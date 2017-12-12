@@ -100,4 +100,12 @@ public class Constants {
  
     public static final String KEY_OFFLINESTATUS_WORKORDERDATE_INVALID = "works.worksorder.statusdate.invalid";
     public static final String MESSAGE_OFFLINESTATUS_WORKORDERDATE_INVALID = "Workorder Date cannot be less then Agreement Order Signed date";
+
+    public static final String KEY_WORKORDER_REMARKS_EDITABLE = "works.worksorder.remarks.editable";
+    public static final String MESSAGE_WORKORDER_REMARKS_EDITABLE = "Remarks is not allowed to modify";
+
+    public static final String KEY_WORKORDER_REMARKS_INVALID_DATA = "works.worksorder.remarks.invalid.data";
+    public static final String MESSAGE_WORKORDER_REMARKS_INVALID_DATA = "Please send the proper data for Work Order Details";
+
+    
 }

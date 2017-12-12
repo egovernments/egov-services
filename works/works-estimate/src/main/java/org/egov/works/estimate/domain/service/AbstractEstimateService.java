@@ -299,10 +299,11 @@ public class AbstractEstimateService {
                     .generateWorkIdentificationNumber(abstractEstimate.getTenantId(), requestInfo);
             // TODO: check idgen to accept values to generate
 
+            final String objectCode = estimateUtils.getBudgetGroup(abstractEstimate.getBudgetGroup(), abstractEstimate.getTenantId(), requestInfo);
             winCode.append(estimateUtils.getCityCode(abstractEstimate.getTenantId(), requestInfo)).append("/")
                     .append(propertiesManager.getWorkIdentificationNumberPrefix()).append("/")
                     .append(abstractEstimate.getFunction().getCode()).append("/")
-                    .append(abstractEstimate.getBudgetGroup().getMaxCode().getGlcode()).append("/").append(workIdentificationNumber);
+                    .append(objectCode).append("/").append(workIdentificationNumber);
             projectCode.setCode(winCode.toString());
         }
 

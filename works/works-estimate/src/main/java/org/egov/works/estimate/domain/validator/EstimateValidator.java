@@ -1,7 +1,12 @@
 package org.egov.works.estimate.domain.validator;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
@@ -18,7 +23,40 @@ import org.egov.works.estimate.persistence.repository.EstimateTechnicalSanctionR
 import org.egov.works.estimate.persistence.repository.FileStoreRepository;
 import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.*;
+import org.egov.works.estimate.web.contract.AbstractEstimate;
+import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetail;
+import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
+import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
+import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
+import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
+import org.egov.works.estimate.web.contract.Asset;
+import org.egov.works.estimate.web.contract.AssetsForEstimate;
+import org.egov.works.estimate.web.contract.Boundary;
+import org.egov.works.estimate.web.contract.BudgetGroup;
+import org.egov.works.estimate.web.contract.Department;
+import org.egov.works.estimate.web.contract.DetailedEstimate;
+import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
+import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
+import org.egov.works.estimate.web.contract.DetailedEstimateStatus;
+import org.egov.works.estimate.web.contract.DocumentDetail;
+import org.egov.works.estimate.web.contract.EstimateActivity;
+import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
+import org.egov.works.estimate.web.contract.EstimateOverhead;
+import org.egov.works.estimate.web.contract.EstimateTechnicalSanction;
+import org.egov.works.estimate.web.contract.ExpenditureType;
+import org.egov.works.estimate.web.contract.Function;
+import org.egov.works.estimate.web.contract.Fund;
+import org.egov.works.estimate.web.contract.ModeOfAllotment;
+import org.egov.works.estimate.web.contract.NatureOfWork;
+import org.egov.works.estimate.web.contract.Overhead;
+import org.egov.works.estimate.web.contract.ReferenceType;
+import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.SORRate;
+import org.egov.works.estimate.web.contract.ScheduleOfRate;
+import org.egov.works.estimate.web.contract.Scheme;
+import org.egov.works.estimate.web.contract.SubScheme;
+import org.egov.works.estimate.web.contract.TypeOfWork;
+import org.egov.works.estimate.web.contract.UOM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,8 +97,8 @@ public class EstimateValidator {
 
     public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
         Map<String, String> messages = new HashMap<>();
-        if(abstractEstimateRequest.getAbstractEstimates().size() > 1) {
-            validateDuplicateAbstractEstimateNumber(messages,abstractEstimateRequest);
+        if (abstractEstimateRequest.getAbstractEstimates().size() > 1) {
+            validateDuplicateAbstractEstimateNumber(messages, abstractEstimateRequest);
         }
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
             validateEstimateDetails(estimate, messages);
@@ -71,10 +109,10 @@ public class EstimateValidator {
             validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages, isNew);
             if (!messages.isEmpty())
                 throw new CustomException(messages);
-            
+
             if (estimate.getSpillOverFlag())
                 validateDuplicateWINCode(messages, estimate);
-            
+
             if (!messages.isEmpty())
                 throw new CustomException(messages);
             if (StringUtils.isNotBlank(estimate.getAbstractEstimateNumber()))
@@ -93,34 +131,37 @@ public class EstimateValidator {
     private void validateDuplicateWINCode(Map<String, String> messages, final AbstractEstimate estimate) {
         int size = estimate.getAbstractEstimateDetails().size();
         boolean validProjectCodes = true;
-        for (int i = 0; i<= size-1; i++) {
-            for(int j = i+1; j<= size-1; j++) {
-                if(estimate.getAbstractEstimateDetails().get(i).getProjectCode().getCode().equalsIgnoreCase(estimate.getAbstractEstimateDetails().get(j).getProjectCode().getCode())) {
+        for (int i = 0; i <= size - 1; i++) {
+            for (int j = i + 1; j <= size - 1; j++) {
+                if (estimate.getAbstractEstimateDetails().get(i).getProjectCode().getCode()
+                        .equalsIgnoreCase(estimate.getAbstractEstimateDetails().get(j).getProjectCode().getCode())) {
                     validProjectCodes = false;
                     break;
                 }
             }
         }
 
-        if(!validProjectCodes) {
+        if (!validProjectCodes) {
             messages.put(Constants.KEY_DUPLICATE_WINCODES,
                     Constants.MESSAGE_DUPLICATE_WINCODES);
         }
     }
-    
-    private void validateDuplicateAbstractEstimateNumber(Map<String, String> messages, final AbstractEstimateRequest abstractEstimateRequest) {
+
+    private void validateDuplicateAbstractEstimateNumber(Map<String, String> messages,
+            final AbstractEstimateRequest abstractEstimateRequest) {
         int size = abstractEstimateRequest.getAbstractEstimates().size();
         boolean validAbstractEstimateNumbers = true;
-        for (int i = 0; i<= size-1; i++) {
-            for(int j = i+1; j<= size-1; j++) {
-                if(abstractEstimateRequest.getAbstractEstimates().get(i).getAbstractEstimateNumber().equalsIgnoreCase(abstractEstimateRequest.getAbstractEstimates().get(j).getAbstractEstimateNumber())) {
+        for (int i = 0; i <= size - 1; i++) {
+            for (int j = i + 1; j <= size - 1; j++) {
+                if (abstractEstimateRequest.getAbstractEstimates().get(i).getAbstractEstimateNumber()
+                        .equalsIgnoreCase(abstractEstimateRequest.getAbstractEstimates().get(j).getAbstractEstimateNumber())) {
                     validAbstractEstimateNumbers = false;
                     break;
                 }
             }
         }
 
-        if(!validAbstractEstimateNumbers) {
+        if (!validAbstractEstimateNumbers) {
             messages.put(Constants.KEY_DUPLICATE_ABSTRACTESTIMATENUMBERS,
                     Constants.MESSAGE_DUPLICATE_ABSTRACTESTIMATENUMBERS);
         }
@@ -141,7 +182,8 @@ public class EstimateValidator {
             messages.put(Constants.KEY_PMCTYPE_INVALID, Constants.MESSAGE_PMCTYPE_INVALID);
         }
 
-        if (estimate.getPmcRequired() && StringUtils.isNotBlank(estimate.getPmcType()) && estimate.getPmcType().equalsIgnoreCase("Panel")
+        if (estimate.getPmcRequired() && StringUtils.isNotBlank(estimate.getPmcType())
+                && estimate.getPmcType().equalsIgnoreCase("Panel")
                 && StringUtils.isBlank(estimate.getPmcName())) {
             messages.put(Constants.KEY_PMCNAME_INVALID, Constants.MESSAGE_PMCNAME_INVALID);
         }
@@ -207,9 +249,9 @@ public class EstimateValidator {
                 .getAbstractEstimates();
 
         if (isNew && !oldEstimates.isEmpty())
-            for(AbstractEstimate abstractEstimate : oldEstimates) {
-                if(!abstractEstimate.getStatus().toString().equals(AbstractEstimateStatus.CANCELLED.toString()))
-                 messages.put(Constants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER, Constants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
+            for (AbstractEstimate abstractEstimate : oldEstimates) {
+                if (!abstractEstimate.getStatus().toString().equals(AbstractEstimateStatus.CANCELLED.toString()))
+                    messages.put(Constants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER, Constants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
             }
     }
 
@@ -217,12 +259,12 @@ public class EstimateValidator {
         if (estimate.getAbstractEstimateNumber() == null)
             messages.put(Constants.KEY_NULL_ABSTRACTESTIMATE_NUMBER, Constants.MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER);
         for (AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
-            if (details.getProjectCode() == null || (details.getProjectCode() != null && StringUtils.isBlank(details.getProjectCode().getCode())))
+            if (details.getProjectCode() == null
+                    || (details.getProjectCode() != null && StringUtils.isBlank(details.getProjectCode().getCode())))
                 messages.put(Constants.KEY_NULL_WIN_NUMBER, Constants.MESSAGE_NULL_WIN_NUMBER);
-        
+
         if (estimate.getDateOfProposal() != null && estimate.getDateOfProposal() > new Date().getTime())
             messages.put(Constants.KEY_FUTUREDATE_DATEOFPROPOSAL, Constants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);
-        
 
     }
 
@@ -231,7 +273,7 @@ public class EstimateValidator {
         if (estimate.getAbstractEstimateDetails().isEmpty())
             messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_REQUIRED,
                     Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_REQUIRED);
-        
+
         for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails()) {
             estimateAmount = estimateAmount.add(aed.getEstimateAmount());
             if (estimate.getBillsCreated() && aed.getGrossAmountBilled() == null) {
@@ -247,7 +289,7 @@ public class EstimateValidator {
             if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null
                     && aed.getGrossAmountBilled().compareTo(BigDecimal.ZERO.doubleValue()) == -1)
                 messages.put(Constants.KEY_INVALID_GROSSBILLEDAMOUNT, Constants.MESSAGE_INVALID_GROSSBILLEDAMOUNT);
-            
+
         }
 
         if (estimate.getBillsCreated() && !(estimate.getDetailedEstimateCreated() && estimate.getWorkOrderCreated())) {
@@ -284,7 +326,7 @@ public class EstimateValidator {
         validateSubTypeOfWork(abstractEstimate.getSubTypeOfWork(), abstractEstimate.getTenantId(), requestInfo,
                 messages);
         validateDepartment(abstractEstimate.getDepartment(), abstractEstimate.getTenantId(), requestInfo, messages);
-        // TODO: 
+        // TODO:
         // validateWard(abstractEstimate.getWard(),
         // abstractEstimate.getTenantId(), requestInfo, messages);
         // validateLocality(abstractEstimate.getLocality(),
@@ -473,7 +515,7 @@ public class EstimateValidator {
                     messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
                             Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
                 validateDetailedEstimateExists(detailedEstimate, abstactEstimate, messages);
-                if(!checkAbstractEstimateRequired(detailedEstimate,requestInfo)) {
+                if (!checkAbstractEstimateRequired(detailedEstimate, requestInfo)) {
                     validateMasterData(detailedEstimate, requestInfo, messages);
                     validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
                 }
@@ -490,15 +532,16 @@ public class EstimateValidator {
                 messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
                         Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
 
-            if(detailedEstimate.getWorkValue() != null && detailedEstimate.getWorkValue().compareTo(BigDecimal.ZERO) <= 0)
+            if (detailedEstimate.getWorkValue() != null && detailedEstimate.getWorkValue().compareTo(BigDecimal.ZERO) <= 0)
                 messages.put(Constants.KEY_WORK_VALUE_INVALID,
                         Constants.MESSAGE_WORK_VALUE_INVALID);
 
-            if(detailedEstimate.getEstimateValue() != null && detailedEstimate.getEstimateValue().compareTo(BigDecimal.ZERO) <= 0)
+            if (detailedEstimate.getEstimateValue() != null
+                    && detailedEstimate.getEstimateValue().compareTo(BigDecimal.ZERO) <= 0)
                 messages.put(Constants.KEY_ESTIMATE_VALUE_INVALID,
                         Constants.MESSAGE_ESTIMATE_VALUE_INVALID);
 
-            if(detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
+            if (detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
                     detailedEstimate.getEstimateValue().compareTo(detailedEstimate.getWorkValue()) < 0)
                 messages.put(Constants.KEY_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE,
                         Constants.MESSAGE_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE);
@@ -508,7 +551,8 @@ public class EstimateValidator {
             throw new CustomException(messages);
     }
 
-    private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,Map<String, String> messages) {
+    private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,
+            Map<String, String> messages) {
         if (abstractEstimate != null) {
             String projectCode = abstractEstimate.getAbstractEstimateDetails().get(0).getProjectCode().getCode();
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
@@ -590,11 +634,11 @@ public class EstimateValidator {
                     .search(abstractEstimateSearchContract);
             if (!abstractEstimates.isEmpty()) {
                 abstractEstimate = abstractEstimates.get(0);
-                    for (AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
-                        if (abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode()
-                                .getCode().equalsIgnoreCase(workIdentificationNumber))
-                            abstractEstimate.setAbstractEstimateDetails(Arrays.asList(abstractEstimateDetails));
-                        return abstractEstimate;
+                for (AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
+                    if (abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode()
+                            .getCode().equalsIgnoreCase(workIdentificationNumber))
+                        abstractEstimate.setAbstractEstimateDetails(Arrays.asList(abstractEstimateDetails));
+                    return abstractEstimate;
 
                 }
             }
@@ -622,11 +666,11 @@ public class EstimateValidator {
         if (detailedEstimate.getId() != null)
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
         List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
-         for(DetailedEstimateHelper detailedEstimateHelper : lists) {
-             if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
-                 messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
-                         Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
-         }
+        for (DetailedEstimateHelper detailedEstimateHelper : lists) {
+            if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
+                messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
+                        Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
+        }
     }
 
     public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
@@ -646,15 +690,16 @@ public class EstimateValidator {
                 } else
                     totalOverAmount = totalOverAmount.add(estimateOverhead.getAmount());
 
-                if(overhead != null && overhead.getCode().equals(estimateOverhead.getOverhead().getCode())) {
+                if (overhead != null && overhead.getCode().equals(estimateOverhead.getOverhead().getCode())) {
                     messages.put(Constants.KEY_ESIMATE_OVERHEAD_UNIQUE, Constants.MESSAGE_ESIMATE_OVERHEAD_UNIQUE);
                 }
                 overhead = estimateOverhead.getOverhead();
             }
         }
 
-        if(detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
-                totalOverAmount != null && totalOverAmount.add(detailedEstimate.getWorkValue()).compareTo(detailedEstimate.getEstimateValue()) != 0 ) {
+        if (detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
+                totalOverAmount != null
+                && totalOverAmount.add(detailedEstimate.getWorkValue()).compareTo(detailedEstimate.getEstimateValue()) != 0) {
             messages.put(Constants.KEY_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT);
         }
     }
@@ -675,8 +720,9 @@ public class EstimateValidator {
 
         if (detailedEstimate.getWorkFlowDetails() != null && detailedEstimate.getWorkFlowDetails().getAction()
                 .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_CREATE) || detailedEstimate.getWorkFlowDetails().getAction()
-                .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_FORWARD) || detailedEstimate.getWorkFlowDetails().getAction()
-                .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_REJECTED))
+                        .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_FORWARD)
+                || detailedEstimate.getWorkFlowDetails().getAction()
+                        .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_REJECTED))
             if (detailedEstimate.getEstimateActivities() == null || detailedEstimate.getEstimateActivities().isEmpty())
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
@@ -684,7 +730,8 @@ public class EstimateValidator {
         for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
 
             if ((activity.getScheduleOfRate() != null && StringUtils.isBlank(activity.getScheduleOfRate().getId())) &&
-                    (StringUtils.isBlank(activity.getScheduleOfRate().getCode()) && activity.getScheduleOfRate().getScheduleCategory() != null &&
+                    (StringUtils.isBlank(activity.getScheduleOfRate().getCode())
+                            && activity.getScheduleOfRate().getScheduleCategory() != null &&
                             StringUtils.isBlank(activity.getScheduleOfRate().getScheduleCategory().getCode()))
                     || (activity.getNonSor() != null && activity.getNonSor().getId() == null)
                     || activity.getScheduleOfRate() == null && activity.getNonSor() == null)
@@ -706,13 +753,15 @@ public class EstimateValidator {
 
             if (activity.getScheduleOfRate() != null) {
                 List<ScheduleOfRate> scheduleOfRates = new ArrayList<>();
-                if(StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
+                if (StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
                     scheduleOfRates = worksMastersRepository.searchScheduleOfRatesById(
                             activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getId()), requestInfo);
-                } else if(StringUtils.isNotBlank(activity.getScheduleOfRate().getCode()) && activity.getScheduleOfRate().getScheduleCategory() != null &&
+                } else if (StringUtils.isNotBlank(activity.getScheduleOfRate().getCode())
+                        && activity.getScheduleOfRate().getScheduleCategory() != null &&
                         StringUtils.isNotBlank(activity.getScheduleOfRate().getScheduleCategory().getCode()))
                     scheduleOfRates = worksMastersRepository.searchScheduleOfRatesByCodeAndCategory(
-                            activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getCode()), Arrays.asList(activity.getScheduleOfRate().getScheduleCategory().getCode()), requestInfo);
+                            activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getCode()),
+                            Arrays.asList(activity.getScheduleOfRate().getScheduleCategory().getCode()), requestInfo);
 
                 if (scheduleOfRates != null && scheduleOfRates.isEmpty())
                     messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID,
@@ -721,14 +770,15 @@ public class EstimateValidator {
                     messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE,
                             Constants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE);
 
-                for(ScheduleOfRate scheduleOfRate : scheduleOfRates) {
-                    for(SORRate sorRate : scheduleOfRate.getSorRates())
-                      if(detailedEstimate.getEstimateDate() < sorRate.getFromDate() || detailedEstimate.getEstimateDate() > sorRate.getToDate())
-                          messages.put(Constants.KEY_INVALID_SOR_RATES,
-                                  Constants.MESSAGE_INVALID_SOR_RATES);
+                for (ScheduleOfRate scheduleOfRate : scheduleOfRates) {
+                    for (SORRate sorRate : scheduleOfRate.getSorRates())
+                        if (detailedEstimate.getEstimateDate() < sorRate.getFromDate()
+                                || detailedEstimate.getEstimateDate() > sorRate.getToDate())
+                            messages.put(Constants.KEY_INVALID_SOR_RATES,
+                                    Constants.MESSAGE_INVALID_SOR_RATES);
                 }
 
-                if(scheduleOfRates != null && !scheduleOfRates.isEmpty())
+                if (scheduleOfRates != null && !scheduleOfRates.isEmpty())
                     activity.setScheduleOfRate(scheduleOfRates.get(0));
             }
 
@@ -741,12 +791,11 @@ public class EstimateValidator {
                         messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED,
                                 Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED);
                     else {
-                        if(estimateMeasurementSheet.getIdentifier().equals("+"))
+                        if (estimateMeasurementSheet.getIdentifier().equals("+"))
                             measurementQuantitySum = measurementQuantitySum.add(estimateMeasurementSheet.getQuantity());
                         else
                             measurementQuantitySum = measurementQuantitySum.subtract(estimateMeasurementSheet.getQuantity());
                     }
-
 
                     if (estimateMeasurementSheet.getQuantity() == null)
                         messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED,
@@ -757,7 +806,7 @@ public class EstimateValidator {
                 }
             }
 
-            if(measurementQuantitySum.compareTo(BigDecimal.valueOf(activity.getQuantity())) == 0) {
+            if (measurementQuantitySum.compareTo(BigDecimal.valueOf(activity.getQuantity())) == 0) {
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER,
                         Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER);
             }
@@ -765,11 +814,10 @@ public class EstimateValidator {
         }
 
         BigDecimal totalActivityAmount = getTotalActivityAmount(detailedEstimate.getEstimateActivities());
-        if(detailedEstimate.getEstimateValue() != null && totalActivityAmount != null &&
+        if (detailedEstimate.getEstimateValue() != null && totalActivityAmount != null &&
                 detailedEstimate.getEstimateValue().compareTo(totalActivityAmount) != 0)
             messages.put(Constants.KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT,
                     Constants.MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT);
-
 
     }
 
@@ -850,11 +898,13 @@ public class EstimateValidator {
 
                 // TODO FIX aset code validation getting deserialization error
                 // for AttributeDefinition["columns"]
-                 if( assetsForEstimate.getAsset() != null && StringUtils.isNotBlank(assetsForEstimate.getAsset().getCode() )) {
-                    List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(), assetsForEstimate.getAsset().getCode(),requestInfo);
-                     if(assets != null && assets.isEmpty())
-                      messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID, Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID);
-                 }
+                if (assetsForEstimate.getAsset() != null && StringUtils.isNotBlank(assetsForEstimate.getAsset().getCode())) {
+                    List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),
+                            assetsForEstimate.getAsset().getCode(), requestInfo);
+                    if (assets != null && assets.isEmpty())
+                        messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,
+                                Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID);
+                }
                 if (asset != null && asset.getCode().equals(assetsForEstimate.getAsset().getCode()))
                     messages.put(Constants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS,
                             Constants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
@@ -1063,24 +1113,11 @@ public class EstimateValidator {
 
     public BigDecimal getTotalActivityAmount(List<EstimateActivity> activities) {
         BigDecimal totalActivityAmount = BigDecimal.ZERO;
-        for(EstimateActivity activity : activities) {
-            if(activity.getUnitRate() != null && activity.getQuantity() != null)
-             totalActivityAmount = totalActivityAmount.add(activity.getUnitRate().multiply(BigDecimal.valueOf(activity.getQuantity())));
+        for (EstimateActivity activity : activities) {
+            if (activity.getUnitRate() != null && activity.getQuantity() != null)
+                totalActivityAmount = totalActivityAmount
+                        .add(activity.getUnitRate().multiply(BigDecimal.valueOf(activity.getQuantity())));
         }
         return totalActivityAmount;
-    }
-
-    public boolean workflowRequired(final String tenantId, final RequestInfo requestInfo) {
-        JSONArray mdmsArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
-                CommonConstants.WORKFLOW_REQUIRED_APPCONFIG, tenantId, requestInfo,
-                CommonConstants.MODULENAME_WORKS);
-        boolean workflowRequired = false;
-        if (mdmsArray != null && !mdmsArray.isEmpty()) {
-            Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
-            if (jsonMap.get("value").equals("Yes")) {
-                workflowRequired = true;
-            }
-        }
-        return workflowRequired;
     }
 }

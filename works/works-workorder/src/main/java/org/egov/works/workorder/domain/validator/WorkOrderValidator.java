@@ -1,12 +1,15 @@
 package org.egov.works.workorder.domain.validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.Remarks;
+import org.egov.works.commons.web.contract.RemarksDetail;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.WorkOrderRepository;
 import org.egov.works.workorder.domain.service.LetterOfAcceptanceService;
@@ -16,13 +19,19 @@ import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
 import org.egov.works.workorder.web.contract.OfflineStatus;
+import org.egov.works.workorder.web.contract.RequestInfo;
 import org.egov.works.workorder.web.contract.WorkOrder;
+import org.egov.works.workorder.web.contract.WorkOrderDetail;
 import org.egov.works.workorder.web.contract.WorkOrderRequest;
 import org.egov.works.workorder.web.contract.WorkOrderSearchContract;
 import org.egov.works.workorder.web.contract.WorkOrderStatus;
 import org.egov.works.workorder.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 /**
  * Created by ritesh on 27/11/17.
@@ -38,21 +47,25 @@ public class WorkOrderValidator {
 
     @Autowired
     private WorkOrderRepository workOrderRepository;
-    
+
     @Autowired
     private MdmsRepository mdmsRepository;
 
     public void validateWorkOrder(final WorkOrderRequest workOrderRequest, Boolean isUpdate) {
         HashMap<String, String> messages = new HashMap<>();
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
+
             if (workOrder.getLetterOfAcceptance() != null && workOrder.getLetterOfAcceptance().getSpillOverFlag()) {
                 checkWorkOrderNumberExist(workOrderRequest, messages, workOrder, isUpdate);
             }
             if (isUpdate) {
                 validateWorkOrderExist(workOrderRequest, messages, workOrder);
+                validateRemarksData(workOrderRequest, messages, workOrder);
             }
-            if (!isUpdate)
+            if (!isUpdate) {
                 validateWorkOrderCreated(workOrderRequest, messages, workOrder);
+                validateWorkOrderDetail(workOrderRequest, messages, workOrder);
+            }
             LetterOfAcceptanceResponse letterOfAcceptanceResponse = getLetterOfAcceptanceResponse(workOrderRequest, workOrder);
             validateLOA(messages, letterOfAcceptanceResponse);
             if (workOrder.getLetterOfAcceptance() != null && !workOrder.getLetterOfAcceptance().getSpillOverFlag())
@@ -61,6 +74,64 @@ public class WorkOrderValidator {
             if (!messages.isEmpty())
                 throw new CustomException(messages);
 
+        }
+    }
+
+    private void validateWorkOrderDetail(final WorkOrderRequest workOrderRequest, HashMap<String, String> messages,
+            WorkOrder workOrder) {
+        Remarks remarks = getRemarks(workOrder.getTenantId(), "Remarks", workOrderRequest.getRequestInfo());
+        // prepair false work order details
+        List<RemarksDetail> remarksDetails = new ArrayList<>();
+        List<WorkOrderDetail> passedWorkOrderDetail = new ArrayList<>();
+        
+        if (remarks.getRemarksDetails() != null && !remarks.getRemarksDetails().isEmpty())
+            for (RemarksDetail remarksDetail : remarks.getRemarksDetails()) {
+                if (!remarksDetail.getEditable())
+                    remarksDetails.add(remarksDetail);
+            }
+
+        if (workOrder.getWorkOrderDetails() != null && !workOrder.getWorkOrderDetails().isEmpty())
+            for (WorkOrderDetail workOrderDetail : workOrder.getWorkOrderDetails()) {
+                if (!workOrderDetail.getEditable())
+                    passedWorkOrderDetail.add(workOrderDetail);
+            }
+
+        if (remarksDetails != null && !remarksDetails.isEmpty() && passedWorkOrderDetail != null
+                && passedWorkOrderDetail.isEmpty() && remarksDetails.size() == passedWorkOrderDetail.size()) {
+            messages.put(Constants.KEY_WORKORDER_REMARKS_INVALID_DATA, Constants.MESSAGE_WORKORDER_REMARKS_INVALID_DATA);
+        }
+        Boolean flag = false;
+        if (remarksDetails != null && !remarksDetails.isEmpty() && passedWorkOrderDetail != null
+                && passedWorkOrderDetail.isEmpty())
+        for(WorkOrderDetail workOrderDetail: passedWorkOrderDetail) {
+            flag = false;
+            for(RemarksDetail remarksDetail: remarksDetails) {
+                if(remarksDetail.getRemarksDescription().equalsIgnoreCase(workOrderDetail.getRemarks())) {
+                    flag = true;
+                }
+            }
+            if(!flag) {
+                messages.put(Constants.KEY_WORKORDER_REMARKS_EDITABLE, Constants.MESSAGE_WORKORDER_REMARKS_EDITABLE);
+                break;
+            }
+        }
+    }
+
+    private void validateRemarksData(final WorkOrderRequest workOrderRequest, HashMap<String, String> messages,
+            WorkOrder workOrder) {
+        WorkOrderSearchContract workOrderSearchContract = new WorkOrderSearchContract();
+        workOrderSearchContract.setIds(Arrays.asList(workOrder.getId()));
+        workOrderSearchContract.setTenantId(workOrder.getTenantId());
+        List<WorkOrder> workOrders = workOrderRepository.search(workOrderSearchContract, workOrderRequest.getRequestInfo());
+
+        for (WorkOrderDetail savedOrderDetails : workOrders.get(0).getWorkOrderDetails()) {
+            for (WorkOrderDetail workOrderDetails : workOrder.getWorkOrderDetails()) {
+                if (savedOrderDetails.getId().equalsIgnoreCase(workOrderDetails.getId()) && !savedOrderDetails.getEditable()
+                        && !savedOrderDetails.getRemarks().equalsIgnoreCase(workOrderDetails.getRemarks())) {
+                    messages.put(Constants.KEY_WORKORDER_REMARKS_EDITABLE,
+                            Constants.MESSAGE_WORKORDER_REMARKS_EDITABLE);
+                }
+            }
         }
     }
 
@@ -78,8 +149,8 @@ public class WorkOrderValidator {
             messages.put(Constants.KEY_LOA_OFFLINE_STATUS,
                     Constants.MESSAGE_LOA_OFFLINE_STATUS);
         }
-        
-        if(offlineStatus != null && offlineStatus.getStatusDate() > workOrder.getWorkOrderDate()) {
+
+        if (offlineStatus != null && offlineStatus.getStatusDate() > workOrder.getWorkOrderDate()) {
             messages.put(Constants.KEY_OFFLINESTATUS_WORKORDERDATE_INVALID,
                     Constants.MESSAGE_OFFLINESTATUS_WORKORDERDATE_INVALID);
         }
@@ -180,9 +251,21 @@ public class WorkOrderValidator {
                 messages.put(Constants.KEY_WORKORDER_WORKORDERNUMBER_REQUIRED,
                         Constants.MESSAGE_WORKORDER_WORKORDERNUMBER_REQUIRED);
         }
-        
-        
 
+    }
+
+    private Remarks getRemarks(final String tenantId, final String filterFieldValue, final RequestInfo requestInfo) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Remarks remarks = new Remarks();
+        JSONArray responseJSONArray;
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId,
+                CommonConstants.MODULENAME_WORKS, CommonConstants.REMARKS_OBJECTNAME, "typeOfDocument", "Work Order / Notice",
+                requestInfo);
+        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            remarks = objectMapper.convertValue(responseJSONArray.get(0), Remarks.class);
+        }
+        return remarks;
     }
 
 }

@@ -530,15 +530,14 @@
   "Remarks": [
     {
       "id": 1,
-      "code": "WorkOrderNotice",
       "tenantId": "default",
       "typeOfDocument": "Work Order / Notice",
-      "type": "Approval / Show Cause / Rejection",
+      "remarksType": "Approval / Show Cause / Rejection",
       "remarksDetails": [
         {
           "id": 1,
           "tenantId": "default",
-          "remarks": "WorkOrderNotice",
+          "remarks": null,
           "remarksDescription": "Reviewed and approved",
           "editable": true
         }

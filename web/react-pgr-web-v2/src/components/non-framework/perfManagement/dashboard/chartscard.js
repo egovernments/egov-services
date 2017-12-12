@@ -196,8 +196,8 @@ export default class BarChartCard extends Component {
                     <CartesianGrid strokeDasharray="3 3"/>
                     <Tooltip/>
                     <Legend />
-                    <Bar dataKey="target" fill="#0088FE" />
-                    <Bar dataKey="value" fill="#00C49F" />
+                    <Bar name="KPI Target" dataKey="target" fill="#0088FE" />
+                    <Bar name="Actual Value" dataKey="value" fill="#00C49F" />
                 </BarChart>
             </div>
         )

@@ -181,7 +181,7 @@ export default class KPIDashboardQuery extends Component {
   };
 
   processOnClickViewButton = () => {
-    let finYears = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)).join(',');
+    let finYears = this.state.fyIndices.map((item, index) => parseFinancialYearResponse(this.fyRes)[item]['finYearRange']).join(',');
     let ulbs = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',');
     let kpis = this.state.kpiIndices.map((item, index) => jp.query(this.kpiRes, `$.KPIs[${item}].code`)).join(',');
 

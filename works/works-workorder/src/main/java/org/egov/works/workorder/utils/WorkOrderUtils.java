@@ -1,19 +1,29 @@
 package org.egov.works.workorder.utils;
 
-import net.minidev.json.JSONArray;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.MasterDetails;
 import org.egov.works.commons.web.contract.MdmsCriteria;
 import org.egov.works.commons.web.contract.ModuleDetails;
-import org.egov.works.workorder.web.contract.*;
+import org.egov.works.commons.web.contract.Remarks;
+import org.egov.works.workorder.web.contract.AuditDetails;
+import org.egov.works.workorder.web.contract.MdmsRequest;
+import org.egov.works.workorder.web.contract.MdmsResponse;
+import org.egov.works.workorder.web.contract.RequestInfo;
+import org.egov.works.workorder.web.contract.ResponseInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
-import java.util.Map;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class WorkOrderUtils {
@@ -107,6 +117,23 @@ public class WorkOrderUtils {
                 CommonConstants.TENANT_MODULENAME);
         if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
             @SuppressWarnings("unchecked")
+            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+            cityCode = ((Map) jsonMap.get("city")).get("code").toString();
+        }
+        return cityCode;
+    }
+    
+    
+    public String getRemarks(final String tenantId, final RequestInfo requestInfo,final String remarksCode) {
+        String cityCode = "";
+        JSONArray responseJSONArray = getMDMSData(CommonConstants.REMARKS_OBJECTNAME,
+                CommonConstants.CODE,
+                remarksCode, tenantId, requestInfo,
+                CommonConstants.MODULENAME_WORKS);
+        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            ObjectMapper mapper = new ObjectMapper();
+//            List<Remarks> remarks = mapper.readV
+            
             Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
             cityCode = ((Map) jsonMap.get("city")).get("code").toString();
         }

@@ -1,17 +1,28 @@
 package org.egov.works.workorder.domain.validator;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.web.contract.Remarks;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.WorkOrderRepository;
 import org.egov.works.workorder.domain.service.LetterOfAcceptanceService;
 import org.egov.works.workorder.domain.service.OfflineStatusService;
-import org.egov.works.workorder.web.contract.*;
+import org.egov.works.workorder.web.contract.LOAStatus;
+import org.egov.works.workorder.web.contract.LetterOfAcceptance;
+import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
+import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
+import org.egov.works.workorder.web.contract.OfflineStatus;
+import org.egov.works.workorder.web.contract.WorkOrder;
+import org.egov.works.workorder.web.contract.WorkOrderRequest;
+import org.egov.works.workorder.web.contract.WorkOrderSearchContract;
+import org.egov.works.workorder.web.contract.WorkOrderStatus;
+import org.egov.works.workorder.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by ritesh on 27/11/17.
@@ -27,6 +38,9 @@ public class WorkOrderValidator {
 
     @Autowired
     private WorkOrderRepository workOrderRepository;
+    
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
     public void validateWorkOrder(final WorkOrderRequest workOrderRequest, Boolean isUpdate) {
         HashMap<String, String> messages = new HashMap<>();
@@ -41,10 +55,9 @@ public class WorkOrderValidator {
                 validateWorkOrderCreated(workOrderRequest, messages, workOrder);
             LetterOfAcceptanceResponse letterOfAcceptanceResponse = getLetterOfAcceptanceResponse(workOrderRequest, workOrder);
             validateLOA(messages, letterOfAcceptanceResponse);
-            if(workOrder.getLetterOfAcceptance() != null && !workOrder.getLetterOfAcceptance().getSpillOverFlag())
+            if (workOrder.getLetterOfAcceptance() != null && !workOrder.getLetterOfAcceptance().getSpillOverFlag())
                 validateOfflineStatus(workOrderRequest, messages, workOrder);
             validateWorkOrder(messages, workOrder, letterOfAcceptanceResponse);
-
             if (!messages.isEmpty())
                 throw new CustomException(messages);
 
@@ -64,6 +77,11 @@ public class WorkOrderValidator {
         if (offlineStatus == null) {
             messages.put(Constants.KEY_LOA_OFFLINE_STATUS,
                     Constants.MESSAGE_LOA_OFFLINE_STATUS);
+        }
+        
+        if(offlineStatus != null && offlineStatus.getStatusDate() > workOrder.getWorkOrderDate()) {
+            messages.put(Constants.KEY_OFFLINESTATUS_WORKORDERDATE_INVALID,
+                    Constants.MESSAGE_OFFLINESTATUS_WORKORDERDATE_INVALID);
         }
     }
 
@@ -98,12 +116,8 @@ public class WorkOrderValidator {
 
         List<WorkOrder> workOrders = workOrderRepository.search(workOrderSearchContract, workOrderRequest.getRequestInfo());
 
-        for (WorkOrder workOrder2 : workOrders) {
-            if (!workOrder2.getStatus().toString().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
-                messages.put(Constants.KEY_INVALID_WORKORDER, Constants.MESSAGE_INVALID_WORKORDER);
-                break;
-            }
-
+        if (workOrders.isEmpty()) {
+            messages.put(Constants.KEY_INVALID_WORKORDER, Constants.MESSAGE_INVALID_WORKORDER);
         }
 
         if (messages != null && !messages.isEmpty())
@@ -157,17 +171,18 @@ public class WorkOrderValidator {
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
 
-        if (letterOfAcceptance.getLoaDate() > workOrder.getWorkOrderDate())
+        if (workOrder.getWorkOrderDate() != null && letterOfAcceptance.getLoaDate() != null
+                && letterOfAcceptance.getLoaDate() > workOrder.getWorkOrderDate())
             messages.put(Constants.KEY_INVALID_WORKORDERDATE, Constants.MESSAGE_INVALID_WORKORDERDATE);
 
         if (workOrder.getLetterOfAcceptance().getSpillOverFlag()) {
-            if (workOrder.getWorkOrderNumber() == null || workOrder.getWorkOrderNumber().isEmpty())
+            if (StringUtils.isBlank(workOrder.getWorkOrderNumber()))
                 messages.put(Constants.KEY_WORKORDER_WORKORDERNUMBER_REQUIRED,
                         Constants.MESSAGE_WORKORDER_WORKORDERNUMBER_REQUIRED);
         }
+        
+        
 
-        if (messages != null && !messages.isEmpty())
-            throw new CustomException(messages);
     }
 
 }

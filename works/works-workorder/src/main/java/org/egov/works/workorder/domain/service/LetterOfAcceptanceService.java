@@ -3,6 +3,7 @@ package org.egov.works.workorder.domain.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonConstants;
@@ -18,6 +19,7 @@ import org.egov.works.workorder.web.contract.EstimateActivity;
 import org.egov.works.workorder.web.contract.EstimateMeasurementSheet;
 import org.egov.works.workorder.web.contract.LOAActivity;
 import org.egov.works.workorder.web.contract.LOAMeasurementSheet;
+import org.egov.works.workorder.web.contract.LOAStatus;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
@@ -28,6 +30,8 @@ import org.egov.works.workorder.web.contract.SecurityDeposit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import net.minidev.json.JSONArray;
 
 /**
  * Created by ramki on 11/11/17.
@@ -66,6 +70,17 @@ public class LetterOfAcceptanceService {
         for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
             letterOfAcceptance.setId(commonUtils.getUUID());
+            Boolean isSpilloverWFReq = false;
+            if (letterOfAcceptance.getSpillOverFlag())
+                isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
+                        letterOfAcceptanceRequest.getRequestInfo(), letterOfAcceptance.getTenantId());
+            if (!isSpilloverWFReq && letterOfAcceptance.getSpillOverFlag()) {
+                letterOfAcceptance.setStatus(LOAStatus.APPROVED);
+            }
+            
+            if(letterOfAcceptance.getSpillOverFlag()) {
+                letterOfAcceptance.setApprovedDate(letterOfAcceptance.getLoaDate());
+            }
 
             for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
                     .getLetterOfAcceptanceEstimates()) {
@@ -243,6 +258,18 @@ public class LetterOfAcceptanceService {
         letterOfAcceptanceResponse
                 .setResponseInfo(workOrderUtils.getResponseInfo(letterOfAcceptanceRequest.getRequestInfo()));
         return letterOfAcceptanceResponse;
+    }
+    
+    private Boolean isConfigRequired(String keyName, RequestInfo requestInfo, final String tenantId) {
+        Boolean isSpilloverWFReq = false;
+        JSONArray responseJSONArray = workOrderUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+                keyName, tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
+        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+            if (jsonMap.get("value").equals("Yes"))
+                isSpilloverWFReq = true;
+        }
+        return isSpilloverWFReq;
     }
 
 }

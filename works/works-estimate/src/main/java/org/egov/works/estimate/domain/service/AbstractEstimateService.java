@@ -98,7 +98,7 @@ public class AbstractEstimateService {
 
             Boolean isBudgetCheckReq = isBudgetCheckRequired(CommonConstants.BUDGET_CHECK_REQUIRED,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
-            
+
             if (!estimate.getSpillOverFlag()) {
                 String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(
                         estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
@@ -124,13 +124,12 @@ public class AbstractEstimateService {
                 estimate.setStatus(AbstractEstimateStatus.ADMIN_SANCTIONED);
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
-                            abstractEstimateRequest.getRequestInfo(), estimate));
+                            abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
                     abstractEstimateDetails.setProjectCode(projectCode);
-                    if(isBudgetCheckReq)
+                    if (isBudgetCheckReq)
                         setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
                 }
-            }
-            else {
+            } else {
                 populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
                 Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
                         estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
@@ -157,7 +156,7 @@ public class AbstractEstimateService {
         }
         return isSpilloverWFReq;
     }
-    
+
     private Boolean isBudgetCheckRequired(String keyName, RequestInfo requestInfo, final String tenantId) {
         Boolean isBudgetCheckReq = false;
         JSONArray responseJSONArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
@@ -191,7 +190,7 @@ public class AbstractEstimateService {
 
             Boolean isFinIntReq = isConfigRequired(CommonConstants.FINANCIAL_INTEGRATION_KEY,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
-            
+
             Boolean isBudgetCheckReq = isBudgetCheckRequired(CommonConstants.BUDGET_CHECK_REQUIRED,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 
@@ -199,10 +198,19 @@ public class AbstractEstimateService {
                     .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
-                            abstractEstimateRequest.getRequestInfo(), estimate));
+                            abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
                     abstractEstimateDetails.setProjectCode(projectCode);
-                    if(isBudgetCheckReq)
+                    if (isBudgetCheckReq)
                         setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+                }
+            }
+
+            if (isFinIntReq && estimate.getStatus().toString()
+                    .equalsIgnoreCase(AbstractEstimateStatus.CANCELLED.toString())) {
+                for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
+                    projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+                            abstractEstimateRequest.getRequestInfo(), estimate, Boolean.TRUE));
+                    abstractEstimateDetails.setProjectCode(projectCode);
                 }
             }
 
@@ -261,7 +269,7 @@ public class AbstractEstimateService {
     }
 
     public String setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag,
-            final RequestInfo requestInfo, final AbstractEstimate abstractEstimate) {
+            final RequestInfo requestInfo, final AbstractEstimate abstractEstimate, Boolean isCancelled) {
         Map<String, String> messages = new HashMap<>();
         ProjectCode projectCode = new ProjectCode();
         StringBuilder winCode = new StringBuilder();
@@ -290,13 +298,17 @@ public class AbstractEstimateService {
         projectCode.setName(abstractEstimateDetails.getNameOfWork());
         projectCode.setDescription(abstractEstimateDetails.getNameOfWork());
         projectCode.setTenantId(abstractEstimateDetails.getTenantId());
-
+        projectCode.setActive(!isCancelled);
         ProjectCodeRequest projectCodeRequest = new ProjectCodeRequest();
         projectCodeRequest.setRequestInfo(requestInfo);
         List<ProjectCode> projectCodes = new ArrayList<>();
         projectCodes.add(projectCode);
         projectCodeRequest.setProjectCodes(projectCodes);
-        List<ProjectCode> savedCodes = projectCodeService.create(projectCodeRequest);
+        List<ProjectCode> savedCodes = new ArrayList<>();
+        if (isCancelled)
+            savedCodes = projectCodeService.update(projectCodeRequest);
+        else
+            savedCodes = projectCodeService.create(projectCodeRequest);
         return savedCodes.get(0).getCode();
     }
 

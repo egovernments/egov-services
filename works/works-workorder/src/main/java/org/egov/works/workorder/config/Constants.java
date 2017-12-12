@@ -68,5 +68,36 @@ public class Constants {
     public static final String KEY_INVALID_LOA_WORKORDER = "INVALID_LOA_WORKORDER";
     public static final String MESSAGE_INVALID_LOA_WORKORDER = "Workorder already created for given LOA";
 
+    public static final String KEY_INVALID_LOADATE_DATE = "LOA_DATE_INVALID";
+    public static final String MESSAGE_INVALID_LOADATE_DATE= "LOA Date cannot be prior to Detailed Estimate Approved Date.";
 
+    public static final String KEY_LOA_CONRACTOR_REQUIRED = "works.loa.contractor.required";
+    public static final String MESSAGE_LOA_CONRACTOR_REQUIRED = "Please provide valid data for contractor";
+
+    public static final String KEY_LOA_CONRACTOR_INACTIVE = "works.loa.contractor.inactive";
+    public static final String MESSAGE_LOA_CONRACTOR_INACTIVE = "The contractor is inactive, Please pass the active contractor";
+
+    public static final String KEY_WORKORDER_LOAAMOUNT_INPROPER = "works.loa.loaamount.invalid";
+    public static final String MESSAGE_WORKORDER_LOAAMOUNT_INPROPER = "LOA Amount should be equal to total amount of LOA activity";
+
+    public static final String KEY_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER = "works.loa.loaamount.workvalue.invalid";
+    public static final String MESSAGE_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER = "LOA Amount should be equal to work value of detailed estimate";
+
+    public static final String KEY_WORKORDER_DLP_ZERO = "works.loa.dlp.invalid";
+    public static final String MESSAGE_WORKORDER_DLP_ZERO = "Defect liability should be greater then 0";
+
+    public static final String KEY_WORKORDER_CP_ZERO = "works.loa.cp.invalid";
+    public static final String MESSAGE_WORKORDER_CP_ZERO = "Contract Period should be greater then 0";
+
+    public static final String KEY_NULL_COUNCILRESOLUTIONDATE = "works.loa.councilresolutiondate.null";
+    public static final String MESSAGE_NULL_COUNCILRESOLUTIONDATE = "Council Resolution Date should be entered";
+    
+    public static final String KEY_NULL_COUNCILRESOLUTIONNUMBER = "works.loa.councilresolutionnumber.null";
+    public static final String MESSAGE_NULL_COUNCILRESOLUTIONNUMBER = "Council Resolution Number should be entered";
+    
+    public static final String KEY_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID = "works.loa.loaamount.loaactivityamount.invalid";
+    public static final String MESSAGE_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID = "Sum of LOA activity amount after aplying Tender Finalized Percentage";
+ 
+    public static final String KEY_OFFLINESTATUS_WORKORDERDATE_INVALID = "works.worksorder.statusdate.invalid";
+    public static final String MESSAGE_OFFLINESTATUS_WORKORDERDATE_INVALID = "Workorder Date cannot be less then Agreement Order Signed date";
 }

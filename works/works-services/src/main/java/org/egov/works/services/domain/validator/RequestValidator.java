@@ -36,7 +36,6 @@ public class RequestValidator {
             messages.put(Constants.KEY_OBJECTTYPE_INVALID,
                     Constants.MESSAGE_OBJECTTYPE_INVALID);
             throw new CustomException(messages);
-
         }
     }
 

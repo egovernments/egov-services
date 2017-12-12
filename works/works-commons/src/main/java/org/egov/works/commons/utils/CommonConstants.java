@@ -55,5 +55,6 @@ public class CommonConstants {
     
     public static  final String TENANT_MODULENAME = "tenant";
     public static  final String TENANT_OBJECTNAME = "tenants";
+    public static  final String REMARKS_OBJECTNAME = "Remarks";
 
 }

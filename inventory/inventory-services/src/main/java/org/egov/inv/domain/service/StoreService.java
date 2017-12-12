@@ -215,7 +215,7 @@ public class StoreService extends DomainService {
             }
 
             //fetch and add office location
-            if (null != store && null != store.getOfficeLocation()) {
+            if (null != store && null != store.getOfficeLocation() && !isEmpty(store.getOfficeLocation().getCode())) {
                 Object object = mdmsRepository.fetchObject(tenantId, "inventory", "Location", store.getOfficeLocation().getCode(), Location.class);
 
                 store.setOfficeLocation((Location) object);

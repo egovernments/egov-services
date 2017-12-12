@@ -1,0 +1,581 @@
+{
+	"info": {
+		"name": "Performance Assessment",
+		"_postman_id": "5b5afa85-2c97-5b37-490e-62adfd68e0f3",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "KPI Master Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"c756c14c-3a12-437d-aeb1-f12bb2a5aec2\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  } , \n  \"KPIs\" : [{ \n    \"name\" : \"Objective Test KPI 4\",\n    \"code\" : \"OTK4\",\n    \"financialYear\" : \"2017-18\",\n    \"departmentId\" : 10, \n    \"categoryId\" : 3, \n    \"targetType\" : \"OBJECTIVE\",\n    \"instructions\" : \"Values should match the target\"\n  }]\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpimaster/_create",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpimaster",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Master Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"716e7426-7f2a-42c2-a294-51cbe93c1f5e\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  } , \n  \"KPIs\" : [{ \n  \t\"id\" : \"29\", \n    \"name\" : \"Egov Test KPI\",\n    \"code\" : \"ETK\",\n    \"financialYear\" : \"2017-18\",\n    \"departmentId\" : 10, \n    \"categoryId\" : 3,\n    \"targetType\" : \"TEXT\",\n    \"instructions\" : \"Values should match the target\"\n    }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpimaster/_update",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpimaster",
+						"_update"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Master Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"c756c14c-3a12-437d-aeb1-f12bb2a5aec2\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n }\n} "
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpimaster/_search?departmentId=10&kpiCode=OTK3",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpimaster",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "departmentId",
+							"value": "10",
+							"equals": true
+						},
+						{
+							"key": "kpiCode",
+							"value": "OTK3",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Target Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"c756c14c-3a12-437d-aeb1-f12bb2a5aec2\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  } , \n  \"kpiTargets\" : [{ \n    \"kpiCode\" : \"OTK4\",\n    \"finYear\" : \"2017-18\",\n    \"targetValue\" : \"3\"\n  }]\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpitarget/_create",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpitarget",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Target Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"716e7426-7f2a-42c2-a294-51cbe93c1f5e\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  } , \n  \"kpiTargets\" : [{ \n  \t\"id\" : \"\",\n    \"kpiCode\" : \"ETK\",\n    \"targetDescription\" : \"CONFIRMED\"\t\n  }]\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpitarget/_update",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpitarget",
+						"_update"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Target Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"c756c14c-3a12-437d-aeb1-f12bb2a5aec2\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpitarget/_search?tenantId=default&departmentId=10&kpiCodes=OTK3",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpitarget",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "departmentId",
+							"value": "10",
+							"equals": true
+						},
+						{
+							"key": "kpiCodes",
+							"value": "OTK3",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Create Single with Documents",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"kpiValues\": [\n        {\n            \"tenantId\": \"default\",\n            \"kpi\": {\n                \"departmentId\": 10,\n                \"department\": null,\n                \"id\": \"37\",\n                \"name\": \"Objective Test KPI 4\",\n                \"code\": \"OTK4\",\n                \"category\": \"Solid Waste Management\",\n                \"categoryId\": 3,\n                \"remoteSystemId\": null,\n                \"periodicity\": \"MONTHLY\",\n                \"targetType\": \"OBJECTIVE\",\n                \"instructions\": \"Values should match the target\",\n                \"financialYear\": \"2017-18\",\n                \"documentsReq\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512985158336,\n                    \"lastModifiedTime\": 0\n                },\n                \"kpiTargets\": [\n                    {\n                        \"id\": \"39\",\n                        \"kpiCode\": \"OTK4\",\n                        \"kpi\": null,\n                        \"finYear\": \"2017-18\",\n                        \"targetValue\": \"3\",\n                        \"targetDescription\": \"WIP\",\n                        \"tenantId\": null,\n                        \"createdBy\": null,\n                        \"lastModifiedBy\": null,\n                        \"createdDate\": null,\n                        \"lastModifiedDate\": null\n                    }\n                ]\n            },\n            \"kpiValue\": {\n                \"id\": \"287\",\n                \"kpi\": null,\n                \"kpiCode\": \"OTK4\",\n                \"tenantId\": \"default\",\n                \"consolidatedValue\": null,\n                \"valueDescription\": null,\n                \"finYear\": \"2017-18\",\n                \"valueList\": [\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"4\",\n                        \"value\": \"3\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"5\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"6\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"7\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"8\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"9\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"10\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"11\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"12\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"1\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"2\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"287\",\n                        \"period\": \"3\",\n                        \"value\": \"\",\n                        \"documents\": null,\n                        \"kpiCode\": null\n                    }\n                ],\n                \"documents\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512985186532,\n                    \"lastModifiedTime\": 0\n                }\n            },\n            \"finYear\": null,\n            \"graphType\": null\n        }\n    ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510809879586,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"c756c14c-3a12-437d-aeb1-f12bb2a5aec2\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpivalue/_create",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpivalue",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Create Bulk ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"be7d739e-8312-4118-bad1-8df9125f8af4\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  } ,\n   \"kpiValues\": [\n        {\n            \"tenantId\": \"default\",\n            \"kpi\": {\n                \"departmentId\": 10,\n                \"department\": null,\n                \"id\": \"9\",\n                \"name\": \"Garbage Bins Installing\",\n                \"code\": \"GBI\",\n                \"remoteSystemId\": null,\n                \"periodicity\": \"MONTHLY\",\n                \"targetType\": \"VALUE\",\n                \"instructions\": \"Installing Garbage Bins on each road\",\n                \"financialYear\": \"2017-18\",\n                \"documentsReq\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512036961334,\n                    \"lastModifiedTime\": 0\n                },\n                \"kpiTarget\": {\n                    \"id\": \"14\",\n                    \"kpiCode\": \"GBI\",\n                    \"targetValue\": \"150\",\n                    \"targetDescription\": \"150\",\n                    \"tenantId\": null,\n                    \"createdBy\": null,\n                    \"lastModifiedBy\": null,\n                    \"createdDate\": null,\n                    \"lastModifiedDate\": null\n                }\n            },\n            \"kpiValue\": {\n                \"id\": \"102\",\n                \"kpi\": null,\n                \"kpiCode\": \"GBI\",\n                \"tenantId\": \"default\",\n                \"valueList\": [\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"4\",\n                        \"value\": \"10\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"5\",\n                        \"value\": \"12\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"6\",\n                        \"value\": \"22\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"7\",\n                        \"value\": \"40\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"8\",\n                        \"value\": \"30\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"9\",\n                        \"value\": \"10\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"10\",\n                        \"value\": \"12\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"11\",\n                        \"value\": \"10\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"12\",\n                        \"value\": \"8\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"1\",\n                        \"value\": \"\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"2\",\n                        \"value\": \"\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"102\",\n                        \"period\": \"3\",\n                        \"value\": \"\"\n                    }\n                ],\n                \"documents\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512037069514,\n                    \"lastModifiedTime\": 0\n                }\n            }\n        },\n        {\n            \"tenantId\": \"default\",\n            \"kpi\": {\n                \"departmentId\": 10,\n                \"department\": null,\n                \"id\": \"8\",\n                \"name\": \"Number of Trees\",\n                \"code\": \"NOT\",\n                \"remoteSystemId\": null,\n                \"periodicity\": \"MONTHLY\",\n                \"targetType\": \"VALUE\",\n                \"instructions\": \"Planting trees one tree per day\",\n                \"financialYear\": \"2017-18\",\n                \"documentsReq\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512036961334,\n                    \"lastModifiedTime\": 0\n                },\n                \"kpiTarget\": {\n                    \"id\": \"13\",\n                    \"kpiCode\": \"NOT\",\n                    \"targetValue\": \"3000\",\n                    \"targetDescription\": \"3000\",\n                    \"tenantId\": null,\n                    \"createdBy\": null,\n                    \"lastModifiedBy\": null,\n                    \"createdDate\": null,\n                    \"lastModifiedDate\": null\n                }\n            },\n            \"kpiValue\": {\n                \"id\": \"93\",\n                \"kpi\": null,\n                \"kpiCode\": \"NOT\",\n                \"tenantId\": \"default\",\n                \"valueList\": [\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"4\",\n                        \"value\": \"100\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"5\",\n                        \"value\": \"90\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"6\",\n                        \"value\": \"100\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"7\",\n                        \"value\": \"50\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"8\",\n                        \"value\": \"60\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"9\",\n                        \"value\": \"80\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"10\",\n                        \"value\": \"90\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"11\",\n                        \"value\": \"100\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"12\",\n                        \"value\": \"30\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"1\",\n                        \"value\": \"\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"2\",\n                        \"value\": \"\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"93\",\n                        \"period\": \"3\",\n                        \"value\": \"\"\n                    }\n                ],\n                \"documents\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512037069514,\n                    \"lastModifiedTime\": 0\n                }\n            }\n        },\n        {\n            \"tenantId\": \"default\",\n            \"kpi\": {\n                \"departmentId\": 10,\n                \"department\": null,\n                \"id\": \"7\",\n                \"name\": \"Water Connections Per Year\",\n                \"code\": \"WCPY\",\n                \"remoteSystemId\": null,\n                \"periodicity\": \"MONTHLY\",\n                \"targetType\": \"VALUE\",\n                \"instructions\": \"Get all the metered and non metered connections\",\n                \"financialYear\": \"2017-18\",\n                \"documentsReq\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512036961334,\n                    \"lastModifiedTime\": 0\n                },\n                \"kpiTarget\": {\n                    \"id\": \"12\",\n                    \"kpiCode\": \"WCPY\",\n                    \"targetValue\": \"1000\",\n                    \"targetDescription\": \"1000\",\n                    \"tenantId\": null,\n                    \"createdBy\": null,\n                    \"lastModifiedBy\": null,\n                    \"createdDate\": null,\n                    \"lastModifiedDate\": null\n                }\n            },\n            \"kpiValue\": {\n                \"id\": \"84\",\n                \"kpi\": null,\n                \"kpiCode\": \"WCPY\",\n                \"tenantId\": \"default\",\n                \"valueList\": [\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"4\",\n                        \"value\": \"100\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"5\",\n                        \"value\": \"100\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"6\",\n                        \"value\": \"120\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"7\",\n                        \"value\": \"90\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"8\",\n                        \"value\": \"70\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"9\",\n                        \"value\": \"70\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"10\",\n                        \"value\": \"80\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"11\",\n                        \"value\": \"100\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"12\",\n                        \"value\": \"100\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"1\",\n                        \"value\": \"\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"2\",\n                        \"value\": \"\"\n                    },\n                    {\n                        \"id\": null,\n                        \"valueid\": \"84\",\n                        \"period\": \"3\",\n                        \"value\": \"\"\n                    }\n                ],\n                \"documents\": null,\n                \"auditDetails\": {\n                    \"createdBy\": 73,\n                    \"lastModifiedBy\": 0,\n                    \"createdTime\": 1512037069514,\n                    \"lastModifiedTime\": 0\n                }\n            }\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpivalue/_create",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpivalue",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"c756c14c-3a12-437d-aeb1-f12bb2a5aec2\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpivalue/_search?departmentId=10&tenantId=default&kpiCodes=OTK4&finYear=2017-18",
+					"protocol": "http",
+					"host": [
+						"egov-micro-dev",
+						"egovernments",
+						"org"
+					],
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpivalue",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "departmentId",
+							"value": "10",
+							"equals": true
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "kpiCodes",
+							"value": "OTK4",
+							"equals": true
+						},
+						{
+							"key": "finYear",
+							"value": "2017-18",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Compare Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"c756c14c-3a12-437d-aeb1-f12bb2a5aec2\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/perfmanagement/v1/kpivalue/_comparesearch?tenantId=default&kpiCodes=OTK1,OTK2,OTK3,OTK4&finYear=2017-18&ulbs=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpivalue",
+						"_comparesearch"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "kpiCodes",
+							"value": "OTK1,OTK2,OTK3,OTK4",
+							"equals": true
+						},
+						{
+							"key": "finYear",
+							"value": "2017-18",
+							"equals": true
+						},
+						{
+							"key": "ulbs",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Documents For KPI ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\" : \"bcdeceb2-5b1a-44e9-aa61-45d84b4201d7\"\n }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/perfmanagement/v1/kpimaster/_getDocumentForKpi?tenantId=default&kpiCode=MKTH",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpimaster",
+						"_getDocumentForKpi"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "kpiCode",
+							"value": "MKTH",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get KPI Type API",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\" : \"352afec4-252e-4605-93ad-dbd49dff4735\"\n }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/perfmanagement/v1/kpimaster/_getkpitype?kpiCode=MKT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpimaster",
+						"_getkpitype"
+					],
+					"query": [
+						{
+							"key": "kpiCode",
+							"value": "MKT",
+							"equals": true
+						}
+					]
+				},
+				"description": "\t\t"
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Value Compare Search - 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"f5edb96d-e963-4446-890d-3ed69d360520\",\n    \"userInfo\" : {\n      \"id\" : 10\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/perfmanagement/v1/kpivalue/_comparesearch?departmentId=10&tenantId=default&kpiCodes=TKC&ulbs=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpivalue",
+						"_comparesearch"
+					],
+					"query": [
+						{
+							"key": "departmentId",
+							"value": "10",
+							"equals": true
+						},
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "kpiCodes",
+							"value": "TKC",
+							"equals": true
+						},
+						{
+							"key": "ulbs",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "KPI Master Single",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"867ab332-5a3e-4b13-8c71-338bfeb80e44\",\n    \"userInfo\" : { \n    \t\"id\" : 1\n    }\n  } , \n  \"KPIs\" : [{ \n    \"name\" : \"MYKPIFOUR\",\n    \"code\" : \"MKF\",\n    \"financialYear\" : \"2017-18\",\n    \"departmentId\" : 2, \n    \"targetType\" : \"VALUE\",\n    \"instructions\" : \"FOUR Instructions\"\n  }]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/perfmanagement/v1/kpimaster/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpimaster",
+						"_create"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

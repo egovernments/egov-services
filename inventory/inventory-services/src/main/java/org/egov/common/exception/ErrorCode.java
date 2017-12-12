@@ -174,7 +174,10 @@ public enum ErrorCode {
             "{0} code {1} already exists"),
     OBJECT_NOT_FOUND("object.not.found",
             "{0} {1} not found for {2}",
-            "{0} {1} not found for {2}");
+            "{0} {1} not found for {2}"),
+    OBJECT_NOT_FOUND_ROW("object.not.found",
+                             "{0} {1} not found at row {2}",
+                             "{0} {1} not found at row {2}");
 
 
     private final String code;

@@ -2,6 +2,7 @@ package org.egov.inv.domain.service;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.security.spec.ECField;
 import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -71,6 +71,9 @@ public class ReceiptNoteService extends DomainService {
 
     @Autowired
     private PurchaseOrderDetailJdbcRepository purchaseOrderDetailJdbcRepository;
+
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
     @Autowired
     private PurchaseOrderJdbcRepository purchaseOrderJdbcRepository;
@@ -328,6 +331,7 @@ public class ReceiptNoteService extends DomainService {
                         materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId, i, errors);
             }
             validateMaterial(materialReceiptDetail, tenantId, i, errors);
+            validateUom(materialReceiptDetail.getUom(), tenantId, i, errors);
             validateQuantity(materialReceiptDetail, i, errors);
             if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
                 validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), materialReceiptDetail.getAcceptedQty().longValue(), tenantId, i, errors);
@@ -360,6 +364,15 @@ public class ReceiptNoteService extends DomainService {
         }
     }
 
+
+    private void validateUom(Uom uom, String tenantId, Long i, InvalidDataException errors) {
+        if (null != uom && !isEmpty(uom.getCode())) {
+            mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", uom.getCode(), Uom.class);
+        } else
+            errors.addDataError(ErrorCode.OBJECT_NOT_FOUND_ROW.getCode(), "UOM ", uom.getCode(), String.valueOf(i));
+
+    }
+
     private void validateQuantity(MaterialReceiptDetail materialReceiptDetail, int i, InvalidDataException errors) {
 
 
@@ -380,12 +393,12 @@ public class ReceiptNoteService extends DomainService {
         }
 
         if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()) {
-            errors.addDataError(ErrorCode.QTY_LE_SCND_ROW.getCode(), "Accepted Quantity ","Received Quantity", String.valueOf(i));
+            errors.addDataError(ErrorCode.QTY_LE_SCND_ROW.getCode(), "Accepted Quantity ", "Received Quantity", String.valueOf(i));
         }
     }
 
     private void validateMaterial(MaterialReceiptDetail receiptDetail, String tenantId, int i, InvalidDataException errors) {
-        if (null != receiptDetail.getMaterial()) {
+        if (null != receiptDetail.getMaterial() && !isEmpty(receiptDetail.getMaterial().getCode())) {
             Material material = materialService.fetchMaterial(tenantId, receiptDetail.getMaterial().getCode(), new RequestInfo());
 
             for (MaterialReceiptDetailAddnlinfo addnlinfo : receiptDetail.getReceiptDetailsAddnInfo()) {

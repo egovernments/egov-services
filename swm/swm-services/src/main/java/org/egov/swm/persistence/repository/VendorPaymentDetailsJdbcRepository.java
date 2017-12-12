@@ -50,7 +50,7 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
             validateSortByOrder(searchRequest.getSortBy());
-            validateEntityFieldName(searchRequest.getSortBy(), VendorPaymentDetailsSearch.class);
+            validateEntityFieldName(searchRequest.getSortBy(), VendorPaymentDetails.class);
         }
 
         String orderBy = "order by paymentNo";
@@ -146,9 +146,9 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
         if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty()) {
 
-            populateVendorContracts(vendorPaymentDetailsList);
+            //populateVendorContracts(vendorPaymentDetailsList);
 
-            populateEmployees(vendorPaymentDetailsList);
+            //populateEmployees(vendorPaymentDetailsList);
         }
         page.setTotalResults(vendorPaymentDetailsList.size());
 

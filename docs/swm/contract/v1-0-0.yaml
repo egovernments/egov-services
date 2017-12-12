@@ -3492,9 +3492,8 @@ definitions:
           description: tenant id of the InstrumentDetails
           maxLength: 128
           minLength: 1
-        paymentNo:
+        vendorPaymentDetails:
           $ref: "#/definitions/VendorPaymentDetails"
-          format: singleValueList
           description: It is unique number and it is same as paymentNo in Vendor Payment details. It will be used to link actual payment made against the invoice raised in Vendor payment details.
         voucherNumber:
           type: string
@@ -3519,7 +3518,7 @@ definitions:
           type: integer
           format: int64
           description: date on which payment instrument was created. e.g. Demand draft or Cheque creation date. Shall be >= Voucher Date
-        amountPaid:
+        amount:
           type: number 
           format: double
           description: Amount paid through the payment instrument
@@ -3538,11 +3537,14 @@ definitions:
           description: List of Documents. Document(s) supporting the payment
           items:
             $ref: '#/definitions/Document'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
+      - vendorPaymentDetails
       - voucherNumber
       - voucherDate
-      - amountPaid
+      - amount
       - instrumentType
       - instrumentDate
       - instrumentNumber

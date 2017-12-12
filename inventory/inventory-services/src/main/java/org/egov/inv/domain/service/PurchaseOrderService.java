@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
@@ -30,6 +31,7 @@ import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
@@ -95,10 +97,13 @@ public class PurchaseOrderService extends DomainService {
     @Autowired
 	private MaterialReceiptJdbcRepository jdbcRepository;
 
+    @Autowired
+    private MdmsRepository mdmsRepository;
+    
     private String INDENT_MULTIPLE = "Multiple";
 
     @Transactional
-    public PurchaseOrderResponse create(PurchaseOrderRequest purchaseOrderRequest) {
+    public PurchaseOrderResponse create(PurchaseOrderRequest purchaseOrderRequest,String tenantId) {
 
         try {
             List<PurchaseOrder> purchaseOrders = purchaseOrderRequest.getPurchaseOrders();
@@ -143,7 +148,9 @@ public class PurchaseOrderService extends DomainService {
 
                     }
                     
-                    purchaseOrderDetail.setUom(uomService.getUom(purchaseOrderDetail.getTenantId(), purchaseOrderDetail.getUom().getCode(),new RequestInfo()));
+                    Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", purchaseOrderDetail.getUom().getCode(), Uom.class);
+                    purchaseOrderDetail.setUom((Uom) uom);
+                   // purchaseOrderDetail.setUom(uomService.getUom(purchaseOrderDetail.getTenantId(), purchaseOrderDetail.getUom().getCode(),new RequestInfo()));
         			if (purchaseOrderDetail.getOrderQuantity() != null) {
         				purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
         			}

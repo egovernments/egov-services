@@ -364,23 +364,23 @@ public class ReceiptNoteService extends DomainService {
 
 
         if (isEmpty(materialReceiptDetail.getReceivedQty())) {
-            errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSING.getCode(), "Received quantity is required at row " + i);
+            errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSING.getCode(), "Received Quantity is Required at row " + i);
         }
 
         if (!isEmpty(materialReceiptDetail.getReceivedQty()) && materialReceiptDetail.getReceivedQty().doubleValue() <= 0) {
-            errors.addDataError(ErrorCode.QTY_GTR_ROW.getCode(), "Received quantity", String.valueOf(i));
+            errors.addDataError(ErrorCode.QTY_GTR_ROW.getCode(), "Received Quantity", String.valueOf(i));
         }
 
         if (isEmpty(materialReceiptDetail.getAcceptedQty())) {
-            errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSINGROW.getCode(), "Accepted quantity ", String.valueOf(i));
+            errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSINGROW.getCode(), "Accepted Quantity ", String.valueOf(i));
         }
 
         if (!isEmpty(materialReceiptDetail.getAcceptedQty()) && materialReceiptDetail.getAcceptedQty().doubleValue() <= 0) {
-            errors.addDataError(ErrorCode.QTY_GTR_ROW.getCode(), "Accepted quantity ", String.valueOf(i));
+            errors.addDataError(ErrorCode.QTY_GTR_ROW.getCode(), "Accepted Quantity ", String.valueOf(i));
         }
 
         if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()) {
-            errors.addDataError(ErrorCode.QTY_GTR_SCND_ROW.getCode(), "Accepted quantity ", "receiving quantity at row ", String.valueOf(i));
+            errors.addDataError(ErrorCode.QTY_LE_SCND_ROW.getCode(), "Accepted Quantity ","Received Quantity", String.valueOf(i));
         }
     }
 
@@ -456,12 +456,12 @@ public class ReceiptNoteService extends DomainService {
 
                     if (null != materialReceiptDetail.getReceivedQty() &&
                             materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
-                        errors.addDataError(ErrorCode.RCVED_QTY_LS_ODRQTY.getCode(), "Received quantity should be less than order quantity at row ", String.valueOf(i));
+                        errors.addDataError(ErrorCode.RCVED_QTY_LS_ODRQTY.getCode(), String.valueOf(i));
                     }
 
                     if (null != materialReceiptDetail.getReceivedQty() &&
                             materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getReceivedQuantity().longValue()) {
-                        errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(), "Received quantity should be not be greater than receieved quatity at row ", String.valueOf(i));
+                        errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(), String.valueOf(i));
                     }
 
                     PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();

@@ -81,6 +81,8 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
         materialReceipts.forEach(materialReceipt ->
         {
+            materialReceipt.setReceiptType(MaterialReceipt.ReceiptTypeEnum.MISCELLANEOUS_RECEIPT);
+
             if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
                 materialReceipt.setTenantId(tenantId);
             }
@@ -177,7 +179,12 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                     } else {
                         for (MaterialReceipt materialReceipt : materialReceipts) {
                             if (!isEmpty(materialReceipt.getIssueNumber())) {
-                                validateIssue(tenantId, errors, materialReceipt);
+                                validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
+                            }
+                            for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+                                int j = 0;
+                                validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
+                                j++;
                             }
                         }
                     }
@@ -190,7 +197,12 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         for (MaterialReceipt materialReceipt : materialReceipts) {
-                            validateIssue(tenantId, errors, materialReceipt);
+                            validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
+                            for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+                                int j = 0;
+                                validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
+                                j++;
+                            }
                         }
                     }
                 }
@@ -203,13 +215,19 @@ public class MiscellaneousReceiptNoteService extends DomainService {
             throw errors;
     }
 
-    private void validateIssue(String tenantId, InvalidDataException errors, MaterialReceipt materialReceipt) {
+    private void validateIssue(String tenantId, InvalidDataException errors, String issueNumber) {
         MaterialIssueEntity materialIssueEntity = new MaterialIssueEntity();
-        materialIssueEntity.setIssueNumber(materialReceipt.getIssueNumber());
+        materialIssueEntity.setIssueNumber(issueNumber);
         materialIssueEntity.setTenantId(tenantId);
         Object materialIssue = materialIssueJdbcRepository.findById(materialIssueEntity, "MaterialIssueEntity");
         if (null == materialIssue) {
-            errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Issue", "", materialReceipt.getIssueNumber());
+            errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Issue", "", issueNumber);
+        }
+    }
+
+    private void validateNonIssueQuantity(String tenantId, MaterialReceiptDetail materialReceiptDetail, InvalidDataException errors, int row) {
+        if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()) {
+            errors.addDataError(ErrorCode.QTY_LE_SCND_ROW.getCode(), "Issued Quantity", "Received Quantity", String.valueOf(row));
         }
     }
 

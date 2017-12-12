@@ -128,7 +128,7 @@ public enum ErrorCode {
             "the field {0} should have a value greater than zero incase of tender. ",
             "the value {1} for the field {0} is not valid, it should be greater than zero incase of tender."),
     QUANTITY1_LTE_QUANTITY2("quantity1.lessthanorequalto.quantity2",
-            "the quantity {0} should be lessthan or equal to quantity {1}",
+            "the quantity {0} should be less than or equal to quantity {1}",
             "The value {2} for the field {0} should be less than or equal to the value {3} for the field {1}"),
     COMBINATION_EXISTS("inv.combination.exists",
             "{0} and {1} combination already exists",

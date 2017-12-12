@@ -135,7 +135,8 @@ public class MDMSApplicationRunnerImpl {
 				tenantModule.put(moduleName, masterDataMap);
 			} else {
 				Map<String, JSONArray> moduleMaster = tenantModule.get(moduleName);
-				moduleMaster.put(masterName, masterDataJsonArray);
+				moduleMaster.putAll(masterDataMap);
+				//moduleMaster.put(masterName, masterDataJsonArray);
 				tenantModule.put(moduleName, moduleMaster);
 			}
 			

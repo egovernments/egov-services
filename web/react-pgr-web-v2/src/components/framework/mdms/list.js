@@ -80,7 +80,7 @@ class MdmsComponent extends Component {
         addupdate: 'caseStatus',
       },
       Court: {
-        addupdate: 'Court',
+        addupdate: 'court',
       },
       Side: {
         addupdate: 'side',

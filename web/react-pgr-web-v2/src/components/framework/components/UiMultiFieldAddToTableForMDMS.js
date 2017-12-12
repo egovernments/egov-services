@@ -423,7 +423,7 @@ class UiMultiFieldAddToTable extends Component {
     });
   };
 
-  deleteRow = (index, isEdit = false) => {
+  deleteRow = (index) => {
     // let formData = _.cloneDeep(this.props.formData);
     // let myTableInParent = _.get(formData, this.props.item.jsonPath);
     // if(myTableInParent) {
@@ -432,7 +432,8 @@ class UiMultiFieldAddToTable extends Component {
     // }
 
     let list = _.cloneDeep(this.state.valueList);
-    if (!isEdit) {
+    let {indexes,isInlineEdit}=this.state;
+    if (indexes.indexOf(index)==-1) {
       list.splice(index, 1);
     }
     this.setState(
@@ -440,6 +441,7 @@ class UiMultiFieldAddToTable extends Component {
         valueList: list,
         isAddAgain: true,
         formData: {},
+        indexes:[]
       },
       function() {
         if (this.props.setDisabled) this.props.setDisabled(true);
@@ -448,7 +450,7 @@ class UiMultiFieldAddToTable extends Component {
   };
 
   editInline = index => {
-    debugger;
+
     let { indexes } = this.state;
     let list = _.cloneDeep(this.state.valueList);
     indexes.push(index);

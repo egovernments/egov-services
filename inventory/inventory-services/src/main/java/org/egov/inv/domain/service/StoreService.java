@@ -114,8 +114,8 @@ public class StoreService extends DomainService {
     public StoreResponse update(StoreRequest storeRequest, String tenantId) {
 
         try {
-            validate(storeRequest.getStores(), Constants.ACTION_UPDATE, tenantId);
-
+            StoreRequest fetchRelated = fetchRelated(storeRequest, tenantId);
+            validate(fetchRelated.getStores(), Constants.ACTION_UPDATE, tenantId);
             for (Store store : storeRequest.getStores()) {
                 if (isEmpty(store.getTenantId())) {
                     store.setTenantId(tenantId);

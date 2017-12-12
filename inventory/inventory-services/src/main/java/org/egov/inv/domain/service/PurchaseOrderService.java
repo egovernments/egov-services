@@ -3,6 +3,7 @@ package org.egov.inv.domain.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -348,6 +349,21 @@ public class PurchaseOrderService extends DomainService {
 						errors.addDataError(ErrorCode.ADVPCT_GE_HUN.getCode(), eachPurchaseOrder.getAdvancePercentage() + " at serial no."+ (pos.indexOf(eachPurchaseOrder) + 1));
 					}
 				}
+                
+                String indentNumbers = "";
+            	for (PurchaseOrderDetail purchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
+            		indentNumbers += purchaseOrderDetail.getIndentNumber() + ",";
+            	}
+            	indentNumbers.replaceAll(",$", "");
+            	
+            	IndentSearch is = IndentSearch.builder().ids(new ArrayList<String>(Arrays.asList(indentNumbers.split(",")))).build();
+            	IndentResponse isr = indentService.search(is, new RequestInfo());
+            	
+            	for(Indent in : isr.getIndents()) {
+            		if(in.getIndentDate().compareTo(eachPurchaseOrder.getPurchaseOrderDate()) > 0) {
+            			errors.addDataError(ErrorCode.DATE1_LE_DATE2.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString()+" at serial no."+pos.indexOf(eachPurchaseOrder));
+            		}
+            	}
             	
             	if (null != eachPurchaseOrder.getPurchaseOrderDetails()){
 		            for (PurchaseOrderDetail poDetail :eachPurchaseOrder.getPurchaseOrderDetails())

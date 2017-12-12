@@ -20,9 +20,9 @@ class UiDocuments extends Component {
     // console.log('came to did mount');
     this.initData(this.props);
   }
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     // console.log('receive props');
-    this.initData(nextProps)
+    this.initData(nextProps);
   }
   initData(props) {
     let { item, handler, useTimestamp } = props;
@@ -45,8 +45,8 @@ class UiDocuments extends Component {
           }
         });
       }
-    }else{
-      let fileCount = (_.get(props.formData,item.jsonPath) && _.get(props.formData,item.jsonPath).length) || 1;
+    } else {
+      let fileCount = (_.get(props.formData, item.jsonPath) && _.get(props.formData, item.jsonPath).length) || 1;
       this.setState({
         docs: [],
         allowedMax: item.maxFile,
@@ -86,44 +86,56 @@ class UiDocuments extends Component {
     // }
   };
   uploadDocs = () => {
-    return _.times(this.state.allowedMax, idx=>{
-      if(_.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`) && _.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`).name){
+    return _.times(this.state.allowedMax, idx => {
+      if (
+        _.get(this.props.formData, `${this.props.item.jsonPath}[${idx}]`) &&
+        _.get(this.props.formData, `${this.props.item.jsonPath}[${idx}]`).name
+      ) {
         //file exists from client side
-        let fileName=_.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`).name;
-        return(
-          <Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx<this.state.fileCount?'':'hide'}>
+        let fileName = _.get(this.props.formData, `${this.props.item.jsonPath}[${idx}]`).name;
+        return (
+          <Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx < this.state.fileCount ? '' : 'hide'}>
             <RaisedButton
               download
-              label={fileName.length > 15 ? fileName.substr(0, 12)+'...' : fileName}
-              style={{marginBottom:15}}
+              label={fileName.length > 15 ? fileName.substr(0, 12) + '...' : fileName}
+              style={{ marginBottom: 15 }}
               primary={true}
-              fullWidth = {true}
+              fullWidth={true}
               labelPosition="before"
               icon={<RemoveFile />}
-              onTouchTap={event => {this.removeFile(`${this.props.item.jsonPath}[${idx}]`)}}
+              onTouchTap={event => {
+                this.removeFile(`${this.props.item.jsonPath}[${idx}]`);
+              }}
             />
           </Col>
-        )
-      }else{
+        );
+      } else {
         //allow them to upload file
-        return (<Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx<this.state.fileCount?'':'hide'}>
-          <div className="input-group">
-            <input type="file" id={`file${idx}`} ref={`file${idx}`} className="form-control"
-              onChange= {(e) => {this.props.handler({target:{value: e.target.files[0]}},`${this.props.item.jsonPath}[${idx}]`,false)}}
-            />
-          </div>
-          <br/>
-        </Col>)
+        return (
+          <Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx < this.state.fileCount ? '' : 'hide'}>
+            <div className="input-group">
+              <input
+                type="file"
+                id={`file${idx}`}
+                ref={`file${idx}`}
+                className="form-control"
+                onChange={e => {
+                  this.props.handler({ target: { value: e.target.files[0] } }, `${this.props.item.jsonPath}[${idx}]`, false);
+                }}
+              />
+            </div>
+            <br />
+          </Col>
+        );
       }
-
-    })
-  }
-  removeFile = (jp) => {
-    this.props.handler({target:{value: ''}},jp,false);
-  }
-  render(){
-    let {showDocs, uploadDocs, addFile} = this;
-    let {item} = this.props;
+    });
+  };
+  removeFile = jp => {
+    this.props.handler({ target: { value: '' } }, jp, false);
+  };
+  render() {
+    let { showDocs, uploadDocs, addFile } = this;
+    let { item } = this.props;
     return (
       <Row>
         {showDocs()}

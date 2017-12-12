@@ -219,13 +219,13 @@ class Search extends Component {
   getValFromDropdownData = (fieldJsonPath, key, path) => {
     let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
     let _val;
-    if(!key){
+    if (!key) {
       _val = undefined;
-    }else{
-        _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
+    } else {
+      _val = _.get(dropdownData.find(data => data.key == key) || [], path);
     }
-    return typeof _val != "undefined" ? _val : "";
-  }
+    return typeof _val != 'undefined' ? _val : '';
+  };
 
   hideField = (_mockData, hideObject, reset) => {
     let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
@@ -891,9 +891,9 @@ const mapDispatchToProps = dispatch => ({
   setFormData: data => {
     dispatch({ type: 'SET_FORM_DATA', data });
   },
-  setDropDownData:(fieldName,dropDownData)=>{
+  setDropDownData: (fieldName, dropDownData) => {
     // console.log(fieldName,dropDownData)
-    dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
+    dispatch({ type: 'SET_DROPDWON_DATA', fieldName, dropDownData });
   },
   resetDropdownData: () => {
     dispatch({ type: 'RESET_DROPDOWN_DATA' });

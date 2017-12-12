@@ -128,114 +128,113 @@ export default class BarChartCard extends Component {
    * render
    * toggle between chart & table format
    */
-    renderKPIData = () => {
-        if (this.state.showChartView) {
-            return this.renderChart();
-        }
+  renderKPIData = () => {
+    if (this.state.showChartView) {
+      return this.renderChart();
+    }
+  };
+
+  /**
+   * render
+   * presents chart
+   */
+  renderChart = () => {
+    if (this.state.data.length < 1) {
+      return (
+        <div style={{ textAlign: 'center' }}>
+          <br />
+          <br />
+          <Card className="uiCard">
+            <CardHeader title={<div style={{ fontSize: '16px' }}> insufficient data to draw the chart </div>} />
+          </Card>
+        </div>
+      );
     }
 
-    /**
-     * render
-     * presents chart
-     */
-    renderChart = () => {
-        if (this.state.data.length < 1) {
-            return (
-                <div style={{"textAlign": "center"}}>
-                    <br /><br />
-                    <Card className="uiCard">
-                        <CardHeader
-                            title={<div style={{fontSize: '16px'}}> insufficient data to draw the chart </div>}
-                        />
-                    </Card>
-                </div>
-            )
-        }
-    
-        let title = `KPI representation for ${this.props.kpis}`;
-        return (
-            <div>
-                <br /><br />
-                <Card className="uiCard" style={(this.props.kpiType === 'VALUE') ? {"textAlign": "left"} : {"textAlign": "center"}}>
-                    <RaisedButton style={{'marginTop': '15px', 'marginLeft': '90%'}} label={"Tabular"} primary={true} type="button" disabled={false}
-                                    onClick={this.processOnClickKPIDataRepresentation}
-                    />
-                    <CardHeader style={{paddingBottom: 0}}
-                                        title={<div style={{fontSize: 16, marginBottom: '25px'}}> {title} </div>}/>
-                    {
-                        this.renderChartType()
-                    }
-                    
-                </Card>
-            </div>
-        )
-    }
-        
-    /**
-     * render
-     * render BarChart or PieChart base upon the KPITypes selected
-     */
-    renderChartType = () => {
-        if (this.props.kpiType === 'VALUE') {
-            return this.renderBarChart()
-        }
+    let title = `KPI representation for ${this.props.kpis}`;
+    return (
+      <div>
+        <br />
+        <br />
+        <Card className="uiCard" style={this.props.kpiType === 'VALUE' ? { textAlign: 'left' } : { textAlign: 'center' }}>
+          <RaisedButton
+            style={{ marginTop: '15px', marginLeft: '90%' }}
+            label={'Tabular'}
+            primary={true}
+            type="button"
+            disabled={false}
+            onClick={this.processOnClickKPIDataRepresentation}
+          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {title} </div>} />
+          {this.renderChartType()}
+        </Card>
+      </div>
+    );
+  };
 
-        return this.renderPieChart();
+  /**
+   * render
+   * render BarChart or PieChart base upon the KPITypes selected
+   */
+  renderChartType = () => {
+    if (this.props.kpiType === 'VALUE') {
+      return this.renderBarChart();
     }
 
-    /**
-     * render
-     * renders BarChart for VALUE type KPI
-     */
-    renderBarChart = () => {
-        return (
-            <div>
-                <BarChart padding={'50%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 30, bottom: 5}}>
-                    <XAxis dataKey={this.state.dataKey}/>
-                    <YAxis/>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip/>
-                    <Legend />
-                    <Bar name="KPI Target" dataKey="target" fill="#0088FE" />
-                    <Bar name="Actual Value" dataKey="value" fill="#00C49F" />
-                </BarChart>
-            </div>
-        )
-    }
- 
-    /**
-     * render
-     * renders PieChart for OBJECTIVE type KPI
-     */
-    renderPieChart = () => {
-        let data = [
-            {
-                'name' : 'YES',
-                'value': this.state.data.filter((el) => el.value === 1).length
-            },
-            {
-                'name' : 'NO',
-                'value': this.state.data.filter((el) => el.value === 2).length
-            },
-            {
-                'name' : 'IN PROGRESS',
-                'value': this.state.data.filter((el) => el.value === 3).length
-            }
-        ];
-        const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+    return this.renderPieChart();
+  };
 
-        return (
-            <div style={{marginLeft: '35%'}}>
-                <PieChart width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 40, bottom: 5}}>
-                    <Pie dataKey={"value"} isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={220} fill="#8884d8" labelLine={false}>
-                        {
-                            data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)
-                        }
-                    </Pie>
-                    <Tooltip/>
-                    <Legend />
-            </PieChart>
-            </div>
-        )
-    }
+  /**
+   * render
+   * renders BarChart for VALUE type KPI
+   */
+  renderBarChart = () => {
+    return (
+      <div>
+        <BarChart padding={'50%'} width={600} height={500} data={this.state.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
+          <XAxis dataKey={this.state.dataKey} />
+          <YAxis />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <Legend />
+          <Bar name="KPI Target" dataKey="target" fill="#0088FE" />
+          <Bar name="Actual Value" dataKey="value" fill="#00C49F" />
+        </BarChart>
+      </div>
+    );
+  };
+
+  /**
+   * render
+   * renders PieChart for OBJECTIVE type KPI
+   */
+  renderPieChart = () => {
+    let data = [
+      {
+        name: 'YES',
+        value: this.state.data.filter(el => el.value === 1).length,
+      },
+      {
+        name: 'NO',
+        value: this.state.data.filter(el => el.value === 2).length,
+      },
+      {
+        name: 'IN PROGRESS',
+        value: this.state.data.filter(el => el.value === 3).length,
+      },
+    ];
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+
+    return (
+      <div style={{ marginLeft: '35%' }}>
+        <PieChart width={600} height={500} data={this.state.data} margin={{ top: 20, right: 30, left: 40, bottom: 5 }}>
+          <Pie dataKey={'value'} isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={220} fill="#8884d8" labelLine={false}>
+            {data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      </div>
+    );
+  };
 }

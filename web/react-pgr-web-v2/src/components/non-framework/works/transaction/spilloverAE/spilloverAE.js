@@ -311,15 +311,21 @@ class SpilloverAE extends Component {
       setFormData(formData);
 
       Promise.all([
-        Api.commonApiPost('/egov-mdms-service/v1/_get', {moduleName:'Works',masterName:'AppConfiguration',filter:"[?(@.code=='Spillover_Workflow_Mandatory')]"}, {}, false, specifications[`works.create`].useTimestamp)
+        Api.commonApiPost(
+          '/egov-mdms-service/v1/_get',
+          { moduleName: 'Works', masterName: 'AppConfiguration', filter: "[?(@.code=='Spillover_Workflow_Mandatory')]" },
+          {},
+          false,
+          specifications[`works.create`].useTimestamp
+        ),
       ]).then(responses => {
-        try{
-          self.setState({spilloverConfiguration:responses[0].MdmsRes.Works.AppConfiguration[0].value.toLowerCase()});
-        }catch(e){
+        try {
+          self.setState({ spilloverConfiguration: responses[0].MdmsRes.Works.AppConfiguration[0].value.toLowerCase() });
+        } catch (e) {
           console.log('error');
           setLoadingStatus('hide');
         }
-      })
+      });
 
       // handleChange (new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
       handleChange(true, `${obj.objectName}[0].spillOverFlag`, false);
@@ -352,9 +358,9 @@ class SpilloverAE extends Component {
 
   componentWillReceiveProps(nextProps) {
     // console.log(this.state.pathname, nextProps.history.location.pathname);
-    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
+    if (this.state.pathname && this.state.pathname != nextProps.history.location.pathname) {
       // console.log('came inside receive props');
-    // if(!_.isEqual(this.props, nextProps))
+      // if(!_.isEqual(this.props, nextProps))
       this.initData();
     }
   }
@@ -1577,33 +1583,44 @@ class SpilloverAE extends Component {
             </Col>
           </Row>
         </div>
-        <form onSubmit={(e) => {
-          create(e)
-        }}>
-        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
-                                    groups={mockData[`${moduleName}.${actionName}`].groups}
-                                    noCols={mockData[`${moduleName}.${actionName}`].numCols}
-                                    ui="google"
-                                    handler={handleChange}
-                                    getVal={getVal}
-                                    fieldErrors={fieldErrors}
-                                    useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
-                                    addNewCard={addNewCard}
-                                    removeCard={removeCard}
-                                    autoComHandler={autoComHandler}
-                                    initiateWF={initiateWF}
-                                    screen={window.location.hash.split("/").indexOf("update") == 1 ? "update" : "create"}
-                                    workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id || this.props.match.params.master) : ""}
-                                    />}
-          <div style={{"textAlign": "center"}}>
-            <br/>
+        <form
+          onSubmit={e => {
+            create(e);
+          }}
+        >
+          {!_.isEmpty(mockData) &&
+            moduleName &&
+            actionName &&
+            mockData[`${moduleName}.${actionName}`] && (
+              <ShowFields
+                groups={mockData[`${moduleName}.${actionName}`].groups}
+                noCols={mockData[`${moduleName}.${actionName}`].numCols}
+                ui="google"
+                handler={handleChange}
+                getVal={getVal}
+                fieldErrors={fieldErrors}
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
+                addNewCard={addNewCard}
+                removeCard={removeCard}
+                autoComHandler={autoComHandler}
+                initiateWF={initiateWF}
+                screen={window.location.hash.split('/').indexOf('update') == 1 ? 'update' : 'create'}
+                workflowId={
+                  window.location.hash.split('/').indexOf('update') == 1 ? this.props.match.params.id || this.props.match.params.master : ''
+                }
+              />
+            )}
+          <div style={{ textAlign: 'center' }}>
+            <br />
+            {this.state.spilloverConfiguration === 'yes' && (
+              <UiButton item={{ label: 'Save', uiType: 'submit', isDisabled: isFormValid ? false : true }} ui="google" handler={this.save} />
+            )}
             {this.state.spilloverConfiguration === 'yes' &&
-              <UiButton item={{"label": "Save", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google" handler={this.save}/>
-            }
-            {this.state.spilloverConfiguration === 'yes' && actionName == "create" &&
-              <UiButton item={{"label": "Forward", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
-            }
-            {this.state.spilloverConfiguration === 'no' && actionName == "create" && <UiButton item={{"label": "Submit", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
+              actionName == 'create' && (
+                <UiButton item={{ label: 'Forward', uiType: 'submit', isDisabled: isFormValid ? false : true }} ui="google" />
+              )}
+            {this.state.spilloverConfiguration === 'no' &&
+              actionName == 'create' && <UiButton item={{ label: 'Submit', uiType: 'submit', isDisabled: isFormValid ? false : true }} ui="google" />}
             {this.renderActions()}
             {/*actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>*/}
             &nbsp;&nbsp;<RaisedButton

@@ -423,7 +423,7 @@ class UiMultiFieldAddToTable extends Component {
     });
   };
 
-  deleteRow = (index,isEdit=false) => {
+  deleteRow = (index, isEdit = false) => {
     // let formData = _.cloneDeep(this.props.formData);
     // let myTableInParent = _.get(formData, this.props.item.jsonPath);
     // if(myTableInParent) {
@@ -433,7 +433,7 @@ class UiMultiFieldAddToTable extends Component {
 
     let list = _.cloneDeep(this.state.valueList);
     if (!isEdit) {
-      list.splice(index, 1)
+      list.splice(index, 1);
     }
     this.setState(
       {
@@ -445,8 +445,6 @@ class UiMultiFieldAddToTable extends Component {
         if (this.props.setDisabled) this.props.setDisabled(true);
       }
     );
-
-
   };
 
   editInline = index => {
@@ -594,7 +592,7 @@ class UiMultiFieldAddToTable extends Component {
             </Dialog>
             <div className="row">
               <div className="col-md-6">
-                  <h4>Master Data of {this.props.item && this.props.item.header[0].label.split(".")[3]}</h4>
+                <h4>Master Data of {this.props.item && this.props.item.header[0].label.split('.')[3]}</h4>
               </div>
               <div className="col-md-6 text-right">
                 <RaisedButton
@@ -654,9 +652,12 @@ class UiMultiFieldAddToTable extends Component {
                             />
                             <br />
                             <FlatButton
-                              label={translate("Reset")}
+                              label={translate('Reset')}
                               secondary={true}
-                              onClick={(e) => {this.deleteRow(index)}}/>
+                              onClick={e => {
+                                this.deleteRow(index);
+                              }}
+                            />
                           </td>
                         </tr>
                       );

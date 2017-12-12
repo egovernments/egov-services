@@ -58,9 +58,9 @@ export default class ShowFields extends Component {
 
   changeExpanded = name => {
     this.setState({
-      [name]: !this.state[name]
-    })
-  }
+      [name]: !this.state[name],
+    });
+  };
 
   renderCard = (group, groupIndex, noCols, jsonPath, uiFramework, groups, isMultiple) => {
     let self = this;

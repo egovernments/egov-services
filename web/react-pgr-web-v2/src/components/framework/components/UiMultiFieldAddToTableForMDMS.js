@@ -221,7 +221,7 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     let counter = 0;
 
     for (var i = 0; i < item.values.length; i++) {
-      item.values[i].name != 'id' && counter++;
+      item.values[i].name != 'id' && item.values[i].name != 'tenantId' && counter++;
     }
 
     this.setState({

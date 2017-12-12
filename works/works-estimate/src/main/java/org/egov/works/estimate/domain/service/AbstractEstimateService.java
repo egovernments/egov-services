@@ -302,7 +302,7 @@ public class AbstractEstimateService {
             winCode.append(estimateUtils.getCityCode(abstractEstimate.getTenantId(), requestInfo)).append("/")
                     .append(propertiesManager.getWorkIdentificationNumberPrefix()).append("/")
                     .append(abstractEstimate.getFunction().getCode()).append("/")
-                    .append(abstractEstimate.getBudgetGroup().getMajorCode()).append("/").append(workIdentificationNumber);
+                    .append(abstractEstimate.getBudgetGroup().getMaxCode().getGlcode()).append("/").append(workIdentificationNumber);
             projectCode.setCode(winCode.toString());
         }
 

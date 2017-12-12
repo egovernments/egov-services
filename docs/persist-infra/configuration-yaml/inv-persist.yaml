@@ -808,7 +808,7 @@ serviceMaps:
       fromTopic: inv-purchaseorders-save-topic
       queryMaps:
         - query: >-
-              insert into PurchaseOrder (store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, fileStoreId, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+              insert into PurchaseOrder (store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, fileStoreId, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId, totalAmount) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.purchaseOrders.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.store.code
@@ -838,6 +838,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.id
             - jsonPath: $.purchaseOrders.*.tenantId
               dbType: LONG
+            - jsonPath: $.purchaseOrders.*.totalAmount
         - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
@@ -868,10 +869,11 @@ serviceMaps:
       fromTopic: inv-purchaseorders-update-topic
       queryMaps:
         - query: >-
-               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , lastModifiedBy= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
+               update purchaseorder set store= ? , totalAmount=?, purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , lastModifiedBy= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
           basePath: $.purchaseOrders.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.store.code
+            - jsonPath: $.purchaseOrders.*.totalAmount
             - jsonPath: $.purchaseOrders.*.purchaseOrderDate
               dbType: LONG
             - jsonPath: $.purchaseOrders.*.purchaseType
@@ -927,7 +929,7 @@ serviceMaps:
       fromTopic: inv-purchaseorders-nonindent-save-topic
       queryMaps:
         - query: >-
-              insert into PurchaseOrder (store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, fileStoreId, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+              insert into PurchaseOrder (store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, fileStoreId, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId, totalAmount) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.purchaseOrders.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.store.code
@@ -957,6 +959,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.id
             - jsonPath: $.purchaseOrders.*.tenantId
               dbType: LONG
+            - jsonPath: $.purchaseOrders.*.totalAmount
         - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
@@ -980,10 +983,11 @@ serviceMaps:
       fromTopic: inv-purchaseorders-nonindent-update-topic
       queryMaps:
         - query: >-
-               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , lastModifiedBy= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
+               update purchaseorder set store= ?, totalAmount=?, purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , lastModifiedBy= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
           basePath: $.purchaseOrders.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.store.code
+            - jsonPath: $.purchaseOrders.*.totalAmount
             - jsonPath: $.purchaseOrders.*.purchaseOrderDate
               dbType: LONG
             - jsonPath: $.purchaseOrders.*.purchaseType

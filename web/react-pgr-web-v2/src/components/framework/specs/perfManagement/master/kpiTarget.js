@@ -277,9 +277,10 @@ var dat = {
       header: [
         { label: 'perfManagement.search.KPIs.groups.searchkpiName' },
         { label: 'perfManagement.create.KPIs.groups.kpiDate' },
+        { label: 'perfManagement.create.KPIs.groups.type' },
         { label: 'perfManagement.search.KPIs.groups.searchkpiTarget' },
       ],
-      values: ['kpi.name', 'finYear', 'targetDescription'],
+      values: ['kpi.name', 'kpi.financialYear','kpi.targetType','targetDescription'],
       resultPath: 'kpiTargets',
       rowClickUrlUpdate: '/update/perfManagement/kpiTarget/{kpiCode}',
       rowClickUrlView: '/view/perfManagement/kpiTarget/{kpiCode}',

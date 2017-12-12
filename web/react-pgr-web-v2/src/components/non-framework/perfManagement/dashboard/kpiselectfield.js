@@ -15,6 +15,8 @@ export default class KPISelectField extends Component {
           color: '#696969',
           fontSize: '20px',
           'white-space': 'nowrap',
+          top: '24px',
+          'paddingLeft': '14px'
         }}
         labelStyle={{ color: '#5F5C57' }}
         floatingLabelFixed={true}

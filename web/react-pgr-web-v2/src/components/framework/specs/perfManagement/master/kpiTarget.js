@@ -281,13 +281,13 @@ var dat = {
       ],
       values: ['kpi.name', 'finYear', 'targetDescription'],
       resultPath: 'kpiTargets',
-      rowClickUrlUpdate: '/update/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}',
-      rowClickUrlView: '/view/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}',
+      rowClickUrlUpdate: '/update/perfManagement/kpiTarget/{kpiCode}',
+      rowClickUrlView: '/view/perfManagement/kpiTarget/{kpiCode}',
     },
   },
   'perfManagement.view': {
     numCols: 12 / 2,
-    url: '/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}',
+    url: '/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}',
     useTimestamp: true,
     objectName: 'kpiTargets',
     groups: [
@@ -387,7 +387,7 @@ var dat = {
   },
   'perfManagement.update': {
     numCols: 12 / 2,
-    searchUrl: 'perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}',
+    searchUrl: 'perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}',
     url: '/perfmanagement/v1/kpitarget/_update',
     useTimestamp: true,
     objectName: 'kpiTargets',

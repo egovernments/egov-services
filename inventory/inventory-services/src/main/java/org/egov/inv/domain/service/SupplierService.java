@@ -158,8 +158,8 @@ public class SupplierService extends DomainService {
                         }
                         if (!supplierJdbcRepository.uniqueCheck("code",
                                 new SupplierEntity().toEntity(supplier))) {
-                            throw new CustomException("inv.004",
-                                    "Supplier Code Already Exists");
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
+
                         }
                         validateBank(supplier, errors);
                     }
@@ -177,8 +177,8 @@ public class SupplierService extends DomainService {
                         }
                         if (!supplierJdbcRepository.uniqueCheck("code",
                                 new SupplierEntity().toEntity(supplier))) {
-                            throw new CustomException("inv.004",
-                                    "Supplier Code Already Exists");
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
+
                         }
                         validateBank(supplier, errors);
 

@@ -156,7 +156,7 @@ public class StoreService extends DomainService {
                         }
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
-                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getName());
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getCode());
                         }
 
                         validateStore(errors, store);
@@ -178,7 +178,7 @@ public class StoreService extends DomainService {
 
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
-                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getName());
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getCode());
 
                         }
 

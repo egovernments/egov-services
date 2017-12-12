@@ -134,6 +134,7 @@ public class DetailedEstimateService {
 							.getEstimateTechnicalSanctions()) {
 						estimateTechnicalSanction.setId(commonUtils.getUUID());
 						estimateTechnicalSanction.setAuditDetails(auditDetails);
+                        estimateTechnicalSanction.setDetailedEstimate(detailedEstimate.getId());
 					}
 				}
 				
@@ -166,8 +167,10 @@ public class DetailedEstimateService {
 						detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
 				detailedEstimate.setStateId(workFlowResponse.get("id"));
 				detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
-			} else
+			} else if(detailedEstimate.getSpillOverFlag())
 				detailedEstimate.setStatus(DetailedEstimateStatus.TECHNICAL_SANCTIONED);
+            else
+                detailedEstimate.setStatus(DetailedEstimateStatus.CREATED);
 		}
 		if (isRevision == null || (isRevision != null && !isRevision))
 			kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
@@ -186,7 +189,7 @@ public class DetailedEstimateService {
 		AbstractEstimate abstactEstimate = null;
 		for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
 			abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
-			populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
+
 			detailedEstimate.setAuditDetails(updateDetails);
 
 			for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
@@ -239,10 +242,14 @@ public class DetailedEstimateService {
 					}
 				}
 			}
-			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
-					detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-			detailedEstimate.setStateId(workFlowResponse.get("id"));
-			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
+            if(validator.workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo())) {
+                populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
+                Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
+                        detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
+                detailedEstimate.setStateId(workFlowResponse.get("id"));
+                detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
+            }
+
 		}
 		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
 		final DetailedEstimateResponse response = new DetailedEstimateResponse();

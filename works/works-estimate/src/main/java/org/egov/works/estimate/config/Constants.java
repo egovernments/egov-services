@@ -314,6 +314,9 @@ public class Constants {
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";
     
+    public static final String KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE = "INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE";
+    public static final String MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE = "Status can not be updated for detailed estimate";
+
     public static final String KEY_DE_EXISTS_FOR_AE = "DE_EXISTS_FOR_AE";
     public static final String MESSAGE_DE_EXISTS_FOR_AE = "Detailed estimate exists for the given abstract estimate";
 

@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class DetailedEstimateJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egw_detailedestimate";
+	public static final String TABLE_NAME = "egw_detailedestimate de";
+    public static final String TABLE_NAME_TECHNICAL = ",egw_estimate_technicalsanction ts";
+
 
 	public List<DetailedEstimateHelper> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
@@ -22,115 +24,131 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
 
+        String tableName = TABLE_NAME;
+        if (detailedEstimateSearchContract.getTechnicalSanctionNumbers() != null
+                && !detailedEstimateSearchContract.getTechnicalSanctionNumbers().isEmpty())
+            tableName += TABLE_NAME_TECHNICAL;
+
 		if (detailedEstimateSearchContract.getSortBy() != null
 				&& !detailedEstimateSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(detailedEstimateSearchContract.getSortBy());
 			validateEntityFieldName(detailedEstimateSearchContract.getSortBy(), DetailedEstimate.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by de.id";
 		if (detailedEstimateSearchContract.getSortBy() != null
 				&& !detailedEstimateSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + detailedEstimateSearchContract.getSortBy();
+			orderBy = "order by de." + detailedEstimateSearchContract.getSortBy();
 		}
 
-		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
+		searchQuery = searchQuery.replace(":tablename", tableName);
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (detailedEstimateSearchContract.getTenantId() != null) {
 			addAnd(params);
-			params.append("tenantId =:tenantId");
+			params.append("de.tenantId =:tenantId");
 			paramValues.put("tenantId", detailedEstimateSearchContract.getTenantId());
 		}
 		if (detailedEstimateSearchContract.getIds() != null) {
 			addAnd(params);
-			params.append("id in(:ids) ");
+			params.append("de.id in(:ids) ");
 			paramValues.put("ids", detailedEstimateSearchContract.getIds());
 		}
 		if (detailedEstimateSearchContract.getDetailedEstimateNumbers() != null && !detailedEstimateSearchContract.getDetailedEstimateNumbers().isEmpty() && detailedEstimateSearchContract.getDetailedEstimateNumbers().size() == 1) {
 			addAnd(params);
-			params.append("lower(estimateNumber) like :estimateNumbers ");
+			params.append("lower(de.estimateNumber) like :estimateNumbers ");
 			paramValues.put("estimateNumbers", '%' + detailedEstimateSearchContract.getDetailedEstimateNumbers().get(0).toLowerCase() + '%' );
 		} else if (detailedEstimateSearchContract.getDetailedEstimateNumbers() != null) {
 			addAnd(params);
-			params.append("estimateNumber in(:estimateNumbers)");
+			params.append("de.estimateNumber in(:estimateNumbers)");
 			paramValues.put("estimateNumbers", detailedEstimateSearchContract.getDetailedEstimateNumbers());
 		}
 		if (detailedEstimateSearchContract.getDepartments() != null) {
 			addAnd(params);
-			params.append("department  in (:departmentCodes)");
+			params.append("de.department  in (:departmentCodes)");
 			paramValues.put("departmentCodes", detailedEstimateSearchContract.getDepartments());
 		}
 		if (detailedEstimateSearchContract.getTypeOfWork() != null) {
 			addAnd(params);
-			params.append("typeofwork in(:typeofwork)");
+			params.append("de.typeofwork in(:typeofwork)");
 			paramValues.put("typeofwork", detailedEstimateSearchContract.getTypeOfWork());
 		}
 		if (detailedEstimateSearchContract.getSubTypeOfWork() != null) {
 			addAnd(params);
-			params.append("subtypeofwork in(:subtypeofwork)");
+			params.append("de.subtypeofwork in(:subtypeofwork)");
 			paramValues.put("subtypeofwork", detailedEstimateSearchContract.getSubTypeOfWork());
 		}
 		if (detailedEstimateSearchContract.getStatuses() != null) {
 			addAnd(params);
-			params.append("status in(:status)");
+			params.append("de.status in(:status)");
 			paramValues.put("status", detailedEstimateSearchContract.getStatuses());
 		}
 		if (detailedEstimateSearchContract.getFromDate() != null) {
 			addAnd(params);
-			params.append("estimatedate >=:estimatedate");
+			params.append("de.estimatedate >=:estimatedate");
 			paramValues.put("estimatedate", detailedEstimateSearchContract.getFromDate());
 		}
 		if (detailedEstimateSearchContract.getToDate() != null) {
 			addAnd(params);
-			params.append("estimatedate <=:estimatedate");
+			params.append("de.estimatedate <=:estimatedate");
 			paramValues.put("estimatedate", detailedEstimateSearchContract.getToDate());
 		}
 		if (detailedEstimateSearchContract.getFromAmount() != null) {
 			addAnd(params);
-			params.append("estimateValue >=:estimateValue");
-			paramValues.put("estimateValue", detailedEstimateSearchContract.getFromAmount());
+			params.append("de.estimateValue >=:estimateValue");
+			paramValues.put("de.estimateValue", detailedEstimateSearchContract.getFromAmount());
 		}
 		if (detailedEstimateSearchContract.getToAmount() != null) {
 			addAnd(params);
-			params.append("estimateValue <=:estimateValue");
+			params.append("de.estimateValue <=:estimateValue");
 			paramValues.put("estimateValue", detailedEstimateSearchContract.getToAmount());
 		}
 		if (detailedEstimateSearchContract.getSpillOverFlag() != null) {
 			addAnd(params);
-			params.append("spillOverFlag =:spillOverFlag");
+			params.append("de.spillOverFlag =:spillOverFlag");
 			paramValues.put("spillOverFlag", detailedEstimateSearchContract.getSpillOverFlag());
 		}
 		if (detailedEstimateSearchContract.getCreatedBy() != null) {
 			addAnd(params);
-			params.append("lower(createdBy) =:createdBy");
+			params.append("lower(de.createdBy) =:createdBy");
 			paramValues.put("createdBy", detailedEstimateSearchContract.getCreatedBy().toLowerCase());
 		}
 		if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null && detailedEstimateSearchContract.getWorkIdentificationNumbers().size() == 1) {
 			addAnd(params);
-			params.append(" lower(projectCode) like :workIdentificationNumbers");
+			params.append(" lower(de.projectCode) like :workIdentificationNumbers");
 			paramValues.put("workIdentificationNumbers", "%" + detailedEstimateSearchContract.getWorkIdentificationNumbers().get(0).toLowerCase() + "%");
 		} else if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null && detailedEstimateSearchContract.getWorkIdentificationNumbers().size() > 1) {
             addAnd(params);
-            params.append(" projectCode in :workIdentificationNumbers");
+            params.append(" de.projectCode in :workIdentificationNumbers");
             paramValues.put("workIdentificationNumbers", detailedEstimateSearchContract.getWorkIdentificationNumbers());
         }
 
 		if (detailedEstimateSearchContract.getNameOfWork() != null) {
 			addAnd(params);
-			params.append("upper(nameOfWork) like :nameOfWork");
+			params.append("upper(de.nameOfWork) like :nameOfWork");
 			paramValues.put("nameOfWork", '%' + detailedEstimateSearchContract.getNameOfWork().toUpperCase() + '%');
 			
 		}
 
 		if (detailedEstimateSearchContract.getWards() != null) {
 			addAnd(params);
-			params.append("ward =:ward");
+			params.append("de.ward =:ward");
 			paramValues.put("ward", detailedEstimateSearchContract.getWards());
 		}
 
-        params.append(" and deleted = false");
+        if (detailedEstimateSearchContract.getTechnicalSanctionNumbers() != null
+                && detailedEstimateSearchContract.getTechnicalSanctionNumbers().size() == 1) {
+            addAnd(params);
+            params.append("ts.detailedestimate = de.id and ts.tenantId =:tenantId and ts.deleted=false and lower(ts.technicalsanctionnumber) like :technicalsanctionnumber");
+            paramValues.put("technicalsanctionnumber", "%" + detailedEstimateSearchContract.getTechnicalSanctionNumbers().get(0).toLowerCase() + "%");
+        } else if(detailedEstimateSearchContract.getTechnicalSanctionNumbers() != null
+                && detailedEstimateSearchContract.getTechnicalSanctionNumbers().size() > 1) {
+            addAnd(params);
+            params.append("ts.detailedestimate = de.id and ts.tenantId =:tenantId and ts.deleted=false and ts.technicalsanctionnumber in :technicalsanctionnumber");
+            paramValues.put("technicalsanctionnumber", detailedEstimateSearchContract.getTechnicalSanctionNumbers());
+        }
+        params.append(" and de.deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

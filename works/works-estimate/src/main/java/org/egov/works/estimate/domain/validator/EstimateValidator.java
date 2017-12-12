@@ -524,6 +524,7 @@ public class EstimateValidator {
                 validateLocationDetails(detailedEstimate, requestInfo, messages);
                 validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
+                validateUpdateStatus(detailedEstimate, requestInfo, messages);
             }
             validateActivities(detailedEstimate, messages, requestInfo);
             if (StringUtils.isNotBlank(detailedEstimate.getId()))
@@ -549,6 +550,22 @@ public class EstimateValidator {
         }
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
+    }
+
+    private void validateUpdateStatus(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
+        if(detailedEstimate.getId() != null) {
+            DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
+                    .ids(Arrays.asList(detailedEstimate.getId()))
+                    .tenantId(detailedEstimate.getTenantId()).build();
+            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+            if(lists != null && !lists.isEmpty()) {
+                String status = lists.get(0).getStatus();
+                if(status.equals(DetailedEstimateStatus.CANCELLED.toString()) || status.equals(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()))
+                    messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
+            }
+
+        }
+
     }
 
     private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,
@@ -718,11 +735,11 @@ public class EstimateValidator {
     public void validateActivities(final DetailedEstimate detailedEstimate, Map<String, String> messages,
             final RequestInfo requestInfo) {
 
-        if (detailedEstimate.getWorkFlowDetails() != null && detailedEstimate.getWorkFlowDetails().getAction()
+        if (detailedEstimate.getWorkFlowDetails() != null &&  detailedEstimate.getWorkFlowDetails().getAction() != null && (detailedEstimate.getWorkFlowDetails().getAction()
                 .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_CREATE) || detailedEstimate.getWorkFlowDetails().getAction()
                         .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_FORWARD)
                 || detailedEstimate.getWorkFlowDetails().getAction()
-                        .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_REJECTED))
+                        .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_REJECTED)))
             if (detailedEstimate.getEstimateActivities() == null || detailedEstimate.getEstimateActivities().isEmpty())
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
@@ -1119,5 +1136,19 @@ public class EstimateValidator {
                         .add(activity.getUnitRate().multiply(BigDecimal.valueOf(activity.getQuantity())));
         }
         return totalActivityAmount;
+    }
+
+    public boolean workflowRequired(final String tenantId, final RequestInfo requestInfo) {
+        JSONArray mdmsArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+                CommonConstants.WORKFLOW_REQUIRED_APPCONFIG, tenantId, requestInfo,
+                CommonConstants.MODULENAME_WORKS);
+        boolean workflowRequired = false;
+        if (mdmsArray != null && !mdmsArray.isEmpty()) {
+            Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
+            if (jsonMap.get("value").equals("Yes")) {
+                workflowRequired = true;
+            }
+        }
+        return workflowRequired;
     }
 }

@@ -5,11 +5,17 @@ package org.egov.works.masters.utils;
  */
 public class Constants {
     //Messages
+    public static final String KEY_SCHEDULERCATEGORY_CODE_MANDATORY="WMS.SCHEDULECATEGORY.CODE.MANDATORY";
+    public static final String MESSAGE_SCHEDULERCATEGORY_CODE_MANDATORY="ScheduleCategory code is mandatory: ";
+
     public static final String KEY_SCHEDULERCATEGORY_CODE_INVALID="WMS.SCHEDULECATEGORY.CODE.INVALID";
     public static final String MESSAGE_SCHEDULERCATEGORY_CODE_INVALID="Given ScheduleCategory is invalid: ";
 
     public static final String KEY_UOM_CODE_INVALID="WMS.UOM.CODE.INVALID";
     public static final String MESSAGE_UOM_CODE_INVALID="Given UOM is invalid: ";
+
+    public static final String KEY_UOM_CODE_MANDATORY="WMS.UOM.CODE.MANDATORY";
+    public static final String MESSAGE_UOM_CODE_MANDATORY="UOM code is invalid: ";
 
     public static final String KEY_SOR_DATES_SHOULDNOT_OVERLAP="WMS.SOR.DATES.SHOULDNOT.OVERLAP";
     public static final String MESSAGE_SOR_DATES_SHOULDNOT_OVERLAP="SOR Dates should not be overlaped";

@@ -36,7 +36,7 @@ public class ScheduleOfRateValidator {
         List<String> codeCategoryList = new ArrayList<>();
 
         for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
-            if (scheduleOfRate.getScheduleCategory() != null && !scheduleOfRate.getScheduleCategory().getCode().isEmpty()) {
+            if (scheduleOfRate.getScheduleCategory() != null && scheduleOfRate.getScheduleCategory().getCode() != null && !scheduleOfRate.getScheduleCategory().getCode().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(scheduleOfRate.getTenantId(), CommonConstants.MODULENAME_WORKS,
                         CommonConstants.MASTERNAME_SCHEDULE_CATEGORY, "code", scheduleOfRate.getScheduleCategory().getCode(),
                         scheduleOfRateRequest.getRequestInfo());
@@ -44,9 +44,12 @@ public class ScheduleOfRateValidator {
                     messages.put(Constants.KEY_SCHEDULERCATEGORY_CODE_INVALID, Constants.MESSAGE_SCHEDULERCATEGORY_CODE_INVALID + scheduleOfRate.getScheduleCategory());
                     isDataValid = Boolean.TRUE;
                 }
+            } else {
+                messages.put(Constants.KEY_SCHEDULERCATEGORY_CODE_MANDATORY, Constants.MESSAGE_SCHEDULERCATEGORY_CODE_MANDATORY);
+                isDataValid = Boolean.TRUE;
             }
 
-            if (scheduleOfRate.getUom() != null && !scheduleOfRate.getUom().getCode().isEmpty()) {
+            if (scheduleOfRate.getUom() != null && scheduleOfRate.getUom().getCode() != null && !scheduleOfRate.getUom().getCode().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(scheduleOfRate.getTenantId(), CommonConstants.MODULENAME_COMMON,
                         CommonConstants.MASTERNAME_UOM, "code", scheduleOfRate.getUom().getCode(),
                         scheduleOfRateRequest.getRequestInfo());
@@ -54,6 +57,9 @@ public class ScheduleOfRateValidator {
                     messages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + scheduleOfRate.getUom());
                     isDataValid = Boolean.TRUE;
                 }
+            } else {
+                messages.put(Constants.KEY_UOM_CODE_MANDATORY, Constants.MESSAGE_UOM_CODE_MANDATORY);
+                isDataValid = Boolean.TRUE;
             }
 
             if ((scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty() && scheduleOfRate.getSorRates().size() > 0) && (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty() && scheduleOfRate.getMarketRates().size() > 0)) {

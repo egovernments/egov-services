@@ -107,13 +107,15 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 			params.append("lower(createdBy) =:createdBy");
 			paramValues.put("createdBy", detailedEstimateSearchContract.getCreatedBy().toLowerCase());
 		}
-		if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null) {
+		if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null && detailedEstimateSearchContract.getWorkIdentificationNumbers().size() == 1) {
 			addAnd(params);
-			params.append(
-					"id in (select id from egw_detailedestimate where projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers)) and tenantid=:tenantid )");
-			paramValues.put("workIdentificationNumbers", detailedEstimateSearchContract.getWorkIdentificationNumbers());
-			paramValues.put("tenantid", detailedEstimateSearchContract.getTenantId());
-		}
+			params.append(" lower(projectCode) like :workIdentificationNumbers");
+			paramValues.put("workIdentificationNumbers", "%" + detailedEstimateSearchContract.getWorkIdentificationNumbers().get(0).toLowerCase() + "%");
+		} else if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null && detailedEstimateSearchContract.getWorkIdentificationNumbers().size() > 1) {
+            addAnd(params);
+            params.append(" projectCode in :workIdentificationNumbers");
+            paramValues.put("workIdentificationNumbers", detailedEstimateSearchContract.getWorkIdentificationNumbers());
+        }
 
 		if (detailedEstimateSearchContract.getNameOfWork() != null) {
 			addAnd(params);

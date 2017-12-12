@@ -10,8 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.measurementbook.config.PropertiesManager;
 import org.egov.works.measurementbook.domain.repository.EstimateRepository;
+import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
-import org.egov.works.measurementbook.domain.repository.WorkOrderRepository;
+import org.egov.works.measurementbook.domain.validator.MeasurementBookValidator;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
 import org.egov.works.measurementbook.web.contract.AuditDetails;
 import org.egov.works.measurementbook.web.contract.DetailedEstimate;
@@ -61,9 +62,13 @@ public class MeasurementBookService {
 	private EstimateRepository estimateRepository;
 
 	@Autowired
-	private WorkOrderRepository workOrderRepository;
+	private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+	
+	@Autowired
+	private MeasurementBookValidator measurementBookValidator;
 
 	public MeasurementBookResponse create(MeasurementBookRequest measurementBookRequest) {
+		measurementBookValidator.validateMB(measurementBookRequest, true);
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
 			measurementBook.setId(UUID.randomUUID().toString().replace("-", ""));
 			for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()) {
@@ -86,8 +91,11 @@ public class MeasurementBookService {
 			measurementBook.setAuditDetails(
 					measurementBookUtils.setAuditDetails(measurementBookRequest.getRequestInfo(), false));
 
-			if (measurementBook.getEstimateActivities() != null && !measurementBook.getEstimateActivities().isEmpty())
+			if (measurementBook.getLumpSumMBDetails() != null && !measurementBook.getLumpSumMBDetails().isEmpty())
 				createUpdateRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo(), false);
+			
+			if (measurementBook.getIsLegacyMB())
+				measurementBook.setApprovedDate(new Date().getTime());
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);
 		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
@@ -105,10 +113,11 @@ public class MeasurementBookService {
 		DetailedEstimate detailedEstimate = new DetailedEstimate();
 		LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
 		if (isUpdate)
-			detailedEstimate.setId(measurementBook.getEstimateActivities().get(0).getParent());
+			detailedEstimate.setId(measurementBook.getLumpSumMBDetails().get(0).getLoaActivity().getEstimateActivity().getDetailedEstimate());
 		detailedEstimate.setTenantId(measurementBook.getTenantId());
 		detailedEstimate.setParent(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getId());
-		detailedEstimate.setEstimateActivities(measurementBook.getEstimateActivities());
+		for (MeasurementBookDetail detail : measurementBook.getLumpSumMBDetails())
+			detailedEstimate.addEstimateActivitiesItem(detail.getLoaActivity().getEstimateActivity());
 		detailedEstimate.setEstimateDate(new Date().getTime());
 		detailedEstimate.setDepartment(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getDepartment());
 		detailedEstimate.setEstimateValue(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getEstimateValue());
@@ -144,7 +153,7 @@ public class MeasurementBookService {
 		LetterOfAcceptanceResponse letterOfAcceptanceResponse = null;
 		if (isUpdate && StringUtils.isNotBlank(measurementBook.getRevisionLOA())) {
 			letterOfAcceptance.setId(measurementBook.getRevisionLOA());
-			letterOfAcceptanceResponse = workOrderRepository.searchLOAById(
+			letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAById(
 					Arrays.asList(measurementBook.getRevisionLOA()), measurementBook.getTenantId(), requestInfo);
 			letterOfAcceptanceEstimate.setId(letterOfAcceptanceResponse.getLetterOfAcceptances().get(0)
 					.getLetterOfAcceptanceEstimates().get(0).getId());
@@ -165,9 +174,51 @@ public class MeasurementBookService {
 		letterOfAcceptanceRequest.setLetterOfAcceptances(letterOfAcceptances);
 		letterOfAcceptanceRequest.setRequestInfo(requestInfo);
 
-		letterOfAcceptanceResponse = workOrderRepository
+		letterOfAcceptanceResponse = letterOfAcceptanceRepository
 				.createUpdateLOA(letterOfAcceptanceRequest, isUpdate);
 		measurementBook.setRevisionLOA(letterOfAcceptanceResponse.getLetterOfAcceptances().get(0).getId());
+		
+		updateLumpsumActivities(measurementBook, letterOfAcceptanceResponse.getLetterOfAcceptances().get(0), isUpdate, requestInfo);
+	}
+
+	private void updateLumpsumActivities(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance, Boolean isUpdate, RequestInfo requestInfo) {
+		if (isUpdate)
+			for (MeasurementBookDetail detail : measurementBook.getLumpSumMBDetails()) {
+				detail.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, true));
+				for (MBMeasurementSheet sheet : detail.getMeasurementSheets())
+					sheet.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, true));
+				measurementBook.addMeasurementBookDetailsItem(detail);
+			}
+		else {
+			for (LOAActivity loaActivity : letterOfAcceptance.getLetterOfAcceptanceEstimates().get(0).getLoaActivities()) {
+				final EstimateActivity activity = loaActivity.getEstimateActivity();
+				final MeasurementBookDetail measurementBookDetail = new MeasurementBookDetail();
+				measurementBookDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+				measurementBookDetail.setTenantId(activity.getTenantId());
+				measurementBookDetail.setAmount(activity.getEstimateRate());
+				measurementBookDetail.setLoaActivity(loaActivity);
+				measurementBookDetail.setMeasurementBook(measurementBook.getId());
+				List<MBMeasurementSheet> measurementSheets = new ArrayList<>();
+				for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
+					MBMeasurementSheet sheet = new MBMeasurementSheet();
+					sheet.setId(UUID.randomUUID().toString().replace("-", ""));
+					sheet.setDepthOrHeight(loaMeasurementSheet.getDepthOrHeight());
+					sheet.setLength(loaMeasurementSheet.getLength());
+					sheet.setLoaMeasurementSheet(loaMeasurementSheet);
+					sheet.setMeasurementBookDetail(measurementBookDetail.getId());
+					sheet.setNumber(loaMeasurementSheet.getNumber());
+					sheet.setQuantity(loaMeasurementSheet.getQuantity());
+					sheet.setWidth(loaMeasurementSheet.getWidth());
+					sheet.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, false));
+					measurementSheets.add(sheet);
+				}
+				measurementBookDetail.setMeasurementSheets(measurementSheets);
+				measurementBookDetail.setQuantity(loaActivity.getApprovedQuantity().doubleValue());
+				measurementBookDetail.setRemarks(loaActivity.getRemarks());
+				measurementBookDetail.setAuditDetails(
+						measurementBookUtils.setAuditDetails(requestInfo, false));
+			}
+		}
 	}
 
 	private void populateLOAActivities(LetterOfAcceptanceEstimate letterOfAcceptanceEstimate,
@@ -225,7 +276,7 @@ public class MeasurementBookService {
 			measurementBook.setAuditDetails(
 					measurementBookUtils.setAuditDetails(measurementBookRequest.getRequestInfo(), true));
 
-			if (measurementBook.getEstimateActivities() != null && !measurementBook.getEstimateActivities().isEmpty())
+			if (measurementBook.getLumpSumMBDetails() != null && !measurementBook.getLumpSumMBDetails().isEmpty())
 				createUpdateRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo(), true);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);

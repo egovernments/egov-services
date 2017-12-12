@@ -60,9 +60,8 @@ public class MeasurementBook   {
   @JsonProperty("measurementBookDetails")
   private List<MeasurementBookDetail> measurementBookDetails = null;
   
-  // Added manually for non tendered and lump sum items 
-  @JsonProperty("estimateActivities")
-  private List<EstimateActivity> estimateActivities = null;
+  @JsonProperty("lumpSumMBDetails")
+  private List<MeasurementBookDetail> lumpSumMBDetails = null;
 
   @JsonProperty("isLegacyMB")
   private Boolean isLegacyMB = null;
@@ -359,13 +358,15 @@ public class MeasurementBook   {
   public void setMeasurementBookDetails(List<MeasurementBookDetail> measurementBookDetails) {
     this.measurementBookDetails = measurementBookDetails;
   }
+  
+  
 
-  public List<EstimateActivity> getEstimateActivities() {
-	return estimateActivities;
+  public List<MeasurementBookDetail> getLumpSumMBDetails() {
+	return lumpSumMBDetails;
   }
 
-  public void setEstimateActivities(List<EstimateActivity> estimateActivities) {
-	this.estimateActivities = estimateActivities;
+  public void setLumpSumMBDetails(List<MeasurementBookDetail> lumpSumMBDetails) {
+	this.lumpSumMBDetails = lumpSumMBDetails;
   }
 
   public MeasurementBook isLegacyMB(Boolean isLegacyMB) {

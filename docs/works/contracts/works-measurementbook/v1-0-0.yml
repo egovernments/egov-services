@@ -515,6 +515,12 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/MeasurementBookDetail'
+      lumpSumMBDetails:
+        type: array
+        description: Array of Non Tendered and Lump sum details
+        minItems: 1
+        items:
+          $ref: '#/definitions/MeasurementBookDetail'
       isLegacyMB:
         type: boolean
         description: True if Measurement Book is legacy record

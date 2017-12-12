@@ -208,7 +208,7 @@ class UiTable extends Component {
     let self = this;
 
     const getNameById = function(item2, i2) {
-      if (resultList.resultHeader[i2].isChecked) {
+      if (resultList.resultHeader[i2] && resultList.resultHeader[i2].isChecked) {
         var selected = false;
         if (selectedValue == item2) {
           selected = true;
@@ -225,7 +225,7 @@ class UiTable extends Component {
             />
           </span>
         );
-      } else if (resultList.resultHeader[i2].isAction) {
+      } else if (resultList.resultHeader[i2] && resultList.resultHeader[i2].isAction) {
         if (_.isArray(item2)) {
           return resultList.resultHeader[i2].actionItems.map((actionitem, index) => {
             return (
@@ -257,12 +257,12 @@ class UiTable extends Component {
             );
           });
         }
-      } else if (resultList.resultHeader[i2].url) {
+      } else if (resultList.resultHeader[i2] && resultList.resultHeader[i2].url) {
         return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : item2 + '';
-      } else if (resultList.resultHeader[i2].isDate) {
+      } else if (resultList.resultHeader[i2] && resultList.resultHeader[i2].isDate) {
         var _date = new Date(Number(item2));
         return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
-      } else if (resultList.resultHeader[i2].isComma) {
+      } else if (resultList.resultHeader[i2] && resultList.resultHeader[i2].isComma) {
         let _commaVal = item2.toString();
         var y = _commaVal.split('.')[1];
         _commaVal = _commaVal.split('.')[0];
@@ -293,7 +293,7 @@ class UiTable extends Component {
           <CardText>
             <Table
               className="table table-striped table-bordered"
-              cellspacing="0"
+              cellSpacing="0"
               width="100%"
               id={showDataTable == undefined ? 'searchTable' : showDataTable ? 'searchTable' : ''}
               responsive

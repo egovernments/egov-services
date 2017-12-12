@@ -78,7 +78,7 @@ class UiMultiFieldTable extends Component {
     var valuesArray = [];
     let { isintialLoad } = this.state;
     var numberOfRowsArray = _.get(props.formData, props.item.jsonPath);
-    // console.log(numberOfRowsArray, props.item.jsonPath);
+    console.log(numberOfRowsArray, props.item.jsonPath, isintialLoad);
     // console.log(this.state.values, numberOfRowsArray, props.item.tableList.values);
     var listValues = _.cloneDeep(props.item.tableList.values);
     // console.log(listValues);
@@ -87,7 +87,7 @@ class UiMultiFieldTable extends Component {
     // console.log(formData, JSON.stringify(formData));
     // console.log('render load', props.item.jsonPath, _.get(formData,props.item.jsonPath), props.item.tableList.values);
     if (numberOfRowsArray && numberOfRowsArray.length > 0 && !isintialLoad) {
-      // console.log('render load true succeeded');
+      console.log('render load true succeeded');
       var regexp = new RegExp(`${this.escapeRegExp(props.item.jsonPath)}\\[\\d+\\]`);
       for (var i = 0; i < numberOfRowsArray.length; i++) {
         var listValuesArray = _.cloneDeep(listValues);
@@ -111,7 +111,7 @@ class UiMultiFieldTable extends Component {
       let values = [props.item.tableList.values];
       this.setState({
         values,
-        isintialLoad: true,
+        // isintialLoad: true,
         list: Object.assign([], props.item.tableList.values),
       });
       this.addMandatoryOnLoad(props.item.tableList.values, 1);

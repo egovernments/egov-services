@@ -564,6 +564,7 @@ var dat = {
             pattern: '',
             type: 'checkbox',
             isDisabled: false,
+            defaultValue: false,
             requiredErrMsg: '',
             patternErrMsg: '',
             url: '',

@@ -182,8 +182,11 @@ public enum ErrorCode {
             "{0} {1} not found for {2}",
             "{0} {1} not found for {2}"),
     OBJECT_NOT_FOUND_ROW("object.not.found",
-                             "{0} {1} not found at row {2}",
-                             "{0} {1} not found at row {2}");
+            "{0} {1} not found at row {2}",
+            "{0} {1} not found at row {2}"),
+    DOESNT_MATCH("doesnt.match.object",
+            "{1} {0} doesnt match with the existing {1} {2}",
+            "{1} {0} doesnt match with the existing {1} {2}");
 
 
     private final String code;
@@ -206,7 +209,7 @@ public enum ErrorCode {
     public static ErrorCode getError(String code) {
         return errorMap.get(code);
     }
-    
+
     public String getCode() {
         return this.code;
     }

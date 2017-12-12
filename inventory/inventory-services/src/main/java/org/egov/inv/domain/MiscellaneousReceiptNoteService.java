@@ -2,13 +2,14 @@ package org.egov.inv.domain;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.domain.service.MaterialReceiptService;
 import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
-import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
+import org.egov.inv.persistence.entity.MaterialReceiptEntity;
 import org.egov.inv.persistence.repository.ReceiptNoteRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
     private ReceiptNoteRepository receiptNoteRepository;
 
     @Autowired
-    private MaterialIssueJdbcRepository materialIssueJdbcRepository;
+    private JdbcRepository jdbcRepository;
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
@@ -197,6 +198,8 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         for (MaterialReceipt materialReceipt : materialReceipts) {
+                            validateReceiptPurpose(materialReceipt.getMrnNumber(), materialReceipt.getReceiptPurpose().toString(),
+                                    tenantId, errors);
                             validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
                             for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
                                 int j = 0;
@@ -219,7 +222,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         MaterialIssueEntity materialIssueEntity = new MaterialIssueEntity();
         materialIssueEntity.setIssueNumber(issueNumber);
         materialIssueEntity.setTenantId(tenantId);
-        Object materialIssue = materialIssueJdbcRepository.findById(materialIssueEntity, "MaterialIssueEntity");
+        Object materialIssue = jdbcRepository.findById(materialIssueEntity, "MaterialIssueEntity");
         if (null == materialIssue) {
             errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Issue", "", issueNumber);
         }
@@ -228,6 +231,21 @@ public class MiscellaneousReceiptNoteService extends DomainService {
     private void validateNonIssueQuantity(String tenantId, MaterialReceiptDetail materialReceiptDetail, InvalidDataException errors, int row) {
         if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()) {
             errors.addDataError(ErrorCode.QTY_LE_SCND_ROW.getCode(), "Issued Quantity", "Received Quantity", String.valueOf(row));
+        }
+    }
+
+    private void validateReceiptPurpose(String mrnNumber, String receiptPurpose, String tenantId, InvalidDataException errors) {
+        if (!isEmpty(mrnNumber)) {
+            MaterialReceiptEntity materialReceiptEntity = new MaterialReceiptEntity();
+            materialReceiptEntity.setMrnNumber(mrnNumber);
+            materialReceiptEntity.setTenantId(tenantId);
+            Object receiptEntity = jdbcRepository.findById(materialReceiptEntity, "MaterialReceiptEntity");
+            MaterialReceiptEntity receiptEntityfromDb = (MaterialReceiptEntity) receiptEntity;
+            if (null != receiptEntityfromDb) {
+                if (!(receiptPurpose.toString().equalsIgnoreCase(receiptEntityfromDb.getReceiptPurpose().toString()))) {
+                    errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(), receiptPurpose, "receipt purpose", receiptEntityfromDb.getReceiptPurpose().toString());
+                }
+            }
         }
     }
 
@@ -246,10 +264,10 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
 
         for (MaterialReceipt materialReceipt : materialReceipts) {
+
         }
 
         return materialReceiptRequest;
     }
-
 
 }

@@ -403,6 +403,15 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of codes of the contractor to which Work Order belongs to.
+        - name: letterOfAcceptances
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of ids of the Letter Of Acceptance to which Work Order belongs to.
       responses:
         200:
           description: Work Order(s) Retrieved Successfully

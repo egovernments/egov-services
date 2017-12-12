@@ -75,6 +75,12 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             params.append("wo.status in(:status)");
             paramValues.put("status", workOrderSearchContract.getStatuses());
         }
+        
+        if (workOrderSearchContract.getLetterOfAcceptances() != null) {
+            addAnd(params);
+            params.append("wo.letterofacceptance in(:letterofacceptance)");
+            paramValues.put("letterofacceptance", workOrderSearchContract.getLetterOfAcceptances());
+        }
 
         if (workOrderSearchContract.getFromDate() != null) {
             addAnd(params);

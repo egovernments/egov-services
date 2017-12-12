@@ -1,8 +1,8 @@
 /* global google */
-import _ from "lodash";
+import _ from 'lodash';
 import React, { Component } from 'react';
-import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-import withScriptjs from "react-google-maps/lib/async/withScriptjs";
+import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import withScriptjs from 'react-google-maps/lib/async/withScriptjs';
 import SearchBox from 'react-google-maps/lib/places/SearchBox';
 
 const INPUT_STYLE = {
@@ -27,45 +27,48 @@ const INPUT_STYLE = {
  */
 const AsyncGettingStartedExampleGoogleMap = _.flowRight(
   withScriptjs,
-  withGoogleMap,
+  withGoogleMap
 )(props => (
   <GoogleMap
-    options={{ scrollwheel: false}}
+    options={{ scrollwheel: false }}
     ref={props.onMapMounted}
     defaultZoom={11}
     center={props.center}
     onBoundsChanged={props.onBoundsChanged}
   >
-  <SearchBox
-    ref={props.onSearchBoxMounted}
-    bounds={props.bounds}
-    controlPosition={google.maps.ControlPosition.TOP_LEFT}
-    onPlacesChanged={props.onPlacesChanged}
-    inputPlaceholder="Customized your placeholder"
-    inputStyle={INPUT_STYLE}
-  />
-  {props.markers.map((marker, index) => (
-    <Marker position={marker.position} key={index} />
-  ))}
+    <SearchBox
+      ref={props.onSearchBoxMounted}
+      bounds={props.bounds}
+      controlPosition={google.maps.ControlPosition.TOP_LEFT}
+      onPlacesChanged={props.onPlacesChanged}
+      inputPlaceholder="Customized your placeholder"
+      inputStyle={INPUT_STYLE}
+    />
+    {props.markers.map((marker, index) => (
+      <Marker position={marker.position} key={index} />
+    ))}
   </GoogleMap>
 ));
 
 export default class SimpleMap extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
-      center : {lat: 0.0, lng:0.0},
-      markers : [{
-        position: {lat: 0.0 , lng: 0.0}
-      }]
+    this.state = {
+      center: { lat: 0.0, lng: 0.0 },
+      markers: [
+        {
+          position: { lat: 0.0, lng: 0.0 },
+        },
+      ],
     };
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.lat && nextProps.lng){
-      this.setState({center : {lat : nextProps.lat, lng : nextProps.lng}});
-      this.setState({markers : [{position:{lat : nextProps.lat, lng : nextProps.lng}}]});
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.lat && nextProps.lng) {
+      this.setState({ center: { lat: nextProps.lat, lng: nextProps.lng } });
+      this.setState({
+        markers: [{ position: { lat: nextProps.lat, lng: nextProps.lng } }],
+      });
     }
   }
 
@@ -80,7 +83,7 @@ export default class SimpleMap extends Component {
 
   handleBoundsChanged() {
     let tempArray = [];
-    tempArray.push(this._map.getCenter())
+    tempArray.push(this._map.getCenter());
 
     // Add a marker for each place returned from search bar
     const markers = tempArray.map(place => ({
@@ -88,11 +91,12 @@ export default class SimpleMap extends Component {
     }));
 
     // Set markers; set map center to first search result
-    const mapCenter = markers.length > 0 ? markers[0].position : this.state.center;
+    const mapCenter =
+      markers.length > 0 ? markers[0].position : this.state.center;
 
     this.setState({
       center: mapCenter,
-      markers
+      markers,
     });
   }
 
@@ -109,36 +113,34 @@ export default class SimpleMap extends Component {
     }));
 
     // Set markers; set map center to first search result
-    const mapCenter = markers.length > 0 ? markers[0].position : this.state.center;
+    const mapCenter =
+      markers.length > 0 ? markers[0].position : this.state.center;
 
     this.setState({
       center: mapCenter,
-      markers
+      markers,
     });
   }
 
-
   render() {
-
     return (
       <AsyncGettingStartedExampleGoogleMap
         googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyDrxvgg2flbGdU9Fxn6thCbNf3VhLnxuFY"
-        loadingElement={
-          <div style={{ height: `100%` }}>
-          </div>
-        }
-        containerElement={
-          <div style={{ height: `100%` }} />
-        }
-        mapElement={
-          <div style={{ height: `100%` }} />
-        }
+        loadingElement={<div style={{ height: `100%` }} />}
+        containerElement={<div style={{ height: `100%` }} />}
+        mapElement={<div style={{ height: `100%` }} />}
         center={this.state.center}
         onMapMounted={this.handleMapMounted}
-        onBoundsChanged={()=>{this.handleBoundsChanged(); this.props.handler(this.state.center.lat(), this.state.center.lng())}}
+        onBoundsChanged={() => {
+          this.handleBoundsChanged();
+          this.props.handler(this.state.center.lat(), this.state.center.lng());
+        }}
         onSearchBoxMounted={this.handleSearchBoxMounted}
         bounds={this.state.bounds}
-        onPlacesChanged={()=>{ this.handlePlacesChanged(); this.props.handler(this.state.center.lat(), this.state.center.lng())}}
+        onPlacesChanged={() => {
+          this.handlePlacesChanged();
+          this.props.handler(this.state.center.lat(), this.state.center.lng());
+        }}
         markers={this.state.markers}
       />
     );

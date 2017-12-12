@@ -1,372 +1,384 @@
 var dat = {
-  "legal.search": {
+  'legal.search': {
     numCols: 4,
-    title: "summon.search.document.title",
+    title: 'summon.search.document.title',
     useTimestamp: true,
-    objectName: "cases",
-    url: "/lcms-services/legalcase/case/_search",
+    objectName: 'cases',
+    url: '/lcms-services/legalcase/case/_search',
     groups: [
       {
-        name: "search",
-        label: "legal.search.case.title",
+        name: 'search',
+        label: 'legal.search.case.title',
         fields: [
           {
-            name: "CaseType",
-            jsonPath: "entryType",
-            label: "legal.create.group.title.CaseType",
-            type: "singleValueList",
+            name: 'CaseType',
+            jsonPath: 'entryType',
+            label: 'legal.create.group.title.CaseType',
+            type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            defaultValue:[{ key:"summon",value:"summon"},{ key:"warrant",value:"warrant"}]
-          },
-           {
-            name: "fromDate",
-            jsonPath: "fromDate",
-            label: "legal.create.caseregistration.fromDate",
-            type: "datePicker",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "legal.create.field.message.fromDate"
+            defaultValue: [
+              { key: 'summon', value: 'summon' },
+              { key: 'warrant', value: 'warrant' },
+            ],
           },
           {
-            name: "toDate",
-            jsonPath: "toDate",
-            label:  "legal.create.caseregistration.toDate",
-            type: "datePicker",
+            name: 'fromDate',
+            jsonPath: 'fromDate',
+            label: 'legal.create.caseregistration.fromDate',
+            type: 'datePicker',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "legal.create.field.message.toDate"
-          },{
-            name: "referenceNo",
-            jsonPath: "summonReferenceNo",
-            label: "legal.create.referenceNo",
-            type: "text",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "legal.create.field.message.referenceNo"
+            patternErrorMsg: 'legal.create.field.message.fromDate',
           },
           {
-            name: "referenceCaseNo",
-            jsonPath: "caseReferenceNo",
-            label: "caseRegistration.create.referenceCaseNo",
-            type: "text",
+            name: 'toDate',
+            jsonPath: 'toDate',
+            label: 'legal.create.caseregistration.toDate',
+            type: 'datePicker',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "legal.create.field.message.referenceCaseNo"
-          },{
-            name: "caseNo",
-            jsonPath: "caseNo",
-            label: "caseRegistration.create.caseNo",
-            type: "text",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "legal.create.field.message.referenceCaseNo"
+            patternErrorMsg: 'legal.create.field.message.toDate',
           },
           {
-            name: "caseStatus",
-            jsonPath: "caseStatus",
-            label: "advocatepayment.create.caseStatus",
-            type: "singleValueList",
+            name: 'referenceNo',
+            jsonPath: 'summonReferenceNo',
+            label: 'legal.create.referenceNo',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: 'legal.create.field.message.referenceNo',
+          },
+          {
+            name: 'referenceCaseNo',
+            jsonPath: 'caseReferenceNo',
+            label: 'caseRegistration.create.referenceCaseNo',
+            type: 'text',
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: 'legal.create.field.message.referenceCaseNo',
+          },
+          {
+            name: 'caseNo',
+            jsonPath: 'caseNo',
+            label: 'caseRegistration.create.caseNo',
+            type: 'text',
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: 'legal.create.field.message.referenceCaseNo',
+          },
+          {
+            name: 'caseStatus',
+            jsonPath: 'caseStatus',
+            label: 'advocatepayment.create.caseStatus',
+            type: 'singleValueList',
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseStatus|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseStatus|$..code|$..name',
           },
           {
-            name: "caseType",
-            jsonPath: "caseType",
-            label: "legal.create.caseType",
-            type: "singleValueList",
+            name: 'caseType',
+            jsonPath: 'caseType',
+            label: 'legal.create.caseType',
+            type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
-            name: "departmentName",
-            jsonPath: "departmentName",
-            label: "legal.create.departmentName",
-            type: "singleValueList",
+            name: 'departmentName',
+            jsonPath: 'departmentName',
+            label: 'legal.create.departmentName',
+            type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            patternErrorMsg: '',
+            url: '/egov-common-masters/departments/_search?|$..code|$..name',
           },
           {
-            name: "advocateName",
-            type: "singleValueList",
-            label: "legal.create.advocateName",
-             isKeyOtherPair:"agencyName",
-            jsonPath: "advocateName",
+            name: 'advocateName',
+            type: 'singleValueList',
+            label: 'legal.create.advocateName',
+            isKeyOtherPair: 'agencyName',
+            jsonPath: 'advocateName',
             isRequired: false,
             isDisabled: false,
-            url:
-              "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
-          }
-        ]
-      }
+            url: '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
+          },
+        ],
+      },
     ],
     result: {
-      "disableRowClick" : true,
-       isAction: true,
-          actionItems: [
-            {
-              label: "Assign ADV",
-              url: "/update/legal/assignadvocate/"
-            },
-            {
-              label: "Case Reg",
-              url: "/update/legal/caseregistration/"
-            }, {
-              label: "Vakalat",
-              url: "/update/legal/vakalatnama/"
-            }, {
-              label: "Hearing",
-              url: "/update/legal/hearingdetails/"
-            }, {
-              label: "ParaWise",
-              url: "/update/legal/parawisecomments/"
-            },{
-              label: "Ref Evidence",
-              url:"/update/legal/referenceevidence/"
-            }
-           
-          ],
+      disableRowClick: true,
+      isAction: true,
+      actionItems: [
+        {
+          label: 'Assign ADV',
+          url: '/update/legal/assignadvocate/',
+        },
+        {
+          label: 'Case Reg',
+          url: '/update/legal/caseregistration/',
+        },
+        {
+          label: 'Vakalat',
+          url: '/update/legal/vakalatnama/',
+        },
+        {
+          label: 'Hearing',
+          url: '/update/legal/hearingdetails/',
+        },
+        {
+          label: 'ParaWise',
+          url: '/update/legal/parawisecomments/',
+        },
+        {
+          label: 'Ref Evidence',
+          url: '/update/legal/referenceevidence/',
+        },
+      ],
       header: [
         {
-          label: "legal.search.result.actionLabels",
-          isChecked:true,
-          checkedItem:{
-            jsonPath:"checkedRow",
-            label:"",
-          }
+          label: 'legal.search.result.actionLabels',
+          isChecked: true,
+          checkedItem: {
+            jsonPath: 'checkedRow',
+            label: '',
+          },
         },
         {
-          label: "legal.create.referenceNo",
-          isAction:true,
-          actionItems:[{
-            label: "View",
-            url:"/view/legal/casedetails/"
-          }]
+          label: 'legal.create.referenceNo',
+          isAction: true,
+          actionItems: [
+            {
+              label: 'View',
+              url: '/view/legal/casedetails/',
+            },
+          ],
         },
         {
-          label: "caseRegistration.create.referenceCaseNo"
+          label: 'caseRegistration.create.referenceCaseNo',
         },
         {
-          label: "advocatepayment.create.caseStatus"
-        }, {
-          label: "legal.create.caseNo"
+          label: 'advocatepayment.create.caseStatus',
         },
         {
-          label: "legal.create.departmentName"
+          label: 'legal.create.caseNo',
         },
         {
-          label: "legal.create.caseType"
+          label: 'legal.create.departmentName',
         },
         {
-          label: "legal.create.advocateName"
-        }
+          label: 'legal.create.caseType',
+        },
+        {
+          label: 'legal.create.advocateName',
+        },
       ],
       values: [
-         "code",
-          {
-          childArray:["summon.summonReferenceNo","code"],
-          isObj:true
-         },
-        "caseRefernceNo",
-        "caseStatus.name",
-        "summon.caseNo",
-        "summon.departmentName.name",
-        "summon.caseType.name",
-        "advocateDetails[0].advocate.name"
+        'code',
+        {
+          childArray: ['summon.summonReferenceNo', 'code'],
+          isObj: true,
+        },
+        'caseRefernceNo',
+        'caseStatus.name',
+        'summon.caseNo',
+        'summon.departmentName.name',
+        'summon.caseType.name',
+        'advocateDetails[0].advocate.name',
       ],
-      resultPath: "cases",
-      rowClickUrlUpdate: "/update/legal/casedetails/{code}",
-      rowClickUrlView: "/view/legal/casedetails/{code}"
-    }
+      resultPath: 'cases',
+      rowClickUrlUpdate: '/update/legal/casedetails/{code}',
+      rowClickUrlView: '/view/legal/casedetails/{code}',
+    },
   },
-  "legal.create": {
+  'legal.create': {
     numCols: 4,
-    title: "summon.create.document.title",
+    title: 'summon.create.document.title',
     useTimestamp: true,
-    objectName: "summons",
+    objectName: 'summons',
     groups: [
       {
-        name: "CaseType",
-        label: "legal.create.group.title.CaseType",
+        name: 'CaseType',
+        label: 'legal.create.group.title.CaseType',
         fields: [
           {
-            name: "isSummon",
-            jsonPath: "summons[0].isSummon",
-            label: "legal.create.isSummon",
-            type: "radio",
-            styleObj:{"display": "-webkit-box"},
+            name: 'isSummon',
+            jsonPath: 'summons[0].isSummon',
+            label: 'legal.create.isSummon',
+            type: 'radio',
+            styleObj: { display: '-webkit-box' },
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             values: [
               {
-                label: "legal.create.Summon",
-                value: true
+                label: 'legal.create.Summon',
+                value: true,
               },
               {
-                label: "legal.create.Warrant",
-                value: false
-              }
+                label: 'legal.create.Warrant',
+                value: false,
+              },
             ],
-            defaultValue : true
-          }
-        ]
+            defaultValue: true,
+          },
+        ],
       },
       {
-        name: "CaseTypeDetails",
-        label: "legal.create.group.title.CaseTypeDetails",
+        name: 'CaseTypeDetails',
+        label: 'legal.create.group.title.CaseTypeDetails',
         fields: [
           {
-            name: "orignatedBYULB",
-            jsonPath: "summons[0].isUlbinitiated",
-            label: "legal.create.orignatedBYULB",
-            type: "checkbox",
+            name: 'orignatedBYULB',
+            jsonPath: 'summons[0].isUlbinitiated',
+            label: 'legal.create.orignatedBYULB',
+            type: 'checkbox',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "referenceNo",
-            jsonPath: "summons[0].summonReferenceNo",
-            label: "legal.create.referenceNo",
-            type: "text",
+            name: 'referenceNo',
+            jsonPath: 'summons[0].summonReferenceNo',
+            label: 'legal.create.referenceNo',
+            type: 'text',
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
-          }, {
-            name: "year",
-            jsonPath: "summons[0].year",
-            label: "legal.create.year",
-            type: "singleValueList",
-            isCurrentYear:true,
+            patternErrorMsg: '',
+          },
+          {
+            name: 'year',
+            jsonPath: 'summons[0].year',
+            label: 'legal.create.year',
+            type: 'singleValueList',
+            isCurrentYear: true,
             isRequired: true,
             isDisabled: false,
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
-            patternErrorMsg: ""
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
+            patternErrorMsg: '',
           },
           {
-            name: "summonDate",
-            jsonPath: "summons[0].summonDate",
-            label: "legal.create.summonDate",
-            type: "datePicker",
+            name: 'summonDate',
+            jsonPath: 'summons[0].summonDate',
+            label: 'legal.create.summonDate',
+            type: 'datePicker',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "side",
-            jsonPath: "summons[0].side.code",
-            label: "legal.create.side",
-            type: "singleValueList",
+            name: 'side',
+            jsonPath: 'summons[0].side.code',
+            label: 'legal.create.side',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name",
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
             depedants: [
               {
-                jsonPath: "summons[0].caseType.code",
-                type: "dropDown",
-                 "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&filter=%5B%3F%28%40.sideCode%3D%3D'{summons[0].side.code}'%29%5D|$..code|$..name"
-              }
-            ]
+                jsonPath: 'summons[0].caseType.code',
+                type: 'dropDown',
+                pattern:
+                  "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&filter=%5B%3F%28%40.sideCode%3D%3D'{summons[0].side.code}'%29%5D|$..code|$..name",
+              },
+            ],
           },
           {
-            name: "caseType",
-            jsonPath: "summons[0].caseType.code",
-            label: "legal.create.caseType",
-            type: "singleValueList",
+            name: 'caseType',
+            jsonPath: 'summons[0].caseType.code',
+            label: 'legal.create.caseType',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
-            url: ""
+            patternErrorMsg: '',
+            url: '',
             // "url": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
           },
           {
-            name: "caseCategory",
-            jsonPath: "summons[0].caseCategory.code",
-            label: "legal.create.caseCategory",
-            type: "singleValueList",
+            name: 'caseCategory',
+            jsonPath: 'summons[0].caseCategory.code',
+            label: 'legal.create.caseCategory',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name',
           },
           {
-            name: "caseNo",
-            jsonPath: "summons[0].caseNo",
-            label: "legal.create.caseNo",
-            type: "text",
+            name: 'caseNo',
+            jsonPath: 'summons[0].caseNo',
+            label: 'legal.create.caseNo',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "plantiffName",
-            jsonPath: "summons[0].plantiffName",
-            label: "legal.create.plantiffName",
-            type: "text",
+            name: 'plantiffName',
+            jsonPath: 'summons[0].plantiffName',
+            label: 'legal.create.plantiffName',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "plantiffAddress",
-            jsonPath: "summons[0].plantiffAddress.addressLine1",
-            label: "legal.create.plantiffAddress",
-            type: "textarea",
+            name: 'plantiffAddress',
+            jsonPath: 'summons[0].plantiffAddress.addressLine1',
+            label: 'legal.create.plantiffAddress',
+            type: 'textarea',
             fullWidth: true,
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "caseDetails",
-            jsonPath: "summons[0].caseDetails",
-            label: "legal.create.caseDetails",
-            type: "textarea",
+            name: 'caseDetails',
+            jsonPath: 'summons[0].caseDetails',
+            label: 'legal.create.caseDetails',
+            type: 'textarea',
             fullWidth: true,
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "defendant",
-            jsonPath: "summons[0].defendant",
-            label: "legal.create.defendant",
-            type: "text",
+            name: 'defendant',
+            jsonPath: 'summons[0].defendant',
+            label: 'legal.create.defendant',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "departmentName",
-            jsonPath: "summons[0].departmentName.code",
-            label: "legal.create.departmentName",
-            type: "singleValueList",
+            name: 'departmentName',
+            jsonPath: 'summons[0].departmentName.code',
+            label: 'legal.create.departmentName',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            patternErrorMsg: '',
+            url: '/egov-common-masters/departments/_search?|$..code|$..name',
           },
           {
-            name: "hearingDate",
-            jsonPath: "summons[0].hearingDate",
-            label: "legal.create.hearingDate",
-            type: "datePicker",
+            name: 'hearingDate',
+            jsonPath: 'summons[0].hearingDate',
+            label: 'legal.create.hearingDate',
+            type: 'datePicker',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           // {
           //   name: "hearingTime",
@@ -377,525 +389,529 @@ var dat = {
           //   isRequired: false,
           //   isDisabled: false,
           //   patternErrorMsg: ""
-          // }, 
+          // },
           {
-            name: "hearingTime",
-            jsonPath: "summons[0].hearingTime",
-            label: "legal.create.hearingTime",
-            type: "timePicker",
+            name: 'hearingTime',
+            jsonPath: 'summons[0].hearingTime',
+            label: 'legal.create.hearingTime',
+            type: 'timePicker',
             isNumber: true,
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "courtName",
-            jsonPath: "summons[0].courtName.code",
-            label: "legal.create.courtName",
-            type: "singleValueList",
-            isKeyOtherPair:"type",
+            name: 'courtName',
+            jsonPath: 'summons[0].courtName.code',
+            label: 'legal.create.courtName',
+            type: 'singleValueList',
+            isKeyOtherPair: 'type',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
-          },
-         {
-            name: "ward",
-            jsonPath: "summons[0].ward",
-            label: "legal.create.ward",
-            type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: "",
-            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
-            name: "bench",
-            jsonPath: "summons[0].bench.code",
-            label: "legal.create.bench",
-            type: "singleValueList",
+            name: 'ward',
+            jsonPath: 'summons[0].ward',
+            label: 'legal.create.ward',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name"
+              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
           },
           {
-            name: "stamp",
-            jsonPath: "summons[0].register.code",
-            label: "legal.create.stamp",
-            type: "singleValueList",
+            name: 'bench',
+            jsonPath: 'summons[0].bench.code',
+            label: 'legal.create.bench',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
-            url: "lcms-services/legalcase/register/_search?|$..code|$..register"
+            patternErrorMsg: '',
+            url:
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
-            name: "sectionApplied",
-            jsonPath: "summons[0].sectionApplied",
-            label: "legal.create.sectionApplied",
-            type: "text",
+            name: 'stamp',
+            jsonPath: 'summons[0].register.code',
+            label: 'legal.create.stamp',
+            type: 'singleValueList',
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: '',
+            url:
+              'lcms-services/legalcase/register/_search?|$..code|$..register',
+          },
+          {
+            name: 'sectionApplied',
+            jsonPath: 'summons[0].sectionApplied',
+            label: 'legal.create.sectionApplied',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
-          }
-        ]
+            patternErrorMsg: '',
+          },
+        ],
       },
       {
-        name: "UploadDocument",
-        label: "legal.create.group.title.UploadDocument",
+        name: 'UploadDocument',
+        label: 'legal.create.group.title.UploadDocument',
         fields: [
           {
-            name: "UploadDocument",
-            jsonPath: "summons[0].documents",
-            label: "legal.create.sectionApplied",
-            type: "fileTable",
+            name: 'UploadDocument',
+            jsonPath: 'summons[0].documents',
+            label: 'legal.create.sectionApplied',
+            type: 'fileTable',
             isRequired: false,
             isDisabled: false,
-            patternErrMsg: "",
+            patternErrMsg: '',
             fileList: {
-              name: "documentName",
-              id: "fileStoreId"
+              name: 'documentName',
+              id: 'fileStoreId',
             },
-            fileCount: 3
-          }
-        ]
-      }
+            fileCount: 3,
+          },
+        ],
+      },
     ],
-    url: "/lcms-services/legalcase/summon/_create",
-    tenantIdRequired: true
+    url: '/lcms-services/legalcase/summon/_create',
+    tenantIdRequired: true,
   },
-  "legal.view": {
+  'legal.view': {
     numCols: 4,
     useTimestamp: true,
-    objectName: "summons",
+    objectName: 'summons',
     groups: [
       {
-        name: "CaseType",
-        label: "legal.create.group.title.CaseType",
+        name: 'CaseType',
+        label: 'legal.create.group.title.CaseType',
         fields: [
           {
-            name: "isSummon",
-            jsonPath: "summons[0].isSummon",
-            label: "legal.create.isSummon",
-            type: "radio",
+            name: 'isSummon',
+            jsonPath: 'summons[0].isSummon',
+            label: 'legal.create.isSummon',
+            type: 'radio',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             values: [
               {
-                label: "legal.create.Summon",
-                value: true
+                label: 'legal.create.Summon',
+                value: true,
               },
               {
-                label: "legal.create.Warrant",
-                value: false
-              }
-            ]
-          }
-        ]
+                label: 'legal.create.Warrant',
+                value: false,
+              },
+            ],
+          },
+        ],
       },
       {
-        name: "CaseTypeDetails",
-        label: "legal.create.group.title.CaseTypeDetails",
+        name: 'CaseTypeDetails',
+        label: 'legal.create.group.title.CaseTypeDetails',
         fields: [
           {
-            name: "referenceNo",
-            jsonPath: "summons[0].referenceNo",
-            label: "legal.create.referenceNo",
-            type: "text",
+            name: 'referenceNo',
+            jsonPath: 'summons[0].referenceNo',
+            label: 'legal.create.referenceNo',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "summonDate",
-            jsonPath: "summons[0].summonDate",
-            label: "legal.create.summonDate",
-            type: "number",
+            name: 'summonDate',
+            jsonPath: 'summons[0].summonDate',
+            label: 'legal.create.summonDate',
+            type: 'number',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "year",
-            jsonPath: "summons[0].year",
-            label: "legal.create.year",
-            type: "text",
+            name: 'year',
+            jsonPath: 'summons[0].year',
+            label: 'legal.create.year',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
             maxLength: 4,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "caseType",
-            jsonPath: "summons[0].caseType.name",
-            label: "legal.create.caseType",
-            type: "text",
+            name: 'caseType',
+            jsonPath: 'summons[0].caseType.name',
+            label: 'legal.create.caseType',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
-            name: "plantiffName",
-            jsonPath: "summons[0].plantiffName",
-            label: "legal.create.plantiffName",
-            type: "text",
+            name: 'plantiffName',
+            jsonPath: 'summons[0].plantiffName',
+            label: 'legal.create.plantiffName',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "caseNo",
-            jsonPath: "summons[0].caseNo",
-            label: "legal.create.caseNo",
-            type: "text",
+            name: 'caseNo',
+            jsonPath: 'summons[0].caseNo',
+            label: 'legal.create.caseNo',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "plantiffAddress",
-            jsonPath: "summons[0].plantiffAddress",
-            label: "legal.create.plantiffAddress",
-            type: "text",
+            name: 'plantiffAddress',
+            jsonPath: 'summons[0].plantiffAddress',
+            label: 'legal.create.plantiffAddress',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "caseDetails",
-            jsonPath: "summons[0].caseDetails",
-            label: "legal.create.caseDetails",
-            type: "textarea",
+            name: 'caseDetails',
+            jsonPath: 'summons[0].caseDetails',
+            label: 'legal.create.caseDetails',
+            type: 'textarea',
             fullWidth: true,
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "defendant",
-            jsonPath: "summons[0].defendant",
-            label: "legal.create.defendant",
-            type: "text",
+            name: 'defendant',
+            jsonPath: 'summons[0].defendant',
+            label: 'legal.create.defendant',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "departmentName",
-            jsonPath: "summons[0].departmentName.code",
-            label: "legal.create.departmentName",
-            type: "singleValueList",
+            name: 'departmentName',
+            jsonPath: 'summons[0].departmentName.code',
+            label: 'legal.create.departmentName',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            patternErrorMsg: '',
+            url: '/egov-common-masters/departments/_search?|$..code|$..name',
           },
           {
-            name: "courtName",
-            jsonPath: "summons[0].courtName",
-            label: "legal.create.courtName",
-            type: "singleValueList",
+            name: 'courtName',
+            jsonPath: 'summons[0].courtName',
+            label: 'legal.create.courtName',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
-            name: "hearingDate",
-            jsonPath: "summons[0].hearingDate",
-            label: "legal.create.hearingDate",
-            type: "number",
+            name: 'hearingDate',
+            jsonPath: 'summons[0].hearingDate',
+            label: 'legal.create.hearingDate',
+            type: 'number',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "ward",
-            jsonPath: "summons[0].ward",
-            label: "legal.create.ward",
-            type: "singleValueList",
+            name: 'ward',
+            jsonPath: 'summons[0].ward',
+            label: 'legal.create.ward',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
-            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
+            patternErrorMsg: '',
+            url:
+              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
           },
           {
-            name: "hearingTime",
-            jsonPath: "summons[0].hearingTime",
-            label: "legal.create.hearingTime",
-            type: "timePicker",
+            name: 'hearingTime',
+            jsonPath: 'summons[0].hearingTime',
+            label: 'legal.create.hearingTime',
+            type: 'timePicker',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "bench",
-            jsonPath: "summons[0].bench.code",
-            label: "legal.create.bench",
-            type: "singleValueList",
+            name: 'bench',
+            jsonPath: 'summons[0].bench.code',
+            label: 'legal.create.bench',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
-            name: "side",
-            jsonPath: "summons[0].side.code",
-            label: "legal.create.side",
-            type: "singleValueList",
+            name: 'side',
+            jsonPath: 'summons[0].side.code',
+            label: 'legal.create.side',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
           },
           {
-            name: "stamp",
-            jsonPath: "summons[0].stamp.code",
-            label: "legal.create.stamp",
-            type: "singleValueList",
+            name: 'stamp',
+            jsonPath: 'summons[0].stamp.code',
+            label: 'legal.create.stamp',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
           },
           {
-            name: "sectionApplied",
-            jsonPath: "summons[0].sectionApplied",
-            label: "legal.create.sectionApplied",
-            type: "text",
+            name: 'sectionApplied',
+            jsonPath: 'summons[0].sectionApplied',
+            label: 'legal.create.sectionApplied',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
-          }
-        ]
-      }
+            patternErrorMsg: '',
+          },
+        ],
+      },
     ],
-    tenantIdRequired: true
+    tenantIdRequired: true,
   },
-  "legal.update": {
+  'legal.update': {
     numCols: 4,
-    title: "summon.update.document.title",
+    title: 'summon.update.document.title',
     useTimestamp: true,
-    objectName: "summons",
-    searchUrl: "lcms-services/legalcase/case/_search?code={id}",
+    objectName: 'summons',
+    searchUrl: 'lcms-services/legalcase/case/_search?code={id}',
     groups: [
       {
-        name: "CaseType",
-        label: "legal.create.group.title.CaseType",
+        name: 'CaseType',
+        label: 'legal.create.group.title.CaseType',
         fields: [
           {
-            name: "isSummon",
-            jsonPath: "summons[0].isSummon",
-            label: "legal.create.isSummon",
-            type: "radio",
+            name: 'isSummon',
+            jsonPath: 'summons[0].isSummon',
+            label: 'legal.create.isSummon',
+            type: 'radio',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             values: [
               {
-                label: "legal.create.Summon",
-                value: true
+                label: 'legal.create.Summon',
+                value: true,
               },
               {
-                label: "legal.create.Warrant",
-                value: false
-              }
-            ]
-          }
-        ]
+                label: 'legal.create.Warrant',
+                value: false,
+              },
+            ],
+          },
+        ],
       },
       {
-        name: "CaseTypeDetails",
-        label: "legal.create.group.title.CaseTypeDetails",
+        name: 'CaseTypeDetails',
+        label: 'legal.create.group.title.CaseTypeDetails',
         fields: [
           {
-            name: "referenceNo",
-            jsonPath: "summons[0].referenceNo",
-            label: "legal.create.referenceNo",
-            type: "text",
+            name: 'referenceNo',
+            jsonPath: 'summons[0].referenceNo',
+            label: 'legal.create.referenceNo',
+            type: 'text',
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "summonDate",
-            jsonPath: "summons[0].summonDate",
-            label: "legal.create.summonDate",
-            type: "number",
+            name: 'summonDate',
+            jsonPath: 'summons[0].summonDate',
+            label: 'legal.create.summonDate',
+            type: 'number',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "year",
-            jsonPath: "summons[0].year",
-            label: "legal.create.year",
-            type: "text",
+            name: 'year',
+            jsonPath: 'summons[0].year',
+            label: 'legal.create.year',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
             maxLength: 4,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "caseType",
-            jsonPath: "summons[0].caseType",
-            label: "legal.create.caseType",
-            type: "text",
+            name: 'caseType',
+            jsonPath: 'summons[0].caseType',
+            label: 'legal.create.caseType',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
-            name: "plantiffName",
-            jsonPath: "summons[0].plantiffName",
-            label: "legal.create.plantiffName",
-            type: "text",
+            name: 'plantiffName',
+            jsonPath: 'summons[0].plantiffName',
+            label: 'legal.create.plantiffName',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "caseNo",
-            jsonPath: "summons[0].caseNo",
-            label: "legal.create.caseNo",
-            type: "text",
+            name: 'caseNo',
+            jsonPath: 'summons[0].caseNo',
+            label: 'legal.create.caseNo',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "plantiffAddress",
-            jsonPath: "summons[0].plantiffAddress",
-            label: "legal.create.plantiffAddress",
-            type: "text",
+            name: 'plantiffAddress',
+            jsonPath: 'summons[0].plantiffAddress',
+            label: 'legal.create.plantiffAddress',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "caseDetails",
-            jsonPath: "summons[0].caseDetails",
-            label: "legal.create.caseDetails",
-            type: "textarea",
+            name: 'caseDetails',
+            jsonPath: 'summons[0].caseDetails',
+            label: 'legal.create.caseDetails',
+            type: 'textarea',
             fullWidth: true,
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "defendant",
-            jsonPath: "summons[0].defendant",
-            label: "legal.create.defendant",
-            type: "text",
+            name: 'defendant',
+            jsonPath: 'summons[0].defendant',
+            label: 'legal.create.defendant',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "departmentName",
-            jsonPath: "summons[0].departmentName",
-            label: "legal.create.departmentName",
-            type: "singleValueList",
+            name: 'departmentName',
+            jsonPath: 'summons[0].departmentName',
+            label: 'legal.create.departmentName',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
-            url: "/egov-common-masters/departments/_search?|$..code|$..name"
+            patternErrorMsg: '',
+            url: '/egov-common-masters/departments/_search?|$..code|$..name',
           },
           {
-            name: "courtName",
-            jsonPath: "summons[0].courtName",
-            label: "legal.create.courtName",
-            type: "singleValueList",
+            name: 'courtName',
+            jsonPath: 'summons[0].courtName',
+            label: 'legal.create.courtName',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
-            name: "hearingDate",
-            jsonPath: "summons[0].hearingDate",
-            label: "legal.create.hearingDate",
-            type: "number",
+            name: 'hearingDate',
+            jsonPath: 'summons[0].hearingDate',
+            label: 'legal.create.hearingDate',
+            type: 'number',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "ward",
-            jsonPath: "summons[0].ward",
-            label: "legal.create.ward",
-            type: "singleValueList",
+            name: 'ward',
+            jsonPath: 'summons[0].ward',
+            label: 'legal.create.ward',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
-            url:"/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name"
+            patternErrorMsg: '',
+            url:
+              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
           },
           {
-            name: "hearingTime",
-            jsonPath: "summons[0].hearingTime",
-            label: "legal.create.hearingTime",
-            type: "timePicker",
+            name: 'hearingTime',
+            jsonPath: 'summons[0].hearingTime',
+            label: 'legal.create.hearingTime',
+            type: 'timePicker',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
+            patternErrorMsg: '',
           },
           {
-            name: "bench",
-            jsonPath: "summons[0].bench",
-            label: "legal.create.bench",
-            type: "singleValueList",
+            name: 'bench',
+            jsonPath: 'summons[0].bench',
+            label: 'legal.create.bench',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
-            name: "side",
-            jsonPath: "summons[0].side",
-            label: "legal.create.side",
-            type: "singleValueList",
+            name: 'side',
+            jsonPath: 'summons[0].side',
+            label: 'legal.create.side',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
           },
           {
-            name: "stamp",
-            jsonPath: "summons[0].stamp",
-            label: "legal.create.stamp",
-            type: "singleValueList",
+            name: 'stamp',
+            jsonPath: 'summons[0].stamp',
+            label: 'legal.create.stamp',
+            type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            patternErrorMsg: "",
+            patternErrorMsg: '',
             url:
-              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name"
+              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
           },
           {
-            name: "sectionApplied",
-            jsonPath: "summons[0].sectionApplied",
-            label: "legal.create.sectionApplied",
-            type: "text",
+            name: 'sectionApplied',
+            jsonPath: 'summons[0].sectionApplied',
+            label: 'legal.create.sectionApplied',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: ""
-          }
-        ]
-      }
-    ]
-  }
+            patternErrorMsg: '',
+          },
+        ],
+      },
+    ],
+  },
 };
 export default dat;

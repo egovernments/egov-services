@@ -1,99 +1,96 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
+import _ from 'lodash';
+import ShowFields from '../../../framework/showFields';
 
-import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
-
-import {translate} from '../../../common/common';
+import { translate } from '../../../common/common';
 import Api from '../../../../api/api';
-import jp from "jsonpath";
+import jp from 'jsonpath';
 import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
-import $ from "jquery";
+import {
+  fileUpload,
+  getInitiatorPosition,
+} from '../../../framework/utility/utility';
+import $ from 'jquery';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import UiTable from '../../../framework/components/UiTable';
 
-var specifications={};
+var specifications = {};
 const styles = {
-
-  underlineStyle: {
-
-  },
-  underlineFocusStyle: {
-
-  },
+  underlineStyle: {},
+  underlineFocusStyle: {},
   floatingLabelStyle: {
-    color: "#354f57"
+    color: '#354f57',
   },
   floatingLabelFocusStyle: {
-    color:"#354f57"
+    color: '#354f57',
   },
   customWidth: {
-    width:100
+    width: 100,
   },
   checkbox: {
     marginBottom: 0,
-    marginTop:15
+    marginTop: 15,
   },
   uploadButton: {
-   verticalAlign: 'middle',
- },
- uploadInput: {
-   cursor: 'pointer',
-   position: 'absolute',
-   top: 0,
-   bottom: 0,
-   right: 0,
-   left: 0,
-   width: '100%',
-   opacity: 0,
- },
- floatButtonMargin: {
-   marginLeft: 20,
-   fontSize:12,
-   width:30,
-   height:30
- },
- iconFont: {
-   fontSize:17,
-   cursor:'pointer'
- },
- radioButton: {
-    marginBottom:0,
+    verticalAlign: 'middle',
   },
-actionWidth: {
-  width:160
-},
-reducePadding: {
-  paddingTop:4,
-  paddingBottom:0
-},
-noPadding: {
-  paddingBottom:0,
-  paddingTop:0
-},
-noMargin: {
-  marginBottom: 0
-},
-textRight: {
-  textAlign:'right'
-},
-chip: {
-  marginTop:4
-}
+  uploadInput: {
+    cursor: 'pointer',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    width: '100%',
+    opacity: 0,
+  },
+  floatButtonMargin: {
+    marginLeft: 20,
+    fontSize: 12,
+    width: 30,
+    height: 30,
+  },
+  iconFont: {
+    fontSize: 17,
+    cursor: 'pointer',
+  },
+  radioButton: {
+    marginBottom: 0,
+  },
+  actionWidth: {
+    width: 160,
+  },
+  reducePadding: {
+    paddingTop: 4,
+    paddingBottom: 0,
+  },
+  noPadding: {
+    paddingBottom: 0,
+    paddingTop: 0,
+  },
+  noMargin: {
+    marginBottom: 0,
+  },
+  textRight: {
+    textAlign: 'right',
+  },
+  chip: {
+    marginTop: 4,
+  },
 };
 
-var CONST_API_GET_FILE = "filestore/v1/files/id";
+var CONST_API_GET_FILE = 'filestore/v1/files/id';
 let reqRequired = [];
 class viewFeeMatrix extends Component {
   constructor(props) {
@@ -101,15 +98,20 @@ class viewFeeMatrix extends Component {
   }
 
   setLabelAndReturnRequired(configObject) {
-    if(configObject && configObject.groups) {
-      for(var i=0;configObject && i<configObject.groups.length; i++) {
+    if (configObject && configObject.groups) {
+      for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-              configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          configObject.groups[i].fields[j].label = translate(
+            configObject.groups[i].fields[j].label
+          );
         }
 
-        if(configObject.groups[i].children && configObject.groups[i].children.length) {
-          for(var k=0; k<configObject.groups[i].children.length; k++) {
+        if (
+          configObject.groups[i].children &&
+          configObject.groups[i].children.length
+        ) {
+          for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
         }
@@ -119,21 +121,37 @@ class viewFeeMatrix extends Component {
 
   setInitialUpdateChildData(form, children) {
     let _form = JSON.parse(JSON.stringify(form));
-    for(var i=0; i<children.length; i++) {
-      for(var j=0; j<children[i].groups.length; j++) {
-        if(children[i].groups[j].multiple) {
+    for (var i = 0; i < children.length; i++) {
+      for (var j = 0; j < children[i].groups.length; j++) {
+        if (children[i].groups[j].multiple) {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(children[i].groups[j].jsonPath.replace("[", "\[").replace("]", "\]") + "\\[\\d{1}\\]", 'g');
-          for(var k=1; k < arr.length; k++) {
+          var regex = new RegExp(
+            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
+              '\\[\\d{1}\\]',
+            'g'
+          );
+          for (var k = 1; k < arr.length; k++) {
             j++;
-            children[i].groups[j].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + "[" + k + "]")));
-            children[i].groups[j].groups[ind+1].index = ind+1;
+            children[i].groups[j].groups.splice(
+              ind + 1,
+              0,
+              JSON.parse(
+                _stringifiedGroup.replace(
+                  regex,
+                  children[i].groups[ind].jsonPath + '[' + k + ']'
+                )
+              )
+            );
+            children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if(children[i].groups[j].children && children[i].groups[j].children.length) {
+        if (
+          children[i].groups[j].children &&
+          children[i].groups[j].children.length
+        ) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -141,32 +159,75 @@ class viewFeeMatrix extends Component {
   }
 
   hideField(specs, moduleName, actionName, hideObject) {
-    if(hideObject.isField) {
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        for(let j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
-          if(hideObject.name == specs[moduleName + "." + actionName].groups[i].fields[j].name) {
-            specs[moduleName + "." + actionName].groups[i].fields[j].hide = true;
+    if (hideObject.isField) {
+      for (
+        let i = 0;
+        i < specs[moduleName + '.' + actionName].groups.length;
+        i++
+      ) {
+        for (
+          let j = 0;
+          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
+          j++
+        ) {
+          if (
+            hideObject.name ==
+            specs[moduleName + '.' + actionName].groups[i].fields[j].name
+          ) {
+            specs[moduleName + '.' + actionName].groups[i].fields[
+              j
+            ].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        if(hideObject.name == specs[moduleName + "." + actionName].groups[i].name) {
+      for (
+        let i = 0;
+        i < specs[moduleName + '.' + actionName].groups.length;
+        i++
+      ) {
+        if (
+          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
+        ) {
           flag = 1;
-          specs[moduleName + "." + actionName].groups[i].hide = true;
+          specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
         }
       }
 
-      if(flag == 0) {
-        for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-          if(specs[moduleName + "." + actionName].groups[i].children && specs[moduleName + "." + actionName].groups[i].children.length) {
-            for(let j=0; j<specs[moduleName + "." + actionName].groups[i].children.length; j++) {
-              for(let k=0; k<specs[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
-                if(hideObject.name == specs[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
-                  specs[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = true;
+      if (flag == 0) {
+        for (
+          let i = 0;
+          i < specs[moduleName + '.' + actionName].groups.length;
+          i++
+        ) {
+          if (
+            specs[moduleName + '.' + actionName].groups[i].children &&
+            specs[moduleName + '.' + actionName].groups[i].children.length
+          ) {
+            for (
+              let j = 0;
+              j <
+              specs[moduleName + '.' + actionName].groups[i].children.length;
+              j++
+            ) {
+              for (
+                let k = 0;
+                k <
+                specs[moduleName + '.' + actionName].groups[i].children[j]
+                  .groups.length;
+                k++
+              ) {
+                if (
+                  hideObject.name ==
+                  specs[moduleName + '.' + actionName].groups[i].children[j]
+                    .groups[k].name
+                ) {
+                  specs[moduleName + '.' + actionName].groups[i].children[
+                    j
+                  ].groups[k].hide = true;
                   break;
                 }
               }
@@ -178,32 +239,75 @@ class viewFeeMatrix extends Component {
   }
 
   showField(specs, moduleName, actionName, showObject) {
-    if(showObject.isField) {
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        for(let j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
-          if(showObject.name == specs[moduleName + "." + actionName].groups[i].fields[j].name) {
-            specs[moduleName + "." + actionName].groups[i].fields[j].hide = false;
+    if (showObject.isField) {
+      for (
+        let i = 0;
+        i < specs[moduleName + '.' + actionName].groups.length;
+        i++
+      ) {
+        for (
+          let j = 0;
+          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
+          j++
+        ) {
+          if (
+            showObject.name ==
+            specs[moduleName + '.' + actionName].groups[i].fields[j].name
+          ) {
+            specs[moduleName + '.' + actionName].groups[i].fields[
+              j
+            ].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-        if(showObject.name == specs[moduleName + "." + actionName].groups[i].name) {
+      for (
+        let i = 0;
+        i < specs[moduleName + '.' + actionName].groups.length;
+        i++
+      ) {
+        if (
+          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
+        ) {
           flag = 1;
-          specs[moduleName + "." + actionName].groups[i].hide = false;
+          specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
         }
       }
 
-      if(flag == 0) {
-        for(let i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-          if(specs[moduleName + "." + actionName].groups[i].children && specs[moduleName + "." + actionName].groups[i].children.length) {
-            for(let j=0; j<specs[moduleName + "." + actionName].groups[i].children.length; j++) {
-              for(let k=0; k<specs[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
-                if(showObject.name == specs[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
-                  specs[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = false;
+      if (flag == 0) {
+        for (
+          let i = 0;
+          i < specs[moduleName + '.' + actionName].groups.length;
+          i++
+        ) {
+          if (
+            specs[moduleName + '.' + actionName].groups[i].children &&
+            specs[moduleName + '.' + actionName].groups[i].children.length
+          ) {
+            for (
+              let j = 0;
+              j <
+              specs[moduleName + '.' + actionName].groups[i].children.length;
+              j++
+            ) {
+              for (
+                let k = 0;
+                k <
+                specs[moduleName + '.' + actionName].groups[i].children[j]
+                  .groups.length;
+                k++
+              ) {
+                if (
+                  showObject.name ==
+                  specs[moduleName + '.' + actionName].groups[i].children[j]
+                    .groups[k].name
+                ) {
+                  specs[moduleName + '.' + actionName].groups[i].children[
+                    j
+                  ].groups[k].hide = false;
                   break;
                 }
               }
@@ -215,35 +319,118 @@ class viewFeeMatrix extends Component {
   }
 
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
-    let {setMockData} = this.props;
+    let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
-      if(specs[moduleName + "." + actionName].groups[i].multiple) {
-        var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
+    for (
+      var i = 0;
+      i < specs[moduleName + '.' + actionName].groups.length;
+      i++
+    ) {
+      if (specs[moduleName + '.' + actionName].groups[i].multiple) {
+        var arr = _.get(
+          _form,
+          specs[moduleName + '.' + actionName].groups[i].jsonPath
+        );
         ind = i;
-        var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
-        var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
-        for(var j=1; j < arr.length; j++) {
+        var _stringifiedGroup = JSON.stringify(
+          specs[moduleName + '.' + actionName].groups[i]
+        );
+        var regex = new RegExp(
+          specs[moduleName + '.' + actionName].groups[i].jsonPath
+            .replace(/\[/g, '\\[')
+            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          'g'
+        );
+        for (var j = 1; j < arr.length; j++) {
           i++;
-          specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+          specs[moduleName + '.' + actionName].groups.splice(
+            ind + 1,
+            0,
+            JSON.parse(
+              _stringifiedGroup.replace(
+                regex,
+                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
+                  '[' +
+                  j +
+                  ']'
+              )
+            )
+          );
+          specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
         }
       }
 
-      for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
-        if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
-          for(var k=0; k<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
-            if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue == _.get(form, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath)) {
-              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length) {
-                for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
-                  this.hideField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
+      for (
+        var j = 0;
+        j < specs[moduleName + '.' + actionName].groups[i].fields.length;
+        j++
+      ) {
+        if (
+          specs[moduleName + '.' + actionName].groups[i].fields[j]
+            .showHideFields &&
+          specs[moduleName + '.' + actionName].groups[i].fields[j]
+            .showHideFields.length
+        ) {
+          for (
+            var k = 0;
+            k <
+            specs[moduleName + '.' + actionName].groups[i].fields[j]
+              .showHideFields.length;
+            k++
+          ) {
+            if (
+              specs[moduleName + '.' + actionName].groups[i].fields[j]
+                .showHideFields[k].ifValue ==
+              _.get(
+                form,
+                specs[moduleName + '.' + actionName].groups[i].fields[j]
+                  .jsonPath
+              )
+            ) {
+              if (
+                specs[moduleName + '.' + actionName].groups[i].fields[j]
+                  .showHideFields[k].hide &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j]
+                  .showHideFields[k].hide.length
+              ) {
+                for (
+                  var a = 0;
+                  a <
+                  specs[moduleName + '.' + actionName].groups[i].fields[j]
+                    .showHideFields[k].hide.length;
+                  a++
+                ) {
+                  this.hideField(
+                    specs,
+                    moduleName,
+                    actionName,
+                    specs[moduleName + '.' + actionName].groups[i].fields[j]
+                      .showHideFields[k].hide[a]
+                  );
                 }
               }
 
-              if(specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show && specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length) {
-                for(var a=0; a<specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
-                  this.showField(specs, moduleName, actionName, specs[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[a]);
+              if (
+                specs[moduleName + '.' + actionName].groups[i].fields[j]
+                  .showHideFields[k].show &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j]
+                  .showHideFields[k].show.length
+              ) {
+                for (
+                  var a = 0;
+                  a <
+                  specs[moduleName + '.' + actionName].groups[i].fields[j]
+                    .showHideFields[k].show.length;
+                  a++
+                ) {
+                  this.showField(
+                    specs,
+                    moduleName,
+                    actionName,
+                    specs[moduleName + '.' + actionName].groups[i].fields[j]
+                      .showHideFields[k].show[a]
+                  );
                 }
               }
             }
@@ -251,8 +438,14 @@ class viewFeeMatrix extends Component {
         }
       }
 
-      if(specs[moduleName + "." + actionName].groups[ind || i].children && specs[moduleName + "." + actionName].groups[ind || i].children.length) {
-        this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind || i].children);
+      if (
+        specs[moduleName + '.' + actionName].groups[ind || i].children &&
+        specs[moduleName + '.' + actionName].groups[ind || i].children.length
+      ) {
+        this.setInitialUpdateChildData(
+          form,
+          specs[moduleName + '.' + actionName].groups[ind || i].children
+        );
       }
     }
 
@@ -271,187 +464,254 @@ class viewFeeMatrix extends Component {
     //
     // }
 
-    specifications = require(`../../../framework/specs/tl/master/FeeMatrix`).default;
-
+    specifications = require(`../../../framework/specs/tl/master/FeeMatrix`)
+      .default;
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
-    let obj = specifications["tl.view"];
+    let obj = specifications['tl.view'];
     self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
-    setModuleName("tl");
-    setActionName("view");
+    setModuleName('tl');
+    setActionName('view');
     //Get view form data
-    var url = specifications["tl.view"].url.split("?")[0];
-    var hash = window.location.hash.split("/");
+    var url = specifications['tl.view'].url.split('?')[0];
+    var hash = window.location.hash.split('/');
     var value = self.props.match.params.id;
     var query = {
-      [specifications["tl.view"].url.split("?")[1].split("=")[0]]: value
+      [specifications['tl.view'].url.split('?')[1].split('=')[0]]: value,
     };
 
-    if(window.location.href.indexOf("?") > -1) {
+    if (window.location.href.indexOf('?') > -1) {
+      var qs = window.location.href.split('?')[1];
+      if (qs && qs.indexOf('=') > -1) {
+        qs = qs.indexOf('&') > -1 ? qs.split('&') : [qs];
+        for (var i = 0; i < qs.length; i++) {
+          query[qs[i].split('=')[0]] = qs[i].split('=')[1];
+        }
+      }
+    }
 
-     var qs =  window.location.href.split("?")[1];
-     if(qs && qs.indexOf("=") > -1) {
-       qs = qs.indexOf("&") > -1 ? qs.split("&") : [qs];
-       for(var i=0; i<qs.length; i++) {
-         query[qs[i].split("=")[0]] = qs[i].split("=")[1];
-       }
-     }
-   }
-
-  Api.commonApiPost(url, query, {}, false, specifications["tl.view"].useTimestamp).then(function(res){
-      self.props.setFormData(res);
-      console.log(res);
-      //self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"tl", "view", specifications["tl.view"].objectName);
-    }, function(err){
-
-    })
+    Api.commonApiPost(
+      url,
+      query,
+      {},
+      false,
+      specifications['tl.view'].useTimestamp
+    ).then(
+      function(res) {
+        self.props.setFormData(res);
+        console.log(res);
+        //self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"tl", "view", specifications["tl.view"].objectName);
+      },
+      function(err) {}
+    );
   }
 
   componentDidMount() {
-      this.initData();
+    this.initData();
   }
 
+  getVal = (path, isDate) => {
+    var val = _.get(this.props.formData, path);
 
-getVal = (path,isDate) => {
-  var val = _.get(this.props.formData, path);
+    if (
+      isDate &&
+      val &&
+      ((val + '').length == 13 || (val + '').length == 12) &&
+      new Date(Number(val)).getTime() > 0
+    ) {
+      var _date = new Date(Number(val));
+      return (
+        ('0' + _date.getDate()).slice(-2) +
+        '/' +
+        ('0' + (_date.getMonth() + 1)).slice(-2) +
+        '/' +
+        _date.getFullYear()
+      );
+    }
 
-  if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
-    var _date = new Date(Number(val));
-    return ('0' + _date.getDate()).slice(-2) + '/'
-             + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
-             + _date.getFullYear();
-  }
+    return typeof val != 'undefined' &&
+      (typeof val == 'string' ||
+        typeof val == 'number' ||
+        typeof val == 'boolean')
+      ? val + ''
+      : '';
+  };
 
-  return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? (val + "") : "";
-}
+  printer = () => {
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
 
-printer = () => {
-  var mywindow = window.open('', 'PRINT', 'height=400,width=600');
-
- var cdn = `
+    var cdn = `
    <!-- Latest compiled and minified CSS -->
    <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
    <!-- Optional theme -->
    <link rel="stylesheet" media="all" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">  `;
- mywindow.document.write('<html><head><title> </title>');
- mywindow.document.write(cdn);
- mywindow.document.write('</head><body>');
- mywindow.document.write(document.getElementById('printable').innerHTML);
- mywindow.document.write('</body></html>');
+    mywindow.document.write('<html><head><title> </title>');
+    mywindow.document.write(cdn);
+    mywindow.document.write('</head><body>');
+    mywindow.document.write(document.getElementById('printable').innerHTML);
+    mywindow.document.write('</body></html>');
 
- mywindow.document.close(); // necessary for IE >= 10
- mywindow.focus(); // necessary for IE >= 10*/
+    mywindow.document.close(); // necessary for IE >= 10
+    mywindow.focus(); // necessary for IE >= 10*/
 
- setTimeout(function(){
-   mywindow.print();
-   mywindow.close();
- }, 1000);
+    setTimeout(function() {
+      mywindow.print();
+      mywindow.close();
+    }, 1000);
 
- return true;
-}
+    return true;
+  };
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
-    let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
+    let {
+      mockData,
+      moduleName,
+      actionName,
+      formData,
+      fieldErrors,
+      date,
+    } = this.props;
+    let {
+      handleChange,
+      getVal,
+      addNewCard,
+      removeCard,
+      printer,
+      feeMatrices,
+    } = this;
 
-
-          const renderBody = function() {
-
-            console.log(formData);
-            // console.log(formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails"));
-            console.log(formData && formData.hasOwnProperty("feeMatrices"));
-            if(!_.isEmpty(formData) && (formData.feeMatrices.length >0)){
-              // console.log(formData.feeMatrices);
-  if(formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails")){
-              return (
-
-                <div>
-                <Card className="uiCard">
-                    <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("tl.view.table.title.feeDetails")}</div>}/>
-                    <CardText>
-                    <Table  bordered responsive className="table-striped">
+    const renderBody = function() {
+      console.log(formData);
+      // console.log(formData && formData.hasOwnProperty("feeMatrices") && formData.feeMatrices[0].hasOwnProperty("feeMatrixDetails"));
+      console.log(formData && formData.hasOwnProperty('feeMatrices'));
+      if (!_.isEmpty(formData) && formData.feeMatrices.length > 0) {
+        // console.log(formData.feeMatrices);
+        if (
+          formData &&
+          formData.hasOwnProperty('feeMatrices') &&
+          formData.feeMatrices[0].hasOwnProperty('feeMatrixDetails')
+        ) {
+          return (
+            <div>
+              <Card className="uiCard">
+                <CardHeader
+                  title={
+                    <div
+                      style={{
+                        color: '#354f57',
+                        fontSize: 18,
+                        margin: '8px 0',
+                      }}
+                    >
+                      {translate('tl.view.table.title.feeDetails')}
+                    </div>
+                  }
+                />
+                <CardText>
+                  <Table bordered responsive className="table-striped">
                     <thead>
                       <tr>
-                        <th>{translate("tl.view.groups.feeMatrixDetails.uomFrom")}</th>
-                        <th>{translate("tl.view.groups.feeMatrixDetails.uomTo")}</th>
-                        <th>{translate("tl.view.groups.feeMatrixDetails.amount")}</th>
+                        <th>
+                          {translate('tl.view.groups.feeMatrixDetails.uomFrom')}
+                        </th>
+                        <th>
+                          {translate('tl.view.groups.feeMatrixDetails.uomTo')}
+                        </th>
+                        <th>
+                          {translate('tl.view.groups.feeMatrixDetails.amount')}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-
-                      { formData.feeMatrices[0].feeMatrixDetails.map(function(item, index) {
+                      {formData.feeMatrices[0].feeMatrixDetails.map(function(
+                        item,
+                        index
+                      ) {
                         return (
                           <tr key={index}>
                             <td>{item.uomFrom}</td>
                             <td>{item.uomTo}</td>
                             <td>{item.amount}</td>
                           </tr>
-                        )
+                        );
                       })}
                     </tbody>
-                    </Table>
-                  </CardText>
-                  </Card>
-
-
-                </div>
-
-              )
-}
-         }
+                  </Table>
+                </CardText>
+              </Card>
+            </div>
+          );
+        }
       }
+    };
 
     return (
       <div className="Report">
         <form id="printable">
-        {!_.isEmpty(mockData) && mockData["tl.view"] && <ShowFields groups={mockData["tl.view"].groups} noCols={mockData["tl.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["tl.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
+          {!_.isEmpty(mockData) &&
+            mockData['tl.view'] && (
+              <ShowFields
+                groups={mockData['tl.view'].groups}
+                noCols={mockData['tl.view'].numCols}
+                ui="google"
+                handler={''}
+                getVal={getVal}
+                fieldErrors={fieldErrors}
+                useTimestamp={mockData['tl.view'].useTimestamp || false}
+                addNewCard={''}
+                removeCard={''}
+                screen="view"
+              />
+            )}
 
-
-            {renderBody()}
-
-
+          {renderBody()}
         </form>
-
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  metaData:state.framework.metaData,
+  metaData: state.framework.metaData,
   mockData: state.framework.mockData,
-  moduleName:state.framework.moduleName,
-  actionName:state.framework.actionName,
-  formData:state.frameworkForm.form,
-  fieldErrors: state.frameworkForm.fieldErrors
+  moduleName: state.framework.moduleName,
+  actionName: state.framework.actionName,
+  formData: state.frameworkForm.form,
+  fieldErrors: state.frameworkForm.fieldErrors,
 });
 
 const mapDispatchToProps = dispatch => ({
-  setFormData: (data) => {
-    dispatch({type: "SET_FORM_DATA", data});
+  setFormData: data => {
+    dispatch({ type: 'SET_FORM_DATA', data });
   },
-  setMetaData: (metaData) => {
-    dispatch({type:"SET_META_DATA", metaData})
+  setMetaData: metaData => {
+    dispatch({ type: 'SET_META_DATA', metaData });
   },
-  setMockData: (mockData) => {
-    dispatch({type: "SET_MOCK_DATA", mockData});
+  setMockData: mockData => {
+    dispatch({ type: 'SET_MOCK_DATA', mockData });
   },
-  setModuleName: (moduleName) => {
-    dispatch({type:"SET_MODULE_NAME", moduleName})
+  setModuleName: moduleName => {
+    dispatch({ type: 'SET_MODULE_NAME', moduleName });
   },
-  setActionName: (actionName) => {
-    dispatch({type:"SET_ACTION_NAME", actionName})
+  setActionName: actionName => {
+    dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  setLoadingStatus: (loadingStatus) => {
-    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  setLoadingStatus: loadingStatus => {
+    dispatch({ type: 'SET_LOADING_STATUS', loadingStatus });
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
-    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
-  }
+    dispatch({
+      type: 'TOGGLE_SNACKBAR_AND_SET_TEXT',
+      snackbarState,
+      toastMsg,
+      isSuccess,
+      isError,
+    });
+  },
 });
 export default connect(mapStateToProps, mapDispatchToProps)(viewFeeMatrix);

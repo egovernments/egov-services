@@ -7,10 +7,7 @@ import reducers from './reducer';
 const store = createStore(
   reducers,
   {},
-  compose(
-    applyMiddleware(thunk),
-    autoRehydrate()
-  )
+  compose(applyMiddleware(thunk), autoRehydrate())
 );
 
 // persistStore(store);

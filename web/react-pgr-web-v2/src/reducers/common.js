@@ -6,9 +6,9 @@ const defaultState = {
   complaintsLength: 0,
   pleaseWait: false,
   showMenu: false,
-  actionList:[],
+  actionList: [],
   showHome: false,
-  tenantInfo:[]
+  tenantInfo: [],
 };
 
 export default (state = defaultState, action) => {
@@ -18,36 +18,44 @@ export default (state = defaultState, action) => {
         ...state,
         token: action.token || null,
         appLoaded: true,
-        currentUser: action.payload ? action.payload.UserRequest : null
+        currentUser: action.payload ? action.payload.UserRequest : null,
       };
 
-    case "SET_TENANT_INFO":
+    case 'SET_TENANT_INFO':
       return {
         ...state,
-        tenantInfo:action.tenantInfo
-      }
+        tenantInfo: action.tenantInfo,
+      };
 
       break;
 
     case 'REDIRECT':
       return { ...state, redirectTo: null };
     case 'LOGOUT':
-      return { ...state, redirectTo: '/'+action.tenantId, token: null, currentUser: null, showMenu: false,actionList:[]};
+      return {
+        ...state,
+        redirectTo: '/' + action.tenantId,
+        token: null,
+        currentUser: null,
+        showMenu: false,
+        actionList: [],
+      };
     case 'FORCE_LOGOUT':
       return { token: null, showMenu: false, showHome: false };
     case 'SETTINGS_SAVED':
       return {
         ...state,
         redirectTo: action.error ? null : '/prd/dashboard',
-        currentUser: action.error ? null : action.payload.UserRequest
+        currentUser: action.error ? null : action.payload.UserRequest,
       };
     case 'LOGIN':
     case 'REGISTER':
       return {
         ...state,
-        redirectTo: action.error || action.doNotNavigate ? null : '/prd/dashboard',
+        redirectTo:
+          action.error || action.doNotNavigate ? null : '/prd/dashboard',
         token: action.error ? null : action.payload.access_token,
-        currentUser: action.error ? null : action.payload.UserRequest
+        currentUser: action.error ? null : action.payload.UserRequest,
       };
     case 'HOME_PAGE_UNLOADED':
     case 'PROFILE_PAGE_UNLOADED':
@@ -59,43 +67,47 @@ export default (state = defaultState, action) => {
         ...state,
         route: action.route,
         redirectTo: action.route,
-
-      }
+      };
     case 'SET_HOME':
       return {
         ...state,
-        showHome: action.showHome
-      }
+        showHome: action.showHome,
+      };
     case 'GET_LENGTH':
       return {
         ...state,
-        complaintsLength: action.payload && action.payload.service_requests && action.payload.service_requests.length ? action.payload.service_requests.length : 10789
-      }
+        complaintsLength:
+          action.payload &&
+          action.payload.service_requests &&
+          action.payload.service_requests.length
+            ? action.payload.service_requests.length
+            : 10789,
+      };
     case 'PLEASE_WAIT':
       return {
         ...state,
-        pleaseWait: action.pleaseWait
+        pleaseWait: action.pleaseWait,
       };
     case 'MENU_TOGGLE':
       return {
         ...state,
-        showMenu: !state.showMenu
-      }
+        showMenu: !state.showMenu,
+      };
 
     case 'MENU_DONT_TOGGLE':
       return {
         ...state,
-        showMenu:action.state
-      }
+        showMenu: action.state,
+      };
 
     case 'SET_ACTION_LIST':
-        return {
-          ...state,
-          actionList:action.actionList
-        }
+      return {
+        ...state,
+        actionList: action.actionList,
+      };
       break;
     default:
-        return state
+      return state;
   }
 
   return state;

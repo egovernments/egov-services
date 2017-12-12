@@ -120,8 +120,11 @@ public class MDMSCreateRepository {
 		uri.append(reloadPathHost)
 		   .append(reloadobjPathEndpoint);
 		logger.info("URI: "+uri.toString());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<String>(reloadReq, headers);
 		try{
-			 restTemplate.postForObject(uri.toString(), reloadReq, String.class);
+			restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
 		}catch(Exception e){
 			logger.error("Exception while updating cache for data: "+reloadReq+" = ",e);
 		}

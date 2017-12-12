@@ -658,7 +658,7 @@ serviceMaps:
 
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.quantity
 
-       - jsonPath: $.detailedEstimates.*.estimateActivities[?({id} in @.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets[*].id)].id
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.estimateActivity
 
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.parent.id
 

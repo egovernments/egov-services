@@ -154,6 +154,7 @@ public class DetailedEstimateService {
 							.getEstimateMeasurementSheets()) {
 						estimateMeasurementSheet.setId(commonUtils.getUUID());
 						estimateMeasurementSheet.setAuditDetails(auditDetails);
+                        estimateMeasurementSheet.setEstimateActivity(estimateActivity.getId());
 					}
 				}
 			}

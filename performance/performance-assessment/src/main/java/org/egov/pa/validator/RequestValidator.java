@@ -84,9 +84,18 @@ public class RequestValidator {
         final Error error = new Error();
         error.setCode(1);
         error.setDescription("Error while binding request");
-        if (errors.hasFieldErrors())
-            for (final FieldError fieldError : errors.getFieldErrors())
-                error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+        List<ErrorField> errFields = new ArrayList<>();
+        if (errors.hasFieldErrors()) { 
+            for (final FieldError fieldError : errors.getFieldErrors()) { 
+            	ErrorField ef = new ErrorField();
+            	ef.setField(fieldError.getField());
+            	ef.setMessage("Value in the field : " + fieldError.getField() + " is not matching the required expression");
+            	errFields.add(ef);
+            	error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+            	error.setMessage("Not matching the required expression"); 
+            }
+            error.setErrorFields(errFields);   
+        }
         errRes.setError(error);
         return errRes;
     }

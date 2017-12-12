@@ -130,12 +130,19 @@ public void setFinancialYear(String financialYear) {
 	this.financialYear = financialYear;
 }
 
+
+/**
+* Get department
+* @return department
+**/
+@Valid
+@Pattern(regexp="^[a-zA-Z0-9:-]+$")
 public String getCode() {
-	return code;
+ return code;
 }
 
 public void setCode(String code) {
-	this.code = code;
+ this.code = code;
 }
 
 

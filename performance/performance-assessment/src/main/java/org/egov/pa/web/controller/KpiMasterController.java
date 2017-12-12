@@ -39,6 +39,7 @@
  */
 package org.egov.pa.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -93,8 +94,10 @@ public class KpiMasterController implements KpiMaster {
             final BindingResult errors) {
     	log.info("KPI Master Request as recieved in Controller : " + kpiRequest);
         if (errors.hasErrors()) {
-            final ErrorResponse errRes = requestValidator.populateErrors(errors); 
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+            final List<ErrorResponse> errResList = new ArrayList<>();
+            errResList.add(requestValidator.populateErrors(errors)); 
+            		
+            return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
         }
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiRequest, Boolean.TRUE);
         if (!errorResponses.isEmpty())

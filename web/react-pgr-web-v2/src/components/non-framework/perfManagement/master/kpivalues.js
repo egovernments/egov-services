@@ -56,6 +56,7 @@ class kpivalues  extends Component{
             allowedMax:1,            
             search:false,
             currentFileList:[],
+            showAlert:false,
             headerList : [{4:'April'},{5:'May'},{6:'June'},{7:'July'},{8:'August'},{9:'September'},{10:'October'},{11:'November'},{12:'December'},{1:'January'},{2:'February'},{3:'March'}],
             errorInput:'No record found'
      };
@@ -309,7 +310,7 @@ prepareUploadPanel(itemValue)
             <span>
             <a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + fileStoreId['fileStoreId']} target="_blank">{this.state.currentFileList[itemValue.valueid][itemValue.period][fileStoreId['fileStoreId']] /*translate("wc.craete.file.Download")*/}</a>
               <br/>
-              <div style={{backgroundColor: '#4CAF50',color: 'white',opacity: 2,width:192,marginLeft:56}}>{"Please Submit KPI Values to save."}</div>
+              <div className={`${this.state.showingAlert ? '' : 'hidden'}`} style={{backgroundColor: '#4CAF50',color: 'white',opacity: 2,width:248,marginLeft:24}}>{"Please Submit KPI Values to save."}</div>
             </span>
 
           }
@@ -669,6 +670,15 @@ getFileDetails(filestoreID,valueid,period,self)
               filelistClone[valueid][period][filestoreID] = filename;
             }
             self.setState({currentFileList:filelistClone});
+
+             self.setState({
+                showingAlert: true
+              });
+             setTimeout(() => {
+                self.setState({
+                  showingAlert: false
+                });
+              }, 2000);
             //console.log(filelistClone);
             console.log(self.state.currentFileList);
           }

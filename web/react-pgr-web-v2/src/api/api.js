@@ -141,6 +141,9 @@ module.exports = {
             }
 
             throw new Error(_err);
+          } else if (response && response.response && response.response.data && response.response.data.hasOwnProperty('Data')) {
+            let _err = common.translate(response.response.data.Message) + '.';
+            throw new Error(_err);
           } else if (response && response.response && !response.response.data && response.response.status === 400) {
             if (counter == 0) {
               document.title = 'eGovernments';

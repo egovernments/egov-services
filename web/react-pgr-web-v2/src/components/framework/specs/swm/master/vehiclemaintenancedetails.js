@@ -565,7 +565,7 @@ var dat = {
             pattern: '',
             type: 'autoCompelete',
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             defaultValue: '',
             maxLength: 12,
             minLength: 6,

@@ -97,7 +97,7 @@ public class PurchaseOrderService extends DomainService {
     private boolean isTotalIndentQuantityUsedInPo;
     
     @Autowired
-	private MaterialReceiptJdbcRepository jdbcRepository;
+	private MaterialReceiptJdbcRepository materialJdbcRepository;
 
     @Autowired
     private MdmsRepository mdmsRepository;
@@ -591,7 +591,7 @@ public class PurchaseOrderService extends DomainService {
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
 		String code = "PO/";
-		int id = Integer.valueOf(jdbcRepository.getSequence(poOrder));
+		int id = Integer.valueOf(materialJdbcRepository.getSequence(poOrder));
 		String idgen = String.format("%05d", id);
 		String purchaseOrderNumber = code + idgen + "/" + year;
 		return purchaseOrderNumber;

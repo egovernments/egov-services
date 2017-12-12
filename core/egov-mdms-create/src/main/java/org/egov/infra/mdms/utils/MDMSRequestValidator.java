@@ -30,7 +30,8 @@ public class MDMSRequestValidator {
 	private MDMSService mDMSService;
 	
 	@SuppressWarnings("unchecked")
-	public ArrayList<Object> validateRequest(MDMSCreateRequest mDMSCreateRequest, Boolean isCreate) throws Exception{
+	public ArrayList<Object> validateRequest(MDMSCreateRequest mDMSCreateRequest, List<String> keys,
+			Boolean isCreate) throws Exception{
 		ArrayList<Object> result = new ArrayList<>();
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		ObjectMapper mapper = new ObjectMapper();
@@ -57,6 +58,7 @@ public class MDMSRequestValidator {
 			return result;
 		}else {
 			logger.info("uniqueKeys: "+uniqueKeys);
+			keys.addAll(uniqueKeys);
 			List<Object> masters = masterData;
 			for(int i = 0; i < masterDataArray.length() ; i++){
 				List<Object> filterResult = new ArrayList<>();

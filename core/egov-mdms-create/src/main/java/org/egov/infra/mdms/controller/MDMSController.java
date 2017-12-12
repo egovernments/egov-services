@@ -48,7 +48,8 @@ public class MDMSController {
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
-		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, true);
+		List<String> keys = new ArrayList<>();
+		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, true);
 		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
 		Gson gson = new Gson();
 		Object errorData = gson.fromJson(validationError.toString(), type);
@@ -56,7 +57,8 @@ public class MDMSController {
 			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
 			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
 				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-			mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, Please rectify and retry");
+			mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, "
+					+ "Please rectify and retry, UniqueKeys are: "+keys);
 			mDMSCreateErrorResponse.setData(errorData);
 			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}
@@ -74,7 +76,8 @@ public class MDMSController {
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
-		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, false);
+		List<String> keys = new ArrayList<>();
+		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, false);
 		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
 		Gson gson = new Gson();
 		Object errorData = gson.fromJson(validationError.toString(), type);
@@ -82,7 +85,8 @@ public class MDMSController {
 			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
 			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
 				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-			mDMSCreateErrorResponse.setMessage("Following records dont exist hence update failed, Please rectify and retry");
+			mDMSCreateErrorResponse.setMessage("Following records dont exist hence update failed, "
+					+ "Please rectify and retry, UniqueKeys are: "+keys);
 			mDMSCreateErrorResponse.setData(errorData);
 			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}

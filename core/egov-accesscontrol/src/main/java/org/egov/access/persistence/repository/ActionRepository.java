@@ -103,8 +103,6 @@ public class ActionRepository {
 	private String actionModule;
 	@Value("${mdms.roleactionmaster.names}")
 	private String roleActionMaster;
-	@Value("${mdms.actiontestmaster.names}")
-	private String actionTestMaster;
 	@Value("${mdms.actionmaster.names}")
 	private String actionMaster;
 	@Value("${mdms.actionstest.path}")

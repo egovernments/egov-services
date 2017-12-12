@@ -151,9 +151,9 @@ public List<Role> getAllMDMSRoles(RoleSearchCriteria roleSearchCriteria) throws 
 
 private MdmsCriteriaReq getRoleMDMSCriteria(RoleSearchCriteria roleSearchCriteria,String roleFilter) {
 	String mName = "";
-	String rMaster = "";
+	
 	mName = moduleName;
-    rMaster = rolesMaster;			
+    		
 	MdmsCriteriaReq mcq = new MdmsCriteriaReq();
 	List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
 	List<ModuleDetail> moduleDetail = new ArrayList<ModuleDetail>();

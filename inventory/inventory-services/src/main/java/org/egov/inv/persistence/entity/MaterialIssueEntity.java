@@ -78,34 +78,35 @@ public class MaterialIssueEntity {
 		if (materialIssue.getDesignation() != null)
 			this.designation = materialIssue.getDesignation();
 		this.issueType = materialIssue.getIssueType().name();
-		if (type.equals(IssueTypeEnum.INDENTISSUE.toString())) {
-			if (materialIssue.getIndent().getIssueStore() != null)
-				this.fromStore = materialIssue.getIndent().getIssueStore().getCode();
-			if (materialIssue.getIndent().getIndentStore() != null)
-				this.toStore = materialIssue.getIndent().getIndentStore().getCode();
-		} else {
-			if(materialIssue.getFromStore() != null && StringUtils.isNotBlank(materialIssue.getFromStore().getCode()))
+		if (materialIssue.getFromStore() != null && StringUtils.isNotBlank(materialIssue.getFromStore().getCode()))
 			this.fromStore = materialIssue.getFromStore().getCode();
-			if(materialIssue.getToStore() != null && StringUtils.isNotBlank(materialIssue.getToStore().getCode()))
+		if (materialIssue.getToStore() != null && StringUtils.isNotBlank(materialIssue.getToStore().getCode()))
 			this.toStore = materialIssue.getToStore().getCode();
-		}
 		this.issueNumber = materialIssue.getIssueNumber();
 		this.issueDate = materialIssue.getIssueDate();
-		if(materialIssue.getMaterialIssueStatus() != null)
-		this.materialIssueStatus = materialIssue.getMaterialIssueStatus().name();
+		if (materialIssue.getMaterialIssueStatus() != null)
+			this.materialIssueStatus = materialIssue.getMaterialIssueStatus().name();
 		this.totalIssueValue = Double.valueOf(materialIssue.getTotalIssueValue().toString());
 		if (materialIssue.getFileStoreId() != null)
 			this.fileStoreId = materialIssue.getFileStoreId();
 		if (materialIssue.getDesignation() != null)
 			this.designation = materialIssue.getDesignation();
-		if(type.equals(IssueTypeEnum.INDENTISSUE.toString())){
-		if (materialIssue.getIndent() != null && materialIssue.getIndent().getId() != null)
-			this.indentId = materialIssue.getIndent().getId();
+		if (type.equals(IssueTypeEnum.INDENTISSUE.toString())) {
+			if (materialIssue.getIndent() != null && materialIssue.getIndent().getId() != null)
+				this.indentId = materialIssue.getIndent().getId();
 		}
+		if(type.equals(IssueTypeEnum.INDENTISSUE.toString()))
+			this.issuedToEmployee = materialIssue.getIndent().getIndentCreatedBy();
+		else{
 		if (materialIssue.getIssuedToEmployee() != null)
 			this.issuedToEmployee = materialIssue.getIssuedToEmployee();
+		}
+		if(type.equals(IssueTypeEnum.INDENTISSUE))
+			this.issuedToDesignation = materialIssue.getIndent().getDesignation();
+		else{
 		if (materialIssue.getIssuedToDesignation() != null)
 			this.issuedToDesignation = materialIssue.getIssuedToDesignation();
+		}
 		if (materialIssue.getIssuePurpose() != null)
 			this.issuePurpose = materialIssue.getIssuePurpose().name();
 		if (materialIssue.getStateId() != null)

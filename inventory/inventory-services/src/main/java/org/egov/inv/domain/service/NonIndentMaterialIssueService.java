@@ -25,6 +25,7 @@ import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.model.MaterialIssue.IssuePurposeEnum;
@@ -34,6 +35,7 @@ import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +83,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 
 	public MaterialIssueResponse create(MaterialIssueRequest nonIndentIssueRequest) {
 		try {
+			fetchRelated(nonIndentIssueRequest);
 			validate(nonIndentIssueRequest.getMaterialIssues(), Constants.ACTION_CREATE);
 			List<String> sequenceNos = materialIssueJdbcRepository.getSequence(MaterialIssue.class.getSimpleName(),
 					nonIndentIssueRequest.getMaterialIssues().size());
@@ -125,6 +128,56 @@ public class NonIndentMaterialIssueService extends DomainService {
 		}
 	}
 
+	private void fetchRelated(MaterialIssueRequest nonIndentIssueRequest) {
+		for (MaterialIssue materialIssue : nonIndentIssueRequest.getMaterialIssues()) {
+		if (materialIssue.getFromStore() != null
+				&& StringUtils.isNotBlank(materialIssue.getFromStore().getCode())) {
+			StoreGetRequest storeGetRequest = new StoreGetRequest();
+			storeGetRequest.setCode(Arrays.asList(materialIssue.getFromStore().getCode()));
+			storeGetRequest.setTenantId(materialIssue.getTenantId());
+			List<Store> stores =storeService.search(storeGetRequest).getStores();
+			if (stores.isEmpty())
+				throw new CustomException("invalid.ref.value", "the field fromstore should have a valid value which exists in the system.");
+			else
+				materialIssue.setFromStore(stores.get(0));
+				
+		}
+		if (materialIssue.getToStore() != null
+				&& StringUtils.isNotBlank(materialIssue.getToStore().getCode())) {
+			StoreGetRequest storeGetRequest = new StoreGetRequest();
+			storeGetRequest.setCode(Arrays.asList(materialIssue.getToStore().getCode()));
+			storeGetRequest.setTenantId(materialIssue.getTenantId());
+			List<Store> stores =storeService.search(storeGetRequest).getStores();
+			if (stores.isEmpty())
+				throw new CustomException("invalid.ref.value", "the field tostore should have a valid value which exists in the system.");
+			else
+				materialIssue.setToStore(stores.get(0));
+		}
+		if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
+			ObjectMapper mapper = new ObjectMapper();
+			Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper,
+					new RequestInfo());
+			Map<String, Uom> uomMap = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
+			for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+				if (materialIssueDetail.getMaterial() != null
+						&& StringUtils.isNotBlank(materialIssueDetail.getMaterial().getCode())) {
+					if (materialMap.get(materialIssueDetail.getMaterial().getCode()) == null)
+				throw new CustomException("invalid.ref.value", "the field material should have a valid value which exists in the system.");
+					else
+						materialIssueDetail.setMaterial(materialMap.get(materialIssueDetail.getMaterial().getCode()));
+				}
+				if (materialIssueDetail.getUom() != null
+						&& StringUtils.isNotBlank(materialIssueDetail.getUom().getCode())) {
+					if (uomMap.get(materialIssueDetail.getUom().getCode()) == null)
+				throw new CustomException("invalid.ref.value", "the field uom should have a valid value which exists in the system.");
+					else
+						materialIssueDetail.setUom(uomMap.get(materialIssueDetail.getUom().getCode()));
+				}
+			}
+		}
+		}
+	}
+
 	private void validate(List<MaterialIssue> materialIssues, String method) {
 		InvalidDataException errors = new InvalidDataException();
 		try {
@@ -141,42 +194,8 @@ public class NonIndentMaterialIssueService extends DomainService {
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",
 								materialIssue.getIssueDate().toString());
 					}
-					if (materialIssue.getFromStore() != null
-							&& StringUtils.isNotBlank(materialIssue.getFromStore().getCode())) {
-						StoreGetRequest storeGetRequest = new StoreGetRequest();
-						storeGetRequest.setCode(Arrays.asList(materialIssue.getFromStore().getCode()));
-						storeGetRequest.setTenantId(materialIssue.getTenantId());
-						if (storeService.search(storeGetRequest).getStores().isEmpty())
-							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "fromStore",
-									materialIssue.getFromStore().getCode());
-					}
-					if (materialIssue.getToStore() != null
-							&& StringUtils.isNotBlank(materialIssue.getToStore().getCode())) {
-						StoreGetRequest storeGetRequest = new StoreGetRequest();
-						storeGetRequest.setCode(Arrays.asList(materialIssue.getToStore().getCode()));
-						storeGetRequest.setTenantId(materialIssue.getTenantId());
-						if (storeService.search(storeGetRequest).getStores().isEmpty())
-							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "toStore",
-									materialIssue.getToStore().getCode());
-					}
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
-						ObjectMapper mapper = new ObjectMapper();
-						Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper,
-								new RequestInfo());
-						Map<String, Uom> uomMap = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
-							if (materialIssueDetail.getMaterial() != null
-									&& StringUtils.isNotBlank(materialIssueDetail.getMaterial().getCode())) {
-								if (materialMap.get(materialIssueDetail.getMaterial().getCode()) == null)
-									errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "material",
-											materialIssueDetail.getMaterial().getCode());
-							}
-							if (materialIssueDetail.getUom() != null
-									&& StringUtils.isNotBlank(materialIssueDetail.getUom().getCode())) {
-								if (uomMap.get(materialIssueDetail.getUom().getCode()) == null)
-									errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "uom",
-											materialIssueDetail.getUom().getCode());
-							}
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
 										materialIssueDetail.getQuantityIssued().toString());
@@ -213,42 +232,8 @@ public class NonIndentMaterialIssueService extends DomainService {
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",
 								materialIssue.getIssueDate().toString());
 					}
-					if (materialIssue.getFromStore() != null
-							&& StringUtils.isNotBlank(materialIssue.getFromStore().getCode())) {
-						StoreGetRequest storeGetRequest = new StoreGetRequest();
-						storeGetRequest.setCode(Arrays.asList(materialIssue.getFromStore().getCode()));
-						storeGetRequest.setTenantId(materialIssue.getTenantId());
-						if (storeService.search(storeGetRequest).getStores().isEmpty())
-							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "fromStore",
-									materialIssue.getFromStore().getCode());
-					}
-					if (materialIssue.getToStore() != null
-							&& StringUtils.isNotBlank(materialIssue.getToStore().getCode())) {
-						StoreGetRequest storeGetRequest = new StoreGetRequest();
-						storeGetRequest.setCode(Arrays.asList(materialIssue.getToStore().getCode()));
-						storeGetRequest.setTenantId(materialIssue.getTenantId());
-						if (storeService.search(storeGetRequest).getStores().isEmpty())
-							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "toStore",
-									materialIssue.getToStore().getCode());
-					}
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
-						ObjectMapper mapper = new ObjectMapper();
-						Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper,
-								new RequestInfo());
-						Map<String, Uom> uomMap = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
-							if (materialIssueDetail.getMaterial() != null
-									&& StringUtils.isNotBlank(materialIssueDetail.getMaterial().getCode())) {
-								if (materialMap.get(materialIssueDetail.getMaterial().getCode()) == null)
-									errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "material",
-											materialIssueDetail.getMaterial().getCode());
-							}
-							if (materialIssueDetail.getUom() != null
-									&& StringUtils.isNotBlank(materialIssueDetail.getUom().getCode())) {
-								if (uomMap.get(materialIssueDetail.getUom().getCode()) == null)
-									errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "uom",
-											materialIssueDetail.getUom().getCode());
-							}
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
 										materialIssueDetail.getQuantityIssued().toString());

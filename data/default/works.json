@@ -722,6 +722,19 @@
       "createddate": null,
       "lastmodifiedby": null,
       "lastmodifieddate": null
+    },
+    {
+      "id": 7,
+      "code": "Budget_Check_Required",
+      "keyName": "Budget_Check_Required",
+      "tenantId": "default",
+      "description": "BudgetCheck Required or not for Estimate",
+      "value": "No",
+      "effectivefrom": "2017-08-22",
+      "createdby": null,
+      "createddate": null,
+      "lastmodifiedby": null,
+      "lastmodifieddate": null
     }
   ],
   "BudgetGroup": [

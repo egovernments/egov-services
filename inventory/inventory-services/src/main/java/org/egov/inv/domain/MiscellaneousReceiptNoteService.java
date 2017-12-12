@@ -2,7 +2,6 @@ package org.egov.inv.domain;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
-import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
@@ -42,9 +41,6 @@ public class MiscellaneousReceiptNoteService extends DomainService {
 
     @Autowired
     private ReceiptNoteRepository receiptNoteRepository;
-
-    @Autowired
-    private JdbcRepository jdbcRepository;
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
@@ -222,7 +218,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         MaterialIssueEntity materialIssueEntity = new MaterialIssueEntity();
         materialIssueEntity.setIssueNumber(issueNumber);
         materialIssueEntity.setTenantId(tenantId);
-        Object materialIssue = jdbcRepository.findById(materialIssueEntity, "MaterialIssueEntity");
+        Object materialIssue = receiptNoteRepository.findById(materialIssueEntity, "MaterialIssueEntity");
         if (null == materialIssue) {
             errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Issue", "", issueNumber);
         }
@@ -239,7 +235,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
             MaterialReceiptEntity materialReceiptEntity = new MaterialReceiptEntity();
             materialReceiptEntity.setMrnNumber(mrnNumber);
             materialReceiptEntity.setTenantId(tenantId);
-            Object receiptEntity = jdbcRepository.findById(materialReceiptEntity, "MaterialReceiptEntity");
+            Object receiptEntity = receiptNoteRepository.findById(materialReceiptEntity, "MaterialReceiptEntity");
             MaterialReceiptEntity receiptEntityfromDb = (MaterialReceiptEntity) receiptEntity;
             if (null != receiptEntityfromDb) {
                 if (!(receiptPurpose.toString().equalsIgnoreCase(receiptEntityfromDb.getReceiptPurpose().toString()))) {

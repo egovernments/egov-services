@@ -54,6 +54,7 @@
     "react-scripts-plugin-no-minify": "0.3.2"
   },
   "scripts": {
+    "fullClean": "npm cache clean --force && rm -rf node_modules && rm package-lock.json && npm install",
     "postinstall": "cd node_modules/pdfmake && mkdir -p examples/fonts && cp -r ../../src/fonts/reports/* examples/fonts && npm install && gulp buildFonts",
     "start": "react-scripts start",
     "build": "react-scripts build",

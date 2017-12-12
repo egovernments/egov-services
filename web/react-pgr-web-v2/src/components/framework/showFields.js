@@ -58,9 +58,9 @@ export default class ShowFields extends Component {
 
   changeExpanded = name => {
     this.setState({
-      [name]: !this.state[name],
-    });
-  };
+      [name]: !this.state[name]
+    })
+  }
 
   renderCard = (group, groupIndex, noCols, jsonPath, uiFramework, groups, isMultiple) => {
     let self = this;
@@ -98,6 +98,7 @@ export default class ShowFields extends Component {
                       xs={12}
                       sm={
                         field.type === 'documentList' ||
+                        field.type === 'viewDocuments' ||
                         field.type === 'fileTable' ||
                         field.type === 'tableList' ||
                         field.type === 'nestedTableList' ||
@@ -109,6 +110,7 @@ export default class ShowFields extends Component {
                       }
                       md={
                         field.type === 'documentList' ||
+                        field.type === 'viewDocuments' ||
                         field.type === 'fileTable' ||
                         field.type === 'tableList' ||
                         field.type === 'nestedTableList' ||
@@ -551,6 +553,7 @@ export default class ShowFields extends Component {
           <UiNestedTablesInputs
             tabIndex={index}
             ui={this.props.ui}
+            getRequiredFields={this.props.getRequiredFields}
             addRequiredFields={this.props.addRequiredFields}
             delRequiredFields={this.props.delRequiredFields}
             setVal={this.props.setVal}

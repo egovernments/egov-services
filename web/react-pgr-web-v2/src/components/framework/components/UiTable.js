@@ -45,6 +45,7 @@ class UiTable extends Component {
   componentWillMount() {
     $('#searchTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      order:[],
       buttons: [
         'excel',
         {
@@ -105,6 +106,7 @@ class UiTable extends Component {
   componentDidUpdate() {
     $('#searchTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      order:[],
       buttons: [
         'excel',
         {

@@ -1,6 +1,7 @@
 package org.egov.inv.domain.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -107,11 +108,34 @@ public class PurchaseOrderService extends DomainService {
 
         try {
             List<PurchaseOrder> purchaseOrders = purchaseOrderRequest.getPurchaseOrders();
+            InvalidDataException errors = new InvalidDataException();
             validate(purchaseOrders, Constants.ACTION_CREATE);
             List<String> sequenceNos = purchaseOrderRepository.getSequence(PurchaseOrder.class.getSimpleName(), purchaseOrders.size());
             int i = 0;
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
-            	BigDecimal totalAmount = new BigDecimal(0);
+            	
+            	if (purchaseOrder.getAdvanceAmount() != null) {
+					if(purchaseOrder.getAdvanceAmount().compareTo(purchaseOrder.getTotalAmount()) > 0) {
+						errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), purchaseOrder.getAdvanceAmount() + " at serial no."+ (purchaseOrders.indexOf(purchaseOrder) + 1));
+					}
+				}
+            	
+            	if(purchaseOrder.getAdvanceAmount() != null && purchaseOrder.getAdvancePercentage() != null) {
+                	
+                	if(purchaseOrder.getAdvancePercentage().compareTo(new BigDecimal(100)) > 1) {
+						errors.addDataError(ErrorCode.ADVPCT_GE_HUN.getCode(), purchaseOrder.getAdvancePercentage() + " at serial no."+ (purchaseOrders.indexOf(purchaseOrder) + 1));
+					}
+                	
+                	if(purchaseOrder.getAdvanceAmount().compareTo(purchaseOrder.getTotalAmount()) > 0) {
+						errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), purchaseOrder.getAdvanceAmount() + " at serial no."+ (purchaseOrders.indexOf(purchaseOrder) + 1));
+					}
+                	
+                	if((purchaseOrder.getTotalAmount().multiply(purchaseOrder.getAdvancePercentage())).divide(new BigDecimal(100), RoundingMode.FLOOR).compareTo(purchaseOrder.getAdvanceAmount().divide(new BigDecimal(1), RoundingMode.FLOOR)) < 0) {
+                		errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), purchaseOrder.getAdvancePercentage() + " at serial no."+ (purchaseOrders.indexOf(purchaseOrder) + 1));
+                	}
+                	
+                }
+            	
             	purchaseOrder.setStatus(StatusEnum.APPROVED);
 				String purchaseOrderNumber = appendString(purchaseOrder);
                 purchaseOrder.setId(sequenceNos.get(i));
@@ -167,9 +191,8 @@ public class PurchaseOrderService extends DomainService {
         				purchaseOrderDetail.setUnitPrice(purchaseOrderDetail.getUnitPrice().divide(purchaseOrderDetail.getUom().getConversionFactor()));
 	       			}
                     j++;
-                    totalAmount = totalAmount.add(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUnitPrice()).add(totalAmount));
                 }
-                purchaseOrder.setTotalAmount(totalAmount);
+                
             }
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
@@ -202,6 +225,14 @@ public class PurchaseOrderService extends DomainService {
             validate(purchaseOrder, Constants.ACTION_UPDATE);
 
             for (PurchaseOrder eachPurchaseOrder : purchaseOrder){
+            	
+            	InvalidDataException errors = new InvalidDataException();
+            	if (eachPurchaseOrder.getAdvanceAmount() != null) {
+					if(eachPurchaseOrder.getAdvanceAmount().compareTo(eachPurchaseOrder.getTotalAmount()) > 0) {
+						errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), eachPurchaseOrder.getAdvanceAmount() + " at serial no."+ (purchaseOrder.indexOf(eachPurchaseOrder) + 1));
+					}
+				}
+            	
             	BigDecimal totalAmount = new BigDecimal(0);
             	eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
             	
@@ -295,6 +326,7 @@ public class PurchaseOrderService extends DomainService {
             Long currentMilllis = System.currentTimeMillis();
                         
             for(PurchaseOrder eachPurchaseOrder : pos){
+            	BigDecimal totalAmount = new BigDecimal(0);
 				int index = pos.indexOf(eachPurchaseOrder) + 1;
             	if(eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis){
             		errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString()+" at serial no."+index);
@@ -304,31 +336,46 @@ public class PurchaseOrderService extends DomainService {
             		errors.addDataError(ErrorCode.EXP_DATE_GE_PODATE.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString()+" at serial no."+index);
                 }
             	}
+            	
+                if(eachPurchaseOrder.getAdvanceAmount() != null && eachPurchaseOrder.getAdvancePercentage() != null) {
+                	
+                	if(eachPurchaseOrder.getAdvancePercentage().compareTo(new BigDecimal(100)) > 1) {
+						errors.addDataError(ErrorCode.ADVPCT_GE_HUN.getCode(), eachPurchaseOrder.getAdvancePercentage() + " at serial no."+ (pos.indexOf(eachPurchaseOrder) + 1));
+					}
+                	
+                }  else if (eachPurchaseOrder.getAdvancePercentage() != null) {
+					if(eachPurchaseOrder.getAdvancePercentage().compareTo(new BigDecimal(100)) > 1) {
+						errors.addDataError(ErrorCode.ADVPCT_GE_HUN.getCode(), eachPurchaseOrder.getAdvancePercentage() + " at serial no."+ (pos.indexOf(eachPurchaseOrder) + 1));
+					}
+				}
+            	
             	if (null != eachPurchaseOrder.getPurchaseOrderDetails()){
-            for (PurchaseOrderDetail poDetail :eachPurchaseOrder.getPurchaseOrderDetails())
-            {
-				int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
-				if(null !=  poDetail.getMaterial() && StringUtils.isEmpty(poDetail.getMaterial().getCode()))
-				{
-            		errors.addDataError(ErrorCode.MAT_DETAIL.getCode()," at serial no."+detailIndex);
-
-				}
-
-				if(priceListConfig && null == poDetail.getPriceList().getId()){
-            		errors.addDataError(ErrorCode.RATE_CONTRACT.getCode(), " at serial no."+detailIndex);
-
-				}
-
-            	if(null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()){
-            		int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
-            		if(res == 1){
-                	errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString()+" at serial no."+detailIndex);
+		            for (PurchaseOrderDetail poDetail :eachPurchaseOrder.getPurchaseOrderDetails())
+		            {
+						int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
+						if(null !=  poDetail.getMaterial() && StringUtils.isEmpty(poDetail.getMaterial().getCode()))
+						{
+		            		errors.addDataError(ErrorCode.MAT_DETAIL.getCode()," at serial no."+detailIndex);
+		
+						}
+		
+						if(priceListConfig && null == poDetail.getPriceList().getId()){
+		            		errors.addDataError(ErrorCode.RATE_CONTRACT.getCode(), " at serial no."+detailIndex);
+		
+						}
+		
+		            	if(null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()){
+		            		int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
+		            		if(res == 1){
+		                	errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString()+" at serial no."+detailIndex);
+		            	}
+		            	}
+		            	totalAmount = totalAmount.add(poDetail.getOrderQuantity().multiply(poDetail.getUnitPrice()).add(totalAmount));
+		            }
+		            eachPurchaseOrder.setTotalAmount(totalAmount);
+            	}else
+            		errors.addDataError(ErrorCode.NOT_NULL.getCode(),"purchaseOrdersDetail",  null);
             	}
-            	}
-            }
-            }else
-            	errors.addDataError(ErrorCode.NOT_NULL.getCode(),"purchaseOrdersDetail",  null);
-            }
             
             
         } catch (IllegalArgumentException e) {
@@ -435,6 +482,7 @@ public class PurchaseOrderService extends DomainService {
                         purchaseOrderDetail.setMaterial(indentDetail.getMaterial());
                         purchaseOrderDetail.setUom(indentDetail.getMaterial().getPurchaseUom());
                         purchaseOrderDetail.setIndentQuantity(pendingQty);
+                        if(purchaseOrder.getRateType().name().equals("One Time Tender"))
                         purchaseOrderDetail.setTenderQuantity(new BigDecimal(priceListjdbcRepository.getTenderQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
                         purchaseOrderDetail.setUsedQuantity(new BigDecimal(purchaseOrderRepository.getUsedQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
                         purchaseOrderDetail.setIndentNumber(indent.getIndentNumber());

@@ -1,7 +1,6 @@
 package org.egov.works.masters.domain.service;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.masters.config.PropertiesManager;
 import org.egov.works.masters.domain.repository.ScheduleOfRateRepository;
@@ -101,8 +100,7 @@ public class ScheduleOfRateService {
         return scheduleOfRateRepository.getbyId(id, tenantId);
     }
 
-    public ScheduleOfRate getByCodeCategory(String code, String scheduleCategory, String tenantId) {
-        return scheduleOfRateRepository.getByCodeCategory(code, scheduleCategory, tenantId);
+    public ScheduleOfRate getByCodeCategory(String code, String scheduleCategory, String tenantId, String sorId, Boolean IsUpdateUniqueCheck) {
+        return scheduleOfRateRepository.getByCodeCategory(code, scheduleCategory, tenantId, sorId, IsUpdateUniqueCheck);
     }
-
 }

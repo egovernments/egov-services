@@ -157,11 +157,9 @@ public class ScheduleOfRateValidator {
         Map<String, String> messages = new HashMap<>();
         Boolean isDataValid = Boolean.FALSE;
         for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
-            if (scheduleOfRate.getScheduleCategory() != null && !scheduleOfRate.getScheduleCategory().getCode().isEmpty()) {
-                if (scheduleOfRateService.getByCodeCategory(scheduleOfRate.getCode(), scheduleOfRate.getScheduleCategory().getCode(), scheduleOfRate.getTenantId()) != null) {
-                    messages.put(Constants.KEY_SOR_CODE_EXISTS, Constants.MESSAGE_SOR_CODE_EXISTS + scheduleOfRate.getCode());
-                    isDataValid = Boolean.TRUE;
-                }
+            if (scheduleOfRateService.getByCodeCategory(scheduleOfRate.getCode(), scheduleOfRate.getScheduleCategory().getCode(), scheduleOfRate.getTenantId(), null, Boolean.FALSE) != null) {
+                messages.put(Constants.KEY_SOR_CODE_EXISTS, Constants.MESSAGE_SOR_CODE_EXISTS + scheduleOfRate.getCode() + ", " + scheduleOfRate.getScheduleCategory().getCode());
+                isDataValid = Boolean.TRUE;
             }
         }
         if (isDataValid) throw new CustomException(messages);
@@ -182,8 +180,20 @@ public class ScheduleOfRateValidator {
                 messages.put(Constants.KEY_SOR_KEY_INVALID, Constants.MESSAGE_SOR_KEY_INVALID + scheduleOfRate.getId());
                 isDataValid = Boolean.TRUE;
             }
+            if (scheduleOfRateService.getByCodeCategory(scheduleOfRate.getCode(), scheduleOfRate.getScheduleCategory().getCode(), scheduleOfRate.getTenantId(), scheduleOfRate.getId(), Boolean.TRUE) != null) {
+                messages.put(Constants.KEY_SOR_CODE_EXISTS, Constants.MESSAGE_SOR_CODE_EXISTS + scheduleOfRate.getCode() + ", " + scheduleOfRate.getScheduleCategory().getCode());
+                isDataValid = Boolean.TRUE;
+            }
         }
         if (isDataValid) throw new CustomException(messages);
     }
 
+    public void validateRatesForUpdate(ScheduleOfRateRequest scheduleOfRateRequest) {
+        Map<String, String> messages = new HashMap<>();
+        Boolean isDataValid = Boolean.FALSE;
+        for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
+
+        }
+        if (isDataValid) throw new CustomException(messages);
+    }
 }

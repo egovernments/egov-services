@@ -92,7 +92,7 @@ public class EstimateTemplateService {
         return estimateTemplateRepository.getbyId(id, tenantId);
     }
 
-    public EstimateTemplate getByCode(String code, String tenantId) {
-        return estimateTemplateRepository.getByCode(code, tenantId);
+    public EstimateTemplate getByCode(String code, String tenantId, String id, Boolean IsUpdateUniqueCheck) {
+        return estimateTemplateRepository.getByCode(code, tenantId, id, IsUpdateUniqueCheck);
     }
 }

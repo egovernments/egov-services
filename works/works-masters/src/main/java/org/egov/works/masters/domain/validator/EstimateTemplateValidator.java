@@ -59,7 +59,7 @@ public class EstimateTemplateValidator {
 
             if (estimateTemplate.getEstimateTemplateActivities() != null && estimateTemplate.getEstimateTemplateActivities().size() > 0) {
                 Set<String> distinctSors = new HashSet<String>(codeList);
-                int sorCount=0;
+                int sorCount = 0;
                 for (EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
                     if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getNonSOR() != null) {
                         validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_BOTH_SORANDNONSOR_SHOULDNOT_PRESENT, Constants.MESSAGE_ESTIMATETEMPLATE_BOTH_SORANDNONSOR_SHOULDNOT_PRESENT);
@@ -110,7 +110,7 @@ public class EstimateTemplateValidator {
                         }
                     }
                 }
-                if(distinctSors.size()!=sorCount){
+                if (distinctSors.size() != sorCount) {
                     validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED, Constants.MESSAGE_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED);
                     isDataValid = Boolean.TRUE;
                 }
@@ -133,11 +133,9 @@ public class EstimateTemplateValidator {
         Boolean isDataValid = Boolean.FALSE;
 
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
-            if (estimateTemplate.getCode() != null) {
-                if (estimateTemplateService.getByCode(estimateTemplate.getCode(), estimateTemplate.getTenantId()) != null) {
-                    validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_CODE_EXISTS, Constants.MESSAGE_ESTIMATETEMPLATE_CODE_EXISTS + estimateTemplate.getCode());
-                    isDataValid = Boolean.TRUE;
-                }
+            if (estimateTemplateService.getByCode(estimateTemplate.getCode(), estimateTemplate.getTenantId(), null, Boolean.FALSE) != null) {
+                validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_CODE_EXISTS, Constants.MESSAGE_ESTIMATETEMPLATE_CODE_EXISTS + estimateTemplate.getCode());
+                isDataValid = Boolean.TRUE;
             }
         }
         if (isDataValid) throw new CustomException(validationMessages);
@@ -146,16 +144,9 @@ public class EstimateTemplateValidator {
     public void validateForUpdate(EstimateTemplateRequest estimateTemplateRequest) {
         Map<String, String> messages = new HashMap<>();
         Boolean isDataValid = Boolean.FALSE;
-        EstimateTemplate dbET = null;
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
-            dbET = estimateTemplateService.getById(estimateTemplate.getId(), estimateTemplate.getTenantId());
-            if (dbET != null) {
-                if (!dbET.getCode().equals(estimateTemplate.getCode())) {
-                    messages.put(Constants.KEY_ESTIMATETEMPLATE_CODE_UPDATE_NOTALLOWED, Constants.MESSAGE_ESTIMATETEMPLATE_CODE_UPDATE_NOTALLOWED);
-                    isDataValid = Boolean.TRUE;
-                }
-            } else {
-                messages.put(Constants.KEY_ESTIMATETEMPLATE_KEY_INVALID, Constants.MESSAGE_ESTIMATETEMPLATE_KEY_INVALID + estimateTemplate.getId());
+            if (estimateTemplateService.getByCode(estimateTemplate.getCode(), estimateTemplate.getTenantId(), estimateTemplate.getId(), Boolean.TRUE) != null) {
+                messages.put(Constants.KEY_ESTIMATETEMPLATE_CODE_EXISTS, Constants.MESSAGE_ESTIMATETEMPLATE_CODE_EXISTS + estimateTemplate.getCode());
                 isDataValid = Boolean.TRUE;
             }
         }

@@ -29,7 +29,7 @@ public class ScheduleOfRateRepository {
     @Autowired
     private ScheduleOfRateQueryBuilder scheduleOfRateQueryBuilder;
 
-    public List<ScheduleOfRate> getScheduleOfRateByCriteria(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria){
+    public List<ScheduleOfRate> getScheduleOfRateByCriteria(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria) {
         Map params = new HashMap();
         String queryStr = scheduleOfRateQueryBuilder.getSearchQuery(scheduleOfRateSearchCriteria, params);
         List<ScheduleOfRateHelper> scheduleOfRateHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(ScheduleOfRateHelper.class));
@@ -37,7 +37,7 @@ public class ScheduleOfRateRepository {
 
         ScheduleOfRate scheduleOfRate;
 
-        for(ScheduleOfRateHelper scheduleOfRateHelper : scheduleOfRateHelpers) {
+        for (ScheduleOfRateHelper scheduleOfRateHelper : scheduleOfRateHelpers) {
             scheduleOfRate = scheduleOfRateHelper.toDomain();
             scheduleOfRate.setSorRates(prepareSorRates(scheduleOfRate.getId(), scheduleOfRate.getTenantId()));
             scheduleOfRate.setMarketRates(prepareMarketRates(scheduleOfRate.getId(), scheduleOfRate.getTenantId()));
@@ -46,7 +46,7 @@ public class ScheduleOfRateRepository {
         return scheduleOfRates;
     }
 
-    private List<SORRate> prepareSorRates(String scheduleOfRate, String tenantId){
+    private List<SORRate> prepareSorRates(String scheduleOfRate, String tenantId) {
         Map params = new HashMap();
         String queryStr = scheduleOfRateQueryBuilder.getSORRates(scheduleOfRate, tenantId, params);
         List<SORRateHelper> sorRateHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(SORRateHelper.class));
@@ -54,14 +54,14 @@ public class ScheduleOfRateRepository {
 
         SORRate sorRate;
 
-        for(SORRateHelper sorRateHelper : sorRateHelpers) {
+        for (SORRateHelper sorRateHelper : sorRateHelpers) {
             sorRate = sorRateHelper.toDomain();
             sorRates.add(sorRate);
         }
         return sorRates;
     }
 
-    private List<MarketRate> prepareMarketRates(String scheduleOfRate, String tenantId){
+    private List<MarketRate> prepareMarketRates(String scheduleOfRate, String tenantId) {
         Map params = new HashMap();
         String queryStr = scheduleOfRateQueryBuilder.getMarketRates(scheduleOfRate, tenantId, params);
         List<MarketRateHelper> marketRateHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(MarketRateHelper.class));
@@ -69,14 +69,14 @@ public class ScheduleOfRateRepository {
 
         MarketRate marketRate;
 
-        for(MarketRateHelper marketRateHelper : marketRateHelpers) {
+        for (MarketRateHelper marketRateHelper : marketRateHelpers) {
             marketRate = marketRateHelper.toDomain();
             marketRates.add(marketRate);
         }
         return marketRates;
     }
 
-    public ScheduleOfRate getbyId(String id, String tenantId){
+    public ScheduleOfRate getbyId(String id, String tenantId) {
         ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria = new ScheduleOfRateSearchCriteria();
         List<ScheduleOfRate> scheduleOfRates;
         List<String> ids = new ArrayList<>();
@@ -84,20 +84,30 @@ public class ScheduleOfRateRepository {
         scheduleOfRateSearchCriteria.setIds(ids);
         scheduleOfRateSearchCriteria.setTenantId(tenantId);
         scheduleOfRates = getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria);
-        return scheduleOfRates.isEmpty()?null:scheduleOfRates.get(0);
+        return scheduleOfRates.isEmpty() ? null : scheduleOfRates.get(0);
     }
 
-    public ScheduleOfRate getByCodeCategory(String code, String scheduleCategory, String tenantId){
+    public ScheduleOfRate getByCodeCategory(String code, String scheduleCategory, String tenantId, String sorId, Boolean IsUpdateUniqueCheck) {
         ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria = new ScheduleOfRateSearchCriteria();
         List<ScheduleOfRate> scheduleOfRates;
-        List<String> codes = new ArrayList<>();
-        codes.add(code);
-        List<String> categories = new ArrayList<>();
-        categories.add(scheduleCategory);
-        scheduleOfRateSearchCriteria.setSorCodes(codes);
+        if (code != null && !code.isEmpty()) {
+            List<String> codes = new ArrayList<>();
+            codes.add(code);
+            scheduleOfRateSearchCriteria.setSorCodes(codes);
+        }
+        if (scheduleCategory != null && !scheduleCategory.isEmpty()) {
+            List<String> categories = new ArrayList<>();
+            categories.add(scheduleCategory);
+            scheduleOfRateSearchCriteria.setScheduleCategoryCodes(categories);
+        }
+        if (sorId != null && !sorId.isEmpty()) {
+            List<String> ids = new ArrayList<>();
+            ids.add(sorId);
+            scheduleOfRateSearchCriteria.setIds(ids);
+        }
         scheduleOfRateSearchCriteria.setTenantId(tenantId);
-        scheduleOfRateSearchCriteria.setScheduleCategoryCodes(categories);
+        scheduleOfRateSearchCriteria.setIsUpdateUniqueCheck(IsUpdateUniqueCheck);
         scheduleOfRates = getScheduleOfRateByCriteria(scheduleOfRateSearchCriteria);
-        return scheduleOfRates.isEmpty()?null:scheduleOfRates.get(0);
+        return scheduleOfRates.isEmpty() ? null : scheduleOfRates.get(0);
     }
 }

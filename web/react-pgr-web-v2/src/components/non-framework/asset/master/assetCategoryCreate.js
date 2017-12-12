@@ -764,8 +764,6 @@ class assetCategoryCreate extends Component {
     self.props.setLoadingStatus('loading');
     var formData = { ...this.props.formData };
 
-
-
     if (formData.MasterMetaData) {
       formData.MasterMetaData.masterData[0].id = this.state.createId;
       formData.MasterMetaData.masterData[0].code = this.state.createId;
@@ -776,10 +774,10 @@ class assetCategoryCreate extends Component {
 
     console.log(formData);
 
-    if(formData && formData.MasterMetaData && formData.MasterMetaData.masterData && formData.MasterMetaData.masterData[0].isDepreciationApplicable){
-      if(formData.MasterMetaData.masterData[0].isDepreciationApplicable == "YES"){
+    if (formData && formData.MasterMetaData && formData.MasterMetaData.masterData && formData.MasterMetaData.masterData[0].isDepreciationApplicable) {
+      if (formData.MasterMetaData.masterData[0].isDepreciationApplicable == 'YES') {
         formData.MasterMetaData.masterData[0].isDepreciationApplicable = true;
-      }else{
+      } else {
         formData.MasterMetaData.masterData[0].isDepreciationApplicable = false;
       }
     }

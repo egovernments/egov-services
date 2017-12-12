@@ -269,8 +269,6 @@ class SpilloverAE extends Component {
 
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
-    setMetaData(specifications);
-    setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName('works');
     setActionName(this.props.match.params.action);
 
@@ -293,6 +291,8 @@ class SpilloverAE extends Component {
             specifications[`works.update`].objectName
           );
           // console.log(responses[0].abstractEstimates[0].pmcName);
+          setMetaData(specifications);
+          setMockData(JSON.parse(JSON.stringify(specifications)));
           setFormData(responses[0]);
           let obj1 = specifications[`works.update`];
           self.depedantValue(obj1.groups);
@@ -305,11 +305,10 @@ class SpilloverAE extends Component {
     } else {
       //create
       // console.log('came to create spill over abstractEstimates');
-      setActionName('create');
+      // setActionName('create');
       var formData = {};
       if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
-      setFormData(formData);
-
+      let specs = { ...specifications };
       Promise.all([
         Api.commonApiPost(
           '/egov-mdms-service/v1/_get',
@@ -318,9 +317,29 @@ class SpilloverAE extends Component {
           false,
           specifications[`works.create`].useTimestamp
         ),
+        Api.commonApiPost(
+          '/egov-mdms-service/v1/_get',
+          { moduleName: 'Works', masterName: 'AppConfiguration', filter: "[?(@.keyname=='Financial_Integration_Required')]" },
+          {},
+          false,
+          specifications[`works.create`].useTimestamp
+        ),
       ]).then(responses => {
         try {
           self.setState({ spilloverConfiguration: responses[0].MdmsRes.Works.AppConfiguration[0].value.toLowerCase() });
+          let specs = { ...specifications };
+          if (responses[1].MdmsRes.Works.AppConfiguration[0].value.toLowerCase() === 'no') {
+            specs[`works.create`].groups.map(groups => {
+              groups.fields.map(fields => {
+                if (fields.name === 'accountCode') {
+                  fields['isHidden'] = true;
+                }
+              });
+            });
+          }
+          setMetaData(specs);
+          setMockData(JSON.parse(JSON.stringify(specs)));
+          setFormData(formData);
         } catch (e) {
           console.log('error');
           setLoadingStatus('hide');
@@ -1071,7 +1090,7 @@ class SpilloverAE extends Component {
 
   affectDependants = (obj, e, property) => {
     let { handleChange, setDropDownData, setDropDownOriginalData, dropDownOringalData } = this.props;
-    let { getVal, getValFromDropdownData, returnPathValueFunction } = this;
+    let { getVal, returnPathValueFunction } = this;
 
     const findLastIdxOnJsonPath = jsonPath => {
       var str = jsonPath.split(REGEXP_FIND_IDX);
@@ -1552,7 +1571,7 @@ class SpilloverAE extends Component {
   render() {
     let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
     let { create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF } = this;
-    // console.log(this.props.requiredFields);
+    // console.log(this.state.Financial_Integration_Required);
     return (
       <div className="Report">
         <div style={{ padding: '0 15px' }}>
@@ -1648,6 +1667,7 @@ const mapStateToProps = state => {
     fieldErrors: state.frameworkForm.fieldErrors,
     isFormValid: state.frameworkForm.isFormValid,
     requiredFields: state.frameworkForm.requiredFields,
+    dropDownData: state.framework.dropDownData,
   };
 };
 

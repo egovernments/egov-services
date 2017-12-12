@@ -177,7 +177,7 @@ class UiSelectField extends Component {
             style={{ display: item.hide ? 'none' : 'inline-block' }}
             errorStyle={{ float: 'left' }}
             fullWidth={true}
-            value={this.props.getVal(this.props.item.jsonPath)}
+            value={item.fromProps ? this.props.getVal(this.props.item.jsonPath) : value}
             underlineDisabledStyle={{ backgroundColor: '#eee!important' }}
             {...labelProperty}
             onChange={(event, key, value) => {

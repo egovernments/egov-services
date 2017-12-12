@@ -119,9 +119,10 @@ public class MDMSService {
 				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
 			}else{
 				logger.info("Object reload....");
+				Map<String, Object> map = mapper.readValue(content, Map.class);
 				DocumentContext docContext = JsonPath.parse(MDMSConstants.MDMS_RELOAD_RES);
 				docContext.put("$", "RequestInfo", mDMSCreateRequest.getRequestInfo());
-				docContext.put("$", "MdmsReq", content);
+				docContext.put("$", "MdmsReq", map);
 				startTime = new Date().getTime();
 				updateCache(docContext.jsonString().toString());
 				endTime = new Date().getTime();

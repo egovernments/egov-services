@@ -37,24 +37,6 @@ public class DataUploadController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadController.class);
 	
-	@PostMapping("/{moduleName}/{defName}/_upload")
-	@ResponseBody
-	public ResponseEntity<?> getReportData(@RequestParam("file") MultipartFile inputFile,
-			/*@RequestPart("file") MultipartFile inputFile,
-			@RequestPart(value="RequestInfo", required=false) RequestInfo requestInfo,*/
-			@PathVariable("moduleName") String moduleName,
-			@PathVariable("defName") String defName) throws Exception {
-		try {
-				logger.info("Inside controller");
-				RequestInfo requestInfo = RequestInfo.builder().action("create").apiId("dataup").authToken("867ab332-5a3e-4b13-8c71-338bfeb80e44")
-				.did("1").msgId("20170310130900").ts(10032017L).build();
-				UploaderResponse result = dataUploadService.doInterServiceCall(inputFile, moduleName, defName, requestInfo);
-				result.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
-				return new ResponseEntity<>(result, HttpStatus.OK);
-		} catch(Exception e){
-			throw e;
-		}
-	}
 	
 	@PostMapping("/_upload")
 	@ResponseBody
@@ -63,7 +45,8 @@ public class DataUploadController {
 				logger.info("Inside controller");
 				RequestInfo requestInfo = RequestInfo.builder().action("create").apiId("dataup").authToken("867ab332-5a3e-4b13-8c71-338bfeb80e44")
 				.did("1").msgId("20170310130900").ts(10032017L).build();
-				UploaderResponse result = null;
+				UploaderResponse result = new UploaderResponse();
+				dataUploadService.getFile(uploaderRequest);
 				result.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 				return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch(Exception e){

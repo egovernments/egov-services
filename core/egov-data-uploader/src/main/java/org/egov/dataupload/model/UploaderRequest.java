@@ -4,6 +4,17 @@ import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UploaderRequest {
 	
 	@JsonProperty("RequestInfo")
@@ -12,8 +23,11 @@ public class UploaderRequest {
 	@JsonProperty("moduleName")
 	public String moduleName;
 	
-	@JsonProperty("maasterName")
-	public String maasterName;
+	@JsonProperty("masterName")
+	public String masterName;
+	
+	@JsonProperty("tenantId")
+	public String tenantId;
 	
 	@JsonProperty("fileStoreId")
 	public String fileStoreId;

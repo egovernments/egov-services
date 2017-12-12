@@ -2,6 +2,7 @@ package org.egov.dataupload.service;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.ResponseMetaData;
 import org.egov.dataupload.model.UploadDefinition;
+import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.model.UploaderResponse;
 import org.egov.dataupload.repository.DataUploadRepository;
 import org.egov.dataupload.utils.DataUploadUtils;
@@ -20,6 +22,7 @@ import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,9 +46,24 @@ public class DataUploadService {
 	@Autowired
 	private DataUploadUtils dataUploadUtils;
 	
+	@Value("${filestore.host}")
+	private String fileStorePath;
+	
+	@Value("${filestore.get.endpoint}")
+	private String getFileEndpoint;
+	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 	
-	public void getFile(RequestInfo requestInfo, String fileStoreId){
+	public void getFile(UploaderRequest uploaderRequest){
+		StringBuilder uri = new StringBuilder();
+		uri.append(fileStorePath).append(getFileEndpoint);
+		uri.append("?fileStoreId="+uploaderRequest.getFileStoreId())
+		   .append("&tenantId="+uploaderRequest.getTenantId());
+		try{
+			dataUploadRepository.getFileContents(uri.toString());
+		}catch(Exception e){
+			logger.error("Exception",e);
+		}
 		
 	}
 

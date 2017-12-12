@@ -47,7 +47,7 @@ public class MDMSConstants {
 	public static final String CREATE_COMMIT_REQ = "{\"message\": \"\",\"parents\": [\":sha\"],\"tree\": \"\"}";
 	public static final String PUSH_CONTENT_REQ = "{\"sha\": \"\",\"force\": true}";
 	public static final String SUCCESS_RES = "{\"status\": \"SUCCESS\",\"file\": \"\"}";
-	public static final String MDMS_RELOAD_RES = "{\"RequestInfo\": \"\",\"MdmsReq\": \"\"}";
+	public static final String MDMS_RELOAD_RES = "{\"RequestInfo\": {},\"MdmsReq\": {}}";
 
 
 

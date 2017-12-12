@@ -131,7 +131,7 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 					Entry<String, KpiValue> thirdEntry = thirdItr.next();
 					KpiValue value = thirdEntry.getValue();
 					value.setValueDescription(value.getConsolidatedValue().toString());
-					KPI kpi = kpiMap.get(thirdEntry.getKey());
+					KPI kpi = kpiMap.get(thirdEntry.getKey().concat("_"+valueList.getFinYear()));
 					if(null != kpi) value.setKpi(kpi);
 					kpiValues.add(value);
 				}
@@ -141,6 +141,7 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 			ulb.setFinYearList(innerList);
 			list.add(ulb);
 		}
+		
 		log.info("Final List after Map to List conversion : " + list);
 	}
 	

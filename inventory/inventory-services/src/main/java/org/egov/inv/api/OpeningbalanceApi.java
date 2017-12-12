@@ -34,6 +34,7 @@ public interface OpeningbalanceApi {
 		    	@ApiResponses(value = { 
 		        @ApiResponse(code = 200, message = "Opening Balance Created", response = OpeningBalanceResponse.class),
 		        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
+		    	
 		    	@RequestMapping(value = "/openingbalance/_create",
 		    	produces = { "application/json" }, 
 		    	consumes = { "application/json" },
@@ -46,6 +47,7 @@ public interface OpeningbalanceApi {
 	            @ApiResponses(value = { 
 	            @ApiResponse(code = 200, message = "Opening Balance  Updated Successfully.", response = OpeningBalanceResponse.class),
 	            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
+	            
             	@RequestMapping(value = "/openingbalance/_update",
             	produces = { "application/json" }, 
             	consumes = { "application/json" },
@@ -54,16 +56,16 @@ public interface OpeningbalanceApi {
     			@ApiParam(value = "Details for the new opening balance." ,required=true ) 
     			@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
     			@RequestBody OpeningBalanceRequest openingBalanace);
-               
                 @ApiOperation(value = "Get the opening balance", notes = "Get opening balance", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
                 @ApiResponses(value = { 
                 @ApiResponse(code = 200, message = "opening balance retrieved Successfully", response = OpeningBalanceResponse.class),
                 @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
+                
                 @RequestMapping(value = "/openingbalance/_search",
                     produces = { "application/json" }, 
                     consumes = { "application/json" },
                     method = RequestMethod.POST)
-                ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost(
+    ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost(
                 		@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
                 		@RequestParam(value = "tenantId", required = true) String tenantId,
         	    		@NotNull@ApiParam(value = "Unique id .", required = false)

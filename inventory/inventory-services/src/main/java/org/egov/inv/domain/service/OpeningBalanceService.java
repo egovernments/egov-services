@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -26,7 +25,6 @@ import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -161,11 +159,6 @@ public class OpeningBalanceService extends DomainService {
 					if (receipt == null) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"materialReceipt", null);
 					} 
-					/*else {
-						receipt.stream().forEach(materialReceipt -> {
-							checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-						});
-					}*/
 				}
 					break;
 	
@@ -233,11 +226,9 @@ public class OpeningBalanceService extends DomainService {
 									if (null != addInfo.getExpiryDate()
 											&& Long.valueOf(addInfo.getExpiryDate()) < getCurrentDate()) {
 										errors.addDataError(ErrorCode.EXP_DATE_GE_TODAY.getCode(),addInfo.getExpiryDate()+" at serial no."+ detailIndex);
-											
 									}
 								}
 							}
-
 						}
 					} else
 						errors.addDataError(ErrorCode.NULL_VALUE.getCode(),"receiptDetail" );
@@ -250,7 +241,6 @@ public class OpeningBalanceService extends DomainService {
 		}
 		if (errors.getValidationErrors().size() > 0)
 			throw errors;
-
 	}
 
 	private void setMaterialDetails(String tenantId, MaterialReceiptDetail materialReceiptDetail) {
@@ -290,16 +280,6 @@ public class OpeningBalanceService extends DomainService {
 		}
 
 	}
-
-	/*private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
-		HashSet<String> hashSet = new HashSet<>();
-		materialReceiptDetails.stream().forEach(materialReceiptDetail -> {
-			if (false == hashSet.add(materialReceiptDetail.getMaterial().getCode())) {
-				errors.addDataError("inv.0015",
-						materialReceiptDetail.getMaterial().getCode() + " Combination Is Already Entered");
-			}
-		});
-	}*/
 	
 	 private Long getCurrentDate() {
 	        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;

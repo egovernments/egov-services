@@ -10286,6 +10286,19 @@
     "serviceCode": "SWMRPT",
     "code": null,
     "path": ""
-  } 
+  },
+  {
+    "id": 1160,
+    "name": "Get Next Scheduled Maintenance Date",
+    "url": "/swm-services/vehiclemaintenancedetails/_getnextscheduleddate",
+    "displayName": "Get Next Scheduled Maintenance Date",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "622",
+    "enabled": false,
+    "serviceCode": "Get Next Scheduled Maintenance Date",
+    "code": null,
+    "path": ""
+  }  
 ]
 }

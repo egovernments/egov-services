@@ -10315,16 +10315,16 @@
   },
   {
     "id": 1423,
-    "name": "PaymentDetails Create",
+    "name": "PaymentDetails Search",
     "url": "/swm-services/paymentdetails/_search",
     "displayName": "Payment Details",
     "orderNumber": 0,
     "queryParams": null,
     "parentModule": "310",
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "Payment Details",
     "code": "null",
-    "path": "Solid Waste Management.SWM Transactions.Payment Details.PaymentDetails Create"
+    "path": "Solid Waste Management.SWM Transactions.Payment Details.PaymentDetails Search"
   }  
 ]
 }

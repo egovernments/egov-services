@@ -14,7 +14,11 @@ import org.egov.infra.mdms.repository.MDMSCreateRepository;
 import org.egov.infra.mdms.utils.MDMSConstants;
 import org.egov.infra.mdms.utils.MDMSUtils;
 import org.egov.mdms.model.MDMSCreateRequest;
+import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MasterMetaData;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +56,9 @@ public class MDMSService {
 	@Value("${filepath.reload}")
 	private Boolean isFilePathReload;
 	
+	@Value("${cache.fetch.enabled}")
+	private Boolean cacheFetch;
+	
 	@Autowired
 	private MDMSCreateRepository mDMSCreateRepository;
 	
@@ -63,20 +70,41 @@ public class MDMSService {
 		ObjectMapper mapper = new ObjectMapper();
 		Long startTime = null;
 		Long endTime = null;
-		
+		Map<String, Object> masterContentFromCache = null;
+		Object fileContents = null;
 		startTime = new Date().getTime();
-		Object fileContents = getFileContents(filePathMap, mDMSCreateRequest);
+		if(cacheFetch){
+			masterContentFromCache = getContentFromCache(filePathMap, mDMSCreateRequest);
+			if(null == masterContentFromCache){
+				logger.info("Failed to get content from cache, fall back to fetch from git triggered....");
+			}else{
+				fileContents = getFileContents(filePathMap, mDMSCreateRequest);
+			}
+		}else{
+			fileContents = getFileContents(filePathMap, mDMSCreateRequest);
+		}		
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		if(null == fileContents) 
 			throw new CustomException("400","Invalid Tenant Id");
-		
+		if(null != masterContentFromCache){
+			Object masterFromCache = mapper.writeValueAsString(masterContentFromCache);
+			logger.info("masterContentsFromCache: "+masterContentFromCache);
+			masterFromCache = JsonPath.read(masterFromCache.toString(), 
+					"$.MdmsRes."+mDMSCreateRequest.getMasterMetaData().getModuleName()+"."+
+					 mDMSCreateRequest.getMasterMetaData().getMasterName());
+			logger.info("masterData fetched from cache: "+masterFromCache);
+			fileContents = mapper.writeValueAsString(fileContents);	
+			DocumentContext documentContext = JsonPath.parse(fileContents.toString());
+			documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(), masterFromCache);
+			fileContents = mapper.readValue(documentContext.jsonString().toString(), Map.class);
+		}
 		startTime = new Date().getTime();
 		String content = getContentForPush(fileContents, mDMSCreateRequest, isCreate);
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
     	String filePath = getFilePath(filePathMap, mDMSCreateRequest);
-    	
+    	    	
 		logger.info("Step 1: Getting the branch head......");
 		startTime = new Date().getTime();
 		String branchHeadSHA = getBranchHead();
@@ -129,7 +157,6 @@ public class MDMSService {
 				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
 			}
 		}
-
 		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + filePath);
 		
 		Map<String, Map<String, JSONArray>> response = new HashMap<>();
@@ -149,6 +176,34 @@ public class MDMSService {
 		String filePath = getFilePath(filePathMap, mDMSCreateRequest);
 		filePath = gitRepoPath + filePath;
 		Object fileContents = mDMSCreateRepository.getFileContents(filePath);
+		return fileContents;
+	}
+	
+	public Map<String, Object> getContentFromCache(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest) throws Exception{
+		logger.info("Getting file contents from the mdms cache.....");
+
+		MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
+		MdmsCriteria mdmsCriteria = new MdmsCriteria();
+		
+	    MasterDetail masterDetail = new MasterDetail();
+	    masterDetail.setName(mDMSCreateRequest.getMasterMetaData().getMasterName());
+	    List<MasterDetail> masterDetails = new ArrayList<>();
+	    masterDetails.add(masterDetail);
+	    
+	    ModuleDetail moduleDetail = new ModuleDetail();
+	    moduleDetail.setModuleName(mDMSCreateRequest.getMasterMetaData().getModuleName());
+	    moduleDetail.setMasterDetails(masterDetails);
+	    List<ModuleDetail> moduleDetails = new ArrayList<>();
+	    moduleDetails.add(moduleDetail);
+	    
+	    mdmsCriteria.setModuleDetails(moduleDetails);
+	    mdmsCriteria.setTenantId(mDMSCreateRequest.getMasterMetaData().getTenantId());
+	    
+	    mdmsCriteriaReq.setMdmsCriteria(mdmsCriteria);
+	    mdmsCriteriaReq.setRequestInfo(mDMSCreateRequest.getRequestInfo());
+
+	    Map<String, Object> fileContents = mDMSCreateRepository.getContentFromCache(mdmsCriteriaReq);
+		
 		return fileContents;
 	}
 	

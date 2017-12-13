@@ -4,11 +4,13 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,10 @@ public class MDMSCreateRepository {
 	
 	@Value("${reloadobj.path.endpoint}")
 	private String reloadobjPathEndpoint;
+	
+	@Value("${search.path.endpoint}")
+	private String searchEndpoint;
+
 	
 	public Object get(String uri, String userName, String password){
 		Object result = null;
@@ -97,6 +103,22 @@ public class MDMSCreateRepository {
 			throw new CustomException("400", "No data avaialble for this master");
 		}
 		logger.debug("Parsed to object: "+result);
+		
+		return result;
+	}
+	
+	public Map<String, Object> getContentFromCache(MdmsCriteriaReq mdmsCriteriaReq) throws Exception{
+		StringBuilder uri = new StringBuilder();
+		Map<String, Object> result = new HashMap<>();
+		uri.append(reloadPathHost)
+		   .append(searchEndpoint);
+		logger.info("URI: "+uri.toString());
+		try{
+			result = restTemplate.postForObject(uri.toString(), mdmsCriteriaReq, Map.class);
+		}catch(Exception e){
+			logger.error("Exception while getting content from cache cache for request: "+mdmsCriteriaReq+" = ",e);
+			return null;
+		}
 		
 		return result;
 	}

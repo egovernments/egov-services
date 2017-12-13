@@ -17,13 +17,13 @@ import lombok.ToString;
 @ToString
 public class ProcessMetaData {
 	
-	@JsonProperty("Message")
+	@JsonProperty("message")
 	public String message;
 	
-	@JsonProperty("Job Id")
+	@JsonProperty("jobId")
 	public String jobId;
 	
-	@JsonProperty("FinalFileStoreId")
+	@JsonProperty("finalfileStoreId")
 	public String finalfileStoreId;
 	
 	@JsonProperty("localFilePath")

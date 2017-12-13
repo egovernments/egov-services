@@ -98,19 +98,19 @@ public class MdmsRepository {
     }
 
     public Object fetchObject(String tenantId, String moduleName, String masterName, String filterField,
-                              String code, Class className) {
+                              String fieldValue, Class className) {
 
         JSONArray responseJSONArray;
         final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = getByCriteria(tenantId, moduleName,
-                masterName, filterField, code, new org.egov.inv.model.RequestInfo());
+                masterName, filterField, fieldValue, new org.egov.inv.model.RequestInfo());
 
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
             return mapper.convertValue(responseJSONArray.get(0), className);
         else
-            throw new CustomException(className.getSimpleName(), "Given " + className.getSimpleName().toString() + " is invalid: " + code);
+            throw new CustomException(className.getSimpleName(), "Given " + className.getSimpleName().toString() + " is invalid: " + fieldValue);
 
     }
 

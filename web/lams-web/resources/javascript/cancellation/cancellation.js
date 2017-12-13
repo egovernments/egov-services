@@ -482,7 +482,7 @@ class CancellationAgreement extends React.Component {
 
     $('#orderDate').datepicker({
       format: 'dd/mm/yyyy',
-      startDate: new Date(ad.split("/")[2], ad.split("/")[1], ad.split("/")[0]),
+      startDate: new Date(ad.split("/")[2], ad.split("/")[1]-1, ad.split("/")[0]),
       autoclose: true,
       defaultDate: ""
     });

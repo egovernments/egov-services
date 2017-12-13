@@ -678,29 +678,29 @@ serviceMaps:
       basePath: $.detailedEstimates.*.estimateTechnicalSanctions.*
       jsonMaps:
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.id
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.id
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.tenantId
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.tenantId
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionNumber
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionNumber
 
-       - jsonPath: $.detailedEstimates[?({id} in @.estimateTechnicalSanctions[*].id)].id
+       - jsonPath: $.detailedEstimates*.estimateTechnicalSanctions.*.detailedEstimate
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionDate
-          dbType: LONG
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionDate
+         dbType: LONG
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionBy
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.technicalSanctionBy.userName
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdBy
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdBy
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdTime
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdTime
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedBy
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedBy
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedTime
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedTime
 
-       -  jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.deleted
-          type: BOOLEAN
+       - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.deleted
+         type: BOOLEAN
 
     - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET objectid=EXCLUDED.objectid, objecttype=EXCLUDED.objecttype, documenttype=EXCLUDED.documenttype, filestore=EXCLUDED.filestore, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
       basePath: $.detailedEstimates.*.documentdetails.*

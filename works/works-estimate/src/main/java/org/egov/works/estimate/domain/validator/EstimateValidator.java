@@ -1031,7 +1031,7 @@ public class EstimateValidator {
                 .technicalSanctionNumbers(Arrays.asList(estimateTechnicalSanction.getTechnicalSanctionNumber()))
                 .statuses(Arrays.asList(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()))
                 .build();
-        if (detailedEstimate.getId() != null) {
+        if (StringUtils.isNotBlank(detailedEstimate.getId())) {
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
         }
         List<DetailedEstimateHelper> detailedEstimates = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);

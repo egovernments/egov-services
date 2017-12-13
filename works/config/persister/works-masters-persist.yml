@@ -287,7 +287,7 @@ serviceMaps:
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.description
 
-       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom.code
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.deleted
 

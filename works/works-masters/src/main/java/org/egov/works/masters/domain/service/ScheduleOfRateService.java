@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -73,9 +75,33 @@ public class ScheduleOfRateService {
         scheduleOfRateValidator.validate(scheduleOfRateRequest);
         scheduleOfRateValidator.validateForUpdate(scheduleOfRateRequest);
 
+        SORRate sorRateP = null;
+        SORRate sorRateC = null;
+
         for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
             scheduleOfRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
-            for (final SORRate sorRate : scheduleOfRate.getSorRates()) {
+            Collections.sort(scheduleOfRate.getSorRates(), new Comparator<SORRate>() {
+                @Override
+                public int compare(SORRate sorRate1, SORRate sorRate2) {
+                    return sorRate1.getFromDate().compareTo(sorRate2.getFromDate());
+                }
+            });
+            for (int i = 0; i < scheduleOfRate.getSorRates().size(); i++) {
+                SORRate sorRate = scheduleOfRate.getSorRates().get(i);
+                if (i == 0) {
+                    sorRateP = sorRate;
+                    sorRateC = sorRate;
+                } else {
+                    sorRateP = sorRateC;
+                    sorRateC = sorRate;
+                }
+                if (sorRateP.getToDate() > sorRateC.getFromDate()) {
+                    scheduleOfRateValidator.validateRatesForUpdate(scheduleOfRateRequest, scheduleOfRate.getId(), sorRateP.getToDate(), sorRateP.getTenantId());
+                }
+
+                if (sorRate.getToDate() == null) {
+
+                }
                 sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
             }
             if (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty()) {

@@ -5,10 +5,8 @@ import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.masters.domain.service.ScheduleOfRateService;
 import org.egov.works.masters.utils.Constants;
-import org.egov.works.masters.web.contract.MarketRate;
-import org.egov.works.masters.web.contract.SORRate;
-import org.egov.works.masters.web.contract.ScheduleOfRate;
-import org.egov.works.masters.web.contract.ScheduleOfRateRequest;
+import org.egov.works.masters.web.contract.*;
+import org.egov.works.masters.web.repository.DetailedEstimateRepository;
 import org.egov.works.masters.web.repository.MdmsRepository;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -28,6 +26,9 @@ public class ScheduleOfRateValidator {
 
     @Autowired
     private ScheduleOfRateService scheduleOfRateService;
+
+    @Autowired
+    private DetailedEstimateRepository detailedEstimateRepository;
 
     public void validate(ScheduleOfRateRequest scheduleOfRateRequest) {
         JSONArray mdmsResponse = null;
@@ -188,12 +189,10 @@ public class ScheduleOfRateValidator {
         if (isDataValid) throw new CustomException(messages);
     }
 
-    public void validateRatesForUpdate(ScheduleOfRateRequest scheduleOfRateRequest) {
-        Map<String, String> messages = new HashMap<>();
-        Boolean isDataValid = Boolean.FALSE;
-        for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
-
+    public void validateRatesForUpdate(ScheduleOfRateRequest scheduleOfRateRequest, final String sorId, final Long sorDate, final String tenantId) {
+        List<DetailedEstimate> des = detailedEstimateRepository.searchDetailedEstimatesBySOR(sorId, sorDate, tenantId, scheduleOfRateRequest.getRequestInfo());
+        if (des != null && des.size() > 0) {
+            throw new CustomException(Constants.KEY_SOR_THEREARE_DE, Constants.MESSAGE_SOR_THEREARE_DE);
         }
-        if (isDataValid) throw new CustomException(messages);
     }
 }

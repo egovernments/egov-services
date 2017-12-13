@@ -91,9 +91,9 @@ public class EstimateTemplateValidator {
                         }
 
                         if (estimateTemplateActivities.getNonSOR() != null) {
-                            if (!estimateTemplateActivities.getNonSOR().getUom().isEmpty()) {
+                            if (estimateTemplateActivities.getNonSOR().getUom().getCode()!=null && !estimateTemplateActivities.getNonSOR().getUom().getCode().isEmpty()) {
                                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
-                                        CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getNonSOR().getUom(),
+                                        CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getNonSOR().getUom().getCode(),
                                         estimateTemplateRequest.getRequestInfo());
                                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                                     validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getNonSOR().getUom());

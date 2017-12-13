@@ -47,6 +47,9 @@ public class Constants {
     public static final String KEY_SOR_THEREARE_DUPLICATE_CODES="WMS.SOR.THEREARE.DUPLICATE.CODES";
     public static final String MESSAGE_SOR_THEREARE_DUPLICATE_CODES="There are duplicate combincations of code and schedule category in given list ";
 
+    public static final String KEY_SOR_THEREARE_DE="WMS.SOR.THEREARE.DE";
+    public static final String MESSAGE_SOR_THEREARE_DE="There are Estimates with this SOR: ";
+
     public static final String KEY_ESTIMATETEMPLATE_CODE_EXISTS="WMS.ESTIMATETEMPLATE.CODE.EXISTS";
     public static final String MESSAGE_ESTIMATETEMPLATE_CODE_EXISTS="Given Estimate Template already exists: ";
 

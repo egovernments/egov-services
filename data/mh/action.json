@@ -1,6 +1,6 @@
 {
   "tenantId": "mh",
-  "moduleName": "ACCESSCONTROL",
+  "moduleName": "ACCESSCONTROL-ACTIONS",
   "actions": [
     {
       "id": 6,

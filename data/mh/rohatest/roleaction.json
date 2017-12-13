@@ -1,6 +1,6 @@
 {
   "tenantId": "mh.rohatest",
-  "moduleName": "ACCESSCONTROL",
+  "moduleName": "ACCESSCONTROL-ROLEACTIONS",
   "roleactions": 
   [
     {

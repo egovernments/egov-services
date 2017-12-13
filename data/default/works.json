@@ -1084,46 +1084,46 @@
   ],
   "WorksStatus": [
     {
-      "code": "NEW",
-      "description": "New",
-      "moduletype": "DetailedEstimate",
-      "tenantid": "default"
-    },
-    {
       "code": "CREATED",
       "description": "Created",
       "moduletype": "DetailedEstimate",
-      "tenantid": "default"
+      "tenantid": "default",
+      "ordernumber" : 1
     },
     {
       "code": "CHECKED",
       "description": "Checked",
       "moduletype": "DetailedEstimate",
       "tenantid": "default"
+      "ordernumber" : 2
     },
     {
-      "code": "APPROVED",
-      "description": "Approved",
-      "moduletype": "DetailedEstimate",
-      "tenantid": "default"
+      "code": "TECHNICAL_SANCTIONED",
+      "description": "Technical Sanctioned",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default",
+      "ordernumber" : 3
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
       "moduletype": "DetailedEstimate",
-      "tenantid": "default"
+      "tenantid": "default",
+      "ordernumber" : 4
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
       "moduletype": "DetailedEstimate",
-      "tenantid": "default"
+      "tenantid": "default",
+      "ordernumber" : 5
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
       "moduletype": "DetailedEstimate",
-      "tenantid": "default"
+      "tenantid": "default",
+      "ordernumber" : 6
     },
     {
       "code": "NOTICEINVITINGTENDERRELEASED",
@@ -1233,12 +1233,7 @@
       "moduletype": "AbstractEstimate",
       "tenantid": "default"
     },
-    {
-      "code": "TECHNICAL_SANCTIONED",
-      "description": "Technical Sanctioned",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
-    },
+    
     {
       "code": "CANCELLED",
       "description": "Cancelled",

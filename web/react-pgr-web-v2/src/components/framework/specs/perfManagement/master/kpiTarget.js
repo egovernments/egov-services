@@ -7,7 +7,7 @@ var dat = {
     tenantIdRequired: true,
     groups: [
       {
-        label: 'Key Performance Indicator Master',
+        label: 'perfManagement.create.KPIs.groups.kpiMaster',
         name: 'kpi',
         fields: [
           {

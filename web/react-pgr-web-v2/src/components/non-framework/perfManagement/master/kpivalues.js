@@ -837,7 +837,12 @@ class kpivalues extends Component {
     return (
       <div className="SearchResult">
         <Card className="uiCard">
-          <CardHeader title={<strong>Search Key Performance Indicator </strong>} />
+          <CardHeader
+            style={{ paddingTop: 4, paddingBottom: 0 }}
+            title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('perfManagement.search.KPIs.groups.kpiSearch')}</div>}
+            actAsExpander={true}
+          />
+          
           <CardText>
             <Row className="show-grid">
               <Col xs={4} md={4}>

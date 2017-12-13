@@ -394,7 +394,7 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
           },
-          {
+          /*{
             name: 'viewkpidocCode',
             jsonPath: 'KPIs[0].documentsReq[0].code',
             label: 'perfManagement.view.KPIs.groups.viewkpidocCode',
@@ -404,7 +404,7 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
             url: '',
-          },
+          },*/
           {
             name: 'viewkpidocMandatory',
             jsonPath: 'KPIs[0].documentsReq[0].active',

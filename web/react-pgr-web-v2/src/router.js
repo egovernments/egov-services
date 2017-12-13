@@ -171,6 +171,7 @@ import assetMovableView from './components/non-framework/asset/master/assetMovab
 import assetCategoryCreate from './components/non-framework/asset/master/assetCategoryCreate';
 import assetCategorySearch from './components/non-framework/asset/master/assetCategorySearch';
 import ComponentLoader from './components/framework/ComponentLoader.js';
+import assetCategoryView from './components/non-framework/asset/master/assetCategoryView';
 
 //inventory
 import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
@@ -308,6 +309,7 @@ const Main = () => {
         <Route exact path={base + '/non-framework/asset/acknowledgeDepreciation/:id'} component={acknowledgeDepreciation} />
         <Route exact path={base + '/non-framework/asset/master/assetCategoryCreate/:id?'} component={assetCategoryCreate} />
         <Route exact path={base + '/non-framework/asset/master/assetCategorySearch'} component={assetCategorySearch} />
+        <Route exact path={base + '/non-framework/asset/master/assetCategoryView/:id'} component={assetCategoryView} />
         {/* inventory */}
         <Route exact path={base + '/non-framework/inventory/master/supplier'} component={SupplierSearch} />
         <Route exact path={base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch} />

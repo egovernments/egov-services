@@ -10325,6 +10325,32 @@
     "serviceCode": "Payment Details",
     "code": "null",
     "path": "Solid Waste Management.SWM Transactions.Payment Details.PaymentDetails Search"
+  },
+  {
+    "id": 1424,
+    "name": "PaymentDetails Create",
+    "url": "/swm-services/paymentdetails/_create",
+    "displayName": "Payment Details Create",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "310",
+    "enabled": false,
+    "serviceCode": "Payment Details",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Transactions.Payment Details.PaymentDetails Create"
+  },
+  {
+    "id": 1425,
+    "name": "PaymentDetails Update",
+    "url": "/swm-services/paymentdetails/_update",
+    "displayName": "Payment Details Update",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "310",
+    "enabled": false,
+    "serviceCode": "Payment Details",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Transactions.Payment Details.PaymentDetails Update"
   }  
 ]
 }

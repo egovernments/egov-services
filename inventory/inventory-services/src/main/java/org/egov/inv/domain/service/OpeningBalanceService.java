@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
@@ -37,6 +38,9 @@ public class OpeningBalanceService extends DomainService {
 	
 	@Value("${inv.openbalance.save.topic}")
 	private String createTopic;
+
+	@Autowired
+	private MdmsRepository mdmsRepository;
 
 	@Value("${inv.openbalance.update.topic}")
 	private String updateTopic;
@@ -184,7 +188,11 @@ public class OpeningBalanceService extends DomainService {
 					if (null != rcpt.getReceiptDetails()) {
 						for (MaterialReceiptDetail detail : rcpt.getReceiptDetails()) {
 							int detailIndex = rcpt.getReceiptDetails().indexOf(detail) + 1;
-
+							
+							if(!validateUom(tenantId,detail))
+							{
+								errors.addDataError(ErrorCode.CATGRY_MATCH.getCode(),detail.getMaterial().getCode(),detail.getUom().getCode(),"At Row "+detailIndex);
+							}
 							if (isEmpty(detail.getMaterial().getCode())) {
 								errors.addDataError(ErrorCode.MATERIAL_NAME_NOT_EXIST.getCode(),detail.getMaterial().getCode()+" at serial no."+ detailIndex);
 							}
@@ -258,7 +266,7 @@ public class OpeningBalanceService extends DomainService {
 	}
 
 	private void setQuantity(String tenantId, MaterialReceiptDetail detail) {
-		Uom uom = getUom(tenantId, detail.getUom().getCode(), new org.egov.inv.model.RequestInfo());
+		Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", detail.getUom().getCode(), Uom.class);
 		detail.setUom(uom);
 
 		if (null != detail.getReceivedQty() && null != uom.getConversionFactor()) {
@@ -269,9 +277,21 @@ public class OpeningBalanceService extends DomainService {
 
 	}
 	
+	private boolean validateUom(String tenantId, MaterialReceiptDetail detail) {
+		Material material = materialService.fetchMaterial(tenantId, detail.getMaterial().getCode(), new org.egov.inv.model.RequestInfo());
+		String uomCategory= material.getBaseUom().getUomCategory();
+		List<String> uomList = new ArrayList<>();
+		List<Object> objectList= mdmsRepository.fetchObjectList(tenantId, "common-masters", "Uom",  "uomCategory", uomCategory, Uom.class);
+		for(Object o : objectList){
+			Uom uom = (Uom) o;
+			uomList.add(uom.getCode());
+		}
+		return  uomList.stream().anyMatch(Collections.singletonList(detail.getUom().getCode()) ::contains);
+	}
+	
 	private void convertRate(String tenantId, MaterialReceiptDetail detail) {
-		Uom uom = getUom(tenantId, detail.getUom().getCode(), new org.egov.inv.model.RequestInfo());
-		detail.setUom(uom);
+		Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom",  "code", detail.getUom().getCode(), Uom.class);
+        detail.setUom(uom);
 
 		if (null != detail.getUnitRate() && null != uom.getConversionFactor()) {
 			Double convertedRate = getSaveConvertedRate(detail.getUnitRate().doubleValue(),

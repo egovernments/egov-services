@@ -190,7 +190,10 @@ public enum ErrorCode {
             "{0} {1} not found at row {2}"),
     DOESNT_MATCH("doesnt.match.object",
             "{1} {0} doesnt match with the existing {1} {2}",
-            "{1} {0} doesnt match with the existing {1} {2}");
+            "{1} {0} doesnt match with the existing {1} {2}"),
+    CATGRY_MATCH("doesnt.match.catgry",
+            "Material {0} and Uom {1} combination Not Exist In The System {2}",
+            "Material {0} and Uom {1} combination Not Exist In The System {2}");
 
 
     private final String code;

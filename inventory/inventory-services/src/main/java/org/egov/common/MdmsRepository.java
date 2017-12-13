@@ -114,7 +114,31 @@ public class MdmsRepository {
 
     }
 
+    public List<Object> fetchObjectList(String tenantId, String moduleName, String masterName, String filterField,
+            String fieldValue, Class className) {
+List<Object> objectList = new ArrayList();
+JSONArray responseJSONArray;
+final ObjectMapper mapper = new ObjectMapper();
 
+responseJSONArray = getByCriteria(tenantId, moduleName,
+masterName, filterField, fieldValue, new org.egov.inv.model.RequestInfo());
+
+
+if (responseJSONArray != null && responseJSONArray.size() > 0)
+{
+	for(Object j : responseJSONArray){
+	Object o =mapper.convertValue(j, className);
+	objectList.add(o);
+	}
+}
+else{
+throw new CustomException(className.getSimpleName(), "Given " + className.getSimpleName().toString() + " is invalid: " + fieldValue);
+}
+return objectList;
+
+}
+
+    
     public RequestInfo getRequestInfo(org.egov.inv.model.RequestInfo requestInfo) {
         RequestInfo info = new RequestInfo();
         return info.builder().action(requestInfo.getAction())

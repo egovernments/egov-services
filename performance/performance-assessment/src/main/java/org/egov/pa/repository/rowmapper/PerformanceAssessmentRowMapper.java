@@ -267,6 +267,16 @@ public class PerformanceAssessmentRowMapper {
 				target.setId(rs.getString("targetId"));
 				target.setKpiCode(rs.getString("targetKpiCode"));
 				target.setTargetValue(rs.getString("targetvalue"));
+				if(StringUtils.isNotBlank(rs.getString("targetType")) && rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
+					if(rs.getString("targetValue").equals("1")) 
+						target.setTargetDescription("Yes");
+					else if (rs.getString("targetValue").equals("2")) 
+						target.setTargetDescription("No");
+					else if (rs.getString("targetValue").equals("3"))
+						target.setTargetDescription("Work In Progress");
+				} else {
+					target.setTargetDescription(rs.getString("targetValue"));
+				}
 				List<KpiTarget> targetList = new ArrayList<>();
 				targetList.add(target);
 				kpi.setKpiTargets(targetList);

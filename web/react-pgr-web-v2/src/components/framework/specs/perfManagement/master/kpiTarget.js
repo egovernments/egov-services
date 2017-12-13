@@ -354,7 +354,7 @@ var dat = {
           {
             name: 'viewkpiTarget',
             //"hide": false,
-            jsonPath: 'kpiTargets[0].targetValue',
+            jsonPath: 'kpiTargets[0].targetDescriptione',
             label: '',
             pattern: '',
             type: 'text',

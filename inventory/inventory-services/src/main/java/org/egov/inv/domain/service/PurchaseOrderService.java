@@ -144,6 +144,12 @@ public class PurchaseOrderService extends DomainService {
                                 PurchaseIndentDetail.class.getSimpleName(),
                                 purchaseOrderDetail.getPurchaseIndentDetails().size());
 
+                        // Order quantity must be less than (tenderQuantity - usedQuantity) in case of tender
+                        if(null != purchaseOrder.getRateType() && purchaseOrder.getRateType().name().equals("One Time Tender"))
+                        if(null != purchaseOrderDetail.getOrderQuantity() && purchaseOrderDetail.getOrderQuantity().compareTo(purchaseOrderDetail.getTenderQuantity().subtract(purchaseOrderDetail.getUsedQuantity())) > 0) {
+                        	errors.addDataError(ErrorCode.QTY_LE_SCND_ROW.getCode(), " at serial no." + purchaseOrder.getPurchaseOrderDetails().indexOf(purchaseOrderDetail));
+                        }
+                        
                         for (PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail
                                 .getPurchaseIndentDetails()) {
                             purchaseIndentDetail.setId(poIndentDetailSequenceNos.get(k));
@@ -406,7 +412,7 @@ public class PurchaseOrderService extends DomainService {
         List<PurchaseOrder> finalPurchaseOrders = new ArrayList<PurchaseOrder>();
 
         for (PurchaseOrder purchaseOrder : purchaseOrders) {
-
+        	InvalidDataException errors = new InvalidDataException();
             // TODO: validation of supplier, rate type and indents.
 
             IndentSearch indentSearch = new IndentSearch();
@@ -476,8 +482,9 @@ public class PurchaseOrderService extends DomainService {
                         purchaseOrderDetail.setMaterial(indentDetail.getMaterial());
                         purchaseOrderDetail.setUom(indentDetail.getMaterial().getPurchaseUom());
                         purchaseOrderDetail.setIndentQuantity(pendingQty);
-                        if (purchaseOrder.getRateType().name().equals("One Time Tender"))
+                        if (null != purchaseOrder.getRateType() && purchaseOrder.getRateType().name().equals("One Time Tender")) {
                             purchaseOrderDetail.setTenderQuantity(new BigDecimal(priceListjdbcRepository.getTenderQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
+                        }
                         purchaseOrderDetail.setUsedQuantity(new BigDecimal(purchaseOrderRepository.getUsedQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
                         purchaseOrderDetail.setIndentNumber(indent.getIndentNumber());
                         purchaseOrderDetail.setTenantId(tenantId);

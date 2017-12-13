@@ -47,7 +47,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
 		if (abstractEstimateSearchContract.getSortBy() != null && !abstractEstimateSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(abstractEstimateSearchContract.getSortBy());
-			validateEntityFieldName(abstractEstimateSearchContract.getSortBy(), AbstractEstimate.class);
+			validateEntityFieldName(abstractEstimateSearchContract.getSortBy(), AbstractEstimateHelper.class);
 		}
 
 		String orderBy = "order by estimate.id";

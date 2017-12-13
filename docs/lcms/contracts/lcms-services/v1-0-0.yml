@@ -1129,6 +1129,9 @@ definitions:
       sideCode:
         type: string
         description: Unique code of the side
+        format: singleValueList
+        $ref: '#/definitions/Side'
+          
       active:
         type: boolean
         default: true

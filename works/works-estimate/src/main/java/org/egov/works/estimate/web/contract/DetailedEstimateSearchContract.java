@@ -1,10 +1,12 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-
-import lombok.*;
+import java.util.List;
 
 /**
  * Contract class to get search request.
@@ -61,4 +63,6 @@ public class DetailedEstimateSearchContract {
 	private String createdBy;
 
     private List<String> technicalSanctionNumbers;
+
+    private String scheduleOfRate;
 }

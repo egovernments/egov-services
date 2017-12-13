@@ -586,8 +586,29 @@ class UpdateRenewal extends React.Component {
                                         },
                                         success: function (res) {
 
-                                            showSuccess("Forwarded successfully");
+                                            $.ajax({
+                                                url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                                                type: 'POST',
+                                                dataType: 'json',
+                                                contentType: 'application/json',
+                                                headers: {
+                                                    'auth-token': authToken
+                                                },
+                                                success: function (res1) {
+                                                    if (window.opener)
+                                                        window.opener.location.reload();
+                                                    if (res1 && res1.Employee && res1.Employee[0].name)
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    else
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
+                                                },
+                                                error: function (err) {
+                                                    if (window.opener)
+                                                        window.opener.location.reload();
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                }
+                                            })
                                         },
                                         error: function (err) {
                                             if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
@@ -622,8 +643,29 @@ class UpdateRenewal extends React.Component {
                         },
                         success: function (res) {
 
-                            showSuccess("Forwarded successfully");
+                            $.ajax({
+                                url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                                type: 'POST',
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                headers: {
+                                    'auth-token': authToken
+                                },
+                                success: function (res1) {
+                                    if (window.opener)
+                                        window.opener.location.reload();
+                                    if (res1 && res1.Employee && res1.Employee[0].name)
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    else
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
+                                },
+                                error: function (err) {
+                                    if (window.opener)
+                                        window.opener.location.reload();
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                }
+                            })
                         },
                         error: function (err) {
                             if (err.responseJSON.Error && err.responseJSON.Error.message)
@@ -1011,7 +1053,7 @@ class UpdateRenewal extends React.Component {
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
                                             <input type="text" className="datepicker" name="renewalOrderDate" id="renewalOrderDate" value={renewal.renewalOrderDate}
-                                                onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }}  disabled />
+                                                onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }} disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1044,7 +1086,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "timePeriod") }}  disabled >
+                                        <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "timePeriod") }} disabled >
                                             <option value="">Select </option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -1081,7 +1123,7 @@ class UpdateRenewal extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
-                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "securityDepositDate") }}  disabled />
+                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "securityDepositDate") }} disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1135,7 +1177,7 @@ class UpdateRenewal extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-file">
-                                            <input id="documents" name="documents" type="file" onChange={(e) => { handleChange(e, "documents") }} multiple  disabled />
+                                            <input id="documents" name="documents" type="file" onChange={(e) => { handleChange(e, "documents") }} multiple disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1147,7 +1189,7 @@ class UpdateRenewal extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <textarea name="remarks" id="remarks" value={remarks}
-                                            onChange={(e) => { handleChange(e, "remarks") }}  disabled ></textarea>
+                                            onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>
                             </div>

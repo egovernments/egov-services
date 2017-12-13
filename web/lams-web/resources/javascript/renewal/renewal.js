@@ -176,8 +176,29 @@ class RenewalAgreement extends React.Component {
                 },
                 success: function (res) {
 
-                  showSuccess("Forwarded successfully");
+                  $.ajax({
+                    url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    headers: {
+                      'auth-token': authToken
+                    },
+                    success: function (res1) {
+                      if (window.opener)
+                        window.opener.location.reload();
+                      if (res1 && res1.Employee && res1.Employee[0].name)
+                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                      else
+                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
+                    },
+                    error: function (err) {
+                      if (window.opener)
+                        window.opener.location.reload();
+                      window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                    }
+                  })
                 },
                 error: function (err) {
                   if (err.responseJSON.Error && err.responseJSON.Error.message)
@@ -212,8 +233,29 @@ class RenewalAgreement extends React.Component {
         },
         success: function (res) {
 
-          showSuccess("Forwarded successfully");
+          $.ajax({
+            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            headers: {
+              'auth-token': authToken
+            },
+            success: function (res1) {
+              if (window.opener)
+                window.opener.location.reload();
+              if (res1 && res1.Employee && res1.Employee[0].name)
+                window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+              else
+                window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
+            },
+            error: function (err) {
+              if (window.opener)
+                window.opener.location.reload();
+              window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+            }
+          })
         },
         error: function (err) {
           if (err.responseJSON.Error && err.responseJSON.Error.message)
@@ -406,9 +448,9 @@ class RenewalAgreement extends React.Component {
 
     var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
     var agreementType = "Renew Municipality Agreement";
-     if (cityGrade.toLowerCase() === 'corp') {
-       agreementType = "Renew Corporation Agreement";
-     }
+    if (cityGrade.toLowerCase() === 'corp') {
+      agreementType = "Renew Corporation Agreement";
+    }
 
     getDesignations(null, function (designations) {
       for (let variable in designations) {

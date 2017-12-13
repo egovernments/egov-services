@@ -2551,6 +2551,7 @@ var localization_EN_Data = {
   'opinionrequest.update.additionalAdvocate': 'Additional Advocate',
   'legal.create.uploadInvoice': 'Upload Invoice',
   'framework.date.error.message': 'Please enter date in DD/MM/YYYY format',
+  'framework.date.futureEror.message': 'Future date is not allowed',
   'framework.time.error.message': 'Please enter time in H:MM AM/PM format',
   'legal.create.code': 'Code',
   'legal.create.paymentNote':
@@ -4852,6 +4853,7 @@ var localization_MR_Data = {
   'advocatepayment.create.group.title.paymentdetails': 'Payment Details-Marathi',
   'legal.create.uploadInvoice': 'Upload Invoice-marathi',
   'framework.date.error.message': 'Please enter date in DD/MM/YYYY format-Marathi',
+  'framework.date.futureEror.message': 'Future date is not allowed',
   'framework.time.error.message': 'Please enter time in H:MM AM/PM format-Marathi',
   'legal.create.code': 'Code-Marathi ',
   'legal.create.paymentNote':

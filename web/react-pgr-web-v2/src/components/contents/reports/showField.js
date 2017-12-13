@@ -254,7 +254,6 @@ export default class ShowField extends Component {
               }}
               maxHeight={200}
             >
-              <MenuItem value="" primaryText="Select" />
               {dropDownData.map((dd, index) => (
                 <MenuItem
                   insetChildren={true}

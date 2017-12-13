@@ -53,8 +53,7 @@ class UiMultiSelectField extends Component {
             dropDownData.sort(function(s1, s2) {
               return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
             });
-
-            dropDownData.unshift({ key: null, value: '-- Please Select --' });
+            // dropDownData.unshift({ key: null, value: '-- Please Select --' });
             setDropDownData(item.jsonPath, dropDownData);
           }
         },
@@ -116,7 +115,14 @@ class UiMultiSelectField extends Component {
               maxHeight={200}
             >
               {dropDownData.hasOwnProperty(item.jsonPath) &&
-                dropDownData[item.jsonPath].map((dd, index) => <MenuItem value={dd.key} key={index} primaryText={dd.value} />)}
+                dropDownData[item.jsonPath].map((dd, index) => (
+                  <MenuItem
+                    value={dd.key}
+                    key={index}
+                    primaryText={dd.value}
+                    checked={this.props.getVal(item.jsonPath) && this.props.getVal(item.jsonPath).indexOf(dd.key) > -1}
+                  />
+                ))}
             </SelectField>
           </div>
         );

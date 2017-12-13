@@ -816,7 +816,7 @@ definitions:
         maxLength: 1024
         minLength: 1
       uom:
-        type: string
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
         description: UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.
         format: singleValueList
       deleted:
@@ -1283,4 +1283,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

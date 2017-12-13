@@ -88,7 +88,7 @@ ReportDefinitions:
     label: reports.asset.departmentCode
     isMandatory: false
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..code|$..name
     source: asset
     stateData: true
     wrapper: true
@@ -533,7 +533,7 @@ ReportDefinitions:
     label: reports.asset.departmentCode
     isMandatory: false
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..code|$..name
     source: asset
     wrapper: true
     stateData: true
@@ -1031,7 +1031,7 @@ ReportDefinitions:
     label: reports.asset.departmentCode
     isMandatory: false
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..code|$..name
     source: asset
     wrapper: true
     stateData: true

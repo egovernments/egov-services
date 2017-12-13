@@ -8,8 +8,6 @@ UIInfo:
       - vehicleFuellingDetails[0].transactionDate
     VehicleDetails2:
       fields:
-      - vehicleFuellingDetails[0].vehicleType.code
-      - vehicleFuellingDetails[0].vehicleRegNo.regNumber
       - vehicleFuellingDetails[0].vehicleReadingDuringFuelling
     VehicleDetails3:
       fields:
@@ -74,16 +72,12 @@ UIInfo:
   groups:
     LocationSelection:
       fields:
-      - collectionPoints[0].location.ward
-      - collectionPoints[0].location.zone
-      - collectionPoints[0].location.block
       - collectionPoints[0].location.code
     CollectionPointDetails:
       fields:
       - collectionPoints[0].name
     CollectionPoints:
       fields:
-      - collectionPoints[0].collectionPointDetails[0].collectionType
       - collectionPoints[0].collectionPointDetails[0].garbageEstimate
       - collectionPoints[0].collectionPointDetails[0].description
     BinDetails:

@@ -18,6 +18,12 @@ public class KpiTarget   {
 
   @JsonProperty("kpiCode")
   private String kpiCode = null;
+  
+  @JsonProperty("kpi")
+  private KPI kpi = null; 
+  
+  @JsonProperty("finYear")
+  private String finYear = null;
 
   @JsonProperty("targetValue")
   private String targetValue = null;
@@ -40,10 +46,23 @@ public class KpiTarget   {
   @JsonProperty("lastModifiedDate")
   private Long lastModifiedDate = null;
   
-  
-  
+public KPI getKpi() {
+	return kpi;
+}
 
-  public String getTargetDescription() {
+public void setKpi(KPI kpi) {
+	this.kpi = kpi;
+}
+
+public String getFinYear() {
+	return finYear;
+}
+
+public void setFinYear(String finYear) {
+	this.finYear = finYear;
+}
+
+public String getTargetDescription() {
 	return targetDescription;
 }
 

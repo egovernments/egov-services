@@ -869,6 +869,14 @@ definitions:
           depreciationRate of asset.
         items:
           $ref: '#/definitions/YearWiseDepreciation'
+      surveyNumber:
+        type: string
+        description: Survey Number.
+        format: varchar
+      marketValue:
+        type: integer
+        format: double
+        description: 'Market VAlue'
   Attributes:
     type: object
     description: >-

@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.OpinionSearchCriteria;
-import org.egov.lcms.utility.ConstantUtility;
+import org.egov.lcms.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

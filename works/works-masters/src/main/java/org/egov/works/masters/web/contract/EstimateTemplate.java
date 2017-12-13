@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object that holds Templates defined for Estimate based on Type of Works and Sub Type of work
  */
 @ApiModel(description = "An Object that holds Templates defined for Estimate based on Type of Works and Sub Type of work")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T13:44:42.993Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
 
 public class EstimateTemplate   {
   @JsonProperty("id")
@@ -45,6 +45,9 @@ public class EstimateTemplate   {
 
   @JsonProperty("estimateTemplateActivities")
   private List<EstimateTemplateActivities> estimateTemplateActivities = new ArrayList<EstimateTemplateActivities>();
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -241,6 +244,26 @@ public class EstimateTemplate   {
     this.estimateTemplateActivities = estimateTemplateActivities;
   }
 
+  public EstimateTemplate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public EstimateTemplate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -281,12 +304,13 @@ public class EstimateTemplate   {
         Objects.equals(this.typeOfWork, estimateTemplate.typeOfWork) &&
         Objects.equals(this.subTypeOfWork, estimateTemplate.subTypeOfWork) &&
         Objects.equals(this.estimateTemplateActivities, estimateTemplate.estimateTemplateActivities) &&
+        Objects.equals(this.deleted, estimateTemplate.deleted) &&
         Objects.equals(this.auditDetails, estimateTemplate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, name, code, active, description, typeOfWork, subTypeOfWork, estimateTemplateActivities, auditDetails);
+    return Objects.hash(id, tenantId, name, code, active, description, typeOfWork, subTypeOfWork, estimateTemplateActivities, deleted, auditDetails);
   }
 
   @Override
@@ -303,6 +327,7 @@ public class EstimateTemplate   {
     sb.append("    typeOfWork: ").append(toIndentedString(typeOfWork)).append("\n");
     sb.append("    subTypeOfWork: ").append(toIndentedString(subTypeOfWork)).append("\n");
     sb.append("    estimateTemplateActivities: ").append(toIndentedString(estimateTemplateActivities)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

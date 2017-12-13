@@ -152,29 +152,39 @@ public class DepreciationService {
 	 * @param fromDate
 	 * @param toDate
 	 */
+	
+	
 	private void calculateDepreciationAndCurrentValue(List<DepreciationInputs> depreciationInputsList,
 			List<DepreciationDetail> depDetList, List<CurrentValue> currValList, Long fromDate, Long toDate) {
+		log.info("depreciationInputsList.size()"+depreciationInputsList.size());
 
 		depreciationInputsList.forEach(a -> {
 
 			log.info("the current depreciation input object : " + a);
 			// TODO get value form master
 			BigDecimal minValue = BigDecimal.ONE;
+			ReasonForFailure reason = null;
 			DepreciationStatus status = DepreciationStatus.FAIL;
 			BigDecimal amtToBeDepreciated = null;
 			BigDecimal valueAfterDep = null;
-			ReasonForFailure reason = null;
+			
 			BigDecimal valueAfterDepRounded=null;
 			BigDecimal amtToBeDepreciatedRounded=null;
 			
 			// getting the indvidual fromDate
-			Long invidualFromDate = getFromDateForIndvidualAsset(a, fromDate);;
+			Long invidualFromDate = getFromDateForIndvidualAsset(a, fromDate);
 
 			if (a.getCurrentValue().compareTo(minValue) <= 0) {
 
 				reason = ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_TO_MINIMUN_VALUE;
-			} else {
-
+			}
+			else if(null==a.getDepreciationRate()) {
+				
+				reason = ReasonForFailure.DEPRECIATION_RATE_NOT_FOUND;
+				}
+			
+			else {
+				
 				status = DepreciationStatus.SUCCESS;
 
 				// getting the amt to be depreciated
@@ -214,23 +224,28 @@ public class DepreciationService {
 	 * @return
 	 */
 	private BigDecimal getAmountToBeDepreciated(DepreciationInputs depInputs, Long indvidualFromDate, Long toDate) {
+		
+		System.err.println("depInputs"+depInputs);
 
 		// getting the no of days betweeen the from and todate (including both from and
 		// to date)
 		Long noOfDays = ((toDate - indvidualFromDate) / 1000 / 60 / 60 / 24) + 1;
 		log.info("no of days between fromdate : " + indvidualFromDate + " and todate : " + toDate + " is : " + noOfDays);
+		 
 
-		// deprate for the no of days = no of days * calculated dep rate per day
+			// deprate for the no of days = no of days * calculated dep rate per day
 		Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate() / 365;
-		log.info("dep rate for given period is : " + depRateForGivenPeriod);
-
+			log.info("dep rate for given period is : " + depRateForGivenPeriod);
+		
 		// returning the calculated amt to be depreciated using the currentvalue from
 		// dep inputs and depreciation rate for given period
+		
 		if (depInputs.getDepreciationSum() != null)
 			return BigDecimal.valueOf((depInputs.getCurrentValue()).add(depInputs.getDepreciationSum()).doubleValue()
 					* (depRateForGivenPeriod / 100));
 		else
 			return BigDecimal.valueOf((depInputs.getCurrentValue()).doubleValue() * (depRateForGivenPeriod / 100));
+		
 	}
 	
 	private Long getFromDateForIndvidualAsset(DepreciationInputs depInputs, Long fromDate) {
@@ -295,6 +310,7 @@ public class DepreciationService {
 		
 		if(!assetMap.get("AssetCategory").isEmpty()) {
 		  Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(assetMap.get("AssetCategory"));
+		  
 
 		depreciationInputsList.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));
 		}else {

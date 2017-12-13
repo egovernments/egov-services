@@ -29,7 +29,7 @@ public class EstimateTemplateRepository {
     @Autowired
     private EstimateTemplateQueryBuilder estimateTemplateQueryBuilder;
 
-    public List<EstimateTemplate> getEstimateTemplateByCriteria(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria){
+    public List<EstimateTemplate> getEstimateTemplateByCriteria(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria) {
         Map params = new HashMap();
         String queryStr = estimateTemplateQueryBuilder.getSearchQuery(estimateTemplateSearchCriteria, params);
         List<EstimateTemplateHelper> estimateTemplateHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(EstimateTemplateHelper.class));
@@ -37,7 +37,7 @@ public class EstimateTemplateRepository {
 
         EstimateTemplate estimateTemplate;
 
-        for(EstimateTemplateHelper estimateTemplateHelper : estimateTemplateHelpers) {
+        for (EstimateTemplateHelper estimateTemplateHelper : estimateTemplateHelpers) {
             estimateTemplate = estimateTemplateHelper.toDomain();
             estimateTemplate.setEstimateTemplateActivities(prepareEstimateTemplateActivities(estimateTemplate.getId(), estimateTemplate.getTenantId()));
             estimateTemplates.add(estimateTemplate);
@@ -45,7 +45,7 @@ public class EstimateTemplateRepository {
         return estimateTemplates;
     }
 
-    private List<EstimateTemplateActivities> prepareEstimateTemplateActivities(String estimateTemplate, String tenantId){
+    private List<EstimateTemplateActivities> prepareEstimateTemplateActivities(String estimateTemplate, String tenantId) {
         Map params = new HashMap();
         String queryStr = estimateTemplateQueryBuilder.getETActivities(estimateTemplate, tenantId, params);
         List<EstimateTemplateActivitiesHelper> estimateTemplateActivitiesHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(EstimateTemplateActivitiesHelper.class));
@@ -53,7 +53,7 @@ public class EstimateTemplateRepository {
 
         EstimateTemplateActivities estimateTemplateActivity;
 
-        for(EstimateTemplateActivitiesHelper estimateTemplateActivitiesHelper : estimateTemplateActivitiesHelpers) {
+        for (EstimateTemplateActivitiesHelper estimateTemplateActivitiesHelper : estimateTemplateActivitiesHelpers) {
             estimateTemplateActivity = estimateTemplateActivitiesHelper.toDomain();
             estimateTemplateActivity.setNonSOR(prepareNonSOR(estimateTemplateActivitiesHelper.getNonSOR(), estimateTemplateActivity.getTenantId()));
             estimateTemplateActivities.add(estimateTemplateActivity);
@@ -61,14 +61,14 @@ public class EstimateTemplateRepository {
         return estimateTemplateActivities;
     }
 
-    private NonSOR prepareNonSOR(String nonSorId, String tenantId){
+    private NonSOR prepareNonSOR(String nonSorId, String tenantId) {
         Map params = new HashMap();
         String queryStr = estimateTemplateQueryBuilder.getNonSorRate(nonSorId, tenantId, params);
         List<NonSORHelper> nonSORHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(NonSORHelper.class));
         return nonSORHelpers.get(0).toDomain();
     }
 
-    public EstimateTemplate getbyId(String id, String tenantId){
+    public EstimateTemplate getbyId(String id, String tenantId) {
         EstimateTemplateSearchCriteria estimateTemplateSearchCriteria = new EstimateTemplateSearchCriteria();
         List<EstimateTemplate> estimateTemplates;
         List<String> ids = new ArrayList<>();
@@ -76,15 +76,21 @@ public class EstimateTemplateRepository {
         estimateTemplateSearchCriteria.setIds(ids);
         estimateTemplateSearchCriteria.setTenantId(tenantId);
         estimateTemplates = getEstimateTemplateByCriteria(estimateTemplateSearchCriteria);
-        return estimateTemplates.isEmpty()?null:estimateTemplates.get(0);
+        return estimateTemplates.isEmpty() ? null : estimateTemplates.get(0);
     }
 
-    public EstimateTemplate getByCode(String code, String tenantId){
+    public EstimateTemplate getByCode(String code, String tenantId, String etId, Boolean IsUpdateUniqueCheck) {
         EstimateTemplateSearchCriteria estimateTemplateSearchCriteria = new EstimateTemplateSearchCriteria();
         List<EstimateTemplate> estimateTemplates;
+        if (etId != null && !etId.isEmpty()) {
+            List<String> ids = new ArrayList<>();
+            ids.add(etId);
+            estimateTemplateSearchCriteria.setIds(ids);
+        }
         estimateTemplateSearchCriteria.setCode(code);
         estimateTemplateSearchCriteria.setTenantId(tenantId);
+        estimateTemplateSearchCriteria.setIsUpdateUniqueCheck(IsUpdateUniqueCheck);
         estimateTemplates = getEstimateTemplateByCriteria(estimateTemplateSearchCriteria);
-        return estimateTemplates.isEmpty()?null:estimateTemplates.get(0);
+        return estimateTemplates.isEmpty() ? null : estimateTemplates.get(0);
     }
 }

@@ -134,7 +134,7 @@ var dat = {
               "label": "works.create.groups.fields.typeOfWork",
               "pattern": "",
               "type": "singleValueList",
-              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name",
+              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork&parent=null|$..code|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -327,7 +327,20 @@ var dat = {
 												"isField": true
 										}
 									]
-								}]
+								},
+								{
+									"ifValue": false,
+									"hide": [
+										{
+											"name": "pmcName",
+											"jpath":"abstractEstimates[0].pmcName",
+											"isGroup": false,
+											"isField": true
+										}
+									],
+									"show": []
+								}
+							]
             },
 						{
               "name": "pmcType",
@@ -353,7 +366,8 @@ var dat = {
 												"isField": true
 										}
 									]
-								}]
+								}
+							]
             },
 						{
               "name": "pmcName",
@@ -362,7 +376,7 @@ var dat = {
               "label": "works.create.groups.fields.pmcName",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name",
+              "url": "/works-masters/v1/contractors/_search?&pmc=true&statuses=ACTIVE|$.contractors[*].code|$.contractors[*].name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -588,7 +602,7 @@ var dat = {
 								"maxLength":1024
 			        }, {
 			          "name": "estimateAmount",
-			          "pattern": "^\\d{0,6}(\\.\\d{0,2})?$",
+			          "pattern": "^\\d{0,20}(\\.\\d{0,2})?$",
 								"patternErrMsg": "works.create.pattern.fields.label.estimateAmount",
 			          "type": "text",
 			          "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].estimateAmount",
@@ -789,7 +803,7 @@ var dat = {
               "label": "works.create.groups.fields.typeOfWork",
               "pattern": "",
               "type": "singleValueList",
-              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name",
+              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork&parent=null|$..code|$..name",
               "isRequired": false,
               "isDisabled": true,
               "requiredErrMsg": "",
@@ -1504,7 +1518,7 @@ var dat = {
 					{
 						"name": "budgetHeadCodes",
 						"jsonPath": "budgetHeadCodes",
-						"label": "works.create.groups.fields.budgetHeadCodes",
+						"label": "works.create.groups.fields.objectCode",
 						"pattern": "",
 						"type": "multiValueList",
 						"url": "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=BudgetGroup|$..id|$..name",
@@ -1566,6 +1580,19 @@ var dat = {
             "isDisabled": false,
             "patternErrorMsg": ""
           },
+					{
+						"name": "employees",
+						"jsonPath": "employees",
+						"label": "works.create.groups.fields.employee",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/hr-employee/employees/_search?&|$..assignments[*].position|$..name",
+						"hide":true,
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			}
 		],
@@ -1594,15 +1621,33 @@ var dat = {
         }
       ],
       "values": [
-        "department.code",
+				{
+					 path:"department.code",
+					 valExp:`getValFromDropdownData('departmentCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
 				"abstractEstimateNumber",
 				"adminSanctionNumber",
-				"fund.code",
-				"function.code",
-				"budgetGroup.name",
-				"auditDetails.createBy",
-				"workFlowDetails.assignee",
-				"status",
+				{
+					 path:"fund.code",
+					 valExp:`getValFromDropdownData('fundCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				{
+					 path:"function.code",
+					 valExp:`getValFromDropdownData('functionCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				{
+					 path:"budgetGroup.name",
+					 valExp:`getValFromDropdownData('budgetHeadCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				"auditDetails.createdBy",
+				{
+					 path:"workFlowDetails.assignee",
+					 valExp:`getValFromDropdownData('employees', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				{
+					 path:"status",
+					 valExp:`getValFromDropdownData('statuses', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
 				"estimateAmount"
       ],
       "resultPath": "abstractEstimates",
@@ -1780,7 +1825,7 @@ var dat = {
               "label": "works.create.groups.fields.typeOfWork",
               "pattern": "",
               "type": "singleValueList",
-              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name",
+              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork&parent=null|$..code|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",

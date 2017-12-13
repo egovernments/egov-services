@@ -4,14 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * Hold the material receipt note material level  additional information. This will helpful to maintain/issue material in lot number,expiry date wise, serial number wise and manufacture number wise. This object will be useful in legacy data collection also.
  */
 @ApiModel(description = "Hold the material receipt note material level  additional information. This will helpful to maintain/issue material in lot number,expiry date wise, serial number wise and manufacture number wise. This object will be useful in legacy data collection also.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T08:48:33.385Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-11T06:27:33.261Z")
 
 public class MaterialReceiptDetailAddnlinfo {
     @JsonProperty("id")
@@ -20,11 +22,17 @@ public class MaterialReceiptDetailAddnlinfo {
     @JsonProperty("tenantId")
     private String tenantId = null;
 
+    @JsonProperty("quantity")
+    private BigDecimal quantity = null;
+
     @JsonProperty("lotNo")
     private String lotNo = null;
 
     @JsonProperty("serialNo")
     private String serialNo = null;
+
+    @JsonProperty("batchNo")
+    private String batchNo = null;
 
     @JsonProperty("manufactureDate")
     private Long manufactureDate = null;
@@ -83,6 +91,28 @@ public class MaterialReceiptDetailAddnlinfo {
         this.tenantId = tenantId;
     }
 
+    public MaterialReceiptDetailAddnlinfo quantity(BigDecimal quantity) {
+        this.quantity = quantity;
+        return this;
+    }
+
+    /**
+     * The quantity at material detail additional info
+     *
+     * @return quantity
+     **/
+    @ApiModelProperty(value = "The quantity at material detail additional info")
+
+    @Valid
+
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
+    }
+
     public MaterialReceiptDetailAddnlinfo lotNo(String lotNo) {
         this.lotNo = lotNo;
         return this;
@@ -123,6 +153,27 @@ public class MaterialReceiptDetailAddnlinfo {
 
     public void setSerialNo(String serialNo) {
         this.serialNo = serialNo;
+    }
+
+    public MaterialReceiptDetailAddnlinfo batchNo(String batchNo) {
+        this.batchNo = batchNo;
+        return this;
+    }
+
+    /**
+     * batch number of material receipt detail.
+     *
+     * @return batchNo
+     **/
+    @ApiModelProperty(value = "batch number of material receipt detail.")
+
+
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
     }
 
     public MaterialReceiptDetailAddnlinfo manufactureDate(Long manufactureDate) {
@@ -242,8 +293,10 @@ public class MaterialReceiptDetailAddnlinfo {
         MaterialReceiptDetailAddnlinfo materialReceiptDetailAddnlinfo = (MaterialReceiptDetailAddnlinfo) o;
         return Objects.equals(this.id, materialReceiptDetailAddnlinfo.id) &&
                 Objects.equals(this.tenantId, materialReceiptDetailAddnlinfo.tenantId) &&
+                Objects.equals(this.quantity, materialReceiptDetailAddnlinfo.quantity) &&
                 Objects.equals(this.lotNo, materialReceiptDetailAddnlinfo.lotNo) &&
                 Objects.equals(this.serialNo, materialReceiptDetailAddnlinfo.serialNo) &&
+                Objects.equals(this.batchNo, materialReceiptDetailAddnlinfo.batchNo) &&
                 Objects.equals(this.manufactureDate, materialReceiptDetailAddnlinfo.manufactureDate) &&
                 Objects.equals(this.receiptDetailId, materialReceiptDetailAddnlinfo.receiptDetailId) &&
                 Objects.equals(this.oldReceiptNumber, materialReceiptDetailAddnlinfo.oldReceiptNumber) &&
@@ -253,7 +306,7 @@ public class MaterialReceiptDetailAddnlinfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, lotNo, serialNo, manufactureDate, receiptDetailId, oldReceiptNumber, receivedDate, expiryDate);
+        return Objects.hash(id, tenantId, quantity, lotNo, serialNo, batchNo, manufactureDate, receiptDetailId, oldReceiptNumber, receivedDate, expiryDate);
     }
 
     @Override
@@ -263,8 +316,10 @@ public class MaterialReceiptDetailAddnlinfo {
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
         sb.append("    lotNo: ").append(toIndentedString(lotNo)).append("\n");
         sb.append("    serialNo: ").append(toIndentedString(serialNo)).append("\n");
+        sb.append("    batchNo: ").append(toIndentedString(batchNo)).append("\n");
         sb.append("    manufactureDate: ").append(toIndentedString(manufactureDate)).append("\n");
         sb.append("    receiptDetailId: ").append(toIndentedString(receiptDetailId)).append("\n");
         sb.append("    oldReceiptNumber: ").append(toIndentedString(oldReceiptNumber)).append("\n");

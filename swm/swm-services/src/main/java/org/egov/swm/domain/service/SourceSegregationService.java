@@ -28,6 +28,9 @@ public class SourceSegregationService {
     @Autowired
     private DumpingGroundService dumpingGroundService;
 
+    @Autowired
+    private TenantService tenantService;
+
     @Transactional
     public SourceSegregationRequest create(final SourceSegregationRequest sourceSegregationRequest) {
 
@@ -92,12 +95,26 @@ public class SourceSegregationService {
 
         for (final SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
 
+            if (sourceSegregation.getUlb() != null && (sourceSegregation.getUlb().getCode() == null
+                    || sourceSegregation.getUlb().getCode().isEmpty()))
+                throw new CustomException("ULB",
+                        "The field ULB Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+            // Validate ULB
+            if (sourceSegregation.getUlb() != null
+                    && sourceSegregation.getUlb().getCode() != null)
+                sourceSegregation.setUlb(tenantService.getTenant(
+                        sourceSegregation.getTenantId(), sourceSegregation.getUlb().getCode(),
+                        sourceSegregationRequest.getRequestInfo()));
+            else
+                throw new CustomException("ULB", "ULB is required");
+
             if (sourceSegregation.getDumpingGround() != null && (sourceSegregation.getDumpingGround().getCode() == null
                     || sourceSegregation.getDumpingGround().getCode().isEmpty()))
                 throw new CustomException("DumpingGround",
                         "The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-            // Validate Ending Dumping ground
+            // Validate Dumping ground
             if (sourceSegregation.getDumpingGround() != null
                     && sourceSegregation.getDumpingGround().getCode() != null)
                 sourceSegregation.setDumpingGround(dumpingGroundService.getDumpingGround(
@@ -105,6 +122,12 @@ public class SourceSegregationService {
                         sourceSegregationRequest.getRequestInfo()));
             else
                 throw new CustomException("DumpingGround", "DumpingGround is required");
+
+            if (sourceSegregation.getSourceSegregationDate() != null)
+                if (new Date()
+                        .before(new Date(sourceSegregation.getSourceSegregationDate())))
+                    throw new CustomException("SourceSegregationDate ", "Given Source Segregation Date is invalid: "
+                            + new Date(sourceSegregation.getSourceSegregationDate()));
 
             for (final CollectionDetails cd : sourceSegregation.getCollectionDetails()) {
 

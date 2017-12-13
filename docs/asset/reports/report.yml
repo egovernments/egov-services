@@ -897,7 +897,6 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: asset
   viewPath: assetScheduleReport
-  selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.egf-master.financialYears
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=financialYears&tenantId=$tenantid&filter=%5B%3F(%20%40.startingDate%20%3C%3D%20$currentTime%20%26%26%20%40.endingDate%20%3E%3D%20$currentTime)%5D
@@ -1010,15 +1009,6 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: 'list://IMMOVABLE:IMMOVABLE,MOVABLE:MOVABLE,LAND:LAND'
     source: asset
-  - name: financialyearstartdate
-    label: reports.asset.financialyearstartdate
-    isMandatory: true
-    type: url
-    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27{assetcategorytype}%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
-    source: asset
-    wrapper: true
-    stateData: true
-    searchClause : 
   - name: assetcategory
     label: reports.asset.assetCategory
     isMandatory: false

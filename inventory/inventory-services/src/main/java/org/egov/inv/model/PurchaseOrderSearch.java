@@ -23,6 +23,7 @@ public class PurchaseOrderSearch {
 	private String rateType;
 	private String supplier;
 	private BigDecimal advanceAmount;
+	private BigDecimal totalAmount;
 	private BigDecimal advancePercentage;
 	private Long expectedDeliveryDate;
 	private String deliveryTerms;

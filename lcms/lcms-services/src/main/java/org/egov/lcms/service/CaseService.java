@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,7 +12,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
-import org.egov.lcms.models.Address;
 import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.AuditDetails;
 import org.egov.lcms.models.Bench;
@@ -45,7 +43,7 @@ import org.egov.lcms.repository.MdmsRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.repository.RegisterRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
-import org.egov.lcms.utility.SummonValidator;
+import org.egov.lcms.util.SummonValidator;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
@@ -200,7 +198,8 @@ public class CaseService {
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria, requestInfo);
 		if (cases != null && cases.size() > 0) {
 			addDepartmentDetails(cases, cases.get(0).getTenantId(), requestInfo);
-			addMasterDetails(cases, caseSearchCriteria.getSearchResultLevel(), requestInfo);
+			addMasterDetails(cases, caseSearchCriteria.getSearchResultLevel(), caseSearchCriteria.getTenantId(),
+					requestInfo);
 		}
 
 		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
@@ -212,33 +211,74 @@ public class CaseService {
 	 * 
 	 * @param cases
 	 */
-	private void addMasterDetails(List<Case> cases, String serachResultLevel, RequestInfo requestInfo)
+	private void addMasterDetails(List<Case> cases, String serachResultLevel, String tenantId, RequestInfo requestInfo)
 			throws Exception {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		Map<String, String> masterMap = new HashMap<>();
+
+		List<String> caseTypeCodes = cases.stream()
+				.filter(caseData -> caseData.getSummon() != null && caseData.getSummon().getCaseType() != null
+						&& caseData.getSummon().getCaseType().getCode() != null)
+				.map(caseCode -> caseCode.getSummon().getCaseType().getCode()).collect(Collectors.toList());
+
+		List<String> caseCategoryCodes = cases.stream()
+				.filter(caseData -> caseData.getSummon() != null && caseData.getSummon().getCaseCategory() != null
+						&& caseData.getSummon().getCaseCategory().getCode() != null)
+				.map(caseCode -> caseCode.getSummon().getCaseCategory().getCode()).collect(Collectors.toList());
+
+		List<String> courtCodes = cases.stream()
+				.filter(caseData -> caseData.getSummon() != null && caseData.getSummon().getCourtName() != null
+						&& caseData.getSummon().getCourtName().getCode() != null)
+				.map(caseCode -> caseCode.getSummon().getCourtName().getCode()).collect(Collectors.toList());
+
+		List<String> benchCodes = cases.stream()
+				.filter(caseData -> caseData.getSummon() != null && caseData.getSummon().getBench() != null
+						&& caseData.getSummon().getBench().getCode() != null)
+				.map(caseCode -> caseCode.getSummon().getBench().getCode()).collect(Collectors.toList());
+
+		List<String> sideCodes = cases.stream()
+				.filter(caseData -> caseData.getSummon() != null && caseData.getSummon().getSide() != null
+						&& caseData.getSummon().getSide().getCode() != null)
+				.map(caseCode -> caseCode.getSummon().getSide().getCode()).collect(Collectors.toList());
+
+		String caseTypesCode = mdmsRepository
+				.getCommaSepratedValues(caseTypeCodes.toArray(new String[caseTypeCodes.size()]));
+
+		String caseCategoriesCodes = mdmsRepository
+				.getCommaSepratedValues(caseCategoryCodes.toArray(new String[caseCategoryCodes.size()]));
+
+		String caseCourtsCodes = mdmsRepository
+				.getCommaSepratedValues(courtCodes.toArray(new String[courtCodes.size()]));
+
+		String caseBenchesCodes = mdmsRepository
+				.getCommaSepratedValues(benchCodes.toArray(new String[benchCodes.size()]));
+
+		String caseSidesCodes = mdmsRepository.getCommaSepratedValues(sideCodes.toArray(new String[sideCodes.size()]));
+
+		if (caseTypesCode != null && !caseTypesCode.isEmpty()) {
+			masterMap.put("caseType", caseTypesCode);
+		}
+
+		if (caseCategoriesCodes != null && !caseCategoriesCodes.isEmpty()) {
+			masterMap.put("caseCategory", caseCategoriesCodes);
+		}
+
+		if (caseCourtsCodes != null && !caseCourtsCodes.isEmpty()) {
+			masterMap.put("court", caseCourtsCodes);
+		}
+
+		if (caseBenchesCodes != null && !caseBenchesCodes.isEmpty()) {
+			masterMap.put("bench", caseBenchesCodes);
+		}
+
+		if (caseSidesCodes != null && !caseSidesCodes.isEmpty()) {
+			masterMap.put("side", caseSidesCodes);
+		}
+
 		for (Case caseObj : cases) {
 
 			if (caseObj.getSummon() != null) {
-				Summon summon = caseObj.getSummon();
-				if (summon.getCaseType() != null && summon.getCaseType().getCode() != null) {
-					masterMap.put("caseType", caseObj.getSummon().getCaseType().getCode());
-				}
-				if (summon.getCaseCategory() != null && summon.getCaseCategory().getCode() != null) {
-					masterMap.put("caseCategory", caseObj.getSummon().getCaseCategory().getCode());
-				}
-
-				if (summon.getCourtName() != null && summon.getCourtName().getCode() != null) {
-					masterMap.put("court", summon.getCourtName().getCode());
-				}
-
-				if (summon.getBench() != null && summon.getBench().getCode() != null) {
-					masterMap.put("bench", summon.getBench().getCode());
-				}
-
-				if (summon.getSide() != null && summon.getSide().getCode() != null) {
-					masterMap.put("side", summon.getSide().getCode());
-				}
 
 				List<String> caseStatusCodes = new ArrayList<String>();
 				String caseStatusCode = "";
@@ -263,156 +303,165 @@ public class CaseService {
 					}
 				}
 				getStampDetails(caseObj);
+			}
+		}
 
-				if (!masterMap.isEmpty()) {
-					MdmsResponse mdmsResponse = mdmsRepository.getMasterData(caseObj.getTenantId(), masterMap,
-							requestInfoWrapper, propertiesManager.getLcmsModuleName());
-					Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
+		if (!masterMap.isEmpty()) {
+			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterMap, requestInfoWrapper,
+					propertiesManager.getLcmsModuleName());
+			Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
 
-					Map<String, JSONArray> mastersmap = response.get(propertiesManager.getLcmsModuleName());
+			Map<String, JSONArray> mastersmap = response.get(propertiesManager.getLcmsModuleName());
 
-					for (String key : mastersmap.keySet()) {
+			for (String key : mastersmap.keySet()) {
 
-						String masterName = key;
+				String masterName = key;
 
-						addParticularMastervalues(masterName, caseObj, mastersmap);
-					}
-
-				}
+				addParticularMastervalues(masterName, cases, mastersmap);
 			}
 
 		}
 
 	}
 
-	private void addParticularMastervalues(String masterName, Case caseObj, Map<String, JSONArray> mastersmap)
+	private void addParticularMastervalues(String masterName, List<Case> cases, Map<String, JSONArray> mastersmap)
 			throws Exception {
 
-		switch (masterName) {
-		case "court": {
-			JSONArray courts = mastersmap.get(masterName);
-			getCourtDetails(courts, caseObj);
-			break;
-		}
+		for (Case caseObj : cases) {
 
-		case "side": {
-			List<Side> sides = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<Side>>() {
-					});
-			if (sides != null && sides.size() > 0)
-				caseObj.getSummon().setSide(sides.get(0));
-			break;
-		}
-
-		case "caseType": {
-			List<CaseType> caseTypes = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<CaseType>>() {
-					});
-			if (caseTypes != null && caseTypes.size() > 0)
-				caseObj.getSummon().setCaseType(caseTypes.get(0));
-			break;
-		}
-
-		case "caseCategory": {
-			List<CaseCategory> caseCategories = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<CaseCategory>>() {
-					});
-			if (caseCategories != null && caseCategories.size() > 0)
-				caseObj.getSummon().setCaseCategory(caseCategories.get(0));
-			break;
-		}
-
-		case "bench": {
-			List<Bench> benchs = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<Bench>>() {
-					});
-			if (benchs != null && benchs.size() > 0)
-				caseObj.getSummon().setBench(benchs.get(0));
-			break;
-		}
-
-		case "caseStatus": {
-			List<CaseStatus> caseStatus = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<CaseStatus>>() {
-					});
-
-			if (caseStatus != null && caseStatus.size() > 0) {
-
-				List<HearingDetails> hearingDetails = caseObj.getHearingDetails();
-
-				for (HearingDetails hearingDetail : hearingDetails) {
-
-					addHearingDetail(hearingDetail, caseStatus);
-				}
-
-				if (hearingDetails != null && caseObj.getCaseStatus() != null
-						&& caseObj.getCaseStatus().getCode() != null) {
-					List<HearingDetails> details = hearingDetails.stream().filter(status -> status.getCaseStatus()
-							.getCode().equalsIgnoreCase(caseObj.getCaseStatus().getCode()))
-							.collect(Collectors.toList());
-
-					if (details != null && details.size() > 0)
-						caseObj.setCaseStatus(details.get(0).getCaseStatus());
-				}
-			}
-
-			break;
-		}
-
-		case "Department": {
-			if (mastersmap.get(masterName) != null) {
-				List<Department> departments = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-						new TypeReference<List<Department>>() {
+			switch (masterName) {
+			case "court": {
+				List<Court> courts = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<Court>>() {
 						});
-				if (departments != null) {
-					List<Department> departmentList = departments.stream()
-							.filter(department -> department.getCode()
-									.equalsIgnoreCase(caseObj.getSummon().getDepartmentName().getCode()))
-							.collect(Collectors.toList());
-					if (departmentList != null && departmentList.size() > 0)
-						caseObj.getSummon().setDepartmentName((departmentList.get(0)));
-				}
+				if (courts != null && courts.size() > 0)
+					caseObj.getSummon().setCourtName(courts.get(0));
+				break;
 			}
 
-			break;
+			case "side": {
+				List<Side> sides = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<Side>>() {
+						});
+				if (caseObj.getSummon() != null && caseObj.getSummon().getSide() != null && sides != null
+						&& sides.size() > 0) {
+					List<Side> sideObj = sides.stream()
+							.filter(side -> side.getCode().equalsIgnoreCase(caseObj.getSummon().getSide().getCode()))
+							.collect(Collectors.toList());
+					
+					if (sideObj != null && sideObj.size() > 0)
+						caseObj.getSummon().setSide(sideObj.get(0));
+				}
+				break;
+			}
+
+			case "caseType": {
+				List<CaseType> caseTypes = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<CaseType>>() {
+						});
+				if (caseObj.getSummon() != null && caseObj.getSummon().getCaseType() != null && caseTypes != null
+						&& caseTypes.size() > 0) {
+					List<CaseType> caseTypeObj = caseTypes.stream()
+							.filter(caseType -> caseType.getCode()
+									.equalsIgnoreCase(caseObj.getSummon().getCaseType().getCode()))
+							.collect(Collectors.toList());
+					
+					if (caseTypeObj != null && caseTypeObj.size() > 0)
+						caseObj.getSummon().setCaseType(caseTypeObj.get(0));
+				}
+				break;
+			}
+
+			case "caseCategory": {
+				List<CaseCategory> caseCategories = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<CaseCategory>>() {
+						});
+				if (caseObj.getSummon() != null && caseObj.getSummon().getCaseCategory() != null
+						&& caseCategories != null && caseCategories.size() > 0) {
+					List<CaseCategory> caseCategoriesObj = caseCategories.stream()
+							.filter(caseCategory -> caseCategory.getCode()
+									.equalsIgnoreCase(caseObj.getSummon().getCaseCategory().getCode()))
+							.collect(Collectors.toList());
+					if (caseCategoriesObj != null && caseCategoriesObj.size() > 0)
+						caseObj.getSummon().setCaseCategory(caseCategoriesObj.get(0));
+				}
+
+				break;
+			}
+
+			case "bench": {
+				List<Bench> benchs = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<Bench>>() {
+						});
+				if (caseObj.getSummon() != null && caseObj.getSummon().getBench() != null && benchs != null
+						&& benchs.size() > 0) {
+					List<Bench> benchObj = benchs.stream()
+							.filter(bench -> bench.getCode().equalsIgnoreCase(caseObj.getSummon().getBench().getCode()))
+							.collect(Collectors.toList());
+					if (benchObj != null && benchObj.size() > 0)
+						caseObj.getSummon().setBench(benchObj.get(0));
+				}
+				break;
+			}
+
+			case "caseStatus": {
+				List<CaseStatus> caseStatus = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<CaseStatus>>() {
+						});
+
+				if (caseStatus != null && caseStatus.size() > 0) {
+
+					List<HearingDetails> hearingDetails = caseObj.getHearingDetails();
+
+					for (HearingDetails hearingDetail : hearingDetails) {
+
+						addHearingDetail(hearingDetail, caseStatus);
+					}
+
+					if (hearingDetails != null && caseObj.getCaseStatus() != null
+							&& caseObj.getCaseStatus().getCode() != null) {
+						List<HearingDetails> details = hearingDetails.stream()
+								.filter(status -> status.getCaseStatus().getCode()
+										.equalsIgnoreCase(caseObj.getCaseStatus().getCode()))
+								.collect(Collectors.toList());
+
+						if (details != null && details.size() > 0)
+							caseObj.setCaseStatus(details.get(0).getCaseStatus());
+					}
+				}
+
+				break;
+			}
+
+			case "Department": {
+				if (caseObj.getSummon() != null && caseObj.getSummon().getDepartmentName() != null
+						&& mastersmap.get(masterName) != null) {
+					List<Department> departments = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+							new TypeReference<List<Department>>() {
+							});
+					if (departments != null) {
+						List<Department> departmentList = departments.stream()
+								.filter(department -> department.getCode()
+										.equalsIgnoreCase(caseObj.getSummon().getDepartmentName().getCode()))
+								.collect(Collectors.toList());
+						if (departmentList != null && departmentList.size() > 0)
+							caseObj.getSummon().setDepartmentName((departmentList.get(0)));
+					}
+				}
+
+				break;
+			}
+
+			default:
+				break;
+			}
 		}
 
-		default:
-			break;
-		}
-
 	}
 
-	@SuppressWarnings("unchecked")
-	private void getCourtDetails(JSONArray courts, Case caseObj) {
+	
 
-		for (int i = 0; i < courts.size(); i++) {
-			LinkedHashMap<String, Object> court = (LinkedHashMap<String, Object>) courts.get(i);
-			Court courtObj = new Court();
-			courtObj.setCode(getString(court.get("code")));
-			courtObj.setActive(getBoolean(court.get("active")));
-			courtObj.setName(getString(court.get("name")));
-			courtObj.setTenantId(getString(court.get("tenantId")));
-			courtObj.setType(getString(court.get("type")));
-
-			Address address = new Address();
-			address.setAddressLine1(getString(court.get("courtAddress1")));
-			address.setCity(getString(court.get("courtAddress2")));
-			address.setAddressLine2(getString(court.get("courtAddress3")));
-			address.setPincode(getString(court.get("pincode")));
-			courtObj.setAddress(address);
-
-			caseObj.getSummon().setCourtName(courtObj);
-		}
-	}
-
-	private Boolean getBoolean(Object object) {
-		return object == null ? null : Boolean.valueOf(object.toString());
-	}
-
-	private String getString(Object object) {
-		return object == null ? null : object.toString();
-	}
+	
 
 	/**
 	 * This will filter the Hearing detail
@@ -480,11 +529,7 @@ public class CaseService {
 			Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
 			Map<String, JSONArray> mastersmap = response.get("common-masters");
 
-			for (Case caseObject : cases) {
-				if (caseObject.getSummon().getDepartmentName() != null) {
-					addParticularMastervalues("Department", caseObject, mastersmap);
-				}
-			}
+			addParticularMastervalues("Department", cases, mastersmap);
 		}
 	}
 
@@ -519,6 +564,8 @@ public class CaseService {
 			if (caseObj.getSummon().getIsSummon() == null) {
 				caseObj.getSummon().setIsSummon(Boolean.FALSE);
 			}
+			
+			summonValidator.validateDuplicateAdvocates(caseObj);
 
 			String summonCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(),
 					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null,

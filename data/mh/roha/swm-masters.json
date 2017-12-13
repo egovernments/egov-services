@@ -1,674 +1,620 @@
 {
   "tenantId": "mh.roha",
-  "moduleName": "SWM",
-  "CollectionPoint": [
+  "moduleName": "swm",
+  "mdms-config": [
     {
-      "id": 1,
-      "type": "Fake Collection Point Type 1",
-      "tenantId": "mh.roha",
-      "name": "Fake Collection Point Name 1",
-      "ward": "Fake Collection Point Ward 1",
-      "zone": "Fake Collection Point Zone 1",
-      "street": "Fake Collection Point Street 1",
-      "colony": "Fake Collection Point Colony 1",
-      "assetOrBinId": "Fake Collection Point Asset Or BINID 1",
-      "rfidAssigned": true,
-      "rfid": "Fake Collection Point RFID 1",
-      "latitude": 111.111,
-      "longitude": 222.222
+      "masterName": "VehicleType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/VehicleType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
     },
     {
-      "id": 2,
-      "type": "Fake Collection Point Type 2",
-      "tenantId": "mh.roha",
-      "name": "Fake Collection Point Name 2",
-      "ward": "Fake Collection Point Ward 2",
-      "zone": "Fake Collection Point Zone 2",
-      "street": "Fake Collection Point Street 2",
-      "colony": "Fake Collection Point Colony 2",
-      "assetOrBinId": "Fake Collection Point Asset Or BINID 2",
-      "rfidAssigned": true,
-      "rfid": "Fake Collection Point RFID 2",
-      "latitude": 111.111,
-      "longitude": 222.222
+      "masterName": "FuelType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/FuelType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
     },
     {
-      "id": 3,
-      "type": "Fake Collection Point Type 3",
-      "tenantId": "mh.roha",
-      "name": "Fake Collection Point Name 3",
-      "ward": "Fake Collection Point Ward 3",
-      "zone": "Fake Collection Point Zone 3",
-      "street": "Fake Collection Point Street 3",
-      "colony": "Fake Collection Point Colony 3",
-      "assetOrBinId": "Fake Collection Point Asset Or BINID 3",
-      "rfidAssigned": true,
-      "rfid": "Fake Collection Point RFID 3",
-      "latitude": 111.111,
-      "longitude": 222.222
-    }
-  ],
-  "Route": [
-    {
-      "id": 1,
-      "tenantId": "mh.roha",
-      "name": "Fake Route Name 1",
-      "ward": "Fake Route Ward 1",
-      "zone": "Fake Route Zone 1",
-      "street": "Fake Route Street 1",
-      "colony": "Fake Route Colony 1",
-      "collectionType": "Fake Route Collection Type 1",
-      "startingPoint": "Fake Route Starting Point 1",
-      "endingPoint": "Fake Route endingPoint 1"
+      "masterName": "OilCompany",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/OilCompany",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
     },
     {
-      "id": 2,
-      "tenantId": "mh.roha",
-      "name": "Fake Route Name 2",
-      "ward": "Fake Route Ward 2",
-      "zone": "Fake Route Zone 2",
-      "street": "Fake Route Street 2",
-      "colony": "Fake Route Colony 2",
-      "collectionType": "Fake Route Collection Type 2",
-      "startingPoint": "Fake Route Starting Point 2",
-      "endingPoint": "Fake Route endingPoint 2"
+      "masterName": "WasteType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/WasteType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
     },
     {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "name": "Fake Route Name 3",
-      "ward": "Fake Route Ward 3",
-      "zone": "Fake Route Zone 3",
-      "street": "Fake Route Street 3",
-      "colony": "Fake Route Colony 3",
-      "collectionType": "Fake Route Collection Type 3",
-      "startingPoint": "Fake Route Starting Point 3",
-      "endingPoint": "Fake Route endingPoint 3"
+      "masterName": "WasteSubType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/WasteSubType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "DumpingGround",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/DumpingGround",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "ProcessingSite",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/ProcessingSite",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "ShiftType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/ShiftType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "Shift",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/Shift",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "CollectionType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/CollectionType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "Population",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/Population",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "Toilet",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/Toilet",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "SwmProcess",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/SwmProcess",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "PaymentTerms",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/PaymentTerms",
+      "uniqueKeys": [
+        "$.label",
+        "$.tenantId"
+      ]
     }
   ],
   "VehicleType": [
     {
       "tenantId": "mh.roha",
-      "name": "Fake Vehicle Type Name 1",
-      "code": "Fake Vehicle Type Code 1"
+      "name": "Ghantagadi (TATA-ACE)- 3",
+      "code": "Vehicle Type Code 1"
     },
     {
       "tenantId": "mh.roha",
-      "name": "Fake Vehicle Type Name 2",
-      "code": "Fake Vehicle Type Code 2"
-    },
-    {
-      "tenantId": "mh.roha",
-      "name": "Fake Vehicle Type Name 3",
-      "code": "Fake Vehicle Type Code 3"
+      "name": "Tractor - 2",
+      "code": "Vehicle Type Code 2"
     }
   ],
-"FuelType": [
+  "FuelType": [
     {
       "tenantId": "mh.roha",
-      "name": "Fake Fuel Type Name 1",
-      "code": "Fake Fuel Type Code 1"
+      "name": "Diesel",
+      "code": "Fuel Type Code 1"
     },
     {
       "tenantId": "mh.roha",
-      "name": "Fake Fuel Type Name 2",
-      "code": "Fake Fuel Type Code 2"
+      "name": "Petrol",
+      "code": "Fuel Type Code 2"
     },
     {
       "tenantId": "mh.roha",
-      "name": "Fake Fuel Type Name 3",
-      "code": "Fake Fuel Type Code 3"
+      "name": "CNG",
+      "code": "Fuel Type Code 3"
+    },
+    {
+      "tenantId": "mh.roha",
+      "name": "Electricity",
+      "code": "Fuel Type Code 4"
     }
   ],
-  "Vehicle": [
+  "OilCompany": [
     {
-      "id": 1,
       "tenantId": "mh.roha",
-      "vehicleType": "Fake Vehicle Type 1",
-      "regNumber": "Fake registration Number 1",
-      "engineSrNumber": "Fake engine Sr Number 1",
-      "chassisSrNumber": "Fake chassis Sr Number Number 1",
-      "vehicleCapacity": 350,
-      "numberOfPersonsReq": 1,
-      "model": "Fake registration Number 1",
-      "ulbOwnedVehicle": true,
-      "vendorName": "Fake vendor Name 1",
-      "vehicleDriverName": "Fake vehicle Driver Name 1",
-      "purchaseDate": "1508896131",
-      "yearOfPurchase": 2017,
-      "price": 100000,
-      "sourceOfPurchase": "Fake source Of Purchase 1",
-      "remarks": "Fake remarks 1",
-      "insuranceNumber": "Fake insurance Number 1",
-      "insuranceValidityDate": "1508896131"
+      "name": "Indian Oil (IOCL)",
+      "code": "Code IOCL"
     },
     {
-      "id": 2,
       "tenantId": "mh.roha",
-      "vehicleType": "Fake Vehicle Type 2",
-      "regNumber": "Fake registration Number 2",
-      "engineSrNumber": "Fake engine Sr Number 2",
-      "chassisSrNumber": "Fake chassis Sr Number Number 2",
-      "vehicleCapacity": 350,
-      "numberOfPersonsReq": 2,
-      "model": "Fake registration Number 2",
-      "ulbOwnedVehicle": true,
-      "vendorName": "Fake vendor Name 2",
-      "vehicleDriverName": "Fake vehicle Driver Name 2",
-      "purchaseDate": "1508896131",
-      "yearOfPurchase": 2027,
-      "price": 200000,
-      "sourceOfPurchase": "Fake source Of Purchase 2",
-      "remarks": "Fake remarks 2",
-      "insuranceNumber": "Fake insurance Number 2",
-      "insuranceValidityDate": "1508896131"
+      "name": "Reliance Industries",
+      "code": "Code RIO"
     },
     {
-      "id": 3,
       "tenantId": "mh.roha",
-      "vehicleType": "Fake Vehicle Type 3",
-      "regNumber": "Fake registration Number 3",
-      "engineSrNumber": "Fake engine Sr Number 3",
-      "chassisSrNumber": "Fake chassis Sr Number Number 3",
-      "vehicleCapacity": 350,
-      "numberOfPersonsReq": 3,
-      "model": "Fake registration Number 3",
-      "ulbOwnedVehicle": true,
-      "vendorName": "Fake vendor Name 3",
-      "vehicleDriverName": "Fake vehicle Driver Name 3",
-      "purchaseDate": "1508896131",
-      "yearOfPurchase": 3037,
-      "price": 300000,
-      "sourceOfPurchase": "Fake source Of Purchase 3",
-      "remarks": "Fake remarks 3",
-      "insuranceNumber": "Fake insurance Number 3",
-      "insuranceValidityDate": "1508896131"
+      "name": "Hindustan Petroleum (HP)",
+      "code": "Code HP"
+    },
+    {
+      "tenantId": "mh.roha",
+      "name": "Bharat Petroleum (BP)",
+      "code": "Code BP"
+    },
+    {
+      "tenantId": "mh.roha",
+      "name": "Shell",
+      "code": "Code Shell"
+    },
+    {
+      "tenantId": "mh.roha",
+      "name": "Essar Oil",
+      "code": "Code Essar"
     }
   ],
   "WasteType": [
     {
-      "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Waste Type Name 1",
-      "code": "Fake Waste Type Code 1"
-
+      "name": "Dry Waste",
+      "code": "Waste Type Code 1"
     },
     {
-      "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Waste Type Name 2",
-      "code": "Fake Waste Type Code 2"
-
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "name": "Fake Waste Type Name 3",
-      "code": "Fake Waste Type Code 3"
-
+      "name": "Wet Waste",
+      "code": "Waste Type Code 2"
     }
   ],
   "WasteSubType": [
     {
-      "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Waste  Sub Type Name 1",
-      "code": "Fake Waste  Sub Type Name 1",
-      "wasteType": "Fake Waste Type 1"
+      "name": "Household Waste",
+      "code": "Waste  Sub Type Name 1",
+      "wasteType": "Waste Type Code 1"
     },
     {
-      "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Waste  Sub Type Name 2",
-      "code": "Fake Waste  Sub Type Name 2",
-      "wasteType": "Fake Waste Type 2"
+      "name": "Household Waste",
+      "code": "Waste  Sub Type Name 2",
+      "wasteType": "Waste Type Code 2"
     },
     {
-      "id": 3,
       "tenantId": "mh.roha",
-      "name": "Fake Waste  Sub Type Name 3",
-      "code": "Fake Waste  Sub Type Name 3",
-      "wasteType": "Fake Waste Type 3"
+      "name": "Slaughterhouse Waste",
+      "code": "Waste  Sub Type Name 3",
+      "wasteType": "Waste Type Code 2"
+    },
+    {
+      "tenantId": "mh.roha",
+      "name": "Market Waste",
+      "code": "Waste  Sub Type Name 4",
+      "wasteType": "Waste Type Code 2"
     }
   ],
   "DumpingGround": [
     {
-      "code": "Fake Dumping Ground Code 1",
-      "tenantId": "mh.roha"
+      "code": "DG Code 1",
+      "tenantId": "mh.roha",
+      "name": "Trimbak Muncipal Council",
+      "ulbs": [
+        {
+          "code": "default",
+          "name": "ULB:Trimbak Muncipal Council",
+          "imageId": "Fake image ID 1",
+          "logoId": "Fake logo ID 1",
+          "type": "Fake type 1"
+        },
+        {
+          "code": "mh.roha",
+          "name": "Fake ULB 2",
+          "imageId": "Fake image ID 2",
+          "logoId": "Fake logo ID 2",
+          "type": "Fake type 2"
+        }
+      ],
+      "siteDetails": {
+        "area": 0.025,
+        "capacity": 6.4,
+        "address": "Trimbak",
+        "latitude": 0,
+        "longitude": 0,
+        "mpcbAuthorisation": true,
+        "bankGuarantee": false,
+        "bankValidityFrom": "1509190483",
+        "bankValidityTo": "1509190483",
+        "wasteTypes": [
+          {
+            "tenantId": "mh.roha",
+            "name": "Dry Waste",
+            "code": "Waste Type Code 1"
+          },
+          {
+            "tenantId": "mh.roha",
+            "name": "Wet Waste",
+            "code": "Waste Type Code 2"
+          }
+        ]
+      },
+      "isProcessingSite": true
     },
     {
-     "code": "Fake Dumping Ground Code 2",
-      "tenantId": "mh.roha"
-    },
-    {
-      "code": "Fake Dumping Ground Code 3",
-      "tenantId": "mh.roha"
+      "code": "DG Code 2",
+      "tenantId": "mh.roha",
+      "name": "Fake dumping ground 2",
+      "ulbs": [
+        {
+          "code": "mh.roha",
+          "name": "Fake ULB 2",
+          "imageId": "Fake image ID 2",
+          "logoId": "Fake logo ID 2",
+          "type": "Fake type 2"
+        }
+      ],
+      "siteDetails": {
+        "area": 2.025,
+        "capacity": 16.4,
+        "address": "Fake address",
+        "latitude": 0,
+        "longitude": 0,
+        "mpcbAuthorisation": true,
+        "bankGuarantee": false,
+        "bankValidityFrom": "1509190483",
+        "bankValidityTo": "1509190483",
+        "wasteTypes": [
+          {
+            "tenantId": "mh.roha",
+            "name": "Dry Waste",
+            "code": "Waste Type Code 1"
+          },
+          {
+            "tenantId": "mh.roha",
+            "name": "Wet Waste",
+            "code": "Waste Type Code 2"
+          }
+        ]
+      },
+      "isProcessingSite": false,
+      "distanceFromProcessingSite": 20.75,
+      "processingSite": {
+        "code": "Fake Pro. Plant 1"
+      }
     }
   ],
-  "Vendor": [
+  "ProcessingSite": [
     {
-      "vendorNo": 1,
+      "code": "Pro. Plant Code 1",
       "tenantId": "mh.roha",
-      "name": "Fake Vendor name 1",
-      "registrationNo": "Fake Vendor registration number 1",
-      "email": "Fake Vendor email 1",
-      "tinNumber": "Fake Vendor tin number 1",
-      "gst": "Fake Vendor GST 1",
-      "phoneNo": "Fake Vendor phone num 1",
-      "contactNo": "Fake Vendor contact no 1",
-      "faxNumber": "Fake Vendor fax num 1",
-      "address": "Fake Vendor address 1",
-      "details": "Fake Vendor details 1"
-    },
-    {
-      "vendorNo": 2,
-      "tenantId": "mh.roha",
-      "name": "Fake Vendor name 2",
-      "registrationNo": "Fake Vendor registration number 2",
-      "email": "Fake Vendor email 2",
-      "tinNumber": "Fake Vendor tin number 2",
-      "gst": "Fake Vendor GST 2",
-      "phoneNo": "Fake Vendor phone num 2",
-      "contactNo": "Fake Vendor contact no 2",
-      "faxNumber": "Fake Vendor fax num 2",
-      "address": "Fake Vendor address 2",
-      "details": "Fake Vendor details 2"
-    },
-    {
-      "vendorNo": 3,
-      "tenantId": "mh.roha",
-      "name": "Fake Vendor name 3",
-      "registrationNo": "Fake Vendor registration number 3",
-      "email": "Fake Vendor email 3",
-      "tinNumber": "Fake Vendor tin number 3",
-      "gst": "Fake Vendor GST 3",
-      "phoneNo": "Fake Vendor phone num 3",
-      "contactNo": "Fake Vendor contact no 3",
-      "faxNumber": "Fake Vendor fax num 3",
-      "address": "Fake Vendor address 3",
-      "details": "Fake Vendor details 3"
-    }
-  ],
-  "VendorContract": [
-    {
-      "id": 1,
-      "tenantId": "mh.roha",
-      "contractNo": "Fake contact num 1",
-      "vendorName": "Fake Vendor Name 1",
-      "contractDate": "2017-03-31 20:00:00 -0400",
-      "contractPeriodFrom": "2020-04-01 20:00:00 -0400",
-      "contractPeriodTo": "2017-04-01 20:00:00 -0400",
-      "securityDeposit": "2037-04-01 20:00:00 -0400",
-      "servicesOffered": "Fake services 1",
-      "paymentTerms": "Fake payment terms 1",
-      "remarks": "Fake remarks 1"
-    },
-    {
-      "id": 2,
-      "tenantId": "mh.roha",
-      "contractNo": "Fake contact num 2",
-      "vendorName": "Fake Vendor Name 2",
-      "contractDate": "2027-04-01 20:00:00 -0400",
-      "contractPeriodFrom": "2020-04-01 20:00:00 -0400",
-      "contractPeriodTo": "2027-04-01 20:00:00 -0400",
-      "securityDeposit": "2037-04-01 20:00:00 -0400",
-      "servicesOffered": "Fake services 2",
-      "paymentTerms": "Fake payment terms 2",
-      "remarks": "Fake remarks 2"
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "contractNo": "Fake contact num 3",
-      "vendorName": "Fake Vendor Name 3",
-      "contractDate": "3037-04-02 20:00:00 -0400",
-      "contractPeriodFrom": "3030-04-02 20:00:00 -0400",
-      "contractPeriodTo": "3037-04-02 20:00:00 -0400",
-      "securityDeposit": "3037-04-02 20:00:00 -0400",
-      "servicesOffered": "Fake services 3",
-      "paymentTerms": "Fake payment terms 3",
-      "remarks": "Fake remarks 3"
+      "name": "Fake Pro. Plant 1",
+      "siteDetails": {
+        "area": 0.025,
+        "capacity": 6.4,
+        "address": "Fake Address",
+        "latitude": 0,
+        "longitude": 0,
+        "mpcbAuthorisation": true,
+        "bankGuarantee": false,
+        "bankValidityFrom": "1509190483",
+        "bankValidityTo": "1509190483",
+        "wasteTypes": [
+          {
+            "tenantId": "mh.roha",
+            "name": "Wet Waste",
+            "code": "Waste Type Code 2"
+          }
+        ]
+      }
     }
   ],
   "ShiftType": [
     {
-      "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Shift Type Name 1",
-      "code": "Fake Shift Type Code 1"
+      "name": "Morning Shift",
+      "code": "Shift Type Code 1"
     },
     {
-      "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Shift Type Name 2",
-      "code": "Fake Shift Type Code 2"
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "name": "Fake Shift Type Name 3",
-      "code": "Fake Shift Type Code 3"
+      "name": "Afternoon Shift",
+      "code": "Shift Type Code 2"
     }
   ],
   "Shift": [
     {
-      "id": 1,
+      "code": "Morning Collection Shift Code",
       "tenantId": "mh.roha",
-      "shiftType": "Fake shift Type 1",
-      "department": "Fake department 1",
-      "designation": "Fake designation 1",
-      "shiftStartTime": "2017-03-31 20:00:00 -0400",
-      "shiftEndTime": "2017-04-01 44:44:44",
-      "lunchStartTime": "2017-03-31 20:00:00 -0400",
-      "lunchEndTime": "2017-04-01 45:45:45",
-      "graceTimeFrom": "2017-04-01 44:44:44",
-      "graceTimeTo": "2024-04-01 44:44:44",
-      "remarks": "Fake remarks 1"
+      "shiftType": {
+        "tenantId": "mh.roha",
+        "name": "Morning Shift",
+        "code": "Shift Type Code 1"
+      },
+      "department": {
+        "tenantId": "mh.roha",
+        "name": "SWM",
+        "code": "Code SWM",
+        "active": true
+      },
+      "designation": {
+        "id": 12345,
+        "name": "Collection Staff",
+        "code": "Code Collection Staff",
+        "active": true
+      },
+      "shiftStartTime": 1512001800000,
+      "shiftEndTime": 1512030600000,
+      "lunchStartTime": 1512016200000,
+      "lunchEndTime": 1512019800000,
+      "graceTimeFrom": 1512016200000,
+      "graceTimeTo": 1512019800000
     },
     {
-      "id": 2,
+      "code": "Afternoon Collection Shift Code",
       "tenantId": "mh.roha",
-      "shiftType": "Fake shift Type 2",
-      "department": "Fake department 2",
-      "designation": "Fake designation 2",
-      "shiftStartTime": "2027-04-01 20:00:00 -0400",
-      "shiftEndTime": "2027-04-02 44:44:44",
-      "lunchStartTime": "2027-04-01 20:00:00 -0400",
-      "lunchEndTime": "2027-04-02 45:45:45",
-      "graceTimeFrom": "2027-04-02 44:44:44",
-      "graceTimeTo": "2024-04-02 44:44:44",
-      "remarks": "Fake remarks 2"
+      "shiftType": {
+        "tenantId": "mh.roha",
+        "name": "Afternoon Shift",
+        "code": "Shift Type Code 2"
+      },
+      "department": {
+        "tenantId": "mh.roha",
+        "name": "SWM",
+        "code": "Code SWM",
+        "active": true
+      },
+      "designation": {
+        "id": 12345,
+        "name": "Collection Staff",
+        "code": "Code Collection Staff",
+        "active": true
+      },
+      "shiftStartTime": 1512030600000,
+      "shiftEndTime": 1512059400000,
+      "lunchStartTime": 1512046800000,
+      "lunchEndTime": 1512050400000,
+      "graceTimeFrom": 1512016200000,
+      "graceTimeTo": 1512019800000
     },
     {
-      "id": 3,
+      "code": "Morning Segregation Shift Code",
       "tenantId": "mh.roha",
-      "shiftType": "Fake shift Type 3",
-      "department": "Fake department 3",
-      "designation": "Fake designation 3",
-      "shiftStartTime": "3037-04-02 20:00:00 -0400",
-      "shiftEndTime": "3037-04-03 44:44:44",
-      "lunchStartTime": "3037-04-02 20:00:00 -0400",
-      "lunchEndTime": "3037-04-03 45:45:45",
-      "graceTimeFrom": "3037-04-03 44:44:44",
-      "graceTimeTo": "3034-04-03 44:44:44",
-      "remarks": "Fake remarks 3"
+      "shiftType": {
+        "tenantId": "mh.roha",
+        "name": "Morning Shift",
+        "code": "Shift Type Code 1"
+      },
+      "department": {
+        "tenantId": "mh.roha",
+        "name": "SWM",
+        "code": "Code SWM",
+        "active": true
+      },
+      "designation": {
+        "id": 12346,
+        "name": "Segregation Staff",
+        "code": "Code Segregation Staff",
+        "active": true
+      },
+      "shiftStartTime": 1512001800000,
+      "shiftEndTime": 1512030600000,
+      "lunchStartTime": 1512016200000,
+      "lunchEndTime": 1512019800000,
+      "graceTimeFrom": 1512016200000,
+      "graceTimeTo": 1512019800000
+    },
+    {
+      "code": "Afternoon Segregation Shift Code",
+      "tenantId": "mh.roha",
+      "shiftType": {
+        "tenantId": "mh.roha",
+        "name": "Afternoon Shift",
+        "code": "Shift Type Code 2"
+      },
+      "department": {
+        "tenantId": "mh.roha",
+        "name": "SWM",
+        "code": "Code SWM",
+        "active": true
+      },
+      "designation": {
+        "id": 12346,
+        "name": "Segregation Staff",
+        "code": "Code Segregation Staff",
+        "active": true
+      },
+      "shiftStartTime": 1512030600000,
+      "shiftEndTime": 1512059400000,
+      "lunchStartTime": 1512046800000,
+      "lunchEndTime": 1512050400000,
+      "graceTimeFrom": 1512016200000,
+      "graceTimeTo": 1512019800000
+    },
+    {
+      "code": "Morning Disposal Shift Code",
+      "tenantId": "mh.roha",
+      "shiftType": {
+        "tenantId": "mh.roha",
+        "name": "Morning Shift",
+        "code": "Shift Type Code 1"
+      },
+      "department": {
+        "tenantId": "mh.roha",
+        "name": "SWM",
+        "code": "Code SWM",
+        "active": true
+      },
+      "designation": {
+        "id": 12347,
+        "name": "Disposal Staff",
+        "code": "Code Disposal Staff",
+        "active": true
+      },
+      "shiftStartTime": 1512001800000,
+      "shiftEndTime": 1512030600000,
+      "lunchStartTime": 1512016200000,
+      "lunchEndTime": 1512019800000,
+      "graceTimeFrom": 1512016200000,
+      "graceTimeTo": 1512019800000
+    },
+    {
+      "code": "Afternoon Disposal Shift Code",
+      "tenantId": "mh.roha",
+      "shiftType": {
+        "tenantId": "mh.roha",
+        "name": "Afternoon Shift",
+        "code": "Shift Type Code 2"
+      },
+      "department": {
+        "tenantId": "mh.roha",
+        "name": "SWM",
+        "code": "Code SWM",
+        "active": true
+      },
+      "designation": {
+        "id": 12347,
+        "name": "Disposal Staff",
+        "code": "Code Disposal Staff",
+        "active": true
+      },
+      "shiftStartTime": 1512030600000,
+      "shiftEndTime": 1512059400000,
+      "lunchStartTime": 1512046800000,
+      "lunchEndTime": 1512050400000,
+      "graceTimeFrom": 1512016200000,
+      "graceTimeTo": 1512019800000
     }
   ],
   "CollectionType": [
     {
-      "id": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Collection Type Name 1",
-      "code": "Fake Collection Type Code 1"
+      "name": "Door to Door Collection (Wet & Dry)",
+      "code": "Collection Type Code 1"
     },
     {
-      "id": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Collection Type Name 2",
-      "code": "Fake Collection Type Code 2"
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "name": "Fake Collection Type Name 3",
-      "code": "Fake Collection Type Code 3"
-    }
-  ],
-  "CollectionPointDetails": [
-    {
-      "id": 1,
-      "tenantId": "mh.roha",
-      "collectionPointType": "Fake collection Point Type 1",
-      "collectionPointName": "Fake collection Point Name 1",
-      "garbageEstimate": "Fake garbage Estimate 1",
-      "description": "Fake description 1"
-    },
-    {
-      "id": 2,
-      "tenantId": "mh.roha",
-      "collectionPointType": "Fake collection Point Type 2",
-      "collectionPointName": "Fake collection Point Name 2",
-      "garbageEstimate": "Fake garbage Estimate 2",
-      "description": "Fake description 2"
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "collectionPointType": "Fake collection Point Type 3",
-      "collectionPointName": "Fake collection Point Name 3",
-      "garbageEstimate": "Fake garbage Estimate 3",
-      "description": "Fake description 3"
-    }
-  ],
-  "VehicleMaintenance": [
-    {
-      "id": 1,
-      "tenantId": "mh.roha",
-      "ward": "Fake Ward 1",
-      "zone": "Fake Zone 1",
-      "street": "Fake Street 1",
-      "colony": "Fake colony 1",
-      "vehicleType": "Fake vehicle type 1",
-      "maintenanceAfter": 100,
-      "downtimeforMaintenance": 100
-    },
-    {
-      "id": 2,
-      "tenantId": "mh.roha",
-      "ward": "Fake Ward 2",
-      "zone": "Fake Zone 2",
-      "street": "Fake Street 2",
-      "colony": "Fake colony 2",
-      "vehicleType": "Fake vehicle type 2",
-      "maintenanceAfter": 200,
-      "downtimeforMaintenance": 200
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "ward": "Fake Ward 3",
-      "zone": "Fake Zone 3",
-      "street": "Fake Street 3",
-      "colony": "Fake colony 3",
-      "vehicleType": "Fake vehicle type 3",
-      "maintenanceAfter": 300,
-      "downtimeforMaintenance": 300
+      "name": "(Day to Day Basis)",
+      "code": "Collection Type Code 2"
     }
   ],
   "Population": [
     {
-      "id": 1,
+      "code": "Trimbak MC Code",
       "tenantId": "mh.roha",
-      "ward": "Fake Ward 1",
-      "zone": "Fake Zone 1",
-      "censusYear": "Fake censusYear 1",
-      "population": "Fake population 1",
-      "garbageToBeCollected": 1000
-    },
-    {
-      "id": 2,
-      "tenantId": "mh.roha",
-      "ward": "Fake Ward 2",
-      "zone": "Fake Zone 2",
-      "censusYear": "Fake censusYear 2",
-      "population": "Fake population 2",
-      "garbageToBeCollected": 2000
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "ward": "Fake Ward 3",
-      "zone": "Fake Zone 3",
-      "censusYear": "Fake censusYear 3",
-      "population": "Fake population 3",
-      "garbageToBeCollected": 3000
-    }
-  ],
-  "RefillingPumpStation": [
-    {
-      "code": "Fake RefillingPumpStation Code 1",
-      "tenantId": "mh.roha",
-      "location": "Fake location 1",
-      "name": "Fake name 1",
-      "remarks": "Fake remarks 1",
-      "typeOfPump": "Fake type Of Pump 1",
-      "typeOfFuel": "Fake type of fuel 1",
-      "quantity": 1000
-    },
-    {
-      "code": "Fake RefillingPumpStation Code 2",
-      "tenantId": "mh.roha",
-      "location": "Fake location 2",
-      "name": "Fake name 2",
-      "remarks": "Fake remarks 2",
-      "typeOfPump": "Fake type Of Pump 2",
-      "typeOfFuel": "Fake type of fuel 2",
-      "quantity": 2000
-    },
-    {
-      "code": "Fake RefillingPumpStation Code 3",
-      "tenantId": "mh.roha",
-      "location": "Fake location 3",
-      "name": "Fake name 3",
-      "remarks": "Fake remarks 3",
-      "typeOfPump": "Fake type Of Pump 3",
-      "typeOfFuel": "Fake type of fuel 3",
-      "quantity": 3000
+      "censusYear": 2011,
+      "population": 13383,
+      "garbageToBeCollected": 5,
+      "ulbName": "Trimbak Muncipal Council"
     }
   ],
   "Toilet": [
     {
-      "id": 1,
+      "code": 1,
       "tenantId": "mh.roha",
-      "name": "Fake Name 1",
+      "publicToilet": true,
+      "name": "Toilet Name 1",
+      "location": {
+        "name": "Fake location name 1"
+      },
       "ward": "Fake Ward 1",
       "zone": "Fake Zone 1",
       "street": "Fake Street 1",
       "colony": "Fake colony 1",
-      "latitude": 1111.2222,
-      "longitude": 2222.3333
+      "seatCount": 10,
+      "address": "Fake Address 1"
     },
     {
-      "id": 2,
+      "code": 2,
       "tenantId": "mh.roha",
-      "name": "Fake Name 2",
-      "ward": "Fake Ward 2",
+      "publicToilet": false,
+      "name": "Toilet Name 2",
+      "location": {
+        "name": "Fake location name 2"
+      },
+      "ward": "Fake Ward 1",
       "zone": "Fake Zone 2",
       "street": "Fake Street 2",
       "colony": "Fake colony 2",
-      "latitude": 2222.2222,
-      "longitude": 2222.3333
-    },
-    {
-      "id": 3,
-      "tenantId": "mh.roha",
-      "name": "Fake Name 3",
-      "ward": "Fake Ward 3",
-      "zone": "Fake Zone 3",
-      "street": "Fake Street 3",
-      "colony": "Fake colony 3",
-      "latitude": 3333.3333,
-      "longitude": 3333.3333
+      "seatCount": 7,
+      "address": "Fake Address 2"
     }
   ],
-  "VehicleSchedule": [
+  "SwmProcess": [
     {
-      "id": 1,
+      "code": "Process 1",
       "tenantId": "mh.roha",
-      "ward": "Fake Ward 1",
-      "zone": "Fake Zone 1",
-      "street": "Fake Street 1",
-      "colony": "Fake colony 1",
-      "scheduledFrom": "2014-04-03 44:44:44",
-      "scheduledTo": "2014-09-03 44:44:44",
-      "route": "Fake route 1",
-      "vehicleType": "Fake vehicle Type 1",
-      "vehicleRegNo": "Fake vehicle Reg No 1",
-      "targetedGarbage": 1000
+      "name": "Collection"
     },
     {
-      "id": 2,
+      "code": "Process 2",
       "tenantId": "mh.roha",
-      "ward": "Fake Ward 2",
-      "zone": "Fake Zone 2",
-      "street": "Fake Street 2",
-      "colony": "Fake colony 2",
-      "scheduledFrom": "2024-04-03 44:44:44",
-      "scheduledTo": "2024-09-03 44:44:44",
-      "route": "Fake route 2",
-      "vehicleType": "Fake vehicle Type 2",
-      "vehicleRegNo": "Fake vehicle Reg No 2",
-      "targetedGarbage": 2000
+      "name": "Segregation"
     },
     {
-      "id": 3,
+      "code": "Process 3",
       "tenantId": "mh.roha",
-      "ward": "Fake Ward 3",
-      "zone": "Fake Zone 3",
-      "street": "Fake Street 3",
-      "colony": "Fake colony 3",
-      "scheduledFrom": "3034-04-03 44:44:44",
-      "scheduledTo": "3034-09-03 44:44:44",
-      "route": "Fake route 3",
-      "vehicleType": "Fake vehicle Type 3",
-      "vehicleRegNo": "Fake vehicle Reg No 3",
-      "targetedGarbage": 3000
+      "name": "Transportation"
+    },
+    {
+      "code": "Process 4",
+      "tenantId": "mh.roha",
+      "name": "Disposal"
+    },
+    {
+      "code": "Process 5",
+      "tenantId": "mh.roha",
+      "name": "Waste Treatment"
+    },
+    {
+      "code": "Process 6",
+      "tenantId": "mh.roha",
+      "name": "Other"
     }
   ],
-  "SanitationStaffTarget": [
+  "PaymentTerms": [
     {
-      "id": 1,
       "tenantId": "mh.roha",
-      "targetNo": "Fake target No 1",
-      "targetFrom": "2014-09-03 44:44:44",
-      "targetTo": "2020-09-03 44:44:44",
-      "swmProcess": "Fake SWM process 1",
-      "ward": "Fake Ward 1",
-      "zone": "Fake Zone 1",
-      "street": "Fake Street 1",
-      "colony": "Fake colony 1",
-      "route": "Fake route 1",
-      "department": "Fake department 1",
-      "designation": "Fake designation 1",
-      "employeeName": "Fake employee Name 1",
-      "locationName": "Fake locatiion Name 1",
-      "targetedGarbage": 1000
+      "noOfDays": 30,
+      "label": "Monthly"
     },
     {
-      "id": 2,
       "tenantId": "mh.roha",
-      "targetNo": "Fake target No 2",
-      "targetFrom": "2024-09-03 44:44:44",
-      "targetTo": "2020-09-03 44:44:44",
-      "swmProcess": "Fake SWM process 2",
-      "ward": "Fake Ward 2",
-      "zone": "Fake Zone 2",
-      "street": "Fake Street 2",
-      "colony": "Fake colony 2",
-      "route": "Fake route 2",
-      "department": "Fake department 2",
-      "designation": "Fake designation 2",
-      "employeeName": "Fake employee Name 2",
-      "locationName": "Fake locatiion Name 2",
-      "targetedGarbage": 2000
+      "noOfDays": 60,
+      "label": "Bi-monthly"
     },
     {
-      "id": 3,
       "tenantId": "mh.roha",
-      "targetNo": "Fake target No 3",
-      "targetFrom": "3034-09-03 44:44:44",
-      "targetTo": "3030-09-03 44:44:44",
-      "swmProcess": "Fake SWM process 3",
-      "ward": "Fake Ward 3",
-      "zone": "Fake Zone 3",
-      "street": "Fake Street 3",
-      "colony": "Fake colony 3",
-      "route": "Fake route 3",
-      "department": "Fake department 3",
-      "designation": "Fake designation 3",
-      "employeeName": "Fake employee Name 3",
-      "locationName": "Fake locatiion Name 3",
-      "targetedGarbage": 3000
+      "noOfDays": 90,
+      "label": "Quarterly"
+    },
+    {
+      "tenantId": "mh.roha",
+      "noOfDays": 365,
+      "label": "Yearly"
     }
   ]
 }

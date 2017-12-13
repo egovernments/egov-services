@@ -28,6 +28,9 @@ public class PriceListDetails   {
 
   @JsonProperty("tenantId")
   private String tenantId = null;
+  
+  @JsonProperty("priceList")
+  private String priceList = null;
 
   @JsonProperty("material")
   private Material material = null;
@@ -95,6 +98,26 @@ public class PriceListDetails   {
   public void setTenantId(String tenantId) {
     this.tenantId = tenantId;
   }
+  
+  public PriceListDetails priceList(String priceList) {
+	    this.priceList = priceList;
+	    return this;
+	  }
+
+	   /**
+	   * PriceList Id of the header
+	   * @return tenantId
+	  **/
+	  @ApiModelProperty(value = "Pricelist id of the header")
+
+	 @Size(min=2,max=128)
+	  public String getPriceList() {
+	    return priceList;
+	  }
+
+	  public void setPriceList(String priceList) {
+	    this.priceList = priceList;
+	  }
 
   public PriceListDetails material(Material material) {
     this.material = material;

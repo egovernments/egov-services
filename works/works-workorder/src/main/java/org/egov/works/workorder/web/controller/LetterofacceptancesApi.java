@@ -34,7 +34,8 @@ public interface LetterofacceptancesApi {
     
     @RequestMapping(value = "/letterofacceptances/_create",
         method = RequestMethod.POST)
-    ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesCreatePost(@ApiParam(value = "Details of new Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest);
+    ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesCreatePost(@ApiParam(value = "Details of new Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+			@RequestParam(required = false) Boolean isRevision);
 
 
     @ApiOperation(value = "Get the list of Letter Of Acceptance(s) defined in the system.", notes = "Search and get Letter Of Acceptance(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params.  In case multiple parameters are passed Letter Of Acceptance(s) will be searched as an AND combination of all the parameters.  Maximum result size is restricted based on the maxlength of Letter Of Acceptance as defined in LetterOfAcceptanceResponse model.  Search results will be sorted by the sortProperty Provided in the parameters ", response = LetterOfAcceptanceResponse.class, tags={ "Letter Of Acceptance", })
@@ -54,6 +55,7 @@ public interface LetterofacceptancesApi {
     
     @RequestMapping(value = "/letterofacceptances/_update",
         method = RequestMethod.POST)
-    ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesUpdatePost(@ApiParam(value = "Details of Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest);
+    ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesUpdatePost(@ApiParam(value = "Details of Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+			@RequestParam(required = false) Boolean isRevision);
 
 }

@@ -8,37 +8,38 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum LOAStatus {
 
-	CREATED("CREATED"),
+    CREATED("CREATED"),
 
-	REJECTED("REJECTED"),
+    REJECTED("REJECTED"),
 
-	APPROVED("APPROVED"),
+    APPROVED("APPROVED"),
 
-	CANCELLED("CANCELLED"),
+    CANCELLED("CANCELLED"),
 
-	RESUBMITTED("RESUBMITTED"),
+    RESUBMITTED("RESUBMITTED"),
 
-	CHECKED("CHECKED");
+    CHECKED("CHECKED");
 
-	private String value;
+    private String value;
 
-	LOAStatus(String value) {
-		this.value = value;
-	}
+    LOAStatus(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static LOAStatus fromValue(String text) {
+        for (LOAStatus b : LOAStatus.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static LOAStatus fromValue(String text) {
-		for (LOAStatus b : LOAStatus.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

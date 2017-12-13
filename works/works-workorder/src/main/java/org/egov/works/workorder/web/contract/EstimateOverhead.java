@@ -1,217 +1,246 @@
 package org.egov.works.workorder.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data of Estimate Overheads
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Overheads")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class EstimateOverhead {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("overhead")
-	private Overhead overhead = null;
+    @JsonProperty("overhead")
+    private Overhead overhead = null;
 
-	@JsonProperty("amount")
-	private BigDecimal amount = null;
+    @JsonProperty("amount")
+    private BigDecimal amount = null;
 
-	@JsonProperty("detailedEstimate")
-	private String detailedEstimate = null;
+    @JsonProperty("detailedEstimate")
+    private String detailedEstimate = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("deleted")
+    private Boolean deleted = false;
 
-	public EstimateOverhead id(String id) {
-		this.id = id;
-		return this;
-	}
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
-	/**
-	 * Unique Identifier of the Estimate Overheads
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Estimate Overheads")
+    public EstimateOverhead id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public String getId() {
-		return id;
-	}
+    /**
+     * Unique Identifier of the Estimate Overheads
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Estimate Overheads")
 
-	public void setId(String id) {
-		this.id = id;
-	}
 
-	public EstimateOverhead tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Tenant id of the Estimate Overheads
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Estimate Overheads")
-	@NotNull
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    public EstimateOverhead tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    /**
+     * Tenant id of the Estimate Overheads
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Estimate Overheads")
+    @NotNull
 
-	public EstimateOverhead overhead(Overhead overhead) {
-		this.overhead = overhead;
-		return this;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	/**
-	 * Get overhead
-	 * 
-	 * @return overhead
-	 **/
-	@ApiModelProperty(required = true, value = "")
-	@NotNull
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	@Valid
+    public EstimateOverhead overhead(Overhead overhead) {
+        this.overhead = overhead;
+        return this;
+    }
 
-	public Overhead getOverhead() {
-		return overhead;
-	}
+    /**
+     * Get overhead
+     *
+     * @return overhead
+     **/
+    @ApiModelProperty(required = true, value = "")
+    @NotNull
 
-	public void setOverhead(Overhead overhead) {
-		this.overhead = overhead;
-	}
+    @Valid
 
-	public EstimateOverhead amount(BigDecimal amount) {
-		this.amount = amount;
-		return this;
-	}
+    public Overhead getOverhead() {
+        return overhead;
+    }
 
-	/**
-	 * Overhead amount
-	 * 
-	 * @return amount
-	 **/
-	@ApiModelProperty(required = true, value = "Overhead amount")
-	@NotNull
+    public void setOverhead(Overhead overhead) {
+        this.overhead = overhead;
+    }
 
-	@Valid
+    public EstimateOverhead amount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
+    /**
+     * Overhead amount
+     *
+     * @return amount
+     **/
+    @ApiModelProperty(required = true, value = "Overhead amount")
+    @NotNull
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+    @Valid
 
-	public EstimateOverhead detailedEstimate(String detailedEstimate) {
-		this.detailedEstimate = detailedEstimate;
-		return this;
-	}
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-	/**
-	 * Reference of the Detailed Estimate for Overheads
-	 * 
-	 * @return detailedEstimate
-	 **/
-	@ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Overheads")
-	@NotNull
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
-	public String getDetailedEstimate() {
-		return detailedEstimate;
-	}
+    public EstimateOverhead detailedEstimate(String detailedEstimate) {
+        this.detailedEstimate = detailedEstimate;
+        return this;
+    }
 
-	public void setDetailedEstimate(String detailedEstimate) {
-		this.detailedEstimate = detailedEstimate;
-	}
+    /**
+     * Reference of the Detailed Estimate for Overheads
+     *
+     * @return detailedEstimate
+     **/
+    @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Overheads")
+    @NotNull
 
-	public EstimateOverhead auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    public String getDetailedEstimate() {
+        return detailedEstimate;
+    }
 
-	@Valid
+    public void setDetailedEstimate(String detailedEstimate) {
+        this.detailedEstimate = detailedEstimate;
+    }
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+    public EstimateOverhead deleted(Boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    /**
+     * Boolean value to identify whether the object is deleted or not from UI.
+     *
+     * @return deleted
+     **/
+    @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		EstimateOverhead estimateOverhead = (EstimateOverhead) o;
-		return Objects.equals(this.id, estimateOverhead.id) && Objects.equals(this.tenantId, estimateOverhead.tenantId)
-				&& Objects.equals(this.overhead, estimateOverhead.overhead)
-				&& Objects.equals(this.amount, estimateOverhead.amount)
-				&& Objects.equals(this.detailedEstimate, estimateOverhead.detailedEstimate)
-				&& Objects.equals(this.auditDetails, estimateOverhead.auditDetails);
-	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, overhead, amount, detailedEstimate, auditDetails);
-	}
+    public Boolean getDeleted() {
+        return deleted;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class EstimateOverhead {\n");
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    overhead: ").append(toIndentedString(overhead)).append("\n");
-		sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
-		sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    public EstimateOverhead auditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public AuditDetails getAuditDetails() {
+        return auditDetails;
+    }
+
+    public void setAuditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EstimateOverhead estimateOverhead = (EstimateOverhead) o;
+        return Objects.equals(this.id, estimateOverhead.id) &&
+                Objects.equals(this.tenantId, estimateOverhead.tenantId) &&
+                Objects.equals(this.overhead, estimateOverhead.overhead) &&
+                Objects.equals(this.amount, estimateOverhead.amount) &&
+                Objects.equals(this.detailedEstimate, estimateOverhead.detailedEstimate) &&
+                Objects.equals(this.deleted, estimateOverhead.deleted) &&
+                Objects.equals(this.auditDetails, estimateOverhead.auditDetails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, overhead, amount, detailedEstimate, deleted, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class EstimateOverhead {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    overhead: ").append(toIndentedString(overhead)).append("\n");
+        sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
+        sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
+        sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

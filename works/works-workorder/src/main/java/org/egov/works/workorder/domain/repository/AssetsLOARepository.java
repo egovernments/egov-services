@@ -32,10 +32,10 @@ public class AssetsLOARepository extends JdbcRepository {
             validateEntityFieldName(assetsForLoaSearchCriteria.getSortBy(), AssetsForLOA.class);
         }
 
-        String orderBy = "order by id";
+        String orderBy = "order by loaassets.id";
         if (assetsForLoaSearchCriteria.getSortBy() != null
                 && !assetsForLoaSearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by " + assetsForLoaSearchCriteria.getSortBy();
+            orderBy = "order by loaassets." + assetsForLoaSearchCriteria.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -59,6 +59,8 @@ public class AssetsLOARepository extends JdbcRepository {
             params.append("loaassets.letterofacceptanceestimate in(:letterofacceptanceestimate)");
             paramValues.put("letterofacceptanceestimate", assetsForLoaSearchCriteria.getLetterOfAcceptanceEstimateIds());
         }
+
+        params.append(" and loaassets.deleted = false");
 
         if (params.length() > 0) {
 

@@ -277,6 +277,7 @@ class AbstractEstimate extends Component {
 
       handleChange (new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
       handleChange (false, `${obj.objectName}[0].spillOverFlag`, false);
+      handleChange (false, `${obj.objectName}[0].pmcRequired`, false);
 
       var sanctionType=[
         {key:'FINANCIAL_SANCTION',value:"FINANCIAL SANCTION"},
@@ -815,6 +816,7 @@ class AbstractEstimate extends Component {
   }
 
   checkMandatory = (jsonPath, val) => {
+    let {handleChange, setFormData} = this.props;
     let _mockData = {...this.props.mockData};
     let {moduleName, actionName, setMockData, addRequiredFields, delRequiredFields} = this.props;
     for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
@@ -847,25 +849,29 @@ class AbstractEstimate extends Component {
             let notReqFields=[];
             let temp = _mockData['works.create']['groups'];
             for(let k=0;k<obj.notRequired.length;k++){
-                for(var key in obj.notRequired[k]){
-                  notReqFields.push(obj.notRequired[k][key]);
-                  //Remove Asterisk symbol in floating label text - update mockdata
-                  for(let a=0;a<temp.length;a++){
-                    for(let b=0;b<temp[a].fields.length;b++){
-                      for(let mockkey in temp[a].fields[b]){
-                        if(mockkey == 'jsonPath' && temp[a].fields[b][mockkey] == obj.notRequired[k][key]){
-                          temp[a].fields[b]['isRequired']=false;
-                        }
-                      }
+              notReqFields.push(obj.notRequired[k]['jpath']);
+              if(obj.notRequired[k]['clear'] == true){
+                handleChange('',obj.notRequired[k]['jpath'], false);
+              }
+              //Remove Asterisk symbol in floating label text - update mockdata
+              for(let a=0;a<temp.length;a++){
+                for(let b=0;b<temp[a].fields.length;b++){
+                  for(let mockkey in temp[a].fields[b]){
+                    if(mockkey == 'jsonPath' && temp[a].fields[b][mockkey] == obj.notRequired[k]['jpath']){
+                      temp[a].fields[b]['isRequired']=false;
                     }
                   }
                 }
+              }
             }
             delRequiredFields(notReqFields);
           }
         }
       }
     }
+    //ended
+    // console.log(_mockData);
+    setMockData(_mockData);
   }
 
   checkIfHasShowHideFields = (jsonPath, val) => {
@@ -948,109 +954,6 @@ class AbstractEstimate extends Component {
       this.checkMandatory(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
       this.affectDependants(obj, e, property);
-
-      // _.forEach(depedants, function(value, key) {
-      //       if (value.type == "dropDown") {
-      //           // let splitArray = value.pattern.split("?");
-      //           let splitArray1 =  value.pattern.substr(0,value.pattern.indexOf('?'));
-      //           let splitArray2 = value.pattern.substr(value.pattern.indexOf('?')+1);
-      //           // console.log(splitArray);
-      //           let context = "";
-      //     			let id = {};
-      //     			for (var j = 0; j < splitArray1.split("/").length; j++) {
-      //     				context+=splitArray1.split("/")[j]+"/";
-      //     			}
-      //
-      //     			let queryStringObject=splitArray2.split("|")[0].split("&");
-      //     			for (var i = 0; i < queryStringObject.length; i++) {
-      //     				if (i) {
-      //               // console.log(queryStringObject[i]);
-      //               if (queryStringObject[i].split("=")[1].search("{")>-1) {
-      //                 if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-      //                   let queryString = queryStringObject[i].split("=")[1];
-      //                   // console.log(queryString, queryString.length);
-      //                   let part1 = queryString.substring(0,queryString.lastIndexOf("{"));
-      //                   // console.log(queryString, queryString.length);
-      //                   let part2 = queryString.substring(queryString.lastIndexOf("}")+1,queryString.length);
-      //                   // console.log(part1, part2);
-      //                   if(part1.length > 0){
-      //                     // console.log(encodeURI(`${part1}${e.target.value}${part2}`));
-      //                     // console.log(encodeURIComponent(`${part1}${e.target.value}${part2}`));
-      //                     id[queryStringObject[i].split("=")[0]]=`${part1}${e.target.value}${part2}`;
-      //                   }else{
-      //                     id[queryStringObject[i].split("=")[0]]=e.target.value || "";
-      //                   }
-      //                 } else {
-      //                   id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-      //                 }
-      //               } else {
-      //                 id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
-      //               }
-      //     				}
-      //     			}
-      //
-      //           Api.commonApiPost(context, id, {}, false, false, false, "", "", value.isStateLevel).then(function(response) {
-      //             if(response) {
-      //               let keys=jp.query(response,splitArray2.split("|")[1]);
-      //               let values=jp.query(response,splitArray2.split("|")[2]);
-      //               let dropDownData=[];
-      //               for (var k = 0; k < keys.length; k++) {
-      //                   let obj={};
-      //                   obj["key"]=keys[k];
-      //                   obj["value"]=values[k];
-      //                   dropDownData.push(obj);
-      //               }
-      //
-      //               dropDownData.sort(function(s1, s2) {
-      //                 return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-      //               });
-      //               dropDownData.unshift({key: null, value: "-- Please Select --"});
-      //               setDropDownData(value.jsonPath, dropDownData);
-      //             }
-      //           },function(err) {
-      //               console.log(err);
-      //           });
-      //       } else if (value.type == "textField") {
-      //         let object={
-      //           target: {
-      //             value:eval(eval(value.pattern))
-      //           }
-      //         }
-      //         handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
-      //       } else if (value.type == "autoFill") {
-      //         let splitArray = value.pattern.split("?");
-      //           let context = "";
-      //           let id = {};
-      //           for (var j = 0; j < splitArray[0].split("/").length; j++) {
-      //             context+=splitArray[0].split("/")[j]+"/";
-      //           }
-      //
-      //           let queryStringObject=splitArray[1].split("|")[0].split("&");
-      //           for (var i = 0; i < queryStringObject.length; i++) {
-      //             if (i) {
-      //               if (queryStringObject[i].split("=")[1].search("{")>-1) {
-      //                 if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-      //                   id[queryStringObject[i].split("=")[0]] = e.target.value || "";
-      //                 } else {
-      //                   id[queryStringObject[i].split("=")[0]] = getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-      //                 }
-      //               } else {
-      //                 id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
-      //               }
-      //             }
-      //           }
-      //
-      //           Api.commonApiPost(context, id).then(function(response) {
-      //             if(response) {
-      //               for(let key in value.autoFillFields) {
-      //                 handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, key, false, '', '');
-      //               }
-      //             }
-      //           },function(err) {
-      //               console.log(err);
-      //           });
-      //       }
-      // });
   }
 
   affectDependants = (obj, e, property)=>{

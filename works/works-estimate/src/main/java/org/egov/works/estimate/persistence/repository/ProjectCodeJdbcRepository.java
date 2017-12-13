@@ -103,6 +103,7 @@ public class ProjectCodeJdbcRepository extends JdbcRepository {
 			paramValues.put("active", Boolean.TRUE);
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

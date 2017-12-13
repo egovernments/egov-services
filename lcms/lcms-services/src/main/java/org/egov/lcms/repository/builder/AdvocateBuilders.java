@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.AdvocateSearchCriteria;
-import org.egov.lcms.utility.ConstantUtility;
+import org.egov.lcms.util.ConstantUtility;
 
 public class AdvocateBuilders {
 

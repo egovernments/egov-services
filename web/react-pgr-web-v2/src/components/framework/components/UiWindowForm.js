@@ -1,23 +1,23 @@
-import React, { Component } from "react";
-import { Grid, Row, Col, Table, DropdownButton } from "react-bootstrap";
-import TextField from "material-ui/TextField";
-import FloatingActionButton from "material-ui/FloatingActionButton";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
-import { translate } from "../../common/common";
-import _ from "lodash";
-import ShowFields from "../showFields";
-import { connect } from "react-redux";
-import jp from "jsonpath";
-import Api from "../../../api/api";
-import {
-  fileUpload,
-  getInitiatorPosition
-} from "../../framework/utility/utility";
+import React, { Component } from 'react';
+import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
+import TextField from 'material-ui/TextField';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import { translate } from '../../common/common';
+import _ from 'lodash';
+import ShowFields from '../showFields';
+import { connect } from 'react-redux';
+import jp from 'jsonpath';
+import Api from '../../../api/api';
+import { fileUpload, getInitiatorPosition } from '../../framework/utility/utility';
 //import $ from "jquery";
 
 var specifications = {};
-let reqRequired = [];
+var reqRequired = [];
+
+const REGEXP_FIND_IDX = /\[(.*?)\]+/g;
+
 class UiWindowForm extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +25,9 @@ class UiWindowForm extends Component {
       open: false,
       mockData: null,
       valuesObj: {},
-      index: -1
+      index: -1,
+      fieldErrors: {},
+      isFormValid: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.getValueFn = this.getValueFn.bind(this);
@@ -36,21 +38,12 @@ class UiWindowForm extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (
-            configObject.groups[i].fields[j].isRequired &&
-            !configObject.groups[i].fields[j].hide &&
-            !configObject.groups[i].hide
-          )
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired && !configObject.groups[i].fields[j].hide && !configObject.groups[i].hide)
             reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -62,45 +55,38 @@ class UiWindowForm extends Component {
     let self = this,
       _url;
     // if(e) e.preventDefault();
-    self.props.setLoadingStatus("loading");
+    self.props.setLoadingStatus('loading');
     if (self.state.mockData[self.props.item.modulepath].tenantIdRequired) {
     }
     //Check if documents, upload and get fileStoreId
-    let formdocumentData =
-      formData[self.state.mockData[self.props.item.modulepath].objectName];
-    let documentPath =
-      self.state.mockData[self.props.item.modulepath].documentsPath;
+    let formdocumentData = formData[self.state.mockData[self.props.item.modulepath].objectName];
+    let documentPath = self.state.mockData[self.props.item.modulepath].documentsPath;
 
-    formdocumentData =
-      (formdocumentData && formdocumentData.length && formdocumentData[0]) ||
-      formdocumentData;
+    formdocumentData = (formdocumentData && formdocumentData.length && formdocumentData[0]) || formdocumentData;
     if (documentPath) {
       formdocumentData = _.get(formData, documentPath);
     }
 
-    if (formdocumentData["documents"] && formdocumentData["documents"].length) {
-      let documents = [...formdocumentData["documents"]];
+    if (formdocumentData['documents'] && formdocumentData['documents'].length) {
+      let documents = [...formdocumentData['documents']];
       let _docs = [];
       let counter = documents.length,
         breakOut = 0;
       for (let i = 0; i < documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(
-          err,
-          res
-        ) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
           if (breakOut == 1) return;
           if (err) {
             breakOut = 1;
-            self.props.setLoadingStatus("hide");
+            self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, err, false, true);
           } else {
             _docs.push({
               ...documents[i],
-              fileStoreId: res.files[0].fileStoreId
+              fileStoreId: res.files[0].fileStoreId,
             });
             counter--;
             if (counter == 0 && breakOut == 0) {
-              formdocumentData["documents"] = _docs;
+              formdocumentData['documents'] = _docs;
               self.checkForOtherFiles(formData, _url);
             }
           }
@@ -110,7 +96,7 @@ class UiWindowForm extends Component {
     if (/\{.*\}/.test(self.state.mockData[self.props.item.modulepath].url)) {
       _url = self.state.mockData[self.props.item.modulepath].url;
       var match = _url.match(/\{.*\}/)[0];
-      var jPath = match.replace(/\{|}/g, "");
+      var jPath = match.replace(/\{|}/g, '');
       _url = _url.replace(match, _.get(formData, jPath));
     }
 
@@ -120,27 +106,22 @@ class UiWindowForm extends Component {
     //let { mockData, actionName, moduleName } = this.props;
     let self = this;
     let fileList = {};
-    this.getFileList(
-      self.state.mockData[self.props.item.modulepath],
-      formData,
-      fileList
-    );
+    this.getFileList(self.state.mockData[self.props.item.modulepath], formData, fileList);
     let counter = Object.keys(fileList).length;
     if (!counter) {
       self.makeAjaxCall(formData, _url);
     } else {
       let breakOut = 0;
       for (let key in fileList) {
-        fileUpload(fileList[key], "legal", function(err, res) {
+        fileUpload(fileList[key], 'legal', function(err, res) {
           if (breakOut == 1) return;
           if (err) {
             breakOut = 1;
-            self.props.setLoadingStatus("hide");
+            self.props.setLoadingStatus('hide');
           } else {
             counter--;
             _.set(formData, key, res.files[0].fileStoreId);
-            if (counter == 0 && breakOut == 0)
-              self.makeAjaxCall(formData, _url);
+            if (counter == 0 && breakOut == 0) self.makeAjaxCall(formData, _url);
           }
         });
       }
@@ -150,27 +131,14 @@ class UiWindowForm extends Component {
   getFileList = (mockObject, formData, fileList = {}) => {
     for (let i = 0; i < mockObject.groups.length; i++) {
       for (let j = 0; j < mockObject.groups[i].fields.length; j++) {
-        if (
-          mockObject.groups[i].fields[j].type == "singleFileUpload" &&
-          _.get(formData, mockObject.groups[i].fields[j].jsonPath)
-        ) {
-          fileList[mockObject.groups[i].fields[j].jsonPath] = _.get(
-            formData,
-            mockObject.groups[i].fields[j].jsonPath
-          );
+        if (mockObject.groups[i].fields[j].type == 'singleFileUpload' && _.get(formData, mockObject.groups[i].fields[j].jsonPath)) {
+          fileList[mockObject.groups[i].fields[j].jsonPath] = _.get(formData, mockObject.groups[i].fields[j].jsonPath);
         }
       }
 
-      if (
-        mockObject.groups[i].children &&
-        mockObject.groups[i].children.length
-      ) {
+      if (mockObject.groups[i].children && mockObject.groups[i].children.length) {
         for (var k = 0; k < mockObject.groups[i].children.length; k++) {
-          this.getFileList(
-            mockObject.groups[i].children[k],
-            formData,
-            fileList
-          );
+          this.getFileList(mockObject.groups[i].children[k], formData, fileList);
         }
       }
     }
@@ -179,25 +147,19 @@ class UiWindowForm extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost(
-      url || self.state.mockData[self.props.item.modulepath].url,
-      "",
-      formData,
-      "",
-      true
-    ).then(
+    Api.commonApiPost(url || self.state.mockData[self.props.item.modulepath].url, '', formData, '', true).then(
       function(response) {
-        self.props.setLoadingStatus("hide");
+        self.props.setLoadingStatus('hide');
         self.initData();
         self.setState({
           valuesObj: {},
           open: false,
-          index: -1
+          index: -1,
         });
         // self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
       },
       function(err) {
-        self.props.setLoadingStatus("hide");
+        self.props.setLoadingStatus('hide');
         //self.props.toggleSnackbarAndSetText(true, err.message);
       }
     );
@@ -205,15 +167,15 @@ class UiWindowForm extends Component {
 
   initData() {
     var self = this;
-    specifications = require(`../../framework/specs/${this.props.item.subPath}`)
-      .default;
-    var result =
-      typeof results == "string" ? JSON.parse(specifications) : specifications;
+    specifications = require(`../../framework/specs/${this.props.item.subPath}`).default;
+    var result = typeof results == 'string' ? JSON.parse(specifications) : specifications;
     let obj = specifications[this.props.item.modulepath];
+    reqRequired = [];
     self.setLabelAndReturnRequired(obj);
-
+    var allReqRequired = reqRequired ? reqRequired : [];
     this.setState({
-      mockData: JSON.parse(JSON.stringify(specifications))
+      mockData: JSON.parse(JSON.stringify(specifications)),
+      reqRequired: allReqRequired,
     });
   }
 
@@ -222,12 +184,12 @@ class UiWindowForm extends Component {
   }
   editRow = index => {
     let { item, getVal } = this.props;
-    var jsonPath = item.jsonPath + "." + item.arrayPath + "[" + index + "]";
+    var jsonPath = item.jsonPath + '.' + item.arrayPath + '[' + index + ']';
     var data = getVal(jsonPath);
     this.setState({
       valuesObj: data,
       index: index,
-      open: true
+      open: true,
     });
   };
   deleteRow = index => {};
@@ -251,20 +213,21 @@ class UiWindowForm extends Component {
                     </th>
                   );
                 })}
-                <th>{translate("reports.common.action")}</th>
+                <th>{translate('reports.common.action')}</th>
               </tr>
             </thead>
             <tbody>
               {_.isArray(_internal_val) &&
                 _internal_val.map((v, i) => {
-                   if(item.hidePrimaryRecord && i == 0){
-                              this.props.item.style = {"display":"none"};
-                            }else{
-                        this.props.item.style = {"display":"table-row"};
-                            }
-               return (
-                   <tr style={item.style}>
-                      <td>{i}</td>
+                  if (item.hidePrimaryRecord && i == 0) {
+                    this.props.item.style = { display: 'none' };
+                  } else {
+                    this.props.item.style = { display: 'table-row' };
+                  }
+
+                  return (
+                    <tr style={item.style}>
+                      <td>{item.hidePrimaryRecord ? i : i + 1}</td>
                       {item.tableConfig.rows.map((value, idx) => {
                         return <td>{_.get(v, value.displayField)}</td>;
                         //this.renderFields(_.get(v,value.displayField),value.type)}</td>);
@@ -291,34 +254,25 @@ class UiWindowForm extends Component {
         <Col xs={12} md={6}>
           <TextField
             className="cutustom-form-controll-for-textfield"
-            id={item.jsonPath.split(".").join("-")}
+            id={item.jsonPath.split('.').join('-')}
             floatingLabelStyle={{
-              color: "#A9A9A9",
-              fontSize: "20px",
-              "white-space": "nowrap"
+              color: '#A9A9A9',
+              fontSize: '20px',
+              'white-space': 'nowrap',
             }}
-            inputStyle={{ color: "#5F5C57" }}
+            inputStyle={{ color: '#5F5C57' }}
             floatingLabelFixed={true}
-            maxLength={item.maxLength || ""}
-            style={{ display: item.hide ? "none" : "inline-block" }}
-            errorStyle={{ float: "left" }}
+            maxLength={item.maxLength || ''}
+            style={{ display: item.hide ? 'none' : 'inline-block' }}
+            errorStyle={{ float: 'left' }}
             fullWidth={true}
             floatingLabelText={
               <span>
-                {item.label}{" "}
-                <span style={{ color: "#FF0000" }}>
-                  {item.isRequired ? " *" : ""}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </span>
             }
             //value = {this.state.valueList.join(", ")}
-            value={
-              _internal_val && _internal_val.constructor == Array ? (
-                _internal_val.join(", ")
-              ) : (
-                ""
-              )
-            }
+            value={_internal_val && _internal_val.constructor == Array ? _internal_val.join(', ') : ''}
             disabled={true}
           />
         </Col>
@@ -327,26 +281,22 @@ class UiWindowForm extends Component {
   };
 
   renderField = item => {
-    let val = this.props.getVal(item.jsonPath + "." + item.arrayPath);
+    let val = this.props.getVal(item.jsonPath + '.' + item.arrayPath);
     if (item.displayField && val && val.constructor == Array) {
       val = jp.query(val, `$..${item.displayField}`);
     }
-    if(item.isExceptFirstRecord && val && val.constructor == Array){
-           val.shift();
+    if (item.isExceptFirstRecord && val && val.constructor == Array) {
+      val.shift();
     }
-    if (this.props.readonly === "true") {
+    if (this.props.readonly === 'true') {
       return (
         <div>
           <Col xs={12}>
             <label>
-              <span style={{ fontWeight: 500, fontSize: "13px" }}>
-                {translate(item.label)}
-              </span>
+              <span style={{ fontWeight: 500, fontSize: '13px' }}>{translate(item.label)}</span>
             </label>
           </Col>
-          <Col xs={12}>
-            {val && val.constructor == Array ? val.join(", ") : ""}
-          </Col>
+          <Col xs={12}>{val && val.constructor == Array ? val.join(', ') : ''}</Col>
         </div>
       );
     } else {
@@ -376,7 +326,7 @@ class UiWindowForm extends Component {
     let { handleChange, getValueFn } = this;
     var self = this;
     switch (this.props.ui) {
-      case "google":
+      case 'google':
         return (
           <div>
             {this.renderField(item)}
@@ -385,80 +335,65 @@ class UiWindowForm extends Component {
               modal={true}
               actions={[
                 <FlatButton
-                  label={translate("pt.create.groups.ownerDetails.fields.add")}
-                  disabled={_.isEmpty(this.state.valuesObj)}
+                  label={translate('pt.create.groups.ownerDetails.fields.add')}
+                  disabled={!this.state.isFormValid}
                   secondary={true}
                   style={{ marginTop: 5 }}
                   onClick={e => {
-                    var oldData = self.props.getVal(
-                      self.props.item.jsonPath + "." + self.props.item.arrayPath
-                    );
+                    var oldData = self.props.getVal(self.props.item.jsonPath + '.' + self.props.item.arrayPath);
                     if (self.state.index >= 0) {
                       oldData[self.state.index] = self.state.valuesObj;
                     } else {
-                      _.isArray(oldData)
-                        ? oldData.push(self.state.valuesObj)
-                        : (oldData = [self.state.valuesObj]);
+                      _.isArray(oldData) ? oldData.push(self.state.valuesObj) : (oldData = [self.state.valuesObj]);
                     }
                     if (self.state.mockData[self.props.item.modulepath].url) {
                       var formData = _.clone(self.props.formData);
-                      _.set(
-                        formData,
-                        self.props.item.jsonPath +
-                          "." +
-                          self.props.item.arrayPath,
-                        oldData
-                      );
+                      _.set(formData, self.props.item.jsonPath + '.' + self.props.item.arrayPath, oldData);
                       self.create(formData);
                     } else {
                       self.props.handler(
                         { target: { value: oldData } },
-                        self.props.item.jsonPath +
-                          "." +
-                          self.props.item.arrayPath,
+                        self.props.item.jsonPath + '.' + self.props.item.arrayPath,
                         self.props.item.isRequired ? true : false,
-                        "",
+                        '',
                         self.props.item.requiredErrMsg,
                         self.props.item.patternErrMsg
                       );
                       self.setState({
                         valuesObj: {},
                         open: false,
-                        index: -1
+                        index: -1,
+                        fieldErrors: {},
+                        isFormValid: false,
                       });
                     }
                   }}
                 />,
-                <FlatButton
-                  label={translate("pt.create.button.viewdcb.close")}
-                  primary={true}
-                  onClick={this.handleClose}
-                />
+                <FlatButton label={translate('pt.create.button.viewdcb.close')} primary={true} onClick={this.handleClose} />,
               ]}
               modal={false}
               open={this.state.open}
-              contentStyle={{ width: "80%", "max-width": "80%" }}
+              contentStyle={{ width: '80%', 'max-width': '80%' }}
               onRequestClose={this.handleClose}
               autoScrollBodyContent={true}
             >
-              {" "}
+              {' '}
               <div>
                 {!_.isEmpty(mockData) &&
-                mockData[this.props.item.modulepath] && (
-                  <ShowFields
-                    groups={mockData[this.props.item.modulepath].groups}
-                    noCols={mockData[this.props.item.modulepath].numCols}
-                    ui="google"
-                    handler={handleChange}
-                    getVal={getValueFn}
-                    fieldErrors={fieldErrors}
-                    useTimestamp={
-                      mockData[this.props.item.modulepath].useTimestamp || false
-                    }
-                    addNewCard={""}
-                    removeCard={""}
-                  />
-                )}
+                  mockData[this.props.item.modulepath] && (
+                    <ShowFields
+                      groups={mockData[this.props.item.modulepath].groups}
+                      noCols={mockData[this.props.item.modulepath].numCols}
+                      ui="google"
+                      handler={handleChange}
+                      getVal={getValueFn}
+                      fieldErrors={this.state.fieldErrors}
+                      useTimestamp={mockData[this.props.item.modulepath].useTimestamp || false}
+                      addNewCard={''}
+                      removeCard={''}
+                      valuesObj={this.state.valuesObj}
+                    />
+                  )}
               </div>
             </Dialog>
           </div>
@@ -466,39 +401,255 @@ class UiWindowForm extends Component {
     }
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
-    var newObj = _.set(this.state.valuesObj, property, e.target.value);
-    this.setState({
-      valuesObj: newObj
+  checkValidations = (fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) => {
+    let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
+    let isFormValid = true;
+    // console.log(requiredFields);
+    for (var i = 0; i < requiredFields.length; i++) {
+      if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '') {
+        // console.log(requiredFields[i], _.get(form, requiredFields[i]));
+        isFormValid = false;
+        break;
+      }
+    }
+
+    if (pattern && _.get(form, property) && !new RegExp(pattern).test(_.get(form, property))) {
+      // console.log(property, _.get(form, property));
+      errorText = patErrMsg ? translate(patErrMsg) : translate('ui.framework.patternMessage');
+      isFormValid = false;
+    }
+
+    // console.log(fieldErrors);
+    for (let key in fieldErrors) {
+      if (fieldErrors[key] && key != property) {
+        // console.log(key, property, fieldErrors, fieldErrors[key]);
+        isFormValid = false;
+        break;
+      }
+    }
+
+    return {
+      isFormValid,
+      errorText,
+    };
+  };
+  affectDependants = (obj, e, property) => {
+    let { handleChange, setDropDownData, setDropDownOriginalData, dropDownOringalData } = this.props;
+    let { getVal, getValFromDropdownData, returnPathValueFunction } = this;
+
+    const findLastIdxOnJsonPath = jsonPath => {
+      var str = jsonPath.split(REGEXP_FIND_IDX);
+      for (let i = str.length - 1; i > -1; i--) {
+        if (str[i].match(/\d+/)) {
+          return str[i];
+        }
+      }
+      return undefined;
+    };
+
+    const replaceLastIdxOnJsonPath = (jsonPath, replaceIdx) => {
+      var str = jsonPath.split(REGEXP_FIND_IDX);
+      var isReplaced = false;
+      for (let i = str.length - 1; i > -1; i--) {
+        if (str[i].match(/\d+/)) {
+          if (!isReplaced) {
+            isReplaced = true;
+            str[i] = `[${replaceIdx}]`;
+          } else str[i] = `[${str[i]}]`;
+        }
+      }
+      return str.join('');
+    };
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+    let dependantIdx;
+    if (depedants.length === 0 && property) {
+      let currentProperty = property;
+      dependantIdx = findLastIdxOnJsonPath(property);
+      if (dependantIdx !== undefined) currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
+      depedants = jp.query(obj, `$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
+
+      //Changes to handle table sum
+      var jpathname = property.substr(0, property.lastIndexOf('[') + 1) + '0' + property.substr(property.lastIndexOf('[') + 2);
+
+      var dependency = jp.query(obj, `$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
+      if (dependency.length > 0) {
+        let _formData = {
+          ...this.props.formData,
+        };
+        if (_formData) {
+          let field = property.substr(0, property.lastIndexOf('['));
+          let last = property.substr(property.lastIndexOf(']') + 2);
+          let curIndex = property.substr(property.lastIndexOf('[') + 1, 1);
+
+          let arrval = _.get(_formData, field);
+          if (arrval) {
+            let len = _.get(_formData, field).length;
+
+            let amtsum = 0;
+            let svalue = '';
+            for (var i = 0; i < len; i++) {
+              let ifield = field + '[' + i + ']' + '.' + last;
+              if (i == curIndex) {
+                svalue = e.target.value;
+              } else {
+                svalue = _.get(_formData, ifield);
+              }
+
+              amtsum += parseInt(svalue);
+            }
+            if (amtsum > 0) {
+              handleChange(
+                {
+                  target: {
+                    value: amtsum,
+                  },
+                },
+                dependency[0],
+                false,
+                '',
+                ''
+              );
+            }
+          }
+        }
+      }
+    }
+
+    _.forEach(depedants, function(value, key) {
+      if (value.type == 'dropDown') {
+        let splitArray = value.pattern.split('?');
+        let context = '';
+        let id = {};
+        for (var j = 0; j < splitArray[0].split('/').length; j++) {
+          context += splitArray[0].split('/')[j] + '/';
+        }
+
+        let queryStringObject = splitArray[1].split('|')[0].split('&');
+        for (var i = 0; i < queryStringObject.length; i++) {
+          if (i) {
+            if (queryStringObject[i].split('=')[1].search('{') > -1) {
+              if (
+                queryStringObject[i]
+                  .split('=')[1]
+                  .split('{')[1]
+                  .split('}')[0] == property
+              ) {
+                //console.log("replacing!!!", queryStringObject[i].split("=")[1], queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value))
+                id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1].replace(/\{(.*?)\}/, e.target.value) || '';
+              } else {
+                id[queryStringObject[i].split('=')[0]] =
+                  queryStringObject[i].split('=')[1].replace(
+                    /\{(.*?)\}/,
+                    getVal(
+                      queryStringObject[i]
+                        .split('=')[1]
+                        .split('{')[1]
+                        .split('}')[0]
+                    )
+                  ) || '';
+              }
+            } else {
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
+            }
+          }
+        }
+
+        Api.commonApiPost(context, id, {}, false, false, false, '', '', value.isStateLevel).then(
+          function(response) {
+            if (response) {
+              let keys = jp.query(response, splitArray[1].split('|')[1]);
+              let values = jp.query(response, splitArray[1].split('|')[2]);
+              let dropDownData = [];
+              for (var k = 0; k < keys.length; k++) {
+                let obj = {};
+                obj['key'] = keys[k];
+                obj['value'] = values[k];
+                dropDownData.push(obj);
+              }
+
+              dropDownData.sort(function(s1, s2) {
+                return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
+              });
+              dropDownData.unshift({ key: null, value: '-- Please Select --' });
+              setDropDownData(value.jsonPath, dropDownData);
+              setDropDownOriginalData(value.jsonPath, response);
+            }
+          },
+          function(err) {
+            console.log(err);
+          }
+        );
+      }
     });
-//$("#title>div>div:nth-child(2)").text(this.state.valuesObj.title);
-//$("#gender>div>div:nth-child(2)").text(this.state.valuesObj.gender);
+  };
+
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
+    let { handleChange, mockData, setDropDownData, formData } = this.props;
+    var currentState = this.state;
+    let hashLocation = window.location.hash;
+    var substring = 'updateagency';
+    let obj;
+    if (hashLocation.indexOf(substring) !== -1) {
+      obj = specifications[`${hashLocation.split('/')[2]}.create`];
+    } else {
+      obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
+    }
+
+    var newObj = _.set(currentState.valuesObj, property, e.target.value);
+    // this.setState({
+    //   valuesObj: newObj
+    // });
+    //$("#title>div>div:nth-child(2)").text(this.state.valuesObj.title);
+    //$("#gender>div>div:nth-child(2)").text(this.state.valuesObj.gender);
     // dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
+    var validationDat = this.checkValidations(
+      currentState.fieldErrors,
+      property,
+      e.target.value,
+      isRequired,
+      currentState.valuesObj,
+      currentState.reqRequired,
+      pattern,
+      patternErrMsg
+    );
+
+    this.setState({
+      valuesObj: newObj,
+      isFormValid: validationDat.isFormValid,
+      fieldErrors: {
+        ...currentState.fieldErrors,
+        [property]: validationDat.errorText,
+      },
+    });
+
+    //  try{
+    //      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+    //  }
+    //  catch(e){
+    //    console.log('error in autocomplete . It is version issue');
+    //    console.log(e);
+    //  }
+
+    this.affectDependants(obj, e, property);
   };
 
   getValueFn = path => {
-    return typeof _.get(this.state.valuesObj, path) != "undefined"
+    return typeof _.get(this.state.valuesObj, path) != 'undefined'
       ? _.get(this.state.valuesObj, path)
-      : _.get(this.props.formData, path) != "undefined"
-        ? _.get(this.props.formData, path)
-        : "";
+      : _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
   handleOpen = () => {
     this.setState({
-      open: true
+      valuesObj: {},
+      open: true,
     });
   };
 
   handleClose = () => {
     this.setState({
-      open: false
+      open: false,
+      fieldErrors: {},
+      isFormValid: false,
     });
   };
 
@@ -508,12 +659,43 @@ class UiWindowForm extends Component {
 }
 const mapStateToProps = state => ({
   fieldErrors: state.frameworkForm.fieldErrors,
-  formData: state.frameworkForm.form
+  formData: state.frameworkForm.form,
+  mockData: state.framework.mockData,
+  moduleName: state.framework.moduleName,
+  actionName: state.framework.actionName,
+  dropDownData: state.framework.dropDownData,
+  dropDownOringalData: state.framework.dropDownOringalData,
 });
 const mapDispatchToProps = dispatch => ({
   setLoadingStatus: loadingStatus => {
-    dispatch({ type: "SET_LOADING_STATUS", loadingStatus });
-  }
+    dispatch({ type: 'SET_LOADING_STATUS', loadingStatus });
+  },
+  setMockData: mockData => {
+    dispatch({ type: 'SET_MOCK_DATA', mockData });
+  },
+  setModuleName: moduleName => {
+    dispatch({ type: 'SET_MODULE_NAME', moduleName });
+  },
+  setActionName: actionName => {
+    dispatch({ type: 'SET_ACTION_NAME', actionName });
+  },
+  setDropDownData: (fieldName, dropDownData) => {
+    dispatch({ type: 'SET_DROPDWON_DATA', fieldName, dropDownData });
+  },
+  setDropDownOriginalData: (fieldName, dropDownData) => {
+    dispatch({ type: 'SET_ORIGINAL_DROPDWON_DATA', fieldName, dropDownData });
+  },
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
+    dispatch({
+      type: 'HANDLE_CHANGE_FRAMEWORK',
+      property,
+      value: e.target.value,
+      isRequired,
+      pattern,
+      requiredErrMsg,
+      patternErrMsg,
+    });
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UiWindowForm);

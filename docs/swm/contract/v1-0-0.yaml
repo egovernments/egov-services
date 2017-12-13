@@ -12,6 +12,7 @@ basePath: "/swm-services"
 
 x-ui-info:
   $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/vfd-ui-info.yaml
+x-module: "swm"
 
 paths:
 
@@ -1495,14 +1496,14 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: ids
-            type: array
-            items: 
-              type: integer
-              format: int64
+          - name: paymentNos
+            type: string
             in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
+            description: comma seperated list of paymentNos 
+          - name: paymentNo
+            type: string
+            in: query
+            description: paymentNo of the PaymentDetails 
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:
@@ -1555,6 +1556,93 @@ paths:
             description: VendorPaymentDetails updated Successfully
             schema:
               $ref: '#/definitions/VendorPaymentDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /paymentdetails/_search:
+      post:
+        summary: Get the list of paymentdetails
+        description: paymentdetails
+        tags: 
+          - PaymentDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: code
+            type: string
+            in: query
+            description: code of the PaymentDetails
+          - name: codes
+            type: string
+            in: query
+            description: comma seperated list of Codes 
+          - name: paymentNo
+            type: string
+            in: query
+            description: paymentNo of the PaymentDetails
+          - name: voucherNumber
+            type: string
+            in: query
+            description: voucherNumber of the PaymentDetails
+          - name: instrumentNumber
+            type: string
+            in: query
+            description: instrumentNumber of the PaymentDetails
+            maxLength: 265
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offSet'
+        responses:
+          200:
+            description: PaymentDetails(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/PaymentDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /paymentdetails/_create:
+      post:
+        summary: Create new paymentdetails(s)
+        description: Create new paymentdetails(s)
+        tags: 
+          - PaymentDetails
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: paymentDetailsRequest
+            in: body
+            description: PaymentDetails Request
+            schema:
+              $ref: '#/definitions/PaymentDetailsRequest'
+        responses:
+          201:
+            description: PaymentDetails(s) created Successfully
+            schema:
+              $ref: '#/definitions/PaymentDetailsResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /paymentdetails/_update:
+      post:
+        summary: Update any of the paymentdetails
+        description: Update any of the paymentdetails
+        tags: 
+          - PaymentDetails
+        parameters:
+          - name: paymentDetailsRequest
+            in: body
+            description: PaymentDetails Request
+            schema:
+              $ref: '#/definitions/PaymentDetailsRequest'
+        responses:
+          200:
+            description: PaymentDetails updated Successfully
+            schema:
+              $ref: '#/definitions/PaymentDetailsResponse'
           400:
             description: Invalid Input
             schema:
@@ -1781,13 +1869,11 @@ definitions:
           minLength: 1
         name:
           type: string
-          format: singleValueList
           description: name of the FuelType. e.g  Diesel, Petrol etc
           maxLength: 128
           minLength: 1
         code:
           type: string
-          format: singleValueList
           description: code of the FuelType. Unique code assigned to the FuelType. Shall be of at least 2 digits. fuelCode will be system generated
           maxLength: 128
           minLength: 1
@@ -1806,13 +1892,11 @@ definitions:
           minLength: 1
         name:
           type: string
-          format: singleValueList
           description: name of the VehicleType
           maxLength: 128
           minLength: 1
         code:
           type: string
-          format: singleValueList
           description: code of the VehicleType
           maxLength: 128
           minLength: 1
@@ -2038,7 +2122,6 @@ definitions:
           minLength: 1
         wasteType:
           $ref: "#/definitions/WasteType"
-          format: singleValueList
       required:
       - tenantId
       - code
@@ -2063,15 +2146,27 @@ definitions:
           description: name of the DumpingGround. should be unique in ULB
           maxLength: 128
           minLength: 1
+        ulbs:
+          description: ULB's
+          type: array
+          items: 
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1.0.1.yml#/definitions/Tenant'
+          minItems: 1
         siteDetails:
           $ref: '#/definitions/SiteDetails'
         isProcessingSite:
           type: boolean
+        distanceFromProcessingSite:
+          type: number
+          format: double
+        processingSite:
+          $ref: '#/definitions/ProcessingSite'
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
       - name
+      - ulbs
       - siteDetails
       
     ProcessingSite:
@@ -2092,31 +2187,16 @@ definitions:
           description: name of the DumpingGround. should be unique in ULB
           maxLength: 128
           minLength: 1
-        distanceFromDumpingGround:
-          type: number
-          format: double
         siteDetails:
           $ref: '#/definitions/SiteDetails'
-        dumpingGrounds:
-          description: Dumping grounds
-          type: array
-          items: 
-            $ref: '#/definitions/DumpingGround'
-          minItems: 1
       required:
       - tenantId
       - name
-      - distanceFromDumpingGround
       - siteDetails
       
     SiteDetails:
       type: object
       properties:
-        tenantId:
-          type: string
-          description: tenant id of the VehicleType
-          maxLength: 128
-          minLength: 1
         location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         area:
@@ -2174,7 +2254,6 @@ definitions:
           x-displayformat: 20/11/2017
           description: Enable this field Iff mpcbAuthorisation is checked. Shall be > bankValidityFrom
       required:
-      - tenantId
       - location
       - area
       - capacity
@@ -2329,7 +2408,7 @@ definitions:
     SwmProcess:
       type: object
       properties:
-        id:
+        code:
           type: string
           description: Unique Identifier of the Vendor
           maxLength: 256
@@ -2691,7 +2770,7 @@ definitions:
           maxLength: 256
           minLength: 1
         typeOfPump:
-          $ref: '#/definitions/OilCompanyName'
+          $ref: '#/definitions/OilCompany'
           format: singleValueList
           description: pump Type of the RefillingPumpStation. e.g. HP, Indian Oil etc
         remarks:
@@ -2739,7 +2818,7 @@ definitions:
           items:
             $ref: '#/definitions/RefillingPumpStation'
     
-    OilCompanyName:
+    OilCompany:
       type: object
       description: This object captures name of Oil Companies operating petrol pumps. e.g Indian Oil 
       properties:
@@ -3276,6 +3355,9 @@ definitions:
         dumpingGround:
           $ref: '#/definitions/DumpingGround'
           description: With the name of dumping ground, display the location data Ward / Zone/ street etc on GUI
+        ulb:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1.0.1.yml#/definitions/Tenant'
+          description: Code of ULB
         sourceSegregationDate:
           type: integer
           format: int64
@@ -3289,6 +3371,7 @@ definitions:
       required:
       - tenantId
       - dumpingGround
+      - ulb
       - sourceSegregationDate
       - collectionDetails
       
@@ -3395,6 +3478,78 @@ definitions:
       - toDate
       - vendorInvoiceAmount
       
+    PaymentDetails:
+      type: object
+      description: This object holds the details of payment instruments 
+      properties:
+        code:
+          type: string
+          description: Unique Identifier of the InstrumentDetails
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the InstrumentDetails
+          maxLength: 128
+          minLength: 1
+        vendorPaymentDetails:
+          $ref: "#/definitions/VendorPaymentDetails"
+          description: It is unique number and it is same as paymentNo in Vendor Payment details. It will be used to link actual payment made against the invoice raised in Vendor payment details.
+        voucherNumber:
+          type: string
+          description: Voucher Number. Shall be unique
+          maxLength: 256
+          minLength: 1
+        voucherDate:
+          type: integer
+          format: int64
+          description: date on which voucher was created. Shall be >= To Date in "Vendor payment details"
+        instrumentType:
+          type: string
+          description: Payment Instrument Name. e.g. Demand draft, RTGS etc
+          maxLength: 256
+          minLength: 1
+        instrumentNumber:
+          type: string
+          description: Instrument Number. Shall be unique across the platform. e.g. Cheque number, demad draft number etc
+          maxLength: 256
+          minLength: 1  
+        instrumentDate:
+          type: integer
+          format: int64
+          description: date on which payment instrument was created. e.g. Demand draft or Cheque creation date. Shall be >= Voucher Date
+        amount:
+          type: number 
+          format: double
+          description: Amount paid through the payment instrument
+        bankName:
+          type: string
+          description: Bank Name from which payment is made. e.g. State bank of India
+          maxLength: 256
+          minLength: 1 
+        branchName:
+          type: string
+          description: Bank Branch Name from which payment is made. e.g. Jayanagar, Bangalore
+          maxLength: 256
+          minLength: 1
+        documents:
+          type: array
+          description: List of Documents. Document(s) supporting the payment
+          items:
+            $ref: '#/definitions/Document'
+        auditDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
+      required:
+      - tenantId
+      - vendorPaymentDetails
+      - voucherNumber
+      - voucherDate
+      - amount
+      - instrumentType
+      - instrumentDate
+      - instrumentNumber
+      - bankName
+      
     Document:
       type: object
       description: An Object to hold the support document detail for a given Vendor Payment Details
@@ -3447,6 +3602,28 @@ definitions:
           maximum: 500
           items:
             $ref: '#/definitions/VendorPaymentDetails'
+            
+    PaymentDetailsRequest:
+      description: Contract class to receive request. Array of PaymentDetails items are used in case of create, whereas single PaymentDetails item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        PaymentDetails:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/PaymentDetails'
+    PaymentDetailsResponse:
+      description: Contract class to send response. Array of PaymentDetails items are used in case of search results or response for create, whereas single PaymentDetails item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        PaymentDetails:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/PaymentDetails'
 
 parameters:
     pageSize:
@@ -3462,14 +3639,5 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
-
-
-
-
-
-
-
-
-
 
 

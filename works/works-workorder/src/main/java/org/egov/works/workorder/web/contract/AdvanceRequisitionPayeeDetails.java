@@ -1,275 +1,275 @@
 package org.egov.works.workorder.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object holds the payee details of Advance Requisition
  */
 @ApiModel(description = "An Object holds the payee details of Advance Requisition")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class AdvanceRequisitionPayeeDetails {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("accountDetailType")
-	private AccountDetailType accountDetailType = null;
+    @JsonProperty("accountDetailType")
+    private AccountDetailType accountDetailType = null;
 
-	@JsonProperty("accountdetailKey")
-	private AccountDetailKey accountdetailKey = null;
+    @JsonProperty("accountdetailKey")
+    private AccountDetailKey accountdetailKey = null;
 
-	@JsonProperty("creditAmount")
-	private BigDecimal creditAmount = null;
+    @JsonProperty("creditAmount")
+    private BigDecimal creditAmount = null;
 
-	@JsonProperty("debitAmount")
-	private BigDecimal debitAmount = null;
+    @JsonProperty("debitAmount")
+    private BigDecimal debitAmount = null;
 
-	@JsonProperty("narration")
-	private String narration = null;
+    @JsonProperty("narration")
+    private String narration = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
-	public AdvanceRequisitionPayeeDetails id(String id) {
-		this.id = id;
-		return this;
-	}
+    public AdvanceRequisitionPayeeDetails id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique Identifier of the Advance Requisition Payee Details
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Advance Requisition Payee Details")
+    /**
+     * Unique Identifier of the Advance Requisition Payee Details
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Advance Requisition Payee Details")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public AdvanceRequisitionPayeeDetails tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Tenant id of the Advance Requisition Payee Details
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Advance Requisition Payee Details")
-	@NotNull
+    public AdvanceRequisitionPayeeDetails tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    /**
+     * Tenant id of the Advance Requisition Payee Details
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Advance Requisition Payee Details")
+    @NotNull
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public AdvanceRequisitionPayeeDetails accountDetailType(AccountDetailType accountDetailType) {
-		this.accountDetailType = accountDetailType;
-		return this;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	/**
-	 * Account Detail Type of the Advance Requisition
-	 * 
-	 * @return accountDetailType
-	 **/
-	@ApiModelProperty(required = true, value = "Account Detail Type of the Advance Requisition")
-	@NotNull
+    public AdvanceRequisitionPayeeDetails accountDetailType(AccountDetailType accountDetailType) {
+        this.accountDetailType = accountDetailType;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Account Detail Type of the Advance Requisition
+     *
+     * @return accountDetailType
+     **/
+    @ApiModelProperty(required = true, value = "Account Detail Type of the Advance Requisition")
+    @NotNull
 
-	public AccountDetailType getAccountDetailType() {
-		return accountDetailType;
-	}
+    @Valid
 
-	public void setAccountDetailType(AccountDetailType accountDetailType) {
-		this.accountDetailType = accountDetailType;
-	}
+    public AccountDetailType getAccountDetailType() {
+        return accountDetailType;
+    }
 
-	public AdvanceRequisitionPayeeDetails accountdetailKey(AccountDetailKey accountdetailKey) {
-		this.accountdetailKey = accountdetailKey;
-		return this;
-	}
+    public void setAccountDetailType(AccountDetailType accountDetailType) {
+        this.accountDetailType = accountDetailType;
+    }
 
-	/**
-	 * Account Detail Key Unique Identifier
-	 * 
-	 * @return accountdetailKey
-	 **/
-	@ApiModelProperty(required = true, value = "Account Detail Key Unique Identifier")
-	@NotNull
+    public AdvanceRequisitionPayeeDetails accountdetailKey(AccountDetailKey accountdetailKey) {
+        this.accountdetailKey = accountdetailKey;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Account Detail Key Unique Identifier
+     *
+     * @return accountdetailKey
+     **/
+    @ApiModelProperty(required = true, value = "Account Detail Key Unique Identifier")
+    @NotNull
 
-	public AccountDetailKey getAccountdetailKey() {
-		return accountdetailKey;
-	}
+    @Valid
 
-	public void setAccountdetailKey(AccountDetailKey accountdetailKey) {
-		this.accountdetailKey = accountdetailKey;
-	}
+    public AccountDetailKey getAccountdetailKey() {
+        return accountdetailKey;
+    }
 
-	public AdvanceRequisitionPayeeDetails creditAmount(BigDecimal creditAmount) {
-		this.creditAmount = creditAmount;
-		return this;
-	}
+    public void setAccountdetailKey(AccountDetailKey accountdetailKey) {
+        this.accountdetailKey = accountdetailKey;
+    }
 
-	/**
-	 * Advance Requisition Payee Details credit amount
-	 * 
-	 * @return creditAmount
-	 **/
-	@ApiModelProperty(value = "Advance Requisition Payee Details credit amount")
+    public AdvanceRequisitionPayeeDetails creditAmount(BigDecimal creditAmount) {
+        this.creditAmount = creditAmount;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Advance Requisition Payee Details credit amount
+     *
+     * @return creditAmount
+     **/
+    @ApiModelProperty(value = "Advance Requisition Payee Details credit amount")
 
-	public BigDecimal getCreditAmount() {
-		return creditAmount;
-	}
+    @Valid
 
-	public void setCreditAmount(BigDecimal creditAmount) {
-		this.creditAmount = creditAmount;
-	}
+    public BigDecimal getCreditAmount() {
+        return creditAmount;
+    }
 
-	public AdvanceRequisitionPayeeDetails debitAmount(BigDecimal debitAmount) {
-		this.debitAmount = debitAmount;
-		return this;
-	}
+    public void setCreditAmount(BigDecimal creditAmount) {
+        this.creditAmount = creditAmount;
+    }
 
-	/**
-	 * Advance Requisition Payee Details debit amount
-	 * 
-	 * @return debitAmount
-	 **/
-	@ApiModelProperty(value = "Advance Requisition Payee Details debit amount")
+    public AdvanceRequisitionPayeeDetails debitAmount(BigDecimal debitAmount) {
+        this.debitAmount = debitAmount;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Advance Requisition Payee Details debit amount
+     *
+     * @return debitAmount
+     **/
+    @ApiModelProperty(value = "Advance Requisition Payee Details debit amount")
 
-	public BigDecimal getDebitAmount() {
-		return debitAmount;
-	}
+    @Valid
 
-	public void setDebitAmount(BigDecimal debitAmount) {
-		this.debitAmount = debitAmount;
-	}
+    public BigDecimal getDebitAmount() {
+        return debitAmount;
+    }
 
-	public AdvanceRequisitionPayeeDetails narration(String narration) {
-		this.narration = narration;
-		return this;
-	}
+    public void setDebitAmount(BigDecimal debitAmount) {
+        this.debitAmount = debitAmount;
+    }
 
-	/**
-	 * Descritpion for Advance Requisition Payee Details.
-	 * 
-	 * @return narration
-	 **/
-	@ApiModelProperty(value = "Descritpion for Advance Requisition Payee Details.")
+    public AdvanceRequisitionPayeeDetails narration(String narration) {
+        this.narration = narration;
+        return this;
+    }
 
-	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
-	@Size(min = 3, max = 1024)
-	public String getNarration() {
-		return narration;
-	}
+    /**
+     * Descritpion for Advance Requisition Payee Details.
+     *
+     * @return narration
+     **/
+    @ApiModelProperty(value = "Descritpion for Advance Requisition Payee Details.")
 
-	public void setNarration(String narration) {
-		this.narration = narration;
-	}
+    @Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
+    @Size(min = 3, max = 1024)
+    public String getNarration() {
+        return narration;
+    }
 
-	public AdvanceRequisitionPayeeDetails auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    public void setNarration(String narration) {
+        this.narration = narration;
+    }
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    public AdvanceRequisitionPayeeDetails auditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+    @Valid
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    public AuditDetails getAuditDetails() {
+        return auditDetails;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		AdvanceRequisitionPayeeDetails advanceRequisitionPayeeDetails = (AdvanceRequisitionPayeeDetails) o;
-		return Objects.equals(this.id, advanceRequisitionPayeeDetails.id)
-				&& Objects.equals(this.tenantId, advanceRequisitionPayeeDetails.tenantId)
-				&& Objects.equals(this.accountDetailType, advanceRequisitionPayeeDetails.accountDetailType)
-				&& Objects.equals(this.accountdetailKey, advanceRequisitionPayeeDetails.accountdetailKey)
-				&& Objects.equals(this.creditAmount, advanceRequisitionPayeeDetails.creditAmount)
-				&& Objects.equals(this.debitAmount, advanceRequisitionPayeeDetails.debitAmount)
-				&& Objects.equals(this.narration, advanceRequisitionPayeeDetails.narration)
-				&& Objects.equals(this.auditDetails, advanceRequisitionPayeeDetails.auditDetails);
-	}
+    public void setAuditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, accountDetailType, accountdetailKey, creditAmount, debitAmount, narration,
-				auditDetails);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class AdvanceRequisitionPayeeDetails {\n");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AdvanceRequisitionPayeeDetails advanceRequisitionPayeeDetails = (AdvanceRequisitionPayeeDetails) o;
+        return Objects.equals(this.id, advanceRequisitionPayeeDetails.id) &&
+                Objects.equals(this.tenantId, advanceRequisitionPayeeDetails.tenantId) &&
+                Objects.equals(this.accountDetailType, advanceRequisitionPayeeDetails.accountDetailType) &&
+                Objects.equals(this.accountdetailKey, advanceRequisitionPayeeDetails.accountdetailKey) &&
+                Objects.equals(this.creditAmount, advanceRequisitionPayeeDetails.creditAmount) &&
+                Objects.equals(this.debitAmount, advanceRequisitionPayeeDetails.debitAmount) &&
+                Objects.equals(this.narration, advanceRequisitionPayeeDetails.narration) &&
+                Objects.equals(this.auditDetails, advanceRequisitionPayeeDetails.auditDetails);
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    accountDetailType: ").append(toIndentedString(accountDetailType)).append("\n");
-		sb.append("    accountdetailKey: ").append(toIndentedString(accountdetailKey)).append("\n");
-		sb.append("    creditAmount: ").append(toIndentedString(creditAmount)).append("\n");
-		sb.append("    debitAmount: ").append(toIndentedString(debitAmount)).append("\n");
-		sb.append("    narration: ").append(toIndentedString(narration)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, accountDetailType, accountdetailKey, creditAmount, debitAmount, narration, auditDetails);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class AdvanceRequisitionPayeeDetails {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    accountDetailType: ").append(toIndentedString(accountDetailType)).append("\n");
+        sb.append("    accountdetailKey: ").append(toIndentedString(accountdetailKey)).append("\n");
+        sb.append("    creditAmount: ").append(toIndentedString(creditAmount)).append("\n");
+        sb.append("    debitAmount: ").append(toIndentedString(debitAmount)).append("\n");
+        sb.append("    narration: ").append(toIndentedString(narration)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

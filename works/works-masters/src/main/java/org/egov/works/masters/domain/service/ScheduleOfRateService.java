@@ -1,7 +1,6 @@
 package org.egov.works.masters.domain.service;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.masters.config.PropertiesManager;
 import org.egov.works.masters.domain.repository.ScheduleOfRateRepository;
@@ -54,7 +53,7 @@ public class ScheduleOfRateService {
                 sorRate.setScheduleOfRate(scheduleOfRate.getId());
                 sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), false));
             }
-            if(scheduleOfRate.getMarketRates()!=null && !scheduleOfRate.getMarketRates().isEmpty()) {
+            if (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty()) {
                 for (final MarketRate marketRate : scheduleOfRate.getMarketRates()) {
                     marketRate.setId(commonUtils.getUUID());
                     marketRate.setScheduleOfRate(scheduleOfRate.getId());
@@ -62,7 +61,7 @@ public class ScheduleOfRateService {
                 }
             }
         }
-        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateCreateValidatedTopic(), scheduleOfRateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateSaveOrUpdateValidatedTopic(), scheduleOfRateRequest);
         response.setScheduleOfRates(scheduleOfRateRequest.getScheduleOfRates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -72,20 +71,21 @@ public class ScheduleOfRateService {
         ScheduleOfRateResponse response = new ScheduleOfRateResponse();
 
         scheduleOfRateValidator.validate(scheduleOfRateRequest);
+        scheduleOfRateValidator.validateForUpdate(scheduleOfRateRequest);
 
         for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
             scheduleOfRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
             for (final SORRate sorRate : scheduleOfRate.getSorRates()) {
                 sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
             }
-            if(scheduleOfRate.getMarketRates()!=null && !scheduleOfRate.getMarketRates().isEmpty()) {
+            if (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty()) {
                 for (final MarketRate marketRate : scheduleOfRate.getMarketRates()) {
                     marketRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
                 }
             }
         }
 
-        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateUpdateValidatedTopic(), scheduleOfRateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateSaveOrUpdateValidatedTopic(), scheduleOfRateRequest);
 
         response.setScheduleOfRates(scheduleOfRateRequest.getScheduleOfRates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));
@@ -100,8 +100,7 @@ public class ScheduleOfRateService {
         return scheduleOfRateRepository.getbyId(id, tenantId);
     }
 
-    public ScheduleOfRate getByCodeCategory(String code, String scheduleCategory, String tenantId) {
-        return scheduleOfRateRepository.getByCodeCategory(code, scheduleCategory, tenantId);
+    public ScheduleOfRate getByCodeCategory(String code, String scheduleCategory, String tenantId, String sorId, Boolean IsUpdateUniqueCheck) {
+        return scheduleOfRateRepository.getByCodeCategory(code, scheduleCategory, tenantId, sorId, IsUpdateUniqueCheck);
     }
-
 }

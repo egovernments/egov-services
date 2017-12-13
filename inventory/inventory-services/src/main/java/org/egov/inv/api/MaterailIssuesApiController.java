@@ -32,7 +32,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	private MaterialIssuesService materialIssueService;
 
 	@Override
-	public ResponseEntity<MaterialIssueResponse> materailIssuesCreatePost(
+	public ResponseEntity<MaterialIssueResponse> materialIssuesCreatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
 		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest);
@@ -50,8 +50,8 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 			@ApiParam(value = "material issue status of the MaterialIssue ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED") @RequestParam(value = "materialIssueStatus", required = false) String materialIssueStatus,
 			@ApiParam(value = "description of the MaterialIssue ") @RequestParam(value = "description", required = false) String description,
 			@ApiParam(value = "total issue value of the MaterialIssue ") @RequestParam(value = "totalIssueValue", required = false) BigDecimal totalIssueValue,
-			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false) Integer pageSize,
-			@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.") @RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@ApiParam(value = "Page number") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
 				issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
@@ -61,10 +61,17 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	}
 
 	@Override
-	public ResponseEntity<MaterialIssueResponse> materailIssuesUpdatePost(
+	public ResponseEntity<MaterialIssueResponse> materialIssuesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
 		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId);
 		return new ResponseEntity(materialIssueResponse,HttpStatus.OK);
+	}
+	
+	public ResponseEntity<MaterialIssueResponse> materiallIssuesPreparemiFromIndents(
+			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+			@ApiParam(value = "Create  new")  @RequestBody MaterialIssueRequest indentIssueRequest) {
+		MaterialIssueResponse materialIssueResponse = materialIssueService.prepareMIFromIndents(indentIssueRequest, tenantId);
+		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 }

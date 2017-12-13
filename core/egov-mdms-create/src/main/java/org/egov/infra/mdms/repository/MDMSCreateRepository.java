@@ -8,10 +8,12 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,7 +31,16 @@ public class MDMSCreateRepository {
 	
 	@Autowired
 	private RestTemplate restTemplate;
-		
+	
+	@Value("${reload.path.host}")
+	private String reloadPathHost;
+			
+	@Value("${reload.path.endpoint}")
+	private String reloadPathEndpoint;
+	
+	@Value("${reloadobj.path.endpoint}")
+	private String reloadobjPathEndpoint;
+	
 	public Object get(String uri, String userName, String password){
 		Object result = null;
 		HttpHeaders headers = new HttpHeaders();
@@ -39,7 +50,7 @@ public class MDMSCreateRepository {
            auth.getBytes(Charset.forName("US-ASCII")) );
         String authHeader = "Basic " + new String( encodedAuth );
         headers.set( "Authorization", authHeader );
-        logger.info("Generated authHeader: "+authHeader);
+        logger.debug("Generated authHeader: "+authHeader);
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
 		ResponseEntity<String> res = null;
 		try{
@@ -61,7 +72,7 @@ public class MDMSCreateRepository {
            auth.getBytes(Charset.forName("US-ASCII")) );
         String authHeader = "Basic " + new String( encodedAuth );
         headers.set( "Authorization", authHeader );
-        logger.info("Generated authHeader: "+authHeader);
+        logger.debug("Generated authHeader: "+authHeader);
 		HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 		ResponseEntity<String> res = null;
 		try{
@@ -85,16 +96,37 @@ public class MDMSCreateRepository {
 			logger.error("Exception while fetching data for: "+filePath+" = ",e);
 			throw new CustomException("400", "No data avaialble for this master");
 		}
-		logger.info("Parsed to object: "+result);
+		logger.debug("Parsed to object: "+result);
 		
 		return result;
 	}
 	
-	public void updateCache(String filePath){
+	public void updateCache(String filePath, String tenantId, RequestInfo requestInfo){
+		StringBuilder uri = new StringBuilder();
+		uri.append(reloadPathHost)
+		   .append(reloadPathEndpoint)
+		   .append("?filePath="+filePath)
+		   .append("&tenantId="+tenantId);
+		logger.info("URI: "+uri.toString());
 		try{
-			//make rest call to update cache.
+			 restTemplate.postForObject(uri.toString(), requestInfo, String.class);
 		}catch(Exception e){
-			
+			logger.error("Exception while updating cache for: "+filePath+" = ",e);
+		}
+	}
+	
+	public void updateCache(String reloadReq){
+		StringBuilder uri = new StringBuilder();
+		uri.append(reloadPathHost)
+		   .append(reloadobjPathEndpoint);
+		logger.info("URI: "+uri.toString());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<String>(reloadReq, headers);
+		try{
+			restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);
+		}catch(Exception e){
+			logger.error("Exception while updating cache for data: "+reloadReq+" = ",e);
 		}
 	}
 

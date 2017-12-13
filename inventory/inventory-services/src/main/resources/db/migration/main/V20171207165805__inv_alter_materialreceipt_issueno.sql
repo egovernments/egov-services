@@ -1,0 +1,1 @@
+ALTER TABLE materialreceipt ADD COLUMN issuenumber CHARACTER VARYING(100);

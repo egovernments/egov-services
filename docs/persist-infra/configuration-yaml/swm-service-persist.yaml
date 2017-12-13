@@ -1276,7 +1276,7 @@ serviceMaps:
    description: create sourcesegregation in egswm_sourcesegregation
    fromTopic: swm-sourcesegregation-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_sourcesegregation(code, tenantid, dumpingGround, sourceSegregationDate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_sourcesegregation(code, tenantid, dumpingGround, ulb, sourceSegregationDate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.sourceSegregations.*
       jsonMaps:
        
@@ -1285,6 +1285,8 @@ serviceMaps:
        - jsonPath: $.sourceSegregations.*.tenantId
          
        - jsonPath: $.sourceSegregations.*.dumpingGround.code
+
+       - jsonPath: $.sourceSegregations.*.ulb.code
 
        - jsonPath: $.sourceSegregations.*.sourceSegregationDate
          dbType: LONG
@@ -1323,10 +1325,12 @@ serviceMaps:
    description: update sourcesegregation in egswm_sourcesegregation
    fromTopic: swm-sourcesegregation-update-topic
    queryMaps: 
-    - query: update egswm_sourcesegregation set dumpingGround=?, sourceSegregationDate=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+    - query: update egswm_sourcesegregation set ulb=?, dumpingGround=?, sourceSegregationDate=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
       basePath: $.sourceSegregations.*
       jsonMaps:
        
+       - jsonPath: $.sourceSegregations.*.ulb.code
+
        - jsonPath: $.sourceSegregations.*.dumpingGround.code
 
        - jsonPath: $.sourceSegregations.*.sourceSegregationDate
@@ -1528,3 +1532,83 @@ serviceMaps:
 
        - jsonPath: $.sanitationStaffSchedules.*.tenantId
 
+ - version: 1.0
+   name: paymentdetails create
+   description: create paymentdetails in egswm_paymentdetails
+   fromTopic: swm-paymentdetails-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_paymentdetails (code, paymentNo, tenantId, voucherNumber, voucherDate, instrumentType, instrumentNumber, instrumentDate, amount, bankName, branchName, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.paymentDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.paymentDetails.*.code
+       
+       - jsonPath: $.paymentDetails.*.vendorPaymentDetails.paymentNo
+
+       - jsonPath: $.paymentDetails.*.tenantId
+
+       - jsonPath: $.paymentDetails.*.voucherNumber
+
+       - jsonPath: $.paymentDetails.*.voucherDate
+         dbType: LONG
+
+       - jsonPath: $.paymentDetails.*.instrumentType
+       
+       - jsonPath: $.paymentDetails.*.instrumentNumber
+
+       - jsonPath: $.paymentDetails.*.instrumentDate
+         dbType: LONG
+
+       - jsonPath: $.paymentDetails.*.amount
+         dbType: DOUBLE
+
+       - jsonPath: $.paymentDetails.*.bankName
+       
+       - jsonPath: $.paymentDetails.*.branchName
+         
+       - jsonPath: $.paymentDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.paymentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.paymentDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.paymentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+
+ - version: 1.0
+   name: paymentdetails update
+   description: update paymentdetails in egswm_paymentdetails
+   fromTopic: swm-paymentdetails-update-topic
+   queryMaps: 
+    - query: update egswm_paymentdetails set paymentNo=?, voucherNumber=?, voucherDate=?, instrumentType=?, instrumentNumber=?, instrumentDate=?, bankName=?, branchName=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+      basePath: $.paymentDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.paymentDetails.*.vendorPaymentDetails.paymentNo
+
+       - jsonPath: $.paymentDetails.*.voucherNumber
+
+       - jsonPath: $.paymentDetails.*.voucherDate
+         dbType: LONG
+
+       - jsonPath: $.paymentDetails.*.instrumentType
+       
+       - jsonPath: $.paymentDetails.*.instrumentNumber
+
+       - jsonPath: $.paymentDetails.*.instrumentDate
+         dbType: LONG
+
+       - jsonPath: $.paymentDetails.*.bankName
+       
+       - jsonPath: $.paymentDetails.*.branchName
+         
+       - jsonPath: $.paymentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.paymentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+         
+       - jsonPath: $.paymentDetails.*.code
+         
+       - jsonPath: $.paymentDetails.*.tenantId

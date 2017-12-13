@@ -101,7 +101,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
 
         if (letterOfAcceptanceSearchCriteria.getStatuses() != null) {
             addAnd(params);
-            params.append("status in(:status)");
+            params.append("loa.status in(:status)");
             paramValues.put("status", letterOfAcceptanceSearchCriteria.getStatuses());
         }
 
@@ -125,21 +125,26 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
                 estimateNumbers.add(detailedEstimate.getEstimateNumber());
 
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber");
+            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantId =:tenantId");
             paramValues.put("detailedestimatenumber", letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers());
+            paramValues.put("tenantId", letterOfAcceptanceSearchCriteria.getTenantId());
 
         }
 
         if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().size() == 1) {
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = loa.loanumber and upper(loaestimate.detailedestimate) like :detailedestimatenumber");
+            params.append("loaestimate.letterofacceptance = loa.loanumber and upper(loaestimate.detailedestimate) like :detailedestimatenumber  and loaestimate.tenantId =:tenantId");
+            paramValues.put("tenantId", letterOfAcceptanceSearchCriteria.getTenantId());
             paramValues.put("detailedestimatenumber", '%' + letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().get(0).toUpperCase() + '%');
         } else if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().size() > 1) {
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber");
+            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber  and loaestimate.tenantId =:tenantId");
+            paramValues.put("tenantId", letterOfAcceptanceSearchCriteria.getTenantId());
             paramValues.put("detailedestimatenumber", letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers());
         }
 
+        params.append(" and loa.deleted = false");
+        
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

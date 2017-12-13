@@ -8,9 +8,17 @@ public class ValueResponse {
 	private String tenantId;
 	private KPI kpi;
 	private KpiValue kpiValue;
+	private String finYear;
 	private String graphType;
 	
 	
+	
+	public String getFinYear() {
+		return finYear;
+	}
+	public void setFinYear(String finYear) {
+		this.finYear = finYear;
+	}
 	public String getGraphType() {
 		return graphType;
 	}

@@ -13,4 +13,5 @@ import java.util.List;
 @EqualsAndHashCode
 public class RoleSearchCriteria {
     private List<String> codes;
+    private String tenantId;
 }

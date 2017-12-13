@@ -45,13 +45,17 @@ var dat = {
         },
         {
           "label": "inventory.mrnNumber"
+        },
+        {
+          "label": "inventory.status"
         }
         
       ],
       "values": [
         "financialYear",
         "receivingStore.code",
-        "mrnNumber"
+        "mrnNumber",
+        "mrnStatus"
       ],
       "resultPath": "materialReceipt",
       "rowClickUrlUpdate": "/update/inventory/openingbalance/{id}",
@@ -95,7 +99,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name"
           }
         ]
       },
@@ -233,7 +237,7 @@ var dat = {
             "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate",
             "pattern": "",
             "type": "datePicker",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""
@@ -280,12 +284,12 @@ var dat = {
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "singleValueList",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name"
           },
           {
             "name":"mrnNumber",
@@ -311,6 +315,7 @@ var dat = {
                   "type":"tableList",
                   "jsonPath":"materialReceipt[0].receiptDetails",
                   "tableList":{
+                    actionsNotRequired:true,
                      "header":[
                         {
                            "label":"inventory.materialName"
@@ -348,7 +353,7 @@ var dat = {
                   "jsonPath": "materialReceipt[0].receiptDetails[0].material.code",
                   "displayJsonPath":"materialReceipt[0].receiptDetails[0].material.name",
                   "isRequired": true,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
                   "depedants": [
                     {
@@ -407,7 +412,7 @@ var dat = {
                   "pattern":"",
                   "type":"text",
                   "isRequired":false,
-                  "isDisabled":false,
+                  "isDisabled":true,
                   "defaultValue":"0",
                   "maxLength":100,
                   "patternErrorMsg":"inventory.create.field.message.code"
@@ -419,7 +424,7 @@ var dat = {
             "type": "datePicker",
             "maxDate":"today",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "patternErrorMsg": ""
           },
@@ -438,7 +443,7 @@ var dat = {
             "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate",
             "pattern": "",
             "type": "datePicker",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""
@@ -490,7 +495,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name"
           },
           {
             "name":"mrnNumber",

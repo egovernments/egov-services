@@ -34,7 +34,7 @@ public class DataUploadApplicationRunnerImpl implements ApplicationRunner {
     @Autowired
     private static Environment env;
     
-    @Value("${search.yaml.path}")
+    @Value("${upload.yaml.path}")
     private String yamllist;
     
     public static ConcurrentHashMap<String, UploadDefinition> uploadDefinitionMap  = new ConcurrentHashMap<>();

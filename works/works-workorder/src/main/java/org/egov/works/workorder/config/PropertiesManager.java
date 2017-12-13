@@ -52,5 +52,6 @@ public class PropertiesManager {
     @Value("${workordernumber.prefix}")
     private String workOrderNumberPrefix;
 
-
+    @Value("${egov.services.works.revisionloa.topic}")
+    private String worksRevisionLOACreateUpdateTopic;
 }

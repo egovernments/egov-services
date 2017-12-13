@@ -11,7 +11,9 @@ import org.egov.inv.model.ResponseInfo;
 import org.egov.inv.model.ResponseInfo.StatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +65,73 @@ public class CustomControllerAdvice {
 		errRes.setErrors(errors);
 		return errRes;
 	}
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(Exception.class)
+	public ErrorRes handleServerError(Exception ex) {
+		ex.printStackTrace();
+		ErrorRes errRes = new ErrorRes();
+		ex.printStackTrace();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(StatusEnum.FAILED);
+		errRes.setResponseInfo(responseInfo);
+		Error error = new  Error();
+		error.setCode(ErrorCode.INTERNAL_SERVER_ERROR.getCode());
+		error.setMessage(ErrorCode.INTERNAL_SERVER_ERROR.getDescription());
+		error.setDescription(ex.getMessage());
+		List<Error> errors = new ArrayList<>();
+		errors.add(error);
+		errRes.setErrors(errors);
+		return errRes;
+
+	  
+	 
+	}
+	
+	 
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(InvalidDataAccessApiUsageException.class )
+	public ErrorRes handleServerError(InvalidDataAccessApiUsageException ex) {
+		ex.printStackTrace();
+		ErrorRes errRes = new ErrorRes();
+		ex.printStackTrace();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(StatusEnum.FAILED);
+		errRes.setResponseInfo(responseInfo);
+		Error error = new  Error();
+		error.setCode(ErrorCode.SQL_ERROR.getCode());
+		error.setMessage(ErrorCode.SQL_ERROR.getMessage());
+		error.setDescription(ErrorCode.SQL_ERROR.getDescription());
+		List<Error> errors = new ArrayList<>();
+		errors.add(error);
+		errRes.setErrors(errors);
+		return errRes;
+
+	  
+	 
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(BadSqlGrammarException.class )
+	public ErrorRes handleServerError(BadSqlGrammarException ex) {
+		ex.printStackTrace();
+		ErrorRes errRes = new ErrorRes();
+		ex.printStackTrace();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(StatusEnum.FAILED);
+		errRes.setResponseInfo(responseInfo);
+		Error error = new  Error();
+		error.setCode(ErrorCode.SQL_ERROR.getCode());
+		error.setMessage(ErrorCode.SQL_ERROR.getMessage());
+		error.setDescription(ErrorCode.SQL_ERROR.getDescription());
+		List<Error> errors = new ArrayList<>();
+		errors.add(error);
+		errRes.setErrors(errors);
+		return errRes;
+
+	  
+	 
+	}
 
 /*	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Throwable.class)
@@ -80,23 +149,7 @@ public class CustomControllerAdvice {
 		return errRes;
 	}
 
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(Exception.class)
-	public ErrorResponse handleServerError(Exception ex) {
-		ex.printStackTrace();
-		ErrorResponse errRes = new ErrorResponse();
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
-
-		error.setCode(500);
-		error.setMessage("Internal Server Error");
-		error.setDescription(ex.getMessage());
-		errRes.setError(error);
-		return errRes;
-	}
+	
 
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(UnauthorizedAccessException.class)

@@ -47,7 +47,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
 		if (abstractEstimateSearchContract.getSortBy() != null && !abstractEstimateSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(abstractEstimateSearchContract.getSortBy());
-			validateEntityFieldName(abstractEstimateSearchContract.getSortBy(), AbstractEstimate.class);
+			validateEntityFieldName(abstractEstimateSearchContract.getSortBy(), AbstractEstimateHelper.class);
 		}
 
 		String orderBy = "order by estimate.id";
@@ -103,8 +103,9 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		}
 		if (abstractEstimateSearchContract.getNameOfWork() != null) {
 			addAnd(params);
-			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) like :nameOfWork");
+			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) like :nameOfWork and details.tenantId=:tenantId and details.deleted = false");
 			paramValues.put("nameOfWork", '%' + abstractEstimateSearchContract.getNameOfWork().toUpperCase() + '%');
+            paramValues.put("tenantId", abstractEstimateSearchContract.getTenantId());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
 			addAnd(params);
@@ -138,10 +139,26 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		
 		if (abstractEstimateSearchContract.getWorkIdentificationNumbers() != null) {
 			addAnd(params);
-			params.append("estimate.id = details.abstractEstimate and details.projectCode in (:workIdentificationNumbers)");
+			params.append("estimate.id = details.abstractEstimate and details.projectCode in (:workIdentificationNumbers) and details.tenantId=:tenantId and details.deleted = false");
 			paramValues.put("workIdentificationNumbers", abstractEstimateSearchContract.getWorkIdentificationNumbers());
-		}
+            paramValues.put("tenantId", abstractEstimateSearchContract.getTenantId());
 
+		}
+		
+        if (abstractEstimateSearchContract.getCouncilSanctionNumbers() != null
+                && !abstractEstimateSearchContract.getCouncilSanctionNumbers().isEmpty()
+                && abstractEstimateSearchContract.getCouncilSanctionNumbers().size() == 1) {
+            addAnd(params);
+            params.append("lower(estimate.councilResolutionNumber) like :councilSanctionNumbers");
+            paramValues.put("councilSanctionNumbers",
+                    '%' + abstractEstimateSearchContract.getCouncilSanctionNumbers().get(0).toLowerCase() + '%');
+        } else if (abstractEstimateSearchContract.getCouncilSanctionNumbers() != null) {
+            addAnd(params);
+            params.append("estimate.councilResolutionNumber in (:councilSanctionNumbers)");
+            paramValues.put("councilSanctionNumbers", abstractEstimateSearchContract.getCouncilSanctionNumbers());
+        }
+
+        params.append(" and estimate.deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
@@ -158,7 +175,11 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateHelper.class);
 		
 		List<AbstractEstimateHelper> abstractEstimateEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-		
+
+		System.out.print("Search Query" + searchQuery.toString());
+		System.out.print("paramValues" + paramValues.get("tenantId"));
+		System.out.print("paramValues" + paramValues.get("abstractEstimateNumbers"));
+
 		List<AbstractEstimate> abstractEstimates = new ArrayList<>();
 		
 		AbstractEstimate abstractEstimate;

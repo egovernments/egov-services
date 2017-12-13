@@ -40,6 +40,10 @@
 
 package org.egov.eis.repository;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.repository.builder.LeaveOpeningBalanceQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveOpeningBalanceRowMapper;
@@ -51,10 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 public class LeaveOpeningBalanceRepository {
@@ -68,6 +68,9 @@ public class LeaveOpeningBalanceRepository {
 			+ " SET employeeId=?, calendarYear=?, leaveTypeId=?, noOfDays=?,"
 			+ " lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id=? and tenantid=? ";
 
+	public static final String UPDATE_CARRYFORWARDLOB_QUERY = "UPDATE egeis_leaveOpeningBalance"
+			+ " SET noOfDays=? where employeeId = ? and calendarYear=? and leaveTypeId=?  and tenantid=? ";
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
@@ -76,7 +79,7 @@ public class LeaveOpeningBalanceRepository {
 
 	@Autowired
 	private LeaveOpeningBalanceQueryBuilder leaveOpeningBalanceQueryBuilder;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -92,15 +95,14 @@ public class LeaveOpeningBalanceRepository {
 	public void create(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
 
 		List<Object[]> batchArgs = new ArrayList<>();
-		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-		        leaveOpeningBalanceRequest.getRequestInfo());
+		final UserResponse userResponse = userService
+				.findUserByUserNameAndTenantId(leaveOpeningBalanceRequest.getRequestInfo());
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			Object[] lobRecord = { leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getCalendarYear(),
 					leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getNoOfDays(),
-					userResponse.getUsers().get(0).getId(),
-					new Date(System.currentTimeMillis()),
-					userResponse.getUsers().get(0).getId(),
-					new Date(System.currentTimeMillis()), leaveOpeningBalance.getTenantId() };
+					userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
+					userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
+					leaveOpeningBalance.getTenantId() };
 			batchArgs.add(lobRecord);
 		}
 
@@ -116,19 +118,39 @@ public class LeaveOpeningBalanceRepository {
 	public void update(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
 
 		List<Object[]> batchArgs = new ArrayList<>();
-		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-                        leaveOpeningBalanceRequest.getRequestInfo());
+		final UserResponse userResponse = userService
+				.findUserByUserNameAndTenantId(leaveOpeningBalanceRequest.getRequestInfo());
 		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
 			Object[] lobRecord = { leaveOpeningBalance.getEmployee(), leaveOpeningBalance.getCalendarYear(),
 					leaveOpeningBalance.getLeaveType().getId(), leaveOpeningBalance.getNoOfDays(),
-					userResponse.getUsers().get(0).getId(),
-					new Date(System.currentTimeMillis()), leaveOpeningBalance.getTenantId(),
-					leaveOpeningBalance.getId(), leaveOpeningBalance.getTenantId() };
+					userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
+					leaveOpeningBalance.getTenantId(), leaveOpeningBalance.getId(), leaveOpeningBalance.getTenantId() };
 			batchArgs.add(lobRecord);
 		}
 
 		try {
 			jdbcTemplate.batchUpdate(UPDATE_LEAVEOPENINGBALANCE_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+
+	}
+
+	public void updateLOBCarryForward(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
+
+		List<Object[]> batchArgs = new ArrayList<>();
+		final UserResponse userResponse = userService
+				.findUserByUserNameAndTenantId(leaveOpeningBalanceRequest.getRequestInfo());
+		for (LeaveOpeningBalance leaveOpeningBalance : leaveOpeningBalanceRequest.getLeaveOpeningBalance()) {
+			Object[] lobRecord = { leaveOpeningBalance.getNoOfDays(), leaveOpeningBalance.getEmployee(),
+					leaveOpeningBalance.getCalendarYear(), leaveOpeningBalance.getLeaveType().getId(),
+					leaveOpeningBalance.getTenantId() };
+			batchArgs.add(lobRecord);
+		}
+
+		try {
+			jdbcTemplate.batchUpdate(UPDATE_CARRYFORWARDLOB_QUERY, batchArgs);
 		} catch (DataAccessException ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex.getMessage());

@@ -15,7 +15,7 @@ var dat = {
         validationMessage : "Please enter {0}!",
         noCols:4,
         redirectUrl:"/create/inventory/purchaseorders/{0}",
-        selectionParamName:"purchaseOrders[0].indents",
+        selectionParamName:"purchaseOrders[0].indentNumbers",
         "groups": [
           {
             "name": "search",

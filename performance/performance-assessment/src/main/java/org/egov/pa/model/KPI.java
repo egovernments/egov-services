@@ -29,6 +29,12 @@ public class KPI   {
   
   @JsonProperty("code")
   private String code = null; 
+  
+  @JsonProperty("category")
+  private String category = null; 
+  
+  @JsonProperty("categoryId")
+  private Long categoryId = null;
 
   @JsonProperty("remoteSystemId")
   private String remoteSystemId = null;
@@ -51,21 +57,38 @@ public class KPI   {
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null; 
   
-  public KpiTarget getKpiTarget() {
-	return kpiTarget;
+
+  @JsonProperty("kpiTargets") 
+  private List<KpiTarget> kpiTargets = null; 
+  
+  
+  
+  
+
+
+public Long getCategoryId() {
+	return categoryId;
 }
 
-public void setKpiTarget(KpiTarget kpiTarget) {
-	this.kpiTarget = kpiTarget;
+public void setCategoryId(Long categoryId) {
+	this.categoryId = categoryId;
 }
 
-@JsonProperty("kpiTarget")
-  private KpiTarget kpiTarget = null; 
-  
-  
-  
-  
+public String getCategory() {
+	return category;
+}
 
+public void setCategory(String category) {
+	this.category = category;
+}
+
+public List<KpiTarget> getKpiTargets() {
+	return kpiTargets;
+}
+
+public void setKpiTargets(List<KpiTarget> kpiTargets) {
+	this.kpiTargets = kpiTargets;
+}
 
 public String getPeriodicity() {
 	return periodicity;
@@ -107,12 +130,19 @@ public void setFinancialYear(String financialYear) {
 	this.financialYear = financialYear;
 }
 
+
+/**
+* Get department
+* @return department
+**/
+@Valid
+@Pattern(regexp="^[a-zA-Z0-9:-]+$")
 public String getCode() {
-	return code;
+ return code;
 }
 
 public void setCode(String code) {
-	this.code = code;
+ this.code = code;
 }
 
 
@@ -157,7 +187,6 @@ public void setCode(String code) {
    * Name of the KPI
    * @return name
   **/
- @Pattern(regexp="^[a-zA-Z0-9 ]+$")
   public String getName() {
     return name;
   }
@@ -194,7 +223,6 @@ public void setCode(String code) {
    * @return instructions
   **/
 
- @Pattern(regexp="^[a-zA-Z0-9 ]+$")
   public String getInstructions() {
     return instructions;
   }

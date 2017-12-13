@@ -41,12 +41,23 @@ public class CommonConstants {
 
 
     public static final String WORKFLOW_ACTION_CREATE = "Create";
+    public static final String WORKFLOW_ACTION_FORWARD = "Forward";
+    public static final String WORKFLOW_ACTION_REJECTED = "Rejected";
+
     
     public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
     
     public static final String ASSET_DETAILES_REQUIRED_APPCONFIG = "ASSET_MANDATORY";
     public static final String FINANCIAL_INTEGRATION_KEY = "Financial_Integration_Required";
     public static final String SPILLOVER_WORKFLOW_MANDATORY = "Spillover_Workflow_Mandatory";
+    public static final String BUDGET_CHECK_REQUIRED = "Budget_Check_Required";
+    public static final String WORKFLOW_REQUIRED_APPCONFIG = "Workflow_Required";
+    public static final String WORKS_STATUS_APPCONFIG = "WorksStatus";
+    public static final String FINANCIALYEAR_OBJECT = "financialYears";
 
     
+    public static  final String TENANT_MODULENAME = "tenant";
+    public static  final String TENANT_OBJECTNAME = "tenants";
+    public static  final String REMARKS_OBJECTNAME = "Remarks";
+
 }

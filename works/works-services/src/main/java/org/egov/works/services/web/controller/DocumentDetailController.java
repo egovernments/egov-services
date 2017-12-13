@@ -9,7 +9,6 @@ import org.egov.works.services.web.contract.DocumentDetail;
 import org.egov.works.services.web.contract.DocumentDetailRequest;
 import org.egov.works.services.web.contract.DocumentDetailResponse;
 import org.egov.works.services.web.contract.DocumentDetailSearchCriteria;
-import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
 import org.egov.works.services.web.contract.RequestInfo;
 import org.egov.works.services.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,22 +29,12 @@ public class DocumentDetailController {
 	@Autowired
 	private DocumentDetailsService documentDetailsService;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
-
 	@PostMapping
 	@RequestMapping("/_create")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> createDocuments(@Valid @RequestBody DocumentDetailRequest documentDetailRequest)
 			throws Exception {
-
-		RequestInfo requestInfo = documentDetailRequest.getRequestInfo();
-		documentDetailsService.validateDocuments(documentDetailRequest);
-		final List<DocumentDetail> documents = documentDetailsService.createDocuments(documentDetailRequest);
-		DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
-		documentDetailResponse
-				.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
-		documentDetailResponse.setDocumentDetails(documents);
+        DocumentDetailResponse documentDetailResponse = documentDetailsService.createDocuments(documentDetailRequest);
 		return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);
 
 	}
@@ -55,14 +44,7 @@ public class DocumentDetailController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<?> updateDocuments(@Valid @RequestBody DocumentDetailRequest documentDetailRequest)
 			throws Exception {
-
-		RequestInfo requestInfo = documentDetailRequest.getRequestInfo();
-		documentDetailsService.validateDocuments(documentDetailRequest);
-		final List<DocumentDetail> documents = documentDetailsService.updateDocuments(documentDetailRequest);
-		DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
-		documentDetailResponse
-				.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
-		documentDetailResponse.setDocumentDetails(documents);
+		DocumentDetailResponse documentDetailResponse = documentDetailsService.updateDocuments(documentDetailRequest);
 		return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);
 
 	}
@@ -70,16 +52,11 @@ public class DocumentDetailController {
 	@PostMapping
 	@RequestMapping("/_search")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<?> searchDocuments(@ModelAttribute DocumentDetailSearchRequest documentDetailSearchRequest,
-			@RequestBody RequestInfo requestInfo, @RequestParam(required = true) String tenantId) {
+	public ResponseEntity<?> searchDocuments(@Valid @ModelAttribute DocumentDetailSearchCriteria documentDetailSearchCriteria,
+			@RequestBody RequestInfo requestInfo) {
 
-		documentDetailsService.validateSearchDocuments(documentDetailSearchRequest);
-		List<DocumentDetail> documents = documentDetailsService
-				.searchDocuments(new DocumentDetailSearchCriteria().toDomain(documentDetailSearchRequest));
-		DocumentDetailResponse documentDetailResponse = new DocumentDetailResponse();
-		documentDetailResponse
-				.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
-		documentDetailResponse.setDocumentDetails(documents);
+        DocumentDetailResponse documentDetailResponse = documentDetailsService
+				.searchDocuments(documentDetailSearchCriteria,requestInfo);
 		return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);
 	}
 }

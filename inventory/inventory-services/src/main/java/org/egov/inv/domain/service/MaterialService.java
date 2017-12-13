@@ -1,7 +1,10 @@
 package org.egov.inv.domain.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.minidev.json.JSONArray;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
@@ -40,6 +43,9 @@ public class MaterialService extends DomainService {
 
     @Value("${inv.materials.update.key}")
     private String updateKey;
+
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
     public static final String SEQ_SERIAL_NO = "seq_material_code_serial_no";
 
@@ -139,6 +145,22 @@ public class MaterialService extends DomainService {
         MaterialResponse response = new MaterialResponse();
         response.setMaterials(searchMaterial.getPagedData().size() > 0 ? searchMaterial.getPagedData() : Collections.emptyList());
         return response;
+    }
+
+    public Material fetchMaterial(final String tenantId, final String code,
+                                  final RequestInfo requestInfo) {
+
+        JSONArray responseJSONArray;
+        final ObjectMapper mapper = new ObjectMapper();
+
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, "inventory",
+                "Material", "code", code, requestInfo);
+
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            return mapper.convertValue(responseJSONArray.get(0), Material.class);
+        else
+            throw new CustomException("Material", "Given Material is invalid: " + code);
+
     }
 
     private void validate(List<Material> materials, String method) {

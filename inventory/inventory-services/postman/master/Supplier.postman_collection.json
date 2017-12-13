@@ -1,0 +1,107 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Supplier",
+		"_postman_id": "3e68db67-0dff-4881-23df-9b78ca9bcd01",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create",
+			"description": "",
+			"item": [
+				{
+					"name": "{{host}}/inventory-services/suppliers/_create?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "{{host}}/inventory-services/suppliers/_create?tenantId=default",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"inventory-services",
+								"suppliers",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n \"RequestInfo\": {\n   \"apiId\": \"emp\",\n   \"ver\": \"1.0\",\n   \"ts\": \"12345677\",\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"key\": \"abcdkey\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"rajesh\",\n   \"authToken\": \"0f1a559a-9b2a-4bc6-bc56-d6cf746cec50\"\n\n \n },\n \"suppliers\":\n[  {\n\t\n\"tenantId\":\"default\",\n  \"type\":\"FIRM\",\n  \"code\":\"supplier545455\",\n  \"active\":\"false\",\n  \"name\":\"Anand And So\",\n  \"address\":\"btm layout\",\n  \"status\":\"ACTIVE\",\n  \"inActiveDate\":\"15436789\",\n  \"contactNo\":\"0132278956\",\n  \"faxNo\":\"123788890\",\n  \"website\":\"http://www.google.com\",\n  \"email\":\"anand@gmail.com\",\n  \"description\":\"supplier for cosmetics\",\n  \"panNo\":\"DFGPV3459D\",\n  \"tinNo\":\"34676767uiu\",\n  \"cstNo\":\"34676767uiC\",\n  \"vatNo\":\"34676767uiV\",\n  \"gstNo\":\"75AGHFD7890A0Z0\",\n  \"contactPerson\":\"anand dubay\",\n  \"contactPersonNo\":\"8388743488\",\n  \"bankCode\":\"bankcode1\",\n\t   \"bankBranch\":\"bankbranch1\",\n  \"acctNo\":\"3161001500005068\",\n  \"ifsc\":\"IFSC38899\",\n  \"micr\":\"MICR983985\"\n  }\n\n]\n \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "update",
+			"description": "",
+			"item": [
+				{
+					"name": "{{host}}/inventory-services/suppliers/_update?tenantId=default&ids=67",
+					"request": {
+						"url": {
+							"raw": "{{host}}/inventory-services/suppliers/_update?tenantId=default&ids=67",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"inventory-services",
+								"suppliers",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "ids",
+									"value": "67",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n \"RequestInfo\": {\n   \"apiId\": \"emp\",\n   \"ver\": \"1.0\",\n   \"ts\": \"12345677\",\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"key\": \"abcdkey\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"rajesh\",\n   \"authToken\": \"8e944626-4a0e-4122-a021-8b1ea2e5a671\"\n\n \n },\n \"suppliers\":\n[  {\n\t\"id\":\"65\",\n\"tenantId\":\"default\",\n  \"type\":\"FIRM\",\n  \"code\":\"supplier545455\",\n  \"active\":\"true\",\n  \"name\":\"Anand And So\",\n  \"address\":\"btm layout\",\n  \"status\":\"ACTIVE\",\n  \"inActiveDate\":\"15436789\",\n  \"contactNo\":\"0132278956\",\n  \"faxNo\":\"123788890\",\n  \"website\":\"http://www.google.com\",\n  \"email\":\"anand@gmail.com\",\n  \"description\":\"supplier for cosmetics\",\n  \"panNo\":\"DFGPV3459D\",\n  \"tinNo\":\"34676767uiu\",\n  \"cstNo\":\"34676767uiC\",\n  \"vatNo\":\"34676767uiV\",\n  \"gstNo\":\"75AGHFD7890A0Z0\",\n  \"contactPerson\":\"anand dubay\",\n  \"contactPersonNo\":\"8388743488\",\n  \"bankCode\":\"bankcode1\",\n\t   \"bankBranch\":\"bankbranch1\",\n  \"acctNo\":\"3161001500005068\",\n  \"ifsc\":\"IFSC38899\",\n  \"micr\":\"MICR983985\"\n  }\n\n]\n \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

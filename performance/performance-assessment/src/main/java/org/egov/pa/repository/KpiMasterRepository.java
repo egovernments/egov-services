@@ -7,6 +7,7 @@ import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
+import org.egov.pa.web.contract.KPIValueSearchRequest;
 
 public interface KpiMasterRepository {
 	
@@ -26,10 +27,14 @@ public interface KpiMasterRepository {
     
     public List<KPI> checkNameOrCodeExists(KPIRequest kpiRequest);
     
+    public String targetExistsForKPI(String kpiCode); 
+    
     public Boolean getKpiType(String kpiCode, String tenantId); 
     
     public List<DocumentTypeContract> getDocumentForKpi(String kpiCode);
     
-    public List<KPI> getKpiByCode(List<String> kpiCodeList); 
+    public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, KPIValueSearchRequest kpiValueSearchReq);
+    
+    public List<String> getTargetTypeForKpiCodes(List<String> kpiCodeList);
     
 }

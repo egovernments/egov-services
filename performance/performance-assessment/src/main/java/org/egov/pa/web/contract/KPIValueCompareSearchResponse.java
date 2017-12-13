@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.ULBKpiValueList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,8 +20,8 @@ public class KPIValueCompareSearchResponse   {
   @JsonProperty("responseInfo")
   private ResponseInfo responseInfo = null;
 
-  @JsonProperty("kpiValues")
-  private List<KpiValueList> kpiValues = null;
+  @JsonProperty("ulbs")
+  private List<ULBKpiValueList> ulbKpiValues = null;
 
   public KPIValueCompareSearchResponse responseInfo(ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
@@ -43,16 +43,16 @@ public class KPIValueCompareSearchResponse   {
     this.responseInfo = responseInfo;
   }
 
-  public KPIValueCompareSearchResponse kpiValues(List<KpiValueList> kpiValues) {
-    this.kpiValues = kpiValues;
+  public KPIValueCompareSearchResponse kpiValues(List<ULBKpiValueList> kpiValues) {
+    this.ulbKpiValues = kpiValues;
     return this;
   }
 
-  public KPIValueCompareSearchResponse addKpiValuesItem(KpiValueList kpiValuesItem) {
-    if (this.kpiValues == null) {
-      this.kpiValues = new ArrayList<KpiValueList>();
+  public KPIValueCompareSearchResponse addKpiValuesItem(ULBKpiValueList kpiValuesItem) {
+    if (this.ulbKpiValues == null) {
+      this.ulbKpiValues = new ArrayList<ULBKpiValueList>();
     }
-    this.kpiValues.add(kpiValuesItem);
+    this.ulbKpiValues.add(kpiValuesItem);
     return this;
   }
 
@@ -62,14 +62,7 @@ public class KPIValueCompareSearchResponse   {
   **/
 
   @Valid
-
-  public List<KpiValueList> getKpiValues() {
-    return kpiValues;
-  }
-
-  public void setKpiValues(List<KpiValueList> kpiValues) {
-    this.kpiValues = kpiValues;
-  }
+  
 
 
   @Override
@@ -82,12 +75,20 @@ public class KPIValueCompareSearchResponse   {
     }
     KPIValueCompareSearchResponse kpIValueSearchResponse = (KPIValueCompareSearchResponse) o;
     return Objects.equals(this.responseInfo, kpIValueSearchResponse.responseInfo) &&
-        Objects.equals(this.kpiValues, kpIValueSearchResponse.kpiValues);
+        Objects.equals(this.ulbKpiValues, kpIValueSearchResponse.ulbKpiValues);
   }
 
-  @Override
+  public List<ULBKpiValueList> getUlbKpiValues() {
+	return ulbKpiValues;
+}
+
+public void setUlbKpiValues(List<ULBKpiValueList> ulbKpiValues) {
+	this.ulbKpiValues = ulbKpiValues;
+}
+
+@Override
   public int hashCode() {
-    return Objects.hash(responseInfo, kpiValues);
+    return Objects.hash(responseInfo, ulbKpiValues);
   }
 
   @Override
@@ -96,7 +97,7 @@ public class KPIValueCompareSearchResponse   {
     sb.append("class KPIValueSearchResponse {\n");
     
     sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
-    sb.append("    kpiValues: ").append(toIndentedString(kpiValues)).append("\n");
+    sb.append("    kpiValues: ").append(toIndentedString(ulbKpiValues)).append("\n");
     sb.append("}");
     return sb.toString();
   }

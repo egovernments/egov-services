@@ -39,21 +39,18 @@
  */
 package org.egov.common;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONArray;
-
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.model.MasterDetail;
-import org.egov.mdms.model.MdmsCriteria;
-import org.egov.mdms.model.MdmsCriteriaReq;
-import org.egov.mdms.model.MdmsResponse;
-import org.egov.mdms.model.ModuleDetail;
+import org.egov.mdms.model.*;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MdmsRepository {
@@ -64,16 +61,16 @@ public class MdmsRepository {
 
     @Autowired
     public MdmsRepository(final RestTemplate restTemplate,
-            @Value("${egov.services.egov_mdms.hostname}") final String mdmsServiceHostname,
-            @Value("${egov.services.egov_mdms.searchpath}") final String mdmsBySearchCriteriaUrl) {
+                          @Value("${egov.services.egov_mdms.hostname}") final String mdmsServiceHostname,
+                          @Value("${egov.services.egov_mdms.searchpath}") final String mdmsBySearchCriteriaUrl) {
 
         this.restTemplate = restTemplate;
         this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
     }
 
     public JSONArray getByCriteria(final String tenantId, final String moduleName, final String masterName,
-            final String filterFieldName,
-            final String filterFieldValue, final RequestInfo requestInfo) {
+                                   final String filterFieldName,
+                                   final String filterFieldValue, final org.egov.inv.model.RequestInfo info) {
 
         List<MasterDetail> masterDetails;
         List<ModuleDetail> moduleDetails;
@@ -89,7 +86,7 @@ public class MdmsRepository {
 
         request = MdmsCriteriaReq.builder()
                 .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
-                .requestInfo(requestInfo).build();
+                .requestInfo(getRequestInfo(info)).build();
         response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
         if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
                 || response.getMdmsRes().get(moduleName) == null
@@ -98,5 +95,37 @@ public class MdmsRepository {
             return null;
         else
             return response.getMdmsRes().get(moduleName).get(masterName);
+    }
+
+    public Object fetchObject(String tenantId, String moduleName, String masterName, String filterField,
+                              String fieldValue, Class className) {
+
+        JSONArray responseJSONArray;
+        final ObjectMapper mapper = new ObjectMapper();
+
+        responseJSONArray = getByCriteria(tenantId, moduleName,
+                masterName, filterField, fieldValue, new org.egov.inv.model.RequestInfo());
+
+
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            return mapper.convertValue(responseJSONArray.get(0), className);
+        else
+            throw new CustomException(className.getSimpleName(), "Given " + className.getSimpleName().toString() + " is invalid: " + fieldValue);
+
+    }
+
+
+    public RequestInfo getRequestInfo(org.egov.inv.model.RequestInfo requestInfo) {
+        RequestInfo info = new RequestInfo();
+        return info.builder().action(requestInfo.getAction())
+                .apiId(requestInfo.getApiId())
+                .authToken(requestInfo.getAuthToken())
+                .correlationId(requestInfo.getCorrelationId())
+                .did(requestInfo.getDid())
+                .key(requestInfo.getKey())
+                .msgId(requestInfo.getMsgId())
+                .ts(requestInfo.getTs())
+                //.userInfo(requestInfo.getUserInfo())
+                .ver(requestInfo.getVer()).build();
     }
 }

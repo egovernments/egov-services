@@ -1,63 +1,68 @@
 var dat = {
-  "legal.search": {
+  'legal.search': {
     numCols: 4,
-    title:"advocates.search.document.title.agency",
+    title: 'advocates.search.document.title.agency',
     useTimestamp: true,
-    objectName: "",
-    url: "/lcms-services/legalcase/advocate/agency/_search?isIndividual=false",
+    objectName: '',
+    url: '/lcms-services/legalcase/advocate/agency/_search?isIndividual=false',
+    customActionsAndUrl: [
+      {
+        actionName: 'Add',
+        url: '/create/legal/advocate',
+      },
+    ],
     groups: [
       {
-        name: "applicantType",
-        label: "advocates.create.group.title.agencySearch",
+        name: 'applicantType',
+        label: 'advocates.create.group.title.agencySearch',
         fields: [
-            {
-            name: "agencOrganizationName",
-            jsonPath: "agencyName",
-            label: "advocates.create.agencOrganizationName",
-            pattern: "",
-            type: "text",
+          {
+            name: 'agencOrganizationName',
+            jsonPath: 'agencyName',
+            label: 'advocates.create.agencOrganizationName',
+            pattern: '',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          }
-        ]
-      }
+            requiredErrMsg: '',
+            patternErrMsg: '',
+          },
+        ],
+      },
     ],
-    "result": {
-       "disableRowClick" : true,
-       isAction: true,
-          actionItems: [
+    result: {
+      disableRowClick: false,
+      isAction: true,
+      /* actionItems: [
             {
               label: "Update Agency",
               url: "/update/legal/updateagency/"
             }
-          ],
-      "header": [
-         {
-          label: "legal.search.result.actionLabels",
-          isChecked:true,
-          checkedItem:{
-            jsonPath:"checkedRow",
-            label:"",
-          }
-        },{
-           "label": "legal.search.result.agencyName"
+          ],*/
+      header: [
+        {
+          label: 'legal.search.result.actionLabels',
+          isChecked: true,
+          checkedItem: {
+            jsonPath: 'checkedRow',
+            label: '',
+          },
         },
         {
-            "label": "legal.search.result.agencyAddress"
-        }
+          label: 'legal.search.result.agencyName',
+        },
+        {
+          label: 'legal.search.result.agencyAddress',
+        },
       ],
-      "values": [
-        "code",
-        "name",
-        "agencyAddress"
-      ],
-      "resultPath": "agencies",
+      values: ['code', 'name', 'agencyAddress'],
+      resultPath: 'agencies',
+      resultIdKey: 'code',
+      rowClickUrlUpdate: '/update/legal/updateagency/{code}',
+      rowClickUrlView: '/view/legal/updateagency/{code}',
       //"rowClickUrlUpdate": "/update/legalcase/{id}",
       //"rowClickUrlView": "/view/legalcase/{id}"
-    }
-  }
+    },
+  },
 };
 export default dat;
-

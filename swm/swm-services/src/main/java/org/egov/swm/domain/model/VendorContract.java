@@ -4,6 +4,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ import lombok.Setter;
 public class VendorContract {
 
     @NotNull
-    @Size(min = 1, max = 128)
+    @Length(min = 1, max = 128)
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -56,7 +58,7 @@ public class VendorContract {
     @JsonProperty("paymentTerms")
     private PaymentTerms paymentTerms = null;
 
-    @Size(min = 15, max = 500)
+    @Length(min = 0, max = 500)
     @JsonProperty("remarks")
     private String remarks = null;
 

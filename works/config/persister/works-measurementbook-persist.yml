@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: works-measurementbook-create-update
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_measurementbook(id, tenantid, mbrefno, contractorcomments, mbdate, mbissueddate, mbabstract, frompageno, topageno, letterofacceptanceestimate, status, islegacymb, mbamount, approveddate, stateid, cancellationreason, cancellationremarks, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET mbrefno=EXCLUDED.mbrefno, contractorcomments=EXCLUDED.contractorcomments, mbdate=EXCLUDED.mbdate, mbissueddate=EXCLUDED.mbissueddate, mbabstract=EXCLUDED.mbabstract, frompageno=EXCLUDED.frompageno, topageno=EXCLUDED.topageno, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, status=EXCLUDED.status, islegacymb=EXCLUDED.islegacymb, mbamount=EXCLUDED.mbamount, approveddate=EXCLUDED.approveddate, stateid=EXCLUDED.stateid, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+    - query: INSERT INTO egw_measurementbook(id, tenantid, mbrefno, contractorcomments, mbdate, mbissueddate, mbabstract, frompageno, topageno, letterofacceptanceestimate, revisionloa, status, islegacymb, mbamount, approveddate, stateid, cancellationreason, cancellationremarks, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET mbrefno=EXCLUDED.mbrefno, contractorcomments=EXCLUDED.contractorcomments, mbdate=EXCLUDED.mbdate, mbissueddate=EXCLUDED.mbissueddate, mbabstract=EXCLUDED.mbabstract, frompageno=EXCLUDED.frompageno, topageno=EXCLUDED.topageno, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, revisionloa=EXCLUDED.revisionloa, status=EXCLUDED.status, islegacymb=EXCLUDED.islegacymb, mbamount=EXCLUDED.mbamount, approveddate=EXCLUDED.approveddate, stateid=EXCLUDED.stateid, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
       basePath: $.measurementBooks.*
       jsonMaps:
 
@@ -33,6 +33,8 @@ serviceMaps:
        
        - jsonPath: $.measurementBooks.*.letterOfAcceptanceEstimate.id
 
+       - jsonPath: $.measurementBooks.*.revisionloa
+
        - jsonPath: $.measurementBooks.*.status
        
        - jsonPath: $.measurementBooks.*.isLegacyMB
@@ -55,8 +57,10 @@ serviceMaps:
        - jsonPath: $.measurementBooks.*.auditDetails.lastModifiedBy
   
        - jsonPath: $.measurementBooks.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.measurementBooks.*.deleted
        
-    - query: INSERT INTO egw_measurementbook_details(id, tenantid, measurementbook, loaactivity, quantity, rate, remarks, amount, partrate, reducedrate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET measurementbook=EXCLUDED.measurementbook, loaactivity=EXCLUDED.loaactivity, quantity=EXCLUDED.quantity, rate=EXCLUDED.rate, remarks=EXCLUDED.remarks, amount=EXCLUDED.amount, partrate=EXCLUDED.partrate, reducedrate=EXCLUDED.reducedrate;
+    - query: INSERT INTO egw_measurementbook_details(id, tenantid, measurementbook, loaactivity, quantity, rate, remarks, amount, partrate, reducedrate, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET measurementbook=EXCLUDED.measurementbook, loaactivity=EXCLUDED.loaactivity, quantity=EXCLUDED.quantity, rate=EXCLUDED.rate, remarks=EXCLUDED.remarks, amount=EXCLUDED.amount, partrate=EXCLUDED.partrate, reducedrate=EXCLUDED.reducedrate, deleted=EXCLUDED.deleted;
       basePath: $.measurementBooks.*.measurementBookDetails.*
       jsonMaps:
 
@@ -88,7 +92,9 @@ serviceMaps:
        
        - jsonPath: $.measurementBooks.*.measurementBookDetails.*.auditDetails.lastModifiedTime
 
-    - query: INSERT INTO egw_mb_measurementsheet(id, tenantid, remarks, "number", length, width, depthorheight, quantity, measurementbookdetail, loameasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, measurementbookdetail= EXCLUDED.measurementbookdetail, loameasurementsheet=EXCLUDED.loameasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.deleted
+
+    - query: INSERT INTO egw_mb_measurementsheet(id, tenantid, remarks, "number", length, width, depthorheight, quantity, measurementbookdetail, loameasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, measurementbookdetail= EXCLUDED.measurementbookdetail, loameasurementsheet=EXCLUDED.loameasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
       basePath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*
       jsonMaps:
 
@@ -120,7 +126,9 @@ serviceMaps:
        
        - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.auditDetails.lastModifiedTime
 
-    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.deleted
+
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
 
       basePath: $.measurementBooks.*.documentDetails.*
       jsonMaps:
@@ -154,3 +162,95 @@ serviceMaps:
        - jsonPath: $.measurementBooks.*.documentDetails.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.measurementBooks.*.documentDetails.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.deleted
+       
+ - version: 1.0
+   name: Contractor Bill Create/Update
+   description: Create/Update Contractor Bill in egw_contractorbill table
+   fromTopic: works-contractorbill-create-update
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_contractorbill(id, billsequencenumber, approveddate, approvedby, cancellationreason, cancellationremarks, letterofacceptanceestimate, stateid, tenantid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) on CONFLICT (id,tenantid) DO UPDATE egw_contractorbill SET billsequencenumber=EXCLUDED.billsequencenumber, approveddate=EXCLUDED.approveddate, approvedby=EXCLUDED.approvedby, cancellationreason=EXCLUDED.cancellationreason, 
+       cancellationremarks=EXCLUDED.cancellationremarks, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, stateid=EXCLUDED.stateid, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+      basePath: $.contractorbills.*
+      jsonMaps:
+
+       - jsonPath: $.contractorbills.*.id
+       
+       - jsonPath: $.contractorbills.*.billSequenceNumber
+         
+       - jsonPath: $.contractorbills.*.approvedDate
+         dbType: LONG
+         
+       - jsonPath: $.contractorbills.*.approvedBy
+       
+       - jsonPath: $.contractorbills.*.cancellationReason
+       
+       - jsonPath: $.contractorbills.*.cancellationRemarks
+       
+       - jsonPath: $.contractorbills.*.letterOfAcceptanceEstimate.id
+       
+       - jsonPath: $.contractorbills.*.stateId
+       
+       - jsonPath: $.contractorbills.*.tenantId
+       
+       - jsonPath: $.contractorbills.*.auditDetails.createdBy
+       
+       - jsonPath: $.contractorbills.*.auditDetails.createdTime
+       
+       - jsonPath: $.contractorbills.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.contractorbills.*.auditDetails.lastModifiedTime 
+       
+       - jsonPath: $.contractorbills.*.deleted 
+       
+    - query: INSERT INTO egw_contractorbill_assets(id, tenantid, asset, chartofaccounts, description, amount, contractorbill, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE egw_contractorbill_assets SET asset=EXCLUDED.asset, chartofaccounts=EXCLUDED.chartofaccounts, description=EXCLUDED.description, amount=EXCLUDED.amount, contractorbill=EXCLUDED.contractorbill, lastmodifiedby=EXCLUDED.lastmodifiedby, 
+       lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+      basePath: $.contractorbills.*.assets.*
+      jsonMaps:
+
+       - jsonPath: $.contractorbills.*.assets.*.id
+       
+       - jsonPath: $.contractorbills.*.assets.*.tenantId
+         
+       - jsonPath: $.contractorbills.*.assets.*.asset.code
+         
+       - jsonPath: $.contractorbills.*.assets.*.chartOfAccounts.glcode
+       
+       - jsonPath: $.contractorbills.*.assets.*.description
+       
+       - jsonPath: $.contractorbills.*.assets.*.amount
+       
+       - jsonPath: $.contractorbills.*.assets.*.contractorBill
+       
+       - jsonPath: $.contractorbills.*.assets.*.auditDetails.createdBy
+       
+       - jsonPath: $.contractorbills.*.assets.*.auditDetails.createdTime
+       
+       - jsonPath: $.contractorbills.*.assets.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.contractorbills.*.assets.*.auditDetails.lastModifiedTime       
+       
+       - jsonPath: $.contractorbills.*.assets.*.deleted
+       
+    - query: INSERT INTO egw_contractorbill_mb(id, tenantid, measurementbook, contractorbill, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?,?,?) on CONFLICT (id,tenantid) DO UPDATE egw_mb_contractor_bills SET measurementbook=EXCLUDED.measurementbook, contractorbill=EXCLUDED.contractorbill, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+      basePath: $.contractorbills.*.mbForContractorBill.*
+      jsonMaps:
+
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.id
+       
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.tenantId
+         
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.measurementBook.id
+         
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.contractorBill.id
+       
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.auditDetails.createdBy
+       
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.auditDetails.createdTime
+       
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.contractorbills.*.mbForContractorBill.*.deleted   
+       

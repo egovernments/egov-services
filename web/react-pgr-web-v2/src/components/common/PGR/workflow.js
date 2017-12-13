@@ -1,24 +1,16 @@
-import React, {Component} from 'react';
-import {Row, Col, DropdownButton} from 'react-bootstrap';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
+import React, { Component } from 'react';
+import { Row, Col, DropdownButton } from 'react-bootstrap';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 import styles from '../../../styles/material-ui';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
-import {translate} from '../common';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import { translate } from '../common';
 
-const workflow = ({workflowdetails}) => {
+const workflow = ({ workflowdetails }) => {
   const renderWorkflow = () => {
-    if(workflowdetails != undefined){
-      return workflowdetails.map((workflow, index) =>
-      {
+    if (workflowdetails != undefined) {
+      return workflowdetails.map((workflow, index) => {
         var department;
-        for(var k in workflow.values.department.values){
+        for (var k in workflow.values.department.values) {
           department = Object.values(workflow.values.department.values[k])[1];
         }
         return (
@@ -30,16 +22,14 @@ const workflow = ({workflowdetails}) => {
             <TableRowColumn className="hidden-xs">{department}</TableRowColumn>
             <TableRowColumn style={styles.customColumnStyle}>{workflow.comments}</TableRowColumn>
           </TableRow>
-        )
+        );
       });
     }
-  }
-  return(
+  };
+  return (
     <div>
       <Card style={styles.cardMargin}>
-        <CardHeader style={styles.cardHeaderPadding} title={< div style = {styles.headerStyle} >
-         {translate('core.lbl.history')}
-        < /div>}/>
+        <CardHeader style={styles.cardHeaderPadding} title={<div style={styles.headerStyle}>{translate('core.lbl.history')}</div>} />
         <CardText style={styles.cardTextPadding}>
           <Table>
             <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
@@ -52,14 +42,12 @@ const workflow = ({workflowdetails}) => {
                 <TableHeaderColumn>{translate('core.lbl.comments')}</TableHeaderColumn>
               </TableRow>
             </TableHeader>
-            <TableBody displayRowCheckbox={false}>
-              {renderWorkflow()}
-            </TableBody>
+            <TableBody displayRowCheckbox={false}>{renderWorkflow()}</TableBody>
           </Table>
         </CardText>
       </Card>
     </div>
   );
-}
+};
 
 export default workflow;

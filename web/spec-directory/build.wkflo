@@ -1,0 +1,9 @@
+def build(path, ci_image) {
+    stage("Build") {
+        docker.image("egovio/ci-react:0.0.4").inside {
+            sh "cd ${path} && npm install";
+        }
+    }
+}
+
+return this;

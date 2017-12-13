@@ -82,11 +82,16 @@ class UiMultiFieldTable extends Component {
     var valuesArray=[];
 		let {isintialLoad }=this.state;
     var numberOfRowsArray= _.get(props.formData,props.item.jsonPath);
-    // console.log(props.item.jsonPath);
+    // console.log(numberOfRowsArray, props.item.jsonPath);
     // console.log(this.state.values, numberOfRowsArray, props.item.tableList.values);
     var listValues = _.cloneDeep(props.item.tableList.values);
     // console.log(listValues);
+    // console.log('render load:',_.get(props.formData,props.item.jsonPath), numberOfRowsArray && numberOfRowsArray.length);
+    let formData = {...props.formData};
+    // console.log(formData, JSON.stringify(formData));
+    // console.log('render load', props.item.jsonPath, _.get(formData,props.item.jsonPath), props.item.tableList.values);
     if(numberOfRowsArray && numberOfRowsArray.length>0 && !isintialLoad){
+      // console.log('render load true succeeded');
         var regexp = new RegExp(`${this.escapeRegExp(props.item.jsonPath)}\\[\\d+\\]`);
           for(var i=0;i<numberOfRowsArray.length;i++){
             var listValuesArray=_.cloneDeep(listValues);
@@ -106,14 +111,17 @@ class UiMultiFieldTable extends Component {
             this.setState({
              isintialLoad:true
             })
+    }else if(numberOfRowsArray == undefined){
+      let values = [props.item.tableList.values];
+      this.setState({
+        values,
+        isintialLoad:true,
+        list: Object.assign([], props.item.tableList.values)
+      });
+      this.addMandatoryOnLoad(props.item.tableList.values, 1);
     }
-    this.addMandatoryOnLoad(props.item.tableList.values, numberOfRowsArray ? numberOfRowsArray.length : 1);
+    // this.addMandatoryOnLoad(props.item.tableList.values, numberOfRowsArray ? numberOfRowsArray.length : 1);
   }
-
-  // shouldComponentUpdate(nextProps, nextState){
-  //   console.log(!(_.isEqual(this.props.formData, nextProps.formData) && _.isEqual(this.state, nextState)));
-  //   return !(_.isEqual(this.props.formData, nextProps.formData) && _.isEqual(this.state, nextState));
-  // }
 
   addMandatoryOnLoad = (values,length) => {
     // console.log(values, '<--->', length, this.props.item.jsonPath);
@@ -121,11 +129,11 @@ class UiMultiFieldTable extends Component {
     let addReq=[];
     let delReq=[];
     var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
+
     for(let i=0;i<length;i++){
       values && values.map((row,rowIdx)=>{
         if(row.isRequired && !row.isHidden){
           row.jsonPath = row.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
-          // console.log(row.jsonPath);
           addReq.push(row.jsonPath);
         }else if(row.isHidden){
           //isHidden -true
@@ -157,18 +165,6 @@ class UiMultiFieldTable extends Component {
         req.push(val.jsonPath);
     });
     addRequiredFields(req);
-  }
-
-  removeMandatoryForDelete = (idx) => {
-    // console.log('remove mandatory');
-    let {delRequiredFields} = this.props;
-    let req=[];
-    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
-    this.props.item.tableList.values.map((item)=>{
-      item.jsonPath = item.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${idx}]`);
-      req.push(item.jsonPath);
-    })
-    delRequiredFields(req);
   }
 
 	addNewRow() {
@@ -207,7 +203,7 @@ class UiMultiFieldTable extends Component {
 		for(var i=0; i<values.length; i++) {
 			for(var j=0; j<values[i].length; j++) {
 				values[i][j].jsonPath = values[i][j].jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
-				if(values[i][j].dependency)//Changes to handle dependency sum
+        if(values[i][j].dependency)//Changes to handle dependency sum
 					{
 						dependencyFlag =1;
 						depField=values[i][j].dependency;
@@ -220,13 +216,22 @@ class UiMultiFieldTable extends Component {
 			index: this.state.index-1,
 			// isintialLoad:false
 		}, () => {
-			let formData = JSON.parse(JSON.stringify(this.props.formData));
-			let formDataArray =_.get(formData,this.props.item.jsonPath)
+			let formData = {...this.props.formData};
+			let formDataArray =_.get(formData,this.props.item.jsonPath) ? [..._.get(formData,this.props.item.jsonPath)] : [];
 			if(formDataArray && formDataArray.length) {
 				formDataArray.splice(ind, 1);
-				var newArray=_.cloneDeep(formDataArray);
 				var newFormData=_.set(formData,this.props.item.jsonPath,formDataArray);
 				this.props.setFormData(newFormData);
+        this.renderOnLoad(this.props);
+        for(let i=0; i<values.length; i++) {
+    			for(let j=0; j<values[i].length; j++) {
+            if(values[i][j].isHidden){
+
+            }else{
+                this.props.handleChange(_.get(this.props.formData,values[i][j].jsonPath) || '', values[i][j].jsonPath, values[i][j].isRequired, values[i][j].pattern,values[i][j].requiredErrMsg,values[i][j].patternErrMsg);
+            }
+    			}
+    		}
 			}
 		})
 
@@ -262,6 +267,19 @@ class UiMultiFieldTable extends Component {
 		}
 		}
 	}
+
+  removeMandatoryForDelete = (idx) => {
+    // console.log('remove mandatory');
+    let {delRequiredFields, removeFieldErrors} = this.props;
+    let req=[];
+    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
+    this.props.item.tableList.values.map((item)=>{
+      item.jsonPath = item.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${idx}]`);
+      req.push(item.jsonPath);
+      removeFieldErrors(item.jsonPath);
+    });
+    delRequiredFields(req);
+  }
 
    	renderFields = (item, screen) => {
    		if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) == -1 ) {
@@ -455,11 +473,17 @@ const mapDispatchToProps = dispatch => ({
   setFormData: (data) => {
     dispatch({type: "SET_FORM_DATA", data});
   },
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
+    dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target ? e.target.value : e, isRequired, pattern, requiredErrMsg, patternErrMsg});
+  },
   delRequiredFields: (requiredFields) => {
     dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
   },
   addRequiredFields: (requiredFields) => {
     dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
+  },
+  removeFieldErrors: (key) => {
+    dispatch({type: "REMOVE_FROM_FIELD_ERRORS", key})
   }
 });
 

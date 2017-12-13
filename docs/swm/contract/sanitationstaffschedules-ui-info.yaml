@@ -1,0 +1,31 @@
+UIInfo:
+- referencePath: "/sanitationstaffschedules"
+  searchUrl: "/sanitationstaffschedules/_search?transactionNo={transactionNo}"
+  groups:
+    SourceSegregationDetails:
+      fields:
+      - sanitationStaffSchedules[0].sanitationStaffTarget.targetNo
+      - sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom
+      - sanitationStaffSchedules[0].sanitationStaffTarget.targetTo
+      - sanitationStaffSchedules[0].sanitationStaffTarget.route.name
+      - sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name
+      - sanitationStaffSchedules[0].shift.code
+  externalData:
+  - fieldName: sanitationStaffSchedules[0].sanitationStaffTarget.targetNo
+    url: "/swm-services/sanitationstafftargets/_search?"
+    keyPath: "$..targetNo"
+    valPath: "$..employee.name"
+  - fieldName: sanitationStaffSchedules[0].shift.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Shift"
+    keyPath: "$..code"
+    valPath: "$..name"
+  searchResult:
+    rowClickUrlUpdate: "/update/swm/sanitationstaffschedules/{transactionNo}"
+    rowClickUrlView: "/view/swm/sanitationstaffschedules/{transactionNo}"
+    columns:
+    - employeeName
+    - shift
+    values:
+    - employee.name
+    - shift.name
+    resultObjectName: sanitationStaffSchedules

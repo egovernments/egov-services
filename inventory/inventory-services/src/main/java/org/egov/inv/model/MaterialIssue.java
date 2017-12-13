@@ -253,8 +253,6 @@ public class MaterialIssue   {
    * @return fromStore
   **/
   @ApiModelProperty(required = true, value = "This field holds the issuing store information. ")
-  @NotNull
-
   @Valid
 
   public Store getFromStore() {
@@ -275,9 +273,7 @@ public class MaterialIssue   {
    * @return toStore
   **/
   @ApiModelProperty(value = "This field holds the receiving store information.     ")
-
   @Valid
-
   public Store getToStore() {
     return toStore;
   }
@@ -337,7 +333,7 @@ public class MaterialIssue   {
    * @return materialIssueStatus
   **/
   @ApiModelProperty(required = true, value = "material issue status of the MaterialIssue ")
-  @NotNull
+  
 
 
   public MaterialIssueStatusEnum getMaterialIssueStatus() {

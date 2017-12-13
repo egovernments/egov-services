@@ -1,6 +1,6 @@
 {
   "tenantId": "default",
-  "moduleName": "ACCESSCONTROL",
+  "moduleName": "ACCESSCONTROL-ACTIONS",
   "actions": [
     {
       "id": 6,
@@ -12443,6 +12443,20 @@
       "serviceCode": "VendorPaymentDetails",
       "code": "null",
       "path": "Solid Waste Management.SWM Transactions.Vendor Payment Details.VendorPaymentDetails Search"
-    }
+    },
+  {
+    "id": 1209,
+    "name": "Get Actions from MDMS",
+    "url": "/access/v1/actions/mdms/_get",
+    "displayName": "Get Actions from mdms",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "221",
+    "enabled": true,
+    "serviceCode": "AccessControl",
+    "code": "null",
+    "path": "Access Control.Get Actions from MDMS"
+  }
+
   ]
 }

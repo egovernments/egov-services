@@ -14,7 +14,7 @@ public class ValueDocument {
 	private String kpiCode;
 	
 	@JsonProperty("valueId")
-	private Long valueId;
+	private String valueId;
 	
 	@JsonProperty("fileStoreId")
 	private String fileStoreId;
@@ -51,10 +51,10 @@ public class ValueDocument {
 	public void setKpiCode(String kpiCode) {
 		this.kpiCode = kpiCode;
 	}
-	public Long getValueId() {
+	public String getValueId() {
 		return valueId;
 	}
-	public void setValueId(Long valueId) {
+	public void setValueId(String valueId) {
 		this.valueId = valueId;
 	}
 	public String getFileStoreId() {

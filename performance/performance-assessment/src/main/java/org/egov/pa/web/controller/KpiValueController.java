@@ -45,7 +45,7 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.ULBKpiValueList;
 import org.egov.pa.service.KpiValueService;
 import org.egov.pa.validator.RequestValidator;
 import org.egov.pa.web.contract.KPIValueCompareSearchResponse;
@@ -118,10 +118,12 @@ public class KpiValueController implements KpiValue {
     
     @Override
     @ResponseBody
-    public ResponseEntity<?> compareAndSearch(@RequestParam("tenantId") List<String> tenantIdList,
+    public ResponseEntity<?> compareAndSearch(@RequestParam(value = "tenantId", required=false) List<String> tenantIdList,
 			 @RequestParam(value="departmentId", required = false) Long departmentId,
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
+			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
+			 @RequestParam(value="categoryId", required = false) Long categoryId,
 			 @RequestBody RequestInfoWrapper requestInfo) {
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
     	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
@@ -130,11 +132,13 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setDepartmentId(departmentId);
     	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
+    	kpiValueSearchReq.setUlbList(ulbList);
+    	kpiValueSearchReq.setCategoryId(categoryId);
     	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq, Boolean.TRUE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        List<ValueResponse> valueList = kpiValueService.compareSearchKpiValue(kpiValueSearchReq); 
-        return getSearchSuccessResponse(valueList, kpiValueSearchReq.getRequestInfo()); 
+        List<ULBKpiValueList> list = kpiValueService.compareSearchKpiValue(kpiValueSearchReq); 
+        return getCompareSearchSuccessResponse(list, kpiValueSearchReq.getRequestInfo()); 
     }
     
     @Override
@@ -144,6 +148,8 @@ public class KpiValueController implements KpiValue {
 			 @RequestParam(value="departmentId", required = false) Long departmentId,
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
+			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
+			 @RequestParam(value="categoryId", required = false) Long categoryId,
 			 @RequestBody RequestInfoWrapper requestInfo) {
     	
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
@@ -153,6 +159,8 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setDepartmentId(departmentId);
     	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
+    	kpiValueSearchReq.setUlbList(ulbList);
+    	kpiValueSearchReq.setCategoryId(categoryId);
     	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq, Boolean.FALSE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -170,13 +178,13 @@ public class KpiValueController implements KpiValue {
         return new ResponseEntity<>(kpiValueSearchResponse, HttpStatus.OK);
     }
     
-    public ResponseEntity<?> getCompareSearchSuccessResponse(final List<KpiValueList> kpiValueList,
+    public ResponseEntity<?> getCompareSearchSuccessResponse(final List<ULBKpiValueList> list,
             final RequestInfo requestInfo) {
         final KPIValueCompareSearchResponse kpiValueSearchResponse = new KPIValueCompareSearchResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
         responseInfo.setStatus(HttpStatus.OK.toString());
         kpiValueSearchResponse.setResponseInfo(responseInfo);
-        kpiValueSearchResponse.setKpiValues(kpiValueList);
+        kpiValueSearchResponse.setUlbKpiValues(list);
         return new ResponseEntity<>(kpiValueSearchResponse, HttpStatus.OK);
     }
     

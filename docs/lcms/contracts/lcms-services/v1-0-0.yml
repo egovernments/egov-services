@@ -27,6 +27,7 @@ schemes:
   - https
 basePath: '/legalcase'
 x-api-id: 'org.egov.lcms.services'
+x-module: "lcms"
 paths:
   /case/_search:
     post:
@@ -1082,6 +1083,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
  
   Side:
     type: object
@@ -1110,6 +1112,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
   CaseType:
     type: object
     properties:
@@ -1123,8 +1126,12 @@ definitions:
         maxLength: 100
         minLength: 1
         description: Unique code of the case type
-      side:
+      sideCode:
+        type: string
+        description: Unique code of the side
+        format: singleValueList
         $ref: '#/definitions/Side'
+          
       active:
         type: boolean
         default: true
@@ -1139,6 +1146,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
   Bench:
     type: object
     properties:
@@ -1166,6 +1174,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
   Register:
     type: object
     properties:
@@ -1193,6 +1202,7 @@ definitions:
     required:
       - tenantId
       - code
+      - name
       
   Agency:
     type: object
@@ -1898,7 +1908,7 @@ definitions:
       documents:
         type: array
         items:
-          $ref: '/definitions/Document'
+          $ref: '#/definitions/Document'
     required:
      - isSummon
      - caseNo

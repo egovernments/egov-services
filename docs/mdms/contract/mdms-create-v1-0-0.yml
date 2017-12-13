@@ -1,0 +1,202 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Master Data Management Service - Create/Update feature
+  description: APIs available to create and update the master data for a particular tenant and module master.
+  contact:
+    name: Abhishek Jain
+schemes:
+  - https
+basePath: '/egov-mdms-create/v1/[API endpoint]'
+paths:     
+  /_create:
+    post:
+      summary: Create master data for specific master.
+      description: >-
+        Create the module master data json files on the github through
+        UI input.
+      parameters:
+        - name: MDMSCreateRequest
+          in: body
+          description: Details of the masterdata that is to be created on github.
+          required: true
+          schema:
+            $ref: '#/definitions/MDMSCreateRequest'
+      tags:
+        - MDMS
+      responses:
+        '201':
+          description: Master updated sucessfully.
+          schema:
+            $ref: '#/definitions/MdmsResponse'
+        '500':
+          description: Error.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/MDMSCreateErrorResponse'
+  
+  /_update:
+    post:
+      summary: Update the data of specific master.
+      description: >-
+        Update the module master data json files on the github through
+        UI input.
+      parameters:
+        - name: MDMSCreateRequest
+          in: body
+          description: Details of the masterdata that is to be updated on github.
+          required: true
+          schema:
+            $ref: '#/definitions/MDMSCreateRequest'
+      tags:
+        - MDMS
+      responses:
+        '201':
+          description: Master updated sucessfully.
+          schema:
+            $ref: '#/definitions/MdmsResponse'
+        '500':
+          description: Error.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: '#/definitions/MDMSCreateErrorResponse'
+            
+  /config/_search:
+    post:
+      summary: Fetches configs for a given module or master.
+      description: >-
+        Searches the configs mentioned for a given master data either at the module level or master level
+      parameters:
+        - name: tenantId
+          in: query
+          type: string
+          description: Tenant Id for the master to be searched.
+          required: true
+        - name: module
+          in: query
+          type: string
+          description: Module name to which the master belongs.
+          required: true
+        - name: master
+          in: query
+          type: string
+          description: Master name to be searched.
+          required: false
+      tags:
+        - MDMS
+      responses:
+        '201':
+          description: Master updated sucessfully.
+          schema:
+            $ref: '#/definitions/ConfigSearchResponse'
+        '400':
+          description: Error.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+definitions:
+  MdmsResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      mdms:
+        type: array
+        description: array of modules
+        items:
+          type: array
+          description: array of masters
+          items:
+            type: object
+            
+  MDMSCreateRequest:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      MasterMetaData:
+        $ref: '#/definitions/MasterMetaData'
+        
+  MasterMetaData:
+    type: object
+    properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+        minLength: 1
+        maxLength: 100
+      moduleName:
+        description: Name of the module for which master data needs to create.
+        type: string
+        minLength: 1
+        maxLength: 1000
+      masterName:
+        description: Master name to be created/updated.
+        type: string
+        minLength: 1
+        maxLength: 100
+      masterData:
+        description: content of be written on the file.
+        type: array
+        items:
+            type: object
+    required:
+      - tenantId
+      - moduleName
+      - masterName
+      - masterData
+      
+  MDMSCreateErrorResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      Message:
+        description: Message displaying the reason of failure.
+        type: string
+        minLength: 1
+        maxLength: 100
+      Data:
+        description: List of objects that caused failure.
+        type: array
+        items:
+            type: object
+    required:
+      - ResponseInfo
+      - Message
+      - Data
+      
+  ConfigSearchResponse:
+    type: object
+    properties:
+      masterName:
+        description: Master name to which config belongs.
+        type: string
+        minLength: 1
+        maxLength: 100
+      moduleDefinition:
+        description: YAML path of the definition file to be used for format validation.
+        type: string
+        minLength: 1
+        maxLength: 100
+      uniqueKeys:
+        description: Master name to be created/updated.
+        type: array
+        items:
+            type: string
+    required:
+      - masterName
+      - moduleDefinition
+      - uniqueKeys
+

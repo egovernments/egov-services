@@ -1,9 +1,27 @@
+var events = [
+  {
+    jsonPath:"materialReceipt[0].receiptDetails[*].receiptDetailsAddnInfo[*].lotNo",
+    onChange:function({jsonPath, value, setVal, getVal}){
+      //setVal('materialReceipt[0].paymentTerms', 'Test Dummy Data Description');
+    }
+  },
+  {
+    jsonPath:"materialReceipt[0].receivingStore.code",
+    onChange:function({jsonPath, value, setVal}){
+      //console.log('changed', jsonPath, value);
+      setVal('materialReceipt[0].paymentTerms', 'Test Dummy Data Description');
+    }
+  }
+
+  
+]
+
 var dat = {
   "inventory.search": {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
-    "url": "/inventory-inventory/v110/receiptnotes/_search",
+    "url": "/inventory-services/receiptnotes/_search",
     "groups": [{
       "name": "search",
       "label": "inventory.search.title",
@@ -96,6 +114,7 @@ var dat = {
     "useTimestamp": true,
     "title":"Material Receipt Note",
     "objectName": "materialReceipt",
+    "events":events,
     "groups": [{
       "name": "Material Receipt Note",
       "label": "inventory.create.group.title.Material Receipt Note",
@@ -290,7 +309,7 @@ var dat = {
 
     {
       "name": "Material Receipt Details",
-      "label": "inventory.create.group.title.Material Receipt Details",
+      "label": "inventory.materialreceipt.details",
       "isFullWidth":true,
       "fields": [
         {
@@ -298,7 +317,7 @@ var dat = {
           "jsonPath": "materialReceipt[0].receiptDetails",
           "type":"nestedTableList",
           "tableList":{
-             "colsWeight":{0:0.3, 11:0.3}, // columnIndex : weightValue (Integer)
+             "colsWeight":{0:0.3, 2:2 , 11:0.3}, // columnIndex : weightValue (Integer)
              "mandatoryCols":[0, 2, 4],
              "isEditMode":true,
              "tables":[
@@ -347,22 +366,22 @@ var dat = {
                         "isDisabled": false
                       },
                       {
-                        "name": "serialNumber",
+                        "name": "serialNo",
                         "pattern": "",
                         "type": "text",
                         "isHideLabel": true,
-                        "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].serialNumber",
+                        "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].serialNo",
                         "isRequired": false,
-                        "isDisabled": true
+                        "isDisabled": false
                       },
                       {
-                        "name": "oldReceiptNumber",
+                        "name": "batchNo",
                         "pattern": "",
                         "type": "text",
                         "isHideLabel": true,
-                        "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber",
+                        "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].batchNo",
                         "isRequired": false,
-                        "isDisabled": true
+                        "isDisabled": false
                       },
                       {
                         "name": "manufactureDate",
@@ -370,8 +389,8 @@ var dat = {
                         "type": "datePicker",
                         "isHideLabel": true,
                         "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].manufactureDate",
-                        "isRequired": true,
-                        "isDisabled": true
+                        "isRequired": false,
+                        "isDisabled": false
                       },
                       {
                         "name": "expiryDate",
@@ -379,8 +398,8 @@ var dat = {
                         "type": "datePicker",
                         "isHideLabel": true,
                         "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate",
-                        "isRequired": true,
-                        "isDisabled": true
+                        "isRequired": false,
+                        "isDisabled": false
                       }
                     ]
                   }
@@ -434,18 +453,13 @@ var dat = {
                   "jsonPath":"materialReceipt[0].receiptDetails[0].purchaseOrderDetail.id",
                   "isRequired":true,
                   "isDisabled":false,
-                  "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department",
+                  "url":"inventory-services/purchaseorders/_search?|$.purchaseOrders[*].id|$.purchaseOrders[*].purchaseOrderNumber|$.purchaseOrders[*].purchaseOrderDetails[*].material.code|$.purchaseOrders[*].purchaseOrderDetails[*].id",
                   "depedants":[
                      {
-                       "jsonPath":"materials[0].storeMapping[0].department.code",
+                       "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
                        "type":"textField",
-                       "valExp":"getValFromDropdownData('materials[0].storeMapping[*].store.code', getVal('materials[0].storeMapping[*].store.code'), 'others[0].code')"
+                       "valExp":"getValFromDropdownData('materialReceipt[0].receiptDetails[0].material.code', getVal('materialReceipt[0].receiptDetails[0].material.code'), 'others[0].code')"
                      }
-                    //  ,{
-                    //     "jsonPath":"materials[0].storeMapping[0].department.name",
-                    //     "type":"textField",
-                    //     "valExp":"getValFromDropdownData('departmentMaster', getVal('materials[0].storeMapping[*].department.code'), 'value')"
-                    //  }
                   ]
                },
                {
@@ -454,9 +468,9 @@ var dat = {
                   "type":"singleValueList",
                   "isHideLabel":true,
                   "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
-                  "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name",
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name",
                   "isRequired":false,
-                  "isDisabled":true
+                  "isDisabled":false
                },
                {
                   "name":"uom",
@@ -465,7 +479,7 @@ var dat = {
                   "isHideLabel":true,
                   "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
                   "isRequired":true,
-                  "isDisabled":true
+                  "isDisabled":false
                },
                {
                   "name":"orderedQty",
@@ -474,7 +488,7 @@ var dat = {
                   "isHideLabel":true,
                   "jsonPath":"materialReceipt[0].receiptDetails[0].orderedQty",
                   "isRequired":true,
-                  "isDisabled":true
+                  "isDisabled":false
                },
                {
                   "name":"receivedQty",
@@ -501,7 +515,7 @@ var dat = {
                   "isHideLabel":true,
                   "jsonPath":"materialReceipt[0].receiptDetails[0].unitRate",
                   "isRequired":true,
-                  "isDisabled":true
+                  "isDisabled":false
                },
                {
                   "name":"totalValueAccepted",
@@ -510,7 +524,7 @@ var dat = {
                   "isHideLabel":true,
                   "jsonPath":"materialReceipt[0].receiptDetails[0].totalValueAccepted",
                   "isRequired":true,
-                  "isDisabled":true
+                  "isDisabled":false
                },
                {
                   "name":"qtyRejected",
@@ -539,7 +553,7 @@ var dat = {
 
 
    ],
-    "url": "/inventory-inventory/v110/receiptnotes/_create",
+    "url": "/inventory-services/receiptnotes/_create",
     "tenantIdRequired": true
   },
   "inventory.view": {
@@ -721,7 +735,7 @@ var dat = {
       }]
     }],
     "tenantIdRequired": true,
-    "url": "/inventory-inventory/v110/receiptnotes/_search?mrnNumber={mrnNumber}"
+    "url": "/inventory-services/receiptnotes/_search?mrnNumber={mrnNumber}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -901,9 +915,9 @@ var dat = {
         "patternErrorMsg": ""
       }]
     }],
-    "url": "/inventory-inventory/v110/receiptnotes/_update",
+    "url": "/inventory-services/receiptnotes/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-inventory/v110/receiptnotes/_search?mrnNumber={mrnNumber}"
+    "searchUrl": "/inventory-services/receiptnotes/_search?mrnNumber={mrnNumber}"
   }
 }
 export default dat;

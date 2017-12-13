@@ -1,9 +1,7 @@
 package org.egov.lcms.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
@@ -21,7 +19,7 @@ import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.IdGenerationRepository;
 import org.egov.lcms.repository.SummonRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
-import org.egov.lcms.utility.SummonValidator;
+import org.egov.lcms.util.SummonValidator;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +81,39 @@ public class SummonService {
 		return new SummonResponse(
 				responseInfoFactory.getResponseInfo(summonRequest.getRequestInfo(), HttpStatus.CREATED),
 				summonRequest.getSummons());
+
+	}
+
+	/**
+	 * This API will update the summon
+	 * 
+	 * @param summonRequest
+	 * @return {@link SummonResponse}
+	 */
+	public CaseResponse updateSummon(CaseRequest caseRequest) throws Exception {
+		for (Case caseObj : caseRequest.getCases()) {
+
+			SummonRequest summonRequest = new SummonRequest();
+
+			if (caseObj.getSummon().getIsUlbinitiated() == null) {
+				caseObj.getSummon().setIsUlbinitiated(Boolean.FALSE);
+			}
+
+			if (caseObj.getSummon().getIsSummon()) {
+				caseObj.getSummon().setEntryType(EntryType.fromValue(propertiesManager.getSummonType()));
+			} else {
+				caseObj.getSummon().setEntryType(EntryType.fromValue(propertiesManager.getWarrantType()));
+			}
+			List<Summon> summons = new ArrayList<Summon>();
+			summons.add(caseObj.getSummon());
+			summonRequest.setSummons(summons);
+			summonRequest.setRequestInfo(caseRequest.getRequestInfo());
+			kafkaTemplate.send(propertiesManager.getUpdateSummonvalidated(), summonRequest);
+
+			pushSummonToIndexer(summonRequest);
+		}
+		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
+				caseRequest.getCases());
 
 	}
 
@@ -237,7 +268,7 @@ public class SummonService {
 						propertiesManager.getAdvocateDetailsMandatoryMessage());
 			}
 
-			validateDuplicateAdvocates(caseObj);
+			summonValidator.validateDuplicateAdvocates(caseObj);
 
 			for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
 
@@ -261,19 +292,6 @@ public class SummonService {
 						propertiesManager.getAdvocateDetailsSizeMessage());
 
 			}
-		}
-
-	}
-
-	private void validateDuplicateAdvocates(Case caseObj) {
-		List<String> advocateCodes = new ArrayList<String>();
-		for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
-			advocateCodes.add(advocateDetails.getAdvocate().getCode());
-		}
-		Set<String> advocateCodeSet = new HashSet<String>(advocateCodes);
-		if (advocateCodeSet.size() < advocateCodes.size()) {
-			throw new CustomException(propertiesManager.getDuplicateAdvocate(),
-					propertiesManager.getDuplicateAdvocateMessage());
 		}
 
 	}

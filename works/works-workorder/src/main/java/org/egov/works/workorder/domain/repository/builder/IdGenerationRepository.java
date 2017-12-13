@@ -60,4 +60,27 @@ public class IdGenerationRepository {
 		return JsonPath.read(response, "$.idResponses[0].id");
 	}
 
+	public String generateWorkOrderNumber(final String tenantId, final RequestInfo requestInfo) {
+		Object response = null;
+		HashMap<String, String> messages = new HashMap<>();
+		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+		IdRequest idRequest = new IdRequest();
+		idRequest.setTenantId(tenantId);
+		idRequest.setFormat(propertiesManager.getWorkOrderNumberFormat());
+		idRequest.setIdName(propertiesManager.getWorksWorkOrderNumber());
+		idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
+		idGenerationRequest.setRequestInfo(requestInfo);
+		try {
+			response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
+		} catch (Exception e) {
+			messages.put(Constants.WORKORDER_NUMBER_GENERATION_ERROR,
+					Constants.WORKORDER_NUMBER_GENERATION_ERROR);
+			throw new CustomException(messages);
+
+		}
+		log.info("Response from id gen service: " + response.toString());
+
+		return JsonPath.read(response, "$.idResponses[0].id");
+	}
+
 }

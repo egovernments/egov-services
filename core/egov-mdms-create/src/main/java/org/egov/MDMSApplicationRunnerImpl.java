@@ -37,7 +37,6 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 	public String mdmsFileDirectory;
 	
 	private static Map<String, String> filePathMap = new HashMap<>();
-	private static Map<String, Map<String, Object>> validationMap = new HashMap<>();
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -68,7 +67,6 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 					try {
 						Map<String, Object> obj = yamlReader.readValue(file, Map.class);
 						buildFilePathMap(obj, file.getName());
-						buildValidationMap(obj);
 					} catch (Exception e) {
 						log.error("Exception while fetching service map for: ");
 						continue;
@@ -78,7 +76,6 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 					try {
 						Map<String, Object> jsonStr = jsonReader.readValue(file, Map.class);
 						buildFilePathMap(jsonStr, file.getName());
-						buildValidationMap(jsonStr);
 					} catch (Exception e) {
 						log.error("Exception while fetching service map for: ");
 						continue;
@@ -102,21 +99,10 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 		
 		filePathMap.put(key.toString(), filePath);
 	}
-	
-	private void buildValidationMap(Map<String, Object> map){
-		StringBuilder key = new StringBuilder();
-		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
-		
-		validationMap.put(key.toString(), map);
-	}
+
 	
 	public static Map<String, String> getFilePathMap(){
 		return filePathMap;
-	
-	}
-	
-	public static Map<String, Map<String, Object>> getValidationMap(){
-		return validationMap;
 	
 	}
 	

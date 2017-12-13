@@ -265,7 +265,7 @@ public class Material   {
      **/
     @ApiModelProperty(value = "code of the Material ")
 
-    @Size(min=5,max=50)
+    @Size(min=4,max=50)
     public String getCode() {
         return code;
     }

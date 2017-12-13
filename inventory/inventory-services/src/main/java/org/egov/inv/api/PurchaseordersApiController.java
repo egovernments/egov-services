@@ -1,5 +1,7 @@
 package org.egov.inv.api;
 
+import io.swagger.annotations.ApiParam;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -12,15 +14,12 @@ import org.egov.inv.domain.service.PurchaseOrderService;
 import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
-import org.egov.inv.model.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import io.swagger.annotations.ApiParam;
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
 @Controller
@@ -32,7 +31,7 @@ public class PurchaseordersApiController implements PurchaseordersApi {
 
     public ResponseEntity<PurchaseOrderResponse> purchaseordersCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "Create  new"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
-    	PurchaseOrderResponse response = purchaseOrderService.create(purchaseOrderRequest);
+    	PurchaseOrderResponse response = purchaseOrderService.create(purchaseOrderRequest,tenantId);
          return   new ResponseEntity(response,HttpStatus.OK);
     }
 
@@ -67,13 +66,13 @@ public class PurchaseordersApiController implements PurchaseordersApi {
     public ResponseEntity<PurchaseOrderResponse> purchaseordersUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "common Request info"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
         // do some magic!
-    	PurchaseOrderResponse response = purchaseOrderService.update(purchaseOrderRequest);
+    	PurchaseOrderResponse response = purchaseOrderService.update(purchaseOrderRequest,tenantId);
         return   new ResponseEntity(response,HttpStatus.OK);
     }
 
     public ResponseEntity<PurchaseOrderResponse> purchaseordersPreparepofromindentsPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
             @ApiParam(value = "Create  new"  )  @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
-    	PurchaseOrderResponse response = purchaseOrderService.preparePoFromIndents(purchaseOrderRequest);
+    	PurchaseOrderResponse response = purchaseOrderService.preparePoFromIndents(purchaseOrderRequest,tenantId);
         return   new ResponseEntity(response,HttpStatus.OK);
         }
 

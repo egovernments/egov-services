@@ -73,7 +73,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || field.type === "nestedTableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || field.type === "nestedTableList" || (field.type === "textarea" && field.fullWidth === true) || field.type==="window" || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "viewDocuments" || field.type === "fileTable" || field.type === "tableList" || field.type === "nestedTableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols} md={field.type === "documentList" || field.type === "viewDocuments" || field.type === "fileTable" || field.type === "tableList" || field.type === "nestedTableList" || (field.type === "textarea" && field.fullWidth === true) || field.type==="window" || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex,field.screenView)}
                       </Col>
                     )
@@ -222,7 +222,7 @@ export default class ShowFields extends Component {
       case 'tableList':
         return <UiMultiFieldTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
       case 'nestedTableList':
-        return <UiNestedTablesInputs tabIndex={index} ui={this.props.ui} addRequiredFields={this.props.addRequiredFields} delRequiredFields={this.props.delRequiredFields} setVal={this.props.setVal} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
+        return <UiNestedTablesInputs tabIndex={index} ui={this.props.ui} getRequiredFields={this.props.getRequiredFields} addRequiredFields={this.props.addRequiredFields} delRequiredFields={this.props.delRequiredFields} setVal={this.props.setVal} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
       case 'workflow':
         return <UiWorkflow tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} initiateWF={this.props.initiateWF} workflowId={this.props.workflowId || ""}/>
       case 'timePicker':

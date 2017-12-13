@@ -13,8 +13,8 @@ public class ScheduleOfRateQueryBuilder {
     public static final String BASE_SEARCH_QUERY = "SELECT * FROM egw_scheduleofrate sor";
     public static final String SORRATE_SEARCH_EXTENTION = ", egw_sorrate sorrate";
     public static final String MARKETRATE_SEARCH_EXTENTION = ", egw_marketrate marketrate";
-    public static final String GETSORRATE_BY_SCHEDULEOFRATE="select * from egw_sorrate where tenantid = :tenantId and scheduleofrate=:scheduleOfRate;";
-    public static final String GETMARKETRATE_BY_SCHEDULEOFRATE="select * from egw_marketrate where tenantid = :tenantId and scheduleofrate=:scheduleOfRate;";
+    public static final String GETSORRATE_BY_SCHEDULEOFRATE = "select * from egw_sorrate where tenantid = :tenantId and deleted=false and scheduleofrate=:scheduleOfRate;";
+    public static final String GETMARKETRATE_BY_SCHEDULEOFRATE = "select * from egw_marketrate where tenantid = :tenantId and deleted=false and scheduleofrate=:scheduleOfRate;";
 
     public String getSearchQuery(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria, Map params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
@@ -23,13 +23,13 @@ public class ScheduleOfRateQueryBuilder {
         return selectQuery.toString();
     }
 
-    public String getSORRates(String scheduleOfRate, String tenantId, Map params){
+    public String getSORRates(String scheduleOfRate, String tenantId, Map params) {
         params.put("scheduleOfRate", scheduleOfRate);
         params.put("tenantId", tenantId);
         return GETSORRATE_BY_SCHEDULEOFRATE;
     }
 
-    public String getMarketRates(String scheduleOfRate, String tenantId, Map params){
+    public String getMarketRates(String scheduleOfRate, String tenantId, Map params) {
         params.put("scheduleOfRate", scheduleOfRate);
         params.put("tenantId", tenantId);
         return GETMARKETRATE_BY_SCHEDULEOFRATE;
@@ -48,13 +48,13 @@ public class ScheduleOfRateQueryBuilder {
             isMarketRate = Boolean.TRUE;
         }
 
-        selectQuery.append(" where sor.id is not null");
+        selectQuery.append(" where sor.id is not null and deleted=false");
 
-        if(isSorRate) {
+        if (isSorRate) {
             selectQuery.append(" and sorrate.scheduleofrate=sor.code and :validSORRateDate between sorrate.fromdate and sorrate.todate");
             params.put("validSORRateDate", scheduleOfRateSearchCriteria.getValidSORRateDate());
         }
-        if(isMarketRate) {
+        if (isMarketRate) {
             selectQuery.append(" and marketrate.scheduleofrate=sor.code and :validMarketRateDate between marketrate.fromdate and marketrate.todate");
             params.put("validMarketRateDate", scheduleOfRateSearchCriteria.getValidMarketRateDate());
         }
@@ -65,23 +65,32 @@ public class ScheduleOfRateQueryBuilder {
         }
 
         if (scheduleOfRateSearchCriteria.getIds() != null && !scheduleOfRateSearchCriteria.getIds().isEmpty()) {
-            selectQuery.append(" and sor.id in (:sorIds)");
+            if (scheduleOfRateSearchCriteria.getIsUpdateUniqueCheck())
+                selectQuery.append(" and sor.id not in (:sorIds)");
+            else
+                selectQuery.append(" and sor.id in (:sorIds)");
             params.put("sorIds", scheduleOfRateSearchCriteria.getIds());
         }
 
-        if (scheduleOfRateSearchCriteria.getSorCodes() != null && !scheduleOfRateSearchCriteria.getSorCodes().isEmpty()) {
+        if (scheduleOfRateSearchCriteria.getSorCodes() != null && !scheduleOfRateSearchCriteria.getSorCodes().isEmpty() && scheduleOfRateSearchCriteria.getSorCodes().size() == 1) {
+            selectQuery.append(" and lower(sor.code) like :sorCodes ");
+            params.put("sorCodes", '%' + scheduleOfRateSearchCriteria.getSorCodes().get(0).toLowerCase() + '%');
+        } else if (scheduleOfRateSearchCriteria.getSorCodes() != null) {
             selectQuery.append(" and sor.code in (:sorCodes)");
             params.put("sorCodes", scheduleOfRateSearchCriteria.getSorCodes());
         }
 
-        if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null && !scheduleOfRateSearchCriteria.getScheduleCategoryCodes().isEmpty()) {
+        if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null && !scheduleOfRateSearchCriteria.getScheduleCategoryCodes().isEmpty() && scheduleOfRateSearchCriteria.getScheduleCategoryCodes().size() == 1) {
+            selectQuery.append(" and lower(sor.schedulecategory) like :scheduleCategoryCodes ");
+            params.put("scheduleCategoryCodes", '%' + scheduleOfRateSearchCriteria.getScheduleCategoryCodes().get(0).toLowerCase() + '%');
+        } else if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null) {
             selectQuery.append(" and sor.schedulecategory in (:scheduleCategoryCodes)");
             params.put("scheduleCategoryCodes", scheduleOfRateSearchCriteria.getScheduleCategoryCodes());
         }
     }
 
     private StringBuilder appendLimitAndOffset(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria,
-                                                      @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
+                                               @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
         selectQuery.append(" order by sor.id");
         selectQuery.append(" limit :pageSize");

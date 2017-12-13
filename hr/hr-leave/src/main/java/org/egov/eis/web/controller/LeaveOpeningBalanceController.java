@@ -40,6 +40,10 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveOpeningBalance;
@@ -56,10 +60,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/leaveopeningbalances")
@@ -119,15 +127,34 @@ public class LeaveOpeningBalanceController {
 	@PostMapping("_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody LeaveOpeningBalanceRequest leaveOpeningBalanceRequest,
-			BindingResult bindingResult, @RequestParam(name = "type",required=false) String type) {
+			BindingResult bindingResult, @RequestParam(name = "type", required = false) String type) {
 
 		ResponseEntity<?> errorResponseEntity = validateLeaveOpeningBalanceRequest(leaveOpeningBalanceRequest,
 				bindingResult);
 		if (errorResponseEntity != null)
 			return errorResponseEntity;
-		
 
-		return leaveOpeningBalanceService.createLeaveOpeningBalance(leaveOpeningBalanceRequest,type);
+		return leaveOpeningBalanceService.createLeaveOpeningBalance(leaveOpeningBalanceRequest, type);
+	}
+
+	@PostMapping("_carryforward")
+	@ResponseBody
+	public ResponseEntity<?> carryForward(
+			@ModelAttribute @Valid LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest,
+			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		// validate input params
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errorHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		}
+
+		// validate input params
+		if (requestBodyBindingResult.hasErrors()) {
+			return errorHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		}
+
+		return leaveOpeningBalanceService.carryForwardLeaveOpeningBalance(leaveOpeningBalanceGetRequest, requestInfo);
 	}
 
 	/**

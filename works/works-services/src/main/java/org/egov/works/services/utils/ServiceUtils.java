@@ -23,11 +23,8 @@ public class ServiceUtils {
 
 	public AuditDetails setAuditDetails(final RequestInfo requestInfo, final Boolean isUpdate) {
 		AuditDetails auditDetails = new AuditDetails();
-        //TODO
-		/*if (!isUpdate) {*/
-			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
-			auditDetails.setCreatedTime(new Date().getTime());
-		/*}*/
+        auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
+        auditDetails.setCreatedTime(new Date().getTime());
 		auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 		auditDetails.setLastModifiedTime(new Date().getTime());
 

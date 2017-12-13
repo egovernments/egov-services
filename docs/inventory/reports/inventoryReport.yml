@@ -422,7 +422,6 @@ ReportDefinitions:
   query: select * from material;
 
 # Rates comparison with history data Report
-# Need to Change drop down Link based on report and Query
 - reportName: ratesComparisonWithHistory
   summary: Rates comparison with history data
   version: 1.0.0
@@ -511,7 +510,6 @@ ReportDefinitions:
           AND mat.code = pld.material
 
 # Comparison between different rates Report
-# Need to Change drop down Link based on report and Query
 - reportName: comparisonBetweenDifferentRates
   summary: Comparison between different rates
   version: 1.0.0
@@ -644,6 +642,7 @@ ReportDefinitions:
     pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: inventory
     isMandatory: true
+    wrapper: true
 
   - name: financialYear
     label: inventory.financialYear
@@ -659,6 +658,229 @@ ReportDefinitions:
     isMandatory: true
 
   query: select * from material;
+
+# Supplier wise Purchase Order History Report
+- reportName: SupplierwisesPurchaseOrderHistoryReport
+  summary: Supplier wise Purchase Order History
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+
+  - name: supplierName
+    label: inventory.supplierName
+    type: string
+    source: inventory
+
+  - name: supplierCompanyName
+    label: inventory.supplierCompanyName
+    type: string
+    source: inventory
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+
+  - name: poStatus
+    label: inventory.poStatus
+    type: string
+    source: inventory
+
+  - name: expectedDeliveryDate
+    label: inventory.expecteddeliverydate
+    type: epoch
+    source: inventory
+
+  - name: paymentDueDate
+    label: inventory.paymentDueDate
+    type: epoch
+    source: inventory
+
+  - name: qtyOrdered
+    label: inventory.qtyOrdered
+    type: string
+    source: inventory
+
+  - name: poTotal
+    label: inventory.poTotal
+    type: string
+    source: inventory
+
+  - name: amountPaid
+    label: inventory.amountPaid
+    type: string
+    source: inventory
+
+  - name: balanceDue
+    label: inventory.balanceDue
+    type: string
+    source: inventory
+
+  searchParams:
+
+  - name: supplierName
+    label: inventory.supplierName
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
+    type: singlevaluelist
+    source: inventory
+    searchClause: AND po.supplier = $supplierName
+    wrapper: true
+    isMandatory: false
+
+  - name: supplierCompanyName
+    label: inventory.supplierCompanyName
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid&type=COMPANY|$..code|$..name
+    type: singlevaluelist
+    source: inventory
+    searchClause: AND sup.name = $supplierCompanyName
+    isMandatory: false
+
+  - name: storeName
+    label: inventory.store.name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    type: singlevaluelist
+    searchClause: AND po.store = $storeName
+    source: inventory
+    isMandatory: false
+    wrapper: true
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+    searchClause: AND po.purchaseordernumber = $poNo
+    isMandatory: false
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+    searchClause: AND po.purchaseorderdate = $poDate
+    isMandatory: false
+
+  query: select sup.name as suppliername,
+        (select name  from supplier where type = 'COMPANY' And tenantid =$tenantid) as supplierCompanyName,
+        po.purchaseorderNumber as PoNo,
+        po.purchaseorderdate as PoDate,
+        po.status as postatus,
+        po.expecteddeliverydate as expecteddeliverydate,
+        pod.orderquantity as qtyOrdered
+        from supplier sup,purchaseorder po,purchaseorderdetail pod
+        where po.tenantid = $tenantid
+        And pod.tenantid = po.tenantid
+        AND pod.tenantid = sup.tenantid
+        And po.purchaseordernumber = pod.purchaseorder
+        AND po.supplier = sup.code
+
+# Material wise Purchase Order History Report
+- reportName: MaterialwisePurchaseOrderHistoryReport
+  summary: Material wise Purchase Order History
+  version: 1.0.0
+  moduleName: inventory
+  externalService:
+  - entity: $.MdmsRes.inventory.Material
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    keyOrder: code,name,tenantId,description
+    tableName: tbl_material
+  sourceColumns:
+
+  - name: materialName
+    label: inventory.materialName
+    type: string
+    source: inventory
+
+  - name: materialdescription
+    label: inventory.material.description
+    type: string
+    source: inventory
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+
+  - name: poStatus
+    label: inventory.poStatus
+    type: string
+    source: inventory
+
+  - name: expectedDeliveryDate
+    label: inventory.expecteddeliverydate
+    type: epoch
+    source: inventory
+
+  - name: paymentDueDate
+    label: inventory.paymentDueDate
+    type: epoch
+    source: inventory
+
+  - name: qtyOrdered
+    label: inventory.qtyOrdered
+    type: string
+    source: inventory
+
+  - name: poTotal
+    label: inventory.poTotal
+    type: string
+    source: inventory
+
+  searchParams:
+
+  - name: materialName
+    label: inventory.materialName
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    type: singlevaluelist
+    source: inventory
+    searchClause: AND pld.material = $materialName
+    wrapper: true
+    isMandatory: false
+
+  - name: storeName
+    label: inventory.store.name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    type: singlevaluelist
+    source: inventory
+    searchClause: AND po.store = $storeName
+    isMandatory: false
+    wrapper: true
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+    searchClause: AND po.purchaseordernumber = $poNo
+    isMandatory: false
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+    searchClause: AND po.purchaseorderdate = $poDate
+    isMandatory: false
+
+  query: select mat.name as materialName,
+        mat .description as materialdescription,
+        po.purchaseorderNumber as PoNo,
+        po.purchaseorderdate as PoDate,
+        po.status as postatus,
+        po.expecteddeliverydate as expecteddeliverydate,
+        pod.orderquantity as qtyOrdered
+        from (VALUES tbl_material) as mat (code, name, tenantid,description),purchaseorder po,purchaseorderdetail pod
+        where po.tenantid = $tenantid
+        And pod.tenantid = po.tenantid
+        AND pod.tenantid = mat.tenantid
+        And po.purchaseordernumber = pod.purchaseorder
+        AND pod.material = mat.code
 
 
 

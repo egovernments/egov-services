@@ -9,12 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
+import org.egov.pa.model.ULBKpiValueList;
+import org.egov.pa.model.ValueList;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIObjectiveReportMapper;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIValueReportMapper;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIValueRowMapper;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
@@ -77,32 +82,111 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	}
 
 	@Override
-	public List<KpiValue> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+	public List<ULBKpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq, preparedStatementValues);
-		KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper();
-		jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
-		List<KpiValue> listOfValues = new ArrayList<>(); 
-		Map<String, KpiValue> valueMap = mapper.valueMap; 
-		Iterator<Entry<String, KpiValue>> itr = valueMap.entrySet().iterator();
-
-		while(itr.hasNext()) { 
-			Entry<String, KpiValue> entry = itr.next();
-			String id = entry.getKey(); 
-			KpiValue value = entry.getValue();
-			
-			if(mapper.valueDetailMap.containsKey(id)) { 
-				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id); 
-				value.setValueList(valueDetailList);
-			} else { 
-				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId());
-				value.setValueList(defaultValueDetailList);
+		KPIValueReportMapper reportMapper = new PerformanceAssessmentRowMapper().new KPIValueReportMapper(); 
+		jdbcTemplate.query(query, preparedStatementValues.toArray(), reportMapper);
+		log.info("Values inside KPI Map : " + reportMapper.kpiMap.size());
+		log.info("Values inside Report Map : " + reportMapper.reportMap.size());
+		List<ULBKpiValueList> list = new ArrayList<>();
+		sortKpiMapToList(reportMapper, list);
+		return list; 
+	}
+	
+	@Override
+	public List<ULBKpiValueList> compareSearchObjectiveKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		String query = queryBuilder.getValueCompareObjectiveSearchQuery(kpiValueSearchReq, preparedStatementValues);
+		KPIObjectiveReportMapper reportMapper = new PerformanceAssessmentRowMapper().new KPIObjectiveReportMapper(); 
+		jdbcTemplate.query(query, preparedStatementValues.toArray(), reportMapper);
+		log.info("Values inside KPI Map : " + reportMapper.kpiMap.size());
+		log.info("Values inside Report Map : " + reportMapper.reportMap.size());
+		List<ULBKpiValueList> list = new ArrayList<>();
+		sortKpiMapToList(reportMapper, list);
+		return list; 
+	}
+	
+	
+	
+	private void sortKpiMapToList(KPIValueReportMapper reportMapper, List<ULBKpiValueList> list) { 
+		Map<String, Map<String, Map<String, KpiValue>>> firstMap = reportMapper.reportMap;
+		Map<String, KPI> kpiMap = reportMapper.kpiMap; 
+		Iterator<Entry<String, Map<String, Map<String, KpiValue>>>> firstItr = firstMap.entrySet().iterator();
+		while(firstItr.hasNext()) { 
+			ULBKpiValueList ulb = new ULBKpiValueList(); 
+			Entry<String, Map<String, Map<String, KpiValue>>> firstEntry = firstItr.next();
+			ulb.setUlbName(firstEntry.getKey());
+			List<ValueList> innerList = new ArrayList<>(); ////////////////////////////////
+			Map<String, Map<String, KpiValue>> secondMap = firstEntry.getValue();
+			Iterator<Entry<String, Map<String, KpiValue>>> secondItr = secondMap.entrySet().iterator();
+			while(secondItr.hasNext()) { 
+				ValueList valueList = new ValueList(); 
+				Entry<String, Map<String, KpiValue>> secondEntry = secondItr.next();
+				valueList.setFinYear(secondEntry.getKey());
+				List<KpiValue> kpiValues = new ArrayList<>(); 
+				Map<String, KpiValue> thirdMap = secondEntry.getValue();
+				Iterator<Entry<String, KpiValue>> thirdItr = thirdMap.entrySet().iterator();
+				while(thirdItr.hasNext()) { 
+					Entry<String, KpiValue> thirdEntry = thirdItr.next();
+					KpiValue value = thirdEntry.getValue();
+					value.setValueDescription(value.getConsolidatedValue().toString());
+					KPI kpi = kpiMap.get(thirdEntry.getKey().concat("_"+valueList.getFinYear()));
+					if(null != kpi) value.setKpi(kpi);
+					kpiValues.add(value);
+				}
+				valueList.setKpiValueList(kpiValues);
+				innerList.add(valueList);
 			}
-			listOfValues.add(value);
+			ulb.setFinYearList(innerList);
+			list.add(ulb);
 		}
-		log.info("Size of Kpi Value List :  " + listOfValues.size());
-		log.info("Kpi Value List :  " + listOfValues.toString());
-		return listOfValues;
+		
+		log.info("Final List after Map to List conversion : " + list);
+	}
+	
+	private void sortKpiMapToList(KPIObjectiveReportMapper reportMapper, List<ULBKpiValueList> list) { 
+		Map<String, Map<String, Map<String, KpiValue>>> firstMap = reportMapper.reportMap;
+		Map<String, KPI> kpiMap = reportMapper.kpiMap; 
+		Iterator<Entry<String, Map<String, Map<String, KpiValue>>>> firstItr = firstMap.entrySet().iterator();
+		while(firstItr.hasNext()) { 
+			ULBKpiValueList ulb = new ULBKpiValueList(); 
+			Entry<String, Map<String, Map<String, KpiValue>>> firstEntry = firstItr.next();
+			ulb.setUlbName(firstEntry.getKey());
+			List<ValueList> innerList = new ArrayList<>(); ////////////////////////////////
+			Map<String, Map<String, KpiValue>> secondMap = firstEntry.getValue();
+			Iterator<Entry<String, Map<String, KpiValue>>> secondItr = secondMap.entrySet().iterator();
+			while(secondItr.hasNext()) { 
+				ValueList valueList = new ValueList(); 
+				Entry<String, Map<String, KpiValue>> secondEntry = secondItr.next();
+				valueList.setFinYear(secondEntry.getKey());
+				List<KpiValue> kpiValues = new ArrayList<>(); 
+				Map<String, KpiValue> thirdMap = secondEntry.getValue();
+				Iterator<Entry<String, KpiValue>> thirdItr = thirdMap.entrySet().iterator();
+				while(thirdItr.hasNext()) { 
+					Entry<String, KpiValue> thirdEntry = thirdItr.next();
+					KpiValue value = thirdEntry.getValue();
+					List<KpiValueDetail> detailList = reportMapper.kpiValueDetailMap.get(value.getId());
+					for(KpiValueDetail detail : detailList) { 
+						if(StringUtils.isNotBlank(detail.getValue())) { 
+							value.setConsolidatedValue(detail.getValue());
+							value.setPeriod(detail.getPeriod());
+							if(detail.getValue().equals("1")) value.setValueDescription("Yes");
+							else if (detail.getValue().equals("2")) value.setValueDescription("No");
+							else if (detail.getValue().equals("3")) value.setValueDescription("Work In Progress");
+						}
+					}
+					KPI kpi = kpiMap.get(thirdEntry.getKey());
+					if(null != kpi) value.setKpi(kpi);
+					kpiValues.add(value);
+				}
+				valueList.setKpiValueList(kpiValues);
+				innerList.add(valueList);
+			}
+			ulb.setFinYearList(innerList);
+			list.add(ulb);
+		}
+		log.info("Final List after Map to List conversion : " + list);
 	}
 	
 	@Override
@@ -121,10 +205,15 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 			KpiValue value = entry.getValue();
 			
 			if(mapper.valueDetailMap.containsKey(id)) { 
-				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id); 
+				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id);
+				for(KpiValueDetail detail : valueDetailList) {
+					if(null != detail) 
+						detail.setDocumentList(mapper.detailDocumentMap.get(detail.getId()));  
+				}
 				value.setValueList(valueDetailList);
+				
 			} else { 
-				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId());
+				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId()+"_"+value.getFinYear());
 				value.setValueList(defaultValueDetailList);
 			}
 			listOfValues.add(value);
@@ -193,13 +282,13 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	}
 
 	@Override
-	public List<Long> getNewKpiIds(int numberOfIds) {
-		String query = PerformanceAssessmentQueryBuilder.getNextKpiValueId();
+	public List<String> getNewKpiIds(int numberOfIds) {
+		String query = PerformanceAssessmentQueryBuilder.getNextKpiValueDetailId();
 		Map<String, Object> paramValues = new HashMap<>();
 		paramValues.put("size", numberOfIds);
-		List<Long> idList;
+		List<String> idList = new ArrayList<>();
 		try {
-			idList = namedParameterJdbcTemplate.queryForList(query, paramValues, Long.class);
+			idList = namedParameterJdbcTemplate.queryForList(query, paramValues, String.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Next id is not generated.");
 		}

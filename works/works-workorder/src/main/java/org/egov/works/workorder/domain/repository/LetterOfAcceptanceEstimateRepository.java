@@ -39,10 +39,10 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
             validateEntityFieldName(letterOfAcceptanceEstimateSearchCriteria.getSortBy(), LetterOfAcceptanceEstimate.class);
         }
 
-        String orderBy = "order by id";
+        String orderBy = "order by loaestimate.id";
         if (letterOfAcceptanceEstimateSearchCriteria.getSortBy() != null
                 && !letterOfAcceptanceEstimateSearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by " + letterOfAcceptanceEstimateSearchCriteria.getSortBy();
+            orderBy = "order by loaestimate." + letterOfAcceptanceEstimateSearchCriteria.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -66,6 +66,8 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
             params.append("loaestimate.letterofacceptance in(:letterofacceptance)");
             paramValues.put("letterofacceptance", letterOfAcceptanceEstimateSearchCriteria.getLetterOfAcceptanceIds());
         }
+
+        params.append(" and loaestimate.deleted = false");
 
         if (params.length() > 0) {
 

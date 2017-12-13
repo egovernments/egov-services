@@ -277,7 +277,7 @@ public class EstimateMeasurementSheet   {
    * @return estimateActivity
   **/
   @ApiModelProperty(required = true, value = "Estimate Activity reference for the Estimate Measurement sheet")
-  @NotNull
+  //@NotNull
 
 
   public String getEstimateActivity() {

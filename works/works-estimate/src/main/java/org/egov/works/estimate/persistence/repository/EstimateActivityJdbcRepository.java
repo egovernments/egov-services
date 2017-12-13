@@ -57,6 +57,8 @@ public class EstimateActivityJdbcRepository extends JdbcRepository {
 			paramValues.put("detailedEstimateIds", estimateActivitySearchContract.getDetailedEstimateIds());
 		}
 
+        params.append(" and deleted = false");
+
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

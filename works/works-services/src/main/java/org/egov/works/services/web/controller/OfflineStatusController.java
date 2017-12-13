@@ -3,7 +3,6 @@ package org.egov.works.services.web.controller;
 import javax.validation.Valid;
 
 import org.egov.works.services.domain.service.OfflineStatusService;
-import org.egov.works.services.utils.ServiceUtils;
 import org.egov.works.services.web.contract.OfflineStatusRequest;
 import org.egov.works.services.web.contract.OfflineStatusResponse;
 import org.egov.works.services.web.contract.OfflineStatusSearchContract;
@@ -24,31 +23,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/offlinestatuses")
 public class OfflineStatusController {
 
-	@Autowired
-	private OfflineStatusService offlineStatusService;
+    @Autowired
+    private OfflineStatusService offlineStatusService;
 
-	@Autowired
-	private ServiceUtils serviceUtils;
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.OK)
+    public OfflineStatusResponse create(@Valid @RequestBody OfflineStatusRequest offlineStatusRequest) {
+        return offlineStatusService.create(offlineStatusRequest);
+    }
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.OK)
-	public OfflineStatusResponse create(@Valid @RequestBody OfflineStatusRequest offlineStatusRequest) {
-		return offlineStatusService.create(offlineStatusRequest);
-	}
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> update(@Valid @RequestBody OfflineStatusRequest offlineStatusRequest, BindingResult errors) {
+        return offlineStatusService.update(offlineStatusRequest);
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<?> update(@Valid @RequestBody OfflineStatusRequest offlineStatusRequest, BindingResult errors) {
-		return offlineStatusService.update(offlineStatusRequest);
-	}
-
-	@PostMapping("/_search")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<?> search(@ModelAttribute @Valid OfflineStatusSearchContract offlineStatusSearchContract,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
-		OfflineStatusResponse response = new OfflineStatusResponse();
-		response.setOfflineStatuses(offlineStatusService.search(offlineStatusSearchContract));
-		response.setResponseInfo(serviceUtils.createResponseInfoFromRequestInfo(requestInfo, true));
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+    @PostMapping("/_search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> search(@ModelAttribute @Valid OfflineStatusSearchContract offlineStatusSearchContract,
+            @RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+        OfflineStatusResponse response = offlineStatusService.search(offlineStatusSearchContract, requestInfo);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

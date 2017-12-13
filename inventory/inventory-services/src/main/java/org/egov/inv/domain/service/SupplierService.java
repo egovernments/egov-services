@@ -45,10 +45,7 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
-import org.egov.inv.model.Supplier;
-import org.egov.inv.model.SupplierGetRequest;
-import org.egov.inv.model.SupplierRequest;
-import org.egov.inv.model.SupplierResponse;
+import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.SupplierEntity;
 import org.egov.inv.persistence.repository.SupplierESRepository;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
@@ -90,9 +87,13 @@ public class SupplierService extends DomainService {
     @Value("${es.enabled}")
     private Boolean isESEnabled;
 
+    @Autowired
+    private BankContractRepository bankContractRepository;
+
     public SupplierResponse create(SupplierRequest supplierRequest, String tenantId) {
         try {
-            validate(supplierRequest.getSuppliers(), Constants.ACTION_CREATE);
+            SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
+            validate(fetchRelated.getSuppliers(), Constants.ACTION_CREATE, tenantId);
             List<String> sequenceNos = supplierJdbcRepository.getSequence(Supplier.class.getSimpleName(), supplierRequest.getSuppliers().size());
             int i = 0;
             for (Supplier supplier : supplierRequest.getSuppliers()) {
@@ -118,7 +119,8 @@ public class SupplierService extends DomainService {
     public SupplierResponse update(SupplierRequest supplierRequest, String tenantId) {
 
         try {
-            validate(supplierRequest.getSuppliers(), Constants.ACTION_UPDATE);
+            SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
+            validate(fetchRelated.getSuppliers(), Constants.ACTION_UPDATE, tenantId);
 
             for (Supplier supplier : supplierRequest.getSuppliers()) {
                 if (isEmpty(supplier.getTenantId())) {
@@ -137,9 +139,12 @@ public class SupplierService extends DomainService {
         } catch (CustomBindException e) {
             throw e;
         }
+
     }
 
-    private void validate(List<Supplier> suppliers, String method) {
+    private void validate(List<Supplier> suppliers, String method, String tenantId) {
+        InvalidDataException errors = new InvalidDataException();
+
         try {
             switch (method) {
 
@@ -148,11 +153,15 @@ public class SupplierService extends DomainService {
                         throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Supplier supplier : suppliers) {
+                        if (isEmpty(supplier.getTenantId())) {
+                            supplier.setTenantId(tenantId);
+                        }
                         if (!supplierJdbcRepository.uniqueCheck("code",
                                 new SupplierEntity().toEntity(supplier))) {
-                            throw new CustomException("inv.004",
-                                    "Supplier Code Already Exists");
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
+
                         }
+                        validateBank(supplier, errors);
                     }
                     break;
                 case Constants.ACTION_UPDATE:
@@ -160,20 +169,26 @@ public class SupplierService extends DomainService {
                         throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Supplier supplier : suppliers) {
+                        if (isEmpty(supplier.getTenantId())) {
+                            supplier.setTenantId(tenantId);
+                        }
                         if (supplier.getId() == null) {
                             throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), supplier.getId());
                         }
                         if (!supplierJdbcRepository.uniqueCheck("code",
                                 new SupplierEntity().toEntity(supplier))) {
-                            throw new CustomException("inv.004",
-                                    "Supplier Code Already Exists");
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
+
                         }
+                        validateBank(supplier, errors);
 
                     }
             }
         } catch (IllegalArgumentException e) {
 
         }
+        if (errors.getValidationErrors().size() > 0)
+            throw errors;
     }
 
 
@@ -185,4 +200,27 @@ public class SupplierService extends DomainService {
         return supplierResponse;
     }
 
+    private SupplierRequest fetchRelated(SupplierRequest supplierRequest, String tenantId) {
+
+        List<Supplier> suppliers = supplierRequest.getSuppliers();
+
+        for (Supplier supplier : suppliers) {
+        	if(supplier.getCode()!=null)
+        	supplier.setCode(supplier.getCode().toUpperCase());
+            BankContract bankContract = new BankContract();
+            bankContract.setCode(supplier.getBankCode());
+            bankContract.setTenantId(!isEmpty(supplier.getTenantId()) ? supplier.getTenantId() : tenantId);
+            BankContract bank = bankContractRepository.findByCode(bankContract);
+            supplier.setBankCode(bank.getCode());
+        }
+
+        return supplierRequest;
+    }
+
+    private void validateBank(Supplier supplier, InvalidDataException errors) {
+        if (isEmpty(supplier.getBankCode())) {
+            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Bank Code", supplier.getBankCode());
+
+        }
+    }
 }

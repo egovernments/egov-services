@@ -77,9 +77,6 @@ public class HolidayConsumers {
             LOGGER.info("SaveHolidayConsumer egov-common-holiday holidayService:" + holidayService);
             final HolidayRequest holidayRequest = holidayService
                     .create(objectMapper.convertValue(record, HolidayRequest.class));
-            //TODO : holiday index id should be changed
-            elasticSearchRepository.index(OBJECT_TYPE_HOLIDAY, holidayRequest.getHoliday().getApplicableOn().toString(),
-                    holidayRequest.getHoliday());
         }
     }
 }

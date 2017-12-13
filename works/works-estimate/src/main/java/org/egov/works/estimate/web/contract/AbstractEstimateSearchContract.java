@@ -51,4 +51,6 @@ public class AbstractEstimateSearchContract {
 	private List<String> statuses;
 	
 	private String nameOfWork;
+	
+	private List<String> councilSanctionNumbers;
 }

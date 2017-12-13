@@ -29,6 +29,7 @@ import org.egov.egf.master.web.contract.FundsourceContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,7 +168,7 @@ public class BillRegisterJdbcRepositoryTest {
                 new BillRegisterResultExtractor());
         assertTrue("Result set length is zero", result.size() == 0);
     }
-	
+    @Ignore
 	@Test
 	@Sql(scripts = { "/sql/billregister/clearbillregister.sql", "/sql/billregister/insertbillregisterdata.sql" })
 	public void test_delete_reason() {

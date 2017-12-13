@@ -185,6 +185,10 @@ public class PerformanceAssessmentConstants {
     public static final String VALUE_PERIOD_INVALID_CODE = "pa.0030";
     public static final String VALUE_PERIOD_INVALID_FIELD_NAME = "period";
     public static final String VALUE_PERIOD_INVALID_ERROR_MESSAGE = "Value Period is not valid";
+    
+    public static final String TARGET_EXISTS_CODE = "pa.0031";
+    public static final String TARGET_EXISTS_FIELD_NAME = "targetType";
+    public static final String TARGET_EXISTS_ERROR_MESSAGE = "Target Type cannot be updated as the Target Value has already been added for this KPI";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

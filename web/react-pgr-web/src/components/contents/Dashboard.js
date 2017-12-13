@@ -495,7 +495,7 @@ class Dashboard extends Component {
         if(localStorage.getItem('type') === constants.ROLE_EMPLOYEE){
 
         //old menu item api access/v1/actions/_get
-        Api.commonApiPost("access/v1/actions/mdms/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
+        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
           var actions = response.actions;
           var roles = JSON.parse(localStorage.userRequest).roles;
           actions.unshift({

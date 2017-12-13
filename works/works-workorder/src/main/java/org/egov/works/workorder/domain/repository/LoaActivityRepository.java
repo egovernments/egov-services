@@ -1,16 +1,16 @@
 package org.egov.works.workorder.domain.repository;
 
-import org.egov.works.common.persistence.repository.JdbcRepository;
-import org.egov.works.workorder.persistence.helper.AssetsForLOAHelper;
-import org.egov.works.workorder.persistence.helper.LoaActivityHelper;
-import org.egov.works.workorder.web.contract.*;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.egov.works.common.persistence.repository.JdbcRepository;
+import org.egov.works.workorder.persistence.helper.LoaActivityHelper;
+import org.egov.works.workorder.web.contract.LOAActivity;
+import org.egov.works.workorder.web.contract.LoaActivitySearchContract;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class LoaActivityRepository extends JdbcRepository {
@@ -32,10 +32,10 @@ public class LoaActivityRepository extends JdbcRepository {
             validateEntityFieldName(loaActivitySearchCriteria.getSortBy(), LoaActivityHelper.class);
         }
 
-        String orderBy = "order by id";
+        String orderBy = "order by loaactivity.id";
         if (loaActivitySearchCriteria.getSortBy() != null
                 && !loaActivitySearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by " + loaActivitySearchCriteria.getSortBy();
+            orderBy = "order by loaactivity." + loaActivitySearchCriteria.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -59,6 +59,8 @@ public class LoaActivityRepository extends JdbcRepository {
             params.append("loaactivity.letterofacceptanceestimate in(:letterofacceptanceestimate)");
             paramValues.put("letterofacceptanceestimate", loaActivitySearchCriteria.getLetterOfAcceptanceEstimateIds());
         }
+
+        params.append(" and loaactivity.deleted = false");
 
         if (params.length() > 0) {
 

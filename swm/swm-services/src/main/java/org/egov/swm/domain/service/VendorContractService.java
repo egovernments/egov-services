@@ -113,6 +113,18 @@ public class VendorContractService {
                         .before(new Date(vendorContract.getContractPeriodFrom())))
                     throw new CustomException("ContractPeriodToDate ", "Given Contract Period To Date is invalid: "
                             + new Date(vendorContract.getContractPeriodTo()));
+            
+            if (vendorContract.getContractDate() != null)
+                if (new Date()
+                        .before(new Date(vendorContract.getContractDate())))
+                    throw new CustomException("ContractDate ", "Given Contract Date is invalid: "
+                            + new Date(vendorContract.getContractDate()));
+            
+            if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractDate() != null)
+                if (new Date(vendorContract.getContractDate())
+                        .before(new Date(vendorContract.getContractPeriodFrom())))
+                    throw new CustomException("ContractPeriodFrom ", "Given Contract Period From Date is invalid: "
+                            + new Date(vendorContract.getContractPeriodFrom()));
 
         }
 

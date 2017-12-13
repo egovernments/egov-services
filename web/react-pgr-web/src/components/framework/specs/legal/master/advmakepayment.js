@@ -46,7 +46,7 @@ var dat = {
             type: "text",
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
+            patternErrorMsg: " The PAN structure is as follows: AAAPL1234C ."
           },
           {
             name: "bankBranch",
@@ -99,6 +99,7 @@ var dat = {
                 type: "tableList",
                 jsonPath: "advocatePayments[0].advocateCharges",
                 tableList: {
+                  actionsNotRequired: true,
                   header: [
                     {
                       label: "legal.create.charge"

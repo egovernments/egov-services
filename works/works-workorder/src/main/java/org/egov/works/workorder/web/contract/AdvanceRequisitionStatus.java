@@ -8,37 +8,38 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum AdvanceRequisitionStatus {
 
-	CREATED("CREATED"),
+    CREATED("CREATED"),
 
-	REJECTED("REJECTED"),
+    REJECTED("REJECTED"),
 
-	CANCELLED("CANCELLED"),
+    CANCELLED("CANCELLED"),
 
-	APPROVED("APPROVED"),
+    APPROVED("APPROVED"),
 
-	RESUBMITTED("RESUBMITTED"),
+    RESUBMITTED("RESUBMITTED"),
 
-	CHECKED("CHECKED");
+    CHECKED("CHECKED");
 
-	private String value;
+    private String value;
 
-	AdvanceRequisitionStatus(String value) {
-		this.value = value;
-	}
+    AdvanceRequisitionStatus(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static AdvanceRequisitionStatus fromValue(String text) {
+        for (AdvanceRequisitionStatus b : AdvanceRequisitionStatus.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static AdvanceRequisitionStatus fromValue(String text) {
-		for (AdvanceRequisitionStatus b : AdvanceRequisitionStatus.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

@@ -193,6 +193,8 @@ import detailedEstimate from './components/non-framework/works/transaction/detai
 
 import kpivalues from './components/non-framework/perfManagement/master/kpivalues';
 
+
+import MdmsComponent from './components/framework/mdms/list';
 const base = "";
 
 const Main = () => {
@@ -394,7 +396,7 @@ const Main = () => {
 
       <Route exact path= {base + '/list/perfManagement/actualKpiCreate'} component={kpivalues}/>
 
-
+      <Route exact path={base + '/mdms/:module/:master'} component={MdmsComponent}/>
       <Route component={NoMatch}/>
 
     </Switch>

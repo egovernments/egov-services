@@ -6,18 +6,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.Pagination;
+import org.egov.inv.domain.service.UomService;
 import org.egov.inv.model.PurchaseOrderDetail;
 import org.egov.inv.model.PurchaseOrderDetailSearch;
+import org.egov.inv.model.RequestInfo;
 import org.egov.inv.persistence.entity.PurchaseOrderDetailEntity;
-import org.egov.inv.persistence.entity.PurchaseOrderEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PurchaseOrderDetailJdbcRepository extends org.egov.common.JdbcRepository {
+	
+    @Autowired
+    private UomService uomService;
+	
     private static final Logger LOG = LoggerFactory.getLogger(PurchaseOrderDetailJdbcRepository.class);
 
     static {
@@ -160,6 +166,24 @@ public class PurchaseOrderDetailJdbcRepository extends org.egov.common.JdbcRepos
 
             purchaseOrderDetails.add(poEntity.toDomain());
         }
+		for (PurchaseOrderDetail eachPoDetail : purchaseOrderDetails) {
+			eachPoDetail.setUom(uomService.getUom(purchaseOrderDetailSearch.getTenantId(), eachPoDetail.getUom().getCode(),new RequestInfo()));
+			if (eachPoDetail.getOrderQuantity() != null) {
+				eachPoDetail.setOrderQuantity(eachPoDetail.getOrderQuantity().divide(eachPoDetail.getUom().getConversionFactor()));
+			}
+			if (eachPoDetail.getIndentQuantity() != null) {
+				eachPoDetail.setIndentQuantity(eachPoDetail.getIndentQuantity().divide(eachPoDetail.getUom().getConversionFactor()));
+			}
+			if (eachPoDetail.getTenderQuantity() != null) {
+				eachPoDetail.setTenderQuantity(eachPoDetail.getTenderQuantity().divide(eachPoDetail.getUom().getConversionFactor()));
+			}
+			if (eachPoDetail.getUsedQuantity() != null) {
+				eachPoDetail.setUsedQuantity(eachPoDetail.getUsedQuantity().divide(eachPoDetail.getUom().getConversionFactor()));
+			}
+			if (eachPoDetail.getUnitPrice() != null) {
+				eachPoDetail.setUnitPrice(eachPoDetail.getUnitPrice().multiply(eachPoDetail.getUom().getConversionFactor()));
+			}
+		}
         page.setPagedData(purchaseOrderDetails);
 
         return page;

@@ -223,22 +223,24 @@ class Attendance extends React.Component {
             }
 
             for (var k = 0; k < empLeaveList.length; k++) {
-              if (empLeaveList[k].fromDate==empLeaveList[k].toDate) {
-                var date=new Date();
-                if (date.getFullYear()==empLeaveList[k].fromDate.split("-")[0] && date.getMonth()==empLeaveList[k].fromDate.split("-")[1]) {
-                  employees[empLeaveList[k].employee]["attendance"][`${parseInt(queryParam["month"])}-${empLeaveList[k].fromDate.split("-")[2]}`]="L";
+
+              console.log("leave employee", empLeaveList[k].employee);
+
+              if (empLeaveList[k].fromDate===empLeaveList[k].toDate) {
+                if (currentDate.getFullYear()==empLeaveList[k].fromDate.split("/")[2] && currentDate.getMonth()==empLeaveList[k].fromDate.split("/")[1]-1) {
+                  employees[empLeaveList[k].employee]["attendance"][`${parseInt(queryParam["month"])}-${empLeaveList[k].fromDate.split("/")[0]}`]="L";                  
                 }
               }
               else {
-                var fromDate=new Date(empLeaveList[k].fromDate.split("-")[0],empLeaveList[k].fromDate.split("-")[1],empLeaveList[k].fromDate.split("-")[2]);
-                var toDate=new Date(empLeaveList[k].toDate.split("-")[0],empLeaveList[k].toDate.split("-")[1],empLeaveList[k].toDate.split("-")[2]);
-                var date=new Date();
-                for (var f = fromDate; f <= toDate; f.setDate(f.getDate() + 1)) {
-                  if (date.getFullYear()==f.getFullYear() && date.getMonth()==f.month) {
-                      employees[empLeaveList[f].employee]["attendance"][`${parseInt(queryParam["month"])}-${f.getDate()}`]="L";
+                var fromDate=new Date(empLeaveList[k].fromDate.split("/")[2],empLeaveList[k].fromDate.split("/")[1]-1,empLeaveList[k].fromDate.split("/")[0]);
+                var toDate=new Date(empLeaveList[k].toDate.split("/")[2],empLeaveList[k].toDate.split("/")[1]-1,empLeaveList[k].toDate.split("/")[0]);
+                for (var f = fromDate; f <= toDate; f.setDate(f.getDate() + 1)) {                  
+                  if (currentDate.getFullYear() === f.getFullYear() && currentDate.getMonth() === f.getMonth()) {
+                    employees[empLeaveList[k].employee]["attendance"][`${parseInt(queryParam["month"])}-${f.getDate()<10?"0"+f.getDate():f.getDate() }`]="L";
                   }
                 }
               }
+              
             }
   
         
@@ -287,6 +289,8 @@ class Attendance extends React.Component {
     });
 
     commonApiPost("hr-leave", "leaveapplications", "_search", {
+        fromDate: currentDate.getDate()+"/"+currentDate.getMonth()+"/"+currentDate.getFullYear(),
+        toDate: endDate.getDate()+"/"+endDate.getMonth()+"/"+endDate.getFullYear(),
         tenantId,
         employee,
         pageSize:500
@@ -470,6 +474,9 @@ class Attendance extends React.Component {
             return "inputBoxWarning"
             break;
           case "A":
+            return "inputBoxRed"
+            break;
+          case "L":
             return "inputBoxRed"
             break;
           default:

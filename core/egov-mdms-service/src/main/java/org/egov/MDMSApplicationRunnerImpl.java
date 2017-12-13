@@ -2,14 +2,13 @@ package org.egov;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -22,9 +21,10 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 @Component
 @Slf4j
@@ -32,29 +32,29 @@ public class MDMSApplicationRunnerImpl {
 
 	@Autowired
 	public ResourceLoader resourceLoader;
-	
+
 	@Value("${egov.mdms.conf.path}")
 	public String mdmsFileDirectory;
-	
-	private static Map<String, List<Object>> tenantMap = new HashMap<>();
 
+	private static Map<String, Map<String, Map<String, JSONArray>>> tenantMap = new HashMap<>();
+
+	ObjectMapper objectMapper = new ObjectMapper();
 	@PostConstruct
 	public void run() {
 		try {
-			log.info("Reading yaml files from: "+mdmsFileDirectory);
-			readDirectory(mdmsFileDirectory);
-			//readUrl(mdmsFileDirectory);
-			log.info("tenantMap:" + tenantMap);
+			log.info("Reading yaml files from: " + mdmsFileDirectory);
+			readFiles(mdmsFileDirectory);
+			log.info("tenantMap1:" + tenantMap);
+		     
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);
 		}
 
 	}
-
-	public void readDirectory(String path) {
-		ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
+	
+	public void readFiles(String baseFoderPath) {
 		ObjectMapper jsonReader = new ObjectMapper();
-		File folder = new File(path);
+		File folder = new File(baseFoderPath);
 		File[] listOfFiles = folder.listFiles();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
@@ -62,26 +62,13 @@ public class MDMSApplicationRunnerImpl {
 				log.info("File " + listOfFiles[i].getName());
 				File file = listOfFiles[i];
 				String name = file.getName();
-				String [] fileName = name.split("[.]");
-				if(fileName[fileName.length - 1].equals("yml") ||
-						fileName[fileName.length - 1].equals("yaml")){
-		//		if (name.contains("yml") || name.contains("yaml")) {
-					log.info("Reading yaml file....:- "+name);
+				String[] fileName = name.split("[.]");
+				if (fileName[fileName.length - 1].equals("json")) {
+					log.debug("Reading json file....:- " + name);
 					try {
-						Map<String, Object> obj = yamlReader.readValue(file, Map.class);
-						filterMaster(obj);
-						System.out.println("yaml obj:" + obj);
-
-					} catch (Exception e) {
-						log.error("Exception while fetching service map for: ");
-						continue;
-					}
-				} else if (fileName[fileName.length - 1].equals("json")) {
-					log.info("Reading json file....:- "+name);
-					try {
-						Map<String, Object> jsonStr = jsonReader.readValue(file, Map.class);
-						filterMaster(jsonStr);
-						System.out.println(jsonStr);
+						Map<String, Object> jsonMap = jsonReader.readValue(file, Map.class);
+						prepareTenantMap(jsonMap);
+						log.debug("json str:" + jsonMap);
 					} catch (JsonGenerationException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -91,6 +78,8 @@ public class MDMSApplicationRunnerImpl {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				} else {
 					log.info("file is not of a valid type please change and retry");
@@ -100,56 +89,64 @@ public class MDMSApplicationRunnerImpl {
 
 			} else if (listOfFiles[i].isDirectory()) {
 				log.info("Directory " + listOfFiles[i].getName());
-				readDirectory(listOfFiles[i].getAbsolutePath());
+				readFiles(listOfFiles[i].getAbsolutePath());
 			}
 		}
 
 	}
-
-	public void readUrl(String path) {
-		//ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-		ObjectMapper jsonReader = new ObjectMapper();
-		List<String> ymlUrlS = Arrays.asList(path.split(","));
-		for(String yamlLocation : ymlUrlS){
+	
+	@SuppressWarnings("unchecked")
+	public void prepareTenantMap(Map<String, Object> map) {
+		// ObjectMapper objectMapper = new ObjectMapper();
+		
+		String tenantId = (String)map.get("tenantId");
+		String moduleName = (String)map.get("moduleName");
+		Set<String> masterKeys = map.keySet();
+		String nonMasterKeys = "tenantId,moduleName";
+		List<String> ignoreKey = new ArrayList<String>(Arrays.asList(nonMasterKeys.split(",")));
+		masterKeys.removeAll(ignoreKey);
+		
+		Map<String, JSONArray> masterDataMap = new HashMap<>();
+		
+		Iterator<String> masterKeyIterator = masterKeys.iterator();
+		String masterName = null;
+		JSONArray masterDataJsonArray = null;
+		while(masterKeyIterator.hasNext()) {
+			masterName = masterKeyIterator.next();
+			
 			try {
-				URL yamlFile = new URL(yamlLocation);
-				Map<String, Object> map = jsonReader.readValue(new InputStreamReader(yamlFile.openStream()), Map.class);
-				System.out.println(map);
-				filterMaster(map);
-			} catch (Exception e) {
+				masterDataJsonArray = JsonPath.read(objectMapper.writeValueAsString((List<Object>)map.get(masterName)),"$");
+			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			masterDataMap.put(masterName, masterDataJsonArray);
 		}
 		
-
-	}
-	
-	private void filterMaster(Map<String, Object> map) {
-	//	ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			List<Object> list = null;
-			if (!tenantMap.containsKey(map.get("tenantId").toString())) {
-				list = new ArrayList<>();
-				list.add(map);
+		if(!tenantMap.containsKey(tenantId)) {
+			Map<String, Map<String, JSONArray>> moduleMap = new HashMap<>();
+			moduleMap.put(moduleName, masterDataMap);
+			tenantMap.put(tenantId, moduleMap);
+		}
+		else {
+			Map<String, Map<String, JSONArray>> tenantModule= tenantMap.get(tenantId);
+			
+			if(!tenantModule.containsKey(moduleName)) {
+				tenantModule.put(moduleName, masterDataMap);
 			} else {
-				List<Object> list1 = tenantMap.get(map.get("tenantId").toString());
-				list1.add(map);
-				list = list1;
+				Map<String, JSONArray> moduleMaster = tenantModule.get(moduleName);
+				moduleMaster.putAll(masterDataMap);
+				//moduleMaster.put(masterName, masterDataJsonArray);
+				tenantModule.put(moduleName, moduleMaster);
 			}
-
-			tenantMap.put(map.get("tenantId").toString(), list);
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			tenantMap.put(tenantId, tenantModule);
 		}
 
 	}
-
-	public static Map<String, List<Object>> getTenantMap(){
+	
+	public static  Map<String, Map<String, Map<String, JSONArray>>> getTenantMap() {
 		return tenantMap;
 	}
-	
+
 }

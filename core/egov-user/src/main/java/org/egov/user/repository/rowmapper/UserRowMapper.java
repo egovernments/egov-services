@@ -56,7 +56,7 @@ public class UserRowMapper implements RowMapper<User> {
 		if (userList.size() > 0) {
 			Long id = user.getId();
 			for (User user1 : userList) {
-				if (user1.getId() == id) {
+				if (user1.getId().equals(id)) {
 					flag = false;
 					break;
 				}

@@ -25,6 +25,7 @@ public class Constants {
     public static final String NATUREOFWORK_OBJECT = "NatureOfWork";
     public static final String REFERENCETYPE_OBJECT = "ReferenceType";
     public static final String MODEOFALLOTMENT_OBJECT = "ModeOfAllotment";
+    public static final String ABSTRACT_ESTIMATE_REQUIRED_APPCONFIG = "Abstract_Estimate_Required";
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
@@ -42,11 +43,11 @@ public class Constants {
     public static final String KEY_ESIMATE_OVERHEAD_AMOUNT = "ESIMATE_OVERHEAD_AMOUNT";
     public static final String MESSAGE_ESIMATE_OVERHEAD_AMOUNT = "Overhead amount is required for estimate";
 
-    public static final String KEY_DUPLICATE_MULTIYEAR_ESTIMATE = "DUPLICATE_MULTIYEAR_ESTIMATE";
-    public static final String MESSAGE_DUPLICATE_MULTIYEAR_ESTIMATE = "Duplicate multiyear estimates";
+    public static final String KEY_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT = "ESIMATE_OVERHEAD_WORKVALUE_AMOUNT";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT = "Sum of workvalue and overhead amount should be equal to estimate amount";
 
-    public static final String KEY_PERCENTAGE_MULTIYEAR_ESTIMATE = "INVALID_PERCANTAGE_MULTIYEAR_ESTIMATE";
-    public static final String MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE = "Percentage should not  be greater than 100 for multiyear estimates";
+    public static final String KEY_ESIMATE_OVERHEAD_UNIQUE = "ESIMATE_OVERHEAD_UNIQUE";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_UNIQUE = "Duplicate overheads for estimate";
     
     public static final String KEY_NULL_ABSTRACTESTIMATE_NUMBER = "INVALID_ABSTRACTESTIMATE_NUMBER";
     public static final String MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER = "Abstract Estimate Number should be entered";
@@ -77,6 +78,24 @@ public class Constants {
 
     public static final String KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "INVALID_ESTIMATE_DATE_SPILLOVER";
     public static final String MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "Estimate Date cannot be future date";
+
+    public static final String KEY_WORK_VALUE_INVALID = "WORK_VALUE_INVALID";
+    public static final String MESSAGE_WORK_VALUE_INVALID = "Work value should be greater than zero";
+
+    public static final String KEY_ESTIMATE_VALUE_INVALID = "ESTIMATE_VALUE_INVALID";
+    public static final String MESSAGE_ESTIMATE_VALUE_INVALID = "Estimate value should be greater than zero";
+
+    public static final String KEY_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE = "WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE";
+    public static final String MESSAGE_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE = "Work value should not be greater estimate value";
+
+    public static final String KEY_ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID = "ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID";
+    public static final String MESSAGE_ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID = "Chart of accounts is required for an estimate";
+
+    public static final String KEY_ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED= "ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED = "Estimate deduction amount is required";
+
+    public static final String KEY_ESTIMATE_DEDUCTIONS_AMOUNT_INVALID= "ESTIMATE_DEDUCTIONS_AMOUNT_INVALID";
+    public static final String MESSAGE_ESTIMATE_DEDUCTIONS_AMOUNT_INVALID = "Estimate deduction amount should be greater than zero";
 
     public static final String KEY_INVALID_ESTIMATNUMBER_SPILLOVER = "INVALID_ESTIMATNUMBER_SPILLOVER";
     public static final String MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER = "Duplicate estimate number";
@@ -167,7 +186,7 @@ public class Constants {
     public static final String MESSAGE_ESTIMATE_ACTIVITY_INVALID = "Invalid data for estimate activity";
 
     public static final String KEY_ESTIMATE_ACTIVITY_REQUIRED= "ESTIMATE_ACTIVITY_REQUIRED";
-    public static final String MESSAGE_ESTIMATE_ACTIVITY_REQUIRED = "Atleast one activity is required to create an estimate";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_REQUIRED = "Atleast one sor or nonsor is required to create an estimate";
 
     public static final String KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE= "INVALID_ESTIMATE_ACTIVITY_ESTIMATE_RATE";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE = "Activity estimate rate should be greater than zero";
@@ -194,7 +213,7 @@ public class Constants {
     public static final String MESSAGE_INVALID_FILESTORE_ID= "Invalid data for document filestore id";
 
     public static final String KEY_INVALID_TECHNICALSANCTION_NUMBER = "INVALID_TECHNICALSANCTION_NUMBER";
-    public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Duplicate technical sanction number";
+    public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Technical sanction number already exists, please provide valid technical sanction number";
 
     public static final String KEY_TECHNICAL_SANCTION_DATE_FUTUREDATE = "TECHNICAL_SANCTION_DATE_FUTUREDATE";
     public static final String MESSAGE_TECHNICAL_SANCTION_DATE_FUTUREDATE= "Estimate technical sanction date cannot be a future date";
@@ -250,8 +269,8 @@ public class Constants {
     public static final String KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "Estimate rate is required for activity";
 
-    public static final String KEY_ESTIMATE_ACTIVITY_UOM_REQUIRED= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
-    public static final String MESSAGE_ESTIMATE_ACTIVITY_UOM_REQUIRED= "UOM is required for activity";
+    public static final String KEY_UOM_REQUIRED= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
+    public static final String MESSAGE_UOM_REQUIRED= "UOM is required for activity";
 
     public static final String KEY_ESTIMATE_ACTIVITY_UOM_CODE_INVALID= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_UOM_CODE_INVALID= "Invalid data for UOM code";
@@ -267,6 +286,12 @@ public class Constants {
 
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED= "ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED= "Estimate measurement sheet identifier is required";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "Estimate measurement sheet quantity should not be greater than activity quantity";
+
+    public static final String KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT= "ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT";
+    public static final String MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT= "Total Estimate activity amount should be equal to estimate amount";
 
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";
@@ -286,9 +311,21 @@ public class Constants {
     public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "Duplicate value for Estimate activity schedule of rate";
 
+    public static final String KEY_INVALID_SOR_RATES= "INVALID_SOR_RATES";
+    public static final String MESSAGE_INVALID_SOR_RATES= "No valid rates defined for activity";
+
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";
     
+    public static final String KEY_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE = "CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE";
+    public static final String MESSAGE_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE = "Status can not be updated for detailed estimate";
+
+    public static final String KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE = "INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE";
+    public static final String MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE = "Invalid status updated for detailed estimate";
+
+    public static final String KEY_DE_EXISTS_FOR_AE = "DE_EXISTS_FOR_AE";
+    public static final String MESSAGE_DE_EXISTS_FOR_AE = "Detailed estimate exists for the given abstract estimate";
+
     public static final String KEY_ESTIMATE_NOT_EXISTS = "ESTIMATE_NOT_EXISTS";
     public static final String MESSAGE_ESTIMATE_NOT_EXISTS = "Estimate does not exist with the given id";
     
@@ -313,6 +350,34 @@ public class Constants {
 
     public static final String KEY_INVALID_WORKORDER_FLAG = "KEY_INVALID_BILLSCREATED_FLAG";
     public static final String MESSAGE_INVALID_WORKORDER_FLAG = "When workorder creates checked detailed estimate created flag is required";
+
+    
+    public static final String KEY_INVALID_GROSSBILLEDAMOUNT = "UNIQUE_GROSSBILLEDAMOUNT";
+    public static final String MESSAGE_INVALID_GROSSBILLEDAMOUNT = "Gross billed amount should be greater then 0";
+ 
+    public static final String KEY_PMCTYPE_INVALID = "INVALID_PMCTYPE";
+    public static final String MESSAGE_PMCTYPE_INVALID = "Please provide valid data for PMC Type";
+
+    public static final String KEY_PMCNAME_INVALID = "INVALID_PMCNAME";
+    public static final String MESSAGE_PMCNAME_INVALID = "Please provide valid data for PMC Name";
+    
+    public static final String KEY_WARDCODE_INVALID = "INVALID_WARDCODE";
+    public static final String MESSAGE_WARDCODE_INVALID = "Please provide valid data for Ward";
+    
+    public static final String KEY_LOCALITYCODE_INVALID = "INVALID_LOCALITY";
+    public static final String MESSAGE_LOCALITYCODE_INVALID = "Please provide valid data for Locality";
+    
+    public static final String KEY_FUTUREDATE_COUNCILRESOLUTIONDATE = "INVALID_COUNCILRESOLUTIONDATE";
+    public static final String MESSAGE_FUTUREDATE_COUNCILRESOLUTIONDATE = "Council Resolution Date cannot be future date";
+    
+    public static final String KEY_COUNCILRESOLUTION_PROPOSAL_DATE = "INVALID_ADMINSANCTION_PROPOSAL_DATE";
+    public static final String MESSAGE_COUNCILRESOLUTION_PROPOSAL_DATE = "Council Resolution date should be on or after the Date of Proposal";
+
+    public static final String KEY_DUPLICATE_WINCODES = "KEY_DUPLICATE_WINCODES";
+    public static final String MESSAGE_DUPLICATE_WINCODES = "Please provide Unique work identification numbers in abstract estimate details";
+
+    public static final String KEY_DUPLICATE_ABSTRACTESTIMATENUMBERS = "works.abstractestimate.duplicate.abstractestimatenumber";
+    public static final String MESSAGE_DUPLICATE_ABSTRACTESTIMATENUMBERS = "Please provide Unique abstract estimate numbers";
 
     
 }

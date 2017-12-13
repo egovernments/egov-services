@@ -3,7 +3,7 @@ package org.egov.inv.domain.service;
 import net.minidev.json.JSONArray;
 
 import org.egov.common.MdmsRepository;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Uom;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

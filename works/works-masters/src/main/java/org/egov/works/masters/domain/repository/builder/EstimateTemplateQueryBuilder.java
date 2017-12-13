@@ -11,8 +11,8 @@ import java.util.Map;
 @Service
 public class EstimateTemplateQueryBuilder {
     public static final String BASE_SEARCH_QUERY = "SELECT * FROM egw_estimatetemplate et";
-    public static final String GET_ESTIMATETEMPLATE_ACTIVTIES_BY_ET="select * from egw_estimatetemplateactivities where tenantid = :tenantId and estimatetemplate=:estimateTemplate;";
-    public static final String GET_NONSORRATE_BY_ID="select * from egw_nonsor where tenantid = :tenantId and id=:nonSorId;";
+    public static final String GET_ESTIMATETEMPLATE_ACTIVTIES_BY_ET = "select * from egw_estimatetemplateactivities where tenantid = :tenantId and deleted=false and estimatetemplate=:estimateTemplate;";
+    public static final String GET_NONSORRATE_BY_ID = "select * from egw_nonsor where tenantid = :tenantId and deleted=false and id=:nonSorId;";
 
     public String getSearchQuery(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria, Map params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
@@ -21,13 +21,13 @@ public class EstimateTemplateQueryBuilder {
         return selectQuery.toString();
     }
 
-    public String getETActivities(String estimateTemplate, String tenantId, Map params){
+    public String getETActivities(String estimateTemplate, String tenantId, Map params) {
         params.put("estimateTemplate", estimateTemplate);
         params.put("tenantId", tenantId);
         return GET_ESTIMATETEMPLATE_ACTIVTIES_BY_ET;
     }
 
-    public String getNonSorRate(String nonSorId, String tenantId, Map params){
+    public String getNonSorRate(String nonSorId, String tenantId, Map params) {
         params.put("nonSorId", nonSorId);
         params.put("tenantId", tenantId);
         return GET_NONSORRATE_BY_ID;
@@ -35,7 +35,7 @@ public class EstimateTemplateQueryBuilder {
 
     private void appendParams(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria, Map params, StringBuilder selectQuery) {
 
-        selectQuery.append(" where et.id is not null");
+        selectQuery.append(" where et.id is not null and deleted=false");
 
         if (estimateTemplateSearchCriteria.getTenantId() != null) {
             selectQuery.append(" and et.tenantid = :tenantId");
@@ -43,7 +43,10 @@ public class EstimateTemplateQueryBuilder {
         }
 
         if (estimateTemplateSearchCriteria.getIds() != null && !estimateTemplateSearchCriteria.getIds().isEmpty()) {
-            selectQuery.append(" and et.id in (:sorIds)");
+            if (estimateTemplateSearchCriteria.getIsUpdateUniqueCheck())
+                selectQuery.append(" and et.id not in (:sorIds)");
+            else
+                selectQuery.append(" and et.id in (:sorIds)");
             params.put("sorIds", estimateTemplateSearchCriteria.getIds());
         }
 
@@ -64,7 +67,7 @@ public class EstimateTemplateQueryBuilder {
     }
 
     private StringBuilder appendLimitAndOffset(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria,
-                                                      @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
+                                               @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
         selectQuery.append(" order by et.id");
         selectQuery.append(" limit :pageSize");

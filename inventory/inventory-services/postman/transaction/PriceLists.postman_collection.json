@@ -1,0 +1,125 @@
+{
+	"info": {
+		"name": "PriceLists",
+		"_postman_id": "68cae002-9493-3744-a98a-948ecec2cb5f",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PriceLists create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"priceLists\": [\n    {\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"rateContractNumber\": \"DEC_11_RC1\",\n      \"rateContractDate\": 1512930600000,\n      \"agreementNumber\": \"DEC11AN1\",\n      \"agreementDate\": 1512930600000,\n      \"agreementStartDate\": 1512930600000,\n      \"agreementEndDate\": 1514658600000,\n      \"active\": true,\n      \"fileStoreId\": \"\",\n      \"rateType\": \"One Time Tender\",\n      \"priceListDetails\": [\n        {\n          \"material\": {\n            \"code\": \"MAT6\"\n          },\n          \"uom\": {\n            \"code\": \"MTR\",\n            \"conversionFactor\": 1\n          },\n          \"ratePerUnit\": \"12\",\n          \"quantity\": \"11\"\n        }\n      ],\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1512988123880,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"0fd71dd8-81d5-48ca-b4d3-887bb2c324cc\",\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/inventory-services/pricelists/_create?tenantId=default",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"pricelists",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": "create pricelist"
+			},
+			"response": []
+		},
+		{
+			"name": "Pricelists Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"priceLists\": [\n    {\n      \"id\": \"188\",\n      \"tenantId\": \"default\",\n      \"supplier\": {\n        \"id\": \"30\",\n        \"tenantId\": \"default\",\n        \"type\": \"FIRM\",\n        \"code\": \"JK002\",\n        \"name\": \"JK Suppliers Ltd\",\n        \"address\": \"Raza bazaar\",\n        \"status\": \"ACTIVE\",\n        \"inActiveDate\": null,\n        \"active\": true,\n        \"contactNo\": \"7760630550\",\n        \"faxNo\": null,\n        \"website\": null,\n        \"email\": null,\n        \"description\": null,\n        \"panNo\": null,\n        \"tinNo\": null,\n        \"cstNo\": null,\n        \"vatNo\": null,\n        \"gstNo\": null,\n        \"contactPerson\": null,\n        \"contactPersonNo\": null,\n        \"bankCode\": \"ABC\",\n        \"bankName\": null,\n        \"bankBranch\": \"Dubai\",\n        \"acctNo\": \"2565566526556\",\n        \"ifsc\": \"HDFC000087\",\n        \"micr\": \"HDKJNSJ256\",\n        \"auditDetails\": {\n          \"createdBy\": \"23115\",\n          \"lastModifiedBy\": \"23115\",\n          \"createdTime\": 1512382364884,\n          \"lastModifiedTime\": 1512382364884\n        }\n      },\n      \"rateType\": \"One Time Tender\",\n      \"rateContractNumber\": \"DEC_11_RC1\",\n      \"rateContractDate\": 1512930600000,\n      \"agreementNumber\": \"DEC11AN1\",\n      \"agreementDate\": 1512930600000,\n      \"agreementStartDate\": 1512930600000,\n      \"agreementEndDate\": 1514658600000,\n      \"active\": true,\n      \"fileStoreId\": \"\",\n      \"priceListDetails\": [\n        {\n          \"id\": \"105\",\n          \"tenantId\": null,\n          \"material\": {\n            \"id\": null,\n            \"tenantId\": null,\n            \"code\": \"MAT6\",\n            \"name\": null,\n            \"description\": null,\n            \"oldCode\": null,\n            \"materialType\": null,\n            \"baseUom\": null,\n            \"inventoryType\": null,\n            \"status\": null,\n            \"inActiveDate\": null,\n            \"purchaseUom\": null,\n            \"expenseAccount\": null,\n            \"minQuantity\": null,\n            \"maxQuantity\": null,\n            \"stockingUom\": null,\n            \"materialClass\": null,\n            \"reorderLevel\": null,\n            \"reorderQuantity\": null,\n            \"lotControl\": null,\n            \"shelfLifeControl\": null,\n            \"serialNumber\": null,\n            \"model\": null,\n            \"manufacturePartNo\": null,\n            \"techincalSpecs\": null,\n            \"termsOfDelivery\": null,\n            \"scrapable\": null,\n            \"assetCategory\": null,\n            \"storeMapping\": null,\n            \"auditDetails\": null\n          },\n          \"fromDate\": 1512930600000,\n          \"toDate\": 1514658600000,\n          \"ratePerUnit\": \"120\",\n          \"quantity\": \"110\",\n          \"uom\": {\n            \"id\": \"7\",\n            \"tenantId\": \"default\",\n            \"name\": null,\n            \"code\": \"MTR\",\n            \"description\": \"Meter\",\n            \"baseUom\": true,\n            \"uomCategory\": \"LENGTH\",\n            \"fromDate\": 1508740856,\n            \"toDate\": 1893436200,\n            \"conversionFactor\": 1,\n            \"active\": null,\n            \"auditDetails\": null\n          },\n          \"active\": true,\n          \"deleted\": null,\n          \"auditDetails\": {\n            \"createdBy\": \"73\",\n            \"lastModifiedBy\": \"73\",\n            \"createdTime\": 1512988123880,\n            \"lastModifiedTime\": 1512988123880\n          }\n        },\n        {\n          \"material\": {\n            \"code\": \"MAT14\"\n          },\n          \"uom\": {\n            \"code\": \"KVA\",\n            \"conversionFactor\": 1\n          },\n          \"ratePerUnit\": \"123\",\n          \"quantity\": \"456\",\n          \"active\": true\n        }\n      ],\n      \"auditDetails\": {\n        \"createdBy\": \"73\",\n        \"lastModifiedBy\": \"73\",\n        \"createdTime\": 1512988123880,\n        \"lastModifiedTime\": 1512988123880\n      }\n    }\n  ],\n  \"page\": null,\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1512988940750,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"555d3cfa-d4ec-44b2-a4ca-3c70bd185401\"\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/inventory-services/pricelists/_update?tenantId=default",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"pricelists",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": "update Pricelists"
+			},
+			"response": []
+		},
+		{
+			"name": "Pricelists Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1512989173575,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{authToken}}\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/pricelists/_search?tenantId=default&pageSize=200",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"pricelists",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "pageSize",
+							"value": "200",
+							"equals": true
+						}
+					]
+				},
+				"description": "search Pricelists"
+			},
+			"response": []
+		}
+	]
+}

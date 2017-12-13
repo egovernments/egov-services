@@ -8,33 +8,34 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ContractorStatus {
 
-	ACTIVE("ACTIVE"),
+    ACTIVE("ACTIVE"),
 
-	INACTIVE("INACTIVE"),
+    INACTIVE("INACTIVE"),
 
-	BLACK_LISTED("BLACK_LISTED"),
+    BLACK_LISTED("BLACK_LISTED"),
 
-	DEBARRED("DEBARRED");
+    DEBARRED("DEBARRED");
 
-	private String value;
+    private String value;
 
-	ContractorStatus(String value) {
-		this.value = value;
-	}
+    ContractorStatus(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static ContractorStatus fromValue(String text) {
+        for (ContractorStatus b : ContractorStatus.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static ContractorStatus fromValue(String text) {
-		for (ContractorStatus b : ContractorStatus.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

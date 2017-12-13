@@ -2,52 +2,14 @@ serviceMaps:
  serviceName: Works Services
  mappings:
  - version: 1.0
-   name: Works Documents Create
-   description: Persists works documents in egw_documentdetails table
+   name: Works Documents Create and Update
+   description: Persists and updates works documents in egw_documentdetails table
    fromTopic: works.documentdetails.create
    isTransaction: true
-   queryMaps:
-    - query: INSERT INTO egw_documentdetail(
-        id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.documentDetails.*
-      jsonMaps:
-         
-       - jsonPath: $.documentDetails.*.id
-       
-       - jsonPath: $.documentDetails.*.tenantId
-         
-       - jsonPath: $.documentDetails.*.objectId
-         
-       - jsonPath: $.documentDetails.*.objectType
-       
-       - jsonPath: $.documentDetails.*.documentType
-       
-       - jsonPath: $.documentDetails.*.fileStore
-       
-       - jsonPath: $.documentDetails.*.latitude
-       
-       - jsonPath: $.documentDetails.*.longitude
-       
-       - jsonPath: $.documentDetails.*.description
-       
-       - jsonPath: $.documentDetails.*.dateOfCapture
-       
-       - jsonPath: $.documentDetails.*.workProgress
-       
-       - jsonPath: $.documentDetails.*.auditDetails.createdBy
-       
-       - jsonPath: $.documentDetails.*.auditDetails.createdTime
-         dbType: LONG
-       
- - version: 1.0
-   name: Works Documents Update
-   description: Update works document data in egw_documentdetail table 
-   fromTopic: works.documentdetails.update
-   isTransaction: true
    queryMaps:   
-    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
              filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress,
-             lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+             lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
       basePath: $.documentDetails.*
       jsonMaps:
 
@@ -83,90 +45,44 @@ serviceMaps:
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+       - jsonPath: $.documentDetails.*.deleted
+         dbType: BOOLEAN
+
 
 
  - version: 1.0
    name: Estimate Appropriation
-   description: Persists Estimate Appropriation in egw_estimate_appropriation table
+   description: Persists and updates Estimate Appropriation in egw_estimate_appropriation table
    fromTopic: works.estimateappropriation.create
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_estimate_appropriation(
-            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+            id, tenantid, objecttype, objectnumber, budgetusage, createdby, createdtime, lastModifiedBy, lastModifiedTime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET budgetusage= EXCLUDED.budgetusage, objectnumber=EXCLUDED.objectnumber, lastModifiedBy=EXCLUDED.lastModifiedBy, lastModifiedTime=EXCLUDED.lastModifiedTime, deleted=EXCLUDED.deleted;
       basePath: $.estimateAppropriations.*
       jsonMaps:
-         
+
        - jsonPath: $.estimateAppropriations.*.id
-       
+
        - jsonPath: $.estimateAppropriations.*.tenantId
-         
+
        - jsonPath: $.estimateAppropriations.*.objectType
-         
+
        - jsonPath: $.estimateAppropriations.*.objectNumber
-       
+
        - jsonPath: $.estimateAppropriations.*.budgetUsage
-       
+
        - jsonPath: $.estimateAppropriations.*.auditDetails.createdBy
-       
+
        - jsonPath: $.estimateAppropriations.*.auditDetails.createdTime
          dbType: LONG
 
- - version: 1.0
-   name: Works Estimate Appropriation Update
-   description: Update Estimate Appropriation in egw_estimate_appropriation table
-   fromTopic: works.estimateappropriation.update
-   isTransaction: true
-   queryMaps:   
-    - query: UPDATE egw_estimate_appropriation SET budgetusage= ?, objectnumber=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
-      basePath: $.estimateAppropriations.*
-      jsonMaps:
-         
-       - jsonPath: $.estimateAppropriations.*.budgetUsage
-
-       - jsonPath: $.estimateAppropriations.*.objectNumber
-
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedBy
-       
+
        - jsonPath: $.estimateAppropriations.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-       - jsonPath: $.estimateAppropriations.*.id
-       
-       - jsonPath: $.estimateAppropriations.*.tenantId
-
- - version: 1.0
-   name: Offline Status
-   description: Persists Offline Status in egw_offlinestatus table
-   fromTopic: works-offlinestatus-create-validated
-   isTransaction: true
-   queryMaps:
-    - query: INSERT INTO egw_offlinestatus(
-            id, objecttype, objectnumber, remarks, statusdate, status, createdby, 
-            createdtime, tenantid,referencenumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.offlineStatuses.*
-      jsonMaps:
-         
-       - jsonPath: $.offlineStatuses.*.id
-       
-       - jsonPath: $.offlineStatuses.*.objectType
-         
-       - jsonPath: $.offlineStatuses.*.objectNumber
-       
-       - jsonPath: $.offlineStatuses.*.remarks
-
-       - jsonPath: $.offlineStatuses.*.statusDate
-         dbType: LONG
-         
-       - jsonPath: $.offlineStatuses.*.status
-       
-       - jsonPath: $.offlineStatuses.*.auditDetails.createdBy
-       
-       - jsonPath: $.offlineStatuses.*.auditDetails.createdTime
-         dbType: LONG
-
-       - jsonPath: $.offlineStatuses.*.tenantId
-
-       - jsonPath: $.offlineStatuses.*.referenceNumber
+       - jsonPath: $.estimateAppropriations.*.deleted
+         dbType: BOOLEAN
 
  - version: 1.0
    name: Works Offline Status Update

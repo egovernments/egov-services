@@ -130,7 +130,7 @@ public class AssetsForEstimate   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate and Assets linking")
-  @NotNull
+  //@NotNull
 
 
   public String getDetailedEstimate() {

@@ -1,6 +1,6 @@
 {
 "tenantId" : "default",
-"moduleName" : "ACCESSCONTROL",
+"moduleName" : "ACCESSCONTROL-ACTIONS-TEST",
 "actions-test" : [
   
   {
@@ -622,7 +622,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "SUPPLIER MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Supplier Master.Supplier Create"
@@ -635,7 +635,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "SUPPLIER MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Supplier Master.Supplier Update"
@@ -674,7 +674,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "STORE MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Store Master.Store Create"
@@ -687,7 +687,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "STORE MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Store Master.Store Update"
@@ -713,7 +713,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Material Master.Material Create"
@@ -726,7 +726,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Material Master.Material Update"
@@ -752,7 +752,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "PRICE LIST MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Price List Master.PriceList Create"
@@ -765,7 +765,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "PRICE LIST MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Price List Master.PriceList Update"
@@ -791,7 +791,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "INDENT",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Indent.Indent Create"
@@ -804,7 +804,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "INDENT",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Indent.Indent Update"
@@ -830,7 +830,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "OPENING BALANCE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Opening Balance.Opening Balance Create"
@@ -843,7 +843,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "OPENING BALANCE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Opening Balance.Opening Balance Update"
@@ -895,7 +895,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": "513",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "CASE",
     "code": "null",
     "path": "Legal Case Management.Legal Case Transactions.Case.New Case Create"
@@ -934,7 +934,7 @@
     "orderNumber": 0,
     "queryParams": null,
     "parentModule": "516",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "ADVOCATE",
     "code": "null",
     "path": "Legal Case Management.Legal Case Masters.Advocate.Advocate Create"
@@ -960,7 +960,7 @@
     "orderNumber": 11,
     "queryParams": null,
     "parentModule": "514",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "OPINION",
     "code": "null",
     "path": "Legal Case Management.Legal Case Transactions.Opinion.Opinion Create"
@@ -986,7 +986,7 @@
     "orderNumber": 21,
     "queryParams": null,
     "parentModule": "515",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "PAYMENTADVOCATE",
     "code": "null",
     "path": "Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Create"
@@ -1012,7 +1012,7 @@
     "orderNumber": 0,
     "queryParams": null,
     "parentModule": "517",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "REGISTER",
     "code": "null",
     "path": "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create"
@@ -1030,6 +1030,85 @@
     "code": "null",
     "path": "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Search"
   },
+    
+  {
+    "id": 1006,
+    "name": "Side",
+    "url": "/lcms-services/legalcase/register/_search",
+    "displayName": "Side",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "517",
+    "enabled": true,
+    "serviceCode": "REGISTER",
+    "code": "null",
+    "path": "Legal Case Management.Legal Case Masters.Side.Side"
+  },
+    {
+    "id": 1209,
+    "name": "Court",
+    "url": "/lcms-services/legalcase/register/_search",
+    "displayName": "Court",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "517",
+    "enabled": false,
+    "serviceCode": "COURTTYPE",
+    "code": "null",
+    "path": "Legal Case Management.Legal Case Masters.Court.Court"
+  },
+   {
+    "id": 1210,
+    "name": "caseType",
+    "url": "/lcms-services/legalcase/register/_search",
+    "displayName": "Case Type",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "517",
+    "enabled": true,
+    "serviceCode": "REGISTER",
+    "code": "null",
+    "path": "Legal Case Management.Legal Case Masters.Case Type.Case Type"
+  },
+   {
+    "id": 1211,
+    "name": "caseCategory",
+    "url": "/lcms-services/legalcase/register/_search",
+    "displayName": "Case Category",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "517",
+    "enabled": true,
+    "serviceCode": "REGISTER",
+    "code": "null",
+    "path": "Legal Case Management.Legal Case Masters.Case Category.Case Category"
+  },
+  {
+    "id": 1212,
+    "name": "bench",
+    "url": "/lcms-services/legalcase/register/_search",
+    "displayName": "Bench",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "517",
+    "enabled": true,
+    "serviceCode": "REGISTER",
+    "code": "null",
+    "path": "Legal Case Management.Legal Case Masters.Bench.Bench"
+  },
+   {
+    "id": 1213,
+    "name": "caseStatus",
+    "url": "/lcms-services/legalcase/register/_search",
+    "displayName": "Case Status",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "517",
+    "enabled": true,
+    "serviceCode": "REGISTER",
+    "code": "null",
+    "path": "Legal Case Management.Legal Case Masters.Case Status.Case Status"
+  },  
   {
     "id": 1030,
     "name": "Case Register Report",
@@ -1178,7 +1257,7 @@
     "name": "PerfAssmtKpiMasterSearch",
     "url": "/perfmanagement/v1/kpimaster/_search",
     "displayName": "KPI Master",
-    "orderNumber": 1,
+    "orderNumber": 2,
     "queryParams": null,
     "parentModule": "592",
     "enabled": true,
@@ -1217,7 +1296,7 @@
     "name": "PerfAssmtKpiValueSearch",
     "url": "/perfmanagement/v1/kpivalue/_search",
     "displayName": "KPI Value",
-    "orderNumber": 1,
+    "orderNumber": 4,
     "queryParams": null,
     "parentModule": "592",
     "enabled": true,
@@ -1615,6 +1694,98 @@
     "code": "null",
     "path": "Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Search"
   },
+  {
+    "id": 1214,
+    "name": "Vehicle type",
+    "url": "/swm-services/vehicletype/_create",
+    "displayName": "Vehicle type",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "507",
+    "enabled": true,
+    "serviceCode": "Collection Point",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Masters.Vehicle type.Vehicle type"
+  },
+  {
+    "id": 1215,
+    "name": "Waste Type",
+    "url": "/swm-services/wastetype/_create",
+    "displayName": "Waste Type",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "507",
+    "enabled": true,
+    "serviceCode": "Collection Point",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Masters.Waste Type.Waste Type"
+  },
+  {
+    "id": 1216,
+    "name": "Waste Subtype",
+    "url": "/swm-services/wastesubtype/_create",
+    "displayName": "Waste Subtype",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "507",
+    "enabled": true,
+    "serviceCode": "Collection Point",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Masters.Waste Subtype.Waste Subtype"
+  },
+  {
+    "id": 1217,
+    "name": "Shift Type",
+    "url": "/swm-services/shifttype/_create",
+    "displayName": "Shift Type",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "507",
+    "enabled": true,
+    "serviceCode": "Collection Point",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Masters.Shift Type.Shift Type"
+  },
+  {
+    "id": 1218,
+    "name": "Collection type",
+    "url": "/swm-services/collectionpoint/_create",
+    "displayName": "Collection type",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "507",
+    "enabled": true,
+    "serviceCode": "Collection Point",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Masters.Collection type.Collection type"
+  },
+  {
+    "id": 1219,
+    "name": "Population",
+    "url": "/swm-services/population/_create",
+    "displayName": "Population",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "507",
+    "enabled": true,
+    "serviceCode": "Collection Point",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Masters.Population.Population"
+  },
+  {
+    "id": 1220,
+    "name": "Toilet",
+    "url": "/swm-services/Toilet/_create",
+    "displayName": "Toilet",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "507",
+    "enabled": true,
+    "serviceCode": "Collection Point",
+    "code": "null",
+    "path": "Solid Waste Management.SWM Masters.Toilet.Toilet"
+  },
+  
   {
     "id": 1098,
     "name": "VehicleSchedule Create",
@@ -8547,19 +8718,6 @@
     "path": "Legal Case Management.Legal Case Transactions.Case.Reference Evidence.Reference Evidence Update"
   },
   {
-    "id": 1101,
-    "name": "PerfAssmtKpiValueCompareSearch",
-    "url": "/perfmanagement/v1/kpivalue/_comparesearch",
-    "displayName": "Search KPI Value",
-    "orderNumber": 1,
-    "queryParams": null,
-    "parentModule": "592",
-    "enabled": false,
-    "serviceCode": "PERF_ASSESSMENT_VAL",
-    "code": "null",
-    "path": "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCompareSearch"
-  },
-  {
     "id": 1102,
     "name": "SearchAttendanceReport",
     "url": "/hr-attendance/attendances/_attendancereport",
@@ -9191,7 +9349,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL ISSUE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Material Issue.Material Issues Create"
@@ -9204,7 +9362,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL ISSUE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Material Issue.Material Issues Update"
@@ -9217,7 +9375,7 @@
     "orderNumber": 3,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL ISSUE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Material Issue.Material Issues Search"
@@ -9962,7 +10120,185 @@
     "serviceCode": "HRPT",
     "code": "null",
     "path": "Employee Management.HR Report.Employee leave summary report"
-  }
-  
+  },
+  {
+    "id": 870,
+    "name": "Get Actions from MDMS",
+    "url": "/access/v1/actions/mdms/_get",
+    "displayName": "Get Actions from mdms",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "221",
+    "enabled": false,
+    "serviceCode": "AccessControl",
+    "code": "null",
+    "path": "Access Control.Get Actions from MDMS"
+  },
+  {
+    "id": 1407,
+    "name": "Dumping Ground Detail Report",
+    "url": "/swm-services/report/dumpinggrounddetailsreport",
+    "displayName": "Dumping Ground Detail Report",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": true,
+    "serviceCode": "SWMRPT",
+    "code": null,
+    "path": "Solid Waste Management.SWM Reports.Dumping Ground Detail Report"
+  },
+  {
+    "id": 1416,
+    "name": "Expenditure Incurred On Transportation Report",
+    "url": "/swm-services/report/expenditureincurredreport",
+    "displayName": "Expenditure Incurred On Transportation Report",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": true,
+    "serviceCode": "SWMRPT",
+    "code": null,
+    "path": "Solid Waste Management.SWM Reports.Expenditure Incurred On Transportation Report"
+  },{
+    "id": 1404,
+    "name": "PerfAssmtKpiTargetCreate",
+    "url": "/perfmanagement/v1/kpitarget/_create",
+    "displayName": "Create KPI Targets",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "592",
+    "enabled": false,
+    "serviceCode": "PERF_ASSESSMENT_TRGT",
+    "code": "null",
+    "path": "Performance Assessment.KPI Targets.PerfAssmtKpiTargetCreate"
+  },{
+    "id": 1405,
+    "name": "PerfAssmtKpiTargetUpdate",
+    "url": "/perfmanagement/v1/kpitarget/_update",
+    "displayName": "Update KPI Targets",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "592",
+    "enabled": false,
+    "serviceCode": "PERF_ASSESSMENT_TRGT",
+    "code": "null",
+    "path": "Performance Assessment.KPI Targets.PerfAssmtKpiTargetUpdate"
+  },
+  {
+    "id": 1413,
+    "name": "PerfAssmtKpiTargetSearch",
+    "url": "/perfmanagement/v1/kpitarget/_search",
+    "displayName": "KPI Targets",
+    "orderNumber": 3,
+    "queryParams": null,
+    "parentModule": "592",
+    "enabled": true,
+    "serviceCode": "PERF_ASSESSMENT_TRGT",
+    "code": "null",
+    "path": "Performance Assessment.KPI Targets.PerfAssmtKpiTargetSearch"
+  },
+  {
+    "id": 1420,
+    "name": "Non Indent Issue Create",
+    "url": "/inventory-services/materialissues-ni/_create",
+    "displayName": "Create Non Indent Issue",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": null,
+    "enabled": false,
+    "serviceCode": "NON INDENT ISSUES",
+    "code": "null",
+    "path": "Inventory.Inventory Transactions.Non Indent Issues.Non Indent Issue Create"
+  },
+  {
+    "id": 1421,
+    "name": "Non Indent Issue Update",
+    "url": "/inventory-services/materialissues-ni/_update",
+    "displayName": "Update Non Indent Issue",
+    "orderNumber": 2,
+    "queryParams": null,
+    "parentModule": null,
+    "enabled": false,
+    "serviceCode": "NON INDENT ISSUES",
+    "code": "null",
+    "path": "Inventory.Inventory Transactions.Non Indent Issues.Non Indent Issue Update"
+  },
+  {
+    "id": 1422,
+    "name": "Non Indent Issue Search",
+    "url": "/inventory-services/materialissues-ni/_search",
+    "displayName": "Search Non Indent Issue",
+    "orderNumber": 3,
+    "queryParams": null,
+    "parentModule": null,
+    "enabled": false,
+    "serviceCode": "NON INDENT ISSUES",
+    "code": "null",
+    "path": "Inventory.Inventory Transactions.Non Indent Issues.Non Indent Issue Search"
+  },
+  {
+    "id": 1101,
+    "name": "PerfAssmtKpiValueCompareSearch",
+    "url": "/perfmanagement/v1/kpivalue/_comparesearch",
+    "displayName": "KPI Dashboard",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "592",
+    "enabled": true,
+    "serviceCode": "PERF_ASSESSMENT_DASHBOARD",
+    "code": "null",    "path": "Performance Assessment.Dashboard.PerfAssmtKpiValueCompareSearch"
+  },
+  {
+    "id": 1414,
+    "name": "Update Summon",
+    "url": "/lcms-services/legalcase/summon/_update",
+    "displayName": "Update Summon",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "513",
+    "enabled": false,
+    "serviceCode": "CASE",
+    "code": "null",    
+    "path": ""
+  },
+  {
+    "id": 1409,
+    "name": "SWM Report MetaData",
+    "url": "/report/swm/metadata/_get",
+    "displayName": "Get SWM Report Metadata",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": false,
+    "serviceCode": "SWMRPT",
+    "code": "null",    
+    "path": ""
+  },
+  {
+    "id": 1410,
+    "name": "SWM Report",
+    "url": "/report/swm/_get",
+    "displayName": "Get SWM Report",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": false,
+    "serviceCode": "SWMRPT",
+    "code": null,
+    "path": ""
+  },
+  {
+    "id": 1160,
+    "name": "Get Next Scheduled Maintenance Date",
+    "url": "/swm-services/vehiclemaintenancedetails/_getnextscheduleddate",
+    "displayName": "Get Next Scheduled Maintenance Date",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "622",
+    "enabled": false,
+    "serviceCode": "Get Next Scheduled Maintenance Date",
+    "code": null,
+    "path": ""
+  }  
 ]
 }

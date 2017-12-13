@@ -1,6 +1,7 @@
 package org.egov.infra.mdms.service;
 
-import java.util.ArrayList;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,11 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -22,64 +25,68 @@ import net.minidev.json.JSONArray;
 @Service
 @Slf4j
 public class MDMSService {
+	
+	@Autowired
+	private KafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Value("${egov.kafka.topics.reload}")
+	private String reloadTopic;
+	
+	public Map<String, Map<String, JSONArray>> searchMaster(MdmsCriteriaReq mdmsCriteriaReq) {
+		Map<String, Map<String, JSONArray>> responseMap = new HashMap<>();
+		Map<String, Map<String, Map<String, JSONArray>>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
+		Map<String, Map<String, JSONArray>> moduleMap = tenantIdMap.get(mdmsCriteriaReq.getMdmsCriteria().getTenantId());
 
-	public Map<String, Map<String, JSONArray>> getMaster(MdmsCriteriaReq mdmsCriteriaReq) {
-		Map<String, List<Object>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
-		List<Object> list = tenantIdMap.get(mdmsCriteriaReq.getMdmsCriteria().getTenantId());
-		
-		if(list == null) 
-		throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId","Invalid Tenant Id");
-		
-		
-		ObjectMapper objectMapper = new ObjectMapper();
+		if (moduleMap == null)
+			throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");
+
 		List<ModuleDetail> moduleDetails = mdmsCriteriaReq.getMdmsCriteria().getModuleDetails();
-		// String masterDataJson = null;
-		String tenantJsonList = null;
-		Map<String, Map<String, JSONArray>> moduleMap = new HashMap<>(); 
 		
-		try {
-			// masterDataJson = objectMapper.writeValueAsString(tenantIdMap);
-			tenantJsonList = objectMapper.writeValueAsString(list);
-			log.info("MDMSService tenantJsonList:" + tenantJsonList);
+		for(ModuleDetail moduleDetail : moduleDetails) {
+			List<MasterDetail> masterDetails = moduleDetail.getMasterDetails();
+			Map<String, JSONArray> masters = moduleMap.get(moduleDetail.getModuleName());
+			if(masters == null) 
+			continue;
 			
-			
-			for(ModuleDetail moduleDetail : moduleDetails) {
-				//List<Map<String, JSONArray>> response = new ArrayList<>();
-				String moduleFilterJsonPath = "$[?(@.moduleName==".concat("\"").
-						concat(moduleDetail.getModuleName()).concat("\"").concat(")]");
-				log.info("moduleFilterJsonPath:"+ moduleFilterJsonPath);
-				JSONArray mastersOfModule = JsonPath.read(tenantJsonList, moduleFilterJsonPath);
-				log.info("getMaster moduleDetail:"+moduleDetail);
-				Map<String, JSONArray> resMap = new HashMap<String, JSONArray>();
-				for(MasterDetail masterDetail : moduleDetail.getMasterDetails()) {
-					//String moduleJson = objectMapper.writeValueAsString(list);
-					JSONArray masters = JsonPath.read(mastersOfModule, "$.*".concat(masterDetail.getName()).concat(".*"));
-					log.info("masters:"+masters);
-					if(masterDetail.getFilter() != null) 
-						masters = filterMaster(masters, masterDetail.getFilter());
-					
-					resMap.put(masterDetail.getName(), masters);
-					//response.add(resMap);
-				}
+			Map<String, JSONArray> finalMasterMap = new HashMap<>();
+			for(MasterDetail masterDetail : masterDetails) {
+				JSONArray masterData = masters.get(masterDetail.getName());
 				
-				moduleMap.put(moduleDetail.getModuleName(), resMap);
-				System.out.println("moduleMap:"+moduleMap);
-				//response.clear();
+				if(masterData == null) 
+				continue;
+				
+				if (masterDetail.getFilter() != null)
+					masterData = filterMaster(masterData, masterDetail.getFilter());
+				
+				finalMasterMap.put(masterDetail.getName(), masterData);
 			}
-			
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
+			responseMap.put(moduleDetail.getModuleName(), finalMasterMap);
 		}
-		
-		return moduleMap;
+		return responseMap;
 	}
 	
-	public JSONArray  filterMaster(JSONArray masters, String filterExp) {
+	public JSONArray filterMaster(JSONArray masters, String filterExp) {
 		JSONArray filteredMasters = JsonPath.read(masters, filterExp);
-		System.out.println("filteredMasters: "+filteredMasters);
 		return filteredMasters;
 	}
+	
+	public void updateCache(String path, String tenantId) {
 
+		ObjectMapper jsonReader = new ObjectMapper();
+		
+			try {
+				URL jsonFileData = new URL(path);
+				Map<String, Object> map = jsonReader.readValue(new InputStreamReader(jsonFileData.openStream()), Map.class);
+				kafkaTemplate.send(reloadTopic, map);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new CustomException("mdms_invalid_file_path","invalid file path");
+			}
+
+
+	}
+	
+	public void reloadObj(Map<String, Object> map) {
+		kafkaTemplate.send(reloadTopic, map);
+	}
 }

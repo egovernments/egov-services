@@ -24,4 +24,5 @@ public class EstimateTemplateSearchCriteria {
     private String subTypeOfWork;
     private Integer pageSize;
     private Integer pageNumber;
+    private Boolean isUpdateUniqueCheck = Boolean.FALSE;
 }

@@ -1,0 +1,52 @@
+{
+	"variables": [],
+	"info": {
+		"name": "indent",
+		"_postman_id": "1b1d92c9-12b2-ec0a-fbf4-5192fccc65b6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/inventory-services/indents/_create?tenantId=default",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/inventory-services/indents/_create?tenantId=default",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"indents",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"indents\": [\n    {\n      \"issueStore\": {\n        \"code\": \"MED001\"\n      },\n      \"indentDate\": 1512412200000,\n      \"indentNumber\": \"\",\n      \"indentType\": \"Indent\",\n      \"expectedDeliveryDate\": 1512412200000,\n      \"narration\": \"fgfd\",\n      \"materialHandOverTo\": \"fdgdf\",\n      \"designation\": \"\",\n      \"indentDetails\": [\n        {\n          \"uom\": {\n            \"code\": \"CUL\"\n          },\n          \"material\": {\n            \"code\": \"MAT19\"\n          },\n          \"indentQuantity\": \"25\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        },\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"CM\"\n          },\n          \"indentQuantity\": \"3\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        }\n      ],\n      \"indentPurpose\": \"Consumption\",\n      \"inventoryType\": \"Asset\",\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511527847642,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"cf72c310-d77c-43fd-bf90-365d1587deed\"\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

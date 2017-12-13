@@ -35,9 +35,15 @@ public class DomainService {
 
     @Autowired
     private UomService uomService;
+    
+    private String assetSearchUrl="";
+    
+    private String assetListFiled="assets";
+    
+   
+    
 
-    public AuditDetails mapAuditDetails(RequestInfo requestInfo
-    ) {
+    public AuditDetails mapAuditDetails(RequestInfo requestInfo) {
 
         return AuditDetails.builder()
                 .createdBy(requestInfo.getUserInfo().getId().toString())
@@ -85,9 +91,11 @@ public class DomainService {
         }
     }
 
-    public Uom getUom(String tenantId, String uomCode, org.egov.common.contract.request.RequestInfo requestInfo) {
+    public Uom getUom(String tenantId, String uomCode, RequestInfo requestInfo) {
         return uomService.getUom(tenantId, uomCode, requestInfo);
     }
+    
+ 
 
     public Double getSaveConvertedQuantity(Double quantity, Double conversionFactor) {
         return quantity * conversionFactor;
@@ -97,11 +105,19 @@ public class DomainService {
         return quantity / conversionFactor;
     }
     
+    public Double getSaveConvertedRate(Double rate, Double conversionFactor) {
+        return rate / conversionFactor;
+    }
+
+    public Double getSearchConvertedRate(Double rate, Double conversionFactor) {
+        return rate * conversionFactor;
+    }
+    
     public  String 	toDateStr(Long epoch)
   	{
-  		Date date=new Date(epoch*1000);
+  		Date date=new Date(epoch);
   		String dateStr = ddMMYYYYHHMMSS.format(date);
-  		//LOG.info("date for epoch "+epoch+" is: "+dateStr);
+  		LOG.info("date for epoch "+epoch+" is: "+dateStr);
   		return dateStr;
   	}
     
@@ -110,7 +126,7 @@ public class DomainService {
   	  try {
   		  String dateStr = ddMMYYYY.format(new Date());
   		  Date date = ddMMYYYY.parse(dateStr);
-  		  return date.getTime()/1000;
+  		  return date.getTime();
   	} catch (ParseException e) {
   		// TODO Auto-generated catch block
   		e.printStackTrace();

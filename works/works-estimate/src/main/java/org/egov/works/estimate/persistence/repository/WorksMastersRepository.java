@@ -20,15 +20,26 @@ public class WorksMastersRepository {
 
     private String searchSorUrl;
 
+    private String searchSorByCodeUrl;
+
     public WorksMastersRepository(final RestTemplate restTemplate, @Value("${egov.works.mastershost}")final String worksMastersHost,
-                                  @Value("${egov.works.masters.searchsorurl}") final String searchSorUrl) {
+                                  @Value("${egov.works.masters.searchsorurl}") final String searchSorUrl,
+                                  @Value("${egov.works.masters.searchsorbycodeurl}") final String searchSorByCodeUrl) {
         this.restTemplate = restTemplate;
         this.searchSorUrl = worksMastersHost + searchSorUrl;
+        this.searchSorByCodeUrl = worksMastersHost + searchSorByCodeUrl;
     }
 
-    public List<ScheduleOfRate> searchScheduleOfRates(final String tenantId, final List<String> sorId,final RequestInfo requestInfo) {
+    public List<ScheduleOfRate> searchScheduleOfRatesById(final String tenantId, final List<String> sorId,final RequestInfo requestInfo) {
         String ids = String.join(",", sorId);
         return restTemplate.postForObject(searchSorUrl,
                 requestInfo, ScheduleOfRateResponse.class, tenantId, ids).getScheduleOfRates();
+    }
+
+    public List<ScheduleOfRate> searchScheduleOfRatesByCodeAndCategory(final String tenantId, final List<String> codes, final List<String> categoryCodes, final RequestInfo requestInfo) {
+        String sorCodes = String.join(",", codes);
+        String scheduleCategoryCodes = String.join(",", categoryCodes);
+        return restTemplate.postForObject(searchSorByCodeUrl,
+                requestInfo, ScheduleOfRateResponse.class, tenantId, sorCodes, scheduleCategoryCodes).getScheduleOfRates();
     }
 }

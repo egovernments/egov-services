@@ -56,16 +56,26 @@ paths:
             in: query
             description: |
               search on basis of financial year
-          - name: receiptNumber
+          - name: ids
             type: string
             in: query
             description: |
-              search on basis of receiptNumber
-          - name: materialName
+              search on basis of ids
+          - name: storeName
             type: string
             in: query
             description: |
-              search on basis of materialName
+              search on basis of storeName
+          - name: mrnNumber
+            type: string
+            in: query
+            description: |
+              search on basis of mrnNumber
+          - name: receiptType
+            type: string
+            in: query
+            description: |
+              search on basis of receiptType
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -227,8 +237,7 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids
           - name: issueStore
-            type: integer
-            format: int64
+            type: string
             in: query
             description: |
               issue store of the Indent
@@ -271,6 +280,28 @@ paths:
             in: query
             description: |
               totalIndentValue  denormalized value from Indent Material
+          - name: indentType
+            in: query
+            type: string
+            enum:
+              - Indent
+              - TransferIndent
+            description: |
+              There are 2 types of indent namely Indent Note and Transfer Indent
+          - name: searchPurpose
+            in: query
+            type: string
+            enum:
+              - PurchaseOrder
+              - IssueMaterial
+            description: | 
+                  Using this field to search indents for purchase order or material issue creation.
+          - name: inventoryType
+            in: query
+            type: string
+            enum:
+              - Asset
+              - Consumable
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -446,6 +477,11 @@ paths:
             in: query
             description: |
               store of the PurchaseOrder
+          - name: configurable
+            type: boolean
+            in: query
+            description: |
+              configure flag for rate contract
           - name: purchaseOrderNumber
             type: string
             in: query
@@ -688,10 +724,137 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /miscellaneousreceiptnotes/_search:
+      post:
+        summary: Get list of Miscellaneous material receipt notes based on below search parameter(s).
+        description: >
+          Provides the list of material receipt note information based on the
+          search paramaters.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+          - name: mrnNumber
+            in: query
+            description: >-
+              Pass List of unique mrn number(s) then the API will returns list of
+              receipts.
+            required: false
+            type: array
+            items:
+              type: string
+            maxItems: 100
+          - name: receiptType
+            in: query
+            description: Mention the type of the receipt.
+            required: false
+            type: array
+            items:
+              type: string
+            maxItems: 3
+          - name: mrnStatus
+            in: query
+            description: Unique status code of the receipt.
+            required: false
+            type: string
+          - name: receivingStore
+            in: query
+            description: The store code from which the receipt was received.
+            required: false
+            type: string
+          - name: supplierCode
+            in: query
+            description: Unique Supplier code from which the receipt was made.
+            required: false
+            type: string
+          - name: receiptDateFrom
+            in: query
+            description: From which receipt date onwards the data needs to be fetched.
+            required: false
+            type: integer
+            format: int64
+          - name: receiptDateT0
+            in: query
+            description: Till which receipt date the data needs to be fetched.
+            required: false
+            type: integer
+            format: int64
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        tags:
+          - MRN
+        responses:
+          '200':
+            description: 'Successful response, returns list of Material Receipt Note(s).'
+            schema:
+              $ref: '#/definitions/MaterialReceiptResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+    /miscellaneousreceiptnotes/_create:
+      post:
+        summary: Create New Miscellaneous Material Receipt Note.
+        description: >-
+          Create a new miscellaneous material receipt note.
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialReceipt
+            in: body
+            description: Details for the new material receipt.
+            required: true
+            schema:
+              $ref: '#/definitions/MaterialReceiptRequest'
+        tags:
+          - MRN
+        responses:
+          '200':
+            description: Material Receipt created
+            schema:
+              $ref: '#/definitions/MaterialReceiptResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+    /miscellaneousreceiptnotes/_update:
+      post:
+        summary: Update existing Miscellaneous Material Receipts.
+        description: Existing miscellaneous material receipt notes can be updated except the mrn number.
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialReceipt
+            in: body
+            description: Details for the new material receipts.
+            required: true
+            schema:
+              $ref: '#/definitions/MaterialReceiptRequest'
+        tags:
+          - MRN
+        responses:
+          '200':
+            description: Material Receipt(s) Updated Successfully.
+            schema:
+              $ref: '#/definitions/MaterialReceiptResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
     /materialissues/_search:
       post:
-        summary: Get the list of material issues
-        description: This API holds the common information required by both Indent Issue and Non Indent Issue. This API will be invoked internally during search of Indent Issue and Non Indent Issue.
+        summary: Get the list of material issues for indent case.
+        description: This API holds the common information required by  Indent Issue . This API will be invoked internally during search of Indent Issue.
         tags:
           - Material Issue
         parameters:
@@ -762,8 +925,8 @@ paths:
 
     /materialissues/_create:
       post:
-        summary: Create  new  materialissues
-        description: This API holds the common information of both Indent Issue and Non Indent Issue. Whenver and Indent Issue or Non Indent Isseu is created in the system, this API will be invoked internally and the common information will be hold by this API.
+        summary: Create  new  materialissues for indent case.
+        description: This API holds the common information of both Indent Issue . Whenver  Indent Issue  is created in the system, this API will be invoked internally and the common information will be hold by this API.
         tags:
           - Material Issue
         parameters:
@@ -785,8 +948,126 @@ paths:
 
     /materialissues/_update:
       post:
-        summary: Update any of the material issues.
-        description: This API is inoked to update the material issue information.
+        summary: Update any of the material issues for indent case.
+        description: This API is inoked to update the material issue information for indent case.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          200:
+            description: MaterialIssue updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialissues-ni/_search:
+      post:
+        summary: Get the list of material issues without
+        description: This API holds the common information required by Non Indent Issue. This API will be invoked internally during search of  Non Indent Issue.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items:
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: fromStore
+            type: string
+            in: query
+            description: |
+             issuing store of the MaterialIssue
+          - name: toStore
+            type: string
+            in: query
+            description: |
+             receiving store of the MaterialIssue
+          - name: issueNoteNumber
+            type: string
+            in: query
+            description: |
+              issueNoteNumber  Auto generated number, read only
+          - name: issueDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              issue date of the MaterialIssue
+          - name: materialIssueStatus
+            type: string
+            in: query
+            description: |
+              material issue status of the MaterialIssue
+            enum:
+              - CREATED
+              - APPROVED
+              - REJECTED
+              - CANCELED
+          - name: description
+            type: string
+            in: query
+            description: |
+              description of the MaterialIssue
+          - name: totalIssueValue
+            type: number
+            format: BigDecimal
+            in: query
+            description: |
+              total issue value of the MaterialIssue
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: MaterialIssue retrieved Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialissues-ni/_create:
+      post:
+        summary: Create  new  materialissues for non indent case
+        description: This API holds the common information of Non Indent Issue. Whenver Non Indent Issue is created in the system, this API will be invoked internally and the common information will be hold by this API.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: Create  new
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          200:
+            description: MaterialIssue created Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialissues-ni/_update:
+      post:
+        summary: Update any of the material issues for non indent case.
+        description: This API is inoked to update the material issue information for non indent case.
         tags:
           - Material Issue
         parameters:
@@ -2031,6 +2312,10 @@ definitions:
           description: Tenant id of the Indent
           maxLength: 128
           minLength: 4
+        action:
+          type: string
+          description: Action to update Indent Details
+          maxLength: 50
         issueStore:
           format: singleValueList
           $ref: "#/definitions/Store"
@@ -2419,7 +2704,7 @@ definitions:
           description: Used for indent search result and used in indent purchase order creation
           type:  array
           items:
-            type: string 
+            type: string
       required:
       - store
       - purchaseOrderDate
@@ -2509,7 +2794,22 @@ definitions:
           type: string
           maxLength: 512
           description: |
-            temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.   
+            temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.
+        indentQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            temporary field used to show indent pending quantity to be used for purchase order. If multiple indent numbers used, then show total quantity by combining indent pending quantities.
+        tenderQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            temporary field used to show tender quantity. If rate type is tender, then show tender quantity.
+        tenderAvailableQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            temporary field used to show tender available quantity. If rate type is tender, then show tender quantity which are already used in purchase orders.
         purchaseIndentDetails:
           type:  array
           items:
@@ -2567,6 +2867,9 @@ definitions:
           type: string
           description: Manual Receipt Number, applicable only for Opening Balanace Entry.
           maxLength: 128
+        issueNumber:
+          type: string
+          description: material issue number.
         receiptDate:
           type: integer
           description: The date on which the receipt was made.
@@ -2690,7 +2993,7 @@ definitions:
           type: string
           maxLength: 1000
           description: |
-            payment terms of the Material Receipt            
+            payment terms of the Material Receipt
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -2716,9 +3019,6 @@ definitions:
           minLength: 4
         material:
           $ref: "#/definitions/Material"
-        batchNo:
-          type: string
-          description: batch number of material receipt detail.
         mrnNumber:
           type: string
           readOnly: true
@@ -2801,6 +3101,9 @@ definitions:
           type: string
           description: Serial number of the materials that are received.
           format: varchar
+        batchNo:
+          type: string
+          description: batch number of material receipt detail.
         manufactureDate:
           type: integer
           description: The date on which the materials are received into system.
@@ -3545,7 +3848,7 @@ definitions:
           minLength: 5
           description: |
             name of the Store
-          format: singleValueList  
+          format: singleValueList
         description:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$

@@ -3,7 +3,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
-    "url": "/inventory-services/v110/purchaseorders/_search",
+    "url": "/inventory-services/purchaseorders/_search",
     "groups": [
       {
         "name": "search",

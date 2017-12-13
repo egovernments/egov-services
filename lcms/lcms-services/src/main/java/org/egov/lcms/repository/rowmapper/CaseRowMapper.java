@@ -70,7 +70,8 @@ public class CaseRowMapper implements RowMapper<Case> {
 		summon.setTenantId(getString(rs.getObject("tenantId")));
 		summon.setStateId(getString(rs.getObject("stateId")));
 		summon.setCaseDetails(getString(rs.getObject("caseDetails")));
-		summon.setEntryType(EntryType.fromValue(rs.getString("entryType")));
+		summon.setEntryType(EntryType.fromValue(getString(rs.getString("entryType"))));
+		summon.setIsUlbinitiated(getBoolean(rs.getBoolean("isUlbinitiated")));
 
 		try {
 			if (rs.getString("departmentName") != null) {

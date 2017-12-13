@@ -148,7 +148,7 @@ var dat = {
               "label": "works.create.groups.fields.typeOfWork",
               "pattern": "",
               "type": "singleValueList",
-              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name",
+              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork&parent=null|$..code|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -341,7 +341,20 @@ var dat = {
 												"isField": true
 										}
 									]
-								}]
+								},
+								{
+									"ifValue": false,
+									"hide": [
+										{
+											"name": "pmcName",
+											"jpath":"abstractEstimates[0].pmcName",
+											"isGroup": false,
+											"isField": true
+										}
+									],
+									"show": []
+								}
+							]
             },
 						{
               "name": "pmcType",
@@ -367,7 +380,8 @@ var dat = {
 												"isField": true
 										}
 									]
-								}]
+								}
+							]
             },
 						{
               "name": "pmcName",
@@ -376,7 +390,7 @@ var dat = {
               "label": "works.create.groups.fields.pmcName",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name",
+              "url": "/works-masters/v1/contractors/_search?&pmc=true&statuses=ACTIVE|$.contractors[*].code|$.contractors[*].name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -659,7 +673,7 @@ var dat = {
 								"maxLength":1024
 			        }, {
 			          "name": "estimateAmount",
-			          "pattern": "^\\d{0,6}(\\.\\d{0,2})?$",
+			          "pattern": "^\\d{0,20}(\\.\\d{0,2})?$",
 								"patternErrMsg": "works.create.pattern.fields.label.estimateAmount",
 			          "type": "text",
 			          "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].estimateAmount",
@@ -736,6 +750,7 @@ var dat = {
 						"jsonPath": "abstractEstimates[0].councilResolutionDate",
 						"label": "works.create.groups.fields.councilResolutionDate",
 						"type": "datePicker",
+						"maxDate":"today",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -1045,7 +1060,7 @@ var dat = {
               "label": "works.create.groups.fields.typeOfWork",
               "pattern": "",
               "type": "singleValueList",
-              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name",
+              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork&parent=null|$..code|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -1604,6 +1619,7 @@ var dat = {
 						"jsonPath": "abstractEstimates[0].councilResolutionDate",
 						"label": "works.create.groups.fields.councilResolutionDate",
 						"type": "datePicker",
+						"maxDate":"today",
 						"isRequired": false,
 						"isDisabled": true,
 						"requiredErrMsg": "",

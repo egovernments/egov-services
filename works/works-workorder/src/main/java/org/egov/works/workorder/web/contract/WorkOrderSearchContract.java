@@ -46,5 +46,7 @@ public class WorkOrderSearchContract {
     private Integer pageNumber;
 
     private String sortBy;
+    
+    private List<String> letterOfAcceptances;
 
 }

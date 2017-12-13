@@ -51,9 +51,15 @@ public class ActionController {
 
 	private static final String[] taskAction = { "create", "update" };
 
-	@PostMapping(value = "_search")
+	/*@PostMapping(value = "_search")
 	public ActionResponse getActionsBasedOnRoles(@RequestBody final ActionRequest actionRequest) {
 		List<Action> actionsList = actionService.getActions(actionRequest.toDomain());
+		return getSuccessResponse(actionsList);
+	}*/
+	
+	@PostMapping(value = "_search")
+	public ActionResponse getActionsBasedOnRoles(@RequestBody final ActionRequest actionRequest) throws UnsupportedEncodingException, JSONException {
+		List<Action> actionsList = actionService.getAllMDMSActions(actionRequest);
 		return getSuccessResponse(actionsList);
 	}
 
@@ -96,7 +102,8 @@ public class ActionController {
 		return getNewListSuccessResponse(actionRequest.getRequestInfo(), actionList);
 
 	}
-
+    
+	
 	@PostMapping(value = "_validate")
 	public ValidateActionResponse validateAction(@RequestBody ValidateActionRequest validateActionRequest) {
 		ActionValidation actionValidation = actionService.validate(validateActionRequest.toDomain());

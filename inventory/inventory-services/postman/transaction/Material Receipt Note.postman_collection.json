@@ -1,0 +1,211 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Material Receipt Note",
+		"_postman_id": "50557c96-100b-fd08-173b-069d4f9e74aa",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Material Receipt Note",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/receiptnotes/_create?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"receiptnotes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\": {\n      \"id\": 73\n    }\n  },\n  \"materialReceipt\": [\n    {\n      \"receivingStore\": {\n        \"code\": \"STR\"\n      },\n      \"receiptDate\": 1512973979000,\n      \"receiptType\": \"PURCHASE RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"supplierBillNo\": \"AB-PO-2017\",\n      \"supplierBillDate\": 1512365762000,\n      \"challanNo\": \"CD-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt\",\n      \"paymentTerms\": \"paymentTerms for receipt\",\n      \"receivedBy\": \"sanjeev\",\n      \"designation\": \"ASST-ENG\",\n      \"inspectedBy\": \"ramesh\",\n      \"inspectionDate\": 45698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt\",\n      \"receiptDetails\": [\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 5,\n          \"acceptedQty\": 3,\n          \"unitRate\": 5,\n          \"isScrapItem\":\"true\",\n          \"rejectionRemark\": \"rejection remark for receipt detail\",\n          \"purchaseOrderDetail\": {\n            \"id\": 1\n          },\n         \"receiptDetailsAddnInfo\": [\n            {\n              \"quantity\": 5,\n              \"manufactureDate\": 12345698,\n              \"lotNo\":\"LOT-01\",\n              \"serialNo\": \"SR-02\",\n              \"expiryDate\": 1544509979000,\n              \"batchNo\": \"BA-NO-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Material Receipt Note",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/receiptnotes/_update?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"receiptnotes",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"materialReceipt\": [\n    {\n      \"id\": 100,\n      \"receivingStore\": {\n        \"code\": \"STR\"\n      },\n      \"mrnNumber\":\"MRN/00101/2017\",\n      \"receiptDate\": 1512432086399,\n      \"mrnStatus\": \"CANCELED\",\n      \"receiptType\": \"MISCELLANEOUS RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"supplierBillNo\": \"ABCP-PO-2017\",\n      \"supplierBillDate\": 3654799,\n      \"challanNo\": \"CDE-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt update\",\n      \"paymentTerms\": \"paymentTerms for receipt update\",\n      \"receivedBy\": \"sanjeev prasad\",\n      \"designation\": \"ASST-ENG1\",\n      \"inspectedBy\": \"ramesh babu\",\n      \"inspectionDate\": 1245698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt update\",\n      \"isScrapItem\":\"true\",\n      \"receiptDetails\": [\n        {\n          \"id\": 67,\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 29.5,\n          \"acceptedQty\": 11,\n          \"unitRate\": 20,\n          \"rejectionRemark\": \"rejection remark for receipt detail update\",\n          \"purchaseOrderDetail\": {\n            \"id\": 2\n          },\n          \"tenantid\":\"default\",\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"id\": 80,\n              \"quantity\": 5,\n              \"manufactureDate\": 345698,\n              \"lotNo\": \"LOTU-01\",\n              \"serialNo\": \"SRU-02\",\n              \"expiryDate\": 1512825037000,\n              \"batchNo\": \"BAC-NO-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Material Receipt Note Bulk",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/receiptnotes/_create?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"receiptnotes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"93f3c9c9-6cad-43dc-9bbe-f88a01ea89e3\",\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"materialReceipt\": [\n    {\n      \"receivingStore\": {\n        \"code\": \"STR\"\n      },\n      \"receiptDate\": 123456987,\n      \"receiptType\": \"PURCHASE RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"supplierBillNo\": \"AB-PO-2017\",\n      \"supplierBillDate\": 123654799,\n      \"challanNo\": \"CD-LK-2017\",\n      \"challanDate\": 45698756,\n      \"description\": \"description for receipt\",\n      \"paymentTerms\": \"paymentTerms for receipt\",\n      \"receivedBy\": \"sanjeev\",\n      \"designation\": \"ASST-ENG\",\n      \"inspectedBy\": \"ramesh\",\n      \"inspectionDate\": 45698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt\",\n      \"receiptDetails\": [\n        {\n          \"material\": {\n            \"code\": \"MAT/03\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 25,\n          \"acceptedQty\": 20,\n          \"unitRate\": 5,\n          \"rejectionRemark\": \"rejection remark for receipt detail\",\n          \"purchaseOrderDetail\": {\n            \"id\": 7\n          },\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"manufactureDate\": 12345698,\n              \"lotNo\": \"LOT-01\",\n              \"serialNo\": \"SR-01\",\n              \"expiryDate\": 56987888,\n              \"batchNo\": \"BA-NO-01-2017\"\n            },\n            {\n              \"manufactureDate\": 12345698,\n              \"lotNo\": \"LOT-02\",\n              \"serialNo\": \"SR-03\",\n              \"expiryDate\": 56987888\n            }\n          ]\n        },\n        {\n          \"material\": {\n            \"code\": \"MAT/03\"\n          },\n          \"uom\": {\n            \"code\": \"KGS\"\n          },\n          \"receivedQty\": 30,\n          \"acceptedQty\": 25,\n          \"unitRate\": 10,\n          \"rejectionRemark\": \"rejection remark for receipt detail 2\",\n          \"batchNo\": \"BA-NO-02-2017\",\n          \"purchaseOrderDetail\": {\n            \"id\": 7\n          },\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"manufactureDate\": 12345698,\n              \"lotNo\": \"LOT-04\",\n              \"serialNo\": \"SR-05\",\n              \"expiryDate\": 56987888,\n              \"batchNo\": \"BA-NO-01-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Material Receipt Note Bulk",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/receiptnotes/_update?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"receiptnotes",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"93f3c9c9-6cad-43dc-9bbe-f88a01ea89e3\",\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"materialReceipt\": [\n    {\n      \"id\": 26,\n      \"receivingStore\": {\n        \"code\": \"str18\"\n      },\n      \"receiptDate\": 123456987,\n      \"receiptType\": \"INWARD RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLR UPDATE\"\n      },\n      \"mrnNumber\": \"MRN/00033/2017\",\n      \"supplierBillNo\": \"BC-PO-2017\",\n      \"supplierBillDate\": 3654799,\n      \"challanNo\": \"EF-LK-2017\",\n      \"challanDate\": 698756,\n      \"description\": \"description for receipt update\",\n      \"paymentTerms\": \"paymentTerms for receipt update\",\n      \"receivedBy\": \"rajeec\",\n      \"designation\": \"ASST-ENG1\",\n      \"inspectedBy\": \"suresh\",\n      \"inspectionDate\": 5698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt update\",\n      \"receiptDetails\": [\n        {\n          \"id\": 31,\n          \"material\": {\n            \"code\": \"MATU/03\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 30,\n          \"acceptedQty\": 25,\n          \"unitRate\": 10,\n          \"rejectionRemark\": \"rejection remark for receipt detail update\",\n          \"purchaseOrderDetail\": {\n            \"id\": 5\n          },\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"id\": 44,\n              \"manufactureDate\": 12345698,\n              \"lotNo\": \"LOTU-01\",\n              \"serialNo\": \"SRU-01\",\n              \"expiryDate\": 56987888,\n              \"batchNo\": \"CD-NO-01-2017\"\n            }\n          ]\n        },\n        {\n          \"id\": 32,\n          \"material\": {\n            \"code\": \"MATU/04\"\n          },\n          \"uom\": {\n            \"code\": \"KGS\"\n          },\n          \"receivedQty\": 35,\n          \"acceptedQty\": 305,\n          \"unitRate\": 15,\n          \"rejectionRemark\": \"rejection remark for receipt detail 2 update\",\n          \"purchaseOrderDetail\": {\n            \"id\": 7\n          },\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"id\": 46,\n              \"manufactureDate\": 12345698,\n              \"lotNo\": \"LOTU-04\",\n              \"serialNo\": \"SRU-05\",\n              \"expiryDate\": 56987888,\n        \t  \"batchNo\": \"CDEA-NO-02-2017\"\n            }\n          ]\n        },\n        {\n          \"material\": {\n            \"code\": \"MATU/04\"\n          },\n          \"uom\": {\n            \"code\": \"KGS\"\n          },\n          \"receivedQty\": 35,\n          \"acceptedQty\": 305,\n          \"unitRate\": 15,\n          \"rejectionRemark\": \"rejection remark for receipt detail 3 update\",\n          \"batchNo\": \"CDEA-NO-02-2017\",\n          \"purchaseOrderDetail\": {\n            \"id\": 7\n          },\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"manufactureDate\": 12345698,\n              \"lotNo\": \"LOTU-04\",\n              \"serialNo\": \"SRU-05\",\n              \"expiryDate\": 56987888,\n              \"batchNo\": \"CDEA-NO-02-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Receipt Note",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/receiptnotes/_search?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"receiptnotes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\":{\n    \t\"id\":1,\n    \t\"tenantId\":\"default\",\n    \t\"username\":\"abc\"\n    }\n  }\n}\n"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

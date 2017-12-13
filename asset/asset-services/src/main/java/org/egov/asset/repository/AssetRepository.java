@@ -56,6 +56,7 @@ import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.YearWiseDepreciation;
+import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
@@ -156,7 +157,12 @@ public class AssetRepository {
 
 		if (asset.getEnableYearWiseDepreciation() != null && asset.getEnableYearWiseDepreciation())
 			asset.setDepreciationRate(null);
-
+		
+		if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.MOVABLE)) {
+			asset.setSurveyNumber(null);
+		    asset.setMarketValue(null);
+		}
+		
 		final Location location = asset.getLocationDetails();
 
 		final Object[] obj = new Object[] { asset.getId(), asset.getAssetCategory().getId(), asset.getName(),
@@ -168,7 +174,7 @@ public class AssetRepository {
 				requestInfo.getUserInfo().getId(), new Date(), requestInfo.getUserInfo().getId(), new Date(),
 				asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
 				asset.getVersion(), asset.getEnableYearWiseDepreciation(),
-				assetCommonService.getDepreciationRate(asset.getDepreciationRate()) };
+				assetCommonService.getDepreciationRate(asset.getDepreciationRate()),asset.getSurveyNumber(),asset.getMarketValue()};
 		try {
 			jdbcTemplate.update(query, obj);
 		} catch (final Exception ex) {
@@ -206,6 +212,11 @@ public class AssetRepository {
 
 		if (asset.getStatus() != null)
 			status = asset.getStatus();
+		
+		if (asset.getAssetCategory() != null && asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.MOVABLE)) {
+			asset.setSurveyNumber(null);
+		    asset.setMarketValue(null);
+		}
 
 		final Location location = asset.getLocationDetails();
 
@@ -215,8 +226,8 @@ public class AssetRepository {
 				location.getZone(), location.getRevenueWard(), location.getStreet(), location.getElectionWard(),
 				location.getDoorNo(), location.getPinCode(), location.getLocality(), location.getBlock(), property,
 				requestInfo.getUserInfo().getId(), new Date(), asset.getGrossValue(),
-				asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getCode(),
-				asset.getTenantId() };
+				asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getSurveyNumber(),asset.getMarketValue(),
+				asset.getCode(), asset.getTenantId()};
 		try {
 			log.debug("query1::" + query + "," + Arrays.toString(obj));
 			final int i = jdbcTemplate.update(query, obj);

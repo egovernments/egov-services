@@ -8,31 +8,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ExpenditureType {
 
-	CAPITAL("CAPITAL"),
+    CAPITAL("CAPITAL"),
 
-	REVENUE("REVENUE"),
+    REVENUE("REVENUE"),
 
-	OTHERS("OTHERS");
+    OTHERS("OTHERS");
 
-	private String value;
+    private String value;
 
-	ExpenditureType(String value) {
-		this.value = value;
-	}
+    ExpenditureType(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static ExpenditureType fromValue(String text) {
+        for (ExpenditureType b : ExpenditureType.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static ExpenditureType fromValue(String text) {
-		for (ExpenditureType b : ExpenditureType.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

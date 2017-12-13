@@ -13,7 +13,7 @@ import java.util.Objects;
  * An Object that holds NON SOR details for a given Estimate template.
  */
 @ApiModel(description = "An Object that holds NON SOR details for a given Estimate template.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T13:13:54.875Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
 
 public class NonSOR   {
   @JsonProperty("id")
@@ -27,6 +27,9 @@ public class NonSOR   {
 
   @JsonProperty("uom")
   private String uom = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   public NonSOR id(String id) {
     this.id = id;
@@ -96,10 +99,10 @@ public class NonSOR   {
   }
 
    /**
-   * UOM for the Non SOR. Unique reference from 'UOM'. Primary key is ref. here.
+   * UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.
    * @return uom
   **/
-  @ApiModelProperty(required = true, value = "UOM for the Non SOR. Unique reference from 'UOM'. Primary key is ref. here.")
+  @ApiModelProperty(required = true, value = "UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.")
   @NotNull
 
 
@@ -109,6 +112,26 @@ public class NonSOR   {
 
   public void setUom(String uom) {
     this.uom = uom;
+  }
+
+  public NonSOR deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
   }
 
 
@@ -124,12 +147,13 @@ public class NonSOR   {
     return Objects.equals(this.id, nonSOR.id) &&
         Objects.equals(this.tenantId, nonSOR.tenantId) &&
         Objects.equals(this.description, nonSOR.description) &&
-        Objects.equals(this.uom, nonSOR.uom);
+        Objects.equals(this.uom, nonSOR.uom) &&
+        Objects.equals(this.deleted, nonSOR.deleted);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, description, uom);
+    return Objects.hash(id, tenantId, description, uom, deleted);
   }
 
   @Override
@@ -141,6 +165,7 @@ public class NonSOR   {
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -33,7 +33,8 @@ export default class UiNestedTablesInputs extends Component {
   constructor(){
     super();
     this.state={
-      list:[]
+      list:[],
+      childTables:[]
     }
   }
 
@@ -46,22 +47,24 @@ export default class UiNestedTablesInputs extends Component {
     //   //  this.addMandatoryFields(list);
     // }
 
-
-    let {setVal, getVal, item} = this.props;
-    let tableDatas = getVal(item.jsonPath);
-    //modifiedTbl.tableList.values = this.cloneRowObject(tableJsonPath, parentTblIdx, [...modifiedTbl.tableList.values]);
-
-    if(!tableDatas || tableDatas.length === 0){
-      setVal(item.jsonPath, [undefined]);
-      let list = [...this.state.list];
-      list.push(this.cloneRowObject(item.jsonPath, 0, [...this.props.item.tableList.values]));
-      this.setState({list});
-      this.addMandatoryFields(list);
+    try{
+      let {setVal, getVal, item} = this.props;
+      let tableDatas = getVal(item.jsonPath);
+      //modifiedTbl.tableList.values = this.cloneRowObject(tableJsonPath, parentTblIdx, [...modifiedTbl.tableList.values]);
+      if(!tableDatas || tableDatas.length === 0){
+        setVal(item.jsonPath, [undefined]);
+        let list = [...this.state.list];
+        list.push(this.cloneRowObject(item.jsonPath, 0, [...this.props.item.tableList.values]));
+        let childTables = item.tableList.tables && [[...item.tableList.tables]] || [];
+        this.setState({list, childTables});
+        this.addMandatoryFields(list);
+      }
+      else{
+          this.addMultipleRow(item.jsonPath, tableDatas.length, item.tableList.values);
+      }
     }
-    else{
-      this.addMultipleRow(item.jsonPath, tableDatas.length, item.tableList.values);
-      //  for(let idx=0;idx<tableDatas.length;idx++)
-      //    this.addRow(item.jsonPath);
+    catch(e){
+      console.log('error', e);
     }
 
   }
@@ -117,39 +120,90 @@ export default class UiNestedTablesInputs extends Component {
   }
 
   addMultipleRow = (tableJsonPath, rowLength, values) =>{
+    let {item} = this.props;
     //console.log('jsonPath --->', tableJsonPath);
-    debugger;
     let list = this.state.list && [...this.state.list] || [];
     let idx = list.length;
     let len = idx+rowLength;
+    let childTables = [...this.state.childTables];
+
     for(idx;idx<len;idx++){
       let clonedObj = this.cloneRowObject(tableJsonPath, idx, [...values]);
       list.push(clonedObj);
+      if(item.tableList.tables){
+        const nestedTables = item.tableList.tables && [...item.tableList.tables] || [];
+        let parentTblIdx  = idx;
+        let tables = [];
+        for(let i=0;i<nestedTables.length;i++)
+        {
+          let table = JSON.parse(JSON.stringify(nestedTables[i]));
+          table.jsonPath =  this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, table.jsonPath);
+          table.tableList['values'] = this.cloneRowObject(tableJsonPath, parentTblIdx, table.tableList.values);
+          tables.push(table);
+        }
+        childTables.push(tables);
+      }
     }
-    this.setState({list});
+    this.setState({list, childTables});
     this.addMandatoryFields(list);
     return list;
   }
 
   addRow = (tableJsonPath) =>{
+    let {item} = this.props;
     let list = [...this.state.list];
     let idx = list.length;
     list.push(this.cloneRowObject(tableJsonPath, idx));
-    this.setState({list});
+
+    let childTables = [...this.state.childTables];
+
+    if(item.tableList.tables){
+      const nestedTables = item.tableList.tables && [...item.tableList.tables] || [];
+      let parentTblIdx  = idx;
+      let tables = [];
+      for(let i=0;i<nestedTables.length;i++)
+      {
+        let table = JSON.parse(JSON.stringify(nestedTables[i]));
+        table.jsonPath =  this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, table.jsonPath);
+        table.tableList['values'] = this.cloneRowObject(tableJsonPath, parentTblIdx, table.tableList.values);
+        tables.push(table);
+      }
+      childTables.push(tables);
+    }
+
+    this.setState({list, childTables});
     this.addMandatoryFields(list);
     return list;
   }
 
   deleteRow = (tableJsonPath, idxToDelete) =>{
     let list = [...this.state.list];
+    let childTables = this.state.childTables && [...this.state.childTables] || [];
     if(list.length > 1){
       let length = list.length;
       let deletedItem = list.splice(idxToDelete, 1);
+      let deletedChildTables = childTables.splice(idxToDelete, 1)[0];
+
       if(idxToDelete <= list.length){
         list = this.reIndexingExistingRows(list, tableJsonPath, idxToDelete);
       }
-      this.setState({list});
+
+      this.setState({list, childTables});
       this.removeMandatoryFields(tableJsonPath, length-1);
+
+      if(deletedChildTables){
+        let deletedFields=[];
+        let requiredFields = [...this.props.getRequiredFields()];
+        for(let i=0;i<deletedChildTables.length;i++)
+        {
+          let deletedFieldsChildTable = requiredFields.filter((field)=>{
+            return field.startsWith(deletedChildTables[i].jsonPath);
+          });
+          deletedFields=[...deletedFields, ...deletedFieldsChildTable];
+          this.resetTableData(deletedFieldsChildTable[i].jsonPath);
+        }
+        this.props.delRequiredFields(deletedFields);
+      }
       this.deleteTableData(tableJsonPath, idxToDelete);
     }
   }
@@ -158,6 +212,10 @@ export default class UiNestedTablesInputs extends Component {
     let tableData = [...this.props.getVal(tableJsonPath, [])];
     tableData.splice(idxToDelete, 1);
     this.props.setVal(tableJsonPath, tableData);
+  }
+
+  resetTableData = (tableJsonPath) => {
+    this.props.setVal(tableJsonPath, []);
   }
 
   reIndexingExistingRows = (list, tableJsonPath, startIdx) => {
@@ -251,24 +309,50 @@ export default class UiNestedTablesInputs extends Component {
     const list = this.state.list;
     const requiredColumns = this.findRequiredColumns(item);
     const tableJsonPath = item.jsonPath;
-    const nestedTables = item.tableList.tables && [...item.tableList.tables] || [];
+    const nestedTables = this.state.childTables || [];
 
-    const renderNestedTables = (childTables, parentTblIdx)=>{
+    // const renderNestedTables = (childTables, parentTblIdx)=>{
+    //
+    //   let nestedTables = [...childTables];
+    //
+    //   if(nestedTables && nestedTables.length > 0){
+    //     try{
+    //       return (
+    //         <div className="childTable">
+    //           {nestedTables.map((table, idx) =>{
+    //             let modifiedTbl = {...table};
+    //             modifiedTbl.jsonPath =  this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, modifiedTbl.jsonPath);
+    //             //console.log('NESTED TABLE --->', modifiedTbl.jsonPath, modifiedTbl.tableList.values);
+    //             //console.log("replacing", table.jsonPath, this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, modifiedTbl.jsonPath));
+    //             modifiedTbl.tableList['values'] = this.cloneRowObject(tableJsonPath, parentTblIdx, modifiedTbl.tableList.values);
+    //             //console.log("clonning --->", modifiedTbl.jsonPath, modifiedTbl.tableList.values);
+    //             return <UiNestedTablesInputs key={idx} tabIndex={this.props.tabIndex} ui={this.props.ui} addRequiredFields={this.props.addRequiredFields} delRequiredFields={this.props.delRequiredFields} setVal={this.props.setVal} getVal={this.props.getVal} item={{...modifiedTbl}} fieldErrors={this.props.fieldErrors} handler={this.props.handler}
+    //                screen={this.props.screen}/>
+    //           }) || null}
+    //         </div>
+    //       )
+    //     }
+    //     catch(e){
+    //       console.log('error', e);
+    //     }
+    //   }
+    //   return null;
+    // }
 
-      let nestedTables = [...childTables];
-
+    const renderNestedTables = (childTables)=>{
+      let nestedTables = childTables && [...childTables];
       if(nestedTables && nestedTables.length > 0){
         try{
           return (
             <div className="childTable">
-              {nestedTables.map((table, idx) =>{
-                let modifiedTbl = {...table};
-                modifiedTbl.jsonPath =  this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, modifiedTbl.jsonPath);
-                //console.log('NESTED TABLE --->', modifiedTbl.jsonPath, modifiedTbl.tableList.values);
-                //console.log("replacing", table.jsonPath, this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, modifiedTbl.jsonPath));
-                modifiedTbl.tableList['values'] = this.cloneRowObject(tableJsonPath, parentTblIdx, modifiedTbl.tableList.values);
-                //console.log("clonning --->", modifiedTbl.jsonPath, modifiedTbl.tableList.values);
-                return <UiNestedTablesInputs key={idx} tabIndex={this.props.tabIndex} ui={this.props.ui} addRequiredFields={this.props.addRequiredFields} delRequiredFields={this.props.delRequiredFields} setVal={this.props.setVal} getVal={this.props.getVal} item={{...modifiedTbl}} fieldErrors={this.props.fieldErrors} handler={this.props.handler}
+              {nestedTables.map((table, idx) => {
+                return <UiNestedTablesInputs key={idx} tabIndex={this.props.tabIndex}
+                   ui={this.props.ui} addRequiredFields={this.props.addRequiredFields}
+                   delRequiredFields={this.props.delRequiredFields}
+                   setVal={this.props.setVal} getVal={this.props.getVal}
+                   item={table}
+                   fieldErrors={this.props.fieldErrors}
+                   handler={this.props.handler}
                    screen={this.props.screen}/>
               }) || null}
             </div>
@@ -297,7 +381,7 @@ export default class UiNestedTablesInputs extends Component {
                    <Delete/>
                  </IconButton>
                 </div>}
-             </div>, renderNestedTables(nestedTables, idx)])})}
+             </div>, renderNestedTables(nestedTables[idx])])})}
 
         {isEditMode &&
           <div className="flex-row border-top">

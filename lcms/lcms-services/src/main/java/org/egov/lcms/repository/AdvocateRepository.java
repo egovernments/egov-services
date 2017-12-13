@@ -13,7 +13,7 @@ import org.egov.lcms.repository.builder.AdvocateBuilders;
 import org.egov.lcms.repository.rowmapper.AdvocateRowMapper;
 import org.egov.lcms.repository.rowmapper.AgencyRowMapper;
 import org.egov.lcms.repository.rowmapper.PersonDetailRowMapper;
-import org.egov.lcms.utility.ConstantUtility;
+import org.egov.lcms.util.ConstantUtility;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

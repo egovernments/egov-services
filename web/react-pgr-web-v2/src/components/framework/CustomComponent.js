@@ -1,18 +1,16 @@
-import  React,{Component} from 'react';
+import React, { Component } from 'react';
 
 class CustomComonent extends Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
-  render()
-  {
-
+  render() {
     return (
       <div>
-          <h2>Custom component</h2>
+        <h2>Custom component</h2>
       </div>
-    )
+    );
   }
 }
 

@@ -36,7 +36,7 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
             validateSortByOrder(searchRequest.getSortBy());
-            validateEntityFieldName(searchRequest.getSortBy(), VehicleMaintenanceDetailsSearch.class);
+            validateEntityFieldName(searchRequest.getSortBy(), VehicleMaintenanceDetails.class);
         }
 
         String orderBy = "order by vehicle";
@@ -67,10 +67,10 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("isscheduled", searchRequest.getIsScheduled());
         }
 
-        if (searchRequest.getVehicleCode() != null) {
+        if (searchRequest.getRegNumber() != null) {
             addAnd(params);
             params.append("vehicle =:vehicle");
-            paramValues.put("vehicle", searchRequest.getVehicleCode());
+            paramValues.put("vehicle", searchRequest.getRegNumber());
         }
 
         if (searchRequest.getActualMaintenanceDate() != null) {
@@ -82,7 +82,7 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
         if (searchRequest.getMaintenanceType() != null) {
             addAnd(params);
             params.append("maintenancetype =:maintenancetype");
-            paramValues.put("maintenancetype", searchRequest.getMaintenanceType());
+            paramValues.put("maintenancetype", searchRequest.getMaintenanceType().getCode());
         }
 
         if (searchRequest.getVehicleScheduledMaintenanceDate() != null) {

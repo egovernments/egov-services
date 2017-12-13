@@ -53,46 +53,47 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class MdmsRepository {
 
-	private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-	private final String mdmsBySearchCriteriaUrl;
+    private final String mdmsBySearchCriteriaUrl;
 
-	@Autowired
-	public MdmsRepository(final RestTemplate restTemplate,
-                          @Value("${egov.services.egov_mdms.hostname}") final String mdmsServiceHostname,
-                          @Value("${egov.services.egov_mdms.searchpath}") final String mdmsBySearchCriteriaUrl) {
+    @Autowired
+    public MdmsRepository(final RestTemplate restTemplate,
+            @Value("${egov.services.egov_mdms.hostname}") final String mdmsServiceHostname,
+            @Value("${egov.services.egov_mdms.searchpath}") final String mdmsBySearchCriteriaUrl) {
 
-		this.restTemplate = restTemplate;
-		this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
-	}
+        this.restTemplate = restTemplate;
+        this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
+    }
 
-	public JSONArray getByCriteria(String tenantId, String moduleName, String masterName, String filterFieldName,
-			String filterFieldValue, RequestInfo requestInfo) {
+    public JSONArray getByCriteria(String tenantId, String moduleName, String masterName, String filterFieldName,
+            String filterFieldValue, RequestInfo requestInfo) {
 
-		MasterDetails[] masterDetails;
-		ModuleDetails[] moduleDetails;
-		MdmsRequest request = null;
-		MdmsResponse response = null;
-		masterDetails = new MasterDetails[1];
-		moduleDetails = new ModuleDetails[1];
+        MasterDetails[] masterDetails;
+        ModuleDetails[] moduleDetails;
+        MdmsRequest request = null;
+        MdmsResponse response = null;
+        masterDetails = new MasterDetails[1];
+        moduleDetails = new ModuleDetails[1];
 
-		masterDetails[0] = MasterDetails.builder().name(masterName)
-				.filter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]").build();
-		moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
+        masterDetails[0] = MasterDetails.builder().name(masterName)
+                .filter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]").build();
+        moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
 
-		request = MdmsRequest.builder()
-				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
-				.requestInfo(requestInfo).build();
-		response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
-		if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
-				|| response.getMdmsRes().get(moduleName) == null
-				|| !response.getMdmsRes().get(moduleName).containsKey(masterName)
-				|| response.getMdmsRes().get(moduleName).get(masterName) == null) {
-			return null;
-		} else {
+        request = MdmsRequest.builder()
+                .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
+                .requestInfo(requestInfo).build();
+        response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
+        if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
+                || response.getMdmsRes().get(moduleName) == null
+                || !response.getMdmsRes().get(moduleName).containsKey(masterName)
+                || response.getMdmsRes().get(moduleName).get(masterName) == null) {
+            return null;
+        } else {
 
-			return response.getMdmsRes().get(moduleName).get(masterName);
+            return response.getMdmsRes().get(moduleName).get(masterName);
 
-		}
-	}
+        }
+    }
+    
 }

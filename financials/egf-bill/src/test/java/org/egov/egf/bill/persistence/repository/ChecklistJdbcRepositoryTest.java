@@ -16,6 +16,7 @@ import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.model.ChecklistSearch;
 import org.egov.egf.bill.persistence.entity.ChecklistEntity;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +133,7 @@ public class ChecklistJdbcRepositoryTest {
                 new ChecklistResultExtractor());
         assertTrue("Result set length is zero", result.size() == 0);
     }
-    
+    @Ignore
     @Test
     @Sql(scripts = { "/sql/billdetail/clearbilldetail.sql", "/sql/billdetail/insertbilldetaildata.sql" })
     public void test_delete_reason() {

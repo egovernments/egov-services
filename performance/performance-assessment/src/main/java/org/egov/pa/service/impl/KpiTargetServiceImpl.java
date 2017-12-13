@@ -9,10 +9,12 @@ import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.Tenant;
+import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.KpiTargetRepository;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.service.KpiTargetService;
 import org.egov.pa.validator.RestCallService;
+import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPITargetRequest;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.ValueResponse;
@@ -35,22 +37,50 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 	private KpiValueRepository kpiValueRepository;
 	
 	@Autowired
+	@Qualifier("kpiMasterRepo")
+	private KpiMasterRepository kpiMasterRepository;
+	
+	@Autowired
 	private RestCallService restCallService; 
 	
 	@Override
 	public KPITargetRequest createNewTarget(KPITargetRequest kpiTargetRequest) {
 		setCreatedAndUpdatedDate(kpiTargetRequest);
+		textTargetChanges(kpiTargetRequest);
 		log.info("KPI Target Message after updating Created Date " + kpiTargetRequest);
 		kpiTargetRepository.persistNewTarget(kpiTargetRequest);
 		kpiValueRepository.persistKpiValue(decideTenantsForTarget(kpiTargetRequest));
 		return kpiTargetRequest;
 	}
+	
+	private void textTargetChanges(KPITargetRequest targetReq) { 
+		for(KpiTarget target : targetReq.getKpiTargets()) { 
+			if(StringUtils.isBlank(target.getTargetValue()) && StringUtils.isNotBlank(target.getTargetDescription())) { 
+				target.setTargetValue(target.getTargetDescription());
+			}
+		}
+		
+	}
 
 	@Override
 	public KPITargetRequest updateNewTarget(KPITargetRequest kpiTargetRequest) {
-		setCreatedAndUpdatedDate(kpiTargetRequest);
-		log.info("KPI Target Message after updating Updated Date " + kpiTargetRequest);
-		kpiTargetRepository.modifyNewTarget(kpiTargetRequest);
+		List<KpiTarget> targetList = kpiTargetRequest.getKpiTargets();
+		List<KpiTarget> createTargetList = new ArrayList<>();
+		for(KpiTarget target : targetList) { 
+			if(StringUtils.isBlank(target.getId())) { 
+				createTargetList.add(target); 
+			}
+		}
+		KPITargetRequest createRequest = new KPITargetRequest();
+		createRequest.setKpiTargets(createTargetList);
+		createRequest.setRequestInfo(kpiTargetRequest.getRequestInfo());
+		createNewTarget(createRequest); 
+		
+		if(targetList.size() != createTargetList.size()) { 
+			setCreatedAndUpdatedDate(kpiTargetRequest);
+			log.info("KPI Target Message after updating Updated Date " + kpiTargetRequest);
+			kpiTargetRepository.modifyNewTarget(kpiTargetRequest);
+		}
 		return kpiTargetRequest;
 	}
 	
@@ -63,6 +93,7 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 				kpi.setCode(target.getKpiCode());
 				ValueResponse vr = new ValueResponse(); 
 				vr.setTenantId(target.getTenantId());
+				vr.setFinYear(target.getFinYear());
 				vr.setKpi(kpi);
 				AuditDetails audit = new AuditDetails(); 
 				audit.setCreatedBy(targetRequest.getRequestInfo().getUserInfo().getId());
@@ -78,6 +109,7 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 					kpi.setCode(target.getKpiCode());
 					ValueResponse vr = new ValueResponse(); 
 					vr.setTenantId(tenant.getCode());
+					vr.setFinYear(target.getFinYear());
 					vr.setKpi(kpi);
 					AuditDetails audit = new AuditDetails(); 
 					audit.setCreatedBy(targetRequest.getRequestInfo().getUserInfo().getId());
@@ -102,5 +134,11 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 			target.setCreatedDate(new java.util.Date().getTime());
 			target.setLastModifiedDate(new java.util.Date().getTime());
 		}
+	}
+
+	@Override
+	public List<KpiTarget> searchKpiTarget(KPITargetGetRequest getReq) {
+		List<KpiTarget> targetList = kpiTargetRepository.searchKpiTargets(getReq);
+		return targetList;
 	}
 }

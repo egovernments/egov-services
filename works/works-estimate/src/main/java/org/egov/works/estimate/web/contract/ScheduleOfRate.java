@@ -16,9 +16,9 @@ import java.util.Objects;
  * An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.
  */
 @ApiModel(description = "An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
 
-public class ScheduleOfRate   {
+public class ScheduleOfRate {
   @JsonProperty("id")
   private String id = null;
 
@@ -32,16 +32,19 @@ public class ScheduleOfRate   {
   private String description = null;
 
   @JsonProperty("scheduleCategory")
-  private String scheduleCategory = null;
+  private ScheduleCategory scheduleCategory = null;
 
   @JsonProperty("uom")
-  private String uom = null;
+  private UOM uom = null;
 
   @JsonProperty("sorRates")
   private List<SORRate> sorRates = new ArrayList<SORRate>();
 
   @JsonProperty("marketRates")
   private List<MarketRate> marketRates = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -129,7 +132,7 @@ public class ScheduleOfRate   {
     this.description = description;
   }
 
-  public ScheduleOfRate scheduleCategory(String scheduleCategory) {
+  public ScheduleOfRate scheduleCategory(ScheduleCategory scheduleCategory) {
     this.scheduleCategory = scheduleCategory;
     return this;
   }
@@ -141,16 +144,15 @@ public class ScheduleOfRate   {
   @ApiModelProperty(required = true, value = "Schedule Category of the SOR. unique reference from 'ScheduleCategory'. Code is ref. here.")
   @NotNull
 
-
-  public String getScheduleCategory() {
+  public ScheduleCategory getScheduleCategory() {
     return scheduleCategory;
   }
 
-  public void setScheduleCategory(String scheduleCategory) {
+  public void setScheduleCategory(ScheduleCategory scheduleCategory) {
     this.scheduleCategory = scheduleCategory;
   }
 
-  public ScheduleOfRate uom(String uom) {
+  public ScheduleOfRate uom(UOM uom) {
     this.uom = uom;
     return this;
   }
@@ -162,12 +164,11 @@ public class ScheduleOfRate   {
   @ApiModelProperty(required = true, value = "Unit Of Measurement of the SOR. unique reference from 'UOM'. Code is ref. here.")
   @NotNull
 
-
-  public String getUom() {
+  public UOM getUom() {
     return uom;
   }
 
-  public void setUom(String uom) {
+  public void setUom(UOM uom) {
     this.uom = uom;
   }
 
@@ -227,6 +228,26 @@ public class ScheduleOfRate   {
     this.marketRates = marketRates;
   }
 
+  public ScheduleOfRate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public ScheduleOfRate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -266,12 +287,13 @@ public class ScheduleOfRate   {
         Objects.equals(this.uom, scheduleOfRate.uom) &&
         Objects.equals(this.sorRates, scheduleOfRate.sorRates) &&
         Objects.equals(this.marketRates, scheduleOfRate.marketRates) &&
+        Objects.equals(this.deleted, scheduleOfRate.deleted) &&
         Objects.equals(this.auditDetails, scheduleOfRate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, code, description, scheduleCategory, uom, sorRates, marketRates, auditDetails);
+    return Objects.hash(id, tenantId, code, description, scheduleCategory, uom, sorRates, marketRates, deleted, auditDetails);
   }
 
   @Override
@@ -287,6 +309,7 @@ public class ScheduleOfRate   {
     sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
     sb.append("    sorRates: ").append(toIndentedString(sorRates)).append("\n");
     sb.append("    marketRates: ").append(toIndentedString(marketRates)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

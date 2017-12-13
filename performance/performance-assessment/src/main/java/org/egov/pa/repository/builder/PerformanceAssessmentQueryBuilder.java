@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.web.contract.KPIGetRequest;
+import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,13 +56,14 @@ public class PerformanceAssessmentQueryBuilder {
 
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "
     		+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
-    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, "
-    		+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId " 
+    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "
+    		+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear "
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ; 
     
-    public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.id, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
-    		+ " detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value FROM "  
-    		+ " egpa_kpi_value value LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE value.id IS NOT NULL "; 
+    public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.id, value.finyear as valueFinYear, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
+    		+ " detail.id as valueDetailId, detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value , docs.filestoreid as fileStoreId FROM  "  
+    		+ " egpa_kpi_value value LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid " 
+    		+ " LEFT JOIN egpa_kpi_value_documents docs ON detail.id = docs.valueid WHERE value.id IS NOT NULL  "; 
     
     /*public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id as id, master.name as name, master.code as code, master.department as  departmentId, master.finyear as financialYear, "  
     		+ " master.instructions as instructions, master.periodicity as periodicity, master.targettype as targetType, master.active as active,  " 
@@ -71,9 +73,24 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode " 
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE master.id IS NOT NULL " ;*/
     
-    public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT value.id, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
-    		+ " detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value FROM "  
-    		+ " egpa_kpi_value value LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE value.id IS NOT NULL " ;
+	public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category,  "
+    		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, target.finyear as targetFinYear, " 
+    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId,  "
+    		+ " SUM(NULLIF(detail.value, '')::int) as consolidatedValue FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
+    		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode  AND target.finyear = value.finyear "
+    		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid " 
+    		+ " WHERE master.targettype = 'VALUE' " ; 
+    
+    public static final String COMPARE_SEARCH_OBJECTIVE_BASE_QUERY = "SELECT master.id, master.name, master.code, master.targettype as targetType, master.instructions, master.finyear as finYear, master.department as departmentId, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, master.periodicity,  "  
+    		+ " target.id as targetId, target.kpicode as targetKpiCode, target.finyear as targetFinYear, target.targetvalue as targetValue, target.tenantid as targetTenantId, " 
+    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId, value.finyear as valueFinYear, detail.id as detailId, detail.valueid as detailValueId, detail.value as value, detail.period as period " 
+    		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode AND value.finyear = target.finyear "  
+    		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE master.targettype = 'OBJECTIVE' " ;   
+    		
+    
+    public static final String COMPARE_GROUP_BY = " GROUP BY master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, "
+    		+ " target.id, target.kpicode, target.targetvalue, target.tenantid, "  
+    		+ " value.id, value.kpicode, value.tenantid, detail.valueid" ;
     
     public static String persistKpiQuery() { 
     	return "INSERT INTO egpa_kpi_master (id, name, code, finyear, createdby, createddate) " 
@@ -91,6 +108,10 @@ public class PerformanceAssessmentQueryBuilder {
     
     public static String getNextKpiValueId() {
     	return "select nextval('seq_egpa_kpi_value') FROM GENERATE_SERIES(1,:size)" ; 
+    }
+    
+    public static String getNextKpiValueDetailId() {
+    	return "select nextval('seq_egpa_kpi_value_detail') FROM GENERATE_SERIES(1,:size)" ; 
     }
     
     public static String numberOfDocsReqQuery() { 
@@ -141,10 +162,24 @@ public class PerformanceAssessmentQueryBuilder {
     
     public String getValueCompareSearchQuery(KPIValueSearchRequest kpiValueSearchReq, final List preparedStatementValues) { 
     	final StringBuilder selectQuery = new StringBuilder(COMPARE_SEARCH_BASE_QUERY); 
-		addKpiValueWhereClause(selectQuery, preparedStatementValues, kpiValueSearchReq);
+    	addCompareWhereClause(selectQuery, preparedStatementValues, kpiValueSearchReq);
+    	selectQuery.append(COMPARE_GROUP_BY);
 		LOGGER.info("Query : " + selectQuery);
 		return selectQuery.toString();
     }
+    
+    public String getValueCompareObjectiveSearchQuery(KPIValueSearchRequest kpiValueSearchReq, final List preparedStatementValues) { 
+    	final StringBuilder selectQuery = new StringBuilder(COMPARE_SEARCH_OBJECTIVE_BASE_QUERY); 
+    	addCompareWhereClause(selectQuery, preparedStatementValues, kpiValueSearchReq);
+    	selectQuery.append(" ORDER BY detail.id "); 
+		LOGGER.info("Query : " + selectQuery);
+		return selectQuery.toString();
+    }
+    
+    public String getTargetTypeForKpi() { 
+    	return "SELECT distinct targettype FROM egpa_kpi_master WHERE code IN (:kpiCodeList) " ; 
+    }
+    
     
     public String getDocumentForKpiValue() { 
     	return " SELECT documentcode as code, kpicode as kpiCode, filestoreid as fileStoreId, id, valueid as valueId " 
@@ -159,26 +194,103 @@ public class PerformanceAssessmentQueryBuilder {
     	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
     }
     
-    public String getKpiByCode() { 
-    	return "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "  
-    			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
-    			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate,  " 
-    			+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId "  
-    			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target  ON " 
-    			+ " master.code = target.kpicode WHERE master.code IN (:kpiCodeList)" ;  
+    public String targetAvailableForKpi() { 
+    	return "select targettype as targetType from egpa_kpi_master master where master.code = :kpiCode AND exists (select 1 from egpa_kpi_master_target where kpicode = master.code) " ;
+    }
+    
+    private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "  
+			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
+			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  
+			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ;
+    
+    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, Long departmentId, Long categoryId,
+    		List<Object> preparedStatementValues) { 
+    	StringBuilder baseQuery = new StringBuilder(GETKPIBYCODEFINYEAR);
+    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, departmentId, categoryId, preparedStatementValues);
+    	 return baseQuery.toString();
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void getKpiByCodeWhereClause(final StringBuilder selectQuery, final List<String> kpiCodeList, 
+            final List<String> finYearList, Long departmentId, Long categoryId, List<Object> preparedStatementValues) {
+        if (!(null == kpiCodeList && null == finYearList && null == departmentId && null == categoryId))
+        	selectQuery.append(" AND ");
+        
+        boolean isAppendAndClause = false;
+
+        if (null != departmentId && departmentId > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.department = ? ");
+            preparedStatementValues.add(departmentId);
+        }
+        
+        if (null != categoryId && categoryId > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.category = ? ");
+            preparedStatementValues.add(categoryId);
+        }
+        
+        if (null != kpiCodeList && kpiCodeList.size() > 0) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
+            
+        }
+
+        if (null != finYearList && finYearList.size() > 0) { 
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" target.finyear IN " + getStringQuery(finYearList));
+        }
+    }
+    
+    public String getTargetSearchQuery(KPITargetGetRequest getReq, final List preparedStatementValues) { 
+    	
+    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, " 
+    			+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear " 
+    			+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
+    			+ " WHERE master.id IS NOT NULL"); 
+    	getTargetSearchWhereClause(selectQuery, preparedStatementValues, getReq);
+		LOGGER.info("Query : " + selectQuery);
+		return selectQuery.toString();
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void getTargetSearchWhereClause(final StringBuilder selectQuery, List<Object> preparedStatementValues, KPITargetGetRequest getReq) {
+        if (!(null == getReq.getKpiCode() && null == getReq.getFinYear() && null == getReq.getDepartmentId()))
+        	selectQuery.append(" AND ");
+        
+        boolean isAppendAndClause = false;
+
+        if (null != getReq.getKpiCode() && getReq.getKpiCode().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.code IN " + getStringQuery(getReq.getKpiCode()));
+        }
+        
+        if (null != getReq.getFinYear() && getReq.getFinYear().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" target.finyear IN " + getStringQuery(getReq.getFinYear()));
+        }
+        
+        if (null != getReq.getDepartmentId() && getReq.getDepartmentId().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.department IN " + getIdQuery(getReq.getDepartmentId()));
+        }
+        
+        if (null != getReq.getCategoryId() && getReq.getCategoryId().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.category IN " + getIdQuery(getReq.getCategoryId()));
+        }
+        
     }
     
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiValueWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final KPIValueSearchRequest kpiValueSearchReq) {
-		/*List<String> finYearList = kpiValueSearchReq.getFinYear();
+		List<String> finYearList = kpiValueSearchReq.getFinYear();
 		List<String> tenantIdList = kpiValueSearchReq.getTenantId();
-		List<String> kpiCodeList = kpiValueSearchReq.getKpiCodes();
-		if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear())
-			return;*/
-    	List<String> tenantIdList = kpiValueSearchReq.getTenantId();
-		selectQuery.append(" AND ");
+		if (!(null == finYearList && null == tenantIdList))
+			selectQuery.append(" AND ");
+		
 		boolean isAppendAndClause = false;
 		
 		if (null != tenantIdList && tenantIdList.size() > 0 && 
@@ -187,36 +299,53 @@ public class PerformanceAssessmentQueryBuilder {
 				selectQuery.append(" value.tenantid IN " + getStringQuery(tenantIdList));
 		}
 
-		/*if (null != finYearList && finYearList.size() > 0 && 
+		if (null != finYearList && finYearList.size() > 0 && 
 				finYearList.size() == 1 && !finYearList.get(0).equals("ALL")) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" master.finyear IN " + getStringQuery(finYearList));
+				selectQuery.append(" value.finyear IN " + getStringQuery(finYearList));
 		}
 
-		if (null != tenantIdList && tenantIdList.size() > 0 && 
-				tenantIdList.size() == 1 && !tenantIdList.get(0).equals("ALL")) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" value.tenantid IN " + getStringQuery(tenantIdList));
-		}
-
-		if (null != kpiCodeList && kpiCodeList.size() > 0 && 
-				kpiCodeList.size() == 1 && !kpiCodeList.get(0).equals("ALL")) {
-				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-				selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
+	}
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addCompareWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final KPIValueSearchRequest kpiValueSearchReq) {
+		if(null == kpiValueSearchReq.getFinYear() && null == kpiValueSearchReq.getKpiCodes() 
+				&& null == kpiValueSearchReq.getUlbList() && null == kpiValueSearchReq.getDepartmentId()) { 
+			selectQuery.append(COMPARE_GROUP_BY); 
+			return;
 		}
 		
-		if (null != kpiValueSearchReq.getDepartmentId()) { 
+		selectQuery.append(" AND ");
+		boolean isAppendAndClause = false;
+		List<String> parameterList = kpiValueSearchReq.getUlbList(); 
+		
+		if (null != parameterList && parameterList.size() > 0 ) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" value.tenantid IN " + getStringQuery(parameterList));
+		}
+		
+		parameterList = kpiValueSearchReq.getKpiCodes(); 
+		
+		if (null != parameterList && parameterList.size() > 0 ) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" master.department = ? ");
-            preparedStatementValues.add(kpiValueSearchReq.getDepartmentId());
-		}*/
+			selectQuery.append(" master.code IN " + getStringQuery(parameterList));
+		}
+		
+		parameterList = kpiValueSearchReq.getFinYear(); 
+		
+		if (null != parameterList && parameterList.size() > 0 ) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" target.finyear IN " + getStringQuery(parameterList));
+		}
 	}
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiMasterWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final KPIGetRequest kpiGetRequest) {
         if (null == kpiGetRequest.getKpiCode() && null == kpiGetRequest.getKpiName() 
-        		&& null == kpiGetRequest.getDepartmentId())
+        		&& null == kpiGetRequest.getDepartmentId() && null == kpiGetRequest.getFinYear()
+        		&& null == kpiGetRequest.getCategoryId())
             return;
 
         selectQuery.append(" AND ");
@@ -245,6 +374,18 @@ public class PerformanceAssessmentQueryBuilder {
             selectQuery.append(" master.department = ? ");
             preparedStatementValues.add(kpiGetRequest.getDepartmentId());
         }
+        
+        if (null != kpiGetRequest.getCategoryId() && kpiGetRequest.getCategoryId() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.category = ? ");
+            preparedStatementValues.add(kpiGetRequest.getCategoryId());
+        }
+        
+        if (StringUtils.isNotBlank(kpiGetRequest.getFinYear())) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.finyear = ? ");
+            preparedStatementValues.add(kpiGetRequest.getFinYear());
+        }
     }
     
     private boolean addAndClauseIfRequired(final boolean appendAndClauseFlag, final StringBuilder queryString) {
@@ -260,6 +401,16 @@ public class PerformanceAssessmentQueryBuilder {
             query.append("'" + idList.get(0).toString() + "'");
             for (int i = 1; i < idList.size(); i++)
                 query.append(",'" + idList.get(i) + "'");
+        }
+        return query.append(")").toString();
+    }
+    
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
+        if (idList.size() >= 1) {
+            query.append(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++)
+                query.append(", " + idList.get(i));
         }
         return query.append(")").toString();
     }

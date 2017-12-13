@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that hold Market Rate Details for a given SOR
  */
 @ApiModel(description = "An Object that hold Market Rate Details for a given SOR")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T05:49:05.088Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
 
 public class MarketRate   {
   @JsonProperty("id")
@@ -34,6 +34,9 @@ public class MarketRate   {
 
   @JsonProperty("rate")
   private BigDecimal rate = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -85,10 +88,10 @@ public class MarketRate   {
   }
 
    /**
-   * unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
+   * unique reference from 'ScheduleOfRate'. Primary key is ref. here.
    * @return scheduleOfRate
   **/
-  @ApiModelProperty(required = true, value = "unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'")
+  @ApiModelProperty(value = "unique reference from 'ScheduleOfRate'. Primary key is ref. here.")
 
 
   public String getScheduleOfRate() {
@@ -162,6 +165,26 @@ public class MarketRate   {
     this.rate = rate;
   }
 
+  public MarketRate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public MarketRate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -199,12 +222,13 @@ public class MarketRate   {
         Objects.equals(this.fromDate, marketRate.fromDate) &&
         Objects.equals(this.toDate, marketRate.toDate) &&
         Objects.equals(this.rate, marketRate.rate) &&
+        Objects.equals(this.deleted, marketRate.deleted) &&
         Objects.equals(this.auditDetails, marketRate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, scheduleOfRate, fromDate, toDate, rate, auditDetails);
+    return Objects.hash(id, tenantId, scheduleOfRate, fromDate, toDate, rate, deleted, auditDetails);
   }
 
   @Override
@@ -218,6 +242,7 @@ public class MarketRate   {
     sb.append("    fromDate: ").append(toIndentedString(fromDate)).append("\n");
     sb.append("    toDate: ").append(toIndentedString(toDate)).append("\n");
     sb.append("    rate: ").append(toIndentedString(rate)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

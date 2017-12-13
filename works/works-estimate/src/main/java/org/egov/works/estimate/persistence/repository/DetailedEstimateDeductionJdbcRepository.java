@@ -57,6 +57,7 @@ public class DetailedEstimateDeductionJdbcRepository extends JdbcRepository {
 			paramValues.put("detailedEstimateIds", detailedEstimateDeductionSearchContract.getDetailedEstimateIds());
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

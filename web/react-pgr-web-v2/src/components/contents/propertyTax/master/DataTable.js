@@ -1,4 +1,4 @@
-import React, {PropTypes, Component} from 'react';
+import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import ReactDOMServer from 'react-dom/server';
 const $ = require('jquery');
@@ -15,33 +15,20 @@ let keyGetter = keys => data => keys.map(key => data[key]);
 
 let isEmpty = value => value == null || value === '';
 
-let getCellValue = ({
-  prop,
-  defaultContent,
-  render
-}, row) =>
-// Return `defaultContent` if the value is empty.
-!isEmpty(prop) && isEmpty(row[prop])
-  ? defaultContent
-  :
-  // Use the render function for the value.
-  render
-    ? render(row[prop], row)
-    :
-    // Otherwise just return the value.
-    row[prop];
+let getCellValue = ({ prop, defaultContent, render }, row) =>
+  // Return `defaultContent` if the value is empty.
+  !isEmpty(prop) && isEmpty(row[prop])
+    ? defaultContent
+    : // Use the render function for the value.
+      render
+      ? render(row[prop], row)
+      : // Otherwise just return the value.
+        row[prop];
 
-let getCellClass = ({
-  prop,
-  className
-}, row) => !isEmpty(prop) && isEmpty(row[prop])
-  ? 'empty-cell'
-  : typeof className == 'function'
-    ? className(row[prop], row)
-    : className;
+let getCellClass = ({ prop, className }, row) =>
+  !isEmpty(prop) && isEmpty(row[prop]) ? 'empty-cell' : typeof className == 'function' ? className(row[prop], row) : className;
 
 export default class DateTable extends Component {
-
   constructor(props) {
     super(props);
     console.log('Table constructor', this);
@@ -51,23 +38,22 @@ export default class DateTable extends Component {
 
   static defaultProps = {
     buildRowOptions: () => ({}),
-    sortBy: {}
+    sortBy: {},
   };
   static propTypes = {
-    keys: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.string
-    ]).isRequired,
+    keys: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]).isRequired,
 
-    columns: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      prop: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      render: PropTypes.func,
-      sortable: PropTypes.bool,
-      defaultContent: PropTypes.string,
-      width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      className: PropTypes.oneOfType([PropTypes.string, PropTypes.func])
-    })).isRequired,
+    columns: PropTypes.arrayOf(
+      PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        prop: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        render: PropTypes.func,
+        sortable: PropTypes.bool,
+        defaultContent: PropTypes.string,
+        width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        className: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+      })
+    ).isRequired,
 
     dataArray: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.array, PropTypes.object])).isRequired,
 
@@ -75,10 +61,10 @@ export default class DateTable extends Component {
 
     sortBy: PropTypes.shape({
       prop: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      order: PropTypes.oneOf(['ascending', 'descending'])
+      order: PropTypes.oneOf(['ascending', 'descending']),
     }),
 
-    onSort: PropTypes.func
+    onSort: PropTypes.func,
   };
 
   componentDidMount() {
@@ -91,17 +77,16 @@ export default class DateTable extends Component {
     $('#dtContainer').append(renderedTable);
 
     let jqueryTable = $('#dt');
-    jqueryTable.DataTable({ // eslint-disable-line new-cap
+    jqueryTable.DataTable({
+      // eslint-disable-line new-cap
       dom: '<"html5buttons"B>lTfgitp',
-      buttons: [
-        'copy', 'csv', 'excel', 'pdf', 'print'
-      ],
-      "pagingType": 'numbers',
-      "bAutoWidth": false,
-      "bDestroy": true,
-      "fnDrawCallback": function() {
+      buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+      pagingType: 'numbers',
+      bAutoWidth: false,
+      bDestroy: true,
+      fnDrawCallback: function() {
         console.log('datatables fnDrawCallback');
-      }
+      },
     });
   }
 
@@ -120,40 +105,49 @@ export default class DateTable extends Component {
   getDTMarkup() {
     console.log('Table getDTMarkup', this);
 
-    let {columns, keys, buildRowOptions, sortBy, onSort} = this.props;
+    let { columns, keys, buildRowOptions, sortBy, onSort } = this.props;
     let headers = columns.map((col, idx) => {
-
       return (
-        <th ref={c => this._headers[idx] = c} key={idx} style={{
-          width: col.width
-        }} role="columnheader" scope="col">
+        <th
+          ref={c => (this._headers[idx] = c)}
+          key={idx}
+          style={{
+            width: col.width,
+          }}
+          role="columnheader"
+          scope="col"
+        >
           <span>{col.title}</span>
         </th>
       );
     });
 
-    let getKeys = Array.isArray(keys)
-      ? keyGetter(keys)
-      : simpleGet(keys);
-    let rows = this.props.dataArray.map(row => <tr key={getKeys(row)} {...buildRowOptions(row)}>
-      {columns.map((col, i) => <td key={i} className={getCellClass(col, row)}>
-        {getCellValue(col, row)}
-      </td>)}
-    </tr>);
+    let getKeys = Array.isArray(keys) ? keyGetter(keys) : simpleGet(keys);
+    let rows = this.props.dataArray.map(row => (
+      <tr key={getKeys(row)} {...buildRowOptions(row)}>
+        {columns.map((col, i) => (
+          <td key={i} className={getCellClass(col, row)}>
+            {getCellValue(col, row)}
+          </td>
+        ))}
+      </tr>
+    ));
 
     return (
       <table id="dt" {...this.props}>
         <thead>
-          <tr>
-            {headers}
-          </tr>
+          <tr>{headers}</tr>
         </thead>
         <tbody>
-          {rows.length
-            ? rows
-            : <tr>
-              <td colSpan={columns.length} className="text-center">No data</td>
-            </tr>}
+          {rows.length ? (
+            rows
+          ) : (
+            <tr>
+              <td colSpan={columns.length} className="text-center">
+                No data
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     );
@@ -163,9 +157,8 @@ export default class DateTable extends Component {
     console.log('Table render', this);
     return (
       <div>
-        <div ref="dtContainer" id="dtContainer"></div>
+        <div ref="dtContainer" id="dtContainer" />
       </div>
     );
   }
-
 }

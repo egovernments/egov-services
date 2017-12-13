@@ -45,13 +45,15 @@ public class DetailedEstimateController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.OK)
-	public DetailedEstimateResponse create(@Valid @RequestBody DetailedEstimateRequest detailedEstimateRequest) {
-		return detailedEstimateService.create(detailedEstimateRequest);
+	public DetailedEstimateResponse create(@Valid @RequestBody DetailedEstimateRequest detailedEstimateRequest,
+			@RequestParam(required = false) Boolean isRevision) {
+		return detailedEstimateService.create(detailedEstimateRequest, isRevision);
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
-	public DetailedEstimateResponse update(@Valid @RequestBody DetailedEstimateRequest detailedEstimateRequest) {
-		return detailedEstimateService.update(detailedEstimateRequest);
+	public DetailedEstimateResponse update(@Valid @RequestBody DetailedEstimateRequest detailedEstimateRequest,
+			@RequestParam(required = false) Boolean isRevision) {
+		return detailedEstimateService.update(detailedEstimateRequest, isRevision);
 	}
 }

@@ -74,6 +74,7 @@ public class PriceListEntity {
                 .agreementEndDate(agreementEndDate)
                 .active( null != active ? active :null )
                 .fileStoreId(fileStoreId)
+                .tenantId(tenantId)
                 .priceListDetails(getPriceListDetails(priceListDetails))
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
                 .build();

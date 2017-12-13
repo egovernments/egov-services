@@ -41,7 +41,7 @@ public class ActionContract {
 					.lastModifiedBy(action.getLastModifiedBy()).lastModifiedDate(action.getLastModifiedDate())
 					.url(action.getUrl()).queryParams(action.getQueryParams()).orderNumber(action.getOrderNumber())
 					.parentModule(action.getParentModule()).serviceCode(action.getServiceCode())
-					.displayName(action.getDisplayName()).build();
+					.displayName(action.getDisplayName()).enabled(action.isEnabled()).build();
 			actionsContractList.add(actionContract);
 		}
 

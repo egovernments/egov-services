@@ -281,14 +281,15 @@ public class AssetQueryBuilder {
                 + "dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,"
                 + "zone,revenueward,street,electionward,doorno,pincode,locality,block,properties,createdby,"
                 + "createddate,lastmodifiedby,lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,"
-                + "enableyearwisedepreciation,depreciationrate)"
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "enableyearwisedepreciation,depreciationrate,surveynumber,marketvalue)"
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 
     public String getUpdateQuery() {
         return "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,remarks=?,length=?,width=?,"
                 + "totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
-                + "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?"
+                + "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,"
+                + "surveynumber=?,marketvalue=?"
                 + "WHERE code=? and tenantid=?";
     }
 

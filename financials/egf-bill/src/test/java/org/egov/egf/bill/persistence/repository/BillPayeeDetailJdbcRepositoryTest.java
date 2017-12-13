@@ -119,7 +119,7 @@ public class BillPayeeDetailJdbcRepositoryTest {
                 new BillPayeeDetailResultExtractor());
         assertTrue("Result set length is zero", result.size() == 0);
     }
-    
+    @Ignore
     @Test
     @Sql(scripts = { "/sql/billpayeedetail/clearbillpayeedetail.sql", "/sql/billpayeedetail/insertbillpayeedetaildata.sql" })
     public void test_delete_reason() {

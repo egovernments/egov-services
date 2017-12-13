@@ -1,285 +1,287 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Notice
  */
 @ApiModel(description = "An Object that holds the basic data of Notice")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class Notice {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("letterOfAcceptance")
-	private LetterOfAcceptance letterOfAcceptance = null;
+    @JsonProperty("letterOfAcceptance")
+    private LetterOfAcceptance letterOfAcceptance = null;
 
-	@JsonProperty("noticeDetails")
-	private List<NoticeDetail> noticeDetails = new ArrayList<NoticeDetail>();
+    @JsonProperty("noticeDetails")
+    private List<NoticeDetail> noticeDetails = new ArrayList<NoticeDetail>();
 
-	@JsonProperty("closingLine")
-	private String closingLine = null;
+    @JsonProperty("closingLine")
+    private String closingLine = null;
 
-	@JsonProperty("daysOfReply")
-	private Integer daysOfReply = null;
+    @JsonProperty("daysOfReply")
+    private Integer daysOfReply = null;
 
-	@JsonProperty("documentDetails")
-	private List<DocumentDetail> documentDetails = null;
+    @JsonProperty("documentDetails")
+    private List<DocumentDetail> documentDetails = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
-	public Notice id(String id) {
-		this.id = id;
-		return this;
-	}
+    public Notice id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique Identifier of the Notice
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Notice")
+    /**
+     * Unique Identifier of the Notice
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Notice")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public Notice tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Tenant id of the Notice
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Notice")
-	@NotNull
+    public Notice tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    /**
+     * Tenant id of the Notice
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Notice")
+    @NotNull
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public Notice letterOfAcceptance(LetterOfAcceptance letterOfAcceptance) {
-		this.letterOfAcceptance = letterOfAcceptance;
-		return this;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	/**
-	 * Reference of LOA
-	 * 
-	 * @return letterOfAcceptance
-	 **/
-	@ApiModelProperty(required = true, value = "Reference of LOA")
-	@NotNull
+    public Notice letterOfAcceptance(LetterOfAcceptance letterOfAcceptance) {
+        this.letterOfAcceptance = letterOfAcceptance;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Reference of LOA
+     *
+     * @return letterOfAcceptance
+     **/
+    @ApiModelProperty(required = true, value = "Reference of LOA")
+    @NotNull
 
-	public LetterOfAcceptance getLetterOfAcceptance() {
-		return letterOfAcceptance;
-	}
+    @Valid
 
-	public void setLetterOfAcceptance(LetterOfAcceptance letterOfAcceptance) {
-		this.letterOfAcceptance = letterOfAcceptance;
-	}
+    public LetterOfAcceptance getLetterOfAcceptance() {
+        return letterOfAcceptance;
+    }
 
-	public Notice noticeDetails(List<NoticeDetail> noticeDetails) {
-		this.noticeDetails = noticeDetails;
-		return this;
-	}
+    public void setLetterOfAcceptance(LetterOfAcceptance letterOfAcceptance) {
+        this.letterOfAcceptance = letterOfAcceptance;
+    }
 
-	public Notice addNoticeDetailsItem(NoticeDetail noticeDetailsItem) {
-		this.noticeDetails.add(noticeDetailsItem);
-		return this;
-	}
+    public Notice noticeDetails(List<NoticeDetail> noticeDetails) {
+        this.noticeDetails = noticeDetails;
+        return this;
+    }
 
-	/**
-	 * Array of Notice Detail
-	 * 
-	 * @return noticeDetails
-	 **/
-	@ApiModelProperty(required = true, value = "Array of Notice Detail")
-	@NotNull
+    public Notice addNoticeDetailsItem(NoticeDetail noticeDetailsItem) {
+        this.noticeDetails.add(noticeDetailsItem);
+        return this;
+    }
 
-	@Valid
-	@Size(min = 1)
-	public List<NoticeDetail> getNoticeDetails() {
-		return noticeDetails;
-	}
+    /**
+     * Array of Notice Detail
+     *
+     * @return noticeDetails
+     **/
+    @ApiModelProperty(required = true, value = "Array of Notice Detail")
+    @NotNull
 
-	public void setNoticeDetails(List<NoticeDetail> noticeDetails) {
-		this.noticeDetails = noticeDetails;
-	}
+    @Valid
+    @Size(min = 1)
+    public List<NoticeDetail> getNoticeDetails() {
+        return noticeDetails;
+    }
 
-	public Notice closingLine(String closingLine) {
-		this.closingLine = closingLine;
-		return this;
-	}
+    public void setNoticeDetails(List<NoticeDetail> noticeDetails) {
+        this.noticeDetails = noticeDetails;
+    }
 
-	/**
-	 * Closing Line for the work
-	 * 
-	 * @return closingLine
-	 **/
-	@ApiModelProperty(value = "Closing Line for the work")
+    public Notice closingLine(String closingLine) {
+        this.closingLine = closingLine;
+        return this;
+    }
 
-	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
-	public String getClosingLine() {
-		return closingLine;
-	}
+    /**
+     * Closing Line for the work
+     *
+     * @return closingLine
+     **/
+    @ApiModelProperty(value = "Closing Line for the work")
 
-	public void setClosingLine(String closingLine) {
-		this.closingLine = closingLine;
-	}
+    @Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
+    public String getClosingLine() {
+        return closingLine;
+    }
 
-	public Notice daysOfReply(Integer daysOfReply) {
-		this.daysOfReply = daysOfReply;
-		return this;
-	}
+    public void setClosingLine(String closingLine) {
+        this.closingLine = closingLine;
+    }
 
-	/**
-	 * The number of Days for reply to Notice
-	 * 
-	 * @return daysOfReply
-	 **/
-	@ApiModelProperty(value = "The number of Days for reply to Notice")
+    public Notice daysOfReply(Integer daysOfReply) {
+        this.daysOfReply = daysOfReply;
+        return this;
+    }
 
-	public Integer getDaysOfReply() {
-		return daysOfReply;
-	}
+    /**
+     * The number of Days for reply to Notice
+     *
+     * @return daysOfReply
+     **/
+    @ApiModelProperty(value = "The number of Days for reply to Notice")
 
-	public void setDaysOfReply(Integer daysOfReply) {
-		this.daysOfReply = daysOfReply;
-	}
 
-	public Notice documentDetails(List<DocumentDetail> documentDetails) {
-		this.documentDetails = documentDetails;
-		return this;
-	}
+    public Integer getDaysOfReply() {
+        return daysOfReply;
+    }
 
-	public Notice addDocumentDetailsItem(DocumentDetail documentDetailsItem) {
-		if (this.documentDetails == null) {
-			this.documentDetails = new ArrayList<DocumentDetail>();
-		}
-		this.documentDetails.add(documentDetailsItem);
-		return this;
-	}
+    public void setDaysOfReply(Integer daysOfReply) {
+        this.daysOfReply = daysOfReply;
+    }
 
-	/**
-	 * Array of document details
-	 * 
-	 * @return documentDetails
-	 **/
-	@ApiModelProperty(value = "Array of document details")
+    public Notice documentDetails(List<DocumentDetail> documentDetails) {
+        this.documentDetails = documentDetails;
+        return this;
+    }
 
-	@Valid
+    public Notice addDocumentDetailsItem(DocumentDetail documentDetailsItem) {
+        if (this.documentDetails == null) {
+            this.documentDetails = new ArrayList<DocumentDetail>();
+        }
+        this.documentDetails.add(documentDetailsItem);
+        return this;
+    }
 
-	public List<DocumentDetail> getDocumentDetails() {
-		return documentDetails;
-	}
+    /**
+     * Array of document details
+     *
+     * @return documentDetails
+     **/
+    @ApiModelProperty(value = "Array of document details")
 
-	public void setDocumentDetails(List<DocumentDetail> documentDetails) {
-		this.documentDetails = documentDetails;
-	}
+    @Valid
 
-	public Notice auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    public List<DocumentDetail> getDocumentDetails() {
+        return documentDetails;
+    }
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    public void setDocumentDetails(List<DocumentDetail> documentDetails) {
+        this.documentDetails = documentDetails;
+    }
 
-	@Valid
+    public Notice auditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    @Valid
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Notice notice = (Notice) o;
-		return Objects.equals(this.id, notice.id) && Objects.equals(this.tenantId, notice.tenantId)
-				&& Objects.equals(this.letterOfAcceptance, notice.letterOfAcceptance)
-				&& Objects.equals(this.noticeDetails, notice.noticeDetails)
-				&& Objects.equals(this.closingLine, notice.closingLine)
-				&& Objects.equals(this.daysOfReply, notice.daysOfReply)
-				&& Objects.equals(this.documentDetails, notice.documentDetails)
-				&& Objects.equals(this.auditDetails, notice.auditDetails);
-	}
+    public AuditDetails getAuditDetails() {
+        return auditDetails;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, letterOfAcceptance, noticeDetails, closingLine, daysOfReply, documentDetails,
-				auditDetails);
-	}
+    public void setAuditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class Notice {\n");
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    letterOfAcceptance: ").append(toIndentedString(letterOfAcceptance)).append("\n");
-		sb.append("    noticeDetails: ").append(toIndentedString(noticeDetails)).append("\n");
-		sb.append("    closingLine: ").append(toIndentedString(closingLine)).append("\n");
-		sb.append("    daysOfReply: ").append(toIndentedString(daysOfReply)).append("\n");
-		sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Notice notice = (Notice) o;
+        return Objects.equals(this.id, notice.id) &&
+                Objects.equals(this.tenantId, notice.tenantId) &&
+                Objects.equals(this.letterOfAcceptance, notice.letterOfAcceptance) &&
+                Objects.equals(this.noticeDetails, notice.noticeDetails) &&
+                Objects.equals(this.closingLine, notice.closingLine) &&
+                Objects.equals(this.daysOfReply, notice.daysOfReply) &&
+                Objects.equals(this.documentDetails, notice.documentDetails) &&
+                Objects.equals(this.auditDetails, notice.auditDetails);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, letterOfAcceptance, noticeDetails, closingLine, daysOfReply, documentDetails, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class Notice {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    letterOfAcceptance: ").append(toIndentedString(letterOfAcceptance)).append("\n");
+        sb.append("    noticeDetails: ").append(toIndentedString(noticeDetails)).append("\n");
+        sb.append("    closingLine: ").append(toIndentedString(closingLine)).append("\n");
+        sb.append("    daysOfReply: ").append(toIndentedString(daysOfReply)).append("\n");
+        sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

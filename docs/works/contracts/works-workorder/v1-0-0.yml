@@ -403,6 +403,15 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of codes of the contractor to which Work Order belongs to.
+        - name: letterOfAcceptances
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of ids of the Letter Of Acceptance to which Work Order belongs to.
       responses:
         200:
           description: Work Order(s) Retrieved Successfully
@@ -1237,6 +1246,10 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - loaNumber
@@ -1279,6 +1292,10 @@ definitions:
           description: LOA Estimate reference, primary key is reference here.
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
       required:
         - tenantId
         - asset
@@ -1323,6 +1340,10 @@ definitions:
           $ref: '#/definitions/LOAActivity'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - detailedEstimate
@@ -1358,6 +1379,10 @@ definitions:
         description: Amount of Security Deposit should be calculated as per percentage
         maxLength: 20
         minLength: 1
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1418,6 +1443,10 @@ definitions:
         description: Array of LOA measurement sheet
         items:
           $ref: '#/definitions/LOAMeasurementSheet'
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1473,6 +1502,10 @@ definitions:
           description: Estimate Measurement sheet reference
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
       required:
         - tenantId
         - quantity
@@ -1529,11 +1562,11 @@ definitions:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of Work Order Date
+        description: Epoch time of Work Order Date. If the Work order is spillover then the Work Order Date is user entered. Otherwise it is default to current date. This field is allowed to edit during rejected status or drafts for Spillover Work Order.
       workOrderNumber:
         type: string
         pattern: '[a-zA-Z0-9-/]+'
-        description: Work Order Number. Auto generated.
+        description: Work Order Number. Auto generated. If the Work order is spillover then the Work Order number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Work Order.
         maxLength: 50
       documentDetails:
         type: array
@@ -1549,6 +1582,10 @@ definitions:
       stateId:
         type: string
         description: State id of the workflow
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - workOrderDate
@@ -1580,6 +1617,10 @@ definitions:
         description: True for default
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - remarks
@@ -1674,6 +1715,10 @@ definitions:
         minLength: 1
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - notice
@@ -1791,6 +1836,10 @@ definitions:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
         description: Stage Order Number for Milestone Activity.
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1901,6 +1950,10 @@ definitions:
         description: Epoch time of the Completion Date for the milestone.
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - percentage
@@ -2000,6 +2053,3 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
-
-
-

@@ -71,7 +71,7 @@ public class StoreJdbcRepository extends JdbcRepository{
 		init(StoreEntity.class);
 		LOG.debug("end store fund");
 	}
-
+    
     public Pagination<Store> search(StoreGetRequest storeGetRequest) {
         String searchQuery = "select * from store :condition :orderby";
         StringBuffer params = new StringBuffer();
@@ -177,7 +177,7 @@ public class StoreJdbcRepository extends JdbcRepository{
         if (storeGetRequest.getOffset() != null)
             page.setOffset(storeGetRequest.getOffset());
         if (params.length() > 0)
-            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and " + params.toString());
         else
             searchQuery = searchQuery.replace(":condition", "");
 

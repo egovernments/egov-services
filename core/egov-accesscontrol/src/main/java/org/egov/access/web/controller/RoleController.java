@@ -1,5 +1,6 @@
 package org.egov.access.web.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.egov.access.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +65,24 @@ public class RoleController {
 		}
 
 		List<Role> roles = roleService.getRoles(roleSearchCriteria);
+		
+		return getSuccessResponse(roles);
+
+	}
+	@PostMapping(value = "mdms/_search")
+	public RoleResponse getMDMSRoles(@RequestParam(value = "code", required = false) String code,@RequestParam(value = "tenantId", required = false) String tenantId,
+			@RequestBody final RoleRequest roleRequest) throws UnsupportedEncodingException, JSONException {
+
+		RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(new ArrayList<String>()).build();
+
+		if (code != null && !code.isEmpty()) {
+
+			roleSearchCriteria = RoleSearchCriteria.builder()
+					.codes(Arrays.stream(code.split(",")).map(String::trim).collect(Collectors.toList())).tenantId(tenantId).build();
+		}
+
+		
+		List<Role> roles = roleService.getRolesfromMDMS(roleSearchCriteria);
 		return getSuccessResponse(roles);
 
 	}

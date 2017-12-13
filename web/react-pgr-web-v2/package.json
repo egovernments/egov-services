@@ -50,9 +50,14 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "react-scripts": "1.0.7"
+    "@jdcrensh/react-scripts": "1.0.17",
+    "prettier": "1.9.2",
+    "react-scripts-plugin-no-minify": "0.3.2",
+    "redux-logger": "^3.0.6"
   },
   "scripts": {
+    "fullClean": "npm cache clean --force && rm -rf node_modules && rm package-lock.json && npm install",
+    "prettier": "prettier --write \"src/**/*.js\"",
     "postinstall": "cd node_modules/pdfmake && mkdir -p examples/fonts && cp -r ../../src/fonts/reports/* examples/fonts && npm install && gulp buildFonts",
     "start": "react-scripts start",
     "build": "react-scripts build",

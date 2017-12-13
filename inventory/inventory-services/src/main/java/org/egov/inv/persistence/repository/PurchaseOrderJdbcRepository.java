@@ -6,11 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.Pagination;
+import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetails;
+import org.egov.inv.model.PriceListDetailsSearchRequest;
+import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.PurchaseOrder;
 import org.egov.inv.model.PurchaseOrderSearch;
 import org.egov.inv.persistence.entity.PurchaseOrderEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +24,12 @@ import org.springframework.stereotype.Service;
 public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository {
 	private static final Logger LOG = LoggerFactory.getLogger(PurchaseOrderJdbcRepository.class);
 
+	@Autowired
+	PriceListDetailJdbcRepository priceListDetailJdbcRepository;
+	
+	@Autowired
+	PriceListJdbcRepository priceListJdbcRepository;
+	
 	static {
 		LOG.debug("init purchase order");
 		init(PurchaseOrderEntity.class);
@@ -66,6 +77,35 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 
 	}
 
+	public Long getUsedQty(String supplier, String material, String rateType){
+	    String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = '" + material + "' and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted=false and ratetype='" + rateType + "' and supplier = '" + supplier + "')";
+	    Long usedQty=namedParameterJdbcTemplate.queryForObject(usedQtyQuery, new HashMap(), Long.class);
+	    return usedQty;
+	}
+	
+	public String getRateContracts(String material, String supplier) {
+		
+		PriceListDetailsSearchRequest pldsr = PriceListDetailsSearchRequest.builder().material(material).build();
+		PriceListSearchRequest plsr = PriceListSearchRequest.builder().supplierName(supplier).build();
+		List<PriceListDetails> lplds = priceListDetailJdbcRepository.search(pldsr).getPagedData();
+		List<PriceList> lpl = priceListJdbcRepository.search(plsr).getPagedData();
+		
+		List<PriceList> commonpl = new ArrayList<>();
+		for(PriceList pl:lpl) {
+			for(PriceListDetails pld:lplds) {
+				if(pl.getId().equals(pld.getPriceList())) {
+					commonpl.add(pl);
+				}
+			}
+		}
+		
+		String rateContracts = "";
+		for(PriceList pl:commonpl) {
+			rateContracts+=pl.getRateContractNumber() + ",";
+		}
+		return rateContracts.replaceAll(",$", "");
+	}
+	
 	public Pagination<PurchaseOrder> search(PurchaseOrderSearch purchaseOrderSearch) {
 
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
@@ -98,8 +138,8 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 		if (purchaseOrderSearch.getStore() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("store =:issueStore ");
-			paramValues.put("issueStore", purchaseOrderSearch.getStore());
+			params.append("store =:store ");
+			paramValues.put("store", purchaseOrderSearch.getStore());
 		}
 
 		if (purchaseOrderSearch.getPurchaseOrderDate() != null) {
@@ -157,7 +197,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 
 		if (params.length() > 0) {
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+			searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and  " + params.toString());
 
 		} else
 

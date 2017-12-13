@@ -31,6 +31,8 @@ public class MaterialDetailAddInfoEntity {
 
     private String receiptDetailId;
 
+    private String batchNo;
+
 
     public MaterialReceiptDetailAddnlinfo toDomain() {
         MaterialReceiptDetailAddnlinfo addnlinfo = new MaterialReceiptDetailAddnlinfo();
@@ -44,6 +46,7 @@ public class MaterialDetailAddInfoEntity {
                 .oldReceiptNumber(oldReceiptNumber)
                 .receivedDate(null != receivedDate ? Long.valueOf(receivedDate.toString()) : null)
                 .expiryDate(null != expiryDate ? Long.valueOf(expiryDate.toString()) : null)
-                .receiptDetailId(receiptDetailId);
+                .receiptDetailId(receiptDetailId)
+                .batchNo(batchNo);
     }
 }

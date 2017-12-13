@@ -1,191 +1,194 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * An Object that holds Nature of work master details
  */
 @ApiModel(description = "An Object that holds Nature of work master details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class NatureOfWork {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("name")
-	private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@JsonProperty("expenditureType")
-	private ExpenditureType expenditureType = null;
+    @JsonProperty("expenditureType")
+    private ExpenditureType expenditureType = null;
 
-	public NatureOfWork id(String id) {
-		this.id = id;
-		return this;
-	}
+    public NatureOfWork id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique Identifier of the Nature Of Work
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Nature Of Work")
+    /**
+     * Unique Identifier of the Nature Of Work
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Nature Of Work")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public NatureOfWork tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Tenant id of the Nature Of Work
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Nature Of Work")
-	@NotNull
+    public NatureOfWork tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    /**
+     * Tenant id of the Nature Of Work
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Nature Of Work")
+    @NotNull
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public NatureOfWork name(String name) {
-		this.name = name;
-		return this;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	/**
-	 * Name of the Nature Of Work
-	 * 
-	 * @return name
-	 **/
-	@ApiModelProperty(required = true, value = "Name of the Nature Of Work")
-	@NotNull
+    public NatureOfWork name(String name) {
+        this.name = name;
+        return this;
+    }
 
-	@Pattern(regexp = "[a-zA-Z0-9\\s\\.,]+")
-	@Size(min = 1, max = 100)
-	public String getName() {
-		return name;
-	}
+    /**
+     * Name of the Nature Of Work
+     *
+     * @return name
+     **/
+    @ApiModelProperty(required = true, value = "Name of the Nature Of Work")
+    @NotNull
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Pattern(regexp = "[a-zA-Z0-9\\s\\.,]+")
+    @Size(min = 1, max = 100)
+    public String getName() {
+        return name;
+    }
 
-	public NatureOfWork code(String code) {
-		this.code = code;
-		return this;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Code of the Nature Of Work
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(required = true, value = "Code of the Nature Of Work")
-	@NotNull
+    public NatureOfWork code(String code) {
+        this.code = code;
+        return this;
+    }
 
-	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
-	@Size(min = 1, max = 100)
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Code of the Nature Of Work
+     *
+     * @return code
+     **/
+    @ApiModelProperty(required = true, value = "Code of the Nature Of Work")
+    @NotNull
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    @Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
+    @Size(min = 1, max = 100)
+    public String getCode() {
+        return code;
+    }
 
-	public NatureOfWork expenditureType(ExpenditureType expenditureType) {
-		this.expenditureType = expenditureType;
-		return this;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * Expenditure type Enum for the nature of work
-	 * 
-	 * @return expenditureType
-	 **/
-	@ApiModelProperty(required = true, value = "Expenditure type Enum for the nature of work")
-	@NotNull
+    public NatureOfWork expenditureType(ExpenditureType expenditureType) {
+        this.expenditureType = expenditureType;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Expenditure type Enum for the nature of work
+     *
+     * @return expenditureType
+     **/
+    @ApiModelProperty(required = true, value = "Expenditure type Enum for the nature of work")
+    @NotNull
 
-	public ExpenditureType getExpenditureType() {
-		return expenditureType;
-	}
+    @Valid
 
-	public void setExpenditureType(ExpenditureType expenditureType) {
-		this.expenditureType = expenditureType;
-	}
+    public ExpenditureType getExpenditureType() {
+        return expenditureType;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		NatureOfWork natureOfWork = (NatureOfWork) o;
-		return Objects.equals(this.id, natureOfWork.id) && Objects.equals(this.tenantId, natureOfWork.tenantId)
-				&& Objects.equals(this.name, natureOfWork.name) && Objects.equals(this.code, natureOfWork.code)
-				&& Objects.equals(this.expenditureType, natureOfWork.expenditureType);
-	}
+    public void setExpenditureType(ExpenditureType expenditureType) {
+        this.expenditureType = expenditureType;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, name, code, expenditureType);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class NatureOfWork {\n");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        NatureOfWork natureOfWork = (NatureOfWork) o;
+        return Objects.equals(this.id, natureOfWork.id) &&
+                Objects.equals(this.tenantId, natureOfWork.tenantId) &&
+                Objects.equals(this.name, natureOfWork.name) &&
+                Objects.equals(this.code, natureOfWork.code) &&
+                Objects.equals(this.expenditureType, natureOfWork.expenditureType);
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
-		sb.append("    expenditureType: ").append(toIndentedString(expenditureType)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, name, code, expenditureType);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class NatureOfWork {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    code: ").append(toIndentedString(code)).append("\n");
+        sb.append("    expenditureType: ").append(toIndentedString(expenditureType)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

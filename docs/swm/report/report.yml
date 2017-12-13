@@ -3,15 +3,17 @@ ReportDefinitions:
   summary: Report regarding dumping ground details
   version: 1.0.0
   moduleName: swm
+  externalService:
+  - entity: $.MdmsRes.swm.DumpingGround
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=DumpingGround&tenantId=$tenantid
+    keyOrder: code,name,tenantId
+    tableName: tbl_swmdumpingground
+    stateData: true
   sourceColumns:
   - name: dumpinggroundname
-    label: reports.swm.dumpinggroundname
+    label: reports.swm.dumpingground
     type: string
     source: mdms
-  - name: date
-    label: reports.swm.date
-    type: string
-    source: egswm_sourcesegregation    
   - name: wetwastecollected
     label: reports.swm.wetwaste
     type: number
@@ -20,19 +22,29 @@ ReportDefinitions:
     label: reports.swm.drywaste
     type: number
     source: egswm_collectiondetails
+  - name: date
+    label: reports.swm.date
+    type: string
+    source: egswm_sourcesegregation    
   searchParams:
   - name: dumpinggroundcode
-    label: reports.swm.dumpinggroundname
-    type: string
+    label: reports.swm.dumpingground
+    type: singlevaluelist
     source: mdms
-    isMandatory: true  
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.SWM.DumpingGround.*.code|$.MdmsRes.SWM.DumpingGround.siteDetails.*.name
+    isMandatory: false
+    stateData: true
+    wrapper: true
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.swm.DumpingGround.*.code|$.MdmsRes.swm.DumpingGround.*.name
+    searchClause: and ssg.dumpingground = $dumpinggroundcode
   - name: collectiontypecode
-    label: reports.swm.collectiontypename
-    type: string
+    label: reports.swm.collectiontype
+    type: singlevaluelist
     source: mdms
-    isMandatory: true  
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.SWM.CollectionType.*.code|$.MdmsRes.SWM.CollectionType.*.name    
+    isMandatory: false  
+    stateData: true
+    wrapper: true
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.swm.CollectionType.*.code|$.MdmsRes.swm.CollectionType.*.name    
+    searchClause: and cd.collectiontype = $collectiontypecode
   - name: fromDate
     label: reports.swm.datefrom
     type: epoch
@@ -43,10 +55,67 @@ ReportDefinitions:
     type: epoch
     source: egswm_sourcesegregation
     isMandatory: true
-  - name: wastetypename
-    label: reports.swm.collectiontypename
+  query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'Asia/Kolkata')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid  and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and ssg.sourcesegregationdate >= $fromDate and  ssg.sourcesegregationdate <= $toDate  
+  groupBy: group by date, dumpinggroundname;
+  
+- reportName: ExpenditureIncurredReport
+  summary: Report regarding Expenditure incurred on Transportation
+  version: 1.0.0
+  moduleName: swm
+  externalService:
+  - entity: $.MdmsRes.swm.VehicleType
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=VehicleType&tenantId=$tenantid
+    keyOrder: code,name,tenantId
+    tableName: tbl_swmvehicletype
+    stateData: true  
+  sourceColumns:
+  - name: date
+    label: reports.swm.date
+    type: string
+    source: egswm_vehiclemaintenancedetails
+  - name: vehicletype
+    label: reports.swm.vehicletype
     type: string
     source: mdms
-    isMandatory: false  
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=WasteType&tenantId=$tenantid|$.MdmsRes.SWM.WasteType.*.code|$.MdmsRes.SWM.WasteType.*.name
-  query: select ssg.dumpingground as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg where cd.sourcesegregation = ssg.code and cd.tenantid = 'default' and ssg.tenantid = 'default' and cd.collectiontype = $collectiontypecode and ssg.dumpingground = $dumpinggroundcode and ssg.sourcesegregationdate >= $fromDate and ssg.sourcesegregationdate <= toDate group by date, dumpinggroundname;
+  - name: registrationnumber
+    label: reports.swm.registrationnumber
+    type: string
+    source: egswm_vehicle
+  - name: fuellingcost
+    label: reports.swm.fuellingcost
+    type: number
+    source: egswm_vehiclefuellingdetails    
+  - name: maintenancecost
+    label: reports.swm.maintenancecost
+    type: number
+    source: egswm_vehiclemaintenancedetails
+  - name: totalcost
+    label: reports.swm.totalcost
+    type: number
+    source: egswm_vehiclemaintenancedetails    
+  searchParams:
+  - name: vehicle
+    label: reports.swm.vehicle
+    type: singlevaluelist
+    source: egswm_vehicle
+    isMandatory: true
+    wrapper: true
+    pattern: http://swm-services:8080/swm-services/vehicles/_search?tenantId=$tenantid|$..regNumber|$..regNumber
+  - name: typeofvehicle
+    label: reports.swm.vehicletype
+    type: url
+    source: egswm_vehicle
+    isMandatory: true
+    wrapper: true
+    pattern: /swm-services/vehicles/_search?tenantId=$tenantid&regNumbers={vehicle}|$..vehicleType.code|$..vehicleType.name    
+  - name: fromDate
+    label: reports.swm.datefrom
+    type: epoch
+    source: egswm_vehiclemaintenancedetails
+    isMandatory: true
+  - name: toDate
+    label: reports.swm.dateto
+    type: epoch
+    source: egswm_vehiclemaintenancedetails
+    isMandatory: true
+  query: select (to_timestamp(vmd.actualmaintenancedate/1000) AT TIME ZONE 'Asia/Kolkata')::date as date,vt.name as vehicletype,vehicle.regnumber as registrationnumber,sum(vfd.totalcostincurred) as fuellingcost,sum(vmd.costincurred) as maintenancecost,sum(vfd.totalcostincurred) + sum(vmd.costincurred) as totalcost from egswm_vehicle vehicle, egswm_vehiclefuellingdetails vfd, egswm_vehiclemaintenancedetails vmd, (VALUES tbl_swmvehicletype) as vt (code,name,tenantId) where vehicle.regnumber = vfd.vehicle and vehicle.regnumber = vmd.vehicle and vehicle.tenantid = $tenantid and vfd.tenantid = $tenantid and vmd.tenantid = $tenantid and vehicle.regnumber = $vehicle and vehicle.vehicletype = $typeofvehicle and vehicle.vehicletype = vt.code and vt.tenantid = $tenantid and vmd.actualmaintenancedate >= $fromDate and  vmd.actualmaintenancedate <= $toDate group by date, vt.name, registrationnumber;

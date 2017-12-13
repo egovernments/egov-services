@@ -52,11 +52,12 @@ public class EstimateTemplateService {
             for (final EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
                 estimateTemplateActivities.setId(commonUtils.getUUID());
                 estimateTemplateActivities.setAuditDetails(masterUtils.getAuditDetails(estimateTemplateRequest.getRequestInfo(), false));
-                estimateTemplateActivities.getNonSOR().setId(commonUtils.getUUID());
+                if (estimateTemplateActivities.getNonSOR() != null)
+                    estimateTemplateActivities.getNonSOR().setId(commonUtils.getUUID());
                 estimateTemplateActivities.setEstimateTemplate(estimateTemplate.getId());
             }
         }
-        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateCreateValidatedTopic(), estimateTemplateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateSaveOrUpdateValidatedTopic(), estimateTemplateRequest);
 
         response.setEstimateTemplates(estimateTemplateRequest.getEstimateTemplates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(estimateTemplateRequest.getRequestInfo(), true));
@@ -67,6 +68,7 @@ public class EstimateTemplateService {
         EstimateTemplateResponse response = new EstimateTemplateResponse();
 
         estimateTemplateValidator.validate(estimateTemplateRequest);
+        estimateTemplateValidator.validateForUpdate(estimateTemplateRequest);
 
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
             estimateTemplate.setAuditDetails(masterUtils.getAuditDetails(estimateTemplateRequest.getRequestInfo(), true));
@@ -75,7 +77,7 @@ public class EstimateTemplateService {
             }
         }
 
-        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateUpdateValidatedTopic(), estimateTemplateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateSaveOrUpdateValidatedTopic(), estimateTemplateRequest);
 
         response.setEstimateTemplates(estimateTemplateRequest.getEstimateTemplates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(estimateTemplateRequest.getRequestInfo(), true));
@@ -90,7 +92,7 @@ public class EstimateTemplateService {
         return estimateTemplateRepository.getbyId(id, tenantId);
     }
 
-    public EstimateTemplate getByCode(String code, String tenantId) {
-        return estimateTemplateRepository.getByCode(code, tenantId);
+    public EstimateTemplate getByCode(String code, String tenantId, String id, Boolean IsUpdateUniqueCheck) {
+        return estimateTemplateRepository.getByCode(code, tenantId, id, IsUpdateUniqueCheck);
     }
 }

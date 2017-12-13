@@ -8,37 +8,38 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum Beneficiary {
 
-	SC("SC"),
+    SC("SC"),
 
-	ST("ST"),
+    ST("ST"),
 
-	BC("BC"),
+    BC("BC"),
 
-	MINORITY("MINORITY"),
+    MINORITY("MINORITY"),
 
-	WOMEN_CHILDREN_WELFARE("WOMEN_CHILDREN_WELFARE"),
+    WOMEN_CHILDREN_WELFARE("WOMEN_CHILDREN_WELFARE"),
 
-	GENERAL("GENERAL");
+    GENERAL("GENERAL");
 
-	private String value;
+    private String value;
 
-	Beneficiary(String value) {
-		this.value = value;
-	}
+    Beneficiary(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static Beneficiary fromValue(String text) {
+        for (Beneficiary b : Beneficiary.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static Beneficiary fromValue(String text) {
-		for (Beneficiary b : Beneficiary.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

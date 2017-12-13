@@ -2,7 +2,6 @@ package org.egov.inv.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
@@ -12,7 +11,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This object holds the materail issue detail information for both indent and non indent. 
+ * This object holds the material issue detail information for both indent and non indent. 
  */
 @ApiModel(description = "This object holds the materail issue detail information for both indent and non indent. ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T08:36:20.118Z")
@@ -47,6 +46,9 @@ public class MaterialIssueDetail   {
 
   @JsonProperty("quantityToBeIssued")
   private BigDecimal quantityToBeIssued = null;
+  
+  @JsonProperty("balanceQuantity")
+  private BigDecimal balanceQuantity = null;
 
   @JsonProperty("scrapValue")
   private BigDecimal scrapValue = null;
@@ -108,8 +110,6 @@ public class MaterialIssueDetail   {
    * @return material
   **/
   @ApiModelProperty(required = true, value = "Applicable for Non Indent Issue. ")
-  @NotNull
-
   @Valid
 
   public Material getMaterial() {
@@ -195,8 +195,6 @@ public class MaterialIssueDetail   {
    * @return uom
   **/
   @ApiModelProperty(required = true, value = "unit of measure of selected material.")
-  @NotNull
-
   @Valid
 
   public Uom getUom() {
@@ -248,26 +246,49 @@ public class MaterialIssueDetail   {
     this.indentDetail = indentDetail;
   }
 
-  public MaterialIssueDetail quantityToBeIssued(BigDecimal quantityToBeIssued) {
-    this.quantityToBeIssued = quantityToBeIssued;
+  public MaterialIssueDetail balanceQuantity(BigDecimal balanceQuantity) {
+    this.balanceQuantity = balanceQuantity;
     return this;
   }
 
    /**
-   * Balance quantity to be issued of the IndentDetails. 
-   * @return quantityToBeIssued
+   * Balance quantity of material in stock. 
+   * @return balanceQuantity
   **/
-  @ApiModelProperty(value = "Balance quantity to be issued of the IndentDetails. ")
+  @ApiModelProperty(value = "Balance quantity of material in stock. ")
 
   @Valid
 
-  public BigDecimal getQuantityToBeIssued() {
-    return quantityToBeIssued;
+  public BigDecimal getBalanceQuantity() {
+    return balanceQuantity;
   }
 
-  public void setQuantityToBeIssued(BigDecimal quantityToBeIssued) {
-    this.quantityToBeIssued = quantityToBeIssued;
+  public void setBalanceQuantity(BigDecimal balanceQuantity) {
+    this.balanceQuantity = balanceQuantity;
   }
+  
+  public MaterialIssueDetail quantityToBeIssued(BigDecimal quantityToBeIssued) {
+	    this.quantityToBeIssued = quantityToBeIssued;
+	    return this;
+	  }
+
+	   /**
+	   * Balance quantity to be issued of the IndentDetails. 
+	   * @return quantityToBeIssued
+	  **/
+	  @ApiModelProperty(value = "Balance quantity to be issued of the IndentDetails. ")
+
+	  @Valid
+
+	  public BigDecimal getQuantityToBeIssued() {
+	    return quantityToBeIssued;
+	  }
+
+	  public void setQuantityToBeIssued(BigDecimal quantityToBeIssued) {
+	    this.quantityToBeIssued = quantityToBeIssued;
+	  }
+  
+  
 
   public MaterialIssueDetail scrapValue(BigDecimal scrapValue) {
     this.scrapValue = scrapValue;

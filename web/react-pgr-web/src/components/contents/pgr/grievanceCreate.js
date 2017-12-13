@@ -768,7 +768,8 @@ class grievanceCreate extends Component {
                       />
                     </Col>
                   </Row>
-                  <Row>
+                  <Row style={{position:'relative'}}>
+                    <p className="errorMsg" style={{position:"absolute",top:0,left:15,'z-index':10}}>(Allowed File Formats : jpg, jpeg, png)</p>
                     <Col xs={12} sm={4} md={3} lg={3}>
                       <RaisedButton label={translate('pgr.lbl.uploadphoto')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
                           <input type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)}/>

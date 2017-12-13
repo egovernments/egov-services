@@ -25,6 +25,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MaterialIssueEntity {
 
+	public static final String TABLE_NAME = "materialissue";
+	public static final String SEQUENCE_NAME = "seq_materialissue";
+	public static final String ALIAS = "materialissue";
+
 	private String id;
 
 	private String tenantId;
@@ -32,7 +36,7 @@ public class MaterialIssueEntity {
 	private String issueType;
 
 	private String fromStore;
-	
+
 	private String toStore;
 
 	private String issueNumber;
@@ -56,7 +60,7 @@ public class MaterialIssueEntity {
 	private String issuedToDesignation;
 
 	private String issuePurpose;
-	
+
 	private String supplier;
 
 	private Long stateId;
@@ -68,80 +72,93 @@ public class MaterialIssueEntity {
 	private String lastmodifiedBy;
 
 	private Long lastModifiedTime;
-	
-	
-	
-	public Object toEntity(MaterialIssue materialIssue) {
-		if(materialIssue.getId() != null)
-		this.id = materialIssue.getId();
+
+	public Object toEntity(MaterialIssue materialIssue, String type) {
+		if (materialIssue.getId() != null)
+			this.id = materialIssue.getId();
 		this.tenantId = materialIssue.getTenantId();
-		if(materialIssue.getDescription() != null)
-		this.description = materialIssue.getDescription();
-		if(materialIssue.getDesignation() != null)
-		this.designation = materialIssue.getDesignation();
+		if (materialIssue.getDescription() != null)
+			this.description = materialIssue.getDescription();
+		if (materialIssue.getDesignation() != null)
+			this.designation = materialIssue.getDesignation();
 		this.issueType = materialIssue.getIssueType().name();
-		this.fromStore = materialIssue.getFromStore().getCode();
-		if(materialIssue.getToStore() != null)
-		this.toStore = materialIssue.getToStore().getCode();
+		if (materialIssue.getFromStore() != null && StringUtils.isNotBlank(materialIssue.getFromStore().getCode()))
+			this.fromStore = materialIssue.getFromStore().getCode();
+		if (materialIssue.getToStore() != null && StringUtils.isNotBlank(materialIssue.getToStore().getCode()))
+			this.toStore = materialIssue.getToStore().getCode();
 		this.issueNumber = materialIssue.getIssueNumber();
 		this.issueDate = materialIssue.getIssueDate();
-		this.materialIssueStatus = materialIssue.getMaterialIssueStatus().name();
+		if (materialIssue.getMaterialIssueStatus() != null)
+			this.materialIssueStatus = materialIssue.getMaterialIssueStatus().name();
 		this.totalIssueValue = Double.valueOf(materialIssue.getTotalIssueValue().toString());
-		if(materialIssue.getFileStoreId() != null)
-		this.fileStoreId = materialIssue.getFileStoreId();
-		if(materialIssue.getDesignation() != null)
-		this.designation = materialIssue.getDesignation();
-		if(materialIssue.getIndent() != null && materialIssue.getIndent().getId() != null)
-		this.indentId = materialIssue.getIndent().getId();
-		if(materialIssue.getIssuedToEmployee() != null)
-		this.issuedToEmployee = materialIssue.getIssuedToEmployee();
-		if(materialIssue.getIssuedToDesignation() != null)
-		this.issuedToDesignation = materialIssue.getIssuedToDesignation();
-		if(materialIssue.getIssuePurpose() != null)
-		this.issuePurpose = materialIssue.getIssuePurpose().name();
-		if(materialIssue.getStateId() != null)
-		this.stateId = materialIssue.getStateId();
+		if (materialIssue.getFileStoreId() != null)
+			this.fileStoreId = materialIssue.getFileStoreId();
+		if (materialIssue.getDesignation() != null)
+			this.designation = materialIssue.getDesignation();
+		if (type.equals(IssueTypeEnum.INDENTISSUE.toString())) {
+			if (materialIssue.getIndent() != null && materialIssue.getIndent().getId() != null)
+				this.indentId = materialIssue.getIndent().getId();
+		}
+		if(type.equals(IssueTypeEnum.INDENTISSUE.toString()))
+			this.issuedToEmployee = materialIssue.getIndent().getIndentCreatedBy();
+		else{
+		if (materialIssue.getIssuedToEmployee() != null)
+			this.issuedToEmployee = materialIssue.getIssuedToEmployee();
+		}
+		if(type.equals(IssueTypeEnum.INDENTISSUE))
+			this.issuedToDesignation = materialIssue.getIndent().getDesignation();
+		else{
+		if (materialIssue.getIssuedToDesignation() != null)
+			this.issuedToDesignation = materialIssue.getIssuedToDesignation();
+		}
+		if (materialIssue.getIssuePurpose() != null)
+			this.issuePurpose = materialIssue.getIssuePurpose().name();
+		if (materialIssue.getStateId() != null)
+			this.stateId = materialIssue.getStateId();
 		return this;
 	}
 
-
-
-	public MaterialIssue toDomain() {
+	public MaterialIssue toDomain(String type) {
 		MaterialIssue materialIssue = new MaterialIssue();
 		materialIssue.setId(id);
 		materialIssue.setTenantId(tenantId);
 		materialIssue.setIssueType(IssueTypeEnum.valueOf(issueType));
-		Store fromMaterialStore = new Store();
-		fromMaterialStore.setCode(fromStore);
-		materialIssue.setFromStore(fromMaterialStore);
-		Store toMaterialStore = new Store();
-		toMaterialStore.setCode(toStore);
-		materialIssue.setToStore(toMaterialStore);
+		Store issueStore = new Store();
+		issueStore.setCode(fromStore);
+		Store indentStore = new Store();
+		indentStore.setCode(toStore);
+		if (type.equals(IssueTypeEnum.INDENTISSUE.toString())) {
+			Indent indent = new Indent();
+			indent.setIssueStore(issueStore);
+			indent.setIndentStore(indentStore);
+			indent.setId(indentId);
+			materialIssue.setIndent(indent);
+		} else {
+			materialIssue.setFromStore(issueStore);
+			materialIssue.setToStore(indentStore);
+		}
 		materialIssue.setIssueNumber(issueNumber);
 		materialIssue.setIssueDate(issueDate);
 		materialIssue.setMaterialIssueStatus(MaterialIssueStatusEnum.valueOf(materialIssueStatus));
-	    materialIssue.setDescription(description);	
-	    materialIssue.setTotalIssueValue(BigDecimal.valueOf(totalIssueValue));
-	    materialIssue.setFileStoreId(fileStoreId);
-	    materialIssue.setDesignation(designation);
-	    Indent indent = new Indent();
-	    indent.setId(indentId);
-	    materialIssue.setIndent(indent);
-	    materialIssue.setIssuedToEmployee(issuedToEmployee);
-	    materialIssue.setIssuedToDesignation(issuedToDesignation);
-	    if(StringUtils.isNotBlank(issuePurpose))
-	    materialIssue.setIssuePurpose(IssuePurposeEnum.valueOf(issuePurpose));
-	    Supplier materialSupplier = new Supplier ();
-	    materialSupplier.setCode(supplier);
-	    materialIssue.setSupplier(materialSupplier);
-	    materialIssue.setStateId(stateId);
-	    AuditDetails auditDetails = new AuditDetails();
-	    auditDetails.setCreatedBy(createdBy);
-	    auditDetails.setCreatedTime(createdTime);
-	    auditDetails.setLastModifiedBy(lastmodifiedBy);
-	    auditDetails.setLastModifiedTime(lastModifiedTime);
-	    materialIssue.setAuditDetails(auditDetails);
+		materialIssue.setDescription(description);
+		materialIssue.setTotalIssueValue(BigDecimal.valueOf(totalIssueValue));
+		materialIssue.setFileStoreId(fileStoreId);
+		materialIssue.setDesignation(designation);
+		materialIssue.setIssuedToEmployee(issuedToEmployee);
+		materialIssue.setIssuedToDesignation(issuedToDesignation);
+		if (StringUtils.isNotBlank(issuePurpose))
+			materialIssue.setIssuePurpose(IssuePurposeEnum.valueOf(issuePurpose));
+		Supplier materialSupplier = new Supplier();
+		materialSupplier.setCode(supplier);
+		materialIssue.setSupplier(materialSupplier);
+		materialIssue.setStateId(stateId);
+		AuditDetails auditDetails = new AuditDetails();
+		auditDetails.setCreatedBy(createdBy);
+		auditDetails.setCreatedTime(createdTime);
+		auditDetails.setLastModifiedBy(lastmodifiedBy);
+		auditDetails.setLastModifiedTime(lastModifiedTime);
+		materialIssue.setAuditDetails(auditDetails);
 		return materialIssue;
 	}
-	
+
 }

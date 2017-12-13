@@ -1,160 +1,163 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * ModeOfAllotment
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class ModeOfAllotment {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("name")
-	private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	public ModeOfAllotment id(String id) {
-		this.id = id;
-		return this;
-	}
+    public ModeOfAllotment id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique Identifier of the Mode Of Allotment
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Mode Of Allotment")
+    /**
+     * Unique Identifier of the Mode Of Allotment
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Mode Of Allotment")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public ModeOfAllotment tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Tenant id of the Mode Of Allotment
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Mode Of Allotment")
-	@NotNull
+    public ModeOfAllotment tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    /**
+     * Tenant id of the Mode Of Allotment
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Mode Of Allotment")
+    @NotNull
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public ModeOfAllotment name(String name) {
-		this.name = name;
-		return this;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	/**
-	 * Unique name of the Mode Of Allotment
-	 * 
-	 * @return name
-	 **/
-	@ApiModelProperty(required = true, value = "Unique name of the Mode Of Allotment")
-	@NotNull
+    public ModeOfAllotment name(String name) {
+        this.name = name;
+        return this;
+    }
 
-	@Pattern(regexp = "[a-zA-Z0-9\\s\\.,]+")
-	@Size(min = 1, max = 100)
-	public String getName() {
-		return name;
-	}
+    /**
+     * Unique name of the Mode Of Allotment
+     *
+     * @return name
+     **/
+    @ApiModelProperty(required = true, value = "Unique name of the Mode Of Allotment")
+    @NotNull
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Pattern(regexp = "[a-zA-Z0-9\\s\\.,]+")
+    @Size(min = 1, max = 100)
+    public String getName() {
+        return name;
+    }
 
-	public ModeOfAllotment code(String code) {
-		this.code = code;
-		return this;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Unique code of the Mode Of Allotment
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(required = true, value = "Unique code of the Mode Of Allotment")
-	@NotNull
+    public ModeOfAllotment code(String code) {
+        this.code = code;
+        return this;
+    }
 
-	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
-	@Size(min = 1, max = 100)
-	public String getCode() {
-		return code;
-	}
+    /**
+     * Unique code of the Mode Of Allotment
+     *
+     * @return code
+     **/
+    @ApiModelProperty(required = true, value = "Unique code of the Mode Of Allotment")
+    @NotNull
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    @Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
+    @Size(min = 1, max = 100)
+    public String getCode() {
+        return code;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		ModeOfAllotment modeOfAllotment = (ModeOfAllotment) o;
-		return Objects.equals(this.id, modeOfAllotment.id) && Objects.equals(this.tenantId, modeOfAllotment.tenantId)
-				&& Objects.equals(this.name, modeOfAllotment.name) && Objects.equals(this.code, modeOfAllotment.code);
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, name, code);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class ModeOfAllotment {\n");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ModeOfAllotment modeOfAllotment = (ModeOfAllotment) o;
+        return Objects.equals(this.id, modeOfAllotment.id) &&
+                Objects.equals(this.tenantId, modeOfAllotment.tenantId) &&
+                Objects.equals(this.name, modeOfAllotment.name) &&
+                Objects.equals(this.code, modeOfAllotment.code);
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, name, code);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ModeOfAllotment {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    code: ").append(toIndentedString(code)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

@@ -46,5 +46,6 @@ public interface KpiMaster {
 	@ResponseBody
 	public ResponseEntity<?> getDocumentForKpi(@RequestParam("kpiCode") String kpiCode,
 			 @RequestBody RequestInfoWrapper requestInfo); 
+	
 
 }

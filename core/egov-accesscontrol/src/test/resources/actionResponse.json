@@ -10,7 +10,6 @@
       "name": "Create Complaint",
       "url": "/createcomplaint",
       "displayName" : "Create Complaint",
-      "enabled": false,
       "orderNumber": 1,
       "createdBy": 1,
       "lastModifiedBy": 1
@@ -20,7 +19,6 @@
       "name": "Update Complaint",
       "url": "/updatecomplaint",
       "displayName" : "Update Complaint",
-      "enabled": false,
       "orderNumber": 2,
       "createdBy": 1,
       "lastModifiedBy": 1

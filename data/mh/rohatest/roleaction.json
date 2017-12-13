@@ -1,6 +1,6 @@
 {
   "tenantId": "mh.rohatest",
-  "moduleName": "ACCESSCONTROL",
+  "moduleName": "ACCESSCONTROL-ROLEACTIONS",
   "roleactions": 
   [
     {
@@ -9566,6 +9566,13 @@
       "actionid": 1075,
       "actioncode": "",
       "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1204,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
     }
+
   ]
 }

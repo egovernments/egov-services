@@ -1,5 +1,7 @@
 package org.egov.pa.repository.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,17 +13,22 @@ import org.egov.pa.model.Department;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
+import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIMasterRowMapper;
 import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
+import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -61,6 +68,8 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     
     @Value("${kafka.topics.kpitarget.update.name}")
 	private String updateKpiTargetTopic;
+    
+    private static final String MH_TENANT = "mh"; 
 
 	@Override
 	public void persistKpi(KPIRequest kpiRequest) {
@@ -122,10 +131,17 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	@Override
 	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-		List<Department> deptList = restCallService.getDepartmentForId("mh");
+		List<Department> deptList = restCallService.getDepartmentForId(MH_TENANT);
 		log.info("Department List obtained for the Tenant ID : " + deptList.toString());
-    	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues); 
-    	List<KPI> kpiList = jdbcTemplate.query(query, preparedStatementValues.toArray(), new PerformanceAssessmentRowMapper().new KPIMasterRowMapper());
+    	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues);
+    	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper(); 
+    	jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+    	List<KPI> kpiList = new ArrayList<>();
+		Map<String, KPI> kpiMap = mapper.kpiMap; 
+		Iterator<Entry<String, KPI>> itr = kpiMap.entrySet().iterator();
+		while(itr.hasNext()) { 
+			kpiList.add(itr.next().getValue()); 
+		}
     	log.info("Number of KPIs Obtainted : " + kpiList.size()); 
     	if(null != kpiList && kpiList.size() > 0) { 
     		arrangeDeptToKpiList(kpiList, deptList);
@@ -137,13 +153,35 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 	
 	@Override
-	public List<KPI> getKpiByCode(List<String> kpiCodeList) {
-		String query = queryBuilder.getKpiByCode();
-		final HashMap<String, Object> parametersMap = new HashMap<>();
-		parametersMap.put("kpiCodeList", kpiCodeList);
-		List<KPI> kpiList = namedParameterJdbcTemplate.query(query,
-                parametersMap, new PerformanceAssessmentRowMapper().new KPIMasterRowMapper());
+	public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, KPIValueSearchRequest kpiValueSearchReq) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		List<String> finYearList = kpiValueSearchReq.getFinYear(); 
+		Long departmentId = kpiValueSearchReq.getDepartmentId();
+		Long categoryId = kpiValueSearchReq.getCategoryId(); 
+		String query = queryBuilder.getKpiByCode(kpiCodeList, finYearList, departmentId, categoryId, preparedStatementValues);
+		log.info("QUERY to fetch KPI Details : " + query);
+		KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
+		jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+		List<KPI> kpiList = new ArrayList<>();
+		Map<String, KPI> kpiMap = mapper.kpiMap;
+		Iterator<Entry<String, KPI>> itr = kpiMap.entrySet().iterator();
+		while (itr.hasNext()) {
+			kpiList.add(itr.next().getValue());
+		}
+		if (getTargets) {
+			mapTargetToKpi(mapper.kpiTargetMap, kpiList);
+		}
 		return kpiList;
+	}
+	
+	private void mapTargetToKpi(Map<String, List<KpiTarget>> map, List<KPI> kpiList){
+		for(KPI kpi : kpiList) { 
+			List<KpiTarget> targetList = map.get(kpi.getCode());
+			if(null != targetList && targetList.size() > 0) { 
+				kpi.setKpiTargets(targetList);
+			}
+			
+		}
 	}
 	
 	private List<Document> getDocumentListForKpi(String kpiCode) {
@@ -205,6 +243,21 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 			deptMap.put(dept.getId(), dept); 
 		}
 	}
+	
+	@Override
+	public List<String> getTargetTypeForKpiCodes(List<String> kpiCodeList) { 
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		String query = queryBuilder.getTargetTypeForKpi(); 
+		parametersMap.put("kpiCodeList", kpiCodeList);
+		List<String> targetTypeList= namedParameterJdbcTemplate.query(query,
+                parametersMap, new RowMapper<String>() {
+			@Override
+			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getString("targettype");
+			}
+		});
+		return targetTypeList;
+	}
 
 	@Override
 	public void persistKpiTarget(KpiTargetList kpiTargetList) {
@@ -216,6 +269,23 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	public void updateKpiTarget(KpiTargetList kpiTargetList) {
 		log.info("Request before pushing to Kafka Queue : " + kpiTargetList);
     	kafkaTemplate.send(updateKpiTargetTopic, kpiTargetList);
+	}
+	
+	@Override
+	public String targetExistsForKPI(String kpiCode) { 
+		String query = queryBuilder.targetAvailableForKpi(); 
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("kpiCode", kpiCode);
+		String targetType = ""; 
+		try { 
+			targetType = namedParameterJdbcTemplate.queryForObject(query,parametersMap, String.class);
+		} catch(EmptyResultDataAccessException erdae) { 
+			log.info("No target has been set for the KPI : " + kpiCode); 
+		} catch(Exception e) { 
+			log.error("Encountered an exception while fetching the target for the KPI : " + kpiCode + " :: Exception : " + e) ; 
+		}
+		
+		return targetType; 
 	}
 
 	@Override

@@ -61,7 +61,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: " The UID number is as follows:412521475850 : all 12 digits"
           },
           {
             name: "gender",
@@ -117,7 +117,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             name: "contactNumber",
@@ -128,7 +128,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             name: "email",
@@ -139,7 +139,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "Email should be in format e.g - abc@abc.com"
           },
           {
             name: "panNumber",
@@ -150,7 +150,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: " The PAN structure is as follows: AAAPL1234C ."
           },
           {
             name: "VATTinNumber",
@@ -173,22 +173,31 @@ var dat = {
             jsonPath: "bankName",
             label: "advocates.create.bankName",
             pattern: "",
-            type: "text",
+            type: "singleValueList",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "",
+            url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..code|$..name",
+            depedants: [
+              {
+                jsonPath: "bankBranch",
+                type: "dropDown",
+                "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch&filter=%5B%3F%28%40.bankCode%3D%3D'{bankName}'%29%5D|$..branch|$..branch"
+              }]
           },
           {
             name: "bankBranch",
             jsonPath: "bankBranch",
             label: "advocates.create.bankBranch",
             pattern: "",
-            type: "text",
+            type: "singleValueList",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
-            patternErrMsg: ""
+            patternErrMsg: "",
+            "url":""
+            //url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch|$..branch|$..branch"
           },
           {
             name: "bankAcc",
@@ -224,91 +233,97 @@ var dat = {
             patternErrMsg: ""
           }
         ]
-      }, {
-        "name": "action",
-        "label": "advocates.create.group.title.action",
-        "fields": [
-          {
-            "name": "actionType",
-            "jsonPath": "status",
-            "label": "advocates.create.actionType",
-            "type": "radio",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": "",
-            "values": [
-              {
-                "label": "advocates.create.active",
-                "value": "active"
-              },
-              {
-                "label": "advocates.create.inactive",
-                "value": "inactive"
-              },
-              {
-                "label": "advocates.create.terminate",
-                "value": "terminate"
-              }
-            ],
-            "defaultValue": "active",
-            "enableDiasableFields": [
-              {
-                "ifValue": "active",
-                "enable": ["terminationDate", "inActivationDate"],
-                "disable": []
-              },{
-                "ifValue": "inactive",
-                "enable": [
-                  "inActivationDate"
-                ],
-                "disable": [
-                  "terminationDate",
-                ]
-              },
-              {
-                "ifValue": "terminate",
-                "enable": [
-                  "terminationDate"
-                ],
-                "disable": [
-                  "inActivationDate"
-                ]
-              }
-            ]
-          },
-          {
-            "name": "inActivationDate",
-            "jsonPath": "inActiveDate",
-            "label": "advocates.create.inActivationDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "terminationDate",
-            "jsonPath": "terminationDate",
-            "label": "advocates.create.terminationDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          }
-        ]
       }
+      // {
+      //   "name": "action",
+      //   "label": "advocates.create.group.title.action",
+      //   "fields": [
+      //     {
+      //       "name": "actionType",
+      //       "jsonPath": "status",
+      //       "label": "advocates.create.actionType",
+      //       "type": "radio",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "patternErrorMsg": "",
+      //       "values": [
+      //         {
+      //           "label": "advocates.create.active",
+      //           "value": "active"
+      //         },
+      //         {
+      //           "label": "advocates.create.inactive",
+      //           "value": "inactive"
+      //         },
+      //         {
+      //           "label": "advocates.create.terminate",
+      //           "value": "terminate"
+      //         }
+      //       ],
+      //       "defaultValue": "active",
+      //       "enableDisableFields": [
+      //         {
+      //           "ifValue": "active",
+      //           "enable": [],
+      //           "disable": ["terminationDate", 
+      //           "inActivationDate",
+      //           "reasonOfTermination"]
+      //         },{
+      //           "ifValue": "inactive",
+      //           "enable": [
+      //             "inActivationDate",
+      //             "reasonOfTermination"
+      //           ],
+      //           "disable": [
+      //             "terminationDate"
+      //           ]
+      //         },
+      //         {
+      //           "ifValue": "terminate",
+      //           "enable": [
+      //             "terminationDate",
+      //             "reasonOfTermination"
+      //           ],
+      //           "disable": [
+      //             "inActivationDate"
+      //           ]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       "name": "inActivationDate",
+      //       "jsonPath": "inActiveDate",
+      //       "label": "advocates.create.inActivationDate",
+      //       "pattern": "",
+      //       "type": "datePicker",
+      //       "isRequired": false,
+      //       "isDisabled": true,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "terminationDate",
+      //       "jsonPath": "terminationDate",
+      //       "label": "advocates.create.terminationDate",
+      //       "pattern": "",
+      //       "type": "datePicker",
+      //       "isRequired": false,
+      //       "isDisabled": true,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       name: "reasonOfTermination",
+      //       jsonPath: "agencies[0].reasonOfTermination",
+      //       label: "advocates.create.reasonOfTerminationOrDeactivation",
+      //       type: "textarea",
+      //       fullWidth: true,
+      //       isRequired: true,
+      //       isDisabled: true,
+      //       patternErrorMsg: ""
+      //     }
+      //   ]
+      // }
     ]
   }
 

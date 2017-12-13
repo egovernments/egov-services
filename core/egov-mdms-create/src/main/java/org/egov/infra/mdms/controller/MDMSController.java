@@ -13,13 +13,7 @@ import org.egov.infra.mdms.utils.MDMSRequestValidator;
 import org.egov.infra.mdms.utils.ResponseInfoFactory;
 import org.egov.mdms.model.MDMSCreateErrorResponse;
 import org.egov.mdms.model.MDMSCreateRequest;
-import org.egov.mdms.model.MasterDetail;
-import org.egov.mdms.model.MdmsCreateResponse;
-import org.egov.mdms.model.MdmsCriteria;
-import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
-import org.egov.mdms.model.ModuleDetail;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,30 +48,27 @@ public class MDMSController {
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
-		try{
-			ArrayList<Object> validationError = mDMSRequestValidator.validateCreateRequest(mDMSCreateRequest);
-			Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
-			Gson gson = new Gson();
-			Object errorData = gson.fromJson(validationError.toString(), type);
-			if(!validationError.isEmpty()){
-				MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
-				mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
-					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-				mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, Please rectify and retry");
-				mDMSCreateErrorResponse.setData(errorData);
-				return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
-			}
-			Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, true);
-			MdmsResponse mdmsResponse = new MdmsResponse();
-			mdmsResponse.setMdmsRes(response);
-			mdmsResponse.setResponseInfo(responseInfoFactory.
-					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
-			
-			return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
-		}catch(Exception e){
-			log.error("Error: ",e);
-			throw e;
+		List<String> keys = new ArrayList<>();
+		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, true);
+		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+		Gson gson = new Gson();
+		Object errorData = gson.fromJson(validationError.toString(), type);
+		if(!validationError.isEmpty()){
+			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
+			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
+				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+			mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, "
+					+ "Please rectify and retry, UniqueKeys are: "+keys);
+			mDMSCreateErrorResponse.setData(errorData);
+			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}
+		Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, true);
+		MdmsResponse mdmsResponse = new MdmsResponse();
+		mdmsResponse.setMdmsRes(response);
+		mdmsResponse.setResponseInfo(responseInfoFactory.
+				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
+			
+		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
 
 	}
 	
@@ -85,30 +76,27 @@ public class MDMSController {
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
-		try{
-			Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, false);
-			MdmsResponse mdmsResponse = new MdmsResponse();
-			mdmsResponse.setMdmsRes(response);
-			mdmsResponse.setResponseInfo(responseInfoFactory.
-					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
-			return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
-		}catch(CustomException e){
-			log.error("Error: ",e);
-			if((e.getMessage()).equals("Invalid Request")){
-				MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
-				mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
-					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-				mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, Please rectify and retry");
-				mDMSCreateErrorResponse.setData(mDMSCreateRequest.getMasterMetaData().getMasterData());
-				return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
-			}
-			throw e;
-		}catch(Exception e){
-			log.error("Error: ",e);
-			throw e;
+		List<String> keys = new ArrayList<>();
+		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, false);
+		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+		Gson gson = new Gson();
+		Object errorData = gson.fromJson(validationError.toString(), type);
+		if(!validationError.isEmpty()){
+			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
+			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
+				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+			mDMSCreateErrorResponse.setMessage("Following records dont exist hence update failed, "
+					+ "Please rectify and retry, UniqueKeys are: "+keys);
+			mDMSCreateErrorResponse.setData(errorData);
+			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}
-
-		
+		Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, false);
+		MdmsResponse mdmsResponse = new MdmsResponse();
+		mdmsResponse.setMdmsRes(response);
+		mdmsResponse.setResponseInfo(responseInfoFactory.
+				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
+			
+		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
 	}
 		
 	@PostMapping("config/_search")
@@ -120,7 +108,7 @@ public class MDMSController {
 			List<Object> response = mdmsService.getConfigs(tenantId, module, master);
 			return new ResponseEntity<>(response, HttpStatus.OK);		
 		}catch(Exception e){
-			log.error("Error at controller level: ",e);
+			log.error("Error ",e);
 			throw e;
 		}
 

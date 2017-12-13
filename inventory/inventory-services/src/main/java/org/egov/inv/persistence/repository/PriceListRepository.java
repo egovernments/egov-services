@@ -1,5 +1,7 @@
 package org.egov.inv.persistence.repository;
 
+import java.util.List;
+
 import org.egov.common.Pagination;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListRequest;
@@ -46,5 +48,10 @@ public class PriceListRepository {
     public Pagination<PriceList> search(PriceListSearchRequest priceListSearchRequest) {
         return priceListJdbcRepository.search(priceListSearchRequest);
     }
+    
+    public List<PriceList> searchPriceList(PriceListSearchRequest priceListSearchRequest) {
+        return priceListJdbcRepository.searchPriceList(priceListSearchRequest);
+    }
+
 
 }

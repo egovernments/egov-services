@@ -96,7 +96,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Tenant id of the Indent Detail")
 
- @Size(min=4,max=128)
+  @Size(min=4,max=128)
   public String getTenantId() {
     return tenantId;
   }

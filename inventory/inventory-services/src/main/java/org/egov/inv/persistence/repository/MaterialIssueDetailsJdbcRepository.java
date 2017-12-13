@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MaterialIssueDetailsJdbcRepository extends JdbcRepository {
 
-	public Pagination<MaterialIssueDetail> search(String issueNumber, String tenantId) {
+	public Pagination<MaterialIssueDetail> search(String issueNumber, String tenantId, String issueType) {
 		String searchQuery = "select * from materialissuedetail :condition :orderby";
 		StringBuffer params = new StringBuffer();
 		String orderBy = "order by id";
@@ -52,7 +52,7 @@ public class MaterialIssueDetailsJdbcRepository extends JdbcRepository {
 
 		for (MaterialIssueDetailEntity materialIssueDetailEntity : materialIssueDetailEntities) {
 
-			materialIssueDetailList.add(materialIssueDetailEntity.toDomain());
+			materialIssueDetailList.add(materialIssueDetailEntity.toDomain(issueType));
 		}
 
 		page.setTotalResults(materialIssueDetailList.size());

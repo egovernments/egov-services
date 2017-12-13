@@ -18,7 +18,7 @@ import java.util.Objects;
  * Hold the material receipt specific information.
  */
 @ApiModel(description = "Hold the material receipt specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-18T03:45:26.890Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-07T10:28:02.933Z")
 
 public class MaterialReceipt {
     @JsonProperty("id")
@@ -32,6 +32,9 @@ public class MaterialReceipt {
 
     @JsonProperty("manualReceiptNumber")
     private String manualReceiptNumber = null;
+
+    @JsonProperty("issueNumber")
+    private String issueNumber = null;
 
     @JsonProperty("receiptDate")
     private Long receiptDate = null;
@@ -132,9 +135,6 @@ public class MaterialReceipt {
     @JsonProperty("challanNo")
     private String challanNo = null;
 
-    @JsonProperty("paymentTerms")
-    private String paymentTerms = null;
-
     @JsonProperty("challanDate")
     private Long challanDate = null;
 
@@ -203,6 +203,9 @@ public class MaterialReceipt {
 
     @JsonProperty("fileStoreId")
     private String fileStoreId = null;
+
+    @JsonProperty("paymentTerms")
+    private String paymentTerms = null;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
@@ -291,6 +294,27 @@ public class MaterialReceipt {
         this.manualReceiptNumber = manualReceiptNumber;
     }
 
+    public MaterialReceipt issueNumber(String issueNumber) {
+        this.issueNumber = issueNumber;
+        return this;
+    }
+
+    /**
+     * material issue number.
+     *
+     * @return issueNumber
+     **/
+    @ApiModelProperty(value = "material issue number.")
+
+
+    public String getIssueNumber() {
+        return issueNumber;
+    }
+
+    public void setIssueNumber(String issueNumber) {
+        this.issueNumber = issueNumber;
+    }
+
     public MaterialReceipt receiptDate(Long receiptDate) {
         this.receiptDate = receiptDate;
         return this;
@@ -303,6 +327,7 @@ public class MaterialReceipt {
      **/
     @ApiModelProperty(required = true, value = "The date on which the receipt was made.")
     @NotNull
+
 
     public Long getReceiptDate() {
         return receiptDate;
@@ -520,27 +545,6 @@ public class MaterialReceipt {
         this.challanNo = challanNo;
     }
 
-    public MaterialReceipt paymentTerms(String paymentTerms) {
-        this.paymentTerms = paymentTerms;
-        return this;
-    }
-
-    /**
-     * payment terms of receipt.
-     *
-     * @return paymentTerms
-     **/
-    @ApiModelProperty(value = "payment terms of receipt.")
-
-    @Size(max = 1000)
-    public String getPaymentTerms() {
-        return paymentTerms;
-    }
-
-    public void setPaymentTerms(String paymentTerms) {
-        this.paymentTerms = paymentTerms;
-    }
-
     public MaterialReceipt challanDate(Long challanDate) {
         this.challanDate = challanDate;
         return this;
@@ -656,7 +660,7 @@ public class MaterialReceipt {
      *
      * @return bill
      **/
-    @ApiModelProperty(value = "Bill number reference, if bill is generatd in system for receipt.")
+    @ApiModelProperty(value = "Bill number reference, if bill is generatd in systemm for receipt.")
 
 
     public String getBill() {
@@ -801,6 +805,27 @@ public class MaterialReceipt {
         this.fileStoreId = fileStoreId;
     }
 
+    public MaterialReceipt paymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
+        return this;
+    }
+
+    /**
+     * payment terms of the Material Receipt
+     *
+     * @return paymentTerms
+     **/
+    @ApiModelProperty(value = "payment terms of the Material Receipt             ")
+
+    @Size(max = 1000)
+    public String getPaymentTerms() {
+        return paymentTerms;
+    }
+
+    public void setPaymentTerms(String paymentTerms) {
+        this.paymentTerms = paymentTerms;
+    }
+
     public MaterialReceipt auditDetails(AuditDetails auditDetails) {
         this.auditDetails = auditDetails;
         return this;
@@ -835,6 +860,7 @@ public class MaterialReceipt {
                 Objects.equals(this.tenantId, materialReceipt.tenantId) &&
                 Objects.equals(this.mrnNumber, materialReceipt.mrnNumber) &&
                 Objects.equals(this.manualReceiptNumber, materialReceipt.manualReceiptNumber) &&
+                Objects.equals(this.issueNumber, materialReceipt.issueNumber) &&
                 Objects.equals(this.receiptDate, materialReceipt.receiptDate) &&
                 Objects.equals(this.financialYear, materialReceipt.financialYear) &&
                 Objects.equals(this.manualReceiptDate, materialReceipt.manualReceiptDate) &&
@@ -846,7 +872,6 @@ public class MaterialReceipt {
                 Objects.equals(this.supplierBillNo, materialReceipt.supplierBillNo) &&
                 Objects.equals(this.supplierBillDate, materialReceipt.supplierBillDate) &&
                 Objects.equals(this.challanNo, materialReceipt.challanNo) &&
-                Objects.equals(this.paymentTerms, materialReceipt.paymentTerms) &&
                 Objects.equals(this.challanDate, materialReceipt.challanDate) &&
                 Objects.equals(this.description, materialReceipt.description) &&
                 Objects.equals(this.receivedBy, materialReceipt.receivedBy) &&
@@ -859,12 +884,13 @@ public class MaterialReceipt {
                 Objects.equals(this.totalReceiptValue, materialReceipt.totalReceiptValue) &&
                 Objects.equals(this.receiptDetails, materialReceipt.receiptDetails) &&
                 Objects.equals(this.fileStoreId, materialReceipt.fileStoreId) &&
+                Objects.equals(this.paymentTerms, materialReceipt.paymentTerms) &&
                 Objects.equals(this.auditDetails, materialReceipt.auditDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, mrnNumber, manualReceiptNumber, receiptDate, financialYear, manualReceiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, paymentTerms, challanDate, description, receivedBy, designation, mrnStatus, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, auditDetails);
+        return Objects.hash(id, tenantId, mrnNumber, manualReceiptNumber, issueNumber, receiptDate, financialYear, manualReceiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, challanDate, description, receivedBy, designation, mrnStatus, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, paymentTerms, auditDetails);
     }
 
     @Override
@@ -876,6 +902,7 @@ public class MaterialReceipt {
         sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
         sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
         sb.append("    manualReceiptNumber: ").append(toIndentedString(manualReceiptNumber)).append("\n");
+        sb.append("    issueNumber: ").append(toIndentedString(issueNumber)).append("\n");
         sb.append("    receiptDate: ").append(toIndentedString(receiptDate)).append("\n");
         sb.append("    financialYear: ").append(toIndentedString(financialYear)).append("\n");
         sb.append("    manualReceiptDate: ").append(toIndentedString(manualReceiptDate)).append("\n");
@@ -887,7 +914,6 @@ public class MaterialReceipt {
         sb.append("    supplierBillNo: ").append(toIndentedString(supplierBillNo)).append("\n");
         sb.append("    supplierBillDate: ").append(toIndentedString(supplierBillDate)).append("\n");
         sb.append("    challanNo: ").append(toIndentedString(challanNo)).append("\n");
-        sb.append("    paymentTerms: ").append(toIndentedString(paymentTerms)).append("\n");
         sb.append("    challanDate: ").append(toIndentedString(challanDate)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    receivedBy: ").append(toIndentedString(receivedBy)).append("\n");
@@ -900,6 +926,7 @@ public class MaterialReceipt {
         sb.append("    totalReceiptValue: ").append(toIndentedString(totalReceiptValue)).append("\n");
         sb.append("    receiptDetails: ").append(toIndentedString(receiptDetails)).append("\n");
         sb.append("    fileStoreId: ").append(toIndentedString(fileStoreId)).append("\n");
+        sb.append("    paymentTerms: ").append(toIndentedString(paymentTerms)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("}");
         return sb.toString();

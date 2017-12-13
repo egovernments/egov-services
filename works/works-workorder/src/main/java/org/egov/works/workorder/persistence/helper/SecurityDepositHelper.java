@@ -37,6 +37,7 @@ public class SecurityDepositHelper {
         SecurityDeposit securityDeposit = new SecurityDeposit();
         securityDeposit.setTenantId(this.tenantId);
         securityDeposit.setAmount(this.amount);
+        securityDeposit.setId(this.id);
         securityDeposit.letterOfAcceptance(this.letterOfAcceptance);
         securityDeposit.collectionMode(this.collectionMode);
         securityDeposit.percentage(this.percentage);

@@ -1,288 +1,293 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
+import org.joda.time.LocalDate;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.joda.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * Role
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class Role {
-	@JsonProperty("id")
-	private Long id = null;
+    @JsonProperty("id")
+    private Long id = null;
 
-	@JsonProperty("name")
-	private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@JsonProperty("description")
-	private String description = null;
+    @JsonProperty("description")
+    private String description = null;
 
-	@JsonProperty("createdBy")
-	private Long createdBy = null;
+    @JsonProperty("createdBy")
+    private Long createdBy = null;
 
-	@JsonProperty("createdDate")
-	private LocalDate createdDate = null;
+    @JsonProperty("createdDate")
+    private LocalDate createdDate = null;
 
-	@JsonProperty("lastModifiedBy")
-	private Long lastModifiedBy = null;
+    @JsonProperty("lastModifiedBy")
+    private Long lastModifiedBy = null;
 
-	@JsonProperty("lastModifiedDate")
-	private LocalDate lastModifiedDate = null;
+    @JsonProperty("lastModifiedDate")
+    private LocalDate lastModifiedDate = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	public Role id(Long id) {
-		this.id = id;
-		return this;
-	}
+    public Role id(Long id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique identifier of the role.
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique identifier of the role.")
+    /**
+     * Unique identifier of the role.
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique identifier of the role.")
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Role name(String name) {
-		this.name = name;
-		return this;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	/**
-	 * The Name of the Role.
-	 * 
-	 * @return name
-	 **/
-	@ApiModelProperty(required = true, value = "The Name of the Role.")
-	@NotNull
+    public Role name(String name) {
+        this.name = name;
+        return this;
+    }
 
-	@Size(min = 2, max = 100)
-	public String getName() {
-		return name;
-	}
+    /**
+     * The Name of the Role.
+     *
+     * @return name
+     **/
+    @ApiModelProperty(required = true, value = "The Name of the Role.")
+    @NotNull
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Size(min = 2, max = 100)
+    public String getName() {
+        return name;
+    }
 
-	public Role code(String code) {
-		this.code = code;
-		return this;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * The Code of the Role.
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(value = "The Code of the Role.")
+    public Role code(String code) {
+        this.code = code;
+        return this;
+    }
 
-	@Size(min = 2, max = 50)
-	public String getCode() {
-		return code;
-	}
+    /**
+     * The Code of the Role.
+     *
+     * @return code
+     **/
+    @ApiModelProperty(value = "The Code of the Role.")
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    @Size(min = 2, max = 50)
+    public String getCode() {
+        return code;
+    }
 
-	public Role description(String description) {
-		this.description = description;
-		return this;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * The description of the Role.
-	 * 
-	 * @return description
-	 **/
-	@ApiModelProperty(value = "The description of the Role.")
+    public Role description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	@Size(max = 256)
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * The description of the Role.
+     *
+     * @return description
+     **/
+    @ApiModelProperty(value = "The description of the Role.")
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @Size(max = 256)
+    public String getDescription() {
+        return description;
+    }
 
-	public Role createdBy(Long createdBy) {
-		this.createdBy = createdBy;
-		return this;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Id of the user who created the record.
-	 * 
-	 * @return createdBy
-	 **/
-	@ApiModelProperty(value = "Id of the user who created the record.")
+    public Role createdBy(Long createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
 
-	public Long getCreatedBy() {
-		return createdBy;
-	}
+    /**
+     * Id of the user who created the record.
+     *
+     * @return createdBy
+     **/
+    @ApiModelProperty(value = "Id of the user who created the record.")
 
-	public void setCreatedBy(Long createdBy) {
-		this.createdBy = createdBy;
-	}
 
-	public Role createdDate(LocalDate createdDate) {
-		this.createdDate = createdDate;
-		return this;
-	}
+    public Long getCreatedBy() {
+        return createdBy;
+    }
 
-	/**
-	 * Date on which the role master data was added into the system.
-	 * 
-	 * @return createdDate
-	 **/
-	@ApiModelProperty(value = "Date on which the role master data was added into the system.")
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	@Valid
+    public Role createdDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
 
-	public LocalDate getCreatedDate() {
-		return createdDate;
-	}
+    /**
+     * Date on which the role master data was added into the system.
+     *
+     * @return createdDate
+     **/
+    @ApiModelProperty(value = "Date on which the role master data was added into the system.")
 
-	public void setCreatedDate(LocalDate createdDate) {
-		this.createdDate = createdDate;
-	}
+    @Valid
 
-	public Role lastModifiedBy(Long lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-		return this;
-	}
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
 
-	/**
-	 * Id of the user who last modified the record.
-	 * 
-	 * @return lastModifiedBy
-	 **/
-	@ApiModelProperty(value = "Id of the user who last modified the record.")
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	public Long getLastModifiedBy() {
-		return lastModifiedBy;
-	}
+    public Role lastModifiedBy(Long lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+        return this;
+    }
 
-	public void setLastModifiedBy(Long lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
+    /**
+     * Id of the user who last modified the record.
+     *
+     * @return lastModifiedBy
+     **/
+    @ApiModelProperty(value = "Id of the user who last modified the record.")
 
-	public Role lastModifiedDate(LocalDate lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-		return this;
-	}
 
-	/**
-	 * Date on which the role master data was last modified.
-	 * 
-	 * @return lastModifiedDate
-	 **/
-	@ApiModelProperty(value = "Date on which the role master data was last modified.")
+    public Long getLastModifiedBy() {
+        return lastModifiedBy;
+    }
 
-	@Valid
+    public void setLastModifiedBy(Long lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
 
-	public LocalDate getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    public Role lastModifiedDate(LocalDate lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
+    }
 
-	public void setLastModifiedDate(LocalDate lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
+    /**
+     * Date on which the role master data was last modified.
+     *
+     * @return lastModifiedDate
+     **/
+    @ApiModelProperty(value = "Date on which the role master data was last modified.")
 
-	public Role tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    @Valid
 
-	/**
-	 * Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Unique Identifier of the tenant, Like AP, AP.Kurnool etc.")
-	@NotNull
+    public LocalDate getLastModifiedDate() {
+        return lastModifiedDate;
+    }
 
-	public String getTenantId() {
-		return tenantId;
-	}
+    public void setLastModifiedDate(LocalDate lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    public Role tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Role role = (Role) o;
-		return Objects.equals(this.id, role.id) && Objects.equals(this.name, role.name)
-				&& Objects.equals(this.code, role.code) && Objects.equals(this.description, role.description)
-				&& Objects.equals(this.createdBy, role.createdBy) && Objects.equals(this.createdDate, role.createdDate)
-				&& Objects.equals(this.lastModifiedBy, role.lastModifiedBy)
-				&& Objects.equals(this.lastModifiedDate, role.lastModifiedDate)
-				&& Objects.equals(this.tenantId, role.tenantId);
-	}
+    /**
+     * Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Unique Identifier of the tenant, Like AP, AP.Kurnool etc.")
+    @NotNull
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, code, description, createdBy, createdDate, lastModifiedBy, lastModifiedDate,
-				tenantId);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class Role {\n");
+    public String getTenantId() {
+        return tenantId;
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
-		sb.append("    description: ").append(toIndentedString(description)).append("\n");
-		sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
-		sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");
-		sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
-		sb.append("    lastModifiedDate: ").append(toIndentedString(lastModifiedDate)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Role role = (Role) o;
+        return Objects.equals(this.id, role.id) &&
+                Objects.equals(this.name, role.name) &&
+                Objects.equals(this.code, role.code) &&
+                Objects.equals(this.description, role.description) &&
+                Objects.equals(this.createdBy, role.createdBy) &&
+                Objects.equals(this.createdDate, role.createdDate) &&
+                Objects.equals(this.lastModifiedBy, role.lastModifiedBy) &&
+                Objects.equals(this.lastModifiedDate, role.lastModifiedDate) &&
+                Objects.equals(this.tenantId, role.tenantId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, code, description, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class Role {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    code: ").append(toIndentedString(code)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
+        sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");
+        sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
+        sb.append("    lastModifiedDate: ").append(toIndentedString(lastModifiedDate)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

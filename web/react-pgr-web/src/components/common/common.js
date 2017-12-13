@@ -1345,6 +1345,10 @@ var localization_EN_Data = {
     "employee.field.assignments": "Assignments Grade",
     "employee.Employee.fields.group": "Employee Group",
     "deshboard.title": "My Tasks",
+    "pgr.print.ClosureNote":"Print closure Note",
+    "pgr.print.rejectionLetter":"Print Rejection Letter",
+    "pgr.title.ClosureNote":"Grievance Redressal Closure Note",
+    "pgr.title.rejectionLetter":"Grievance Redressal Rejection Letter",
     "pgr.dashboard.analytics":"Analytics Dashboard",
     "pgr.dashboard.7daystitle":"No. of Complaints (Last 7 Days)",
     "pgr.dashboard.7monthstitle":"No. of Complaints (Last 7 Months)",
@@ -2015,6 +2019,7 @@ var localization_EN_Data = {
     "ac.create.asset.asset.category": "Asset Category",
     "ac.create.depreciationRate": "Depreciation Rate (%)",
     "reports.asset.assetcategorytype": "Asset Category Type",
+    "ac.create.additional.field.url":"Url",
 
 //swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",
@@ -2236,6 +2241,21 @@ var localization_EN_Data = {
 "vendorcontracts.create.isActive": "Is Active",
 "vendorcontracts.create.isNotActive": "Is Not Active",
 "vendorcontracts.create.group.title.VendorContractDetails": "Vendor Contract Details",
+"swm.vehiclemaintenancedetails.search.title": "Search",
+
+"reports.swm.dumpingground": "Dumping Ground",
+"reports.swm.collectiontype": "Collection Type",
+"reports.swm.datefrom": "From Date",
+"reports.swm.dateto": "To Date",
+"reports.swm.date" : "Date",
+"reports.swm.wetwaste" : "Wet Waste",
+"reports.swm.drywaste" : "Dry Waste",
+"reports.swm.vehicle" : "Vehicle",
+"reports.swm.vehicletype" : "Vehicle Type",
+"reports.swm.registrationnumber" : "Vehicle Registration Number",
+"reports.swm.fuellingcost" : "Cost Incurred on Fuelling",
+"reports.swm.maintenancecost" : "Cost Incurred on Maintenance/Repair",
+"reports.swm.totalcost" : "Total Cost Incurred",
 
 
 "pgr.dashboard.gis.registered.title":"Registered",
@@ -2401,7 +2421,7 @@ var localization_EN_Data = {
 "advocates.create.inactive":"Inactive",
 "advocates.create.terminate":"Terminate",
 "advocates.create.group.title.action":"Action",
-"advocates.create.reasonOfTerminationOrDeactivation":"Reason Of Termination/Deactivation",
+"advocates.create.reasonOfTerminationOrDeactivation":"Reason Of Termination/Inactivation",
 "advocates.create.terminationDate":"Termination Date",
 "advocates.create.inActivationDate":"InActivation Date",
 "advocates.create.group.title.agencyDetails":"Agency Owner Details",
@@ -2624,7 +2644,7 @@ var localization_EN_Data = {
 "opinion.search.document.title":"Search Opinion",
 "parawisecomments.create.document.title":"Create Parawise Comments",
 "register.create.document.title":"Create Stamp/Register",
-"register.search.document.title":"Search Register",
+"register.search.document.title":"Search Stamp/Register",
 "register.update.document.title":"Update Register",
 "summon.create.document.title":"Create Summon/Warrant",
 "summon.search.document.title":"Search Case",
@@ -2807,6 +2827,7 @@ var localization_EN_Data = {
  "referenceEvidence.create.caseNo":"Case No",
 
 //Inventory Store Master
+"inventory.status":"Status",
  "inventory.store.title":"Store Master",
  "inventory.supplier.title":"Supplier Master",
  "inventory.pricelist.title":"PriceList Master",
@@ -2821,6 +2842,7 @@ var localization_EN_Data = {
  "inventory.store.search.title":"Search Store",
  "inventory.store.code" : "Store Code",
  "inventory.store.name" : "Store Name",
+ "inventory.currentRate":"Current Rate",
  "inventory.currentYear": "Current Year(From 01/Jan to 01/Mar)",
  "inventory.previousYear": "Previous Year(From 01/Jan to 31/Dec)",
 
@@ -2886,6 +2908,9 @@ var localization_EN_Data = {
 // indent
 
 "inventory.create.group.title.indent":"Add Indent",
+"inventory.update.group.title.indent":"Update Indent",
+"inventory.view.group.title.indent":"View Indent",
+"inventory.update.group.title.indent" :"Update Indent",
 "inventory.store.name":"Store Name",
 "inventory.indent.date": "Indent Date",
 "inventory.indent.number":"Indent Number",
@@ -2907,6 +2932,7 @@ var localization_EN_Data = {
 "inventory.totalValue":"Total Value",
 "inventory.assetCode":"Asset Code",
 "inventory.projectCode":"Project Code",
+"inventory.indent.certificate.title":"Indent Certificate",
 
 
 // Material Issue Lables
@@ -2976,6 +3002,15 @@ var localization_EN_Data = {
  "inventory.pricelist.group.title":"Material Opening Balance Entry",
  "inventory.pricelist.search.title":"Search Price List",
     "inventory.supplierName":"Supplier Name",
+    "inventory.supplierCompanyName": "Supplier Company Name",
+    "inventory.poNo": "Po.No",
+    "inventory.poDate": "Po Date",
+    "inventory.poStatus": "Po Status",
+    "inventory.paymentDueDate": "Payment Due Date",
+    "inventory.qtyOrdered":"Qty Ordered",
+    "inventory.poTotal":"Po Total",
+    "inventory.amountPaid": "Amount Paid",
+    "inventory.balanceDue": "Balance Due",
     "inventory.agreementNumber":"Agreement Number",
     "inventory.rateContractNumber":"Rate Contract / Tender / Quotation No.",
     "inventory.rateContractDate":"Rate Contract Date",

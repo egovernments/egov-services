@@ -8,29 +8,30 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ProjectCodeStatus {
 
-	CREATED("CREATED"),
+    CREATED("CREATED"),
 
-	CLOSED("CLOSED");
+    CLOSED("CLOSED");
 
-	private String value;
+    private String value;
 
-	ProjectCodeStatus(String value) {
-		this.value = value;
-	}
+    ProjectCodeStatus(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static ProjectCodeStatus fromValue(String text) {
+        for (ProjectCodeStatus b : ProjectCodeStatus.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static ProjectCodeStatus fromValue(String text) {
-		for (ProjectCodeStatus b : ProjectCodeStatus.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

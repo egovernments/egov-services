@@ -13,16 +13,13 @@ import java.util.*;
 public class MeasurementBookJdbcRepository extends JdbcRepository {
 
     @Autowired
-    private MBContractorBillRepository mbContractorBillRepository;
-
-    @Autowired
     private MeasurementBookDetailRepository measurementBookDetailRepository;
 
     @Autowired
     private EstimateRepository estimateRepository;
 
     @Autowired
-    private WorkOrderRepository workOrderRepository;
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
 
     public static final String TABLE_NAME = "egw_measurementbook mb";
     public static final String MB_LOAESTIMATE_EXTENTION = ", egw_letterofacceptanceestimate loaestimate";
@@ -118,7 +115,7 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
 
         List<String> loaNumbers = null;
         if (measurementBookSearchContract.getContractorCodes() != null && !measurementBookSearchContract.getContractorCodes().isEmpty()) {
-           List<LetterOfAcceptance> loas = workOrderRepository.searchLetterOfAcceptance(measurementBookSearchContract.getContractorCodes(), null, measurementBookSearchContract.getTenantId(), requestInfo);
+           List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(measurementBookSearchContract.getContractorCodes(), null, measurementBookSearchContract.getTenantId(), requestInfo);
             loaNumbers = new ArrayList<String>();
             for(LetterOfAcceptance letterOfAcceptance : loas)
                 loaNumbers.add(letterOfAcceptance.getLoaNumber());
@@ -127,7 +124,7 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         }
 
         if (measurementBookSearchContract.getContractorNames() != null && !measurementBookSearchContract.getContractorNames().isEmpty()) {
-            List<LetterOfAcceptance> loas = workOrderRepository.searchLetterOfAcceptance(null,measurementBookSearchContract.getContractorNames(), measurementBookSearchContract.getTenantId(), requestInfo);
+            List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(null,measurementBookSearchContract.getContractorNames(), measurementBookSearchContract.getTenantId(), requestInfo);
             loaNumbers = new ArrayList<String>();
             for(LetterOfAcceptance letterOfAcceptance : loas)
                 loaNumbers.add(letterOfAcceptance.getLoaNumber());
@@ -152,15 +149,10 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         for (MeasurementBookHelper measurementBookHelper : loaList) {
             MeasurementBook measurementBook = measurementBookHelper.toDomain();
 
-            MBContractorBillSearchContract mbContractorBillSearchCriteria = MBContractorBillSearchContract.builder()
-                    .tenantId(measurementBook.getTenantId())
-                    .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
-
             MeasurementBookDetailSearchContract measurementBookDetailSearchCriteria = MeasurementBookDetailSearchContract.builder()
                     .tenantId(measurementBook.getTenantId())
                     .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
 
-            measurementBook.setMbContractorBills(mbContractorBillRepository.searchMBContractorBill(mbContractorBillSearchCriteria));
             measurementBook.setMeasurementBookDetails(measurementBookDetailRepository.searchMeasurementBookDetail(measurementBookDetailSearchCriteria));
 
             measurementBooks.add(measurementBook);

@@ -129,6 +129,9 @@ public class PurchaseOrder   {
 
   @JsonProperty("remarks")
   private String remarks = null;
+  
+  @JsonProperty("totalAmount")
+  private BigDecimal totalAmount = null;
 
   /**
    * status of the Ind PurchaseOrder 
@@ -262,9 +265,8 @@ public class PurchaseOrder   {
    * purchaseOrderNumber  Auto generated number, read only 
    * @return purchaseOrderNumber
   **/
-  @ApiModelProperty(required = true, readOnly = true, value = "purchaseOrderNumber  Auto generated number, read only ")
-  @NotNull
-
+  @ApiModelProperty(readOnly = true, value = "purchaseOrderNumber  Auto generated number, read only ")
+ 
 
   public String getPurchaseOrderNumber() {
     return purchaseOrderNumber;
@@ -377,6 +379,25 @@ public class PurchaseOrder   {
 
   public void setAdvanceAmount(BigDecimal advanceAmount) {
     this.advanceAmount = advanceAmount;
+  }
+  
+  public PurchaseOrder totalAmount(BigDecimal totalAmount) {
+	    this.totalAmount = totalAmount;
+	    return this;
+	  }
+
+  /**
+   * total amount of the PurchaseOrder 
+   * @return totalAmount
+  **/
+  @ApiModelProperty(value = "total amount of the PurchaseOrder ")
+
+  public BigDecimal getTotalAmount() {
+    return totalAmount;
+  }
+
+  public void setTotalAmount(BigDecimal totalAmount) {
+    this.totalAmount = totalAmount;
   }
 
   public PurchaseOrder advancePercentage(BigDecimal advancePercentage) {

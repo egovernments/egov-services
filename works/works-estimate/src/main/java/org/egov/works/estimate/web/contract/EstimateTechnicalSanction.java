@@ -113,7 +113,7 @@ public class EstimateTechnicalSanction   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for which the Technical sanction belongs to")
-  @NotNull
+  //@NotNull
 
 
   public String getDetailedEstimate() {
@@ -157,7 +157,7 @@ public class EstimateTechnicalSanction   {
   @ApiModelProperty(required = true, value = "User who technical sanctioned Detailed Estimate")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public User getTechnicalSanctionBy() {
     return technicalSanctionBy;

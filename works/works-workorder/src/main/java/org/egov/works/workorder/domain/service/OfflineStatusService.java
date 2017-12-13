@@ -7,7 +7,6 @@ import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.DetailedEstimateOfflineStatus;
 import org.egov.works.commons.web.contract.LOAOfflineStatuses;
 import org.egov.works.workorder.domain.repository.OfflineStatusRepository;
-import org.egov.works.workorder.web.contract.OfflineStatus;
 import org.egov.works.workorder.web.contract.OfflineStatusResponse;
 import org.egov.works.workorder.web.contract.OfflineStatusSearchContract;
 import org.egov.works.workorder.web.contract.RequestInfo;
@@ -17,40 +16,40 @@ import org.springframework.stereotype.Service;
 @Service
 public class OfflineStatusService {
 
-	@Autowired
-	private OfflineStatusRepository offlineStatusRepository;
+    @Autowired
+    private OfflineStatusRepository offlineStatusRepository;
 
-	public OfflineStatusResponse getOfflineStatus(final String detailedEstimate, final String tenantId,
-			final RequestInfo requestInfo) {
-		OfflineStatusSearchContract offlineStatusSearchContract = new OfflineStatusSearchContract();
-		final List<String> detailedEstimateNumber = new ArrayList<>();
-		detailedEstimateNumber.add(detailedEstimate);
-		offlineStatusSearchContract.setDetailedEstimateNumbers(detailedEstimateNumber);
-		List<String> statuses = new ArrayList<>();
-		statuses.add(DetailedEstimateOfflineStatus.L1_TENDER_FINALIZED.toString());
-		offlineStatusSearchContract.setStatuses(statuses);
-		offlineStatusSearchContract.setObjectType(CommonConstants.DETAILEDESTIMATE);
-		offlineStatusSearchContract.setTenantId(tenantId);
-		
-		final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
-				.getOfflineStatus(offlineStatusSearchContract, tenantId, requestInfo);
-		return offlineStatusResponse;
-	}
+    public OfflineStatusResponse getOfflineStatus(final String detailedEstimate, final String tenantId,
+            final RequestInfo requestInfo) {
+        OfflineStatusSearchContract offlineStatusSearchContract = new OfflineStatusSearchContract();
+        final List<String> detailedEstimateNumber = new ArrayList<>();
+        detailedEstimateNumber.add(detailedEstimate);
+        offlineStatusSearchContract.setDetailedEstimateNumbers(detailedEstimateNumber);
+        List<String> statuses = new ArrayList<>();
+        statuses.add(DetailedEstimateOfflineStatus.L1_TENDER_FINALIZED.toString());
+        offlineStatusSearchContract.setStatuses(statuses);
+        offlineStatusSearchContract.setObjectType(CommonConstants.DETAILEDESTIMATE);
+        offlineStatusSearchContract.setTenantId(tenantId);
 
-	public OfflineStatusResponse getOfflineStatusForWorkOrder(final String letterOfAcceptance, final String tenantId,
-												  final RequestInfo requestInfo) {
-		OfflineStatusSearchContract offlineStatusSearchContract = new OfflineStatusSearchContract();
-		final List<String> loaNumber = new ArrayList<>();
-		loaNumber.add(letterOfAcceptance);
-		offlineStatusSearchContract.setLoaNumbers(loaNumber);
-		List<String> statuses = new ArrayList<>();
-		statuses.add(LOAOfflineStatuses.AGREEMENT_ORDER_SIGNED.toString());
-		offlineStatusSearchContract.setStatuses(statuses);
-		offlineStatusSearchContract.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
-		offlineStatusSearchContract.setTenantId(tenantId);
+        final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
+                .getOfflineStatus(offlineStatusSearchContract, tenantId, requestInfo);
+        return offlineStatusResponse;
+    }
 
-		final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
-				.getOfflineStatusByLoaNumber(offlineStatusSearchContract, tenantId, requestInfo);
-		return offlineStatusResponse;
-	}
+    public OfflineStatusResponse getOfflineStatusForWorkOrder(final String letterOfAcceptance, final String tenantId,
+            final RequestInfo requestInfo) {
+        OfflineStatusSearchContract offlineStatusSearchContract = new OfflineStatusSearchContract();
+        final List<String> loaNumber = new ArrayList<>();
+        loaNumber.add(letterOfAcceptance);
+        offlineStatusSearchContract.setLoaNumbers(loaNumber);
+        List<String> statuses = new ArrayList<>();
+        statuses.add(LOAOfflineStatuses.AGREEMENT_ORDER_SIGNED.toString());
+        offlineStatusSearchContract.setStatuses(statuses);
+        offlineStatusSearchContract.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
+        offlineStatusSearchContract.setTenantId(tenantId);
+
+        final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
+                .getOfflineStatusByLoaNumber(offlineStatusSearchContract, tenantId, requestInfo);
+        return offlineStatusResponse;
+    }
 }

@@ -26,8 +26,8 @@ public class CaseType {
 	@JsonProperty("code")
 	private String code = null;
 
-	@JsonProperty("side")
-	private Side side = null;
+	@JsonProperty("sideCode")
+	private String sideCode = null;
 
 	@JsonProperty("active")
 	private Boolean active = true;

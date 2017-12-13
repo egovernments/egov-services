@@ -7,6 +7,7 @@ UIInfo:
       - sanitationStaffSchedules[0].sanitationStaffTarget.targetNo
       - sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom
       - sanitationStaffSchedules[0].sanitationStaffTarget.targetTo
+    SourceSegregationDetails2:
       - sanitationStaffSchedules[0].sanitationStaffTarget.route.name
       - sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name
       - sanitationStaffSchedules[0].shift.code

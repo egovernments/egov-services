@@ -167,27 +167,6 @@ public class BoundaryControllerTest {
 	}
 
 	@Test
-	public void testShouldFetchAllLocationsForGivenWard() throws Exception {
-		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
-		when(crossHierarchyService.getActiveChildBoundariesByBoundaryIdAndTenantId(any(Long.class), any(String.class)))
-				.thenReturn(Collections.singletonList(expectedBoundary));
-		mockMvc.perform(
-				post("/boundarys/childLocationsByBoundaryId").param("boundaryId", "1").param("tenantId", "ap.public"))
-				.andExpect(status().isOk()).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(getFileContents("boundaryResponse.json")));
-	}
-
-	@Test
-	public void testShouldReturnBadRequestWhenWardIsEmpty() throws Exception {
-		when(crossHierarchyService.getActiveChildBoundariesByBoundaryIdAndTenantId(any(Long.class), any(String.class)))
-				.thenReturn(null);
-		mockMvc.perform(
-				post("/boundarys/childLocationsByBoundaryId").param("boundaryId", "").param("tenantId", "ap.public")
-						.header("X-CORRELATION-ID", "someId").contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isBadRequest());
-	}
-
-	@Test
 	public void testShouldFetchAllBoundariesForBoundarytypenameAndHierarchytypename() throws Exception {
 		final Boundary expectedBoundary = Boundary.builder().id(1L).name("Bank Road").build();
 		when(boundaryService.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(any(String.class),

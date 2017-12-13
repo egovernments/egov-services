@@ -51,15 +51,11 @@ import javax.validation.Valid;
 import org.egov.boundary.domain.model.BoundarySearchRequest;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.domain.service.BoundaryTypeService;
-import org.egov.boundary.domain.service.CrossHierarchyService;
-import org.egov.boundary.domain.service.HierarchyTypeService;
 import org.egov.boundary.exception.CustomException;
 import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.Boundary;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.egov.boundary.web.contract.BoundaryResponse;
-import org.egov.boundary.web.contract.BoundaryType;
-import org.egov.boundary.web.contract.HierarchyType;
 import org.egov.boundary.web.contract.RequestInfoWrapper;
 import org.egov.boundary.web.contract.ShapeFile;
 import org.egov.boundary.web.contract.ShapeFileResponse;
@@ -100,15 +96,9 @@ public class BoundaryController {
 
 	@Autowired
 	private BoundaryService boundaryService;
-
+	
 	@Autowired
 	private BoundaryTypeService boundaryTypeService;
-
-	@Autowired
-	private HierarchyTypeService hierarchyTypeService;
-
-	@Autowired
-	private CrossHierarchyService crossHierarchyService;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -296,8 +286,7 @@ public class BoundaryController {
 	}
 
 	private List<Boundary> getChildBoundaryByBoundaryIdAndTenantId(String boundaryId, String tenantId) {
-		List<org.egov.boundary.domain.model.Boundary> boundaryList = crossHierarchyService
-				.getActiveChildBoundariesByBoundaryIdAndTenantId(Long.valueOf(boundaryId), tenantId);
+		List<org.egov.boundary.domain.model.Boundary> boundaryList = boundaryService.getchildBoundariesByIdAndTenant(boundaryId,tenantId);
 		List<Boundary> boundaries = new ArrayList<Boundary>();
 		if (boundaryList != null && !boundaryList.isEmpty()) {
 			boundaries = mapToContractBoundaryList(boundaryList);
@@ -380,26 +369,11 @@ public class BoundaryController {
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		boundaryResponse.setResponseInfo(responseInfo);
 		List<Boundary> allBoundarys = null;
-		List<Long> boundaryTypeIds = null;
-		List<Long> hierarchyTypeIds = null;
-		if (tenantId != null && !tenantId.isEmpty() && boundaryType != null && !boundaryType.isEmpty()) {
-			boundaryTypeIds = getBoundaryTypeList(tenantId, boundaryType);
-			if (!(boundaryTypeIds != null && !boundaryTypeIds.isEmpty())) {
-				ErrorResponse errorResponses = addBoundaryTypeValidationError(boundaryResponse);
-				return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-			}
-		}
-		if (tenantId != null && !tenantId.isEmpty() && hierarchyType != null && !hierarchyType.isEmpty()) {
-			hierarchyTypeIds = getHierarchyTypeList(tenantId, hierarchyType);
-			if (!(hierarchyTypeIds != null && !hierarchyTypeIds.isEmpty())) {
-				ErrorResponse errorResponses = addHierarchyTypeValidationError(boundaryResponse);
-				return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-			}
-		}
+
 		if (tenantId != null && !tenantId.isEmpty()) {
 			BoundarySearchRequest boundarySearchRequest = BoundarySearchRequest.builder().tenantId(tenantId)
-					.boundaryIds(boundaryIds).boundaryNumbers(boundaryNum).boundaryTypeIds(boundaryTypeIds)
-					.hierarchyTypeName(hierarchyType).hierarchyTypeIds(hierarchyTypeIds).codes(codes).build();
+					.boundaryIds(boundaryIds).boundaryNumbers(boundaryNum).boundaryTypeName(boundaryType)
+					.hierarchyTypeName(hierarchyType).codes(codes).build();
 			allBoundarys = mapToContractBoundaryList(
 					boundaryService.getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(boundarySearchRequest));
 			responseInfo.setStatus(HttpStatus.OK.toString());
@@ -458,55 +432,6 @@ public class BoundaryController {
 			List<Boundary> allBoundarys) {
 		boundaryResponse.setBoundarys(allBoundarys);
 		return new ResponseEntity<BoundaryResponse>(boundaryResponse, HttpStatus.OK);
-	}
-
-	private ErrorResponse addBoundaryTypeValidationError(BoundaryResponse boundaryResponse) {
-		boundaryResponse.getResponseInfo().setStatus(HttpStatus.BAD_REQUEST.toString());
-		final ErrorResponse errorResponse = new ErrorResponse();
-		final List<ErrorField> errorFields = new ArrayList<>();
-		final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.BOUNDARY_TYPE_INVALID_CODE)
-				.message(BoundaryConstants.BOUNDARY_TYPE_INVALID_ERROR_MESSAGE)
-				.field(BoundaryConstants.BOUNDARY_TYPE_INVALID_FIELD_NAME).build();
-		final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(BoundaryConstants.INVALID_BOUNDARY_REQUEST_MESSAGE).errorFields(errorFields).build();
-		errorResponse.setError(error);
-		errorFields.add(errorField);
-		return errorResponse;
-	}
-
-	private ErrorResponse addHierarchyTypeValidationError(BoundaryResponse boundaryResponse) {
-		boundaryResponse.getResponseInfo().setStatus(HttpStatus.BAD_REQUEST.toString());
-		final ErrorResponse errorResponse = new ErrorResponse();
-		final List<ErrorField> errorFields = new ArrayList<>();
-		final ErrorField errorField = ErrorField.builder().code(BoundaryConstants.HIERARCHY_TYPE_INVALID_CODE)
-				.message(BoundaryConstants.HIERARCHY_TYPE_INVALID_ERROR_MESSAGE)
-				.field(BoundaryConstants.HIERARCHY_TYPE_INVALID_FIELD_NAME).build();
-		final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value())
-				.message(BoundaryConstants.INVALID_BOUNDARY_REQUEST_MESSAGE).errorFields(errorFields).build();
-		errorResponse.setError(error);
-		errorFields.add(errorField);
-		return errorResponse;
-	}
-
-	private List<Long> getBoundaryTypeList(String tenantId, String boundaryType) {
-		List<BoundaryType> boundaryTypeList = boundaryTypeService.getAllBoundarytypesByNameAndTenant(boundaryType,
-				tenantId);
-		List<String> list = null;
-		List<Long> boundaryTypesList = null;
-		if (boundaryTypeList != null && !boundaryTypeList.isEmpty())
-			list = boundaryTypeList.stream().map(BoundaryType::getId).collect(Collectors.toList());
-		if (list != null && !list.isEmpty())
-			boundaryTypesList = list.stream().map(Long::parseLong).collect(Collectors.toList());
-
-		return boundaryTypesList;
-	}
-
-	private List<Long> getHierarchyTypeList(String tenantId, String hierarchyType) {
-		List<Long> list = new ArrayList<Long>();
-		HierarchyType hierarhcy = hierarchyTypeService.getHierarchyTypeByNameAndTenantId(hierarchyType, tenantId);
-		if (hierarhcy != null)
-			list.add(Long.valueOf(hierarhcy.getId()));
-		return list;
 	}
 
 	private ErrorResponse validateBoundaryRequest(final BoundaryRequest boundaryRequest, String action) {

@@ -68,6 +68,8 @@ public class Boundary {
 	private String name;
 	private Long boundaryNum;
 	private String code;
+	private String label;
+	private Long labelid;
 	private String codes;
 	private BoundaryType boundaryType;
 	private Boundary parent;

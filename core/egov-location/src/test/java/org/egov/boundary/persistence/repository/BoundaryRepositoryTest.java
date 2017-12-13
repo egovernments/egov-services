@@ -1,6 +1,5 @@
 package org.egov.boundary.persistence.repository;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -27,21 +26,10 @@ public class BoundaryRepositoryTest {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	@Autowired
-	private MdmsRepository mdmsRepository;
-	
 	
 	@Before
 	public void before() {
-		boundaryRepository = new BoundaryRepository(namedParameterJdbcTemplate,jdbcTemplate,mdmsRepository);
-	}
-
-	@Test
-	@Sql(scripts = { "/sql/clearBoundary.sql", "/sql/createBoundary.sql" })
-	public void test_should_fetch_boundaries_for_boundarytype_and_hierarchytype_name() {
-		final List<Boundary> boundarys = boundaryRepository
-				.getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId("City", "ADMINISTRATION", "default");
-		assertEquals("Srikakulam  Municipality", boundarys.get(0).getName());
+		boundaryRepository = new BoundaryRepository(namedParameterJdbcTemplate,jdbcTemplate);
 	}
 
 /*	@Test

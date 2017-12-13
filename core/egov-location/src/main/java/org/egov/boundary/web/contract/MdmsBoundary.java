@@ -3,6 +3,8 @@ package org.egov.boundary.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class MdmsBoundary {
 	private String label;
 	private String latitude;
 	private String longitude;
+	@JsonProperty("boundarynum")
 	private Long boundaryNum;
     private List<MdmsBoundary> children = new ArrayList<MdmsBoundary>();
 }

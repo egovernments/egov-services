@@ -1,0 +1,300 @@
+{
+  "tenantId": "mh.rohatest",
+  "moduleName": "egov-location",
+  "crossHierarchys": [
+    {
+      "id": 272,
+      "parent": 928,
+      "child": 960,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 274,
+      "parent": 928,
+      "child": 969,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 277,
+      "parent": 928,
+      "child": 983,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 278,
+      "parent": 928,
+      "child": 984,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 279,
+      "parent": 928,
+      "child": 987,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 281,
+      "parent": 928,
+      "child": 995,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 283,
+      "parent": 928,
+      "child": 1008,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 285,
+      "parent": 929,
+      "child": 973,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 286,
+      "parent": 929,
+      "child": 975,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 287,
+      "parent": 929,
+      "child": 977,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 288,
+      "parent": 929,
+      "child": 978,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 289,
+      "parent": 929,
+      "child": 993,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 290,
+      "parent": 929,
+      "child": 996,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 293,
+      "parent": 929,
+      "child": 1016,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 294,
+      "parent": 929,
+      "child": 1017,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 295,
+      "parent": 930,
+      "child": 962,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 297,
+      "parent": 930,
+      "child": 970,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 298,
+      "parent": 930,
+      "child": 974,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 299,
+      "parent": 930,
+      "child": 976,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 300,
+      "parent": 930,
+      "child": 980,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 301,
+      "parent": 930,
+      "child": 994,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 302,
+      "parent": 930,
+      "child": 997,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 304,
+      "parent": 930,
+      "child": 1009,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 305,
+      "parent": 931,
+      "child": 961,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 307,
+      "parent": 931,
+      "child": 971,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 308,
+      "parent": 931,
+      "child": 972,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 309,
+      "parent": 931,
+      "child": 979,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 310,
+      "parent": 931,
+      "child": 985,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 311,
+      "parent": 931,
+      "child": 986,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 312,
+      "parent": 931,
+      "child": 989,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 313,
+      "parent": 931,
+      "child": 998,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 314,
+      "parent": 931,
+      "child": 1010,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 315,
+      "parent": 931,
+      "child": 1011,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 316,
+      "parent": 932,
+      "child": 959,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 317,
+      "parent": 932,
+      "child": 988,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 318,
+      "parent": 932,
+      "child": 999,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 319,
+      "parent": 932,
+      "child": 1000,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 320,
+      "parent": 932,
+      "child": 1003,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 321,
+      "parent": 932,
+      "child": 1012,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 322,
+      "parent": 932,
+      "child": 1013,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 323,
+      "parent": 932,
+      "child": 1014,
+      "parenttype": 57,
+      "childtype": 61
+    },
+    {
+      "id": 324,
+      "parent": 932,
+      "child": 1015,
+      "parenttype": 57,
+      "childtype": 61
+    }
+  ]
+}

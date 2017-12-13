@@ -110,4 +110,77 @@ public class MdmsRepository {
 
 		}
 	}
+	
+	public JSONArray getBoundariesByBndryTypeNameAndHierarchyTypeNameAndTenantId(String tenantId,String hierarchyTypeName,RequestInfo requestInfo) {
+		MasterDetails[] masterDetails;
+		ModuleDetails[] moduleDetails;
+		MdmsRequest request = null;
+		MdmsResponse response = null;
+		masterDetails = new MasterDetails[1];
+		moduleDetails = new ModuleDetails[1];
+		String filter = null;
+		if(hierarchyTypeName!=null && hierarchyTypeName!=""){
+			filter = "[?(@." + "hierarchyType.name" + " in [" + hierarchyTypeName.toUpperCase() + "])]";
+		}
+		masterDetails[0] = MasterDetails.builder().name(masterName)
+				.filter(filter).build();
+		moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
+
+		request = MdmsRequest.builder()
+				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
+				.requestInfo(requestInfo).build();
+		try{
+		response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
+		}catch(Exception e){
+			System.out.println("Invalid TenantId" + e.getMessage());
+		}
+		if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
+				|| response.getMdmsRes().get(moduleName) == null
+				|| !response.getMdmsRes().get(moduleName).containsKey(masterName)
+				|| response.getMdmsRes().get(moduleName).get(masterName) == null) {
+			return new JSONArray();
+		} else {
+
+			return response.getMdmsRes().get(moduleName).get(masterName);
+
+		}
+	}
+	
+	public JSONArray getCrossHierarchyByIdAndTenantId(String tenantId,Long id,RequestInfo requestInfo) {
+		MasterDetails[] masterDetails;
+		ModuleDetails[] moduleDetails;
+		MdmsRequest request = null;
+		MdmsResponse response = null;
+		masterDetails = new MasterDetails[1];
+		moduleDetails = new ModuleDetails[1];
+		String filter = null;
+		if(id!=null){
+			filter = "[?(@.id IN [$id])]";
+		    filter = filter.replaceAll("\\$id", id.toString());
+		}
+		
+		masterDetails[0] = MasterDetails.builder().name("crossHierarchys")
+				.filter(filter).build();
+		moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
+
+		request = MdmsRequest.builder()
+				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
+				.requestInfo(requestInfo).build();
+		try{
+		response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
+		}catch(Exception e){
+			System.out.println("Invalid TenantId" + e.getMessage());
+		}
+		if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
+				|| response.getMdmsRes().get(moduleName) == null
+				|| !response.getMdmsRes().get(moduleName).containsKey("crossHierarchys")
+				|| response.getMdmsRes().get(moduleName).get("crossHierarchys") == null) {
+			return new JSONArray();
+		} else {
+
+			return response.getMdmsRes().get(moduleName).get("crossHierarchys");
+
+		}
+	}
+	
 }

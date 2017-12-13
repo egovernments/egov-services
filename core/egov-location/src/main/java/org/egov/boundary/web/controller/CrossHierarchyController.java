@@ -96,6 +96,7 @@ public class CrossHierarchyController {
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
 
+	
 	@PostMapping
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid CrossHierarchyRequest crossHierarchyRequest,
@@ -206,8 +207,14 @@ public class CrossHierarchyController {
 		if (crossHierarchyRequest.getCrossHierarchy() != null
 				&& crossHierarchyRequest.getCrossHierarchy().getTenantId() != null
 				&& !crossHierarchyRequest.getCrossHierarchy().getTenantId().isEmpty()) {
-			List<CrossHierarchy> allCrossHierarchys = crossHierarchyService
-					.getAllCrossHierarchys(crossHierarchyRequest);
+			List<CrossHierarchy> allCrossHierarchys = crossHierarchyService.getAllCrossHierarchys(crossHierarchyRequest.getCrossHierarchy().getTenantId(),crossHierarchyRequest.getCrossHierarchy().getId());
+		    if(crossHierarchyRequest.getCrossHierarchy().getId() == null){
+		    	allCrossHierarchys.forEach(p -> p.getParent().setChildren(null));
+		    	allCrossHierarchys.forEach(p -> p.getParent().setParent(null));
+		    	allCrossHierarchys.forEach(p -> p.getChild().setChildren(null));
+		    	allCrossHierarchys.forEach(p -> p.getChild().setParent(null));
+		    }
+			
 			crossHierarchyResponse.getCrossHierarchys().addAll(allCrossHierarchys);
 			ResponseInfo responseInfo = new ResponseInfo();
 			responseInfo.setStatus(HttpStatus.OK.toString());
@@ -216,7 +223,9 @@ public class CrossHierarchyController {
 		}
 		return new ResponseEntity<CrossHierarchyResponse>(crossHierarchyResponse, HttpStatus.OK);
 	}
+	
 
+	
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();
 		ResponseInfo responseInfo = new ResponseInfo();

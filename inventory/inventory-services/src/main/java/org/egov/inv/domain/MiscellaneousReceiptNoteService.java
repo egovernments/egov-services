@@ -158,20 +158,6 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                 case Constants.ACTION_CREATE: {
                     if (materialReceipts == null) {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
-                    } else {
-                        for (MaterialReceipt materialReceipt : materialReceipts) {
-                            if (!isEmpty(materialReceipt.getIssueNumber())) {
-                                validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
-                            }
-                            for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
-                                int j = 0;
-                                validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
-                                validateReceivedQuantity(errors, materialReceiptDetail, j);
-                                validateReceiptdate(errors, materialReceipt);
-
-                                j++;
-                            }
-                        }
                     }
                 }
 
@@ -180,23 +166,22 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                 case Constants.ACTION_UPDATE: {
                     if (materialReceipts == null) {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
-                    } else {
-                        for (MaterialReceipt materialReceipt : materialReceipts) {
-                            validateReceiptPurpose(materialReceipt.getMrnNumber(), materialReceipt.getReceiptPurpose().toString(),
-                                    tenantId, errors);
-                            validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
-                            for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
-                                int j = 0;
-                                validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
-                                validateReceivedQuantity(errors, materialReceiptDetail, j);
-                                validateReceiptdate(errors, materialReceipt);
-                                j++;
-                            }
-                        }
                     }
                 }
 
                 break;
+            }
+            for (MaterialReceipt materialReceipt : materialReceipts) {
+                validateReceiptPurpose(materialReceipt.getMrnNumber(), materialReceipt.getReceiptPurpose().toString(),
+                        tenantId, errors);
+                validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
+                validateReceiptdate(errors, materialReceipt);
+                for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+                    int j = 0;
+                    validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
+                    validateReceivedQuantity(errors, materialReceiptDetail, j);
+                    j++;
+                }
             }
         } catch (IllegalArgumentException e) {
         }

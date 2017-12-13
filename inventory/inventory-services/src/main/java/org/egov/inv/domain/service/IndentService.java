@@ -18,7 +18,6 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.api.AssetRepository;
 import org.egov.inv.domain.util.InventoryUtilities;
-import org.egov.inv.model.Asset;
 import org.egov.inv.model.FinancialYear;
 import org.egov.inv.model.Indent;
 import org.egov.inv.model.Indent.IndentPurposeEnum;
@@ -46,7 +45,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.swagger.client.model.AssetResponse;
 import net.minidev.json.JSONArray;
 /**
  * 
@@ -438,11 +436,11 @@ public class IndentService extends DomainService {
 //			 
 			for (IndentDetail detail : indent.getIndentDetails()) {
 				detail.setUom(uomMap.get(detail.getUom().getCode()));
-				if(detail.getAsset().getCode()!=null)
+				/*if(detail.getAsset().getCode()!=null)
 				{
 					Asset a=assetRepository.findByCode(detail.getAsset(),indentRequest.getRequestInfo());
 					detail.setAsset(a);
-				}
+				}*/
 				
 				
 			}

@@ -306,7 +306,7 @@ public class ReceiptNoteService extends DomainService {
 
         if (null != materialReceipt.getReceiptDate() && materialReceipt.getReceiptDate() > getCurrentDate()) {
             errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",
-                    materialReceipt.getSupplierBillDate().toString());
+                    materialReceipt.getReceiptDate().toString());
         }
 
         if (null != materialReceipt.getSupplier() && !isEmpty(materialReceipt.getSupplier().getCode())) {

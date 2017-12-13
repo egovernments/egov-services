@@ -167,6 +167,8 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                                 int j = 0;
                                 validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
                                 validateReceivedQuantity(errors, materialReceiptDetail, j);
+                                validateReceiptdate(errors, materialReceipt);
+
                                 j++;
                             }
                         }
@@ -187,6 +189,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                                 int j = 0;
                                 validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
                                 validateReceivedQuantity(errors, materialReceiptDetail, j);
+                                validateReceiptdate(errors, materialReceipt);
                                 j++;
                             }
                         }
@@ -199,6 +202,13 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         }
         if (errors.getValidationErrors().size() > 0)
             throw errors;
+    }
+
+    private void validateReceiptdate(InvalidDataException errors, MaterialReceipt materialReceipt) {
+        if (null != materialReceipt.getReceiptDate() && materialReceipt.getReceiptDate() > getCurrentDate()) {
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",
+                    materialReceipt.getReceiptDate().toString());
+        }
     }
 
     private void validateReceivedQuantity(InvalidDataException errors, MaterialReceiptDetail materialReceiptDetail, int j) {
@@ -280,6 +290,10 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         }
 
         return materialReceiptRequest;
+    }
+
+    private Long getCurrentDate() {
+        return currentEpochWithoutTime() + (24 * 60 * 60 * 1000) - 1;
     }
 
 }

@@ -97,14 +97,14 @@ public class MdmsRepository {
             return response.getMdmsRes().get(moduleName).get(masterName);
     }
 
-    public Object fetchObject(String tenantId, String moduleName, String masterName,
+    public Object fetchObject(String tenantId, String moduleName, String masterName, String filterField,
                               String code, Class className) {
 
         JSONArray responseJSONArray;
         final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = getByCriteria(tenantId, moduleName,
-                masterName, "code", code, new org.egov.inv.model.RequestInfo());
+                masterName, filterField, code, new org.egov.inv.model.RequestInfo());
 
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)

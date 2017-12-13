@@ -210,13 +210,13 @@ public class StoreService extends DomainService {
         for (Store store : stores) {
             //fetch and set department
             if (null != store && null != store.getDepartment()) {
-                Object object = mdmsRepository.fetchObject(tenantId, "common-masters", "Department", store.getDepartment().getCode(), Department.class);
+                Object object = mdmsRepository.fetchObject(tenantId, "common-masters", "Department", "code", store.getDepartment().getCode(), Department.class);
                 store.setDepartment((Department) object);
             }
 
             //fetch and add office location
             if (null != store && null != store.getOfficeLocation() && !isEmpty(store.getOfficeLocation().getCode())) {
-                Object object = mdmsRepository.fetchObject(tenantId, "inventory", "Location", store.getOfficeLocation().getCode(), Location.class);
+                Object object = mdmsRepository.fetchObject(tenantId, "inventory", "Location", "code", store.getOfficeLocation().getCode(), Location.class);
 
                 store.setOfficeLocation((Location) object);
             }

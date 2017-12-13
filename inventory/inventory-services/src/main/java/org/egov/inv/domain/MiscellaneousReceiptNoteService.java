@@ -255,10 +255,10 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         for (MaterialReceipt materialReceipt : materialReceipts) {
             for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
 
-                Material material = (Material) mdmsRepository.fetchObject(tenantId, "inventory", "Material", materialReceiptDetail.getMaterial().getCode(), Material.class);
+                Material material = (Material) mdmsRepository.fetchObject(tenantId, "inventory", "Material", "code", materialReceiptDetail.getMaterial().getCode(), Material.class);
                 materialReceiptDetail.setMaterial(material);
 
-                Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", materialReceiptDetail.getUom().getCode(), Uom.class);
+                Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", materialReceiptDetail.getUom().getCode(), Uom.class);
                 materialReceiptDetail.setUom(uom);
 
                 if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {

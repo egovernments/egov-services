@@ -153,7 +153,7 @@ public class PurchaseOrderService extends DomainService {
 
                     }
 
-                    Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", purchaseOrderDetail.getUom().getCode(), Uom.class);
+                    Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", purchaseOrderDetail.getUom().getCode(), Uom.class);
                     purchaseOrderDetail.setUom((Uom) uom);
                     // purchaseOrderDetail.setUom(uomService.getUom(purchaseOrderDetail.getTenantId(), purchaseOrderDetail.getUom().getCode(),new RequestInfo()));
                     if (purchaseOrderDetail.getOrderQuantity() != null) {

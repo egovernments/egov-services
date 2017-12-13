@@ -181,6 +181,8 @@ public class PerformanceAssessmentRowMapper {
 					target.setTargetDescription("No");
 				else if (rs.getString("targetValue").equals("3"))
 					target.setTargetDescription("Work In Progress");
+			} else {
+				target.setTargetDescription(rs.getString("targetValue"));
 			}
 			return target;
 		}

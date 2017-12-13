@@ -474,8 +474,11 @@ class CancellationAgreement extends React.Component {
 
     var _this = this;
 
+    var ad = this.state.agreement.agreementDate;
+
     $('#orderDate').datepicker({
       format: 'dd/mm/yyyy',
+      startDate: new Date(ad.split("/")[2], ad.split("/")[1], ad.split("/")[0]),
       autoclose: true,
       defaultDate: ""
     });
@@ -798,7 +801,7 @@ class CancellationAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="securityDeposit">Advace Collection:</label>
+                    <label htmlFor="securityDeposit">Advance Collection:</label>
                   </div>
                   <div className="col-sm-6 label-view-text">
                     <label id="securityDeposit" name="securityDeposit">
@@ -925,7 +928,7 @@ class CancellationAgreement extends React.Component {
                     <label htmlFor="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea rows="4" cols="50" id="remarks" name="remarks" value={remarks}
+                    <textarea rows="4" cols="50" id="remarks" name="remarks"
                       onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                   </div>
                 </div>
@@ -941,7 +944,7 @@ class CancellationAgreement extends React.Component {
         <div className="form-section">
           <div className="row">
             <div className="col-md-8 col-sm-8">
-              <h3 className="categoryType">Workflow Details </h3>
+              <h3 className="categoryType">Forward to </h3>
             </div>
           </div>
           <div className="row">
@@ -982,7 +985,7 @@ class CancellationAgreement extends React.Component {
             <div className="col-sm-6">
               <div className="row">
                 <div className="col-sm-6 label-text">
-                  <label htmlFor="">User Name <span>*</span></label>
+                  <label htmlFor="">Employee Name <span>*</span></label>
                 </div>
                 <div className="col-sm-6">
                   <div className="styled-select">

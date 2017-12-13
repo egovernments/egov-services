@@ -1,5 +1,17 @@
 package org.egov.inv.domain.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.MdmsRepository;
@@ -7,22 +19,39 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
-import org.egov.inv.model.*;
+import org.egov.inv.model.Indent;
+import org.egov.inv.model.IndentDetail;
+import org.egov.inv.model.IndentResponse;
+import org.egov.inv.model.IndentSearch;
+import org.egov.inv.model.Material;
+import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListResponse;
+import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.model.PurchaseIndentDetail;
+import org.egov.inv.model.PurchaseOrder;
 import org.egov.inv.model.PurchaseOrder.PurchaseTypeEnum;
 import org.egov.inv.model.PurchaseOrder.StatusEnum;
+import org.egov.inv.model.PurchaseOrderDetail;
+import org.egov.inv.model.PurchaseOrderDetailSearch;
+import org.egov.inv.model.PurchaseOrderRequest;
+import org.egov.inv.model.PurchaseOrderResponse;
+import org.egov.inv.model.PurchaseOrderSearch;
+import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Supplier;
+import org.egov.inv.model.SupplierGetRequest;
+import org.egov.inv.model.Uom;
+import org.egov.inv.persistence.entity.IndentEntity;
+import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
+import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -36,15 +65,24 @@ public class PurchaseOrderService extends DomainService {
 
     @Autowired
     private PriceListJdbcRepository priceListjdbcRepository;
+    
+    @Autowired
+    private IndentJdbcRepository indentJdbcRepository;
 
     @Autowired
     private IndentService indentService;
 
     @Autowired
     private PriceListService priceListService;
+    
+    @Autowired
+    private MaterialService materialService;
 
     @Autowired
     private UomService uomService;
+    
+    @Autowired
+    SupplierJdbcRepository supplierJdbcRepository;
 
     @Value("${inv.purchaseorders.save.topic}")
     private String saveTopic;
@@ -337,7 +375,12 @@ public class PurchaseOrderService extends DomainService {
                 }
 
                 String indentNumbers = "";
+                if(null != eachPurchaseOrder.getPurchaseOrderDetails())
                 for (PurchaseOrderDetail purchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
+                	IndentEntity ie = indentJdbcRepository.findById(IndentEntity.builder().id(purchaseOrderDetail.getIndentNumber()).build());
+                	if(ie.getId() == null) {
+                		throw new CustomException("indentnumber", "IndentNumber " + purchaseOrderDetail.getIndentNumber() + " doesn't exists");
+                	}
                     indentNumbers += purchaseOrderDetail.getIndentNumber() + ",";
                 }
                 indentNumbers.replaceAll(",$", "");
@@ -350,13 +393,36 @@ public class PurchaseOrderService extends DomainService {
                         errors.addDataError(ErrorCode.DATE1_LE_DATE2.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString() + " at serial no." + pos.indexOf(eachPurchaseOrder));
                     }
                 }
-
+                
+                //Supplier reference validation
+                if (null != eachPurchaseOrder.getSupplier() && !isEmpty(eachPurchaseOrder.getSupplier().getCode())) {
+                    SupplierGetRequest supplierGetRequest = new SupplierGetRequest();
+                    supplierGetRequest.setCode(Collections.singletonList(eachPurchaseOrder.getSupplier().getCode()));
+                    supplierGetRequest.setTenantId(eachPurchaseOrder.getTenantId());
+                    Pagination<Supplier> supplierPagination = supplierJdbcRepository.search(supplierGetRequest);
+                    if (!(supplierPagination.getPagedData().size() > 0)) {
+                        throw new CustomException("supplier", "Supplier " + eachPurchaseOrder.getSupplier().getCode() + " doesn't exists");
+                    }
+                }
+                
+                //RateType reference validation
+                if (!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(eachPurchaseOrder.getRateType().toString())))) {
+                    throw new CustomException("rateType", "Please enter a valid RateType");
+                }
+                
                 if (null != eachPurchaseOrder.getPurchaseOrderDetails()) {
                     for (PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                         int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
+                        
+                        //Material reference validation
+                        if(null != poDetail.getMaterial()) {
+                        	if(validateMaterial(tenantId, poDetail.getMaterial())) {
+                        		throw new CustomException("material", "Material " + poDetail.getMaterial().getCode() + " doesn't exists");
+                        	}
+                        }
+                        
                         if (null != poDetail.getMaterial() && StringUtils.isEmpty(poDetail.getMaterial().getCode())) {
                             errors.addDataError(ErrorCode.MAT_DETAIL.getCode(), " at serial no." + detailIndex);
-
                         }
 
                         if (priceListConfig && null == poDetail.getPriceList().getId()) {
@@ -560,7 +626,18 @@ public class PurchaseOrderService extends DomainService {
         return search;
     }
 
-
+	private boolean validateMaterial(String tenantId, Material material) {
+		Material materialFromMdms = materialService.fetchMaterial(tenantId, material.getCode(), new org.egov.inv.model.RequestInfo());
+		if(materialFromMdms == null) {
+			return false;
+		}
+		if(material.getBaseUom().getCode()!=null)
+		if(!materialFromMdms.getBaseUom().getCode().equals(material.getBaseUom().getCode())) {
+			return false;
+		}
+		return true;
+	}
+	
     private void buildPurchaseOrderIndentDetail(PurchaseOrderRequest purchaseOrderRequest, PurchaseOrder purchaseOrder,
                                                 IndentDetail indentDetail, PurchaseOrderDetail purchaseOrderDetail, BigDecimal pendingQty, String tenantId) {
         PurchaseIndentDetail poIndentDetail = new PurchaseIndentDetail();

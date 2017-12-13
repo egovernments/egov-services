@@ -112,9 +112,11 @@ public class KpiMasterController implements KpiMaster {
     public ResponseEntity<?> update(@RequestBody @Valid final KPIRequest kpiRequest,
             final BindingResult errors) {
     	log.info("KPI Master Update Request as recieved in Controller : " + kpiRequest);
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = requestValidator.populateErrors(errors); 
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+    	if (errors.hasErrors()) {
+            final List<ErrorResponse> errResList = new ArrayList<>();
+            errResList.add(requestValidator.populateErrors(errors)); 
+            		
+            return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
         }
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiRequest, Boolean.FALSE);
         if (!errorResponses.isEmpty())

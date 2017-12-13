@@ -46,9 +46,6 @@ public class KpiTarget   {
   @JsonProperty("lastModifiedDate")
   private Long lastModifiedDate = null;
   
-  
-  
-
 public KPI getKpi() {
 	return kpi;
 }

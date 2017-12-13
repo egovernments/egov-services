@@ -1,5 +1,6 @@
 package org.egov.pa.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -47,9 +48,11 @@ public class KpiTargetController implements KpiTarget{
 	public ResponseEntity<?> create(@RequestBody @Valid final KPITargetRequest kpiTargetRequest,
             final BindingResult errors) {
 		log.info("KPI Target Request as recieved in Controller : " + kpiTargetRequest);
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = requestValidator.populateErrors(errors); 
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		if (errors.hasErrors()) {
+            final List<ErrorResponse> errResList = new ArrayList<>();
+            errResList.add(requestValidator.populateErrors(errors)); 
+            		
+            return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
         }
         kpiTargetService.createNewTarget(kpiTargetRequest); 
 		return getCreateUpdateSuccessResponse(kpiTargetRequest);
@@ -61,9 +64,11 @@ public class KpiTargetController implements KpiTarget{
 	public ResponseEntity<?> update(@RequestBody @Valid final KPITargetRequest kpiTargetRequest,
             final BindingResult errors) {
 		log.info("KPI Target Update Request as recieved in Controller : " + kpiTargetRequest);
-        if (errors.hasErrors()) {
-            final ErrorResponse errRes = requestValidator.populateErrors(errors); 
-            return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		if (errors.hasErrors()) {
+            final List<ErrorResponse> errResList = new ArrayList<>();
+            errResList.add(requestValidator.populateErrors(errors)); 
+            		
+            return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
         }
         kpiTargetService.updateNewTarget(kpiTargetRequest); 
         return getCreateUpdateSuccessResponse(kpiTargetRequest);

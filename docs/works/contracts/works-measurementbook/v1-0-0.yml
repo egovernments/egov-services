@@ -515,12 +515,6 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/MeasurementBookDetail'
-      lumpSumMBDetails:
-        type: array
-        description: Array of Non Tendered and Lump sum details
-        minItems: 1
-        items:
-          $ref: '#/definitions/MeasurementBookDetail'
       isLegacyMB:
         type: boolean
         description: True if Measurement Book is legacy record
@@ -751,67 +745,67 @@ definitions:
           $ref: '#/definitions/ContractorBill'
           
   ContractorBill:
-    type: object
     description: An Object that holds the basic data for a Contractor Bill
     allOf:
     - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-bill/v1-0-0.yml#/definitions/BillRegister'
-      description: Contractor Bill object extends Bill Register object
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Contractor Bill
-      tenantId:
-        type: string
-        description: Tenant id of the Contractor Bill
-        maxLength: 128
-        minLength: 2
-      billSequenceNumber:
-        type: string
-        description: Bill sequence number of the Bill
-        pattern: '[a-zA-Z0-9-\\]+'
-        maxLength: 50
-      approvedDate:
-        type: integer
-        format: int64
-        x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of when the Bill approved
-      approvedBy:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
-        description: User name of the User who approved the Bill
-      cancellationReason:
-        type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        description: Reason for cancellation of the Bill, Required only while cancelling Contractor Bill
-        maxLength: 100
-      cancellationRemarks:
-        type: string
-        pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        description: Remarks for cancellation of the Bill, Required only while cancelling Bill
-        maxLength: 512
-      assets:
-        type: array
-        description: Array of Asset details for the Bill
-        items:
-          ref: '#/definitions/AssetForBill'
-      mbForContractorBill:
-        type: array
-        description: Array of Measurement Book for the Bill
-        items:
-          $ref: '#/definitions/MeasurementBookForContractorBill'    
-      letterOfAcceptanceEstimate:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
-        description: LOA and Estimate reference for the Bill
-      workFlowDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
-      stateId:
-        type: string
-        description: State id of the workflow
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      deleted:
-          type: boolean
-          description: Boolean value to identify whether the object is deleted or not from UI.
-          default: false  
+    - type: object
+    - description: Contractor Bill object extends Bill Register object
+    - properties:
+        id:
+          type: string
+          description: Unique Identifier of the Contractor Bill
+        tenantId:
+          type: string
+          description: Tenant id of the Contractor Bill
+          maxLength: 128
+          minLength: 2
+        billSequenceNumber:
+          type: string
+          description: Bill sequence number of the Bill
+          pattern: '[a-zA-Z0-9-\\]+'
+          maxLength: 50
+        approvedDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: Epoch time of when the Bill approved
+        approvedBy:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+          description: User name of the User who approved the Bill
+        cancellationReason:
+          type: string
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+          description: Reason for cancellation of the Bill, Required only while cancelling Contractor Bill
+          maxLength: 100
+        cancellationRemarks:
+          type: string
+          pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+          description: Remarks for cancellation of the Bill, Required only while cancelling Bill
+          maxLength: 512
+        assets:
+          type: array
+          description: Array of Asset details for the Bill
+          items:
+            $ref: '#/definitions/AssetForBill'
+        mbForContractorBill:
+          type: array
+          description: Array of Measurement Book for the Bill
+          items:
+            $ref: '#/definitions/MeasurementBookForContractorBill' 
+        letterOfAcceptanceEstimate:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
+          description: LOA and Estimate reference for the Bill
+        workFlowDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
+        stateId:
+          type: string
+          description: State id of the workflow
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+        deleted:
+            type: boolean
+            description: Boolean value to identify whether the object is deleted or not from UI.
+            default: false  
     required:
       - tenantId
       - letterOfAcceptanceEstimate
@@ -847,7 +841,8 @@ definitions:
         minLength: 1
         maxLength: 20
       contractorBill:
-        $ref: '#/definitions/ContractorBill'
+        #$ref: '#/definitions/ContractorBill'
+        type: string
         description: Bill reference in the Asset
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
@@ -894,5 +889,6 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
+
 
 

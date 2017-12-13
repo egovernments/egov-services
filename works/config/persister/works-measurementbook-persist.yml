@@ -222,7 +222,7 @@ serviceMaps:
        
        - jsonPath: $.contractorbills.*.assets.*.amount
        
-       - jsonPath: $.contractorbills.*.assets.*.contractorBill.id
+       - jsonPath: $.contractorbills.*.assets.*.contractorBill
        
        - jsonPath: $.contractorbills.*.assets.*.auditDetails.createdBy
        

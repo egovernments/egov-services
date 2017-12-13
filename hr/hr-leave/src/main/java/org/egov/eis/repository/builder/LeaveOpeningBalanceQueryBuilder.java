@@ -40,14 +40,14 @@
 
 package org.egov.eis.repository.builder;
 
+import java.util.List;
+
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class LeaveOpeningBalanceQueryBuilder {
@@ -66,8 +66,11 @@ public class LeaveOpeningBalanceQueryBuilder {
 			+ " lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
 			+ " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
 			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
-			+ " FROM egeis_leaveOpeningBalance lob"
-			+ " JOIN egeis_leaveType lt ON lob.leaveTypeId = lt.id";
+			+ " FROM egeis_leaveOpeningBalance lob" + " JOIN egeis_leaveType lt ON lob.leaveTypeId = lt.id";
+
+	public static String selectLeaveAllotmentByDesignationQuery() {
+		return " select * from egeis_leaveallotment where leavetypeid = ? and designationid = ? and tenantId = ? ";
+	}
 
 	@SuppressWarnings("rawtypes")
 	public String getQuery(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest, List preparedStatementValues) {
@@ -108,7 +111,8 @@ public class LeaveOpeningBalanceQueryBuilder {
 			selectQuery.append(" lob.id IN " + getIdQuery(leaveOpeningBalanceGetRequest.getId()));
 		}
 
-		if (leaveOpeningBalanceGetRequest.getEmployee() != null && !leaveOpeningBalanceGetRequest.getEmployee().isEmpty()) {
+		if (leaveOpeningBalanceGetRequest.getEmployee() != null
+				&& !leaveOpeningBalanceGetRequest.getEmployee().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" lob.employeeId IN " + getIdQuery(leaveOpeningBalanceGetRequest.getEmployee()));
 		}
@@ -119,7 +123,8 @@ public class LeaveOpeningBalanceQueryBuilder {
 			preparedStatementValues.add(leaveOpeningBalanceGetRequest.getYear());
 		}
 
-		if (leaveOpeningBalanceGetRequest.getLeaveType() != null && !leaveOpeningBalanceGetRequest.getLeaveType().isEmpty() ) {
+		if (leaveOpeningBalanceGetRequest.getLeaveType() != null
+				&& !leaveOpeningBalanceGetRequest.getLeaveType().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" lob.leaveTypeId IN " + getIdQuery(leaveOpeningBalanceGetRequest.getLeaveType()));
 		}
@@ -149,7 +154,8 @@ public class LeaveOpeningBalanceQueryBuilder {
 		int pageNumber = 0; // Default pageNo is zero meaning first page
 		if (leaveOpeningBalanceGetRequest.getPageNumber() != null)
 			pageNumber = leaveOpeningBalanceGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
+		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+															// pageNo * pageSize
 	}
 
 	/**

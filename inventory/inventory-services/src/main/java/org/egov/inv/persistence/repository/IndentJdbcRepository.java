@@ -92,11 +92,11 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 			orderBy = "order by " + indentSearch.getSortBy();
 		}
 
-		searchQuery = searchQuery.replace(":tablename", "indent indent,Store issueStore" );
+		searchQuery = searchQuery.replace(":tablename", "indent indent,Store issueStore,indentdetail details" );
 
-		searchQuery = searchQuery.replace(":selectfields", " indent.*,issueStore.code as \"issueStore.code\" ,issueStore.name as \"issueStore.name\"  ");
+		searchQuery = searchQuery.replace(":selectfields", " distinct indent.*,issueStore.code as \"issueStore.code\" ,issueStore.name as \"issueStore.name\"  ");
 
-		String conditions="   and issuestore.code=indent.issuestore";
+		String conditions=" and issuestore.code=indent.issuestore and details.indentnumber=indent.indentnumber";
 		// implement jdbc specfic search
 	 
 		if (indentSearch.getTenantId() != null) {
@@ -194,19 +194,21 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 				params.append(" and ");
 			params.append("indentStatus =:indentStatus");
 			paramValues.put("indentStatus", IndentStatusEnum.APPROVED.name());
-		}
+			if (params.length() > 0)
+				params.append(" and  ");
+			params.append(" (details.totalProcessedQuantity is null or details.indentQuantity - details.totalProcessedQuantity > :value)");
+			paramValues.put("value", Integer.valueOf(0));
+		} 
 		
 		if(indentSearch.getSearchPurpose()!=null  && indentSearch.getSearchPurpose().equalsIgnoreCase("IssueMaterial"))
 		{
 			if (params.length() > 0)
 				params.append(" and ");
 			params.append("indentStatus !=:indentStatus");
-			paramValues.put("indentStatus", IndentStatusEnum.APPROVED.name());
+			paramValues.put("indentStatus", IndentStatusEnum.ISSUED.name());
+		
 			
 		}
-
-		 
-	 
 		Pagination<Indent> page = new Pagination<>();
 		if (indentSearch.getPageNumber() != null) {
 			page.setOffset(indentSearch.getPageNumber()-1);

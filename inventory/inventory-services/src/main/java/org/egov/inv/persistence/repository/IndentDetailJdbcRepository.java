@@ -65,18 +65,24 @@ public class IndentDetailJdbcRepository extends JdbcRepository {
 
 	}
 
-	public List<IndentDetailEntity>  find(List<String> indentNumbers, String tenantId) {
+	public List<IndentDetailEntity>  find(List<String> indentNumbers, String tenantId,String searchPurpose) {
 
 		 
 		if(indentNumbers.isEmpty())
 		{
 			return new ArrayList<>();
 		}
-		String query = "select * from indentdetail where indentnumber in (:indentNumbers) and tenantId=:tenantId";
+		String query = "select * from indentdetail where indentnumber in (:indentNumbers) and tenantId=:tenantId and isdeleteted =false ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		paramValues.put("indentNumbers", indentNumbers);
 		paramValues.put("tenantId", tenantId);
+		if(searchPurpose!=null && searchPurpose.equalsIgnoreCase("PurchaseOrder"))
+		{
+			query=query+(" and ( totalProcessedQuantity is  null or indentQuantity - totalProcessedQuantity > 0 )");
+		}
+		
+		LOG.info(query);
 
 		List<IndentDetailEntity> indentdetails = namedParameterJdbcTemplate.query(query, paramValues,
 				new BeanPropertyRowMapper(IndentDetailEntity.class));

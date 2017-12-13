@@ -16,7 +16,9 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.api.AssetRepository;
 import org.egov.inv.domain.util.InventoryUtilities;
+import org.egov.inv.model.Asset;
 import org.egov.inv.model.FinancialYear;
 import org.egov.inv.model.Indent;
 import org.egov.inv.model.Indent.IndentPurposeEnum;
@@ -40,11 +42,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.swagger.client.model.AssetResponse;
 import net.minidev.json.JSONArray;
-
+/**
+ * 
+ * @author mani
+ * In search for PO show only records which 
+ *   1. If appconfig is to consider whole indentquantiy return podetails where qty-(poordered+issued) >0
+ *   2. If not return podetails qty-poordered
+ *   3. Maintain seperate field for ui quantity
+ *   4. all qty in base uom
+ *   5. give api for status change
+ *   6. give api for force close 
+ *   7. Consider the status closed for not to show in issue or po
+ *    
+ */
 @Service
 @Transactional(readOnly = true)
 public class IndentService extends DomainService {
@@ -54,6 +70,8 @@ public class IndentService extends DomainService {
 	 * @Autowired private DepartmentRepository departmentRepository;
 	 */
 
+	@Autowired
+	  private RestTemplate restTemplate;
 	@Autowired
 	private IndentJdbcRepository indentRepository;
 
@@ -91,6 +109,8 @@ public class IndentService extends DomainService {
 
 	@Autowired
 	private NumberGenerator numberGenerator;
+	@Autowired
+	private AssetRepository assetRepository;
 
 	private static final Logger LOG = LoggerFactory.getLogger(IndentService.class);
 
@@ -230,8 +250,10 @@ public class IndentService extends DomainService {
 				indentNumbers.add(indent.getIndentNumber());
 			}
 
-			List<IndentDetailEntity> indentDetails = indentDetailJdbcRepository.find(indentNumbers, is.getTenantId());
+			List<IndentDetailEntity> indentDetails = indentDetailJdbcRepository.find(indentNumbers, is.getTenantId(),is.getSearchPurpose());
 
+			if(indentDetails!=null )
+			{
 			IndentDetail detail = null;
 			for (Indent indent : search.getPagedData()) {
 				for (IndentDetailEntity detailEntity : indentDetails) {
@@ -242,6 +264,7 @@ public class IndentService extends DomainService {
 						indent.addIndentDetailsItem(detail);
 					}
 				}
+			}
 			}
 		}
 		response.setIndents(search.getPagedData());
@@ -398,37 +421,46 @@ public class IndentService extends DomainService {
 
 			// fetch related items
 
-			/*
-			 * if (indent.getIssueStore() != null) {
-			 * indent.getIssueStore().setTenantId(tenantId); Store issueStore =
-			 * (Store)
-			 * storeJdbcRepository.findById(indent.getIssueStore(),"StoreEntity"
-			 * ); if (issueStore == null) { throw new
-			 * InvalidDataException("issueStore", "issueStore.invalid",
-			 * " Invalid issueStore"); } indent.setIssueStore(issueStore); } if
-			 * (indent.getIndentStore() != null) {
-			 * indent.getIndentStore().setTenantId(tenantId); Store indentStore
-			 * = (Store) storeJdbcRepository.findById(indent.getIndentStore(),
-			 * "StoreEntity"); if (indentStore == null) { throw new
-			 * InvalidDataException("indentStore", "indentStore.invalid",
-			 * " Invalid indentStore"); } indent.setIndentStore(indentStore); }
-			 */
+			
+//			  if (indent.getIssueStore() != null) {
+//			 indent.getIssueStore().setTenantId(tenantId); Store issueStore =
+//			 (Store)
+//			   storeJdbcRepository.findById(indent.getIssueStore(),"StoreEntity"
+//			 ); if (issueStore == null) { throw new
+//			   InvalidDataException("issueStore", "issueStore.invalid",
+//			  " Invalid issueStore"); } indent.setIssueStore(issueStore); } if
+//			  (indent.getIndentStore() != null) {
+//			  indent.getIndentStore().setTenantId(tenantId); Store indentStore
+//			  = (Store) storeJdbcRepository.findById(indent.getIndentStore(),
+//			  "StoreEntity"); if (indentStore == null) { throw new
+//			  InvalidDataException("indentStore", "indentStore.invalid",
+//			  " Invalid indentStore"); } indent.setIndentStore(indentStore); }
+//			 
 			for (IndentDetail detail : indent.getIndentDetails()) {
 				detail.setUom(uomMap.get(detail.getUom().getCode()));
+				if(detail.getAsset().getCode()!=null)
+				{
+					Asset a=assetRepository.findByCode(detail.getAsset(),indentRequest.getRequestInfo());
+					detail.setAsset(a);
+				}
+				
+				
 			}
 
-			/*
-			 * if (indent.getDepartment() != null) { Department department =
-			 * .findById(indent.getDepartment()); if (department == null) {
-			 * throw new InvalidDataException("department",
-			 * "department.invalid", " Invalid department"); }
-			 * indent.setDepartment(department); }
-			 */
+			/*if (indent.getDepartment() != null) {
+				Department department = restTemplate.postForEntity("", indentRequest.getRequestInfo(), Department.class);
+				if (department == null) {
+					throw new InvalidDataException("department", "department.invalid", " Invalid department");
+				}
+				indent.setDepartment(department);
+			}*/
 
 		}
 
 		return indentRequest;
 	}
+	
+	 
 
 	private Map<String, Uom> getUoms(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
 		JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "common-masters", "Uom", null, null,

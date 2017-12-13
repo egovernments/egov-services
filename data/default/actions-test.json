@@ -10299,6 +10299,19 @@
     "serviceCode": "Get Next Scheduled Maintenance Date",
     "code": null,
     "path": ""
-  }  
+  },
+  {
+    "id": 1221,
+    "name": "Get Roles from MDMS",
+    "url": "/access/v1/roles/mdms/_search",
+    "displayName": "Get Roles from MDMS",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": null,
+    "enabled": false,
+    "serviceCode": "AccessControl",
+    "code": null,
+    "path": "AccessControl"
+  }
 ]
 }

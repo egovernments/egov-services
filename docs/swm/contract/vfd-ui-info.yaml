@@ -1,115 +1,31 @@
 UIInfo:
-- referencePath: "/vehiclefuellingdetails"
-  searchUrl: "/vehiclefuellingdetails/_search?transactionNo={transactionNo}"
-  
+- referencePath: "/sanitationstaffschedules"
+  searchUrl: "/sanitationstaffschedules/_search?transactionNo={transactionNo}"
   groups:
-    VehicleDetails1:
+    SourceSegregationDetails:
       fields:
-      - vehicleFuellingDetails[0].transactionDate
-    VehicleDetails2:
-      fields:
-      - vehicleFuellingDetails[0].vehicleReadingDuringFuelling
-    VehicleDetails3:
-      fields:
-      - vehicleFuellingDetails[0].refuellingStation.name
-      - vehicleFuellingDetails[0].fuelFilled
-      - vehicleFuellingDetails[0].typeOfFuel.code
-      - vehicleFuellingDetails[0].totalCostIncurred
-      - vehicleFuellingDetails[0].receiptNo
-      - vehicleFuellingDetails[0].receiptDate
-  dependents:
-  - onChangeField: vehicleFuellingDetails[0].vehicleType.code
-    affectedFields:
-      vehicleFuellingDetails[0].vehicleRegNo.regNumber:
-        pattern: /swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber
-        type: dropDown
+      - sanitationStaffSchedules[0].sanitationStaffTarget.targetNo
+      - sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom
+      - sanitationStaffSchedules[0].sanitationStaffTarget.targetTo
+      - sanitationStaffSchedules[0].sanitationStaffTarget.route.name
+      - sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name
+      - sanitationStaffSchedules[0].shift.code
   externalData:
-  - fieldName: vehicleFuellingDetails[0].vehicleType.code
-    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType"
+  - fieldName: sanitationStaffSchedules[0].sanitationStaffTarget.targetNo
+    url: "/swm-services/sanitationstafftargets/_search?"
+    keyPath: "$..targetNo"
+    valPath: "$..employee.name"
+  - fieldName: sanitationStaffSchedules[0].shift.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Shift"
     keyPath: "$..code"
-    valPath: "$..code"
-  - fieldName: vehicleFuellingDetails[0].typeOfFuel.code
-    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType"
-    keyPath: "$..code"
-    valPath: "$..code"
-  - fieldName: vehicleFuellingDetails[0].refuellingStation.name
-    url: "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=RefillingPumpStation"
-    keyPath: "$..name"
     valPath: "$..name"
   searchResult:
-    rowClickUrlUpdate: /update/vehiclefuellingdetails/{transactionNo}
-    rowClickUrlView: /view/vehiclefuellingdetails/{transactionNo}
+    rowClickUrlUpdate: "/update/swm/sanitationstaffschedules/{transactionNo}"
+    rowClickUrlView: "/view/swm/sanitationstaffschedules/{transactionNo}"
     columns:
-    - transactionNo
-    - transactionDate
-    - vehicleType
-    - vehicleRegNo
-    - vehicleReadingDuringFuelling
-    - refuellingStation
-    - fuelFilled
-    - typeOfFuel
-    - totalCostIncurred
-    - receiptNo
-    - receiptDate
+    - employeeName
+    - shift
     values:
-    - transactionNo
-    - transactionDate
-    - vehicleType.code
-    - vehicleRegNo.regNumber
-    - vehicleReadingDuringFuelling
-    - refuellingStation.name
-    - fuelFilled
-    - typeOfFuel.code
-    - totalCostIncurred
-    - receiptNo
-    - receiptDate
-    resultObjectName: vehicleFuellingDetails
-
-
-- referencePath: "/collectionpoints"
-  searchUrl: "/collectionpoints/_search?code={code}"
-  
-  groups:
-    LocationSelection:
-      fields:
-      - collectionPoints[0].location.code
-    CollectionPointDetails:
-      fields:
-      - collectionPoints[0].name
-    CollectionPoints:
-      fields:
-      - collectionPoints[0].collectionPointDetails[0].garbageEstimate
-      - collectionPoints[0].collectionPointDetails[0].description
-    BinDetails:
-      fields:
-      - collectionPoints[0].binDetails[0].assetOrBinId
-      - collectionPoints[0].binDetails[0].rfidAssigned
-      - collectionPoints[0].binDetails[0].rfid
-      - collectionPoints[0].binDetails[0].latitude
-      - collectionPoints[0].binDetails[0].longitude
-  dependents:
-  - onChangeField: collectionPoints[0].location.ward
-    affectedFields:
-      collectionPoints[0].location.zone:
-        pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Zone&hierarchyTypeName=REVENUE|$..id|$..name
-        type: dropDown
-  - onChangeField: collectionPoints[0].location.zone
-    affectedFields:
-      collectionPoints[0].location.block:
-        pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Block&hierarchyTypeName=REVENUE|$..id|$..name
-        type: dropDown
-  - onChangeField: collectionPoints[0].location.block
-    affectedFields:
-      collectionPoints[0].location.code:
-        pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Circle&hierarchyTypeName=REVENUE|$..id|$..name
-        type: dropDown
-  searchResult:
-    rowClickUrlUpdate: /update/collectionpoints/{code}
-    rowClickUrlView: /view/collectionpoints/{code}
-    columns:
-    - code
-    - name
-    values:
-    - code
-    - name
-    resultObjectName: collectionpoints
+    - employee.name
+    - shift.name
+    resultObjectName: sanitationStaffSchedules

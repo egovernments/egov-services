@@ -189,13 +189,13 @@ class CancellationAgreement extends React.Component {
                     },
                     success: function (res1) {
                       if(res1 && res1.Employee && res1.Employee[0].name)
-                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreement[0].acknowledgementNumber}`;
+                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                       else
-                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreement[0].acknowledgementNumber}`;                      
+                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;                      
 
                     },
                     error: function (err) {
-                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreement[0].acknowledgementNumber}`;                      
+                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;                      
                     }
                   })
 
@@ -242,10 +242,10 @@ class CancellationAgreement extends React.Component {
               'auth-token': authToken
             },
             success: function (res1) {
-              window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreement[0].acknowledgementNumber}`;
+              window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
             },
             error: function (err) {
-              window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreement[0].acknowledgementNumber}`;                      
+              window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;                      
             }
           })
 

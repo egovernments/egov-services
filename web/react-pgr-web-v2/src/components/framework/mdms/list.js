@@ -79,22 +79,22 @@ class MdmsComponent extends Component {
       casestatus: {
         addupdate: 'caseStatus',
       },
-      Court: {
+      court: {
         addupdate: 'court',
       },
-      Side: {
+      side: {
         addupdate: 'side',
       },
-      CaseType: {
+      casetype: {
         addupdate: 'caseType',
       },
-      Bench: {
+      bench: {
         addupdate: 'bench',
       },
-      Register: {
+      register: {
         addupdate: 'stamp',
       },
-      CaseCategory: {
+      casecategory: {
         addupdate: 'caseCategory',
       },
     };

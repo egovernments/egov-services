@@ -288,7 +288,7 @@ serviceMaps:
         id, tenantid, code, active, description, name, status , 
         completiondate, projectvalue, createdby, createdtime, deleted) VALUES
         (?, ?, ?, ?, ?, ?, ?, 
-        ?, ?, ?, ?
+        ?, ?, ?, ?,
         ?);
       basePath: $.projectCodes.*
       jsonMaps:

@@ -1088,42 +1088,42 @@
       "description": "Created",
       "moduletype": "DetailedEstimate",
       "tenantid": "default",
-      "ordernumber" : 1
+      "ordernumber": 1
     },
     {
       "code": "CHECKED",
       "description": "Checked",
       "moduletype": "DetailedEstimate",
-      "tenantid": "default"
-      "ordernumber" : 2
+      "tenantid": "default",
+      "ordernumber": 2
     },
     {
       "code": "TECHNICAL_SANCTIONED",
       "description": "Technical Sanctioned",
       "moduletype": "AbstractEstimate",
       "tenantid": "default",
-      "ordernumber" : 3
+      "ordernumber": 3
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
       "moduletype": "DetailedEstimate",
       "tenantid": "default",
-      "ordernumber" : 4
+      "ordernumber": 4
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
       "moduletype": "DetailedEstimate",
       "tenantid": "default",
-      "ordernumber" : 5
+      "ordernumber": 5
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
       "moduletype": "DetailedEstimate",
       "tenantid": "default",
-      "ordernumber" : 6
+      "ordernumber": 6
     },
     {
       "code": "NOTICEINVITINGTENDERRELEASED",
@@ -1233,7 +1233,6 @@
       "moduletype": "AbstractEstimate",
       "tenantid": "default"
     },
-    
     {
       "code": "CANCELLED",
       "description": "Cancelled",

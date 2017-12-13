@@ -43,7 +43,7 @@ import org.egov.lcms.repository.MdmsRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.repository.RegisterRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
-import org.egov.lcms.utility.SummonValidator;
+import org.egov.lcms.util.SummonValidator;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;

@@ -19,7 +19,7 @@ import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.IdGenerationRepository;
 import org.egov.lcms.repository.SummonRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
-import org.egov.lcms.utility.SummonValidator;
+import org.egov.lcms.util.SummonValidator;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

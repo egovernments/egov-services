@@ -1,4 +1,4 @@
-package org.egov.lcms.utility;
+package org.egov.lcms.util;
 
 public class ConstantUtility {
 

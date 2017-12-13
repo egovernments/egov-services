@@ -1,4 +1,4 @@
-package org.egov.lcms.utility;
+package org.egov.lcms.util;
 
 import java.util.ArrayList;
 import java.util.HashSet;

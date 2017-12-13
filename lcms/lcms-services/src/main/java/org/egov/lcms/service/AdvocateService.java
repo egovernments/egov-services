@@ -17,7 +17,7 @@ import org.egov.lcms.models.PersonDetails;
 import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.AdvocateRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
-import org.egov.lcms.utility.ConstantUtility;
+import org.egov.lcms.util.ConstantUtility;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

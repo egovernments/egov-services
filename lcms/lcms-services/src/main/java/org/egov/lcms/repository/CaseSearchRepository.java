@@ -30,7 +30,7 @@ import org.egov.lcms.repository.rowmapper.EventRowMapper;
 import org.egov.lcms.repository.rowmapper.EvidenceRowMapper;
 import org.egov.lcms.repository.rowmapper.HearingDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.ParaWiseRowMapper;
-import org.egov.lcms.utility.ConstantUtility;
+import org.egov.lcms.util.ConstantUtility;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;

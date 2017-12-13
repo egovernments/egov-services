@@ -9,7 +9,7 @@ import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.EventSearchCriteria;
 import org.egov.lcms.models.HearingRepository;
 import org.egov.lcms.repository.AdvocateRepository;
-import org.egov.lcms.utility.ConstantUtility;
+import org.egov.lcms.util.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

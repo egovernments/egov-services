@@ -1,19 +1,21 @@
 package org.egov.works.estimate.domain.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import net.minidev.json.JSONArray;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
+import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
 import org.egov.works.estimate.domain.validator.EstimateValidator;
+import org.egov.works.estimate.persistence.helper.DetailedEstimateHelper;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
 import org.egov.works.estimate.web.contract.*;
 import org.egov.works.workflow.service.WorkflowService;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,15 +110,12 @@ public class DetailedEstimateService {
             }
 
 			if (isRevision == null || (isRevision != null && !isRevision)) {
-				if (detailedEstimate.getMultiYearEstimates() != null) {
-					for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-						multiYearEstimate.setId(commonUtils.getUUID());
-						//TODO Set from financials
-						multiYearEstimate.setFinancialYear(new FinancialYear());
-						multiYearEstimate.setPercentage(100d);
-						multiYearEstimate.setAuditDetails(auditDetails);
-					}
-				}
+                MultiYearEstimate multiYearEstimate = new MultiYearEstimate();
+                multiYearEstimate.setId(commonUtils.getUUID());
+                multiYearEstimate.setFinancialYear(getCurrentFinancialYear(detailedEstimate.getTenantId(),detailedEstimateRequest.getRequestInfo()));
+                multiYearEstimate.setPercentage(100d);
+                multiYearEstimate.setAuditDetails(auditDetails);
+                detailedEstimate.setMultiYearEstimates(Arrays.asList(multiYearEstimate));
 
 				for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
 					estimateOverhead.setId(commonUtils.getUUID());
@@ -182,7 +181,28 @@ public class DetailedEstimateService {
 		return response;
 	}
 
-	public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
+    private FinancialYear getCurrentFinancialYear(final String tenantId, final RequestInfo requestInfo) {
+        JSONArray jsonArray = estimateUtils.getMDMSData(CommonConstants.FINANCIALYEAR_OBJECT, "tenantId", tenantId,
+                tenantId, requestInfo, Constants.EGF_MODULE_CODE);
+        FinancialYear financialYear = null;
+        if(jsonArray != null && !jsonArray.isEmpty()) {
+            for(int i= 0 ; i < jsonArray.size(); i++) {
+                Map<String, Object> jsonMap = (Map<String, Object>) jsonArray.get(i);
+                long fromDate = (long) jsonMap.get("startingDate");
+                long toDate = (long) jsonMap.get("endingDate");
+                long currentDateTime = new Date().getTime();
+                if(fromDate<= currentDateTime && toDate >= currentDateTime) {
+                    financialYear = new FinancialYear();
+                    financialYear.setId((String) jsonMap.get("id"));
+                    financialYear.setFinYearRange((String) jsonMap.get("finYearRange"));
+                    break;
+                }
+            }
+        }
+        return financialYear;
+    }
+
+    public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
 		validator.validateDetailedEstimates(detailedEstimateRequest, isRevision);
 		AuditDetails updateDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), true);
 		AuditDetails createDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);

@@ -48,12 +48,6 @@ public class Constants {
 
     public static final String KEY_ESIMATE_OVERHEAD_UNIQUE = "ESIMATE_OVERHEAD_UNIQUE";
     public static final String MESSAGE_ESIMATE_OVERHEAD_UNIQUE = "Duplicate overheads for estimate";
-
-    public static final String KEY_DUPLICATE_MULTIYEAR_ESTIMATE = "DUPLICATE_MULTIYEAR_ESTIMATE";
-    public static final String MESSAGE_DUPLICATE_MULTIYEAR_ESTIMATE = "Duplicate multiyear estimates";
-
-    public static final String KEY_PERCENTAGE_MULTIYEAR_ESTIMATE = "INVALID_PERCANTAGE_MULTIYEAR_ESTIMATE";
-    public static final String MESSAGE_PERCENTAGE_MULTIYEAR_ESTIMATE = "Percentage should not  be greater than 100 for multiyear estimates";
     
     public static final String KEY_NULL_ABSTRACTESTIMATE_NUMBER = "INVALID_ABSTRACTESTIMATE_NUMBER";
     public static final String MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER = "Abstract Estimate Number should be entered";
@@ -93,6 +87,15 @@ public class Constants {
 
     public static final String KEY_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE = "WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE";
     public static final String MESSAGE_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE = "Work value should not be greater estimate value";
+
+    public static final String KEY_ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID = "ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID";
+    public static final String MESSAGE_ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID = "Chart of accounts is required for an estimate";
+
+    public static final String KEY_ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED= "ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED = "Estimate deduction amount is required";
+
+    public static final String KEY_ESTIMATE_DEDUCTIONS_AMOUNT_INVALID= "ESTIMATE_DEDUCTIONS_AMOUNT_INVALID";
+    public static final String MESSAGE_ESTIMATE_DEDUCTIONS_AMOUNT_INVALID = "Estimate deduction amount should be greater than zero";
 
     public static final String KEY_INVALID_ESTIMATNUMBER_SPILLOVER = "INVALID_ESTIMATNUMBER_SPILLOVER";
     public static final String MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER = "Duplicate estimate number";
@@ -314,8 +317,11 @@ public class Constants {
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";
     
+    public static final String KEY_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE = "CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE";
+    public static final String MESSAGE_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE = "Status can not be updated for detailed estimate";
+
     public static final String KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE = "INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE";
-    public static final String MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE = "Status can not be updated for detailed estimate";
+    public static final String MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE = "Invalid status updated for detailed estimate";
 
     public static final String KEY_DE_EXISTS_FOR_AE = "DE_EXISTS_FOR_AE";
     public static final String MESSAGE_DE_EXISTS_FOR_AE = "Detailed estimate exists for the given abstract estimate";

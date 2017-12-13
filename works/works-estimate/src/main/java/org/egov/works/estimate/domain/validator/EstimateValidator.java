@@ -23,40 +23,7 @@ import org.egov.works.estimate.persistence.repository.EstimateTechnicalSanctionR
 import org.egov.works.estimate.persistence.repository.FileStoreRepository;
 import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.AbstractEstimate;
-import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetail;
-import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
-import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
-import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
-import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
-import org.egov.works.estimate.web.contract.Asset;
-import org.egov.works.estimate.web.contract.AssetsForEstimate;
-import org.egov.works.estimate.web.contract.Boundary;
-import org.egov.works.estimate.web.contract.BudgetGroup;
-import org.egov.works.estimate.web.contract.Department;
-import org.egov.works.estimate.web.contract.DetailedEstimate;
-import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
-import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.contract.DetailedEstimateStatus;
-import org.egov.works.estimate.web.contract.DocumentDetail;
-import org.egov.works.estimate.web.contract.EstimateActivity;
-import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
-import org.egov.works.estimate.web.contract.EstimateOverhead;
-import org.egov.works.estimate.web.contract.EstimateTechnicalSanction;
-import org.egov.works.estimate.web.contract.ExpenditureType;
-import org.egov.works.estimate.web.contract.Function;
-import org.egov.works.estimate.web.contract.Fund;
-import org.egov.works.estimate.web.contract.ModeOfAllotment;
-import org.egov.works.estimate.web.contract.NatureOfWork;
-import org.egov.works.estimate.web.contract.Overhead;
-import org.egov.works.estimate.web.contract.ReferenceType;
-import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.SORRate;
-import org.egov.works.estimate.web.contract.ScheduleOfRate;
-import org.egov.works.estimate.web.contract.Scheme;
-import org.egov.works.estimate.web.contract.SubScheme;
-import org.egov.works.estimate.web.contract.TypeOfWork;
-import org.egov.works.estimate.web.contract.UOM;
+import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -525,6 +492,7 @@ public class EstimateValidator {
                 validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
                 validateUpdateStatus(detailedEstimate, requestInfo, messages);
+                validateDeductions(detailedEstimate, requestInfo, messages);
             }
             validateActivities(detailedEstimate, messages, requestInfo);
             if (StringUtils.isNotBlank(detailedEstimate.getId()))
@@ -552,16 +520,50 @@ public class EstimateValidator {
             throw new CustomException(messages);
     }
 
+    private void validateDeductions(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
+        if(detailedEstimate.getDetailedEstimateDeductions() != null) {
+            for(DetailedEstimateDeduction deduction : detailedEstimate.getDetailedEstimateDeductions()) {
+                if(deduction.getChartOfAccounts() != null && StringUtils.isBlank(deduction.getChartOfAccounts().getGlcode()))
+                    messages.put(Constants.KEY_ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID,
+                            Constants.MESSAGE_ESTIMATE_DEDUCTIONS_CHARTOFACCOUNTS_INVALID);
+
+                if(deduction.getAmount() == null)
+                    messages.put(Constants.KEY_ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED,
+                            Constants.MESSAGE_ESTIMATE_DEDUCTIONS_AMOUNT_REQUIRED);
+                else if(deduction.getAmount().compareTo(BigDecimal.ZERO) <= 0)
+                    messages.put(Constants.KEY_ESTIMATE_DEDUCTIONS_AMOUNT_INVALID,
+                            Constants.MESSAGE_ESTIMATE_DEDUCTIONS_AMOUNT_INVALID);
+            }
+        }
+    }
+
     private void validateUpdateStatus(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
         if(detailedEstimate.getId() != null) {
-            DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
-                    .ids(Arrays.asList(detailedEstimate.getId()))
-                    .tenantId(detailedEstimate.getTenantId()).build();
-            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+            List<DetailedEstimateHelper> lists = searchDetailedEstimatesById(detailedEstimate);
             if(lists != null && !lists.isEmpty()) {
                 String status = lists.get(0).getStatus();
-                if(status.equals(DetailedEstimateStatus.CANCELLED.toString()) || status.equals(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()))
+                if (status.equals(DetailedEstimateStatus.CANCELLED.toString()) || status.equals(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
+                    messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE);
+                } else if((status.equals(DetailedEstimateStatus.REJECTED) && !detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.RESUBMITTED)) ||
+                        (status.equals(DetailedEstimateStatus.RESUBMITTED) && !detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.CHECKED))) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
+                } else {
+                    JSONArray statusRequestArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE,
+                            detailedEstimate.getStatus().toString().toUpperCase(), detailedEstimate.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE,
+                            status.toUpperCase(), detailedEstimate.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    if (statusRequestArray != null && !statusRequestArray.isEmpty() && dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                        Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
+                        Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
+                        Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("ordernumber");
+                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("ordernumber");
+                        if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
+                            messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
+                        }
+                    }
+                }
             }
 
         }
@@ -694,30 +696,32 @@ public class EstimateValidator {
             Map<String, String> messages) {
         Overhead overhead = null;
         BigDecimal totalOverAmount = BigDecimal.ZERO;
-        for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
+        if (detailedEstimate.getEstimateOverheads() != null) {
+            for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
 
-            if (estimateOverhead != null) {
-                validateEstimateOverHead(estimateOverhead.getOverhead(), requestInfo, messages);
+                if (estimateOverhead != null) {
+                    validateEstimateOverHead(estimateOverhead.getOverhead(), requestInfo, messages);
 
-                if (estimateOverhead.getOverhead().getCode() == null) {
-                    messages.put(Constants.KEY_ESIMATE_OVERHEAD_CODE, Constants.MESSAGE_ESIMATE_OVERHEAD_CODE);
+                    if (estimateOverhead.getOverhead().getCode() == null) {
+                        messages.put(Constants.KEY_ESIMATE_OVERHEAD_CODE, Constants.MESSAGE_ESIMATE_OVERHEAD_CODE);
+                    }
+                    if (estimateOverhead.getAmount() != null && estimateOverhead.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+                        messages.put(Constants.KEY_ESIMATE_OVERHEAD_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
+                    } else
+                        totalOverAmount = totalOverAmount.add(estimateOverhead.getAmount());
+
+                    if (overhead != null && overhead.getCode().equals(estimateOverhead.getOverhead().getCode())) {
+                        messages.put(Constants.KEY_ESIMATE_OVERHEAD_UNIQUE, Constants.MESSAGE_ESIMATE_OVERHEAD_UNIQUE);
+                    }
+                    overhead = estimateOverhead.getOverhead();
                 }
-                if (estimateOverhead.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-                    messages.put(Constants.KEY_ESIMATE_OVERHEAD_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
-                } else
-                    totalOverAmount = totalOverAmount.add(estimateOverhead.getAmount());
-
-                if (overhead != null && overhead.getCode().equals(estimateOverhead.getOverhead().getCode())) {
-                    messages.put(Constants.KEY_ESIMATE_OVERHEAD_UNIQUE, Constants.MESSAGE_ESIMATE_OVERHEAD_UNIQUE);
-                }
-                overhead = estimateOverhead.getOverhead();
             }
-        }
 
-        if (detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
-                totalOverAmount != null
-                && totalOverAmount.add(detailedEstimate.getWorkValue()).compareTo(detailedEstimate.getEstimateValue()) != 0) {
-            messages.put(Constants.KEY_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT);
+            if (detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
+                    totalOverAmount != null
+                    && totalOverAmount.add(detailedEstimate.getWorkValue()).compareTo(detailedEstimate.getEstimateValue()) != 0) {
+                messages.put(Constants.KEY_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT);
+            }
         }
     }
 
@@ -1150,5 +1154,12 @@ public class EstimateValidator {
             }
         }
         return workflowRequired;
+    }
+
+    public List<DetailedEstimateHelper> searchDetailedEstimatesById(final DetailedEstimate detailedEstimate) {
+        DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
+                .ids(Arrays.asList(detailedEstimate.getId()))
+                .tenantId(detailedEstimate.getTenantId()).build();
+        return detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
     }
 }

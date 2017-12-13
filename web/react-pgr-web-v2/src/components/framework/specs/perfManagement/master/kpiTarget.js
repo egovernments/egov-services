@@ -558,7 +558,7 @@ var dat = {
             jsonPath: 'kpiTargets[0].targetValue',
             label: '',
             pattern: '[0-9]',
-            type: 'text',
+            type: 'number',
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: 'perfManagement.create.KPIs.groups.kpiInputNumber',

@@ -17,6 +17,10 @@ public enum ErrorCode {
             "org.egov.service.internal.error",
             "Internal Server error",
             "Some required service is down. Please contact Administrator"),
+	SQL_ERROR(
+			"org.egov.service.sql.error",
+			"Error in the sql statements ",
+			"Sql statment execution failed . Please contact Administrator"),
     NON_UNIQUE_VALUE(
             "non.unique.value",
             "the field {0} must be unique in the system",

@@ -205,6 +205,8 @@ public class SupplierService extends DomainService {
         List<Supplier> suppliers = supplierRequest.getSuppliers();
 
         for (Supplier supplier : suppliers) {
+        	if(supplier.getCode()!=null)
+        	supplier.setCode(supplier.getCode().toUpperCase());
             BankContract bankContract = new BankContract();
             bankContract.setCode(supplier.getBankCode());
             bankContract.setTenantId(!isEmpty(supplier.getTenantId()) ? supplier.getTenantId() : tenantId);

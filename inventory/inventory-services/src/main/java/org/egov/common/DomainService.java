@@ -35,9 +35,15 @@ public class DomainService {
 
     @Autowired
     private UomService uomService;
+    
+    private String assetSearchUrl="";
+    
+    private String assetListFiled="assets";
+    
+   
+    
 
-    public AuditDetails mapAuditDetails(RequestInfo requestInfo
-    ) {
+    public AuditDetails mapAuditDetails(RequestInfo requestInfo) {
 
         return AuditDetails.builder()
                 .createdBy(requestInfo.getUserInfo().getId().toString())

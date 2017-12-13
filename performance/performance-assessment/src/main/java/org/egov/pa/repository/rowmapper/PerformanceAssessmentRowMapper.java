@@ -174,7 +174,14 @@ public class PerformanceAssessmentRowMapper {
 			}
 			target.setFinYear(rs.getString("targetFinYear"));
 			target.setTargetValue(rs.getString("targetValue"));
-			target.setTargetDescription(rs.getString("targetValue")); 
+			if(StringUtils.isNotBlank(rs.getString("targetType")) && rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
+				if(rs.getString("targetValue").equals("1")) 
+					target.setTargetDescription("Yes");
+				else if (rs.getString("targetValue").equals("2")) 
+					target.setTargetDescription("No");
+				else if (rs.getString("targetValue").equals("3"))
+					target.setTargetDescription("Work In Progress");
+			}
 			return target;
 		}
 	}

@@ -103,11 +103,6 @@ UIInfo:
       collectionPoints[0].location.code:
         pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Circle&hierarchyTypeName=REVENUE|$..id|$..name
         type: dropDown
-  externalData:
-  - fieldName: collectionPoints[0].location.ward
-    url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE"
-    keyPath: "$..id"
-    valPath: "$..name"
   searchResult:
     rowClickUrlUpdate: /update/collectionpoints/{code}
     rowClickUrlView: /view/collectionpoints/{code}

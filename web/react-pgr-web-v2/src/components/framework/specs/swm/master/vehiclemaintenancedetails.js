@@ -317,7 +317,7 @@ var dat = {
         label: 'swm.create.group.title.Selection',
         fields: [
           {
-            name: '',
+            name: 'isScheduled',
             jsonPath: 'vehicleMaintenanceDetails[0].isScheduled',
             label: 'swm.create.isScheduled',
             type: 'text',

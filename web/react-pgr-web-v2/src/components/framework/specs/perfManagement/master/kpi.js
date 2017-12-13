@@ -380,7 +380,7 @@ var dat = {
         label: 'perfManagement.view.KPIs.groups.viewkpiDocuments',
         name: 'viewkpiDocuments',
         multiple: true,
-        "hide": "this.props.getVal('KPIs[0].documentsReq.length') == 0?true:false",
+        hide: "this.props.getVal('KPIs[0].documentsReq.length') == 0?true:false",
         jsonPath: 'KPIs[0].documentsReq',
         fields: [
           {

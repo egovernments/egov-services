@@ -842,7 +842,7 @@ class kpivalues extends Component {
             title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('perfManagement.search.KPIs.groups.kpiSearch')}</div>}
             actAsExpander={true}
           />
-          
+
           <CardText>
             <Row className="show-grid">
               <Col xs={4} md={4}>

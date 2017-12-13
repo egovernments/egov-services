@@ -66,7 +66,7 @@ public class PurchaseordersApiController implements PurchaseordersApi {
     public ResponseEntity<PurchaseOrderResponse> purchaseordersUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "common Request info"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
         // do some magic!
-    	PurchaseOrderResponse response = purchaseOrderService.update(purchaseOrderRequest);
+    	PurchaseOrderResponse response = purchaseOrderService.update(purchaseOrderRequest,tenantId);
         return   new ResponseEntity(response,HttpStatus.OK);
     }
 

@@ -3676,7 +3676,7 @@ definitions:
           description: |
             parent of the MaterialType
         isParent:
-          type: string
+          type: boolean
           description: |
             whether parent or not of material type
         auditDetails:

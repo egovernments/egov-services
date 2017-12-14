@@ -10403,6 +10403,45 @@
       "serviceCode": "DEPT",
       "code": "null",
       "path": "Administration.Department.View Department"
-    }
+    },
+  {
+    "id": 1426,
+    "name": "createAccountCodePurpose_Master",
+    "url": "/egf-masters/accountcodepurposes/_create",
+    "displayName": "Create Account Code Purpose",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "230",
+    "enabled": false,
+    "serviceCode": "Account_Code_Purpose_Master",
+    "code": "null",
+    "path": "Financial_Master.Financials_Master.Account_Code_Purpose_Master.createAccountCodePurpose_Master"
+  },
+  {
+    "id": 1427,
+    "name": "updateAccountCodePurpose_Master",
+    "url": "/egf-masters/accountcodepurposes/_update",
+    "displayName": "Modify Account Code Purpose",
+    "orderNumber": 2,
+    "queryParams": null,
+    "parentModule": "230",
+    "enabled": false,
+    "serviceCode": "Account_Code_Purpose_Master",
+    "code": "null",
+    "path": "Financial_Master.Financials_Master.Account_Code_Purpose_Master.updateAccountCodePurpose_Master"
+  },
+  {
+    "id": 1428,
+    "name": "searchAccountCodePurpose_Master",
+    "url": "/egf-masters/accountcodepurposes/_search",
+    "displayName": "Search Account Code Purpose",
+    "orderNumber": 3,
+    "queryParams": null,
+    "parentModule": "230",
+    "enabled": true,
+    "serviceCode": "Account_Code_Purpose_Master",
+    "code": "null",
+    "path": "Financial_Master.Financials_Master.Account_Code_Purpose_Master.searchAccountCodePurpose_Master"
+  }
 ]
 }

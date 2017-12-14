@@ -189,8 +189,8 @@ public class ScheduleOfRateValidator {
         if (isDataValid) throw new CustomException(messages);
     }
 
-    public void validateRatesForUpdate(ScheduleOfRateRequest scheduleOfRateRequest, final String sorId, final Long sorDate, final String tenantId) {
-        List<DetailedEstimate> des = detailedEstimateRepository.searchDetailedEstimatesBySOR(sorId, sorDate, tenantId, scheduleOfRateRequest.getRequestInfo());
+    public void validateRatesForUpdate(ScheduleOfRateRequest scheduleOfRateRequest, final String sorId, final Long sorFromDate, final Long sorToDate, final String tenantId) {
+        List<DetailedEstimate> des = detailedEstimateRepository.searchDetailedEstimatesBySOR(sorId, sorFromDate, sorToDate, tenantId, scheduleOfRateRequest.getRequestInfo());
         if (des != null && des.size() > 0) {
             throw new CustomException(Constants.KEY_SOR_THEREARE_DE, Constants.MESSAGE_SOR_THEREARE_DE);
         }

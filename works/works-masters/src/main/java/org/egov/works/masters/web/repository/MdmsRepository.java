@@ -40,6 +40,7 @@
 package org.egov.works.masters.web.repository;
 
 import net.minidev.json.JSONArray;
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.works.masters.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,12 +50,12 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class MdmsRepository {
 
-	private final RestTemplate restTemplate;
+	private final LogAwareRestTemplate restTemplate;
 
 	private final String mdmsBySearchCriteriaUrl;
 
 	@Autowired
-	public MdmsRepository(final RestTemplate restTemplate,
+	public MdmsRepository(final LogAwareRestTemplate restTemplate,
                           @Value("${egov.services.egov_mdms.hostname}") final String mdmsServiceHostname,
                           @Value("${egov.services.egov_mdms.searchpath}") final String mdmsBySearchCriteriaUrl) {
 

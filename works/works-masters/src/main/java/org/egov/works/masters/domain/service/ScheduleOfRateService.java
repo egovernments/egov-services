@@ -96,7 +96,7 @@ public class ScheduleOfRateService {
                     sorRateC = sorRate;
                 }
                 if (sorRateP.getToDate() > sorRateC.getFromDate()) {
-                    scheduleOfRateValidator.validateRatesForUpdate(scheduleOfRateRequest, scheduleOfRate.getId(), sorRateP.getToDate(), sorRateP.getTenantId());
+                    scheduleOfRateValidator.validateRatesForUpdate(scheduleOfRateRequest, scheduleOfRate.getId(), sorRateP.getFromDate(), sorRateP.getToDate(), sorRateP.getTenantId());
                 }
 
                 if (sorRate.getToDate() == null) {

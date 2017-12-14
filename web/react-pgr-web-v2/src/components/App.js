@@ -174,6 +174,7 @@ class App extends Component {
   };
 
   render() {
+    console.log('LifeCycle: App: render');
     var {
       toggleDailogAndSetText,
       toggleSnackbarAndSetText,

@@ -170,7 +170,7 @@ import assetImmovableView from './components/non-framework/asset/master/assetImm
 import assetMovableView from './components/non-framework/asset/master/assetMovableView';
 import assetCategoryCreate from './components/non-framework/asset/master/assetCategoryCreate';
 import assetCategorySearch from './components/non-framework/asset/master/assetCategorySearch';
-import ComponentLoader from './components/framework/ComponentLoader.js';
+import ComponentLoader from './components/framework/pure-components/ComponentLoader.js';
 import assetCategoryView from './components/non-framework/asset/master/assetCategoryView';
 
 //inventory

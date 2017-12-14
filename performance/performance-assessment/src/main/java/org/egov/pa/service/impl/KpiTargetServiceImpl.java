@@ -70,7 +70,7 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 			if(StringUtils.isBlank(target.getId())) { 
 				createTargetList.add(target); 
 			}
-			if(StringUtils.isBlank(target.getTargetValue()) && StringUtils.isNotBlank(target.getTargetDescription())) { 
+			if(StringUtils.isNotBlank(target.getTargetDescription())) { 
 				target.setTargetValue(target.getTargetDescription());
 			}
 		}

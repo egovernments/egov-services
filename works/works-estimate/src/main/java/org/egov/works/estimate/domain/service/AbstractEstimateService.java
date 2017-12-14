@@ -173,14 +173,15 @@ public class AbstractEstimateService {
         validator.validateEstimates(abstractEstimateRequest, false);
         ProjectCode projectCode = new ProjectCode();
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
-            for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
-                if (documentDetail.getId() == null)
-                    documentDetail.setId(commonUtils.getUUID());
-                documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
-                documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
-                documentDetail
-                        .setAuditDetails(estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), true));
-            }
+            if(estimate.getDocumentDetails() != null)
+                for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
+                    if (documentDetail.getId() == null)
+                        documentDetail.setId(commonUtils.getUUID());
+                    documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
+                    documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
+                    documentDetail
+                            .setAuditDetails(estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), true));
+                }
             populateAuditDetails(abstractEstimateRequest.getRequestInfo(), estimate);
             populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
             Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),

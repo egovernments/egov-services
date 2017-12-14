@@ -489,10 +489,12 @@ public class EstimateValidator {
                 validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
                 validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
                 validateLocationDetails(detailedEstimate, requestInfo, messages);
-                validateOverheads(detailedEstimate, requestInfo, messages);
+                if(detailedEstimate.getEstimateOverheads() != null && !detailedEstimate.getEstimateOverheads().isEmpty())
+                    validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
                 validateUpdateStatus(detailedEstimate, requestInfo, messages);
-                validateDeductions(detailedEstimate, requestInfo, messages);
+                if(detailedEstimate.getDetailedEstimateDeductions() != null && !detailedEstimate.getDetailedEstimateDeductions().isEmpty())
+                    validateDeductions(detailedEstimate, requestInfo, messages);
             }
             validateActivities(detailedEstimate, messages, requestInfo);
             if (StringUtils.isNotBlank(detailedEstimate.getId()))

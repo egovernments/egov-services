@@ -236,8 +236,9 @@ class UiDatePicker extends Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state.form.form);
-  return {};
+  return {
+    formData: state.frameworkForm.form
+  }
 };
 
 const mapDispatchToProps = dispatch => ({

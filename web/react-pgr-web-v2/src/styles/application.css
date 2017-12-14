@@ -37,6 +37,7 @@ html, body{
 	bottom: 2px !important;
 	left: 10px !important;
 	z-index: 10 !important;
+	pointer-events: none;
 }
 
 .custom-form-control-for-select > div > div:nth-child(1){

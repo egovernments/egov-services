@@ -170,7 +170,7 @@ public class BasePage {
         return "email" + String.valueOf(100 + (RandomUtils.nextInt(9999))) + "@xyz.com";
     }
 
-    public String autoGenerateValue(String value) {
+    public String   autoGenerateValue(String value) {
         value = value.replaceAll("\"", "");
         if (value.contains("random") || value.contains("date") || value.contains("year") || value.contains("time")) {
             if (value.contains(",") && value.contains("numbers")) {
@@ -315,6 +315,6 @@ public class BasePage {
             }
         }
 
-        return date != null ? value.replaceAll("/", "") : value;
+        return date != null ? value : value;
     }
 }

@@ -27,31 +27,31 @@
         {
         "elementName":"vehicleCapacity",
         "identifier":"id",
-        "value":"vehicles[0]-vehicleCapacity",
+        "value":"vehicles[0]-manufacturingDetails-vehicleCapacity",
         "waitFor":"visibility"
         },
         {
         "elementName":"engineSrNo",
         "identifier":"id",
-        "value":"vehicles[0]-engineSrNumber",
+        "value":"vehicles[0]-manufacturingDetails-engineSrNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"NoOfPersonsReq",
         "identifier":"id",
-        "value":"vehicles[0]-numberOfPersonsReq",
+        "value":"vehicles[0]-operatorsReq",
         "waitFor":"presence"
         },
         {
         "elementName":"chassisSrNumber",
         "identifier":"id",
-        "value":"vehicles[0]-chassisSrNumber",
+        "value":"vehicles[0]-manufacturingDetails-chassisSrNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"model",
         "identifier":"id",
-        "value":"vehicles[0]-model",
+        "value":"vehicles[0]-manufacturingDetails-model",
         "waitFor":"visibility"
         },
         {
@@ -63,37 +63,43 @@
         {
         "elementName":"vendorName",
         "identifier":"id",
-        "value":"vehicles[0]-vendor-name",
+        "value":"vehicles[0]-vendor-vendorNo",
         "waitFor":"visibility"
         },
         {
         "elementName":"insuranceNumber",
         "identifier":"id",
-        "value":"vehicles[0]-insuranceNumber",
+        "value":"vehicles[0]-insuranceDetails-insuranceNumber",
         "waitFor":"visibility"
         },
         {
         "elementName":"insuranceValidityDate",
         "identifier":"id",
-        "value":"vehicles[0]-insuranceValidityDate",
+        "value":"vehicles[0]-insuranceDetails-insuranceValidityDate",
         "waitFor":"visibility"
         },
         {
         "elementName":"insuranceDocument",
         "identifier":"id",
-        "value":"vehicles[0]-insuranceDocument-fileStoreId",
+        "value":"vehicles[0]-insuranceDetails-insuranceDocument-fileStoreId",
         "waitFor":"visibility"
         },
         {
         "elementName":"purchaseDate",
         "identifier":"id",
-        "value":"vehicles[0]-purchaseDate",
+        "value":"vehicles[0]-purchaseInfo-purchaseDate",
         "waitFor":"presence"
         },
         {
         "elementName":"price",
         "identifier":"id",
-        "value":"vehicles[0]-price",
+        "value":"vehicles[0]-purchaseInfo-price",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"sourceOfPurchase",
+        "identifier":"id",
+        "value":"vehicles[0]-purchaseInfo-sourceOfPurchase",
         "waitFor":"visibility"
         },
         {
@@ -175,21 +181,21 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"approver",
+        "elementName":"searchName",
         "identifier":"id",
-        "value":"approver",
+        "value":"name",
         "waitFor":"visibility"
         },
         {
-        "elementName":"comments",
-        "identifier":"id",
-        "value":"comments",
+        "elementName":"searchResultStopName",
+        "identifier":"xpath",
+        "value":".//*[@id='searchTable']/tbody[1]/tr/td[2]",
         "waitFor":"visibility"
         },
         {
-        "elementName":"fieldInspectionFile",
+        "elementName":"Update",
         "identifier":"id",
-        "value":"inspectionfile",
+        "value":"Update",
         "waitFor":"visibility"
         },
         {
@@ -205,21 +211,39 @@
         "waitFor":"visibility"
         },
         {
-         "elementName":"applicationNumber",
-         "identifier":"xpath",
-         "value":".//*[@id='root']/div/main/div/div[1]/div/div[2]/div/div/div[1]/div/span/div/div/p",
+         "elementName":"maintenanceAfter",
+         "identifier":"id",
+         "value":"vehicleMaintenances[0]-maintenanceAfter",
          "waitFor":"visibility"
         },
         {
-        "elementName":"tradeValueForTheUOMInSI",
+        "elementName":"maintenanceUom",
         "identifier":"id",
-        "value":"quantity",
+        "value":"vehicleMaintenances[0]-maintenanceUom",
         "waitFor":"visibility"
         },
         {
-        "elementName":"ownerGender",
+        "elementName":"downtimeforMaintenance",
         "identifier":"id",
-        "value":"licenses[0]-ownerGender",
+        "value":"vehicleMaintenances[0]-downtimeforMaintenance",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"downtimeforMaintenanceUom",
+        "identifier":"id",
+        "value":"vehicleMaintenances[0]-downtimeforMaintenanceUom",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchRegNumber",
+        "identifier":"id",
+        "value":"regNumber",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"searchResulRegNumber",
+        "identifier":"xpath",
+        "value":".//*[@id='searchTable_wrapper']/table/tbody/tr/td[3]",
         "waitFor":"visibility"
         }
     ]

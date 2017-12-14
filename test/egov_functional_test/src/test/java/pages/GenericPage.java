@@ -139,9 +139,10 @@ public class GenericPage extends BasePage {
         return value;
     }
 
-    public void actionOnSuggestionBox(WebElement webElement, String value) {
+    public void actionOnSuggestionBox(WebElement webElement, String value) throws InterruptedException {
         waitForElementToBeVisible(webElement, driver);
         webElement.sendKeys(value);
+        clickOnDropdown(webElement, value);
         webElement.sendKeys(Keys.ARROW_DOWN, Keys.ENTER);
     }
 

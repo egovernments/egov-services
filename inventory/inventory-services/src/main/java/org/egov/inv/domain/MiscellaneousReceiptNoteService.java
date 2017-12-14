@@ -18,9 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -191,8 +193,8 @@ public class MiscellaneousReceiptNoteService extends DomainService {
 
     private void validateReceiptdate(InvalidDataException errors, MaterialReceipt materialReceipt) {
         if (null != materialReceipt.getReceiptDate() && materialReceipt.getReceiptDate() > getCurrentDate()) {
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",
-                    materialReceipt.getReceiptDate().toString());
+			String date = convertEpochtoDate(materialReceipt.getReceiptDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",date);
         }
     }
 
@@ -280,5 +282,13 @@ public class MiscellaneousReceiptNoteService extends DomainService {
     private Long getCurrentDate() {
         return currentEpochWithoutTime() + (24 * 60 * 60 * 1000) - 1;
     }
+    
+    private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 
 }

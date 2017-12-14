@@ -4,10 +4,12 @@ import static org.springframework.util.StringUtils.isEmpty;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -354,11 +356,13 @@ public class PurchaseOrderService extends DomainService {
                 BigDecimal totalAmount = new BigDecimal(0);
                 int index = pos.indexOf(eachPurchaseOrder) + 1;
                 if (eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis) {
-                    errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString() + " at serial no." + index);
+					String date = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
+                    errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), date + " at serial no." + index);
                 }
                 if (null != eachPurchaseOrder.getExpectedDeliveryDate()) {
                     if (eachPurchaseOrder.getExpectedDeliveryDate() < eachPurchaseOrder.getPurchaseOrderDate()) {
-                        errors.addDataError(ErrorCode.EXP_DATE_GE_PODATE.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString() + " at serial no." + index);
+						String date = convertEpochtoDate(eachPurchaseOrder.getExpectedDeliveryDate());
+                        errors.addDataError(ErrorCode.EXP_DATE_GE_PODATE.getCode(), date + " at serial no." + index);
                     }
                 }
 
@@ -390,7 +394,8 @@ public class PurchaseOrderService extends DomainService {
 
                 for (Indent in : isr.getIndents()) {
                     if (in.getIndentDate().compareTo(eachPurchaseOrder.getPurchaseOrderDate()) > 0) {
-                        errors.addDataError(ErrorCode.DATE1_LE_DATE2.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString() + " at serial no." + pos.indexOf(eachPurchaseOrder));
+						String date = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
+                        errors.addDataError(ErrorCode.DATE1_LE_DATE2.getCode(), date + " at serial no." + pos.indexOf(eachPurchaseOrder));
                     }
                 }
                 
@@ -658,5 +663,12 @@ public class PurchaseOrderService extends DomainService {
         String purchaseOrderNumber = code + idgen + "/" + year;
         return purchaseOrderNumber;
     }
+    private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 
 }

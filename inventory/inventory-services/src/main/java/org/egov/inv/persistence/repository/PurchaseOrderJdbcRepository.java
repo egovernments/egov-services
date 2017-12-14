@@ -84,11 +84,9 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	}
 	
 	public boolean getIsIndentPORaised(String indentId) {
-		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity=totalprocessedquantity and isdeleted=false and indentnumber = '" + indentId +"'";
-		String totalIndentLinesQuery = "select count(*) from indentdetail where indentnumber = '" + indentId+ "' and isdelted=false";
-		Long count1 = namedParameterJdbcTemplate.queryForObject(totalIndentLinesQuery, new HashMap(), Long.class);
-		Long count2 = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, new HashMap(), Long.class);
-		if(count1.compareTo(count2) == 0)
+		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity>totalprocessedquantity and totalprocessedquantity!=null and isdeleted=false and indentnumber = '" + indentId +"'";
+		Long count = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, new HashMap(), Long.class);
+		if(count > 0)
 			return true;
 		else
 			return false;

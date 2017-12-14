@@ -5419,7 +5419,7 @@
     "orderNumber": 3,
     "queryParams": null,
     "parentModule": "230",
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "Account_Code_Purpose_Master",
     "code": "null",
     "path": "Financial_Master.Financials_Master.Account_Code_Purpose_Master.searchAccountCodePurpose_Master"

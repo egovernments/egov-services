@@ -50,7 +50,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.minidev.json.JSONArray;
-import scala.annotation.varargs;
+
 
 @Service
 public class MaterialIssuesService extends DomainService {

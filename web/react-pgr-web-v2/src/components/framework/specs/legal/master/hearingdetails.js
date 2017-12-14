@@ -81,7 +81,7 @@ var dat = {
             jsonPath: 'cases[0].departmentPerson',
             label: 'caseRegistration.create.departmentConcernedPerson',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
             defaultValue: [],

@@ -509,6 +509,8 @@ class UpdateRenewal extends React.Component {
 
             agreement.action = "renewal";
             agreement.workflowDetails.action = ID;
+            agreement.workflowDetails.status = this.state.wfStatus;
+            
 
             if (ID === "Reject") {
 

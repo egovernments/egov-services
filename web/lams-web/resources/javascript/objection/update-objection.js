@@ -509,6 +509,7 @@ class UpdateObjection extends React.Component {
 
             agreement.action = "objection";
             agreement.workflowDetails.action = ID;
+            agreement.workflowDetails.status = this.state.wfStatus;
 
             if (ID === "Reject") {
 

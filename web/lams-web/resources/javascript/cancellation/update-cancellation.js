@@ -514,6 +514,8 @@ class UpdateCancellation extends React.Component {
 
             agreement.action = "cancellation";
             agreement.workflowDetails.action = ID;
+            agreement.workflowDetails.status = this.state.wfStatus;
+            
 
             if (ID === "Reject") {
 

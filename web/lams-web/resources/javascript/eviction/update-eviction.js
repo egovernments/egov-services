@@ -491,6 +491,8 @@ class UpdateEviction extends React.Component {
 
             agreement.action = "eviction";
             agreement.workflowDetails.action = ID;
+            agreement.workflowDetails.status = this.state.wfStatus;
+            
 
             if (ID === "Reject") {
 

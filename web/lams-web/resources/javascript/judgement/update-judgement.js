@@ -510,6 +510,8 @@ class UpdateJudgement extends React.Component {
 
             agreement.action = "judgement";
             agreement.workflowDetails.action = ID;
+            agreement.workflowDetails.status = this.state.wfStatus;
+            
 
             if (ID === "Reject") {
 

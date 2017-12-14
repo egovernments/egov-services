@@ -379,5 +379,9 @@ public class Constants {
     public static final String KEY_DUPLICATE_ABSTRACTESTIMATENUMBERS = "works.abstractestimate.duplicate.abstractestimatenumber";
     public static final String MESSAGE_DUPLICATE_ABSTRACTESTIMATENUMBERS = "Please provide Unique abstract estimate numbers";
 
+    public static final String KEY_ESTIMATEAPPROPRIATION_BUDGET_NOTAVAILABLE = "works.estimateappropriation.budget.notavailable";
+    public static final String MESSAGE_ESTIMATEAPPROPRIATION_BUDGET_NOTAVAILABLE = "There is no budget availble for the given combination";
+
+    
     
 }

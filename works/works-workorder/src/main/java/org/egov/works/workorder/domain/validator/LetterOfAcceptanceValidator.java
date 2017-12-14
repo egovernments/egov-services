@@ -152,7 +152,7 @@ public class LetterOfAcceptanceValidator {
             throw new CustomException(messages);
     }
 
-    private OfflineStatus validateOfflineStatus(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+    private void validateOfflineStatus(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
             HashMap<String, String> messages, LetterOfAcceptance letterOfAcceptance,
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate) {
         OfflineStatus offlineStatus = null;
@@ -172,7 +172,6 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_FUTUREDATE_LOADATE_OFFLINESTATUS,
                     Constants.MESSAGE_FUTUREDATE_LOADATE_OFFLINESTATUS);
 
-        return offlineStatus;
     }
 
     private void checkLOAExists(LetterOfAcceptanceRequest letterOfAcceptanceRequest, HashMap<String, String> messages,
@@ -228,14 +227,17 @@ public class LetterOfAcceptanceValidator {
         for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
             for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
                 approvedAmount = approvedAmount.add(loaActivity.getApprovedAmount());
-
             }
+        }
 
+        if (detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
+            messages.put(Constants.KEY_FUTUREDATE_LOADATE_DETAILEDESTIMATE,
+                    Constants.MESSAGE_FUTUREDATE_LOADATE_DETAILEDESTIMATE);
         }
 
         approvedAmount = approvedAmount.multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage()));
-        
-        if(letterOfAcceptance.getLoaAmount().compareTo(approvedAmount) != 0) {
+
+        if (letterOfAcceptance.getLoaAmount().compareTo(approvedAmount) != 0) {
             messages.put(Constants.KEY_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID,
                     Constants.MESSAGE_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID);
         }

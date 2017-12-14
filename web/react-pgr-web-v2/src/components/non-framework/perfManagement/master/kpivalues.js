@@ -282,6 +282,7 @@ class kpivalues extends Component {
             <input
               id={'file_' + item.valueid + item.period}
               type="file"
+              accept=".xls,.xlsx,.txt,.json,.doc,.docx"
               style={{ display: 'none' }}
               onChange={e => this.handleFile(e, item.valueid, item.period)}
             />

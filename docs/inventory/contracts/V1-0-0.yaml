@@ -3672,10 +3672,13 @@ definitions:
           items:
             $ref: '#/definitions/StoreMapping'
         parent:
-          type: integer
-          format: int64
+          type: string
           description: |
             parent of the MaterialType
+        isParent:
+          type: string
+          description: |
+            whether parent or not of material type
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 

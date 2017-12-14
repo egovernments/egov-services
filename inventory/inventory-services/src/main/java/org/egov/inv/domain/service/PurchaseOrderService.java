@@ -447,7 +447,7 @@ public class PurchaseOrderService extends DomainService {
                         }
                         
                         if (priceListConfig && (null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0))<0)) {
-                        	throw new CustomException("orderQuantity", "OrderQuantity cannnot be blank");
+                        	throw new CustomException("unitPrice", "UnitPrice cannnot be blank");
                         }
                         
                         //validate the rates entered for creating PO with the one's in pricelist

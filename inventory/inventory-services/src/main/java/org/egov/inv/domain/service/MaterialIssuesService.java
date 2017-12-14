@@ -1,9 +1,11 @@
 package org.egov.inv.domain.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,8 @@ import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentSearch;
 import org.egov.inv.model.Material;
 import org.egov.inv.model.MaterialIssue;
+import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
+import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
 import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueRequest;
 import org.egov.inv.model.MaterialIssueResponse;
@@ -30,14 +34,9 @@ import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
-import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
-import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
-import org.egov.inv.persistence.entity.IndentEntity;
-import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
-import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -232,9 +231,10 @@ public class MaterialIssuesService extends DomainService {
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "materialIssues", "null");
 				}
 				for (MaterialIssue materialIssue : materialIssues) {
-				if (materialIssue.getIssueDate().compareTo(currentDate) > 0)
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",
-								materialIssue.getIssueDate().toString());
+				if (materialIssue.getIssueDate().compareTo(currentDate) > 0){
+					String date = convertEpochtoDate(materialIssue.getIssueDate());
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate ",date);
+				}
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
@@ -272,9 +272,10 @@ public class MaterialIssuesService extends DomainService {
 				for (MaterialIssue materialIssue : materialIssues) {
 					if (StringUtils.isEmpty(materialIssue.getIssueNumber()))
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(), "issueNumber", "null");
-					if (materialIssue.getIssueDate().compareTo(currentDate) > 0)
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",
-								materialIssue.getIssueDate().toString());
+					if (materialIssue.getIssueDate().compareTo(currentDate) > 0){
+						String date = convertEpochtoDate(materialIssue.getIssueDate());
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",date);
+					}
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
@@ -467,5 +468,12 @@ public class MaterialIssuesService extends DomainService {
 		}
 		return materialMap;
 	}
+	private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 
 }

@@ -3,6 +3,7 @@ package org.egov.inv.domain.service;
 import static org.springframework.util.StringUtils.isEmpty;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -342,8 +343,8 @@ public class IndentService extends DomainService {
 					LOG.info("-----------------------------------------------------------");
 
 					if (indent.getIndentDate().compareTo(currentDate) >= 0) {
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "indentDate",
-								indent.getIndentDate().toString());
+						String indentDate = convertEpochtoDate(indent.getIndentDate());
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "indentDate",indentDate);
 					}
 					// commeneted as of now to support the past dated entries
 					/*
@@ -358,8 +359,10 @@ public class IndentService extends DomainService {
 							&& indent.getIndentDate().compareTo(indent.getExpectedDeliveryDate()) > 0) {
 						LOG.info("expectedDeliveryDate=" + toDateStr(indent.getExpectedDeliveryDate()));
 						LOG.info("indentDate=" + toDateStr(indent.getIndentDate()));
+						String expectedDeliveryDate = convertEpochtoDate(indent.getExpectedDeliveryDate());
+						String indentDate = convertEpochtoDate(indent.getIndentDate());
 						errors.addDataError(ErrorCode.DATE1_GE_DATE2.getCode(), "expectedDeliveryDate", "indentDate",
-								indent.getExpectedDeliveryDate().toString(), indent.getIndentDate().toString());
+								expectedDeliveryDate, indentDate);
 					}
 					List<String> materialCodes = new ArrayList<>();
 					int i = 0;
@@ -474,5 +477,11 @@ public class IndentService extends DomainService {
 		}
 		return uomMap;
 	}
-
+	 private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 }

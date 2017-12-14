@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -237,22 +239,27 @@ public class PriceListService extends DomainService {
                 }
 
                 if (Long.valueOf(pl.getAgreementDate()) > currentMilllis) {
-                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "agreementDate", pl.getAgreementDate().toString());
+					String agreementDate = convertEpochtoDate(pl.getAgreementDate());
+                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "agreementDate",agreementDate);
                 }
 
                 if (Long.valueOf(pl.getRateContractDate()) > currentMilllis) {
-                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "rateContractDate", pl.getRateContractDate().toString());
+					String rateContractDate = convertEpochtoDate(pl.getRateContractDate());
+                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "rateContractDate", rateContractDate);
                 }
 
                 if (Long.valueOf(pl.getAgreementStartDate()) > currentMilllis) {
-                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "agreementStartDate", pl.getAgreementStartDate().toString());
+					String agreementStartDate = convertEpochtoDate(pl.getAgreementStartDate());
+                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "agreementStartDate",agreementStartDate);
                 }
 
                 if (Long.valueOf(pl.getAgreementEndDate()) < Long.valueOf(pl.getAgreementStartDate())) {
                     if (Long.valueOf(pl.getAgreementEndDate()) < 0) {
                         throw new CustomException("agreementEndDate", "Enter a valid Agreement End Date");
                     }
-                    errors.addDataError(ErrorCode.DATE1_GE_DATE2.getCode(), "agreementStartDate", "agreementEndDate", pl.getAgreementStartDate().toString(), pl.getAgreementEndDate().toString());
+					String agreementStartDate = convertEpochtoDate(pl.getAgreementStartDate());
+					String agreementEndDate = convertEpochtoDate(pl.getAgreementEndDate());
+                    errors.addDataError(ErrorCode.DATE1_GE_DATE2.getCode(), "agreementStartDate", "agreementEndDate", agreementStartDate,agreementEndDate );
                 }
 
                 // Negative epoch time is for years below 1970
@@ -298,7 +305,13 @@ public class PriceListService extends DomainService {
         } catch (IllegalArgumentException e) {
 
         }
-
     }
+    private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 
 }

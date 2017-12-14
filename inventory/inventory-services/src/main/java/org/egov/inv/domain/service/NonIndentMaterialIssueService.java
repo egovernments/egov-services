@@ -1,9 +1,11 @@
 package org.egov.inv.domain.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -191,8 +193,8 @@ public class NonIndentMaterialIssueService extends DomainService {
 				}
 				for (MaterialIssue materialIssue : materialIssues) {
 					if (materialIssue.getIssueDate().compareTo(currentDate) > 0) {
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",
-								materialIssue.getIssueDate().toString());
+						String date = convertEpochtoDate(materialIssue.getIssueDate());
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",date);
 					}
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
@@ -229,8 +231,8 @@ public class NonIndentMaterialIssueService extends DomainService {
 					if (StringUtils.isEmpty(materialIssue.getIssueNumber()))
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(), "issueNumber", "null");
 					if (materialIssue.getIssueDate().compareTo(currentDate) > 0) {
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",
-								materialIssue.getIssueDate().toString());
+						String date = convertEpochtoDate(materialIssue.getIssueDate());
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",date);
 					}
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
@@ -396,6 +398,12 @@ public class NonIndentMaterialIssueService extends DomainService {
 				errors.addDataError(ErrorCode.REPEATED_VALUE.getCode(), "material", material.getCode(), "");
 			}
 		}
-
 	}
+	private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 }

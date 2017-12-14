@@ -426,6 +426,7 @@ public class PurchaseOrderService extends DomainService {
                     for (PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                         int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
                         
+                        //validating ratecontracts for each POLine
                         boolean isRateContractExist =false;
 	            		if(purchaseOrderRepository.isRateContractsExists(eachPurchaseOrder.getSupplier().getCode(), eachPurchaseOrder.getRateType().name(), poDetail.getMaterial().getCode()))
 	            		{
@@ -435,6 +436,11 @@ public class PurchaseOrderService extends DomainService {
                         if(!isRateContractExist)
                         	throw new CustomException("rateContract", "No RateContracts exist for the given combination of indent, supplier and ratetype");
                         
+                        
+                        //validation of order quantity incase of tender
+                        if(( poDetail.getOrderQuantity().add(poDetail.getUsedQuantity()) ).compareTo(poDetail.getTenderQuantity()) > 0) {
+                        	throw new CustomException("orderQuantity", "Order Quantity exceeding the permitted");
+                        }
                         
                         //Material reference validation
                         if(null != poDetail.getMaterial()) {

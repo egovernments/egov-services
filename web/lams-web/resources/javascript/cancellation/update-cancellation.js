@@ -131,7 +131,7 @@ class UpdateCancellation extends React.Component {
         this.setState = this.setState.bind(this);
         this.getUsersFun = this.getUsersFun.bind(this);
         this.printNotice = this.printNotice.bind(this);
-        
+
     }
 
 
@@ -591,7 +591,29 @@ class UpdateCancellation extends React.Component {
                                         },
                                         success: function (res) {
 
-                                            showSuccess("Forwarded successfully");
+                                            $.ajax({
+                                                url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                                                type: 'POST',
+                                                dataType: 'json',
+                                                contentType: 'application/json',
+                                                headers: {
+                                                    'auth-token': authToken
+                                                },
+                                                success: function (res1) {
+                                                    if (window.opener)
+                                                        window.opener.location.reload();
+                                                    if (res1 && res1.Employee && res1.Employee[0].name)
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    else
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+
+                                                },
+                                                error: function (err) {
+                                                    if (window.opener)
+                                                        window.opener.location.reload();
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                }
+                                            })
 
                                         },
                                         error: function (err) {
@@ -627,7 +649,29 @@ class UpdateCancellation extends React.Component {
                         },
                         success: function (res) {
 
-                            showSuccess("Forwarded successfully");
+                            $.ajax({
+                                url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                                type: 'POST',
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                headers: {
+                                    'auth-token': authToken
+                                },
+                                success: function (res1) {
+                                    if (window.opener)
+                                        window.opener.location.reload();
+                                    if (res1 && res1.Employee && res1.Employee[0].name)
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    else
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+
+                                },
+                                error: function (err) {
+                                    if (window.opener)
+                                        window.opener.location.reload();
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                }
+                            })
 
                         },
                         error: function (err) {

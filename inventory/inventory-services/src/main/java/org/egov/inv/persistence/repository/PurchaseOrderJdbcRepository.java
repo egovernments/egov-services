@@ -83,8 +83,19 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	    return usedQty;
 	}
 	
+	public boolean getIsIndentPORaised(String indentId) {
+		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity=totalprocessedquantity and isdeleted=false and indentnumber = '" + indentId +"'";
+		String totalIndentLinesQuery = "select count(*) from indentdetail where indentnumber = '" + indentId+ "' and isdelted=false";
+		Long count1 = namedParameterJdbcTemplate.queryForObject(totalIndentLinesQuery, new HashMap(), Long.class);
+		Long count2 = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, new HashMap(), Long.class);
+		if(count1.compareTo(count2) == 0)
+			return true;
+		else
+			return false;
+	}
+	
 	public boolean isRateContractsExists(String supplier, String rateType, String material){
-		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetail pl where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and  pl.supplier='" + supplier +"' and pl.rateType='" + rateType + "' and pld.material = '" + material + "'";
+		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetail pl where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and  pl.supplier='" + supplier +"' and pl.rateType='" + rateType + "' and pld.material = '" + material + "' and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate::bigint and pl.agreementenddate::bigint";
 		Long count = namedParameterJdbcTemplate.queryForObject(rateContractQuery, new HashMap(), Long.class);
 		if(count > 0)
 			return true;

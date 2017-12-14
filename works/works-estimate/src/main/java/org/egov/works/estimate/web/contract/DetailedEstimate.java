@@ -473,7 +473,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Project Code of the Detailed Estimate")
 
-  @Valid
+  //@Valid
 
   public ProjectCode getProjectCode() {
     return projectCode;
@@ -1071,7 +1071,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Multiyear Estimate list for the Abstract Estimate")
 
-  @Valid
+ // @Valid
 
   public List<MultiYearEstimate> getMultiYearEstimates() {
     return multiYearEstimates;

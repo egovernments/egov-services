@@ -546,10 +546,11 @@ public class EstimateValidator {
                 String status = lists.get(0).getStatus();
                 if (status.equals(DetailedEstimateStatus.CANCELLED.toString()) || status.equals(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
                     messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE);
-                } else if((status.equals(DetailedEstimateStatus.REJECTED) && !detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.RESUBMITTED)) ||
-                        (status.equals(DetailedEstimateStatus.RESUBMITTED) && !detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.CHECKED))) {
+                } else if((status.equals(DetailedEstimateStatus.REJECTED.toString()) && !detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.RESUBMITTED.toString())) ||
+                        (status.equals(DetailedEstimateStatus.RESUBMITTED.toString()) && !(detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.CHECKED.toString()) ||
+                                detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.CANCELLED.toString())) )) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
-                } else {
+                } else if (!detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.REJECTED.toString())) {
                     JSONArray statusRequestArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE,
                             detailedEstimate.getStatus().toString().toUpperCase(), detailedEstimate.getTenantId(), requestInfo,
                             CommonConstants.MODULENAME_WORKS);
@@ -574,7 +575,7 @@ public class EstimateValidator {
 
     private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,
             Map<String, String> messages) {
-        if (abstractEstimate != null) {
+        if (abstractEstimate != null && detailedEstimate == null) {
             String projectCode = abstractEstimate.getAbstractEstimateDetails().get(0).getProjectCode().getCode();
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
@@ -681,16 +682,16 @@ public class EstimateValidator {
     }
 
     private void validateEstimateNumberUnique(DetailedEstimate detailedEstimate, Map<String, String> messages) {
-        DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
-                .tenantId(detailedEstimate.getTenantId())
-                .detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
-        if (detailedEstimate.getId() != null)
-            detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
-        List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
-        for (DetailedEstimateHelper detailedEstimateHelper : lists) {
-            if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
-                messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
-                        Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
+        if (detailedEstimate.getId() == null) {
+            DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
+                    .tenantId(detailedEstimate.getTenantId())
+                    .detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
+            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+            for (DetailedEstimateHelper detailedEstimateHelper : lists) {
+                if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
+                    messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
+                            Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
+            }
         }
     }
 
@@ -752,11 +753,13 @@ public class EstimateValidator {
         ScheduleOfRate sor = null;
         for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
 
-            if ((activity.getScheduleOfRate() != null && StringUtils.isBlank(activity.getScheduleOfRate().getId())) &&
+            if (activity.getScheduleOfRate() != null && (StringUtils.isBlank(activity.getScheduleOfRate().getId()) &&
                     (StringUtils.isBlank(activity.getScheduleOfRate().getCode())
-                            && activity.getScheduleOfRate().getScheduleCategory() != null &&
+                            && activity.getScheduleOfRate().getScheduleCategory() == null)) ||
+                    (activity.getScheduleOfRate() != null && activity.getScheduleOfRate().getScheduleCategory() != null &&
                             StringUtils.isBlank(activity.getScheduleOfRate().getScheduleCategory().getCode()))
-                    || (activity.getNonSor() != null && (activity.getNonSor().getUom() == null || StringUtils.isBlank(activity.getNonSor().getDescription()))
+                    || (activity.getNonSor() != null && (activity.getNonSor().getUom() == null || (activity.getNonSor().getUom() != null &&
+                      StringUtils.isBlank(activity.getNonSor().getUom().getCode())) || StringUtils.isBlank(activity.getNonSor().getDescription()))
                     || activity.getScheduleOfRate() == null && activity.getNonSor() == null))
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
@@ -787,8 +790,8 @@ public class EstimateValidator {
                             Arrays.asList(activity.getScheduleOfRate().getScheduleCategory().getCode()), requestInfo);
 
                 if (scheduleOfRates != null && scheduleOfRates.isEmpty())
-                    messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID,
-                            Constants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID);
+                    messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATES_INVALID,
+                            Constants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATES_INVALID);
                 else if (sor != null && sor.getId().equals(activity.getScheduleOfRate().getId()))
                     messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE,
                             Constants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE);

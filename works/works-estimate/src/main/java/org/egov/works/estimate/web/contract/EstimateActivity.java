@@ -141,8 +141,7 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  //@Valid
-  //TODO only code is required
+  @Valid
 
   public NonSOR getNonSor() {
     return nonSor;

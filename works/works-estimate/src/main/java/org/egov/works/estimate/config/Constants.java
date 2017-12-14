@@ -296,8 +296,8 @@ public class Constants {
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";
 
-    public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID";
-    public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "Estimate activity schedule of rate is invalid";
+    public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATES_INVALID= "ESTIMATE_ACTIVITY_SCHEDULEOFRATES_INVALID";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATES_INVALID= "Estimate activity schedule of rate is invalid";
     
     public static final String KEY_NATUREOFWORK_REQUIRED = "NATUREOFWORK_REQUIRED";
     public static final String MESSAGE_NATUREOFWORK_REQUIRED = "Nature Of Work is required";

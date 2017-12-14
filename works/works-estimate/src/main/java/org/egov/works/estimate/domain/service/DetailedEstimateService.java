@@ -112,7 +112,7 @@ public class DetailedEstimateService {
 			if (isRevision == null || (isRevision != null && !isRevision)) {
                 MultiYearEstimate multiYearEstimate = new MultiYearEstimate();
                 multiYearEstimate.setId(commonUtils.getUUID());
-                multiYearEstimate.setFinancialYear(getCurrentFinancialYear(detailedEstimate.getTenantId(),detailedEstimateRequest.getRequestInfo()));
+                multiYearEstimate.setFinancialYear(getCurrentFinancialYear(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()));
                 multiYearEstimate.setTenantId(detailedEstimate.getTenantId());
                 multiYearEstimate.setPercentage(100d);
                 multiYearEstimate.setAuditDetails(auditDetails);
@@ -212,60 +212,60 @@ public class DetailedEstimateService {
 		AuditDetails createDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
 		AbstractEstimate abstactEstimate = null;
 		for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-			abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+            abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
 
-			detailedEstimate.setAuditDetails(updateDetails);
+            detailedEstimate.setAuditDetails(updateDetails);
 
-			for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
-				if (assetsForEstimate.getId() == null) {
-					assetsForEstimate.setId(commonUtils.getUUID());
-					assetsForEstimate.setAuditDetails(createDetails);
-				}
-				assetsForEstimate.setAuditDetails(updateDetails);
-			}
+            if (detailedEstimate.getAssets() != null) {
+                for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
+                    if (assetsForEstimate.getId() == null) {
+                        assetsForEstimate.setId(commonUtils.getUUID());
+                        assetsForEstimate.setAuditDetails(createDetails);
+                    }
+                    assetsForEstimate.setAuditDetails(updateDetails);
+                }
+            }
 
-			for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-				if (multiYearEstimate.getId() == null) {
-					multiYearEstimate.setId(commonUtils.getUUID());
-					multiYearEstimate.setAuditDetails(createDetails);
-				}
-				multiYearEstimate.setAuditDetails(updateDetails);
-			}
+            if (detailedEstimate.getEstimateOverheads() != null) {
+                for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
+                    if (estimateOverhead.getId() == null) {
+                        estimateOverhead.setId(commonUtils.getUUID());
+                        estimateOverhead.setAuditDetails(createDetails);
+                    }
+                    estimateOverhead.setAuditDetails(updateDetails);
+                }
+            }
 
-			for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
-				if (estimateOverhead.getId() == null) {
-					estimateOverhead.setId(commonUtils.getUUID());
-					estimateOverhead.setAuditDetails(createDetails);
-				}
-				estimateOverhead.setAuditDetails(updateDetails);
-			}
+            if(detailedEstimate.getDetailedEstimateDeductions() != null) {
+                for (final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate
+                        .getDetailedEstimateDeductions()) {
+                    if (detailedEstimateDeduction.getId() == null) {
+                        detailedEstimateDeduction.setId(commonUtils.getUUID());
+                        detailedEstimateDeduction.setAuditDetails(createDetails);
+                    }
+                    detailedEstimateDeduction.setAuditDetails(updateDetails);
+                }
+            }
 
-			for (final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate
-					.getDetailedEstimateDeductions()) {
-				if (detailedEstimateDeduction.getId() == null) {
-					detailedEstimateDeduction.setId(commonUtils.getUUID());
-					detailedEstimateDeduction.setAuditDetails(createDetails);
-				}
-				detailedEstimateDeduction.setAuditDetails(updateDetails);
-			}
-
-			for (final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-				if (estimateActivity.getId() == null) {
-					estimateActivity.setId(commonUtils.getUUID());
-					estimateActivity.setAuditDetails(createDetails);
-				}
-				estimateActivity.setAuditDetails(updateDetails);
-				if (estimateActivity.getEstimateMeasurementSheets() != null) {
-					for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity
-							.getEstimateMeasurementSheets()) {
-						if (estimateMeasurementSheet.getId() == null) {
-							estimateMeasurementSheet.setId(commonUtils.getUUID());
-							estimateMeasurementSheet.setAuditDetails(createDetails);
-						}
-						estimateMeasurementSheet.setAuditDetails(updateDetails);
-					}
-				}
-			}
+            if(detailedEstimate.getEstimateActivities() != null) {
+                for (final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
+                    if (estimateActivity.getId() == null) {
+                        estimateActivity.setId(commonUtils.getUUID());
+                        estimateActivity.setAuditDetails(createDetails);
+                    }
+                    estimateActivity.setAuditDetails(updateDetails);
+                    if (estimateActivity.getEstimateMeasurementSheets() != null) {
+                        for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity
+                                .getEstimateMeasurementSheets()) {
+                            if (estimateMeasurementSheet.getId() == null) {
+                                estimateMeasurementSheet.setId(commonUtils.getUUID());
+                                estimateMeasurementSheet.setAuditDetails(createDetails);
+                            }
+                            estimateMeasurementSheet.setAuditDetails(updateDetails);
+                        }
+                    }
+                }
+            }
             if(validator.workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo())) {
                 populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
                 Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),

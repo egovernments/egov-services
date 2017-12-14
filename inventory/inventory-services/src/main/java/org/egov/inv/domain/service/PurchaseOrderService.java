@@ -43,6 +43,7 @@ import org.egov.inv.model.Supplier;
 import org.egov.inv.model.SupplierGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.IndentEntity;
+import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
@@ -382,6 +383,11 @@ public class PurchaseOrderService extends DomainService {
                 if(null != eachPurchaseOrder.getPurchaseOrderDetails())
                 for (PurchaseOrderDetail purchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                 	IndentEntity ie = indentJdbcRepository.findById(IndentEntity.builder().id(purchaseOrderDetail.getIndentNumber()).build());
+                	PriceListEntity ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).build());
+                	//RateContract reference validation
+                	if(ple.getId() == null) {
+                		throw new CustomException("priceList", "RateContract" + purchaseOrderDetail.getPriceList() + " doesn't exists");
+                	}
                 	if(ie.getId() == null) {
                 		throw new CustomException("indentnumber", "IndentNumber " + purchaseOrderDetail.getIndentNumber() + " doesn't exists");
                 	}
@@ -486,6 +492,11 @@ public class PurchaseOrderService extends DomainService {
         	InvalidDataException errors = new InvalidDataException();
             // TODO: validation of supplier, rate type and indents.
 
+        	//RateType reference validation
+            if (!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(purchaseOrder.getRateType().toString())))) {
+                throw new CustomException("rateType", "Please select a valid RateType");
+            }
+        	
             IndentSearch indentSearch = new IndentSearch();
             indentSearch.setIds(purchaseOrder.getIndentNumbers());
             indentSearch.setTenantId(tenantId);

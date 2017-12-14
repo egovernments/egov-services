@@ -1,9 +1,22 @@
 package org.egov.inv.persistence.repository;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.Constants;
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
-import org.egov.inv.model.*;
+import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetails;
+import org.egov.inv.model.PriceListDetailsSearchRequest;
+import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.model.SupplierGetRequest;
+import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -12,10 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class PriceListJdbcRepository extends JdbcRepository {
@@ -191,6 +200,26 @@ public class PriceListJdbcRepository extends JdbcRepository {
 
         return priceListList;
     }
+    
+	public PriceListEntity findById(PriceListEntity entity) {
+		List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
+		Map<String, Object> paramValues = new HashMap<>();
+
+		for (String s : list) {
+			paramValues.put(s, getValue(getField(entity, s), entity));
+		}
+
+		List<PriceListEntity> priceLists = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+				new BeanPropertyRowMapper(PriceListEntity.class));
+		if (priceLists.isEmpty()) {
+			return null;
+		} else {
+			return priceLists.get(0);
+		}
+
+	}
 
     public Pagination<PriceList> search(PriceListSearchRequest priceListSearchRequest) {
         String searchQuery = "select * from pricelist :condition  :orderby ";

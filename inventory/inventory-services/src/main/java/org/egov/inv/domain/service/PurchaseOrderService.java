@@ -426,6 +426,16 @@ public class PurchaseOrderService extends DomainService {
                     for (PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                         int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
                         
+                        boolean isRateContractExist =false;
+	            		if(purchaseOrderRepository.isRateContractsExists(eachPurchaseOrder.getSupplier().getCode(), eachPurchaseOrder.getRateType().name(), poDetail.getMaterial().getCode()))
+	            		{
+	            			isRateContractExist = true;
+	            			break;
+	            		}
+                        if(!isRateContractExist)
+                        	throw new CustomException("rateContract", "No RateContracts exist for the given combination of indent, supplier and ratetype");
+                        
+                        
                         //Material reference validation
                         if(null != poDetail.getMaterial()) {
                         	if(validateMaterial(tenantId, poDetail.getMaterial())) {

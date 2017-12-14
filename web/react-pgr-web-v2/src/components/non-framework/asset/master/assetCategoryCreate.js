@@ -1418,6 +1418,33 @@ class assetCategoryCreate extends Component {
     });
   };
 
+  mandatoryCheck = _value => {
+    let valueWarranty = _value;
+    let self = this;
+    let spec = self.props.mockData;
+
+    console.log(spec[`asset.create`].groups.length);
+
+    //for (var q = 0; q < spec[`asset.create`].groups.length; q++) {
+      //console.log(spec[`asset.${self.state.action}`].groups[q].name);
+     //if (spec[`asset.${self.state.action}`].groups[q].name == 'createCategoryType') {
+    //     for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
+    //       if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == 'WarrantyExpiryDate') {
+    //         if (valueWarranty == false) {
+    //           spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
+    //           self.props.delRequiredFields(['Asset.warrantyExpiryDate']);
+    //           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+    //         } else if (valueWarranty == true) {
+    //           spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
+    //           self.props.addRequiredFields(['Asset.warrantyExpiryDate']);
+    //           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+    //         }
+    //       }
+    //     }
+     //}
+    //}
+  };
+
   affectDependants = (obj, e, property) => {
     let { handleChange, setDropDownData, setDropDownOriginalData, dropDownOringalData } = this.props;
     let { getVal, getValFromDropdownData, returnPathValueFunction } = this;
@@ -1445,10 +1472,8 @@ class assetCategoryCreate extends Component {
       }
       return str.join('');
     };
-    debugger;
     let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     let dependantIdx;
-    debugger;
     if (depedants.length === 0 && property) {
       let currentProperty = property;
       dependantIdx = findLastIdxOnJsonPath(property);
@@ -1754,7 +1779,11 @@ class assetCategoryCreate extends Component {
     let { handleChange, mockData, setDropDownData, formData } = this.props;
     let hashLocation = window.location.hash;
     let obj = specifications[`asset.create`];
-    debugger;
+    let self = this;
+
+    if(property == "MasterMetaData.masterData[0].isDepreciationApplicable"){
+      self.mandatoryCheck(e.target.value);
+    }
     if (expression && e.target.value) {
       let str = expression;
       let pos = 0;

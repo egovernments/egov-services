@@ -225,6 +225,20 @@ serviceMaps:
        - jsonPath: $.kpiTargets.*.id
          
        - jsonPath: $.kpiTargets.*.kpiCode
+       
+    - query: UPDATE egpa_kpi_value set finyear = ?,  lastmodifiedby = ?, lastmodifieddate = ? WHERE kpicode = ?  
+      basePath: $.kpiTargets.*
+      jsonMaps:
+       
+       - jsonPath: $.kpiTargets.*.finYear
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG  
+         
+       - jsonPath: $.kpiTargets.*.lastModifiedDate
+         type: LONG
+         
+       - jsonPath: $.kpiTargets.*.kpiCode
          
  - version: 1.0
    name: kpiValueDetail create

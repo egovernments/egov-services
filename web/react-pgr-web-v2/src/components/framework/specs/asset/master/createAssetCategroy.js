@@ -8,7 +8,7 @@ var dat = {
     moduleName: 'ASSET',
     masterName: 'AssetCategory',
     objectName: 'MasterMetaData',
-    groups: [
+    groups: [ 
       {
         label: 'ac.create.title',
         name: 'createCategoryType',

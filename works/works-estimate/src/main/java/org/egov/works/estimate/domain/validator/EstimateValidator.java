@@ -756,8 +756,8 @@ public class EstimateValidator {
                     (StringUtils.isBlank(activity.getScheduleOfRate().getCode())
                             && activity.getScheduleOfRate().getScheduleCategory() != null &&
                             StringUtils.isBlank(activity.getScheduleOfRate().getScheduleCategory().getCode()))
-                    || (activity.getNonSor() != null && activity.getNonSor().getId() == null)
-                    || activity.getScheduleOfRate() == null && activity.getNonSor() == null)
+                    || (activity.getNonSor() != null && (activity.getNonSor().getUom() == null || StringUtils.isBlank(activity.getNonSor().getDescription()))
+                    || activity.getScheduleOfRate() == null && activity.getNonSor() == null))
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
             // validate at pattern level
@@ -803,6 +803,18 @@ public class EstimateValidator {
 
                 if (scheduleOfRates != null && !scheduleOfRates.isEmpty())
                     activity.setScheduleOfRate(scheduleOfRates.get(0));
+            }
+
+            if(activity.getNonSor() != null) {
+                if(StringUtils.isBlank(activity.getNonSor().getDescription()))
+                    messages.put(Constants.KEY_NONSOR_DESCRIPTION_REQUIRED,
+                            Constants.MESSAGE_NONSOR_DESCRIPTION_REQUIRED);
+
+                if(activity.getNonSor().getUom() != null && StringUtils.isBlank(activity.getNonSor().getUom().getCode()))
+                    messages.put(Constants.KEY_NONSOR_UOM_CODE_REQUIRED,
+                            Constants.MESSAGE_NONSOR_UOM_CODE_REQUIRED);
+                else
+                    validateUOM(activity.getNonSor().getUom(), detailedEstimate.getTenantId(), requestInfo, messages);
             }
 
             BigDecimal measurementQuantitySum = BigDecimal.ZERO;

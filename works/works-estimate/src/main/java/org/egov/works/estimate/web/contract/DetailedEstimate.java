@@ -262,7 +262,7 @@ public class DetailedEstimate   {
    * @return estimateDate
   **/
   @ApiModelProperty(required = true, value = "Epoch time of the Detailed Estimate Created. Default the current date for new detailed estimates and do not allow to modify. This field is user entered for spillover detailed estimates. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter in this field. Detailed Estimate date should be on or after the Admin Sanction date of Abstract Estimate. If the date is modified after the activities(Schedule A) are added from drafts - then reset the activities(Schedule A) with a warning message.")
-//  @NotNull
+  @NotNull
 
 
   public Long getEstimateDate() {
@@ -304,7 +304,7 @@ public class DetailedEstimate   {
    * @return description
   **/
   @ApiModelProperty(required = true, value = "description for the Detailed Estimate")
-//  @NotNull
+  @NotNull
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(min=1,max=1024)
   public String getDescription() {

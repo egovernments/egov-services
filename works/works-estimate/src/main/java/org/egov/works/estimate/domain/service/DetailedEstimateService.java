@@ -113,6 +113,7 @@ public class DetailedEstimateService {
                 MultiYearEstimate multiYearEstimate = new MultiYearEstimate();
                 multiYearEstimate.setId(commonUtils.getUUID());
                 multiYearEstimate.setFinancialYear(getCurrentFinancialYear(detailedEstimate.getTenantId(),detailedEstimateRequest.getRequestInfo()));
+                multiYearEstimate.setTenantId(detailedEstimate.getTenantId());
                 multiYearEstimate.setPercentage(100d);
                 multiYearEstimate.setAuditDetails(auditDetails);
                 detailedEstimate.setMultiYearEstimates(Arrays.asList(multiYearEstimate));
@@ -157,6 +158,9 @@ public class DetailedEstimateService {
                         estimateMeasurementSheet.setEstimateActivity(estimateActivity.getId());
 					}
 				}
+                if(estimateActivity.getNonSor() != null) {
+                    estimateActivity.getNonSor().setId(commonUtils.getUUID());
+                }
 			}
 
             if(validator.workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&

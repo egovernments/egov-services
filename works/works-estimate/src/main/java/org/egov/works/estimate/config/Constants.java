@@ -314,6 +314,13 @@ public class Constants {
     public static final String KEY_INVALID_SOR_RATES= "INVALID_SOR_RATES";
     public static final String MESSAGE_INVALID_SOR_RATES= "No valid rates defined for activity";
 
+    public static final String KEY_NONSOR_DESCRIPTION_REQUIRED= "NONSOR_DESCRIPTION_REQUIRED";
+    public static final String MESSAGE_NONSOR_DESCRIPTION_REQUIRED= "Non sor description is required";
+
+    public static final String KEY_NONSOR_UOM_CODE_REQUIRED= "NONSOR_UOM_CODE_REQUIRED";
+    public static final String MESSAGE_NONSOR_UOM_CODE_REQUIRED= "Non sor uom code is required";
+
+
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";
     

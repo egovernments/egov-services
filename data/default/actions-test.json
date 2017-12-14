@@ -10469,6 +10469,45 @@
       "serviceCode": "AbstractEstimate",
       "code": "null",
       "path": "Works Management.Abstract Estimate.Spillover Abstract Estimate"
+    },
+    {
+      "id": 1395,
+      "name": "Letter Of Acceptance",
+      "url": "/works-workorder/v1/letterofacceptances/_create",
+      "displayName": "Create Letter Of Acceptance",
+      "orderNumber": 0,
+      "queryParams": null,
+      "parentModule": "",
+      "enabled": false,
+      "serviceCode": "AbstractEstimate",
+      "code": "null",
+      "path": "Works Management.Letter Of Acceptance.Letter Of Acceptance"
+    },
+    {
+      "id": 1396,
+      "name": "Letter Of Acceptance",
+      "url": "/works-workorder/v1/letterofacceptances/_update",
+      "displayName": "Search Letter Of Acceptance",
+      "orderNumber": 0,
+      "queryParams": null,
+      "parentModule": "",
+      "enabled": false,
+      "serviceCode": "AbstractEstimate",
+      "code": "null",
+      "path": "Works Management.Letter Of Acceptance.Letter Of Acceptance"
+    },
+    {
+      "id": 1397,
+      "name": "Letter Of Acceptance",
+      "url": "/works-workorder/v1/letterofacceptances/_search",
+      "displayName": "Letter Of Acceptance",
+      "orderNumber": 0,
+      "queryParams": null,
+      "parentModule": "",
+      "enabled": true,
+      "serviceCode": "AbstractEstimate",
+      "code": "null",
+      "path": "Works Management.Letter Of Acceptance.Letter Of Acceptance"
     }
 ]
 }

@@ -184,7 +184,7 @@ public class WorkflowRepository {
 		LOGGER.info("task businesskey :" + task.getBusinessKey());
 		LOGGER.info("task type: " + task.getType());
 		task.setId(agreement.getStateId());
-
+		task.setTenantId(agreement.getTenantId());
 		if (workflowDetails != null) {
 
 			task.setAction(workflowDetails.getAction());

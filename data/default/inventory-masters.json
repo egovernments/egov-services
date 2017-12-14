@@ -102,7 +102,6 @@
     }
   ],
   "Material": [
-
     {
       "code": "MAT1",
       "tenantId": "default",
@@ -130,8 +129,9 @@
         "code": "NOS",
         "uomCategory": "QUANTITY"
       },
-      "lotControl":true,
-      "shelfLifeControl":true
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT2",
@@ -160,8 +160,9 @@
         "code": "NOS",
         "uomCategory": "QUANTITY"
       },
-      "lotControl":true,
-      "shelfLifeControl":true
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT3",
@@ -174,7 +175,6 @@
       "baseUom": {
         "code": "LTR",
         "uomCategory": "VOLUME"
-        
       },
       "expenseAccount": {
         "glCode": "44003"
@@ -189,10 +189,10 @@
       "stockingUom": {
         "code": "LTR",
         "uomCategory": "VOLUME"
-        
       },
-      "lotControl":true,
-      "shelfLifeControl":true
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT4",
@@ -221,8 +221,9 @@
         "code": "NOS",
         "uomCategory": "QUANTITY"
       },
-      "lotControl":true,
-      "shelfLifeControl":true
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT5",
@@ -251,8 +252,9 @@
         "code": "KGS",
         "uomCategory": "WEIGHT"
       },
-      "lotControl":true,
-      "shelfLifeControl":true
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT6",
@@ -281,8 +283,9 @@
         "code": "MTR",
         "uomCategory": "LENGTH"
       },
-      "lotControl":false,
-      "shelfLifeControl":false
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT7",
@@ -311,8 +314,9 @@
         "code": "GMS",
         "uomCategory": "WEIGHT"
       },
-      "lotControl":false,
-      "shelfLifeControl":false
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT8",
@@ -325,7 +329,6 @@
       "baseUom": {
         "code": "LTR",
         "uomCategory": "VOLUME"
-        
       },
       "expenseAccount": {
         "glCode": "44008"
@@ -337,15 +340,14 @@
       "purchaseUom": {
         "code": "LTR",
         "uomCategory": "VOLUME"
-        
       },
       "stockingUom": {
         "code": "LTR",
         "uomCategory": "VOLUME"
-        
       },
-      "lotControl":false,
-      "shelfLifeControl":false
+      "lotControl": false,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT9",
@@ -374,8 +376,9 @@
         "code": "KGS",
         "uomCategory": "WEIGHT"
       },
-      "lotControl":true,
-      "shelfLifeControl":false
+      "lotControl": true,
+      "shelfLifeControl": true,
+      "serialNumber": true
     },
     {
       "code": "MAT10",
@@ -404,8 +407,9 @@
         "code": "HP",
         "uomCategory": "POWER"
       },
-      "lotControl":false,
-      "shelfLifeControl":true
+      "lotControl": true,
+      "shelfLifeControl": true,
+      "serialNumber": true
     },
     {
       "code": "MAT11",
@@ -434,8 +438,9 @@
         "code": "NOS",
         "uomCategory": "QUANTITY"
       },
-      "lotControl":true,
-      "shelfLifeControl":false
+      "lotControl": true,
+      "shelfLifeControl": true,
+      "serialNumber": false
     },
     {
       "code": "MA12",
@@ -459,14 +464,14 @@
       "purchaseUom": {
         "code": "MTR",
         "uomCategory": "LENGTH"
-
       },
       "stockingUom": {
         "code": "MTR",
         "uomCategory": "LENGTH"
       },
-      "lotControl":false,
-      "shelfLifeControl":true
+      "lotControl": true,
+      "shelfLifeControl": true,
+      "serialNumber": true
     },
     {
       "code": "MAT13",
@@ -495,8 +500,9 @@
         "code": "KW",
         "uomCategory": "POWER"
       },
-      "lotControl":true,
-      "shelfLifeControl":false
+      "lotControl": true,
+      "shelfLifeControl": true,
+      "serialNumber": true
     },
     {
       "code": "MAT14",
@@ -525,8 +531,9 @@
         "code": "KVA",
         "uomCategory": "POWER"
       },
-      "lotControl":false,
-      "shelfLifeControl":true
+      "lotControl": true,
+      "shelfLifeControl": true,
+      "serialNumber": true
     },
     {
       "code": "MAT15",
@@ -555,8 +562,9 @@
         "code": "KGS",
         "uomCategory": "WEIGHT"
       },
-      "lotControl":false,
-      "shelfLifeControl":false
+      "lotControl": true,
+      "shelfLifeControl": true,
+      "serialNumber": true
     },
     {
       "code": "MAT16",
@@ -585,8 +593,9 @@
         "code": "SFT",
         "uomCategory": "AREA"
       },
-      "lotControl":false,
-      "shelfLifeControl":false
+      "lotControl": true,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT17",
@@ -615,8 +624,9 @@
         "code": "SFT",
         "uomCategory": "AREA"
       },
-      "lotControl":false,
-      "shelfLifeControl":false
+      "lotControl": false,
+      "shelfLifeControl": true,
+      "serialNumber": true
     },
     {
       "code": "MAT18",
@@ -645,8 +655,9 @@
         "code": "TON",
         "uomCategory": "WEIGHT"
       },
-      "lotControl":true,
-      "shelfLifeControl":false
+      "lotControl": true,
+      "shelfLifeControl": false,
+      "serialNumber": false
     },
     {
       "code": "MAT19",
@@ -675,8 +686,9 @@
         "code": "TON",
         "uomCategory": "WEIGHT"
       },
-      "lotControl":false,
-      "shelfLifeControl":true
+      "lotControl": false,
+      "shelfLifeControl": true,
+      "serialNumber": false
     },
     {
       "code": "MAT20",
@@ -705,8 +717,9 @@
         "code": "TON",
         "uomCategory": "WEIGHT"
       },
-      "lotControl":false,
-      "shelfLifeControl":true
+      "lotControl": true,
+      "shelfLifeControl": false,
+      "serialNumber": false
     }
   ],
   "MaterialControlType": [

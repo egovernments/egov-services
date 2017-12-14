@@ -130,7 +130,8 @@
         "uomCategory": "QUANTITY"
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT2",
@@ -160,7 +161,8 @@
         "uomCategory": "QUANTITY"
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT3",
@@ -191,7 +193,8 @@
         
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT4",
@@ -221,7 +224,8 @@
         "uomCategory": "QUANTITY"
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT5",
@@ -251,7 +255,8 @@
         "uomCategory": "WEIGHT"
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT6",
@@ -281,7 +286,8 @@
         "uomCategory": "LENGTH"
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT7",
@@ -311,7 +317,8 @@
         "uomCategory": "WEIGHT"
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT8",
@@ -344,7 +351,8 @@
         
       },
       "lotControl":false,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT9",
@@ -374,7 +382,8 @@
         "uomCategory": "WEIGHT"
       },
       "lotControl":true,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":true
     },
     {
       "code": "MAT10",
@@ -404,7 +413,8 @@
         "uomCategory": "POWER"
       },
       "lotControl":true,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":true
     },
     {
       "code": "MAT11",
@@ -434,7 +444,8 @@
         "uomCategory": "QUANTITY"
       },
       "lotControl":true,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":false
     },
     {
       "code": "MA12",
@@ -465,7 +476,8 @@
         "uomCategory": "LENGTH"
       },
       "lotControl":true,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":true
     },
     {
       "code": "MAT13",
@@ -495,7 +507,8 @@
         "uomCategory": "POWER"
       },
       "lotControl":true,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":true
     },
     {
       "code": "MAT14",
@@ -525,7 +538,8 @@
         "uomCategory": "POWER"
       },
       "lotControl":true,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":true
     },
     {
       "code": "MAT15",
@@ -555,7 +569,8 @@
         "uomCategory": "WEIGHT"
       },
       "lotControl":true,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":true
     },
     {
       "code": "MAT16",
@@ -585,7 +600,8 @@
         "uomCategory": "AREA"
       },
       "lotControl":true,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT17",
@@ -615,7 +631,8 @@
         "uomCategory": "AREA"
       },
       "lotControl":false,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":true
     },
     {
       "code": "MAT18",
@@ -645,7 +662,8 @@
         "uomCategory": "WEIGHT"
       },
       "lotControl":true,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     },
     {
       "code": "MAT19",
@@ -675,7 +693,8 @@
         "uomCategory": "WEIGHT"
       },
       "lotControl":false,
-      "shelfLifeControl":true
+      "shelfLifeControl":true,
+      "serialNumber":false
     },
     {
       "code": "MAT20",
@@ -705,7 +724,8 @@
         "uomCategory": "WEIGHT"
       },
       "lotControl":true,
-      "shelfLifeControl":false
+      "shelfLifeControl":false,
+      "serialNumber":false
     }
   ],
   "MaterialControlType": [

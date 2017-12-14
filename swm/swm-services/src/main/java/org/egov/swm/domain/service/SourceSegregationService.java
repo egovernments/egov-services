@@ -1,13 +1,11 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.CollectionDetails;
-import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.SourceSegregation;
-import org.egov.swm.domain.model.SourceSegregationSearch;
+import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.repository.SourceSegregationRepository;
 import org.egov.swm.web.requests.SourceSegregationRequest;
 import org.egov.tracer.model.CustomException;
@@ -35,6 +33,7 @@ public class SourceSegregationService {
     public SourceSegregationRequest create(final SourceSegregationRequest sourceSegregationRequest) {
 
         validate(sourceSegregationRequest);
+        validateForDuplicateCollectionTypes(sourceSegregationRequest);
 
         Long userId = null;
 
@@ -76,6 +75,7 @@ public class SourceSegregationService {
         }
 
         validate(sourceSegregationRequest);
+        validateForDuplicateCollectionTypes(sourceSegregationRequest);
 
         return sourceSegregationRepository.update(sourceSegregationRequest);
 
@@ -146,6 +146,23 @@ public class SourceSegregationService {
 
             }
 
+        }
+    }
+
+    private void validateForDuplicateCollectionTypes(final SourceSegregationRequest sourceSegregationRequest){
+
+        final Map<String, String> codeMap = new HashMap<>();
+
+        for(SourceSegregation sourceSegregation :sourceSegregationRequest.getSourceSegregations()){
+
+            for(CollectionDetails collectionDetail : sourceSegregation.getCollectionDetails()){
+
+                if (codeMap.get(collectionDetail.getCollectionType().getCode()) != null)
+                    throw new CustomException("Collection Type",
+                            "Collection types shall be unique per record.: " + collectionDetail.getCollectionType().getCode());
+
+                codeMap.put(collectionDetail.getCollectionType().getCode(), collectionDetail.getCollectionType().getCode());
+            }
         }
     }
 

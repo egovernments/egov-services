@@ -156,7 +156,6 @@ public class ReceiptNoteService extends DomainService {
                     receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(), "status = (case when status = 'RECEIPTED' then 'APPROVED' ELSE status end)"
                             + " where purchaseordernumber = (select purchaseorder from purchaseorderdetail where id = '"
                             + materialReceiptDetail.getPurchaseOrderDetail().getId() + "') and tenantid = '" + tenantId + "'");
-                    ;
                 }
             }
 

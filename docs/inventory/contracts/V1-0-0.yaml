@@ -187,7 +187,7 @@ paths:
             in: query
             description: |
               search purpose of the Indent
-            enum: 
+            enum:
               - PurchaseOrder
               - IssueMaterial
           - name: indentStatus
@@ -294,7 +294,7 @@ paths:
             enum:
               - PurchaseOrder
               - IssueMaterial
-            description: | 
+            description: |
                   Using this field to search indents for purchase order or material issue creation.
           - name: inventoryType
             in: query
@@ -1476,7 +1476,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /materialtypestoremappings/_create:
+    /materialtypestoremapping/_create:
       post:
         summary: Create  new  material type store mappings
         description: Create  new  material type store mappings
@@ -1499,7 +1499,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /materialtypestoremappings/_update:
+    /materialtypestoremapping/_update:
       post:
         summary: Update any of the material type store mappings
         description: Update any of the material type store mappings
@@ -1522,7 +1522,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /materialtypestoremappings/_search:
+    /materialtypestoremapping/_search:
       post:
         summary: Get the list of material type store mappings
         description: material type store mappings
@@ -3865,7 +3865,7 @@ definitions:
       - material
       - tenantId
 
-    MaterialTypeStore:
+    MaterialTypeStoreMapping:
       type: object
       description: |
         This object holds the material type store mapping details information.
@@ -4068,25 +4068,25 @@ definitions:
       properties:
         RequestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        materialTypeStore:
+        materialTypeStores:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/MaterialTypeStore'
+            $ref: '#/definitions/MaterialTypeStoreMapping'
       required:
       - RequestInfo
-      - materialTypeStore
+      - materialTypeStores
 
     MaterialTypeStoreResponse:
       description: Contract class for web response. Array of Material Type Store Mapping are used in case of search ,create or update request.
       properties:
         ResponseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        materialTypeStore:
+        materialTypeStores:
           description: Used for search result and create only
           type:  array
           items:
-            $ref: '#/definitions/MaterialTypeStore'
+            $ref: '#/definitions/MaterialTypeStoreMapping'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
 

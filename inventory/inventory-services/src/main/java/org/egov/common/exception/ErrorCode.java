@@ -141,7 +141,7 @@ public enum ErrorCode {
             "the quantity {0} should be less than or equal to quantity {1}",
             "The value {2} for the field {0} should be less than or equal to the value {3} for the field {1}"),
     COMBINATION_EXISTS("inv.combination.exists",
-            "{0} and {1} combination already exists",
+            "{0} and {1} combination already exists at row {2}",
             "{0} and {1} combination already exists at row {2}"),
     DATE1_LE_DATE2ROW("date1row.should.be.le.date2",
             "{0} should be less than {1} at row {2}",

@@ -1,9 +1,8 @@
-
 var dt = new Date();
 var date1 = Date.now();
 
-var date2 = Date.now() + 2*365*24*60*60*1000; 
-let criteria = '['+encodeURIComponent('?')+'((@.endingDate>'+date1+encodeURIComponent('&&')+'@.startingDate<'+date2+'))]';
+var date2 = Date.now() + 2 * 365 * 24 * 60 * 60 * 1000;
+let criteria = '[' + encodeURIComponent('?') + '((@.endingDate>' + date1 + encodeURIComponent('&&') + '@.startingDate<' + date2 + '))]';
 
 var dat = {
   'perfManagement.create': {
@@ -423,7 +422,7 @@ var dat = {
             type: 'text',
             isDisabled: true,
             requiredErrMsg: '',
-          },          
+          },
           {
             name: 'updatekpitype',
             jsonPath: 'kpiTargets[0].kpi.targetType',
@@ -538,29 +537,32 @@ var dat = {
             url:
               'egov-mdms-service/v1/_get?tenantId=' +
               localStorage.tenantId.split('.')[0] +
-              '&masterName=financialYears&moduleName=egf-master&filter='+criteria+'|$..finYearRange|$..finYearRange',
+              '&masterName=financialYears&moduleName=egf-master&filter=' +
+              criteria +
+              '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
           },
-          ]},
+        ],
+      },
 
-        {
-          label: '',
-          name: 'updatekpiTargetTextBlock',
-          hide: false,
-          multiple: false,
-          fields: [
-            {
-              name: 'updatekpiTarget',
-              jsonPath: 'kpiTargets[0].targetDescription',
-              label: 'perfManagement.update.KPIs.groups.updatekpiTargetTextBlock',
-              pattern: '',
-              type: 'text',
-              isDisabled: false,
-              requiredErrMsg: '',
-            },
-          ],
-        },
+      {
+        label: '',
+        name: 'updatekpiTargetTextBlock',
+        hide: false,
+        multiple: false,
+        fields: [
+          {
+            name: 'updatekpiTarget',
+            jsonPath: 'kpiTargets[0].targetDescription',
+            label: 'perfManagement.update.KPIs.groups.updatekpiTargetTextBlock',
+            pattern: '',
+            type: 'text',
+            isDisabled: false,
+            requiredErrMsg: '',
+          },
+        ],
+      },
 
       {
         label: '',

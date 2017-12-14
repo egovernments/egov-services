@@ -363,11 +363,11 @@ public class PerformanceAssessmentQueryBuilder {
             preparedStatementValues.add(kpiGetRequest.getKpiName());
         }
         
-        if (StringUtils.isNotBlank(kpiGetRequest.getTenantIdCustom())) {
+        /*if (StringUtils.isNotBlank(kpiGetRequest.getTenantId())) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.tenantid = ? ");
-            preparedStatementValues.add(kpiGetRequest.getTenantIdCustom());
-        }
+            preparedStatementValues.add(kpiGetRequest.getTenantId());
+        }*/
         
         if (null != kpiGetRequest.getDepartmentId() && kpiGetRequest.getDepartmentId() > 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

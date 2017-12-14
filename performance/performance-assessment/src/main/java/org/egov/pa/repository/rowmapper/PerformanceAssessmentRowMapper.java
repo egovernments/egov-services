@@ -175,11 +175,11 @@ public class PerformanceAssessmentRowMapper {
 			target.setFinYear(rs.getString("targetFinYear"));
 			target.setTargetValue(rs.getString("targetValue"));
 			if(StringUtils.isNotBlank(rs.getString("targetType")) && rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
-				if(rs.getString("targetValue").equals("1")) 
+				if(StringUtils.isNotBlank(rs.getString("targetValue")) && rs.getString("targetValue").equals("1")) 
 					target.setTargetDescription("Yes");
-				else if (rs.getString("targetValue").equals("2")) 
+				else if (StringUtils.isNotBlank(rs.getString("targetValue")) && rs.getString("targetValue").equals("2")) 
 					target.setTargetDescription("No");
-				else if (rs.getString("targetValue").equals("3"))
+				else if (StringUtils.isNotBlank(rs.getString("targetValue")) && rs.getString("targetValue").equals("3"))
 					target.setTargetDescription("Work In Progress");
 			} else {
 				target.setTargetDescription(rs.getString("targetValue"));

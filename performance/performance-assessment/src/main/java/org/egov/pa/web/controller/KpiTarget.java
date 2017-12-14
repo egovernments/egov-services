@@ -38,6 +38,7 @@ public interface KpiTarget {
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="departmentId", required = false) List<Long> departmentId,
 			 @RequestParam(value="categoryId", required = false) List<Long> categoryId,
+			 @RequestParam(value="tenantId", required = false) String tenantId,
 			 @RequestBody RequestInfoWrapper requestInfo);
 	
 }

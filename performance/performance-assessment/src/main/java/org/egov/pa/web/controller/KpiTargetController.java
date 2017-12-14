@@ -87,6 +87,7 @@ public class KpiTargetController implements KpiTarget{
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="departmentId", required = false) List<Long> departmentId,
 			 @RequestParam(value="categoryId", required = false) List<Long> categoryId,
+			 @RequestParam(value="tenantId", required = false) String tenantId,
 			 @RequestBody RequestInfoWrapper requestInfo) {
 		log.info("KPI Get Target Request as recieved in Controller : " + kpiCodes + finYearList + departmentId);
 		KPITargetGetRequest getReq = new KPITargetGetRequest(); 
@@ -94,6 +95,7 @@ public class KpiTargetController implements KpiTarget{
 		getReq.setKpiCode(kpiCodes);
 		getReq.setDepartmentId(departmentId);
 		getReq.setCategoryId(categoryId);
+		getReq.setTenantId(tenantId);
 		List<org.egov.pa.model.KpiTarget> targetList = kpiTargetService.searchKpiTarget(getReq); 
 		return getSearchSuccessResponse(targetList, requestInfo.getRequestInfo());
 	}

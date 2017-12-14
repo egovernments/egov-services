@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.Department;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.DocumentTypeContract;
@@ -131,7 +132,17 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	@Override
 	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-		List<Department> deptList = restCallService.getDepartmentForId(MH_TENANT);
+		List<Department> deptList = null;
+		if(StringUtils.isNotBlank(kpiGetRequest.getTenantId())){
+			if(kpiGetRequest.getTenantId().split("\\.")[0].equals(MH_TENANT)) { 
+				deptList = restCallService.getDepartmentForId(MH_TENANT);
+			} else { 
+				deptList = restCallService.getDepartmentForId(kpiGetRequest.getTenantId());
+			}
+		} else {
+			deptList = restCallService.getDepartmentForId(MH_TENANT);
+		}
+		
 		log.info("Department List obtained for the Tenant ID : " + deptList.toString());
     	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues);
     	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper(); 

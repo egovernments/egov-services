@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.Department;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
@@ -44,6 +45,8 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
     
     @Autowired
     private RestCallService restCallService; 
+    
+    private static final String MH_TENANT = "mh"; 
 	
 	@Override
 	public void persistNewTarget(KPITargetRequest kpiTargetRequest) {
@@ -64,7 +67,18 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
     	KPITargetRowMapper mapper = new PerformanceAssessmentRowMapper().new KPITargetRowMapper(); 
     	List<KpiTarget> list = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
     	Map<String, KPI> kpiMap = mapper.kpiMap; 
-    	List<Department> deptList = restCallService.getDepartmentForId("mh");
+    	List<Department> deptList = null ;
+    	
+    	if(StringUtils.isNotBlank(getReq.getTenantId())){
+			if(getReq.getTenantId().split("\\.")[0].equals(MH_TENANT)) { 
+				deptList = restCallService.getDepartmentForId(MH_TENANT);
+			} else { 
+				deptList = restCallService.getDepartmentForId(getReq.getTenantId());
+			}
+		} else {
+			deptList = restCallService.getDepartmentForId(MH_TENANT);
+		}
+    	
     	Map<String, Department> deptMap = new HashMap<>(); 
     	sortDepartmentToMap(deptList, deptMap);
     	if(null != list && list.size() > 0) {

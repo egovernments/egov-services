@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
+import org.egov.pa.model.TargetType;
 import org.egov.pa.model.ULBKpiValueList;
 import org.egov.pa.model.ValueList;
 import org.egov.pa.repository.KpiValueRepository;
@@ -170,6 +171,14 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 					for(KpiValueDetail detail : detailList) { 
 						if(StringUtils.isNotBlank(detail.getValue())) { 
 							value.setConsolidatedValue(detail.getValue());
+							if(detail.getValue().equals(TargetType.OBJECTIVE.toString())) { 
+								if(detail.getValue().equals("1")) 
+									value.setValueDescription("Yes");
+								else if(detail.getValue().equals("2"))
+									value.setValueDescription("No");
+								else if(detail.getValue().equals("3"))
+									value.setValueDescription("Work In Progress");
+							}
 							value.setPeriod(detail.getPeriod());
 							if(detail.getValue().equals("1")) value.setValueDescription("Yes");
 							else if (detail.getValue().equals("2")) value.setValueDescription("No");

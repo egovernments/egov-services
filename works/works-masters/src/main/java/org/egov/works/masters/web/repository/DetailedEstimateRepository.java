@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ramki on 12/12/17.
@@ -34,7 +32,7 @@ public class DetailedEstimateRepository {
 
     public List<DetailedEstimate> searchDetailedEstimatesBySOR(final String sorId, final Long sorDate, final String tenantId,
                                                                final RequestInfo requestInfo) {
-        Map<String, Object> detailedEstimateSearchInfo = new HashMap<>();
-        return restTemplate.postForObject(detailedEstimateSearchUrl, requestInfo, DetailedEstimateResponse.class, tenantId, sorId, sorDate).getDetailedEstimates();
+        DetailedEstimateResponse deResponse = restTemplate.postForObject(detailedEstimateSearchUrl, requestInfo, DetailedEstimateResponse.class, tenantId, sorId, sorDate);
+        return deResponse.getDetailedEstimates();
     }
 }

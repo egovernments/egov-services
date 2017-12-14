@@ -3,7 +3,7 @@ var dt = new Date();
 var date1 = Date.now();
 
 var date2 = Date.now() + 2*365*24*60*60*1000; 
-let criteria = encodeURIComponent('[[?((@')+'.endingDate'+encodeURIComponent('<')+date1+encodeURIComponent(')&&(@')+'.startingDate'+encodeURIComponent('>')+date2+encodeURIComponent('))]');
+let criteria = '['+encodeURIComponent('?')+'((@.endingDate>'+date1+encodeURIComponent('&&')+'@.startingDate<'+date2+'))]';
 
 var dat = {
   'perfManagement.create': {

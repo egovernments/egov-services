@@ -50,7 +50,7 @@ class Report extends Component {
   }
 
   setDefaultValues(groups, dat) {
-    let formData = this.props.formData 
+    let formData = this.props.formData;
     for (var i = 0; i < groups.length; i++) {
       for (var j = 0; j < groups[i].fields.length; j++) {
         if (
@@ -58,8 +58,7 @@ class Report extends Component {
           typeof groups[i].fields[j].defaultValue == 'number' ||
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
-          if(!_.get(formData,groups[i].fields[j].jsonPath))
-          {
+          if (!_.get(formData, groups[i].fields[j].jsonPath)) {
             _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
           }
         }

@@ -1,11 +1,7 @@
 package org.egov.works.measurementbook.web.contract;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonValue;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Gets or Sets MeasurementBookStatus
@@ -24,7 +20,8 @@ public enum MeasurementBookStatus {
   
   RESUBMITTED("RESUBMITTED"),
   
-  CANCELLED("CANCELLED");
+  CANCELLED("CANCELLED"), 
+  SAVED("SAVED");
 
   private String value;
 

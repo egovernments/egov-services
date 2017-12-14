@@ -2,13 +2,37 @@ package org.egov.works.measurementbook.utils;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+import org.egov.works.commons.web.contract.MasterDetails;
+import org.egov.works.commons.web.contract.MdmsCriteria;
+import org.egov.works.commons.web.contract.ModuleDetails;
 import org.egov.works.measurementbook.web.contract.AuditDetails;
+import org.egov.works.measurementbook.web.contract.MdmsRequest;
+import org.egov.works.measurementbook.web.contract.MdmsResponse;
 import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.egov.works.measurementbook.web.contract.ResponseInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class MeasurementBookUtils {
+	
+	private final RestTemplate restTemplate;
+
+	private final String mdmsBySearchCriteriaUrl;
+
+	@Autowired
+	public MeasurementBookUtils(final RestTemplate restTemplate,
+			@Value("${egov.services.egov_mdms.hostname}") final String mdmsServiceHostname,
+			@Value("${egov.services.egov_mdms.searchpath}") final String mdmsBySearchCriteriaUrl) {
+
+		this.restTemplate = restTemplate;
+		this.mdmsBySearchCriteriaUrl = mdmsServiceHostname + mdmsBySearchCriteriaUrl;
+	}
 
 	public ResponseInfo createResponseInfoFromRequestInfo(RequestInfo requestInfo, Boolean isSuccess) {
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -35,4 +59,45 @@ public class MeasurementBookUtils {
 		return auditDetails;
 	}
 
+	/**
+	 * 
+	 * @param objectName
+	 *            accepts the name of entity like : ScheduleOfRate,Contractor
+	 *            camelcase should be follwed
+	 * @param tenantId
+	 *            tenantId for which the data to should be retrived
+	 * @param requestInfo
+	 * 
+	 * @param fieldName
+	 *            name of the field in given object
+	 * @param fieldvalue
+	 *            value for given field name
+	 * @return the json map it to your object.
+	 */
+
+	public JSONArray getMDMSData(final String objectName, final String fieldName, final String fieldValue,
+			final String tenantId, final RequestInfo requestInfo, final String moduleName) {
+		MasterDetails[] masterDetailsArray;
+		ModuleDetails[] moduleDetailsArray;
+		MdmsRequest mdmsRequest;
+		MdmsResponse mdmsResponse;
+		String filter = "";
+
+		if (StringUtils.isNotBlank(fieldName) && StringUtils.isNotBlank(fieldValue))
+			filter = "[?(@." + fieldName + " == '" + fieldValue + "')]";
+
+		masterDetailsArray = new MasterDetails[1];
+		masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter).build();
+		moduleDetailsArray = new ModuleDetails[1];
+		moduleDetailsArray[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetailsArray)
+				.build();
+
+		mdmsRequest = MdmsRequest.builder()
+				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray).tenantId(tenantId).build())
+				.requestInfo(requestInfo).build();
+
+		mdmsResponse = restTemplate.postForObject(mdmsBySearchCriteriaUrl, mdmsRequest, MdmsResponse.class);
+
+		return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
+	}
 }

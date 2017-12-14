@@ -10,6 +10,7 @@ public class Constants {
     public static final String REJECT = "Reject";
     public static final String FORWARD = "Forward";
     public static final String CANCEL = "Cancel";
+    public static final String SAVE = "Save";
 
     //Error messages
     public static final String KEY_COMMON_ERROR_CODE = "SOMETHING_WENT_WRONG";
@@ -63,4 +64,14 @@ public class Constants {
     
     public static final String KEY_MB_DATE_PREVIOUS_DATE = "MB_DATE_PREVIOUS_DATE";
     public static final String MSG_MB_DATE_PREVIOUS_DATE = "MB Date should be greater than previous MB Dates";
+    
+    public static final String KEY_MB_AMOUNT_SUM_DETAILS = "MB_AMOUNT_SUM_DETAILS";
+    public static final String MSG_MB_AMOUNT_SUM_DETAILS = "MB amount should be equal to Sum of MB details amount after applying tender finalized percentage";
+    
+    public static final String KEY_MB_WO_WORK_COMMENCED = "MB_WO_WORK_COMMENCED";
+    public static final String MSG_MB_WO_WORK_COMMENCED = "Work Order should be in Work commenced status to create MB";
+    
+    public static final String KEY_MB_DATE_WORK_COMMENCED_DATE = "MB_DATE_WORK_COMMENCED_DATE";
+    public static final String MSG_MB_DATE_WORK_COMMENCED_DATE = "MB Date should be greater than Work Commenced date";
+    
 }

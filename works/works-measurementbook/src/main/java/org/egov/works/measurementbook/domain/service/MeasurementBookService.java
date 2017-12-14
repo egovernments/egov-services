@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonConstants;
+import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.config.PropertiesManager;
 import org.egov.works.measurementbook.domain.repository.EstimateRepository;
 import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
@@ -34,10 +37,13 @@ import org.egov.works.measurementbook.web.contract.MeasurementBookDetail;
 import org.egov.works.measurementbook.web.contract.MeasurementBookRequest;
 import org.egov.works.measurementbook.web.contract.MeasurementBookResponse;
 import org.egov.works.measurementbook.web.contract.MeasurementBookSearchContract;
+import org.egov.works.measurementbook.web.contract.MeasurementBookStatus;
 import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import net.minidev.json.JSONArray;
 
 @Service
 @Transactional(readOnly = true)
@@ -49,8 +55,8 @@ public class MeasurementBookService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-//	 @Autowired
-//	 private CommonUtils commonUtils;
+	// @Autowired
+	// private CommonUtils commonUtils;
 
 	@Autowired
 	private MeasurementBookUtils measurementBookUtils;
@@ -63,12 +69,15 @@ public class MeasurementBookService {
 
 	@Autowired
 	private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
-	
+
 	@Autowired
 	private MeasurementBookValidator measurementBookValidator;
 
 	public MeasurementBookResponse create(MeasurementBookRequest measurementBookRequest) {
 		measurementBookValidator.validateMB(measurementBookRequest, true);
+		Boolean isWorkflowReq = isConfigRequired(CommonConstants.WORKFLOW_REQUIRED_APPCONFIG,
+				measurementBookRequest.getRequestInfo(),
+				measurementBookRequest.getMeasurementBooks().get(0).getTenantId());
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
 			measurementBook.setId(UUID.randomUUID().toString().replace("-", ""));
 			for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()) {
@@ -93,9 +102,13 @@ public class MeasurementBookService {
 
 			if (measurementBook.getLumpSumMBDetails() != null && !measurementBook.getLumpSumMBDetails().isEmpty())
 				createUpdateRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo(), false);
-			
+
 			if (measurementBook.getIsLegacyMB())
 				measurementBook.setApprovedDate(new Date().getTime());
+			if (measurementBook.getIsLegacyMB() && isWorkflowReq) {
+				updateStatus(measurementBook, true);
+			} else
+				measurementBook.setStatus(MeasurementBookStatus.APPROVED);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);
 		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
@@ -103,7 +116,35 @@ public class MeasurementBookService {
 		return measurementBookResponse;
 	}
 
-	private void createUpdateRevisionEstimate(MeasurementBook measurementBook, RequestInfo requestInfo, Boolean isUpdate) {
+	private void updateStatus(MeasurementBook measurementBook, boolean isNew) {
+		String action = measurementBook.getWorkFlowDetails().getAction();
+		if (isNew) {
+			if (!action.equalsIgnoreCase(Constants.SAVE))
+				measurementBook.setStatus(MeasurementBookStatus.CREATED);
+			else
+				measurementBook.setStatus(MeasurementBookStatus.SAVED);
+		} else {
+			if (action.equalsIgnoreCase(Constants.SUBMIT)
+					&& measurementBook.getStatus().equals(MeasurementBookStatus.CREATED))
+				measurementBook.setStatus(MeasurementBookStatus.CHECKED);
+			else if (action.equalsIgnoreCase(Constants.APPROVE)
+					&& measurementBook.getStatus().equals(MeasurementBookStatus.CHECKED))
+				measurementBook.setStatus(MeasurementBookStatus.APPROVED);
+			else if (action.equalsIgnoreCase(Constants.REJECT)
+					&& !(measurementBook.getStatus().equals(MeasurementBookStatus.APPROVED)
+							|| measurementBook.getStatus().equals(MeasurementBookStatus.CANCELLED)))
+				measurementBook.setStatus(MeasurementBookStatus.REJECTED);
+			else if (action.equalsIgnoreCase(Constants.CANCEL)
+					&& measurementBook.getStatus().equals(MeasurementBookStatus.REJECTED))
+				measurementBook.setStatus(MeasurementBookStatus.CANCELLED);
+			else if (action.equalsIgnoreCase(Constants.FORWARD)
+					&& measurementBook.getStatus().equals(MeasurementBookStatus.REJECTED))
+				measurementBook.setStatus(MeasurementBookStatus.RESUBMITTED);
+		}
+	}
+
+	private void createUpdateRevisionEstimate(MeasurementBook measurementBook, RequestInfo requestInfo,
+			Boolean isUpdate) {
 		DetailedEstimateRequest detailedEstimateRequest = new DetailedEstimateRequest();
 		LetterOfAcceptanceRequest letterOfAcceptanceRequest = new LetterOfAcceptanceRequest();
 		Boolean deleted = true;
@@ -113,14 +154,17 @@ public class MeasurementBookService {
 		DetailedEstimate detailedEstimate = new DetailedEstimate();
 		LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
 		if (isUpdate)
-			detailedEstimate.setId(measurementBook.getLumpSumMBDetails().get(0).getLoaActivity().getEstimateActivity().getDetailedEstimate());
+			detailedEstimate.setId(measurementBook.getLumpSumMBDetails().get(0).getLoaActivity().getEstimateActivity()
+					.getDetailedEstimate());
 		detailedEstimate.setTenantId(measurementBook.getTenantId());
 		detailedEstimate.setParent(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getId());
 		for (MeasurementBookDetail detail : measurementBook.getLumpSumMBDetails())
 			detailedEstimate.addEstimateActivitiesItem(detail.getLoaActivity().getEstimateActivity());
 		detailedEstimate.setEstimateDate(new Date().getTime());
-		detailedEstimate.setDepartment(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getDepartment());
-		detailedEstimate.setEstimateValue(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getEstimateValue());
+		detailedEstimate
+				.setDepartment(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getDepartment());
+		detailedEstimate.setEstimateValue(
+				measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getEstimateValue());
 		for (final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
 			estimateActivity.setTenantId(measurementBook.getTenantId());
 			estimateActivity.setAuditDetails(auditDetails);
@@ -174,14 +218,15 @@ public class MeasurementBookService {
 		letterOfAcceptanceRequest.setLetterOfAcceptances(letterOfAcceptances);
 		letterOfAcceptanceRequest.setRequestInfo(requestInfo);
 
-		letterOfAcceptanceResponse = letterOfAcceptanceRepository
-				.createUpdateLOA(letterOfAcceptanceRequest, isUpdate);
+		letterOfAcceptanceResponse = letterOfAcceptanceRepository.createUpdateLOA(letterOfAcceptanceRequest, isUpdate);
 		measurementBook.setRevisionLOA(letterOfAcceptanceResponse.getLetterOfAcceptances().get(0).getId());
-		
-		updateLumpsumActivities(measurementBook, letterOfAcceptanceResponse.getLetterOfAcceptances().get(0), isUpdate, requestInfo);
+
+		updateLumpsumActivities(measurementBook, letterOfAcceptanceResponse.getLetterOfAcceptances().get(0), isUpdate,
+				requestInfo);
 	}
 
-	private void updateLumpsumActivities(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance, Boolean isUpdate, RequestInfo requestInfo) {
+	private void updateLumpsumActivities(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,
+			Boolean isUpdate, RequestInfo requestInfo) {
 		if (isUpdate)
 			for (MeasurementBookDetail detail : measurementBook.getLumpSumMBDetails()) {
 				detail.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, true));
@@ -190,7 +235,8 @@ public class MeasurementBookService {
 				measurementBook.addMeasurementBookDetailsItem(detail);
 			}
 		else {
-			for (LOAActivity loaActivity : letterOfAcceptance.getLetterOfAcceptanceEstimates().get(0).getLoaActivities()) {
+			for (LOAActivity loaActivity : letterOfAcceptance.getLetterOfAcceptanceEstimates().get(0)
+					.getLoaActivities()) {
 				final EstimateActivity activity = loaActivity.getEstimateActivity();
 				final MeasurementBookDetail measurementBookDetail = new MeasurementBookDetail();
 				measurementBookDetail.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -215,8 +261,7 @@ public class MeasurementBookService {
 				measurementBookDetail.setMeasurementSheets(measurementSheets);
 				measurementBookDetail.setQuantity(loaActivity.getApprovedQuantity().doubleValue());
 				measurementBookDetail.setRemarks(loaActivity.getRemarks());
-				measurementBookDetail.setAuditDetails(
-						measurementBookUtils.setAuditDetails(requestInfo, false));
+				measurementBookDetail.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, false));
 			}
 		}
 	}
@@ -278,6 +323,8 @@ public class MeasurementBookService {
 
 			if (measurementBook.getLumpSumMBDetails() != null && !measurementBook.getLumpSumMBDetails().isEmpty())
 				createUpdateRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo(), true);
+			
+			updateStatus(measurementBook, false);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);
 		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
@@ -291,5 +338,17 @@ public class MeasurementBookService {
 		measurementBookResponse.setMeasurementBooks(
 				measurementBookRepository.searchMeasurementBooks(measurementBookSearchContract, requestInfo));
 		return measurementBookResponse;
+	}
+
+	private Boolean isConfigRequired(String keyName, RequestInfo requestInfo, final String tenantId) {
+		Boolean isSpilloverWFReq = false;
+		JSONArray responseJSONArray = measurementBookUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT,
+				CommonConstants.CODE, keyName, tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
+		if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+			Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+			if (jsonMap.get("value").equals("Yes"))
+				isSpilloverWFReq = true;
+		}
+		return isSpilloverWFReq;
 	}
 }

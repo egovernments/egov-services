@@ -27,6 +27,7 @@ import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.IndentSearch;
 import org.egov.inv.model.Material;
 import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.PurchaseIndentDetail;
@@ -436,9 +437,26 @@ public class PurchaseOrderService extends DomainService {
                             errors.addDataError(ErrorCode.MAT_DETAIL.getCode(), " at serial no." + detailIndex);
                         }
 
+                        //ratecontract mandatory, then rate, price, quantity are mandatory at each line level
                         if (priceListConfig && null == poDetail.getPriceList().getId()) {
                             errors.addDataError(ErrorCode.RATE_CONTRACT.getCode(), " at serial no." + detailIndex);
-
+                        }
+                        
+                        if (priceListConfig && (null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(new BigDecimal(0))<0)) {
+                        	throw new CustomException("orderQuantity", "OrderQuantity cannnot be blank");
+                        }
+                        
+                        if (priceListConfig && (null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0))<0)) {
+                        	throw new CustomException("orderQuantity", "OrderQuantity cannnot be blank");
+                        }
+                        
+                        //validate the rates entered for creating PO with the one's in pricelist
+                        if(poDetail.getPriceList()!=null && poDetail.getPriceList().getPriceListDetails()!=null)
+                        for(PriceListDetails pld : poDetail.getPriceList().getPriceListDetails()) {
+                        	if(pld.getMaterial().getCode()!=null && poDetail.getMaterial().getCode()!=null)
+                        	if(pld.getMaterial().getCode().equals(poDetail.getMaterial().getCode()) && pld.getRatePerUnit().compareTo(poDetail.getUnitPrice().doubleValue())!=0) {
+                        		throw new CustomException("materialRate", "Material rate entered is not matching with rate contract rate");
+                        	}
                         }
 
                         if (null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {

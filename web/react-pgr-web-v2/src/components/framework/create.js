@@ -50,7 +50,6 @@ class Report extends Component {
   }
 
   setDefaultValues(groups, dat) {
-    let formData = this.props.formData;
     for (var i = 0; i < groups.length; i++) {
       for (var j = 0; j < groups[i].fields.length; j++) {
         if (
@@ -58,18 +57,40 @@ class Report extends Component {
           typeof groups[i].fields[j].defaultValue == 'number' ||
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
-          if (!_.get(formData, groups[i].fields[j].jsonPath)) {
-            _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
-          }
+          //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
+          //  _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
-        if (groups[i].children && groups[i].children.length) {
-          for (var k = 0; k < groups[i].children.length; k++) {
-            this.setDefaultValues(groups[i].children[k].groups, dat);
+
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for (var k = 0; k < groups[i].fields[j].children.length; k++) {
+            this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
         }
       }
     }
   }
+
+  // setDefaultValues(groups, dat) {
+  //   let formData = this.props.formData;
+  //   for (var i = 0; i < groups.length; i++) {
+  //     for (var j = 0; j < groups[i].fields.length; j++) {
+  //       if (
+  //         typeof groups[i].fields[j].defaultValue == 'string' ||
+  //         typeof groups[i].fields[j].defaultValue == 'number' ||
+  //         typeof groups[i].fields[j].defaultValue == 'boolean'
+  //       ) {
+  //         if (!_.get(formData, groups[i].fields[j].jsonPath)) {
+  //           _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
+  //         }
+  //       }
+  //       if (groups[i].children && groups[i].children.length) {
+  //         for (var k = 0; k < groups[i].children.length; k++) {
+  //           this.setDefaultValues(groups[i].children[k].groups, dat);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   depedantValue(groups) {
     let self = this;

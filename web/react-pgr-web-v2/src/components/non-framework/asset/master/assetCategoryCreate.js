@@ -66,11 +66,13 @@ class assetCategoryCreate extends Component {
           typeof groups[i].fields[j].defaultValue == 'number' ||
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
-          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
+          //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
+          //  _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
-        if (groups[i].children && groups[i].children.length) {
-          for (var k = 0; k < groups[i].children.length; k++) {
-            this.setDefaultValues(groups[i].children[k].groups, dat);
+
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
+          for (var k = 0; k < groups[i].fields[j].children.length; k++) {
+            this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
         }
       }
@@ -207,13 +209,6 @@ class assetCategoryCreate extends Component {
     for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
         var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
-        console.log('--------');
-        console.log(arr, i);
-        console.log(specs[moduleName + '.' + actionName].groups[i].jsonPath);
-        console.log(_form);
-        console.log(_.get);
-        console.log(specs[moduleName + '.' + actionName].groups, i);
-        console.log('--------');
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
@@ -271,6 +266,56 @@ class assetCategoryCreate extends Component {
     setMockData(specs);
   }
 
+  modifyData(urlId) {
+    let self = this;
+    let assetCheck = {};
+    let specifications = require(`../../../framework/specs/asset/master/createAssetCategroy`).default;
+
+    var _body = {
+      MdmsCriteria: {
+        tenantId: localStorage.getItem('tenantId'),
+        moduleDetails: [
+          {
+            moduleName: 'ASSET',
+            masterDetails: [
+              {
+                name: 'AssetCategory',
+                filter: '[?(@.id IN [' + self.props.match.params.id + '])]',
+              },
+            ],
+          },
+        ],
+      },
+    };
+    Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true).then(
+      function(response) {
+        var MasterMetaData = {};
+        var masterData = [];
+        console.log(response.MdmsRes.ASSET.AssetCategory);
+        MasterMetaData.masterData = response.MdmsRes.ASSET.AssetCategory;
+        if (MasterMetaData.masterData[0].isDepreciationApplicable == true) {
+          MasterMetaData.masterData[0].isDepreciationApplicable = 'YES';
+        } else {
+          MasterMetaData.masterData[0].isDepreciationApplicable = 'NO';
+        }
+        // response.Assets[0].assetAttributesCheck = assetCheck;
+        self.props.setFormData({ MasterMetaData: MasterMetaData });
+        console.log(self.props.formData);
+        self.handleChange({ target: { value: MasterMetaData.masterData[0].assetCategoryType } }, 'MasterMetaData.masterData[0].assetCategoryType');
+        // self.setInitialUpdateData(
+        //   { MasterMetaData: MasterMetaData },
+        //   JSON.parse(JSON.stringify(specifications)),
+        //   'asset',
+        //   'update',
+        //   specifications['asset.update'].objectName
+        // );
+      },
+      function(err) {
+        console.log(err);
+      }
+    );
+  }
+
   displayUI(results) {
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
@@ -287,21 +332,21 @@ class assetCategoryCreate extends Component {
     setActionName('create');
 
     if (hashLocation.split('/').indexOf('update') == 1) {
-      var url = specifications[`asset.create`].searchUrl.split('?')[0];
+      var url = specifications[`asset.update`].searchUrl.split('?')[0];
       var id = (self.props.match.params.id && decodeURIComponent(self.props.match.params.id)) || self.props.match.params.master;
       var query = {
-        [specifications[`asset.create`].searchUrl.split('?')[1].split('=')[0]]: id,
+        [specifications[`asset.update`].searchUrl.split('?')[1].split('=')[0]]: id,
       };
       //handle 2nd parameter
-      if (specifications[`asset.create`].searchUrl.split('?')[1].split('=')[2]) {
-        var pval = specifications[`asset.create`].searchUrl.split('?')[1].split('=')[2];
-        var pname = specifications[`asset.create`].searchUrl
+      if (specifications[`asset.update`].searchUrl.split('?')[1].split('=')[2]) {
+        var pval = specifications[`asset.update`].searchUrl.split('?')[1].split('=')[2];
+        var pname = specifications[`asset.update`].searchUrl
           .split('?')[1]
           .split('=')[1]
           .split('&')[1];
 
         query = {
-          [specifications[`asset.create`].searchUrl.split('?')[1].split('=')[0]]: id,
+          [specifications[`asset.update`].searchUrl.split('?')[1].split('=')[0]]: id,
           [pname]: pval,
         };
       }
@@ -317,19 +362,36 @@ class assetCategoryCreate extends Component {
       }
 
       self.props.setLoadingStatus('loading');
-      Api.commonApiPost(url, query, {}, false, specifications[`asset.create`].useTimestamp).then(
+      console.log(self.props.match.params.id);
+      var _body = {
+        MdmsCriteria: {
+          tenantId: localStorage.getItem('tenantId'),
+          moduleDetails: [
+            {
+              moduleName: 'ASSET',
+              masterDetails: [
+                {
+                  filter: '[?(@.id IN [' + '12' + '])]',
+                },
+              ],
+            },
+          ],
+        },
+      };
+      Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true).then(
         function(res) {
+          console.log('res');
           self.props.setLoadingStatus('hide');
-          if (specifications[`asset.create`].isResponseArray) {
+          if (specifications[`asset.update`].isResponseArray) {
             var obj = {};
-            _.set(obj, specifications[`asset.create`].objectName, jp.query(res, '$..[0]')[0]);
+            _.set(obj, specifications[`asset.update`].objectName, jp.query(res, '$..[0]')[0]);
             self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'asset', 'create', specifications[`asset.create`].objectName);
+            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
           } else {
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'create', specifications[`asset.create`].objectName);
+            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
             self.props.setFormData(res);
           }
-          let obj1 = specifications[`asset.create`];
+          let obj1 = specifications[`asset.update`];
 
           self.depedantValue(obj1.groups);
         },
@@ -360,6 +422,7 @@ class assetCategoryCreate extends Component {
           Api.commonApiPost(mockObj.onloadFetchUrl, {}, requestBody, false, mockObj.useTimestamp).then(
             function(res) {
               self.props.setLoadingStatus('hide');
+              console.log('here');
               if (specifications[`asset.create`].isResponseArray) {
                 var obj = {};
                 _.set(obj, specifications[`asset.create`].objectName, jp.query(res, '$..[0]')[0]);
@@ -444,7 +507,7 @@ class assetCategoryCreate extends Component {
             moduleName: 'ASSET',
             masterDetails: [
               {
-                name: 'AssetCategory',
+                id: 18,
               },
             ],
           },
@@ -541,7 +604,13 @@ class assetCategoryCreate extends Component {
   }
 
   componentDidMount() {
+    let self = this;
     this.initData();
+    console.log(specifications);
+    if (self.props.match.params.id) {
+      self.modifyData(self.props.match.params.id);
+      console.log(specifications['asset.update']);
+    }
 
     //  Api.commonApiPost("/egov-mdms-service/v1/_search",{},{}, false, false, false, "", "", false).then(function(response)
     // {
@@ -600,69 +669,46 @@ class assetCategoryCreate extends Component {
 
   makeAjaxCall = (formData, url) => {
     let self = this;
-    delete formData.ResponseInfo;
+    //delete formData.ResponseInfo;
     //return console.log(formData);
     Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
-        console.log('Back response');
-        console.log(response);
-        if (response.summons) {
-          if (response.summons.length > 0) {
-            self.props.toggleSnackbarAndSetText(
-              true,
-              translate(
-                self.props.actionName == 'create'
-                  ? 'Created Successfully Ref No. is ' + response.summons[0].summonReferenceNo
-                  : 'wc.update.message.success'
-              ),
-              true
-            );
-          } else {
-            self.props.toggleSnackbarAndSetText(
-              true,
-              translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
-              true
-            );
-          }
-        } else {
-          self.props.toggleSnackbarAndSetText(
-            true,
-            translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
-            true
-          );
-        }
-
+        self.props.toggleSnackbarAndSetText(
+          true,
+          translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
+          true
+        );
+        console.log(response.MdmsRes.ASSET.AssetCategory[0][0].id);
+        console.log(self.props.actionName);
         setTimeout(function() {
+          if (self.props.actionName == 'update') {
+            console.log('update');
+            var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
+          } else {
+            console.log(formData);
+            var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
+          }
           if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
             if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
               var hash =
                 self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl +
                 '/' +
                 encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              console.log('check');
             } else {
+              console.log('check1');
               if (self.props.actionName == 'update') {
-                var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/');
+                console.log('update');
+                var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
               } else {
-                var hash =
-                  window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/') +
-                  '/' +
-                  encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+                console.log(formData);
+                var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
               }
             }
 
-            self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
-          } else if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore) {
-            var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl;
-            var obj = _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore);
-            if (obj.isVakalatnamaGenerated) {
-              localStorage.setItem(
-                self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].localStoreResponseKey,
-                JSON.stringify(obj)
-              );
-              self.props.setRoute(hash);
-            }
+            self.props.setRoute(hash);
           }
         }, 1500);
       },
@@ -672,6 +718,55 @@ class assetCategoryCreate extends Component {
       }
     );
   };
+
+  // makeAjaxCall = (formData, url) => {
+  //   let self = this;
+  //   //delete formData.ResponseInfo;
+  //   //return console.log(formData);
+  //   Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
+  //     function(response) {
+  //     console.log("enter");
+  //       self.props.setLoadingStatus('hide');
+  //       self.initData();
+  //       self.props.toggleSnackbarAndSetText(
+  //         true,
+  //         translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
+  //         true
+  //       );
+  //       console.log(response.MdmsRes.ASSET.AssetCategory[0].id);
+  //       setTimeout(function() {
+  //         if (self.props.actionName == 'update') {
+  //           console.log('update');
+  //           var hash = '/non-framework/asset/master/assetCategoryView/' ;
+  //         }
+  //         if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+  //           if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
+  //             var hash =
+  //               self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl +
+  //               '/' +
+  //               encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+  //             console.log('check');
+  //           } else {
+  //             console.log('check1');
+  //             if (self.props.actionName == 'update') {
+  //               console.log('update');
+  //               var hash = '/non-framework/asset/master/assetCategoryView/' ;
+  //             } else {
+  //               console.log(formData);
+  //               var hash = '/non-framework/asset/master/assetCategoryView/';
+  //             }
+  //           }
+  //
+  //           self.props.setRoute(hash);
+  //         }
+  //       }, 1500);
+  //     },
+  //     function(err) {
+  //       self.props.setLoadingStatus('hide');
+  //       self.props.toggleSnackbarAndSetText(true, err.message);
+  //     }
+  //   );
+  // };
 
   //Needs to be changed later for more customfields
   checkCustomFields = (formData, cb) => {
@@ -871,12 +966,14 @@ class assetCategoryCreate extends Component {
             if (counter == 0 && breakOut == 0) {
               formdocumentData['documents'] = _docs;
               self.checkForOtherFiles(formData, _url);
+              self.makeAjaxCall(formData, _url);
             }
           }
         });
       }
     } else {
       self.checkForOtherFiles(formData, _url);
+      self.makeAjaxCall(formData, _url);
     }
   };
 
@@ -1327,8 +1424,10 @@ class assetCategoryCreate extends Component {
       }
       return str.join('');
     };
+    debugger;
     let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     let dependantIdx;
+    debugger;
     if (depedants.length === 0 && property) {
       let currentProperty = property;
       dependantIdx = findLastIdxOnJsonPath(property);
@@ -1381,7 +1480,6 @@ class assetCategoryCreate extends Component {
         }
       }
     }
-
     _.forEach(depedants, function(value, key) {
       //console.log(value.type);
       if (value.type == 'dropDown') {
@@ -1635,11 +1733,15 @@ class assetCategoryCreate extends Component {
     let { handleChange, mockData, setDropDownData, formData } = this.props;
     let hashLocation = window.location.hash;
     let obj = specifications[`asset.create`];
-
+    debugger;
     if (expression && e.target.value) {
       let str = expression;
       let pos = 0;
       let values = [];
+      if (property == 'MasterMetaData.masterData[0].isDepreciationApplicable') {
+        console.log('hi');
+      }
+
       while (pos < str.length) {
         if (str.indexOf('$', pos) > -1) {
           let ind = str.indexOf('$', pos);
@@ -1954,6 +2056,7 @@ class assetCategoryCreate extends Component {
       !_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty('customActionsAndUrl')
         ? mockData[`${moduleName}.${actionName}`]['customActionsAndUrl'][0].url
         : '';
+    console.log(formData);
     //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
     //  console.log({...this.props.formData})
     return (

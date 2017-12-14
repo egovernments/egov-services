@@ -152,7 +152,7 @@ class assetCategorySearch extends Component {
     let { getVal, getValFromDropdownData } = self;
     var result1 = specifications['asset.search'];
     var result2 = result1['result'];
-    if (formData.name) {
+    if (formData && formData.name) {
       var _body = {
         MdmsCriteria: {
           tenantId: localStorage.getItem('tenantId'),

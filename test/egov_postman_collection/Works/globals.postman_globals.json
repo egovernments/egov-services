@@ -1,0 +1,69 @@
+{
+  "id": "d0a4532e-049c-206d-c837-b35e81452902",
+  "name": "Postman Globals",
+  "values": [
+    {
+      "enabled": false,
+      "key": "url",
+      "type": "text",
+      "value": "https://jsonblob.com"
+    },
+    {
+      "enabled": false,
+      "key": "variable_key",
+      "type": "text",
+      "value": "variable_value"
+    },
+    {
+      "key": "i",
+      "value": 64,
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "userName",
+      "value": "clerk",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "j",
+      "value": 43,
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "projectCode",
+      "value": "defa/WIN/2/1978/000105/2017-18",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "AE_workflow",
+      "value": "defa/AE/ENG/000135/2017-18",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "spilloverPC",
+      "value": "WIN-2017-6450",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "sorCode",
+      "value": "SOR64",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "sorId",
+      "value": "3068cc4e333b4d48810be9f51077b2b5",
+      "enabled": true,
+      "type": "text"
+    }
+  ],
+  "_postman_variable_scope": "globals",
+  "_postman_exported_at": "2017-12-14T13:56:22.409Z",
+  "_postman_exported_using": "Postman/5.5.0"
+}

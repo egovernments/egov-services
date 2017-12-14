@@ -3,9 +3,11 @@ package org.egov.inv.domain.service;
 import static org.springframework.util.StringUtils.isEmpty;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -228,12 +230,14 @@ public class OpeningBalanceService extends DomainService {
 									
 									if (null != addInfo.getReceivedDate()
 											&& Long.valueOf(addInfo.getReceivedDate()) > getCurrentDate()) {
-										errors.addDataError(ErrorCode.RCPT_DATE_LE_TODAY.getCode(),addInfo.getReceivedDate()+" at serial no."+ detailIndex);
+										String date = convertEpochtoDate(addInfo.getReceivedDate());
+										errors.addDataError(ErrorCode.RCPT_DATE_LE_TODAY.getCode(),date+" at serial no."+ detailIndex);
 												
 									}
 									if (null != addInfo.getExpiryDate()
 											&& Long.valueOf(addInfo.getExpiryDate()) < getCurrentDate()) {
-										errors.addDataError(ErrorCode.EXP_DATE_GE_TODAY.getCode(),addInfo.getExpiryDate()+" at serial no."+ detailIndex);
+										String date = convertEpochtoDate(addInfo.getExpiryDate());
+										errors.addDataError(ErrorCode.EXP_DATE_GE_TODAY.getCode(),date+" at serial no."+ detailIndex);
 									}
 								}
 							}
@@ -304,4 +308,12 @@ public class OpeningBalanceService extends DomainService {
 	 private Long getCurrentDate() {
 	        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
 	    }
+	 
+	 private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 }

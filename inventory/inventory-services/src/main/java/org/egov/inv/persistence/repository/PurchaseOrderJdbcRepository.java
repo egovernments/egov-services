@@ -83,6 +83,15 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	    return usedQty;
 	}
 	
+	public boolean isRateContractsExists(String supplier, String rateType, String material){
+		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetail pl where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and  pl.supplier='" + supplier +"' and pl.rateType='" + rateType + "' and pld.material = '" + material + "'";
+		Long count = namedParameterJdbcTemplate.queryForObject(rateContractQuery, new HashMap(), Long.class);
+		if(count > 0)
+			return true;
+		else
+			return false;
+	}
+	
 	public String getRateContracts(String material, String supplier) {
 		
 		PriceListDetailsSearchRequest pldsr = PriceListDetailsSearchRequest.builder().material(material).build();

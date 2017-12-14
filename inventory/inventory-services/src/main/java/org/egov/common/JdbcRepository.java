@@ -1,5 +1,7 @@
 package org.egov.common;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,8 +27,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Repository
 public abstract class JdbcRepository {

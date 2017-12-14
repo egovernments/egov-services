@@ -497,6 +497,19 @@ public class PurchaseOrderService extends DomainService {
 
             // convert all items into purchase uom by referring each indent.
 
+            boolean isRateContractExist =false;
+            for(Indent indent : indentResponse.getIndents()) {
+            	for(IndentDetail indentDetail : indent.getIndentDetails()) {
+            		if(purchaseOrderRepository.isRateContractsExists(purchaseOrder.getSupplier().getCode(), purchaseOrder.getRateType().name(), indentDetail.getMaterial().getCode()))
+            		{
+            			isRateContractExist = true;
+            			break;
+            		}
+            	}
+            }
+            if(!isRateContractExist)
+            	throw new CustomException("rateContract", "No RateContracts exist for the given combination of indent, supplier and ratetype");
+            
             for (Indent indent : indentResponse.getIndents()) {
 
                 for (IndentDetail indentDetail : indent.getIndentDetails()) {

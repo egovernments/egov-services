@@ -576,6 +576,7 @@ var dat = {
             label: 'perfManagement.update.KPIs.groups.updatekpiTargetBlock',
             pattern: '[0-9]',
             type: 'number',
+            isNumber: true,
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: 'perfManagement.create.KPIs.groups.kpiInputNumber',

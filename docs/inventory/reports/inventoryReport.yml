@@ -7,9 +7,13 @@ ReportDefinitions:
   moduleName: inventory
   externalService:
   - entity: $.MdmsRes.inventory.Material
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
     keyOrder: code,name,tenantId
     tableName: tbl_material
+  - entity: $.MdmsRes.common-masters.Uom
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Uom&tenantId=$tenantid
+    keyOrder: code,conversionFactor,tenantId
+    tableName: tbl_uom
   sourceColumns:
 
   - name: financialYear
@@ -73,7 +77,7 @@ ReportDefinitions:
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://egov-micro-dev.egovernments.org/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
     wrapper: true
@@ -92,24 +96,29 @@ ReportDefinitions:
     source: materialReceipt
     isMandatory: false
     searchClause: AND mat.name = $materialName
-
-  query:  SELECT matrcpt.financialyear as financialyear,
-          store.name as storeName,
-          matrcptdtl.material as materialcode,
-          mat.name as materialname,
-          matrcpt.receiptType as materialtypename,
-          matrcptdtl.uomno as uom,
-          matrcptdtl.receivedqty as qty,
-          matrcptdtl.unitrate as rate,
-          (matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,
-          matrcptdtl.remarks as remarks 
+  query: SELECT matrcpt.financialyear AS financialyear,
+          store.name AS storeName,
+          matrcptdtl.material AS materialcode,
+          mat.name AS materialname,
+          matrcpt.receiptType AS materialtypename,
+          matrcptdtl.uomno AS uom,
+          (matrcptdtl.receivedqty / (SELECT CAST(conversionFactor AS bigint) FROM (values tbl_uom )AS tb (code,conversionFactor,tenantid) 
+           WHERE tb.code = matrcptdtl.uomno AND tb.tenantid= $tenantid AND matrcptdtl.tenantid = $tenantid)) ::numeric(13,2) AS qty,
+          matrcptdtl.unitrate AS rate,
+          (matrcptdtl.unitrate * (matrcptdtl.receivedqty / (SELECT CAST(conversionFactor AS bigint) FROM (values tbl_uom )AS tb (code,conversionFactor,tenantid)
+           WHERE tb.code = matrcptdtl.uomno AND tb.tenantid= $tenantid AND matrcptdtl.tenantid = $tenantid))) ::numeric(13,2)  AS totalamount,
+          matrcptdtl.remarks AS remarks 
           FROM materialreceipt matrcpt,
-          (VALUES tbl_material) as mat (code, name, tenantid),
+          (VALUES tbl_material) AS mat (code, name, tenantid),
+          (VALUES tbl_uom) AS uomtbl (code,conversionFactor,tenantid),
           materialreceiptdetail matrcptdtl , store store 
-          WHERE matrcpt.financialyear = $financialYear 
+          WHERE matrcpt.financialyear = $financialYear
           AND matrcpt.receivingstore =  store.code
-          AND matrcpt.receivingstore = $storeName 
-          and store.tenantid = matrcpt.tenantid
+          AND matrcpt.receivingstore =  $storeName
+          AND store.tenantid = matrcpt.tenantid
+          AND mat.tenantid= matrcpt.tenantid
+          AND uomtbl.code=matrcptdtl.uomno
+          AND uomtbl.tenantid= store.tenantid
           AND matrcpt.tenantid = matrcptdtl.tenantid
           AND mat.tenantid = matrcpt.tenantid 
           AND matrcpt.tenantid = $tenantid 
@@ -192,18 +201,18 @@ ReportDefinitions:
     type: string
     source: supplier
 
-  query:  select supplier.code as supplierCode, supplier.type as supplierType, supplier.name as supplierName,
-          supplier.status as status, supplier.address as address , supplier.contactno as contactNo,
-          supplier.email as email, supplier.cstno as cstNo,
-          bank.name as bankName, supplier.bankbranch as bankBranch, supplier.bankacctno as bankAcctNo,
-          supplier.bankifsc as ifsc, supplier.contactperson as contactPerson,
-          supplier.contactpersonno as contactPersonNo
-          from supplier as supplier, egf_bank bank
-          where
+  query:  SELECT supplier.code AS supplierCode, supplier.type AS supplierType, supplier.name AS supplierName,
+          supplier.status AS status, supplier.address AS address , supplier.contactno AS contactNo,
+          supplier.email AS email, supplier.cstno AS cstNo,
+          bank.name AS bankName, supplier.bankbranch AS bankBranch, supplier.bankacctno AS bankAcctNo,
+          supplier.bankifsc AS ifsc, supplier.contactperson AS contactPerson,
+          supplier.contactpersonno AS contactPersonNo
+          FROM supplier AS supplier, egf_bank bank
+          WHERE
           bank.code = supplier.bankcode
-          and bank.tenantid = supplier.tenantid
-          and supplier.tenantid = $tenantid
-          order by supplier.name asc;
+          AND bank.tenantid = supplier.tenantid
+          AND supplier.tenantid = $tenantid
+          ORDER BY supplier.name asc;
 
 # Material Returned Report
 # Need to change  drop down Link based on report and Query
@@ -309,7 +318,7 @@ ReportDefinitions:
     source: inventory
     isMandatory: false
 
-  query: select * from material;
+  query: SELECT * FROM material;
 
 # Disposal of Scrap Report
 # Need to Change drop down Link based on report and Query
@@ -419,7 +428,7 @@ ReportDefinitions:
     source: inventory
     isMandatory: false
 
-  query: select * from material;
+  query: SELECT * FROM material;
 
 # Rates comparison with history data Report
 - reportName: ratesComparisonWithHistory
@@ -487,18 +496,18 @@ ReportDefinitions:
     isMandatory: false
     wrapper: true
 
-  query: select pld.material AS materialCode, 
+  query: SELECT pld.material AS materialCode, 
           sup.name AS supplierName, 
           mat.name AS materialName, 
           pl.ratetype AS ratetype,
           pld.ratePerUnit AS currentRate, 
-          (select count(*) from pricelistdetails WHERE material=pld.material AND pld.tenantid = $tenantid
-          AND fromdate::bigint >= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','01','-','01')))) 
-          AND todate::bigint <= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','03','-','01'))))) AS currentYear, 
-          (select count(*) from pricelistdetails WHERE material=pld.material AND pricelistdetails.tenantid = $tenantid
-          AND fromdate::bigint >= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','01','-','01')))) 
-          AND todate::bigint <= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','12','-','31'))))) AS previousYear 
-          from pricelist pl,pricelistdetails pld,supplier sup,(VALUES tbl_material) as mat (code, name, tenantid)
+          (SELECT count(*) FROM pricelistdetails WHERE material=pld.material AND pld.tenantid = $tenantid
+          AND fromdate::bigint >= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((SELECT to_char(now(),'YYYY')),'-','01','-','01')))) 
+          AND todate::bigint <= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((SELECT to_char(now(),'YYYY')),'-','03','-','01'))))) AS currentYear, 
+          (SELECT count(*) FROM pricelistdetails WHERE material=pld.material AND pricelistdetails.tenantid = $tenantid
+          AND fromdate::bigint >= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((SELECT to_char(now()- interval '1 year','YYYY')),'-','01','-','01')))) 
+          AND todate::bigint <= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((SELECT to_char(now()- interval '1 year','YYYY')),'-','12','-','31'))))) AS previousYear 
+          FROM pricelist pl,pricelistdetails pld,supplier sup,(VALUES tbl_material) AS mat (code, name, tenantid)
           WHERE
           pld.tenantid = sup.tenantid
           AND sup.tenantid =  pl.tenantid
@@ -576,23 +585,23 @@ ReportDefinitions:
     wrapper: true
 
 
-  query: select pld.material AS materialCode,
+  query: SELECT pld.material AS materialCode,
          mat.name AS materialName,
          sup.name AS supplierName,
-         ((select  ratePerUnit FROM pricelistdetails Where material=pld.material AND pl.rateType = 'Quotation' AND pld.tenantid = $tenantid
-         AND FROMdate::bigint <= (select extract(epoch FROM now())*1000) AND todate::bigint >= (select extract(epoch FROM now()))*1000)
-         order by createdtime desc limit 1) AS quotation,
-         ((select  ratePerUnit FROM pricelistdetails Where material=pld.material AND pl.rateType ='DGSC Rate Contract' AND pld.tenantid = $tenantid
-         AND FROMdate::bigint <= (select extract(epoch FROM now())*1000) AND todate::bigint >= (select extract(epoch FROM now()))*1000)
-         order by createdtime desc limit 1) AS dgsnd,
-         ((select  ratePerUnit FROM pricelistdetails Where material=pld.material AND pl.rateType = 'ULB Rate Contract' AND pld.tenantid =  $tenantid
-         AND FROMdate::bigint <= (select extract(epoch FROM now())*1000) AND todate::bigint >= (select extract(epoch FROM now()))*1000) 
-         order by createdtime desc limit 1) AS dtt,
-         ((select  ratePerUnit FROM pricelistdetails Where material=pld.material AND pl.rateType = 'One Time Tender'  AND pld.tenantid =  $tenantid
-         AND FROMdate::bigint <= (select extract(epoch FROM now())*1000) AND todate::bigint >= (select extract(epoch FROM now()))*1000)
-         order by createdtime desc limit 1) AS tender
-         FROM pricelistdetails pld, pricelist pl,  (VALUES tbl_material) as mat (code, name, tenantid) , supplier sup
-         Where  pld.tenantid =  $tenantid
+         ((SELECT  ratePerUnit FROM pricelistdetails WHERE material=pld.material AND pl.rateType = 'Quotation' AND pld.tenantid = $tenantid
+         AND FROMdate::bigint <= (SELECT extract(epoch FROM now())*1000) AND todate::bigint >= (SELECT extract(epoch FROM now()))*1000)
+         ORDER BY createdtime desc limit 1) AS quotation,
+         ((SELECT  ratePerUnit FROM pricelistdetails WHERE material=pld.material AND pl.rateType ='DGSC Rate Contract' AND pld.tenantid = $tenantid
+         AND FROMdate::bigint <= (SELECT extract(epoch FROM now())*1000) AND todate::bigint >= (SELECT extract(epoch FROM now()))*1000)
+         ORDER BY createdtime desc limit 1) AS dgsnd,
+         ((SELECT  ratePerUnit FROM pricelistdetails WHERE material=pld.material AND pl.rateType = 'ULB Rate Contract' AND pld.tenantid =  $tenantid
+         AND FROMdate::bigint <= (SELECT extract(epoch FROM now())*1000) AND todate::bigint >= (SELECT extract(epoch FROM now()))*1000) 
+         ORDER BY createdtime desc limit 1) AS dtt,
+         ((SELECT  ratePerUnit FROM pricelistdetails WHERE material=pld.material AND pl.rateType = 'One Time Tender'  AND pld.tenantid =  $tenantid
+         AND FROMdate::bigint <= (SELECT extract(epoch FROM now())*1000) AND todate::bigint >= (SELECT extract(epoch FROM now()))*1000)
+         ORDER BY createdtime desc limit 1) AS tender
+         FROM pricelistdetails pld, pricelist pl,  (VALUES tbl_material) AS mat (code, name, tenantid) , supplier sup
+         WHERE  pld.tenantid =  $tenantid
          AND pl.tenantid = pld.tenantid
          AND sup.tenantid=pl.tenantId
          AND mat.tenantid = pl.tenantid
@@ -657,7 +666,7 @@ ReportDefinitions:
     source: inventory
     isMandatory: true
 
-  query: select * from material;
+  query: SELECT * FROM material;
 
 # Supplier wise Purchase Order History Report
 - reportName: SupplierwisesPurchaseOrderHistoryReport
@@ -763,18 +772,18 @@ ReportDefinitions:
     searchClause: AND po.purchaseorderdate = $poDate
     isMandatory: false
 
-  query: select sup.name as suppliername,
-        (select name  from supplier where type = 'COMPANY' And tenantid =$tenantid) as supplierCompanyName,
-        po.purchaseorderNumber as PoNo,
-        po.purchaseorderdate as PoDate,
-        po.status as postatus,
-        po.expecteddeliverydate as expecteddeliverydate,
-        pod.orderquantity as qtyOrdered
-        from supplier sup,purchaseorder po,purchaseorderdetail pod
-        where po.tenantid = $tenantid
-        And pod.tenantid = po.tenantid
+  query: SELECT sup.name AS suppliername,
+        (SELECT name  FROM supplier WHERE type = 'COMPANY' AND tenantid =$tenantid) AS supplierCompanyName,
+        po.purchaseorderNumber AS PoNo,
+        po.purchaseorderdate AS PoDate,
+        po.status AS postatus,
+        po.expecteddeliverydate AS expecteddeliverydate,
+        pod.orderquantity AS qtyOrdered
+        FROM supplier sup,purchaseorder po,purchaseorderdetail pod
+        WHERE po.tenantid = $tenantid
+        AND pod.tenantid = po.tenantid
         AND pod.tenantid = sup.tenantid
-        And po.purchaseordernumber = pod.purchaseorder
+        AND po.purchaseordernumber = pod.purchaseorder
         AND po.supplier = sup.code
 
 # Material wise Purchase Order History Report
@@ -868,18 +877,18 @@ ReportDefinitions:
     searchClause: AND po.purchaseorderdate = $poDate
     isMandatory: false
 
-  query: select mat.name as materialName,
-        mat .description as materialdescription,
-        po.purchaseorderNumber as PoNo,
-        po.purchaseorderdate as PoDate,
-        po.status as postatus,
-        po.expecteddeliverydate as expecteddeliverydate,
-        pod.orderquantity as qtyOrdered
-        from (VALUES tbl_material) as mat (code, name, tenantid,description),purchaseorder po,purchaseorderdetail pod
-        where po.tenantid = $tenantid
-        And pod.tenantid = po.tenantid
+  query: SELECT mat.name AS materialName,
+        mat .description AS materialdescription,
+        po.purchaseorderNumber AS PoNo,
+        po.purchaseorderdate AS PoDate,
+        po.status AS postatus,
+        po.expecteddeliverydate AS expecteddeliverydate,
+        pod.orderquantity AS qtyOrdered
+        FROM (VALUES tbl_material) AS mat (code, name, tenantid,description),purchaseorder po,purchaseorderdetail pod
+        WHERE po.tenantid = $tenantid
+        AND pod.tenantid = po.tenantid
         AND pod.tenantid = mat.tenantid
-        And po.purchaseordernumber = pod.purchaseorder
+        AND po.purchaseordernumber = pod.purchaseorder
         AND pod.material = mat.code
 
 

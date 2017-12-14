@@ -548,7 +548,7 @@ definitions:
         description: The boolean value to indicate whether the contractor Agency/Firm is PMC(Project Management Consultant). The default value is false.
         default: false
       status:
-        $ref: '#/definitions/ContractorStatus'
+        type: string
         description: Status of the Contractor      
         format: singleValueList
       auditDetails:
@@ -1283,5 +1283,6 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 
 

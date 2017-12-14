@@ -106,6 +106,8 @@ public class Constants {
 
     public static final String KEY_WORKORDER_REMARKS_INVALID_DATA = "works.worksorder.remarks.invalid.data";
     public static final String MESSAGE_WORKORDER_REMARKS_INVALID_DATA = "Please send the proper data for Work Order Details";
-
     
+    public static final String KEY_FUTUREDATE_LOADATE_DETAILEDESTIMATE = "works.offlinestatus.loadate.invalid";
+    public static final String MESSAGE_FUTUREDATE_LOADATE_DETAILEDESTIMATE = "LOA Date cannot be prior to detailed estimate approved rate";
+
 }

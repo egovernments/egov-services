@@ -16,8 +16,6 @@ import org.egov.works.services.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class EstimateAppropriationService {
 
@@ -48,7 +46,6 @@ public class EstimateAppropriationService {
     public EstimateAppropriationResponse create(final EstimateAppropriationRequest estimateAppropriationRequest) {
         String budgetRefNumber;
         for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
-            estimateAppropriationRepository.validateEstimateAppropriation(estimateAppropriation);
             estimateAppropriation.setAuditDetails(serviceUtils
                     .setAuditDetails(estimateAppropriationRequest.getRequestInfo(), false));
             estimateAppropriation.setId(commonUtils.getUUID());
@@ -66,9 +63,7 @@ public class EstimateAppropriationService {
     }
 
     public EstimateAppropriationResponse update(final EstimateAppropriationRequest estimateAppropriationRequest) {
-
         for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
-            estimateAppropriationRepository.validateEstimateAppropriation(estimateAppropriation);
             estimateAppropriation.setAuditDetails(serviceUtils
                     .setAuditDetails(estimateAppropriationRequest.getRequestInfo(), true));
 

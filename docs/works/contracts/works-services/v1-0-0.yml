@@ -470,6 +470,10 @@ definitions:
       objectNumber:
         type: string
         description: Unique Identifier for the specified obect type. For example Detailed Estimate Number, LOA Number and Work Order number.
+      objectDate:
+        type: integer
+        format: int64
+        description: In case of Detailed estimate object date will be the date on which detatiled estimate is technical sanctioned and in case of Work Order/LOA the object date will be the date on which Work Order/LOA is approved.
       status:
         type: string
         description: Offline status for the object type.
@@ -595,6 +599,7 @@ tags:
     description: APIs required for Estimate Appropriation.
   - name: Document Detail
     description: APIs required for Document Detail
+
 
 
 

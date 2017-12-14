@@ -32,7 +32,6 @@ public class WorkOrderSearchContract {
 
     private List<String> contractorCodes;
 
-
     private List<String> detailedEstimateNumbers;
 
     private List<String> workIdentificationNumbers;

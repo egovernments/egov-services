@@ -65,13 +65,13 @@ public class AbstractEstimateService {
     private WorkflowService workflowService;
 
     @Autowired
-    private RestTemplate restTemplate;
-
-    @Autowired
     private ProjectCodeService projectCodeService;
 
     @Autowired
     private EstimateValidator validator;
+    
+    @Autowired
+    private EstimateAppropriationService estimateAppropriationService;
 
     @Transactional
     public AbstractEstimateResponse create(AbstractEstimateRequest abstractEstimateRequest) {
@@ -127,7 +127,7 @@ public class AbstractEstimateService {
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
                     abstractEstimateDetails.setProjectCode(projectCode);
                     if (isBudgetCheckReq)
-                        setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+                        estimateAppropriationService.setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo(), Boolean.TRUE);
                 }
             } else {
                 populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
@@ -205,8 +205,10 @@ public class AbstractEstimateService {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
                     abstractEstimateDetails.setProjectCode(projectCode);
-                    if (isFinIntReq && isBudgetCheckReq)
-                        setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+                    if (isFinIntReq && isBudgetCheckReq) {
+                        estimateAppropriationService.setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo(), Boolean.TRUE);
+                    }
+                        
                 }
             }
             if (estimate.getStatus().toString()
@@ -216,7 +218,7 @@ public class AbstractEstimateService {
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
                     abstractEstimateDetails.setProjectCode(projectCode);
                     if (isFinIntReq && isBudgetCheckReq)
-                        setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+                        estimateAppropriationService.setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo(), Boolean.TRUE);
                 }
             }
 
@@ -326,24 +328,6 @@ public class AbstractEstimateService {
         else
             savedCodes = projectCodeService.create(projectCodeRequest);
         return savedCodes.get(0).getCode();
-    }
-
-    private void setEstimateAppropriation(AbstractEstimateDetails abstractEstimateDetails,
-            final RequestInfo requestInfo) {
-        EstimateAppropriationRequest estimateAppropriationRequest = new EstimateAppropriationRequest();
-        EstimateAppropriation estimateAppropriation = new EstimateAppropriation();
-        List<EstimateAppropriation> appropriations = new ArrayList<>();
-        if (abstractEstimateDetails.getProjectCode() != null
-                && abstractEstimateDetails.getProjectCode().getCode() != null)
-            estimateAppropriation.setObjectNumber(abstractEstimateDetails.getProjectCode().getCode());
-        estimateAppropriation.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
-        estimateAppropriation.setTenantId(abstractEstimateDetails.getTenantId());
-        estimateAppropriationRequest.setEstimateAppropriations(appropriations);
-        estimateAppropriationRequest.setRequestInfo(requestInfo);
-
-        final String url = propertiesManager.getWorksSeviceHostName() + propertiesManager.getEstimateAppropriationURL();
-        // TODO: do appropriation if this succeeds
-        restTemplate.postForObject(url, estimateAppropriationRequest, EstimateAppropriationResponse.class);
     }
 
 }

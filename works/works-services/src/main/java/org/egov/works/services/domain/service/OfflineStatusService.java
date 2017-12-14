@@ -1,5 +1,8 @@
 package org.egov.works.services.domain.service;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
@@ -17,10 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class OfflineStatusService {
@@ -52,8 +51,7 @@ public class OfflineStatusService {
     }
 
     public OfflineStatusResponse create(OfflineStatusRequest offlineStatusRequest) {
-        requestValidator.validateOfflineStatus(offlineStatusRequest);
-
+        requestValidator.validateOfflineStatus(offlineStatusRequest,Boolean.FALSE);
         OfflineStatusResponse response = new OfflineStatusResponse();
         for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
             offlineStatus.setId(commonUtils.getUUID());
@@ -69,7 +67,7 @@ public class OfflineStatusService {
     }
 
     public ResponseEntity<?> update(OfflineStatusRequest offlineStatusRequest) {
-        requestValidator.validateOfflineStatus(offlineStatusRequest);
+        requestValidator.validateOfflineStatus(offlineStatusRequest, Boolean.TRUE);
 
         OfflineStatusResponse response = new OfflineStatusResponse();
         for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {

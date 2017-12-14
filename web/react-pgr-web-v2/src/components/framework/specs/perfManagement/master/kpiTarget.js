@@ -1,3 +1,10 @@
+
+var dt = new Date();
+var date1 = Date.now();
+
+var date2 = Date.now() + 2*365*24*60*60*1000; 
+let criteria = encodeURIComponent('[[?((@')+'.endingDate'+encodeURIComponent('<')+date1+encodeURIComponent(')&&(@')+'.startingDate'+encodeURIComponent('>')+date2+encodeURIComponent('))]');
+
 var dat = {
   'perfManagement.create': {
     numCols: 12 / 2,
@@ -416,22 +423,7 @@ var dat = {
             type: 'text',
             isDisabled: true,
             requiredErrMsg: '',
-          },
-          {
-            name: 'updatekpiDate',
-            jsonPath: 'kpiTargets[0].finYear',
-            label: 'perfManagement.update.KPIs.groups.updatekpiDate',
-            isRequired: true,
-            pattern: '',
-            type: 'singleValueList',
-            //"url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
-            url:
-              'egov-mdms-service/v1/_get?tenantId=' +
-              localStorage.tenantId.split('.')[0] +
-              '&masterName=financialYears&moduleName=egf-master|$..finYearRange|$..finYearRange',
-            isDisabled: false,
-            requiredErrMsg: '',
-          },
+          },          
           {
             name: 'updatekpitype',
             jsonPath: 'kpiTargets[0].kpi.targetType',
@@ -530,25 +522,48 @@ var dat = {
         ],
       },
       {
-        label: 'perfManagement.update.KPIs.groups.updatekpiTargetTextBlock',
-        name: 'updatekpiTargetTextBlock',
+        label: '',
+        name: 'updatekpiTargetDateBlock',
         hide: false,
         multiple: false,
         fields: [
           {
-            name: 'updatekpiTarget',
-            jsonPath: 'kpiTargets[0].targetDescription',
-            label: '',
+            name: 'updatekpiDate',
+            jsonPath: 'kpiTargets[0].finYear',
+            label: 'perfManagement.update.KPIs.groups.updatekpiDate',
+            isRequired: true,
             pattern: '',
-            type: 'text',
+            type: 'singleValueList',
+            //"url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+            url:
+              'egov-mdms-service/v1/_get?tenantId=' +
+              localStorage.tenantId.split('.')[0] +
+              '&masterName=financialYears&moduleName=egf-master&filter='+criteria+'|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
           },
-        ],
-      },
+          ]},
+
+        {
+          label: '',
+          name: 'updatekpiTargetTextBlock',
+          hide: false,
+          multiple: false,
+          fields: [
+            {
+              name: 'updatekpiTarget',
+              jsonPath: 'kpiTargets[0].targetDescription',
+              label: 'perfManagement.update.KPIs.groups.updatekpiTargetTextBlock',
+              pattern: '',
+              type: 'text',
+              isDisabled: false,
+              requiredErrMsg: '',
+            },
+          ],
+        },
 
       {
-        label: 'perfManagement.update.KPIs.groups.updatekpiTargetBlock',
+        label: '',
         name: 'updatekpiTargetBlock',
         hide: false,
         multiple: false,
@@ -556,7 +571,7 @@ var dat = {
           {
             name: 'updatekpiTargetText',
             jsonPath: 'kpiTargets[0].targetValue',
-            label: '',
+            label: 'perfManagement.update.KPIs.groups.updatekpiTargetBlock',
             pattern: '[0-9]',
             type: 'number',
             isDisabled: false,
@@ -566,7 +581,7 @@ var dat = {
         ],
       },
       {
-        label: 'perfManagement.update.KPIs.groups.updatekpiTargetRadioBlock',
+        label: '',
         name: 'updatekpiTargetRadioBlock',
         hide: true,
         //"hide": "`${getVal('KPIs[0].targetType')}`",
@@ -575,7 +590,7 @@ var dat = {
           {
             name: 'updatekpiTargetRadio',
             jsonPath: 'kpiTargets[0].targetValue',
-            label: '',
+            label: 'perfManagement.update.KPIs.groups.updatekpiTargetRadioBlock',
             pattern: '',
             type: 'radio',
             isRequired: false,

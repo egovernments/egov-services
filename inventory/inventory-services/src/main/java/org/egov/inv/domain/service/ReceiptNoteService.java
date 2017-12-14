@@ -296,18 +296,18 @@ public class ReceiptNoteService extends DomainService {
         }
 
         if (null != materialReceipt.getSupplierBillDate() && materialReceipt.getSupplierBillDate() > getCurrentDate()) {
-			String date = convertEpochtoDate(materialReceipt.getSupplierBillDate());
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Supplier bill date ",date);
+            String date = convertEpochtoDate(materialReceipt.getSupplierBillDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Supplier bill date ", date);
         }
 
         if (null != materialReceipt.getChallanDate() && materialReceipt.getChallanDate() > getCurrentDate()) {
-			String date = convertEpochtoDate(materialReceipt.getChallanDate());
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Challan date ",date);
+            String date = convertEpochtoDate(materialReceipt.getChallanDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Challan date ", date);
         }
 
         if (null != materialReceipt.getReceiptDate() && materialReceipt.getReceiptDate() > getCurrentDate()) {
-			String date = convertEpochtoDate(materialReceipt.getReceiptDate());
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",date);
+            String date = convertEpochtoDate(materialReceipt.getReceiptDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ", date);
         }
 
         if (null != materialReceipt.getSupplier() && !isEmpty(materialReceipt.getSupplier().getCode())) {
@@ -427,12 +427,14 @@ public class ReceiptNoteService extends DomainService {
         Long totalQuantity = 0L;
         for (MaterialReceiptDetailAddnlinfo addnlinfo : materialReceiptDetailAddnlinfos) {
             {
-                totalQuantity = totalQuantity + addnlinfo.getQuantity().longValue();
+                if (null != addnlinfo.getQuantity()) {
+                    totalQuantity = totalQuantity + addnlinfo.getQuantity().longValue();
+                }
 
                 if (null != addnlinfo.getExpiryDate()
                         && currentDate > addnlinfo.getExpiryDate()) {
-					String date = convertEpochtoDate(addnlinfo.getExpiryDate());
-                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ",date);
+                    String date = convertEpochtoDate(addnlinfo.getExpiryDate());
+                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ", date);
 
                 }
             }
@@ -520,12 +522,12 @@ public class ReceiptNoteService extends DomainService {
         String mrnNumber = code + idgen + "/" + year;
         return mrnNumber;
     }
-    private String convertEpochtoDate(Long date)
-	 {
-		 Date epoch = new Date(date);
-		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		 String s2 = format.format(epoch);
-		 return s2;
-	 }
+
+    private String convertEpochtoDate(Long date) {
+        Date epoch = new Date(date);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        String s2 = format.format(epoch);
+        return s2;
+    }
 
 }

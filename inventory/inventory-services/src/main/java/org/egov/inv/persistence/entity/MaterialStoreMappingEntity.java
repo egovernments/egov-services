@@ -56,7 +56,7 @@ public class MaterialStoreMappingEntity {
                 .store(null != materialStoreMapping.getStore() ? materialStoreMapping.getStore().getCode() : null)
                 .active(materialStoreMapping.getActive())
                 .chartOfAccount(null != materialStoreMapping.getChartofAccount() ? materialStoreMapping.getChartofAccount().getGlCode() : null)
-                .tenantId(tenantId)
+                .tenantId(materialStoreMapping.getTenantId())
                 .build();
     }
 

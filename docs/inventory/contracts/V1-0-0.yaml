@@ -1295,6 +1295,97 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /materialtypes/_create:
+      post:
+        summary: Create  new  material types
+        description: Create  new material types
+        tags:
+          - MaterialType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialTypeRequest
+            in: body
+            description: Create  new
+            schema:
+              $ref: '#/definitions/MaterialTypeRequest'
+        responses:
+          200:
+            description: Material Type created Successfully
+            schema:
+              $ref: '#/definitions/MaterialTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialtypes/_update:
+      post:
+        summary: Update any of the material types
+        description: Update any of the material types
+        tags:
+          - MaterialType
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialTypeRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/MaterialTypeRequest'
+        responses:
+          200:
+            description: Material Type updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialtypes/_search:
+      post:
+        summary: Get the list of Material Types
+        description: Material Types
+        tags:
+          - MaterialType
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items:
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: code
+            type: string
+            in: query
+            description: |
+              code of the Material Type
+          - name: name
+            type: string
+            in: query
+            description: |
+              name of the Material Type
+          - name: store
+            type: string
+            in: query
+            description: |
+              store to which material type is mapped
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: Material Type retrieved Successfully
+            schema:
+              $ref: '#/definitions/MaterialTypeResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+
     /materialstoremapping/_create:
       post:
         summary: Create  new  material store mappings
@@ -1320,8 +1411,8 @@ paths:
 
     /materialstoremapping/_update:
       post:
-        summary: Update any of the materials
-        description: Update any of the materials
+        summary: Update any of the material store mappings
+        description: Update any of the material store mappings
         tags:
           - MaterialStoreMappings
         parameters:
@@ -1384,6 +1475,97 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialtypestoremappings/_create:
+      post:
+        summary: Create  new  material type store mappings
+        description: Create  new  material type store mappings
+        tags:
+          - MaterialTypeStoreMappings
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialtypestoreRequest
+            in: body
+            description: This object holds the Material Type Store Mapping information.
+            schema:
+              $ref: '#/definitions/MaterialTypeStoreRequest'
+        responses:
+          200:
+            description: Material Type Store Mapping created Successfully
+            schema:
+              $ref: '#/definitions/MaterialTypeStoreResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialtypestoremappings/_update:
+      post:
+        summary: Update any of the material type store mappings
+        description: Update any of the material type store mappings
+        tags:
+          - MaterialTypeStoreMappings
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialtypestoreRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/MaterialTypeStoreRequest'
+        responses:
+          200:
+            description: Material Type Store Mapping updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialTypeStoreResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialtypestoremappings/_search:
+      post:
+        summary: Get the list of material type store mappings
+        description: material type store mappings
+        tags:
+          - MaterialTypeStoreMappings
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items:
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: materialType
+            type: string
+            in: query
+            description: |
+              material type code of material store mapping
+          - name: store
+            type: string
+            in: query
+            description: |
+              store code of material store mapping
+          - name: active
+            type: boolean
+            in: query
+            description: |
+              active flag of material store mapping
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: Material Type Store Mapping retrieved Successfully
+            schema:
+              $ref: '#/definitions/MaterialTypeStoreResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
 
     /stores/_search:
       post:
@@ -3683,6 +3865,41 @@ definitions:
       - material
       - tenantId
 
+    MaterialTypeStore:
+      type: object
+      description: |
+        This object holds the material type store mapping details information.
+      properties:
+        id:
+          type: string
+          description: |
+            Unique Identifier of the Material Type Store Mapping
+        materialType:
+          $ref: "#/definitions/MaterialType"
+        store:
+          $ref: "#/definitions/Store"
+        chartofAccount:
+          $ref: "#/definitions/ChartofAccount"
+        active:
+          type: boolean
+          description: |
+            active or inactive flag of mapping
+        delete:
+          type: boolean
+          description: |
+            delete flag of mapping used during deleting the mapping.
+        tenantId:
+          type: string
+          description: Tenant id of the Material Type Store
+          maxLength: 128
+          minLength: 4
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+      - store
+      - materialType
+      - tenantId
+
     StoreMapping:
       type: object
       description: |
@@ -3791,6 +4008,34 @@ definitions:
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
 
+
+    MaterialTypeRequest:
+      description: Contract class for web request. Array of Material Types  are used in case of create or update
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        materialTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/MaterialType'
+      required:
+      - RequestInfo
+      - materialTypes
+
+    MaterialTypeResponse:
+      description: Contract class for web response. Array of Material Types  are used in case of search ,create or update request.
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        materialTypes:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/MaterialType'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
     MaterialStoreMappingRequest:
       description: Contract class for web request. Array of Material items  are used in case of create or update
       properties:
@@ -3815,6 +4060,33 @@ definitions:
           type:  array
           items:
             $ref: '#/definitions/MaterialStoreMapping'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    MaterialTypeStoreRequest:
+      description: Contract class for web request. Array of Material Type Store Mapping  are used in case of create or update
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        materialTypeStore:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/MaterialTypeStore'
+      required:
+      - RequestInfo
+      - materialTypeStore
+
+    MaterialTypeStoreResponse:
+      description: Contract class for web response. Array of Material Type Store Mapping are used in case of search ,create or update request.
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        materialTypeStore:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/MaterialTypeStore'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
 

@@ -35,7 +35,7 @@ var dat = {
             jsonPath: 'cases[0].summon.caseCategory.code',
             label: 'legal.create.caseCategory',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
             url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name',

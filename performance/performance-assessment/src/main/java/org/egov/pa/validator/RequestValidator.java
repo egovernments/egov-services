@@ -46,12 +46,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
+import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.service.impl.KpiMasterServiceImpl;
 import org.egov.pa.service.impl.KpiValueServiceImpl;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.egov.pa.web.contract.KPIRequest;
+import org.egov.pa.web.contract.KPITargetRequest;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.egov.pa.web.contract.ValueResponse;
@@ -104,6 +106,17 @@ public class RequestValidator {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
         final Error error = getError(kpiRequest,createOrUpdate);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponses.add(errorResponse);
+        log.info(errorResponses.size() + " Error Responses are found");
+        return errorResponses;
+    }
+	
+	public List<ErrorResponse> validateRequest(final KPITargetRequest kpiTargetRequest) {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Error error = getError(kpiTargetRequest);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
@@ -186,6 +199,29 @@ public class RequestValidator {
 			
 		}
 				return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+				.message(PerformanceAssessmentConstants.INVALID_REQUEST_MESSAGE).errorFields(errorFields).build();
+	}
+	
+	public Error getError(final KPITargetRequest kpiTargetRequest) {
+		final List<ErrorField> errorFields = new ArrayList<>();
+		List<KpiTarget> targetList = kpiTargetRequest.getKpiTargets();
+
+		for (KpiTarget target : targetList) {
+
+			if (StringUtils.isBlank(target.getFinYear())) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGETFINYEAR_UNAVAILABLE_CODE,
+						PerformanceAssessmentConstants.TARGETFINYEAR_UNAVAILABLE_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.TARGETFINYEAR_UNAVAILABLE_FIELD_NAME));
+			}
+			
+			if (StringUtils.isBlank(target.getTargetDescription()) && StringUtils.isBlank(target.getTargetValue())) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGETDESC_MANDATORY_CODE,
+						PerformanceAssessmentConstants.TARGETDESC_MANDATORY_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.TARGETDESC_MANDATORY_FIELD_NAME));
+			}
+		}
+
+		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PerformanceAssessmentConstants.INVALID_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 	

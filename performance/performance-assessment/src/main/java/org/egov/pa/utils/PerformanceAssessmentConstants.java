@@ -103,8 +103,8 @@ public class PerformanceAssessmentConstants {
     public static final String DOCACTIVE_MANDATORY_ERROR_MESSAGE = "Document Active Status is mandatory";
     
     public static final String TARGETDESC_MANDATORY_CODE = "pa.0011";
-    public static final String TARGETDESC_MANDATORY_FIELD_NAME = "targetDescription";
-    public static final String TARGETDESC_MANDATORY_ERROR_MESSAGE = "Target Description is mandatory if Target Value is specified";
+    public static final String TARGETDESC_MANDATORY_FIELD_NAME = "targetValue";
+    public static final String TARGETDESC_MANDATORY_ERROR_MESSAGE = "Target Value is mandatory for the KPI!";
     
     public static final String TARGETINSTRUCTIONS_MANDATORY_CODE = "pa.0012";
     public static final String TARGETINSTRUCTIONS_MANDATORY_FIELD_NAME = "instructions";
@@ -189,6 +189,10 @@ public class PerformanceAssessmentConstants {
     public static final String TARGET_EXISTS_CODE = "pa.0031";
     public static final String TARGET_EXISTS_FIELD_NAME = "targetType";
     public static final String TARGET_EXISTS_ERROR_MESSAGE = "Target Type cannot be updated as the Target Value has already been added for this KPI";
+    
+    public static final String TARGETFINYEAR_UNAVAILABLE_CODE = "pa.0032";
+    public static final String TARGETFINYEAR_UNAVAILABLE_FIELD_NAME = "finYear";
+    public static final String TARGETFINYEAR_UNAVAILABLE_ERROR_MESSAGE = "Target Financial Year is mandatory for KPI Target Record";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

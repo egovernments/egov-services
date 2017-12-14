@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -295,18 +296,18 @@ public class ReceiptNoteService extends DomainService {
         }
 
         if (null != materialReceipt.getSupplierBillDate() && materialReceipt.getSupplierBillDate() > getCurrentDate()) {
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Supplier bill date ",
-                    materialReceipt.getSupplierBillDate().toString());
+			String date = convertEpochtoDate(materialReceipt.getSupplierBillDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Supplier bill date ",date);
         }
 
         if (null != materialReceipt.getChallanDate() && materialReceipt.getChallanDate() > getCurrentDate()) {
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Challan date ",
-                    materialReceipt.getSupplierBillDate().toString());
+			String date = convertEpochtoDate(materialReceipt.getChallanDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Challan date ",date);
         }
 
         if (null != materialReceipt.getReceiptDate() && materialReceipt.getReceiptDate() > getCurrentDate()) {
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",
-                    materialReceipt.getReceiptDate().toString());
+			String date = convertEpochtoDate(materialReceipt.getReceiptDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",date);
         }
 
         if (null != materialReceipt.getSupplier() && !isEmpty(materialReceipt.getSupplier().getCode())) {
@@ -430,9 +431,8 @@ public class ReceiptNoteService extends DomainService {
 
                 if (null != addnlinfo.getExpiryDate()
                         && currentDate > addnlinfo.getExpiryDate()) {
-
-                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ",
-                            addnlinfo.getExpiryDate().toString());
+					String date = convertEpochtoDate(addnlinfo.getExpiryDate());
+                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ",date);
 
                 }
             }
@@ -520,6 +520,12 @@ public class ReceiptNoteService extends DomainService {
         String mrnNumber = code + idgen + "/" + year;
         return mrnNumber;
     }
-
+    private String convertEpochtoDate(Long date)
+	 {
+		 Date epoch = new Date(date);
+		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		 String s2 = format.format(epoch);
+		 return s2;
+	 }
 
 }

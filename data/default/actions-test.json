@@ -10442,6 +10442,20 @@
     "serviceCode": "Account_Code_Purpose_Master",
     "code": "null",
     "path": "Financial_Master.Financials_Master.Account_Code_Purpose_Master.searchAccountCodePurpose_Master"
+  },
+  {
+    "id": 1429,
+    "name": "Search Boundaries With Mdms",
+    "url": "/egov-location/location/v11/boundarys/_search",
+    "displayName": "Boundaries Mdms Search",
+    "orderNumber": 3,
+    "queryParams": null,
+    "parentModule": "67",
+    "enabled": false,
+    "serviceCode": "LOCATION_MS",
+    "code": "null",
+    "path": "Location.Search Boundary"
+
   }
 ]
 }

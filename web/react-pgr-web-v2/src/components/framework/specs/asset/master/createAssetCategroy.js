@@ -134,7 +134,7 @@ var dat = {
         // "label": "",
         name: 'AdditionalField',
         multiple: true,
-        jsonPath: '',
+        jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination',
         fields: [
           {
             name: 'additionalName',
@@ -684,7 +684,7 @@ var dat = {
         // "label": "",
         name: 'AdditionalField',
         multiple: true,
-        jsonPath: '',
+        jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination',
         fields: [
           {
             name: 'additionalName',

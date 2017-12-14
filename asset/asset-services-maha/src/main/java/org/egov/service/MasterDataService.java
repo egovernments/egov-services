@@ -20,6 +20,7 @@ import org.egov.model.ModeOfAcquisition;
 import org.egov.repository.MasterDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -115,7 +116,7 @@ public class MasterDataService {
 
 	public Map<Long, AssetCategory> getAssetCategoryMapFromJSONArray(JSONArray jsonArray ) {
 		
-		if(jsonArray.isEmpty())
+		if(CollectionUtils.isEmpty(jsonArray))
 			return new HashMap<Long,AssetCategory>();
 			List<AssetCategory> assetCategorys = new ArrayList<>();
 		try {
@@ -135,8 +136,8 @@ public class MasterDataService {
 	}
 	
 	public Map<String, Department> getDepartmentMapFromJSONArray(JSONArray jsonArray ) {
-		System.err.println("jsonArray"+jsonArray);
-		if(jsonArray.isEmpty())
+
+		if(CollectionUtils.isEmpty(jsonArray))
 			return new HashMap<String,Department>();
 		
 		List<Department> Departments = new ArrayList<>();
@@ -159,7 +160,7 @@ public class MasterDataService {
 	
 	public Map<String, FundSource> getFundSourceMapFromJSONArray(JSONArray jsonArray ) {
 
-		if(jsonArray.isEmpty())
+		if(CollectionUtils.isEmpty(jsonArray))
 			return new HashMap<String,FundSource>();
 		List<FundSource> Fundsources = new ArrayList<>();
 		try {
@@ -185,7 +186,7 @@ public class MasterDataService {
 
 	public Map<String, ModeOfAcquisition> getModeOfAcquisitionMapFromJSONArray(JSONArray jsonArray ) {
 
-		if(jsonArray.isEmpty())
+		if(CollectionUtils.isEmpty(jsonArray))
 			return new HashMap<String, ModeOfAcquisition>();
 		List<ModeOfAcquisition> ModeOfAcquisitions = new ArrayList<>();
 		try {

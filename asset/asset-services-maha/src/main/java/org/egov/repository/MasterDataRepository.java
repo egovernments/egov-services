@@ -1,6 +1,7 @@
 package org.egov.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,6 +16,7 @@ import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -92,8 +94,12 @@ public class MasterDataRepository {
 				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailList).tenantId(tenantId).build())
 				.build();
 
-		return new ObjectMapper().convertValue(getMdmsResponse(mdmsCriteriaReq).getMdmsRes()
-				.get("egf-master").get("financialYears").get(0),FinancialYear.class);
+		JSONArray jsonArray = getMdmsResponse(mdmsCriteriaReq).getMdmsRes().get("egf-master").get("financialYears");
+
+		if (CollectionUtils.isEmpty(jsonArray))
+			return null;
+		else
+			return new ObjectMapper().convertValue(jsonArray.get(0), FinancialYear.class);
 	}
 
 	private MdmsResponse getMdmsResponse(MdmsCriteriaReq mdmsCriteriaReq) {

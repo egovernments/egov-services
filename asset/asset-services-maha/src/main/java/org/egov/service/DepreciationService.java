@@ -269,6 +269,13 @@ public class DepreciationService {
 		
 		FinancialYear financialYear = mDService.getFinancialYear(todate, depreciationRequest.getRequestInfo(),
 				criteria.getTenantId());
+		
+		if(financialYear==null)
+		{
+			Map<String, String> errormap = new HashMap<>();
+			errormap.put("EGASSET_DEPRECIATION_FINANCIALYEAR", " No Financial Found For The Given ToDate");
+			throw new CustomException(errormap);
+		}
 		// setting the toDate hours to 23 and mins to 59
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(todate);

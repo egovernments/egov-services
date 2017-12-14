@@ -73,7 +73,9 @@ public class RoleController {
 	public RoleResponse getMDMSRoles(@RequestParam(value = "code", required = false) String code,@RequestParam(value = "tenantId", required = false) String tenantId,
 			@RequestBody final RoleRequest roleRequest) throws UnsupportedEncodingException, JSONException {
 
-		RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(new ArrayList<String>()).build();
+		RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(new ArrayList<String>()).tenantId(tenantId).build();
+		
+		System.out.println("Tenant id from the controller: "+tenantId);
 
 		if (code != null && !code.isEmpty()) {
 

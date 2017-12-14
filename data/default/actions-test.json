@@ -10351,6 +10351,58 @@
     "serviceCode": "Payment Details",
     "code": "null",
     "path": "Solid Waste Management.SWM Transactions.Payment Details.PaymentDetails Update"
-  }  
+  },  
+    {
+      "id": 697,
+      "name": "UpdateUserWithoutValidation",
+      "url": "/user/users/{id}/_updatenovalidate",
+      "displayName": "UserRole Mapping",
+      "orderNumber": 1,
+      "queryParams": null,
+      "parentModule": null,
+      "enabled": true,
+      "serviceCode": "ADMIN",
+      "code": "null",
+      "path": "Administration.UpdateUserWithoutValidation"
+    },
+    {
+      "id": 795,
+      "name": "Create Department",
+      "url": "/egov-common-masters/departments/v1/_create",
+      "displayName": "Create Department",
+      "orderNumber": 1,
+      "queryParams": null,
+      "parentModule": "273",
+      "enabled": true,
+      "serviceCode": "DEPT",
+      "code": "null",
+      "path": "Administration.Department.Create Department"
+    },
+    {
+      "id": 796,
+      "name": "Modify Department",
+      "url": "/egov-common-masters/departments/v1/_search",
+      "displayName": "Modify Department",
+      "orderNumber": 2,
+      "queryParams": null,
+      "parentModule": "273",
+      "enabled": true,
+      "serviceCode": "DEPT",
+      "code": "null",
+      "path": "Administration.Department.Modify Department"
+    },
+    {
+      "id": 797,
+      "name": "View Department",
+      "url": "/egov-common-masters/departments/v1/_search",
+      "displayName": "View Department",
+      "orderNumber": 3,
+      "queryParams": null,
+      "parentModule": "273",
+      "enabled": true,
+      "serviceCode": "DEPT",
+      "code": "null",
+      "path": "Administration.Department.View Department"
+    }
 ]
 }

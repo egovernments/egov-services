@@ -153,18 +153,30 @@ private MdmsCriteriaReq getRoleMDMSCriteria(RoleSearchCriteria roleSearchCriteri
 	String mName = "";
 	
 	mName = moduleName;
-    		
+	String tenantId = "";
+	tenantId = roleSearchCriteria.getTenantId();
+	LOGGER.info("Tenant id from repository: "+tenantId);
 	MdmsCriteriaReq mcq = new MdmsCriteriaReq();
 	List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
 	List<ModuleDetail> moduleDetail = new ArrayList<ModuleDetail>();
 	mcq.setRequestInfo(getRInfo());
 	MdmsCriteria mc = new MdmsCriteria();
-	mc.setTenantId(roleSearchCriteria.getTenantId());
+	if(tenantId.contains(".")){
+		 String[] stateid = tenantId.split("\\.");
+		 LOGGER.info("State IDs are :"+stateid);
+		 mc.setTenantId(stateid[0]);
+		 
+	 } else {
+		 mc.setTenantId(tenantId);
+		 
+	 }
 	ModuleDetail md = new ModuleDetail();
 	md.setModuleName(mName);
 	MasterDetail masterDetail = new MasterDetail();
 	masterDetail.setName(rolesMaster);
+	if(roleSearchCriteria.getCodes().size() > 0){
 	masterDetail.setFilter(roleFilter);
+	}
 	masterDetails.add(masterDetail);
 	md.setMasterDetails(masterDetails);
 	moduleDetail.add(md);

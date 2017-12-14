@@ -14,10 +14,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * An Object that holds Contractor Information
+ * An Object that holds the Contractor Agency/Firm Information
  */
-@ApiModel(description = "An Object that holds Contractor Information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T10:39:50.702Z")
+@ApiModel(description = "An Object that holds the Contractor Agency/Firm Information")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-14T13:05:23.935Z")
 
 public class Contractor   {
   @JsonProperty("id")
@@ -28,6 +28,9 @@ public class Contractor   {
 
   @JsonProperty("name")
   private String name = null;
+
+  @JsonProperty("localName")
+  private String localName = null;
 
   @JsonProperty("code")
   private String code = null;
@@ -87,7 +90,7 @@ public class Contractor   {
   private Boolean pmc = false;
 
   @JsonProperty("status")
-  private ContractorStatus status = null;
+  private String status = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -118,10 +121,10 @@ public class Contractor   {
   }
 
    /**
-   * Tenant id of the Contractor.
+   * Tenant id of the Contractor Agency/Firm.
    * @return tenantId
   **/
-  @ApiModelProperty(required = true, value = "Tenant id of the Contractor.")
+  @ApiModelProperty(required = true, value = "Tenant id of the Contractor Agency/Firm.")
   @NotNull
 
  @Size(min=2,max=128)
@@ -139,10 +142,10 @@ public class Contractor   {
   }
 
    /**
-   * Name of the Contractor.
+   * Name of the Contractor Agency/Firm.
    * @return name
   **/
-  @ApiModelProperty(required = true, value = "Name of the Contractor.")
+  @ApiModelProperty(required = true, value = "Name of the Contractor Agency/Firm.")
   @NotNull
 
  @Pattern(regexp="[a-zA-Z0-9\\s\\.,]+") @Size(min=1,max=100)
@@ -154,16 +157,36 @@ public class Contractor   {
     this.name = name;
   }
 
+  public Contractor localName(String localName) {
+    this.localName = localName;
+    return this;
+  }
+
+   /**
+   * Name of the Contractor Agency/Firm in Local Language.
+   * @return localName
+  **/
+  @ApiModelProperty(value = "Name of the Contractor Agency/Firm in Local Language.")
+
+ @Size(max=100)
+  public String getLocalName() {
+    return localName;
+  }
+
+  public void setLocalName(String localName) {
+    this.localName = localName;
+  }
+
   public Contractor code(String code) {
     this.code = code;
     return this;
   }
 
    /**
-   * Code of the Contractor.
+   * Code of the Contractor Agency/Firm.
    * @return code
   **/
-  @ApiModelProperty(required = true, value = "Code of the Contractor.")
+  @ApiModelProperty(required = true, value = "Code of the Contractor Agency/Firm.")
   @NotNull
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=100)
@@ -181,10 +204,10 @@ public class Contractor   {
   }
 
    /**
-   * Correspondence Address of the Contractor.
+   * Correspondence Address of the Contractor Agency/Firm.
    * @return correspondenceAddress
   **/
-  @ApiModelProperty(required = true, value = "Correspondence Address of the Contractor.")
+  @ApiModelProperty(required = true, value = "Correspondence Address of the Contractor Agency/Firm.")
   @NotNull
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(min=1,max=512)
@@ -205,8 +228,7 @@ public class Contractor   {
    * Payment Address of the Contractor.
    * @return paymentAddress
   **/
-  @ApiModelProperty(required = true, value = "Payment Address of the Contractor.")
-  @NotNull
+  @ApiModelProperty(value = "Payment Address of the Contractor.")
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(max=512)
   public String getPaymentAddress() {
@@ -223,11 +245,10 @@ public class Contractor   {
   }
 
    /**
-   * Contact Person of the Contractor.
+   * Contact Person of the Contractor Agency/Firm.
    * @return contactPerson
   **/
-  @ApiModelProperty(required = true, value = "Contact Person of the Contractor.")
-  @NotNull
+  @ApiModelProperty(value = "Contact Person of the Contractor Agency/Firm.")
 
  @Size(max=100)
   public String getContactPerson() {
@@ -244,11 +265,10 @@ public class Contractor   {
   }
 
    /**
-   * Email of the Contractor.
+   * Email of the Contractor Agency/Firm.
    * @return email
   **/
-  @ApiModelProperty(required = true, value = "Email of the Contractor.")
-  @NotNull
+  @ApiModelProperty(value = "Email of the Contractor Agency/Firm.")
 
   //@Pattern(regexp="^([a-zA-Z0-9_\\\\-\\\\.]+)@([a-zA-Z0-9_\\\\-\\\\.]+)\\\\.([a-zA-Z]{2,5})$") @Size(max=100)
   //TODO : there is a difference in autogen email pattern and original pattern. Commenting autogen code.
@@ -267,10 +287,10 @@ public class Contractor   {
   }
 
    /**
-   * Narration of the Contractor.
+   * Narration of the Contractor Agency/Firm.
    * @return narration
   **/
-  @ApiModelProperty(value = "Narration of the Contractor.")
+  @ApiModelProperty(value = "Narration of the Contractor Agency/Firm.")
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(max=1024)
   public String getNarration() {
@@ -287,10 +307,10 @@ public class Contractor   {
   }
 
    /**
-   * Mobile Number of the Contractor
+   * Mobile Number of the Contractor Agency/Firm
    * @return mobileNumber
   **/
-  @ApiModelProperty(required = true, value = "Mobile Number of the Contractor")
+  @ApiModelProperty(required = true, value = "Mobile Number of the Contractor Agency/Firm")
   @NotNull
 
   @Valid
@@ -309,11 +329,10 @@ public class Contractor   {
   }
 
    /**
-   * PAN Number of the Contractor
+   * PAN Number of the Contractor Agency/Firm
    * @return panNumber
   **/
-  @ApiModelProperty(required = true, value = "PAN Number of the Contractor")
-  @NotNull
+  @ApiModelProperty(value = "PAN Number of the Contractor Agency/Firm")
 
  @Pattern(regexp="[A-Z]{5}[0-9]{4}[A-Z]{1}") @Size(max=10)
   public String getPanNumber() {
@@ -330,11 +349,10 @@ public class Contractor   {
   }
 
    /**
-   * TIN Number of the Contractor
+   * TIN Number of the Contractor Agency/Firm
    * @return tinNumber
   **/
-  @ApiModelProperty(required = true, value = "TIN Number of the Contractor")
-  @NotNull
+  @ApiModelProperty(value = "TIN Number of the Contractor Agency/Firm")
 
  @Size(max=12)
   public String getTinNumber() {
@@ -351,10 +369,10 @@ public class Contractor   {
   }
 
    /**
-   * Bank of the Contractor. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.
+   * Bank of the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.
    * @return bank
   **/
-  @ApiModelProperty(value = "Bank of the Contractor. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.")
+  @ApiModelProperty(value = "Bank of the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then bank is mandatory else its optional.")
 
   //@Valid
 
@@ -372,10 +390,10 @@ public class Contractor   {
   }
 
    /**
-   * Bank Account Number of the Contractor. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.
+   * Bank Account Number of the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.
    * @return bankAccountNumber
   **/
-  @ApiModelProperty(value = "Bank Account Number of the Contractor. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.")
+  @ApiModelProperty(value = "Bank Account Number of the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then bank account number is mandatory else its optional.")
 
   @Valid
 
@@ -393,11 +411,10 @@ public class Contractor   {
   }
 
    /**
-   * PWD Approval Code of the Contractor
+   * PWD Approval Code of the Contractor Agency/Firm
    * @return pwdApprovalCode
   **/
-  @ApiModelProperty(required = true, value = "PWD Approval Code of the Contractor")
-  @NotNull
+  @ApiModelProperty(value = "PWD Approval Code of the Contractor Agency/Firm")
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=20)
   public String getPwdApprovalCode() {
@@ -414,10 +431,10 @@ public class Contractor   {
   }
 
    /**
-   * Excemption allowed for of the Contractor
+   * Excemption allowed for of the Contractor Agency/Firm
    * @return exemptedFrom
   **/
-  @ApiModelProperty(value = "Excemption allowed for of the Contractor")
+  @ApiModelProperty(value = "Excemption allowed for of the Contractor Agency/Firm")
 
   @Valid
 
@@ -435,11 +452,10 @@ public class Contractor   {
   }
 
    /**
-   * PWD Approval Valid Till
+   * PWD Approval Valid Till date of Contractor Agency/Firm
    * @return pwdApprovalValidTill
   **/
-  @ApiModelProperty(required = true, value = "PWD Approval Valid Till")
-  @NotNull
+  @ApiModelProperty(value = "PWD Approval Valid Till date of Contractor Agency/Firm")
 
 
   public Long getPwdApprovalValidTill() {
@@ -459,8 +475,7 @@ public class Contractor   {
    * EPF Registration Number of the Contractor,Only Number value with decimal should be accepted
    * @return epfRegistrationNumber
   **/
-  @ApiModelProperty(required = true, value = "EPF Registration Number of the Contractor,Only Number value with decimal should be accepted")
-  @NotNull
+  @ApiModelProperty(value = "EPF Registration Number of the Contractor,Only Number value with decimal should be accepted")
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=50)
   public String getEpfRegistrationNumber() {
@@ -498,10 +513,10 @@ public class Contractor   {
   }
 
    /**
-   * IFSC Code of the Bank Account for the Contractor. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.
+   * IFSC Code of the Bank Account for the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.
    * @return ifscCode
   **/
-  @ApiModelProperty(value = "IFSC Code of the Bank Account for the Contractor. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.")
+  @ApiModelProperty(value = "IFSC Code of the Bank Account for the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.")
 
   @Valid
 
@@ -519,10 +534,10 @@ public class Contractor   {
   }
 
    /**
-   * Contractor Class for which Contractor belongs to
+   * Contractor Class for which Contractor Agency/Firm belongs to
    * @return contractorClass
   **/
-  @ApiModelProperty(required = true, value = "Contractor Class for which Contractor belongs to")
+  @ApiModelProperty(required = true, value = "Contractor Class for which Contractor Agency/Firm belongs to")
   @NotNull
 
 //  @Valid
@@ -541,10 +556,10 @@ public class Contractor   {
   }
 
    /**
-   * The boolean value to indicate whether the contractor is PMC(Project Management Consultant). The default value is false.
+   * The boolean value to indicate whether the contractor Agency/Firm is PMC(Project Management Consultant). The default value is false.
    * @return pmc
   **/
-  @ApiModelProperty(value = "The boolean value to indicate whether the contractor is PMC(Project Management Consultant). The default value is false.")
+  @ApiModelProperty(value = "The boolean value to indicate whether the contractor Agency/Firm is PMC(Project Management Consultant). The default value is false.")
 
 
   public Boolean getPmc() {
@@ -555,7 +570,7 @@ public class Contractor   {
     this.pmc = pmc;
   }
 
-  public Contractor status(ContractorStatus status) {
+  public Contractor status(String status) {
     this.status = status;
     return this;
   }
@@ -567,13 +582,12 @@ public class Contractor   {
   @ApiModelProperty(required = true, value = "Status of the Contractor")
   @NotNull
 
-  @Valid
 
-  public ContractorStatus getStatus() {
+  public String getStatus() {
     return status;
   }
 
-  public void setStatus(ContractorStatus status) {
+  public void setStatus(String status) {
     this.status = status;
   }
 
@@ -611,6 +625,7 @@ public class Contractor   {
     return Objects.equals(this.id, contractor.id) &&
         Objects.equals(this.tenantId, contractor.tenantId) &&
         Objects.equals(this.name, contractor.name) &&
+        Objects.equals(this.localName, contractor.localName) &&
         Objects.equals(this.code, contractor.code) &&
         Objects.equals(this.correspondenceAddress, contractor.correspondenceAddress) &&
         Objects.equals(this.paymentAddress, contractor.paymentAddress) &&
@@ -636,7 +651,7 @@ public class Contractor   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, name, code, correspondenceAddress, paymentAddress, contactPerson, email, narration, mobileNumber, panNumber, tinNumber, bank, bankAccountNumber, pwdApprovalCode, exemptedFrom, pwdApprovalValidTill, epfRegistrationNumber, accountCode, ifscCode, contractorClass, pmc, status, auditDetails);
+    return Objects.hash(id, tenantId, name, localName, code, correspondenceAddress, paymentAddress, contactPerson, email, narration, mobileNumber, panNumber, tinNumber, bank, bankAccountNumber, pwdApprovalCode, exemptedFrom, pwdApprovalValidTill, epfRegistrationNumber, accountCode, ifscCode, contractorClass, pmc, status, auditDetails);
   }
 
   @Override
@@ -647,6 +662,7 @@ public class Contractor   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
+    sb.append("    localName: ").append(toIndentedString(localName)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    correspondenceAddress: ").append(toIndentedString(correspondenceAddress)).append("\n");
     sb.append("    paymentAddress: ").append(toIndentedString(paymentAddress)).append("\n");

@@ -131,7 +131,7 @@ public class ContractorHelper {
         contractor.setContractorClass(new ContractorClass());
         contractor.getContractorClass().setPropertyClass(this.contractorClass);
         contractor.setPmc(this.pmc);
-        contractor.setStatus(ContractorStatus.valueOf(this.status));
+        contractor.setStatus(this.status);
         contractor.setAuditDetails(new AuditDetails());
         contractor.getAuditDetails().setCreatedBy(this.createdBy);
         contractor.getAuditDetails().setCreatedTime(this.createdTime);

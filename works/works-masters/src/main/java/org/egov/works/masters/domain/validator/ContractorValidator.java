@@ -42,17 +42,40 @@ public class ContractorValidator {
         }
 
         for (final Contractor contractor : contractorRequest.getContractors()) {
-            //Validate for code uniqueness. In case of update do not validate for the same object code.
             if (!StringUtils.isBlank(contractor.getCode())) {
-                dbContractorObj = contractorRepository.getByCode(contractor.getCode(), tenantId);
-                if (dbContractorObj != null) {
-                    if (isNew || (!isNew && !contractor.getCode().equalsIgnoreCase(dbContractorObj.getCode()))) {
+                // In case of create, Validate for code uniqueness.
+                if (isNew) {
+                    dbContractorObj = contractorRepository.getByCode(contractor.getCode(), tenantId);
+                    if (dbContractorObj != null) {
                         messages.put(Constants.KEY_CONTRACTOR_CODE_INVALID, Constants.MESSAGE_CONTRACTOR_CODE_INVALID);
                         isDataValid = Boolean.TRUE;
                     }
+                } 
+                // In case of update, do not allow to modify code
+                if (!isNew){
+                    dbContractorObj = contractorRepository.findByID(contractor.getId(), tenantId);
+                    if (dbContractorObj != null) {
+                       if(!dbContractorObj.getCode().equalsIgnoreCase(contractor.getCode())) {
+                           messages.put(Constants.KEY_CONTRACTOR_CODE_MODIFY, Constants.MESSAGE_CONTRACTOR_CODE_MODIFY);
+                           isDataValid = Boolean.TRUE;
+                       }
+                    }
                 }
             }
-            // Validate bank/ accountnumber/ accountcode/ ifsccode only if financial integration is configured
+
+            if (contractor.getStatus() != null) {
+                mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
+                        CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE, contractor.getStatus(),
+                        contractorRequest.getRequestInfo());
+                if (mdmsResponse == null || mdmsResponse.size() == 0) {
+                    messages.put(Constants.KEY_CONTRACTOR_STATUS_INVALID,
+                            Constants.MESSAGE_CONTRACTOR_STATUS_INVALID + contractor.getStatus());
+                    isDataValid = Boolean.TRUE;
+                }
+            }
+
+            // Validate bank/ accountnumber/ accountcode/ ifsccode only if
+            // financial integration is configured
             if (financialIntegrationReq) {
                 if (contractor.getBank() != null && contractor.getBank().getCode() != null) {
                     mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(),

@@ -102,6 +102,12 @@ public class Constants {
     public static final String KEY_CONTRACTOR_CODE_INVALID="WMS.CONTRACTOR.CODE.INVALID";
     public static final String MESSAGE_CONTRACTOR_CODE_INVALID="Given Code already exist: ";
     
+    public static final String KEY_CONTRACTOR_CODE_MODIFY="WMS.CONTRACTOR.CODE.MODIFY";
+    public static final String MESSAGE_CONTRACTOR_CODE_MODIFY="Cannot Modify Code: ";
+    
+    public static final String KEY_CONTRACTOR_STATUS_INVALID="WMS.CONTRACTOR.STATUS.INVALID";
+    public static final String MESSAGE_CONTRACTOR_STATUS_INVALID="Given Status is invalid: ";
+    
     public static final String KEY_CONTRACTOR_BANKACCOUNTNUMBER_INVALID="WMS.CONTRACTOR.BANKACCOUNTNUMBER.INVALID";
     public static final String MESSAGE_CONTRACTOR_BANKACCOUNTNUMBER_INVALID="BankAccountNumber cannot be null. Please provide correct value";
     

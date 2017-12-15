@@ -229,7 +229,7 @@ public class LetterOfAcceptanceEstimate {
      **/
     @ApiModelProperty(value = "Array of LOA Activity Details")
 
-    @Valid
+//    @Valid
 
     public List<LOAActivity> getLoaActivities() {
         return loaActivities;

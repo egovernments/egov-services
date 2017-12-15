@@ -178,7 +178,7 @@ public class PurchaseOrderService extends DomainService {
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
                     purchaseOrderDetail.setId(detailSequenceNos.get(j));
                     purchaseOrderDetail.setTenantId(purchaseOrder.getTenantId());
-
+                    
                     if (purchaseOrderDetail.getPurchaseIndentDetails() != null
                             && purchaseOrderDetail.getPurchaseIndentDetails().size() > 0) {
                         int k = 0;
@@ -200,6 +200,21 @@ public class PurchaseOrderService extends DomainService {
                         }
 
                     }
+
+                    //Logic to split PODetail order quantity across multiple indentdetails starts
+                    BigDecimal totalIndentQuantity = new BigDecimal(0);
+                    
+                    if(purchaseOrderDetail.getPurchaseIndentDetails()!=null)
+                    for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+                    	totalIndentQuantity = totalIndentQuantity.add(purchaseIndentDetail.getIndentDetail().getIndentQuantity());
+                    }
+                    
+                    for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+                    	if(totalIndentQuantity.compareTo(purchaseOrderDetail.getOrderQuantity())>=0){
+	                    	purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(purchaseOrderDetail.getOrderQuantity());
+                    	}
+                    }
+                    //Logic to split PODetail order quantity across multiple indentdetails ends
 
                     Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", purchaseOrderDetail.getUom().getCode(), Uom.class);
                     purchaseOrderDetail.setUom((Uom) uom);
@@ -254,37 +269,64 @@ public class PurchaseOrderService extends DomainService {
             validate(purchaseOrder, Constants.ACTION_UPDATE, tenantId);
 
             for (PurchaseOrder eachPurchaseOrder : purchaseOrder) {
-
-                InvalidDataException errors = new InvalidDataException();
-                if (eachPurchaseOrder.getAdvanceAmount() != null) {
-                    if (eachPurchaseOrder.getAdvanceAmount().compareTo(eachPurchaseOrder.getTotalAmount()) > 0) {
-                        errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), eachPurchaseOrder.getAdvanceAmount() + " at serial no." + (purchaseOrder.indexOf(eachPurchaseOrder) + 1));
-                    }
+            	
+            	if(eachPurchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Rejected"))) {
+                	for (PurchaseOrderDetail eachPurchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
+                		for(PurchaseIndentDetail purchaseIndentDetail : eachPurchaseOrderDetail.getPurchaseIndentDetails()) {
+                			purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(new BigDecimal(0));
+                			purchaseIndentDetail.getIndentDetail().setIndentQuantity(new BigDecimal(0));
+                		}
+                	}
                 }
 
-                BigDecimal totalAmount = new BigDecimal(0);
-                eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
-
-                for (PurchaseOrderDetail eachPurchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
-                    eachPurchaseOrderDetail.setUom(uomService.getUom(eachPurchaseOrderDetail.getTenantId(), eachPurchaseOrderDetail.getUom().getCode(), new RequestInfo()));
-                    if (eachPurchaseOrderDetail.getOrderQuantity() != null) {
-                        eachPurchaseOrderDetail.setOrderQuantity(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
-                    }
-                    if (eachPurchaseOrderDetail.getIndentQuantity() != null) {
-                        eachPurchaseOrderDetail.setIndentQuantity(eachPurchaseOrderDetail.getIndentQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
-                    }
-                    if (eachPurchaseOrderDetail.getTenderQuantity() != null) {
-                        eachPurchaseOrderDetail.setTenderQuantity(eachPurchaseOrderDetail.getTenderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
-                    }
-                    if (eachPurchaseOrderDetail.getUsedQuantity() != null) {
-                        eachPurchaseOrderDetail.setUsedQuantity(eachPurchaseOrderDetail.getUsedQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
-                    }
-                    if (eachPurchaseOrderDetail.getUnitPrice() != null) {
-                        eachPurchaseOrderDetail.setUnitPrice(eachPurchaseOrderDetail.getUnitPrice().divide(eachPurchaseOrderDetail.getUom().getConversionFactor()));
-                    }
-                    totalAmount = totalAmount.add(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUnitPrice()).add(totalAmount));
-                }
-                eachPurchaseOrder.setTotalAmount(totalAmount);
+            	else {
+	                InvalidDataException errors = new InvalidDataException();
+	                if (eachPurchaseOrder.getAdvanceAmount() != null) {
+	                    if (eachPurchaseOrder.getAdvanceAmount().compareTo(eachPurchaseOrder.getTotalAmount()) > 0) {
+	                        errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), eachPurchaseOrder.getAdvanceAmount() + " at serial no." + (purchaseOrder.indexOf(eachPurchaseOrder) + 1));
+	                    }
+	                }
+	
+	                BigDecimal totalAmount = new BigDecimal(0);
+	                eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+	
+	                for (PurchaseOrderDetail eachPurchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
+	                	
+	                    //Logic to split PODetail order quantity across multiple indentdetails starts
+	                    BigDecimal totalIndentQuantity = new BigDecimal(0);
+	                    
+	                    if(eachPurchaseOrderDetail.getPurchaseIndentDetails()!=null)
+	                    for(PurchaseIndentDetail purchaseIndentDetail : eachPurchaseOrderDetail.getPurchaseIndentDetails()) {
+	                    	totalIndentQuantity = totalIndentQuantity.add(purchaseIndentDetail.getIndentDetail().getIndentQuantity());
+	                    }
+	                    
+	                    for(PurchaseIndentDetail purchaseIndentDetail : eachPurchaseOrderDetail.getPurchaseIndentDetails()) {
+	                    	if(totalIndentQuantity.compareTo(eachPurchaseOrderDetail.getOrderQuantity())>=0){
+		                    	purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(eachPurchaseOrderDetail.getOrderQuantity());
+	                    	}
+	                    }
+	                    //Logic to split PODetail order quantity across multiple indentdetails ends
+	                	
+	                    eachPurchaseOrderDetail.setUom(uomService.getUom(eachPurchaseOrderDetail.getTenantId(), eachPurchaseOrderDetail.getUom().getCode(), new RequestInfo()));
+	                    if (eachPurchaseOrderDetail.getOrderQuantity() != null) {
+	                        eachPurchaseOrderDetail.setOrderQuantity(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+	                    }
+	                    if (eachPurchaseOrderDetail.getIndentQuantity() != null) {
+	                        eachPurchaseOrderDetail.setIndentQuantity(eachPurchaseOrderDetail.getIndentQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+	                    }
+	                    if (eachPurchaseOrderDetail.getTenderQuantity() != null) {
+	                        eachPurchaseOrderDetail.setTenderQuantity(eachPurchaseOrderDetail.getTenderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+	                    }
+	                    if (eachPurchaseOrderDetail.getUsedQuantity() != null) {
+	                        eachPurchaseOrderDetail.setUsedQuantity(eachPurchaseOrderDetail.getUsedQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+	                    }
+	                    if (eachPurchaseOrderDetail.getUnitPrice() != null) {
+	                        eachPurchaseOrderDetail.setUnitPrice(eachPurchaseOrderDetail.getUnitPrice().divide(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+	                    }
+	                    totalAmount = totalAmount.add(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUnitPrice()).add(totalAmount));
+	                }
+	                eachPurchaseOrder.setTotalAmount(totalAmount);
+	            }
             }
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
@@ -545,10 +587,16 @@ public class PurchaseOrderService extends DomainService {
             boolean isRateContractExist =false;
             for(Indent indent : indentResponse.getIndents()) {
             	for(IndentDetail indentDetail : indent.getIndentDetails()) {
+            		//checking if atleast one ratecontract exists for materials in the given indents
             		if(purchaseOrderRepository.isRateContractsExists(purchaseOrder.getSupplier().getCode(), purchaseOrder.getRateType().name(), indentDetail.getMaterial().getCode()))
             		{
             			isRateContractExist = true;
             			break;
+            		}
+            		
+            		//if an indent line is used in PO, it cannot be used to create PO again
+            		if(indentDetail.getPoOrderedQuantity().compareTo(new BigDecimal(0)) > 0) {
+            			indent.getIndentDetails().remove(indentDetail);
             		}
             	}
             }

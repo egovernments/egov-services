@@ -39,6 +39,9 @@ public class ScheduleOfRateService {
     @Autowired
     private ScheduleOfRateValidator scheduleOfRateValidator;
 
+    @Autowired
+    private ScheduleOfRateService scheduleOfRateService;
+
     @Transactional
     public ResponseEntity<?> create(ScheduleOfRateRequest scheduleOfRateRequest) {
         ScheduleOfRateResponse response = new ScheduleOfRateResponse();
@@ -71,38 +74,66 @@ public class ScheduleOfRateService {
 
     public ResponseEntity<?> update(ScheduleOfRateRequest scheduleOfRateRequest) {
         ScheduleOfRateResponse response = new ScheduleOfRateResponse();
+        Boolean existingSorAvailable = Boolean.FALSE;
+        Boolean isMigratedSorRatesAvailable = Boolean.FALSE;
+        CommonUtils commonUtils = new CommonUtils();
+        SORRate sorRateP = null;
+        SORRate sorRateC = null;
+        Long secInMillis = 1000l;
+
+        for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
+            if (scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty()) {
+                //Finding any existing SORs are sent, if existing SORrates sent and flag isMigrated set true then we will not get existing rates from DB.
+                for (SORRate sorRate : scheduleOfRate.getSorRates()) {
+                    if (sorRate.getId() != null && !sorRate.getId().isEmpty()) existingSorAvailable = Boolean.TRUE;
+                    if (sorRate.getIsMigrated() != null && sorRate.getIsMigrated())
+                        isMigratedSorRatesAvailable = Boolean.TRUE;
+                }
+                //If there are no existing rates and this update is migrated data then we are getting existing sor rates and append to existing sor rates collection
+                if (!existingSorAvailable && isMigratedSorRatesAvailable) {
+                    scheduleOfRate.getSorRates().addAll(scheduleOfRateService.getById(scheduleOfRate.getId(), scheduleOfRate.getTenantId()).getSorRates());
+                }
+                //sorting SOR rates by from date
+                Collections.sort(scheduleOfRate.getSorRates(), new Comparator<SORRate>() {
+                    @Override
+                    public int compare(SORRate sorRate1, SORRate sorRate2) {
+                        return sorRate1.getFromDate().compareTo(sorRate2.getFromDate());
+                    }
+                });
+                //Check for any new rates are overlapping with existing data, in this case we will close the existing data with previous date of new rate from date.
+                for (int i = 0; i < scheduleOfRate.getSorRates().size(); i++) {
+                    SORRate sorRate = scheduleOfRate.getSorRates().get(i);
+                    if (i == 0) {
+                        sorRateP = sorRate;
+                        sorRateC = sorRate;
+                    } else {
+                        sorRateP = sorRateC;
+                        sorRateC = sorRate;
+                    }
+                    if (i>0 && sorRateP.getToDate() > sorRateC.getFromDate()) {
+                        //Validating existence of Estimates
+                        scheduleOfRateValidator.validateRatesForUpdate(scheduleOfRateRequest, scheduleOfRate.getId(), sorRateP.getFromDate(), sorRateP.getToDate(), sorRateP.getTenantId());
+                        //Setting previous rate to date to current rate from date - 1sec
+                        scheduleOfRate.getSorRates().get(i - 1).setToDate(scheduleOfRate.getSorRates().get(i).getFromDate() - secInMillis);
+                    }
+                }
+            }
+        }
 
         scheduleOfRateValidator.validate(scheduleOfRateRequest);
         scheduleOfRateValidator.validateForUpdate(scheduleOfRateRequest);
 
-        SORRate sorRateP = null;
-        SORRate sorRateC = null;
-
         for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
             scheduleOfRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
-            Collections.sort(scheduleOfRate.getSorRates(), new Comparator<SORRate>() {
-                @Override
-                public int compare(SORRate sorRate1, SORRate sorRate2) {
-                    return sorRate1.getFromDate().compareTo(sorRate2.getFromDate());
+            if (scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty()) {
+                for (SORRate sorRate : scheduleOfRate.getSorRates()) {
+                    if (sorRate.getId() != null && !sorRate.getId().isEmpty())
+                        sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
+                    else {
+                        sorRate.setId(commonUtils.getUUID());
+                        sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), false));
+                    }
                 }
-            });
-            for (int i = 0; i < scheduleOfRate.getSorRates().size(); i++) {
-                SORRate sorRate = scheduleOfRate.getSorRates().get(i);
-                if (i == 0) {
-                    sorRateP = sorRate;
-                    sorRateC = sorRate;
-                } else {
-                    sorRateP = sorRateC;
-                    sorRateC = sorRate;
-                }
-                if (sorRateP.getToDate() > sorRateC.getFromDate()) {
-                    scheduleOfRateValidator.validateRatesForUpdate(scheduleOfRateRequest, scheduleOfRate.getId(), sorRateP.getFromDate(), sorRateP.getToDate(), sorRateP.getTenantId());
-                }
-
-                if (sorRate.getToDate() == null) {
-
-                }
-                sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
             }
             if (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty()) {
                 for (final MarketRate marketRate : scheduleOfRate.getMarketRates()) {

@@ -638,7 +638,8 @@ definitions:
         maxLength: 128
         minLength: 2
       milestoneTemplate:
-        $ref: '#/definitions/MilestoneTemplate'
+        type: string
+        description: The milestone template of the Template activity. Unique reference from 'MilestoneTemplate'. Primary key is ref. here.
       stageOrderNumber:
         type: number
         pattern: "[0-9]"

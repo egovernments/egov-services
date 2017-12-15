@@ -1246,5 +1246,30 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
               type: LONG
 
+    - version: 1.0
+      name: material type store mapping create/update
+      description: create material type store mapping in inventory
+      fromTopic: inv-materialtypestoremapping-save-topic
+      queryMaps:
+        - query: >-
+                 INSERT INTO materialtypestoremapping(id, materialtype, store, chartofaccount, active,tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 materialtype= EXCLUDED.materialType,  store=EXCLUDED.store,  chartofaccount=EXCLUDED.chartofaccount,
+                 active=EXCLUDED.active, lastmodifiedby=EXCLUDED.lastmodifiedby,  lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+          basePath: $.materialTypeStores.*
+          jsonMaps:
+            - jsonPath: $.materialTypeStores.*.id
+            - jsonPath: $.materialTypeStores.*.materialType.code
+            - jsonPath: $.materialTypeStores.*.store.code
+            - jsonPath: $.materialTypeStores.*.chartofAccount.glCode
+            - jsonPath: $.materialTypeStores.*.active
+            - jsonPath: $.materialTypeStores.*.tenantId
+            - jsonPath: $.materialTypeStores.*.auditDetails.createdBy
+            - jsonPath: $.materialTypeStores.*.auditDetails.lastModifiedBy
+            - jsonPath: $.materialTypeStores.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.materialTypeStores.*.auditDetails.lastModifiedTime
+              dbType: LONG
+
 
 

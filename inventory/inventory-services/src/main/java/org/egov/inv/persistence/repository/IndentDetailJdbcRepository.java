@@ -72,7 +72,7 @@ public class IndentDetailJdbcRepository extends JdbcRepository {
 		{
 			return new ArrayList<>();
 		}
-		String query = "select * from indentdetail where indentnumber in (:indentNumbers) and tenantId=:tenantId and deleted =false ";
+		String query = "select * from indentdetail where indentnumber in (:indentNumbers) and tenantId=:tenantId and deleted is not true ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		paramValues.put("indentNumbers", indentNumbers);

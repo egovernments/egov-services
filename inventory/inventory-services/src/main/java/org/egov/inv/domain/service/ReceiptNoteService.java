@@ -450,7 +450,7 @@ public class ReceiptNoteService extends DomainService {
         for (MaterialReceiptDetail materialReceiptDetail : materialReceiptDetails) {
             i++;
             if (false == hashSet.add(materialReceiptDetail.getPurchaseOrderDetail().getId() + "-" + materialReceiptDetail.getMaterial().getCode())) {
-                errors.addDataError(ErrorCode.COMBINATION_EXISTS.getCode(), "Purchase order", materialReceiptDetail.getPurchaseOrderDetail().getId().toString()
+                errors.addDataError(ErrorCode.COMBINATION_EXISTS_ROW.getCode(), "Purchase order", materialReceiptDetail.getPurchaseOrderDetail().getId().toString()
                         , "material", materialReceiptDetail.getMaterial().getCode().toString(), String.valueOf(i));
             }
         }

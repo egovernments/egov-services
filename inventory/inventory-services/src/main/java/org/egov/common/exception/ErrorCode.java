@@ -17,10 +17,10 @@ public enum ErrorCode {
             "org.egov.service.internal.error",
             "Internal Server error",
             "Some required service is down. Please contact Administrator"),
-	SQL_ERROR(
-			"org.egov.service.sql.error",
-			"Error in the sql statements ",
-			"Sql statment execution failed . Please contact Administrator"),
+    SQL_ERROR(
+            "org.egov.service.sql.error",
+            "Error in the sql statements ",
+            "Sql statment execution failed . Please contact Administrator"),
     NON_UNIQUE_VALUE(
             "non.unique.value",
             "the field {0} must be unique in the system",
@@ -141,8 +141,11 @@ public enum ErrorCode {
             "the quantity {0} should be less than or equal to quantity {1}",
             "The value {2} for the field {0} should be less than or equal to the value {3} for the field {1}"),
     COMBINATION_EXISTS("inv.combination.exists",
-            "{0} {1} and {2} {3} found at row {4}",
-            "{0} {1} and {2} {3} found at row {4}"),
+            "{0} {1} and {2} {3} combination already exists",
+            "{0} {1} and {2} {3} combination already exists"),
+    COMBINATION_EXISTS_ROW("inv.combination.row.exists",
+            "{0} {1} and {2} {3} combination already exists at row {4}",
+            "{0} {1} and {2} {3} combination already exists at row {4}"),
     DATE1_LE_DATE2ROW("date1row.should.be.le.date2",
             "{0} should be less than {1} at row {2}",
             "{0} should be less than {1} at row {2}"),
@@ -193,10 +196,7 @@ public enum ErrorCode {
             "{1} {0} doesnt match with the existing {1} {2}"),
     CATGRY_MATCH("doesnt.match.catgry",
             "Material {0} and Uom {1} combination Not Exist In The System {2}",
-            "Material {0} and Uom {1} combination Not Exist In The System {2}"),
-    NULL_VALUE_ROW("null.value",
-            "the field {0} must be not be null at row {2}",
-            "the field {0} must be not be null at row {2}");
+            "Material {0} and Uom {1} combination Not Exist In The System {2}");
 
 
     private final String code;

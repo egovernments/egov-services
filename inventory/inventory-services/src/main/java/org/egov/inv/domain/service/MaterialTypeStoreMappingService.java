@@ -115,10 +115,10 @@ public class MaterialTypeStoreMappingService extends DomainService {
             }
 
             for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStoreMappings) {
-                uniqueCheck(errors, materialTypeStoreMapping, i);
-                validateMaterial(tenantId, errors, materialTypeStoreMapping, i);
-                validateStore(tenantId, errors, materialTypeStoreMapping, i);
-                validateChartOfAccount(errors, materialTypeStoreMapping, i);
+                uniqueCheck(errors, materialTypeStoreMapping);
+                validateMaterial(tenantId, errors, materialTypeStoreMapping);
+                validateStore(tenantId, errors, materialTypeStoreMapping);
+                validateChartOfAccount(errors, materialTypeStoreMapping);
                 i++;
             }
 
@@ -130,7 +130,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
         }
     }
 
-    private void validateStore(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+    private void validateStore(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
         if (null != materialTypeStoreMapping.getStore() && !isEmpty(materialTypeStoreMapping.getStore().getCode())) {
             StoreGetRequest storeGetRequest = StoreGetRequest.builder()
                     .code(Collections.singletonList(materialTypeStoreMapping.getStore().getCode()))
@@ -139,31 +139,31 @@ public class MaterialTypeStoreMappingService extends DomainService {
 
             StoreResponse storeResponse = storeService.search(storeGetRequest);
             if (storeResponse.getStores().size() == 0) {
-                errors.addDataError(ErrorCode.OBJECT_NOT_FOUND_ROW.getCode(), "Store ", materialTypeStoreMapping.getStore().getCode(), String.valueOf(i));
+                errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Store ", materialTypeStoreMapping.getStore().getCode());
             }
         }
     }
 
-    private void validateMaterial(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+    private void validateMaterial(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
         if (null != materialTypeStoreMapping && null != materialTypeStoreMapping.getMaterialType().getCode()) {
             MaterialType materialType = (MaterialType) mdmsRepository.fetchObject(tenantId, "inventory", "MaterialType", "code", materialTypeStoreMapping.getMaterialType().getCode(), MaterialType.class);
             if (null == materialType) {
-                errors.addDataError(ErrorCode.OBJECT_NOT_FOUND_ROW.getCode(), "Material Type ", materialTypeStoreMapping.getMaterialType().getCode(), String.valueOf(i));
+                errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Material Type ", materialTypeStoreMapping.getMaterialType().getCode());
 
             }
         }
     }
 
-    private void uniqueCheck(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+    private void uniqueCheck(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
         if (!typeStoreMappingJdbcRepository.uniqueCheck("materialType", "store", new MaterialTypeStoreMappingEntity().toEntity(materialTypeStoreMapping))) {
-            errors.addDataError(ErrorCode.COMBINATION_EXISTS.getCode(), "Material Type", materialTypeStoreMapping.getMaterialType().getCode(), "store", materialTypeStoreMapping.getStore().getCode(), String.valueOf(i));
+            errors.addDataError(ErrorCode.COMBINATION_EXISTS.getCode(), "Material Type", materialTypeStoreMapping.getMaterialType().getCode(), "store", materialTypeStoreMapping.getStore().getCode());
 
         }
     }
 
-    private void validateChartOfAccount(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+    private void validateChartOfAccount(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
         if (isFinancialEnabled && isEmpty(materialTypeStoreMapping.getChartofAccount().getGlCode())) {
-            errors.addDataError(ErrorCode.NULL_VALUE_ROW.getCode(), "Account Code", String.valueOf(i));
+            errors.addDataError(ErrorCode.NULL_VALUE.getCode(), "Account Code");
         }
     }
 }

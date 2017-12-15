@@ -31,3 +31,24 @@ UIInfo:
     - employee.name
     - shift.name
     resultObjectName: sanitationStaffSchedules
+    
+- referencePath: "/vehicleSchedules"
+  searchUrl: "/vehicleSchedules/_search?transactionNo={transactionNo}"
+  groups:
+    SourceSegregationDetails:
+      fields:
+      - vehicleSchedules[0].scheduledFrom
+      - vehicleSchedules[0].scheduledTo
+      - vehicleSchedules[0].targetedGarbage
+  searchResult:
+    rowClickUrlUpdate: "/update/swm/vehicleSchedules/{transactionNo}"
+    rowClickUrlView: "/view/swm/vehicleSchedules/{transactionNo}"
+    columns:
+    - scheduledFrom
+    - scheduledTo
+    - targetedGarbage
+    values:
+    - vehicleSchedules[0].scheduledFrom
+    - vehicleSchedules[0].scheduledTo
+    - vehicleSchedules[0].targetedGarbage
+    resultObjectName: vehicleSchedules

@@ -70,7 +70,6 @@ public void setId(String id) {
    * @return name
   **/
 
- @Pattern(regexp="^[a-zA-Z0-9 ]+$")
   public String getName() {
     return name;
   }

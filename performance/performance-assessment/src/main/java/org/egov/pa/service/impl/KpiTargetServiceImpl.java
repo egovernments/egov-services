@@ -8,6 +8,7 @@ import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
+import org.egov.pa.model.TargetType;
 import org.egov.pa.model.Tenant;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.KpiTargetRepository;
@@ -70,7 +71,10 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 			if(StringUtils.isBlank(target.getId())) { 
 				createTargetList.add(target); 
 			}
-			if(StringUtils.isNotBlank(target.getTargetDescription())) { 
+			KPI kpi = target.getKpi();
+			if(null != kpi && StringUtils.isNotBlank(kpi.getTargetType())
+					&& kpi.getTargetType().equals(TargetType.TEXT.toString())
+					&& StringUtils.isNotBlank(target.getTargetDescription())) { 
 				target.setTargetValue(target.getTargetDescription());
 			}
 		}

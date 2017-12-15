@@ -91,10 +91,10 @@ public class RequestValidator {
             for (final FieldError fieldError : errors.getFieldErrors()) { 
             	ErrorField ef = new ErrorField();
             	ef.setField(fieldError.getField());
-            	ef.setMessage("Value Entered : " + fieldError.getRejectedValue() + " is not matching the required expression");
+            	ef.setMessage("Value Entered : " + fieldError.getRejectedValue() + " is not a valid value. Please re-enter !");
             	errFields.add(ef);
             	error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
-            	error.setMessage("Not matching the required expression"); 
+            	error.setMessage("Not matching the required expression :: "); 
             }
             error.setErrorFields(errFields);   
         }

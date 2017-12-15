@@ -203,7 +203,7 @@ export default class UiLabel extends Component {
       }
       target="_blank"
     >
-      {this.state.value}
+      {"Download"}
     </a>
     </Col>
     </Row>

@@ -164,7 +164,7 @@ class UiFileTable extends Component {
                 <tr>
                   <th>#</th>
                   <th>{translate('tl.create.license.table.documentName')}</th>
-                  <th>{translate('wc.create.groups.fileDetails.title')}</th>
+                  {this.props.readonly?<th>{translate("wc.create.groups.fileDetailsDownload.title")}</th>:<th>{translate("wc.create.groups.fileDetails.title")}</th>}
                   {this.props.readonly ? '' : <th>{translate('reports.common.action')}</th>}
                 </tr>
               </thead>

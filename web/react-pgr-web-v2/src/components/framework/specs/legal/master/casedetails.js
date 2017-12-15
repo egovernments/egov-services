@@ -52,7 +52,7 @@ var dat = {
             label: 'legal.create.referenceNo',
             type: 'text',
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: '',
           },
           {

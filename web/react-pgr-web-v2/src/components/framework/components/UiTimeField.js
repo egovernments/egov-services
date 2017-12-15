@@ -60,7 +60,6 @@ export default class UiTimeField extends Component {
               }}
               defaultText=""
               onChange={e => {
-                debugger;
                 this.props.handler(
                   { target: { value: e } },
                   item.jsonPath,

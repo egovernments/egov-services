@@ -280,7 +280,7 @@ var dat = {
       },
       {
         name: 'UploadDocument1',
-        label: 'legal.create.group.title.UploadDocument',
+        label: 'legal.create.group.title.DownloadDocument',
         fields: [
           {
             name: 'UploadDocument1',

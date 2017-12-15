@@ -183,8 +183,13 @@ export default class KPIDashboardQuery extends Component {
   processOnClickViewButton = () => {
     let finYears = this.state.fyIndices.map((item, index) => parseFinancialYearResponse(this.fyRes)[item]['finYearRange']).join(',');
     let ulbs = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',');
-    let kpis = this.state.kpiIndices.map((item, index) => jp.query(this.kpiRes, `$.KPIs[${item}].code`)).join(',');
+    let kpis = this.state.kpiIndices.map((item, index) => parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)[item]['code']).join(',');
+    let kpiNames = this.state.kpiIndices.map((item, index) => parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)[item]['name']).join(',');
 
+    console.log(kpis)
+    console.log(kpiNames)
+    console.log(this.state.kpiIndices)
+    
     this.setState({
       showChartView: false,
       showTableView: false,

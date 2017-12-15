@@ -546,7 +546,7 @@ var dat = {
       {
         label: '',
         name: 'updatekpiTargetTextBlock',
-        hide: true,
+        hide: "this.props.getVal('kpiTargets[0].kpi.targetType') != 'TEXT'?true:false",
         multiple: false,
         fields: [
           {
@@ -565,7 +565,7 @@ var dat = {
       {
         label: '',
         name: 'updatekpiTargetBlock',
-        hide: true,
+        hide: "this.props.getVal('kpiTargets[0].kpi.targetType') != 'VALUE'?true:false",
         multiple: false,
         fields: [
           {
@@ -585,7 +585,7 @@ var dat = {
       {
         label: '',
         name: 'updatekpiTargetRadioBlock',
-        hide: true,
+        hide: "this.props.getVal('kpiTargets[0].kpi.targetType') != 'OBJECTIVE'?true:false",
         //"hide": "`${getVal('KPIs[0].targetType')}`",
         multiple: false,
         fields: [

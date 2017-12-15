@@ -36,6 +36,9 @@ public class MaterialTypeStoreMappingService extends DomainService {
     @Autowired
     private StoreService storeService;
 
+    @Value("${financial.enabled}")
+    private boolean isFinancialEnabled;
+
     public MaterialTypeStoreResponse create(MaterialTypeStoreRequest materialTypeStoreRequest, String tenantId) {
         List<MaterialTypeStoreMapping> materialTypeStores = materialTypeStoreRequest.getMaterialTypeStores();
 
@@ -115,6 +118,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
                 uniqueCheck(errors, materialTypeStoreMapping, i);
                 validateMaterial(tenantId, errors, materialTypeStoreMapping, i);
                 validateStore(tenantId, errors, materialTypeStoreMapping, i);
+                validateChartOfAccount(errors, materialTypeStoreMapping, i);
                 i++;
             }
 
@@ -157,4 +161,9 @@ public class MaterialTypeStoreMappingService extends DomainService {
         }
     }
 
+    private void validateChartOfAccount(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+        if (isFinancialEnabled && isEmpty(materialTypeStoreMapping.getChartofAccount().getGlCode())) {
+            errors.addDataError(ErrorCode.NULL_VALUE_ROW.getCode(), "Account Code", String.valueOf(i));
+        }
+    }
 }

@@ -193,7 +193,10 @@ public enum ErrorCode {
             "{1} {0} doesnt match with the existing {1} {2}"),
     CATGRY_MATCH("doesnt.match.catgry",
             "Material {0} and Uom {1} combination Not Exist In The System {2}",
-            "Material {0} and Uom {1} combination Not Exist In The System {2}");
+            "Material {0} and Uom {1} combination Not Exist In The System {2}"),
+    NULL_VALUE_ROW("null.value",
+            "the field {0} must be not be null at row {2}",
+            "the field {0} must be not be null at row {2}");
 
 
     private final String code;

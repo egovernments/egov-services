@@ -1,0 +1,126 @@
+{
+	"info": {
+		"name": "Material Type Store Mapping",
+		"_postman_id": "c8a9ea09-c9fc-a788-997e-e77fa874b077",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Type Material Store",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"materialTypeStores\": [\n    {\n      \"materialType\": {\n        \"code\": \"MT1\"\n      },\n      \"store\": {\n        \"code\": \"STR\"\n      },\n      \"department\": {\n        \"name\": \"dept_234\"\n      },\n      \"chartofAccount\": {\n        \"glCode\": \"4209001\"\n      },\n      \"active\": true,\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"93f3c9c9-6cad-43dc-9bbe-f88a01ea89e3\",\n    \"userInfo\":{\n      \"id\":1\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/materialtypestoremapping/_create?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"materialtypestoremapping",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Type Material Store",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"d6769a6d-e331-4475-8bf3-701f9eae9997\",\n      \"userInfo\":{  \n         \"id\":1\n      }\n   },\n   \"materialTypeStores\":[  \n      {  \n        \"id\":\"4\",\n         \"materialType\":{  \n            \"code\":\"MAT3\",\n            \"name\":\"material75\"\n         },\n         \"store\":{  \n            \"code\":\"STR18\",\n            \"name\":\"store12\"\n         },\n         \"active\":false,\n         \"delete\":null,\n         \"chartofAccount\":{  \n           \"id\":1,\n           \"glCode\":\"glcode\"\n         }\n      }\n   ]\n}"
+				},
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/materialtypestoremapping/_update?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"materialtypestoremapping",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Material Type Store",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"3cc512e5-434c-451a-928f-9821e14aa632\",\n      \"userInfo\":{\n        \"id\":2\n      }\n }\n}"
+				},
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/materialtypestoremapping/_search?tenantId=default&materialType=MT1",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"materialtypestoremapping",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "materialType",
+							"value": "MT1",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

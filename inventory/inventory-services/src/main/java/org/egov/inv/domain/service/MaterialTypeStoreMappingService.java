@@ -7,6 +7,7 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
+import org.egov.inv.persistence.entity.MaterialTypeStoreMappingEntity;
 import org.egov.inv.persistence.repository.MaterialTypeStoreJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,7 +61,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
 
     public MaterialTypeStoreResponse update(MaterialTypeStoreRequest materialTypeStoreRequest, String tenantId) {
         List<MaterialTypeStoreMapping> materialTypeStores = materialTypeStoreRequest.getMaterialTypeStores();
-         validate(materialTypeStores, tenantId, Constants.ACTION_UPDATE);
+        validate(materialTypeStores, tenantId, Constants.ACTION_UPDATE);
 
         for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStores) {
             setTenant(tenantId, materialTypeStoreMapping);
@@ -90,6 +91,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
 
     private void validate(List<MaterialTypeStoreMapping> materialTypeStoreMappings, String tenantId, String method) {
         InvalidDataException errors = new InvalidDataException();
+        int i = 0;
         try {
             switch (method) {
 
@@ -110,7 +112,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
             }
 
             for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStoreMappings) {
-                int i = 0;
+                uniqueCheck(errors, materialTypeStoreMapping, i);
                 validateMaterial(tenantId, errors, materialTypeStoreMapping, i);
                 validateStore(tenantId, errors, materialTypeStoreMapping, i);
                 i++;
@@ -148,5 +150,11 @@ public class MaterialTypeStoreMappingService extends DomainService {
         }
     }
 
+    private void uniqueCheck(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+        if (!typeStoreMappingJdbcRepository.uniqueCheck("materialType", "store", new MaterialTypeStoreMappingEntity().toEntity(materialTypeStoreMapping))) {
+            errors.addDataError(ErrorCode.COMBINATION_EXISTS.getCode(), "Material Type", materialTypeStoreMapping.getMaterialType().getCode(), "store", materialTypeStoreMapping.getStore().getCode(), String.valueOf(i));
+
+        }
+    }
 
 }

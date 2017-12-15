@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class MaterialTypeStoreJdbcRepository extends JdbcRepository {
 
     static {
-        init(MaterialStoreMappingEntity.class);
+        init(MaterialTypeStoreMappingEntity.class);
     }
 
 

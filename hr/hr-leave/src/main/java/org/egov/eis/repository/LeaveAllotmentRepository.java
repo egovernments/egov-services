@@ -129,10 +129,10 @@ public class LeaveAllotmentRepository {
 
 	}
 
-	public List<Map<String, Object>> getLeaveAllotmentByDesignation(final Long employeeid, final Long designationid,
+	public List<Map<String, Object>> getLeaveAllotmentByDesignation(final Long leavetypeid, final Long designationid,
 			final String tenantId) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		preparedStatementValues.add(employeeid);
+		preparedStatementValues.add(leavetypeid);
 		preparedStatementValues.add(tenantId);
 
 		String query;
@@ -140,7 +140,28 @@ public class LeaveAllotmentRepository {
 			preparedStatementValues.add(designationid);
 			query = leaveAllotmentQueryBuilder.selectLeaveAllotmentByDesignationQuery();
 		} else {
-			query = leaveAllotmentQueryBuilder.selectLeaveAllotmentByEmployeeQuery();
+			query = leaveAllotmentQueryBuilder.selectLeaveAllotmentByLeavetypeQuery();
+		}
+
+		List<Map<String, Object>> maps = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+		return maps;
+
+	}
+
+	public List<Map<String, Object>> getLeaveAllotmentByLeaveType(final Long id, final Long leavetypeid,
+			final Long designationid, final String tenantId) {
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		preparedStatementValues.add(leavetypeid);
+		preparedStatementValues.add(tenantId);
+
+		String query;
+		if (designationid != null) {
+			preparedStatementValues.add(designationid);
+			preparedStatementValues.add(id);
+			query = leaveAllotmentQueryBuilder.selectLeaveAllotmentByDesignationAndIdNotInQuery();
+		} else {
+			preparedStatementValues.add(id);
+			query = leaveAllotmentQueryBuilder.selectLeaveAllotmentByLeavetypeAndIdNotInQuery();
 		}
 
 		List<Map<String, Object>> maps = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());

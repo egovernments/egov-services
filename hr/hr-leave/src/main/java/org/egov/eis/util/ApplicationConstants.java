@@ -62,6 +62,8 @@ public class ApplicationConstants {
     public static final String MSG_RETIREMENT_DATE = "leaveapplication.retirement.date";
     public static final String MSG_COMPENSATORYDATE_PRESENT = "leaveapplication.compensatorydate.present";
     public static final String MSG_ASSIGNMENT_TODATE = "leaveapplication.assignment.todate";
+    public static final String MSG_LEAVEALLOTMENT_EXISTS = "leaveallotment.present";
+
 
 
     @Autowired

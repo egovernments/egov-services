@@ -80,8 +80,16 @@ public class LeaveAllotmentQueryBuilder {
 		return " select * from egeis_leaveallotment where leavetypeid = ?  and tenantId = ? and designationid = ?";
 	}
 
-	public static String selectLeaveAllotmentByEmployeeQuery() {
+	public static String selectLeaveAllotmentByLeavetypeQuery() {
 		return " select * from egeis_leaveallotment where leavetypeid = ? and tenantId = ? and designationid is null ";
+	}
+
+	public static String selectLeaveAllotmentByDesignationAndIdNotInQuery() {
+		return " select * from egeis_leaveallotment where leavetypeid = ?  and tenantId = ? and designationid = ? and id!= ?";
+	}
+
+	public static String selectLeaveAllotmentByLeavetypeAndIdNotInQuery() {
+		return " select * from egeis_leaveallotment where leavetypeid = ? and tenantId = ? and id!= ? and designationid is null ";
 	}
 
 	@SuppressWarnings("rawtypes")

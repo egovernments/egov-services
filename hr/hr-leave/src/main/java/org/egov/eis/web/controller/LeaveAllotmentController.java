@@ -40,26 +40,40 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveAllotment;
+import org.egov.eis.repository.LeaveAllotmentRepository;
 import org.egov.eis.service.LeaveAllotmentService;
+import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.LeaveAllotmentGetRequest;
 import org.egov.eis.web.contract.LeaveAllotmentRequest;
 import org.egov.eis.web.contract.LeaveAllotmentResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
+import org.egov.eis.web.errorhandlers.Error;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
+import org.egov.eis.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/leaveallotments")
@@ -69,6 +83,12 @@ public class LeaveAllotmentController {
 
 	@Autowired
 	private LeaveAllotmentService leaveAllotmentService;
+
+	@Autowired
+	private LeaveAllotmentRepository leaveAllotmentRepository;
+
+	@Autowired
+	private ApplicationConstants applicationConstants;
 
 	@Autowired
 	private ErrorHandler errHandler;
@@ -126,9 +146,15 @@ public class LeaveAllotmentController {
 	public ResponseEntity<?> create(@RequestBody LeaveAllotmentRequest leaveAllotmentRequest,
 			BindingResult bindingResult) {
 
-		ResponseEntity<?> errorResponseEntity = validateLeaveAllotmentRequest(leaveAllotmentRequest, bindingResult);
-		if (errorResponseEntity != null)
-			return errorResponseEntity;
+		if (bindingResult.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("leaveAllotmentRequest::" + leaveAllotmentRequest);
+
+		final List<ErrorResponse> errorResponses = validateLeaveAllotmentRequest(leaveAllotmentRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
 		return leaveAllotmentService.createLeaveAllotment(leaveAllotmentRequest);
 	}
@@ -148,9 +174,15 @@ public class LeaveAllotmentController {
 	public ResponseEntity<?> update(@RequestBody LeaveAllotmentRequest leaveAllotmentRequest,
 			@PathVariable(required = true, name = "leavetypeId") Long leavetypeId, BindingResult bindingResult) {
 
-		ResponseEntity<?> errorResponseEntity = validateLeaveAllotmentRequest(leaveAllotmentRequest, bindingResult);
-		if (errorResponseEntity != null)
-			return errorResponseEntity;
+		if (bindingResult.hasErrors()) {
+			final ErrorResponse errRes = populateErrors(bindingResult);
+			return new ResponseEntity<ErrorResponse>(errRes, HttpStatus.BAD_REQUEST);
+		}
+		logger.info("leaveAllotmentRequest::" + leaveAllotmentRequest);
+
+		final List<ErrorResponse> errorResponses = validateLeaveAllotmentRequest(leaveAllotmentRequest);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
 
 		return leaveAllotmentService.updateLeaveAllotment(leaveAllotmentRequest);
 	}
@@ -186,14 +218,60 @@ public class LeaveAllotmentController {
 	 * @param bindingResult
 	 * @return ResponseEntity<?>
 	 */
-	private ResponseEntity<?> validateLeaveAllotmentRequest(LeaveAllotmentRequest leaveAllotmentRequest,
-			BindingResult bindingResult) {
-		// validate input params that can be handled by annotations
-		if (bindingResult.hasErrors()) {
-			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult,
-					leaveAllotmentRequest.getRequestInfo());
+	private List<ErrorResponse> validateLeaveAllotmentRequest(LeaveAllotmentRequest leaveAllotmentRequest) {
+		boolean leaveAllotmentExists = false;
+		final List<ErrorResponse> errorResponses = new ArrayList<>();
+
+		for (LeaveAllotment leaveAllotment : leaveAllotmentRequest.getLeaveAllotment()) {
+			List<Map<String, Object>> leaveAllotments;
+			if (leaveAllotment.getId() != null && !leaveAllotment.getId().equals("")) {
+				if (leaveAllotment.getDesignation() != null && !leaveAllotment.getDesignation().equals("")) {
+					leaveAllotments = leaveAllotmentRepository.getLeaveAllotmentByLeaveType(leaveAllotment.getId(),
+							leaveAllotment.getLeaveType().getId(), leaveAllotment.getDesignation(),
+							leaveAllotment.getTenantId());
+				} else {
+					leaveAllotments = leaveAllotmentRepository.getLeaveAllotmentByLeaveType(leaveAllotment.getId(),
+							leaveAllotment.getLeaveType().getId(), null, leaveAllotment.getTenantId());
+				}
+			} else {
+				if (leaveAllotment.getDesignation() != null && !leaveAllotment.getDesignation().equals("")) {
+					leaveAllotments = leaveAllotmentRepository.getLeaveAllotmentByDesignation(
+							leaveAllotment.getLeaveType().getId(), leaveAllotment.getDesignation(),
+							leaveAllotment.getTenantId());
+				} else {
+					leaveAllotments = leaveAllotmentRepository.getLeaveAllotmentByDesignation(
+							leaveAllotment.getLeaveType().getId(), null, leaveAllotment.getTenantId());
+				}
+			}
+
+			if (!leaveAllotments.isEmpty()) {
+				leaveAllotmentExists = true;
+				break;
+			}
 		}
-		return null;
+
+		if (leaveAllotmentExists) {
+			final ErrorResponse errorResponse = new ErrorResponse();
+			final Error error = new Error();
+			error.setDescription(applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVEALLOTMENT_EXISTS));
+			errorResponse.setError(error);
+			errorResponses.add(errorResponse);
+		}
+		return errorResponses;
+	}
+
+	private ErrorResponse populateErrors(final BindingResult errors) {
+		final ErrorResponse errRes = new ErrorResponse();
+
+		final Error error = new Error();
+		error.setCode(1);
+		error.setDescription("Error while binding request");
+		if (errors.hasFieldErrors())
+			for (final FieldError fieldError : errors.getFieldErrors()) {
+				error.getFields().put(fieldError.getField(), fieldError.getRejectedValue());
+			}
+		errRes.setError(error);
+		return errRes;
 	}
 
 }

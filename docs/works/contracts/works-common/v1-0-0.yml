@@ -599,13 +599,13 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       typeOfWork:
-        type: string
-        description: Type of work for which this Milestone template is belongs to
+        $ref: '#/definitions/TypeOfWork'
+        description: Type of work for which this Milestone template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.
         maxLength: 100
         format: singleValueList
       subTypeOfWork:
-        type: string
-        description: Sub Type of work for which this Milestone template is belongs to. Unique reference from 'SubTypeOfWork'.Code is ref. here.
+        $ref: '#/definitions/TypeOfWork'
+        description: Sub Type of work for which this Milestone template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.
         maxLength: 100
         format: singleValueList
       milestoneTemplateActivities:
@@ -614,6 +614,8 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/MilestoneTemplateActivities'
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       
     required:
       - tenantId
@@ -652,6 +654,8 @@ definitions:
         format: double
         pattern: "[0-9.]"
         description: Percentage to be applied for the given Milestone Template Activitie
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 
     required:
       - stageOrderNumber
@@ -737,12 +741,13 @@ definitions:
         maxLength: 1024
         minLength: 1
       typeOfWork:
-        type: string
-        description: The Type of work of the Template activity. Unique reference from 'TypeOfWork'.Code is ref. here.
+        $ref: '#/definitions/TypeOfWork'
+        description: Type of work for which this Estimate template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.
+        maxLength: 100
         format: singleValueList
       subTypeOfWork:
-        type: string
-        description: The Sub Type of work of the Template activity. Unique reference from 'SubTypeOfWork'.Code is ref. here.
+        $ref: '#/definitions/TypeOfWork'
+        description: Sub Type of work for which this Estimate template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.
         format: singleValueList
       estimateTemplateActivities:
         type: array

@@ -49,6 +49,7 @@ import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
+import org.egov.pa.model.TargetType;
 import org.egov.pa.service.impl.KpiMasterServiceImpl;
 import org.egov.pa.service.impl.KpiValueServiceImpl;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
@@ -214,7 +215,10 @@ public class RequestValidator {
 						PerformanceAssessmentConstants.TARGETFINYEAR_UNAVAILABLE_FIELD_NAME));
 			}
 			
-			if (StringUtils.isBlank(target.getTargetDescription()) && StringUtils.isBlank(target.getTargetValue())) {
+			KPI kpi = target.getKpi(); 
+			if( null != kpi && StringUtils.isNotBlank(kpi.getTargetType()) 
+					&& (kpi.getTargetType().equals(TargetType.VALUE.toString()) || kpi.getTargetType().equals(TargetType.OBJECTIVE.toString()))
+					&& StringUtils.isBlank(target.getTargetValue())) {
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGETDESC_MANDATORY_CODE,
 						PerformanceAssessmentConstants.TARGETDESC_MANDATORY_ERROR_MESSAGE,
 						PerformanceAssessmentConstants.TARGETDESC_MANDATORY_FIELD_NAME));

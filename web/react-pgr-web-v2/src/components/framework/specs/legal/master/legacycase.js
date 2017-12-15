@@ -12,6 +12,33 @@ var dat = {
       },
     ],
     groups: [
+    {
+        name: 'CaseType',
+        label: 'legal.create.group.title.CaseType',
+        fields: [
+          {
+            name: 'isSummon',
+            jsonPath: 'cases[0].summon.isSummon',
+            label: 'legal.create.isSummon',
+            type: 'radio',
+            styleObj: { display: '-webkit-box' },
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: '',
+            values: [
+              {
+                label: 'legal.create.Summon',
+                value: true,
+              },
+              {
+                label: 'legal.create.Warrant',
+                value: false,
+              },
+            ],
+            defaultValue: true,
+          },
+        ],
+      },
       {
         name: 'CaseTypeDetails',
         label: 'legal.create.group.title.CaseTypeDetails',
@@ -22,7 +49,7 @@ var dat = {
             label: 'legal.create.referenceNo',
             type: 'text',
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: '',
           },
           {

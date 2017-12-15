@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
+import org.egov.lcms.enums.EntryType;
 import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.AuditDetails;
@@ -348,7 +349,7 @@ public class CaseService {
 					List<Side> sideObj = sides.stream()
 							.filter(side -> side.getCode().equalsIgnoreCase(caseObj.getSummon().getSide().getCode()))
 							.collect(Collectors.toList());
-					
+
 					if (sideObj != null && sideObj.size() > 0)
 						caseObj.getSummon().setSide(sideObj.get(0));
 				}
@@ -365,7 +366,7 @@ public class CaseService {
 							.filter(caseType -> caseType.getCode()
 									.equalsIgnoreCase(caseObj.getSummon().getCaseType().getCode()))
 							.collect(Collectors.toList());
-					
+
 					if (caseTypeObj != null && caseTypeObj.size() > 0)
 						caseObj.getSummon().setCaseType(caseTypeObj.get(0));
 				}
@@ -458,10 +459,6 @@ public class CaseService {
 		}
 
 	}
-
-	
-
-	
 
 	/**
 	 * This will filter the Hearing detail
@@ -556,15 +553,11 @@ public class CaseService {
 	public CaseResponse createLegacyCase(CaseRequest caseRequest) throws Exception {
 
 		for (Case caseObj : caseRequest.getCases()) {
-
-			if (caseObj.getSummon().getIsUlbinitiated() == null) {
-				caseObj.getSummon().setIsUlbinitiated(Boolean.FALSE);
+			if (caseObj.getSummon().getIsSummon()) {
+				caseObj.getSummon().setEntryType(EntryType.fromValue(propertiesManager.getSummonType()));
+			} else {
+				caseObj.getSummon().setEntryType(EntryType.fromValue(propertiesManager.getWarrantType()));
 			}
-
-			if (caseObj.getSummon().getIsSummon() == null) {
-				caseObj.getSummon().setIsSummon(Boolean.FALSE);
-			}
-			
 			summonValidator.validateDuplicateAdvocates(caseObj);
 
 			String summonCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(),

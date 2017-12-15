@@ -599,12 +599,14 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
       typeOfWork:
-        $ref: '#/definitions/TypeOfWork'
+        type: string
         description: Type of work for which this Milestone template is belongs to
+        maxLength: 100
         format: singleValueList
       subTypeOfWork:
-        $ref: '#/definitions/TypeOfWork'
-        description: Sub Type of work for which this Milestone template is belongs to
+        type: string
+        description: Sub Type of work for which this Milestone template is belongs to. Unique reference from 'SubTypeOfWork'.Code is ref. here.
+        maxLength: 100
         format: singleValueList
       milestoneTemplateActivities:
         type: array

@@ -111,7 +111,7 @@ public class LetterOfAcceptanceService {
                 }
             }
 
-            if ((isRevision != null && !isRevision))
+            if ((isRevision != null && !isRevision) && letterOfAcceptance.getSecurityDeposits() != null)
                 for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
                     securityDeposit.setId(commonUtils.getUUID());
@@ -227,6 +227,7 @@ public class LetterOfAcceptanceService {
 
             }
 
+            if(letterOfAcceptance.getSecurityDeposits() != null)
             for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
                 if (securityDeposit.getId() == null || securityDeposit.getId().isEmpty())

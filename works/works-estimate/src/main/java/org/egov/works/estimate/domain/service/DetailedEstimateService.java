@@ -63,6 +63,9 @@ public class DetailedEstimateService {
 			detailedEstimate.setId(commonUtils.getUUID());
 			detailedEstimate.setAuditDetails(auditDetails);
 			detailedEstimate.setTotalIncludingRE(detailedEstimate.getEstimateValue());
+			if(detailedEstimate.getSpillOverFlag()) {
+			    detailedEstimate.setApprovedDate(detailedEstimate.getEstimateDate());
+			}
 			AbstractEstimate abstactEstimate = null;
 			if (detailedEstimate.getAbstractEstimateDetail() != null || (isRevision != null && isRevision)) {
 				abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
@@ -214,6 +217,9 @@ public class DetailedEstimateService {
 		for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
             abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
 
+            if(detailedEstimate.getSpillOverFlag()) {
+                detailedEstimate.setApprovedDate(detailedEstimate.getEstimateDate());
+            }
             detailedEstimate.setAuditDetails(updateDetails);
 
             if (detailedEstimate.getAssets() != null) {
@@ -272,6 +278,10 @@ public class DetailedEstimateService {
                         detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
                 detailedEstimate.setStateId(workFlowResponse.get("id"));
                 detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
+            }
+            
+            if(!detailedEstimate.getSpillOverFlag() && detailedEstimate.getStatus().toString().equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
+                detailedEstimate.setApprovedDate(new Date().getTime());
             }
 
 		}

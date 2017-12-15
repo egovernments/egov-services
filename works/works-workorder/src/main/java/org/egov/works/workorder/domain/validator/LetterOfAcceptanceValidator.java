@@ -225,12 +225,13 @@ public class LetterOfAcceptanceValidator {
         BigDecimal approvedAmount = BigDecimal.ZERO;
 
         for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
+            if(letterOfAcceptanceEstimate.getLoaActivities() != null)
             for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
                 approvedAmount = approvedAmount.add(loaActivity.getApprovedAmount());
             }
         }
 
-        if (detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
+        if (detailedEstimate.getApprovedDate() != null && detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
             messages.put(Constants.KEY_FUTUREDATE_LOADATE_DETAILEDESTIMATE,
                     Constants.MESSAGE_FUTUREDATE_LOADATE_DETAILEDESTIMATE);
         }

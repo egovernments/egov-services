@@ -7,7 +7,6 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
-import org.egov.inv.persistence.entity.MaterialTypeStoreMappingEntity;
 import org.egov.inv.persistence.repository.MaterialTypeStoreJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +38,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
     public MaterialTypeStoreResponse create(MaterialTypeStoreRequest materialTypeStoreRequest, String tenantId) {
         List<MaterialTypeStoreMapping> materialTypeStores = materialTypeStoreRequest.getMaterialTypeStores();
 
-       // validate(materialTypeStores, tenantId, Constants.ACTION_CREATE);
+        validate(materialTypeStores, tenantId, Constants.ACTION_CREATE);
         for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStores) {
             setTenant(tenantId, materialTypeStoreMapping);
             materialTypeStoreMapping.setId(typeStoreMappingJdbcRepository.getSequence("seq_materialtypestoremapping"));
@@ -61,7 +60,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
 
     public MaterialTypeStoreResponse update(MaterialTypeStoreRequest materialTypeStoreRequest, String tenantId) {
         List<MaterialTypeStoreMapping> materialTypeStores = materialTypeStoreRequest.getMaterialTypeStores();
-       // validate(materialTypeStores, tenantId, Constants.ACTION_UPDATE);
+         validate(materialTypeStores, tenantId, Constants.ACTION_UPDATE);
 
         for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStores) {
             setTenant(tenantId, materialTypeStoreMapping);
@@ -109,37 +108,43 @@ public class MaterialTypeStoreMappingService extends DomainService {
 
                 break;
             }
+
             for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStoreMappings) {
                 int i = 0;
-
-                if (!typeStoreMappingJdbcRepository.uniqueCheck("materialtype", "store", new MaterialTypeStoreMappingEntity().toEntity(materialTypeStoreMapping))) {
-                    errors.addDataError(ErrorCode.COMBINATION_EXISTS.getCode(), "Material type and ", "store", String.valueOf(i));
-                }
-
-                if (null != materialTypeStoreMapping && null != materialTypeStoreMapping.getMaterialType().getCode()) {
-                    MaterialType materialType = (MaterialType) mdmsRepository.fetchObject(tenantId, "inventory", "MaterialType", "code", materialTypeStoreMapping.getMaterialType().getCode(), MaterialType.class);
-                    materialTypeStoreMapping.setMaterialType(materialType);
-                }
-
-                if (null != materialTypeStoreMapping.getStore() && !isEmpty(materialTypeStoreMapping.getStore().getCode())) {
-                    StoreGetRequest storeGetRequest = StoreGetRequest.builder()
-                            .code(Collections.singletonList(materialTypeStoreMapping.getStore().getCode()))
-                            .tenantId(tenantId)
-                            .build();
-
-                    StoreResponse storeResponse = storeService.search(storeGetRequest);
-                    if (storeResponse.getStores().size() == 0) {
-                        errors.addDataError(ErrorCode.STORE_NOT_EXIST.getCode(), materialTypeStoreMapping.getStore().getCode());
-                    }
-                }
-
+                validateMaterial(tenantId, errors, materialTypeStoreMapping, i);
+                validateStore(tenantId, errors, materialTypeStoreMapping, i);
                 i++;
             }
+
         } catch (IllegalArgumentException e) {
 
         }
         if (errors.getValidationErrors().size() > 0) {
             throw errors;
+        }
+    }
+
+    private void validateStore(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+        if (null != materialTypeStoreMapping.getStore() && !isEmpty(materialTypeStoreMapping.getStore().getCode())) {
+            StoreGetRequest storeGetRequest = StoreGetRequest.builder()
+                    .code(Collections.singletonList(materialTypeStoreMapping.getStore().getCode()))
+                    .tenantId(tenantId)
+                    .build();
+
+            StoreResponse storeResponse = storeService.search(storeGetRequest);
+            if (storeResponse.getStores().size() == 0) {
+                errors.addDataError(ErrorCode.OBJECT_NOT_FOUND_ROW.getCode(), "Store ", materialTypeStoreMapping.getStore().getCode(), String.valueOf(i));
+            }
+        }
+    }
+
+    private void validateMaterial(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping, int i) {
+        if (null != materialTypeStoreMapping && null != materialTypeStoreMapping.getMaterialType().getCode()) {
+            MaterialType materialType = (MaterialType) mdmsRepository.fetchObject(tenantId, "inventory", "MaterialType", "code", materialTypeStoreMapping.getMaterialType().getCode(), MaterialType.class);
+            if (null == materialType) {
+                errors.addDataError(ErrorCode.OBJECT_NOT_FOUND_ROW.getCode(), "Material Type ", materialTypeStoreMapping.getMaterialType().getCode(), String.valueOf(i));
+
+            }
         }
     }
 

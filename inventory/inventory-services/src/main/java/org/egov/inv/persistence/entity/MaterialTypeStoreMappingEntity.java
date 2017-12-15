@@ -52,7 +52,6 @@ public class MaterialTypeStoreMappingEntity {
 
 
     public MaterialTypeStoreMappingEntity toEntity(MaterialTypeStoreMapping materialTypeStoreMapping) {
-        AuditDetails auditDetails = materialTypeStoreMapping.getAuditDetails();
         return MaterialTypeStoreMappingEntity.builder()
                 .id(materialTypeStoreMapping.getId())
                 .materialType(null != materialTypeStoreMapping.getMaterialType() ? materialTypeStoreMapping.getMaterialType().getCode() : null)

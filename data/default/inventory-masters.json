@@ -69,36 +69,24 @@
       "tenantId": "default",
       "code": "MT1",
       "name": "Fake Material Type Name 1",
-      "description": "Fake Material Type Description 1",
-      "parentMaterialTypeCode": null,
-      "storeCode": "STORE1",
-      "department": "DEPT1",
-      "stockInHandCode": "SIH1",
-      "active": true
+      "parent": null,
+      "isparent": false
     },
     {
       "id": 2,
       "tenantId": "default",
       "code": "MT2",
       "name": "Fake Material Type Name 2",
-      "description": "Fake Material Type Description 2",
-      "parentMaterialTypeCode": null,
-      "storeCode": "STORE2",
-      "department": "DEPT2",
-      "stockInHandCode": "SIH2",
-      "active": true
+      "parent": null,
+      "isparent": false
     },
     {
       "id": 3,
       "tenantId": "default",
       "code": "MT3",
       "name": "Fake Material Type Name 3",
-      "description": "Fake Material Type Description 3",
-      "parentMaterialTypeCode": null,
-      "storeCode": "STORE3",
-      "department": "DEPT3",
-      "stockInHandCode": "SIH3",
-      "active": true
+      "parent": null,
+      "isparent": false
     }
   ],
   "Material": [

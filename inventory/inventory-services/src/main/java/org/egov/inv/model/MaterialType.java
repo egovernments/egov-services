@@ -33,7 +33,7 @@ public class MaterialType {
     private String code = null;
 
     @JsonProperty("parent")
-    private Long parent = null;
+    private String parent = null;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
@@ -122,7 +122,7 @@ public class MaterialType {
         this.code = code;
     }
 
-    public MaterialType parent(Long parent) {
+    public MaterialType parent(String parent) {
         this.parent = parent;
         return this;
     }
@@ -135,11 +135,11 @@ public class MaterialType {
     @ApiModelProperty(value = "parent of the MaterialType ")
 
 
-    public Long getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(Long parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
 

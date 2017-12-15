@@ -15,8 +15,6 @@ export default class KPISelectField extends Component {
           color: '#696969',
           fontSize: '20px',
           'white-space': 'nowrap',
-          top: '24px',
-          paddingLeft: '14px',
         }}
         labelStyle={{ color: '#5F5C57' }}
         floatingLabelFixed={true}
@@ -27,6 +25,7 @@ export default class KPISelectField extends Component {
         style={{ display: 'inline-block' }}
         errorStyle={{ float: 'left' }}
         fullWidth={true}
+        hintText="Please Select"
         multiple={this.props.multiple}
         disabled={this.props.disabled ? true : false}
         floatingLabelText={
@@ -36,6 +35,7 @@ export default class KPISelectField extends Component {
         }
         value={this.props.value}
         onChange={this.handleChange}
+        maxHeight={200}
       >
         {this.props.items.map((item, i) => {
           return <MenuItem key={i} value={i} primaryText={item[this.props.displayKey]} />;

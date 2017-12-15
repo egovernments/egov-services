@@ -8,7 +8,6 @@
     "name" : "REVENUE"
   },
   "boundary" : {
-    
   "id": 1,
   "boundaryNum": 1,
   "name": "Roha Municipality",
@@ -89,7 +88,19 @@
               "longitude": null,
               "latitude": null,
               "label" : "Block",
-              "code": "13"
+              "code": "13",
+              "children" : [
+              {
+                "id": 200,
+              "boundaryNum": 1,
+              "name": "Colony 1",
+              "localname": "Colony 1",
+              "longitude": null,
+              "latitude": null,
+              "label" : "Colony",
+              "code": "200"
+              }
+                ]
             }
           ]
         }
@@ -123,7 +134,20 @@
               "longitude": null,
               "latitude": null,
               "label" : "Block",
-              "code": "14"
+              "code": "14",
+              "children" : [
+                {
+                "id": 201,
+              "boundaryNum": 1,
+              "name": "Colony 2",
+              "localname": "Colony 2",
+              "longitude": null,
+              "latitude": null,
+              "label" : "Colony",
+              "code": "201"
+              }
+                
+                ]
             }
           ]
         }
@@ -168,7 +192,19 @@
               "longitude": null,
               "latitude": null,
               "label" : "Block",
-              "code": "15"
+              "code": "15",
+              "children" : [
+                {
+              "id": 202,
+              "boundaryNum": 1,
+              "name": "Colony 3",
+              "localname": "Colony 3",
+              "longitude": null,
+              "latitude": null,
+              "label" : "Colony",
+              "code": "202"
+              }
+                ]
             }
           ]
         }
@@ -213,7 +249,19 @@
               "longitude": null,
               "latitude": null,
               "label" : "Block",
-              "code": "16"
+              "code": "16",
+              "children" : [
+                {
+                "id": 203,
+              "boundaryNum": 1,
+              "name": "Colony 4",
+              "localname": "Colony 4",
+              "longitude": null,
+              "latitude": null,
+              "label" : "Colony",
+              "code": "203"
+              }
+                ]
             }
           ]
         }

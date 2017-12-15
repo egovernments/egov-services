@@ -111,12 +111,15 @@ class Report extends Component {
               for (let m = 0; m < queryStringObject.length; m++) {
                 if (m) {
                   if (queryStringObject[m].split('=')[1].search('{') > -1) {
-                    id[queryStringObject[m].split('=')[0]] = self.getVal(
+                   let value = self.getVal(
                       queryStringObject[m]
                         .split('=')[1]
                         .split('{')[1]
                         .split('}')[0]
                     );
+                    id[queryStringObject[m].split('=')[0]]=queryStringObject[m]
+                        .split('=')[1].split('{')[0]+value+queryStringObject[m]
+                        .split('=')[1].split('{')[1].split('}')[1];
                   } else {
                     id[queryStringObject[m].split('=')[0]] = queryStringObject[m].split('=')[1];
                   }

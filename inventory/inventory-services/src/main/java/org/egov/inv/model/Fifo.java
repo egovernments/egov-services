@@ -23,8 +23,10 @@ public class Fifo {
 	@NotNull
 	private Uom uom;
 
-	@NotNull
 	private BigDecimal quantityIssued;
 
+	@NotNull
 	private Long issueDate;
+	
+	private String mrnNumber;
 }

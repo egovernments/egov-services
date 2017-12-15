@@ -28,6 +28,9 @@ public class MaterialIssueDetail   {
 
   @JsonProperty("orderNumber")
   private BigDecimal orderNumber = null;
+  
+  @JsonProperty("mrnNumber")
+  private String mrnNumber = null;
 
   @JsonProperty("quantityIssued")
   private BigDecimal quantityIssued = null;
@@ -140,6 +143,29 @@ public class MaterialIssueDetail   {
   public void setOrderNumber(BigDecimal orderNumber) {
     this.orderNumber = orderNumber;
   }
+  
+  public MaterialIssueDetail mrnNumber(String mrnNumber) {
+	    this.mrnNumber = mrnNumber;
+	    return this;
+	  }
+
+	   /**
+	   * receiptNumber of receipt in case of issueType return to supplier.
+	   * @return mrnNumber
+	  **/
+	  @ApiModelProperty(value = "Order of items issued.")
+
+	  @Valid
+
+	  public String getMrnNumber() {
+	    return mrnNumber;
+	  }
+
+	  public void setMrnNumber(String mrnNumber) {
+	    this.mrnNumber = mrnNumber;
+	  }
+  
+
 
   public MaterialIssueDetail quantityIssued(BigDecimal quantityIssued) {
     this.quantityIssued = quantityIssued;
@@ -173,7 +199,7 @@ public class MaterialIssueDetail   {
    * @return value
   **/
   @ApiModelProperty(required = true, value = "Total value of issued material.   Send value 0 if price not defined.  ")
-  @NotNull
+ 
 
   @Valid
 

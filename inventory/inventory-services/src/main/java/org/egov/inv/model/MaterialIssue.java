@@ -232,7 +232,7 @@ public class MaterialIssue   {
    * @return issueType
   **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
+ 
 
 
   public IssueTypeEnum getIssueType() {

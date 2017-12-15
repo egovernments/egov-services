@@ -18,7 +18,7 @@ public class MaterialIssueReceiptFifoLogicRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private static final String query = "select materialreceipt.id as receiptid,rctdtl.id as receiptdetailid,rctdtl.podetailid as receiptdetailpodetailid ,"
+	private static final String query = "select * from (select materialreceipt.id as receiptid,rctdtl.id as receiptdetailid,rctdtl.podetailid as receiptdetailpodetailid ,"
 			+ "receiptdate ,rctdtl.mrnnumber as mrnnumber, material, uomno,"
 			+ " (COALESCE(addinfo.quantity,acceptedqty) -" + " COALESCE (case when addinfo.id is not null then"
 			+ " (select sum(issuereceipt.quantity) from materialissuedfromreceipt"
@@ -35,11 +35,12 @@ public class MaterialIssueReceiptFifoLogicRepository {
 			+ " materialreceiptdetailaddnlinfo  addinfo on rctdtl.id= addinfo.receiptdetailid"
 			+ " where  (isscrapitem IS NULL or isscrapitem=false) and (rctdtl.deleted=false or"
 			+ " rctdtl.deleted is null ) and receivingstore= :store  and materialreceipt.tenantid= :tenantId"
-			+ " and  material= :material and mrnstatus in ('APPROVED') and receiptdate <= :date"
-			+ " order by addinfo.expirydate,addinfo.receiveddate,receiptdate ";
+			+ " and  material= :material and mrnstatus in ('APPROVED') and receiptdate <= :date";
 
 	public List<FifoEntity> implementFifoLogic(Store store, Material material, Long issueDate, String tenantId) {
 		Map<String, Object> paramValues = new HashMap<>();
+		StringBuilder baseQuery = new StringBuilder(query);
+		baseQuery.append(" order by addinfo.expirydate,addinfo.receiveddate,receiptdate)as fifo where balance >0");
 		if(store.getCode() == null || material.getCode() == null || issueDate == null || tenantId == null)
 		    throw new CustomException("required.fields","please provide all fields required for the api");
 		else{
@@ -50,9 +51,28 @@ public class MaterialIssueReceiptFifoLogicRepository {
 		 
 		}
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FifoEntity.class);
-		List<FifoEntity> listOfFifoEntities = namedParameterJdbcTemplate.query(query, paramValues, row);
+		List<FifoEntity> listOfFifoEntities = namedParameterJdbcTemplate.query(baseQuery.toString(), paramValues, row);
 		return listOfFifoEntities;
 
+	}
+
+	public List<FifoEntity> implementFifoLogicForReturnMaterial(Store store, Material material, Long issueDate,
+			String tenantId, String mrnNumber) {
+		Map<String, Object> paramValues = new HashMap<>();
+		StringBuilder baseQuery = new StringBuilder(query);
+		baseQuery.append(" and materialreceipt.mrnNumber= :mrnNumber order by addinfo.expirydate,addinfo.receiveddate,receiptdate)as fifo where balance >0");
+		if(store.getCode() == null || material.getCode() == null || issueDate == null || tenantId == null || mrnNumber == null)
+		    throw new CustomException("required.fields","please provide all fields required for the api");
+		else{
+			  paramValues.put("store", store.getCode());
+			  paramValues.put("tenantId", tenantId);
+			  paramValues.put("material", material.getCode());
+			  paramValues.put("date", issueDate);
+			  paramValues.put("mrnNumber", mrnNumber);
+			}
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FifoEntity.class);
+		List<FifoEntity> listOfFifoEntities = namedParameterJdbcTemplate.query(baseQuery.toString(), paramValues, row);
+		return listOfFifoEntities;
 	}
 	
 	

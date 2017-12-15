@@ -26,6 +26,7 @@ import org.egov.inv.model.MaterialIssueRequest;
 import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
+import org.egov.inv.model.MaterialReceiptDetail;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
@@ -33,6 +34,7 @@ import org.egov.inv.model.Uom;
 import org.egov.inv.model.MaterialIssue.IssuePurposeEnum;
 import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
 import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
+import org.egov.inv.persistence.entity.FifoEntity;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
@@ -64,6 +66,9 @@ public class NonIndentMaterialIssueService extends DomainService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+	
+	@Autowired
+	private MaterialIssueReceiptFifoLogic materialIssueReceiptFifoLogic;
 
 	@Autowired
 	private StoreService storeService;
@@ -105,21 +110,16 @@ public class NonIndentMaterialIssueService extends DomainService {
 					for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
 						materialIssueDetail.setId(detailSequenceNos.get(j));
 						materialIssueDetail.setTenantId(materialIssue.getTenantId());
+						BigDecimal unitRate =getMaterialIssuedFromReceiptData(materialIssue.getFromStore(),
+								materialIssueDetail.getMaterial(), materialIssue.getIssueDate(),
+								materialIssue.getTenantId(), materialIssueDetail,materialIssue);
+						materialIssueDetail.setValue(unitRate);
 						convertToUom(materialIssueDetail, uomMap);
 						j++;
-						int k = 0;
-						List<String> materialIssuedFromReceiptsSeqNos = materialIssuedFromReceiptsJdbcRepository
-								.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(),
-										materialIssueDetail.getMaterialIssuedFromReceipts().size());
-						for (MaterialIssuedFromReceipt materialIssuedFromReceipts : materialIssueDetail
-								.getMaterialIssuedFromReceipts()) {
-							materialIssuedFromReceipts.setId(materialIssuedFromReceiptsSeqNos.get(k));
-							materialIssuedFromReceipts.setTenantId(materialIssueDetail.getTenantId());
-							k++;
 						}
 					}
 				}
-			}
+	
 			kafkaTemplate.send(createTopic, createKey, nonIndentIssueRequest);
 			MaterialIssueResponse response = new MaterialIssueResponse();
 			response.setMaterialIssues(nonIndentIssueRequest.getMaterialIssues());
@@ -128,6 +128,54 @@ public class NonIndentMaterialIssueService extends DomainService {
 		} catch (CustomBindException e) {
 			throw e;
 		}
+	}
+
+	private BigDecimal getMaterialIssuedFromReceiptData(Store store, Material material, Long issueDate, String tenantId,
+			MaterialIssueDetail materialIssueDetail, MaterialIssue materialIssue) {
+		List<MaterialIssuedFromReceipt> materialIssuedFromReceipts = new ArrayList<>();
+		List<FifoEntity> listOfFifoEntity = new ArrayList<> ();
+		if(materialIssue.getIssuePurpose().equals(IssuePurposeEnum.WRITEOFFORSCRAP)){
+			listOfFifoEntity = materialIssueReceiptFifoLogic.implementFifoLogic(store, material, issueDate,
+					tenantId);
+		}
+		else{
+			listOfFifoEntity = materialIssueReceiptFifoLogic.implementFifoLogicForReturnMaterial(store, material, issueDate, tenantId, materialIssueDetail.getMrnNumber());
+		}
+			int k = 0;
+			List<String> materialIssuedFromReceiptsSeqNos = materialIssuedFromReceiptsJdbcRepository
+					.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(), listOfFifoEntity.size());
+			BigDecimal unitRate = BigDecimal.ZERO;
+			BigDecimal quantityIssued = materialIssueDetail.getQuantityIssued();
+			for (FifoEntity fifoEntity : listOfFifoEntity) {
+				MaterialIssuedFromReceipt materialIssuedFromReceipt = new MaterialIssuedFromReceipt();
+				MaterialReceiptDetail materialReceiptDetail = new MaterialReceiptDetail();
+				materialReceiptDetail.setId(fifoEntity.getReceiptDetailId());
+				materialIssuedFromReceipt.setMaterialReceiptDetail(materialReceiptDetail);
+				materialIssuedFromReceipt.setMaterialReceiptDetailAddnlinfoId(fifoEntity.getReceiptDetailAddnInfoId());
+				materialIssuedFromReceipt.setId(materialIssuedFromReceiptsSeqNos.get(k));
+				materialIssuedFromReceipt.setTenantId(materialIssueDetail.getTenantId());
+				materialIssuedFromReceipt.setStatus(true);
+				materialIssuedFromReceipt.setMaterialReceiptId(fifoEntity.getReceiptId());
+				if (quantityIssued.compareTo(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString())))) >= 0) {
+					materialIssuedFromReceipt.setQuantity(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString()))));
+					unitRate = BigDecimal.valueOf(fifoEntity.getUnitRate())
+							.multiply(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString())))).add(unitRate);
+					quantityIssued = quantityIssued.subtract(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString()))));
+				} else {
+					materialIssuedFromReceipt.setQuantity(quantityIssued);
+					unitRate = quantityIssued.multiply(BigDecimal.valueOf(fifoEntity.getUnitRate())).add(unitRate);
+					quantityIssued = BigDecimal.ZERO;
+				}
+				k++;
+				materialIssuedFromReceipts.add(materialIssuedFromReceipt);
+				if (quantityIssued.equals(BigDecimal.ZERO))
+					break;
+			}
+			materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts);
+			return unitRate;
+
+	
+			
 	}
 
 	private void fetchRelated(MaterialIssueRequest nonIndentIssueRequest) {
@@ -276,12 +324,19 @@ public class NonIndentMaterialIssueService extends DomainService {
 
 	private void convertToUom(MaterialIssueDetail materialIssueDetail, Map<String, Uom> uomMap) {
 		Double quantityIssued = 0d;
+		Double quantity = 0d;
 		if (materialIssueDetail.getUom() != null && uomMap.get(materialIssueDetail.getUom().getCode()) != null) {
 			if (materialIssueDetail.getQuantityIssued() != null)
 				quantityIssued = getSaveConvertedQuantity(
 						Double.valueOf(materialIssueDetail.getQuantityIssued().toString()), Double.valueOf(
 								uomMap.get(materialIssueDetail.getUom().getCode()).getConversionFactor().toString()));
 			materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
+			if(!materialIssueDetail.getMaterialIssuedFromReceipts().isEmpty())
+			for(MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()){
+				if(mifr.getQuantity() != null && materialIssueDetail.getUom().getConversionFactor() != null)
+				quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()), Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
+				mifr.setQuantity(BigDecimal.valueOf(quantity));
+			}
 		}
 	}
 

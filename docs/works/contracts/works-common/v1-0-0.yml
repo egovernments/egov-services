@@ -578,13 +578,13 @@ definitions:
         description: Tenant id of the Milestone Template
         maxLength: 128
         minLength: 2
-      templateName:
+      name:
         type: string
         description: Name of the Milestone Template
         pattern: '[a-zA-Z0-9\s\.,]+'
         maxLength: 100
         minLength: 1
-      templateCode:
+      code:
         type: string
         description: Code of the Milestone Template
         pattern: '[a-zA-Z0-9-\\]+'
@@ -615,8 +615,8 @@ definitions:
       
     required:
       - tenantId
-      - templateName
-      - templateCode
+      - name
+      - code
       - active
       - typeOfWork
       - milestoneTemplateActivities

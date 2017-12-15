@@ -171,7 +171,7 @@ var dat = {
             label: 'perfManagement.create.KPIs.groups.kpidocMandatory',
             pattern: '',
             type: 'checkbox',
-            defaultValue: false,
+            defaultValue: 0,
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',

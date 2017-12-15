@@ -96,7 +96,7 @@ public class Constants {
     public static final String MESSAGE_NULL_COUNCILRESOLUTIONNUMBER = "Council Resolution Number should be entered";
     
     public static final String KEY_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID = "works.loa.loaamount.loaactivityamount.invalid";
-    public static final String MESSAGE_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID = "Sum of LOA activity amount after aplying Tender Finalized Percentage";
+    public static final String MESSAGE_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID = "Sum of LOA activity amount after aplying Tender Finalized Percentage Should be equal to LOA Amount";
  
     public static final String KEY_OFFLINESTATUS_WORKORDERDATE_INVALID = "works.worksorder.statusdate.invalid";
     public static final String MESSAGE_OFFLINESTATUS_WORKORDERDATE_INVALID = "Workorder Date cannot be less then Agreement Order Signed date";

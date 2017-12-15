@@ -236,7 +236,7 @@ public class LetterOfAcceptanceValidator {
                     Constants.MESSAGE_FUTUREDATE_LOADATE_DETAILEDESTIMATE);
         }
 
-        approvedAmount = approvedAmount.multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage()));
+        approvedAmount = approvedAmount.add(approvedAmount.multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage())).divide(new BigDecimal(100)));
 
         if (letterOfAcceptance.getLoaAmount().compareTo(approvedAmount) != 0) {
             messages.put(Constants.KEY_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID,
@@ -245,7 +245,9 @@ public class LetterOfAcceptanceValidator {
         BigDecimal loaValue = letterOfAcceptance.getLoaAmount()
                 .multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage()));
 
-        if (loaValue.compareTo(detailedEstimate.getWorkValue()) != 0) {
+        
+        BigDecimal workValue = detailedEstimate.getWorkValue().add(detailedEstimate.getWorkValue().multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage())).divide(new BigDecimal(100)));
+        if (loaValue.compareTo(workValue) != 0) {
             messages.put(Constants.KEY_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER,
                     Constants.MESSAGE_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER);
         }

@@ -8,10 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.works.measurementbook.config.Constants;
+import org.egov.works.measurementbook.domain.repository.EstimateRepository;
 import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.domain.repository.OfflineStatusRepository;
 import org.egov.works.measurementbook.domain.repository.WorkOrderRepository;
+import org.egov.works.measurementbook.web.contract.DetailedEstimate;
+import org.egov.works.measurementbook.web.contract.EstimateActivity;
+import org.egov.works.measurementbook.web.contract.EstimateMeasurementSheet;
+import org.egov.works.measurementbook.web.contract.LOAActivity;
+import org.egov.works.measurementbook.web.contract.LOAMeasurementSheet;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
@@ -43,6 +49,9 @@ public class MeasurementBookValidator {
 	@Autowired
 	private OfflineStatusRepository offlineStatusRepository;
 
+	@Autowired
+	private EstimateRepository estimateRepository;
+
 	public void validateMB(MeasurementBookRequest measurementBookRequest, Boolean isNew) {
 		final RequestInfo requestInfo = measurementBookRequest.getRequestInfo();
 		Map<String, String> messages = new HashMap<>();
@@ -66,7 +75,7 @@ public class MeasurementBookValidator {
 			if (measurementBook.getFromPageNo() > measurementBook.getToPageNo())
 				messages.put(Constants.KEY_MB_FROM_TO_PAGE_NUMBER, Constants.MSG_MB_FROM_TO_PAGE_NUMBER);
 			validateMBDetails(measurementBook, letterOfAcceptanceResponse.getLetterOfAcceptances().get(0), messages,
-					isNew);
+					isNew, requestInfo);
 			Boolean loaEstimateExists = false;
 			for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceResponse.getLetterOfAcceptances()) {
 				for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
@@ -113,7 +122,7 @@ public class MeasurementBookValidator {
 	}
 
 	private void validateMBDetails(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,
-			Map<String, String> messages, Boolean isNew) {
+			Map<String, String> messages, Boolean isNew, RequestInfo requestInfo) {
 		for (MeasurementBookDetail detail : measurementBook.getMeasurementBookDetails()) {
 			if (detail.getLoaActivity() == null)
 				messages.put(Constants.KEY_MB_DETAILS_LOA_ACTIVITY, Constants.MSG_MB_DETAILS_LOA_ACTIVITY);
@@ -128,10 +137,23 @@ public class MeasurementBookValidator {
 				messages.put(Constants.KEY_MB_DETAILS_PART_REDUCED_RATE, Constants.MSG_MB_DETAILS_PART_REDUCED_RATE);
 
 			if (detail.getMeasurementSheets() != null)
-				for (MBMeasurementSheet sheet : detail.getMeasurementSheets()) {
-					validateMeasurementSheet(sheet, letterOfAcceptance, messages);
-				}
+				validateMeasurementSheet(detail, letterOfAcceptance, messages, requestInfo);
 
+		}
+		for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
+				.getLetterOfAcceptanceEstimates()) {
+			for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
+				if (!loaActivity.getLoaMeasurements().isEmpty()) {
+					for (MeasurementBookDetail detail : measurementBook.getMeasurementBookDetails()) {
+						if (detail.getLoaActivity().getId() != null
+								&& detail.getLoaActivity().getId().equals(loaActivity.getId())
+								&& !loaActivity.getLoaMeasurements().isEmpty()
+								&& detail.getMeasurementSheets().isEmpty())
+							messages.put(Constants.KEY_MB_MEASUREMENTS_MANDATORY_IF_LOA_MEASUREMENTS,
+									Constants.MSG_MB_MEASUREMENTS_MANDATORY_IF_LOA_MEASUREMENTS);
+					}
+				}
+			}
 		}
 		if (isNew) {
 			if (!measurementBook.getWorkFlowDetails().getAction().equalsIgnoreCase(Constants.SAVE)
@@ -159,10 +181,41 @@ public class MeasurementBookValidator {
 		}
 	}
 
-	private void validateMeasurementSheet(MBMeasurementSheet sheet, LetterOfAcceptance letterOfAcceptance,
-			Map<String, String> messages) {
-		// TODO Auto-generated method stub
-
+	private void validateMeasurementSheet(MeasurementBookDetail detail, LetterOfAcceptance letterOfAcceptance,
+			Map<String, String> messages, RequestInfo requestInfo) {
+		List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByIds(
+				Arrays.asList(letterOfAcceptance.getLetterOfAcceptanceEstimates().get(0).getDetailedEstimate().getId()),
+				detail.getTenantId(), requestInfo);
+		Double mbSheetQuantity = 0D;
+		for (MBMeasurementSheet sheet : detail.getMeasurementSheets()) {
+			String estimateSheetId = null;
+			String identifier = null;
+			for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
+				for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
+					for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
+						if (loaMeasurementSheet.getId().equals(sheet.getLoaMeasurementSheet().getId()))
+							estimateSheetId = loaMeasurementSheet.getEstimateMeasurementSheet();
+						else
+							messages.put(Constants.KEY_MB_MEASUREMENTS_LOA_NOT_VALID,
+									Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
+					}
+					
+				}
+			}
+			for (EstimateActivity estimateActivity : detailedEstimates.get(0).getEstimateActivities()) {
+				for (EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity.getEstimateMeasurementSheets()) {
+					if (estimateMeasurementSheet.getId().equals(estimateSheetId))
+						identifier = estimateMeasurementSheet.getIdentifier();
+				}
+			}
+			if ("A".equalsIgnoreCase(identifier))
+				mbSheetQuantity += sheet.getQuantity().doubleValue();
+			else
+				mbSheetQuantity -= sheet.getQuantity().doubleValue();
+		}
+		if (!mbSheetQuantity.equals(detail.getQuantity()))
+			messages.put(Constants.KEY_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL,
+					Constants.MSG_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL);
 	}
 
 	private void vallidateMBDate(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,

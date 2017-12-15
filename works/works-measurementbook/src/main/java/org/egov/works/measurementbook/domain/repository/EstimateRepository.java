@@ -32,6 +32,8 @@ public class EstimateRepository {
 
     private String detailedEstimateByDepartmentUrl;
     
+    private String detailedEstimateByIdsUrl;
+    
     private String detailedEstimateCreateUrl;
     
     private String detailedEstimateUpdateUrl;
@@ -43,10 +45,12 @@ public class EstimateRepository {
 	public EstimateRepository(final RestTemplate restTemplate,
                               @Value("${egov.services.egov_works_estimate.hostname}") final String worksEstimateHostname,
                               @Value("${egov.services.egov_works_estimate.searchbydepartment}") final String detailedEstimateByDepartmentUrl,
+                              @Value("${egov.services.egov_works_estimate.searchbyids}") final String detailedEstimateByIdsUrl,
                               @Value("${egov.services.egov_works_estimate.createpath}") final String detailedEstimateCreateUrl,
                               @Value("${egov.services.egov_works_estimate.updatepath}") final String detailedEstimateUpdateUrl) {
 		this.restTemplate = restTemplate;
         this.detailedEstimateByDepartmentUrl = worksEstimateHostname + detailedEstimateByDepartmentUrl;
+        this.detailedEstimateByIdsUrl = worksEstimateHostname + detailedEstimateByIdsUrl;
         this.detailedEstimateCreateUrl = worksEstimateHostname + detailedEstimateCreateUrl;
         this.detailedEstimateUpdateUrl = worksEstimateHostname + detailedEstimateUpdateUrl;
 	}
@@ -56,6 +60,13 @@ public class EstimateRepository {
         String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
         String departments = String.join(",", departmentCodes);
         return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departments, status).getDetailedEstimates();
+    }
+    
+    public List<DetailedEstimate> searchDetailedEstimatesByIds(final List<String> ids, final String tenantId,final RequestInfo requestInfo) {
+
+        String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+        String id = String.join(",", ids);
+        return restTemplate.postForObject(detailedEstimateByIdsUrl, requestInfo, DetailedEstimateResponse.class,tenantId,id, status).getDetailedEstimates();
     }
 
     public DetailedEstimateResponse createUpdateDetailedEstimate(DetailedEstimateRequest detailedEstimateRequest, Boolean isUpdate) {

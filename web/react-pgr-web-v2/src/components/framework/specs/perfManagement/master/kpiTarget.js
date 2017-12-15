@@ -1,8 +1,6 @@
-var dt = new Date();
-var date1 = Date.now();
 
-var date2 = Date.now() + 2 * 365 * 24 * 60 * 60 * 1000;
-let criteria = '[' + encodeURIComponent('?') + '((@.endingDate>' + date1 + encodeURIComponent('&&') + '@.startingDate<' + date2 + '))]';
+var date2 = Date.now() + 365 * 24 * 60 * 60 * 1000;
+let criteria = '[' + encodeURIComponent('?') + '(' + '@.startingDate<' + date2 + ')]';
 
 var dat = {
   'perfManagement.create': {
@@ -559,6 +557,7 @@ var dat = {
             pattern: '',
             type: 'text',
             isDisabled: false,
+            /*isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'TEXT'?true:false",*/
             requiredErrMsg: '',
           },
         ],
@@ -578,6 +577,7 @@ var dat = {
             type: 'number',
             isNumber: true,
             isDisabled: false,
+            /*isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'VALUE'?true:false",*/
             requiredErrMsg: '',
             patternErrMsg: 'perfManagement.create.KPIs.groups.kpiInputNumber',
           },

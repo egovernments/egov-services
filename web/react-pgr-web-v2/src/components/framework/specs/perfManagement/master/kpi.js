@@ -1,3 +1,6 @@
+var date2 = Date.now() + 365 * 24 * 60 * 60 * 1000;
+let criteria = '[' + encodeURIComponent('?') + '(' + '@.startingDate<' + date2 + ')]';
+
 var dat = {
   'perfManagement.create': {
     numCols: 12 / 2,
@@ -46,7 +49,9 @@ var dat = {
             url:
               'egov-mdms-service/v1/_get?tenantId=' +
               localStorage.tenantId.split('.')[0] +
-              '&masterName=financialYears&moduleName=egf-master|$..finYearRange|$..finYearRange',
+              '&masterName=financialYears&moduleName=egf-master&filter=' +
+              criteria +
+              '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
           },
@@ -453,7 +458,9 @@ var dat = {
             url:
               'egov-mdms-service/v1/_get?tenantId=' +
               localStorage.tenantId.split('.')[0] +
-              '&masterName=financialYears&moduleName=egf-master|$..finYearRange|$..finYearRange',
+              '&masterName=financialYears&moduleName=egf-master&filter=' +
+              criteria +
+              '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
           },

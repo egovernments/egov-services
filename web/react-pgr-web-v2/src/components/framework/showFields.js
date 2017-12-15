@@ -4,7 +4,6 @@ import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 
 import UiTextField from './components/UiTextField';
-import UiTextFieldTwo from './components/UiTextFieldTwo';
 import UiSelectField from './components/UiSelectField';
 import UiSelectFieldMultiple from './components/UiSelectFieldMultiple';
 import UiButton from './components/UiButton';
@@ -262,17 +261,6 @@ export default class ShowFields extends Component {
           />
         );
 
-      case 'textTwo':
-        return (
-          <UiTextFieldTwo
-            tabIndex={index}
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
-        );
       case 'singleValueListMultiple':
         return (
           <UiSelectFieldMultiple

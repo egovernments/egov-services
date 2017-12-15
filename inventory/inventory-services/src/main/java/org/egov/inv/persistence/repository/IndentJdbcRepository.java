@@ -127,7 +127,7 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 		if (indentSearch.getIndentNumber() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("indentNumber =:indentNumber");
+			params.append("indent.indentNumber =:indentNumber");
 			paramValues.put("indentNumber", indentSearch.getIndentNumber());
 		}
 		if (indentSearch.getIndentType() != null) {

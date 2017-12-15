@@ -1,5 +1,7 @@
 package org.egov.dataupload.model;
 
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,17 +24,8 @@ public class UploaderRequest {
 	@JsonProperty("RequestInfo")
 	public RequestInfo requestInfo;
 	
-	@JsonProperty("moduleName")
-	public String moduleName;
-	
-	@JsonProperty("defName")
-	public String defName;
-	
-	@JsonProperty("tenantId")
-	public String tenantId;
-	
-	@JsonProperty("fileStoreId")
-	public String fileStoreId;
+	@JsonProperty("UploadJobs")
+	public List<UploadJob> uploadJobs;
 	
 
 }

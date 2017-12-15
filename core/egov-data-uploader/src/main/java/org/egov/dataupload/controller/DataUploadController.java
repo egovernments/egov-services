@@ -1,9 +1,11 @@
 package org.egov.dataupload.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.dataupload.model.ProcessMetaData;
+import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.model.UploaderResponse;
 import org.egov.dataupload.service.DataUploadService;
@@ -16,11 +18,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@RequestMapping(value = "/v1")
 public class DataUploadController {
 		
 	@Autowired
@@ -35,17 +39,17 @@ public class DataUploadController {
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadController.class);
 	
 	
-	@PostMapping("/_upload")
+	@PostMapping("/_create")
 	@ResponseBody
 	public ResponseEntity<?> upload(@RequestBody @Valid UploaderRequest uploaderRequest) throws Exception {
 		try {
 				logger.info("Inside controller");
 				RequestInfo requestInfo = RequestInfo.builder().action("create").apiId("dataup").authToken("867ab332-5a3e-4b13-8c71-338bfeb80e44")
 				.did("1").msgId("20170310130900").ts(10032017L).build();
-				ProcessMetaData processMetaData = dataUploadService.createUploadJob(uploaderRequest);
+				List<UploadJob> uploadJobs = dataUploadService.createUploadJob(uploaderRequest);
 				UploaderResponse result = UploaderResponse.builder()
 						.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
-						.proccessMetadata(processMetaData).build();
+						.uploadJobs(uploadJobs).build();
 				return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch(Exception e){
 			throw e;

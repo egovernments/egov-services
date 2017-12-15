@@ -1,5 +1,7 @@
 package org.egov.dataupload.model;
 
+import java.util.List;
+
 import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +24,7 @@ public class UploaderResponse {
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 	
-	@JsonProperty("ProccessMetadata")
-	private ProcessMetaData proccessMetadata;
+	@JsonProperty("uploadJobs")
+	public List<UploadJob> uploadJobs;
 
 }

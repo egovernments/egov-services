@@ -9,6 +9,6 @@ UploadDefinitions:
    isBulkApi: false
    arrayPath: $.KPIs
    uri: http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpimaster/_create
-   
+   additionalResFields: {"name": "$.KPIs.*.name", "code": "$.KPIs.*.code"}
 
   

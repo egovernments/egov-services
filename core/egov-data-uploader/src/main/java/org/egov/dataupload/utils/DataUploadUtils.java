@@ -2,26 +2,34 @@ package org.egov.dataupload.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.UploadDefinition;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 
 @Component
@@ -29,7 +37,10 @@ public class DataUploadUtils {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadUtils.class);
 	
-	public List<List<Object>> readExcelFile(HSSFSheet sheet, List<String> coloumnHeaders){
+	@Value("${result.file.path}")
+	private String resultFilePath;
+	
+	public List<List<Object>> readExcelFile(HSSFSheet sheet, List<Object> coloumnHeaders){
         List<List<Object>> excelData = new ArrayList<>(); 
         Iterator<Row> iterator = sheet.iterator();
         while(iterator.hasNext()){
@@ -97,5 +108,64 @@ public class DataUploadUtils {
 	    
 	    return multipartFile;
 	}
+	
+	
+	public void writeToexcelSheet(List<Object> exisitingFields) throws Exception{
+		logger.info("Writing to file: "+resultFilePath);
+	    MultipartFile file = getExcelFile(resultFilePath);
+		HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
+        HSSFSheet sheet = workbook.getSheetAt(0);
+        int rowCount = sheet.getLastRowNum();
+        logger.info("MxRowCount of sheet: "+rowCount);
+        Row row = sheet.createRow(++rowCount);
+        for(int i = 0; i < exisitingFields.size(); i++)
+        {
+            Cell cell = row.createCell(i);
+            if(exisitingFields.get(i) instanceof String){
+            	cell.setCellType(CellType.STRING);
+            	cell.setCellValue(exisitingFields.get(i).toString());
+            }else if(exisitingFields.get(i) instanceof Double){
+            	cell.setCellType(CellType.NUMERIC);
+            	cell.setCellValue(Double.parseDouble(exisitingFields.get(i).toString()));
+            }
+            
+            logger.info("cell: "+cell.getColumnIndex()+" value: "+cell.getStringCellValue());
+        }
+
+        try (FileOutputStream outputStream = new FileOutputStream(resultFilePath)) {
+            workbook.write(outputStream);
+        }
+        
+        workbook.close();
+	}
+	
+	
+	public List<Object> getResJsonPathList(Map<String, String> resFieldsMap, List<Object> coloumnHeaders){
+		List<Object> jsonpathList = new ArrayList<>();
+		for(Entry<String, String> entry: resFieldsMap.entrySet()){
+			coloumnHeaders.add(entry.getValue());
+			jsonpathList.add(entry.getKey());
+		}
+		
+		return jsonpathList;
+		
+	}
+	
+	public void addAdditionalFields(Object response, List<Object> row, List<Object> jsonPathList) throws Exception{
+		ObjectMapper mapper = new ObjectMapper();
+		response = mapper.writeValueAsString(response);
+		for(Object path: jsonPathList){
+			try{
+				Object value = JsonPath.read(response, path.toString());
+				row.add(value);
+			}catch(Exception e){
+				row.add(null);
+				
+				continue;
+			}
+		}
+	}
 
 }
+
+

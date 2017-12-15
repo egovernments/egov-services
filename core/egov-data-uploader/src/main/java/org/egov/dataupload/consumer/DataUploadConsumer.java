@@ -3,7 +3,7 @@ package org.egov.dataupload.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.egov.dataupload.model.ConsumerRequest;
+import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.service.DataUploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class DataUploadConsumer {
 		ObjectMapper mapper = new ObjectMapper();
 		try{
 			logger.info("Consuming record: "+record);
-			dataUploadService.parseExcel(mapper.convertValue(record, ConsumerRequest.class));
+			dataUploadService.parseExcel(mapper.convertValue(record, UploaderRequest.class));
 		}catch(final Exception e){
 			logger.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());
 		}

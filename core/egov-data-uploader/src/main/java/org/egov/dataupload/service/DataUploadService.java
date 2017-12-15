@@ -12,12 +12,11 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.dataupload.model.ConsumerRequest;
 import org.egov.dataupload.model.Definition;
-import org.egov.dataupload.model.ProcessMetaData;
 import org.egov.dataupload.model.ResponseMetaData;
 import org.egov.dataupload.model.UploadDefinition;
 import org.egov.dataupload.model.UploadDefinitions;
+import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.model.SuccessFailure;
 import org.egov.dataupload.producer.DataUploadProducer;
@@ -63,46 +62,40 @@ public class DataUploadService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 	
-	public ProcessMetaData createUploadJob(UploaderRequest uploaderRequest){
+	public List<UploadJob> createUploadJob(UploaderRequest uploaderRequest){
 		StringBuilder uri = new StringBuilder();
+		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 		uri.append(fileStoreHost).append(getFileEndpoint);
-		uri.append("?fileStoreId="+uploaderRequest.getFileStoreId())
-		   .append("&tenantId="+uploaderRequest.getTenantId());
+		uri.append("?fileStoreId="+uploadJob.getRequestFilePath())
+		   .append("&tenantId="+uploadJob.getTenantId());
 		String filePath = null;
 		try{
 			filePath = dataUploadRepository.getFileContents(uri.toString());
 		}catch(Exception e){
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
-					"No .xls file found for: fileStoreId = "+uploaderRequest.getFileStoreId()
-					+" AND tenantId = "+uploaderRequest.getTenantId());		
+					"No .xls file found for: fileStoreId = "+uploadJob.getRequestFilePath()
+					+" AND tenantId = "+uploadJob.getTenantId());		
 		}
-		ProcessMetaData processMetaData = ProcessMetaData.builder().finalfileStoreId("")
-				.jobId("").localFilePath(null).message("Upload process has begun....").build();
+		uploadJob.setLocalFilePath(filePath);
 		
-		ProcessMetaData procMetaData = ProcessMetaData.builder().finalfileStoreId("")
-				.jobId("").localFilePath(filePath).message("Upload process has begun....").build();
-		ConsumerRequest consumerRequest = ConsumerRequest.builder().uploaderRequest(uploaderRequest)
-				.processMetaData(procMetaData).build();
-		
-		dataUploadProducer.producer(consumerRequest);
-		return processMetaData;
+		dataUploadProducer.producer(uploaderRequest);
+		return uploaderRequest.getUploadJobs();
 	}
 
 
-	public SuccessFailure parseExcel(ConsumerRequest consumerRequest) throws Exception {
+	public SuccessFailure parseExcel(UploaderRequest uploaderRequest) throws Exception {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
-		UploaderRequest uploaderRequest = consumerRequest.getUploaderRequest();
+		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
-	    		uploaderRequest.getModuleName(), uploaderRequest.getDefName());
+	    		uploadJob.getModuleName(), uploadJob.getDefName());
 	    List<ResponseMetaData> success = new ArrayList<>();
 	    List<ResponseMetaData> failure = new ArrayList<>();
 	    List<List<Object>> excelData = new ArrayList<>();
-        List<String> coloumnHeaders = new ArrayList<>();
+        List<Object> coloumnHeaders = new ArrayList<>();
 	    try{
-		    MultipartFile file = dataUploadUtils.getExcelFile(consumerRequest.getProcessMetaData().getLocalFilePath());
+		    MultipartFile file = dataUploadUtils.getExcelFile(uploadJob.getLocalFilePath());
 			HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
 	        HSSFSheet sheet = wb.getSheetAt(0);
-	        logger.info("Workbook: "+sheet);
 	        excelData = dataUploadUtils.readExcelFile(sheet, coloumnHeaders);
 	    }catch(Exception e){
 	    	logger.error("Couldn't parse excel sheet", e);
@@ -135,10 +128,16 @@ public class DataUploadService {
 	}
 	
 	private String callNonBulkApis(List<List<Object>> excelData,
-			     List<String> coloumnHeaders, Definition uploadDefinition, RequestInfo requestInfo,
-			     List<ResponseMetaData> success, List<ResponseMetaData> failure){
+			     List<Object> coloumnHeaders, Definition uploadDefinition, RequestInfo requestInfo,
+			     List<ResponseMetaData> success, List<ResponseMetaData> failure) throws Exception{
 		String request = null;
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
+    	List<Object> resJsonPathList = null;
+    	if(null != uploadDefinition.getAdditionalResFields()){
+    		resJsonPathList = dataUploadUtils.getResJsonPathList(uploadDefinition.getAdditionalResFields(), coloumnHeaders);
+    	}
+    	coloumnHeaders.add("status"); coloumnHeaders.add("message");
+		dataUploadUtils.writeToexcelSheet(coloumnHeaders);
 		for(List<Object> row: excelData){
 			try{
 				if(!row.isEmpty()){
@@ -156,20 +155,39 @@ public class DataUploadService {
 				    	documentContext.put("$", "requestInfo", requestInfo);
 					    request = documentContext.jsonString().toString();
 				    }         	
-				    hitApi(request, uploadDefinition.getUri());	
-				    ResponseMetaData responseMetaData= new ResponseMetaData();
-				    responseMetaData.setRownum((excelData.indexOf(row) + 2));
-				    responseMetaData.setRowData(row);
-				    success.add(responseMetaData);	         	
+				    Object apiResponse = hitApi(request, uploadDefinition.getUri());	
+				    if(null != resJsonPathList){
+				    	try{
+				    		dataUploadUtils.addAdditionalFields(apiResponse, row, resJsonPathList);
+				    		row.add("SUCCESS");
+				    	}catch(Exception e){
+				    		for(Object obj: resJsonPathList){
+				    			row.add(null);
+				    		}
+				    		row.add("SUCCESS");
+				    		row.add("Failed to additional fields from API response");
+				    	}
+				    }
+		    		row.add("SUCCESS");
+					dataUploadUtils.writeToexcelSheet(row);
 				}
 			}catch(Exception e){
 				logger.error("Error while processing row: "+(excelData.indexOf(row) + 2));
-		    	ResponseMetaData responseMetaData= new ResponseMetaData();
-		    	responseMetaData.setRownum((excelData.indexOf(row) + 2));
-		    	responseMetaData.setRowData(row);
-		    	failure.add(responseMetaData);	    			
+		    	if(null != resJsonPathList){
+		    		for(Object obj: resJsonPathList){
+		    			row.add(null);
+		    		}
+		    		row.add("FAILED");
+		    		row.add(e.getMessage());
+		    	}else{
+		    		row.add("FAILED");
+		    		row.add(e.getMessage());
+		    	}
+		    		
+				dataUploadUtils.writeToexcelSheet(row);
+
 		    	continue;
-		    }
+		    }			
 		}
 	    
 	    return request;

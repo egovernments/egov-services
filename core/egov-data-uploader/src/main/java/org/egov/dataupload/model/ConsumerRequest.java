@@ -1,6 +1,8 @@
 package org.egov.dataupload.model;
 
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -20,8 +22,5 @@ public class ConsumerRequest {
 	
 	@JsonProperty("UploaderRequest")
 	public UploaderRequest uploaderRequest;
-	
-	@JsonProperty("ProcessMetaData")
-	public ProcessMetaData processMetaData;
-	
+		
 }

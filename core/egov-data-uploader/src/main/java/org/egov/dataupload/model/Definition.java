@@ -36,4 +36,7 @@ public class Definition {
 	@JsonProperty("uri")
 	private String uri;	
 	
+	@JsonProperty("additionalResFields")
+	private Map<String, String> additionalResFields;
+	
 }

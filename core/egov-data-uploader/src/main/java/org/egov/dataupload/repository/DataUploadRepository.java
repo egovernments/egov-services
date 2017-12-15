@@ -65,7 +65,7 @@ public class DataUploadRepository {
 		    }
 	    }catch(Exception e){
 			LOGGER.error("Exception while fetching file from: "+filePath, e);
-			throw e;
+			throw new CustomException("400", "Module API couldn't process this");
 	    }
 	    
 	    return writeFilePath;

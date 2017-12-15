@@ -83,6 +83,15 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	    return usedQty;
 	}
 	
+	public boolean getIsIndentValidForPOCreate(String indentNumber) {
+		String validityQuery = "select count(*) from indentdetail where indentquantity=poorderedquantity";
+		Long count = namedParameterJdbcTemplate.queryForObject(validityQuery, new HashMap(), Long.class);
+		if(count>0)
+			return false;
+		else
+			return true;
+	}
+	
 	public boolean getIsIndentPORaised(String indentId) {
 		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity>totalprocessedquantity and totalprocessedquantity!=null and isdeleted=false and indentnumber = '" + indentId +"'";
 		Long count = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, new HashMap(), Long.class);

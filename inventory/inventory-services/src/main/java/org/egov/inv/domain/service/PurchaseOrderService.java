@@ -584,6 +584,13 @@ public class PurchaseOrderService extends DomainService {
 
             // convert all items into purchase uom by referring each indent.
 
+            //Logic to check if indent lines are valid for PO Creation
+            for(String indentNo:purchaseOrder.getIndentNumbers()){
+            	if(!purchaseOrderRepository.getIsIndentValidForPOCreate(indentNo)) {
+            		throw new CustomException("indents", "One / Some of the selected indents is not eligible for Creation of PO");            		
+            	}
+            }
+            
             boolean isRateContractExist =false;
             for(Indent indent : indentResponse.getIndents()) {
             	for(IndentDetail indentDetail : indent.getIndentDetails()) {
@@ -592,11 +599,6 @@ public class PurchaseOrderService extends DomainService {
             		{
             			isRateContractExist = true;
             			break;
-            		}
-            		
-            		//if an indent line is used in PO, it cannot be used to create PO again
-            		if(indentDetail.getPoOrderedQuantity().compareTo(new BigDecimal(0)) > 0) {
-            			indent.getIndentDetails().remove(indentDetail);
             		}
             	}
             }

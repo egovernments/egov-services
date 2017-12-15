@@ -401,6 +401,7 @@ var dat = {
             pattern: '',
             isRequired: false,
             isDisabled: false,
+            enableDownload : true,
             patternErrorMsg: '',
             readonly: true,
           },

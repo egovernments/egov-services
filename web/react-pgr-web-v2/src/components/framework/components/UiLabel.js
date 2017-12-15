@@ -175,6 +175,41 @@ export default class UiLabel extends Component {
 
   renderLabel = item => {
     // console.log(item.jsonPath, this.props.getVal(item.jsonPath,item.isDate));
+    if(item.enableDownload){
+      return ( 
+        <div>
+        <Row>
+        <Col
+      id={item.jsonPath.split('.').join('-')}
+      style={item.hasOwnProperty('textAlign') ? { textAlign: item.textAlign } : { textAlign: 'left' }}
+      xs={12}
+    >
+      <label>
+        <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate(item.label)}</span>
+      </label>
+      </Col>
+      <Col
+      id={item.jsonPath.split('.').join('-')}
+      style={item.hasOwnProperty('textAlign') ? { textAlign: item.textAlign } : { textAlign: 'left' }}
+      xs={12}
+    >
+      <a
+      href={
+        window.location.origin +
+        '/filestore/v1/files/id?tenantId=' +
+        localStorage.tenantId +
+        '&fileStoreId=' +
+        this.state.value
+      }
+      target="_blank"
+    >
+      {this.state.value}
+    </a>
+    </Col>
+    </Row>
+    </div>
+  ) ;
+    }
     return (
       <div>
         <Row>

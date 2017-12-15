@@ -33,7 +33,7 @@ serviceMaps:
 
        - jsonPath: $.scheduleOfRates.*.deleted
 
-    - query: INSERT INTO egw_sorrate(id, tenantid, scheduleofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET fromdate=EXCLUDED.fromdate, todate=EXCLUDED.todate, rate=EXCLUDED.rate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+    - query: INSERT INTO egw_sorrate(id, tenantid, scheduleofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, ismigrated) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET fromdate=EXCLUDED.fromdate, todate=EXCLUDED.todate, rate=EXCLUDED.rate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
       basePath: $.scheduleOfRates.*.sorRates.*
       jsonMaps:
 
@@ -58,6 +58,8 @@ serviceMaps:
        - jsonPath: $.scheduleOfRates.*.sorRates.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.scheduleOfRates.*.sorRates.*.deleted
+
+       - jsonPath: $.scheduleOfRates.*.sorRates.*.ismigrated
 
     - query: INSERT INTO egw_marketrate(id, tenantid, scheduleofrate, fromdate, todate, rate,  createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET fromdate=EXCLUDED.fromdate, todate=EXCLUDED.todate, rate=EXCLUDED.rate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
       basePath: $.scheduleOfRates.*.marketRates.*

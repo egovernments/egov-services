@@ -1,0 +1,1 @@
+ALTER TABLE egw_sorrate ADD COLUMN ismigrated boolean DEFAULT false;

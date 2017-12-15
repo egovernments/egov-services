@@ -290,8 +290,8 @@ public class Constants {
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "Estimate measurement sheet quantity should not be greater than activity quantity";
 
-    public static final String KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT= "ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT";
-    public static final String MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT= "Total Estimate activity amount should be equal to estimate amount";
+    public static final String KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE= "works.de.activityamounttotalnotequalsto.workvalue";
+    public static final String MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE= "Total Estimate activity amount should be equal to work value";
 
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";

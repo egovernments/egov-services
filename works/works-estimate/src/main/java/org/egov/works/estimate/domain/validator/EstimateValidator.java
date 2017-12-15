@@ -852,10 +852,10 @@ public class EstimateValidator {
         }
 
         BigDecimal totalActivityAmount = getTotalActivityAmount(detailedEstimate.getEstimateActivities());
-        if (detailedEstimate.getEstimateValue() != null && totalActivityAmount != null &&
-                detailedEstimate.getEstimateValue().compareTo(totalActivityAmount) != 0)
-            messages.put(Constants.KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT,
-                    Constants.MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT);
+        if (detailedEstimate.getWorkValue() != null && totalActivityAmount != null &&
+                detailedEstimate.getWorkValue().compareTo(totalActivityAmount) != 0)
+            messages.put(Constants.KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE,
+                    Constants.MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE);
 
     }
 

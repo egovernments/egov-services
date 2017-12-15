@@ -1,0 +1,683 @@
+{
+	"info": {
+		"name": "eGov-Works_Spillover_Flow",
+		"_postman_id": "dace6c0a-4f29-5e8e-16c3-53dc29f89ddc",
+		"description": "[WIP] Spillover Work starts from Abstract Estimate upto Work order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Spillover Flow",
+			"description": "Start with the AE(Create_Search) > DE(Create_Search) > LOA(Create_Search) > WO(Create_Search)",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cbca48d7-56f4-4c0d-9dd6-c00d2c0e3a45",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"pm.globals.set(\"userName\", jsonData.UserRequest.userName);",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"postman.setNextRequest(\"Create sEstimate\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "clerk",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create sEstimate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "56f12182-52f5-47bc-911a-814260dff413",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var estimateAmount = [1000, 10000, 100000];",
+									"",
+									"pm.environment.set(\"abstractEstimateNumber\", \"AE/ENG/\"+num1);",
+									"pm.environment.set(\"referenceNumber\", \"RefNum\"+num1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.set(\"adminSanctionNumber\", \"ADN-\"+year+\"-\"+num1);",
+									"pm.environment.set(\"financialSanctionNumber\", \"FS-\"+year+\"-\"+num1);",
+									"pm.environment.set(\"councilResolutionNumber\", \"CRN-\"+year+\"-\"+num1);",
+									"pm.environment.set(\"spilloverPC\", \"WIN-\"+year+\"-\"+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6a7dff82-4d7d-4698-a450-2b943cf275dd",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"AE_id\", jsonData.abstractEstimates[0].id);",
+									"pm.environment.set(\"AEdetails_id\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].id);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status);",
+									"// pm.globals.set(\"spilloverPC\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].projectCode.code);",
+									"postman.setNextRequest(\"Search sEstimate\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"abstractEstimateNumber\": \"{{abstractEstimateNumber}}\",\n      \"dateOfProposal\": 1427784646000,\n      \"subject\": \"Spillover AE - Project Estimation\",\n      \"referenceType\": {\n      \t\"code\":\"Demandfrompublic\"\n      },\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"description\": \"Spillover AE Project Estimation for the proposed work\",\n      \"documentDetails\": [],\n      \"assetDetails\": [],      \n      \"budgetGroup\": {\n        \"name\": \"4122001-CWIP-Office Buildings\"\n      },\n      \"department\": {\n        \"code\": \"ENG\"\n      },\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"Tendering\"\n      },\n      \"fund\": {\n        \"code\": \"1\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"adminSanctionNumber\": \"{{adminSanctionNumber}}\",\n      \"adminSanctionDate\": 1427784646000,\n      \"adminSanctionBy\": {\n        \"userName\": \"clerk\"\n      },\n      \"financialSanctionNumber\": \"{{financialSanctionNumber}}\",\n      \"financialSanctionDate\": 1427784646000,\n      \"financialSanctionBy\": {\n      \t\"userName\": \"clerk\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"Buildings\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"OFFICEBUILDINGS\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"New\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": \"{{councilResolutionNumber}}\",\n      \"councilResolutionDate\": 1427784646000,\n      \"spillOverFlag\": true,\n      \"detailedEstimateCreated\": true,\n      \"workOrderCreated\": true,\n      \"billsCreated\": true,\n      \"implementationPeriod\": 5,\n      \"fundAvailable\": true,\n      \"fundSanctioningAuthority\": \"Municipal\",\n      \"pmcRequired\": false,\n      \"pmcType\":\"pmc type\",\n      \"pmcName\":\"pmc Name\",\n      \"workProposedAsPerDP\": false,\n      \"dpRemarks\": \"Dp remarks\",\n      \"landAssetRequired\": true,\n      \"noOfLands\": 10,\n      \"otherAssetSpecificationRemarks\": \"Other remarks\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Hospital Building Construction\",\n          \"estimateAmount\": 1000,\n          \"grossAmountBilled\": 900,\n\t\t  \"projectCode\": {\n        \t\t\"code\": \"{{spilloverPC}}\"\n    \t\t }          \n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"create\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_create"
+							]
+						},
+						"description": "Create APi for Data entry type of work estimation"
+					},
+					"response": []
+				},
+				{
+					"name": "Search sEstimate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "903e0a73-c193-4cde-9a2d-496fc1bf4221",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"sEstimateAmount\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].estimateAmount);",
+									"pm.environment.set(\"sProjectCode\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].projectCode.code);",
+									"pm.environment.set(\"sNameOfWork\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].nameOfWork);",
+									"",
+									"postman.setNextRequest(\"Create sDE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{AE_id}}&statuses=ADMIN_SANCTIONED",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{AE_id}}",
+									"equals": true
+								},
+								{
+									"key": "statuses",
+									"value": "ADMIN_SANCTIONED",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search AE for Spillover"
+					},
+					"response": []
+				},
+				{
+					"name": "Create sDE",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "bc0f423f-47cb-403a-ae1e-d18460beb2f9",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.environment.set(\"sEstimateNum\", \"Spillover/DE/ENG/\"+num1);",
+									"pm.environment.set(\"sTechSanctionNum\", \"Spillover/DE/TS/\"+num1);",
+									"pm.environment.set(\"sAdminSanctionNum\", \"Spillover/DE/ADN/\"+num1);",
+									"// pm.globals.get(\"spilloverPC\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cdab4ab9-3199-4ca7-b407-3159b9bc393e",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"var workValue = jsonData.detailedEstimates[0].workValue;",
+									"var estimateValue = jsonData.detailedEstimates[0].estimateValue;",
+									"var activityAmount = jsonData.detailedEstimates[0].estimateActivities[0].estimateRate;",
+									"",
+									"console.log(workValue);",
+									"console.log(estimateValue);",
+									"console.log(activityAmount);",
+									"",
+									"postman.setNextRequest(\"Search sDE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"1427784646000\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"detailedEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"estimateNumber\": \"{{sEstimateNum}}\",\n      \"estimateDate\": 1427784646000,\n      \"nameOfWork\": \"Spillover DE\",\n      \"description\": \"Spillover Detailed Estimation for the proposed work\",\n      \"department\": {\n        \"code\": \"ENG\"\n      },\n      \"adminSanctionNumber\": \"{{sAdminSanctionNum}}\",\n      \"adminSanctionDate\": 1427784646000,\n      \"workValue\": 900,\n      \"estimateValue\": 1000,\n      \"projectCode\": {\n          \"code\": \"{{spilloverPC}}\"\n        },\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"EProcurement\"\n      },\n      \"worksType\": {\n        \"code\": \"Buildings\"\n      },\n      \"worksSubtype\": {\n        \"code\": \"OFFICEBUILDINGS\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"New\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"location\": \"Sarjapur Road\",\n      \"workCategory\": \"NON_SLUM\",\n      \"workOrderCreated\": true,\n      \"billsCreated\": true,\n      \"spillOverFlag\": true,\n      \"abstractEstimateDetail\": {\n      \t\"nameOfWork\": \"{{sNameOfWork}}\",\n      \t\"estimateAmount\": \"{{sEstimateAmount}}\",\n        \"projectCode\": {\n          \"code\": \"{{sProjectCode}}\"\n        },\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"documentDetails\": [],\n      \"assets\": [],\n      \"multiYearEstimates\": [],\n      \"estimateActivities\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"scheduleOfRate\": {\n            \"id\": \"8476e765666a43489f0029eefbd42072\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"code\": \"SOR65\"\n          },\n          \"uom\": {\n            \"code\": \"MTR\"\n          },\n          \"unitRate\": 300,\n          \"quantity\": 3,\n          \"estimateRate\": 900\n        }\n      ],\n      \"estimateOverheads\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"overhead\": {\n          \t\"accountCode\": \"123\",\n          \t\"name\": \"TAXFake\",\n            \"code\": \"TAXFake\",\n            \"tenantId\": \"{{tenantId}}\"\n          },\n          \"amount\": 100\n        }\n      ],\n      \"detailedEstimateDeductions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"chartOfAccounts\":{\n          \t\"glcode\": \"1981\"\n          },\n          \"amount\": 50\n        }\n      ],\n      \"estimateTechnicalSanctions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"technicalSanctionNumber\": \"{{sTechSanctionNum}}\",\n          \"technicalSanctionDate\": 1427784646000,\n          \"technicalSanctionBy\": {\n            \"userName\": \"clerk\"\n          }\n        }\n      ],\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"budgetGroup\": {\n        \"name\": \"4122001-CWIP-Office Buildings\"\n      },\n      \"workFlowDetails\": {\n        \"action\": \"Create\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_create"
+							]
+						},
+						"description": "Create Detailed Estimate"
+					},
+					"response": []
+				},
+				{
+					"name": "Search sDE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "234ce9fc-a96d-4f3d-ae8d-c1bf3e47501c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Create sLOA\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_search?tenantId={{tenantId}}&detailedEstimateNumbers={{sEstimateNum}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "detailedEstimateNumbers",
+									"value": "{{sEstimateNum}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search Detailed Estimate by using params:\ntenantId\nspillOverFlag\nstatuses\ndetailedEstimateNumbers\nworkIdentificationNumbers\nabstractEstimateNumbers\nids\nfromDate\ntoDate\ndepartments\ntypeOfWork\nsubTypeOfWork\nfromAmount\ntoAmount\nnameOfWork\nwards\ncreatedBy\ncurrentOwner\npageSize\npageNumber\nsortBy"
+					},
+					"response": []
+				},
+				{
+					"name": "Create sLOA",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e01b86cf-2f16-47a1-9dfd-f757aa9e4415",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.environment.set(\"loaNumber\", \"LOA-\"+num1);",
+									"pm.environment.set(\"fileNumber\", \"FN-\"+num1);",
+									"pm.environment.set(\"loaCRN\", \"CRN-LOA-\"+num1);",
+									"pm.environment.get(\"sEstimateNum\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "24c53c58-fd02-453f-a3da-8e3beef9797c",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"loaId\", jsonData.letterOfAcceptances[0].id);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Search sLOA\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \n  \"letterofacceptances\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractor\": {\n        \"code\": \"GRADE-A1\",\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"loaDate\": 1427784646000,\n      \"loaNumber\": \"{{loaNumber}}\",\n      \"contractPeriod\": 5,\n      \"emdAmountDeposited\": 200,\n      \"stampPaperAmount\": 100,\n      \"engineerIncharge\": \"Ritesh\",\n      \"defectLiabilityPeriod\": 10,\n      \"tenderFinalizedPercentage\": 0,\n      \"loaAmount\": 900,\n      \"approvedDate\": 1427784646000,\n      \"fileNumber\": \"{{fileNumber}}\",\n      \"fileDate\": 1427784646000,\n      \"councilResolutionNumber\": \"{{loaCRN}}\",\n      \"councilResolutionDate\": 1427784646000,\n      \"spillOverFlag\": true,\n      \"status\": \"APPROVED\",\n      \"letterOfAcceptanceEstimates\":[\n      \t{\n        \t\"tenantId\": \"{{tenantId}}\",\n        \t\"detailedEstimate\": {\n        \t\"estimateNumber\": \"{{sEstimateNum}}\"\n        \t},\n        \t\"workCompletionDate\": 1427784646000,\n        \t\"loaActivities\": [\n        \t\t{\n       \t\t\t\t\"tenantId\": \"{{tenantId}}\",\n       \t\t\t\t\"collectionMode\":\"CASH\",\n       \t\t\t\t\"percentage\": 10,\n       \t\t\t\t\"amount\": 100\n    \t\t\t}\n      \t\t],\n        \t\"estimateLOAAmount\": 900\n    \t}\n      ],\n      \"securityDeposits\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_create?isRevision=false",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "isRevision",
+									"value": "false",
+									"equals": true
+								}
+							]
+						},
+						"description": "LOA for the spillover estimates"
+					},
+					"response": []
+				},
+				{
+					"name": "Search sLOA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e79b0a01-3748-46e2-9c58-5a3fa49e952d",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"loaId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].letterOfAcceptance);",
+									"pm.environment.set(\"loaNumber\", jsonData.letterOfAcceptances[0].loaNumber);",
+									"pm.environment.set(\"loaStatus\", jsonData.letterOfAcceptances[0].status);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Create sWO\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"search\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_search?tenantId={{tenantId}}&loaNumbers={{loaNumber}}&ids={{loaId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "loaNumbers",
+									"value": "{{loaNumber}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{loaId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search LOA"
+					},
+					"response": []
+				},
+				{
+					"name": "Create sWO",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "239540d5-d8d9-4973-ad24-99f80fead0d8",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"pm.environment.set(\"workOrderNumber\", \"WO-\"+num1);",
+									"pm.environment.get(\"loaId\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "07ed84b7-989d-48ed-84a2-4c10cf7c3c3c",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"woID\", jsonData.workOrders[0].id);",
+									"pm.environment.set(\"woNum\", jsonData.workOrders[0].workOrderNumber);",
+									"postman.setNextRequest(\"Search sWO\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\"\n  },\n\t\n  \"workOrders\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"letterOfAcceptance\": {\n        \"id\": \"{{loaId}}\",\n        \"loaNumber\": \"{{loaNumber}}\",\n        \"tenantId\": \"{{tenantId}}\",\n        \"spillOverFlag\": true\n      },\n      \"workOrderDate\": 1427784646000,\n      \"workOrderNumber\": \"{{workOrderNumber}}\",\n      \"status\": \"APPROVED\",\n      \"workOrderDetails\": [\n        {\n        \"tenantId\": \"{{tenantId}}\",\n        \"remarks\":\"CASH\",\n        \"editable\": true\n        }    ],\n      \"documentDetails\":[]\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_create"
+							]
+						},
+						"description": "Work Order for the spillover work"
+					},
+					"response": []
+				},
+				{
+					"name": "Search sWO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7a0600e5-893d-43de-9159-e56333704fd0",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_search?tenantId={{tenantId}}&ids={{woID}}&workOrderNumbers={{woNum}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{woID}}",
+									"equals": true
+								},
+								{
+									"key": "workOrderNumbers",
+									"value": "{{woNum}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search work order for the spillover"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -54,24 +54,17 @@ paths:
         '201':
           description: Definitions fetched Successfully sucessfully.
           schema:
-            $ref: '#/definitions/DefinitionSearchResponse'
+            $ref: '#/definitions/ModuleDefResponse'
         '400':
           description: Error.
           schema:
             $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
 definitions:
-  UploaderResponse:
+  
+  UploadJob:
     type: object
-    properties:
-      ResponseInfo:
-        $ref: >-
-          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-      ProccessMetaData:
-            $ref: '#/definitions/ProccessMetaData'
-            
-  UploaderRequest:
-    type: object
+    description: An upload job 
     properties:
       tenantId:
         description: Unique id for for a tenant.
@@ -88,80 +81,121 @@ definitions:
         type: string
         minLength: 1
         maxLength: 100
-      fileStoreId:
-        description: fileStoreId of the excel file.
+      code: 
         type: string
-        minLength: 1
-        maxLength: 100
-      RequestInfo:
-        $ref: >-
-          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        description: server generated unique id/code for this upload job if the job is accepted
+        readOnly: true
+      requestFilePath:
+        description: file store path of the uploaded request file
+        type: string
+      responseFilePath:
+        description: file store path of the uploaded request file
+        type: string
+      status:
+        description: current status of the job
+        type: string
+        enum:
+          - new
+          - InProgress
+          - completed
+          - failed
+      totalRows:
+        description: total number of rows in the file to process
+        type: integer
+      successfulRows:
+        description: total number of rows successfully proccessed
+        type: integer
+      failedRows:
+        description: total number of rows failed to be proccessed
+        type: integer
+      requesterName:
+        description: userName of the user requesting this job
+        type: string
     required:
       - tenantId
       - moduleName
       - defName
-      - fileStoreId
-      - RequestInfo
-      
-  ProccessMetaData:
-    type: object
-    properties:
-      message:
-        description: Unique id for for a tenant.
-        type: string
-        minLength: 1
-        maxLength: 100
-      jobId:
-        description: Name of the module for which data upload is intiated.
-        type: string
-        minLength: 1
-        maxLength: 1000
-      finalFilestoreId:
-        description: Name of the definition for which data upload is intiated.
-        type: string
-        minLength: 1
-        maxLength: 100
-  
-    required:
-      - message
-      - jobId
-      - finalFilestoreId
-      
-      
-  SearchRequest:
-    type: object
-    properties:
-      moduleName:
-        description: Name of the module for which the definitions are expected. Not sending this will fetch all modules and all definitions.
-        type: string
-        minLength: 1
-        maxLength: 100
-      RequestInfo:
-        $ref: >-
-          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      - requestFilePath
 
-    required:
-      - RequestInfo
 
-      
-  DefinitionSearchResponse:
+  UploaderResponse:
     type: object
     properties:
       ResponseInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-      Modules:
+      UploadJobs:
+        type: array
+        items: 
+          $ref: '#/definitions/UploadJob'
+            
+  UploaderRequest:
+    type: object
+    properties:
+      UploadJobs:
+        type: array
+        items: 
+          $ref: '#/definitions/UploadJob'
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+    required:
+      - UploadJobs
+      - RequestInfo
+      
+      
+      
+  SearchRequest:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+
+    required:
+      - RequestInfo
+
+      
+  ModuleDefResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      ModuleDefs:
         description: Array of modules
         type: array
         items: 
-          type: string
-      Definitions:
-        description: Array of definitions
-        type: array
-        items: 
-          type: string
-        
+          $ref: '#/definitions/ModuleDefs'
     required:
       - ResponseInfo
-      - Modules
-      - Definitions
+      
+
+  Definition:
+    type: object
+    properties:
+      code: 
+        description: Def code
+        type: string
+      name:
+        description: Default display name of the deffinition
+        type: string
+      path:
+        description: swagger API path for the API
+        type: string
+      
+  ModuleDefs:
+    type: object
+    properties:
+      code: 
+        description: unique key for teh module - ideally x-module from that swagger def
+        type: string
+      name:
+        description: Default display name of the module
+        type: string
+      Definitions:
+        description: Array of definitions for this module
+        type: array
+        items: 
+          $ref: '#/definitions/Definition'
+        

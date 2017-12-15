@@ -4,6 +4,7 @@ import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 
 import UiTextField from './components/UiTextField';
+import UiTextFieldTwo from './components/UiTextFieldTwo';
 import UiSelectField from './components/UiSelectField';
 import UiSelectFieldMultiple from './components/UiSelectFieldMultiple';
 import UiButton from './components/UiButton';
@@ -40,6 +41,7 @@ import UiImage from './components/UiImage';
 import UiMultiFieldAddToTable from './components/UiMultiFieldAddToTable';
 import UiNestedTablesInputs from './components/UiNestedTablesInputs';
 import UiWindowSelectField from './components/UiWindowSelectField';
+import UiCheckBoxGrp from './components/UiCheckBoxGrp';
 
 let styles = {
   reducePadding: {
@@ -251,6 +253,18 @@ export default class ShowFields extends Component {
       case 'text':
         return (
           <UiTextField
+            tabIndex={index}
+            ui={this.props.ui}
+            getVal={this.props.getVal}
+            item={item}
+            fieldErrors={this.props.fieldErrors}
+            handler={this.props.handler}
+          />
+        );
+
+      case 'textTwo':
+        return (
+          <UiTextFieldTwo
             tabIndex={index}
             ui={this.props.ui}
             getVal={this.props.getVal}
@@ -677,8 +691,19 @@ export default class ShowFields extends Component {
             handler={this.props.handler}
           />
         );
-      // return <div></div>
+      case 'checkBoxGroup':
+        return (
+          <UiCheckBoxGrp
+            tabIndex={index}
+            ui={this.props.ui}
+            getVal={this.props.getVal}
+            item={item}
+            fieldErrors={this.props.fieldErrors}
+            handler={this.props.handler}
+          />
+        );
     }
+    // return <div></div>
   };
 
   render() {

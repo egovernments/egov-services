@@ -9,7 +9,6 @@ import org.egov.common.Pagination;
 import org.egov.inv.model.Indent;
 import org.egov.inv.model.Indent.IndentStatusEnum;
 import org.egov.inv.model.IndentSearch;
-import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.entity.IndentEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.deser.std.StringCollectionDeserializer;
 
 @Service
 public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
@@ -87,7 +84,7 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 			validateEntityFieldName(indentSearch.getSortBy(), IndentEntity.class);
 		}
 
-		String orderBy = "order by indentNumber";
+		String orderBy = "order by indent.indentNumber";
 		if (indentSearch.getSortBy() != null && !indentSearch.getSortBy().isEmpty()) {
 			orderBy = "order by " + indentSearch.getSortBy();
 		}

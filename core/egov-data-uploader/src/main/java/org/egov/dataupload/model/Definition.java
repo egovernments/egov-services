@@ -1,6 +1,8 @@
 package org.egov.dataupload.model;
 
 
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +23,9 @@ public class Definition {
 	
 	@JsonProperty("apiRequest")
 	private Object apiRequest;
+	
+	@JsonProperty("headerJsonPathMap")
+	private Map<String, String> headerJsonPathMap;
 	
 	@JsonProperty("isBulkApi")
 	private Boolean isBulkApi;

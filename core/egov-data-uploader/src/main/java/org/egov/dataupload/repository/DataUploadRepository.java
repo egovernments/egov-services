@@ -40,7 +40,7 @@ public class DataUploadRepository {
 		try{
 			response = restTemplate.postForObject(url, request, Map.class);
 		}catch(Exception e){
-			LOGGER.error("Exception while hitting url: "+url, e);
+			LOGGER.error("Exception while hitting url: "+url);
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"Exception while hitting url: "+url);
 		}

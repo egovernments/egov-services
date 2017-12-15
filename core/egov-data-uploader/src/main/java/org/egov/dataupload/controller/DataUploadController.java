@@ -42,7 +42,7 @@ public class DataUploadController {
 				logger.info("Inside controller");
 				RequestInfo requestInfo = RequestInfo.builder().action("create").apiId("dataup").authToken("867ab332-5a3e-4b13-8c71-338bfeb80e44")
 				.did("1").msgId("20170310130900").ts(10032017L).build();
-				ProcessMetaData processMetaData = dataUploadService.getFileContents(uploaderRequest);
+				ProcessMetaData processMetaData = dataUploadService.createUploadJob(uploaderRequest);
 				UploaderResponse result = UploaderResponse.builder()
 						.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
 						.proccessMetadata(processMetaData).build();

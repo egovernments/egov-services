@@ -1,11 +1,15 @@
 package org.egov.dataupload.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +19,9 @@ import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Component
@@ -23,7 +29,7 @@ public class DataUploadUtils {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadUtils.class);
 	
-	public List<List<Object>> readExcelFile(HSSFSheet sheet, List<String> jsonPathList){
+	public List<List<Object>> readExcelFile(HSSFSheet sheet, List<String> coloumnHeaders){
         List<List<Object>> excelData = new ArrayList<>(); 
         Iterator<Row> iterator = sheet.iterator();
         while(iterator.hasNext()){
@@ -33,14 +39,14 @@ public class DataUploadUtils {
             while(cellIterator.hasNext()){
 	            Cell cell = cellIterator.next();
 	            if(0 == cell.getRowIndex())
-	            	jsonPathList.add(cell.getStringCellValue());
+	            	coloumnHeaders.add(cell.getStringCellValue());
 	            else{
 	            	dataList.add(cell.getStringCellValue());
 	            }
             }
             excelData.add(dataList);
         }
-	    logger.info("jsonPathList: "+jsonPathList);
+	    logger.info("coloumnHeaders: "+coloumnHeaders);
 	    logger.info("excelData: "+excelData);
 
         
@@ -81,6 +87,15 @@ public class DataUploadUtils {
     			expression.append(".");
     	}
     	return expressionArray[expressionArray.length - 1];
+	}
+	
+	public MultipartFile getExcelFile(String path) throws Exception{
+		File file = new File(path);
+	    FileInputStream input = new FileInputStream(file);
+	    MultipartFile multipartFile = new MockMultipartFile("ReadFile",
+	            file.getName(), "text/plain", IOUtils.toByteArray(input));
+	    
+	    return multipartFile;
 	}
 
 }

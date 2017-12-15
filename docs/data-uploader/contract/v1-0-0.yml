@@ -1,0 +1,168 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Data Uploader
+  description: APIs available for uploading data in bulk and searching upload status.
+  contact:
+    name: Abhishek Jain
+schemes:
+  - https
+basePath: '/data-uploader/v1/[API endpoint]'
+paths:     
+  /_create:
+    post:
+      summary: API to parse excel file and call respective APIs.
+      description: >-
+        API fetches an xls file based on the id provided to it and parses the excel to create
+        requests for respective module APIs.
+      parameters:
+        - name: UploaderRequest
+          in: body
+          description: Details of the module and file to be parsed.
+          required: true
+          schema:
+            $ref: '#/definitions/UploaderRequest'
+      tags:
+        - MDMS
+      responses:
+        '201':
+          description: Data uploaded sucessfully.
+          schema:
+            $ref: '#/definitions/UploaderResponse'
+        '400':
+          description: Error.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+            
+  /upload-definition/_search:
+    post:
+      summary: Fetches upload-definitions that are configured.
+      description: >-
+        Fetched the map of modules and their respective upload-definitions configured
+      parameters:
+        - name: SearchRequest
+          in: body
+          description: Details of the module and file to be parsed.
+          required: true
+          schema:
+            $ref: '#/definitions/SearchRequest'
+      tags:
+        - MDMS
+      responses:
+        '201':
+          description: Definitions fetched Successfully sucessfully.
+          schema:
+            $ref: '#/definitions/DefinitionSearchResponse'
+        '400':
+          description: Error.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+definitions:
+  UploaderResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      ProccessMetaData:
+            $ref: '#/definitions/ProccessMetaData'
+            
+  UploaderRequest:
+    type: object
+    properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+        minLength: 1
+        maxLength: 100
+      moduleName:
+        description: Name of the module for which data upload is intiated.
+        type: string
+        minLength: 1
+        maxLength: 1000
+      defName:
+        description: Name of the definition for which data upload is intiated.
+        type: string
+        minLength: 1
+        maxLength: 100
+      fileStoreId:
+        description: fileStoreId of the excel file.
+        type: string
+        minLength: 1
+        maxLength: 100
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+    required:
+      - tenantId
+      - moduleName
+      - defName
+      - fileStoreId
+      - RequestInfo
+      
+  ProccessMetaData:
+    type: object
+    properties:
+      message:
+        description: Unique id for for a tenant.
+        type: string
+        minLength: 1
+        maxLength: 100
+      jobId:
+        description: Name of the module for which data upload is intiated.
+        type: string
+        minLength: 1
+        maxLength: 1000
+      finalFilestoreId:
+        description: Name of the definition for which data upload is intiated.
+        type: string
+        minLength: 1
+        maxLength: 100
+  
+    required:
+      - message
+      - jobId
+      - finalFilestoreId
+      
+      
+  SearchRequest:
+    type: object
+    properties:
+      moduleName:
+        description: Name of the module for which the definitions are expected. Not sending this will fetch all modules and all definitions.
+        type: string
+        minLength: 1
+        maxLength: 100
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+
+    required:
+      - RequestInfo
+
+      
+  DefinitionSearchResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      Modules:
+        description: Array of modules
+        type: array
+        items: 
+          type: string
+      Definitions:
+        description: Array of definitions
+        type: array
+        items: 
+          type: string
+        
+    required:
+      - ResponseInfo
+      - Modules
+      - Definitions
+

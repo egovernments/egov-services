@@ -63,7 +63,7 @@ public class DataUploadService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 	
-	public ProcessMetaData getFileContents(UploaderRequest uploaderRequest){
+	public ProcessMetaData createUploadJob(UploaderRequest uploaderRequest){
 		StringBuilder uri = new StringBuilder();
 		uri.append(fileStoreHost).append(getFileEndpoint);
 		uri.append("?fileStoreId="+uploaderRequest.getFileStoreId())
@@ -73,8 +73,8 @@ public class DataUploadService {
 			filePath = dataUploadRepository.getFileContents(uri.toString());
 		}catch(Exception e){
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
-					"No .xls file found for: fileStoreId="+uploaderRequest.getFileStoreId()
-					+"AND tenantId="+uploaderRequest.getTenantId());		
+					"No .xls file found for: fileStoreId = "+uploaderRequest.getFileStoreId()
+					+" AND tenantId = "+uploaderRequest.getTenantId());		
 		}
 		ProcessMetaData processMetaData = ProcessMetaData.builder().finalfileStoreId("")
 				.jobId("").localFilePath(null).message("Upload process has begun....").build();
@@ -89,30 +89,34 @@ public class DataUploadService {
 	}
 
 
-	public SuccessFailure doInterServiceCall(ConsumerRequest consumerRequest) throws Exception {
-		logger.info("Recived from consumer: "+consumerRequest.toString());
+	public SuccessFailure parseExcel(ConsumerRequest consumerRequest) throws Exception {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 		UploaderRequest uploaderRequest = consumerRequest.getUploaderRequest();
 	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
 	    		uploaderRequest.getModuleName(), uploaderRequest.getDefName());
 	    List<ResponseMetaData> success = new ArrayList<>();
 	    List<ResponseMetaData> failure = new ArrayList<>();
-	    MultipartFile file = (MultipartFile) new File(consumerRequest.getProcessMetaData().getLocalFilePath());
-		HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
-        HSSFSheet sheet = wb.getSheetAt(0);
-        logger.info("Workbook: "+sheet);
-        List<String> jsonPathList = new ArrayList<>();
-        List<List<Object>> excelData = dataUploadUtils.readExcelFile(sheet, jsonPathList);
+	    List<List<Object>> excelData = new ArrayList<>();
+        List<String> coloumnHeaders = new ArrayList<>();
+	    try{
+		    MultipartFile file = dataUploadUtils.getExcelFile(consumerRequest.getProcessMetaData().getLocalFilePath());
+			HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
+	        HSSFSheet sheet = wb.getSheetAt(0);
+	        logger.info("Workbook: "+sheet);
+	        excelData = dataUploadUtils.readExcelFile(sheet, coloumnHeaders);
+	    }catch(Exception e){
+	    	logger.error("Couldn't parse excel sheet", e);
+	    }
         try{
-		    if(uploadDefinition.getIsBulkApi()){
-		    	String request = prepareDataForBulkApi(excelData, jsonPathList, 
+		    /*if(uploadDefinition.getIsBulkApi()){
+		    	String request = prepareDataForBulkApi(excelData, coloumnHeaders, 
 		    			uploadDefinition, uploaderRequest.getRequestInfo(), success, failure);
 		        hitApi(request, uploadDefinition.getUri());
 				ResponseMetaData responseMetaData= new ResponseMetaData();
 				responseMetaData.setRowData(excelData);
 	        	success.add(responseMetaData);
-		    } else{
-		    	callNonBulkApis(excelData, jsonPathList, 
+		    }else*/{
+		    	callNonBulkApis(excelData, coloumnHeaders, 
 		    			uploadDefinition, uploaderRequest.getRequestInfo(), success, failure);
 		    }
         }catch(Exception e){
@@ -125,20 +129,23 @@ public class DataUploadService {
         uploaderResponse.setSuccess(success);
         uploaderResponse.setFailure(failure);
         
+        logger.info("UploaderResponse: "+uploaderResponse);
+        
         return uploaderResponse;
 	}
 	
 	private String callNonBulkApis(List<List<Object>> excelData,
-			     List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo,
+			     List<String> coloumnHeaders, Definition uploadDefinition, RequestInfo requestInfo,
 			     List<ResponseMetaData> success, List<ResponseMetaData> failure){
 		String request = null;
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
 		for(List<Object> row: excelData){
 			try{
 				if(!row.isEmpty()){
-					for(int i = 0; i < jsonPathList.size(); i++){
+					for(int i = 0; i < coloumnHeaders.size(); i++){
 		            	StringBuilder expression = new StringBuilder();
-		            	String key = dataUploadUtils.getJsonPathKey(jsonPathList.get(i), expression);
+		            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i));
+		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
 				        documentContext.put(expression.toString(), key, row.get(i));	            	
 					} 	
 				    logger.info("RequestInfo: "+requestInfo);
@@ -148,17 +155,15 @@ public class DataUploadService {
 				    }catch(Exception e){
 				    	documentContext.put("$", "requestInfo", requestInfo);
 					    request = documentContext.jsonString().toString();
-				    }
-				            	
-				    hitApi(request, uploadDefinition.getUri());
-				            	
+				    }         	
+				    hitApi(request, uploadDefinition.getUri());	
 				    ResponseMetaData responseMetaData= new ResponseMetaData();
 				    responseMetaData.setRownum((excelData.indexOf(row) + 2));
 				    responseMetaData.setRowData(row);
 				    success.add(responseMetaData);	         	
 				}
 			}catch(Exception e){
-				logger.error("Error while processing row (here row 1 is the first data row after headers): "+(excelData.indexOf(row) + 2), e);
+				logger.error("Error while processing row: "+(excelData.indexOf(row) + 2));
 		    	ResponseMetaData responseMetaData= new ResponseMetaData();
 		    	responseMetaData.setRownum((excelData.indexOf(row) + 2));
 		    	responseMetaData.setRowData(row);
@@ -170,7 +175,7 @@ public class DataUploadService {
 	    return request;
 	}
 	
-	private String prepareDataForBulkApi(List<List<Object>> excelData,
+	/*private String prepareDataForBulkApi(List<List<Object>> excelData,
 		     List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo, List<ResponseMetaData> success,
 		     List<ResponseMetaData> failure) throws JsonProcessingException{
 		ObjectMapper mapper = new ObjectMapper();
@@ -222,7 +227,7 @@ public class DataUploadService {
 
     	return documentContext.jsonString().toString();
     	
-	}
+	}*/
 	
 		
 	private Object hitApi(String request, String uri){

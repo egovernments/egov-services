@@ -1,4 +1,3 @@
-
 var date2 = Date.now() + 365 * 24 * 60 * 60 * 1000;
 let criteria = '[' + encodeURIComponent('?') + '(' + '@.startingDate<' + date2 + ')]';
 
@@ -547,7 +546,7 @@ var dat = {
       {
         label: '',
         name: 'updatekpiTargetTextBlock',
-        hide: false,
+        hide: true,
         multiple: false,
         fields: [
           {
@@ -557,7 +556,7 @@ var dat = {
             pattern: '',
             type: 'text',
             isDisabled: false,
-            /*isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'TEXT'?true:false",*/
+            isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'TEXT'?true:false",
             requiredErrMsg: '',
           },
         ],
@@ -566,7 +565,7 @@ var dat = {
       {
         label: '',
         name: 'updatekpiTargetBlock',
-        hide: false,
+        hide: true,
         multiple: false,
         fields: [
           {
@@ -577,7 +576,7 @@ var dat = {
             type: 'number',
             isNumber: true,
             isDisabled: false,
-            /*isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'VALUE'?true:false",*/
+            isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'VALUE'?true:false",
             requiredErrMsg: '',
             patternErrMsg: 'perfManagement.create.KPIs.groups.kpiInputNumber',
           },
@@ -598,6 +597,7 @@ var dat = {
             type: 'radio',
             isRequired: false,
             isDisabled: false,
+            isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'OBJECTIVE'?true:false",
             requiredErrMsg: '',
             patternErrMsg: '',
             values: [

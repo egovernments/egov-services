@@ -1,3 +1,34 @@
+
+
+var serviceProvided = {
+  name: 'serviceProvidedMain',
+  version: 'v1',
+  level: 0,
+  hide: false,
+  groups: [
+    {
+      name: 'serviceProvided',
+      multiple: false,
+      fields: [
+        {
+          name: 'ChecBxGrp',
+          jsonPath: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
+          label: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
+          pattern: '',
+          type: 'checkBoxGroup',
+          isRequired: false,
+          isDisabled: false,
+          defaultValue: false,
+          requiredErrMsg: '',
+          patternErrMsg: '',
+          colSpan:6
+        }
+      ],
+    },
+  ],
+};
+
+
 var dat = {
   'swm.search': {
     numCols: 4,
@@ -83,7 +114,7 @@ var dat = {
     },
   },
   'swm.create': {
-    numCols: 3,
+    numCols: 6,
     useTimestamp: true,
     objectName: 'vendors',
     groups: [
@@ -330,7 +361,21 @@ var dat = {
       {
         name: 'ServicesOffered',
         label: 'swm.create.group.title.ServicesOffered',
+        // children: [serviceProvided],
         fields: [
+          {
+            name: 'ChecBxGrp',
+            jsonPath: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
+            label: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
+            pattern: '',
+            type: 'checkBoxGroup',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: false,
+            requiredErrMsg: '',
+            patternErrMsg: '',
+            colSpan:6
+          },
           {
             name: 'details',
             jsonPath: 'vendors[0].details',
@@ -343,7 +388,7 @@ var dat = {
             maxLength: 500,
             minLength: 10,
             patternErrorMsg: '',
-          },
+          }
         ],
       },
     ],

@@ -24,34 +24,44 @@ class UiCheckBoxGrp extends Component {
     let tempDisabled = eval(item.isDisabled);
     switch (this.props.ui) {
       case 'google':
-        item.json.map((i, key) => {
-          return (
-            <Checkbox
-              id={item.jsonPath[i].split('.').join('-')}
-              style={{
-                display: item.hide ? 'none' : 'inline-block',
-                marginTop: '43px',
-                marginLeft: '-5px',
-              }}
-              label={item.label + (item.isRequired ? ' *' : '')}
-              checked={this.props.getVal ? this.props.getVal(item.jsonPath[i]) : isSelected}
-              disabled={tempDisabled}
-              errorText={this.props.fieldErrors ? this.props.fieldErrors[item.jsonPath] : 'Empty'}
-              onCheck={e =>
-                this.props.handler(
-                  { target: { value: e.target.checked } },
-                  item.jsonPath,
-                  item.isRequired ? true : false,
-                  '',
-                  item.requiredErrMsg,
-                  item.patternErrMsg,
-                  item.expression,
-                  item.expressionMsg
-                )
-              }
-            />
-          );
-        });
+        return (
+          <div className="row">
+            {
+              item.jsonPath.map((i, key) => {
+                return (
+                    <div className={`col-md-${item.hasOwnProperty("colSpan")?item.colSpan:6}`}>
+                      <Checkbox
+                        id={item.jsonPath[key].split('.').join('-')}
+                        style={{
+                          display: item.hide ? 'none' : 'inline',
+                          marginTop: '43px',
+                          marginLeft: '-5px',
+                        }}
+                        label={item.label[key] + (item.isRequired ? ' *' : '')}
+                        checked={this.props.getVal ? this.props.getVal(item.jsonPath[key]) : isSelected}
+                        disabled={tempDisabled}
+                        errorText={this.props.fieldErrors ? this.props.fieldErrors[item.jsonPath[key]] : 'Empty'}
+                        onCheck={e =>
+                          this.props.handler(
+                            { target: { value: e.target.checked } },
+                            item.jsonPath[key],
+                            item.isRequired ? true : false,
+                            '',
+                            item.requiredErrMsg,
+                            item.patternErrMsg,
+                            item.expression,
+                            item.expressionMsg
+                          )
+                        }
+                      />
+                    </div>
+                  )
+
+                }
+          )
+        }
+        </div>
+      );
     }
   };
 

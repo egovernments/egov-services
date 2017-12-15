@@ -339,6 +339,10 @@ definitions:
         type: boolean
         description: Boolean value to identify whether the object is deleted or not from UI.
         default: false
+      isMigrated:
+        type: boolean
+        description: Boolean value to identify whether the object is migrated (loaded to system via data entry, excel upload or back end) from older system or created newly in new system.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

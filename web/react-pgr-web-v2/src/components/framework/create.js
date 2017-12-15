@@ -55,7 +55,7 @@ class Report extends Component {
         if (
           typeof groups[i].fields[j].defaultValue == 'string' ||
           typeof groups[i].fields[j].defaultValue == 'number' 
-          //typeof groups[i].fields[j].defaultValue == 'boolean'
+         //typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
             _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
@@ -326,6 +326,8 @@ class Report extends Component {
       self.props.setLoadingStatus('loading');
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
+
+          console.log("this is srespons efrom ", res)
           self.props.setLoadingStatus('hide');
           if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
             var obj = {};
@@ -350,6 +352,7 @@ class Report extends Component {
           }
           let obj1 = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
           self.depedantValue(obj1.groups);
+          
         },
         function(err) {
           self.props.setLoadingStatus('hide');
@@ -367,15 +370,13 @@ class Report extends Component {
           let params = JSON.parse(id);
           self.props.setLoadingStatus('loading');
           // console.log('query', query);
-
           let requestBody = {};
-
           Object.keys(params).map(key => {
             _.set(requestBody, key, params[key]);
           });
-
           Api.commonApiPost(mockObj.onloadFetchUrl, {}, requestBody, false, mockObj.useTimestamp).then(
             function(res) {
+            
               self.props.setLoadingStatus('hide');
               if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
                 var obj = {};
@@ -607,6 +608,7 @@ class Report extends Component {
         self.initData();
         console.log('Back response');
         console.log(response);
+       
         if (response.summons) {
           if (response.summons.length > 0) {
             self.props.toggleSnackbarAndSetText(
@@ -626,6 +628,10 @@ class Report extends Component {
             );
           }
         } else {
+          let hashLocation = window.location.hash;
+          if(hashLocation == "#/create/legal/advocatepayment"){
+            $('input[type=file]').val('');
+          }
           self.props.toggleSnackbarAndSetText(
             true,
             translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
@@ -775,7 +781,6 @@ class Report extends Component {
       _url;
     if (e) e.preventDefault();
     self.props.setLoadingStatus('loading');
-
     self.checkifHasInjectData(this.props.mockData);
     var formData = { ...this.props.formData };
     if (
@@ -825,6 +830,7 @@ class Report extends Component {
             breakOut = 1;
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, err, false, true);
+          
           } else {
             _docs.push({
               index: i,

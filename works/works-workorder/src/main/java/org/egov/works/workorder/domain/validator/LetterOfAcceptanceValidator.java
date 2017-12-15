@@ -222,10 +222,23 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_WORKORDER_LOANUMBER_REQUIRED, Constants.MESSAGE_WORKORDER_LOANUMBER_REQUIRED);
         }
 
-        BigDecimal approvedAmount = BigDecimal.ZERO;
+        if (letterOfAcceptance.getDefectLiabilityPeriod() <= 0) {
+            messages.put(Constants.KEY_WORKORDER_DLP_ZERO, Constants.MESSAGE_WORKORDER_DLP_ZERO);
+        }
 
+        if (letterOfAcceptance.getContractPeriod().compareTo(BigDecimal.ZERO) <= 0) {
+            messages.put(Constants.KEY_WORKORDER_CP_ZERO, Constants.MESSAGE_WORKORDER_CP_ZERO);
+        }
+
+        // TODO validation for engineer incharge not added becouse of clarity
+
+    }
+
+    public void validateLOAAmount(LetterOfAcceptance letterOfAcceptance,
+            final DetailedEstimate detailedEstimate) {
+        BigDecimal approvedAmount = BigDecimal.ZERO;
+        HashMap<String, String> messages = new HashMap<>();
         for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
-            if(letterOfAcceptanceEstimate.getLoaActivities() != null)
             for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
                 approvedAmount = approvedAmount.add(loaActivity.getApprovedAmount());
             }
@@ -251,17 +264,9 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER,
                     Constants.MESSAGE_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER);
         }
-
-        if (letterOfAcceptance.getDefectLiabilityPeriod() <= 0) {
-            messages.put(Constants.KEY_WORKORDER_DLP_ZERO, Constants.MESSAGE_WORKORDER_DLP_ZERO);
-        }
-
-        if (letterOfAcceptance.getContractPeriod().compareTo(BigDecimal.ZERO) <= 0) {
-            messages.put(Constants.KEY_WORKORDER_CP_ZERO, Constants.MESSAGE_WORKORDER_CP_ZERO);
-        }
-
-        // TODO validation for engineer incharge not added becouse of clarity
-
+        
+        if (messages != null && !messages.isEmpty())
+            throw new CustomException(messages);
     }
 
     private void validateDetailedEstimate(DetailedEstimate detailedEstimate, HashMap<String, String> messages,

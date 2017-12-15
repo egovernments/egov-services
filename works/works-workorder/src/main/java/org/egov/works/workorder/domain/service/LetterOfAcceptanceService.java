@@ -95,11 +95,14 @@ public class LetterOfAcceptanceService {
                 List<LOAActivity> loaActivities = new ArrayList<>();
 
                 for (EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-                    prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
+                    prepareLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
                             letterOfAcceptanceRequest.getRequestInfo(), false);
                 }
                 letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
                 letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
+                
+                
+                letterOfAcceptanceValidator.validateLOAAmount(letterOfAcceptance, detailedEstimate);
 
                 if (!detailedEstimate.getWorkOrderCreated()) {
                     String loaNumber = idGenerationRepository.generateLOANumber(letterOfAcceptance.getTenantId(),
@@ -147,7 +150,7 @@ public class LetterOfAcceptanceService {
         return letterOfAcceptanceResponse;
     }
 
-    private void prepairLOAActivity(LetterOfAcceptance letterOfAcceptance,
+    private void prepareLOAActivity(LetterOfAcceptance letterOfAcceptance,
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate, List<LOAActivity> loaActivities,
             EstimateActivity estimateActivity, final RequestInfo requestInfo, final Boolean isUpdate) {
         LOAActivity activity = new LOAActivity();
@@ -155,7 +158,7 @@ public class LetterOfAcceptanceService {
         activity.setApprovedRate(estimateActivity.getEstimateRate());
         activity.setApprovedQuantity(new BigDecimal(estimateActivity.getQuantity()));
         activity.setApprovedAmount(
-                BigDecimal.valueOf(estimateActivity.getEstimateRate().doubleValue() * estimateActivity.getQuantity()));
+                BigDecimal.valueOf(estimateActivity.getUnitRate().doubleValue() * estimateActivity.getQuantity()));
         if (activity.getId() == null || activity.getId().isEmpty())
             activity.setId(commonUtils.getUUID());
         activity.setTenantId(letterOfAcceptanceEstimate.getTenantId());
@@ -219,7 +222,7 @@ public class LetterOfAcceptanceService {
                 List<LOAActivity> loaActivities = new ArrayList<>();
 
                 for (EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-                    prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
+                    prepareLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
                             letterOfAcceptanceRequest.getRequestInfo(), true);
                 }
                 letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());

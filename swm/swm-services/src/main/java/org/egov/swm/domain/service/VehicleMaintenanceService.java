@@ -87,7 +87,7 @@ public class VehicleMaintenanceService {
 
             // Validate Vehicle
             if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
-                    && vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+                    && !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
 
                 vehicleSearch = new VehicleSearch();
                 vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());

@@ -84,6 +84,12 @@ public class UploadJob   {
   @JsonProperty("requesterName")
   private String requesterName;
   
+  @JsonProperty("startTime")
+  private Long startTime;
+  
+  @JsonProperty("endTime")
+  private Long endTime;
+  
   @JsonProperty("localFilePath")
   private String localFilePath;
 

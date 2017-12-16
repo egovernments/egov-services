@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -164,6 +165,14 @@ public class DataUploadUtils {
 				continue;
 			}
 		}
+	}
+	
+	public String mockIdGen(String module){
+		StringBuilder id = new StringBuilder();
+		id.append("DU-").append(module+"-").append(new Date().getTime());
+		
+		logger.info("JOB CODE: "+id.toString());
+		return id.toString();
 	}
 
 }

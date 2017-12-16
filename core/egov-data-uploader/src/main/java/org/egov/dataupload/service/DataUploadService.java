@@ -21,6 +21,7 @@ import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.model.SuccessFailure;
 import org.egov.dataupload.producer.DataUploadProducer;
 import org.egov.dataupload.repository.DataUploadRepository;
+import org.egov.dataupload.repository.UploadRegistryRepository;
 import org.egov.dataupload.utils.DataUploadUtils;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -44,6 +45,9 @@ public class DataUploadService {
 
 	@Autowired
 	private DataUploadRepository dataUploadRepository;
+	
+	@Autowired
+	private UploadRegistryRepository uploadRegistryRepository;
 	
 	@Autowired
 	private DataUploadApplicationRunnerImpl runner;
@@ -76,6 +80,9 @@ public class DataUploadService {
 					"No .xls file found for: fileStoreId = "+uploadJob.getRequestFilePath()
 					+" AND tenantId = "+uploadJob.getTenantId());		
 		}
+		uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName()));
+		uploadJob.setRequesterName(uploaderRequest.getRequestInfo().getUserInfo().getUserName());
+		uploadRegistryRepository.createJob(uploaderRequest);
 		uploadJob.setLocalFilePath(filePath);
 		
 		dataUploadProducer.producer(uploaderRequest);
@@ -165,7 +172,7 @@ public class DataUploadService {
 				    			row.add(null);
 				    		}
 				    		row.add("SUCCESS");
-				    		row.add("Failed to additional fields from API response");
+				    		row.add("Failed to obtain additional fields from API response");
 				    	}
 				    }
 		    		row.add("SUCCESS");

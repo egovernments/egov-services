@@ -40,7 +40,20 @@
 
 package org.egov.eis.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static java.util.Collections.max;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveApplication;
@@ -51,7 +64,17 @@ import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.LeaveAllotmentRepository;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.util.ApplicationConstants;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.Assignment;
+import org.egov.eis.web.contract.EmployeeInfo;
+import org.egov.eis.web.contract.EmployeeInfoResponse;
+import org.egov.eis.web.contract.Holiday;
+import org.egov.eis.web.contract.LeaveApplicationGetRequest;
+import org.egov.eis.web.contract.LeaveApplicationRequest;
+import org.egov.eis.web.contract.LeaveApplicationResponse;
+import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
+import org.egov.eis.web.contract.LeaveApplicationUploadResponse;
+import org.egov.eis.web.contract.LeaveSearchRequest;
+import org.egov.eis.web.contract.LeaveTypeGetRequest;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
@@ -62,357 +85,382 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.util.Collections.max;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class LeaveApplicationService {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(LeaveApplicationService.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(LeaveApplicationService.class);
 
-    @Value("${kafka.topics.leaveapplication.create.name}")
-    private String leaveApplicationCreateTopic;
+	@Value("${kafka.topics.leaveapplication.create.name}")
+	private String leaveApplicationCreateTopic;
 
-    @Value("${kafka.topics.leaveapplication.update.name}")
-    private String leaveApplicationUpdateTopic;
+	@Value("${kafka.topics.leaveapplication.update.name}")
+	private String leaveApplicationUpdateTopic;
 
-    @Autowired
-    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	@Autowired
+	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    @Autowired
-    private LeaveApplicationRepository leaveApplicationRepository;
+	@Autowired
+	private LeaveApplicationRepository leaveApplicationRepository;
 
-    @Autowired
-    private LeaveAllotmentRepository leaveAllotmentRepository;
+	@Autowired
+	private LeaveAllotmentRepository leaveAllotmentRepository;
 
-    @Autowired
-    private CommonMastersRepository commonMastersRepository;
+	@Autowired
+	private CommonMastersRepository commonMastersRepository;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
-    @Autowired
-    private HRStatusService hrStatusService;
+	@Autowired
+	private HRStatusService hrStatusService;
 
-    @Autowired
-    private LeaveTypeService leaveTypeService;
+	@Autowired
+	private LeaveTypeService leaveTypeService;
 
-    @Autowired
-    private ApplicationConstants applicationConstants;
+	@Autowired
+	private ApplicationConstants applicationConstants;
 
-    @Autowired
-    private HRConfigurationService hrConfigurationService;
+	@Autowired
+	private HRConfigurationService hrConfigurationService;
 
-    @Autowired
-    private ResponseInfoFactory responseInfoFactory;
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
-    @Autowired
-    private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
+	@Autowired
+	private LeaveApplicationNumberGeneratorService leaveApplicationNumberGeneratorService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+	@Autowired
+	private ObjectMapper objectMapper;
 
-    public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest,
-                                                       final RequestInfo requestInfo) {
-        return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
-    }
+	public List<LeaveApplication> getLeaveApplications(final LeaveApplicationGetRequest leaveApplicationGetRequest,
+			final RequestInfo requestInfo) {
+		return leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest, requestInfo);
+	}
 
-    public ResponseEntity<?> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest, final String type) {
-        final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
-        final List<LeaveApplication> leaveApplicationsList = validate(leaveApplicationRequest, isExcelUpload);
-        final List<LeaveApplication> successLeaveApplicationsList = new ArrayList<>();
-        final List<LeaveApplication> errorLeaveApplicationsList = new ArrayList<>();
-        leaveApplicationRequest.setType(type);
-        for (final LeaveApplication leaveApplication : leaveApplicationsList)
-            if (leaveApplication.getErrorMsg().isEmpty())
-                successLeaveApplicationsList.add(leaveApplication);
-            else
-                errorLeaveApplicationsList.add(leaveApplication);
-        leaveApplicationRequest.setLeaveApplication(successLeaveApplicationsList);
-        for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
-            if (isExcelUpload)
-                leaveApplication.setStatus(hrStatusService.getHRStatuses("APPROVED", leaveApplication.getTenantId(),
-                        leaveApplicationRequest.getRequestInfo()).get(0).getId());
-            else
-                leaveApplication.setStatus(hrStatusService.getHRStatuses("APPLIED", leaveApplication.getTenantId(),
-                        leaveApplicationRequest.getRequestInfo()).get(0).getId());
-            leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
-        }
-        kafkaTemplate.send(leaveApplicationCreateTopic, leaveApplicationRequest);
-        if (isExcelUpload)
-            return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
-                    leaveApplicationRequest.getRequestInfo());
-        else
-            return getSuccessResponseForCreate(leaveApplicationsList, leaveApplicationRequest.getRequestInfo());
-    }
+	public ResponseEntity<?> createLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest,
+			final String type) {
+		final Boolean isExcelUpload = type != null && "upload".equalsIgnoreCase(type);
+		final List<LeaveApplication> leaveApplicationsList = validate(leaveApplicationRequest, isExcelUpload);
+		final List<LeaveApplication> successLeaveApplicationsList = new ArrayList<>();
+		final List<LeaveApplication> errorLeaveApplicationsList = new ArrayList<>();
+		leaveApplicationRequest.setType(type);
+		for (final LeaveApplication leaveApplication : leaveApplicationsList)
+			if (leaveApplication.getErrorMsg().isEmpty())
+				successLeaveApplicationsList.add(leaveApplication);
+			else
+				errorLeaveApplicationsList.add(leaveApplication);
+		leaveApplicationRequest.setLeaveApplication(successLeaveApplicationsList);
+		for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+			if (isExcelUpload)
+				leaveApplication.setStatus(hrStatusService.getHRStatuses("APPROVED", leaveApplication.getTenantId(),
+						leaveApplicationRequest.getRequestInfo()).get(0).getId());
+			else
+				leaveApplication.setStatus(hrStatusService.getHRStatuses("APPLIED", leaveApplication.getTenantId(),
+						leaveApplicationRequest.getRequestInfo()).get(0).getId());
+			leaveApplication.setApplicationNumber(leaveApplicationNumberGeneratorService.generate());
+		}
+		kafkaTemplate.send(leaveApplicationCreateTopic, leaveApplicationRequest);
+		if (isExcelUpload)
+			return getSuccessResponseForUpload(successLeaveApplicationsList, errorLeaveApplicationsList,
+					leaveApplicationRequest.getRequestInfo());
+		else
+			return getSuccessResponseForCreate(leaveApplicationsList, leaveApplicationRequest.getRequestInfo());
+	}
 
-    public List<LeaveApplication> getLeaveApplicationsReport(final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
-        getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
-        return leaveApplicationRepository.findForReportCriteria(leaveSearchRequest, requestInfo);
-    }
+	public List<LeaveApplication> getLeaveApplicationsReport(final LeaveSearchRequest leaveSearchRequest,
+			final RequestInfo requestInfo) {
+		getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
+		return leaveApplicationRepository.findForReportCriteria(leaveSearchRequest, requestInfo);
+	}
 
-    public List<LeaveApplication> getLeaveSummaryReport(final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
-        List<LeaveApplication> leaveSummary;
-        if (leaveSearchRequest.getDesignationId() != null || leaveSearchRequest.getCode() != null) {
-            getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
-            leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
-        } else {
-            leaveSearchRequest.setIsPrimary(true);
-            EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest, requestInfo);
-            leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
-            leaveSummary.stream().forEach(leaveApplication -> {
-                int i = 0;
+	public List<LeaveApplication> getLeaveSummaryReport(final LeaveSearchRequest leaveSearchRequest,
+			final RequestInfo requestInfo) {
+		List<LeaveApplication> leaveSummary;
+		if (leaveSearchRequest.getDesignationId() != null || leaveSearchRequest.getCode() != null) {
+			getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
+			leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
+		} else {
+			leaveSearchRequest.setIsPrimary(true);
+			EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
+					requestInfo);
+			leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
+			leaveSummary.stream().forEach(leaveApplication -> {
+				int i = 0;
 
-                List<EmployeeInfo> employeesInfo = employeeResponse.getEmployees().stream().filter(employeeDetail -> employeeDetail.getId().equals(leaveApplication.getEmployee()))
-                        .collect(Collectors.toList());
-                if (employeesInfo.size() > 0) {
+				List<EmployeeInfo> employeesInfo = employeeResponse.getEmployees().stream()
+						.filter(employeeDetail -> employeeDetail.getId().equals(leaveApplication.getEmployee()))
+						.collect(Collectors.toList());
+				if (employeesInfo.size() > 0) {
 
-                    if (leaveSearchRequest.getEmployeeType() != null && !employeesInfo.get(0).getEmployeeType().equals(leaveSearchRequest.getEmployeeType())) {
-                        leaveSummary.remove(leaveApplication);
+					if (leaveSearchRequest.getEmployeeType() != null
+							&& !employeesInfo.get(0).getEmployeeType().equals(leaveSearchRequest.getEmployeeType())) {
+						leaveSummary.remove(leaveApplication);
 
-                    } else if (leaveSearchRequest.getEmployeeStatus() != null && !employeesInfo.get(0).getEmployeeStatus().equals(leaveSearchRequest.getEmployeeStatus())) {
-                        leaveSummary.remove(leaveApplication);
-                    } else if (leaveSearchRequest.getDepartmentId() != null) {
-                        List<Assignment> assignments = employeesInfo.get(0).getAssignments();
-                        for (Assignment assign : assignments) {
-                            if (!assign.getDepartment().equals(leaveSearchRequest.getDepartmentId()))
-                                i++;
-                        }
-                        if (i > 0)
-                            leaveSummary.remove(leaveApplication);
-                    } else {
-                        Float eligibleDays = getEligibleDays(leaveSearchRequest.getToDate(), employeesInfo, leaveApplication);
-                        leaveApplication.setAvailableDays(eligibleDays);
-                        leaveApplication.setTotalLeavesEligible(eligibleDays + leaveApplication.getNoOfDays());
-                        leaveApplication.setBalance(leaveApplication.getTotalLeavesEligible() - leaveApplication.getLeaveDays());
-                    }
-                }
+					} else if (leaveSearchRequest.getEmployeeStatus() != null && !employeesInfo.get(0)
+							.getEmployeeStatus().equals(leaveSearchRequest.getEmployeeStatus())) {
+						leaveSummary.remove(leaveApplication);
+					} else if (leaveSearchRequest.getDepartmentId() != null) {
+						List<Assignment> assignments = employeesInfo.get(0).getAssignments();
+						for (Assignment assign : assignments) {
+							if (!assign.getDepartment().equals(leaveSearchRequest.getDepartmentId()))
+								i++;
+						}
+						if (i > 0)
+							leaveSummary.remove(leaveApplication);
+					} else {
+						Float eligibleDays = getEligibleDays(leaveSearchRequest.getToDate(), employeesInfo,
+								leaveApplication);
+						leaveApplication.setAvailableDays(eligibleDays);
+						leaveApplication.setTotalLeavesEligible(eligibleDays + leaveApplication.getNoOfDays());
+						leaveApplication.setBalance(
+								leaveApplication.getTotalLeavesEligible() - leaveApplication.getLeaveDays());
+					}
+				}
 
-            });
-        }
-        return leaveSummary;
-    }
+			});
+		}
+		return leaveSummary;
+	}
 
-    public Float getEligibleDays(Date asOnDate, List<EmployeeInfo> employees, LeaveApplication leaveApplication) {
-        LocalDate yearStartDate = null, asondate = null, dateOfAppointment = null;
-        Long designationid = null;
-        Float allotmentValue = 0f, proratedAllotmentValue = 0f;
+	public Float getEligibleDays(Date asOnDate, List<EmployeeInfo> employees, LeaveApplication leaveApplication) {
+		LocalDate yearStartDate = null, asondate = null, dateOfAppointment = null;
+		Long designationid = null;
+		Float allotmentValue = 0f, proratedAllotmentValue = 0f;
 
-        if (asOnDate != null) {
-            asondate = LocalDate.parse(new SimpleDateFormat("dd/MM/yyyy").format(asOnDate), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        }
+		if (asOnDate != null) {
+			asondate = LocalDate.parse(new SimpleDateFormat("dd/MM/yyyy").format(asOnDate),
+					DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		}
 
+		if (employees.size() > 0 && employees.get(0).getDateOfAppointment() != null) {
+			dateOfAppointment = LocalDate
+					.parse(new SimpleDateFormat("yyyy-MM-dd").format(employees.get(0).getDateOfAppointment()));
+			if (!employees.get(0).getAssignments().isEmpty()) {
+				List<Assignment> assignments = employees.get(0).getAssignments().stream()
+						.filter(assign -> (assign.getIsPrimary().equals(true) && assign.getToDate().after(new Date())))
+						.collect(Collectors.toList());
+				designationid = assignments.stream().map(assign -> assign.getDesignation()).collect(Collectors.toList())
+						.get(0);
+			}
+		}
 
-        if (employees.size() > 0 && employees.get(0).getDateOfAppointment() != null) {
-            dateOfAppointment = LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(employees.get(0).getDateOfAppointment()));
-            if (!employees.get(0).getAssignments().isEmpty()) {
-                List<Assignment> assignments = employees.get(0).getAssignments().stream()
-                        .filter(assign -> (assign.getIsPrimary().equals(true) && assign.getToDate().after(new Date()))).collect(Collectors.toList());
-                designationid = assignments.stream().map(assign -> assign.getDesignation()).collect(Collectors.toList()).get(0);
-            }
-        }
+		if (dateOfAppointment != null && dateOfAppointment.isAfter(yearStartDate))
+			yearStartDate = dateOfAppointment;
 
-        if (dateOfAppointment != null && dateOfAppointment.isAfter(yearStartDate))
-            yearStartDate = dateOfAppointment;
+		List<Map<String, Object>> leaveAllotmentsList = leaveAllotmentRepository.getLeaveAllotmentByDesignation(
+				leaveApplication.getLeaveType().getId(), designationid, leaveApplication.getTenantId());
 
+		if (leaveAllotmentsList != null && !leaveAllotmentsList.isEmpty()) {
+			Object noofdays = leaveAllotmentsList.get(0).get("noofdays");
+			allotmentValue = Float.valueOf(noofdays.toString());
+		}
 
-        List<Map<String, Object>> leaveAllotmentsList = leaveAllotmentRepository.getLeaveAllotmentByDesignation(leaveApplication.getLeaveType().getId(), designationid, leaveApplication.getTenantId());
+		if (allotmentValue != null)
+			proratedAllotmentValue = allotmentValue / 356
+					* Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays();
 
-        if (leaveAllotmentsList != null && !leaveAllotmentsList.isEmpty()) {
-            Object noofdays = leaveAllotmentsList.get(0).get("noofdays");
-            allotmentValue = Float.valueOf(noofdays.toString());
-        }
+		Float.valueOf(String.format("%.0f", proratedAllotmentValue));
 
+		return Float.valueOf(String.format("%.0f", proratedAllotmentValue));
+	}
 
-        if (allotmentValue != null)
-            proratedAllotmentValue = allotmentValue / 356
-                    * Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays();
+	private void getEmployeeIdForRequest(LeaveSearchRequest leaveSearchRequest, RequestInfo requestInfo) {
+		List<Long> employeeIds = null;
+		if (leaveSearchRequest.getCode() != null && leaveSearchRequest.getDesignationId() == null)
+			leaveSearchRequest.setIsPrimary(true);
+		if (leaveSearchRequest.getDepartmentId() != null || leaveSearchRequest.getDesignationId() != null
+				|| leaveSearchRequest.getCode() != null || leaveSearchRequest.getEmployeeType() != null
+				|| leaveSearchRequest.getEmployeeStatus() != null) {
+			EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
+					requestInfo);
+			if (employeeResponse.getEmployees().size() == 1) {
+				List<Assignment> assignments = employeeResponse.getEmployees().get(0).getAssignments().stream()
+						.map(assignment -> {
+							assignment.getToDate().after(new Date());
+							return assignment;
+						}).collect(Collectors.toList());
+				leaveSearchRequest.setDesignationId(assignments.get(0).getDesignation());
+			}
+			employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId())
+					.collect(Collectors.toList());
+		}
+		leaveSearchRequest.setEmployeeIds(employeeIds);
+	}
 
+	private List<LeaveApplication> validate(final LeaveApplicationRequest leaveApplicationRequest,
+			final Boolean isExcelUpload) {
+		String errorMsg = "";
+		for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+			errorMsg = "";
+			final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
+			List<LeaveType> leaveTypes = new ArrayList<>();
+			if (leaveApplication.getCompensatoryForDate() == null
+					|| leaveApplication.getCompensatoryForDate().equals("")) {
+				leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
+				leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
+			}
+			final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(
+					leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(),
+					leaveApplication.getEmployee());
+			final List<LeaveApplication> applications = getLeaveApplicationForDateRange(leaveApplication,
+					leaveApplicationRequest.getRequestInfo());
+			if (leaveTypes.isEmpty() && (leaveApplication.getCompensatoryForDate() == null
+					|| leaveApplication.getCompensatoryForDate().equals("")))
+				errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_NOTPRESENT) + " ";
+			if (leaveApplication.getFromDate().after(leaveApplication.getToDate()))
+				errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE)
+						+ " ";
+			if (isExcelUpload) {
+				Date cutOffDate = null;
+				try {
+					cutOffDate = hrConfigurationService.getCuttOffDate(leaveApplication.getTenantId(),
+							leaveApplicationRequest.getRequestInfo());
+				} catch (final ParseException e) {
+					errorMsg = errorMsg + e.getMessage() + " ";
+				}
+				if (cutOffDate == null || leaveApplication.getFromDate().after(cutOffDate))
+					errorMsg = errorMsg
+							+ applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE) + " ";
+			}
 
-        Float.valueOf(String.format("%.0f", proratedAllotmentValue));
+			final List<Holiday> holidays = commonMastersRepository.getHolidayByDateRange(
+					leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(),
+					leaveApplication.getToDate(), leaveApplication.getTenantId());
 
+			if (holidays.size() > 0)
+				errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_DATE_HOLIDAY);
 
-        return Float.valueOf(String.format("%.0f", proratedAllotmentValue));
-    }
+			if (leaveApplication.getCompensatoryForDate() != null
+					&& !leaveApplication.getCompensatoryForDate().equals("") && leaveApplication.getStateId() == null) {
+				if (employees.size() > 0) {
 
-    private void getEmployeeIdForRequest(LeaveSearchRequest leaveSearchRequest, RequestInfo requestInfo) {
-        List<Long> employeeIds = null;
-        if (leaveSearchRequest.getCode() != null && leaveSearchRequest.getDesignationId() == null)
-            leaveSearchRequest.setIsPrimary(true);
-        if (leaveSearchRequest.getDepartmentId() != null || leaveSearchRequest.getDesignationId() != null || leaveSearchRequest.getCode() != null
-                || leaveSearchRequest.getEmployeeType() != null || leaveSearchRequest.getEmployeeStatus() != null) {
-            EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest, requestInfo);
-            if (employeeResponse.getEmployees().size() == 1) {
-                List<Assignment> assignments = employeeResponse.getEmployees().get(0).getAssignments().stream().map(assignment -> {
-                    assignment.getToDate().after(new Date());
-                    return assignment;
-                }).collect(Collectors.toList());
-                leaveSearchRequest.setDesignationId(assignments.get(0).getDesignation());
-            }
-            employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
-        }
-        leaveSearchRequest.setEmployeeIds(employeeIds);
-    }
+					if (employees.get(0).getDateOfAppointment() != null
+							&& !employees.get(0).getDateOfAppointment().equals("")
+							&& leaveApplication.getFromDate().before(employees.get(0).getDateOfAppointment()))
+						errorMsg = errorMsg
+								+ applicationConstants.getErrorMessage(ApplicationConstants.MSG_APPOINTMENT_DATE);
 
-    private List<LeaveApplication> validate(final LeaveApplicationRequest leaveApplicationRequest, final Boolean isExcelUpload) {
-        String errorMsg = "";
-        for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
-            errorMsg = "";
-            final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
-            List<LeaveType> leaveTypes = new ArrayList<>();
-            if (leaveApplication.getCompensatoryForDate() == null || leaveApplication.getCompensatoryForDate().equals("")) {
-                leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
-                leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
-            }
-            final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(), leaveApplication.getEmployee());
-            final List<LeaveApplication> applications = getLeaveApplicationForDateRange(leaveApplication,
-                    leaveApplicationRequest.getRequestInfo());
-            if (leaveTypes.isEmpty() && (leaveApplication.getCompensatoryForDate() == null || leaveApplication.getCompensatoryForDate().equals("")))
-                errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_NOTPRESENT) + " ";
-            if (leaveApplication.getFromDate().after(leaveApplication.getToDate()))
-                errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_TODATE) + " ";
-            if (isExcelUpload) {
-                Date cutOffDate = null;
-                try {
-                    cutOffDate = hrConfigurationService.getCuttOffDate(leaveApplication.getTenantId(),
-                            leaveApplicationRequest.getRequestInfo());
-                } catch (final ParseException e) {
-                    errorMsg = errorMsg + e.getMessage() + " ";
-                }
-                if (cutOffDate == null || leaveApplication.getFromDate().after(cutOffDate))
-                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE)
-                            + " ";
-            }
-            if (leaveApplication.getCompensatoryForDate() != null && !leaveApplication.getCompensatoryForDate().equals("") && leaveApplication.getStateId() == null) {
-                final List<Holiday> holidays = commonMastersRepository.getHolidayByDate(leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(), leaveApplication.getTenantId());
+					if (employees.get(0).getDateOfRetirement() != null
+							&& !employees.get(0).getDateOfRetirement().equals("")
+							&& leaveApplication.getFromDate().after(employees.get(0).getDateOfRetirement()))
+						errorMsg = errorMsg
+								+ applicationConstants.getErrorMessage(ApplicationConstants.MSG_RETIREMENT_DATE);
+				}
 
-                if (holidays.size() > 0)
-                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_DATE_HOLIDAY);
-                if (employees.size() > 0) {
+				Long statusId = hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(),
+						leaveApplication.getTenantId(), leaveApplicationRequest.getRequestInfo()).get(0).getId();
 
-                    if (employees.get(0).getDateOfAppointment() != null && !employees.get(0).getDateOfAppointment().equals("") && leaveApplication.getFromDate().before(employees.get(0).getDateOfAppointment()))
-                        errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_APPOINTMENT_DATE);
+				LeaveApplication leaveApp = leaveApplicationRepository.getLeaveApplicationForDate(
+						leaveApplication.getEmployee(), leaveApplication.getCompensatoryForDate(),
+						leaveApplication.getTenantId());
 
-                    if (employees.get(0).getDateOfRetirement() != null && !employees.get(0).getDateOfRetirement().equals("") && leaveApplication.getFromDate().after(employees.get(0).getDateOfRetirement()))
-                        errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_RETIREMENT_DATE);
-                }
+				if (leaveApp != null && leaveApp.getStatus() != statusId)
+					errorMsg = errorMsg
+							+ applicationConstants.getErrorMessage(ApplicationConstants.MSG_COMPENSATORYDATE_PRESENT);
 
-                Long statusId = hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(),
-                        leaveApplicationRequest.getRequestInfo()).get(0).getId();
+			}
 
+			if (employees.size() > 0) {
+				List<Assignment> assignments = employees.get(0).getAssignments().stream()
+						.filter(assign -> assign.getIsPrimary().equals(true)).collect(Collectors.toList());
 
-                LeaveApplication leaveApp = leaveApplicationRepository.getLeaveApplicationForDate(leaveApplication.getEmployee(), leaveApplication.getCompensatoryForDate(), leaveApplication.getTenantId());
+				List<Date> todate = assignments.stream().map(assign -> assign.getToDate()).collect(Collectors.toList());
 
-                if (leaveApp != null && leaveApp.getStatus() != statusId)
-                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_COMPENSATORYDATE_PRESENT);
+				if (max(todate).before(leaveApplication.getToDate())) {
+					errorMsg = errorMsg
+							+ applicationConstants.getErrorMessage(ApplicationConstants.MSG_ASSIGNMENT_TODATE);
+				}
+			}
 
-            }
+			if (!applications.isEmpty())
+				errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
+			leaveApplication.setErrorMsg(errorMsg);
 
-            if (employees.size() > 0) {
-                List<Assignment> assignments = employees.get(0).getAssignments().stream()
-                        .filter(assign -> assign.getIsPrimary().equals(true)).collect(Collectors.toList());
+		}
+		return leaveApplicationRequest.getLeaveApplication();
+	}
 
-                List<Date> todate = assignments.stream().map(assign -> assign.getToDate()).collect(Collectors.toList());
+	public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
+		return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
+	}
 
-                if (max(todate).before(leaveApplication.getToDate())) {
-                    errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ASSIGNMENT_TODATE);
-                }
-            }
+	public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+		final LeaveApplicationRequest applicationRequest = new LeaveApplicationRequest();
+		List<LeaveApplication> leaveApplications = new ArrayList<>();
+		leaveApplications.add(leaveApplicationRequest.getLeaveApplication());
+		applicationRequest.setLeaveApplication(leaveApplications);
+		applicationRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
+		leaveApplications = validate(applicationRequest, false);
+		if (leaveApplications.get(0).getErrorMsg().isEmpty()) {
+			final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
+			final List<Long> ids = new ArrayList<>();
+			ids.add(leaveApplications.get(0).getId());
+			leaveApplicationGetRequest.setId(ids);
+			final List<LeaveApplication> oldApplications = leaveApplicationRepository
+					.findForCriteria(leaveApplicationGetRequest, leaveApplicationRequest.getRequestInfo());
+			leaveApplications.get(0).setStatus(oldApplications.get(0).getStatus());
+			leaveApplications.get(0).setStateId(oldApplications.get(0).getStateId());
+			kafkaTemplate.send(leaveApplicationUpdateTopic, leaveApplicationRequest);
+			leaveApplicationStatusChange(leaveApplications.get(0), leaveApplicationRequest.getRequestInfo());
+		}
+		return getSuccessResponseForCreate(leaveApplications, leaveApplicationRequest.getRequestInfo());
+	}
 
-            if (!applications.isEmpty())
-                errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_ALREADY_PRESENT);
-            leaveApplication.setErrorMsg(errorMsg);
+	private ResponseEntity<?> getSuccessResponseForCreate(final List<LeaveApplication> leaveApplicationsList,
+			final RequestInfo requestInfo) {
+		final LeaveApplicationResponse leaveApplicationRes = new LeaveApplicationResponse();
+		HttpStatus httpStatus = HttpStatus.OK;
+		if (!leaveApplicationsList.get(0).getErrorMsg().isEmpty())
+			httpStatus = HttpStatus.BAD_REQUEST;
+		leaveApplicationRes.setLeaveApplication(leaveApplicationsList);
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(httpStatus.toString());
+		leaveApplicationRes.setResponseInfo(responseInfo);
+		return new ResponseEntity<LeaveApplicationResponse>(leaveApplicationRes, httpStatus);
+	}
 
-        }
-        return leaveApplicationRequest.getLeaveApplication();
-    }
+	private ResponseEntity<?> getSuccessResponseForUpload(final List<LeaveApplication> successLeaveApplicationsList,
+			final List<LeaveApplication> errorLeaveApplicationsList, final RequestInfo requestInfo) {
+		final LeaveApplicationUploadResponse leaveApplicationUploadResponse = new LeaveApplicationUploadResponse();
+		leaveApplicationUploadResponse.getSuccessList().addAll(successLeaveApplicationsList);
+		leaveApplicationUploadResponse.getErrorList().addAll(errorLeaveApplicationsList);
 
-    public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
-        return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
-    }
+		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+		responseInfo.setStatus(HttpStatus.OK.toString());
+		leaveApplicationUploadResponse.setResponseInfo(responseInfo);
+		return new ResponseEntity<LeaveApplicationUploadResponse>(leaveApplicationUploadResponse, HttpStatus.OK);
+	}
 
-    public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-        final LeaveApplicationRequest applicationRequest = new LeaveApplicationRequest();
-        List<LeaveApplication> leaveApplications = new ArrayList<>();
-        leaveApplications.add(leaveApplicationRequest.getLeaveApplication());
-        applicationRequest.setLeaveApplication(leaveApplications);
-        applicationRequest.setRequestInfo(leaveApplicationRequest.getRequestInfo());
-        leaveApplications = validate(applicationRequest, false);
-        if (leaveApplications.get(0).getErrorMsg().isEmpty()) {
-            final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
-            final List<Long> ids = new ArrayList<>();
-            ids.add(leaveApplications.get(0).getId());
-            leaveApplicationGetRequest.setId(ids);
-            final List<LeaveApplication> oldApplications = leaveApplicationRepository.findForCriteria(leaveApplicationGetRequest,
-                    leaveApplicationRequest.getRequestInfo());
-            leaveApplications.get(0).setStatus(oldApplications.get(0).getStatus());
-            leaveApplications.get(0).setStateId(oldApplications.get(0).getStateId());
-            kafkaTemplate.send(leaveApplicationUpdateTopic, leaveApplicationRequest);
-            leaveApplicationStatusChange(leaveApplications.get(0), leaveApplicationRequest.getRequestInfo());
-        }
-        return getSuccessResponseForCreate(leaveApplications, leaveApplicationRequest.getRequestInfo());
-    }
+	private void leaveApplicationStatusChange(final LeaveApplication leaveApplication, final RequestInfo requestInfo) {
+		final String workFlowAction = leaveApplication.getWorkflowDetails().getAction();
+		if ("Approve".equalsIgnoreCase(workFlowAction))
+			leaveApplication.setStatus(hrStatusService
+					.getHRStatuses(LeaveStatus.APPROVED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
+					.getId());
+		else if ("Reject".equalsIgnoreCase(workFlowAction))
+			leaveApplication.setStatus(hrStatusService
+					.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
+					.getId());
+		else if ("Cancel".equalsIgnoreCase(workFlowAction))
+			leaveApplication.setStatus(hrStatusService
+					.getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
+					.getId());
+		else if ("Submit".equalsIgnoreCase(workFlowAction))
+			leaveApplication.setStatus(hrStatusService
+					.getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(), requestInfo)
+					.get(0).getId());
+	}
 
-    private ResponseEntity<?> getSuccessResponseForCreate(final List<LeaveApplication> leaveApplicationsList,
-                                                          final RequestInfo requestInfo) {
-        final LeaveApplicationResponse leaveApplicationRes = new LeaveApplicationResponse();
-        HttpStatus httpStatus = HttpStatus.OK;
-        if (!leaveApplicationsList.get(0).getErrorMsg().isEmpty())
-            httpStatus = HttpStatus.BAD_REQUEST;
-        leaveApplicationRes.setLeaveApplication(leaveApplicationsList);
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(httpStatus.toString());
-        leaveApplicationRes.setResponseInfo(responseInfo);
-        return new ResponseEntity<LeaveApplicationResponse>(leaveApplicationRes, httpStatus);
-    }
+	public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+		return leaveApplicationRepository.updateLeaveApplication(leaveApplicationRequest);
+	}
 
-    private ResponseEntity<?> getSuccessResponseForUpload(final List<LeaveApplication> successLeaveApplicationsList,
-                                                          final List<LeaveApplication> errorLeaveApplicationsList, final RequestInfo requestInfo) {
-        final LeaveApplicationUploadResponse leaveApplicationUploadResponse = new LeaveApplicationUploadResponse();
-        leaveApplicationUploadResponse.getSuccessList().addAll(successLeaveApplicationsList);
-        leaveApplicationUploadResponse.getErrorList().addAll(errorLeaveApplicationsList);
-
-        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-        responseInfo.setStatus(HttpStatus.OK.toString());
-        leaveApplicationUploadResponse.setResponseInfo(responseInfo);
-        return new ResponseEntity<LeaveApplicationUploadResponse>(leaveApplicationUploadResponse, HttpStatus.OK);
-    }
-
-    private void leaveApplicationStatusChange(final LeaveApplication leaveApplication, final RequestInfo requestInfo) {
-        final String workFlowAction = leaveApplication.getWorkflowDetails().getAction();
-        if ("Approve".equalsIgnoreCase(workFlowAction))
-            leaveApplication
-                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.APPROVED.toString(), leaveApplication.getTenantId(),
-                            requestInfo).get(0).getId());
-        else if ("Reject".equalsIgnoreCase(workFlowAction))
-            leaveApplication
-                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(),
-                            requestInfo).get(0).getId());
-        else if ("Cancel".equalsIgnoreCase(workFlowAction))
-            leaveApplication
-                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(),
-                            requestInfo).get(0).getId());
-        else if ("Submit".equalsIgnoreCase(workFlowAction))
-            leaveApplication
-                    .setStatus(hrStatusService.getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(),
-                            requestInfo).get(0).getId());
-    }
-
-    public LeaveApplication update(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-        return leaveApplicationRepository.updateLeaveApplication(leaveApplicationRequest);
-    }
-
-    public List<LeaveApplication> getLeaveApplicationForDateRange(final LeaveApplication leaveApplication,
-                                                                  final RequestInfo requestInfo) {
-        return leaveApplicationRepository.getLeaveApplicationForDateRange(leaveApplication, requestInfo);
-    }
+	public List<LeaveApplication> getLeaveApplicationForDateRange(final LeaveApplication leaveApplication,
+			final RequestInfo requestInfo) {
+		return leaveApplicationRepository.getLeaveApplicationForDateRange(leaveApplication, requestInfo);
+	}
 
 }

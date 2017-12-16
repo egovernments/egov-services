@@ -44,4 +44,20 @@ public class CommonMastersRepository {
 
 	}
 
+	public List<Holiday> getHolidayByDateRange(RequestInfo requestInfo, Date fromDate, Date toDate, String tenantId) {
+		final String url = commonMastersServiceHost + "/egov-common-masters/holidays/_search?tenantId=" + tenantId;
+		final StringBuilder searchURL = new StringBuilder(url);
+
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		String fromdate = simpleDateFormat.format(fromDate);
+		searchURL.append("&fromDate=" + fromdate);
+		String todate = simpleDateFormat.format(toDate);
+		searchURL.append("&toDate=" + todate);
+		final HolidayResponse holidayResponse = restTemplate.postForObject(searchURL.toString(), requestInfo,
+				HolidayResponse.class);
+
+		return holidayResponse.getHoliday();
+
+	}
+
 }

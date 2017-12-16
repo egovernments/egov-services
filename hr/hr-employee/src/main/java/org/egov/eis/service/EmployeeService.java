@@ -245,6 +245,7 @@ public class EmployeeService {
         List<Long> ids = empInfoList.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
         log.debug("Employee ids are :: " + ids);
         employeeCriteria.setId(ids);
+        employeeCriteria.setActive(true);
         List<User> usersList = userService.getUsers(employeeCriteria, requestInfo);
         log.debug("usersList returned by UsersService is :: " + usersList);
         empInfoList = employeeUserMapper.mapUsersWithEmployeesForReport(empInfoList, usersList);

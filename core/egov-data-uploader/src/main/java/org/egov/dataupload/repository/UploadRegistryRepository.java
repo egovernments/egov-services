@@ -20,7 +20,7 @@ public class UploadRegistryRepository {
 	private JdbcTemplate jdbcTemplate;
 
 	public void createJob(UploaderRequest uploaderRequest){
-		String query="insert into EGDU_UPLOADREGISTRY(CODE, TENANTID, REQUESTFILE_PATH, MODULE_NAME, DEF_NAME, REQUESTER_NAME,"
+		String query="Insert into EGDU_UPLOADREGISTRY(CODE, TENANTID, REQUESTFILE_PATH, MODULE_NAME, DEF_NAME, REQUESTER_NAME,"
 				+ "STATUS,CREATEDBY,CREATEDDATE,LASTMODIFIEDBY,LASTMODIFIEDDATE) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 		try{
@@ -29,6 +29,17 @@ public class UploadRegistryRepository {
 					uploaderRequest.getRequestInfo().getUserInfo().getId(), new Date().getTime(), uploaderRequest.getRequestInfo().getUserInfo().getId(), new Date().getTime()});
 		}catch(Exception e){
 			logger.error("Exception while creating job in db for job code: "+uploadJob.getCode(), e);
+		}
+	}
+	
+	public void updateJob(UploaderRequest uploaderRequest){
+		String query="Update EGDU_UPLOADREGISTRY set START_TIME=?, END_TIME=?, TOTAL_ROWS=?, SUCCESS_ROWS=?, FAILED_ROWS=?, RESPONSEFILE_PATH=?, STATUS=? where CODE=? AND TENANTID=?";
+		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
+		try{
+			jdbcTemplate.update(query, new Object[] {uploadJob.getStartTime(), uploadJob.getEndTime(), uploadJob.getTotalRows(), uploadJob.getSuccessfulRows(),
+					uploadJob.getFailedRows(), uploadJob.getResponseFilePath(), uploadJob.getStatus(), uploadJob.getCode(), uploadJob.getTenantId()});
+		}catch(Exception e){
+			logger.error("Exception while updating job in db for job code: "+uploadJob.getCode(), e);
 		}
 	}
 }

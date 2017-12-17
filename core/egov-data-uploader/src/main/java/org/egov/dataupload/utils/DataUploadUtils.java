@@ -28,7 +28,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -138,6 +137,27 @@ public class DataUploadUtils {
         }
         
         workbook.close();
+	}
+	
+	public void clearExceFile(String filePath){
+		logger.info("Clearing the file: "+filePath);
+		try{
+		    MultipartFile file = getExcelFile(filePath);
+			HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
+	        HSSFSheet sheet = workbook.getSheetAt(0);
+	        Iterator<Row> rowIte =  sheet.iterator();
+	        while(rowIte.hasNext()){
+	            rowIte.next();              
+	            rowIte.remove();
+	        }
+	        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+	            workbook.write(outputStream);
+	        }
+	        workbook.close();
+		}catch(Exception e){
+			logger.error("Couldn't delete all the contents of file: "+filePath);
+		}
+        
 	}
 	
 	

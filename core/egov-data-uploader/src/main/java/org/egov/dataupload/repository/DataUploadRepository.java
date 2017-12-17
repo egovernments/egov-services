@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -21,7 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Repository
@@ -32,6 +36,12 @@ public class DataUploadRepository {
 	
 	@Value("${write.file.path}")
 	private String writeFilePath;
+	
+	@Value("${filestore.post.endpoint}")
+	private String postFilePath;
+	
+	@Value("${filestore.host}")
+	private String fileStoreHost;
 			
 	public static final Logger LOGGER = LoggerFactory.getLogger(DataUploadRepository.class);
 		
@@ -65,10 +75,35 @@ public class DataUploadRepository {
 		    }
 	    }catch(Exception e){
 			LOGGER.error("Exception while fetching file from: "+filePath, e);
-			throw new CustomException("400", "Module API couldn't process this");
+			throw new CustomException("400", "Exception while fetching file from");
 	    }
 	    
 	    return writeFilePath;
+	}
+	
+	public Map<String, Object> postFileContents(String tenantId, String moduleName, String filePath) throws Exception{
+		StringBuilder uri = new StringBuilder();
+		Map<String, Object> result = new HashMap<>();
+		uri.append(fileStoreHost).append(postFilePath)
+		   .append("?tenantId="+tenantId).append("&module="+moduleName);
+		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		map.add("file", new ClassPathResource(filePath));
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new    HttpEntity<LinkedMultiValueMap<String, Object>>(
+		                    map, headers);
+		try{
+			ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.POST, requestEntity,
+			                    Map.class);
+			result = resultMap.getBody();
+		}catch(Exception e){
+			LOGGER.error("Couldn't post the response excel: "+filePath, e);
+			throw new CustomException("500", "Couldn't post the response excel");
+		}
+		LOGGER.info("POST FILE response: "+result);
+		
+		return result;
 	}
 
 }

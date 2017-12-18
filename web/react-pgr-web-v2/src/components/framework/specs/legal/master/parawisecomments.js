@@ -240,7 +240,7 @@ var dat = {
             pattern: '',
             type: 'text',
             isRequired: true,
-            isDisabled: false,
+            isDisabled: true,
             requiredErrMsg: '',
             patternErrMsg: '',
           },

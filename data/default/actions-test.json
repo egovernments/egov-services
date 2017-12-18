@@ -1502,40 +1502,40 @@
         "id": 1044,
         "name": "RefillinPumpStation Create",
         "url": "/swm-services/refillingpumpstations/_create",
-        "displayName": "Create Refillin Pump Station",
+        "displayName": "Create Refilling Pump Station",
         "orderNumber": 0,
         "queryParams": null,
         "parentModule": null,
         "enabled": false,
-        "serviceCode": "Refillin Pump Station",
+        "serviceCode": "Refilling Pump Station",
         "code": "null",
-        "path": "Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Create"
+        "path": "Solid Waste Management.SWM Masters.Refilling Pump Station.RefillingPumpStation Create"
       },
       {
         "id": 1045,
         "name": "RefillinPumpStation Update",
         "url": "/swm-services/refillingpumpstations/_update",
-        "displayName": "Update Refillin Pump Station",
+        "displayName": "Update Refilling Pump Station",
         "orderNumber": 0,
         "queryParams": null,
         "parentModule": null,
         "enabled": false,
-        "serviceCode": "Refillin Pump Station",
+        "serviceCode": "Refilling Pump Station",
         "code": "null",
-        "path": "Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Update"
+        "path": "Solid Waste Management.SWM Masters.Refilling Pump Station.RefillingPumpStation Update"
       },
       {
         "id": 1046,
         "name": "RefillinPumpStation Search",
         "url": "/swm-services/refillingpumpstations/_search",
-        "displayName": " Refillin Pump Station",
+        "displayName": " Refilling Pump Station",
         "orderNumber": 0,
         "queryParams": null,
         "parentModule": null,
         "enabled": true,
-        "serviceCode": "Refillin Pump Station",
+        "serviceCode": "Refilling Pump Station",
         "code": "null",
-        "path": "Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Search"
+        "path": "Solid Waste Management.SWM Masters.Refilling Pump Station.RefillingPumpStation Search"
       },
       {
         "id": 1047,

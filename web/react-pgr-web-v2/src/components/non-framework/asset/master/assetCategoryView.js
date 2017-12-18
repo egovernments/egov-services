@@ -150,26 +150,28 @@ class assetCategoryView extends Component {
   }
 
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
-    let { setMockData, formData } = this.props;
+    let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
     for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
-        ind = i;
-        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
-        var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
-          'g'
-        );
-        for (var j = 1; j < arr.length; j++) {
-          i++;
-          specs[moduleName + '.' + actionName].groups.splice(
-            ind + 1,
-            0,
-            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
+        if (_form.MdmsRes.ASSET.AssetCategory[0].assetFieldsDefination != null) {
+          var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
+          ind = i;
+          var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
+          var regex = new RegExp(
+            specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+            'g'
           );
-          specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
+          for (var j = 1; j < arr.length; j++) {
+            i++;
+            specs[moduleName + '.' + actionName].groups.splice(
+              ind + 1,
+              0,
+              JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
+            );
+            specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
+          }
         }
       }
 
@@ -205,33 +207,11 @@ class assetCategoryView extends Component {
         }
       }
 
-      //for valueBasedOn feature
-      for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
-        if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j].valueBasedOn &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j].valueBasedOn.length
-        ) {
-          for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].valueBasedOn.length; k++) {
-            if (this.getVal(specs[moduleName + '.' + actionName].groups[i].fields[j].valueBasedOn[k].jsonPath)) {
-              _.set(
-                formData,
-                specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath,
-                specs[moduleName + '.' + actionName].groups[i].fields[j].valueBasedOn[k].valueIfDataFound
-              );
-            } else {
-              _.set(
-                formData,
-                specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath,
-                !specs[moduleName + '.' + actionName].groups[i].fields[j].valueBasedOn[k].valueIfDataFound
-              );
-            }
-          }
-        }
-      }
       if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
         this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
+
     setMockData(specs);
   }
 

@@ -451,7 +451,8 @@ var dat = {
       {
         label: 'ac.create.additional.field',
         name: 'AdditionalField',
-        jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination',
+        jsonPath: 'MdmsRes.ASSET.AssetCategory[0].assetFieldsDefination',
+				multiple: true,
         fields: [
           {
             name: 'additionalName',

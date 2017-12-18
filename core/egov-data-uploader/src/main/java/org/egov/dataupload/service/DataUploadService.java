@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.dataupload.model.Definition;
+import org.egov.dataupload.model.Defs;
+import org.egov.dataupload.model.ModuleDefs;
 import org.egov.dataupload.model.ResponseMetaData;
 import org.egov.dataupload.model.UploadDefinition;
 import org.egov.dataupload.model.UploadJob;
@@ -244,6 +247,29 @@ public class DataUploadService {
 		
 		logger.info("responsefile fileStoreId: "+id);
 		return id;
+	}
+	
+	
+	public List<ModuleDefs> getModuleDefs(){
+		logger.info("fetching definitions for upload....");
+		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
+		List<ModuleDefs> result = new ArrayList<>();
+		for(Entry<String, UploadDefinition> entry: uploadDefinitionMap.entrySet()){
+			ModuleDefs moduleDefs = new ModuleDefs();
+			moduleDefs.setName(entry.getKey());
+			List<Defs> definitions = new ArrayList<>();
+			UploadDefinition uploadDefinition = entry.getValue();
+			for(Definition definition: uploadDefinition.getDefinitions()){
+				Defs def = Defs.builder().name(definition.getDefName()).build();
+				definitions.add(def);
+			}
+			moduleDefs.setDefinitions(definitions);
+			
+			result.add(moduleDefs);
+		}
+		logger.info("result: "+result);
+		return result;
+
 	}
 	
 	

@@ -40,6 +40,7 @@ public class DataUploadUtils {
 	@Value("${result.file.path}")
 	private String resultFilePath;
 	
+	@SuppressWarnings({ "deprecation", "static-access" })
 	public List<List<Object>> readExcelFile(HSSFSheet sheet, List<Object> coloumnHeaders){
         List<List<Object>> excelData = new ArrayList<>(); 
         Iterator<Row> iterator = sheet.iterator();
@@ -52,6 +53,9 @@ public class DataUploadUtils {
 	            if(0 == cell.getRowIndex())
 	            	coloumnHeaders.add(cell.getStringCellValue());
 	            else{
+	            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType())
+	            	dataList.add(cell.getNumericCellValue());
+	            	if(cell.CELL_TYPE_STRING == cell.getCellType())
 	            	dataList.add(cell.getStringCellValue());
 	            }
             }
@@ -144,19 +148,14 @@ public class DataUploadUtils {
 		    MultipartFile file = getExcelFile(filePath);
 			HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
 	        HSSFSheet sheet = workbook.getSheetAt(0);
-	        Iterator<Row> rowIte =  sheet.iterator();
-	        while(rowIte.hasNext()){
-	            Row nextRow = rowIte.next();
-	            Iterator<Cell> cellIterator = nextRow.cellIterator();
-	            while(cellIterator.hasNext()){
-		            Cell cell = cellIterator.next();
-		            cell.setCellValue("");
-	            }
+	        int index = 0;
+	        if(sheet != null)   {
+	            index = workbook.getSheetIndex(sheet);
+	            workbook.removeSheetAt(index);
 	        }
-	        //sheet.shiftRows(0, sheet.getLastRowNum(), (0 - sheet.getLastRowNum()));
-	        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
-	            workbook.write(outputStream);
-	        }
+	        FileOutputStream output = new FileOutputStream(filePath);
+	        workbook.write(output);
+	        output.close();
 	        workbook.close();
 		}catch(Exception e){
 			logger.error("Couldn't delete all the contents of file: "+filePath, e);

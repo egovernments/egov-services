@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.dataupload.model.ModuleDefRequest;
+import org.egov.dataupload.model.ModuleDefResponse;
+import org.egov.dataupload.model.ModuleDefs;
 import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploaderRequest;
 import org.egov.dataupload.model.UploaderResponse;
@@ -39,17 +42,30 @@ public class DataUploadController {
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadController.class);
 	
 	
-	@PostMapping("/_create")
+	@PostMapping("jobs/_create")
 	@ResponseBody
 	public ResponseEntity<?> upload(@RequestBody @Valid UploaderRequest uploaderRequest) throws Exception {
 		try {
 				logger.info("Inside controller");
-				RequestInfo requestInfo = RequestInfo.builder().action("create").apiId("dataup").authToken("867ab332-5a3e-4b13-8c71-338bfeb80e44")
-				.did("1").msgId("20170310130900").ts(10032017L).build();
 				List<UploadJob> uploadJobs = dataUploadService.createUploadJob(uploaderRequest);
 				UploaderResponse result = UploaderResponse.builder()
-						.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true))
+						.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(uploaderRequest.getRequestInfo(), true))
 						.uploadJobs(uploadJobs).build();
+				return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e){
+			throw e;
+		}
+	}
+	
+	@PostMapping("upload-definitions/_search")
+	@ResponseBody
+	public ResponseEntity<?> definitionSearch(@RequestBody @Valid ModuleDefRequest moduleDefRequest) throws Exception {
+		try {
+				logger.info("Inside controller");
+				List<ModuleDefs> moduleDefs = dataUploadService.getModuleDefs();
+				ModuleDefResponse result = ModuleDefResponse.builder()
+						.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(moduleDefRequest.getRequestInfo(), true))
+						.moduleDefs(moduleDefs).build();
 				return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch(Exception e){
 			throw e;

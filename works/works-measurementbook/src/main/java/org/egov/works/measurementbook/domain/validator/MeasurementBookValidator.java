@@ -154,7 +154,7 @@ public class MeasurementBookValidator {
 		for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
 				.getLetterOfAcceptanceEstimates()) {
 			for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
-				if (!loaActivity.getLoaMeasurements().isEmpty()) {
+				if (loaActivity.getLoaMeasurements() != null && !loaActivity.getLoaMeasurements().isEmpty()) {
 					for (MeasurementBookDetail detail : measurementBook.getMeasurementBookDetails()) {
 						if (detail.getLoaActivity().getId() != null
 								&& detail.getLoaActivity().getId().equals(loaActivity.getId())
@@ -172,8 +172,8 @@ public class MeasurementBookValidator {
 					&& measurementBook.getLumpSumMBDetails().isEmpty())
 				messages.put(Constants.KEY_MB_DETAILS_MANDATORY, Constants.MSG_MB_DETAILS_MANDATORY);
 		} else {
-			if (measurementBook.getMeasurementBookDetails().isEmpty()
-					&& measurementBook.getLumpSumMBDetails().isEmpty())
+			if (measurementBook.getMeasurementBookDetails() != null && measurementBook.getMeasurementBookDetails().isEmpty()
+					&& measurementBook.getLumpSumMBDetails() != null && measurementBook.getLumpSumMBDetails().isEmpty())
 				messages.put(Constants.KEY_MB_DETAILS_MANDATORY, Constants.MSG_MB_DETAILS_MANDATORY);
 			for (MeasurementBookDetail detail : measurementBook.getLumpSumMBDetails()) {
 				if (detail.getLoaActivity() == null)
@@ -198,35 +198,37 @@ public class MeasurementBookValidator {
 				Arrays.asList(letterOfAcceptance.getLetterOfAcceptanceEstimates().get(0).getDetailedEstimate().getId()),
 				detail.getTenantId(), requestInfo);
 		Double mbSheetQuantity = 0D;
-		for (MBMeasurementSheet sheet : detail.getMeasurementSheets()) {
-			String estimateSheetId = null;
-			String identifier = null;
-			for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
-				for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
-                    if(loaActivity.getLoaMeasurements() != null) {
-                        for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
-                            if (loaMeasurementSheet.getId().equals(sheet.getLoaMeasurementSheet().getId()))
-                                estimateSheetId = loaMeasurementSheet.getEstimateMeasurementSheet();
-                            else
-                                messages.put(Constants.KEY_MB_MEASUREMENTS_LOA_NOT_VALID,
-                                        Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
+        if(detail.getMeasurementSheets() != null) {
+            for (MBMeasurementSheet sheet : detail.getMeasurementSheets()) {
+                String estimateSheetId = null;
+                String identifier = null;
+                for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
+                    for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
+                        if (loaActivity.getLoaMeasurements() != null) {
+                            for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
+                                if (loaMeasurementSheet.getId().equals(sheet.getLoaMeasurementSheet().getId()))
+                                    estimateSheetId = loaMeasurementSheet.getEstimateMeasurementSheet();
+                                else
+                                    messages.put(Constants.KEY_MB_MEASUREMENTS_LOA_NOT_VALID,
+                                            Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
+                            }
                         }
                     }
-				}
-			}
-			for (EstimateActivity estimateActivity : detailedEstimates.get(0).getEstimateActivities()) {
-                if(estimateActivity.getEstimateMeasurementSheets() != null) {
-                    for (EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity.getEstimateMeasurementSheets()) {
-                        if (estimateMeasurementSheet.getId().equals(estimateSheetId))
-                            identifier = estimateMeasurementSheet.getIdentifier();
+                }
+                for (EstimateActivity estimateActivity : detailedEstimates.get(0).getEstimateActivities()) {
+                    if (estimateActivity.getEstimateMeasurementSheets() != null) {
+                        for (EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity.getEstimateMeasurementSheets()) {
+                            if (estimateMeasurementSheet.getId().equals(estimateSheetId))
+                                identifier = estimateMeasurementSheet.getIdentifier();
+                        }
                     }
                 }
-			}
-			if ("A".equalsIgnoreCase(identifier))
-				mbSheetQuantity += sheet.getQuantity().doubleValue();
-			else
-				mbSheetQuantity -= sheet.getQuantity().doubleValue();
-		}
+                if ("A".equalsIgnoreCase(identifier))
+                    mbSheetQuantity += sheet.getQuantity().doubleValue();
+                else
+                    mbSheetQuantity -= sheet.getQuantity().doubleValue();
+            }
+        }
 		if (!mbSheetQuantity.equals(detail.getQuantity()))
 			messages.put(Constants.KEY_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL,
 					Constants.MSG_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL);

@@ -419,6 +419,7 @@ const menuConvention = {
   'Inventory.Inventory Report.Comparison Between Different Rates': '/report/inventory/comparisonBetweenDifferentRates',
   'Inventory.Inventory Report.Material wise Purchase Order History': '/report/inventory/MaterialwisePurchaseOrderHistoryReport',
   'Inventory.Inventory Report.Supplier wise Purchase Order History': '/report/inventory/SupplierwisesPurchaseOrderHistoryReport',
+  'Inventory.Inventory Report.Inventory Register Report': '/report/inventory/inventoryRegisterReport',
   //Works
   'Works Management.Abstract Estimate.Estimate Create': '/non-framework/works/transaction/create/abstractEstimate',
   'Works Management.Abstract Estimate.Estimate Search': '/search/works/abstractEstimate/view',

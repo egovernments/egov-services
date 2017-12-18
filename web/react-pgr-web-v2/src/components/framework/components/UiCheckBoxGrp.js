@@ -29,7 +29,7 @@ class UiCheckBoxGrp extends Component {
             {
               item.jsonPath.map((i, key) => {
                 return (
-                    <div className={`col-md-${item.hasOwnProperty("colSpan")?item.colSpan:6}`}>
+                    <div key = {key} className={`col-md-${item.hasOwnProperty("colSpan")?item.colSpan:4}`}>
                       <Checkbox
                         id={item.jsonPath[key].split('.').join('-')}
                         style={{

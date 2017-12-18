@@ -105,7 +105,8 @@ export default class ShowFields extends Component {
                         field.type === 'nestedTableList' ||
                         (field.type === 'textarea' && field.fullWidth === true) ||
                         field.type === 'workflow' ||
-                        field.type === 'multiFieldAddToTable'
+                        field.type === 'multiFieldAddToTable'||
+                        field.type === "checkBoxGroup"
                           ? 12
                           : noCols
                       }
@@ -118,7 +119,8 @@ export default class ShowFields extends Component {
                         (field.type === 'textarea' && field.fullWidth === true) ||
                         field.type === 'window' ||
                         field.type === 'workflow' ||
-                        field.type === 'multiFieldAddToTable'
+                        field.type === 'multiFieldAddToTable'||
+                        field.type === "checkBoxGroup"
                           ? 12
                           : noCols
                       }

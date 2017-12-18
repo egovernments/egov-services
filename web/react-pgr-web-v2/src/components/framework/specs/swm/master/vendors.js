@@ -31,7 +31,7 @@ var serviceProvided = {
 
 var dat = {
   'swm.search': {
-    numCols: 4,
+    numCols: 3,
     useTimestamp: true,
     objectName: '',
     url: '/swm-services/vendors/_search',
@@ -41,14 +41,61 @@ var dat = {
         label: 'swm.search.vendor.title',
         fields: [
           {
-            name: 'vendorNos',
-            jsonPath: 'vendorNos',
-            label: 'swm.create.vendorNos',
-            type: '',
+            name: 'name',
+            jsonPath: 'name',
+            label: 'swm.create.supplier.name',
+            pattern: '',
+            type: 'text',
+            isRequired: false,
             isDisabled: false,
-            patternErrorMsg: 'swm.create.field.message.vendorNos',
+            defaultValue: '',
+            maxLength: 256,
+            minLength: 1,
+            patternErrorMsg: 'swm.create.field.message.name',
           },
           {
+            name: 'vendorNo',
+            jsonPath: 'vendorNo',
+            label: 'swm.create.vendorNo',
+            pattern: '',
+            type: 'text',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: '',
+            maxLength: 128,
+            minLength: 1,
+            patternErrorMsg: 'swm.create.field.message.vendorNo',
+          },
+          {
+            name: 'registrationNo',
+            jsonPath: 'registrationNo',
+            label: 'swm.create.registrationNo',
+            pattern: '',
+            type: 'text',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: '',
+            maxLength: 256,
+            minLength: 1,
+            patternErrorMsg: 'swm.create.field.message.registrationNo',
+          }
+
+
+          /*{
+            name: 'ServicesOffered',
+            label: 'swm.create.servicesOffered',
+            jsonPath: 'servicesOffered.name',
+            type: 'text',
+            isRequired: false,
+            isDisabled: false,
+            maxLength: 128,
+            url:'',
+            minLength: 1,
+            patternErrorMsg: ''
+          }*/
+
+
+          /*{
             name: 'vendorNo',
             jsonPath: 'vendorNo',
             label: 'swm.create.vendorNo',
@@ -72,42 +119,17 @@ var dat = {
             isDisabled: false,
             maxLength: 256,
             patternErrorMsg: 'swm.create.field.message.registrationNo',
-          },
-          {
-            name: 'supplier',
-            jsonPath: 'supplier',
-            label: 'swm.create.supplier',
-            type: 'text',
-            isDisabled: false,
-            maxLength: 256,
-            patternErrorMsg: 'swm.create.field.message.supplier',
-          },
-          {
-            name: 'offSet',
-            jsonPath: 'offSet',
-            label: 'swm.create.offSet',
-            type: 'number',
-            isDisabled: false,
-            patternErrorMsg: 'swm.create.field.message.offSet',
-          },
-          {
-            name: 'sortBy',
-            jsonPath: 'sortBy',
-            label: 'swm.create.sortBy',
-            type: 'text',
-            isDisabled: false,
-            patternErrorMsg: 'swm.create.field.message.sortBy',
-          },
+          }*/
         ],
       },
     ],
     result: {
       header: [
-        {
-          label: 'swm.search.result.vendorNo',
-        },
+        {label: 'swm.create.supplier.name'},
+        {label: 'swm.create.vendorNo'},
+        {label: 'swm.create.registrationNo'}
       ],
-      values: ['vendorNo'],
+      values: ['name', 'vendorNo', 'registrationNo'/*, 'servicesOffered.name'*/],
       resultPath: 'vendors',
       rowClickUrlUpdate: '/update/swm/vendors/{vendorNo}',
       rowClickUrlView: '/view/swm/vendors/{vendorNo}',
@@ -172,7 +194,7 @@ var dat = {
             jsonPath: 'vendors[0].registrationNo',
             label: 'swm.create.registrationNo',
             pattern: '',
-            type: 'number',
+            type: 'text',
             isRequired: true,
             isDisabled: false,
             defaultValue: '',
@@ -211,7 +233,7 @@ var dat = {
             jsonPath: 'vendors[0].supplier.faxNumber',
             label: 'swm.create.supplier.faxNumber',
             pattern: '',
-            type: 'number',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
             defaultValue: '',
@@ -224,7 +246,7 @@ var dat = {
             jsonPath: 'vendors[0].supplier.tinNumber',
             label: 'swm.create.supplier.tinNumber',
             pattern: '',
-            type: 'number',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
             defaultValue: '',

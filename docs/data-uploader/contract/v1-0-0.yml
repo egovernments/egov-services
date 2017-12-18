@@ -7,47 +7,21 @@ info:
     name: Abhishek Jain
 schemes:
   - https
-basePath: '/data-uploader/v1/[API endpoint]'
-paths:     
-  /_create:
-    post:
-      summary: API to parse excel file and call respective APIs.
-      description: >-
-        API fetches an xls file based on the id provided to it and parses the excel to create
-        requests for respective module APIs.
-      parameters:
-        - name: UploaderRequest
-          in: body
-          description: Details of the module and file to be parsed.
-          required: true
-          schema:
-            $ref: '#/definitions/UploaderRequest'
-      tags:
-        - Data-Upload
-      responses:
-        '201':
-          description: Data uploaded sucessfully.
-          schema:
-            $ref: '#/definitions/UploaderResponse'
-        '400':
-          description: Error.
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+basePath: '/uploader/v1/'
+paths:   
 
-            
-  /upload-definition/_search:
+  /upload-definitions/_search:
     post:
-      summary: Fetches upload-definitions that are configured.
+      summary: Search for uploadable data definitions
       description: >-
-        Fetched the map of modules and their respective upload-definitions configured
+        Fetches a map of modules (a group of related APIs) and uploadable defintions (API supported via uplaoder service) under them
       parameters:
         - name: SearchRequest
           in: body
           description: Details of the module and file to be parsed.
           required: true
           schema:
-            $ref: '#/definitions/SearchRequest'
+            $ref: '#/definitions/ModuleDefRequest'
       tags:
         - Data-Upload
       responses:
@@ -59,14 +33,42 @@ paths:
           description: Error.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              #/definitions/UploadErrorRes
               
+  /jobs/_create:
+    post:
+      summary: Initiate an Uplaod request.
+      description: >-
+        This API performs following functions - 
+        -  Accesses file as per provided requestFilePath to ensure file exists
+        - Performs header row check against the configuration to ensure file format correctness (TO BE DONE)
+        - Generate a job code if file is accessble an dtemplate matches configuration for the module + definition combination
+        - Queue teh job for processing and return the Job code
+      parameters:
+        - name: JobRequest
+          in: body
+          description: Details of the module and file to be parsed.
+          required: true
+          schema:
+            $ref: '#/definitions/JobRequest'
+      tags:
+        - Data-Upload
+      responses:
+        '201':
+          description: Data uploaded initaited successfully.
+          schema:
+            $ref: '#/definitions/JobResponse'
+        '400':
+          description: Error in initiating the data upload
+          schema:
+            $ref: >-
+              #/definitions/UploadErrorRes
               
   /jobs/_search:
     post:
       summary: Fetches upload-jobs for the given criteria.
       description: >-
-        Fetched the map of modules and their respective upload-definitions configured
+        Fetches the map of modules and their respective upload-definitions configured
       parameters:
         - name: JobSearchRequest
           in: body
@@ -80,15 +82,12 @@ paths:
         '201':
           description: Definitions fetched Successfully.
           schema:
-            $ref: '#/definitions/UploaderResponse'
+            $ref: '#/definitions/JobResponse'
         '400':
           description: Error.
           schema:
             $ref: >-
-              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
-              
-
-              
+              #/definitions/UploadErrorRes
 
 definitions:
   
@@ -147,8 +146,7 @@ definitions:
       - defName
       - requestFilePath
 
-
-  UploaderResponse:
+  JobResponse:
     type: object
     properties:
       ResponseInfo:
@@ -159,7 +157,7 @@ definitions:
         items: 
           $ref: '#/definitions/UploadJob'
             
-  UploaderRequest:
+  JobRequest:
     type: object
     properties:
       UploadJobs:
@@ -173,9 +171,7 @@ definitions:
       - UploadJobs
       - RequestInfo
       
-      
-      
-  SearchRequest:
+  ModuleDefRequest:
     type: object
     properties:
       RequestInfo:
@@ -232,6 +228,11 @@ definitions:
   JobSearchRequest:
     type: object
     properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+        minLength: 1
+        maxLength: 100
       codes: 
         description: Job-ids of the jobs to be searched
         type: array
@@ -258,4 +259,19 @@ definitions:
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
     required:
       - RequestInfo
+      - tenantId
      
+  UploadErrorRes:
+    allOf: 
+    - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+    - type: object
+      properties:
+        codes:
+          type: string
+          enum:
+            - BadRequestFile
+            - InvalidFileFormat
+            - FileNotFound
+            - ModuleNotFound
+            - DefNotFound
+            - TenantNotFound

@@ -85,9 +85,10 @@ class UiMultiFieldTable extends Component {
     // console.log('render load:',_.get(props.formData,props.item.jsonPath), numberOfRowsArray && numberOfRowsArray.length);
     let formData = { ...props.formData };
     // console.log(formData, JSON.stringify(formData));
+    // console.log(numberOfRowsArray, numberOfRowsArray ? numberOfRowsArray.length - 1 : 0,  props.item.jsonPath, isintialLoad);
     // console.log('render load', props.item.jsonPath, _.get(formData,props.item.jsonPath), props.item.tableList.values);
     if (numberOfRowsArray && numberOfRowsArray.length > 0 && !isintialLoad) {
-      console.log('render load true succeeded');
+      // console.log('render load true succeeded');
       var regexp = new RegExp(`${this.escapeRegExp(props.item.jsonPath)}\\[\\d+\\]`);
       for (var i = 0; i < numberOfRowsArray.length; i++) {
         var listValuesArray = _.cloneDeep(listValues);
@@ -105,9 +106,9 @@ class UiMultiFieldTable extends Component {
       });
     } else if (numberOfRowsArray && numberOfRowsArray.length == 0) {
       this.setState({
-        isintialLoad: true,
+        isintialLoad: false,
       });
-    } else if (numberOfRowsArray == undefined) {
+    } else if (numberOfRowsArray == undefined && !isintialLoad) {
       let values = [props.item.tableList.values];
       this.setState({
         values,
@@ -313,6 +314,7 @@ class UiMultiFieldTable extends Component {
           />
         );
       case 'singleValueList':
+        // console.log(item.jsonPath, this.props.getVal(item.jsonPath));
         return (
           <UiSelectField
             ui={this.props.ui}

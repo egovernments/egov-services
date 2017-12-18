@@ -84,15 +84,12 @@ class AbstractEstimate extends Component {
               }
 
               let queryStringObject = splitArray[1].split('|')[0].split('&');
+
               for (let m = 0; m < queryStringObject.length; m++) {
                 if (m) {
                   if (queryStringObject[m].split('=')[1].search('{') > -1) {
-                    id[queryStringObject[m].split('=')[0]] = self.getVal(
-                      queryStringObject[m]
-                        .split('=')[1]
-                        .split('{')[1]
-                        .split('}')[0]
-                    );
+                    let regexp = new RegExp(`\\{.*\\}`);
+                    id[queryStringObject[m].split('=')[0]] = queryStringObject[m].split('=')[1].replace(regexp, self.getVal(queryStringObject[m].split('=')[1].split('{')[1].split('}')[0])) ;
                   } else {
                     id[queryStringObject[m].split('=')[0]] = queryStringObject[m].split('=')[1];
                   }
@@ -106,6 +103,7 @@ class AbstractEstimate extends Component {
               //   console.log("helo", formData);
               //   return false;
               // }
+
               Api.commonApiPost(context, id).then(
                 function(response) {
                   if (response) {
@@ -265,10 +263,10 @@ class AbstractEstimate extends Component {
     let obj = specifications[`works.${this.props.match.params.action}`];
     reqRequired = [];
 
+    let specs = {...specifications};
+
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
-    setMetaData(specifications);
-    setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName('works');
     setActionName(this.props.match.params.action);
 
@@ -283,16 +281,64 @@ class AbstractEstimate extends Component {
       };
       Promise.all([Api.commonApiPost(url, query, {}, false, specifications[`works.update`].useTimestamp)]).then(responses => {
         try {
+          let status = responses[0].abstractEstimates[0].status;
+          console.log(status);
+          // Show financial details or sanction detials based on role
+          if(responses[0].abstractEstimates[0].status === 'CREATED'){
+            specs[`works.update`].groups.map((groups,idx) => {
+              //remove financial details section
+              if(groups.name === 'Financial Details'){
+                specs[`works.update`].groups.splice(idx,1);
+              }
+              //remove sanction details fields
+              if(groups.name === 'Sanction Details'){
+                let sanctionFields=['adminSanctionNumber','adminSanctionDate','councilResolutionNumber','councilResolutionDate']
+                groups.fields.map((field)=>{
+                  sanctionFields.indexOf(field.name) > -1 ? field['isHidden']=true : '';
+                })
+              }
+            });
+          }else if(responses[0].abstractEstimates[0].status === 'CHECKED'){
+            //financial details will be shown by default
+            specs[`works.update`].groups.map((groups,idx) => {
+              //remove sanction details fields
+              if(groups.name === 'Sanction Details'){
+                let sanctionFields=['adminSanctionNumber','adminSanctionDate','councilResolutionNumber','councilResolutionDate']
+                groups.fields.map((field)=>{
+                  sanctionFields.indexOf(field.name) > -1 ? field['isHidden']=true : '';
+                })
+              }
+            })
+          }else if(responses[0].abstractEstimates[0].status === 'FINANCIAL_SANCTIONED'){
+            //show sanction details in editable mode
+            specs[`works.update`].groups.map((groups,idx) => {
+              if(groups.name === 'Financial Details'){
+                specs[`works.update`].groups.splice(idx,1);
+              }
+            });
+          }else if(responses[0].abstractEstimates[0].status === 'ADMIN_SANCTIONED'){
+            //show financial and sanction details in disabled mode
+            specs[`works.update`].groups.map((groups,idx) => {
+              if(groups.name === 'Financial Details' || groups.name === 'Sanction Details'){
+                groups.fields.map((field)=>{
+                  field['isDisabled']=true;
+                })
+              }
+            });
+          }
+          // console.log(specs[`works.update`]);
+          setMetaData(specs);
+          setMockData(JSON.parse(JSON.stringify(specs)));
           self.setInitialUpdateData(
             responses[0],
-            JSON.parse(JSON.stringify(specifications)),
+            JSON.parse(JSON.stringify(specs)),
             'works',
             'update',
-            specifications[`works.update`].objectName
+            specs[`works.update`].objectName
           );
-          console.log(responses[0].abstractEstimates[0].pmcName);
+          console.log('init call',responses[0].abstractEstimates[0].landAssetRequired);
           setFormData(responses[0]);
-          let obj1 = specifications[`works.update`];
+          let obj1 = specs[`works.update`];
           self.depedantValue(obj1.groups);
           setLoadingStatus('hide');
         } catch (e) {
@@ -302,10 +348,13 @@ class AbstractEstimate extends Component {
       });
     } else {
       //create
-      console.log('came to create abstractEstimates');
+      // console.log('came to create abstractEstimates');
       setActionName('create');
       var formData = {};
       if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
+
+      setMetaData(specs);
+      setMockData(JSON.parse(JSON.stringify(specs)));
       setFormData(formData);
 
       handleChange(new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
@@ -344,7 +393,7 @@ class AbstractEstimate extends Component {
   componentWillReceiveProps(nextProps) {
     // console.log(this.state.pathname, nextProps.history.location.pathname);
     if (this.state.pathname && this.state.pathname != nextProps.history.location.pathname) {
-      console.log('came inside receive props');
+      // console.log('came inside receive props');
       // if(!_.isEqual(this.props, nextProps))
       this.initData();
     }
@@ -602,6 +651,7 @@ class AbstractEstimate extends Component {
   hideField = (_mockData, hideObject, reset, val) => {
     let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
+    // console.log(this.props.formData);
     if (hideObject.isField) {
       for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
         for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
@@ -610,6 +660,7 @@ class AbstractEstimate extends Component {
             _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
               _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              console.log('hide field function if loop',_formData.abstractEstimates[0].landAssetRequired);
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
               if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
@@ -644,6 +695,7 @@ class AbstractEstimate extends Component {
               }
             }
             delRequiredFields(_rReq);
+            console.log('hide field function else loop', this.props.formData.abstractEstimates[0].landAssetRequired, hideObject, _formData.abstractEstimates[0].landAssetRequired);
             setFormData(_formData);
           } else {
             var _rReq = [];
@@ -675,6 +727,7 @@ class AbstractEstimate extends Component {
                       }
                     }
                     delRequiredFields(_rReq);
+                    console.log('hide function flag 0 if loop', _formData.abstractEstimates[0].landAssetRequired);
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
@@ -728,6 +781,7 @@ class AbstractEstimate extends Component {
   showField = (_mockData, showObject, reset) => {
     let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
+    // console.log(showObject, this.props.formData);
     if (showObject.isField) {
       for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
         for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
@@ -735,6 +789,7 @@ class AbstractEstimate extends Component {
             _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
               _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              console.log('shoe field function if loop',_formData.abstractEstimates[0].landAssetRequired);
               setFormData(_formData);
               if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
                 addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
@@ -762,6 +817,7 @@ class AbstractEstimate extends Component {
             }
 
             addRequiredFields(_rReq);
+            console.log('shoe field function else loop', this.props.formData.abstractEstimates[0].landAssetRequired, showObject, _formData.abstractEstimates[0].landAssetRequired);
             setFormData(_formData);
           } else {
             var _rReq = [];
@@ -823,6 +879,7 @@ class AbstractEstimate extends Component {
           _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if (!reset) {
             _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+            console.log('enable field',_formData.abstractEstimates[0].landAssetRequired);
             setFormData(_formData);
           }
           break;
@@ -842,6 +899,7 @@ class AbstractEstimate extends Component {
           _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if (!reset) {
             _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+            console.log('disable field',_formData.abstractEstimates[0].landAssetRequired);
             setFormData(_formData);
           }
 
@@ -1156,11 +1214,6 @@ class AbstractEstimate extends Component {
                   .split('{')[1]
                   .split('}')[0] == property
               ) {
-                console.log(
-                  'replacing!!!',
-                  queryStringObject[i].split('=')[1],
-                  queryStringObject[i].split('=')[1].replace(/\{(.*?)\}/, e.target.value)
-                );
                 id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1].replace(/\{(.*?)\}/, e.target.value) || '';
               } else {
                 id[queryStringObject[i].split('=')[0]] = getVal(
@@ -1382,7 +1435,7 @@ class AbstractEstimate extends Component {
               setMockData(mockData);
               var temp = { ...formData };
               self.setDefaultValues(mockData[moduleName + '.' + actionName].groups, temp);
-              //console.log(temp);
+              console.log('add new card',temp.abstractEstimates[0].landAssetRequired);
               setFormData(temp);
               break;
             }
@@ -1448,7 +1501,7 @@ class AbstractEstimate extends Component {
             //console.log(mockData[moduleName + "." + actionName].groups);
             grps.splice(mockData[moduleName + '.' + actionName].groups[i].index - 1, 1);
             _.set(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath, grps);
-            //console.log(_formData);
+            console.log('remove card',_formData.abstractEstimates[0].landAssetRequired);
             setFormData(_formData);
 
             //Reduce index values
@@ -1497,6 +1550,7 @@ class AbstractEstimate extends Component {
           return (
             <RaisedButton
               label={item.name}
+              key={index}
               style={styles.buttonSpacing}
               disabled={!comments}
               primary={true}
@@ -1509,6 +1563,7 @@ class AbstractEstimate extends Component {
           return (
             <RaisedButton
               label={item.name}
+              key={index}
               style={styles.buttonSpacing}
               disabled={!isFormValid}
               primary={true}
@@ -1631,7 +1686,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: 'SET_MOCK_DATA', mockData });
   },
   setFormData: data => {
-    // console.log('came to set form data:',data.abstractEstimates[0].pmcName);
+    // console.log('came to set form data:',data.abstractEstimates[0].landAssetRequired);
     dispatch({ type: 'SET_FORM_DATA', data });
   },
   setModuleName: moduleName => {

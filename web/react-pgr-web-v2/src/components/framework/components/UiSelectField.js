@@ -213,7 +213,6 @@ class UiSelectField extends Component {
   };
 
   render() {
-    console.log('UiSelectField, render() called', 'value is ', this.props.getVal(this.props.item.jsonPath));
     return this.renderSelect(this.props.item);
   }
 }

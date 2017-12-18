@@ -17,13 +17,19 @@ class WorkFlow extends Component {
     this.state = {
       workFlowDepartment: [],
       workFlowDesignation: [],
+      initialLoad:false
     };
   }
   componentDidMount() {
+    // console.log('did mount');
     this.initCall();
   }
   componentWillReceiveProps(nextProps) {
-    this.initCall();
+    // console.log('receive props');
+    if(!this.state.initialLoad){
+      // console.log('receive props succeeds');
+      this.initCall();
+    }
   }
   // shouldComponentUpdate(nextProps, nextState){
   //   console.log(!(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
@@ -36,21 +42,23 @@ class WorkFlow extends Component {
 
     initCall.push(Api.commonApiPost('egov-common-masters/departments/_search'));
 
-    if (this.props.status && _.get(this.props.formData, `${this.props.stateId}`))
+    if (this.props.status && _.get(this.props.formData, `${this.props.stateId}`)){
       initCall.push(
         Api.commonApiPost('egov-common-workflows/process/_search', { id: _.get(this.props.formData, `${this.props.stateId}`) }, {}, false, true)
       );
+    }
 
     Promise.all(initCall).then(responses => {
-      // console.log(responses[0].Department);
+      // console.log(_.get(this.props.formData, `${this.props.stateId}`), responses);
       try {
         self.setState({
           workFlowDepartment: responses[0].Department,
           process: responses[1] && responses[1].processInstance,
+          initialLoad:true
         });
         this.props.callbackFromParent(responses[1].processInstance);
       } catch (e) {
-        console.log('Error:', e);
+        // console.log('Error:', e);
       }
     });
   };
@@ -77,7 +85,7 @@ class WorkFlow extends Component {
       {
         businessKey: 'AbstractEstimate',
         departmentRule: '',
-        currentStatus: '',
+        currentStatus: self.state.process && self.state.process.status || '',
         amountRule: '',
         additionalRule: '',
         pendingAction: '',
@@ -150,6 +158,7 @@ class WorkFlow extends Component {
   // }
   render() {
     self = this;
+    // console.log(this.state);
     //console.log('Check State',this.state.process ? this.state.process.attributes.nextAction.code : 'process not there');
     return (
       <Card style={styles.marginStyle}>

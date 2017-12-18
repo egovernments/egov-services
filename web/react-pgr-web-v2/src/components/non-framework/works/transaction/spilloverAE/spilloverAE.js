@@ -309,6 +309,24 @@ class SpilloverAE extends Component {
       var formData = {};
       if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
       let specs = { ...specifications };
+      setFormData(formData);
+      // handleChange (new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
+      handleChange(true, `${obj.objectName}[0].spillOverFlag`, false);
+      handleChange(false, `${obj.objectName}[0].pmcRequired`, false);
+
+      var sanctionType = [
+        { key: 'FINANCIAL_SANCTION', value: 'FINANCIAL SANCTION' },
+        { key: 'ADMINISTRATIVE_SANCTION', value: 'ADMINISTRATIVE SANCTION' },
+        { key: 'TECHNICAL_SANCTION', value: 'TECHNICAL SANCTION' },
+      ];
+
+      sanctionType.map((sanction, index) => {
+        for (var key in sanction) {
+          handleChange(sanction['key'], `${obj.objectName}[0].sanctionDetails[${index}].sanctionType`, false);
+          handleChange('', `${obj.objectName}[0].sanctionDetails[${index}].sanctionAuthority.name`, false);
+        }
+      });
+      
       Promise.all([
         Api.commonApiPost(
           '/egov-mdms-service/v1/_get',
@@ -339,29 +357,13 @@ class SpilloverAE extends Component {
           }
           setMetaData(specs);
           setMockData(JSON.parse(JSON.stringify(specs)));
-          setFormData(formData);
+
         } catch (e) {
           console.log('error');
           setLoadingStatus('hide');
         }
       });
 
-      // handleChange (new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
-      handleChange(true, `${obj.objectName}[0].spillOverFlag`, false);
-      handleChange(false, `${obj.objectName}[0].pmcRequired`, false);
-
-      var sanctionType = [
-        { key: 'FINANCIAL_SANCTION', value: 'FINANCIAL SANCTION' },
-        { key: 'ADMINISTRATIVE_SANCTION', value: 'ADMINISTRATIVE SANCTION' },
-        { key: 'TECHNICAL_SANCTION', value: 'TECHNICAL SANCTION' },
-      ];
-
-      sanctionType.map((sanction, index) => {
-        for (var key in sanction) {
-          handleChange(sanction['key'], `${obj.objectName}[0].sanctionDetails[${index}].sanctionType`, false);
-          handleChange('', `${obj.objectName}[0].sanctionDetails[${index}].sanctionAuthority.name`, false);
-        }
-      });
     }
 
     // this.props.addRequiredFields([`${obj.objectName}[0].workFlowDetails.department`, `${obj.objectName}[0].workFlowDetails.designation`, `${obj.objectName}[0].workFlowDetails.assignee`]);
@@ -644,6 +646,7 @@ class SpilloverAE extends Component {
             _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
               _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              console.log('hideField set form');
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
               if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
@@ -678,6 +681,7 @@ class SpilloverAE extends Component {
               }
             }
             delRequiredFields(_rReq);
+            console.log('hideField set form');
             setFormData(_formData);
           } else {
             var _rReq = [];
@@ -709,6 +713,7 @@ class SpilloverAE extends Component {
                       }
                     }
                     delRequiredFields(_rReq);
+                    console.log('hideField set form');
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
@@ -769,6 +774,7 @@ class SpilloverAE extends Component {
             _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
               _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              console.log('showField set form');
               setFormData(_formData);
               if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
                 addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
@@ -796,6 +802,7 @@ class SpilloverAE extends Component {
             }
 
             addRequiredFields(_rReq);
+            console.log('showField set form');
             setFormData(_formData);
           } else {
             var _rReq = [];
@@ -857,6 +864,7 @@ class SpilloverAE extends Component {
           _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if (!reset) {
             _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+            console.log('enablefield set form');
             setFormData(_formData);
           }
           break;
@@ -876,6 +884,7 @@ class SpilloverAE extends Component {
           _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if (!reset) {
             _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+            console.log('disable set form');
             setFormData(_formData);
           }
 
@@ -1429,6 +1438,7 @@ class SpilloverAE extends Component {
               var temp = { ...formData };
               self.setDefaultValues(mockData[moduleName + '.' + actionName].groups, temp);
               //console.log(temp);
+              console.log('addNewCard set form');
               setFormData(temp);
               break;
             }
@@ -1495,6 +1505,7 @@ class SpilloverAE extends Component {
             grps.splice(mockData[moduleName + '.' + actionName].groups[i].index - 1, 1);
             _.set(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath, grps);
             //console.log(_formData);
+            console.log('removeCard set form');
             setFormData(_formData);
 
             //Reduce index values

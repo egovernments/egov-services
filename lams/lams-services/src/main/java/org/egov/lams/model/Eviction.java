@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Eviction {
 
-	@JsonProperty("evictionProceedingNo")
+	@JsonProperty("evictionProceedingNumber")
 	private String evictionProceedingNumber;
 
 	@JsonFormat(pattern="dd/MM/yyyy")

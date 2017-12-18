@@ -270,7 +270,7 @@ serviceMaps:
       description: update material store mapping  in inventory
       fromTopic: inv-materialstore-update-topic
       queryMaps:
-        - query: UPDATE materialstoremapping SET material=?,  store=?,  chartofaccount=?,  active=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE material=? AND store=? AND tenantid=?;
+        - query: UPDATE materialstoremapping SET material=?,  store=?,  chartofaccount=?,  active=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id=? AND tenantid=?;
           basePath: $.materialStoreMappings.*
           jsonMaps:
             - jsonPath: $.materialStoreMappings.*.material.code
@@ -280,8 +280,7 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedBy
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedTime
               dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.code
-            - jsonPath: $.materialStoreMappings.*.store.code
+            - jsonPath: $.materialStoreMappings.*.id
             - jsonPath: $.materialStoreMappings.*.tenantId
 
 

@@ -225,54 +225,25 @@ class assetCategoryCreate extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
+    console.log(specs[moduleName + '.' + actionName]);
     for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
-        ind = i;
-        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
-        var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
-          'g'
-        );
-        for (var j = 1; j < arr.length; j++) {
-          i++;
-          specs[moduleName + '.' + actionName].groups.splice(
-            ind + 1,
-            0,
-            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
+        if (_form.MasterMetaData.masterData[0].assetFieldsDefination != null) {
+          var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
+          ind = i;
+          var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
+          var regex = new RegExp(
+            specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+            'g'
           );
-          specs[moduleName + '.' + actionName].groups[ind + 1].index = j;
-        }
-      }
-
-      for (var j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
-        if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
-        ) {
-          for (var k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
-            if (
-              specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue ==
-              _.get(form, specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
-            ) {
-              if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length
-              ) {
-                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
-                  this.hideField(specs, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
-                }
-              }
-
-              if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length
-              ) {
-                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
-                  this.showField(specs, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[a]);
-                }
-              }
-            }
+          for (var j = 1; j < arr.length; j++) {
+            i++;
+            specs[moduleName + '.' + actionName].groups.splice(
+              ind + 1,
+              0,
+              JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
+            );
+            specs[moduleName + '.' + actionName].groups[ind + 1].index = j;
           }
         }
       }
@@ -283,6 +254,7 @@ class assetCategoryCreate extends Component {
     }
 
     setMockData(specs);
+    console.log(this.props.formData);
   }
 
   modifyData(urlId) {
@@ -321,13 +293,14 @@ class assetCategoryCreate extends Component {
         self.props.setFormData({ MasterMetaData: MasterMetaData });
         console.log(self.props.formData);
         self.handleChange({ target: { value: MasterMetaData.masterData[0].assetCategoryType } }, 'MasterMetaData.masterData[0].assetCategoryType');
-        // self.setInitialUpdateData(
-        //   { MasterMetaData: MasterMetaData },
-        //   JSON.parse(JSON.stringify(specifications)),
-        //   'asset',
-        //   'update',
-        //   specifications['asset.update'].objectName
-        // );
+        self.handleChange({ target: { value: MasterMetaData.masterData[0].id } }, 'MasterMetaData.masterData[0].id');
+        self.setInitialUpdateData(
+          { MasterMetaData: MasterMetaData },
+          JSON.parse(JSON.stringify(specifications)),
+          'asset',
+          'update',
+          specifications['asset.update'].objectName
+        );
       },
       function(err) {
         console.log(err);
@@ -349,76 +322,79 @@ class assetCategoryCreate extends Component {
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName('asset');
-    setActionName('create');
+    if (self.props.match.params.id) {
+      setActionName('update');
+    }else{
+      setActionName('create');
+    }
 
     if (hashLocation.split('/').indexOf('update') == 1) {
-      var url = specifications[`asset.update`].searchUrl.split('?')[0];
-      var id = (self.props.match.params.id && decodeURIComponent(self.props.match.params.id)) || self.props.match.params.master;
-      var query = {
-        [specifications[`asset.update`].searchUrl.split('?')[1].split('=')[0]]: id,
-      };
-      //handle 2nd parameter
-      if (specifications[`asset.update`].searchUrl.split('?')[1].split('=')[2]) {
-        var pval = specifications[`asset.update`].searchUrl.split('?')[1].split('=')[2];
-        var pname = specifications[`asset.update`].searchUrl
-          .split('?')[1]
-          .split('=')[1]
-          .split('&')[1];
-
-        query = {
-          [specifications[`asset.update`].searchUrl.split('?')[1].split('=')[0]]: id,
-          [pname]: pval,
-        };
-      }
-
-      if (window.location.href.indexOf('?') > -1) {
-        var qs = window.location.href.split('?')[1];
-        if (qs && qs.indexOf('=') > -1) {
-          qs = qs.indexOf('&') > -1 ? qs.split('&') : [qs];
-          for (var i = 0; i < qs.length; i++) {
-            query[qs[i].split('=')[0]] = qs[i].split('=')[1];
-          }
-        }
-      }
-
-      self.props.setLoadingStatus('loading');
-      console.log(self.props.match.params.id);
-      var _body = {
-        MdmsCriteria: {
-          tenantId: localStorage.getItem("tenantId"),
-          moduleDetails:  [
-            {
-              "moduleName": "ASSET",
-              "masterDetails": [
-                {
-                  "filter": "[?(@.id IN [" + "12" + "])]"
-                }
-              ]
-            }
-          ]
-        }
-      }
-      Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body,{},true,true).then(
-        function(res) {
-          console.log("res");
-          self.props.setLoadingStatus('hide');
-          if (specifications[`asset.update`].isResponseArray) {
-            var obj = {};
-            _.set(obj, specifications[`asset.update`].objectName, jp.query(res, '$..[0]')[0]);
-            self.props.setFormData(obj);
-            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
-          } else {
-            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
-            self.props.setFormData(res);
-          }
-          let obj1 = specifications[`asset.update`];
-
-          self.depedantValue(obj1.groups);
-        },
-        function(err) {
-          self.props.setLoadingStatus('hide');
-        }
-      );
+      // var url = specifications[`asset.update`].searchUrl.split('?')[0];
+      // var id = (self.props.match.params.id && decodeURIComponent(self.props.match.params.id)) || self.props.match.params.master;
+      // var query = {
+      //   [specifications[`asset.update`].searchUrl.split('?')[1].split('=')[0]]: id,
+      // };
+      // //handle 2nd parameter
+      // if (specifications[`asset.update`].searchUrl.split('?')[1].split('=')[2]) {
+      //   var pval = specifications[`asset.update`].searchUrl.split('?')[1].split('=')[2];
+      //   var pname = specifications[`asset.update`].searchUrl
+      //     .split('?')[1]
+      //     .split('=')[1]
+      //     .split('&')[1];
+      //
+      //   query = {
+      //     [specifications[`asset.update`].searchUrl.split('?')[1].split('=')[0]]: id,
+      //     [pname]: pval,
+      //   };
+      // }
+      //
+      // if (window.location.href.indexOf('?') > -1) {
+      //   var qs = window.location.href.split('?')[1];
+      //   if (qs && qs.indexOf('=') > -1) {
+      //     qs = qs.indexOf('&') > -1 ? qs.split('&') : [qs];
+      //     for (var i = 0; i < qs.length; i++) {
+      //       query[qs[i].split('=')[0]] = qs[i].split('=')[1];
+      //     }
+      //   }
+      // }
+      //
+      // self.props.setLoadingStatus('loading');
+      // var _body = {
+      //   MdmsCriteria: {
+      //     tenantId: localStorage.getItem("tenantId"),
+      //     moduleDetails:  [
+      //       {
+      //         "moduleName": "ASSET",
+      //         "masterDetails": [
+      //           {
+      //             "filter": "[?(@.id IN [" + "12" + "])]"
+      //           }
+      //         ]
+      //       }
+      //     ]
+      //   }
+      // }
+      // Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body,{},true,true).then(
+      //   function(res) {
+      //     console.log("res");
+      //     self.props.setLoadingStatus('hide');
+      //     if (specifications[`asset.update`].isResponseArray) {
+      //       var obj = {};
+      //       _.set(obj, specifications[`asset.update`].objectName, jp.query(res, '$..[0]')[0]);
+      //       self.props.setFormData(obj);
+      //       self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
+      //     } else {
+      //       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
+      //       self.props.setFormData(res);
+      //     }
+      //     let obj1 = specifications[`asset.update`];
+      //
+      //     self.depedantValue(obj1.groups);
+      //   },
+      //   function(err) {
+      //     self.props.setLoadingStatus('hide');
+      //   }
+      // );
     } else {
       var formData = {};
       if (obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
@@ -431,7 +407,6 @@ class assetCategoryCreate extends Component {
         if (mockObj.onloadFetchUrl) {
           let params = JSON.parse(id);
           self.props.setLoadingStatus('loading');
-          console.log('query', query);
 
           let requestBody = {};
 
@@ -479,9 +454,20 @@ class assetCategoryCreate extends Component {
         Api.commonApiPost('/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory', {}, {}, false, mockObj.useTimestamp),
       ]).then(responses => {
         let searchAPI = responses[0];
-        this.setState({
-          createId: searchAPI.MdmsRes.ASSET.AssetCategory.length + 101,
+        console.log(searchAPI.MdmsRes.ASSET.AssetCategory);
+        if(self.props.match.params.id){
+          this.setState({
+          createId: self.props.match.params.id,
         });
+        }else
+        {
+          var maxIdObject = _.maxBy(searchAPI.MdmsRes.ASSET.AssetCategory, function(o) { return o.id;});
+          var maxId = maxIdObject.id;
+          console.log(maxId);
+          this.setState({
+          createId: maxId + 1,
+        });
+      }
       });
     }
     var res = self.handleMasterData(specifications, this.props.moduleName);
@@ -1423,26 +1409,45 @@ class assetCategoryCreate extends Component {
     let self = this;
     let spec = self.props.mockData;
 
-    console.log(spec[`asset.create`].groups.length);
+    for (var q = 0; q < spec[`asset.create`].groups.length; q++) {
+     if (spec[`asset.create`].groups[q].name == 'createCategoryType') {
+        for (var l = 0; l < spec[`asset.create`].groups[q].fields.length; l++) {
+          if (spec[`asset.create`].groups[q].fields[l].name == 'DepericiationRate') {
+            console.log(valueWarranty);
+            if (valueWarranty == "NO") {
+              spec[`asset.create`].groups[q].fields[l].isRequired = false;
+              self.props.delRequiredFields(['MasterMetaData.masterData[0].depreciationRate']);
+              self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+            }
+            else if (valueWarranty == "YES") {
+              spec[`asset.create`].groups[q].fields[l].isRequired = true;
+              self.props.addRequiredFields(['MasterMetaData.masterData[0].depreciationRate']);
+              self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+            }
+          }
+        }
+     }
+    }
 
-    //for (var q = 0; q < spec[`asset.create`].groups.length; q++) {
-      //console.log(spec[`asset.${self.state.action}`].groups[q].name);
-     //if (spec[`asset.${self.state.action}`].groups[q].name == 'createCategoryType') {
-    //     for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
-    //       if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == 'WarrantyExpiryDate') {
-    //         if (valueWarranty == false) {
-    //           spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
-    //           self.props.delRequiredFields(['Asset.warrantyExpiryDate']);
-    //           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-    //         } else if (valueWarranty == true) {
-    //           spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
-    //           self.props.addRequiredFields(['Asset.warrantyExpiryDate']);
-    //           self.props.setMockData(JSON.parse(JSON.stringify(spec)));
-    //         }
-    //       }
-    //     }
-     //}
-    //}
+    for (var q = 0; q < spec[`asset.update`].groups.length; q++) {
+     if (spec[`asset.update`].groups[q].name == 'createCategoryType') {
+        for (var l = 0; l < spec[`asset.update`].groups[q].fields.length; l++) {
+          if (spec[`asset.update`].groups[q].fields[l].name == 'DepericiationRate') {
+            console.log(valueWarranty);
+            if (valueWarranty == "NO") {
+              spec[`asset.update`].groups[q].fields[l].isRequired = false;
+              self.props.delRequiredFields(['MasterMetaData.masterData[0].depreciationRate']);
+              self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+            }
+            else if (valueWarranty == "YES") {
+              spec[`asset.update`].groups[q].fields[l].isRequired = true;
+              self.props.addRequiredFields(['MasterMetaData.masterData[0].depreciationRate']);
+              self.props.setMockData(JSON.parse(JSON.stringify(spec)));
+            }
+          }
+        }
+     }
+    }
   };
 
   affectDependants = (obj, e, property) => {

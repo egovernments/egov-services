@@ -59,6 +59,8 @@ class Transaction extends Component {
   setDefaultValues(groups, dat) {
     for (var i = 0; i < groups.length; i++) {
       for (var j = 0; j < groups[i].fields.length; j++) {
+        console.log(typeof groups[i].fields[j].defaultValue);
+        debugger;
         if (
           typeof groups[i].fields[j].defaultValue == 'string' ||
           typeof groups[i].fields[j].defaultValue == 'number' ||
@@ -167,6 +169,8 @@ class Transaction extends Component {
     var d = new Date();
     var n = d.getTime();
     self.props.handleChange({ target: { value: n } }, 'Disposal.disposalDate');
+
+    self.props.handleChange({ target: { value: 'DISPOSAL' } }, 'Disposal.transactionType');
   }
 
   search = e => {

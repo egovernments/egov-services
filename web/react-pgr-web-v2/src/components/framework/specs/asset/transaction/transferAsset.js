@@ -254,7 +254,7 @@ var dat = {
             patternErrMsg: '',
             //"values": [{"label":"ac.transaction.TA.TransferAsset", "value":true},{"label":"ac.transaction.TA.DisposalAsset", "value":false}],
             values: [{ label: 'Transfer of Asset', value: 'SALE' }, { label: 'Disposal of Asset', value: 'DISPOSAL' }],
-            defaultValue: true,
+            defaultValue: 'DISPOSAL',
           },
           {
             name: 'Transfer/DisposalDate',

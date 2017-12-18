@@ -145,7 +145,7 @@ public class AssetServiceTest {
 		assertEquals(expectedAsset, actualAsset);
 
 	}
-
+/*
 	@Test
 	public void testGetDepreciationReport() {
 		final List<Asset> assets = new ArrayList<>();
@@ -163,7 +163,7 @@ public class AssetServiceTest {
 
 		assertEquals(expectedAssetResponse, actualAssetResponse);
 
-	}
+	}*/
 
 	private AssetResponse getAssetResponse(final Asset asset) {
 		final List<Asset> assets = new ArrayList<>();

@@ -20,7 +20,7 @@
 				"id": 1,
 				"name": "category name",
 				"code": null,
-				"assetCategoryType": null,
+				"assetCategoryType": "MOVABLE",
 				"parent": null,
 				"depreciationMethod": null,
 				"isAssetAllow": null,

@@ -6,27 +6,33 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.asset.TestConfiguration;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetCriteria;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
+@WebMvcTest(AssetQueryBuilder.class)
+@Import(TestConfiguration.class)
 public class AssetQueryBuilderTest {
 
-	@MockBean
+        @MockBean
 	private ApplicationProperties applicationProperties;
 
 	@InjectMocks
 	private AssetQueryBuilder assetQueryBuilder;
 
-	@MockBean
+	 @Mock
 	private AssetCriteria assetCriteria;
 
 	@Before
@@ -200,7 +206,7 @@ public class AssetQueryBuilderTest {
 				+ "description,dateofcreation,remarks,length,width,totalarea,modeofacquisition,status,tenantid,zone,revenueward"
 				+ ",street,electionward,doorno,pincode,locality,block,properties,createdby,createddate,lastmodifiedby,"
 				+ "lastmodifieddate,grossvalue,accumulateddepreciation,assetreference,version,enableyearwisedepreciation,"
-				+ "depreciationrate)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "depreciationrate,surveynumber,marketvalue)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		assertEquals(queryWithTenantId, assetQueryBuilder.getInsertQuery());
 	}
 
@@ -209,7 +215,7 @@ public class AssetQueryBuilderTest {
 		final String queryWithTenantId = "UPDATE egasset_asset SET assetcategory=?,name=?,department=?,assetdetails=?,description=?,"
 				+ "remarks=?,length=?,width=?,totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,"
 				+ "doorno=?,pincode=?,locality=?,block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,"
-				+ "accumulateddepreciation=?,assetreference=?,version=?WHERE code=? and tenantid=?";
+				+ "accumulateddepreciation=?,assetreference=?,version=?,surveynumber=?,marketvalue=? WHERE code=? and tenantid=?";
 		assertEquals(queryWithTenantId, assetQueryBuilder.getUpdateQuery());
 	}
 }

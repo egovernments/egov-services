@@ -1,5 +1,7 @@
 package org.egov.asset.model;
 
+import java.math.BigDecimal;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,22 +23,45 @@ import lombok.ToString;
 @Builder
 public class DepreciationReportCriteria {
 
+    private Long id;
+
     @JsonProperty("tenantId")
     @NotNull
     private String tenantId;
 
     @JsonProperty("assetCategoryType")
-    @NotNull
     private String assetCategoryType;
 
+    private Long parent;
+
+    private String departmentName;
+    private Long department;
+
     @JsonProperty("assetCategoryName")
-    @NotNull
     private String assetCategoryName;
 
     @JsonProperty("assetName")
     private String assetName;
 
-    @JsonProperty("assetCategoryTree")
-    private String assetCategoryTree;
+    @JsonProperty("assetCode")
+    private String assetCode;
+
+    private String financialYear;
+
+    private Long assetId;
+
+    private BigDecimal grossValue;
+
+    private BigDecimal originalValue;
+
+    @JsonProperty("valueAfterDepreciation")
+    private BigDecimal valueAfterDepreciation;
+    private Long assetCategory;
+
+    private BigDecimal depreciationValue;
+
+    private Double depreciationRate;
+
+    private BigDecimal currentValue;
 
 }

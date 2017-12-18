@@ -16,11 +16,14 @@ import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
+import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.repository.builder.DepreciationQueryBuilder;
+import org.egov.asset.repository.builder.DepreciationReportQueryBuilder;
 import org.egov.asset.repository.rowmapper.CalculationAssetDetailsRowMapper;
 import org.egov.asset.repository.rowmapper.CalculationCurrentValueRowMapper;
 import org.egov.asset.repository.rowmapper.DepreciationDetailRowMapper;
+import org.egov.asset.repository.rowmapper.DepreciationReportRowMapper;
 import org.egov.asset.repository.rowmapper.DepreciationSumRowMapper;
 import org.egov.asset.service.AssetConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +53,13 @@ public class DepreciationRepository {
     private DepreciationDetailRowMapper depreciationDetailRowMapper;
 
     @Autowired
+    private DepreciationReportQueryBuilder depreciationReportQueryBuilder;
+
+    @Autowired
     private DepreciationSumRowMapper depreciationSumRowMapper;
+
+    @Autowired
+    private DepreciationReportRowMapper depreciationReportRowMapper;
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
@@ -71,7 +80,7 @@ public class DepreciationRepository {
         final AuditDetails auditDetails = depreciation.getAuditDetails();
         final int batchSize = Integer.parseInt(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.ASSETBATCHSIZE, tenantId));
-        
+
         log.debug("Batch Size :: " + batchSize);
 
         for (int j = 0; j < assetDepreciationvalues.size(); j += batchSize) {
@@ -151,4 +160,20 @@ public class DepreciationRepository {
 
         return jdbcTemplate.query(sql, pSValues.toArray(), calculationCurrentValueRowMapper);
     }
+
+    public List<DepreciationReportCriteria> getDepreciatedAsset(final DepreciationReportCriteria depreciationReportCriteria) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = depreciationReportQueryBuilder.getQuery(depreciationReportCriteria,
+                preparedStatementValues);
+        List<DepreciationReportCriteria> assets = new ArrayList<>();
+        try {
+            log.debug("queryStr::" + queryStr + "preparedStatementValues::" + preparedStatementValues.toString());
+            assets = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), depreciationReportRowMapper);
+            log.debug("DepreciationRepository::" + depreciationReportCriteria);
+        } catch (final Exception ex) {
+            log.debug("the exception from findforcriteria : " + ex);
+        }
+        return assets;
+    }
+
 }

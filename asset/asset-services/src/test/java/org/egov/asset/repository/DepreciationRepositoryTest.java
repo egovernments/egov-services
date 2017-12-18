@@ -18,13 +18,16 @@ import org.egov.asset.domain.CalculationCurrentValue;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
+import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.DepreciationStatus;
 import org.egov.asset.repository.builder.DepreciationQueryBuilder;
+import org.egov.asset.repository.builder.DepreciationReportQueryBuilder;
 import org.egov.asset.repository.rowmapper.CalculationAssetDetailsRowMapper;
 import org.egov.asset.repository.rowmapper.CalculationCurrentValueRowMapper;
 import org.egov.asset.repository.rowmapper.DepreciationDetailRowMapper;
+import org.egov.asset.repository.rowmapper.DepreciationReportRowMapper;
 import org.egov.asset.repository.rowmapper.DepreciationSumRowMapper;
 import org.egov.asset.service.AssetConfigurationService;
 import org.junit.Test;
@@ -64,6 +67,12 @@ public class DepreciationRepositoryTest {
     @InjectMocks
     private DepreciationRepository depreciationRepository;
 
+    @Mock
+    private DepreciationReportQueryBuilder depreciationReportQueryBuilder;
+
+    @Mock
+    private DepreciationReportRowMapper depreciationReportRowMapper;
+
     @SuppressWarnings("unchecked")
     @Test
     public void test_get_depreciation_details() {
@@ -77,6 +86,27 @@ public class DepreciationRepositoryTest {
         assertTrue(
                 depreciationDetails.equals(depreciationRepository.getDepreciationdetails(new DepreciationCriteria())));
 
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testGetDepreciatedAssets() {
+
+        final List<DepreciationReportCriteria> depreciationReport = new ArrayList<>();
+        depreciationReport.add(getAssetDepreciationReport());
+
+        when(depreciationReportQueryBuilder.getQuery(any(DepreciationReportCriteria.class), any(List.class)))
+                .thenReturn(StringUtils.EMPTY);
+        when(jdbcTemplate.query(any(String.class), any(Object[].class), any(DepreciationReportRowMapper.class)))
+                .thenReturn(depreciationReport);
+
+        final DepreciationReportCriteria depreciationReportCriteria = DepreciationReportCriteria.builder()
+                .assetCategoryName("category name")
+                .tenantId("ap.kurnool").build();
+        final List<DepreciationReportCriteria> actualAssets = depreciationRepository
+                .getDepreciatedAsset(depreciationReportCriteria);
+
+        assertEquals(depreciationReport, actualAssets);
     }
 
     @Test
@@ -172,5 +202,22 @@ public class DepreciationRepositoryTest {
         calculationAssetDetail.setYearwisedepreciationrate(Double.valueOf("15"));
         calculationAssetDetails.add(calculationAssetDetail);
         return calculationAssetDetails;
+    }
+
+    private DepreciationReportCriteria getAssetDepreciationReport() {
+        final DepreciationReportCriteria depreciation = new DepreciationReportCriteria();
+        depreciation.setId(Long.valueOf("1"));
+        depreciation.setTenantId("ap.kurnool");
+        depreciation.setAssetId(null);
+        depreciation.setFinancialYear("2017-18");
+        depreciation.setAssetCategory(Long.valueOf("1"));
+        depreciation.setAssetCategoryName("abcd");
+        depreciation.setAssetCategoryType("IMMOVABLE");
+        depreciation.setAssetCode("00001");
+        depreciation.setAssetName("abcd");
+        depreciation.setDepreciationRate(Double.valueOf("14"));
+        depreciation.setDepreciationValue(new BigDecimal("700"));
+        depreciation.setValueAfterDepreciation(new BigDecimal("4300"));
+        return depreciation;
     }
 }

@@ -290,7 +290,7 @@ public class AssetQueryBuilder {
                 + "totalarea=?,modeofacquisition=?,status=?,zone=?,revenueward=?,street=?,electionward=?,doorno=?,pincode=?,locality=?,"
                 + "block=?,properties=?,lastmodifiedby=?,lastmodifieddate=?,grossvalue=?,accumulateddepreciation=?,assetreference=?,version=?,"
                 + "surveynumber=?,marketvalue=?"
-                + "WHERE code=? and tenantid=?";
+                + " WHERE code=? and tenantid=?";
     }
 
     public final static String BATCHINSERTQUERY = "INSERT INTO egasset_yearwisedepreciation "

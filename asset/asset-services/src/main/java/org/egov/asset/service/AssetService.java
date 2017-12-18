@@ -48,7 +48,6 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
-import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Sequence;
@@ -176,12 +175,12 @@ public class AssetService {
 					"There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
 	}
 
-	public AssetResponse getDepreciationReport(final RequestInfo requestInfo,
+	/*public AssetResponse getDepreciationReport(final RequestInfo requestInfo,
 			final DepreciationReportCriteria depreciationReportCriteria) {
 		final List<Asset> assets = assetRepository.getDepreciatedAsset(depreciationReportCriteria);
 		final AssetResponse assetResponse = new AssetResponse();
 		assetResponse.setAssets(assets);
 		assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
 		return assetResponse;
-	}
+	}*/
 }

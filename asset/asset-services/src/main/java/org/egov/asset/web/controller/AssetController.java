@@ -48,6 +48,7 @@ import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetCurrentValueResponse;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
+import org.egov.asset.contract.DepreciationReportResponse;
 import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DepreciationResponse;
 import org.egov.asset.contract.DisposalRequest;
@@ -88,213 +89,214 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/assets")
 public class AssetController {
 
-	@Autowired
-	private AssetService assetService;
+    @Autowired
+    private AssetService assetService;
 
-	@Autowired
-	private AssetValidator assetValidator;
+    @Autowired
+    private AssetValidator assetValidator;
 
-	@Autowired
-	private RevaluationService revaluationService;
+    @Autowired
+    private RevaluationService revaluationService;
 
-	@Autowired
-	private CurrentValueService currentValueService;
+    @Autowired
+    private CurrentValueService currentValueService;
 
-	@Autowired
-	private DisposalService disposalService;
+    @Autowired
+    private DisposalService disposalService;
 
-	@Autowired
-	private AssetCommonService assetCommonService;
+    @Autowired
+    private AssetCommonService assetCommonService;
 
-	@Autowired
-	private DepreciationService depreciationservice;
+    @Autowired
+    private DepreciationService depreciationservice;
 
-	@PostMapping("_search")
-	@ResponseBody
-	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final AssetCriteria assetCriteria, final BindingResult bindingResult) {
-		log.debug("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
+    @PostMapping("_search")
+    @ResponseBody
+    public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute @Valid final AssetCriteria assetCriteria, final BindingResult bindingResult) {
+        log.debug("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
 
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		if (assetCriteria.getGrossValue() != null && assetCriteria.getFromCapitalizedValue() != null
-				&& assetCriteria.getToCapitalizedValue() != null)
-			throw new RuntimeException(
-					"Gross Value should not be present with from capitalized value and to capitalized value");
+        if (assetCriteria.getGrossValue() != null && assetCriteria.getFromCapitalizedValue() != null
+                && assetCriteria.getToCapitalizedValue() != null)
+            throw new RuntimeException(
+                    "Gross Value should not be present with from capitalized value and to capitalized value");
 
-		final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
-		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
-	}
+        final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
+        return new ResponseEntity<>(assetResponse, HttpStatus.OK);
+    }
 
-	@PostMapping("_create")
-	@ResponseBody
-	public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
-			final BindingResult bindingResult) {
-		log.debug("create asset:" + assetRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+    @PostMapping("_create")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest,
+            final BindingResult bindingResult) {
+        log.debug("create asset:" + assetRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		assetValidator.validateAsset(assetRequest);
+        assetValidator.validateAsset(assetRequest);
 
-		final AssetResponse assetResponse = assetService.createAsync(assetRequest);
-		return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
-	}
+        final AssetResponse assetResponse = assetService.createAsync(assetRequest);
+        return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
+    }
 
-	@PostMapping("_update")
-	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
+    @PostMapping("_update")
+    @ResponseBody
+    public ResponseEntity<?> update(@RequestBody final AssetRequest assetRequest, final BindingResult bindingResult) {
 
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		assetValidator.validateAssetForUpdate(assetRequest);
-		final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
-		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
-	}
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        assetValidator.validateAssetForUpdate(assetRequest);
+        final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
+        return new ResponseEntity<>(assetResponse, HttpStatus.OK);
+    }
 
-	@PostMapping("revaluation/_create")
-	@ResponseBody
-	public ResponseEntity<?> revaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
-			final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
+    @PostMapping("revaluation/_create")
+    @ResponseBody
+    public ResponseEntity<?> revaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest,
+            final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
 
-		log.debug("create revaluate:" + revaluationRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		log.debug("Request Headers :: " + headers);
-		assetValidator.validateRevaluation(revaluationRequest);
-		final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest, headers);
+        log.debug("create revaluate:" + revaluationRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        log.debug("Request Headers :: " + headers);
+        assetValidator.validateRevaluation(revaluationRequest);
+        final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest, headers);
 
-		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
-	}
+        return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
+    }
 
-	@PostMapping("revaluation/_search")
-	@ResponseBody
-	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
+    @PostMapping("revaluation/_search")
+    @ResponseBody
+    public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute @Valid final RevaluationCriteria revaluationCriteria, final BindingResult bindingResult) {
 
-		log.debug("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		assetValidator.validateRevaluationCriteria(revaluationCriteria);
+        log.debug("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        assetValidator.validateRevaluationCriteria(revaluationCriteria);
 
-		final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria,
-				requestInfoWrapper.getRequestInfo());
+        final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria,
+                requestInfoWrapper.getRequestInfo());
 
-		return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
-	}
+        return new ResponseEntity<RevaluationResponse>(revaluationResponse, HttpStatus.OK);
+    }
 
-	@PostMapping("dispose/_create")
-	@ResponseBody
-	public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
-			final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
+    @PostMapping("dispose/_create")
+    @ResponseBody
+    public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest,
+            final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
 
-		log.debug("create dispose:" + disposalRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+        log.debug("create dispose:" + disposalRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		log.debug("Request Headers :: " + headers);
-		assetValidator.validateDisposal(disposalRequest);
+        log.debug("Request Headers :: " + headers);
+        assetValidator.validateDisposal(disposalRequest);
 
-		final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest, headers);
-		log.debug("dispose disposalResponse:" + disposalResponse);
-		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
-	}
+        final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest, headers);
+        log.debug("dispose disposalResponse:" + disposalResponse);
+        return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
+    }
 
-	@PostMapping("dispose/_search")
-	@ResponseBody
-	public ResponseEntity<?> disposalSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final DisposalCriteria disposalCriteria, final BindingResult bindingResult) {
+    @PostMapping("dispose/_search")
+    @ResponseBody
+    public ResponseEntity<?> disposalSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute @Valid final DisposalCriteria disposalCriteria, final BindingResult bindingResult) {
 
-		log.debug("disposalSearch disposalCriteria:" + disposalCriteria);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		assetValidator.validateDisposalCriteria(disposalCriteria);
+        log.debug("disposalSearch disposalCriteria:" + disposalCriteria);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        assetValidator.validateDisposalCriteria(disposalCriteria);
 
-		final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,
-				requestInfoWrapper.getRequestInfo());
+        final DisposalResponse disposalResponse = disposalService.search(disposalCriteria,
+                requestInfoWrapper.getRequestInfo());
 
-		return new ResponseEntity<>(disposalResponse, HttpStatus.OK);
-	}
+        return new ResponseEntity<>(disposalResponse, HttpStatus.OK);
+    }
 
-	@PostMapping("currentvalue/_search")
-	@ResponseBody
-	public ResponseEntity<?> getAssetCurrentValue(
-			@RequestParam(name = "assetIds", required = true) final Set<Long> assetIds,
-			@RequestParam(name = "tenantId", required = true) final String tenantId,
-			@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
+    @PostMapping("currentvalue/_search")
+    @ResponseBody
+    public ResponseEntity<?> getAssetCurrentValue(
+            @RequestParam(name = "assetIds", required = true) final Set<Long> assetIds,
+            @RequestParam(name = "tenantId", required = true) final String tenantId,
+            @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper, final BindingResult bindingResult) {
 
-		log.debug("getAssetCurrentValue assetId:" + assetIds + ",tenantId:" + tenantId);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+        log.debug("getAssetCurrentValue assetId:" + assetIds + ",tenantId:" + tenantId);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService.getCurrentValues(assetIds,
-				tenantId, requestInfoWrapper.getRequestInfo());
+        final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService.getCurrentValues(assetIds,
+                tenantId, requestInfoWrapper.getRequestInfo());
 
-		log.debug("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
-		return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.OK);
-	}
+        log.debug("getAssetCurrentValue assetCurrentValueResponse:" + assetCurrentValueResponse);
+        return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.OK);
+    }
 
-	@PostMapping("currentvalue/_create")
-	@ResponseBody
-	public ResponseEntity<?> saveCurrentValue(
-			@RequestBody @Valid final AssetCurrentValueRequest assetCurrentValueRequest,
-			final BindingResult bindingResult) {
-		log.debug("create assetcurrentvalue :" + assetCurrentValueRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
-		final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService
-				.createCurrentValueAsync(assetCurrentValueRequest);
-		return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.CREATED);
-	}
+    @PostMapping("currentvalue/_create")
+    @ResponseBody
+    public ResponseEntity<?> saveCurrentValue(
+            @RequestBody @Valid final AssetCurrentValueRequest assetCurrentValueRequest,
+            final BindingResult bindingResult) {
+        log.debug("create assetcurrentvalue :" + assetCurrentValueRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
+        final AssetCurrentValueResponse assetCurrentValueResponse = currentValueService
+                .createCurrentValueAsync(assetCurrentValueRequest);
+        return new ResponseEntity<>(assetCurrentValueResponse, HttpStatus.CREATED);
+    }
 
-	@PostMapping("depreciations/_create")
-	@ResponseBody
-	public ResponseEntity<?> saveDepreciation(@RequestBody @Valid final DepreciationRequest depreciationRequest,
-			final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
-		log.debug("create depreciationRequest :" + depreciationRequest);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+    @PostMapping("depreciations/_create")
+    @ResponseBody
+    public ResponseEntity<?> saveDepreciation(@RequestBody @Valid final DepreciationRequest depreciationRequest,
+            final BindingResult bindingResult, @RequestHeader final HttpHeaders headers) {
+        log.debug("create depreciationRequest :" + depreciationRequest);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		log.debug("Request Headers :: " + headers);
-		assetValidator.validateDepreciation(depreciationRequest);
-		final DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest,
-				headers);
-		return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);
-	}
+        log.debug("Request Headers :: " + headers);
+        assetValidator.validateDepreciation(depreciationRequest);
+        final DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest,
+                headers);
+        return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);
+    }
 
-	@PostMapping("depreciations/_search")
-	@ResponseBody
-	public ResponseEntity<?> depreciationReport(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid final DepreciationReportCriteria depreciationReportCriteria,
-			final BindingResult bindingResult) {
-		log.debug("depreciationReportCriteria :" + depreciationReportCriteria);
-		if (bindingResult.hasErrors()) {
-			final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
-			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-		}
+    @PostMapping("depreciations/_search")
+    @ResponseBody
+    public ResponseEntity<?> depreciationReport(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            @ModelAttribute @Valid final DepreciationReportCriteria depreciationReportCriteria,
+            final BindingResult bindingResult) {
+        log.debug("depreciationReportCriteria :" + depreciationReportCriteria);
+        if (bindingResult.hasErrors()) {
+            final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 
-		final AssetResponse assetResponse = assetService.getDepreciationReport(requestInfoWrapper.getRequestInfo(),
-				depreciationReportCriteria);
-		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
-	}
+        final DepreciationReportResponse depreciationResponse = depreciationservice.getDepreciationReport(
+                requestInfoWrapper.getRequestInfo(),
+                depreciationReportCriteria);
+        return new ResponseEntity<>(depreciationResponse, HttpStatus.OK);
+    }
 }

@@ -11,15 +11,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DepreciationReportQueryBuilder {
 
-    public static final String BASE_QUERY = "SELECT *,asset.id AS assetId,assetcategory.id AS assetcategoryId,"
-            + "asset.name as assetname,asset.code as assetcode,"
-            + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as "
-            + "ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
-            + " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
-            + "ON asset.assetcategory = assetcategory.id LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
-            + "ON asset.id = ywd.assetid WHERE "
-            + "asset.id in (SELECT depreciation.assetid FROM egasset_depreciation depreciation WHERE "
-            + "depreciation.tenantId = ?)";
+    public static final String BASE_QUERY = "SELECT  depreciation.id as depreciationId,depreciation.tenantId as tenantId, depreciation.assetid as assetId,assetcategory.id as assetcategoryId,"
+            + "asset.name as assetname,asset.code as assetcode,asset.department as department,assetcategory.depreciationrate as depreciationrate,"
+            + "depreciation.depreciationvalue as depreciationvalue,depreciation.valueafterdepreciation as valueafterdepreciation,asset.grossvalue as grossvalue, "
+            + "assetcategory.name as assetcategoryname,assetcategory.code as assetcategorycode,assetcategory.assetcategorytype as assetcategorytype,assetcategory.parentid as parentid, "
+            + "assetcategory.depreciationrate as assetcategory_depreciationrate,depreciation.financialyear as financialyear "
+            + " FROM egasset_depreciation depreciation,egasset_asset asset, egasset_assetcategory assetcategory "
+            +  "WHERE asset.assetcategory = assetcategory.id and "
+            + " depreciation.assetid = asset.id and depreciation.tenantId =asset.tenantId "
+            + " and assetcategory.id= asset.assetcategory and assetcategory.tenantId = asset.tenantId "
+           ;
 
     public String getQuery(final DepreciationReportCriteria depreciationReportCriteria,
             final List<Object> preparedStatementValues) {
@@ -41,9 +42,9 @@ public class DepreciationReportQueryBuilder {
 
         if (depreciationTenantId != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" asset.tenantId = ?");
+            selectQuery.append(" depreciation.tenantId = ?");
             preparedStatementValues.add(depreciationTenantId);
-            preparedStatementValues.add(depreciationTenantId);
+
         }
 
         if (depreciationReportCriteria.getAssetCategoryName() != null) {
@@ -57,12 +58,32 @@ public class DepreciationReportQueryBuilder {
             selectQuery.append(" assetcategory.assetcategorytype =?");
             preparedStatementValues.add(depreciationReportCriteria.getAssetCategoryType());
         }
+        
+        if (depreciationReportCriteria.getParent()!= null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" assetcategory.parentid =?");
+            preparedStatementValues.add(depreciationReportCriteria.getParent());
+        }
+        
 
         if (depreciationReportCriteria.getAssetName() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" asset.name ilike ?");
             preparedStatementValues.add("%" + depreciationReportCriteria.getAssetName() + "%");
         }
+        
+        if (depreciationReportCriteria.getAssetCode()!= null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" asset.code ilike ?");
+            preparedStatementValues.add("%" + depreciationReportCriteria.getAssetCode() + "%");
+        }
+        
+        if (depreciationReportCriteria.getFinancialYear()!= null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" depreciation.financialyear =?");
+            preparedStatementValues.add(depreciationReportCriteria.getFinancialYear());
+        }
+         
 
     }
 
@@ -71,5 +92,5 @@ public class DepreciationReportQueryBuilder {
             queryString.append(" AND");
         return true;
     }
-
+    
 }

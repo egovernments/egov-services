@@ -62,11 +62,11 @@ public class EstimateRepository {
         return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departments, status).getDetailedEstimates();
     }
     
-    public List<DetailedEstimate> searchDetailedEstimatesByIds(final List<String> ids, final String tenantId,final RequestInfo requestInfo) {
+    public List<DetailedEstimate> searchDetailedEstimatesByIds(final List<String> idList, final String tenantId,final RequestInfo requestInfo) {
 
         String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
-        String id = String.join(",", ids);
-        return restTemplate.postForObject(detailedEstimateByIdsUrl, requestInfo, DetailedEstimateResponse.class,tenantId,id, status).getDetailedEstimates();
+        String ids = String.join(",", idList);
+        return restTemplate.postForObject(detailedEstimateByIdsUrl, requestInfo, DetailedEstimateResponse.class,tenantId,ids, status).getDetailedEstimates();
     }
 
     public DetailedEstimateResponse createUpdateDetailedEstimate(DetailedEstimateRequest detailedEstimateRequest, Boolean isUpdate) {

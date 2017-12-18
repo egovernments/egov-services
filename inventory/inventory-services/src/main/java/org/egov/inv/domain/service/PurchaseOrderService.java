@@ -596,7 +596,7 @@ public class PurchaseOrderService extends DomainService {
             for(Indent indent : indentResponse.getIndents()) {
             	for(IndentDetail indentDetail : indent.getIndentDetails()) {
             		//checking if atleast one ratecontract exists for materials in the given indents
-            		if(purchaseOrderRepository.isRateContractsExists(purchaseOrder.getSupplier().getCode(), purchaseOrder.getRateType().name(), indentDetail.getMaterial().getCode()))
+            		if(purchaseOrderRepository.isRateContractsExists(purchaseOrder.getSupplier().getCode(), purchaseOrder.getRateType().toString(), indentDetail.getMaterial().getCode()))
             		{
             			isRateContractExist = true;
             			break;

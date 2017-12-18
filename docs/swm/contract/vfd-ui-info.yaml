@@ -32,7 +32,7 @@ UIInfo:
     - shift.name
     resultObjectName: sanitationStaffSchedules
     
-- referencePath: "/vehicleSchedules"
+- referencePath: "/vehicleschedules"
   searchUrl: "/vehicleSchedules/_search?transactionNo={transactionNo}"
   groups:
     SourceSegregationDetails:

@@ -330,7 +330,7 @@ class Report extends Component {
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
 
-          console.log("this is srespons efrom ", res)
+          console.log("this is respons efrom ", res)
           self.props.setLoadingStatus('hide');
           if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
             var obj = {};
@@ -665,11 +665,13 @@ class Report extends Component {
             var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl;
             var obj = _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore);
             if (obj.isVakalatnamaGenerated) {
+              localStorage.setItem('returnUrl', window.location.hash.split('#/')[1]);
               localStorage.setItem(
                 self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].localStoreResponseKey,
                 JSON.stringify(obj)
               );
               self.props.setRoute(hash);
+              
             }
           }
         }, 1500);
@@ -1602,7 +1604,7 @@ class Report extends Component {
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch', expression, expErr, isDate) => {
     let { getVal } = this.props;
-    let { handleChange, mockData, setDropDownData, formData } = this.props;
+    let { handleChange, mockData, setDropDownData, formData, changeFormStatus} = this.props;
     let hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
 
@@ -1654,6 +1656,10 @@ class Report extends Component {
       console.log(e);
     }
     this.affectDependants(obj, e, property);
+    if(property == "agencies[0].status" && e.target.value == 'active' ){
+      changeFormStatus(true);
+    }
+    
   };
 
   incrementIndexValue = (group, jsonPath) => {
@@ -1826,6 +1832,7 @@ class Report extends Component {
 
   render() {
     let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+
     let { create, handleChange, setVal, getVal, addNewCard, removeCard, autoComHandler, initiateWF } = this;
     let customActionsAndUrl =
       !_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty('customActionsAndUrl')
@@ -2003,6 +2010,12 @@ const mapDispatchToProps = dispatch => ({
       requiredErrMsg,
       patternErrMsg,
     });
+  },
+  changeFormStatus: (status) => {
+    dispatch({
+      type: 'CHANGE_FORM_STATUS',
+      status
+    })
   },
   setLoadingStatus: loadingStatus => {
     dispatch({ type: 'SET_LOADING_STATUS', loadingStatus });

@@ -10,6 +10,12 @@ var dat = {
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: 'cases',
+    customActionsAndUrl: [
+      {
+        actionName: 'Back',
+        url: '/search/legal/summon/view',
+      }
+    ],
     groups: [
       {
         label: 'legal.vakalatnama.create.group.title.generateVakalatnama',

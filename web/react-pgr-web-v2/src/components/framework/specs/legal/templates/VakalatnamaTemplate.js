@@ -130,7 +130,7 @@ export default class VakalatnamaTemplate extends Component {
       pageMargins: [30, 10, 10, 30],
       header: [],
       content: [
-        { text: 'Exhibit No. ______________________', margin: [10, 20, 10, 0] },
+        { text: 'Exhibit No. ______________________', margin: [10, 20, 10, 0] , alignment: 'right'},
         {
           text: 'VAKALATNAMA',
           alignment: 'center',

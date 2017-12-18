@@ -40,6 +40,7 @@ class assetCategoryCreate extends Component {
   }
 
   setLabelAndReturnRequired(configObject) {
+    console.log(configObject);
     if (configObject && configObject.groups) {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
@@ -315,7 +316,7 @@ class assetCategoryCreate extends Component {
     let self = this;
 
     specifications = typeof results == 'string' ? JSON.parse(results) : results;
-    let obj = specifications[`asset.create`];
+    let obj = self.props.match.params.id ? specifications[`asset.update`] : specifications[`asset.create`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);

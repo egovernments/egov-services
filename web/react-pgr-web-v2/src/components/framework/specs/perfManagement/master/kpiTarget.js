@@ -526,7 +526,7 @@ var dat = {
           {
             name: 'updatekpiDate',
             jsonPath: 'kpiTargets[0].finYear',
-            label: 'perfManagement.update.KPIs.groups.updatekpiDate',
+            label: 'perfManagement.update.KPIs.groups.updatekpiTargetFinancialYear',
             isRequired: true,
             pattern: '',
             type: 'singleValueList',

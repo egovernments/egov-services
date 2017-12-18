@@ -450,7 +450,7 @@ class kpivalues extends Component {
             <label>{translate('perfManagement.create.KPIs.groups.kpiTarget')}</label>:&nbsp;
             <span>{item.kpi.kpiTargets[0].targetDescription}</span>
             <br />
-            <label>{translate('perfManagement.view.KPIs.groups.viewkpiDate')}</label>:&nbsp;
+            <label>{translate('perfManagement.view.KPIs.groups.viewkpiTargetFinancialYear')}</label>:&nbsp;
             <span>{item.kpi.kpiTargets[0].finYear}</span>
             <br />
             <OverlayTrigger trigger="click" overlay={this.prepareKPIdesc(item.kpi)} placement="right" rootClose>

@@ -167,7 +167,7 @@ public class MeasurementBookValidator {
 			}
 		}
 		if (isNew) {
-			if (!measurementBook.getWorkFlowDetails().getAction().equalsIgnoreCase(Constants.SAVE)
+			if (measurementBook.getWorkFlowDetails() != null && !measurementBook.getWorkFlowDetails().getAction().equalsIgnoreCase(Constants.SAVE)
 					&& measurementBook.getMeasurementBookDetails().isEmpty()
 					&& measurementBook.getLumpSumMBDetails().isEmpty())
 				messages.put(Constants.KEY_MB_DETAILS_MANDATORY, Constants.MSG_MB_DETAILS_MANDATORY);

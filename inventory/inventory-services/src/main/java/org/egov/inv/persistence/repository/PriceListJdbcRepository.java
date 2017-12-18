@@ -56,7 +56,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
 
         }
         insertFields.addAll(fetchFields(T));
-//        uniqueFields.add("rateContractNumber");
+        uniqueFields.add("id");
         uniqueFields.add("tenantId");
         insertFields.removeAll(uniqueFields);
         allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));

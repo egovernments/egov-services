@@ -426,8 +426,8 @@ public class PurchaseOrderService extends DomainService {
                 String indentNumbers = "";
                 if(null != eachPurchaseOrder.getPurchaseOrderDetails())
                 for (PurchaseOrderDetail purchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
-                	IndentEntity ie = indentJdbcRepository.findById(IndentEntity.builder().id(purchaseOrderDetail.getIndentNumber()).build());
-                	PriceListEntity ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).build());
+                	IndentEntity ie = indentJdbcRepository.findById(IndentEntity.builder().indentNumber(purchaseOrderDetail.getIndentNumber()).tenantId(purchaseOrderDetail.getTenantId()).build());
+                	PriceListEntity ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).tenantId(purchaseOrderDetail.getTenantId()).build());
                 	//RateContract reference validation
                 	if(ple.getId() == null) {
                 		throw new CustomException("priceList", "RateContract" + purchaseOrderDetail.getPriceList() + " doesn't exists");

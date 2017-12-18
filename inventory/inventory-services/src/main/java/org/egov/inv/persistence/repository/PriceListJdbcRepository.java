@@ -16,7 +16,6 @@ import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.SupplierGetRequest;
-import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -84,7 +83,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
     }
 
     public Long getTenderQty(String supplier, String material, String rateType) {
-        String tenderQtyQuery = "select quantity from pricelist where active=true and deleted=false and material ='" + material + "' and pricelist in (select id from pricelist where ratetype='" + rateType + "' and supplier='" + supplier + "') and extract(epoch from now())::bigint * 1000 between agreementstartdate::bigint and agreementenddate::bigint";
+        String tenderQtyQuery = "select quantity from pricelist where active=true and deleted=false and material ='" + material + "' and pricelist in (select id from pricelist where ratetype='" + rateType + "' and supplier='" + supplier + "') and extract(epoch from now())::bigint * 1000 between agreementstartdate and agreementenddate";
         Long tenderQty = namedParameterJdbcTemplate.queryForObject(tenderQtyQuery, new HashMap(), Long.class);
         return tenderQty;
     }
@@ -96,7 +95,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
    		/*
             * select * from pricelist where id in ( select pricelist from
    		 * pricelistdetails where material='MAT1' and 1509474600000 between
-   		 * fromdate::bigint and todate::bigint ) and supplier='supp1' and
+   		 * fromdate and todate ) and supplier='supp1' and
    		 * ratetype='DGSC Rate Contract' and active=true
    		 */
 
@@ -116,7 +115,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             if (priceListSearchRequest.getMaterialCode() != null
                     && priceListSearchRequest.getRateContractDate() != null) {
                 params.append(" and  id in ( select pricelist from pricelistdetails "
-                        + "where material=:materialCode  and :rateContractDate between fromdate::bigint and todate::bigint  )  ");
+                        + "where material=:materialCode  and :rateContractDate between fromdate and todate )  ");
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
                 paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
             } else if (priceListSearchRequest.getMaterialCode() != null) {
@@ -125,7 +124,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
             } else if (priceListSearchRequest.getRateContractDate() != null) {
                 params.append(" and id in ( select pricelist from pricelistdetails "
-                        + "where  :rateContractDate between fromdate::bigint and todate::bigint  )  ");
+                        + "where  :rateContractDate between fromdate and todate  )  ");
                 paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
 
             }
@@ -316,7 +315,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             if (params.length() > 0) {
                 params.append(" and ");
             }
-            params.append("agreementDate::bigint =:agreementDate");
+            params.append("agreementDate =:agreementDate");
             paramValues.put("agreementDate", priceListSearchRequest.getAgreementDate());
         }
 
@@ -324,7 +323,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             if (params.length() > 0) {
                 params.append(" and ");
             }
-            params.append("rateContractDate::bigint =:rateContractDate");
+            params.append("rateContractDate =:rateContractDate");
             paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
         }
 
@@ -332,7 +331,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             if (params.length() > 0) {
                 params.append(" and ");
             }
-            params.append("agreementStartDate::bigint =:agreementStartDate");
+            params.append("agreementStartDate =:agreementStartDate");
             paramValues.put("agreementStartDate", priceListSearchRequest.getAgreementStartDate());
         }
 
@@ -340,7 +339,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             if (params.length() > 0) {
                 params.append(" and ");
             }
-            params.append("agreementEndDate::bigint =:agreementEndDate");
+            params.append("agreementEndDate =:agreementEndDate");
             paramValues.put("agreementEndDate", priceListSearchRequest.getAgreementEndDate());
         }
 
@@ -418,7 +417,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
 
             for (PriceListDetails plds : pl.getPriceListDetails()) {
 
-                String dupeQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate::bigint <= " + pl.getAgreementEndDate() + " and todate::bigint >= " + pl.getAgreementStartDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
+                String dupeQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate <= " + pl.getAgreementEndDate() + " and todate >= " + pl.getAgreementStartDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
                 Long dupeCount = namedParameterJdbcTemplate.queryForObject(dupeQuery, new HashMap(), Long.class);
                 if (dupeCount != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
@@ -426,28 +425,28 @@ public class PriceListJdbcRepository extends JdbcRepository {
                     return true;
                 }
 
-                String searchQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate::bigint >= " + pl.getAgreementStartDate() + " and fromdate::bigint <= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
+                String searchQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate >= " + pl.getAgreementStartDate() + " and fromdate <= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
                 Long count = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
                 if (count != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (count > 1l && method.equals(Constants.ACTION_UPDATE)) {
                     return true;
                 }
-                String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( todate::bigint >= " + pl.getAgreementStartDate() + " and todate::bigint <= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
+                String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( todate >= " + pl.getAgreementStartDate() + " and todate <= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
                 Long count1 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
                 if (count1 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (count1 > 1l && method.equals(Constants.ACTION_UPDATE)) {
                     return true;
                 }
-                String searchQuery2 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate::bigint <= " + pl.getAgreementStartDate() + " and todate::bigint >= " + pl.getAgreementStartDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
+                String searchQuery2 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate <= " + pl.getAgreementStartDate() + " and todate >= " + pl.getAgreementStartDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
                 Long count2 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
                 if (count2 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (count2 > 1l && method.equals(Constants.ACTION_UPDATE)) {
                     return true;
                 }
-                String searchQuery3 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate::bigint <= " + pl.getAgreementEndDate() + " and todate::bigint >= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
+                String searchQuery3 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate <= " + pl.getAgreementEndDate() + " and todate >= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
                 Long count3 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
                 if (count3 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;

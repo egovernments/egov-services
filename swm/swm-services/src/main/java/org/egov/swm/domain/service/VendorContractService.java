@@ -121,8 +121,8 @@ public class VendorContractService {
                             + new Date(vendorContract.getContractDate()));
             
             if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractDate() != null)
-                if (!new Date(vendorContract.getContractDate())
-                        .before(new Date(vendorContract.getContractPeriodFrom())))
+                if (new Date(vendorContract.getContractDate())
+                        .after(new Date(vendorContract.getContractPeriodFrom())))
                     throw new CustomException("ContractPeriodFrom ", "Given Contract Period From Date is invalid: "
                             + new Date(vendorContract.getContractPeriodFrom()));
 

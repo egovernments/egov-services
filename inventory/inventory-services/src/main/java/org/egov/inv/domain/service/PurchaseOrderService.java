@@ -396,6 +396,7 @@ public class PurchaseOrderService extends DomainService {
 
             Long currentMilllis = System.currentTimeMillis();
 
+            if(!method.equals(Constants.ACTION_SEARCH_INDENT_FOR_PO))
             for (PurchaseOrder eachPurchaseOrder : pos) {
                 BigDecimal totalAmount = new BigDecimal(0);
                 int index = pos.indexOf(eachPurchaseOrder) + 1;

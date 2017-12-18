@@ -186,10 +186,6 @@ export default class KPIDashboardQuery extends Component {
     let kpis = this.state.kpiIndices.map((item, index) => parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)[item]['code']).join(',');
     let kpiNames = this.state.kpiIndices.map((item, index) => parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)[item]['name']).join(',');
 
-    console.log(kpis)
-    console.log(kpiNames)
-    console.log(this.state.kpiIndices)
-    
     this.setState({
       showChartView: false,
       showTableView: false,
@@ -202,10 +198,18 @@ export default class KPIDashboardQuery extends Component {
         this.toast('Unable to get report data');
       } else {
         this.chartRes = res;
-        this.setState({
-          showChartView: true,
-          showTableView: false,
-        });
+
+        if (kpiTypes[this.state.kpiTypeIndex].name === 'TEXT') {
+          this.setState({
+            showChartView: false,
+            showTableView: true,
+          });          
+        } else {
+          this.setState({
+            showChartView: true,
+            showTableView: false,
+          });
+        }
       }
     });
   };

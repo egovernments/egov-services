@@ -133,7 +133,6 @@ public class EstimateTemplateActivities   {
     @ApiModelProperty(required = true, value = "UOM for the Estimate Template Activity. Unique reference from 'UOM'. Code is ref. here.")
     @NotNull
 
-    @Valid
 
     public UOM getUom() {
         return uom;

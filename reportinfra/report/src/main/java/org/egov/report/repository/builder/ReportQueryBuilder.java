@@ -144,7 +144,10 @@ public class ReportQueryBuilder {
 
 					for (int k=0; k<jsonKeys.length; k++) {
 
-						String value = String.valueOf(obj.get(jsonKeys[k]));
+						String value = "";
+						if(obj.has(jsonKeys[k])){
+					    value = String.valueOf(obj.get(jsonKeys[k]));
+						} 
 
 						sb.append("'" + value + "'");
 						if ((k != jsonKeys.length-1)) {

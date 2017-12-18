@@ -49,6 +49,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -172,6 +173,10 @@ public class LeaveApplicationService {
 	public List<LeaveApplication> getLeaveApplicationsReport(final LeaveSearchRequest leaveSearchRequest,
 			final RequestInfo requestInfo) {
 		getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
+		if ((leaveSearchRequest.getDepartmentId() != null || leaveSearchRequest.getDesignationId() != null
+				|| leaveSearchRequest.getCode() != null || leaveSearchRequest.getEmployeeType() != null
+				|| leaveSearchRequest.getEmployeeStatus() != null) && !(leaveSearchRequest.getEmployeeIds().size() > 0))
+			return Collections.EMPTY_LIST;
 		return leaveApplicationRepository.findForReportCriteria(leaveSearchRequest, requestInfo);
 	}
 
@@ -269,7 +274,8 @@ public class LeaveApplicationService {
 
 	private void getEmployeeIdForRequest(LeaveSearchRequest leaveSearchRequest, RequestInfo requestInfo) {
 		List<Long> employeeIds = null;
-		if (leaveSearchRequest.getCode() != null && leaveSearchRequest.getDesignationId() == null)
+		if ((leaveSearchRequest.getCode() != null || leaveSearchRequest.getEmployeeType() != null
+				|| leaveSearchRequest.getEmployeeStatus() != null) && leaveSearchRequest.getDesignationId() == null)
 			leaveSearchRequest.setIsPrimary(true);
 		if (leaveSearchRequest.getDepartmentId() != null || leaveSearchRequest.getDesignationId() != null
 				|| leaveSearchRequest.getCode() != null || leaveSearchRequest.getEmployeeType() != null
@@ -277,12 +283,8 @@ public class LeaveApplicationService {
 			EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
 					requestInfo);
 			if (employeeResponse.getEmployees().size() == 1) {
-				List<Assignment> assignments = employeeResponse.getEmployees().get(0).getAssignments().stream()
-						.map(assignment -> {
-							assignment.getToDate().after(new Date());
-							return assignment;
-						}).collect(Collectors.toList());
-				leaveSearchRequest.setDesignationId(assignments.get(0).getDesignation());
+				leaveSearchRequest.setDesignationId(
+						employeeResponse.getEmployees().get(0).getAssignments().get(0).getDesignation());
 			}
 			employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId())
 					.collect(Collectors.toList());

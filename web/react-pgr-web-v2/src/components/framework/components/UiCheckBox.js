@@ -29,7 +29,7 @@ class UiCheckBox extends Component {
             id={item.jsonPath.split('.').join('-')}
             style={{
               display: item.hide ? 'none' : 'inline-block',
-              marginTop: '43px',
+              marginTop: '25px', //For DumpingGround Changed from 43px
               marginLeft: '-5px',
             }}
             label={item.label + (item.isRequired ? ' *' : '')}

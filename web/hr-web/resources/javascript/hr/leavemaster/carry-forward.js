@@ -1,4 +1,4 @@
-class LeaveMaster extends React.Component {
+class CarryForward extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -13,7 +13,12 @@ class LeaveMaster extends React.Component {
 
         this.addOrUpdate = this.addOrUpdate.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.setInitialState = this.setInitialState.bind(this);
     }
+
+    setInitialState(initState) {
+        this.setState(initState);
+      }      
 
     handleChange(e, name) {
         this.setState({
@@ -78,7 +83,7 @@ class LeaveMaster extends React.Component {
 
 
     render() {
-        let { handleChange, addOrUpdate } = this;
+        let { handleChange, addOrUpdate, setInitialState } = this;
         let { leaveType, year } = this.state.searchSet;
 
         const renderOption = function (list) {
@@ -146,6 +151,6 @@ class LeaveMaster extends React.Component {
     }
 }
 ReactDOM.render(
-    <LeaveMaster />,
+    <CarryForward />,
     document.getElementById('root')
 );

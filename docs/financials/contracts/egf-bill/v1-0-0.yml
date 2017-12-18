@@ -8,11 +8,11 @@ info:
     name: Manikanta P T
     email: info@egovernments.org
   
-basePath: "/egf-bill/v110"
+basePath: "/egf-bill"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/egf-bill/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.egf.bill'
 paths:
-    /billregisters/_search:
+    /bills/_search:
       post:
         summary: Get the list of billregisters
         description: billregisters
@@ -178,7 +178,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /billregisters/_create:
+    /bills/_create:
       post:
         summary: Create  new  billregisters
         description: Create  new billregisters
@@ -201,7 +201,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-    /billregisters/_update:
+    /bills/_update:
       post:
         summary: Update any of the billregisters
         description: Update any of the billregisters
@@ -334,16 +334,14 @@ definitions:
 
     BillRegister:
       type: object
-      description: |
-          
-      allOf:
-        - $ref: '#/definitions/Auditable'
       properties:
-        id:
+        tenantId:
           type: string
-          maxLength: 50
+          maxLength: 256
+          minLength: 0
           description: |
-            Unique Identifier of the BillRegister
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
         billType:
           type: string
           maxLength: 50
@@ -387,49 +385,40 @@ definitions:
           description: |
             moduleName is the name of the module who is posting the bill in financials
         status:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialStatus"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialStatus"
+          description: |
                 status refers to the status of the bill like ,created,approved etc
         fund:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
+          description: |
                 fundsource refers to the fundsounce master
         function:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+          description: |
                 function refers to the function master
         fundsource:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource"
+          description: |
                 fundsource of the BillRegister
         scheme:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Scheme"
+          description: |
                 scheme of the BillRegister
         subScheme:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/SubScheme"
+          description: |
                 sub scheme of the BillRegister
         functionary:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Functionary"
+          description: |
                 functionary of the BillRegister
         division:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary"
+          description: |
                 division of the BillRegister
         department:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department"
+          description: |
                 department of the BillRegister
         sourcePath:
           type: string
@@ -467,17 +456,22 @@ definitions:
             bill details of the BillRegister
           items:
             $ref: "#/definitions/BillDetail"
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - billType
       - billDate
       - billAmount
     BillDetail:
       type: object
-      description: |
-          
-      allOf:
-        - $ref: '#/definitions/Auditable'
       properties:
+        tenantId:
+          type: string
+          maxLength: 256
+          minLength: 0
+          description: |
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
         id:
           type: string
           description: |
@@ -508,9 +502,8 @@ definitions:
           description: |
             credit amount of the BillDetail
         function:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
+          description: |
                 function of the BillDetail
         billPayeeDetails:
           type:  array
@@ -518,6 +511,8 @@ definitions:
             bill payee details of the BillDetail
           items:
             $ref: "#/definitions/BillPayeeDetail"
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - chartOfAccount
       - glcode
@@ -525,30 +520,33 @@ definitions:
       - creditAmount
     BillPayeeDetail:
       type: object
-      description: |
-          
-      allOf:
-        - $ref: '#/definitions/Auditable'
       properties:
+        tenantId:
+          type: string
+          maxLength: 256
+          minLength: 0
+          description: |
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
         id:
           type: string
           description: |
             Unique Identifier of the BillPayeeDetail
         accountDetailType:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailType"
+          description: |
                 account detail type of the BillPayeeDetail
         accountDetailKey:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
-            - description: |
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/AccountDetailKey"
+          description: |
                 account detail key of the BillPayeeDetail
         amount:
           type: number
           format: double
           description: |
             amount of the BillPayeeDetail
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - accountDetailKey
       - amount
@@ -577,16 +575,19 @@ definitions:
 
     Checklist:
       type: object
-      description: |
-          
-      allOf:
-        - $ref: '#/definitions/Auditable'
       properties:
-        id:
+        tenantId:
+          type: string
+          maxLength: 256
+          minLength: 0
+          description: |
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
+        code:
           type: string
           maxLength: 50
           description: |
-            id is the unique identifier
+            code is the unique identifier
         type:
           type: string
           maxLength: 50
@@ -615,6 +616,9 @@ definitions:
           minLength: 3
           description: |
             description is further detailed discription of the check list values
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          
     ChecklistRequest:
       description: Contract class for web request. Array of Checklist items  are used in case of create or update
       properties:
@@ -637,36 +641,6 @@ definitions:
             $ref: '#/definitions/Checklist'
         page:
           $ref: '#/definitions/Page'
-    Auditable:
-      type: object
-      properties:
-        tenantId:
-          type: string
-          maxLength: 50
-          minLength: 5
-          description: |
-            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
-            represents the client for which the transaction is created.
-        createdBy:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
-            - description: |
-                createdBy is the logged in user who is conducting transaction
-        lastModifiedBy:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User"
-            - description: |
-                lastModifiedBy is the logged in user who is updating transaction
-        createdDate:
-          type: string
-          format: date
-          description: |
-            
-        lastModifiedDate:
-          type: string
-          format: date
-          description: |
-            lastModifiedDate date is on which trnasaction is updated lastly
     Page:
      type: object
      properties:

@@ -517,17 +517,43 @@ var dat = {
           },
         ],
       },
+      // {
+      //   label: '',
+      //   name: 'updatekpiTargetDateBlock',
+      //   hide: false,
+      //   multiple: false,
+      //   fields: [
+      //     {
+      //       name: 'updatekpiDate',
+      //       jsonPath: 'kpiTargets[0].finYear',
+      //       label: 'perfManagement.update.KPIs.groups.updatekpiTargetFinancialYear',
+      //       isRequired: true,
+      //       pattern: '',
+      //       type: 'singleValueList',
+      //       //"url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+      //       url:
+      //         'egov-mdms-service/v1/_get?tenantId=' +
+      //         localStorage.tenantId.split('.')[0] +
+      //         '&masterName=financialYears&moduleName=egf-master&filter=' +
+      //         criteria +
+      //         '|$..finYearRange|$..finYearRange',
+      //       isDisabled: false,
+      //       requiredErrMsg: '',
+      //     },
+      //   ],
+      // },
+
       {
         label: '',
-        name: 'updatekpiTargetDateBlock',
-        hide: false,
+        name: 'updatekpiTargetTextBlock',
+        hide: "this.props.getVal('kpiTargets[0].kpi.targetType') != 'TEXT'?true:false",
         multiple: false,
         fields: [
           {
             name: 'updatekpiDate',
             jsonPath: 'kpiTargets[0].finYear',
             label: 'perfManagement.update.KPIs.groups.updatekpiTargetFinancialYear',
-            isRequired: true,
+            isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'TEXT'?true:false",
             pattern: '',
             type: 'singleValueList',
             //"url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
@@ -540,15 +566,6 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
           },
-        ],
-      },
-
-      {
-        label: '',
-        name: 'updatekpiTargetTextBlock',
-        hide: "this.props.getVal('kpiTargets[0].kpi.targetType') != 'TEXT'?true:false",
-        multiple: false,
-        fields: [
           {
             name: 'updatekpiTarget',
             jsonPath: 'kpiTargets[0].targetDescription',
@@ -568,6 +585,23 @@ var dat = {
         hide: "this.props.getVal('kpiTargets[0].kpi.targetType') != 'VALUE'?true:false",
         multiple: false,
         fields: [
+          {
+            name: 'updatekpiDate',
+            jsonPath: 'kpiTargets[0].finYear',
+            label: 'perfManagement.update.KPIs.groups.updatekpiTargetFinancialYear',
+            isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'VALUE'?true:false",
+            pattern: '',
+            type: 'singleValueList',
+            //"url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+            url:
+              'egov-mdms-service/v1/_get?tenantId=' +
+              localStorage.tenantId.split('.')[0] +
+              '&masterName=financialYears&moduleName=egf-master&filter=' +
+              criteria +
+              '|$..finYearRange|$..finYearRange',
+            isDisabled: false,
+            requiredErrMsg: '',
+          },
           {
             name: 'updatekpiTargetText',
             jsonPath: 'kpiTargets[0].targetValue',
@@ -589,6 +623,23 @@ var dat = {
         //"hide": "`${getVal('KPIs[0].targetType')}`",
         multiple: false,
         fields: [
+          {
+            name: 'updatekpiDate',
+            jsonPath: 'kpiTargets[0].finYear',
+            label: 'perfManagement.update.KPIs.groups.updatekpiTargetFinancialYear',
+            isRequired: "this.props.getVal('kpiTargets[0].kpi.targetType') == 'OBJECTIVE'?true:false",
+            pattern: '',
+            type: 'singleValueList',
+            //"url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+            url:
+              'egov-mdms-service/v1/_get?tenantId=' +
+              localStorage.tenantId.split('.')[0] +
+              '&masterName=financialYears&moduleName=egf-master&filter=' +
+              criteria +
+              '|$..finYearRange|$..finYearRange',
+            isDisabled: false,
+            requiredErrMsg: '',
+          },
           {
             name: 'updatekpiTargetRadio',
             jsonPath: 'kpiTargets[0].targetValue',

@@ -1811,7 +1811,7 @@ definitions:
         type: integer
         format: int64
         description: This field holds information about the advocate opinion
-      furtherProcesssDetails:
+      furtherProcessDetails:
         type: string
         description: This field holds information about the further processs details
       darkhasthDueDate:

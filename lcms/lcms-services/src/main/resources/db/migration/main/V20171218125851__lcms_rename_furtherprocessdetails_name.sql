@@ -1,0 +1,1 @@
+ALTER TABLE egov_lcms_hearing_details RENAME COLUMN furtherprocesssdetails TO furtherprocessdetails;

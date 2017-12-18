@@ -86,7 +86,7 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: false
-  - name: furtherprocesssdetails
+  - name: furtherprocessdetails
     label: reports.lcms.furtherProcessDetails
     type: string
     source: lcms

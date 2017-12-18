@@ -53,8 +53,8 @@ public class HearingDetails {
 	@JsonProperty("advocateOpinion")
 	private String advocateOpinion = null;
 
-	@JsonProperty("furtherProcesssDetails")
-	private String furtherProcesssDetails = null;
+	@JsonProperty("furtherProcessDetails")
+	private String furtherProcessDetails = null;
 
 	@JsonProperty("darkhasthDueDate")
 	private Long darkhasthDueDate = null;

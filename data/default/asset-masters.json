@@ -1,6 +1,16 @@
 {
   "tenantId": "default",
   "moduleName": "ASSET",
+  "mdms-config": [
+    {
+      "masterName": "AssetCategory",
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.id",
+        "$.tenantId"
+      ]
+    }
+  ],
   "AssetCategory": [
     {
       "tenantId": "default",

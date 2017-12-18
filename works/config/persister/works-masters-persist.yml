@@ -251,7 +251,7 @@ serviceMaps:
 
        - jsonPath: $.estimateTemplates.*.deleted
 
-    - query: INSERT INTO egw_estimatetemplateactivities(id, tenantid, estimatetemplate, schedulerofrate, uom, nonsor,  unitrate, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET schedulerofrate=EXCLUDED.schedulerofrate, uom=EXCLUDED.uom, unitrate=EXCLUDED.unitrate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+    - query: INSERT INTO egw_estimatetemplateactivities(id, tenantid, estimatetemplate, schedulerofrate, uom, nonsor,  createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET schedulerofrate=EXCLUDED.schedulerofrate, uom=EXCLUDED.uom, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
       basePath: $.estimateTemplates.*.estimateTemplateActivities.*
       jsonMaps:
 
@@ -266,8 +266,6 @@ serviceMaps:
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom.code
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
-
-       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.unitRate
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.auditDetails.createdBy
 

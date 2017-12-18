@@ -35,9 +35,6 @@ public class EstimateTemplateActivitiesHelper {
     @JsonProperty("nonSOR")
     private String nonSOR = null;
 
-    @JsonProperty("unitRate")
-    private BigDecimal unitRate = null;
-
     @JsonProperty("createdBy")
     private String createdBy = null;
 
@@ -59,7 +56,6 @@ public class EstimateTemplateActivitiesHelper {
         estimateTemplateActivities.getScheduleOfRate().setId(this.scheduleOfRate);
         estimateTemplateActivities.setUom(new UOM());
         estimateTemplateActivities.getUom().setCode(this.uom);
-        estimateTemplateActivities.setUnitRate(this.unitRate);
         return estimateTemplateActivities;
     }
 }

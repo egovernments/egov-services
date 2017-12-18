@@ -7,14 +7,13 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
  * An Object that holds Activities for a given Estimate template. Either SOR or NON SOR is mandatory.
  */
 @ApiModel(description = "An Object that holds Activities for a given Estimate template. Either SOR or NON SOR is mandatory.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-08T12:40:04.021Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-18T07:32:22.753Z")
 
 public class EstimateTemplateActivities   {
     @JsonProperty("id")
@@ -34,9 +33,6 @@ public class EstimateTemplateActivities   {
 
     @JsonProperty("nonSOR")
     private NonSOR nonSOR = null;
-
-    @JsonProperty("unitRate")
-    private BigDecimal unitRate = null;
 
     @JsonProperty("deleted")
     private Boolean deleted = false;
@@ -137,6 +133,7 @@ public class EstimateTemplateActivities   {
     @ApiModelProperty(required = true, value = "UOM for the Estimate Template Activity. Unique reference from 'UOM'. Code is ref. here.")
     @NotNull
 
+    @Valid
 
     public UOM getUom() {
         return uom;
@@ -165,27 +162,6 @@ public class EstimateTemplateActivities   {
 
     public void setNonSOR(NonSOR nonSOR) {
         this.nonSOR = nonSOR;
-    }
-
-    public EstimateTemplateActivities unitRate(BigDecimal unitRate) {
-        this.unitRate = unitRate;
-        return this;
-    }
-
-    /**
-     * Unit Rate for Estimate Template Activitie
-     * @return unitRate
-     **/
-    @ApiModelProperty(value = "Unit Rate for Estimate Template Activitie")
-
-    @Valid
-
-    public BigDecimal getUnitRate() {
-        return unitRate;
-    }
-
-    public void setUnitRate(BigDecimal unitRate) {
-        this.unitRate = unitRate;
     }
 
     public EstimateTemplateActivities deleted(Boolean deleted) {
@@ -245,14 +221,13 @@ public class EstimateTemplateActivities   {
                 Objects.equals(this.scheduleOfRate, estimateTemplateActivities.scheduleOfRate) &&
                 Objects.equals(this.uom, estimateTemplateActivities.uom) &&
                 Objects.equals(this.nonSOR, estimateTemplateActivities.nonSOR) &&
-                Objects.equals(this.unitRate, estimateTemplateActivities.unitRate) &&
                 Objects.equals(this.deleted, estimateTemplateActivities.deleted) &&
                 Objects.equals(this.auditDetails, estimateTemplateActivities.auditDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, estimateTemplate, scheduleOfRate, uom, nonSOR, unitRate, deleted, auditDetails);
+        return Objects.hash(id, tenantId, estimateTemplate, scheduleOfRate, uom, nonSOR, deleted, auditDetails);
     }
 
     @Override
@@ -266,7 +241,6 @@ public class EstimateTemplateActivities   {
         sb.append("    scheduleOfRate: ").append(toIndentedString(scheduleOfRate)).append("\n");
         sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
         sb.append("    nonSOR: ").append(toIndentedString(nonSOR)).append("\n");
-        sb.append("    unitRate: ").append(toIndentedString(unitRate)).append("\n");
         sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("}");

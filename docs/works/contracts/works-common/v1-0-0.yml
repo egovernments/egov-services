@@ -800,10 +800,6 @@ definitions:
       nonSOR:
         $ref: '#/definitions/NonSOR'
         description: The Non SOR of the Template activity
-      unitRate:
-        type: number
-        format: BigDecimal
-        description: Unit Rate for Estimate Template Activitie
       deleted:
         type: boolean
         description: Boolean value to identify whether the object is deleted or not from UI.

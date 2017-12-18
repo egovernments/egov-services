@@ -80,6 +80,8 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	public Long getUsedQty(String supplier, String material, String rateType){
 	    String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = '" + material + "' and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted=false and ratetype='" + rateType + "' and supplier = '" + supplier + "')";
 	    Long usedQty=namedParameterJdbcTemplate.queryForObject(usedQtyQuery, new HashMap(), Long.class);
+	    if(usedQty == null)
+	    	return 0l;
 	    return usedQty;
 	}
 	

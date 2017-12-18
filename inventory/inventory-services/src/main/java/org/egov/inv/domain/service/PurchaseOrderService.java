@@ -665,7 +665,7 @@ public class PurchaseOrderService extends DomainService {
                         if (null != purchaseOrder.getRateType() && purchaseOrder.getRateType().name().equals("One Time Tender")) {
                             purchaseOrderDetail.setTenderQuantity(new BigDecimal(priceListjdbcRepository.getTenderQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
                         }
-                        purchaseOrderDetail.setUsedQuantity(new BigDecimal(purchaseOrderRepository.getUsedQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
+                        purchaseOrderDetail.setUsedQuantity(new BigDecimal(purchaseOrderRepository.getUsedQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().toString())));
                         purchaseOrderDetail.setIndentNumber(indent.getIndentNumber());
                         purchaseOrderDetail.setTenantId(tenantId);
                         buildPurchaseOrderIndentDetail(purchaseOrderRequest, purchaseOrder, indentDetail,

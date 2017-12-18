@@ -89,7 +89,7 @@ public class LetterOfAcceptanceValidator {
                 if (messages != null && !messages.isEmpty())
                     throw new CustomException(messages);
 
-                if (detailedEstimate.getWorkOrderCreated() && isRevision == null || (isRevision != null && !isRevision)) {
+                if (!detailedEstimate.getWorkOrderCreated() && isRevision == null || (isRevision != null && !isRevision)) {
                     validateOfflineStatus(letterOfAcceptanceRequest, messages, letterOfAcceptance,
                             letterOfAcceptanceEstimate);
 
@@ -209,13 +209,13 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_LOA_CONRACTOR_REQUIRED, Constants.MESSAGE_LOA_CONRACTOR_REQUIRED);
         }
 
-//        if (letterOfAcceptance.getContractor() != null && StringUtils.isNotBlank(letterOfAcceptance.getContractor().getCode())) {
-//            List<Contractor> contractors = worksMastersRepository.searchContractorsByCodes(letterOfAcceptance.getTenantId(),
-//                    letterOfAcceptance.getContractor().getCode(), requestInfo);
-//            if (contractors.isEmpty()) {
-//                messages.put(Constants.KEY_LOA_CONRACTOR_INACTIVE, Constants.MESSAGE_LOA_CONRACTOR_INACTIVE);
-//            }
-//        }
+        if (letterOfAcceptance.getContractor() != null && StringUtils.isNotBlank(letterOfAcceptance.getContractor().getCode())) {
+            List<Contractor> contractors = worksMastersRepository.searchContractorsByCodes(letterOfAcceptance.getTenantId(),
+                    letterOfAcceptance.getContractor().getCode(), requestInfo);
+            if (contractors.isEmpty()) {
+                messages.put(Constants.KEY_LOA_CONRACTOR_INACTIVE, Constants.MESSAGE_LOA_CONRACTOR_INACTIVE);
+            }
+        }
 
         if (detailedEstimate.getWorkOrderCreated()
                 && (letterOfAcceptance.getLoaNumber() == null || letterOfAcceptance.getLoaNumber().isEmpty())) {

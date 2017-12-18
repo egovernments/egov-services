@@ -62,12 +62,6 @@ public class Constants {
     public static final String KEY_ESTIMATETEMPLATE_NONSOR_DESCRIPTION_REQUIRED="WMS.ESTIMATETEMPLATE.NONSOR.DESCRIPTION.REQUIRED";
     public static final String MESSAGE_ESTIMATETEMPLATE_NONSOR_DESCRIPTION_REQUIRED="Description is required for Non SOR";
 
-    public static final String KEY_ESTIMATETEMPLATE_CODE_UPDATE_NOTALLOWED="WMS.ESTIMATETEMPLATE.CODE.UPDATE.NOTALLOWED";
-    public static final String MESSAGE_ESTIMATETEMPLATE_CODE_UPDATE_NOTALLOWED="You are trying to update code, not allowed";
-
-    public static final String KEY_ESTIMATETEMPLATE_KEY_INVALID="WMS.ESTIMATETEMPLATE.KEY.INVALID";
-    public static final String MESSAGE_ESTIMATETEMPLATE_KEY_INVALID="Given Estimate Template key is not valid: ";
-
     public static final String KEY_ESTIMATETEMPLATE_EITHER_SOR_OR_NONSOR_ISREQUIRED="WMS.ESTIMATETEMPLATE.EITHER.SOR.OR.NONSOR.ISREQUIRED";
     public static final String MESSAGE_ESTIMATETEMPLATE_EITHER_SOR_OR_NONSOR_ISREQUIRED="Either SOR or Non SOR is mandatory for activity";
 
@@ -76,7 +70,6 @@ public class Constants {
 
     public static final String KEY_ESTIMATETEMPLATE_THEREARE_DUPLICATE_CODES="WMS.ESTIMATETEMPLATE.THEREARE.DUPLICATE.CODES";
     public static final String MESSAGE_ESTIMATETEMPLATE_THEREARE_DUPLICATE_CODES="There are duplicate of code in given list ";
-
 
     public static final String KEY_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED="WMS.ESTIMATETEMPLATE.DUPLICATE.SOR.NOTALLOWED";
     public static final String MESSAGE_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED="Duplicate SORs not allowed for activity in a Template";
@@ -116,4 +109,13 @@ public class Constants {
     
     public static final String KEY_CONTRACTOR_IFSCCODE_INVALID="WMS.CONTRACTOR.IFSCCODE.INVALID";
     public static final String MESSAGE_CONTRACTOR_IFSCCODE_INVALID="IfscCode cannot be null. Please provide correct value";
+
+    public static final String KEY_MILESTONETEMPLATE_MIN_ONE_ETA_REQUIRED="WMS.MILESTONETEMPLATE.MIN_ONE.ETA.REQUIRED";
+    public static final String MESSAGE_MILESTONETEMPLATE_MIN_ONE_ETA_REQUIRED="Minumum one Activity is required";
+
+    public static final String KEY_MILESTONETEMPLATE_THEREARE_DUPLICATE_CODES="WMS.MILESTONETEMPLATE.THEREARE.DUPLICATE.CODES";
+    public static final String MESSAGE_MILESTONETEMPLATE_THEREARE_DUPLICATE_CODES="There are duplicate of code in given list ";
+
+    public static final String KEY_MILESTONETEMPLATE_CODE_EXISTS="WMS.MILESTONETEMPLATE.CODE.EXISTS";
+    public static final String MESSAGE_MILESTONETEMPLATE_CODE_EXISTS="Given Estimate Template already exists: ";
 }

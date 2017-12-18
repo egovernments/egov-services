@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object that holds Templates defined for Estimate based on Type of Works and Sub Type of work
  */
 @ApiModel(description = "An Object that holds Templates defined for Estimate based on Type of Works and Sub Type of work")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-15T12:55:05.253Z")
 
 public class EstimateTemplate   {
   @JsonProperty("id")
@@ -38,10 +38,10 @@ public class EstimateTemplate   {
   private String description = null;
 
   @JsonProperty("typeOfWork")
-  private String typeOfWork = null;
+  private TypeOfWork typeOfWork = null;
 
   @JsonProperty("subTypeOfWork")
-  private String subTypeOfWork = null;
+  private TypeOfWork subTypeOfWork = null;
 
   @JsonProperty("estimateTemplateActivities")
   private List<EstimateTemplateActivities> estimateTemplateActivities = new ArrayList<EstimateTemplateActivities>();
@@ -176,44 +176,42 @@ public class EstimateTemplate   {
     this.description = description;
   }
 
-  public EstimateTemplate typeOfWork(String typeOfWork) {
+  public EstimateTemplate typeOfWork(TypeOfWork typeOfWork) {
     this.typeOfWork = typeOfWork;
     return this;
   }
 
    /**
-   * The Type of work of the Template activity. Unique reference from 'TypeOfWork'.Code is ref. here.
+   * Type of work for which this Estimate template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.
    * @return typeOfWork
   **/
-  @ApiModelProperty(required = true, value = "The Type of work of the Template activity. Unique reference from 'TypeOfWork'.Code is ref. here.")
+  @ApiModelProperty(required = true, value = "Type of work for which this Estimate template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.")
   @NotNull
 
-
-  public String getTypeOfWork() {
+  public TypeOfWork getTypeOfWork() {
     return typeOfWork;
   }
 
-  public void setTypeOfWork(String typeOfWork) {
+  public void setTypeOfWork(TypeOfWork typeOfWork) {
     this.typeOfWork = typeOfWork;
   }
 
-  public EstimateTemplate subTypeOfWork(String subTypeOfWork) {
+  public EstimateTemplate subTypeOfWork(TypeOfWork subTypeOfWork) {
     this.subTypeOfWork = subTypeOfWork;
     return this;
   }
 
    /**
-   * The Sub Type of work of the Template activity. Unique reference from 'SubTypeOfWork'.Code is ref. here.
+   * Sub Type of work for which this Estimate template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.
    * @return subTypeOfWork
   **/
-  @ApiModelProperty(value = "The Sub Type of work of the Template activity. Unique reference from 'SubTypeOfWork'.Code is ref. here.")
+  @ApiModelProperty(value = "Sub Type of work for which this Estimate template is belongs to. Unique reference from 'TypeOfWork'.Code is ref. here.")
 
-
-  public String getSubTypeOfWork() {
+  public TypeOfWork getSubTypeOfWork() {
     return subTypeOfWork;
   }
 
-  public void setSubTypeOfWork(String subTypeOfWork) {
+  public void setSubTypeOfWork(TypeOfWork subTypeOfWork) {
     this.subTypeOfWork = subTypeOfWork;
   }
 

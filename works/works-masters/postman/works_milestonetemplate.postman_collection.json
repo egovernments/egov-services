@@ -1,0 +1,115 @@
+{
+	"info": {
+		"name": "WMS-Masters-MT",
+		"_postman_id": "08f68ae1-89ee-9037-e205-d0d0d13907ba",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create MT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"66d3aa78-bfd3-4698-bc56-3d5ce2c8cbd5\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"milestoneTemplates\":[{\n      \"tenantId\":\"default\",\n      \"name\":\"Road milestone Template\",\n      \"code\":\"MT1\",\n      \"active\":true,\n      \"description\":\"First milestone Template for Road\",\n      \"typeOfWork\":{\n      \t\"code\":\"Buildings\"\n      \t},\n      \"milestoneTemplateActivities\":[{  \n         \"tenantId\":\"default\",\n         \"stageOrderNumber\":7893843,\n         \"stageDescription\":\"First Milestone Template\",\n         \"percentage\":25\n      }]\n        \n    }]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8280/works-masters/v1/milestonetemplates/_create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"works-masters",
+						"v1",
+						"milestonetemplates",
+						"_create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search MT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"6f17d2da-f576-41c2-a506-5656a9214d9f\"\n    }\n}\n"
+				},
+				"url": {
+					"raw": "http://localhost:8280/works-masters/v1/milestonetemplates/_search?tenantId=default&codes=MT1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"works-masters",
+						"v1",
+						"milestonetemplates",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "codes",
+							"value": "MT1",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update MT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"66d3aa78-bfd3-4698-bc56-3d5ce2c8cbd5\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n       \"milestoneTemplates\": [\n        {\n            \"id\": \"b87a9da8aed3437686bfa466d74bec54\",\n            \"tenantId\": \"default\",\n            \"name\": \"Road milestone Template\",\n            \"code\": \"MT1\",\n            \"active\": true,\n            \"description\": \"First milestone Template for Road\",\n            \"typeOfWork\": {\n                \"id\": null,\n                \"tenantId\": null,\n                \"name\": null,\n                \"code\": \"Buildings\",\n                \"description\": null,\n                \"active\": null,\n                \"parent\": null\n            },\n            \"subTypeOfWork\": {\n                \"id\": null,\n                \"tenantId\": null,\n                \"name\": null,\n                \"code\": null,\n                \"description\": null,\n                \"active\": null,\n                \"parent\": null\n            },\n            \"milestoneTemplateActivities\": [\n                {\n                    \"id\": \"23ef2fcdd0ff412b979acce28a36b278\",\n                    \"tenantId\": \"default\",\n                    \"milestoneTemplate\": \"b87a9da8aed3437686bfa466d74bec54\",\n                    \"stageOrderNumber\": null,\n                    \"stageDescription\": null,\n                    \"percentage\": 25,\n                    \"auditDetails\": null,\n                    \"deleted\": false\n                }\n            ],\n            \"auditDetails\": null,\n            \"deleted\": false\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8280/works-masters/v1/milestonetemplates/_update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"works-masters",
+						"v1",
+						"milestonetemplates",
+						"_update"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

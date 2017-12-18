@@ -36,11 +36,14 @@ public class PropertiesManager {
 
     @Value("${egov.services.egov_mdms.searchpath}")
     private String mdmsSearchPath;
-    
+
     @Value("${egov.services.works.masters.contractor.create.validated}")
     private String worksMasterContractorCreateValidatedTopic;
-    
+
     @Value("${egov.services.works.masters.contractor.update.validated}")
     private String worksMasterContractorUpdateValidatedTopic;
+
+    @Value("${egov.services.works.masters.milestonetemplate.saveorupdate.validated}")
+    private String worksMasterMilestoneTemplateSaveOrUpdateValidatedTopic;
 
 }

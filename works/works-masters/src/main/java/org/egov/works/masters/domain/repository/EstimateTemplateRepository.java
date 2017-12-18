@@ -13,10 +13,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ramki on 6/11/17.
@@ -87,7 +84,7 @@ public class EstimateTemplateRepository {
             ids.add(etId);
             estimateTemplateSearchCriteria.setIds(ids);
         }
-        estimateTemplateSearchCriteria.setCode(code);
+        estimateTemplateSearchCriteria.setCodes(Arrays.asList(code));
         estimateTemplateSearchCriteria.setTenantId(tenantId);
         estimateTemplateSearchCriteria.setIsUpdateUniqueCheck(IsUpdateUniqueCheck);
         estimateTemplates = getEstimateTemplateByCriteria(estimateTemplateSearchCriteria);

@@ -616,7 +616,10 @@ definitions:
           $ref: '#/definitions/MilestoneTemplateActivities'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - name
@@ -657,13 +660,15 @@ definitions:
         description: Percentage to be applied for the given Milestone Template Activitie
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - stageOrderNumber
       - stageDescription
       - tenantId
       - percentage
-      - milestoneTemplate
     
   TypeOfWork:
     type: object

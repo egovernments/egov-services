@@ -44,15 +44,15 @@ public class EstimateTemplateQueryBuilder {
 
         if (estimateTemplateSearchCriteria.getIds() != null && !estimateTemplateSearchCriteria.getIds().isEmpty()) {
             if (estimateTemplateSearchCriteria.getIsUpdateUniqueCheck())
-                selectQuery.append(" and et.id not in (:sorIds)");
+                selectQuery.append(" and et.id not in (:etIds)");
             else
-                selectQuery.append(" and et.id in (:sorIds)");
-            params.put("sorIds", estimateTemplateSearchCriteria.getIds());
+                selectQuery.append(" and et.id in (:etIds)");
+            params.put("etIds", estimateTemplateSearchCriteria.getIds());
         }
 
-        if (estimateTemplateSearchCriteria.getCode() != null && !estimateTemplateSearchCriteria.getCode().isEmpty()) {
-            selectQuery.append(" and et.code = :code");
-            params.put("code", estimateTemplateSearchCriteria.getCode());
+        if (estimateTemplateSearchCriteria.getCodes() != null && !estimateTemplateSearchCriteria.getCodes().isEmpty()) {
+            selectQuery.append(" and et.code in (:codes)");
+            params.put("codes", estimateTemplateSearchCriteria.getCodes());
         }
 
         if (estimateTemplateSearchCriteria.getTypeOfWork() != null && !estimateTemplateSearchCriteria.getTypeOfWork().isEmpty()) {

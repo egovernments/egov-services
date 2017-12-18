@@ -1,12 +1,13 @@
 package org.egov.works.masters.web.contract;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * Created by ramki on 7/11/17.
+ * Created by ramki on 15/12/17.
  */
 
 @Setter
@@ -14,12 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EstimateTemplateSearchCriteria {
+public class MilestoneTemplateSearchCriteria {
     @NotNull
     private String tenantId;
     private List<String> ids;
     private List<String> codes;
     private String name;
+    private Boolean active;
     private String typeOfWork;
     private String subTypeOfWork;
     private Integer pageSize;

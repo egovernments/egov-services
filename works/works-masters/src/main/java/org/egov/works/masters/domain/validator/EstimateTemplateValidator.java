@@ -37,9 +37,9 @@ public class EstimateTemplateValidator {
 
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
 
-            if (estimateTemplate.getTypeOfWork() != null && !estimateTemplate.getTypeOfWork().isEmpty()) {
+            if (estimateTemplate.getTypeOfWork() != null && estimateTemplate.getTypeOfWork().getCode()!=null && !estimateTemplate.getTypeOfWork().getCode().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
-                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getTypeOfWork(),
+                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getTypeOfWork().getCode(),
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     validationMessages.put(Constants.KEY_TYPEOFWORK_CODE_INVALID, Constants.MESSAGE_TYPEOFWORK_CODE_INVALID + estimateTemplate.getTypeOfWork());
@@ -47,9 +47,9 @@ public class EstimateTemplateValidator {
                 }
             }
 
-            if (estimateTemplate.getSubTypeOfWork() != null && !estimateTemplate.getSubTypeOfWork().isEmpty()) {
+            if (estimateTemplate.getSubTypeOfWork() != null && estimateTemplate.getSubTypeOfWork().getCode()!=null && !estimateTemplate.getSubTypeOfWork().getCode().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
-                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getSubTypeOfWork(),
+                        CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getSubTypeOfWork().getCode(),
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     validationMessages.put(Constants.KEY_SUBTYPEOFWORK_CODE_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_CODE_INVALID + estimateTemplate.getSubTypeOfWork());
@@ -91,7 +91,7 @@ public class EstimateTemplateValidator {
                         }
 
                         if (estimateTemplateActivities.getNonSOR() != null) {
-                            if (estimateTemplateActivities.getNonSOR().getUom().getCode()!=null && !estimateTemplateActivities.getNonSOR().getUom().getCode().isEmpty()) {
+                            if (estimateTemplateActivities.getNonSOR().getUom().getCode() != null && !estimateTemplateActivities.getNonSOR().getUom().getCode().isEmpty()) {
                                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
                                         CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getNonSOR().getUom().getCode(),
                                         estimateTemplateRequest.getRequestInfo());

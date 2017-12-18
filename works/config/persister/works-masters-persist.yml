@@ -96,63 +96,63 @@ serviceMaps:
     - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, pmc, status, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.contractors.*
       jsonMaps:
-         
+
        - jsonPath: $.contractors.*.id
-       
+
        - jsonPath: $.contractors.*.tenantId
-       
+
        - jsonPath: $.contractors.*.name
-         
+
        - jsonPath: $.contractors.*.code
-         
+
        - jsonPath: $.contractors.*.correspondenceAddress
-       
+
        - jsonPath: $.contractors.*.paymentAddress
-       
+
        - jsonPath: $.contractors.*.contactPerson
-       
+
        - jsonPath: $.contractors.*.email
-       
+
        - jsonPath: $.contractors.*.narration
-       
+
        - jsonPath: $.contractors.*.mobileNumber
-       
+
        - jsonPath: $.contractors.*.panNumber
-       
+
        - jsonPath: $.contractors.*.tinNumber
-       
+
        - jsonPath: $.contractors.*.bank.code
-       
+
        - jsonPath: $.contractors.*.bankAccountNumber
-       
+
        - jsonPath: $.contractors.*.pwdApprovalCode
-       
+
        - jsonPath: $.contractors.*.exemptedFrom
-       
+
        - jsonPath: $.contractors.*.pwdApprovalValidTill
          dbType: LONG
-       
+
        - jsonPath: $.contractors.*.epfRegistrationNumber
-       
+
        - jsonPath: $.contractors.*.accountCode.glcode
-       
+
        - jsonPath: $.contractors.*.ifscCode
-       
+
        - jsonPath: $.contractors.*.contractorClass.class
-       
+
        - jsonPath: $.contractors.*.pmc
          type: BOOLEAN
 
-       - jsonPath: $.contractors.*.status       
+       - jsonPath: $.contractors.*.status
 
        - jsonPath: $.contractors.*.auditDetails.createdBy
- 
+
        - jsonPath: $.contractors.*.auditDetails.createdTime
-       
+
        - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
-  
-       - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime 
-       
+
+       - jsonPath: $.scheduleOfRates.*.auditDetails.lastModifiedTime
+
  - version: 1.0
    name: Contractor Update
    description: Update Contractor in egw_contractor table
@@ -162,53 +162,53 @@ serviceMaps:
     - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, pmc=?, status=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
       basePath: $.contractors.*
       jsonMaps:
-         
+
        - jsonPath: $.contractors.*.name
-         
+
        - jsonPath: $.contractors.*.code
-         
+
        - jsonPath: $.contractors.*.correspondenceAddress
-       
+
        - jsonPath: $.contractors.*.paymentAddress
-       
+
        - jsonPath: $.contractors.*.contactPerson
-       
+
        - jsonPath: $.contractors.*.email
-       
+
        - jsonPath: $.contractors.*.narration
-       
+
        - jsonPath: $.contractors.*.mobileNumber
-       
+
        - jsonPath: $.contractors.*.panNumber
-       
+
        - jsonPath: $.contractors.*.tinNumber
-       
+
        - jsonPath: $.contractors.*.bank.code
-       
+
        - jsonPath: $.contractors.*.bankAccountNumber
-       
+
        - jsonPath: $.contractors.*.pwdApprovalCode
-       
+
        - jsonPath: $.contractors.*.exemptedFrom
-       
+
        - jsonPath: $.contractors.*.pwdApprovalValidTill
          dbType: LONG
-       
+
        - jsonPath: $.contractors.*.epfRegistrationNumber
-       
+
        - jsonPath: $.contractors.*.accountCode.glcode
-       
+
        - jsonPath: $.contractors.*.ifscCode
-       
+
        - jsonPath: $.contractors.*.contractorClass.class
-       
+
        - jsonPath: $.contractors.*.pmc
          type: BOOLEAN
 
        - jsonPath: $.contractors.*.status
-       
+
        - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
-  
+
        - jsonPath: $.contractors.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.contractors.*.id
@@ -237,9 +237,9 @@ serviceMaps:
 
        - jsonPath: $.estimateTemplates.*.description
 
-       - jsonPath: $.estimateTemplates.*.typeOfWork
+       - jsonPath: $.estimateTemplates.*.typeOfWork.code
 
-       - jsonPath: $.estimateTemplates.*.subTypeOfWork
+       - jsonPath: $.estimateTemplates.*.subTypeOfWork.code
 
        - jsonPath: $.estimateTemplates.*.auditDetails.createdBy
 
@@ -294,3 +294,64 @@ serviceMaps:
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.deleted
 
 
+ - version: 1.0
+   name: Milestone Template Create
+   description: Persists Milestone Template in egw_milestonetemplate table
+   fromTopic: works-milestonetemplate-saveorupdate-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_milestonetemplate(id, tenantid, code, name, active, description, typeofwork, subtypeofwork, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET code=EXCLUDED.code, name=EXCLUDED.name, active=EXCLUDED.active, description=EXCLUDED.description, typeofwork=EXCLUDED.typeofwork, subtypeofwork=EXCLUDED.subtypeofwork, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+      basePath: $.milestoneTemplates.*
+      jsonMaps:
+
+       - jsonPath: $.milestoneTemplates.*.id
+
+       - jsonPath: $.milestoneTemplates.*.tenantId
+
+       - jsonPath: $.milestoneTemplates.*.code
+
+       - jsonPath: $.milestoneTemplates.*.name
+
+       - jsonPath: $.milestoneTemplates.*.active
+
+       - jsonPath: $.milestoneTemplates.*.description
+
+       - jsonPath: $.milestoneTemplates.*.typeOfWork.code
+
+       - jsonPath: $.milestoneTemplates.*.subTypeOfWork.code
+
+       - jsonPath: $.milestoneTemplates.*.auditDetails.createdBy
+
+       - jsonPath: $.milestoneTemplates.*.auditDetails.createdTime
+
+       - jsonPath: $.milestoneTemplates.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.milestoneTemplates.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.milestoneTemplates.*.deleted
+
+    - query: INSERT INTO egw_milestonetemplateactivities(id, tenantid, milestonetemplate, stageordernumber, stagedescription, percentage, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET stageordernumber=EXCLUDED.stageordernumber, stagedescription=EXCLUDED.stagedescription, percentage=EXCLUDED.percentage, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+      basePath: $.milestoneTemplates.*.milestoneTemplateActivities.*
+      jsonMaps:
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.id
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.tenantId
+
+       - jsonPath: $.milestoneTemplates[?({id} in @.milestoneTemplateActivities[*].id)].id
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.stageOrderNumber
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.stageDescription
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.percentage
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.auditDetails.createdBy
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.auditDetails.createdTime
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.deleted

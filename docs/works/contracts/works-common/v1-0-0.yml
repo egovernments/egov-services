@@ -215,6 +215,13 @@ definitions:
       - ADMINISTRATIVE_SANCTION
       - TECHNICAL_SANCTION
 
+  TrackMilestoneActivityStatus:
+    type: string
+    enum:
+      - NOT_YET_STARTED
+      - IN_PROGRESS
+      - COMPLETED
+
       
 ##### MASTERS #######
       

@@ -606,7 +606,7 @@ paths:
         200:
           description: Milestone(s) created successfully
           schema:
-            $ref: '#/definitions/NoticeResponse'
+            $ref: '#/definitions/MilestoneResponse'
         400:
           description: Milestone(s) creation failed
           schema:
@@ -635,7 +635,7 @@ paths:
         200:
           description: Milestone(s) updated successfully
           schema:
-            $ref: '#/definitions/NoticeResponse'
+            $ref: '#/definitions/MilestoneResponse'
         400:
           description: Milestone(s) updation failed
           schema:
@@ -1948,11 +1948,18 @@ definitions:
         format: BigDecimal
         description: Percentage for the Completed Percentage in Track Milestone Activity.
         maxLength: 6
-      completionDate:
+      actualStartDate:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of the Completion Date for the milestone.
+        description: Epoch time of the actual stat date for the milestone.
+      actualEndDate:
+        type: integer
+        format: int64
+        x-displayformat: 'dd/MM/yyyy'
+        description: Epoch time of the actual end date for the milestone.
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TrackMilestoneActivityStatus'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       deleted:
@@ -1962,6 +1969,7 @@ definitions:
     required:
       - tenantId
       - percentage
+      - actualStartDate
       - trackMilestone
       - milestoneActivity
 

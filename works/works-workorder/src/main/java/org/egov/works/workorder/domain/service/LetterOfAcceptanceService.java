@@ -104,7 +104,7 @@ public class LetterOfAcceptanceService {
                 
                 letterOfAcceptanceValidator.validateLOAAmount(letterOfAcceptance, detailedEstimate);
 
-                if (!detailedEstimate.getWorkOrderCreated()) {
+                if (detailedEstimate.getWorkOrderCreated()) {
                     String loaNumber = idGenerationRepository.generateLOANumber(letterOfAcceptance.getTenantId(),
                             letterOfAcceptanceRequest.getRequestInfo());
                     // TODO: check idgen to accept values to generate
@@ -113,7 +113,7 @@ public class LetterOfAcceptanceService {
                             + detailedEstimate.getDepartment().getCode() + loaNumber);
                 }
             }
-
+            letterOfAcceptance.setLoaNumber("asdf");
             if ((isRevision != null && !isRevision) && letterOfAcceptance.getSecurityDeposits() != null)
                 for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 

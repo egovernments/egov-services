@@ -27,7 +27,7 @@ public class MultiYearEstimateJdbcRepository extends JdbcRepository {
 		if (multiYearEstimateSearchContract.getSortBy() != null
 				&& !multiYearEstimateSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(multiYearEstimateSearchContract.getSortBy());
-			validateEntityFieldName(multiYearEstimateSearchContract.getSortBy(), MultiYearEstimate.class);
+			validateEntityFieldName(multiYearEstimateSearchContract.getSortBy(), MultiYearEstimateHelper.class);
 		}
 
 		String orderBy = "order by id";

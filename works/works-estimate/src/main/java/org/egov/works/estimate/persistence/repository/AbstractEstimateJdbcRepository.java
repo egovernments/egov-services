@@ -95,9 +95,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			paramValues.put("budgetHeads", abstractEstimateSearchContract.getBudgetHeadCodes());
 		}
 		if (abstractEstimateSearchContract.getStatuses() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+		    addAnd(params);
 			params.append("estimate.status in (:statuses)");
 			paramValues.put("statuses", abstractEstimateSearchContract.getStatuses());
 		}

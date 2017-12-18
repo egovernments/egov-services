@@ -27,7 +27,7 @@ public class EstimateOverheadJdbcRepository extends JdbcRepository {
 		if (estimateOverheadSearchContract.getSortBy() != null
 				&& !estimateOverheadSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(estimateOverheadSearchContract.getSortBy());
-			validateEntityFieldName(estimateOverheadSearchContract.getSortBy(), EstimateOverhead.class);
+			validateEntityFieldName(estimateOverheadSearchContract.getSortBy(), EstimateOverheadHelper.class);
 		}
 
 		String orderBy = "order by id";

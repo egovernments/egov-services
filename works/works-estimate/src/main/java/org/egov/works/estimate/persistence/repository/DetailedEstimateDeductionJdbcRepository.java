@@ -27,7 +27,7 @@ public class DetailedEstimateDeductionJdbcRepository extends JdbcRepository {
 		if (detailedEstimateDeductionSearchContract.getSortBy() != null
 				&& !detailedEstimateDeductionSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(detailedEstimateDeductionSearchContract.getSortBy());
-			validateEntityFieldName(detailedEstimateDeductionSearchContract.getSortBy(), DetailedEstimateDeduction.class);
+			validateEntityFieldName(detailedEstimateDeductionSearchContract.getSortBy(), DetailedEstimateDeductionHelper.class);
 		}
 
 		String orderBy = "order by id";

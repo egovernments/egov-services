@@ -97,6 +97,7 @@ public class EstimateUtils {
         return auditDetails;
     }
 
+    @SuppressWarnings("rawtypes")
     public String getCityCode(final String tenantId, final RequestInfo requestInfo) {
         String cityCode = "";
         JSONArray responseJSONArray = getMDMSData(CommonConstants.TENANT_OBJECTNAME,
@@ -104,6 +105,7 @@ public class EstimateUtils {
                 tenantId, tenantId, requestInfo,
                 CommonConstants.TENANT_MODULENAME);
         if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            @SuppressWarnings("unchecked")
             Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
             cityCode = ((Map) jsonMap.get("city")).get("code").toString();
         }
@@ -118,6 +120,7 @@ public class EstimateUtils {
                     budgetGroup.getName(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 
             if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+                @SuppressWarnings("unchecked")
                 Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
                 objectCode = jsonMap.get("maxcode").toString();
             }

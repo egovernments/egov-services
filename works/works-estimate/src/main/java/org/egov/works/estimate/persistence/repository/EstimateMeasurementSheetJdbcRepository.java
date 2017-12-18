@@ -27,7 +27,7 @@ public class EstimateMeasurementSheetJdbcRepository extends JdbcRepository {
 		if (estimateMeasurementSheetSearchContract.getSortBy() != null
 				&& !estimateMeasurementSheetSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(estimateMeasurementSheetSearchContract.getSortBy());
-			validateEntityFieldName(estimateMeasurementSheetSearchContract.getSortBy(), EstimateMeasurementSheet.class);
+			validateEntityFieldName(estimateMeasurementSheetSearchContract.getSortBy(), EstimateMeasurementSheetHelper.class);
 		}
 
 		String orderBy = "order by id";

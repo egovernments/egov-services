@@ -28,7 +28,7 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
         if (abstractEstimateAssetDetailSearchContract.getSortBy() != null
                 && !abstractEstimateAssetDetailSearchContract.getSortBy().isEmpty()) {
             validateSortByOrder(abstractEstimateAssetDetailSearchContract.getSortBy());
-            validateEntityFieldName(abstractEstimateAssetDetailSearchContract.getSortBy(), AbstractEstimateAssetDetail.class);
+            validateEntityFieldName(abstractEstimateAssetDetailSearchContract.getSortBy(), AbstractEstimateAssetDetailHelper.class);
         }
 
         String orderBy = "order by id";

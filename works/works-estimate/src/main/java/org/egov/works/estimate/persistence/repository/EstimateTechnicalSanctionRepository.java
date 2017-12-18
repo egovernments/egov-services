@@ -31,7 +31,7 @@ public class EstimateTechnicalSanctionRepository  extends JdbcRepository
         if (technicalSanctionSearchContract.getSortBy() != null
                 && !technicalSanctionSearchContract.getSortBy().isEmpty()) {
             validateSortByOrder(technicalSanctionSearchContract.getSortBy());
-            validateEntityFieldName(technicalSanctionSearchContract.getSortBy(), EstimateTechnicalSanction.class);
+            validateEntityFieldName(technicalSanctionSearchContract.getSortBy(), EstimateTechnicalSanctionHelper.class);
         }
 
         String orderBy = "order by id";

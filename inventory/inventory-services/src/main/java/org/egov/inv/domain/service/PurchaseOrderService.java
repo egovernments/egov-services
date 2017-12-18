@@ -281,6 +281,11 @@ public class PurchaseOrderService extends DomainService {
 
             	else {
 	                InvalidDataException errors = new InvalidDataException();
+	            	
+	                if(eachPurchaseOrder.getPurchaseOrderNumber() == null) {
+	            		errors.addDataError(ErrorCode.NULL_VALUE.getCode(), eachPurchaseOrder.getPurchaseOrderNumber() + " at serial no." + (purchaseOrder.indexOf(eachPurchaseOrder) + 1));
+	            	}
+	                
 	                if (eachPurchaseOrder.getAdvanceAmount() != null) {
 	                    if (eachPurchaseOrder.getAdvanceAmount().compareTo(eachPurchaseOrder.getTotalAmount()) > 0) {
 	                        errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), eachPurchaseOrder.getAdvanceAmount() + " at serial no." + (purchaseOrder.indexOf(eachPurchaseOrder) + 1));

@@ -864,10 +864,9 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
         - query: >-
-            update indentdetail set poOrderedQuantity = ? where id = ? and tenantid = ? and deleted=false;
+            update indentdetail set poOrderedQuantity = indentdetail.indentQuantity where id = ? and tenantid = ? and deleted=false;
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentdetail
           jsonMaps:
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.*.poOrderedQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.*.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.*.tenantId
     - version: 1.0

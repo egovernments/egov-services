@@ -260,7 +260,7 @@ var dat = {
           },
         ],
       },
-      { 
+      {
         name: 'agreementCopyDetails',
         label: 'swm.vendors.create.group.title.agreementCopyDetails',
         fields: [
@@ -279,7 +279,7 @@ var dat = {
           },
         ],
       },
-      
+
       {
         name: 'LocationDetails',
         multiple:true,
@@ -394,6 +394,11 @@ var dat = {
               "filter": "",
               "key": "$..code",
               "value": "$..name",
+            },
+            hasATOAATransform:true,
+            aATransformInfo:{
+              to:'vendors[0].servicesOffered',
+              key:'code'
             }
           },
 

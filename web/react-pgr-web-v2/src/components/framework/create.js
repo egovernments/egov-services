@@ -54,7 +54,7 @@ class Report extends Component {
       for (var j = 0; j < groups[i].fields.length; j++) {
         if (
           typeof groups[i].fields[j].defaultValue == 'string' ||
-          typeof groups[i].fields[j].defaultValue == 'number' 
+          typeof groups[i].fields[j].defaultValue == 'number'
          //typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
@@ -355,7 +355,7 @@ class Report extends Component {
           }
           let obj1 = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
           self.depedantValue(obj1.groups);
-          
+
         },
         function(err) {
           self.props.setLoadingStatus('hide');
@@ -379,7 +379,7 @@ class Report extends Component {
           });
           Api.commonApiPost(mockObj.onloadFetchUrl, {}, requestBody, false, mockObj.useTimestamp).then(
             function(res) {
-            
+
               self.props.setLoadingStatus('hide');
               if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
                 var obj = {};
@@ -535,6 +535,7 @@ class Report extends Component {
 
   initData() {
     var hash = window.location.hash.split('/');
+
     let endPoint = '';
     let self = this;
     try {
@@ -546,6 +547,8 @@ class Report extends Component {
     } catch (e) {
       console.log(e);
     }
+
+
 
     self.displayUI(specifications);
   }
@@ -603,6 +606,14 @@ class Report extends Component {
 
   makeAjaxCall = (formData, url) => {
     let self = this;
+    var hashLocation = window.location.hash;
+    let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
+    let fields = jp.query(obj, `$.groups..fields[?(@.hasATOAATransform==true)]`);
+    for (var i = 0; i < fields.length; i++) {
+      let values=_.get(formData, fields[i].jsonPath);
+      formData=_.set(formData, fields[i]["aATransformInfo"].to,values.map(item=>{return {[fields[i]["aATransformInfo"].key]:item}}));
+    }
+    // console.log(formData);
     delete formData.ResponseInfo;
     //return console.log(formData);
     Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
@@ -611,7 +622,7 @@ class Report extends Component {
         self.initData();
         console.log('Back response');
         console.log(response);
-       
+
         if (response.summons) {
           if (response.summons.length > 0) {
             self.props.toggleSnackbarAndSetText(
@@ -671,7 +682,7 @@ class Report extends Component {
                 JSON.stringify(obj)
               );
               self.props.setRoute(hash);
-              
+
             }
           }
         }, 1500);
@@ -835,7 +846,7 @@ class Report extends Component {
             breakOut = 1;
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, err, false, true);
-          
+
           } else {
             _docs.push({
               index: i,
@@ -1659,7 +1670,7 @@ class Report extends Component {
     if(property == "agencies[0].status" && e.target.value == 'active' ){
       changeFormStatus(true);
     }
-    
+
   };
 
   incrementIndexValue = (group, jsonPath) => {

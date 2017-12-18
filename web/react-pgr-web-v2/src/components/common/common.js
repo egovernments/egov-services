@@ -1,4 +1,6 @@
 var localization_EN_Data = {
+  'swm.create.sanitationstaffschedules.departmentName':"Department Name",
+  'swm.create.sanitationstaffschedules.employeeName':"Employee Name",
   'works.search.title': 'Search Rate Master',
   'works.create.sorCodes': 'SOR Code',
   'works.create.code': 'SOR Code',

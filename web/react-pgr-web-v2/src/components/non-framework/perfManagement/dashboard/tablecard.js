@@ -47,8 +47,8 @@ export default class TableCard extends Component {
               ulbName: jp.query(ulbs, '$.ulbName').join(''),
               finYear: jp.query(finYears, '$.finYear').join(''),
               kpiName: jp.query(kpis, '$.kpi.name').join(''),
-              target: parseInt(jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join('')),
-              value: parseInt(jp.query(kpis, '$.consolidatedValue').join('')),
+              target: jp.query(kpis, '$.kpi.kpiTargets[*].targetDescription').join(''),
+              value: jp.query(kpis, '$.consolidatedValue').join(''),
             };
           });
         });

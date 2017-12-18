@@ -347,10 +347,14 @@ export default class KPIDashboardQuery extends Component {
         showTableView: true,
       });
     } else {
-      this.setState({
-        showChartView: true,
-        showTableView: false,
-      });
+      if (kpiTypes[this.state.kpiTypeIndex].name === 'TEXT') {
+        this.toast('chart cannot be rendered for TEXT type of KPIs');
+      } else {
+        this.setState({
+          showChartView: true,
+          showTableView: false,
+        });
+      }
     }
   };
 

@@ -102,7 +102,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	}
 	
 	public boolean isRateContractsExists(String supplier, String rateType, String material){
-		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetail pl where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and  pl.supplier='" + supplier +"' and pl.rateType='" + rateType + "' and pld.material = '" + material + "' and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate::bigint and pl.agreementenddate::bigint";
+		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetails pld where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and  pl.supplier='" + supplier +"' and pl.rateType='" + rateType + "' and pld.material = '" + material + "' and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate::bigint and pl.agreementenddate::bigint";
 		Long count = namedParameterJdbcTemplate.queryForObject(rateContractQuery, new HashMap(), Long.class);
 		if(count > 0)
 			return true;

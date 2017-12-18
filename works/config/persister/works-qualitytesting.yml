@@ -1,0 +1,107 @@
+serviceMaps:
+ serviceName: Works Quality Testing
+ mappings:
+ - version: 1.0
+   name: Quality Testing create and update
+   description: Persists Quality Testing in egw_qualitycontrol table
+   fromTopic: works-qualitytesting-createandupdate
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_qualitytesting(id, tenantid, letterOfAcceptanceEstimate, remarks, status, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+      basePath: $.qualityTesting.*
+      jsonMaps:
+
+       - jsonPath: $.qualityTesting.*.id
+
+       - jsonPath: $.qualityTesting.*.tenantId
+
+       - jsonPath: $.qualityTesting.*.letterOfAcceptanceEstimate
+
+       - jsonPath: $.qualityTesting.*.remarks
+       
+       - jsonPath: $.qualityTesting.*.status
+
+       - jsonPath: $.qualityTesting.*.auditDetails.createdBy
+
+       - jsonPath: $.qualityTesting.*.auditDetails.createdTime
+
+       - jsonPath: $.qualityTesting.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.qualityTesting.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.qualityTesting.*.deleted
+         type: BOOLEAN
+
+    - query: INSERT INTO egw_qualitytesting_details(id, tenantid, qualityTesting, materialName, testName, resultUnit, minimumValue, maximumValue, hodRemarks, coRemarks, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET materialName=EXCLUDED.materialName, testName=EXCLUDED.testName, resultUnit=EXCLUDED.resultUnit, minimumValue=EXCLUDED.minimumValue , maximumValue=EXCLUDED.maximumValue, hodRemarks=EXCLUDED.hodRemarks, coRemarks=EXCLUDED.coRemarks lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+      basePath: $.qualityTesting.*.qualityTestingDetails.*
+      jsonMaps:
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.id
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.tenantId
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.qualityTesting
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.materialName
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.testName
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.resultUnit
+       
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.minimumValue
+       
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.maximumValue
+       
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.hodRemarks
+       
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.coRemarks
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.auditDetails.createdTime
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.qualityTesting.*.qualityTestingDetails.*.deleted
+         type: BOOLEAN
+
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted= EXCLUDED.deleted;
+
+      basePath: $.qualityTesting.*.testReports.*
+      jsonMaps:
+
+        - jsonPath: $.qualityTesting.*.testReports.*.id
+
+        - jsonPath: $.qualityTesting.*.testReports.*.tenantId
+
+        - jsonPath: $.qualityTesting.*.testReports.*.objectId
+
+        - jsonPath: $.qualityTesting.*.testReports.*.objectType
+
+        - jsonPath: $.qualityTesting.*.testReports.*.documentType
+
+        - jsonPath: $.qualityTesting.*.testReports.*.fileStore
+
+        - jsonPath: $.qualityTesting.*.testReports.*.latitude
+
+        - jsonPath: $.qualityTesting.*.testReports.*.longitude
+
+        - jsonPath: $.qualityTesting.*.testReports.*.description
+
+        - jsonPath: $.qualityTesting.*.testReports.*.dateOfCapture
+
+        - jsonPath: $.qualityTesting.*.testReports.*.workProgress
+
+        - jsonPath: $.qualityTesting.*.testReports.*.auditDetails.createdBy
+
+        - jsonPath: $.qualityTesting.*.testReports.*.auditDetails.createdTime
+
+        - jsonPath: $.qualityTesting.*.testReports.*.auditDetails.lastModifiedBy
+
+        - jsonPath: $.qualityTesting.*.testReports.*.auditDetails.lastModifiedTime
+
+        - jsonPath: $.qualityTesting.*.testReports.*.deleted
+          type: BOOLEAN
+

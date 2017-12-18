@@ -11581,7 +11581,7 @@
       "orderNumber": 1,
       "queryParams": null,
       "parentModule": null,
-      "enabled": false,
+      "enabled": true,
       "serviceCode": "PURCHASE ORDER",
       "code": "null",
       "path": "Inventory.Inventory Transactions.Purchase Order.Purchase Order Create"
@@ -11594,7 +11594,7 @@
       "orderNumber": 2,
       "queryParams": null,
       "parentModule": null,
-      "enabled": false,
+      "enabled": true,
       "serviceCode": "PURCHASE ORDER",
       "code": "null",
       "path": "Inventory.Inventory Transactions.Purchase Order.Purchase Order Update"
@@ -11607,7 +11607,7 @@
       "orderNumber": 3,
       "queryParams": null,
       "parentModule": null,
-      "enabled": false,
+      "enabled": true,
       "serviceCode": "PURCHASE ORDER",
       "code": "null",
       "path": "Inventory.Inventory Transactions.Purchase Order.Purchase Order Search"
@@ -12444,19 +12444,32 @@
       "code": "null",
       "path": "Solid Waste Management.SWM Transactions.Vendor Payment Details.VendorPaymentDetails Search"
     },
-  {
-    "id": 1209,
-    "name": "Get Actions from MDMS",
-    "url": "/access/v1/actions/mdms/_get",
-    "displayName": "Get Actions from mdms",
-    "orderNumber": 1,
-    "queryParams": null,
-    "parentModule": "221",
-    "enabled": true,
-    "serviceCode": "AccessControl",
-    "code": "null",
-    "path": "Access Control.Get Actions from MDMS"
-  }
+    {
+      "id": 1209,
+      "name": "Get Actions from MDMS",
+      "url": "/access/v1/actions/mdms/_get",
+      "displayName": "Get Actions from mdms",
+      "orderNumber": 1,
+      "queryParams": null,
+      "parentModule": "221",
+      "enabled": true,
+      "serviceCode": "AccessControl",
+      "code": "null",
+      "path": "Access Control.Get Actions from MDMS"
+    },
+    {
+      "id": 1210,
+      "name": "Purchase Order Create from Indents",
+      "url": "/inventory-services/purchaseorders/_preparepofromindents",
+      "displayName": "Create Purchase Order From Indents",
+      "orderNumber": 4,
+      "queryParams": null,
+      "parentModule": null,
+      "enabled": false,
+      "serviceCode": "PURCHASE ORDER",
+      "code": "null",
+      "path": "Inventory.Inventory Transactions.Purchase Order.Purchase Order Create"
+    }
 
   ]
 }

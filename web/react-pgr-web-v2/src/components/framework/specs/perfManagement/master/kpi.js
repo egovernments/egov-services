@@ -70,6 +70,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             requiredErrMsg: '',
+            maxLength: 64
           },
           {
             name: 'kpiCode',

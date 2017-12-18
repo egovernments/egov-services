@@ -20,8 +20,11 @@ public class Constants {
 	public static final String KEY_INVALID_MB_DATE = "INVALID_MB_DATE";
 	public static final String MSG_INVALID_MB_DATE = "Measurement Book date cannot be future date";
 
-	public static final String KEY_MB_LOA_WO_DOES_NOT_EXIST = "MB_LOA_WO_DOES_NOT_EXIST";
-	public static final String MSG_MB_LOA_WO_DOES_NOT_EXIST = "Work Order and Letter Of Acceptance does not exist";
+	public static final String KEY_MB_LOA_DOES_NOT_EXIST = "MB_LOA_DOES_NOT_EXIST";
+	public static final String MSG_MB_LOA_DOES_NOT_EXIST = "Letter Of Acceptance does not exist";
+
+        public static final String KEY_MB_WO_DOES_NOT_EXIST = "MB_WO_DOES_NOT_EXIST";
+	public static final String MSG_MB_WO_DOES_NOT_EXIST = "Work Order does not exist";
 
 	public static final String KEY_MB_FROM_TO_PAGE_NUMBER = "MB_FROM_TO_PAGE_NUMBER";
 	public static final String MSG_MB_FROM_TO_PAGE_NUMBER = "MB From to should be greater than or equal to from page number";

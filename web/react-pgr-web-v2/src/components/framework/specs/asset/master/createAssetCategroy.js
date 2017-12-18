@@ -688,18 +688,18 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
           },
-					{
-            name: 'id',
-            jsonPath: 'MasterMetaData.masterData[0].id',
-            label: 'ac.create.asset.category.name',
-            pattern: '^.[a-zA-Z. ]{2,99}$',
-            type: 'number',
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: '',
-            patternErrMsg: '',
-						isHidden: false
-          }
+					// {
+          //   name: 'id',
+          //   jsonPath: 'MasterMetaData.masterData[0].id',
+          //   label: 'ac.create.asset.category.name',
+          //   pattern: '^.[a-zA-Z. ]{2,99}$',
+          //   type: 'number',
+          //   isRequired: true,
+          //   isDisabled: false,
+          //   requiredErrMsg: '',
+          //   patternErrMsg: '',
+					// 	isHidden: false
+          // }
         ],
       },
       {

@@ -400,7 +400,7 @@ class assetImmovableView extends Component {
 
   render() {
     let { mockData, moduleName, actionName, formData, fieldErrors, date, match } = this.props;
-    let { handleChange, getVal, addNewCard, removeCard, printer, feeMatrices } = this;
+    let { handleChange, getVal, addNewCard, removeCard, printer } = this;
     // console.log(match);
     let self = this;
     var mappingObject;

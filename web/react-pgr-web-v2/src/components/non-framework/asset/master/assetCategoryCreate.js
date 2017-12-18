@@ -2143,7 +2143,7 @@ class assetCategoryCreate extends Component {
                 marginLeft: '16px',
               }}
             >
-              <UiBackButton customUrl={customActionsAndUrl} />
+              <UiBackButton customUrl={'/non-framework/asset/master/assetCategorySearch'} />
             </div>
             </Col>
             <Col xs={6} md={6}>

@@ -261,7 +261,7 @@ class assetCategoryView extends Component {
     //Get view form data
     var url = specifications[`asset.view`].url.split('?')[0];
     var hash = window.location.hash.split('/');
-    var value = decodeURIComponent(self.props.match.params.id);
+    var value = self.props.match.params.id;
     console.log(self.props.match.params.id);
     // var query = {
     //   [specifications[`asset.view`].url.split("?")[1].split("=")[0]]: value
@@ -372,7 +372,7 @@ class assetCategoryView extends Component {
   };
 
   render() {
-    let { mockData, moduleName, actionName, formData, fieldErrors } = this.props;
+    let { mockData, moduleName, actionName, formData, fieldErrors, date, match } = this.props;
     let { handleChange, getVal, addNewCard, removeCard, printer } = this;
     console.log(formData);
     const renderTable = function() {
@@ -446,7 +446,7 @@ class assetCategoryView extends Component {
                 marginLeft: '16px',
               }}
             >
-              <UiBackButton />
+              <UiBackButton customUrl={'/non-framework/asset/master/assetCategorySearch'} />
             </div>
           </Col>
           <Col xs={6} md={6}>
@@ -462,7 +462,7 @@ class assetCategoryView extends Component {
                 handler={printer}
               />{' '}
               &nbsp;&nbsp;
-              <UiEditButton />
+              <UiEditButton customUrl={'/non-framework/asset/master/assetCategoryCreate/' + (!_.isEmpty(match) ? match.params.id : '')} />
             </div>
           </Col>
         </Row>

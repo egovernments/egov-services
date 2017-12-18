@@ -90,7 +90,9 @@ public class MeasurementBookService {
 				measurementBookDetail.setAuditDetails(
 						measurementBookUtils.setAuditDetails(measurementBookRequest.getRequestInfo(), false));
 			}
+			
 
+			if(measurementBook.getDocumentDetails() != null)
 			for (DocumentDetail detail : measurementBook.getDocumentDetails()) {
 				detail.setId(UUID.randomUUID().toString().replace("-", ""));
 				detail.setObjectType("MeasurementBook");

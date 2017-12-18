@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.tracer.model.CustomException;
 import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.domain.repository.EstimateRepository;
 import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
@@ -65,6 +66,10 @@ public class MeasurementBookValidator {
 			if (letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty()
 					&& workOrderResponse.getWorkOrders().isEmpty())
 				messages.put(Constants.KEY_MB_LOA_WO_DOES_NOT_EXIST, Constants.MSG_MB_LOA_WO_DOES_NOT_EXIST);
+			
+			if (!messages.isEmpty())
+		                throw new CustomException(messages);
+			
 			if (!letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty() && isNew)
 				validateInWorkflow(measurementBook, letterOfAcceptanceResponse.getLetterOfAcceptances().get(0),
 						messages, requestInfo);
@@ -105,6 +110,8 @@ public class MeasurementBookValidator {
 				}
 			}
 		}
+		if (!messages.isEmpty())
+	                throw new CustomException(messages);
 	}
 
 	private void vallidateMBAmount(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,

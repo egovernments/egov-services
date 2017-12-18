@@ -1667,7 +1667,7 @@ class Report extends Component {
       console.log(e);
     }
     this.affectDependants(obj, e, property);
-    if(property == "agencies[0].status" && e.target.value == 'active' ){
+    if((property == "agencies[0].status" || property == "agencies[0].advocates[0].status") && e.target.value == 'active' ){
       changeFormStatus(true);
     }
 

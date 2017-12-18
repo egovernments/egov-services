@@ -184,7 +184,7 @@ class UiDatePicker extends Component {
 
   minMaxvalidation = (e, item) => {
     //chosen date
-    if (typeof e === 'object') {
+    if (typeof e === 'object'  || (typeof e === "string" && e.length === 0)) {
       if (item.minDate || item.maxDate) {
         if (moment().diff(moment(e.toDate()), 'days') < 0 && item.maxDate === 'today') {
           this.props.handler(

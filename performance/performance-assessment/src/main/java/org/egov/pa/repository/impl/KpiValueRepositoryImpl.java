@@ -108,8 +108,6 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 		return list; 
 	}
 	
-	
-	
 	private void sortKpiMapToList(KPIValueReportMapper reportMapper, List<ULBKpiValueList> list) { 
 		Map<String, Map<String, Map<String, KpiValue>>> firstMap = reportMapper.reportMap;
 		Map<String, KPI> kpiMap = reportMapper.kpiMap; 
@@ -317,6 +315,5 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 		return numberOfDocsReq;
 	}
 
-	
 
 }

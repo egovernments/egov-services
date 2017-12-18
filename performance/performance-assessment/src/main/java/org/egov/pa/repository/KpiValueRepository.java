@@ -20,8 +20,8 @@ public interface KpiValueRepository {
     
     public List<ULBKpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
     
-    public List<ULBKpiValueList> compareSearchObjectiveKpiValue(KPIValueSearchRequest kpiValueSearchReq); 
-
+    public List<ULBKpiValueList> compareSearchObjectiveKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+    
     public List<KPI> checkKpiExists(String kpiCode); 
     
     public List<KPI> fetchTargetForKpi(String kpiCode, String finYear); 

@@ -101,7 +101,8 @@ public class KpiValueServiceImpl implements KpiValueService {
 		List<String> targetTypes = kpiMasterRepository.getTargetTypeForKpiCodes(kpiValueSearchReq.getKpiCodes());
 		log.info("Target Types of the KPIs are : " + targetTypes.toString());
 		List<ULBKpiValueList> list = new ArrayList<>();
-		if(null != targetTypes && targetTypes.size() == 1 && targetTypes.get(0).equals(TargetType.OBJECTIVE.toString())) {
+		if(null != targetTypes && targetTypes.size() == 1 && (targetTypes.get(0).equals(TargetType.OBJECTIVE.toString())
+				|| targetTypes.get(0).equals(TargetType.TEXT.toString()))) {
 			log.info("Objective Target Search Methods Invoked");
 			list = kpiValueRepository.compareSearchObjectiveKpiValue(kpiValueSearchReq);
 		}

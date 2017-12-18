@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -187,6 +188,8 @@ public void setCode(String code) {
    * Name of the KPI
    * @return name
   **/
+  
+  @Size(min=0,max=64)
   public String getName() {
     return name;
   }

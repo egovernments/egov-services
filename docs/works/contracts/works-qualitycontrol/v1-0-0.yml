@@ -25,7 +25,7 @@ info:
     email : contacts@egovernments.org
 schemes:
   - https
-basePath: '/works-services/v1'
+basePath: '/works-qualitytesting/v1'
 x-api-id: 'org.egov.works.qualitycontrol'
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 paths:
@@ -112,11 +112,18 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
+        - name: workOrderNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Work Order Numbers
         - name: ids
           in: query
           type: array
@@ -131,31 +138,52 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
           description: Comma separated list of LOA Numbers
+        - name: loaNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: LOA Number
         - name: detailedEstimateNumbers
           in: query
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
           description: Comma separated list of Detailed Estimate Numbers
+        - name: detailedEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Detailed estimate Number
         - name: workIdentificationNumbers
           in: query
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
+        - name: workIdentificationNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Work Identification Number
       responses:
         200:
           description: Quality Testing(s) Retrieved Successfully
@@ -188,8 +216,8 @@ definitions:
         maxLength: 128
         minLength: 2
       letterOfAcceptanceEstimate:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate'
         description: Reference of Letter of Acceptance Estimate
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate'
       qualityTestingDetails:
         type: array
         description: Array of Quality Testing Detail
@@ -201,6 +229,13 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for the Quality Testing
         maxLength: 1024
+      status:
+        type: string
+        description: Status for quality testing.
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       testReports:
         type: array
         description: Array of test reports in PDF format
@@ -211,6 +246,7 @@ definitions:
     required:
       - tenantId
       - remarks
+      - status
     
   QualityTestingDetail:
     type: object
@@ -225,7 +261,7 @@ definitions:
         maxLength: 128
         minLength: 2
       qualityTesting:
-        $ref: '#/definitions/QualityTesting'
+        type: string
         description: Reference of Quality Testing object
       materialName:
         type: string
@@ -269,6 +305,10 @@ definitions:
         minLength: 1
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: CO remarks for the Quality Testing
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

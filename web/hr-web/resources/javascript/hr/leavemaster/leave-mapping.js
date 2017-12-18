@@ -96,7 +96,11 @@ close(){
                 })
               },
               error: function(err) {
-                showError(err["statusText"]);
+                console.log(err);
+                if(err["0"]["Error"]["description"])
+                  showError(err["0"]["Error"]["description"]);
+                else
+                  showError(err["statusText"]);
               }
           });
       }

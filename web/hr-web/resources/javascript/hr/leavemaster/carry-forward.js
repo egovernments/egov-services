@@ -34,16 +34,14 @@ class CarryForward extends React.Component {
 
     addOrUpdate(e) {
         e.preventDefault();
-
-        //
+        var _this = this;
         commonApiPost("hr-leave", "leaveopeningbalances", "_carryforward", { ..._this.state.searchSet, tenantId, pageSize: 500 }, function (err, res) {
-            if (res && res.Employee) {
+            if (res) {
                 showSuccess("Opening leave balance carry forward successfully.");
                 _this.setState({
                     searchSet: {
                         "year": "",
-                        "leaveType": "",
-                        "tenantId": tenantId
+                        "leaveType": ""
                     }
                 })
             } else {
@@ -61,7 +59,7 @@ class CarryForward extends React.Component {
             }
         }
 
-        if (getUrlVars()["type"]) $('#hp-citizen-title').text("Opening Balance Carry Forward");
+        $('#hp-citizen-title').text("Opening Balance Carry Forward");
 
         var _this = this, count = 2, _state = {};
         const checkCountAndCall = function (key, res) {
@@ -98,7 +96,7 @@ class CarryForward extends React.Component {
         return (
             <div>
                 <h3>Opening Balance Carry Forward</h3>
-                <form onSubmit={(e) => { addOrUpdate(e, mode) }}>
+                <form onSubmit={(e) => { addOrUpdate(e) }}>
                     <fieldset>
                         <div className="row">
                             <div className="col-sm-6">
@@ -110,7 +108,7 @@ class CarryForward extends React.Component {
                                         <div className="styled-select">
                                             <select id="year" name="year" value={year} onChange={(e) => {
                                                 handleChange(e, "year")
-                                            }}>
+                                            }} required="true" >
                                                 <option>Select Calender Year</option>
                                                 {renderOption(this.state.years)}
                                             </select>

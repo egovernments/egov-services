@@ -49,6 +49,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -57,6 +58,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.model.enums.LeaveStatus;
@@ -125,6 +127,9 @@ public class LeaveApplicationService {
 
 	@Autowired
 	private HRConfigurationService hrConfigurationService;
+
+	@Autowired
+	private PropertiesManager propertiesManager;
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
@@ -295,6 +300,7 @@ public class LeaveApplicationService {
 	private List<LeaveApplication> validate(final LeaveApplicationRequest leaveApplicationRequest,
 			final Boolean isExcelUpload) {
 		String errorMsg = "";
+		Boolean isHoliday = false;
 		for (final LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
 			errorMsg = "";
 			final LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
@@ -328,11 +334,27 @@ public class LeaveApplicationService {
 							+ applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE) + " ";
 			}
 
+			final Map<String, List<String>> weeklyHolidays = hrConfigurationService
+					.getWeeklyHolidays(leaveApplication.getTenantId(), leaveApplicationRequest.getRequestInfo());
+
+			if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceWeeklyHolidayConfigKey()).get(0))) {
+				if (isSecondSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
+					isHoliday = true;
+			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceWeeklyHolidayConfigKey()).get(0))) {
+				if (isSecondOrFourthSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
+					isHoliday = true;
+			}
+
+			if (isSunday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
+				isHoliday = true;
+
 			final List<Holiday> holidays = commonMastersRepository.getHolidayByDateRange(
 					leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(),
 					leaveApplication.getToDate(), leaveApplication.getTenantId());
 
-			if (holidays.size() > 0)
+			if (holidays.size() > 0 || isHoliday)
 				errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_DATE_HOLIDAY);
 
 			if (leaveApplication.getCompensatoryForDate() != null
@@ -389,6 +411,78 @@ public class LeaveApplicationService {
 		return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
 	}
 
+	public Boolean isSunday(Date fromDate, Date toDate) {
+
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(fromDate);
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(toDate);
+		int sundays = 0;
+
+		while (c2.after(c1)) {
+			if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+				sundays++;
+			}
+			c1.add(Calendar.DATE, 1);
+		}
+
+		if (c1.equals(c2) && c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			return true;
+		}
+
+		return sundays > 0 ? true : false;
+	}
+
+	public Boolean isSecondSaturday(Date fromDate, Date toDate) {
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(fromDate);
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(toDate);
+		int secondSaturday = 0;
+
+		while (c2.after(c1)) {
+			if ((c1.getFirstDayOfWeek() == Calendar.SATURDAY) && (c1.get(Calendar.WEEK_OF_MONTH) == 2)
+					&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+				secondSaturday++;
+			}
+			c1.add(Calendar.DATE, 1);
+
+		}
+		if (c1.equals(c2) && (c1.get(Calendar.WEEK_OF_MONTH) == 2)
+				&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			return true;
+		}
+		
+		return secondSaturday > 0 ? true : false;
+	}
+
+	public Boolean isSecondOrFourthSaturday(Date fromDate, Date toDate) {
+		if (isSecondSaturday(fromDate, toDate)) {
+			return true;
+		} else {
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(fromDate);
+			Calendar c2 = Calendar.getInstance();
+			c2.setTime(toDate);
+			int fourthSaturday = 0;
+
+			while (c2.after(c1)) {
+				if ((c1.get(Calendar.WEEK_OF_MONTH) == 4)
+						&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+					fourthSaturday++;
+				}
+				c1.add(Calendar.DATE, 1);
+
+			}
+			
+			if (c1.equals(c2) && (c1.get(Calendar.WEEK_OF_MONTH) == 4)
+					&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+				return true;
+			}
+			return fourthSaturday > 0 ? true : false;
+		}
+	}
+	
 	public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
 		final LeaveApplicationRequest applicationRequest = new LeaveApplicationRequest();
 		List<LeaveApplication> leaveApplications = new ArrayList<>();

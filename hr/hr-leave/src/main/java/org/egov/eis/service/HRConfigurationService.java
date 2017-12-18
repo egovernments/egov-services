@@ -54,6 +54,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HRConfigurationService {
@@ -107,6 +108,22 @@ public class HRConfigurationService {
             leaveValidity = values.get(0);
         }
         return leaveValidity;
+    }
+    
+    public Map<String, List<String>> getWeeklyHolidays(final String tenantId, final RequestInfo requestInfo) {
+        final String url = hrConfigurationSearchURLHelper.weeklyHolidaysSearchURL(tenantId);
+
+        final RestTemplate restTemplate = new RestTemplate();
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+        final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
+
+        final HRConfigurationResponse hrConfigurationResponse = restTemplate.postForObject(url, request,
+                HRConfigurationResponse.class);
+
+        return hrConfigurationResponse.getHrConfiguration();
     }
 
 

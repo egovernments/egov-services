@@ -40,4 +40,10 @@ public class HRConfigurationSearchURLHelper {
         url.append("&name=" + propertiesManager.getHrMastersServiceCompensatoryConfigurationKey());
         return url.toString();
     }
+    
+    public String weeklyHolidaysSearchURL(final String tenantId) {
+        StringBuilder url = searchURL(tenantId);
+        url.append("&name=" + propertiesManager.getHrMastersServiceWeeklyHolidayConfigKey());
+        return url.toString();
+    }
 }

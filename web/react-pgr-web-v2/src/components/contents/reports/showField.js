@@ -69,6 +69,7 @@ export default class ShowField extends Component {
         return (
           <Col xs={12} sm={4} md={3} lg={3}>
             <TextField
+              value={this.props.value}
               className="custom-form-control-for-textfield"
               id={obj.label.split('.').join('-')}
               fullWidth={true}

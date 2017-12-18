@@ -527,7 +527,7 @@ var dat = {
         fields: [
           {
             name: 'referenceCaseNo',
-            jsonPath: 'cases[0].summon.summonReferenceNo',
+            jsonPath: 'cases[0].caseRefernceNo',
             label: 'caseRegistration.create.referenceCaseNo',
             type: 'text',
             isRequired: false,

@@ -292,9 +292,9 @@ const menuConvention = {
   'Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Update': '/search/swm/sanitationstafftargets/update',
 
   // "Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Create": "/create/swm/refillingpumpstations",
-  'Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Create': '/search/swm/refillingpumpstations/view',
-  'Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Search': '/search/swm/refillingpumpstations/view',
-  'Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Update': '/search/swm/refillingpumpstations/update',
+  'Solid Waste Management.SWM Masters.Refilling Pump Station.RefillingPumpStation Create': '/search/swm/refillingpumpstations/view',
+  'Solid Waste Management.SWM Masters.Refilling Pump Station.RefillingPumpStation Search': '/search/swm/refillingpumpstations/view',
+  'Solid Waste Management.SWM Masters.Refilling Pump Station.RefillingPumpStation Update': '/search/swm/refillingpumpstations/update',
 
   // "Solid Waste Management.SWM Transactions.Vehicle Trip Sheet Details.VehicleTripSheetDetails Create": "/create/swm/vehicletripsheetdetails",
   'Solid Waste Management.SWM Transactions.Vehicle Trip Sheet Details.VehicleTripSheetDetails Create': '/search/swm/vehicletripsheetdetails/view',

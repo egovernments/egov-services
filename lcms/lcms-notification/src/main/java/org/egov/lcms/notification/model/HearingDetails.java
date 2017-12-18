@@ -58,4 +58,10 @@ public class HearingDetails {
 	
 	@JsonProperty("darkhasthDueDate")
 	private Long darkhasthDueDate = null;
+	
+	@JsonProperty("currentHearingDate")
+	private Long currentHearingDate = null;
+
+	@JsonProperty("currentHearingTime")
+	private String currentHearingTime = null;
 }

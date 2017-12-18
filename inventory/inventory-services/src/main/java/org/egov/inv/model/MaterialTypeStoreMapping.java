@@ -74,8 +74,6 @@ public class MaterialTypeStoreMapping {
     @ApiModelProperty(required = true, value = "")
     @NotNull
 
-    @Valid
-
     public MaterialType getMaterialType() {
         return materialType;
     }
@@ -97,8 +95,6 @@ public class MaterialTypeStoreMapping {
     @ApiModelProperty(required = true, value = "")
     @NotNull
 
-    @Valid
-
     public Store getStore() {
         return store;
     }
@@ -118,8 +114,6 @@ public class MaterialTypeStoreMapping {
      * @return chartofAccount
      **/
     @ApiModelProperty(value = "")
-
-    @Valid
 
     public ChartofAccount getChartofAccount() {
         return chartofAccount;
@@ -204,8 +198,6 @@ public class MaterialTypeStoreMapping {
      * @return auditDetails
      **/
     @ApiModelProperty(value = "")
-
-    @Valid
 
     public AuditDetails getAuditDetails() {
         return auditDetails;

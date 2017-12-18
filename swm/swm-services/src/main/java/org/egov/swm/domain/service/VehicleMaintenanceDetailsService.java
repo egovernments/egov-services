@@ -149,6 +149,10 @@ public class VehicleMaintenanceDetailsService {
 
             }
 
+            //validation for actual maintenance date
+            if(new Date(vehicleMaintenanceDetails.getActualMaintenanceDate()).after(new Date()))
+                throw new CustomException("ActualMaintenanceDate",
+                        "Actual Maintenance date cannot be future date: " + vehicleMaintenanceDetails.getActualMaintenanceDate());
         }
     }
 

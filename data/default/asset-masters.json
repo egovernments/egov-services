@@ -1,16 +1,6 @@
 {
   "tenantId": "default",
   "moduleName": "ASSET",
-  "mdms-config": [
-    {
-      "masterName": "AssetCategory",
-      "moduleDefinition": "a/b/c",
-      "uniqueKeys": [
-        "$.id",
-        "$.tenantId"
-      ]
-    }
-  ],
   "AssetCategory": [
     {
       "tenantId": "default",
@@ -2485,7 +2475,49 @@
       "isAssetAllow": true,
       "tenantId": "default"
     },
-     {
+    {
+      "depreciationMethod": "Straight Line method",
+      "assetCategoryType": "MOVABLE",
+      "parent": 21,
+      "name": "Tables",
+      "unitOfMeasurement": "CM",
+      "isDepreciationApplicable": true,
+      "depreciationRate": "7",
+      "id": "2",
+      "code": "002",
+      "isAssetAllow": true,
+      "tenantId": "default",
+      "assetFieldsDefination": [
+        {
+          "name": "width",
+          "type": "Number",
+          "isActive": true
+        },
+        {
+          "name": "Height",
+          "type": "Number"
+        }
+      ]
+    },
+    {
+      "depreciationMethod": "Straight Line method",
+      "name": "Electric box",
+      "assetCategoryType": "IMMOVABLE",
+      "parent": 4,
+      "unitOfMeasurement": "NOS",
+      "isDepreciationApplicable": false,
+      "assetFieldsDefination": [
+        {
+          "name": "Number of points",
+          "type": "Number"
+        }
+      ],
+      "id": 166,
+      "code": 166,
+      "isAssetAllow": true,
+      "tenantId": "default"
+    },
+    {
       "depreciationMethod": "Straight Line method",
       "name": "Electric box",
       "assetCategoryType": "IMMOVABLE",

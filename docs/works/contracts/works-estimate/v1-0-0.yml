@@ -1685,6 +1685,11 @@ definitions:
           format: BigDecimal
           description: No. of the Estimate Measurement sheet
           maxLength: 12
+        multiplier:
+          type: number
+          format: BigDecimal
+          description: Multiplication factor for the number. If the multiplier is entered then number will be multiplied to number.
+          maxLength: 10
         length:
           type: number
           format: BigDecimal
@@ -2005,4 +2010,5 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+
 

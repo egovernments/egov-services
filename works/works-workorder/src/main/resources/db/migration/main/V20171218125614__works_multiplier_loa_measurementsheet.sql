@@ -1,0 +1,1 @@
+ALTER TABLE egw_loameasurementsheet ADD COLUMN multiplier double precision;

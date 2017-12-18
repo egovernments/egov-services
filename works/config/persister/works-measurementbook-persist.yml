@@ -94,7 +94,7 @@ serviceMaps:
 
        - jsonPath: $.measurementBooks.*.measurementBookDetails.*.deleted
 
-    - query: INSERT INTO egw_mb_measurementsheet(id, tenantid, remarks, "number", length, width, depthorheight, quantity, measurementbookdetail, loameasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, measurementbookdetail= EXCLUDED.measurementbookdetail, loameasurementsheet=EXCLUDED.loameasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+    - query: INSERT INTO egw_mb_measurementsheet(id, tenantid, remarks, "number", length, width, depthorheight, quantity, measurementbookdetail, loameasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, multiplier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, measurementbookdetail= EXCLUDED.measurementbookdetail, loameasurementsheet=EXCLUDED.loameasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted, multiplier=EXCLUDED.multiplier;
       basePath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*
       jsonMaps:
 
@@ -127,6 +127,8 @@ serviceMaps:
        - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.deleted
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.multiplier
 
     - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
 

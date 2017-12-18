@@ -634,7 +634,7 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.deleted
          type: BOOLEAN
        
-    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier, remarks, number, length, width, depthorheight, quantity, estimateactivity, parent, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET slno=EXCLUDED.slno, identifier=EXCLUDED.identifier, remarks=EXCLUDED.remarks, number=EXCLUDED.number, length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, estimateactivity=EXCLUDED.estimateactivity, parent=EXCLUDED.parent, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier, remarks, number, length, width, depthorheight, quantity, estimateactivity, parent, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted,multiplier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET slno=EXCLUDED.slno, identifier=EXCLUDED.identifier, remarks=EXCLUDED.remarks, number=EXCLUDED.number, length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, estimateactivity=EXCLUDED.estimateactivity, parent=EXCLUDED.parent, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted, multiplier = EXCLUDED.multiplier;
       basePath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*
       jsonMaps:
 
@@ -662,16 +662,18 @@ serviceMaps:
 
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.parent.id
 
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdBy
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.auditDetails.createdBy
 
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdTime
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.auditDetails.createdTime
 
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedBy
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.auditDetails.lastModifiedBy
 
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedTime
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.auditDetails.lastModifiedTime
 
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.deleted
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.deleted
          type: BOOLEAN
+
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.multiplier
        
     - query: INSERT INTO egw_estimate_technicalsanction(id, tenantid, technicalsanctionnumber, detailedestimate, technicalsanctiondate, technicalsanctionby, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET technicalsanctionnumber=EXCLUDED.technicalsanctionnumber, detailedestimate=EXCLUDED.detailedestimate,
          technicalsanctiondate=EXCLUDED.technicalsanctiondate, technicalsanctionby=EXCLUDED.technicalsanctionby, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;

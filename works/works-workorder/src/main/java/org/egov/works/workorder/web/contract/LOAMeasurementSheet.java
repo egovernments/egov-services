@@ -1,20 +1,19 @@
 package org.egov.works.workorder.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.Objects;
 
-/**
- * An Object that holds the basic data for LOA Measurement Sheet
- */
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 @ApiModel(description = "An Object that holds the basic data for LOA Measurement Sheet")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-18T09:51:26.029Z")
 
 public class LOAMeasurementSheet {
     @JsonProperty("id")
@@ -25,6 +24,9 @@ public class LOAMeasurementSheet {
 
     @JsonProperty("number")
     private BigDecimal number = null;
+
+    @JsonProperty("multiplier")
+    private BigDecimal multiplier = null;
 
     @JsonProperty("length")
     private BigDecimal length = null;
@@ -57,11 +59,9 @@ public class LOAMeasurementSheet {
 
     /**
      * Unique Identifier of the Measurement Sheet
-     *
      * @return id
      **/
     @ApiModelProperty(value = "Unique Identifier of the Measurement Sheet")
-
 
     public String getId() {
         return id;
@@ -78,7 +78,6 @@ public class LOAMeasurementSheet {
 
     /**
      * Tenant id of the Measurement Sheet
-     *
      * @return tenantId
      **/
     @ApiModelProperty(required = true, value = "Tenant id of the Measurement Sheet")
@@ -100,7 +99,6 @@ public class LOAMeasurementSheet {
 
     /**
      * No. of the Measurement sheet
-     *
      * @return number
      **/
     @ApiModelProperty(value = "No. of the Measurement sheet")
@@ -115,6 +113,27 @@ public class LOAMeasurementSheet {
         this.number = number;
     }
 
+    public LOAMeasurementSheet multiplier(BigDecimal multiplier) {
+        this.multiplier = multiplier;
+        return this;
+    }
+
+    /**
+     * Multiplication factor for the number. If the multiplier is entered then number will be multiplied to number.
+     * @return multiplier
+     **/
+    @ApiModelProperty(value = "Multiplication factor for the number. If the unit is entered then number will be multiplied to number.")
+
+    @Valid
+
+    public BigDecimal getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(BigDecimal multiplier) {
+        this.multiplier = multiplier;
+    }
+
     public LOAMeasurementSheet length(BigDecimal length) {
         this.length = length;
         return this;
@@ -122,7 +141,6 @@ public class LOAMeasurementSheet {
 
     /**
      * Length of the Measurement sheet
-     *
      * @return length
      **/
     @ApiModelProperty(value = "Length of the Measurement sheet")
@@ -144,7 +162,6 @@ public class LOAMeasurementSheet {
 
     /**
      * Width of the Measurement sheet
-     *
      * @return width
      **/
     @ApiModelProperty(value = "Width of the Measurement sheet")
@@ -166,7 +183,6 @@ public class LOAMeasurementSheet {
 
     /**
      * Depth or Height of the Measurement sheet
-     *
      * @return depthOrHeight
      **/
     @ApiModelProperty(value = "Depth or Height of the Measurement sheet")
@@ -188,7 +204,6 @@ public class LOAMeasurementSheet {
 
     /**
      * Quantity of the Measurement sheet
-     *
      * @return quantity
      **/
     @ApiModelProperty(required = true, value = "Quantity of the Measurement sheet")
@@ -211,12 +226,10 @@ public class LOAMeasurementSheet {
 
     /**
      * LOA activity reference, primary key is ref here.
-     *
      * @return loaActivity
      **/
     @ApiModelProperty(required = true, value = "LOA activity reference, primary key is ref here.")
     @NotNull
-
 
     public String getLoaActivity() {
         return loaActivity;
@@ -233,12 +246,10 @@ public class LOAMeasurementSheet {
 
     /**
      * Estimate Measurement sheet reference
-     *
      * @return estimateMeasurementSheet
      **/
     @ApiModelProperty(required = true, value = "Estimate Measurement sheet reference")
     @NotNull
-
 
     public String getEstimateMeasurementSheet() {
         return estimateMeasurementSheet;
@@ -255,7 +266,6 @@ public class LOAMeasurementSheet {
 
     /**
      * Get auditDetails
-     *
      * @return auditDetails
      **/
     @ApiModelProperty(value = "")
@@ -277,11 +287,9 @@ public class LOAMeasurementSheet {
 
     /**
      * Boolean value to identify whether the object is deleted or not from UI.
-     *
      * @return deleted
      **/
     @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
-
 
     public Boolean getDeleted() {
         return deleted;
@@ -291,9 +299,8 @@ public class LOAMeasurementSheet {
         this.deleted = deleted;
     }
 
-
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -304,6 +311,7 @@ public class LOAMeasurementSheet {
         return Objects.equals(this.id, loAMeasurementSheet.id) &&
                 Objects.equals(this.tenantId, loAMeasurementSheet.tenantId) &&
                 Objects.equals(this.number, loAMeasurementSheet.number) &&
+                Objects.equals(this.multiplier, loAMeasurementSheet.multiplier) &&
                 Objects.equals(this.length, loAMeasurementSheet.length) &&
                 Objects.equals(this.width, loAMeasurementSheet.width) &&
                 Objects.equals(this.depthOrHeight, loAMeasurementSheet.depthOrHeight) &&
@@ -316,7 +324,8 @@ public class LOAMeasurementSheet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, number, length, width, depthOrHeight, quantity, loaActivity, estimateMeasurementSheet, auditDetails, deleted);
+        return Objects.hash(id, tenantId, number, multiplier, length, width, depthOrHeight, quantity, loaActivity,
+                estimateMeasurementSheet, auditDetails, deleted);
     }
 
     @Override
@@ -327,6 +336,7 @@ public class LOAMeasurementSheet {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
         sb.append("    number: ").append(toIndentedString(number)).append("\n");
+        sb.append("    multiplier: ").append(toIndentedString(multiplier)).append("\n");
         sb.append("    length: ").append(toIndentedString(length)).append("\n");
         sb.append("    width: ").append(toIndentedString(width)).append("\n");
         sb.append("    depthOrHeight: ").append(toIndentedString(depthOrHeight)).append("\n");
@@ -340,14 +350,12 @@ public class LOAMeasurementSheet {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
 }
-

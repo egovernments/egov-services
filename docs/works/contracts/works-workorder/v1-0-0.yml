@@ -1474,6 +1474,11 @@ definitions:
           format: BigDecimal
           description: No. of the Measurement sheet
           maxLength: 20
+        multiplier:
+          type: number
+          format: BigDecimal
+          description: Multiplication factor for the number. If the multiplier is entered then number will be multiplied to number.
+          maxLength: 10
         length:
           type: number
           format: BigDecimal

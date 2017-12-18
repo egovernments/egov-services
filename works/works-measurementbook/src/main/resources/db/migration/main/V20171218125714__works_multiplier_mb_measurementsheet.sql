@@ -1,0 +1,1 @@
+ALTER TABLE egw_mb_measurementsheet ADD COLUMN multiplier double precision;

@@ -1,14 +1,15 @@
 package org.egov.works.workorder.persistence.helper;
 
+import java.math.BigDecimal;
+
+import org.egov.works.workorder.web.contract.LOAMeasurementSheet;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.works.workorder.web.contract.AuditDetails;
-import org.egov.works.workorder.web.contract.LOAMeasurementSheet;
-
-import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -24,6 +25,9 @@ public class LOAMeasurementSheetHelper {
 
     @JsonProperty("number")
     private BigDecimal number = null;
+
+    @JsonProperty("multiplier")
+    private BigDecimal multiplier = null;
 
     @JsonProperty("length")
     private BigDecimal length = null;
@@ -54,6 +58,7 @@ public class LOAMeasurementSheetHelper {
         loaMeasurementSheet.setQuantity(this.quantity);
         loaMeasurementSheet.setLoaActivity(this.loaActivity);
         loaMeasurementSheet.setEstimateMeasurementSheet(this.estimateMeasurementSheet);
+        loaMeasurementSheet.setMultiplier(this.multiplier);
         return loaMeasurementSheet;
 
     }

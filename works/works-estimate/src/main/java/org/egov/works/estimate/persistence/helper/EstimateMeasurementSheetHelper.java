@@ -25,55 +25,58 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EstimateMeasurementSheetHelper {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("slNo")
-	private Integer slNo = null;
+    @JsonProperty("slNo")
+    private Integer slNo = null;
 
-	@JsonProperty("identifier")
-	private String identifier = null;
+    @JsonProperty("identifier")
+    private String identifier = null;
 
-	@JsonProperty("remarks")
-	private String remarks = null;
+    @JsonProperty("remarks")
+    private String remarks = null;
 
     @JsonProperty("number")
     private BigDecimal number = null;
 
-	@JsonProperty("length")
-	private BigDecimal length = null;
+    @JsonProperty("multiplier")
+    private BigDecimal multiplier = null;
 
-	@JsonProperty("width")
-	private BigDecimal width = null;
+    @JsonProperty("length")
+    private BigDecimal length = null;
 
-	@JsonProperty("depthOrHeight")
-	private BigDecimal depthOrHeight = null;
+    @JsonProperty("width")
+    private BigDecimal width = null;
 
-	@JsonProperty("quantity")
-	private BigDecimal quantity = null;
+    @JsonProperty("depthOrHeight")
+    private BigDecimal depthOrHeight = null;
 
-	@JsonProperty("estimateActivity")
-	private String estimateMeasurementSheet = null;
+    @JsonProperty("quantity")
+    private BigDecimal quantity = null;
 
-	@JsonProperty("parent")
-	private String parent = null;
+    @JsonProperty("estimateActivity")
+    private String estimateMeasurementSheet = null;
 
-	@JsonProperty("createdBy")
-	private String createdBy = null;
+    @JsonProperty("parent")
+    private String parent = null;
 
-	@JsonProperty("lastModifiedBy")
-	private String lastModifiedBy = null;
+    @JsonProperty("createdBy")
+    private String createdBy = null;
 
-	@JsonProperty("createdTime")
-	private Long createdTime = null;
+    @JsonProperty("lastModifiedBy")
+    private String lastModifiedBy = null;
 
-	@JsonProperty("lastModifiedTime")
-	private Long lastModifiedTime = null;
+    @JsonProperty("createdTime")
+    private Long createdTime = null;
 
-	public EstimateMeasurementSheet toDomain() {
+    @JsonProperty("lastModifiedTime")
+    private Long lastModifiedTime = null;
+
+    public EstimateMeasurementSheet toDomain() {
 
 		final EstimateMeasurementSheet estimateMeasurementSheet = new EstimateMeasurementSheet();
 		estimateMeasurementSheet.setAuditDetails(new AuditDetails());
@@ -92,7 +95,7 @@ public class EstimateMeasurementSheetHelper {
 		estimateMeasurementSheet.setRemarks(this.remarks);
 		estimateMeasurementSheet.setSlNo(this.slNo);
 		estimateMeasurementSheet.setWidth(this.width);
-
+		estimateMeasurementSheet.setMultiplier(this.multiplier);
 		return estimateMeasurementSheet;
 	}
 

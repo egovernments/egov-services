@@ -27,6 +27,9 @@ public class MBMeasurementSheetHelper {
 
     @JsonProperty("number")
     private BigDecimal number = null;
+    
+    @JsonProperty("multiplier")
+    private BigDecimal multiplier = null;
 
     @JsonProperty("length")
     private BigDecimal length = null;
@@ -59,6 +62,7 @@ public class MBMeasurementSheetHelper {
         mbMeasurementSheet.setMeasurementBookDetail(this.measurementBookDetail);
         mbMeasurementSheet.setLoaMeasurementSheet(new LOAMeasurementSheet());
         mbMeasurementSheet.getLoaMeasurementSheet().setId(this.loaMeasurementSheet);
+        mbMeasurementSheet.setMultiplier(this.multiplier);
         return mbMeasurementSheet;
     }
 }

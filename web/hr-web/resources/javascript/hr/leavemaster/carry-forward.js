@@ -4,8 +4,7 @@ class CarryForward extends React.Component {
         this.state = {
             searchSet: {
                 year: "",
-                leaveType: "",
-                tenantId: tenantId
+                leaveType: ""
             },
             leaveTypeList: [],
             years: []
@@ -23,7 +22,7 @@ class CarryForward extends React.Component {
     handleChange(e, name) {
         this.setState({
             searchSet: {
-                ...this.state.leave,
+                ...this.state.searchSet,
                 [name]: e.target.value
             }
         })
@@ -35,10 +34,9 @@ class CarryForward extends React.Component {
 
     addOrUpdate(e) {
         e.preventDefault();
-        var tempInfo = Object.assign({}, this.state.leave), type = getUrlVars()["type"];
 
-
-        commonApiPost("hr-employee", "employees", "_baseregisterreport", { ..._this.state.searchSet, tenantId, pageSize: 500 }, function (err, res) {
+        //
+        commonApiPost("hr-leave", "leaveopeningbalances", "_carryforward", { ..._this.state.searchSet, tenantId, pageSize: 500 }, function (err, res) {
             if (res && res.Employee) {
                 showSuccess("Opening leave balance carry forward successfully.");
                 _this.setState({
@@ -127,7 +125,7 @@ class CarryForward extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">
-                                            <select id="leaveType" name="leaveType" value={leaveType.id} required="true" onChange={(e) => {
+                                            <select id="leaveType" name="leaveType" value={leaveType} required="true" onChange={(e) => {
                                                 handleChange(e, "leaveType")
                                             }}>
                                                 <option value=""> Select Leave Type</option>

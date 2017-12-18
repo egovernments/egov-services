@@ -6,14 +6,14 @@ class LeaveReport extends React.Component {
       this.state = {
         "result": [],
         "searchSet": {
-          "employeeCode": "",
-          "department": "",
-          "designation": "",
+          "code": "",
+          "departmentId": "",
+          "designationId": "",
           "employeeType": "",
           "employeeStatus": "",
           "leaveType": "",
-          "dateFrom": "",
-          "dateTo": "",
+          "fromDate": "",
+          "toDate": "",
           "leaveStatus": ""
         },
         "employeeTypes": [],
@@ -96,33 +96,33 @@ class LeaveReport extends React.Component {
 
       var _this = this;
 
-      $('#dateFrom').datepicker({
+      $('#fromDate').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
         defaultDate: ""
       });
 
-      $('#dateFrom').on('changeDate', function(e) {
+      $('#fromDate').on('changeDate', function(e) {
         _this.setState({
           searchSet: {
             ..._this.state.searchSet,
-            "dateFrom": $("#dateFrom").val(),
+            "fromDate": $("#fromDate").val(),
           }
         });
       });
 
 
-      $('#dateTo').datepicker({
+      $('#toDate').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
         defaultDate: ""
       });
 
-      $('#dateTo').on('changeDate', function(e) {
+      $('#toDate').on('changeDate', function(e) {
         _this.setState({
           searchSet: {
             ..._this.state.searchSet,
-            "dateTo": $("#dateTo").val(),
+            "toDate": $("#toDate").val(),
           }
         });
       });
@@ -152,9 +152,9 @@ class LeaveReport extends React.Component {
       e.preventDefault();
       $('#employeeTable').dataTable().fnDestroy();
       var _this = this;
-      if (this.state.searchSet.dateFrom && !this.state.searchSet.dateTo)
+      if (this.state.searchSet.fromDate && !this.state.searchSet.toDate)
         return showError("Please enter To Date");
-      if (!this.state.searchSet.dateFrom && this.state.searchSet.dateTo)
+      if (!this.state.searchSet.fromDate && this.state.searchSet.toDate)
         return showError("Please enter From Date");
       try {
         flag = 1;
@@ -195,7 +195,7 @@ class LeaveReport extends React.Component {
 
     let {handleChange ,searchEmployee, closeWindow} = this;
     let {result, employeeTypes, departments, designations, leaveStatuses, leaveTypes, employeeStatuses, employeeList, isSearchClicked} = this.state;
-    let {employeeCode, department, designation, employeeType, employeeStatus, leaveStatus, leaveType, dateFrom, dateTo} = this.state.searchSet;
+    let {code, departmentId, designationId, employeeType, employeeStatus, leaveStatus, leaveType, fromDate, toDate} = this.state.searchSet;
 
     const renderOptions = function(list)
     {
@@ -270,7 +270,7 @@ class LeaveReport extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                         <div className="styled-select">
-                                            <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
+                                            <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}}>
                                                 <option value="">Select Department</option>
                                                 {renderOptions(departments)}
                                             </select>
@@ -285,7 +285,7 @@ class LeaveReport extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                         <div className="styled-select">
-                                            <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
+                                            <select id="designationId" value={designationId} onChange={(e) => {handleChange(e, "designationId")}}>
                                                 <option value="">Select Designation</option>
                                                 {renderOptions(designations)}
                                             </select>
@@ -301,7 +301,7 @@ class LeaveReport extends React.Component {
                                             <label htmlFor="">Employee Code/Name </label>
                                         </div>
                                         <div className="col-sm-6">
-                                            <input id="employeeCode" type="text" value={employeeCode} onChange={(e) => {handleChange(e, "employeeCode")}}/>
+                                            <input id="code" type="text" value={code} onChange={(e) => {handleChange(e, "code")}}/>
                                         </div>
                                     </div>
                                 </div>
@@ -362,7 +362,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                             <div className="text-no-ui">
                                                 <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                                <input type="text" id="dateFrom" value={dateFrom} onChange={(e) => {handleChange(e, "dateFrom")}}/>
+                                                <input type="text" id="fromDate" value={fromDate} onChange={(e) => {handleChange(e, "fromDate")}}/>
                                             </div>
                                         </div>
                                     </div>
@@ -375,7 +375,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                             <div className="text-no-ui">
                                                 <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                                <input type="text" id="dateTo" value={dateTo} onChange={(e) => {handleChange(e, "dateTo")}}/>
+                                                <input type="text" id="toDate" value={toDate} onChange={(e) => {handleChange(e, "toDate")}}/>
                                             </div>
                                         </div>
                                     </div>

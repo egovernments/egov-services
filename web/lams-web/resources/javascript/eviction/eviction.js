@@ -127,7 +127,10 @@ class EvictionAgreement extends React.Component {
     setInitialState(initState) {
         this.setState(initState);
     }
-
+    
+    close() {
+              open(location, '_self').close();
+    }
     addOrUpdate(e) {
 
         e.preventDefault();
@@ -837,13 +840,13 @@ class EvictionAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="evictionProceedingNo">Eviction Proceeding Number
+                                        <label for="evictionProceedingNumber">Eviction Proceeding Number
                                        <span>*</span>
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input type="text" name="evictionProceedingNo" id="evictionProceedingNo" value={eviction.evictionProceedingNo}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "eviction", "evictionProceedingNo") }} required />
+                                        <input type="text" name="evictionProceedingNumber" id="evictionProceedingNumber" value={eviction.evictionProceedingNumber}
+                                            onChange={(e) => { handleChangeTwoLevel(e, "eviction", "evictionProceedingNumber") }} required />
                                     </div>
                                 </div>
                             </div>
@@ -920,7 +923,7 @@ class EvictionAgreement extends React.Component {
                                         <label for="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks" value={remarks}
+                                        <textarea name="remarks" id="remarks" value=""
                                             onChange={(e) => { handleChange(e, "remarks") }}></textarea>
                                     </div>
                                 </div>

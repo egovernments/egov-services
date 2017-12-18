@@ -37,7 +37,7 @@ public class UploadRegistryRepository {
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 		try{
 			jdbcTemplate.update(query, new Object[] {uploadJob.getStartTime(), uploadJob.getEndTime(), uploadJob.getTotalRows(), uploadJob.getSuccessfulRows(),
-					uploadJob.getFailedRows(), uploadJob.getResponseFilePath(), uploadJob.getStatus(), uploadJob.getCode(), uploadJob.getTenantId()});
+					uploadJob.getFailedRows(), uploadJob.getResponseFilePath(), uploadJob.getStatus().toString(), uploadJob.getCode(), uploadJob.getTenantId()});
 		}catch(Exception e){
 			logger.error("Exception while updating job in db for job code: "+uploadJob.getCode(), e);
 		}

@@ -34,6 +34,7 @@ public class DataUploadApplication
 	
 	public static void main(String[] args) {
 		SpringApplication.run(DataUploadApplication.class, args);
+		
 	}    
 
 	@Bean

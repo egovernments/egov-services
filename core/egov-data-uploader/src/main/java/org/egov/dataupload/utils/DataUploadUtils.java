@@ -129,7 +129,6 @@ public class DataUploadUtils {
             	cell.setCellValue(Double.parseDouble(exisitingFields.get(i).toString()));
             }
             
-            logger.info("cell: "+cell.getColumnIndex()+" value: "+cell.getStringCellValue());
         }
 
         try (FileOutputStream outputStream = new FileOutputStream(resultFilePath)) {
@@ -140,22 +139,27 @@ public class DataUploadUtils {
 	}
 	
 	public void clearExceFile(String filePath){
-		logger.info("Clearing the file: "+filePath);
+		logger.info("Clearing the file....: "+filePath);
 		try{
 		    MultipartFile file = getExcelFile(filePath);
 			HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
 	        HSSFSheet sheet = workbook.getSheetAt(0);
 	        Iterator<Row> rowIte =  sheet.iterator();
 	        while(rowIte.hasNext()){
-	            rowIte.next();              
-	            rowIte.remove();
+	            Row nextRow = rowIte.next();
+	            Iterator<Cell> cellIterator = nextRow.cellIterator();
+	            while(cellIterator.hasNext()){
+		            Cell cell = cellIterator.next();
+		            cell.setCellValue("");
+	            }
 	        }
+	        //sheet.shiftRows(0, sheet.getLastRowNum(), (0 - sheet.getLastRowNum()));
 	        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
 	            workbook.write(outputStream);
 	        }
 	        workbook.close();
 		}catch(Exception e){
-			logger.error("Couldn't delete all the contents of file: "+filePath);
+			logger.error("Couldn't delete all the contents of file: "+filePath, e);
 		}
         
 	}

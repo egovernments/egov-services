@@ -1,10 +1,8 @@
 package org.egov.dataupload.service;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,11 +10,9 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import org.egov.DataUploadApplicationRunnerImpl;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.ResponseMetaData;
 import org.egov.dataupload.model.UploadDefinition;
-import org.egov.dataupload.model.UploadDefinitions;
 import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploadJob.StatusEnum;
 import org.egov.dataupload.model.UploaderRequest;
@@ -30,12 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -125,6 +119,8 @@ public class DataUploadService {
 	        	success.add(responseMetaData);
 		    }else*/{
 		    	uploadData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
+				dataUploadUtils.clearExceFile(writeFilePath);
+				dataUploadUtils.clearExceFile(resultFilePath);
 		    }
         }catch(Exception e){
 			ResponseMetaData responseMetaData= new ResponseMetaData();
@@ -146,7 +142,7 @@ public class DataUploadService {
 		String request = null;
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 		uploadJob.setEndTime(0L);uploadJob.setFailedRows(0);uploadJob.setStartTime(new Date().getTime());uploadJob.setSuccessfulRows(0);
-		uploadJob.setStatus(StatusEnum.fromValue("INPROGRESS"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size());
+		uploadJob.setStatus(StatusEnum.fromValue("InProgress"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size());
 		uploadRegistryRepository.updateJob(uploaderRequest);
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
     	List<Object> resJsonPathList = null;
@@ -184,6 +180,7 @@ public class DataUploadService {
 				    		}
 				    		row.add("SUCCESS");
 				    		row.add("Failed to obtain additional fields from API response");
+				    		successCount++;
 				    	}
 				    }
 		    		row.add("SUCCESS");
@@ -198,11 +195,12 @@ public class DataUploadService {
 		    		}
 		    		row.add("FAILED");
 		    		row.add(e.getMessage());
+			    	failureCount++;	
 		    	}else{
 		    		row.add("FAILED");
 		    		row.add(e.getMessage());
+			    	failureCount++;	
 		    	}
-		    	failureCount++;	
 				dataUploadUtils.writeToexcelSheet(row);
 
 		    	continue;
@@ -210,10 +208,8 @@ public class DataUploadService {
 		}
 		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName());
 		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount);
-		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("COMPLETED"));
+		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
 		uploadRegistryRepository.updateJob(uploaderRequest);
-		dataUploadUtils.clearExceFile(writeFilePath);
-		dataUploadUtils.clearExceFile(resultFilePath);
 
 		
 	    return request;

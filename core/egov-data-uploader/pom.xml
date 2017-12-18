@@ -106,6 +106,10 @@
            <artifactId>poi</artifactId>
            <version>3.17</version>
         </dependency>
+        <dependency><groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>4.1.0</version>
+        </dependency>
 </dependencies>
     <distributionManagement>
         <snapshotRepository>

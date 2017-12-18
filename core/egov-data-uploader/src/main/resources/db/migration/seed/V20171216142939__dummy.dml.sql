@@ -1,1 +1,0 @@
-select * from EGDU_UPLOADREGISTRY;

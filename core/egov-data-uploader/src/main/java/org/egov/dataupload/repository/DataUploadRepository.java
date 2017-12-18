@@ -1,5 +1,6 @@
 package org.egov.dataupload.repository;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -25,7 +26,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 
 @Repository
@@ -87,19 +87,18 @@ public class DataUploadRepository {
 		uri.append(fileStoreHost).append(postFilePath)
 		   .append("?tenantId="+tenantId).append("&module="+moduleName);
 		LinkedMultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-		map.add("file", new ClassPathResource(filePath));
+		map.add("file", new FileSystemResource(filePath));
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new    HttpEntity<LinkedMultiValueMap<String, Object>>(
-		                    map, headers);
+		HttpEntity<LinkedMultiValueMap<String, Object>> requestEntity = new  
+				HttpEntity<LinkedMultiValueMap<String, Object>>(map, headers);
+		LOGGER.info("URI: "+uri.toString());
 		try{
 			ResponseEntity<Map> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.POST, requestEntity,
 			                    Map.class);
 			result = resultMap.getBody();
 		}catch(Exception e){
 			LOGGER.error("Couldn't post the response excel: "+filePath, e);
-			throw new CustomException("500", "Couldn't post the response excel");
 		}
 		LOGGER.info("POST FILE response: "+result);
 		

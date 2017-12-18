@@ -60,6 +60,36 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
+              
+  /jobs/_search:
+    post:
+      summary: Fetches upload-jobs for the given criteria.
+      description: >-
+        Fetched the map of modules and their respective upload-definitions configured
+      parameters:
+        - name: JobSearchRequest
+          in: body
+          description: Criteria for search of jobs.
+          required: true
+          schema:
+            $ref: '#/definitions/JobSearchRequest'
+      tags:
+        - Data-Upload
+      responses:
+        '201':
+          description: Definitions fetched Successfully.
+          schema:
+            $ref: '#/definitions/UploaderResponse'
+        '400':
+          description: Error.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+              
+
+              
+
 definitions:
   
   UploadJob:
@@ -198,4 +228,34 @@ definitions:
         type: array
         items: 
           $ref: '#/definitions/Definition'
-        
+          
+  JobSearchRequest:
+    type: object
+    properties:
+      codes: 
+        description: Job-ids of the jobs to be searched
+        type: array
+        items:
+          type: string
+      statuses: 
+        description: Statuses of the jobs to be searched
+        type: array
+        items:
+          type: string
+      requesterNames: 
+        description: Requester names of the jobs to be searched
+        type: array
+        items:
+          type: string
+      startDate: 
+        description: EPOCH value of the start date of the jobs to be searched
+        type: integer
+      endDate: 
+        description: EPOCH value of the end date of the jobs to be searched
+        type: integer
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+    required:
+      - RequestInfo
+     

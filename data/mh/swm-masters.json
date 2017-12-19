@@ -7,7 +7,8 @@
       "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/VehicleType",
       "uniqueKeys": [
         "$.code",
-        "$.tenantId"
+        "$.tenantId",
+	"$.name"
       ]
     },
     {
@@ -31,7 +32,8 @@
       "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/WasteType",
       "uniqueKeys": [
         "$.code",
-        "$.tenantId"
+        "$.tenantId",
+	"$.name"
       ]
     },
     {
@@ -39,7 +41,8 @@
       "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/WasteSubType",
       "uniqueKeys": [
         "$.code",
-        "$.tenantId"
+        "$.tenantId",
+	"$.name"
       ]
     },
     {
@@ -47,7 +50,8 @@
       "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/DumpingGround",
       "uniqueKeys": [
         "$.code",
-        "$.tenantId"
+        "$.tenantId",
+	"$.name"
       ]
     },
     {
@@ -55,7 +59,8 @@
       "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/ProcessingSite",
       "uniqueKeys": [
         "$.code",
-        "$.tenantId"
+        "$.tenantId",
+	"$.name"
       ]
     },
     {
@@ -63,7 +68,8 @@
       "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/ShiftType",
       "uniqueKeys": [
         "$.code",
-        "$.tenantId"
+        "$.tenantId",
+	"$.name"
       ]
     },
     {

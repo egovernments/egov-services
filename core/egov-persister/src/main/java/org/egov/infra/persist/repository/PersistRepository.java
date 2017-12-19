@@ -46,7 +46,18 @@ public class PersistRepository {
 	}
 
 	public void persistList(String query, List<JsonMap> jsonMaps, String basePath, Object document) {
-
+		
+		String basePathForNullCheck = null;
+		
+		if(!basePath.endsWith("*")) {
+			basePathForNullCheck = new String();
+			basePathForNullCheck = basePathForNullCheck.concat(basePath);
+			log.info("basePathForNullCheck before Substr::"+basePathForNullCheck);
+			basePathForNullCheck = basePathForNullCheck.substring(basePath.lastIndexOf("*.")+2, basePathForNullCheck.length());
+			log.info("basePathForNullCheck after Substr::"+basePathForNullCheck);
+		}
+		
+		
 		log.debug("persistList arrObjJsonPath:" + basePath);
 		basePath=basePath.substring(0, basePath.lastIndexOf(".*")+2);
 		log.debug("basePath::"+basePath);
@@ -63,6 +74,23 @@ public class PersistRepository {
 			LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>) list.get(i);
 			if(linkedHashMap == null) 
 				continue;
+			
+			boolean isChildObjNull = false;
+			if(basePathForNullCheck != null) {
+				String [] baseObjectsForNullCheck = basePathForNullCheck.split("\\.");
+				LinkedHashMap<String, Object> mapOfData = new LinkedHashMap<>();
+				mapOfData.putAll(linkedHashMap);
+				for(String baseObjectForNullCheck : baseObjectsForNullCheck) {
+					mapOfData = (LinkedHashMap<String, Object>)mapOfData.get(baseObjectForNullCheck);
+					if(mapOfData == null) {
+						isChildObjNull = true;
+						break;
+					}
+				}
+			}
+			if(isChildObjNull) 
+				continue;
+			
 			log.info("i:" + i + "linkedHashMap:" + linkedHashMap);
 			for (int j = 0; j < jsonMaps.size(); j++) {
 				JsonMap jsonMap = jsonMaps.get(j);

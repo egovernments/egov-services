@@ -16,6 +16,13 @@ public class VehicleSearch extends Vehicle {
     private String purchaseYear;
     private String fuelTypeCode;
     private String driverCode;
+    private String engineSrNumber;
+    private String chassisSrNumber;
+    private Double vehicleCapacity;
+    private String model;
+    private String insuranceNumber;
+    private Long insuranceValidityDate;
+    private Long purchaseDate;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

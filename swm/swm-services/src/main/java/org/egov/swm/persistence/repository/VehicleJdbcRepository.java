@@ -85,48 +85,42 @@ public class VehicleJdbcRepository extends JdbcRepository {
             paramValues.put("regNumbers", new ArrayList<>(Arrays.asList(searchRequest.getRegNumbers().split(","))));
         }
 
-        if (searchRequest.getManufacturingDetails() != null) {
-
-            if (searchRequest.getManufacturingDetails().getChassisSrNumber() != null) {
-                addAnd(params);
-                params.append("chassisSrNumber =:chassisSrNumber");
-                paramValues.put("chassisSrNumber", searchRequest.getManufacturingDetails().getChassisSrNumber());
-            }
-
-            if (searchRequest.getManufacturingDetails().getEngineSrNumber() != null) {
-                addAnd(params);
-                params.append("engineSrNumber =:engineSrNumber");
-                paramValues.put("engineSrNumber", searchRequest.getManufacturingDetails().getEngineSrNumber());
-            }
-
-            if (searchRequest.getInsuranceDetails().getInsuranceNumber() != null) {
-                addAnd(params);
-                params.append("insuranceNumber =:insuranceNumber");
-                paramValues.put("insuranceNumber", searchRequest.getInsuranceDetails().getInsuranceNumber());
-            }
-
-            if (searchRequest.getManufacturingDetails().getModel() != null) {
-                addAnd(params);
-                params.append("model =:model");
-                paramValues.put("model", searchRequest.getManufacturingDetails().getModel());
-            }
-
+        if (searchRequest.getChassisSrNumber() != null) {
+            addAnd(params);
+            params.append("chassisSrNumber =:chassisSrNumber");
+            paramValues.put("chassisSrNumber", searchRequest.getChassisSrNumber());
         }
 
-        if (searchRequest.getInsuranceDetails() != null)
-            if (searchRequest.getInsuranceDetails().getInsuranceValidityDate() != null) {
-                addAnd(params);
-                params.append("insuranceValidityDate =:insuranceValidityDate");
-                paramValues.put("insuranceValidityDate",
-                        searchRequest.getInsuranceDetails().getInsuranceValidityDate());
-            }
+        if (searchRequest.getEngineSrNumber() != null) {
+            addAnd(params);
+            params.append("engineSrNumber =:engineSrNumber");
+            paramValues.put("engineSrNumber", searchRequest.getEngineSrNumber());
+        }
 
-        if (searchRequest.getPurchaseInfo() != null)
-            if (searchRequest.getPurchaseInfo().getPurchaseDate() != null) {
-                addAnd(params);
-                params.append("purchaseDate =:purchaseDate");
-                paramValues.put("purchaseDate", searchRequest.getPurchaseInfo().getPurchaseDate());
-            }
+        if (searchRequest.getInsuranceNumber() != null) {
+            addAnd(params);
+            params.append("insuranceNumber =:insuranceNumber");
+            paramValues.put("insuranceNumber", searchRequest.getInsuranceNumber());
+        }
+
+        if (searchRequest.getModel() != null) {
+            addAnd(params);
+            params.append("model =:model");
+            paramValues.put("model", searchRequest.getModel());
+        }
+
+        if (searchRequest.getInsuranceValidityDate() != null) {
+            addAnd(params);
+            params.append("insuranceValidityDate =:insuranceValidityDate");
+            paramValues.put("insuranceValidityDate",
+                    searchRequest.getInsuranceValidityDate());
+        }
+
+        if (searchRequest.getPurchaseDate() != null) {
+            addAnd(params);
+            params.append("purchaseDate =:purchaseDate");
+            paramValues.put("purchaseDate", searchRequest.getPurchaseDate());
+        }
 
         if (searchRequest.getVehicleTypeCode() != null) {
             addAnd(params);

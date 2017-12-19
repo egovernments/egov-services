@@ -121,7 +121,6 @@ public class SupplierService extends DomainService {
                 if (isEmpty(supplier.getTenantId())) {
                     supplier.setTenantId(tenantId);
                 }
-                supplier.setCode(supplier.getCode().toUpperCase());
                 if (!supplier.getActive()) {
                     supplier.setStatus(Supplier.StatusEnum.INACTIVE);
                 }

@@ -176,20 +176,21 @@ public class MeasurementBookValidator {
 			if (measurementBook.getMeasurementBookDetails() != null && measurementBook.getMeasurementBookDetails().isEmpty()
 					&& measurementBook.getLumpSumMBDetails() != null && measurementBook.getLumpSumMBDetails().isEmpty())
 				messages.put(Constants.KEY_MB_DETAILS_MANDATORY, Constants.MSG_MB_DETAILS_MANDATORY);
-			for (MeasurementBookDetail detail : measurementBook.getLumpSumMBDetails()) {
-				if (detail.getLoaActivity() == null)
-					messages.put(Constants.KEY_MB_DETAILS_LOA_ACTIVITY, Constants.MSG_MB_DETAILS_LOA_ACTIVITY);
-				if (detail.getQuantity() <= 0)
-					messages.put(Constants.KEY_MB_DETAILS_QUANTITY_ZERO, Constants.MSG_MB_DETAILS_QUANTITY_ZERO);
-				if (detail.getRate() <= 0)
-					messages.put(Constants.KEY_MB_DETAILS_RATE_ZERO, Constants.MSG_MB_DETAILS_RATE_ZERO);
-				if (detail.getAmount().compareTo(BigDecimal.ZERO) <= 0)
-					messages.put(Constants.KEY_MB_DETAILS_AMOUNT_ZERO, Constants.MSG_MB_DETAILS_AMOUNT_ZERO);
-
-				if (detail.getPartRate() != null && detail.getReducedRate() != null)
-					messages.put(Constants.KEY_MB_DETAILS_PART_REDUCED_RATE,
-							Constants.MSG_MB_DETAILS_PART_REDUCED_RATE);
-			}
+			if (measurementBook.getLumpSumMBDetails() != null && measurementBook.getLumpSumMBDetails().isEmpty())
+				for (MeasurementBookDetail detail : measurementBook.getLumpSumMBDetails()) {
+					if (detail.getLoaActivity() == null)
+						messages.put(Constants.KEY_MB_DETAILS_LOA_ACTIVITY, Constants.MSG_MB_DETAILS_LOA_ACTIVITY);
+					if (detail.getQuantity() <= 0)
+						messages.put(Constants.KEY_MB_DETAILS_QUANTITY_ZERO, Constants.MSG_MB_DETAILS_QUANTITY_ZERO);
+					if (detail.getRate() <= 0)
+						messages.put(Constants.KEY_MB_DETAILS_RATE_ZERO, Constants.MSG_MB_DETAILS_RATE_ZERO);
+					if (detail.getAmount().compareTo(BigDecimal.ZERO) <= 0)
+						messages.put(Constants.KEY_MB_DETAILS_AMOUNT_ZERO, Constants.MSG_MB_DETAILS_AMOUNT_ZERO);
+	
+					if (detail.getPartRate() != null && detail.getReducedRate() != null)
+						messages.put(Constants.KEY_MB_DETAILS_PART_REDUCED_RATE,
+								Constants.MSG_MB_DETAILS_PART_REDUCED_RATE);
+				}
 		}
 	}
 

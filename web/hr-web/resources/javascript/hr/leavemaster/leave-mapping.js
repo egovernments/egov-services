@@ -98,7 +98,7 @@ close(){
               error: function(err) {
                 try{
                   showError(err["responseJSON"]["Error"]["description"]);
-                }catch{
+                }catch (e) {
                   showError("Something went wrong, Please contact administrator"); 
                 }
               }

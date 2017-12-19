@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object that holds the basic data for Quality Testing
  */
 @ApiModel(description = "An Object that holds the basic data for Quality Testing")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-18T07:23:14.953Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-19T07:20:24.051Z")
 
 public class QualityTesting   {
   @JsonProperty("id")
@@ -35,7 +35,7 @@ public class QualityTesting   {
   private String remarks = null;
 
   @JsonProperty("status")
-  private String status = null;
+  private WorksStatus status = null;
 
   @JsonProperty("deleted")
   private Boolean deleted = false;
@@ -158,7 +158,7 @@ public class QualityTesting   {
     this.remarks = remarks;
   }
 
-  public QualityTesting status(String status) {
+  public QualityTesting status(WorksStatus status) {
     this.status = status;
     return this;
   }
@@ -170,12 +170,13 @@ public class QualityTesting   {
   @ApiModelProperty(required = true, value = "Status for quality testing.")
   @NotNull
 
+  @Valid
 
-  public String getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
   }
 

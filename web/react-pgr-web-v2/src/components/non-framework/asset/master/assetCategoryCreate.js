@@ -456,7 +456,7 @@ class assetCategoryCreate extends Component {
         Api.commonApiPost('/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory', {}, {}, false, mockObj.useTimestamp),
       ]).then(responses => {
         let searchAPI = responses[0];
-        console.log(searchAPI.MdmsRes.ASSET.AssetCategory);
+        console.log(self.props.match.params.id);
         if(self.props.match.params.id){
           this.setState({
           createId: self.props.match.params.id,
@@ -728,55 +728,6 @@ class assetCategoryCreate extends Component {
     );
   };
 
-  // makeAjaxCall = (formData, url) => {
-  //   let self = this;
-  //   //delete formData.ResponseInfo;
-  //   //return console.log(formData);
-  //   Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
-  //     function(response) {
-  //     console.log("enter");
-  //       self.props.setLoadingStatus('hide');
-  //       self.initData();
-  //       self.props.toggleSnackbarAndSetText(
-  //         true,
-  //         translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
-  //         true
-  //       );
-  //       console.log(response.MdmsRes.ASSET.AssetCategory[0].id);
-  //       setTimeout(function() {
-  //         if (self.props.actionName == 'update') {
-  //           console.log('update');
-  //           var hash = '/non-framework/asset/master/assetCategoryView/' ;
-  //         }
-  //         if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-  //           if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
-  //             var hash =
-  //               self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl +
-  //               '/' +
-  //               encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-  //             console.log('check');
-  //           } else {
-  //             console.log('check1');
-  //             if (self.props.actionName == 'update') {
-  //               console.log('update');
-  //               var hash = '/non-framework/asset/master/assetCategoryView/' ;
-  //             } else {
-  //               console.log(formData);
-  //               var hash = '/non-framework/asset/master/assetCategoryView/';
-  //             }
-  //           }
-  //
-  //           self.props.setRoute(hash);
-  //         }
-  //       }, 1500);
-  //     },
-  //     function(err) {
-  //       self.props.setLoadingStatus('hide');
-  //       self.props.toggleSnackbarAndSetText(true, err.message);
-  //     }
-  //   );
-  // };
-
   //Needs to be changed later for more customfields
   checkCustomFields = (formData, cb) => {
     var self = this;
@@ -875,9 +826,6 @@ class assetCategoryCreate extends Component {
       formData.MasterMetaData.masterData[0].isAssetAllow = true;
       formData.MasterMetaData.masterData[0].tenantId = localStorage.getItem('tenantId');
     }
-
-    console.log(formData);
-
     if (formData && formData.MasterMetaData && formData.MasterMetaData.masterData && formData.MasterMetaData.masterData[0].isDepreciationApplicable) {
       if (formData.MasterMetaData.masterData[0].isDepreciationApplicable == 'YES') {
         formData.MasterMetaData.masterData[0].isDepreciationApplicable = true;
@@ -974,14 +922,12 @@ class assetCategoryCreate extends Component {
             counter--;
             if (counter == 0 && breakOut == 0) {
               formdocumentData['documents'] = _docs;
-              self.checkForOtherFiles(formData, _url);
               self.makeAjaxCall(formData, _url);
             }
           }
         });
       }
     } else {
-      self.checkForOtherFiles(formData, _url);
       self.makeAjaxCall(formData, _url);
     }
   };

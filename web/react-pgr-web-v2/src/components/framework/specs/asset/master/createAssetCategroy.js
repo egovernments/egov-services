@@ -261,7 +261,7 @@ var dat = {
   },
   'asset.search': {
     numCols: 12 / 3,
-    url: '/egov-mdms-service/v1/_search',
+    url: '',
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: 'AssetCategory',
@@ -576,7 +576,7 @@ var dat = {
     url: '/egov-mdms-create/v1/_update',
     tenantIdRequired: true,
     useTimestamp: true,
-    idJsonPath: '',
+    idJsonPath: 'MasterMetaData.masterData[0].id',
     moduleName: 'ASSET',
     masterName: 'AssetCategory',
     objectName: 'MasterMetaData',

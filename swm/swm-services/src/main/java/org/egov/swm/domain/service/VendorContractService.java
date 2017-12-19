@@ -91,7 +91,7 @@ public class VendorContractService {
 
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
-        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         for (final VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
 
             if (vendorContract.getVendor() != null && (vendorContract.getVendor().getVendorNo() == null

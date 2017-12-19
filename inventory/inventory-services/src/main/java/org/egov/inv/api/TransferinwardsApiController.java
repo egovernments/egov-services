@@ -33,10 +33,8 @@ public class TransferinwardsApiController implements TransferinwardsApi {
     public ResponseEntity<TransferInwardResponse> transferinwardsCreatePost( 
     	@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "Create  new"  )  @Valid @RequestBody TransferInwardRequest transferInwardRequest) {
-    
-		List<MaterialReceipt> inwardReq = transferinwardsService.create(transferInwardRequest, tenantId);
-		TransferInwardResponse inwardResponse = buildInwardResponse(inwardReq, transferInwardRequest.getRequestInfo());
-        return new ResponseEntity<TransferInwardResponse>(inwardResponse, HttpStatus.OK);
+
+        return new ResponseEntity<TransferInwardResponse>(transferinwardsService.create(transferInwardRequest, tenantId), HttpStatus.OK);
         
     }
 
@@ -58,21 +56,6 @@ public class TransferinwardsApiController implements TransferinwardsApi {
 
     public ResponseEntity<TransferInwardResponse> transferinwardsUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "common Request info"  )  @Valid @RequestBody TransferInwardRequest transferInwardRequest) {
-    	
-    	List<MaterialReceipt> inwardReq = transferinwardsService.update(transferInwardRequest, tenantId);
-		TransferInwardResponse inwardResponse = buildInwardResponse(inwardReq, transferInwardRequest.getRequestInfo());
-		return new ResponseEntity<TransferInwardResponse>(inwardResponse, HttpStatus.OK);
+    	 return new ResponseEntity<TransferInwardResponse>(transferinwardsService.update(transferInwardRequest, tenantId), HttpStatus.OK);
     }
-    
-    private TransferInwardResponse buildInwardResponse(List<MaterialReceipt> material,
-			org.egov.inv.model.RequestInfo requestInfo) {
-		return TransferInwardResponse.builder().responseInfo(getResponseInfo(requestInfo)).transferInwards(material)
-				.build();
-	}
-    
-    private org.egov.inv.model.ResponseInfo getResponseInfo(org.egov.inv.model.RequestInfo requestInfo) {
-		return org.egov.inv.model.ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").build();
-	}
-
 }

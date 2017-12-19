@@ -44,7 +44,7 @@ serviceMaps:
             UPDATE store SET
             name=?,description=?,department=?,storeincharge=?,officelocation=?,
             billingaddress=?,deliveryaddress=?,contactno1=?,contactno2=?,email=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifiedtime=?
-            WHERE id=? AND tenantid=?;
+            WHERE code=? AND tenantid=?;
           basePath: $.stores.*
           jsonMaps:
             - jsonPath: $.stores.*.name
@@ -62,7 +62,7 @@ serviceMaps:
             - jsonPath: $.stores.*.auditDetails.lastModifiedBy
             - jsonPath: $.stores.*.auditDetails.lastModifiedTime
               dbType: LONG
-            - jsonPath: $.stores.*.id
+            - jsonPath: $.stores.*.code
             - jsonPath: $.stores.*.tenantId
 
     - version: 1.0
@@ -212,7 +212,7 @@ serviceMaps:
             status = ?, inactivedate = ?, active = ?, contactno = ?, faxno = ?,
             website = ?, email = ?, description = ?, panno = ?,
             tinno = ?, cstno = ?, vatno = ?, gstNo = ?, contactperson = ?,contactpersonno = ?,
-            bankcode = ?,bankbranch = ?, bankifsc = ?,bankAcctNo = ?, bankmicr = ?, lastmodifiedby = ?, lastmodifiedtime = ? where id = ? and tenantid = ?
+            bankcode = ?,bankbranch = ?, bankifsc = ?,bankAcctNo = ?, bankmicr = ?, lastmodifiedby = ?, lastmodifiedtime = ? where code = ? and tenantid = ?
           basePath: $.suppliers.*
           jsonMaps:
             - jsonPath: $.suppliers.*.name
@@ -242,7 +242,7 @@ serviceMaps:
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedBy
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedTime
               dbType: LONG
-            - jsonPath: $.suppliers.*.id
+            - jsonPath: $.suppliers.*.code
             - jsonPath: $.suppliers.*.tenantId
     - version: 1.0
       name: material store mapping create
@@ -864,7 +864,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
         - query: >-
             update indentdetail set poOrderedQuantity = indentdetail.indentQuantity where id = ? and tenantid = ? and deleted=false;
-          basePath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail
+          basePath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentdetail
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.*.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.*.tenantId
@@ -1275,6 +1275,163 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materialTypeStores.*.auditDetails.lastModifiedTime
               dbType: LONG
+
+    - version: 1.0
+      name: Transfer Inward Receipt
+      description: Create Transfer Inward Receipt Note
+      fromTopic: inv-transfer-inward-save-topic
+      queryMaps:
+        - query: >-
+               INSERT INTO materialreceipt(id, mrnnumber, receivingstore, issueingstore,receiptDate, receiptType, suppliercode, supplierbillno, supplierbilldate,
+               challanno, challandate, description, paymentterms, receivedby, designation, mrnstatus, inspectedby, inspectiondate, inspectionremarks,
+               tenantid, createdby, createdTime, lastmodifiedby,lastModifiedTime) VALUES ( ?,?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?,?);
+          basePath: $.transferInwards.*
+          jsonMaps:
+            - jsonPath: $.transferInwards.*.id
+            - jsonPath: $.transferInwards.*.mrnNumber
+            - jsonPath: $.transferInwards.*.receivingStore.code
+            - jsonPath: $.transferInwards.*.issueingStore.code
+            - jsonPath: $.transferInwards.*.receiptDate
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.receiptType
+            - jsonPath: $.transferInwards.*.supplier.code
+            - jsonPath: $.transferInwards.*.supplierBillNo
+            - jsonPath: $.transferInwards.*.supplierBillDate
+            - jsonPath: $.transferInwards.*.challanNo
+            - jsonPath: $.transferInwards.*.challanDate
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.description
+            - jsonPath: $.transferInwards.*.paymentTerms
+            - jsonPath: $.transferInwards.*.receivedBy
+            - jsonPath: $.transferInwards.*.designation
+            - jsonPath: $.transferInwards.*.mrnStatus
+            - jsonPath: $.transferInwards.*.inspectedBy
+            - jsonPath: $.transferInwards.*.inspectionDate
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.inspectionRemarks
+            - jsonPath: $.transferInwards.*.tenantId
+            - jsonPath: $.transferInwards.*.auditDetails.createdBy
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.auditDetails.lastModifiedBy
+            - type: CURRENTDATE
+              dbType: LONG
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark, podetailid, mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.transferInwards.*.receiptDetails.*
+          jsonMaps:
+            - jsonPath: $.transferInwards.*.receiptDetails.*.id
+            - jsonPath: $.transferInwards.*.receiptDetails.*.tenantId
+            - jsonPath: $.transferInwards.*.receiptDetails.*.material.code
+            - jsonPath: $.transferInwards.*.receiptDetails.*.uom.code
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receivedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.acceptedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.unitRate
+            - jsonPath: $.transferInwards.*.receiptDetails.*.rejectionRemark
+            - jsonPath: $.transferInwards.*.receiptDetails.*.purchaseOrderDetail.id
+            - jsonPath: $.transferInwards[?({id} in @.receiptDetails[*].id)].mrnNumber
+            - jsonPath: $.transferInwards.*.receiptDetails.*.auditDetails.createdBy
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.receiptDetails.*.auditDetails.lastModifiedBy
+            - type: CURRENTDATE
+              dbType: LONG
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, quantity, manufacturedate, lotNo, expiryDate, batchno, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*
+          jsonMaps:
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
+            - jsonPath: $.transferInwards.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
+            - jsonPath: $.transferInwards.*.tenantId
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.manufactureDate
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+              type: LONG
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.batchNo
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
+              type: LONG
+
+    - version: 1.0
+      name: Transfer Inward Receipt
+      description: Update Transfer Inward Receipt
+      fromTopic: inv-transfer-inward-update-topic
+      isTransaction: true
+      queryMaps:
+        - query: >-
+               update materialreceipt set receivingstore = ?,issueingStore=?, receiptDate  = ?, receiptType = ?, suppliercode = ?, supplierbillno = ?, supplierbilldate = ?,
+               challanno = ?, challandate = ?, description = ?, paymentterms = ?, receivedby = ?, designation = ?, mrnstatus = ?, inspectedby = ?, inspectiondate = ?,
+               inspectionremarks = ?, lastmodifiedby = ?, lastModifiedTime = ? where mrnnumber = ? and tenantid = ?;
+          basePath: $.transferInwards.*
+          jsonMaps:
+            - jsonPath: $.transferInwards.*.receivingStore.code
+            - jsonPath: $.transferInwards.*.issueingStore.code
+            - jsonPath: $.transferInwards.*.receiptDate
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.receiptType
+            - jsonPath: $.transferInwards.*.supplier.code
+            - jsonPath: $.transferInwards.*.supplierBillNo
+            - jsonPath: $.transferInwards.*.supplierBillDate
+            - jsonPath: $.transferInwards.*.challanNo
+            - jsonPath: $.transferInwards.*.challanDate
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.description
+            - jsonPath: $.transferInwards.*.paymentTerms
+            - jsonPath: $.transferInwards.*.receivedBy
+            - jsonPath: $.transferInwards.*.designation
+            - jsonPath: $.transferInwards.*.mrnStatus
+            - jsonPath: $.transferInwards.*.inspectedBy
+            - jsonPath: $.transferInwards.*.inspectionDate
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.inspectionRemarks
+            - jsonPath: $.transferInwards.*.auditDetails.lastModifiedBy
+            - jsonPath: $.transferInwards.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.mrnNumber
+            - jsonPath: $.transferInwards.*.tenantId
+        - query: >-
+                 INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark, podetailid,
+                 mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 material = EXCLUDED.material, uomno  = EXCLUDED.uomno, receivedQty = EXCLUDED.receivedQty,
+                 acceptedQty = EXCLUDED.acceptedQty, unitRate = EXCLUDED.unitRate, rejectionremark = EXCLUDED.rejectionremark,
+                 podetailid = EXCLUDED.podetailid, mrnnumber = EXCLUDED.mrnnumber, lastmodifiedby = EXCLUDED.lastmodifiedby,
+                 lastModifiedTime = EXCLUDED.lastmodifiedtime ;
+          basePath: $.transferInwards.*.receiptDetails.*
+          jsonMaps:
+            - jsonPath: $.transferInwards.*.receiptDetails.*.id
+            - jsonPath: $.transferInwards.*.receiptDetails.*.tenantId
+            - jsonPath: $.transferInwards.*.receiptDetails.*.material.code
+            - jsonPath: $.transferInwards.*.receiptDetails.*.uom.code
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receivedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.acceptedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.unitRate
+            - jsonPath: $.transferInwards.*.receiptDetails.*.rejectionRemark
+            - jsonPath: $.transferInwards.*.receiptDetails.*.purchaseOrderDetail.id
+            - jsonPath: $.transferInwards[?({id} in @.receiptDetails[*].id)].mrnNumber
+            - jsonPath: $.transferInwards.*.receiptDetails.*.auditDetails.createdBy
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.transferInwards.*.receiptDetails.*.auditDetails.lastModifiedBy
+            - type: CURRENTDATE
+              dbType: LONG
+        - query: >-
+                 INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, quantity, manufacturedate, lotNo, expiryDate, batchno, serialno)
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 receiptDetailId = EXCLUDED.receiptdetailid, quantity = EXCLUDED.quantity, manufacturedate = EXCLUDED.manufacturedate,
+                 lotNo = EXCLUDED.lotno, batchNo = EXCLUDED.batchno,
+                 expiryDate = EXCLUDED.expirydate, serialno = EXCLUDED.serialno ;
+          basePath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*
+          jsonMaps:
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
+            - jsonPath: $.transferInwards.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
+            - jsonPath: $.transferInwards.*.tenantId
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.manufactureDate
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+              type: LONG
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.batchNo
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
+              type: LONG
+
 
 
 

@@ -125,6 +125,10 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
+            style: {
+              height: '180px',
+              overflowY : 'auto'
+            }
           },
           {
             name: 'primaryAdvocate',

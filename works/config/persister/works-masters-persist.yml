@@ -143,7 +143,7 @@ serviceMaps:
        - jsonPath: $.contractors.*.pmc
          type: BOOLEAN
 
-       - jsonPath: $.contractors.*.status
+       - jsonPath: $.contractors.*.status.code
 
        - jsonPath: $.contractors.*.auditDetails.createdBy
 
@@ -207,7 +207,7 @@ serviceMaps:
        - jsonPath: $.contractors.*.pmc
          type: BOOLEAN
 
-       - jsonPath: $.contractors.*.status
+       - jsonPath: $.contractors.*.status.code
 
        - jsonPath: $.contractors.*.auditDetails.lastModifiedBy
 

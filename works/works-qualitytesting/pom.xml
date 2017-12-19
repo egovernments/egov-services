@@ -116,12 +116,35 @@
             <artifactId>json-path</artifactId>
             <version>2.2.0</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
-        </dependency>
 	</dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Releases Repository</name>
+            <url>https://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>repo.egovernments.org</id>
+            <name>eGov ERP Snapshots Repository</name>
+            <url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>repo.egovernments.org</id>
+            <name>eGov Public Repository Group</name>
+            <url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
 
 	<build>
 		<plugins>

@@ -44,7 +44,7 @@ serviceMaps:
             UPDATE store SET
             name=?,description=?,department=?,storeincharge=?,officelocation=?,
             billingaddress=?,deliveryaddress=?,contactno1=?,contactno2=?,email=?,iscentralstore=?,active=?,lastmodifiedby=?,lastmodifiedtime=?
-            WHERE code=? AND tenantid=?;
+            WHERE id=? AND tenantid=?;
           basePath: $.stores.*
           jsonMaps:
             - jsonPath: $.stores.*.name
@@ -62,7 +62,7 @@ serviceMaps:
             - jsonPath: $.stores.*.auditDetails.lastModifiedBy
             - jsonPath: $.stores.*.auditDetails.lastModifiedTime
               dbType: LONG
-            - jsonPath: $.stores.*.code
+            - jsonPath: $.stores.*.id
             - jsonPath: $.stores.*.tenantId
 
     - version: 1.0
@@ -212,7 +212,7 @@ serviceMaps:
             status = ?, inactivedate = ?, active = ?, contactno = ?, faxno = ?,
             website = ?, email = ?, description = ?, panno = ?,
             tinno = ?, cstno = ?, vatno = ?, gstNo = ?, contactperson = ?,contactpersonno = ?,
-            bankcode = ?,bankbranch = ?, bankifsc = ?,bankAcctNo = ?, bankmicr = ?, lastmodifiedby = ?, lastmodifiedtime = ? where code = ? and tenantid = ?
+            bankcode = ?,bankbranch = ?, bankifsc = ?,bankAcctNo = ?, bankmicr = ?, lastmodifiedby = ?, lastmodifiedtime = ? where id = ? and tenantid = ?
           basePath: $.suppliers.*
           jsonMaps:
             - jsonPath: $.suppliers.*.name
@@ -242,7 +242,7 @@ serviceMaps:
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedBy
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedTime
               dbType: LONG
-            - jsonPath: $.suppliers.*.code
+            - jsonPath: $.suppliers.*.id
             - jsonPath: $.suppliers.*.tenantId
     - version: 1.0
       name: material store mapping create

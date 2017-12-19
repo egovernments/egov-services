@@ -47,10 +47,8 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.SupplierEntity;
-import org.egov.inv.persistence.repository.SupplierESRepository;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,9 +63,6 @@ public class SupplierService extends DomainService {
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    private SupplierESRepository supplierESRepository;
 
     @Autowired
     private SupplierJdbcRepository supplierJdbcRepository;
@@ -92,8 +87,8 @@ public class SupplierService extends DomainService {
 
     public SupplierResponse create(SupplierRequest supplierRequest, String tenantId) {
         try {
-            SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
-            validate(fetchRelated.getSuppliers(), Constants.ACTION_CREATE, tenantId);
+          //  SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
+            validate(supplierRequest.getSuppliers(), Constants.ACTION_CREATE, tenantId);
             List<String> sequenceNos = supplierJdbcRepository.getSequence(Supplier.class.getSimpleName(), supplierRequest.getSuppliers().size());
             int i = 0;
             for (Supplier supplier : supplierRequest.getSuppliers()) {
@@ -119,13 +114,14 @@ public class SupplierService extends DomainService {
     public SupplierResponse update(SupplierRequest supplierRequest, String tenantId) {
 
         try {
-            SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
-            validate(fetchRelated.getSuppliers(), Constants.ACTION_UPDATE, tenantId);
+        //    SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
+            validate(supplierRequest.getSuppliers(), Constants.ACTION_UPDATE, tenantId);
 
             for (Supplier supplier : supplierRequest.getSuppliers()) {
                 if (isEmpty(supplier.getTenantId())) {
                     supplier.setTenantId(tenantId);
                 }
+                supplier.setCode(supplier.getCode().toUpperCase());
                 if (!supplier.getActive()) {
                     supplier.setStatus(Supplier.StatusEnum.INACTIVE);
                 }
@@ -161,7 +157,7 @@ public class SupplierService extends DomainService {
                             errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
 
                         }
-                        validateBank(supplier, errors);
+                        //validateBank(supplier, errors);
                     }
                     break;
                 case Constants.ACTION_UPDATE:
@@ -180,7 +176,7 @@ public class SupplierService extends DomainService {
                             errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
 
                         }
-                        validateBank(supplier, errors);
+                       // validateBank(supplier, errors);
 
                     }
             }
@@ -205,8 +201,8 @@ public class SupplierService extends DomainService {
         List<Supplier> suppliers = supplierRequest.getSuppliers();
 
         for (Supplier supplier : suppliers) {
-        	if(supplier.getCode()!=null)
-        	supplier.setCode(supplier.getCode().toUpperCase());
+            if (supplier.getCode() != null)
+                supplier.setCode(supplier.getCode().toUpperCase());
             BankContract bankContract = new BankContract();
             bankContract.setCode(supplier.getBankCode());
             bankContract.setTenantId(!isEmpty(supplier.getTenantId()) ? supplier.getTenantId() : tenantId);

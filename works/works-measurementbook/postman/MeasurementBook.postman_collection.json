@@ -1,0 +1,102 @@
+{
+	"info": {
+		"name": "Measurement Book",
+		"_postman_id": "54d2f13c-c183-b76f-48a8-2c132cd6a219",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create",
+			"description": "",
+			"item": [
+				{
+					"name": "Create New",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"3522d065-18dc-43e0-a820-b7e5febfe1b7\",\n    \"tenantId\": \"default\"\n  },\n  \"measurementBooks\": [\n    {\n      \"tenantId\": \"default\",\n      \"mbRefNo\": \"MB1\",\n      \"contractorComments\": \"First MB\",\n      \"mbDate\": \"1450434548000\",\n      \"mbIssuedDate\": \"1450434548000\",\n      \"mbAbstract\": \"Abstract MB\",\n      \"fromPageNo\": \"1\",\n      \"toPageNo\": \"20\",\n      \"letterOfAcceptanceEstimate\": {\n        \"tenantId\": \"default\",\n        \"id\": \"0a6dc1fcb5694224ba8f4915a63864e0\",\n        \"letterOfAcceptance\": \"6ed57296787d4d92a5fc2678eaba2cb8\",\n        \"detailedEstimate\": {\n        \t\"id\": \"99c9cd02e0f64589a68ac404acb28fe5\",\n        \t\"tenantId\": \"default\",\n        \t\"estimateNumber\": \"Spillover/DE/ENG/7513\"\n        }\n      },\n      \"revisionLOA\": null,\n      \"status\": \"APPROVED\",\n      \"measurementBookDetails\": [\n        {\n          \"tenantId\": \"default\",\n          \"measurementBook\": null,\n          \"quantity\": \"10\",\n          \"rate\": \"100\",\n          \"remarks\": \"remarks\",\n          \"amount\": 1000,\n          \"loaActivity\": {\n          \t\"id\":\"1a4dc1fcb5634124ba8f4915a63864e1\"\n          },\n          \"measurementSheets\": [\n            {\n              \"tenantId\": \"default\",\n              \"remarks\": \"sheet remarks\",\n              \"number\": 1,\n              \"length\": 10,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 10,\n              \"measurementBookDetail\": null,\n              \"loaMeasurementSheet\": {\n              \t\"id\": \"9ec9cd02e0f64589a68ac404acb28fea\"\n              }\n            }\n          ]\n        }\n      ],\n      \"isLegacyMB\": \"true\",\n      \"mbAmount\": \"1000\",\n      \"approvedDate\": \"1450434548000\",\n      \"documentDetails\": [],\n      \"workFlowDetails\": {\n      \t\"action\": \"create\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://egov-micro-dev.egovernments.org/works-measurementbook/v1/measurementbooks/_create?tenantId=default",
+							"protocol": "http",
+							"host": [
+								"egov-micro-dev",
+								"egovernments",
+								"org"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Update",
+			"description": "",
+			"item": [
+				{
+					"name": "Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"ac6a90f6-da32-40a8-a157-db79a0c16948\",\n    \"tenantId\": \"default\"\n  },\n  \"measurementBooks\": [\n    {\n      \"id\" : \"c84a835897b74dbaaf77cadbf1ab6191\",\n      \"tenantId\": \"default\",\n      \"mbRefNo\": \"MB1\",\n      \"contractorComments\": \"Update MB\",\n      \"mbDate\": \"1450434548000\",\n      \"mbIssuedDate\": \"1450434548000\",\n      \"mbAbstract\": \"Abstract MB\",\n      \"fromPageNo\": \"1\",\n      \"toPageNo\": \"20\",\n      \"letterOfAcceptanceEstimate\": {\n        \"tenantId\": \"default\",\n        \"id\": \"0a6dc1fcb5694224ba8f4915a63864e0\",\n        \"letterOfAcceptance\": \"6ed57296787d4d92a5fc2678eaba2cb8\",\n        \"detailedEstimate\": {\n        \t\"id\": \"99c9cd02e0f64589a68ac404acb28fe5\",\n        \t\"tenantId\": \"default\",\n        \t\"estimateNumber\": \"Spillover/DE/ENG/7513\"\n        }\n      },\n      \"revisionLOA\": null,\n      \"status\": \"APPROVED\",\n      \"measurementBookDetails\": [\n        {\n          \"id\": \"568cef3a4e5a44d9bcb882fe8eae340a\",\n          \"tenantId\": \"default\",\n          \"measurementBook\": null,\n          \"quantity\": \"9\",\n          \"rate\": \"100\",\n          \"remarks\": \"remarks\",\n          \"amount\": 900,\n          \"loaActivity\": {\n          \t\"id\":\"1a4dc1fcb5634124ba8f4915a63864e1\"\n          },\n          \"measurementSheets\": [\n            {\n              \"id\": \"dbacee839e884d66ba671fb91b0f1af8\",\n              \"tenantId\": \"default\",\n              \"remarks\": \"sheet remarks\",\n              \"number\": 1,\n              \"length\": 10,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 9,\n              \"measurementBookDetail\": null,\n              \"loaMeasurementSheet\": {\n              \t\"id\": \"9ec9cd02e0f64589a68ac404acb28fea\"\n              }\n            }\n          ]\n        }\n      ],\n      \"isLegacyMB\": \"true\",\n      \"mbAmount\": \"900\",\n      \"approvedDate\": \"1450434548000\",\n      \"documentDetails\": [],\n      \"workFlowDetails\": {\n      \t\"action\": \"create\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://egov-micro-dev.egovernments.org/works-measurementbook/v1/measurementbooks/_update?tenantId=default",
+							"protocol": "http",
+							"host": [
+								"egov-micro-dev",
+								"egovernments",
+								"org"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

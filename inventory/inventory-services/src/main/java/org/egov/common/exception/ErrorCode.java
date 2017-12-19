@@ -205,7 +205,10 @@ public enum ErrorCode {
             "The  value  {2} for the field {0} should be equal to value  {3} for the field {1} ."),
     CATGRY_MATCH("doesnt.match.catgry",
             "Material {0} and Uom {1} combination Not Exist In The System {2}",
-            "Material {0} and Uom {1} combination Not Exist In The System {2}");
+            "Material {0} and Uom {1} combination Not Exist In The System {2}"),
+    TRANSACTION_USED("transaction.used",
+            "{0} {1} cannot be updated as it is used in transactions",
+            "{0} {1} cannot be updated as it is used in transactions");
 
 
     private final String code;

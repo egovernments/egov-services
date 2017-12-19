@@ -49,7 +49,7 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.StoreEntity;
-import org.egov.inv.persistence.repository.StoreJdbcRepository;
+import org.egov.inv.persistence.repository.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -86,6 +86,18 @@ public class StoreService extends DomainService {
 
     @Autowired
     private MdmsRepository mdmsRepository;
+
+    @Autowired
+    private IndentJdbcRepository indentJdbcRepository;
+
+    @Autowired
+    private PurchaseOrderJdbcRepository purchaseOrderJdbcRepository;
+
+    @Autowired
+    private MaterialReceiptJdbcRepository materialReceiptJdbcRepository;
+
+    @Autowired
+    private MaterialIssueJdbcRepository materialIssueJdbcRepository;
 
     public StoreResponse create(StoreRequest storeRequest, String tenantId) {
         try {
@@ -137,12 +149,6 @@ public class StoreService extends DomainService {
 
     public StoreResponse search(StoreGetRequest storeGetRequest) {
 
-        if (null != storeGetRequest.getCode() && storeGetRequest.getCode().size() > 0) {
-            List<String> uppercaseCodes = storeGetRequest.getCode().stream()
-                    .map(String::toUpperCase).collect(Collectors.toList());
-            storeGetRequest.setCode(uppercaseCodes);
-        }
-
         StoreResponse storeResponse = new StoreResponse();
         Pagination<Store> search = storeJdbcRepository.search(storeGetRequest);
         storeResponse.setStores(search.getPagedData());
@@ -171,6 +177,16 @@ public class StoreService extends DomainService {
                         if (store.getId() == null) {
                             throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getCode());
                         }
+
+                        if (isEmpty(store.getTenantId())) {
+                            store.setTenantId(tenantId);
+                        }
+
+                        boolean storeUsed = checkStoreUsedInTransaction(store.getCode(), store.getTenantId());
+                        if (storeUsed) {
+                            errors.addDataError(ErrorCode.TRANSACTION_USED.getCode(), "Store", store.getCode());
+                        }
+
                     }
                 }
                 break;
@@ -221,6 +237,72 @@ public class StoreService extends DomainService {
         }
 
         return storeRequest;
+    }
+
+    public boolean checkStoreUsedInTransaction(String code, String tenantId) {
+        IndentSearch indentSearch = new IndentSearch();
+        indentSearch.setIssueStore(code);
+        indentSearch.setTenantId(tenantId);
+
+        Pagination<Indent> indents = indentJdbcRepository.search(indentSearch);
+        if (indents.getPagedData().size() > 0) {
+            return true;
+        }
+
+        PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+        purchaseOrderSearch.setStore(code);
+        purchaseOrderSearch.setTenantId(tenantId);
+
+        Pagination<PurchaseOrder> purchaseOrders = purchaseOrderJdbcRepository.search(purchaseOrderSearch);
+
+        if (purchaseOrders.getPagedData().size() > 0) {
+            return true;
+        }
+
+        MaterialReceiptSearch issueStoreSearch = new MaterialReceiptSearch();
+        issueStoreSearch.setIssueingStore(code);
+        issueStoreSearch.setTenantId(tenantId);
+
+        Pagination<MaterialReceipt> issueStoreMaterialReceipt = materialReceiptJdbcRepository.search(issueStoreSearch);
+
+        if (issueStoreMaterialReceipt.getPagedData().size() > 0) {
+            return true;
+        }
+
+
+        MaterialReceiptSearch receivingStoreSearch = new MaterialReceiptSearch();
+        receivingStoreSearch.setIssueingStore(code);
+        receivingStoreSearch.setTenantId(tenantId);
+
+        Pagination<MaterialReceipt> receivingStoreMaterialReceipt = materialReceiptJdbcRepository.search(receivingStoreSearch);
+
+        if (receivingStoreMaterialReceipt.getPagedData().size() > 0) {
+            return true;
+        }
+
+        MaterialIssueSearchContract fromStoreIssue = new MaterialIssueSearchContract();
+        fromStoreIssue.setFromStore(code);
+        fromStoreIssue.setTenantId(tenantId);
+
+
+        Pagination<MaterialIssue> fromStoreSearch = materialIssueJdbcRepository.search(fromStoreIssue, null);
+
+        if (fromStoreSearch.getPagedData().size() > 0) {
+            return true;
+        }
+
+        MaterialIssueSearchContract toStoreIssue = new MaterialIssueSearchContract();
+        toStoreIssue.setToStore(code);
+        toStoreIssue.setTenantId(tenantId);
+
+
+        Pagination<MaterialIssue> toStoreSearch = materialIssueJdbcRepository.search(toStoreIssue, null);
+
+        if (toStoreSearch.getPagedData().size() > 0) {
+            return true;
+        }
+
+        return false;
     }
 
 }

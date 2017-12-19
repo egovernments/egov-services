@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -96,10 +97,15 @@ public class StoreJdbcRepository extends JdbcRepository {
             paramValues.put("ids", storeGetRequest.getId());
         }
         if (storeGetRequest.getCode() != null) {
+
+            List<String> uppercaseCodes = storeGetRequest.getCode().stream()
+                    .map(String::toUpperCase).collect(Collectors.toList());
+            storeGetRequest.setCode(uppercaseCodes);
+
             if (params.length() > 0)
                 params.append(" and ");
             params.append("UPPER(code) in (:codes)");
-            paramValues.put("codes", storeGetRequest.getCode());
+            paramValues.put("codes", uppercaseCodes);
         }
         if (storeGetRequest.getName() != null) {
             if (params.length() > 0)

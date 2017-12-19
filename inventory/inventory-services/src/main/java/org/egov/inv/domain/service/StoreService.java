@@ -136,9 +136,13 @@ public class StoreService extends DomainService {
     }
 
     public StoreResponse search(StoreGetRequest storeGetRequest) {
-        List<String> uppercaseCodes = storeGetRequest.getCode().stream()
-                .map(String::toUpperCase).collect(Collectors.toList());
-        storeGetRequest.setCode(uppercaseCodes);
+
+        if (null != storeGetRequest.getCode() && storeGetRequest.getCode().size() > 0) {
+            List<String> uppercaseCodes = storeGetRequest.getCode().stream()
+                    .map(String::toUpperCase).collect(Collectors.toList());
+            storeGetRequest.setCode(uppercaseCodes);
+        }
+
         StoreResponse storeResponse = new StoreResponse();
         Pagination<Store> search = storeJdbcRepository.search(storeGetRequest);
         storeResponse.setStores(search.getPagedData());

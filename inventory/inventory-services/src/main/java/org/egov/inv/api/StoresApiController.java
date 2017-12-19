@@ -90,6 +90,7 @@ public class StoresApiController implements StoresApi {
             @Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @Valid @RequestParam(value = "ids", required = false) List<String> ids,
             @ApiParam(value = "list of code of the Store ") @Valid @RequestParam(value = "codes", required = false) List<String> codes,
             @ApiParam(value = "name of the Store ") @Valid @RequestParam(value = "name", required = false) String name,
+            @ApiParam(value = "search purposeof store ") @Valid @RequestParam(value = "searchPurpose", required = false) String searchPurpose,
             @ApiParam(value = "description of the Store ") @Valid @RequestParam(value = "description", required = false) String description,
             @ApiParam(value = "department of the Store ") @Valid @RequestParam(value = "department", required = false) String department,
             @ApiParam(value = "billing address of the Store ") @Valid @RequestParam(value = "billingAddress", required = false) String billingAddress,
@@ -107,7 +108,7 @@ public class StoresApiController implements StoresApi {
             throws Exception {
 
         StoreGetRequest storeGetRequest = new StoreGetRequest(ids,
-                codes, name, description, department, contactNo1, billingAddress, deliveryAddress, contactNo2, email, isCentralStore,
+                codes, name, searchPurpose, description, department, contactNo1, billingAddress, deliveryAddress, contactNo2, email, isCentralStore,
                 storeInCharge, active, sortBy, pageSize, offset, tenantId);
         StoreResponse response = storesService.search(storeGetRequest);
 

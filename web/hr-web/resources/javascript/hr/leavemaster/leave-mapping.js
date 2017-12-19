@@ -67,7 +67,11 @@ close(){
                 window.location.href = 'app/hr/common/show-leave-mapping.html?type=update';
               },
               error: function(err) {
-                  showError(err["statusText"]);
+                try{
+                  showError(err["responseJSON"]["0"]["Error"]["description"]);
+                }catch (e) {
+                  showError("Something went wrong, Please contact administrator"); 
+                }
               }
           });
       } else {

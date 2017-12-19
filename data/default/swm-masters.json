@@ -295,7 +295,8 @@
         "capacity": 6.4,
         "address": "Trimbak",
         "location": {
-          "code": "Fake location code 1"
+          "code": "Fake location code 1",
+	  "name": "Fake location name 1"
         },
         "latitude": 0,
         "longitude": 0,
@@ -336,7 +337,8 @@
         "capacity": 16.4,
         "address": "Fake address",
         "location": {
-          "code": "Fake location code 1"
+          "code": "Fake location code 1",
+	  "name": "Fake location name 1"
         },
         "latitude": 0,
         "longitude": 0,
@@ -373,6 +375,10 @@
         "area": 0.025,
         "capacity": 6.4,
         "address": "Fake Address",
+	"location": {
+          "code": "Fake location code 1",
+	  "name": "Fake location name 1"
+        },
         "latitude": 0,
         "longitude": 0,
         "mpcbAuthorisation": true,

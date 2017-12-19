@@ -96,11 +96,11 @@ close(){
                 })
               },
               error: function(err) {
-                console.log(err);
-                if(err["0"]["Error"]["description"])
-                  showError(err["0"]["Error"]["description"]);
-                else
-                  showError(err["statusText"]);
+                try{
+                  showError(err["responseJSON"]["Error"]["description"]);
+                }catch{
+                  showError("Something went wrong, Please contact administrator"); 
+                }
               }
           });
       }

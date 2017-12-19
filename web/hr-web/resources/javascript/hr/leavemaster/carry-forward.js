@@ -45,7 +45,11 @@ class CarryForward extends React.Component {
                     }
                 })
             } else {
-                showError(err["statusText"]);
+                try{
+                    showError(err["responseJSON"]["Error"]["description"]);
+                  }catch{
+                    showError("Something went wrong, Please contact administrator"); 
+                  }
             }
         });
     }
@@ -102,13 +106,13 @@ class CarryForward extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Calender Year </label>
+                                        <label for="">Calender Year<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">
-                                            <select id="year" name="year" value={year} onChange={(e) => {
+                                            <select id="year" name="year" value={year} required="true" onChange={(e) => {
                                                 handleChange(e, "year")
-                                            }} required="true" >
+                                            }} >
                                                 <option>Select Calender Year</option>
                                                 {renderOption(this.state.years)}
                                             </select>

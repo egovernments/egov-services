@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -94,27 +93,26 @@ public class ScheduleOfRateService {
                     scheduleOfRate.getSorRates().addAll(scheduleOfRateService.getById(scheduleOfRate.getId(), scheduleOfRate.getTenantId()).getSorRates());
                 }
                 //sorting SOR rates by from date
-                Collections.sort(scheduleOfRate.getSorRates(), new Comparator<SORRate>() {
-                    @Override
-                    public int compare(SORRate sorRate1, SORRate sorRate2) {
-                        return sorRate1.getFromDate().compareTo(sorRate2.getFromDate());
-                    }
-                });
-                //Check for any new rates are overlapping with existing data, in this case we will close the existing data with previous date of new rate from date.
-                for (int i = 0; i < scheduleOfRate.getSorRates().size(); i++) {
-                    SORRate sorRate = scheduleOfRate.getSorRates().get(i);
-                    if (i == 0) {
-                        sorRateP = sorRate;
-                        sorRateC = sorRate;
-                    } else {
-                        sorRateP = sorRateC;
-                        sorRateC = sorRate;
-                    }
-                    if (i>0 && sorRateP.getToDate() > sorRateC.getFromDate()) {
-                        //Validating existence of Estimates
-                        scheduleOfRateValidator.validateRatesForUpdate(scheduleOfRateRequest, scheduleOfRate.getId(), sorRateP.getFromDate(), sorRateP.getToDate(), sorRateP.getTenantId());
-                        //Setting previous rate to date to current rate from date - 1sec
-                        scheduleOfRate.getSorRates().get(i - 1).setToDate(scheduleOfRate.getSorRates().get(i).getFromDate() - secInMillis);
+                Collections.sort(scheduleOfRate.getSorRates(), (SORRate o1, SORRate o2) -> o1.getFromDate().compareTo(o2.getFromDate()));
+
+                /*Check for any new rates are overlapping with existing data for migrated(excel),
+                in this case we will close the existing data with previous date of new rate from date.*/
+                if (isMigratedSorRatesAvailable) {
+                    for (int i = 0; i < scheduleOfRate.getSorRates().size(); i++) {
+                        SORRate sorRate = scheduleOfRate.getSorRates().get(i);
+                        if (i == 0) {
+                            sorRateP = sorRate;
+                            sorRateC = sorRate;
+                        } else {
+                            sorRateP = sorRateC;
+                            sorRateC = sorRate;
+                        }
+                        if (i > 0 && sorRateP.getToDate() > sorRateC.getFromDate()) {
+                            //Validating existence of Estimates
+                            scheduleOfRateValidator.validateRatesForUpdate(scheduleOfRateRequest, scheduleOfRate.getId(), sorRateP.getFromDate(), sorRateP.getToDate(), sorRateP.getTenantId());
+                            //Setting previous rate to date to current rate from date - 1sec
+                            scheduleOfRate.getSorRates().get(i - 1).setToDate(scheduleOfRate.getSorRates().get(i).getFromDate() - secInMillis);
+                        }
                     }
                 }
             }

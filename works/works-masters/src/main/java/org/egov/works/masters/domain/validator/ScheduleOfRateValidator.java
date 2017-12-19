@@ -8,8 +8,6 @@ import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.*;
 import org.egov.works.masters.web.repository.DetailedEstimateRepository;
 import org.egov.works.masters.web.repository.MdmsRepository;
-import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +31,7 @@ public class ScheduleOfRateValidator {
     public void validate(ScheduleOfRateRequest scheduleOfRateRequest) {
         JSONArray mdmsResponse = null;
         Map<String, String> messages = new HashMap<>();
-        Boolean isDataValid = Boolean.FALSE;
+        Boolean isValidationError = Boolean.FALSE;
         List<String> codeCategoryList = new ArrayList<>();
 
         for (final ScheduleOfRate scheduleOfRate : scheduleOfRateRequest.getScheduleOfRates()) {
@@ -43,11 +41,11 @@ public class ScheduleOfRateValidator {
                         scheduleOfRateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     messages.put(Constants.KEY_SCHEDULERCATEGORY_CODE_INVALID, Constants.MESSAGE_SCHEDULERCATEGORY_CODE_INVALID + scheduleOfRate.getScheduleCategory());
-                    isDataValid = Boolean.TRUE;
+                    isValidationError = Boolean.TRUE;
                 }
             } else {
                 messages.put(Constants.KEY_SCHEDULERCATEGORY_CODE_MANDATORY, Constants.MESSAGE_SCHEDULERCATEGORY_CODE_MANDATORY);
-                isDataValid = Boolean.TRUE;
+                isValidationError = Boolean.TRUE;
             }
 
             if (scheduleOfRate.getUom() != null && scheduleOfRate.getUom().getCode() != null && !scheduleOfRate.getUom().getCode().isEmpty()) {
@@ -56,59 +54,66 @@ public class ScheduleOfRateValidator {
                         scheduleOfRateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     messages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + scheduleOfRate.getUom());
-                    isDataValid = Boolean.TRUE;
+                    isValidationError = Boolean.TRUE;
                 }
             } else {
                 messages.put(Constants.KEY_UOM_CODE_MANDATORY, Constants.MESSAGE_UOM_CODE_MANDATORY);
-                isDataValid = Boolean.TRUE;
+                isValidationError = Boolean.TRUE;
             }
 
-            if ((scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty() && scheduleOfRate.getSorRates().size() > 0) && (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty() && scheduleOfRate.getMarketRates().size() > 0)) {
-                messages.put(Constants.KEY_SOR_BOTH_RATES_SHOULDNOT_PRESENT, Constants.MESSAGE_SOR_BOTH_RATES_SHOULDNOT_PRESENT);
-                isDataValid = Boolean.TRUE;
-            } else if ((scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty())
+            if ((scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty())
                     || (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty())) {
-                if (scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty() && scheduleOfRate.getSorRates().size() > 0) {
-                    Boolean isDateOverlaped = Boolean.FALSE;
-                    List<SORRate> sorRates;
-                    Map<SORRate, Interval> sorIntervals = new HashMap<>();
+                if (scheduleOfRate.getSorRates() != null && !scheduleOfRate.getSorRates().isEmpty()
+                        && scheduleOfRate.getSorRates().size() > 0) {
                     int openEndedDateCount = 0;
+                    int sorCounter = 0;
+                    SORRate sorRateP = null;
+                    SORRate sorRateC = null;
+
+                    //Sort SOR rates by from date
+                    Collections.sort(scheduleOfRate.getSorRates(), (SORRate o1, SORRate o2) -> o1.getFromDate().compareTo(o2.getFromDate()));
+
                     for (final SORRate sorRate : scheduleOfRate.getSorRates()) {
                         if (sorRate.getToDate() == null) {
                             openEndedDateCount++;
                             sorRate.setToDate(System.currentTimeMillis());
+                        } else if (sorRate.getFromDate().compareTo(sorRate.getToDate()) != -1) {
+                            messages.put(Constants.KEY_SOR_FROMDATE_SHOULDBE_LESSTHAN_TODATE, Constants.MESSAGE_SOR_FROMDATE_SHOULDBE_LESSTHAN_TODATE);
+                            isValidationError = Boolean.TRUE;
                         }
                         if (openEndedDateCount > 1) {
                             messages.put(Constants.KEY_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES, Constants.MESSAGE_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES);
-                            isDataValid = Boolean.TRUE;
+                            isValidationError = Boolean.TRUE;
                             break;
                         }
-                        sorIntervals.put(sorRate, new Interval(new DateTime(sorRate.getFromDate()), new DateTime(sorRate.getToDate())));
+                        //Date range overlapping validation
+                        if (sorCounter == 0) {
+                            sorRateP = sorRate;
+                            sorRateC = sorRate;
+                        } else {
+                            sorRateP = sorRateC;
+                            sorRateC = sorRate;
+                            if (isDateRangeOverlapped(sorRateP.getFromDate(), sorRateP.getToDate(), sorRateC.getFromDate(), sorRateC.getToDate())) {
+                                messages.put(Constants.KEY_SOR_DATES_SHOULDNOT_OVERLAP, Constants.MESSAGE_SOR_DATES_SHOULDNOT_OVERLAP);
+                                isValidationError = Boolean.TRUE;
+                            }
+                        }
+
                         if (sorRate.getRate().compareTo(BigDecimal.ZERO) <= 0) {
                             messages.put(Constants.KEY_SOR_RATE_SHOULDBE_GREATERTHANZERO, Constants.MESSAGE_SOR_RATE_SHOULDBE_GREATERTHANZERO + sorRate.getRate());
-                            isDataValid = Boolean.TRUE;
+                            isValidationError = Boolean.TRUE;
                         }
-                    }
-                    sorRates = new ArrayList(sorIntervals.keySet());
-                    for (int outerIndex = 0; outerIndex < sorRates.size(); outerIndex++) {
-                        for (int innerIndex = outerIndex + 1; innerIndex < sorRates.size(); innerIndex++) {
-                            if (sorIntervals.get(sorRates.get(outerIndex)).overlaps(sorIntervals.get(sorRates.get(innerIndex)))) {
-                                isDateOverlaped = Boolean.TRUE;
-                                break;
-                            }
-                            if (isDateOverlaped) break;
-                        }
-                    }
-                    if (isDateOverlaped) {
-                        messages.put(Constants.KEY_SOR_DATES_SHOULDNOT_OVERLAP, Constants.MESSAGE_SOR_DATES_SHOULDNOT_OVERLAP);
-                        isDataValid = Boolean.TRUE;
+                        sorCounter++;
                     }
                 }
                 if (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty() && scheduleOfRate.getMarketRates().size() > 0) {
-                    Boolean isDateOverlaped = Boolean.FALSE;
-                    List<MarketRate> marketRates;
-                    Map<MarketRate, Interval> sorIntervals = new HashMap<>();
                     int openEndedDateCount = 0;
+                    int marketCounter = 0;
+                    MarketRate marketRateP = null;
+                    MarketRate marketRateC = null;
+
+                    //Sort Market rates by from date
+                    Collections.sort(scheduleOfRate.getMarketRates(), (MarketRate o1, MarketRate o2) -> o1.getFromDate().compareTo(o2.getFromDate()));
                     for (final MarketRate marketRate : scheduleOfRate.getMarketRates()) {
                         if (marketRate.getToDate() == null) {
                             openEndedDateCount++;
@@ -116,42 +121,41 @@ public class ScheduleOfRateValidator {
                         }
                         if (openEndedDateCount > 1) {
                             messages.put(Constants.KEY_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES, Constants.MESSAGE_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES);
-                            isDataValid = Boolean.TRUE;
+                            isValidationError = Boolean.TRUE;
                             break;
                         }
-                        sorIntervals.put(marketRate, new Interval(new DateTime(marketRate.getFromDate()), new DateTime(marketRate.getToDate())));
+                        //Date range overlapping validation
+                        if (marketCounter == 0) {
+                            marketRateP = marketRate;
+                            marketRateC = marketRate;
+                        } else {
+                            marketRateP = marketRateC;
+                            marketRateC = marketRate;
+                            if (isDateRangeOverlapped(marketRateP.getFromDate(), marketRateP.getToDate(), marketRateC.getFromDate(), marketRateC.getToDate())) {
+                                messages.put(Constants.KEY_SOR_MARKETRATE_DATES_SHOULDNOT_OVERLAP, Constants.MESSAGE_SOR_MARKETRATE_DATES_SHOULDNOT_OVERLAP);
+                                isValidationError = Boolean.TRUE;
+                            }
+                        }
                         if (marketRate.getRate().compareTo(BigDecimal.ZERO) <= 0) {
                             messages.put(Constants.KEY_SOR_RATE_SHOULDBE_GREATERTHANZERO, Constants.MESSAGE_SOR_RATE_SHOULDBE_GREATERTHANZERO + marketRate.getRate());
-                            isDataValid = Boolean.TRUE;
+                            isValidationError = Boolean.TRUE;
                         }
-                    }
-                    marketRates = new ArrayList(sorIntervals.keySet());
-                    for (int outerIndex = 0; outerIndex < marketRates.size(); outerIndex++) {
-                        for (int innerIndex = outerIndex + 1; innerIndex < marketRates.size(); innerIndex++) {
-                            if (sorIntervals.get(marketRates.get(outerIndex)).overlaps(sorIntervals.get(marketRates.get(innerIndex)))) {
-                                isDateOverlaped = Boolean.TRUE;
-                                break;
-                            }
-                            if (isDateOverlaped) break;
-                        }
-                    }
-                    if (isDateOverlaped) {
-                        messages.put(Constants.KEY_SOR_MARKETRATE_DATES_SHOULDNOT_OVERLAP, Constants.MESSAGE_SOR_MARKETRATE_DATES_SHOULDNOT_OVERLAP);
-                        isDataValid = Boolean.TRUE;
+                        marketCounter++;
                     }
                 }
             } else {
                 messages.put(Constants.KEY_SOR_EITHER_SOR_OR_MARKETRATE_ISREQUIRED, Constants.MESSAGE_SOR_EITHER_SOR_OR_MARKETRATE_ISREQUIRED);
-                isDataValid = Boolean.TRUE;
+                isValidationError = Boolean.TRUE;
             }
             codeCategoryList.add(scheduleOfRate.getCode() + "_" + scheduleOfRate.getScheduleCategory().getCode());
         }
         Set<String> filteredCodeCategory = new HashSet<String>(codeCategoryList);
+        //Checking duplicate codes in received list from request
         if (codeCategoryList.size() != filteredCodeCategory.size()) {
             messages.put(Constants.KEY_SOR_THEREARE_DUPLICATE_CODES, Constants.MESSAGE_SOR_THEREARE_DUPLICATE_CODES);
-            isDataValid = Boolean.TRUE;
+            isValidationError = Boolean.TRUE;
         }
-        if (isDataValid) throw new CustomException(messages);
+        if (isValidationError) throw new CustomException(messages);
     }
 
     public void validateForExistance(ScheduleOfRateRequest scheduleOfRateRequest) {
@@ -194,5 +198,12 @@ public class ScheduleOfRateValidator {
         if (des != null && des.size() > 0) {
             throw new CustomException(Constants.KEY_SOR_THEREARE_DE, Constants.MESSAGE_SOR_THEREARE_DE);
         }
+    }
+
+    private Boolean isDateRangeOverlapped(Long fromDate1, Long toDate1, Long fromDate2, Long toDate2) {
+        if (toDate1 < fromDate2 && fromDate1 < fromDate2 && toDate1 < toDate2 && fromDate1 < toDate2)
+            return false;
+        else
+            return true;
     }
 }

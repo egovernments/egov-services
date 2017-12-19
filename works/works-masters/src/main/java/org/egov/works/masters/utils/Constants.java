@@ -38,8 +38,8 @@ public class Constants {
     public static final String KEY_SOR_KEY_INVALID="WMS.SOR.KEY.INVALID";
     public static final String MESSAGE_SOR_KEY_INVALID="Given SOR key is not valid: ";
 
-    public static final String KEY_SOR_BOTH_RATES_SHOULDNOT_PRESENT="WMS.SOR.BOTH.RATES.SHOULDNOT.PRESENT";
-    public static final String MESSAGE_SOR_BOTH_RATES_SHOULDNOT_PRESENT="SOR cannot exist with both the rates ";
+    public static final String KEY_SOR_FROMDATE_SHOULDBE_LESSTHAN_TODATE="WMS.SOR.FROMDATE.SHOULDBE.LESSTHAN.TODATE";
+    public static final String MESSAGE_SOR_FROMDATE_SHOULDBE_LESSTHAN_TODATE="From date should be less than to date ";
 
     public static final String KEY_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES="WMS.SOR.SHOULDNOT.MULTIPLE.OPEN.ENDEDDATES";
     public static final String MESSAGE_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES="SOR cannot have multiple open ended dates ";

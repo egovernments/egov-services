@@ -524,7 +524,7 @@ class UpdateCancellation extends React.Component {
 
             }
 
-            if(agreement.workflowDetails.assignee){
+            if(!agreement.workflowDetails.assignee){
                 agreement.workflowDetails.assignee = this.state.initiatorPosition;
             }
 

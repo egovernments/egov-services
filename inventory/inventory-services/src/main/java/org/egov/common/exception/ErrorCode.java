@@ -200,6 +200,9 @@ public enum ErrorCode {
     DOESNT_MATCH("doesnt.match.object",
             "{1} {0} doesnt match with the existing {1} {2}",
             "{1} {0} doesnt match with the existing {1} {2}"),
+    UNITPRICE_EQ_PLDRATE("unitprice.should.be.eq.ratecontractprice",
+            "the unitprice {0} should be equal to {1} ratecontract price. ",
+            "The  value  {2} for the field {0} should be equal to value  {3} for the field {1} ."),
     CATGRY_MATCH("doesnt.match.catgry",
             "Material {0} and Uom {1} combination Not Exist In The System {2}",
             "Material {0} and Uom {1} combination Not Exist In The System {2}");

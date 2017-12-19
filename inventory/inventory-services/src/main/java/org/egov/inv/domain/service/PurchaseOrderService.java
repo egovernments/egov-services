@@ -485,6 +485,12 @@ public class PurchaseOrderService extends DomainService {
                         	throw new CustomException("rateContract", "No RateContracts exist for the given combination of indent, supplier and ratetype");
                         
                         
+                        //Validating the POLine price with that in the ratecontract
+                        if(poDetail.getUnitPrice().compareTo(new BigDecimal(poDetail.getPriceList().getPriceListDetails().get(0).getRatePerUnit())) != 0) {
+                        	errors.addDataError(ErrorCode.UNITPRICE_EQ_PLDRATE.getCode(), "unitprice" + "ratecontractprice" + poDetail.getUnitPrice() + poDetail.getPriceList().getPriceListDetails().get(0).getRatePerUnit());
+                        }
+                        
+                        
                         //validation of order quantity incase of tender
                         if(( poDetail.getOrderQuantity().add(poDetail.getUsedQuantity()) ).compareTo(poDetail.getTenderQuantity()) > 0) {
                         	throw new CustomException("orderQuantity", "Order Quantity exceeding the permitted");

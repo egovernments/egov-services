@@ -15,6 +15,7 @@ export default class BarChartCard extends Component {
       dataKey: null,
       showChartView: true,
     };
+    this.kpis = this.props.kpis;
   }
 
   componentDidMount() {
@@ -151,7 +152,7 @@ export default class BarChartCard extends Component {
       );
     }
 
-    let title = `KPI representation for ${this.props.kpis}`;
+    let title = `KPI representation for ${this.kpis}`;
     return (
       <div>
         <br />

@@ -1,5 +1,7 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -89,6 +91,7 @@ public class VendorContractService {
 
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
+        DateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm:ss");
         for (final VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
 
             if (vendorContract.getVendor() != null && (vendorContract.getVendor().getVendorNo() == null
@@ -112,19 +115,19 @@ public class VendorContractService {
                 if (new Date(vendorContract.getContractPeriodTo())
                         .before(new Date(vendorContract.getContractPeriodFrom())))
                     throw new CustomException("ContractPeriodToDate ", "Given Contract Period To Date is invalid: "
-                            + new Date(vendorContract.getContractPeriodTo()));
+                            + dateFormat.format(new Date(vendorContract.getContractPeriodTo())));
             
             if (vendorContract.getContractDate() != null)
                 if (new Date()
                         .before(new Date(vendorContract.getContractDate())))
                     throw new CustomException("ContractDate ", "Given Contract Date is invalid: "
-                            + new Date(vendorContract.getContractDate()));
+                            + dateFormat.format(new Date(vendorContract.getContractDate())));
             
             if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractDate() != null)
                 if (new Date(vendorContract.getContractDate())
                         .after(new Date(vendorContract.getContractPeriodFrom())))
                     throw new CustomException("ContractPeriodFrom ", "Given Contract Period From Date is invalid: "
-                            + new Date(vendorContract.getContractPeriodFrom()));
+                            + dateFormat.format(new Date(vendorContract.getContractPeriodFrom())));
 
         }
 

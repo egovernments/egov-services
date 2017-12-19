@@ -227,10 +227,10 @@ public class MeasurementBookValidator {
                         }
                     }
                 }
-                if ("A".equalsIgnoreCase(identifier))
-                    mbSheetQuantity += sheet.getQuantity().doubleValue();
-                else
+                if ("D".equalsIgnoreCase(identifier))
                     mbSheetQuantity -= sheet.getQuantity().doubleValue();
+                else
+                    mbSheetQuantity += sheet.getQuantity().doubleValue();
             }
             if (!mbSheetQuantity.equals(detail.getQuantity()))
     			messages.put(Constants.KEY_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL,

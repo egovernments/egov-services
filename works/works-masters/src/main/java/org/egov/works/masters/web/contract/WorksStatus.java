@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-19T07:03:25.843Z")
 
 public class WorksStatus   {
-  @JsonProperty("tenantid")
+  @JsonProperty("tenantId")
   private String tenantId = null;
 
   @JsonProperty("code")
@@ -29,10 +29,10 @@ public class WorksStatus   {
   @JsonProperty("description")
   private String description = null;
 
-  @JsonProperty("moduletype")
+  @JsonProperty("moduleType")
   private String moduleType = null;
 
-  @JsonProperty("ordernumber")
+  @JsonProperty("orderNumber")
   private BigDecimal orderNumber = null;
 
   public WorksStatus tenantId(String tenantId) {

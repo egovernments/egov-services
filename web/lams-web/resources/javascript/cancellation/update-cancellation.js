@@ -1135,7 +1135,7 @@ class UpdateCancellation extends React.Component {
                 if (btn.key.toLowerCase() === "approve" || btn.key.toLowerCase() === "print notice") {
                     flg = 1; 
                 }
-            }
+            });
 
             if(flg === 0){
             

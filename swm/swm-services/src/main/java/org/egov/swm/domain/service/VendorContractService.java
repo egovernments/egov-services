@@ -3,6 +3,7 @@ package org.egov.swm.domain.service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -92,6 +93,7 @@ public class VendorContractService {
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (final VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
 
             if (vendorContract.getVendor() != null && (vendorContract.getVendor().getVendorNo() == null

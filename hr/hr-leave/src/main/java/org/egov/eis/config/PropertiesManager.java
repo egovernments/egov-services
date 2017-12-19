@@ -97,7 +97,7 @@ public class PropertiesManager {
 	private String hrMastersServiceCompensatoryConfigurationKey;
 
 	@Value("${egov.services.hr_masters_service.hrconfigurations.weeklyholidaykey}")
-	private String hrMastersServiceWeeklyHolidayConfigKey;
+	private String hrMastersServiceConfigurationsWeeklyHolidayKey;
 
 	@Value("${egov.services.hr_masters_service.hrconfigurations.fivedayweek}")
 	private String hrMastersServiceConfigurationsFiveDayWeek;

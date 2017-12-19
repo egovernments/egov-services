@@ -338,11 +338,11 @@ public class LeaveApplicationService {
 					.getWeeklyHolidays(leaveApplication.getTenantId(), leaveApplicationRequest.getRequestInfo());
 
 			if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
-					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceWeeklyHolidayConfigKey()).get(0))) {
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsWeeklyHolidayKey()).get(0))) {
 				if (isSecondSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
 					isHoliday = true;
 			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
-					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceWeeklyHolidayConfigKey()).get(0))) {
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsWeeklyHolidayKey()).get(0))) {
 				if (isSecondOrFourthSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
 					isHoliday = true;
 			}

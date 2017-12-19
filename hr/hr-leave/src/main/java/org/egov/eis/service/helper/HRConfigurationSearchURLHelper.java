@@ -43,7 +43,7 @@ public class HRConfigurationSearchURLHelper {
     
     public String weeklyHolidaysSearchURL(final String tenantId) {
         StringBuilder url = searchURL(tenantId);
-        url.append("&name=" + propertiesManager.getHrMastersServiceWeeklyHolidayConfigKey());
+        url.append("&name=" + propertiesManager.getHrMastersServiceConfigurationsWeeklyHolidayKey());
         return url.toString();
     }
 }

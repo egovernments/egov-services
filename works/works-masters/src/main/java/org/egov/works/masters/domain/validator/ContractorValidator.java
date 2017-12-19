@@ -75,19 +75,24 @@ public class ContractorValidator {
                         contractorRequest.getRequestInfo());
                 ObjectMapper mapper = new ObjectMapper();
                 List<WorksStatus> worksStatus = new ArrayList<WorksStatus>();
-                if (mdmsResponse != null || mdmsResponse.size() > 0) {
+                if (mdmsResponse != null && mdmsResponse.size() > 0) {
                     for (Object obj : mdmsResponse)
                         worksStatus.add(mapper.convertValue(obj, WorksStatus.class));
                     if (!worksStatus.isEmpty()) {
+                        Boolean isValidStatus = Boolean.FALSE;
                         for (WorksStatus ws : worksStatus) {
-                            if (!(ws.getModuleType() != null
+                            if (ws.getModuleType() != null
                                     && ws.getModuleType()
                                             .equalsIgnoreCase(CommonConstants.MDMS_CONTRACTORMASTER_MODULETYPE)
-                                    && ws.getCode()!=null && ws.getCode().equalsIgnoreCase(ws.getCode()))) {
-                                messages.put(Constants.KEY_CONTRACTOR_STATUS_INVALID,
-                                        Constants.MESSAGE_CONTRACTOR_STATUS_INVALID + contractor.getStatus());
-                                isDataValid = Boolean.TRUE;
-                            }
+                                    && ws.getCode()!=null && ws.getCode().equalsIgnoreCase(ws.getCode())) {
+                                isValidStatus = Boolean.TRUE;
+                                break;
+                            } 
+                        }
+                        if(!isValidStatus){
+                            messages.put(Constants.KEY_CONTRACTOR_STATUS_INVALID,
+                                    Constants.MESSAGE_CONTRACTOR_STATUS_INVALID + contractor.getStatus());
+                            isDataValid = Boolean.TRUE;
                         }
                     }
                 } else {

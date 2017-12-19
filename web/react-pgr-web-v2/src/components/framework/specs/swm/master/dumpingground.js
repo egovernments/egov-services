@@ -58,27 +58,118 @@ var dat = {
     'swm.create': {
       numCols: 3,
       useTimestamp: true,
-      objectName: 'DumpingGround',
-      idJsonPath: 'dumpingGround[0].code',
+      objectName: 'MasterMetaData',
+      idJsonPath: 'MasterMetaData.masterData[0].code',
       title: 'swm.create.page.title.dumpingGround',
       groups: [
+
+        {
+          name: 'LocationDetails',
+          label: 'swm.collectionpoints.create.group.title.LocationDetails',
+          jsonPath: "MasterMetaData.masterData[0].siteDetails.location",
+          fields: [
+                {
+                  name: 'Ward',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.ward',
+                  label: 'swm.collectionpoints.create.ward',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  url:
+                    'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name',
+                  minLength: 1,
+                  patternErrorMsg: '',
+                  depedants: [
+                    {
+                      jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
+                      type: 'dropDown',
+                      pattern:
+                        'egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={MasterMetaData.masterData[0].siteDetails.location.ward}|$.Boundary.*.id|$.Boundary.*.name',
+                    },
+                  ],
+                },
+                {
+                  name: 'Zone',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
+                  label: 'swm.collectionpoints.create.zone',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  minLength: 1,
+                  patternErrorMsg: '',
+                  depedants: [
+                    {
+                      jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
+                      type: 'dropDown',
+                      pattern:
+                        'egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={MasterMetaData.masterData[0].siteDetails.location.zone}|$.Boundary.*.id|$.Boundary.*.name',
+                    },
+                  ],
+                },
+                {
+                  name: 'Road/Street',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
+                  label: 'swm.collectionpoints.create.block',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  minLength: 1,
+                  patternErrorMsg: '',
+                  depedants: [
+                    {
+                      jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
+                      type: 'dropDown',
+                      pattern:
+                        'egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={MasterMetaData.masterData[0].siteDetails.location.block}|$.Boundary.*.id|$.Boundary.*.name',
+                    },
+                  ],
+                },
+                {
+                  name: 'Colony',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
+                  label: 'swm.collectionpoints.create.colony',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  minLength: 1,
+                  patternErrorMsg: '',
+                },
+            ],
+        },
         {
           name: 'ULBs',
           label: 'swm.dumpingGround.create.ulbs',
           fields: [
             {
               name: 'ulbs',
-              jsonPath: 'DumpingGround[0].ulbs',
+              label: 'swm.create.servicesOffered',
+              jsonPath: 'MasterMetaData.masterData[0].ulbs',
+              type: 'multiValueList',
               pattern: '',
-              type: 'singleValueList',
               isRequired: false,
               isDisabled: false,
-              defaultValue: '',
               maxLength: '',
+              url:'/egov-mdms-service/v1/_get?&moduleName=tenant&masterName=tenants|$..code|$..name',
               minLength: '',
               patternErrorMsg: '',
-              url: '',
-            }
+              // mdms: {
+              //   "moduleName": "swm",
+              //   "masterName": "DumpingGround",
+              //   "filter": "",
+              //   "key": "$.ulbs.[*].code",
+              //   "value": "$.ulbs.[*].name",
+              // },
+              hasATOAATransform:true,
+              aATransformInfo:{
+                to:'MasterMetaData.masterData[0].ulbs',
+                key:'code'
+              }
+            },
+           
           ]
         },
 
@@ -88,7 +179,7 @@ var dat = {
             fields: [
               {
                 name: 'mpcbAuthorisation',
-                jsonPath: 'DumpingGround[0].mpcbAuthorisation',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.mpcbAuthorisation',
                 label: 'swm.dumpingGround.create.mpcbAuthorisation',
                 pattern: '',
                 type: 'checkbox',
@@ -98,12 +189,36 @@ var dat = {
                 maxLength: '',
                 minLength: '',
                 patternErrorMsg: '',
+                defaultValue: false,
                 url: '',
+                showHideFields: [
+                  {
+                    ifValue: true,
+                    hide: [],
+                    show: [
+                      {
+                        name: 'bankName',
+                        isGroup: false,
+                        isField: true,
+                      },
+                      {
+                        name: 'bankValidityFrom',
+                        isGroup: false,
+                        isField: true,
+                      },
+                      {
+                        name: 'bankValidityTo',
+                        isGroup: false,
+                        isField: true,
+                      },
+                    ],
+                  },
+                ],
               },
 
               {
                 name: 'bankGuarantee',
-                jsonPath: 'DumpingGround[0].bankGuarantee',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankGuarantee',
                 label: 'swm.dumpingGround.create.bankGuarantee',
                 pattern: '',
                 type: 'checkbox',
@@ -118,7 +233,7 @@ var dat = {
 
               {
                 name: 'dummy',
-                jsonPath: 'dummy',
+                jsonPath: '',
                 label: 'swm.dumpingGround.create.dummy',
                 pattern: '',
                 type: 'textArea',
@@ -133,7 +248,7 @@ var dat = {
 
             {
                 name: 'dummy',
-                jsonPath: 'dummy',
+                jsonPath: '',
                 label: 'swm.dumpingGround.create.dummy',
                 pattern: '',
                 type: 'textArea',
@@ -148,12 +263,13 @@ var dat = {
 
               {
                 name: 'bankName',
-                jsonPath: 'DumpingGround[0].bankName',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankName',
                 label: 'swm.dumpingGround.create.bankName',
                 pattern: '',
                 type: 'text',
                 isRequired: false,
                 isDisabled: false,
+                hide: true,
                 defaultValue: '',
                 maxLength: '',
                 minLength: '',
@@ -163,12 +279,13 @@ var dat = {
 
               {
                 name: 'bankValidityFrom',
-                jsonPath: 'DumpingGround[0].bankValidityFrom',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankValidityFrom',
                 label: 'swm.dumpingGround.create.bankValidityFrom',
                 pattern: '',
                 type: 'datePicker',
                 isRequired: false,
                 isDisabled: false,
+                hide: true,
                 defaultValue: '',
                 maxLength: '',
                 minLength: '',
@@ -178,12 +295,13 @@ var dat = {
 
               {
                 name: 'bankValidityTo',
-                jsonPath: 'DumpingGround[0].bankValidityTo',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankValidityTo',
                 label: 'swm.dumpingGround.create.bankValidityTo',
                 pattern: '',
                 type: 'datePicker',
                 isRequired: false,
                 isDisabled: false,
+                hide: true,
                 defaultValue: '',
                 maxLength: '',
                 minLength: '',
@@ -198,7 +316,7 @@ var dat = {
             fields: [
                 {
                     name: 'dumpingGroundName',
-                    jsonPath: 'DumpingGround[0].name',
+                    jsonPath: 'MasterMetaData.masterData[0].name',
                     label: 'swm.dumpingGround.create.dumpingGroundName',
                     pattern: '',
                     type: 'text',
@@ -213,7 +331,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundArea',
-                    jsonPath: 'DumpingGround[0].siteDetails.area',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.area',
                     label: 'swm.dumpingGround.create.dumpingGroundArea',
                     pattern: '',
                     type: 'text',
@@ -228,7 +346,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundCapacity',
-                    jsonPath: 'DumpingGround[0].siteDetails.capacity',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.capacity',
                     label: 'swm.dumpingGround.create.dumpingGroundCapacity',
                     pattern: '',
                     type: 'text',
@@ -241,7 +359,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundAddress',
-                    jsonPath: 'DumpingGround[0].siteDetails.address',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.address',
                     label: 'swm.dumpingGround.create.dumpingGroundAddress',
                     pattern: '',
                     type: 'textarea',
@@ -257,7 +375,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundLatitude',
-                    jsonPath: 'DumpingGround[0].siteDetails.latitude',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.latitude',
                     label: 'swm.dumpingGround.create.dumpingGroundLatitude',
                     pattern: '',
                     type: 'text',
@@ -272,7 +390,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundLongitude',
-                    jsonPath: 'DumpingGround[0].siteDetails.longitude',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.longitude',
                     label: 'swm.dumpingGround.create.dumpingGroundLongitude',
                     pattern: '',
                     type: 'text',
@@ -287,7 +405,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundisProcessingSite',
-                    jsonPath: 'DumpingGround[0].isProcessingSite',
+                    jsonPath: 'MasterMetaData.masterData[0].isProcessingSite',
                     label: 'swm.dumpingGround.create.isProcessingSite',
                     pattern: '',
                     type: 'checkbox',
@@ -298,11 +416,29 @@ var dat = {
                     minLength: '',
                     patternErrorMsg: '',
                     url: '',
+                    showHideFields: [
+                      {
+                        ifValue: true,
+                        hide: [],
+                        show: [
+                          {
+                            name: 'dumpingGroundProcessingPlant',
+                            isGroup: false,
+                            isField: true,
+                          },
+                          {
+                            name: 'dumpingGroundDistance',
+                            isGroup: false,
+                            isField: true,
+                          },
+                        ],
+                      },
+                    ],
                 },
 
                 {
                     name: 'dumpingGroundAddress',
-                    jsonPath: 'DumpingGround[0].siteDetails.address',
+                    jsonPath: '',
                     label: 'swm.dumpingGround.create.dumpingGroundAddress',
                     pattern: '',
                     type: 'textArea',
@@ -318,12 +454,13 @@ var dat = {
 
                 {
                     name: 'dumpingGroundProcessingPlant',
-                    jsonPath: 'DumpingGround[0].dumpingGroundProcessingPlant',
+                    jsonPath: 'MasterMetaData.masterData[0].dumpingGroundProcessingPlant',
                     label: 'swm.dumpingGround.create.dumpingGroundProcessingPlant',
                     pattern: '',
                     type: 'text',
                     isRequired: false,
                     isDisabled: false,
+                    hide: true,
                     defaultValue: '',
                     maxLength: '',
                     minLength: '',
@@ -333,12 +470,13 @@ var dat = {
 
                 {
                     name: 'dumpingGroundDistance',
-                    jsonPath: 'DumpingGround[0].distance',
+                    jsonPath: 'MasterMetaData.masterData[0].distance',
                     label: 'swm.dumpingGround.create.distance',
                     pattern: '',
                     type: 'text',
                     isRequired: false,
                     isDisabled: false,
+                    hide: true,
                     defaultValue: '',
                     maxLength: '',
                     minLength: '',
@@ -355,32 +493,64 @@ var dat = {
                 {
                     name: 'WasteType',
                     label: '',
-                    jsonPath: 'vendors[0].servicesOffered[0].code',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.wasteTypes',
                     type: 'multiValueList',
                     pattern: '^null|$',
                     isRequired: false,
                     isDisabled: false,
                     maxLength: 128,
-                    url:'',
+                    url:'/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',
                     minLength: 1,
                     patternErrorMsg: 'may not be null',
-                    mdms: {
-                      "moduleName": "swm",
-                      "masterName": "SwmProcess",
-                      "filter": "",
-                      "key": "$..code",
-                      "value": "$..name",
-                    },
                     hasATOAATransform:true,
                     aATransformInfo:{
-                      to:'vendors[0].servicesOffered',
+                      to:'MasterMetaData.masterData[0].siteDetails.wasteTypes',
                       key:'code'
                     }
                   },
             ]
+        },
+
+        {
+          name: 'HideGroup',
+          hide: true,
+          fields: [
+              {
+                name: 'tenantId',
+                jsonPath: 'MasterMetaData.masterData[0].tenantId',
+                defaultValue: localStorage.getItem("tenantId"),
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+              {
+                name: 'moduleName',
+                jsonPath: 'MasterMetaData.moduleName',
+                defaultValue: 'swm',
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+              {
+                name: 'masterName',
+                jsonPath: 'MasterMetaData.masterName',
+                defaultValue: 'DumpingGround',
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+              {
+                name: 'code',
+                jsonPath: 'MasterMetaData.masterData[0].code',
+                defaultValue: 'DumpingGround-' + new Date().getTime(),
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+          ]
         }
       ],
-      url: '/swm-services/dumpingground/_create',
+      url: 'egov-mdms-create/v1/_create',
       tenantIdRequired: true,
     },
     'swm.view': {
@@ -395,7 +565,7 @@ var dat = {
           fields: [
             {
               name: 'ulbs',
-              jsonPath: 'DumpingGround[0].ulbs',
+              jsonPath: 'MasterMetaData.masterData[0].ulbs',
               pattern: '',
               type: 'singleValueList',
               isRequired: false,
@@ -415,7 +585,7 @@ var dat = {
             fields: [
               {
                 name: 'mpcbAuthorisation',
-                jsonPath: 'DumpingGround[0].mpcbAuthorisation',
+                jsonPath: 'MasterMetaData.masterData[0].mpcbAuthorisation',
                 label: 'swm.dumpingGround.create.mpcbAuthorisation',
                 pattern: '',
                 type: 'checkbox',
@@ -430,7 +600,7 @@ var dat = {
 
               {
                 name: 'bankGuarantee',
-                jsonPath: 'DumpingGround[0].bankGuarantee',
+                jsonPath: 'MasterMetaData.masterData[0].bankGuarantee',
                 label: 'swm.dumpingGround.create.bankGuarantee',
                 pattern: '',
                 type: 'checkbox',
@@ -475,7 +645,7 @@ var dat = {
 
               {
                 name: 'bankName',
-                jsonPath: 'DumpingGround[0].bankName',
+                jsonPath: 'MasterMetaData.masterData[0].bankName',
                 label: 'swm.dumpingGround.create.bankName',
                 pattern: '',
                 type: 'text',
@@ -490,7 +660,7 @@ var dat = {
 
               {
                 name: 'bankValidityFrom',
-                jsonPath: 'DumpingGround[0].bankValidityFrom',
+                jsonPath: 'MasterMetaData.masterData[0].bankValidityFrom',
                 label: 'swm.dumpingGround.create.bankValidityFrom',
                 pattern: '',
                 type: 'datePicker',
@@ -505,7 +675,7 @@ var dat = {
 
               {
                 name: 'bankValidityTo',
-                jsonPath: 'DumpingGround[0].bankValidityTo',
+                jsonPath: 'MasterMetaData.masterData[0].bankValidityTo',
                 label: 'swm.dumpingGround.create.bankValidityTo',
                 pattern: '',
                 type: 'datePicker',
@@ -525,7 +695,7 @@ var dat = {
             fields: [
                 {
                     name: 'dumpingGroundName',
-                    jsonPath: 'DumpingGround[0].name',
+                    jsonPath: 'MasterMetaData.masterData[0].name',
                     label: 'swm.dumpingGround.create.dumpingGroundName',
                     pattern: '',
                     type: 'text',
@@ -540,7 +710,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundArea',
-                    jsonPath: 'DumpingGround[0].siteDetails.area',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.area',
                     label: 'swm.dumpingGround.create.dumpingGroundArea',
                     pattern: '',
                     type: 'text',
@@ -555,7 +725,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundCapacity',
-                    jsonPath: 'DumpingGround[0].siteDetails.capacity',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.capacity',
                     label: 'swm.dumpingGround.create.dumpingGroundCapacity',
                     pattern: '',
                     type: 'text',
@@ -568,7 +738,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundAddress',
-                    jsonPath: 'DumpingGround[0].siteDetails.address',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.address',
                     label: 'swm.dumpingGround.create.dumpingGroundAddress',
                     pattern: '',
                     type: 'textarea',
@@ -584,7 +754,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundLatitude',
-                    jsonPath: 'DumpingGround[0].siteDetails.latitude',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.latitude',
                     label: 'swm.dumpingGround.create.dumpingGroundLatitude',
                     pattern: '',
                     type: 'text',
@@ -599,7 +769,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundLongitude',
-                    jsonPath: 'DumpingGround[0].siteDetails.longitude',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.longitude',
                     label: 'swm.dumpingGround.create.dumpingGroundLongitude',
                     pattern: '',
                     type: 'text',
@@ -614,7 +784,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundisProcessingSite',
-                    jsonPath: 'DumpingGround[0].isProcessingSite',
+                    jsonPath: 'MasterMetaData.masterData[0].isProcessingSite',
                     label: 'swm.dumpingGround.create.isProcessingSite',
                     pattern: '',
                     type: 'checkbox',
@@ -629,7 +799,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundAddress',
-                    jsonPath: 'DumpingGround[0].siteDetails.address',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.address',
                     label: 'swm.dumpingGround.create.dumpingGroundAddress',
                     pattern: '',
                     type: 'textArea',
@@ -645,7 +815,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundProcessingPlant',
-                    jsonPath: 'DumpingGround[0].dumpingGroundProcessingPlant',
+                    jsonPath: 'MasterMetaData.masterData[0].dumpingGroundProcessingPlant',
                     label: 'swm.dumpingGround.create.dumpingGroundProcessingPlant',
                     pattern: '',
                     type: 'text',
@@ -660,7 +830,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundDistance',
-                    jsonPath: 'DumpingGround[0].distance',
+                    jsonPath: 'MasterMetaData.masterData[0].distance',
                     label: 'swm.dumpingGround.create.distance',
                     pattern: '',
                     type: 'text',
@@ -715,25 +885,116 @@ var dat = {
       useTimestamp: true,
       objectName: 'dumpingground',
       searchUrl: 'swm-services/dumpingground/_search?code={code}',
-      idJsonPath: 'dumpingground[0].code',
+      idJsonPath: 'MasterMetaData.masterData[0].code',
       groups: [
+        
+        {
+          name: 'LocationDetails',
+          label: 'swm.collectionpoints.create.group.title.LocationDetails',
+          jsonPath: "MasterMetaData.masterData[0].siteDetails.location",
+          fields: [
+                {
+                  name: 'Ward',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.ward',
+                  label: 'swm.collectionpoints.create.ward',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  url:
+                    'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name',
+                  minLength: 1,
+                  patternErrorMsg: '',
+                  depedants: [
+                    {
+                      jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
+                      type: 'dropDown',
+                      pattern:
+                        'egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={MasterMetaData.masterData[0].siteDetails.location.ward}|$.Boundary.*.id|$.Boundary.*.name',
+                    },
+                  ],
+                },
+                {
+                  name: 'Zone',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
+                  label: 'swm.collectionpoints.create.zone',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  minLength: 1,
+                  patternErrorMsg: '',
+                  depedants: [
+                    {
+                      jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
+                      type: 'dropDown',
+                      pattern:
+                        'egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={MasterMetaData.masterData[0].siteDetails.location.zone}|$.Boundary.*.id|$.Boundary.*.name',
+                    },
+                  ],
+                },
+                {
+                  name: 'Road/Street',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
+                  label: 'swm.collectionpoints.create.block',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  minLength: 1,
+                  patternErrorMsg: '',
+                  depedants: [
+                    {
+                      jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
+                      type: 'dropDown',
+                      pattern:
+                        'egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={MasterMetaData.masterData[0].siteDetails.location.block}|$.Boundary.*.id|$.Boundary.*.name',
+                    },
+                  ],
+                },
+                {
+                  name: 'Colony',
+                  jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
+                  label: 'swm.collectionpoints.create.colony',
+                  type: 'singleValueList',
+                  isRequired: true,
+                  isDisabled: false,
+                  maxLength: 128,
+                  minLength: 1,
+                  patternErrorMsg: '',
+                },
+            ],
+        },
         {
           name: 'ULBs',
           label: 'swm.dumpingGround.create.ulbs',
           fields: [
             {
               name: 'ulbs',
-              jsonPath: 'DumpingGround[0].ulbs',
+              label: 'swm.create.servicesOffered',
+              jsonPath: 'MasterMetaData.masterData[0].ulbs',
+              type: 'multiValueList',
               pattern: '',
-              type: 'singleValueList',
               isRequired: false,
               isDisabled: false,
-              defaultValue: '',
               maxLength: '',
+              url:'/egov-mdms-service/v1/_get?&moduleName=tenant&masterName=tenants|$..code|$..name',
               minLength: '',
               patternErrorMsg: '',
-              url: '',
-            }
+              // mdms: {
+              //   "moduleName": "swm",
+              //   "masterName": "DumpingGround",
+              //   "filter": "",
+              //   "key": "$.ulbs.[*].code",
+              //   "value": "$.ulbs.[*].name",
+              // },
+              hasATOAATransform:true,
+              aATransformInfo:{
+                to:'MasterMetaData.masterData[0].ulbs',
+                key:'code'
+              }
+            },
+            
           ]
         },
 
@@ -743,7 +1004,7 @@ var dat = {
             fields: [
               {
                 name: 'mpcbAuthorisation',
-                jsonPath: 'DumpingGround[0].mpcbAuthorisation',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.mpcbAuthorisation',
                 label: 'swm.dumpingGround.create.mpcbAuthorisation',
                 pattern: '',
                 type: 'checkbox',
@@ -753,12 +1014,36 @@ var dat = {
                 maxLength: '',
                 minLength: '',
                 patternErrorMsg: '',
+                defaultValue: false,
                 url: '',
+                showHideFields: [
+                  {
+                    ifValue: true,
+                    hide: [],
+                    show: [
+                      {
+                        name: 'bankName',
+                        isGroup: false,
+                        isField: true,
+                      },
+                      {
+                        name: 'bankValidityFrom',
+                        isGroup: false,
+                        isField: true,
+                      },
+                      {
+                        name: 'bankValidityTo',
+                        isGroup: false,
+                        isField: true,
+                      },
+                    ],
+                  },
+                ],
               },
 
               {
                 name: 'bankGuarantee',
-                jsonPath: 'DumpingGround[0].bankGuarantee',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankGuarantee',
                 label: 'swm.dumpingGround.create.bankGuarantee',
                 pattern: '',
                 type: 'checkbox',
@@ -773,7 +1058,7 @@ var dat = {
 
               {
                 name: 'dummy',
-                jsonPath: 'dummy',
+                jsonPath: '',
                 label: 'swm.dumpingGround.create.dummy',
                 pattern: '',
                 type: 'textArea',
@@ -784,11 +1069,11 @@ var dat = {
                 minLength: 10,
                 patternErrorMsg: '',
                 url: '',
-            },
+              },
 
-            {
+              {
                 name: 'dummy',
-                jsonPath: 'dummy',
+                jsonPath: '',
                 label: 'swm.dumpingGround.create.dummy',
                 pattern: '',
                 type: 'textArea',
@@ -799,16 +1084,17 @@ var dat = {
                 minLength: 10,
                 patternErrorMsg: '',
                 url: '',
-            },
+              },
 
               {
                 name: 'bankName',
-                jsonPath: 'DumpingGround[0].bankName',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankName',
                 label: 'swm.dumpingGround.create.bankName',
                 pattern: '',
                 type: 'text',
                 isRequired: false,
                 isDisabled: false,
+                hide: true,
                 defaultValue: '',
                 maxLength: '',
                 minLength: '',
@@ -818,12 +1104,13 @@ var dat = {
 
               {
                 name: 'bankValidityFrom',
-                jsonPath: 'DumpingGround[0].bankValidityFrom',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankValidityFrom',
                 label: 'swm.dumpingGround.create.bankValidityFrom',
                 pattern: '',
                 type: 'datePicker',
                 isRequired: false,
                 isDisabled: false,
+                hide: true,
                 defaultValue: '',
                 maxLength: '',
                 minLength: '',
@@ -833,12 +1120,13 @@ var dat = {
 
               {
                 name: 'bankValidityTo',
-                jsonPath: 'DumpingGround[0].bankValidityTo',
+                jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankValidityTo',
                 label: 'swm.dumpingGround.create.bankValidityTo',
                 pattern: '',
                 type: 'datePicker',
                 isRequired: false,
                 isDisabled: false,
+                hide: true,
                 defaultValue: '',
                 maxLength: '',
                 minLength: '',
@@ -853,7 +1141,7 @@ var dat = {
             fields: [
                 {
                     name: 'dumpingGroundName',
-                    jsonPath: 'DumpingGround[0].name',
+                    jsonPath: 'MasterMetaData.masterData[0].name',
                     label: 'swm.dumpingGround.create.dumpingGroundName',
                     pattern: '',
                     type: 'text',
@@ -868,7 +1156,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundArea',
-                    jsonPath: 'DumpingGround[0].siteDetails.area',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.area',
                     label: 'swm.dumpingGround.create.dumpingGroundArea',
                     pattern: '',
                     type: 'text',
@@ -883,7 +1171,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundCapacity',
-                    jsonPath: 'DumpingGround[0].siteDetails.capacity',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.capacity',
                     label: 'swm.dumpingGround.create.dumpingGroundCapacity',
                     pattern: '',
                     type: 'text',
@@ -896,7 +1184,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundAddress',
-                    jsonPath: 'DumpingGround[0].siteDetails.address',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.address',
                     label: 'swm.dumpingGround.create.dumpingGroundAddress',
                     pattern: '',
                     type: 'textarea',
@@ -912,7 +1200,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundLatitude',
-                    jsonPath: 'DumpingGround[0].siteDetails.latitude',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.latitude',
                     label: 'swm.dumpingGround.create.dumpingGroundLatitude',
                     pattern: '',
                     type: 'text',
@@ -927,7 +1215,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundLongitude',
-                    jsonPath: 'DumpingGround[0].siteDetails.longitude',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.longitude',
                     label: 'swm.dumpingGround.create.dumpingGroundLongitude',
                     pattern: '',
                     type: 'text',
@@ -942,7 +1230,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundisProcessingSite',
-                    jsonPath: 'DumpingGround[0].isProcessingSite',
+                    jsonPath: 'MasterMetaData.masterData[0].isProcessingSite',
                     label: 'swm.dumpingGround.create.isProcessingSite',
                     pattern: '',
                     type: 'checkbox',
@@ -953,11 +1241,29 @@ var dat = {
                     minLength: '',
                     patternErrorMsg: '',
                     url: '',
+                    showHideFields: [
+                      {
+                        ifValue: true,
+                        hide: [],
+                        show: [
+                          {
+                            name: 'dumpingGroundProcessingPlant',
+                            isGroup: false,
+                            isField: true,
+                          },
+                          {
+                            name: 'dumpingGroundDistance',
+                            isGroup: false,
+                            isField: true,
+                          },
+                        ],
+                      },
+                    ],
                 },
 
                 {
                     name: 'dumpingGroundAddress',
-                    jsonPath: 'DumpingGround[0].siteDetails.address',
+                    jsonPath: '',
                     label: 'swm.dumpingGround.create.dumpingGroundAddress',
                     pattern: '',
                     type: 'textArea',
@@ -973,12 +1279,13 @@ var dat = {
 
                 {
                     name: 'dumpingGroundProcessingPlant',
-                    jsonPath: 'DumpingGround[0].dumpingGroundProcessingPlant',
+                    jsonPath: 'MasterMetaData.masterData[0].dumpingGroundProcessingPlant',
                     label: 'swm.dumpingGround.create.dumpingGroundProcessingPlant',
                     pattern: '',
                     type: 'text',
                     isRequired: false,
                     isDisabled: false,
+                    hide: true,
                     defaultValue: '',
                     maxLength: '',
                     minLength: '',
@@ -988,12 +1295,13 @@ var dat = {
 
                 {
                     name: 'dumpingGroundDistance',
-                    jsonPath: 'DumpingGround[0].distance',
+                    jsonPath: 'MasterMetaData.masterData[0].distance',
                     label: 'swm.dumpingGround.create.distance',
                     pattern: '',
                     type: 'text',
                     isRequired: false,
                     isDisabled: false,
+                    hide: true,
                     defaultValue: '',
                     maxLength: '',
                     minLength: '',
@@ -1010,32 +1318,64 @@ var dat = {
                 {
                     name: 'WasteType',
                     label: '',
-                    jsonPath: 'vendors[0].servicesOffered[0].code',
+                    jsonPath: 'MasterMetaData.masterData[0].siteDetails.wasteTypes',
                     type: 'multiValueList',
                     pattern: '^null|$',
                     isRequired: false,
                     isDisabled: false,
                     maxLength: 128,
-                    url:'',
+                    url:'/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',
                     minLength: 1,
                     patternErrorMsg: 'may not be null',
-                    mdms: {
-                      "moduleName": "swm",
-                      "masterName": "SwmProcess",
-                      "filter": "",
-                      "key": "$..code",
-                      "value": "$..name",
-                    },
                     hasATOAATransform:true,
                     aATransformInfo:{
-                      to:'vendors[0].servicesOffered',
+                      to:'MasterMetaData.masterData[0].siteDetails.wasteTypes',
                       key:'code'
                     }
                   },
             ]
+        },
+
+        {
+          name: 'HideGroup',
+          hide: true,
+          fields: [
+              {
+                name: 'tenantId',
+                jsonPath: 'MasterMetaData.masterData[0].tenantId',
+                defaultValue: localStorage.getItem("tenantId"),
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+              {
+                name: 'moduleName',
+                jsonPath: 'MasterMetaData.moduleName',
+                defaultValue: 'swm',
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+              {
+                name: 'masterName',
+                jsonPath: 'MasterMetaData.masterName',
+                defaultValue: 'DumpingGround',
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+              {
+                name: 'code',
+                jsonPath: 'MasterMetaData.masterData[0].code',
+                defaultValue: 'DumpingGround-' + new Date().getTime(),
+                isRequired : true,
+                type: 'text',
+                hide: true
+              },
+          ]
         }
       ],
-      url: '/swm-services/dumpingground/_update',
+      url: '/egov-mdms-create/v1/_update',
       tenantIdRequired: true,
       searchUrl: '/swm-services/dumpingground/_search?code={code}',
     },

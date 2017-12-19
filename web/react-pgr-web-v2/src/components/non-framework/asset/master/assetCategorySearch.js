@@ -169,7 +169,7 @@ class assetCategorySearch extends Component {
           ],
         },
       };
-    } else {
+    } else if (formData && formData.assetCategoryType) {
       var _body = {
         MdmsCriteria: {
           tenantId: localStorage.getItem('tenantId'),
@@ -181,6 +181,23 @@ class assetCategorySearch extends Component {
                   name: 'AssetCategory',
                   filter: '[?(@.assetCategoryType IN [' + formData.assetCategoryType + '])]',
                 },
+              ],
+            },
+          ],
+        },
+      };
+    }
+    else {
+      var _body = {
+        MdmsCriteria: {
+          tenantId: localStorage.getItem('tenantId'),
+          moduleDetails: [
+            {
+              moduleName: 'ASSET',
+              masterDetails: [
+                {
+                  name: 'AssetCategory'
+              },
               ],
             },
           ],

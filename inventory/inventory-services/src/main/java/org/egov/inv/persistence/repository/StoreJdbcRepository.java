@@ -68,7 +68,7 @@ public class StoreJdbcRepository extends JdbcRepository {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 
-    @Value("${centralstore.purchase}")
+    @Value("${onlycentralstore.purchase}")
     private boolean centalStorePurchase;
 
     static {

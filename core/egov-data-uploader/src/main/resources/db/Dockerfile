@@ -1,6 +1,8 @@
 FROM egovio/flyway:4.1.2
 
-COPY ./migration/main /flyway/sql
+#COPY ./migration/main /flyway/sql
+
+COPY ./migration/ddl  /flyway/sql
 
 COPY ./migration/seed /flyway/seed
 

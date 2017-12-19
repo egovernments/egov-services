@@ -148,6 +148,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
+        - name: workOrderNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: mbRefNumbers
           in: query
           type: array
@@ -157,7 +164,14 @@ paths:
           maxItems: 50
           required: false
           allowEmptyValue: true
-          description: Comma separated list of MB Reference Numbers          
+          description: Comma separated list of MB Reference Numbers         
+        - name: mbRefNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: loaNumbers
           in: query
           type: array
@@ -168,6 +182,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of LOA Numbers
+        - name: loaNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: detailedEstimateNumbers
           in: query
           type: array
@@ -178,6 +199,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Detailed Estimate Numbers
+        - name: detailedEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: workIdentificationNumbers
           in: query
           type: array
@@ -188,6 +216,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
+        - name: workIdentificationNumbersLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: fromDate
           in: query
           type: integer
@@ -228,6 +263,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Names of the contractor to which Measurement Book belongs to
+        - name: contractorNameLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: contractorCodes
           in: query
           type: array
@@ -238,6 +280,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of codes of the contractor to which Measurement Book belongs to
+        - name: contractorCodeLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
       responses:
         200:
           description: Measurement Book(s) Retrieved Successfully
@@ -894,6 +943,3 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
-
-
-

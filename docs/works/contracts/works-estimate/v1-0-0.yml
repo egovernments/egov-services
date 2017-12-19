@@ -49,16 +49,6 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
-        - name: adminSanctionNumbers
-          in: query
-          type: array
-          items:
-            type: string
-          format: autoComplete
-          maxItems: 50
-          required: false
-          allowEmptyValue: true
-          description: Comma separated list of Admin Sanction Numbers of Abstract Estimates
         - name: ids
           in: query
           type: array
@@ -138,11 +128,17 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
           description: Comma separated list of abstract estimate numbers of the Abstract Estimate 
+        - name: abstractEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: workIdentificationNumbers
           in: query
           type: array
@@ -153,6 +149,47 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers assigned to Abstract Estimate
+        - name: workIdentificationNumbersLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: adminSanctionNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Admin Sanction Numbers of Abstract Estimates
+        - name: adminSanctionNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: councilSanctionNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Council Sanction Numbers of Abstract Estimates
+        - name: councilSanctionNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: statuses
           in: query
           type: array
@@ -311,11 +348,40 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of abstract Estimate Numbers
+        - name: workIdentificationNumbers
+          in: query
+          type: array
+          items:
+            type: string
           maxItems: 50
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
+        - name: abstractEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: detailedEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: workIdentificationNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: statuses
           in: query
           type: array
@@ -431,6 +497,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Detailed Estimate Numbers to get the Detailed Estimates
+        - name: detailedEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: ids
           in: query
           type: array
@@ -500,6 +573,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma Separated List of Work Identification Numbers of the Detailed Estimate
+        - name: workIdentificationNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: abstractEstimateNumbers
           in: query
           type: array
@@ -510,6 +590,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Abstract Estimate Numbers for which Detailed Estimate belongs to
+        - name: abstractEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: fromAmount
           in: query
           required: false
@@ -553,7 +640,24 @@ paths:
           type: string
           format: singleValueList
           required: false
-          description: The User who owns(work flow user) the Detailed Estimate
+          description: The User who owns(work flow user) the Detailed Estimate.
+        - name: technicalSanctionNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Technical Sanction Numbers to get the Detailed Estimates
+        - name: technicalSanctionNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
       responses:
         200:
           description: Detailed Estimate(s) Retrieved Successfully
@@ -668,6 +772,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Revision Estimate Numbers to get the Revision Estimates
+        - name: revisionEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: ids
           in: query
           type: array
@@ -687,6 +798,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Detailed Estimate Numbers to get the Revision Estimates
+        - name: detailedEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
         - name: fromDate
           in: query
           type: integer
@@ -2010,5 +2128,3 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
-
-

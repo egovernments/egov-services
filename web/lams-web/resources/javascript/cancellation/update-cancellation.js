@@ -1229,7 +1229,7 @@ class UpdateCancellation extends React.Component {
                                 <div className="col-sm-6 label-text">
                                     <label htmlFor="comments">Comments </label>
                                 </div>
-                                <div className="col-sm-8">
+                                <div className="col-sm-6">
                                     <textarea rows="4" cols="50" id="comments" name="comments" value={workflowDetails.comments}
                                         onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "comments") }} ></textarea>
                                 </div>

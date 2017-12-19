@@ -57,6 +57,8 @@ public class DataUploadUtils {
 	            	dataList.add(cell.getNumericCellValue());
 	            	if(cell.CELL_TYPE_STRING == cell.getCellType())
 	            	dataList.add(cell.getStringCellValue());
+	            	if(cell.CELL_TYPE_BOOLEAN == cell.getCellType())
+	            	dataList.add(cell.getBooleanCellValue());
 	            }
             }
             excelData.add(dataList);
@@ -95,7 +97,7 @@ public class DataUploadUtils {
 	}
 	
 	public String getJsonPathKey(String jsonPath, StringBuilder expression){
-        String[] expressionArray = (jsonPath).split("[.]");
+		String[] expressionArray = (jsonPath).split("[.]");
     	for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
     		expression.append(expressionArray[j]);
     		if(j != expressionArray.length - 2)
@@ -118,9 +120,9 @@ public class DataUploadUtils {
 		logger.info("Writing to file: "+resultFilePath);
 	    MultipartFile file = getExcelFile(resultFilePath);
 		HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
+		workbook.createSheet();
         HSSFSheet sheet = workbook.getSheetAt(0);
         int rowCount = sheet.getLastRowNum();
-        logger.info("MxRowCount of sheet: "+rowCount);
         Row row = sheet.createRow(++rowCount);
         for(int i = 0; i < exisitingFields.size(); i++)
         {

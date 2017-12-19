@@ -67,7 +67,11 @@ close(){
                 window.location.href = 'app/hr/common/show-leave-mapping.html?type=update';
               },
               error: function(err) {
-                  showError(err["statusText"]);
+                try{
+                  showError(err["responseJSON"]["0"]["Error"]["description"]);
+                }catch (e) {
+                  showError("Something went wrong, Please contact administrator"); 
+                }
               }
           });
       } else {
@@ -97,8 +101,8 @@ close(){
               },
               error: function(err) {
                 try{
-                  showError(err["responseJSON"]["Error"]["description"]);
-                }catch{
+                  showError(err["responseJSON"]["0"]["Error"]["description"]);
+                }catch (e) {
                   showError("Something went wrong, Please contact administrator"); 
                 }
               }
@@ -202,7 +206,7 @@ componentDidMount() {
                     <select id="designation" name="designation" value={designation} onChange={(e)=>{
                         handleChange(e,"designation")
                     }}>
-                    <option>Select Designation</option>
+                    <option value="" >Select Designation</option>
                     {renderOption(this.state.assignments_designation)}
                    </select>
                     </div>

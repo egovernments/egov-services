@@ -88,7 +88,7 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		if (supplierGetRequest.getCode() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("code in (:codes)");
+			params.append("UPPER(code) in (:codes)");
 			paramValues.put("codes", supplierGetRequest.getCode());
 		}
 		if (supplierGetRequest.getName() != null) {

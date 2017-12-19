@@ -38,8 +38,8 @@ public class Constants {
     public static final String KEY_SOR_KEY_INVALID="WMS.SOR.KEY.INVALID";
     public static final String MESSAGE_SOR_KEY_INVALID="Given SOR key is not valid: ";
 
-    public static final String KEY_SOR_BOTH_RATES_SHOULDNOT_PRESENT="WMS.SOR.BOTH.RATES.SHOULDNOT.PRESENT";
-    public static final String MESSAGE_SOR_BOTH_RATES_SHOULDNOT_PRESENT="SOR cannot exist with both the rates ";
+    public static final String KEY_SOR_FROMDATE_SHOULDBE_LESSTHAN_TODATE="WMS.SOR.FROMDATE.SHOULDBE.LESSTHAN.TODATE";
+    public static final String MESSAGE_SOR_FROMDATE_SHOULDBE_LESSTHAN_TODATE="From date should be less than to date ";
 
     public static final String KEY_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES="WMS.SOR.SHOULDNOT.MULTIPLE.OPEN.ENDEDDATES";
     public static final String MESSAGE_SOR_SHOULDNOT_MULTIPLE_OPEN_ENDEDDATES="SOR cannot have multiple open ended dates ";
@@ -77,8 +77,14 @@ public class Constants {
     public static final String KEY_TYPEOFWORK_CODE_INVALID="WMS.TYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_TYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
 
+    public static final String KEY_TYPEOFWORK_CODE_MANDATORY="WMS.TYPEOFWORK.CODE.MANDATORY";
+    public static final String MESSAGE_TYPEOFWORK_CODE_MANDATORY="Type of work is mandatory";
+
     public static final String KEY_SUBTYPEOFWORK_CODE_INVALID="WMS.SUBTYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_SUBTYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
+
+    public static final String KEY_SCHEDULEOFRATE_ID_REQUIRED="WMS.SCHEDULEOFRATE.ID.REQUIRED";
+    public static final String MESSAGE_SCHEDULEOFRATE_ID_REQUIRED="Schedule Of Rate id is required: ";
 
     public static final String KEY_SCHEDULEOFRATE_ID_INVALID="WMS.SCHEDULEOFRATE.ID.INVALID";
     public static final String MESSAGE_SCHEDULEOFRATE_ID_INVALID="Given Schedule Of Rate is invalid: ";

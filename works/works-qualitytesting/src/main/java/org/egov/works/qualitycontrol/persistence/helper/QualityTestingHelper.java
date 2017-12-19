@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.egov.works.qualitycontrol.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.qualitycontrol.web.contract.QualityTesting;
 import org.egov.works.qualitycontrol.web.contract.QualityTestingDetail;
+import org.egov.works.qualitycontrol.web.contract.WorksStatus;
 
 import java.util.List;
 
@@ -42,7 +43,9 @@ public class QualityTestingHelper {
         LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = new LetterOfAcceptanceEstimate();
         letterOfAcceptanceEstimate.setLetterOfAcceptance(this.letterOfAcceptanceEstimate);
         qualityTesting.setLetterOfAcceptanceEstimate(letterOfAcceptanceEstimate);
-        qualityTesting.setStatus(this.status);
+        WorksStatus worksStatus = new WorksStatus();
+        worksStatus.setCode(this.status);
+        qualityTesting.setStatus(worksStatus);
         qualityTesting.setRemarks(this.remarks);
         return qualityTesting;
     }

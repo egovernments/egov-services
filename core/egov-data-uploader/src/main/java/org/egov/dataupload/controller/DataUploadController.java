@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.dataupload.model.JobSearchRequest;
 import org.egov.dataupload.model.ModuleDefRequest;
 import org.egov.dataupload.model.ModuleDefResponse;
 import org.egov.dataupload.model.ModuleDefs;
@@ -66,6 +67,21 @@ public class DataUploadController {
 				ModuleDefResponse result = ModuleDefResponse.builder()
 						.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(moduleDefRequest.getRequestInfo(), true))
 						.moduleDefs(moduleDefs).build();
+				return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e){
+			throw e;
+		}
+	}
+	
+	@PostMapping("jobs/_search")
+	@ResponseBody
+	public ResponseEntity<?> jobsSearch(@RequestBody @Valid JobSearchRequest jobSearchRequest) throws Exception {
+		try {
+				logger.info("Inside controller");
+				List<UploadJob> uploadJobs = dataUploadService.getUploadJobs(jobSearchRequest);
+				UploaderResponse result = UploaderResponse.builder()
+						.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(jobSearchRequest.getRequestInfo(), true))
+						.uploadJobs(uploadJobs).build();
 				return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch(Exception e){
 			throw e;

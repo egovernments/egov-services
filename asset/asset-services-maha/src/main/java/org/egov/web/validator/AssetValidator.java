@@ -62,11 +62,11 @@ public class AssetValidator implements Validator {
 		Map<String, String> errorMap = new HashMap<>();
 
 		Asset asset = assetRequest.getAsset();
-		AssetCategory assetCategory = asset.getAssetCategory();
 
 		validateLandDetails(assetRequest,errorMap);
 	    validateAndEnrichStateWideMasters(assetRequest, errorMap);
 		addMissingPathForPersister(asset);
+		AssetCategory assetCategory = asset.getAssetCategory();
 		validateDepreciationRate(assetCategory.getDepreciationRate(),assetCategory.getAssetCategoryType(),errorMap);
 		if ((!assetCategory.getAssetCategoryType().equals(AssetCategoryType.LAND))) {
 			validateAnticipatedLife(asset.getAnticipatedLife(), assetCategory.getAssetCategoryType(),

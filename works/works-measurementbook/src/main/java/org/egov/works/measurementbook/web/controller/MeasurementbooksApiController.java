@@ -66,7 +66,7 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 	}
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
-			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest) {
+			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest) {
 		return new ResponseEntity<>(measurementBookService.update(measurementBookRequest),
 				HttpStatus.OK);
 	}

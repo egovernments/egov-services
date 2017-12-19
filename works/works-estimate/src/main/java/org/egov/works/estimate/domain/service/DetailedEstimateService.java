@@ -167,7 +167,7 @@ public class DetailedEstimateService {
 			}
 
             if(validator.workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&
-                 isRevision == null || (isRevision != null && !isRevision)) {
+                    (isRevision == null || (isRevision != null && !isRevision))) {
 				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
 				Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
 						detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());

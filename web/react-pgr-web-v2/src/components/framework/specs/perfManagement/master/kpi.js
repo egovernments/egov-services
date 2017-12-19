@@ -70,7 +70,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             requiredErrMsg: '',
-            maxLength: 64
+            maxLength: 64,
           },
           {
             name: 'kpiCode',
@@ -81,6 +81,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             requiredErrMsg: '',
+            maxLength: 64,
           },
           {
             name: 'kpitype',
@@ -480,6 +481,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             requiredErrMsg: '',
+            maxLength: 64,
           },
           {
             name: 'updatekpiCode',
@@ -490,6 +492,7 @@ var dat = {
             type: 'text',
             isDisabled: true,
             requiredErrMsg: '',
+            maxLength: 64,
           },
           {
             name: 'updatekpitype',

@@ -220,7 +220,7 @@ var dat = {
             label: 'caseRegistration.create.referenceCaseNo',
             type: 'text',
             isRequired: false,
-            isDisabled: false,
+            isDisabled: true,
             patternErrorMsg: '',
           },
           {

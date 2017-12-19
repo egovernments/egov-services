@@ -1,0 +1,1 @@
+Alter table egw_estimatetemplateactivities rename column schedulerofrate to scheduleofrate;

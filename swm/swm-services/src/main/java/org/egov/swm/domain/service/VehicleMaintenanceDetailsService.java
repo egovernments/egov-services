@@ -153,6 +153,18 @@ public class VehicleMaintenanceDetailsService {
             if(new Date(vehicleMaintenanceDetails.getActualMaintenanceDate()).after(new Date()))
                 throw new CustomException("ActualMaintenanceDate",
                         "Actual Maintenance date cannot be future date: " + vehicleMaintenanceDetails.getActualMaintenanceDate());
+
+            //validation for vehiclemaintenance if scheduled
+            if(vehicleMaintenanceDetails.getIsScheduled() && vehicleMaintenanceDetails.getVehicle() != null
+                    && vehicleMaintenanceDetails.getVehicle().getRegNumber() != null &&
+                    !vehicleMaintenanceDetails.getVehicle().getRegNumber().isEmpty()){
+
+                final Pagination<VehicleMaintenance> vehicleMaintenancePage = fetchVehicleMaintenanceForVehicle(vehicleMaintenanceDetails);
+
+                if(vehicleMaintenancePage.getPagedData().isEmpty())
+                    throw new CustomException("VehicleMaintenance",
+                            "Vehicle Maintenance not defined for vehicle: " + vehicleMaintenanceDetails.getVehicle().getRegNumber());
+            }
         }
     }
 
@@ -164,12 +176,7 @@ public class VehicleMaintenanceDetailsService {
                         || vehicleMaintenanceDetail.getVehicle().getRegNumber().isEmpty()))
             throw new CustomException("code", "Vehicle code required in maintenance details");
 
-        final VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
-        vehicleMaintenanceSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
-        vehicleMaintenanceSearch.setRegNumber(vehicleMaintenanceDetail.getVehicle().getRegNumber());
-
-        final Pagination<VehicleMaintenance> vehicleMaintenancePage = vehicleMaintenanceService
-                .search(vehicleMaintenanceSearch);
+        final Pagination<VehicleMaintenance> vehicleMaintenancePage = fetchVehicleMaintenanceForVehicle(vehicleMaintenanceDetail);
 
         if (!vehicleMaintenancePage.getPagedData().isEmpty()) {
 
@@ -185,6 +192,14 @@ public class VehicleMaintenanceDetailsService {
                     + vehicleMaintenanceDetail.getVehicle().getRegNumber());
 
         return 0;
+    }
+
+    private Pagination<VehicleMaintenance> fetchVehicleMaintenanceForVehicle(final VehicleMaintenanceDetails vehicleMaintenanceDetail){
+        final VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
+        vehicleMaintenanceSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+        vehicleMaintenanceSearch.setRegNumber(vehicleMaintenanceDetail.getVehicle().getRegNumber());
+
+        return vehicleMaintenanceService.search(vehicleMaintenanceSearch);
     }
 
     private int fetchkilometersFromRoutes(final VehicleMaintenanceDetails vehicleMaintenanceDetail,

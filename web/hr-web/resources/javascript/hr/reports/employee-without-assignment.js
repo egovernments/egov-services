@@ -69,7 +69,7 @@ class WithoutAssignment extends React.Component {
     $('#employeeTable').dataTable().fnDestroy();
     try {
         flag = 1;
-        commonApiPost("hr-employee", "employees", "_employeewithoutassignmentreport", {...this.state.searchSet, tenantId},function(err,res){
+        commonApiPost("hr-employee", "employees", "_employeewithoutassignmentreport", {...this.state.searchSet, tenantId, pageSize:500},function(err,res){
           if(res && res.Employee){
           _this.setState({
             ..._this.state,

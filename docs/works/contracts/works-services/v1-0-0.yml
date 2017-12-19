@@ -53,6 +53,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Order Numbers
+        - name: workOrderNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: loaNumbers
           in: query
           type: array
@@ -63,6 +70,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma Seaprated List of LOA Number
+        - name: loaNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: detailedEstimateNumbers
           in: query
           type: array
@@ -73,6 +87,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Detailed Estimate Numbers
+        - name: detailedEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: statuses
           in: query
           type: array
@@ -93,6 +114,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
+        - name: workIdentificationNumbersLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
         - name: objectType
           in: query
           type: string
@@ -599,7 +627,3 @@ tags:
     description: APIs required for Estimate Appropriation.
   - name: Document Detail
     description: APIs required for Document Detail
-
-
-
-

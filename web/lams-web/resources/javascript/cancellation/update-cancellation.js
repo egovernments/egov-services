@@ -328,7 +328,7 @@ class UpdateCancellation extends React.Component {
             ...this.state,
             agreement: agreement,
             departmentList: departmentList,
-            //owner:process.owner.id,
+            initiatorPosition:process.initiatorPosition,
             wfStatus: process.status,
             buttons: _btns ? _btns : []
         });
@@ -515,13 +515,17 @@ class UpdateCancellation extends React.Component {
             agreement.action = "cancellation";
             agreement.workflowDetails.action = ID;
             agreement.workflowDetails.status = this.state.wfStatus;
-            
+
 
             if (ID === "Reject") {
 
                 if (agreement.workflowDetails.comments || agreement.workflowDetails.comments === "")
                     return showError("Please enter the Comments, If you are rejecting");
 
+            }
+
+            if(!agreement.workflowDetails.assignee){
+                agreement.workflowDetails.assignee = this.state.initiatorPosition;
             }
 
             console.log("Agreement", agreement);
@@ -1128,7 +1132,18 @@ class UpdateCancellation extends React.Component {
         }
 
         const renderWorkFlowDetails = function () {
-            return (
+
+            var flg = 0;
+
+            buttons.forEach(function (btn, ind) {
+                if (btn.key.toLowerCase() === "approve" || btn.key.toLowerCase() === "print notice") {
+                    flg = 1; 
+                }
+            });
+
+            if(flg === 0){
+            
+                return (
                 <div className="form-section">
                     <div className="row">
                         <div className="col-md-8 col-sm-8">
@@ -1200,6 +1215,30 @@ class UpdateCancellation extends React.Component {
                     </div>
                 </div>
             );
+        }else{
+            return (
+                <div className="form-section">
+                    <div className="row">
+                        <div className="col-md-8 col-sm-8">
+                            <h3 className="categoryType">Workflow Details </h3>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="comments">Comments </label>
+                                </div>
+                                <div className="col-sm-6">
+                                    <textarea rows="4" cols="50" id="comments" name="comments" value={workflowDetails.comments}
+                                        onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "comments") }} ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
 
         }
 

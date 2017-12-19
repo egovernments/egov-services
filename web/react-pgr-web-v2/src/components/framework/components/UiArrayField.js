@@ -161,6 +161,7 @@ export default class UiArrayField extends Component {
                 </Col>
               </Row>
               <br />
+              <Col xs={12} md={12}  style={this.props.item.style}>
               <Table className="table table-striped table-bordered" responsive>
                 <thead>
                   <tr>
@@ -190,6 +191,7 @@ export default class UiArrayField extends Component {
                   })}
                 </tbody>
               </Table>
+              </Col>
             </Dialog>
           </div>
         );

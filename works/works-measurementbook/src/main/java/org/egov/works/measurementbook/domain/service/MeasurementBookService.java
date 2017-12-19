@@ -82,6 +82,7 @@ public class MeasurementBookService {
 			measurementBook.setId(UUID.randomUUID().toString().replace("-", ""));
 			for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()) {
 				measurementBookDetail.setId(UUID.randomUUID().toString().replace("-", ""));
+				if(measurementBookDetail.getMeasurementSheets() != null && !measurementBookDetail.getMeasurementSheets().isEmpty())
 				for (MBMeasurementSheet sheet : measurementBookDetail.getMeasurementSheets()) {
 					sheet.setId(UUID.randomUUID().toString().replace("-", ""));
 					sheet.setAuditDetails(
@@ -92,7 +93,7 @@ public class MeasurementBookService {
 			}
 			
 
-			if(measurementBook.getDocumentDetails() != null)
+			if(measurementBook.getDocumentDetails() != null && !measurementBook.getDocumentDetails().isEmpty())
 			for (DocumentDetail detail : measurementBook.getDocumentDetails()) {
 				detail.setId(UUID.randomUUID().toString().replace("-", ""));
 				detail.setObjectType("MeasurementBook");
@@ -299,6 +300,7 @@ public class MeasurementBookService {
 	}
 
 	public MeasurementBookResponse update(MeasurementBookRequest measurementBookRequest) {
+		measurementBookValidator.validateMB(measurementBookRequest, false);
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
 			for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()) {
 				if (measurementBookDetail.getId() == null)

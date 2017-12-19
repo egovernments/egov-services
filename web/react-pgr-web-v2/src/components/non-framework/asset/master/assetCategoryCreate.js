@@ -62,10 +62,11 @@ class assetCategoryCreate extends Component {
   setDefaultValues(groups, dat) {
     for (var i = 0; i < groups.length; i++) {
       for (var j = 0; j < groups[i].fields.length; j++) {
+        console.log(groups[i].fields[j].defaultValue);
         if (
           typeof groups[i].fields[j].defaultValue == 'string' ||
-          typeof groups[i].fields[j].defaultValue == 'number'
-          // typeof groups[i].fields[j].defaultValue == 'boolean'
+          typeof groups[i].fields[j].defaultValue == 'number' ||
+          (typeof groups[i].fields[j].defaultValue == 'boolean' && groups[i].fields[j].defaultValue == true)
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
             _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
@@ -455,7 +456,7 @@ class assetCategoryCreate extends Component {
         Api.commonApiPost('/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory', {}, {}, false, mockObj.useTimestamp),
       ]).then(responses => {
         let searchAPI = responses[0];
-        console.log(searchAPI.MdmsRes.ASSET.AssetCategory);
+        console.log(self.props.match.params.id);
         if(self.props.match.params.id){
           this.setState({
           createId: self.props.match.params.id,
@@ -727,55 +728,6 @@ class assetCategoryCreate extends Component {
     );
   };
 
-  // makeAjaxCall = (formData, url) => {
-  //   let self = this;
-  //   //delete formData.ResponseInfo;
-  //   //return console.log(formData);
-  //   Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
-  //     function(response) {
-  //     console.log("enter");
-  //       self.props.setLoadingStatus('hide');
-  //       self.initData();
-  //       self.props.toggleSnackbarAndSetText(
-  //         true,
-  //         translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
-  //         true
-  //       );
-  //       console.log(response.MdmsRes.ASSET.AssetCategory[0].id);
-  //       setTimeout(function() {
-  //         if (self.props.actionName == 'update') {
-  //           console.log('update');
-  //           var hash = '/non-framework/asset/master/assetCategoryView/' ;
-  //         }
-  //         if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-  //           if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
-  //             var hash =
-  //               self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl +
-  //               '/' +
-  //               encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-  //             console.log('check');
-  //           } else {
-  //             console.log('check1');
-  //             if (self.props.actionName == 'update') {
-  //               console.log('update');
-  //               var hash = '/non-framework/asset/master/assetCategoryView/' ;
-  //             } else {
-  //               console.log(formData);
-  //               var hash = '/non-framework/asset/master/assetCategoryView/';
-  //             }
-  //           }
-  //
-  //           self.props.setRoute(hash);
-  //         }
-  //       }, 1500);
-  //     },
-  //     function(err) {
-  //       self.props.setLoadingStatus('hide');
-  //       self.props.toggleSnackbarAndSetText(true, err.message);
-  //     }
-  //   );
-  // };
-
   //Needs to be changed later for more customfields
   checkCustomFields = (formData, cb) => {
     var self = this;
@@ -857,7 +809,7 @@ class assetCategoryCreate extends Component {
 
     _.set(formData, workflowItem.jsonPath.actionPath, action.key);
     _.set(formData, workflowItem.jsonPath.statusPath, status);
-    this.create();
+    //this.create();
   };
 
   create = e => {
@@ -874,9 +826,6 @@ class assetCategoryCreate extends Component {
       formData.MasterMetaData.masterData[0].isAssetAllow = true;
       formData.MasterMetaData.masterData[0].tenantId = localStorage.getItem('tenantId');
     }
-
-    console.log(formData);
-
     if (formData && formData.MasterMetaData && formData.MasterMetaData.masterData && formData.MasterMetaData.masterData[0].isDepreciationApplicable) {
       if (formData.MasterMetaData.masterData[0].isDepreciationApplicable == 'YES') {
         formData.MasterMetaData.masterData[0].isDepreciationApplicable = true;
@@ -973,14 +922,12 @@ class assetCategoryCreate extends Component {
             counter--;
             if (counter == 0 && breakOut == 0) {
               formdocumentData['documents'] = _docs;
-              self.checkForOtherFiles(formData, _url);
               self.makeAjaxCall(formData, _url);
             }
           }
         });
       }
     } else {
-      self.checkForOtherFiles(formData, _url);
       self.makeAjaxCall(formData, _url);
     }
   };
@@ -2144,7 +2091,11 @@ class assetCategoryCreate extends Component {
                 marginLeft: '16px',
               }}
             >
-              <UiBackButton customUrl={'/non-framework/asset/master/assetCategorySearch'} />
+              <UiBackButton customUrl={'/non-framework/asset/master/assetCategorySearch'}
+              onClick={() => {
+                this.initData();
+              }}
+              />
             </div>
             </Col>
             <Col xs={6} md={6}>

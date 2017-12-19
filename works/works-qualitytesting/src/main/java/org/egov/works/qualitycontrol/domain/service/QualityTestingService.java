@@ -3,6 +3,7 @@ package org.egov.works.qualitycontrol.domain.service;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.qualitycontrol.config.PropertiesManager;
+import org.egov.works.qualitycontrol.domain.validator.RequestValidator;
 import org.egov.works.qualitycontrol.persistence.repository.QualityTestingRepository;
 import org.egov.works.qualitycontrol.utils.QualityTestingUtils;
 import org.egov.works.qualitycontrol.web.contract.*;
@@ -27,7 +28,11 @@ public class QualityTestingService {
     @Autowired
     private QualityTestingRepository qualityTestingRepository;
 
+    @Autowired
+    private RequestValidator requestValidator;
+
     public QualityTestingResponse create(final QualityTestingRequest qualityTestingRequest) {
+        requestValidator.validateQualityTesting(qualityTestingRequest);
         AuditDetails auditDetails = qualityTestingUtils.setAuditDetails(qualityTestingRequest.getRequestInfo());
         for (QualityTesting qualityTesting : qualityTestingRequest.getQualityTestings()) {
             qualityTesting.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -57,6 +62,7 @@ public class QualityTestingService {
     }
 
     public QualityTestingResponse update(final QualityTestingRequest qualityTestingRequest) {
+        requestValidator.validateQualityTesting(qualityTestingRequest);
         AuditDetails auditDetails = qualityTestingUtils.setAuditDetails(qualityTestingRequest.getRequestInfo());
         for (QualityTesting qualityTesting : qualityTestingRequest.getQualityTestings()) {
             qualityTesting.setAuditDetails(auditDetails);

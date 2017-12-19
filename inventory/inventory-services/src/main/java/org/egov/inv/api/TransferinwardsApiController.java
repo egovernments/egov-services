@@ -1,5 +1,7 @@
 package org.egov.inv.api;
 
+import static java.util.Arrays.asList;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -10,6 +12,8 @@ import javax.validation.constraints.Size;
 
 import org.egov.inv.domain.service.TransferinwardsService;
 import org.egov.inv.model.MaterialReceipt;
+import org.egov.inv.model.MaterialReceiptResponse;
+import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.TransferInwardRequest;
 import org.egov.inv.model.TransferInwardResponse;
@@ -33,46 +37,38 @@ public class TransferinwardsApiController implements TransferinwardsApi {
     public ResponseEntity<TransferInwardResponse> transferinwardsCreatePost( 
     	@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "Create  new"  )  @Valid @RequestBody TransferInwardRequest transferInwardRequest) {
-    
-		List<MaterialReceipt> inwardReq = transferinwardsService.create(transferInwardRequest, tenantId);
-		TransferInwardResponse inwardResponse = buildInwardResponse(inwardReq, transferInwardRequest.getRequestInfo());
-        return new ResponseEntity<TransferInwardResponse>(inwardResponse, HttpStatus.OK);
+
+        return new ResponseEntity<TransferInwardResponse>(transferinwardsService.create(transferInwardRequest, tenantId), HttpStatus.OK);
         
     }
 
     public ResponseEntity<TransferInwardResponse> transferinwardsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
+        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
         @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
         @ApiParam(value = "receipt date of the TransferInward ") @RequestParam(value = "receiptDate", required = false) Long receiptDate,
-        @ApiParam(value = "transfer out ward of the TransferInward ") @RequestParam(value = "transferOutWard", required = false) Long transferOutWard,
+        @ApiParam(value = "transfer out ward of the TransferInward ") @RequestParam(value = "issueNumber", required = false) List<String> issueNumber,
         @ApiParam(value = "description of the TransferInward ") @RequestParam(value = "description", required = false) String description,
-        @ApiParam(value = "inward note number of the TransferInward ") @RequestParam(value = "inwardNoteNumber", required = false) String inwardNoteNumber,
-        @ApiParam(value = "inward note status of the TransferInward ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED") @RequestParam(value = "inwardNoteStatus", required = false) String inwardNoteStatus,
+        @ApiParam(value = "inward note number of the TransferInward ") @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber,
+        @ApiParam(value = "inward note status of the TransferInward ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED") @RequestParam(value = "status", required = false) List<String> status,
         @ApiParam(value = "state id of the TransferInward ") @RequestParam(value = "stateId", required = false) Long stateId,
         @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
         @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
         @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
-        // do some magic!
-        return new ResponseEntity<TransferInwardResponse>(HttpStatus.OK);
+    	MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder()
+                .tenantId(tenantId)
+                .mrnNumber(mrnNumber)
+                .receiptDate(receiptDate)
+                .issueNumber(issueNumber)
+                .mrnStatus(status)
+                .pageNumber(pageNumber)
+                .pageSize(pageSize)
+                .build();
+    	TransferInwardResponse response = transferinwardsService.search(materialReceiptSearch,tenantId);
+        return new ResponseEntity<TransferInwardResponse>(response, HttpStatus.OK);
     }
 
     public ResponseEntity<TransferInwardResponse> transferinwardsUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "common Request info"  )  @Valid @RequestBody TransferInwardRequest transferInwardRequest) {
-    	
-    	List<MaterialReceipt> inwardReq = transferinwardsService.update(transferInwardRequest, tenantId);
-		TransferInwardResponse inwardResponse = buildInwardResponse(inwardReq, transferInwardRequest.getRequestInfo());
-		return new ResponseEntity<TransferInwardResponse>(inwardResponse, HttpStatus.OK);
+    	 return new ResponseEntity<TransferInwardResponse>(transferinwardsService.update(transferInwardRequest, tenantId), HttpStatus.OK);
     }
-    
-    private TransferInwardResponse buildInwardResponse(List<MaterialReceipt> material,
-			org.egov.inv.model.RequestInfo requestInfo) {
-		return TransferInwardResponse.builder().responseInfo(getResponseInfo(requestInfo)).transferInwards(material)
-				.build();
-	}
-    
-    private org.egov.inv.model.ResponseInfo getResponseInfo(org.egov.inv.model.RequestInfo requestInfo) {
-		return org.egov.inv.model.ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").build();
-	}
-
 }

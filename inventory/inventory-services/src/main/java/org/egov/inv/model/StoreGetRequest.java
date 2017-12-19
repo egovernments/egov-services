@@ -23,6 +23,8 @@ public class StoreGetRequest {
 
     private String name;
 
+    private String searchPurpose;
+
     private String description;
 
     private String department;

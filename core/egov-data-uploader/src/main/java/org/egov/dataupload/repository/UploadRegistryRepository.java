@@ -1,7 +1,10 @@
 package org.egov.dataupload.repository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.egov.dataupload.model.JobSearchRequest;
 import org.egov.dataupload.model.UploadJob;
 import org.egov.dataupload.model.UploadJob.StatusEnum;
 import org.egov.dataupload.model.UploaderRequest;
@@ -18,6 +21,12 @@ public class UploadRegistryRepository {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private UploadJobRowMapper uploadJobRowMapper;
+	
+	@Autowired
+	private DataUploadQueryBuilder dataUploadQueryBuilder;
 
 	public void createJob(UploaderRequest uploaderRequest){
 		String query="Insert into EGDU_UPLOADREGISTRY(CODE, TENANTID, REQUESTFILE_PATH, MODULE_NAME, DEF_NAME, REQUESTER_NAME,"
@@ -41,5 +50,14 @@ public class UploadRegistryRepository {
 		}catch(Exception e){
 			logger.error("Exception while updating job in db for job code: "+uploadJob.getCode(), e);
 		}
+	}
+	
+	public List<UploadJob> searchJob(JobSearchRequest jobSearchRequest){
+		List preparedStatementValues= new ArrayList<>();
+		String query = dataUploadQueryBuilder.getQuery(jobSearchRequest, preparedStatementValues);
+		List<UploadJob> uploadJobs = new ArrayList<>();
+		uploadJobs = jdbcTemplate.query(query, preparedStatementValues.toArray(), uploadJobRowMapper);
+		
+		return uploadJobs;
 	}
 }

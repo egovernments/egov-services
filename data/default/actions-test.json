@@ -10741,45 +10741,6 @@
       "path": "Works Management.Masters"
     },
     {
-      "id": 1131,
-      "name": "Purchase Order Create",
-      "url": "/inventory-services/purchaseorders/_create",
-      "displayName": "Create Purchase Order",
-      "orderNumber": 1,
-      "queryParams": null,
-      "parentModule": null,
-      "enabled": true,
-      "serviceCode": "PURCHASE ORDER",
-      "code": "null",
-      "path": "Inventory.Inventory Transactions.Purchase Order.Purchase Order Create"
-    },
-    {
-      "id": 1132,
-      "name": "Purchase Order Update",
-      "url": "/inventory-services/purchaseorders/_update",
-      "displayName": "Update Purchase Order",
-      "orderNumber": 2,
-      "queryParams": null,
-      "parentModule": null,
-      "enabled": true,
-      "serviceCode": "PURCHASE ORDER",
-      "code": "null",
-      "path": "Inventory.Inventory Transactions.Purchase Order.Purchase Order Update"
-    },
-    {
-      "id": 1133,
-      "name": "Purchase Order Search",
-      "url": "/inventory-services/purchaseorders/_search",
-      "displayName": "Search Purchase Order",
-      "orderNumber": 3,
-      "queryParams": null,
-      "parentModule": null,
-      "enabled": true,
-      "serviceCode": "PURCHASE ORDER",
-      "code": "null",
-      "path": "Inventory.Inventory Transactions.Purchase Order.Purchase Order Search"
-    },
-    {
       "id": 1210,
       "name": "Purchase Order Create from Indents",
       "url": "/inventory-services/purchaseorders/_preparepofromindents",

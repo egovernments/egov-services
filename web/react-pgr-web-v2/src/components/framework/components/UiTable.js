@@ -192,6 +192,34 @@ class UiTable extends Component {
         }
       }
     }
+    $('#searchTable').DataTable({
+      dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+      order: [],
+      buttons: [
+        'excel',
+        {
+          extend: 'pdf',
+          orientation: 'landscape',
+          pageSize: 'LEGAL',
+          exportOptions: {
+            modifier: {
+              page: 'current',
+            },
+          },
+          customize: function(doc) {
+            doc.defaultStyle.fontSize = 10; 
+          },
+          text: 'Pdf/Print',
+        },
+        'copy',
+        'csv',
+ 
+      ],
+      bDestroy: true,
+      language: {
+        emptyTable: 'No Records',
+      },
+    });
   }
 
   render() {
@@ -318,6 +346,7 @@ class UiTable extends Component {
                         })}
 
                         <td style={{ textAlign: 'center', marginRight: '10px' }}>
+
                           <i
                             style={{ marginRight: '10px' }}
                             onClick={() => {

@@ -9,6 +9,7 @@ import org.egov.works.masters.web.contract.Contractor;
 import org.egov.works.masters.web.contract.ContractorClass;
 import org.egov.works.masters.web.contract.ContractorExemption;
 import org.egov.works.masters.web.contract.ContractorStatus;
+import org.egov.works.masters.web.contract.WorksStatus;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -131,7 +132,8 @@ public class ContractorHelper {
         contractor.setContractorClass(new ContractorClass());
         contractor.getContractorClass().setPropertyClass(this.contractorClass);
         contractor.setPmc(this.pmc);
-        contractor.setStatus(this.status);
+        contractor.setStatus(new WorksStatus());
+        contractor.getStatus().setCode(this.status);
         contractor.setAuditDetails(new AuditDetails());
         contractor.getAuditDetails().setCreatedBy(this.createdBy);
         contractor.getAuditDetails().setCreatedTime(this.createdTime);

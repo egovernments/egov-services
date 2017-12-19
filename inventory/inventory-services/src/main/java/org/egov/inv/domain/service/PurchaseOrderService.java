@@ -203,16 +203,17 @@ public class PurchaseOrderService extends DomainService {
 
                     //Logic to split PODetail order quantity across multiple indentdetails starts
                     BigDecimal totalIndentQuantity = new BigDecimal(0);
-                    
                     if(purchaseOrderDetail.getPurchaseIndentDetails()!=null)
-                    for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
-                    	totalIndentQuantity = totalIndentQuantity.add(purchaseIndentDetail.getIndentDetail().getIndentQuantity());
-                    }
-                    
-                    for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
-                    	if(totalIndentQuantity.compareTo(purchaseOrderDetail.getOrderQuantity())>=0){
-	                    	purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(purchaseOrderDetail.getOrderQuantity());
-                    	}
+                    {
+                    	for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+                        	totalIndentQuantity = totalIndentQuantity.add(purchaseIndentDetail.getIndentDetail().getIndentQuantity());
+                        }
+
+                        for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+                        	if(totalIndentQuantity.compareTo(purchaseOrderDetail.getOrderQuantity())>=0){
+    	                    	purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(purchaseIndentDetail.getIndentDetail().getIndentQuantity());
+                        	}
+                        }
                     }
                     //Logic to split PODetail order quantity across multiple indentdetails ends
 
@@ -312,7 +313,10 @@ public class PurchaseOrderService extends DomainService {
 	                    }
 	                    //Logic to split PODetail order quantity across multiple indentdetails ends
 	                	
-	                    eachPurchaseOrderDetail.setUom(uomService.getUom(eachPurchaseOrderDetail.getTenantId(), eachPurchaseOrderDetail.getUom().getCode(), new RequestInfo()));
+	                    //populating the below Uom to get the conversion factor for populating the line level details
+	                    Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", eachPurchaseOrderDetail.getUom().getCode(), Uom.class);
+	                    eachPurchaseOrderDetail.setUom((Uom) uom);
+	                    
 	                    if (eachPurchaseOrderDetail.getOrderQuantity() != null) {
 	                        eachPurchaseOrderDetail.setOrderQuantity(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
 	                    }
@@ -483,6 +487,12 @@ public class PurchaseOrderService extends DomainService {
 	            		}
                         if(!isRateContractExist)
                         	throw new CustomException("rateContract", "No RateContracts exist for the given combination of indent, supplier and ratetype");
+                        
+                        
+                        //Validating the POLine price with that in the ratecontract
+                        if(poDetail.getUnitPrice().compareTo(new BigDecimal(poDetail.getPriceList().getPriceListDetails().get(0).getRatePerUnit())) != 0) {
+                        	errors.addDataError(ErrorCode.UNITPRICE_EQ_PLDRATE.getCode(), "unitprice" + "ratecontractprice" + poDetail.getUnitPrice() + poDetail.getPriceList().getPriceListDetails().get(0).getRatePerUnit());
+                        }
                         
                         
                         //validation of order quantity incase of tender

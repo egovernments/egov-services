@@ -570,7 +570,7 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.multiYearEstimates.*.deleted
          type: BOOLEAN
        
-    - query: INSERT INTO egw_estimate_overheads(id, tenantid, overhead, amount, detailedestimate, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET overhead=EXCLUDED.overhead, amount=EXCLUDED.amount, detailedestimate=EXCLUDED.detailedestimate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+    - query: INSERT INTO egw_estimate_overheads(id, tenantid, overhead, amount, detailedestimate, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (tenantid, overhead, detailedestimate) DO UPDATE SET overhead=EXCLUDED.overhead, amount=EXCLUDED.amount, detailedestimate=EXCLUDED.detailedestimate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
       basePath: $.detailedEstimates.*.estimateOverheads.*
       jsonMaps:
 
@@ -703,6 +703,21 @@ serviceMaps:
 
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.deleted
          type: BOOLEAN
+         
+         
+    - query: INSERT INTO egw_nonsor(id, tenantid, description, uom, deleted) VALUES(?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET description=EXCLUDED.description, uom=EXCLUDED.uom, deleted=EXCLUDED.deleted;
+      basePath: $.detailedEstimates.*.estimateActivities.*.nonSor
+      jsonMaps:
+
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.id
+
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.tenantId
+
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.description
+
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.uom.code
+
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.deleted
 
     - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET objectid=EXCLUDED.objectid, objecttype=EXCLUDED.objecttype, documenttype=EXCLUDED.documenttype, filestore=EXCLUDED.filestore, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
       basePath: $.detailedEstimates.*.documentdetails.*

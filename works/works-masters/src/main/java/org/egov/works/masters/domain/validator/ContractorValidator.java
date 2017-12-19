@@ -1,19 +1,23 @@
 package org.egov.works.masters.domain.validator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.masters.domain.repository.ContractorRepository;
 import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.Contractor;
 import org.egov.works.masters.web.contract.ContractorRequest;
+import org.egov.works.masters.web.contract.WorksStatus;
 import org.egov.works.masters.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.StringUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONArray;
 
 @Service
@@ -50,24 +54,48 @@ public class ContractorValidator {
                         messages.put(Constants.KEY_CONTRACTOR_CODE_INVALID, Constants.MESSAGE_CONTRACTOR_CODE_INVALID);
                         isDataValid = Boolean.TRUE;
                     }
-                } 
+                }
                 // In case of update, do not allow to modify code
-                if (!isNew){
+                if (!isNew) {
                     dbContractorObj = contractorRepository.findByID(contractor.getId(), tenantId);
                     if (dbContractorObj != null) {
-                       if(!dbContractorObj.getCode().equalsIgnoreCase(contractor.getCode())) {
-                           messages.put(Constants.KEY_CONTRACTOR_CODE_MODIFY, Constants.MESSAGE_CONTRACTOR_CODE_MODIFY);
-                           isDataValid = Boolean.TRUE;
-                       }
+                        if (!dbContractorObj.getCode().equalsIgnoreCase(contractor.getCode())) {
+                            messages.put(Constants.KEY_CONTRACTOR_CODE_MODIFY,
+                                    Constants.MESSAGE_CONTRACTOR_CODE_MODIFY);
+                            isDataValid = Boolean.TRUE;
+                        }
                     }
                 }
             }
-
+            
+            // Contractor status reference validation
             if (contractor.getStatus() != null) {
                 mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
-                        CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE, contractor.getStatus(),
+                        CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE, contractor.getStatus().getCode(),
                         contractorRequest.getRequestInfo());
-                if (mdmsResponse == null || mdmsResponse.size() == 0) {
+                ObjectMapper mapper = new ObjectMapper();
+                List<WorksStatus> worksStatus = new ArrayList<WorksStatus>();
+                if (mdmsResponse != null && mdmsResponse.size() > 0) {
+                    for (Object obj : mdmsResponse)
+                        worksStatus.add(mapper.convertValue(obj, WorksStatus.class));
+                    if (!worksStatus.isEmpty()) {
+                        Boolean isValidStatus = Boolean.FALSE;
+                        for (WorksStatus ws : worksStatus) {
+                            if (ws.getModuleType() != null
+                                    && ws.getModuleType()
+                                            .equalsIgnoreCase(CommonConstants.MDMS_CONTRACTORMASTER_MODULETYPE)
+                                    && ws.getCode()!=null && ws.getCode().equalsIgnoreCase(ws.getCode())) {
+                                isValidStatus = Boolean.TRUE;
+                                break;
+                            } 
+                        }
+                        if(!isValidStatus){
+                            messages.put(Constants.KEY_CONTRACTOR_STATUS_INVALID,
+                                    Constants.MESSAGE_CONTRACTOR_STATUS_INVALID + contractor.getStatus());
+                            isDataValid = Boolean.TRUE;
+                        }
+                    }
+                } else {
                     messages.put(Constants.KEY_CONTRACTOR_STATUS_INVALID,
                             Constants.MESSAGE_CONTRACTOR_STATUS_INVALID + contractor.getStatus());
                     isDataValid = Boolean.TRUE;

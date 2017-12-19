@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the Contractor Agency/Firm Information
  */
 @ApiModel(description = "An Object that holds the Contractor Agency/Firm Information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-14T13:05:23.935Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-19T07:03:25.843Z")
 
 public class Contractor   {
   @JsonProperty("id")
@@ -90,7 +90,10 @@ public class Contractor   {
   private Boolean pmc = false;
 
   @JsonProperty("status")
-  private String status = null;
+  private WorksStatus status = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -570,7 +573,7 @@ public class Contractor   {
     this.pmc = pmc;
   }
 
-  public Contractor status(String status) {
+  public Contractor status(WorksStatus status) {
     this.status = status;
     return this;
   }
@@ -582,13 +585,34 @@ public class Contractor   {
   @ApiModelProperty(required = true, value = "Status of the Contractor")
   @NotNull
 
+//  @Valid
 
-  public String getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(String status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
+  }
+
+  public Contractor deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
   }
 
   public Contractor auditDetails(AuditDetails auditDetails) {
@@ -646,12 +670,13 @@ public class Contractor   {
         Objects.equals(this.contractorClass, contractor.contractorClass) &&
         Objects.equals(this.pmc, contractor.pmc) &&
         Objects.equals(this.status, contractor.status) &&
+        Objects.equals(this.deleted, contractor.deleted) &&
         Objects.equals(this.auditDetails, contractor.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, name, localName, code, correspondenceAddress, paymentAddress, contactPerson, email, narration, mobileNumber, panNumber, tinNumber, bank, bankAccountNumber, pwdApprovalCode, exemptedFrom, pwdApprovalValidTill, epfRegistrationNumber, accountCode, ifscCode, contractorClass, pmc, status, auditDetails);
+    return Objects.hash(id, tenantId, name, localName, code, correspondenceAddress, paymentAddress, contactPerson, email, narration, mobileNumber, panNumber, tinNumber, bank, bankAccountNumber, pwdApprovalCode, exemptedFrom, pwdApprovalValidTill, epfRegistrationNumber, accountCode, ifscCode, contractorClass, pmc, status, deleted, auditDetails);
   }
 
   @Override
@@ -683,6 +708,7 @@ public class Contractor   {
     sb.append("    contractorClass: ").append(toIndentedString(contractorClass)).append("\n");
     sb.append("    pmc: ").append(toIndentedString(pmc)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

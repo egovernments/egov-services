@@ -1076,7 +1076,7 @@ ReportDefinitions:
     assetid AND current.tenantid=prevdep.tenantid left outer join (select sum(depreciationvalue) currdepsum,assetid,tenantid from
     egasset_depreciation where tenantid=$tenantid AND (todate between (select startingDate::bigint from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) and (select endingDate::bigint from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate))) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=
     currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid
-    left outer join ( select assetSubcategory.name as assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
+    left outer join ( select assetSubcategory.name as assetsubcategoryname,CASE WHEN assetSubcategory.depreciationrate='null' THEN 'NA' WHEN assetSubcategory.depreciationrate='' THEN 'NA' ELSE assetSubcategory.depreciationrate END,
     assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
     ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId)
     inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as

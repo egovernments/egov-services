@@ -39,39 +39,45 @@
  */
 package org.egov.inv.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.persistence.entity.StoreEntity;
-import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
-public class StoreJdbcRepository extends JdbcRepository{
-	
-	private static final Logger LOG = LoggerFactory.getLogger(StoreJdbcRepository.class);
+public class StoreJdbcRepository extends JdbcRepository {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StoreJdbcRepository.class);
 
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
+
+
+    @Value("${onlycentralstore.purchase}")
+    private boolean centalStorePurchase;
+
     static {
-		LOG.debug("init store");
-		init(StoreEntity.class);
-		LOG.debug("end store fund");
-	}
-    
+        LOG.debug("init store");
+        init(StoreEntity.class);
+        LOG.debug("end store fund");
+    }
+
     public Pagination<Store> search(StoreGetRequest storeGetRequest) {
         String searchQuery = "select * from store :condition :orderby";
         StringBuffer params = new StringBuffer();
@@ -91,10 +97,15 @@ public class StoreJdbcRepository extends JdbcRepository{
             paramValues.put("ids", storeGetRequest.getId());
         }
         if (storeGetRequest.getCode() != null) {
+
+            List<String> uppercaseCodes = storeGetRequest.getCode().stream()
+                    .map(String::toUpperCase).collect(Collectors.toList());
+            storeGetRequest.setCode(uppercaseCodes);
+
             if (params.length() > 0)
                 params.append(" and ");
-            params.append("code in (:codes)");
-            paramValues.put("codes", storeGetRequest.getCode());
+            params.append("UPPER(code) in (:codes)");
+            paramValues.put("codes", uppercaseCodes);
         }
         if (storeGetRequest.getName() != null) {
             if (params.length() > 0)
@@ -102,6 +113,14 @@ public class StoreJdbcRepository extends JdbcRepository{
             params.append("name = :name");
             paramValues.put("name", storeGetRequest.getName());
         }
+
+        if (!isEmpty(storeGetRequest.getSearchPurpose())
+                && storeGetRequest.getSearchPurpose().equalsIgnoreCase("createPO") && centalStorePurchase) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("iscentralstore = true");
+        }
+
         if (storeGetRequest.getDescription() != null) {
             if (params.length() > 0)
                 params.append(" and ");
@@ -114,18 +133,18 @@ public class StoreJdbcRepository extends JdbcRepository{
             params.append("department = :department");
             paramValues.put("department", storeGetRequest.getDepartment());
         }
-        if(storeGetRequest.getBillingAddress() != null){
-        	if(params.length() > 0)
-        		params.append(" and ");
-        	params.append("billingaddress = :billingaddress");
-            paramValues.put("billingaddress", storeGetRequest.getBillingAddress());	
+        if (storeGetRequest.getBillingAddress() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("billingaddress = :billingaddress");
+            paramValues.put("billingaddress", storeGetRequest.getBillingAddress());
         }
-        
-        if(storeGetRequest.getDeliveryAddress() != null){
-        	if(params.length() > 0)
-        		params.append(" and ");
-        	params.append("deliveryaddress = :deliveryaddress");
-            paramValues.put("deliveryaddress", storeGetRequest.getDeliveryAddress());	
+
+        if (storeGetRequest.getDeliveryAddress() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("deliveryaddress = :deliveryaddress");
+            paramValues.put("deliveryaddress", storeGetRequest.getDeliveryAddress());
         }
         if (storeGetRequest.getContactNo1() != null) {
             if (params.length() > 0)
@@ -133,7 +152,7 @@ public class StoreJdbcRepository extends JdbcRepository{
             params.append("contactno1 = :contactno1");
             paramValues.put("contactno1", storeGetRequest.getContactNo1());
         }
-        
+
         if (storeGetRequest.getContactNo2() != null) {
             if (params.length() > 0)
                 params.append(" and ");
@@ -191,7 +210,7 @@ public class StoreJdbcRepository extends JdbcRepository{
         List<Store> storesList = new ArrayList<>();
 
         List<StoreEntity> storesEntities = namedParameterJdbcTemplate
-                        .query(searchQuery.toString(), paramValues, row);
+                .query(searchQuery.toString(), paramValues, row);
 
         for (StoreEntity storesEntity : storesEntities) {
 
@@ -205,7 +224,5 @@ public class StoreJdbcRepository extends JdbcRepository{
         return page;
     }
 
-  
 
-  
 }

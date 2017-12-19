@@ -7,7 +7,7 @@ info:
     name: Abhishek Jain
 schemes:
   - https
-basePath: '/uploader/v1/'
+basePath: '/data-uploader/v1/'
 paths:   
 
   /upload-definitions/_search:

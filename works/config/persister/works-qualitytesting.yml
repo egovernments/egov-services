@@ -19,7 +19,7 @@ serviceMaps:
 
        - jsonPath: $.qualityTesting.*.remarks
        
-       - jsonPath: $.qualityTesting.*.status
+       - jsonPath: $.qualityTesting.*.status.code
 
        - jsonPath: $.qualityTesting.*.auditDetails.createdBy
 

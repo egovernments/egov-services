@@ -257,6 +257,8 @@ public class Store {
 
     @Valid
 
+    @NotNull
+
     public Location getOfficeLocation() {
         return officeLocation;
     }

@@ -1,9 +1,7 @@
+import { FILE_DOWNLOAD_ENDPOINT } from "../constants/ApiEndpoints";
+
 export const slugify = term => {
   return term.toLowerCase().replace(/\s+/, "-");
-};
-
-export const getPlayerById = (playerId, players) => {
-  return players.filter(player => player.id == playerId)[0];
 };
 
 export const persistInLocalStorage = obj => {
@@ -32,4 +30,14 @@ export const prepareFormData = params => {
     formData.append(k, params[k]);
   }
   return formData;
+};
+
+export const getFileDownloadLink = (tenantId, fileStoreId) => {
+  const requestParams = { tenantId, fileStoreId };
+  let downloadLink = getRequestUrl(FILE_DOWNLOAD_ENDPOINT, requestParams);
+  // for developement prepend the dev environment
+  if (process.env.NODE_ENV === "development") {
+    downloadLink = "http://egov-micro-dev.egovernments.org" + downloadLink;
+  }
+  return downloadLink;
 };

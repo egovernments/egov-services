@@ -11,6 +11,6 @@ const footerStyles = {
 };
 
 const Footer = () => {
-  return <footer style={footerStyles}>Copyrights egov 2003-2017</footer>;
+  return <footer style={footerStyles}>© 2017 eGovernments Foundation</footer>;
 };
 export default Footer;

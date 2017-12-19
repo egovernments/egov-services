@@ -5,11 +5,10 @@ import { Link } from "react-router-dom";
 import { setInputFile } from "../actions/fileUpload";
 import { createJob } from "../actions/createJob";
 import RaisedButton from "material-ui/RaisedButton";
+import Snackbar from "material-ui/Snackbar";
 import UploadDefinitionsContainer from "./UploadDefinitions";
 import LoadingIndicator from "../atomic-components/LoadingIndicator";
-
-// Material UI Components
-import { Card, CardActions, CardHeader, CardText } from "material-ui/Card";
+import { Card, CardActions, CardText } from "material-ui/Card";
 import FlatButton from "material-ui/FlatButton";
 
 const styles = {
@@ -20,6 +19,11 @@ const styles = {
     textAlign: "center",
     padding: "5px",
     textTransform: "uppercase"
+  },
+  jobCreationAck: {
+    padding: "10px",
+    color: "red",
+    textAlign: "center"
   }
 };
 
@@ -35,37 +39,49 @@ class FileUploaderContainer extends Component {
   };
 
   state = {
-    message: ""
+    message: "",
+    messageBarOpen: false,
+    errorMessage: ""
   };
 
   handleOnChange = e => {
     const file = e.target.files[0];
     this.props.setInputFile(file);
   };
+
   componentWillReceiveProps(nextProps) {
     const currentJobId = this.props.jobId;
     const nextJobId = nextProps.jobId;
     if (currentJobId == null && nextJobId) {
-      const message = `New Job with reference ${nextJobId} created`;
+      const message = `New Job ${nextJobId} is created`;
       this.setState({ message });
     }
   }
 
   handleSubmit = e => {
     const { file, moduleName, moduleDefinition } = this.props;
-    const formData = { file, moduleName };
-    this.props.createJobRequest(moduleName, moduleDefinition, file);
+    if (file === null) {
+      const errorMessage = "Please choose a file";
+      this.setState({ messageBarOpen: true, errorMessage });
+      return;
+    }
+    this.props.createJob(moduleName, moduleDefinition, file);
   };
 
   render() {
     const { handleSubmit, handleOnChange } = this;
     const { isLoading } = this.props;
-    const { message } = this.state;
+    const { message, messageBarOpen, errorMessage } = this.state;
 
     return (
       <div className="container">
         <div className="row">
           <div className="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+            <Snackbar
+              open={messageBarOpen}
+              message={errorMessage}
+              autoHideDuration={2000}
+            />
             {isLoading ? (
               <LoadingIndicator />
             ) : (
@@ -76,7 +92,7 @@ class FileUploaderContainer extends Component {
                 <CardText>
                   <UploadDefinitionsContainer />
                   <div className="file-input" style={styles.fileInput}>
-                    <input type="file" onChange={this.handleOnChange} />
+                    <input type="file" onChange={handleOnChange} />
                   </div>
                   <RaisedButton
                     onClick={handleSubmit}
@@ -94,7 +110,11 @@ class FileUploaderContainer extends Component {
                     />
                   </Link>
                 </CardActions>
-                {message.length ? <h2>{message}</h2> : ""}
+                {message.length ? (
+                  <h3 style={styles.jobCreationAck}>{message}</h3>
+                ) : (
+                  ""
+                )}
               </Card>
             )}
           </div>
@@ -114,7 +134,7 @@ const mapStateToProps = (state, ownProps) => ({
   file: state.fileUpload.inputFile,
   moduleName: state.uploadDefinitions.selectedModule,
   moduleDefinition: state.uploadDefinitions.selectedModuleDefinition,
-  isLoading: state.fileUpload.isFetching,
+  isLoading: state.jobCreate.isFetching,
   jobId: state.jobCreate.jobId
 });
 

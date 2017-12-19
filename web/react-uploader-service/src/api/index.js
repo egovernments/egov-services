@@ -1,6 +1,10 @@
 import axios from "axios";
 import * as apiEndpoints from "../constants/ApiEndpoints";
-import { prepareFormData, fetchFromLocalStorage } from "../utils";
+import {
+  prepareFormData,
+  getRequestUrl,
+  fetchFromLocalStorage
+} from "../utils";
 import * as prepareRequestBody from "./createRequestBody";
 import {
   uploadDefinitionsResponse,
@@ -41,7 +45,6 @@ export const Api = () => {
     throw new Error(apiError);
   };
 
-  //doesn't take any input parameters
   const fetchUploadDefintions = async () => {
     const response = uploadDefinitionsResponse();
     const uploadDefinitionsRequestBody = prepareRequestBody.uploadDefinitionsRequest(
@@ -99,8 +102,8 @@ export const Api = () => {
 
     return new Promise((resolve, reject) => {
       setTimeout(function() {
-        const jobStatusId = "acds133";
-        resolve(response.UploadJobs);
+        const uploadJobs = response.UploadJobs;
+        resolve(uploadJobs.length ? uploadJobs[0].code : null);
       }, 1000);
     });
   };

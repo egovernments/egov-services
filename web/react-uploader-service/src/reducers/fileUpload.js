@@ -13,6 +13,7 @@ const fileUpload = (state = initialState, action) => {
     case actionTypes.FILE_UPLOAD_SUCCESS:
       return {
         ...state,
+        inputFile: null,
         fileStoreId: action.fileStoreId,
         isFetching: false,
         error: false

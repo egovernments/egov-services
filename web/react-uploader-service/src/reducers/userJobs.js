@@ -1,4 +1,5 @@
 import * as actionTypes from "../constants/actionTypes";
+import { getFileDownloadLink } from "../utils";
 
 const initialState = {
   isFetching: false,
@@ -15,8 +16,9 @@ const transformUserJobs = userJobs => {
     const download = { label: "Download" };
 
     if (status === "completed") {
-      // construct the download url
-      download.href = "http://google.com";
+      const tenantId = userJob.tenantId;
+      const responseFilePath = userJob.responseFilePath;
+      download.href = getFileDownloadLink(tenantId, responseFilePath);
     }
 
     return {

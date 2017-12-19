@@ -17,7 +17,6 @@ class Filters extends Component {
 
   handleClick = event => {
     const { codes, statuses, startDate, endDate } = this.props;
-    // do validation if all are empty then disable
     this.props.fetchUserJobs(codes, statuses, startDate, endDate);
   };
 
@@ -39,7 +38,10 @@ class Filters extends Component {
 }
 
 const mapStateToProps = state => ({
-  codes: null
+  codes: null,
+  statuses: state.filter.completionStatus,
+  startDate: state.filter.fromDate,
+  endDate: state.filter.toDate
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -47,4 +49,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchUserJobs(codes, statuses, startDate, endDate))
 });
 
-export default connect(null, mapDispatchToProps)(Filters);
+export default connect(mapStateToProps, mapDispatchToProps)(Filters);

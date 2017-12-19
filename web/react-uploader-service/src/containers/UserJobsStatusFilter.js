@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import RadioButtonUi from "../atomic-components/RadioButtonUi";
 import CheckboxUi from "../atomic-components/CheckboxUi";
 import { applyJobsStatusFilter } from "../actions/filter";
 

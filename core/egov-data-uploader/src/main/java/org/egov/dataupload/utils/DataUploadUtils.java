@@ -95,7 +95,7 @@ public class DataUploadUtils {
 	}
 	
 	public String getJsonPathKey(String jsonPath, StringBuilder expression){
-        String[] expressionArray = (jsonPath).split("[.]");
+		String[] expressionArray = (jsonPath).split("[.]");
     	for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
     		expression.append(expressionArray[j]);
     		if(j != expressionArray.length - 2)
@@ -118,9 +118,9 @@ public class DataUploadUtils {
 		logger.info("Writing to file: "+resultFilePath);
 	    MultipartFile file = getExcelFile(resultFilePath);
 		HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
+		workbook.createSheet();
         HSSFSheet sheet = workbook.getSheetAt(0);
         int rowCount = sheet.getLastRowNum();
-        logger.info("MxRowCount of sheet: "+rowCount);
         Row row = sheet.createRow(++rowCount);
         for(int i = 0; i < exisitingFields.size(); i++)
         {

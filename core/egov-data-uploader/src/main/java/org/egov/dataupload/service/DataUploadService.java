@@ -100,6 +100,7 @@ public class DataUploadService {
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
 	    		uploadJob.getModuleName(), uploadJob.getDefName());
+	    logger.info("HeaderMap: "+uploadDefinition.getHeaderJsonPathMap());
 	    List<ResponseMetaData> success = new ArrayList<>();
 	    List<ResponseMetaData> failure = new ArrayList<>();
 	    List<List<Object>> excelData = new ArrayList<>();
@@ -126,17 +127,13 @@ public class DataUploadService {
 				dataUploadUtils.clearExceFile(resultFilePath);
 		    }
         }catch(Exception e){
-			ResponseMetaData responseMetaData= new ResponseMetaData();
-			responseMetaData.setRowData(excelData);
-        	failure.add(responseMetaData);
+        	logger.info("Exception whil proccessing data: ",e);
         }
         
         SuccessFailure uploaderResponse = new SuccessFailure();
         uploaderResponse.setSuccess(success);
         uploaderResponse.setFailure(failure);
-        
-        logger.info("UploaderResponse: "+uploaderResponse);
-        
+                
         return uploaderResponse;
 	}
 	
@@ -160,7 +157,11 @@ public class DataUploadService {
 				if(!row.isEmpty()){
 					for(int i = 0; i < coloumnHeaders.size(); i++){
 		            	StringBuilder expression = new StringBuilder();
-		            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i));
+		            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
+		            	if(null == jsonPath){
+							logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+		            		continue;
+		            	}
 		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
 				        documentContext.put(expression.toString(), key, row.get(i));	            	
 					} 	
@@ -173,6 +174,9 @@ public class DataUploadService {
 					    request = documentContext.jsonString().toString();
 				    }         	
 				    Object apiResponse = hitApi(request, uploadDefinition.getUri());	
+				    if(null == apiResponse){
+				    	throw new CustomException("500", "Module API failed");
+				    }
 				    if(null != resJsonPathList){
 				    	try{
 				    		dataUploadUtils.addAdditionalFields(apiResponse, row, resJsonPathList);
@@ -191,17 +195,23 @@ public class DataUploadService {
 					dataUploadUtils.writeToexcelSheet(row);
 				}
 			}catch(Exception e){
-				logger.error("Error while processing row: "+(excelData.indexOf(row) + 2));
+				logger.error("Error while processing row: "+(excelData.indexOf(row) + 2), e);
 		    	if(null != resJsonPathList){
 		    		for(Object obj: resJsonPathList){
 		    			row.add(null);
 		    		}
 		    		row.add("FAILED");
-		    		row.add(e.getMessage());
-			    	failureCount++;	
+		    		if(!e.getMessage().isEmpty())
+		    			row.add(e.getMessage());
+		    		else
+		    			row.add("Please verify config");			    	
+		    		failureCount++;	
 		    	}else{
 		    		row.add("FAILED");
-		    		row.add(e.getMessage());
+		    		if(!e.getMessage().isEmpty())
+		    			row.add(e.getMessage());
+		    		else
+		    			row.add("Please verify config");
 			    	failureCount++;	
 		    	}
 				dataUploadUtils.writeToexcelSheet(row);
@@ -220,6 +230,7 @@ public class DataUploadService {
 		
 		
 	private Object hitApi(String request, String uri){
+		logger.info("Making inter-service call to the module API...");
 		Object response = null;
 		logger.info("Request: "+request);
     	logger.info("uri: "+uri);
@@ -230,11 +241,14 @@ public class DataUploadService {
 		
     	response = dataUploadRepository.doApiCall(data, uri);
     	
+    	logger.info("Module API Response: "+response);
+    	
     	return response;
 		
 	}
 	
 	private String getFileStoreId(String tenantId, String module) throws Exception{
+		logger.info("Uploading result excel to filestore....");
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> result = dataUploadRepository.postFileContents(tenantId, module, resultFilePath);
 		List<Object> objects = (List<Object>) result.get("files");

@@ -1086,390 +1086,390 @@
     {
       "code": "CREATED",
       "description": "Created",
-      "moduletype": "DetailedEstimate",
-      "tenantid": "default",
-      "ordernumber": 1
+      "moduleType": "DetailedEstimate",
+      "tenantId": "default",
+      "orderNumber": 1
     },
     {
       "code": "CHECKED",
       "description": "Checked",
-      "moduletype": "DetailedEstimate",
-      "tenantid": "default",
-      "ordernumber": 2
+      "moduleType": "DetailedEstimate",
+      "tenantId": "default",
+      "orderNumber": 2
     },
     {
       "code": "TECHNICAL_SANCTIONED",
       "description": "Technical Sanctioned",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default",
-      "ordernumber": 3
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default",
+      "orderNumber": 3
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
-      "moduletype": "DetailedEstimate",
-      "tenantid": "default",
-      "ordernumber": 4
+      "moduleType": "DetailedEstimate",
+      "tenantId": "default",
+      "orderNumber": 4
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
-      "moduletype": "DetailedEstimate",
-      "tenantid": "default",
-      "ordernumber": 1
+      "moduleType": "DetailedEstimate",
+      "tenantId": "default",
+      "orderNumber": 1
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "DetailedEstimate",
-      "tenantid": "default",
-      "ordernumber": 6
+      "moduleType": "DetailedEstimate",
+      "tenantId": "default",
+      "orderNumber": 6
     },
     {
       "code": "NOTICEINVITINGTENDERRELEASED",
       "description": "Notice inviting tender released",
-      "moduletype": "AbstractEstimateOffline",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimateOffline",
+      "tenantId": "default"
     },
     {
       "code": "TENDER_DOCUMENT_RELEASED",
       "description": "Tender document released",
-      "moduletype": "AbstractEstimateOffline",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimateOffline",
+      "tenantId": "default"
     },
     {
       "code": "TENDER_OPENED",
       "description": "Tender opened",
-      "moduletype": "AbstractEstimateOffline",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimateOffline",
+      "tenantId": "default"
     },
     {
       "code": "TECHNICAL_EVALUATION_DONE",
       "description": "Technical evaluation done",
-      "moduletype": "AbstractEstimateOffline",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimateOffline",
+      "tenantId": "default"
     },
     {
       "code": "COMMERCIAL_EVALUATION_DONE",
       "description": "Commercial evaluation done",
-      "moduletype": "AbstractEstimateOffline",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimateOffline",
+      "tenantId": "default"
     },
     {
       "code": "L1_TENDER_FINALIZED",
       "description": "L1 tender finalized",
-      "moduletype": "AbstractEstimateOffline",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimateOffline",
+      "tenantId": "default"
     },
     {
       "code": "NEW",
       "description": "New",
-      "moduletype": "CONTRACTORADVANCE",
-      "tenantid": "default"
+      "moduleType": "CONTRACTORADVANCE",
+      "tenantId": "default"
     },
     {
       "code": "CREATED",
       "description": "Created",
-      "moduletype": "CONTRACTORADVANCE",
-      "tenantid": "default"
+      "moduleType": "CONTRACTORADVANCE",
+      "tenantId": "default"
     },
     {
       "code": "CHECKED",
       "description": "Checked",
-      "moduletype": "CONTRACTORADVANCE",
-      "tenantid": "default"
+      "moduleType": "CONTRACTORADVANCE",
+      "tenantId": "default"
     },
     {
       "code": "APPROVED",
       "description": "Approved",
-      "moduletype": "CONTRACTORADVANCE",
-      "tenantid": "default"
+      "moduleType": "CONTRACTORADVANCE",
+      "tenantId": "default"
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
-      "moduletype": "CONTRACTORADVANCE",
-      "tenantid": "default"
+      "moduleType": "CONTRACTORADVANCE",
+      "tenantId": "default"
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
-      "moduletype": "CONTRACTORADVANCE",
-      "tenantid": "default"
+      "moduleType": "CONTRACTORADVANCE",
+      "tenantId": "default"
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "CONTRACTORADVANCE",
-      "tenantid": "default"
+      "moduleType": "CONTRACTORADVANCE",
+      "tenantId": "default"
     },
     {
       "code": "CREATED",
       "description": "Created",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "CHECKED",
       "description": "Checked",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "TECHNICALLY_APPROVED",
       "description": "Technically Approved",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "BUDGET_SANCTIONED",
       "description": "Budget Sanctioned",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "ADMINISTRATIVE_SANCTIONED",
       "description": "Administrative Sanctioned",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
-      "moduletype": "AbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "AbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "NEW",
       "description": "New",
-      "moduletype": "MBHeader",
-      "tenantid": "default"
+      "moduleType": "MBHeader",
+      "tenantId": "default"
     },
     {
       "code": "CREATED",
       "description": "Created",
-      "moduletype": "MBHeader",
-      "tenantid": "default"
+      "moduleType": "MBHeader",
+      "tenantId": "default"
     },
     {
       "code": "CHECKED",
       "description": "Checked",
-      "moduletype": "MBHeader",
-      "tenantid": "default"
+      "moduleType": "MBHeader",
+      "tenantId": "default"
     },
     {
       "code": "APPROVED",
       "description": "Approved",
-      "moduletype": "MBHeader",
-      "tenantid": "default"
+      "moduleType": "MBHeader",
+      "tenantId": "default"
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "MBHeader",
-      "tenantid": "default"
+      "moduleType": "MBHeader",
+      "tenantId": "default"
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
-      "moduletype": "MBHeader",
-      "tenantid": "default"
+      "moduleType": "MBHeader",
+      "tenantId": "default"
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
-      "moduletype": "MBHeader",
-      "tenantid": "default"
+      "moduleType": "MBHeader",
+      "tenantId": "default"
     },
     {
       "code": "APPROVED",
       "description": "Approved",
-      "moduletype": "Milestone",
-      "tenantid": "default"
+      "moduleType": "Milestone",
+      "tenantId": "default"
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "Milestone",
-      "tenantid": "default"
+      "moduleType": "Milestone",
+      "tenantId": "default"
     },
     {
       "code": "NEW",
       "description": "New",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "CREATED",
       "description": "Created",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "BUDGET_SANCTIONED",
       "description": "Budget Sanctioned",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "TECH_SANCTIONED",
       "description": "Technical Sanctioned",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "APPROVED",
       "description": "Approved",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "CHECKED",
       "description": "Checked",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
-      "moduletype": "RevisionAbstractEstimate",
-      "tenantid": "default"
+      "moduleType": "RevisionAbstractEstimate",
+      "tenantId": "default"
     },
     {
       "code": "APPROVED",
       "description": "Approved",
-      "moduletype": "TrackMilestone",
-      "tenantid": "default"
+      "moduleType": "TrackMilestone",
+      "tenantId": "default"
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "TrackMilestone",
-      "tenantid": "default"
+      "moduleType": "TrackMilestone",
+      "tenantId": "default"
     },
     {
       "code": "CREATED",
       "description": "Created",
-      "moduletype": "WorkOrder",
-      "tenantid": "default"
+      "moduleType": "WorkOrder",
+      "tenantId": "default"
     },
     {
       "code": "CHECKED",
       "description": "Checked",
-      "moduletype": "WorkOrder",
-      "tenantid": "default"
+      "moduleType": "WorkOrder",
+      "tenantId": "default"
     },
     {
       "code": "REJECTED",
       "description": "Rejected",
-      "moduletype": "WorkOrder",
-      "tenantid": "default"
+      "moduleType": "WorkOrder",
+      "tenantId": "default"
     },
     {
       "code": "APPROVED",
       "description": "Approved",
-      "moduletype": "WorkOrder",
-      "tenantid": "default"
+      "moduleType": "WorkOrder",
+      "tenantId": "default"
     },
     {
       "code": "CANCELLED",
       "description": "Cancelled",
-      "moduletype": "WorkOrder",
-      "tenantid": "default"
+      "moduleType": "WorkOrder",
+      "tenantId": "default"
     },
     {
       "code": "ACCEPTANCE_LETTER_ISSUED",
       "description": "Acceptance letter issued",
-      "moduletype": "LetterOfAcceptanceOffline",
-      "tenantid": "default"
+      "moduleType": "LetterOfAcceptanceOffline",
+      "tenantId": "default"
     },
     {
       "code": "ACCEPTANCE_LETTER_ACKNOWLEDGED",
       "description": "Acceptance letter acknowledged",
-      "moduletype": "LetterOfAcceptanceOffline",
-      "tenantid": "default"
+      "moduleType": "LetterOfAcceptanceOffline",
+      "tenantId": "default"
     },
     {
       "code": "AGREEMENT_ORDER_SIGNED",
       "description": "Agreement order signed",
-      "moduletype": "LetterOfAcceptanceOffline",
-      "tenantid": "default"
+      "moduleType": "LetterOfAcceptanceOffline",
+      "tenantId": "default"
     },
     {
       "code": "WORK_ORDER_ACKNOWLEDGED",
       "description": "Work order acknowledged",
-      "moduletype": "WorkOrderOffline",
-      "tenantid": "default"
+      "moduleType": "WorkOrderOffline",
+      "tenantId": "default"
     },
     {
       "code": "SITE_HANDED_OVER",
       "description": "Site handed over",
-      "moduletype": "WorkOrderOffline",
-      "tenantid": "default"
+      "moduleType": "WorkOrderOffline",
+      "tenantId": "default"
     },
     {
       "code": "WORK_COMMENCED",
       "description": "Work commenced",
-      "moduletype": "WorkOrderOffline",
-      "tenantid": "default"
+      "moduleType": "WorkOrderOffline",
+      "tenantId": "default"
     },
     {
       "code": "RESUBMITTED",
       "description": "Re-Submitted",
-      "moduletype": "WorkOrder",
-      "tenantid": "default"
+      "moduleType": "WorkOrder",
+      "tenantId": "default"
     },
     {
       "code": "ACTIVE",
       "description": "Active",
-      "moduletype": "Contractor",
-      "tenantid": "default",
-      "ordernumber": 1
+      "moduleType": "Contractor",
+      "tenantId": "default",
+      "orderNumber": 1
     },
     {
       "code": "INACTIVE",
       "description": "Inactive",
-      "moduletype": "Contractor",
-      "tenantid": "default",
-      "ordernumber": 2
+      "moduleType": "Contractor",
+      "tenantId": "default",
+      "orderNumber": 2
     },
     {
       "code": "BLACK_LISTED",
       "description": "Black_Listed",
-      "moduletype": "Contractor",
-      "tenantid": "default",
-      "ordernumber": 3
+      "moduleType": "Contractor",
+      "tenantId": "default",
+      "orderNumber": 3
     },
     {
       "code": "DEBARRED",
       "description": "Debarred",
-      "moduletype": "Contractor",
-      "tenantid": "default",
-      "ordernumber": 4
+      "moduleType": "Contractor",
+      "tenantId": "default",
+      "orderNumber": 4
     }
   ]
 }

@@ -1304,7 +1304,11 @@ definitions:
         description: Type of Module
         pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
-        minLength: 1     
+        minLength: 1   
+      orderNumber:
+        type: number
+        pattern: "[0-9]"
+        description: order Number for the status
     required:
       - code
       - moduleType
@@ -1337,4 +1341,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

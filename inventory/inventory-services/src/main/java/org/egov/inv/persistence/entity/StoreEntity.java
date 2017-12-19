@@ -42,6 +42,8 @@ package org.egov.inv.persistence.entity;
 import lombok.*;
 import org.egov.inv.model.*;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Builder
 @Getter
 @Setter
@@ -126,7 +128,7 @@ public class StoreEntity {
     public Object toEntity(Store store) {
         this.id = store.getId();
         this.name = store.getName();
-        this.code = store.getCode();
+        this.code = !isEmpty(store.getCode()) ? store.getCode().toUpperCase() : null;
         this.contactno1 = store.getContactNo1();
         this.contactno2 = store.getContactNo2();
         this.billingAddress = store.getBillingAddress();

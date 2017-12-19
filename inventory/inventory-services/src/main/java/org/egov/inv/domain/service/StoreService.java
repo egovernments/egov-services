@@ -56,6 +56,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -94,6 +95,7 @@ public class StoreService extends DomainService {
             int i = 0;
             for (Store store : storeRequest.getStores()) {
                 store.setId(sequenceNos.get(i));
+                store.setCode(store.getCode().toUpperCase());
                 if (isEmpty(store.getTenantId())) {
                     store.setTenantId(tenantId);
                 }
@@ -117,6 +119,7 @@ public class StoreService extends DomainService {
             StoreRequest fetchRelated = fetchRelated(storeRequest, tenantId);
             validate(fetchRelated.getStores(), Constants.ACTION_UPDATE, tenantId);
             for (Store store : storeRequest.getStores()) {
+                store.setCode(store.getCode().toUpperCase());
                 if (isEmpty(store.getTenantId())) {
                     store.setTenantId(tenantId);
                 }
@@ -133,11 +136,13 @@ public class StoreService extends DomainService {
     }
 
     public StoreResponse search(StoreGetRequest storeGetRequest) {
+        List<String> uppercaseCodes = storeGetRequest.getCode().stream()
+                .map(String::toUpperCase).collect(Collectors.toList());
+        storeGetRequest.setCode(uppercaseCodes);
         StoreResponse storeResponse = new StoreResponse();
         Pagination<Store> search = storeJdbcRepository.search(storeGetRequest);
         storeResponse.setStores(search.getPagedData());
         return storeResponse;
-        //	return isESEnabled ? storeESRepository.search(storeGetRequest):
     }
 
     private void validate(List<Store> stores, String method, String tenantId) {
@@ -146,61 +151,49 @@ public class StoreService extends DomainService {
         try {
             switch (method) {
 
-                case Constants.ACTION_CREATE:
+                case Constants.ACTION_CREATE: {
+                    if (stores == null) {
+                        throw new InvalidDataException("stores", ErrorCode.NOT_NULL.getCode(), null);
+                    }
+                }
+
+                break;
+
+                case Constants.ACTION_UPDATE: {
                     if (stores == null) {
                         throw new InvalidDataException("stores", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Store store : stores) {
-                        if (isEmpty(store.getTenantId())) {
-                            store.setTenantId(tenantId);
-                        }
-                        if (!storeJdbcRepository.uniqueCheck("code",
-                                new StoreEntity().toEntity(store))) {
-                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getCode());
-                        }
-
-                        validateStore(errors, store);
-                    }
-
-                    break;
-                case Constants.ACTION_UPDATE:
-                    if (stores == null) {
-                        throw new InvalidDataException("stores", ErrorCode.NOT_NULL.getCode(), null);
-                    }
-                    for (Store store : stores) {
-                        if (isEmpty(store.getTenantId())) {
-                            store.setTenantId(tenantId);
-                        }
                         if (store.getId() == null) {
-                            throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
+                            throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getCode());
                         }
-                        store.setTenantId(tenantId);
-
-                        if (!storeJdbcRepository.uniqueCheck("code",
-                                new StoreEntity().toEntity(store))) {
-                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getCode());
-
-                        }
-
-                        validateStore(errors, store);
-
                     }
+                }
+                break;
             }
+
+            for (Store store : stores) {
+                if (isEmpty(store.getTenantId())) {
+                    store.setTenantId(tenantId);
+                }
+                if (!storeJdbcRepository.uniqueCheck("code",
+                        new StoreEntity().toEntity(store))) {
+                    errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getCode());
+
+                }
+
+                if (!storeJdbcRepository.uniqueCheck("name",
+                        new StoreEntity().toEntity(store))) {
+                    errors.addDataError(ErrorCode.NAME_ALREADY_EXISTS.getCode(), "Store", store.getName());
+
+                }
+            }
+
         } catch (IllegalArgumentException e) {
 
         }
         if (errors.getValidationErrors().size() > 0)
             throw errors;
-    }
-
-    private void validateStore(InvalidDataException errors, Store store) {
-        if (null == store.getDepartment()) {
-            errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Department ", "", "store " + store.getName());
-        }
-
-        if (null == store.getOfficeLocation()) {
-            errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Office Location ", "", "store " + store.getName());
-        }
     }
 
     private StoreRequest fetchRelated(StoreRequest storeRequest, String tenantId) {

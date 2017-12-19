@@ -62,7 +62,7 @@ public class EstimateTemplateRepository {
         Map params = new HashMap();
         String queryStr = estimateTemplateQueryBuilder.getNonSorRate(nonSorId, tenantId, params);
         List<NonSORHelper> nonSORHelpers = namedParameterJdbcTemplate.query(queryStr, params, new BeanPropertyRowMapper(NonSORHelper.class));
-        return nonSORHelpers.get(0).toDomain();
+        return (nonSORHelpers != null && !nonSORHelpers.isEmpty()) ? nonSORHelpers.get(0).toDomain() : null;
     }
 
     public EstimateTemplate getbyId(String id, String tenantId) {

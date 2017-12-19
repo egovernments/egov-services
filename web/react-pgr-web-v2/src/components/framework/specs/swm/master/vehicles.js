@@ -1,3 +1,35 @@
+//var $=require('jquery'); 
+import Api from '../../../../../api/api';
+import $ from 'jquery';
+
+var curDate = new Date();
+var formattedDate = curDate.getDate()+"/"+(curDate.getMonth()+1)+"/"+curDate.getFullYear();
+let driverDesignaionId="";
+let body={
+          "RequestInfo":{
+            apiId: 'org.egov.pt',
+            ver: '1.0',
+            ts: '27-06-2017 10:30:12',
+            action: 'asd',
+            did: '4354648646',
+            key: 'xyz',
+            msgId: '654654',
+            requesterId: '61',
+            authToken: localStorage.getItem('token'),
+          }
+        };
+
+$.ajax({
+        url: window.location.origin+'/hr-masters/designations/_search?tenantId='+localStorage.getItem("tenantId")+'&name=Driver',
+        type:"POST",
+        contentType:"application/json",
+        data:JSON.stringify(body),
+        success: function (result) {
+              driverDesignaionId=result.Designation[0].id;       
+        },
+        async: false
+});
+
 var dat = {
   'swm.search': {
     numCols: 4,
@@ -39,11 +71,11 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
+            url: "hr-employee/employees/_search?&designationId="+driverDesignaionId+"&asOnDate="+formattedDate+"|$.Employee[*].code|$.Employee[*].name",
           },
           {
             name: 'engineSrNumber',
-            jsonPath: 'manufacturingDetails.engineSrNumber',
+            jsonPath: 'engineSrNumber',
             label: 'swm.vehicles.create.engineSrNumber',
             type: 'text',
             isDisabled: false,
@@ -53,7 +85,7 @@ var dat = {
           },
           {
             name: 'chassisSrNumber',
-            jsonPath: 'manufacturingDetails.chassisSrNumber',
+            jsonPath: 'chassisSrNumber',
             label: 'swm.vehicles.create.chassisSrNumber',
             type: 'text',
             isDisabled: false,
@@ -63,7 +95,7 @@ var dat = {
           },
           {
             name: 'model',
-            jsonPath: 'manufacturingDetails.model',
+            jsonPath: 'model',
             label: 'swm.vehicles.create.model',
             type: 'text',
             isDisabled: false,
@@ -86,7 +118,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..name|$..name',
+            url: 'swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
           },
         ],
       },
@@ -96,7 +128,7 @@ var dat = {
         fields: [
           {
             name: 'insuranceNumber',
-            jsonPath: 'insuranceDetails.insuranceNumber',
+            jsonPath: 'insuranceNumber',
             label: 'swm.vehicles.create.insuranceNumber',
             type: 'text',
             isDisabled: false,
@@ -112,7 +144,7 @@ var dat = {
         fields: [
           {
             name: 'purchaseDate',
-            jsonPath: 'purchaseInfo.purchaseDate',
+            jsonPath: 'purchaseDate',
             label: 'swm.vehicles.create.purchaseDate',
             type: 'datePicker',
             isDisabled: false,
@@ -207,7 +239,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
+            url: "hr-employee/employees/_search?&designationId="+driverDesignaionId+"&asOnDate="+formattedDate+"|$.Employee[*].code|$.Employee[*].name",
           },
           {
             name: 'vehicleCapacity',
@@ -751,6 +783,7 @@ var dat = {
   'swm.update': {
     numCols: 3,
     useTimestamp: true,
+    idJsonPath: 'vehicles[0].regNumber',
     objectName: 'vehicles',
     groups: [
       {
@@ -779,6 +812,17 @@ var dat = {
             maxLength: 12,
             minLength: 6,
             patternErrorMsg: '',
+          },
+          {
+            name: 'driverCode',
+            jsonPath: 'vehicles[0].driver',
+            label: 'swm.vehicles.create.driver',
+            type: 'singleValueList',
+            isDisabled: false,
+            maxLength: 128,
+            minLength: 1,
+            patternErrorMsg: '',
+            url: "hr-employee/employees/_search?&designationId="+driverDesignaionId+"&asOnDate="+formattedDate+"|$.Employee[*].code|$.Employee[*].name",
           },
           {
             name: 'vehicleCapacity',
@@ -937,7 +981,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..vendorNo|$..name',
+            url: 'swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
           },
         ],
       },

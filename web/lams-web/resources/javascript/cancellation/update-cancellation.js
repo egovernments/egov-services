@@ -328,7 +328,7 @@ class UpdateCancellation extends React.Component {
             ...this.state,
             agreement: agreement,
             departmentList: departmentList,
-            //owner:process.owner.id,
+            initiatorPosition:process.initiatorPosition,
             wfStatus: process.status,
             buttons: _btns ? _btns : []
         });
@@ -522,6 +522,10 @@ class UpdateCancellation extends React.Component {
                 if (agreement.workflowDetails.comments || agreement.workflowDetails.comments === "")
                     return showError("Please enter the Comments, If you are rejecting");
 
+            }
+
+            if(agreement.workflowDetails.assignee){
+                agreement.workflowDetails.assignee = this.state.initiatorPosition;
             }
 
             console.log("Agreement", agreement);

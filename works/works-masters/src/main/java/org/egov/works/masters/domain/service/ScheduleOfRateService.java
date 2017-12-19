@@ -129,13 +129,20 @@ public class ScheduleOfRateService {
                         sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
                     else {
                         sorRate.setId(commonUtils.getUUID());
+                        sorRate.setScheduleOfRate(scheduleOfRate.getId());
                         sorRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), false));
                     }
                 }
             }
             if (scheduleOfRate.getMarketRates() != null && !scheduleOfRate.getMarketRates().isEmpty()) {
                 for (final MarketRate marketRate : scheduleOfRate.getMarketRates()) {
-                    marketRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
+                    if (marketRate.getId() != null && !marketRate.getId().isEmpty())
+                        marketRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), true));
+                    else {
+                        marketRate.setId(commonUtils.getUUID());
+                        marketRate.setScheduleOfRate(scheduleOfRate.getId());
+                        marketRate.setAuditDetails(masterUtils.getAuditDetails(scheduleOfRateRequest.getRequestInfo(), false));
+                    }
                 }
             }
         }

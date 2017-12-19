@@ -299,6 +299,7 @@ public class MeasurementBookService {
 	}
 
 	public MeasurementBookResponse update(MeasurementBookRequest measurementBookRequest) {
+		measurementBookValidator.validateMB(measurementBookRequest, false);
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
 			for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()) {
 				if (measurementBookDetail.getId() == null)

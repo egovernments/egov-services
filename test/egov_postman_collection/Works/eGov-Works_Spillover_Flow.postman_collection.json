@@ -92,7 +92,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "56f12182-52f5-47bc-911a-814260dff413",
+								"id": "2aee983f-24d8-4c41-9b7e-915d8deb02b8",
 								"type": "text/javascript",
 								"exec": [
 									"var num1 = Math.floor((Math.random() * 10000) + 1);",
@@ -104,18 +104,17 @@
 									"",
 									"pm.environment.set(\"abstractEstimateNumber\", \"AE/ENG/\"+num1);",
 									"pm.environment.set(\"referenceNumber\", \"RefNum\"+num1);",
-									"pm.environment.set(\"epochDate\", epoch);",
 									"pm.environment.set(\"adminSanctionNumber\", \"ADN-\"+year+\"-\"+num1);",
 									"pm.environment.set(\"financialSanctionNumber\", \"FS-\"+year+\"-\"+num1);",
 									"pm.environment.set(\"councilResolutionNumber\", \"CRN-\"+year+\"-\"+num1);",
-									"pm.environment.set(\"spilloverPC\", \"WIN-\"+year+\"-\"+num1);"
+									"pm.environment.set(\"sProjectCode\", \"WIN-\"+year+\"-\"+num1);"
 								]
 							}
 						},
 						{
 							"listen": "test",
 							"script": {
-								"id": "6a7dff82-4d7d-4698-a450-2b943cf275dd",
+								"id": "30414b01-84e2-47c4-8990-63aecedb47c4",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -123,10 +122,16 @@
 									"});",
 									"",
 									"var jsonData = JSON.parse(responseBody);",
-									"pm.environment.set(\"AE_id\", jsonData.abstractEstimates[0].id);",
-									"pm.environment.set(\"AEdetails_id\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].id);",
-									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status);",
-									"// pm.globals.set(\"spilloverPC\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].projectCode.code);",
+									"pm.environment.set(\"sAEId\", jsonData.abstractEstimates[0].id);",
+									"pm.environment.set(\"sAEdetailsId\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].id);",
+									"pm.environment.set(\"sAEstatus\", jsonData.abstractEstimates[0].status);",
+									"",
+									"pm.test(\"Abstract Estimae Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"abstractEstimateNumber\")).to.include(jsonData.abstractEstimates[0].abstractEstimateNumber);",
+									"});",
+									"pm.test(\"Abstract Estimae ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"sAEId\")).to.include(jsonData.abstractEstimates[0].id);",
+									"});",
 									"postman.setNextRequest(\"Search sEstimate\");"
 								]
 							}
@@ -142,7 +147,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"abstractEstimateNumber\": \"{{abstractEstimateNumber}}\",\n      \"dateOfProposal\": 1427784646000,\n      \"subject\": \"Spillover AE - Project Estimation\",\n      \"referenceType\": {\n      \t\"code\":\"Demandfrompublic\"\n      },\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"description\": \"Spillover AE Project Estimation for the proposed work\",\n      \"documentDetails\": [],\n      \"assetDetails\": [],      \n      \"budgetGroup\": {\n        \"name\": \"4122001-CWIP-Office Buildings\"\n      },\n      \"department\": {\n        \"code\": \"ENG\"\n      },\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"Tendering\"\n      },\n      \"fund\": {\n        \"code\": \"1\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"adminSanctionNumber\": \"{{adminSanctionNumber}}\",\n      \"adminSanctionDate\": 1427784646000,\n      \"adminSanctionBy\": {\n        \"userName\": \"clerk\"\n      },\n      \"financialSanctionNumber\": \"{{financialSanctionNumber}}\",\n      \"financialSanctionDate\": 1427784646000,\n      \"financialSanctionBy\": {\n      \t\"userName\": \"clerk\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"Buildings\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"OFFICEBUILDINGS\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"New\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": \"{{councilResolutionNumber}}\",\n      \"councilResolutionDate\": 1427784646000,\n      \"spillOverFlag\": true,\n      \"detailedEstimateCreated\": true,\n      \"workOrderCreated\": true,\n      \"billsCreated\": true,\n      \"implementationPeriod\": 5,\n      \"fundAvailable\": true,\n      \"fundSanctioningAuthority\": \"Municipal\",\n      \"pmcRequired\": false,\n      \"pmcType\":\"pmc type\",\n      \"pmcName\":\"pmc Name\",\n      \"workProposedAsPerDP\": false,\n      \"dpRemarks\": \"Dp remarks\",\n      \"landAssetRequired\": true,\n      \"noOfLands\": 10,\n      \"otherAssetSpecificationRemarks\": \"Other remarks\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Hospital Building Construction\",\n          \"estimateAmount\": 1000,\n          \"grossAmountBilled\": 900,\n\t\t  \"projectCode\": {\n        \t\t\"code\": \"{{spilloverPC}}\"\n    \t\t }          \n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"create\"\n      }\n    }\n  ]\n}"
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"abstractEstimateNumber\": \"{{abstractEstimateNumber}}\",\n      \"dateOfProposal\": 1427784646000,\n      \"subject\": \"Spillover AE - Project Estimation\",\n      \"referenceType\": {\n      \t\"code\":\"Demandfrompublic\"\n      },\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"description\": \"Spillover AE Project Estimation for the proposed work\",\n      \"documentDetails\": [],\n      \"assetDetails\": [],      \n      \"budgetGroup\": {\n        \"name\": \"4122001-CWIP-Office Buildings\"\n      },\n      \"department\": {\n        \"code\": \"ENG\"\n      },\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"Tendering\"\n      },\n      \"fund\": {\n        \"code\": \"1\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"adminSanctionNumber\": \"{{adminSanctionNumber}}\",\n      \"adminSanctionDate\": 1427784646000,\n      \"adminSanctionBy\": {\n        \"userName\": \"clerk\"\n      },\n      \"financialSanctionNumber\": \"{{financialSanctionNumber}}\",\n      \"financialSanctionDate\": 1427784646000,\n      \"financialSanctionBy\": {\n      \t\"userName\": \"clerk\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"Buildings\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"OFFICEBUILDINGS\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"New\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"councilResolutionNumber\": \"{{councilResolutionNumber}}\",\n      \"councilResolutionDate\": 1427784646000,\n      \"spillOverFlag\": true,\n      \"detailedEstimateCreated\": true,\n      \"workOrderCreated\": true,\n      \"billsCreated\": true,\n      \"implementationPeriod\": 5,\n      \"fundAvailable\": true,\n      \"fundSanctioningAuthority\": \"Municipal\",\n      \"pmcRequired\": false,\n      \"pmcType\":\"pmc type\",\n      \"pmcName\":\"pmc Name\",\n      \"workProposedAsPerDP\": false,\n      \"dpRemarks\": \"Dp remarks\",\n      \"landAssetRequired\": true,\n      \"noOfLands\": 10,\n      \"otherAssetSpecificationRemarks\": \"Other remarks\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Hospital Building Construction\",\n          \"estimateAmount\": 1000,\n          \"grossAmountBilled\": 900,\n\t\t  \"projectCode\": {\n        \t\t\"code\": \"{{sProjectCode}}\"\n    \t\t }          \n        }\n      ]\n    }\n  ]\n}"
 						},
 						"url": {
 							"raw": "{{url}}/works-estimate/v1/abstractestimates/_create",
@@ -166,7 +171,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "903e0a73-c193-4cde-9a2d-496fc1bf4221",
+								"id": "0b83f012-aef8-4b7c-8bb6-cdfbb04def75",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
@@ -178,6 +183,16 @@
 									"pm.environment.set(\"sProjectCode\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].projectCode.code);",
 									"pm.environment.set(\"sNameOfWork\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].nameOfWork);",
 									"",
+									"pm.test(\"Spillover AE status is Admin Sanctioned\", function () {",
+									"    pm.expect(\"ADMIN_SANCTIONED\").to.include(jsonData.abstractEstimates[0].status);",
+									"    pm.environment.set(\"sAEstatus\", jsonData.abstractEstimates[0].status);",
+									"});",
+									"pm.test(\"Abstract Estimae Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"abstractEstimateNumber\")).to.include(jsonData.abstractEstimates[0].abstractEstimateNumber);",
+									"});",
+									"pm.test(\"Abstract Estimae ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"sAEId\")).to.include(jsonData.abstractEstimates[0].id);",
+									"});",
 									"postman.setNextRequest(\"Create sDE\");"
 								]
 							}
@@ -193,10 +208,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n\t}\n}"
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\"\n\t}\n}"
 						},
 						"url": {
-							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{AE_id}}&statuses=ADMIN_SANCTIONED",
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{sAEId}}&statuses=ADMIN_SANCTIONED",
 							"host": [
 								"{{url}}"
 							],
@@ -214,7 +229,7 @@
 								},
 								{
 									"key": "ids",
-									"value": "{{AE_id}}",
+									"value": "{{sAEId}}",
 									"equals": true
 								},
 								{
@@ -234,7 +249,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "bc0f423f-47cb-403a-ae1e-d18460beb2f9",
+								"id": "9112ef56-a90c-49b7-9260-937bc798ff4f",
 								"type": "text/javascript",
 								"exec": [
 									"var num1 = Math.floor((Math.random() * 10000) + 1);",
@@ -243,32 +258,30 @@
 									"var epoch = Math.round(today.getTime()/1000);",
 									"var year = today.getFullYear();",
 									"",
-									"pm.environment.set(\"sEstimateNum\", \"Spillover/DE/ENG/\"+num1);",
-									"pm.environment.set(\"sTechSanctionNum\", \"Spillover/DE/TS/\"+num1);",
-									"pm.environment.set(\"sAdminSanctionNum\", \"Spillover/DE/ADN/\"+num1);",
-									"// pm.globals.get(\"spilloverPC\");"
+									"pm.environment.get(\"sProjectCode\");",
+									"pm.environment.get(\"sEstimateAmount\");",
+									"pm.environment.get(\"sNameOfWork\");",
+									"pm.environment.set(\"sDENum\", \"Spillover/DE/ENG/\"+num1);",
+									"pm.environment.set(\"sDETechSanNum\", \"Spillover/DE/TS/\"+num1);",
+									"pm.environment.set(\"sDEAdnSanNum\", \"Spillover/DE/ADN/\"+num1);"
 								]
 							}
 						},
 						{
 							"listen": "test",
 							"script": {
-								"id": "cdab4ab9-3199-4ca7-b407-3159b9bc393e",
+								"id": "2cce1662-52bd-4f34-a978-c5f6eb83d655",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"var jsonData = JSON.parse(responseBody);",
-									"",
 									"var workValue = jsonData.detailedEstimates[0].workValue;",
 									"var estimateValue = jsonData.detailedEstimates[0].estimateValue;",
 									"var activityAmount = jsonData.detailedEstimates[0].estimateActivities[0].estimateRate;",
 									"",
-									"console.log(workValue);",
-									"console.log(estimateValue);",
-									"console.log(activityAmount);",
-									"",
+									"pm.environment.set(\"sDEstatus\", jsonData.detailedEstimates[0].status);",
 									"postman.setNextRequest(\"Search sDE\");"
 								]
 							}
@@ -284,7 +297,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"1427784646000\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"detailedEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"estimateNumber\": \"{{sEstimateNum}}\",\n      \"estimateDate\": 1427784646000,\n      \"nameOfWork\": \"Spillover DE\",\n      \"description\": \"Spillover Detailed Estimation for the proposed work\",\n      \"department\": {\n        \"code\": \"ENG\"\n      },\n      \"adminSanctionNumber\": \"{{sAdminSanctionNum}}\",\n      \"adminSanctionDate\": 1427784646000,\n      \"workValue\": 900,\n      \"estimateValue\": 1000,\n      \"projectCode\": {\n          \"code\": \"{{spilloverPC}}\"\n        },\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"EProcurement\"\n      },\n      \"worksType\": {\n        \"code\": \"Buildings\"\n      },\n      \"worksSubtype\": {\n        \"code\": \"OFFICEBUILDINGS\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"New\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"location\": \"Sarjapur Road\",\n      \"workCategory\": \"NON_SLUM\",\n      \"workOrderCreated\": true,\n      \"billsCreated\": true,\n      \"spillOverFlag\": true,\n      \"abstractEstimateDetail\": {\n      \t\"nameOfWork\": \"{{sNameOfWork}}\",\n      \t\"estimateAmount\": \"{{sEstimateAmount}}\",\n        \"projectCode\": {\n          \"code\": \"{{sProjectCode}}\"\n        },\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"documentDetails\": [],\n      \"assets\": [],\n      \"multiYearEstimates\": [],\n      \"estimateActivities\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"scheduleOfRate\": {\n            \"id\": \"8476e765666a43489f0029eefbd42072\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"code\": \"SOR65\"\n          },\n          \"uom\": {\n            \"code\": \"MTR\"\n          },\n          \"unitRate\": 300,\n          \"quantity\": 3,\n          \"estimateRate\": 900\n        }\n      ],\n      \"estimateOverheads\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"overhead\": {\n          \t\"accountCode\": \"123\",\n          \t\"name\": \"TAXFake\",\n            \"code\": \"TAXFake\",\n            \"tenantId\": \"{{tenantId}}\"\n          },\n          \"amount\": 100\n        }\n      ],\n      \"detailedEstimateDeductions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"chartOfAccounts\":{\n          \t\"glcode\": \"1981\"\n          },\n          \"amount\": 50\n        }\n      ],\n      \"estimateTechnicalSanctions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"technicalSanctionNumber\": \"{{sTechSanctionNum}}\",\n          \"technicalSanctionDate\": 1427784646000,\n          \"technicalSanctionBy\": {\n            \"userName\": \"clerk\"\n          }\n        }\n      ],\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"budgetGroup\": {\n        \"name\": \"4122001-CWIP-Office Buildings\"\n      },\n      \"workFlowDetails\": {\n        \"action\": \"Create\"\n      }\n    }\n  ]\n}"
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"1427784646000\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"detailedEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"estimateNumber\": \"{{sDENum}}\",\n      \"estimateDate\": 1427784646000,\n      \"nameOfWork\": \"{{sNameOfWork}}\",\n      \"description\": \"Spillover Detailed Estimation for the proposed work\",\n      \"department\": {\n        \"code\": \"ENG\"\n      },\n      \"adminSanctionNumber\": \"{{sDEAdnSanNum}}\",\n      \"adminSanctionDate\": 1427784646000,\n      \"workValue\": 900,\n      \"estimateValue\": 1000,\n      \"projectCode\": {\n          \"code\": \"{{sProjectCode}}\"\n        },\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"EProcurement\"\n      },\n      \"worksType\": {\n        \"code\": \"Buildings\"\n      },\n      \"worksSubtype\": {\n        \"code\": \"OFFICEBUILDINGS\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"New\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"location\": \"Sarjapur Road\",\n      \"workCategory\": \"NON_SLUM\",\n      \"workOrderCreated\": true,\n      \"billsCreated\": true,\n      \"spillOverFlag\": true,\n      \"abstractEstimateDetail\": {\n      \t\"nameOfWork\": \"{{sNameOfWork}}\",\n      \t\"estimateAmount\": \"{{sEstimateAmount}}\",\n        \"projectCode\": {\n          \"code\": \"{{sProjectCode}}\"\n        },\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"documentDetails\": [],\n      \"assets\": [],\n      \"multiYearEstimates\": [],\n      \"estimateActivities\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"scheduleOfRate\": {\n            \"id\": \"8476e765666a43489f0029eefbd42072\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"code\": \"SOR65\"\n          },\n          \"uom\": {\n            \"code\": \"MTR\"\n          },\n          \"unitRate\": 300,\n          \"quantity\": 3,\n          \"estimateRate\": 900\n        }\n      ],\n      \"estimateOverheads\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"overhead\": {\n          \t\"accountCode\": \"123\",\n          \t\"name\": \"TAXFake\",\n            \"code\": \"TAXFake\",\n            \"tenantId\": \"{{tenantId}}\"\n          },\n          \"amount\": 100\n        }\n      ],\n      \"detailedEstimateDeductions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"chartOfAccounts\":{\n          \t\"glcode\": \"1981\"\n          },\n          \"amount\": 50\n        }\n      ],\n      \"estimateTechnicalSanctions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"technicalSanctionNumber\": \"{{sDETechSanNum}}\",\n          \"technicalSanctionDate\": 1427784646000,\n          \"technicalSanctionBy\": {\n            \"userName\": \"clerk\"\n          }\n        }\n      ],\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"budgetGroup\": {\n        \"name\": \"4122001-CWIP-Office Buildings\"\n      }\n    }\n  ]\n}"
 						},
 						"url": {
 							"raw": "{{url}}/works-estimate/v1/detailedestimates/_create",
@@ -308,13 +321,24 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "234ce9fc-a96d-4f3d-ae8d-c1bf3e47501c",
+								"id": "09dcd41e-2d6c-43e4-86f7-033297a27ee7",
 								"type": "text/javascript",
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.test(\"Spillover AE status is Technical Sanctioned\", function () {",
+									"    pm.expect(\"TECHNICAL_SANCTIONED\").to.include(jsonData.detailedEstimates[0].status);",
+									"    pm.environment.set(\"sDEstatus\", jsonData.detailedEstimates[0].status);",
+									"});",
+									"pm.environment.set(\"sDEid\", jsonData.detailedEstimates[0].id);",
+									"pm.test(\"Detailed Estimae Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"sDENum\")).to.include(jsonData.detailedEstimates[0].estimateNumber);",
+									"});",
+									"pm.test(\"Deatiled Estimae ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"sDEid\")).to.include(jsonData.detailedEstimates[0].id);",
+									"});",
 									"postman.setNextRequest(\"Create sLOA\");"
 								]
 							}
@@ -333,7 +357,7 @@
 							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\"\n    }\n}"
 						},
 						"url": {
-							"raw": "{{url}}/works-estimate/v1/detailedestimates/_search?tenantId={{tenantId}}&detailedEstimateNumbers={{sEstimateNum}}",
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_search?tenantId={{tenantId}}&detailedEstimateNumbers={{sDENum}}&statuses=TECHNICAL_SANCTIONED",
 							"host": [
 								"{{url}}"
 							],
@@ -351,7 +375,12 @@
 								},
 								{
 									"key": "detailedEstimateNumbers",
-									"value": "{{sEstimateNum}}",
+									"value": "{{sDENum}}",
+									"equals": true
+								},
+								{
+									"key": "statuses",
+									"value": "TECHNICAL_SANCTIONED",
 									"equals": true
 								}
 							]
@@ -411,10 +440,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \n  \"letterofacceptances\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractor\": {\n        \"code\": \"GRADE-A1\",\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"loaDate\": 1427784646000,\n      \"loaNumber\": \"{{loaNumber}}\",\n      \"contractPeriod\": 5,\n      \"emdAmountDeposited\": 200,\n      \"stampPaperAmount\": 100,\n      \"engineerIncharge\": \"Ritesh\",\n      \"defectLiabilityPeriod\": 10,\n      \"tenderFinalizedPercentage\": 0,\n      \"loaAmount\": 900,\n      \"approvedDate\": 1427784646000,\n      \"fileNumber\": \"{{fileNumber}}\",\n      \"fileDate\": 1427784646000,\n      \"councilResolutionNumber\": \"{{loaCRN}}\",\n      \"councilResolutionDate\": 1427784646000,\n      \"spillOverFlag\": true,\n      \"status\": \"APPROVED\",\n      \"letterOfAcceptanceEstimates\":[\n      \t{\n        \t\"tenantId\": \"{{tenantId}}\",\n        \t\"detailedEstimate\": {\n        \t\"estimateNumber\": \"{{sEstimateNum}}\"\n        \t},\n        \t\"workCompletionDate\": 1427784646000,\n        \t\"loaActivities\": [\n        \t\t{\n       \t\t\t\t\"tenantId\": \"{{tenantId}}\",\n       \t\t\t\t\"collectionMode\":\"CASH\",\n       \t\t\t\t\"percentage\": 10,\n       \t\t\t\t\"amount\": 100\n    \t\t\t}\n      \t\t],\n        \t\"estimateLOAAmount\": 900\n    \t}\n      ],\n      \"securityDeposits\": []\n    }\n  ]\n}"
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \n  \"letterofacceptances\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractor\": {\n        \"code\": \"GRADE-A1\",\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"loaDate\": 1427784646000,\n      \"loaNumber\": \"{{loaNumber}}\",\n      \"contractPeriod\": 5,\n      \"emdAmountDeposited\": 200,\n      \"stampPaperAmount\": 100,\n      \"engineerIncharge\": \"Ritesh\",\n      \"defectLiabilityPeriod\": 10,\n      \"tenderFinalizedPercentage\": 0,\n      \"loaAmount\": 900,\n      \"approvedDate\": 1427784646000,\n      \"fileNumber\": \"{{fileNumber}}\",\n      \"fileDate\": 1427784646000,\n      \"councilResolutionNumber\": \"{{loaCRN}}\",\n      \"councilResolutionDate\": 1427784646000,\n      \"spillOverFlag\": true,\n      \"status\": \"APPROVED\",\n      \"letterOfAcceptanceEstimates\":[\n      \t{\n        \t\"tenantId\": \"{{tenantId}}\",\n        \t\"detailedEstimate\": {\n        \t\"estimateNumber\": \"{{sDENum}}\"\n        \t},\n        \t\"workCompletionDate\": 1427784646000,\n        \t\"loaActivities\": [\n        \t\t{\n       \t\t\t\t\"tenantId\": \"{{tenantId}}\",\n       \t\t\t\t\"collectionMode\":\"CASH\",\n       \t\t\t\t\"percentage\": 10,\n       \t\t\t\t\"amount\": 100\n    \t\t\t}\n      \t\t],\n        \t\"estimateLOAAmount\": 900\n    \t}\n      ],\n      \"securityDeposits\": []\n    }\n  ]\n}"
 						},
 						"url": {
-							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_create?isRevision=false",
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_create",
 							"host": [
 								"{{url}}"
 							],
@@ -423,13 +452,6 @@
 								"v1",
 								"letterofacceptances",
 								"_create"
-							],
-							"query": [
-								{
-									"key": "isRevision",
-									"value": "false",
-									"equals": true
-								}
 							]
 						},
 						"description": "LOA for the spillover estimates"
@@ -442,18 +464,25 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e79b0a01-3748-46e2-9c58-5a3fa49e952d",
+								"id": "da316c6b-7001-44a5-b5c1-e5c514b1cf26",
 								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"pm.environment.set(\"loaId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].letterOfAcceptance);",
 									"pm.environment.set(\"loaNumber\", jsonData.letterOfAcceptances[0].loaNumber);",
 									"pm.environment.set(\"loaStatus\", jsonData.letterOfAcceptances[0].status);",
+									"pm.environment.set(\"loaEstimateId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].id);",
+									"pm.environment.set(\"loaActId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[0].id);",
 									"",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									"",
+									"pm.test(\"LOA ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaId\")).to.include(jsonData.letterOfAcceptances[0].id);",
+									"});",
+									"pm.test(\"LOA Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaNumber\")).to.include(jsonData.letterOfAcceptances[0].loaNumber);",
+									"});",
 									"postman.setNextRequest(\"Create sWO\");"
 								]
 							}
@@ -574,14 +603,33 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7a0600e5-893d-43de-9159-e56333704fd0",
+								"id": "d2ecc378-57de-4651-a055-e85673641312",
 								"type": "text/javascript",
 								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.get(\"loaNumber\");",
+									"pm.environment.get(\"loaId\");",
+									"",
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"postman.setNextRequest(\"Logout\");"
+									"pm.test(\"LOA ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaId\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].letterOfAcceptance);",
+									"});",
+									"pm.test(\"LOA Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaNumber\")).to.include(jsonData.workOrders[0].letterOfAcceptance.loaNumber);",
+									"});",
+									"pm.test(\"LOA Estimate ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaEstimateId\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].id);",
+									"});",
+									"pm.test(\"LOA Activity ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaActId\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].loaActivities[0].id);",
+									"});",
+									"pm.test(\"Detailed Estimate ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"sDEid\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].detailedEstimate.id);",
+									"});",
+									"postman.setNextRequest(\"Create sMB\");"
 								]
 							}
 						}
@@ -628,6 +676,117 @@
 							]
 						},
 						"description": "Search work order for the spillover"
+					},
+					"response": []
+				},
+				{
+					"name": "Create sMB",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e164fb59-8c9d-46fe-95ae-d8e3a77c2016",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"pm.environment.set(\"mbRef\", \"MBref-\"+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "e5abba31-7138-4034-aeec-d4ce271a5208",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"MBid\", jsonData.measurementBooks[0].id);",
+									"pm.environment.set(\"MBrefNo\", jsonData.measurementBooks[0].mbRefNo);",
+									"",
+									"postman.setNextRequest(\"Search sMB\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"measurementBooks\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"mbRefNo\": \"{{mbRef}}\",\n      \"contractorComments\": \"First MB\",\n      \"mbDate\": \"1450434548000\",\n      \"mbIssuedDate\": \"1450434548000\",\n      \"mbAbstract\": \"Abstract MB\",\n      \"fromPageNo\": \"1\",\n      \"toPageNo\": \"100\",\n      \"letterOfAcceptanceEstimate\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": \"{{loaEstimateId}}\",\n        \"letterOfAcceptance\": \"{{loaId}}\",\n        \"detailedEstimate\": {\n        \t\"id\": \"{{sDEid}}\",\n        \t\"tenantId\": \"{{tenantId}}\",\n        \t\"estimateNumber\": \"{{sEstimateNum}}\"\n        }\n      },\n      \"revisionLOA\": null,\n      \"status\": \"APPROVED\",\n      \"measurementBookDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"measurementBook\": null,\n          \"quantity\": \"10\",\n          \"rate\": \"100\",\n          \"remarks\": \"remarks\",\n          \"amount\": 1000,\n          \"loaActivity\": {\n          \t\"id\":\"{{loaActId}}\"\n          }\n        }\n      ],\n      \"isLegacyMB\": true,\n      \"mbAmount\": \"1000\",\n      \"approvedDate\": \"1450434548000\",\n      \"documentDetails\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search sMB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "06f4ec09-d385-4509-aa04-ddd1c6535f92",
+								"type": "text/javascript",
+								"exec": [
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_search?tenantId={{tenantId}}&ids={{MBid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{MBid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search spillover MB"
 					},
 					"response": []
 				},

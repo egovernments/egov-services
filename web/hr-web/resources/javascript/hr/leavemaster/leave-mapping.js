@@ -202,7 +202,7 @@ componentDidMount() {
                     <select id="designation" name="designation" value={designation} onChange={(e)=>{
                         handleChange(e,"designation")
                     }}>
-                    <option>Select Designation</option>
+                    <option value="" >Select Designation</option>
                     {renderOption(this.state.assignments_designation)}
                    </select>
                     </div>

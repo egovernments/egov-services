@@ -193,6 +193,10 @@ public class PerformanceAssessmentConstants {
     public static final String TARGETFINYEAR_UNAVAILABLE_CODE = "pa.0032";
     public static final String TARGETFINYEAR_UNAVAILABLE_FIELD_NAME = "finYear";
     public static final String TARGETFINYEAR_UNAVAILABLE_ERROR_MESSAGE = "Target Financial Year is mandatory for KPI Target Record";
+    
+    public static final String TARGETVALUE_INVALID_CODE = "pa.0033";
+    public static final String TARGETVALUE_INVALID_FIELD_NAME = "targetValue";
+    public static final String TARGETVALUE_INVALID_ERROR_MESSAGE = "Target Value cannot be set as ZERO!";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

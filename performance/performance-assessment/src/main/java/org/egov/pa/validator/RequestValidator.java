@@ -223,6 +223,21 @@ public class RequestValidator {
 						PerformanceAssessmentConstants.TARGETDESC_MANDATORY_ERROR_MESSAGE,
 						PerformanceAssessmentConstants.TARGETDESC_MANDATORY_FIELD_NAME));
 			}
+			
+			if (StringUtils.isNotBlank(target.getTargetValue()) &&  
+					target.getTargetValue().equals("0")) { 
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGETVALUE_INVALID_CODE,
+						PerformanceAssessmentConstants.TARGETVALUE_INVALID_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.TARGETVALUE_INVALID_FIELD_NAME));
+			}
+			
+			if (StringUtils.isNotBlank(target.getTargetDescription()) &&    
+					target.getTargetDescription().equals("0")) { 
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGETVALUE_INVALID_CODE,
+						PerformanceAssessmentConstants.TARGETVALUE_INVALID_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.TARGETVALUE_INVALID_FIELD_NAME));
+			}
+			
 		}
 
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())

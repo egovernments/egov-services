@@ -79,6 +79,6 @@ public interface MeasurementbooksApi {
 
 	@RequestMapping(value = "/measurementbooks/_update", method = RequestMethod.POST)
 	ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
-			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
+			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest);
 
 }

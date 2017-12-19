@@ -1845,22 +1845,22 @@ paths:
             in: query
             description: |
               receipt date of the TransferInward
-          - name: transferOutWard
+          - name: issueNumber
             type: integer
             format: int64
             in: query
             description: |
-              transfer out ward of the TransferInward
-          - name: inwardNoteNumber
+              out ward  issue Number of the TransferInward
+          - name: mrnNumber
             type: string
             in: query
             description: |
-              inward note number of the TransferInward
-          - name: inwardNoteStatus
+              mrn number of the TransferInward
+          - name: status
             type: string
             in: query
             description: |
-              inward note status of the TransferInward
+              status of the TransferInward
             enum:
               - CREATED
               - APPROVED

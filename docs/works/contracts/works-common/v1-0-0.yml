@@ -559,9 +559,13 @@ definitions:
         description: The boolean value to indicate whether the contractor Agency/Firm is PMC(Project Management Consultant). The default value is false.
         default: false
       status:
-        type: string
+        $ref: '#/definitions/WorksStatus'
         description: Status of the Contractor      
         format: singleValueList
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails" 
     required:
@@ -1275,6 +1279,36 @@ definitions:
     required:
       - tenantId
       - name
+      
+  WorksStatus:
+    type: object
+    description: An Object that holds Status of all Works Module
+    properties:
+      tenantId:
+        type: string
+        description: Tenant id of the Works Status
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: Status Code
+        pattern: '[a-zA-Z0-9-\\]+'
+        maxLength: 100
+        minLength: 1  
+      description:
+          type: string
+          maxLength: 256
+          description: description about the Status
+      moduleType:
+        type: string
+        description: Type of Module
+        pattern: '[a-zA-Z0-9-\\]+'
+        maxLength: 100
+        minLength: 1     
+    required:
+      - code
+      - moduleType
+      - tenantId
 
 parameters:
 ##########################################################
@@ -1303,6 +1337,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
-
 

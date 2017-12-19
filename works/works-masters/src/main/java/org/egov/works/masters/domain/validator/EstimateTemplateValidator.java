@@ -37,7 +37,7 @@ public class EstimateTemplateValidator {
 
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
 
-            if (estimateTemplate.getTypeOfWork() != null && estimateTemplate.getTypeOfWork().getCode()!=null && !estimateTemplate.getTypeOfWork().getCode().isEmpty()) {
+            if (estimateTemplate.getTypeOfWork() != null && estimateTemplate.getTypeOfWork().getCode() != null && !estimateTemplate.getTypeOfWork().getCode().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
                         CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getTypeOfWork().getCode(),
                         estimateTemplateRequest.getRequestInfo());
@@ -47,7 +47,7 @@ public class EstimateTemplateValidator {
                 }
             }
 
-            if (estimateTemplate.getSubTypeOfWork() != null && estimateTemplate.getSubTypeOfWork().getCode()!=null && !estimateTemplate.getSubTypeOfWork().getCode().isEmpty()) {
+            if (estimateTemplate.getSubTypeOfWork() != null && estimateTemplate.getSubTypeOfWork().getCode() != null && !estimateTemplate.getSubTypeOfWork().getCode().isEmpty()) {
                 mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_WORKS,
                         CommonConstants.MASTERNAME_TYPEOFWORK, "code", estimateTemplate.getSubTypeOfWork().getCode(),
                         estimateTemplateRequest.getRequestInfo());
@@ -81,14 +81,20 @@ public class EstimateTemplateValidator {
                             isDataValid = Boolean.TRUE;
                         }
 
-                        if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getScheduleOfRate().getId() != null) {
-                            sorCount++;
-                            distinctSors.add(estimateTemplateActivities.getScheduleOfRate().getId());
-                            if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate().getId(), estimateTemplateActivities.getTenantId()) == null) {
-                                validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate());
+                        if (estimateTemplateActivities.getScheduleOfRate() != null) {
+                            if (estimateTemplateActivities.getScheduleOfRate().getId() != null) {
+                                sorCount++;
+                                distinctSors.add(estimateTemplateActivities.getScheduleOfRate().getId());
+                                if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate().getId(), estimateTemplateActivities.getTenantId()) == null) {
+                                    validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate());
+                                    isDataValid = Boolean.TRUE;
+                                }
+                            } else {
+                                validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_REQUIRED, Constants.MESSAGE_SCHEDULEOFRATE_ID_REQUIRED);
                                 isDataValid = Boolean.TRUE;
                             }
                         }
+
 
                         if (estimateTemplateActivities.getNonSOR() != null) {
                             if (estimateTemplateActivities.getNonSOR().getUom().getCode() != null && !estimateTemplateActivities.getNonSOR().getUom().getCode().isEmpty()) {

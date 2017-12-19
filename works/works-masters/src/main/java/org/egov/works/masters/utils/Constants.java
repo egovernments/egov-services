@@ -80,6 +80,9 @@ public class Constants {
     public static final String KEY_SUBTYPEOFWORK_CODE_INVALID="WMS.SUBTYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_SUBTYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
 
+    public static final String KEY_SCHEDULEOFRATE_ID_REQUIRED="WMS.SCHEDULEOFRATE.ID.REQUIRED";
+    public static final String MESSAGE_SCHEDULEOFRATE_ID_REQUIRED="Schedule Of Rate id is required: ";
+
     public static final String KEY_SCHEDULEOFRATE_ID_INVALID="WMS.SCHEDULEOFRATE.ID.INVALID";
     public static final String MESSAGE_SCHEDULEOFRATE_ID_INVALID="Given Schedule Of Rate is invalid: ";
 

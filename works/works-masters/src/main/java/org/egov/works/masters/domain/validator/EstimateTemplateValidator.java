@@ -32,7 +32,7 @@ public class EstimateTemplateValidator {
     public void validate(EstimateTemplateRequest estimateTemplateRequest) {
         JSONArray mdmsResponse = null;
         Map<String, String> validationMessages = new HashMap<>();
-        Boolean isDataValid = Boolean.FALSE;
+        Boolean isValidationError = Boolean.FALSE;
         List<String> codeList = new ArrayList<>();
 
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
@@ -43,8 +43,11 @@ public class EstimateTemplateValidator {
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     validationMessages.put(Constants.KEY_TYPEOFWORK_CODE_INVALID, Constants.MESSAGE_TYPEOFWORK_CODE_INVALID + estimateTemplate.getTypeOfWork());
-                    isDataValid = Boolean.TRUE;
+                    isValidationError = Boolean.TRUE;
                 }
+            }else {
+                validationMessages.put(Constants.KEY_TYPEOFWORK_CODE_MANDATORY, Constants.MESSAGE_TYPEOFWORK_CODE_MANDATORY);
+                isValidationError = Boolean.TRUE;
             }
 
             if (estimateTemplate.getSubTypeOfWork() != null && estimateTemplate.getSubTypeOfWork().getCode() != null && !estimateTemplate.getSubTypeOfWork().getCode().isEmpty()) {
@@ -53,7 +56,7 @@ public class EstimateTemplateValidator {
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     validationMessages.put(Constants.KEY_SUBTYPEOFWORK_CODE_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_CODE_INVALID + estimateTemplate.getSubTypeOfWork());
-                    isDataValid = Boolean.TRUE;
+                    isValidationError = Boolean.TRUE;
                 }
             }
 
@@ -63,10 +66,10 @@ public class EstimateTemplateValidator {
                 for (EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
                     if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getNonSOR() != null) {
                         validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_BOTH_SORANDNONSOR_SHOULDNOT_PRESENT, Constants.MESSAGE_ESTIMATETEMPLATE_BOTH_SORANDNONSOR_SHOULDNOT_PRESENT);
-                        isDataValid = Boolean.TRUE;
+                        isValidationError = Boolean.TRUE;
                     } else if (estimateTemplateActivities.getScheduleOfRate() == null && estimateTemplateActivities.getNonSOR() == null) {
                         validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_EITHER_SOR_OR_NONSOR_ISREQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_EITHER_SOR_OR_NONSOR_ISREQUIRED);
-                        isDataValid = Boolean.TRUE;
+                        isValidationError = Boolean.TRUE;
                     } else {
                         if (estimateTemplateActivities.getUom() != null && estimateTemplateActivities.getUom().getCode() != null) {
                             mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
@@ -74,11 +77,11 @@ public class EstimateTemplateValidator {
                                     estimateTemplateRequest.getRequestInfo());
                             if (mdmsResponse == null || mdmsResponse.size() == 0) {
                                 validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getUom());
-                                isDataValid = Boolean.TRUE;
+                                isValidationError = Boolean.TRUE;
                             }
                         } else {
                             validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_UOM_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_UOM_REQUIRED);
-                            isDataValid = Boolean.TRUE;
+                            isValidationError = Boolean.TRUE;
                         }
 
                         if (estimateTemplateActivities.getScheduleOfRate() != null) {
@@ -87,11 +90,11 @@ public class EstimateTemplateValidator {
                                 distinctSors.add(estimateTemplateActivities.getScheduleOfRate().getId());
                                 if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate().getId(), estimateTemplateActivities.getTenantId()) == null) {
                                     validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate());
-                                    isDataValid = Boolean.TRUE;
+                                    isValidationError = Boolean.TRUE;
                                 }
                             } else {
                                 validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_REQUIRED, Constants.MESSAGE_SCHEDULEOFRATE_ID_REQUIRED);
-                                isDataValid = Boolean.TRUE;
+                                isValidationError = Boolean.TRUE;
                             }
                         }
 
@@ -103,35 +106,35 @@ public class EstimateTemplateValidator {
                                         estimateTemplateRequest.getRequestInfo());
                                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                                     validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getNonSOR().getUom());
-                                    isDataValid = Boolean.TRUE;
+                                    isValidationError = Boolean.TRUE;
                                 }
                             } else {
                                 validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_UOM_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_UOM_REQUIRED);
-                                isDataValid = Boolean.TRUE;
+                                isValidationError = Boolean.TRUE;
                             }
                             if (!(estimateTemplateActivities.getNonSOR().getDescription() != null && !estimateTemplateActivities.getNonSOR().getDescription().isEmpty())) {
                                 validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_NONSOR_DESCRIPTION_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_NONSOR_DESCRIPTION_REQUIRED);
-                                isDataValid = Boolean.TRUE;
+                                isValidationError = Boolean.TRUE;
                             }
                         }
                     }
                 }
                 if (distinctSors.size() != sorCount) {
                     validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED, Constants.MESSAGE_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED);
-                    isDataValid = Boolean.TRUE;
+                    isValidationError = Boolean.TRUE;
                 }
             } else {
                 validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_MIN_ONE_ETA_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_MIN_ONE_ETA_REQUIRED);
-                isDataValid = Boolean.TRUE;
+                isValidationError = Boolean.TRUE;
             }
             codeList.add(estimateTemplate.getCode());
         }
         Set<String> filteredCode = new HashSet<String>(codeList);
         if (codeList.size() != filteredCode.size()) {
             validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_THEREARE_DUPLICATE_CODES, Constants.MESSAGE_ESTIMATETEMPLATE_THEREARE_DUPLICATE_CODES);
-            isDataValid = Boolean.TRUE;
+            isValidationError = Boolean.TRUE;
         }
-        if (isDataValid) throw new CustomException(validationMessages);
+        if (isValidationError) throw new CustomException(validationMessages);
     }
 
     public void validateForExistance(EstimateTemplateRequest estimateTemplateRequest) {

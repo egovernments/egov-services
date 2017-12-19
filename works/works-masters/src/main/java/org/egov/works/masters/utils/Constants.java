@@ -77,6 +77,9 @@ public class Constants {
     public static final String KEY_TYPEOFWORK_CODE_INVALID="WMS.TYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_TYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
 
+    public static final String KEY_TYPEOFWORK_CODE_MANDATORY="WMS.TYPEOFWORK.CODE.MANDATORY";
+    public static final String MESSAGE_TYPEOFWORK_CODE_MANDATORY="Type of work is mandatory";
+
     public static final String KEY_SUBTYPEOFWORK_CODE_INVALID="WMS.SUBTYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_SUBTYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";
 

@@ -52,24 +52,7 @@ public class RoleController {
 		this.roleService = roleService;
 	}
 
-	@PostMapping(value = "_search")
-	public RoleResponse getRoles(@RequestParam(value = "code", required = false) String code,
-			@RequestBody final RoleRequest roleRequest) {
-
-		RoleSearchCriteria roleSearchCriteria = RoleSearchCriteria.builder().codes(new ArrayList<String>()).build();
-
-		if (code != null && !code.isEmpty()) {
-
-			roleSearchCriteria = RoleSearchCriteria.builder()
-					.codes(Arrays.stream(code.split(",")).map(String::trim).collect(Collectors.toList())).build();
-		}
-
-		List<Role> roles = roleService.getRoles(roleSearchCriteria);
-		
-		return getSuccessResponse(roles);
-
-	}
-	@PostMapping(value = "mdms/_search")
+		@PostMapping(value = "_search")
 	public RoleResponse getMDMSRoles(@RequestParam(value = "code", required = false) String code,@RequestParam(value = "tenantId", required = false) String tenantId,
 			@RequestBody final RoleRequest roleRequest) throws UnsupportedEncodingException, JSONException {
 

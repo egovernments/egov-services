@@ -152,10 +152,11 @@ public class DataUploadService {
     	coloumnHeaders.add("status"); coloumnHeaders.add("message");
 		dataUploadUtils.writeToexcelSheet(coloumnHeaders);
 		int successCount = 0; int failureCount = 0;
+
 		for(List<Object> row: excelData){
 			try{
 				if(!row.isEmpty()){
-					for(int i = 0; i < coloumnHeaders.size(); i++){
+					for(int i = 0; i < (coloumnHeaders.size() - 2); i++){
 		            	StringBuilder expression = new StringBuilder();
 		            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
 		            	if(null == jsonPath){
@@ -163,7 +164,7 @@ public class DataUploadService {
 		            		continue;
 		            	}
 		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-				        documentContext.put(expression.toString(), key, row.get(i));	            	
+		            	documentContext.put(expression.toString(), key, row.get(i));	            	
 					} 	
 				    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
 				    try{
@@ -283,6 +284,20 @@ public class DataUploadService {
 		}
 		logger.info("result: "+result);
 		return result;
+
+	}
+	
+	
+	public List<UploadJob> getUploadJobs(org.egov.dataupload.model.JobSearchRequest jobSearchRequest){
+		logger.info("fetching upload jobs....");
+		List<UploadJob> uploadJobs = new ArrayList<>();
+		try{
+			uploadJobs = uploadRegistryRepository.searchJob(jobSearchRequest);
+		}catch(Exception e){
+			logger.error("Exception while searching for jobs", e);
+		}
+
+		return uploadJobs;
 
 	}
 	

@@ -57,6 +57,8 @@ public class DataUploadUtils {
 	            	dataList.add(cell.getNumericCellValue());
 	            	if(cell.CELL_TYPE_STRING == cell.getCellType())
 	            	dataList.add(cell.getStringCellValue());
+	            	if(cell.CELL_TYPE_BOOLEAN == cell.getCellType())
+	            	dataList.add(cell.getBooleanCellValue());
 	            }
             }
             excelData.add(dataList);

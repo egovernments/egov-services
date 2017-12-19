@@ -88,7 +88,7 @@ public class EmployeeInfo {
 
     private String pan;
 
-    private Long aadhaarNumber;
+    private String aadhaarNumber;
 
     private Boolean active;
 

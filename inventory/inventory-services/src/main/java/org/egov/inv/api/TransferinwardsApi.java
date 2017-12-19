@@ -60,19 +60,19 @@ public interface TransferinwardsApi {
     		@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
     		@RequestParam(value = "tenantId", required = true) String tenantId,
     		@ApiParam(value = "Parameter to carry Request metadata in the request body"  )  
-    		@Valid @RequestBody RequestInfo requestInfo, @Size(max=50)
+    		@Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo, @Size(max=50)
     		@ApiParam(value = "comma seperated list of Ids")
     		@RequestParam(value = "ids", required = false) List<String> ids,
     		@ApiParam(value = "receipt date of the TransferInward ") 
     		@RequestParam(value = "receiptDate", required = false) Long receiptDate,
     		@ApiParam(value = "transfer out ward of the TransferInward ") 
-    		@RequestParam(value = "transferOutWard", required = false) Long transferOutWard,
+    		@RequestParam(value = "issueNumber", required = false) List<String> issueNumber,
     		@ApiParam(value = "description of the TransferInward ") 
     		@RequestParam(value = "description", required = false) String description,
     		@ApiParam(value = "inward note number of the TransferInward ") 
-    		@RequestParam(value = "inwardNoteNumber", required = false) String inwardNoteNumber,
+    		@RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber,
     		@ApiParam(value = "inward note status of the TransferInward ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED")
-    		@RequestParam(value = "inwardNoteStatus", required = false) String inwardNoteStatus,
+    		@RequestParam(value = "status", required = false) List<String> status,
     		@ApiParam(value = "state id of the TransferInward ")
     		@RequestParam(value = "stateId", required = false) Long stateId, @Min(0) @Max(100)
     		@ApiParam(value = "Number of records returned.", defaultValue = "20")

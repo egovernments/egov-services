@@ -147,6 +147,20 @@ public class MaterialReceiptJdbcRepository extends JdbcRepository {
             params.append("financialyear = :financialYear");
             paramValues.put("financialYear", materialReceiptSearch.getFinancialYear());
         }
+        
+        if (materialReceiptSearch.getMrnStatus() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("mrnStatus = :mrnStatus");
+            paramValues.put("mrnStatus", materialReceiptSearch.getMrnStatus());
+        }
+        
+        if (materialReceiptSearch.getIssueNumber() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("issueNumber = :issueNumber");
+            paramValues.put("issueNumber", materialReceiptSearch.getIssueNumber());
+        }
 
         if (materialReceiptSearch.getTenantId() != null) {
             if (params.length() > 0)

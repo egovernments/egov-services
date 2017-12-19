@@ -37,8 +37,6 @@ public class TransferInwardRequest   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
-
   public RequestInfo getRequestInfo() {
     return requestInfo;
   }

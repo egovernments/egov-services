@@ -43,8 +43,6 @@ public class TransferInwardResponse   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
-
   public ResponseInfo getResponseInfo() {
     return responseInfo;
   }

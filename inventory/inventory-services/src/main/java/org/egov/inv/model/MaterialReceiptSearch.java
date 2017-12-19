@@ -16,6 +16,8 @@ public class MaterialReceiptSearch {
     private List<String> mrnNumber;
 
     private List<String> mrnStatus;
+    
+    private List<String> issueNumber;
 
     private Long receiptDate;
 

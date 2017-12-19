@@ -97,11 +97,7 @@ close(){
               },
               error: function(err) {
                 try{
-                  console.log(err);
-                  console.log(err["responseJSON"]);
-                  console.log(err["responseJSON"]["Error"]);
-                  console.log(err["responseJSON"]["Error"]["description"]);
-                  showError(err["responseJSON"]["Error"]["description"]);
+                  showError(err["responseJSON"]["0"]["Error"]["description"]);
                 }catch (e) {
                   showError("Something went wrong, Please contact administrator"); 
                 }

@@ -44,13 +44,17 @@ var dat = {
                 key: 'MOVABLE',
                 value: 'MOVABLE',
               },
+							{
+                key: 'LAND',
+                value: 'LAND',
+              }
             ],
             depedants: [
               {
                 jsonPath: 'MasterMetaData.masterData[0].parent',
                 type: 'dropDown',
                 pattern:
-                  "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%3D%3D'{MasterMetaData.masterData[0].assetCategoryType}')%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+                  "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F%28+%40.assetCategoryType%3D%3D'{MasterMetaData.masterData[0].assetCategoryType}'%29%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
               },
             ],
           },
@@ -137,6 +141,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
+						defaultValue: true
           }
         ],
       },
@@ -300,6 +305,10 @@ var dat = {
                 key: 'MOVABLE',
                 value: 'MOVABLE',
               },
+							{
+                key: 'LAND',
+                value: 'LAND',
+              }
             ],
             isRequired: true,
             isDisabled: false,

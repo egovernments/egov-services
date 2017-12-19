@@ -494,7 +494,7 @@ class assetMovableCreate extends Component {
       {
         moduleName: 'ASSET',
         masterName: 'AssetCategory',
-        filter: '%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D%0A',
+        filter: '%5B%3F%28+%40.isAssetAllowFromUi+%3D%3D+true+%26%26+%40.isAssetAllow+%3D%3D+true+%26%26+%40.assetCategoryType+%3D%3D+%22MOVABLE%22%29%5D',
       },
       {},
       false,

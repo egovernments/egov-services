@@ -105,7 +105,6 @@ class assetCategorySearch extends Component {
     var formData = {};
     if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
-
     this.setState({
       pathname: this.props.history.location.pathname,
       showResult: false,
@@ -114,12 +113,14 @@ class assetCategorySearch extends Component {
 
   componentDidMount() {
     // this.props.resetDropdownData();
+    console.log("hello");
     this.initData();
     this.hasReturnUrl();
   }
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname && this.state.pathname != nextProps.history.location.pathname) {
       // this.props.resetDropdownData();
+      console.log("hi");
       this.initData();
     }
   }
@@ -140,7 +141,7 @@ class assetCategorySearch extends Component {
     self.props.setLoadingStatus('loading');
     var formData = { ...this.props.formData };
     if (hasDefaultSearch) {
-      formData = window.localStorage.getItem('formData') && JSON.parse(window.localStorage.getItem('formData'));
+      formData = window.localStorage.getItem('formData') && JSON.parse(window.localStorage.getItem('formData')) || {};
       this.props.setFormData(formData);
     }
     for (var key in formData) {
@@ -186,8 +187,7 @@ class assetCategorySearch extends Component {
           ],
         },
       };
-    }
-    else {
+    } else {
       var _body = {
         MdmsCriteria: {
           tenantId: localStorage.getItem('tenantId'),
@@ -197,7 +197,7 @@ class assetCategorySearch extends Component {
               masterDetails: [
                 {
                   name: 'AssetCategory'
-              },
+                },
               ],
             },
           ],
@@ -247,6 +247,7 @@ class assetCategorySearch extends Component {
               // }
             }
             resultList.resultValues.push(tmp);
+            console.log(resultList);
           }
         }
         if (result.isAction) {
@@ -270,110 +271,18 @@ class assetCategorySearch extends Component {
     );
   };
 
-  // search = (e=null,hasDefaultSearch=false) => {
-  //   if (e) {
-  //       e.preventDefault();
-  //   }
-  //
-  //   let self = this;
-  //   // self.props.setLoadingStatus('loading');
-  //   var formData = {...this.props.formData};
-  //   if (hasDefaultSearch) {
-  //     formData=window.localStorage.getItem("formData") && JSON.parse(window.localStorage.getItem("formData"));
-  //     this.props.setFormData(formData)
-  //   }
-  //
-  //   console.log(formData);
-  //   let queryFilter = '';
-  //
-  //   for(let key in formData) {
-  //     if(formData[key] == "" || typeof formData[key] == "undefined"){
-  //       delete formData[key];
-  //     }else{
-  //       if(queryFilter == ''){
-  //         queryFilter = `%20%40.${key}%3D%3D%27${formData[key]}%27`
-  //       }else {
-  //           queryFilter+=`%20%26%26%20%40.${key}%3D%3D%27${formData[key]}%27`;
-  //       }
-  //     }
-  //   }
-  //
-  //   let filter;
-  //   if(queryFilter!=='')
-  //     filter = `%5B%3F(${queryFilter})%5D`;
-  //
-  //   var specifications=JSON.parse(window.localStorage.getItem("specifications"));
-  //   var currentSpecification=specifications[`asset.search`];
-  //   let {getVal, getValFromDropdownData} = self;
-  //
-  //   Api.commonApiPost(currentSpecification.url, {filter}, {}, null, currentSpecification.useTimestamp).then(function(res){
-  //     self.props.setLoadingStatus('hide');
-  //     var result = currentSpecification.result;
-  //
-  //         var resultList = {
-  //       resultHeader: [{label: "#"}, ...result.header],
-  //       resultValues: [],
-  //       disableRowClick:result.disableRowClick || false
-  //     };
-  //     var specsValuesList = currentSpecification.result.values;
-  //     var values = _.get(res, currentSpecification.result.resultPath);
-  //     if(values && values.length) {
-  //       for(var i=0; i<values.length; i++) {
-  //         var tmp = [i+1];
-  //         for(var j=0; j<specsValuesList.length; j++) {
-  //           let valuePath = specsValuesList[j];
-  //           if(typeof valuePath === 'object' && valuePath.valExp){
-  //             tmp.push(eval(valuePath.valExp));
-  //             continue;
-  //           }
-  //           if(typeof valuePath === 'object' && valuePath.isObj){
-  //             var childArray=[];
-  //               if(valuePath.childArray && valuePath.childArray.length>0){
-  //                 for(var k=0;k<valuePath.childArray.length;k++){
-  //                   childArray.push(_.get(values[i],valuePath.childArray[k]));
-  //                 }
-  //               }
-  //
-  //
-  //             tmp.push(childArray);
-  //             continue;
-  //           }
-  //           // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
-  //           //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
-  //           // } else {
-  //             tmp.push(_.get(values[i], valuePath));
-  //           // }
-  //         }
-  //         resultList.resultValues.push(tmp);
-  //       }
-  //     }
-  //     if(result.isAction){
-  //       resultList.actionItems = result.actionItems;
-  //     }
-  //     self.setState({
-  //       resultList,
-  //       values,
-  //       showResult: true
-  //     });
-  //
-  //     self.props.setFlag(1);
-  //
-  //     window.localStorage.setItem("formData","");
-  //     window.localStorage.setItem("returnUrl","");
-  //
-  //   }, function(err) {
-  //     self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-  //     self.props.setLoadingStatus('hide');
-  //   })
-  // }
-
   getVal = path => {
     return _.get(this.props.formData, path) || '';
   };
 
   getValFromDropdownData = (fieldJsonPath, key, path) => {
     let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
-    let _val = _.get(dropdownData.find(data => data.key == key) || [], path);
+    let _val;
+    if (!key) {
+      _val = undefined;
+    } else {
+      _val = _.get(dropdownData.find(data => data.key == key) || [], path);
+    }
     return typeof _val != 'undefined' ? _val : '';
   };
 
@@ -663,7 +572,10 @@ class assetCategorySearch extends Component {
                 dropDownData.sort(function(s1, s2) {
                   return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
                 });
-                dropDownData.unshift({ key: null, value: '-- Please Select --' });
+                dropDownData.unshift({
+                  key: null,
+                  value: '-- Please Select --',
+                });
                 setDropDownData(value.jsonPath, dropDownData);
               }
             },
@@ -877,7 +789,13 @@ class assetCategorySearch extends Component {
             </h3>
           </Col>
           <Col xs={6} md={6}>
-            <div style={{ textAlign: 'right', marginRight: '16px', marginTop: '16px' }}>
+            <div
+              style={{
+                textAlign: 'right',
+                marginRight: '16px',
+                marginTop: '16px',
+              }}
+            >
               <UiAddButton customUrl={customActionsAndUrl} />
             </div>
           </Col>
@@ -903,7 +821,13 @@ class assetCategorySearch extends Component {
                 removeCard={''}
               />
             )}
-          <div style={{ textAlign: 'right', color: '#FF0000', marginRight: '16px' }}>
+          <div
+            style={{
+              textAlign: 'right',
+              color: '#FF0000',
+              marginRight: '16px',
+            }}
+          >
             <i>( * ) {translate('framework.required.note')}</i>{' '}
           </div>
 
@@ -915,7 +839,11 @@ class assetCategorySearch extends Component {
                   search
                 </i>
               }
-              item={{ label: 'Search', uiType: 'submit', isDisabled: isFormValid ? false : true }}
+              item={{
+                label: 'Search',
+                uiType: 'submit',
+                isDisabled: isFormValid ? false : true,
+              }}
               ui="google"
             />&nbsp;&nbsp;
             {showResult &&
@@ -993,13 +921,27 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
-    dispatch({ type: 'HANDLE_CHANGE_FRAMEWORK', property, value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg });
+    dispatch({
+      type: 'HANDLE_CHANGE_FRAMEWORK',
+      property,
+      value: e.target.value,
+      isRequired,
+      pattern,
+      requiredErrMsg,
+      patternErrMsg,
+    });
   },
   setLoadingStatus: loadingStatus => {
     dispatch({ type: 'SET_LOADING_STATUS', loadingStatus });
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
-    dispatch({ type: 'TOGGLE_SNACKBAR_AND_SET_TEXT', snackbarState, toastMsg, isSuccess, isError });
+    dispatch({
+      type: 'TOGGLE_SNACKBAR_AND_SET_TEXT',
+      snackbarState,
+      toastMsg,
+      isSuccess,
+      isError,
+    });
   },
   setRoute: route => dispatch({ type: 'SET_ROUTE', route }),
   setFlag: flag => {
@@ -1009,7 +951,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: 'SET_FORM_DATA', data });
   },
   setDropDownData: (fieldName, dropDownData) => {
-    console.log(fieldName, dropDownData);
+    // console.log(fieldName,dropDownData)
     dispatch({ type: 'SET_DROPDWON_DATA', fieldName, dropDownData });
   },
   resetDropdownData: () => {

@@ -62,10 +62,11 @@ class assetCategoryCreate extends Component {
   setDefaultValues(groups, dat) {
     for (var i = 0; i < groups.length; i++) {
       for (var j = 0; j < groups[i].fields.length; j++) {
+        console.log(groups[i].fields[j].defaultValue);
         if (
           typeof groups[i].fields[j].defaultValue == 'string' ||
-          typeof groups[i].fields[j].defaultValue == 'number'
-          // typeof groups[i].fields[j].defaultValue == 'boolean'
+          typeof groups[i].fields[j].defaultValue == 'number' ||
+          (typeof groups[i].fields[j].defaultValue == 'boolean' && groups[i].fields[j].defaultValue == true)
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
             _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
@@ -857,7 +858,7 @@ class assetCategoryCreate extends Component {
 
     _.set(formData, workflowItem.jsonPath.actionPath, action.key);
     _.set(formData, workflowItem.jsonPath.statusPath, status);
-    this.create();
+    //this.create();
   };
 
   create = e => {
@@ -2144,7 +2145,11 @@ class assetCategoryCreate extends Component {
                 marginLeft: '16px',
               }}
             >
-              <UiBackButton customUrl={'/non-framework/asset/master/assetCategorySearch'} />
+              <UiBackButton customUrl={'/non-framework/asset/master/assetCategorySearch'}
+              onClick={() => {
+                this.initData();
+              }}
+              />
             </div>
             </Col>
             <Col xs={6} md={6}>

@@ -14,9 +14,9 @@ class SearchDepreciationReport extends React.Component {
    },isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],result:[]}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
-    //this.handleClick = this.handleClick.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
   }
+
 
   handleChange(e, name) {
     var self = this;
@@ -74,10 +74,6 @@ class SearchDepreciationReport extends React.Component {
       //call api call
       var _this = this;
       var searchSet = Object.assign({}, this.state.searchSet);
-      if(searchSet.asset)
-        delete searchSet.allotteeName;
-      else
-        delete searchSet.asset;
       console.log(this.state.searchSet);
       commonApiPost("asset-services","assets/depreciations","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
         if(res) {
@@ -94,6 +90,28 @@ class SearchDepreciationReport extends React.Component {
     }
   }
 
+  componentWillUpdate() {
+      if(flag == 1) {
+        flag = 0;
+        $('#searchDepreciationTable').dataTable().fnDestroy();
+      }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.list.length!=this.state.list.length) {
+            $('#searchDepreciationTable').DataTable({
+              dom: 'Bfrtip',
+              buttons: [
+                       'excel', 'pdf', 'print'
+               ],
+               ordering: false,
+               bDestroy: true,
+               language: {
+                  "emptyTable": "No Records"
+               }
+            });
+        }
+    }
   componentDidMount() {
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -213,23 +231,16 @@ class SearchDepreciationReport extends React.Component {
          }
        }
      });
-
-
-
-
 }
 
 close() {
     open(location, '_self').close();
 }
 
-//Fetch asset  name suggestions
-
   render() {
     let {handleChange, search, handleClick}=this;
     let {assetCategoryType,assetCategory,financialYear,department,parent,assetName,assetCode}=this.state.searchSet;
-    let {isSearchClicked,list,departments,assetCategories}=this.state;
-    console.log(assetCategories);
+    let {isSearchClicked,list,departments,assetCategories,assetId}=this.state;
       const renderOption = function(list) {
           if(list) {
 
@@ -299,7 +310,7 @@ close() {
         {
                   return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id)}}>
                         <td>{index+1}</td>
-                        <td>{item.assetCode}</td>
+                        <td><a href={`app/asset/create-asset.html?id=${item.assetId}&type=view`}>{item.assetCode}</a></td>
                         <td>{item.assetName}</td>
                         <td>{item.assetCategoryName}</td>
                         <td>{getNameById(departments,item.department.id)}</td>
@@ -308,11 +319,7 @@ close() {
                         <td>{item.grossValue}</td>
                         <td>{item.depreciationValue}</td>
                         <td>{item.valueAfterDepreciation}</td>
-
-
-
-
-                  </tr>  );
+                    </tr>  );
         })
       }
     }

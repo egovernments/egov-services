@@ -7,15 +7,18 @@ import DateFilter from "./UserJobsDateFilter";
 import { fetchUserJobs } from "../actions/userJobs";
 
 class Filters extends Component {
+  static propTypes = {
+    codes: PropTypes.array,
+    statuses: PropTypes.array,
+    startDate: PropTypes.instanceOf(Date),
+    endDate: PropTypes.instanceOf(Date),
+    fetchUserJobs: PropTypes.func.isRequired
+  };
+
   handleClick = event => {
-    const { jobStatus, fromDate, toDate } = this.props;
+    const { codes, statuses, startDate, endDate } = this.props;
     // do validation if all are empty then disable
-    const filters = {
-      jobStatus,
-      fromDate,
-      toDate
-    };
-    this.props.fetchUserJobs(filters);
+    this.props.fetchUserJobs(codes, statuses, startDate, endDate);
   };
 
   render() {
@@ -35,8 +38,13 @@ class Filters extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  codes: null
+});
+
 const mapDispatchToProps = dispatch => ({
-  fetchUserJobs: filters => dispatch(fetchUserJobs())
+  fetchUserJobs: (codes, statuses, startDate, endDate) =>
+    dispatch(fetchUserJobs(codes, statuses, startDate, endDate))
 });
 
 export default connect(null, mapDispatchToProps)(Filters);

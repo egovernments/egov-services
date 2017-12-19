@@ -11,19 +11,23 @@ export const fetchUserJobsSuccess = (userJobs = []) => {
 };
 
 // fetch players failure
-export const fetchPlayersFailure = error => {
+export const fetchUserJobsFailure = error => {
   return { type: actionTypes.FETCH_USER_JOBS_FAILURE, error };
 };
 
-export const fetchUserJobs = filter => {
+export const fetchUserJobs = (codes, statuses, startDate, endDate) => {
   return async (dispatch, getState) => {
     dispatch(initiateUserJobsFetch());
     try {
-      const userJobs = await Api().fetchUserJobs(filter);
+      const userJobs = await Api().fetchUserJobs(
+        codes,
+        statuses,
+        startDate,
+        endDate
+      );
       dispatch(fetchUserJobsSuccess(userJobs));
     } catch (error) {
-      //handle the error
-      console.log(error);
+      dispatch(fetchUserJobsFailure(error));
     }
   };
 };

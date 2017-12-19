@@ -34,6 +34,7 @@ class UserJobsContainer extends Component {
     fieldsType: ["label", "label", "label", "label", "hyperlink"]
   };
   componentDidMount() {
+    //parameters for search
     this.props.fetchUserJobs();
   }
 
@@ -57,7 +58,7 @@ class UserJobsContainer extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchUserJobs: filter => dispatch(fetchUserJobs(filter))
+  fetchUserJobs: () => dispatch(fetchUserJobs())
 });
 
 const mapStateToProps = (state, ownProps) => ({

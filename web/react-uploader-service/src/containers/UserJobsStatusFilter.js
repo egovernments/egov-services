@@ -2,11 +2,15 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import RadioButtonUi from "../atomic-components/RadioButtonUi";
+import CheckboxUi from "../atomic-components/CheckboxUi";
 import { applyJobsStatusFilter } from "../actions/filter";
 
 class UserJobsStatusFilterContainer extends Component {
   static propTypes = {
     applyJobsStatusFilter: PropTypes.func.isRequired
+  };
+  state = {
+    checkedValues: []
   };
 
   options = [
@@ -28,22 +32,27 @@ class UserJobsStatusFilterContainer extends Component {
     }
   ];
 
-  handleChange = (e, jobStatus) => {
-    this.props.applyJobsStatusFilter(jobStatus);
+  onChecked = (e, value) => {
+    const { checkedValues } = this.state;
+    let jobStatuses;
+    if (checkedValues.indexOf(value) !== -1) {
+      jobStatuses = checkedValues.filter(
+        checkedValue => checkedValue !== value
+      );
+    } else {
+      jobStatuses = checkedValues.concat(value);
+    }
+    this.props.applyJobsStatusFilter(jobStatuses);
+    this.setState({ checkedValues: jobStatuses });
   };
 
   render() {
-    const { options, handleChange } = this;
+    const { options, onChecked } = this;
 
     return (
       <div>
         <h5>By Status</h5>
-        <RadioButtonUi
-          defaultValue="completed"
-          name="Completion Status"
-          options={options}
-          handleChange={handleChange}
-        />
+        <CheckboxUi options={options} onCheck={onChecked} />
       </div>
     );
   }

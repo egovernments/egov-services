@@ -162,6 +162,7 @@ public class LeaveOpeningBalanceService {
 
 		LeaveSearchRequest leaveSearchRequest = new LeaveSearchRequest();
 		leaveSearchRequest.setIsPrimary(true);
+		leaveSearchRequest.setActive(true);
 		leaveSearchRequest.setTenantId(leaveOpeningBalanceGetRequest.getTenantId());
 		List<Long> employeeIds = new ArrayList<>();
 
@@ -171,12 +172,13 @@ public class LeaveOpeningBalanceService {
 		employeeResponse.getEmployees().stream().forEach(employee -> {
 			carryForwardLOB(leaveOpeningBalanceGetRequest, employee, successLeaveOpeningBalanceList, requestInfo);
 		});
-        employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
-        leaveOpeningBalanceGetRequest.setEmployee(employeeIds);
-        leaveOpeningBalanceGetRequest.setYear(leaveOpeningBalanceGetRequest.getYear()+1);
+		employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId())
+				.collect(Collectors.toList());
+		leaveOpeningBalanceGetRequest.setEmployee(employeeIds);
+		leaveOpeningBalanceGetRequest.setYear(leaveOpeningBalanceGetRequest.getYear() + 1);
 		LeaveOpeningBalanceRequest createLeaveOpeningBalanceRequest = new LeaveOpeningBalanceRequest();
 		LeaveOpeningBalanceRequest updateLeaveOpeningBalanceRequest = new LeaveOpeningBalanceRequest();
-        List<LeaveOpeningBalance> removeLOB = new ArrayList<LeaveOpeningBalance>();
+		List<LeaveOpeningBalance> removeLOB = new ArrayList<LeaveOpeningBalance>();
 		createLeaveOpeningBalanceRequest.setLeaveOpeningBalance(successLeaveOpeningBalanceList);
 		createLeaveOpeningBalanceRequest.setRequestInfo(requestInfo);
 		updateLeaveOpeningBalanceRequest.setRequestInfo(requestInfo);

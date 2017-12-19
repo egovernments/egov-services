@@ -40,16 +40,25 @@
 
 package org.egov.eis.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
-import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @Getter
@@ -60,46 +69,48 @@ import java.util.List;
 @EqualsAndHashCode
 public class LeaveSearchRequest {
 
-    private List<Long> employeeIds;
+	private List<Long> employeeIds;
 
-    private List<EmployeeInfo> employees;
+	private List<EmployeeInfo> employees;
 
-    @Size(min = 1, max = 256)
-    private String code;
+	@Size(min = 1, max = 256)
+	private String code;
 
-    private Long designationId;
+	private Long designationId;
 
-    private Long departmentId;
+	private Long departmentId;
 
-    private Long employeeType;
+	private Long employeeType;
 
-    private Long employeeStatus;
+	private Long employeeStatus;
 
-    private Long leaveType;
+	private Long leaveType;
 
-    private Boolean isPrimary;
+	private Boolean isPrimary;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
+	private Boolean active;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	private Date fromDate;
 
-    private Long leaveStatus;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	private Date toDate;
 
-    @NotNull
-    private String tenantId;
+	private Long leaveStatus;
 
-    private String sortBy;
+	@NotNull
+	private String tenantId;
 
-    private String sortOrder;
+	private String sortBy;
 
-    @Min(1)
-    @Max(500)
-    private Short pageSize;
+	private String sortOrder;
 
-    private Short pageNumber;
+	@Min(1)
+	@Max(500)
+	private Short pageSize;
+
+	private Short pageNumber;
 
 }

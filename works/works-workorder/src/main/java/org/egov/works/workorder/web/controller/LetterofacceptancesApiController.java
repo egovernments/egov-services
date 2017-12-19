@@ -30,7 +30,7 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesCreatePost(
             @ApiParam(value = "Details of new Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest,
-            @RequestParam(required = false) Boolean isRevision) {
+            @RequestParam(required = false, defaultValue = "false") Boolean isRevision) {
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceService
                 .create(letterOfAcceptanceRequest, isRevision);
         return new ResponseEntity(letterOfAcceptanceResponse, HttpStatus.OK);
@@ -66,7 +66,7 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesUpdatePost(
             @ApiParam(value = "Details of Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest,
-            @RequestParam(required = false) Boolean isRevision) {
+            @RequestParam(required = false, defaultValue = "false") Boolean isRevision) {
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceService
                 .update(letterOfAcceptanceRequest, isRevision);
         return new ResponseEntity(letterOfAcceptanceResponse, HttpStatus.OK);

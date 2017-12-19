@@ -167,7 +167,8 @@ public class MeasurementBookValidator {
 			}
 		}
 		if (isNew) {
-			if (measurementBook.getWorkFlowDetails() != null && !measurementBook.getWorkFlowDetails().getAction().equalsIgnoreCase(Constants.SAVE)
+			if (measurementBook.getWorkFlowDetails() != null && measurementBook.getWorkFlowDetails().getAction() != null
+					&& !measurementBook.getWorkFlowDetails().getAction().equalsIgnoreCase(Constants.SAVE)
 					&& measurementBook.getMeasurementBookDetails().isEmpty()
 					&& measurementBook.getLumpSumMBDetails().isEmpty())
 				messages.put(Constants.KEY_MB_DETAILS_MANDATORY, Constants.MSG_MB_DETAILS_MANDATORY);
@@ -198,10 +199,13 @@ public class MeasurementBookValidator {
 				Arrays.asList(letterOfAcceptance.getLetterOfAcceptanceEstimates().get(0).getDetailedEstimate().getId()),
 				detail.getTenantId(), requestInfo);
 		Double mbSheetQuantity = 0D;
-        if(detail.getMeasurementSheets() != null) {
+        if(detail.getMeasurementSheets() != null && !detail.getMeasurementSheets().isEmpty()) {
             for (MBMeasurementSheet sheet : detail.getMeasurementSheets()) {
                 String estimateSheetId = null;
                 String identifier = null;
+				if (sheet.getLoaMeasurementSheet() == null)
+					messages.put(Constants.KEY_MB_MEASUREMENTS_LOA_NOT_VALID,
+							Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
                 for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
                     for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
                         if (loaActivity.getLoaMeasurements() != null) {
@@ -228,10 +232,10 @@ public class MeasurementBookValidator {
                 else
                     mbSheetQuantity -= sheet.getQuantity().doubleValue();
             }
+            if (!mbSheetQuantity.equals(detail.getQuantity()))
+    			messages.put(Constants.KEY_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL,
+    					Constants.MSG_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL);
         }
-		if (!mbSheetQuantity.equals(detail.getQuantity()))
-			messages.put(Constants.KEY_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL,
-					Constants.MSG_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL);
 	}
 
 	private void vallidateMBDate(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,
@@ -261,10 +265,5 @@ public class MeasurementBookValidator {
 			if (measurementBook.getMbDate() < book.getMbDate())
 				messages.put(Constants.MSG_MB_DATE_PREVIOUS_DATE, Constants.MSG_MB_DATE_PREVIOUS_DATE);
 		}
-	}
-
-	public void validateMasterData(MeasurementBook measurementBook, RequestInfo requestInfo,
-			Map<String, String> messages, Boolean isNew) {
-
 	}
 }

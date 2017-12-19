@@ -1,16 +1,14 @@
 import axios from "axios";
 import * as apiEndpoints from "../constants/ApiEndpoints";
 import { prepareFormData, fetchFromLocalStorage } from "../utils";
-import * as requestObjects from "./requestObjects";
+import * as prepareRequestBody from "./createRequestBody";
 import {
   uploadDefinitionsResponse,
   createJobResponse,
   searchUserJobsReponse
 } from "./apiResponse";
 
-// application/json
 // application/x-www-form-urlencoded
-// required for login only
 // Authorization: "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0
 
 export const Api = () => {
@@ -24,14 +22,33 @@ export const Api = () => {
   const authToken = fetchFromLocalStorage("token");
   const tenantId = fetchFromLocalStorage("tenantId");
 
-  const httpRequest = async (endPoint, requestBody) => {
-    const response = await instance.post(endPoint, requestBody);
-    return response;
+  const httpRequest = async (endPoint, requestBody, headers) => {
+    let apiError = "Api Error";
+    try {
+      const response = await instance.post(endPoint, requestBody);
+      const responseStatus = parseInt(response.status);
+      if (responseStatus == 200 || responseStatus == 201) {
+        return response.data;
+      } else {
+        apiError =
+          response.hasOwnProperty("Errors") && response.Errors.length
+            ? response.Errors[0].message
+            : apiError;
+      }
+    } catch (error) {
+      apiError = error;
+    }
+    throw new Error(apiError);
   };
 
   //doesn't take any input parameters
   const fetchUploadDefintions = async () => {
     const response = uploadDefinitionsResponse();
+    const uploadDefinitionsRequestBody = prepareRequestBody.uploadDefinitionsRequest(
+      authToken
+    );
+    const endPoint = apiEndpoints.UPLOAD_DEFINITIONS_ENDPOINT;
+
     return new Promise((resolve, reject) => {
       setTimeout(function() {
         resolve(response.ModuleDefs);
@@ -40,8 +57,25 @@ export const Api = () => {
   };
 
   // job search request
-  const fetchUserJobs = async (codes = [], statuses = [], fromDate, toDate) => {
+  const fetchUserJobs = async (
+    codes = [],
+    statuses = [],
+    startDate,
+    endDate
+  ) => {
     const response = searchUserJobsReponse();
+    const jobSearchRequestBody = prepareRequestBody.jobSearchRequest(
+      authToken,
+      tenantId,
+      codes,
+      statuses,
+      startDate,
+      endDate
+    );
+
+    const endPoint = apiEndpoints.SEARCH_USER_JOBS_ENDPOINT;
+    console.log(jobSearchRequestBody);
+
     return new Promise((resolve, reject) => {
       setTimeout(function() {
         resolve(response.UploadJobs);
@@ -52,6 +86,17 @@ export const Api = () => {
   // upload job request
   const createJob = async (requestFilePath, moduleName, defName) => {
     const response = createJobResponse();
+    const createJobRequestBody = prepareRequestBody.jobCreateRequest(
+      authToken,
+      tenantId,
+      requestFilePath,
+      moduleName,
+      defName
+    );
+    const endPoint = apiEndpoints.CREATE_JOB_ENDPOINT;
+    // create job request body
+    console.log(createJobRequestBody);
+
     return new Promise((resolve, reject) => {
       setTimeout(function() {
         const jobStatusId = "acds133";
@@ -72,11 +117,11 @@ export const Api = () => {
   // upload file API
   const uploadFile = async (module, file) => {
     const requestParams = { tenantId, module, file };
-    const formData = prepareFormData(requestParams);
+    const requestBody = prepareFormData(requestParams);
     const endPoint = apiEndpoints.FILE_UPLOAD_ENDPOINT;
 
     const url = "/filestore/v1/files?tenantId=default";
-    const response = await axios.post(url, formData, {
+    const response = await axios.post(url, requestBody, {
       headers: {
         "Content-Type": "multipart/form-data"
       }
@@ -93,7 +138,7 @@ export const Api = () => {
         : false;
     }
 
-    console.log(fileStoreId);
+    return fileStoreId;
   };
 
   return {

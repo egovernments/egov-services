@@ -589,7 +589,7 @@ class UpdateCancellation extends React.Component {
                                                 if (window.opener)
                                                     window.opener.location.reload();
 
-                                                this.printNotice(response["responseJSON"].Notices[0]);
+                                                _this.printNotice(response["responseJSON"].Notices[0]);
                                                 // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
                                             } else {
                                                 console.log("Something went wrong.");
@@ -679,7 +679,7 @@ class UpdateCancellation extends React.Component {
                                 if (window.opener)
                                     window.opener.location.reload();
 
-                                this.printNotice(response["responseJSON"].Notices[0]);
+                                _this.printNotice(response["responseJSON"].Notices[0]);
                                 // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
                             } else {
                                 console.log("Something went wrong.");

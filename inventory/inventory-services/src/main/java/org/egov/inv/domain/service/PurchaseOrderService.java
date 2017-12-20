@@ -478,6 +478,10 @@ public class PurchaseOrderService extends DomainService {
                     for (PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                         int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
                         
+                        if(poDetail.getIndentNumber() == null) {
+                        	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indentNumber", "null");
+                        }
+                        
                         //validating ratecontracts for each POLine
                         boolean isRateContractExist =false;
 	            		if(purchaseOrderRepository.isRateContractsExists(eachPurchaseOrder.getSupplier().getCode(), eachPurchaseOrder.getRateType().toString(), poDetail.getMaterial().getCode()))
@@ -503,7 +507,7 @@ public class PurchaseOrderService extends DomainService {
                         //Material reference validation
                         if(null != poDetail.getMaterial()) {
                         	if(validateMaterial(tenantId, poDetail.getMaterial())) {
-                        		throw new CustomException("material", "Material " + poDetail.getMaterial().getCode() + " doesn't exists");
+                        		errors.addDataError(ErrorCode.MATERIAL_NAME_NOT_EXIST.getCode(),poDetail.getMaterial().getCode()+" at serial no."+ detailIndex);
                         	}
                         }
                         
@@ -517,11 +521,11 @@ public class PurchaseOrderService extends DomainService {
                         }
                         
                         if (priceListConfig && (null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(new BigDecimal(0))<0)) {
-                        	throw new CustomException("orderQuantity", "OrderQuantity cannnot be blank");
+                        	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "orderQuantity", "null");
                         }
                         
                         if (priceListConfig && (null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0))<0)) {
-                        	throw new CustomException("unitPrice", "UnitPrice cannnot be blank");
+                        	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "unitPrice", "null");
                         }
                         
                         //validate the rates entered for creating PO with the one's in pricelist
@@ -586,7 +590,7 @@ public class PurchaseOrderService extends DomainService {
 
         	//RateType reference validation
             if (!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(purchaseOrder.getRateType().toString())))) {
-                throw new CustomException("rateType", "Please select a valid RateType");
+                errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "rateType", purchaseOrder.getRateType().toString());
             }
         	
             IndentSearch indentSearch = new IndentSearch();

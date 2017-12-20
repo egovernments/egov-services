@@ -3,6 +3,7 @@ package org.egov.inv.domain.service;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.model.BankContract;
 import org.egov.inv.model.BankResponse;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -62,7 +63,7 @@ public class BankContractRepository {
         if (result.getBanks() != null && result.getBanks().size() == 1) {
             return result.getBanks().get(0);
         } else {
-            return null;
+            throw new CustomException("Bank", "Bank Code " + bankContract.getCode() + " doesnt exist");
         }
 
     }

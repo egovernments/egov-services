@@ -71,11 +71,14 @@ public class AssetValidator implements Validator {
 		if ((!assetCategory.getAssetCategoryType().equals(AssetCategoryType.LAND))) {
 			validateAnticipatedLife(asset.getAnticipatedLife(), assetCategory.getAssetCategoryType(),
 					assetCategory.getDepreciationRate(), errorMap);
-			if (asset.getWipReferenceNo() == null && StringUtils.isEmpty(asset.getWipReferenceNo())) {
-				errorMap.put("EGASSET_WIP_REF_NUMBER",
-						"WIP Reference number is mandatory for " + assetCategory.getAssetCategoryType() + " Assets");
-			}
+			
 		}/* assetAccountValidate(asset, errorMap); */
+		
+		if ((assetCategory.getAssetCategoryType().equals(AssetCategoryType.IMMOVABLE)) && asset.getWipReferenceNo() == null && StringUtils.isEmpty(asset.getWipReferenceNo())) {
+			errorMap.put("EGASSET_WIP_REF_NUMBER",
+					"WIP Reference number is mandatory for " + assetCategory.getAssetCategoryType() + " Assets");
+		}
+	
 		
 		if (asset.getWarrantyAvailable()) {
 			if (asset.getWarrantyExpiryDate() == null)

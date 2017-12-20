@@ -13,20 +13,17 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
-import org.egov.inv.model.IndentDetail;
-import org.egov.inv.model.Material;
 import org.egov.inv.model.MaterialIssue;
-import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
 import org.egov.inv.model.MaterialReceiptDetail;
+import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.TransferInwardRequest;
 import org.egov.inv.model.TransferInwardResponse;
 import org.egov.inv.persistence.repository.TransferInwardRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -161,7 +158,7 @@ public class TransferinwardsService extends DomainService {
 
                 case Constants.ACTION_CREATE: {
                     if (materialReceipts == null) {
-                        throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
+                    	errors.addDataError("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } 
                 }
 
@@ -169,12 +166,21 @@ public class TransferinwardsService extends DomainService {
 
                 case Constants.ACTION_UPDATE: {
                     if (materialReceipts == null) {
-                        throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
+                    	errors.addDataError("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } 
                 }
 
                 break;
             }
+	            for (MaterialReceipt rcpt : materialReceipts) {
+	            	if(null == rcpt.getIssueingStore() && isEmpty(rcpt.getIssueingStore())){
+	            		errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Issuing Store", null);
+	            	}
+	            	if(null == rcpt.getReceivingStore() && isEmpty(rcpt.getReceivingStore())){
+	            		errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Receiving Store", null);
+	            	}
+	            }
+	            
         } catch (IllegalArgumentException e) {
         }
         if (errors.getValidationErrors().size() > 0)
@@ -200,14 +206,22 @@ public class TransferinwardsService extends DomainService {
 				issue.setIssueNoteNumber(receipt.getIssueNumber());
 				issue.setTenantId(receipt.getTenantId());
 				List<MaterialIssue> matIssues = materialIssuesService.search(issue).getMaterialIssues();
+				Long issueDate = materialIssuesService.search(issue).getMaterialIssues().get(0).getIssueDate();
 				if (matIssues.isEmpty())
 					errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(),"issueNumber", null);
 				else
 					receipt.setIssueNumber(matIssues.get(0).getIssueNumber());
-				
+				for(MaterialReceiptDetail details : receipt.getReceiptDetails()){
+					for(MaterialReceiptDetailAddnlinfo info: details.getReceiptDetailsAddnInfo()){
+						 if(info.getReceivedDate() <= issueDate){
+			            errors.addDataError(ErrorCode.DATE1_GT_DATE2.getCode(),"Receive Date","Issue ", null);
+						 }
+					}
 				}
+			}
 		}
 
-	}
-	
+	if (errors.getValidationErrors().size() > 0)
+        throw errors;
+	}	
 }

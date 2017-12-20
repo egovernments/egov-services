@@ -31,6 +31,7 @@ class UserJobsDateFilterContainer extends Component {
           }}
           floatingLabelText="From Date"
           value={fromDate}
+          maxDate={maxDate}
         />
         <DatePicker
           onChange={(event, date) => {
@@ -38,7 +39,6 @@ class UserJobsDateFilterContainer extends Component {
           }}
           floatingLabelText="To Date"
           value={toDate}
-          maxDate={maxDate}
         />
       </div>
     );

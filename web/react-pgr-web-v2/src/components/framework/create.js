@@ -30,6 +30,14 @@ class Report extends Component {
     this.getVal = this.getVal.bind(this);
   }
 
+  //TODO generate Specific FormData
+  generateSpecificForm = (formData, omitPropertiesJPath) => {
+    omitPropertiesJPath.forEach(function(item, index){
+        eval(item);
+    });
+    return formData;
+  }
+
   setLabelAndReturnRequired(configObject) {
     if (configObject && configObject.groups) {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
@@ -329,7 +337,7 @@ class Report extends Component {
       self.props.setLoadingStatus('loading');
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
-
+          
           console.log("this is respons efrom ", res)
           self.props.setLoadingStatus('hide');
           if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
@@ -616,7 +624,19 @@ class Report extends Component {
     // console.log(formData);
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
+    console.log(obj);
+    if(obj.hasOwnProperty('omittableFields')){
+      this.generateSpecificForm(formData, obj['omittableFields']);
+    }
+    console.log(formData);
+
+    // TODO
+    // Find whether object have "omittableFields"
+    // If there fetch array from specs
+    // Loop on array and delete
+
+
+    /*Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
@@ -691,7 +711,7 @@ class Report extends Component {
         self.props.setLoadingStatus('hide');
         self.props.toggleSnackbarAndSetText(true, err.message);
       }
-    );
+    );*/
   };
 
   //Needs to be changed later for more customfields

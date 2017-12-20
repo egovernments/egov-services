@@ -75,7 +75,7 @@ export default class assetImmovableReport extends Component {
               </tr>
               <tr>
                 <td colSpan={13} style={{ textAlign: 'center' }}>
-                  <b>नमुना क्रमांक १६</b>
+                  <b>नमुना क्रमांक १७</b>
                 </td>
               </tr>
               <tr>
@@ -86,7 +86,7 @@ export default class assetImmovableReport extends Component {
             </tbody>
             <tbody>
               <td colSpan={17} style={{ textAlign: 'center' }}>
-                <b>स्थावर मालमत्तांची नोंदवही</b>
+                <b>जंगम  मालमत्तांची नोंदवही </b>
               </td>
             </tbody>
 
@@ -139,7 +139,7 @@ export default class assetImmovableReport extends Component {
 
             <tbody>
               <td colSpan={4} style={{ textAlign: 'left' }}>
-                <b>प्रगतिपथावरील बांधकाम नोंदवहीचा संदर्भ क्रमांक</b>
+                <b>प्रगतिपथावरील काम नोंदवहीचा  संदर्भ क्रमांक</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'left' }}>
                 <b>{this.props.data[36] ? this.props.data[36] : ''}</b>
@@ -216,7 +216,7 @@ export default class assetImmovableReport extends Component {
 
             <tbody>
               <td colSpan={4} style={{ textAlign: 'left' }}>
-                <b> निधीचे स्रोत</b>
+                <b> निधींचे स्रोत</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'left' }}>
                 <b>{this.props.data[42] ? this.props.data[42] : ''}</b>
@@ -234,7 +234,7 @@ export default class assetImmovableReport extends Component {
                 <b>{this.props.data[10] ? this.props.data[10] : ''}</b>
               </td>
               <td colSpan={5} style={{ textAlign: 'left' }}>
-                <b> ज्यास मत्ता विकण्यात आली त्या व्यक्तीचे नाव</b>
+                <b> ज्यास  मत्तेची  विक्री करण्यात आली त्या व्यक्तीचे नाव</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'left' }}>
                 <b>{this.props.data[39] ? this.props.data[39] : ''}</b>
@@ -302,7 +302,7 @@ export default class assetImmovableReport extends Component {
                   <b>वजा करणे रु. </b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>एकूण </b>
+                  <b>एकूण रु. </b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <b>प्रारंभिक शिल्लक </b>

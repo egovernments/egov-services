@@ -95,7 +95,7 @@ export default class assetImmovableReport extends Component {
             </tbody>
             <tbody>
               <td colSpan={12} style={{ textAlign: 'center' }}>
-                <b>स्थावर मालमत्तांची नोंदवही</b>
+                <b>जमिनींची नोंदवहीी</b>
               </td>
             </tbody>
 
@@ -116,7 +116,7 @@ export default class assetImmovableReport extends Component {
 
             <tbody>
               <td colSpan={3} style={{ textAlign: 'left' }}>
-                <b>मत्तेचा ओळखपत्र क्रमांक</b>
+                <b>मत्ता  ओळखपत्र क्रमांक </b>
               </td>
               <td colSpan={3} style={{ textAlign: 'left' }}>
                 <b>{this.props.data[33] ? this.props.data[33] : ''}</b>
@@ -225,7 +225,7 @@ export default class assetImmovableReport extends Component {
                 <b>{this.props.data[45] ? printAttributesVal(this.props.data[45], 'Holding Type') : ''}</b>
               </td>
               <td colSpan={6} style={{ textAlign: 'left' }}>
-                <b> ज्यास मत्ता विकण्यात आली त्या व्यक्तीचे नाव</b>
+                <b> ज्या व्यक्तिला विक्री करावयाचे त्या व्यक्तीचे नाव </b>
               </td>
             </tbody>
 
@@ -269,10 +269,10 @@ export default class assetImmovableReport extends Component {
             <tbody>
               <tr>
                 <td rowSpan={3} style={{ textAlign: 'center' }}>
-                  <b>संपादन / सुधारणा केल्याचा</b>
+                  <b>संपादन / सुधारणा केल्याचा दिनांक </b>
                 </td>
                 <td rowSpan={3} style={{ textAlign: 'center' }}>
-                  <b>संपादन / सुधारणा करण्याचा</b>
+                  <b>संपादन / सुधारणा करण्याचा खर्च </b>
                 </td>
                 <td rowSpan={3} style={{ textAlign: 'center' }}>
                   <b>प्रमाणक क्रमांक</b>
@@ -292,7 +292,7 @@ export default class assetImmovableReport extends Component {
               </tr>
               <tr>
                 <td colSpan={3} style={{ textAlign: 'center' }}>
-                  <b>( हस्तांतरण / विक्री करणे )</b>
+                  <b>हस्तांतरण</b>
                 </td>
               </tr>
               <tr>
@@ -306,7 +306,7 @@ export default class assetImmovableReport extends Component {
                   <b>वजा करणे रु. </b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>एकूण </b>
+                  <b>एकूण रु. </b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <b>दिनांक </b>

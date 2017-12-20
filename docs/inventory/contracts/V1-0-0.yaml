@@ -1721,6 +1721,7 @@ paths:
           - name: code
             type: string
             in: query
+            required: true
             description: |
               code of the Store
         responses:
@@ -2388,6 +2389,7 @@ paths:
           - name: code
             type: string
             in: query
+            required: true
             description: |
               code of the supplier
         responses:

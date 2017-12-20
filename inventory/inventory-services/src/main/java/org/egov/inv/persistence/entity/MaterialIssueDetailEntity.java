@@ -60,6 +60,7 @@ public class MaterialIssueDetailEntity {
 		IndentDetail indentDetail = new IndentDetail();
 		indentDetail.setUom(unit);
 		indentDetail.setMaterial(material);
+		indentDetail.setId(indentDetailId);
 		detail.setIndentDetail(indentDetail);
 		}
 		else{
@@ -69,11 +70,6 @@ public class MaterialIssueDetailEntity {
 		if(scrapValue != null )
 		detail.scrapValue(BigDecimal.valueOf(scrapValue));
 		detail.setVoucherHeader(voucherHeader);
-		if(type.equals(IssueTypeEnum.INDENTISSUE)){
-		IndentDetail indentDetail = new IndentDetail();
-		indentDetail.setId(indentDetailId);
-		detail.setIndentDetail(indentDetail);
-		}
 		detail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
 		detail.setDescription(description);
 		return detail;

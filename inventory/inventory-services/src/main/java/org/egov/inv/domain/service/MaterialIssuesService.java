@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -31,14 +32,19 @@ import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
 import org.egov.inv.model.MaterialReceiptDetail;
+import org.egov.inv.model.MaterialReceiptDetailSearch;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.FifoEntity;
+import org.egov.inv.persistence.entity.IndentDetailEntity;
+import org.egov.inv.persistence.entity.MaterialIssueEntity;
+import org.egov.inv.persistence.entity.PurchaseOrderDetailEntity;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialReceiptDetailJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -50,7 +56,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.minidev.json.JSONArray;
-
 
 @Service
 public class MaterialIssuesService extends DomainService {
@@ -77,6 +82,9 @@ public class MaterialIssuesService extends DomainService {
 
 	@Autowired
 	private DepartmentService departmentService;
+
+	@Autowired
+	private MaterialReceiptDetailJdbcRepository materialReceiptDetailJdbcRepository;
 
 	@Autowired
 	private MaterialIssueReceiptFifoLogic materialIssueReceiptFifoLogic;
@@ -110,20 +118,24 @@ public class MaterialIssuesService extends DomainService {
 				materialIssue.setAuditDetails(mapAuditDetails(materialIssueRequest.getRequestInfo()));
 				i++;
 				int j = 0;
+				BigDecimal totalIssueValue = BigDecimal.ZERO;
 				if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 					List<String> detailSequenceNos = materialIssueDetailsJdbcRepository.getSequence(
 							MaterialIssueDetail.class.getSimpleName(), materialIssue.getMaterialIssueDetails().size());
 					for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
 						materialIssueDetail.setId(detailSequenceNos.get(j));
 						materialIssueDetail.setTenantId(materialIssue.getTenantId());
-						BigDecimal unitRate = getMaterialIssuedFromReceiptData(materialIssue.getFromStore(),
+						BigDecimal value = getMaterialIssuedFromReceiptData(materialIssue.getFromStore(),
 								materialIssueDetail.getMaterial(), materialIssue.getIssueDate(),
 								materialIssue.getTenantId(), materialIssueDetail);
-						materialIssueDetail.setValue(unitRate);
+						totalIssueValue = totalIssueValue.add(value);
+						materialIssueDetail.setValue(value);
 						convertToUom(materialIssueDetail);
+						backUpdateIndent(materialIssueDetail, materialIssue.getTenantId());
 						j++;
 					}
 				}
+				materialIssue.setTotalIssueValue(totalIssueValue);
 			}
 			kafkaTemplate.send(createTopic, createKey, materialIssueRequest);
 			MaterialIssueResponse response = new MaterialIssueResponse();
@@ -135,16 +147,19 @@ public class MaterialIssuesService extends DomainService {
 		}
 	}
 
+	private void backUpdateIndent(MaterialIssueDetail materialIssueDetail, String tenantId) {
+		 HashMap<String, String> hashMap = new HashMap<>();
+         hashMap.put("indentissuedquantity", "indentissuedquantity  + " + materialIssueDetail.getQuantityIssued().toString());
+         materialIssueDetail.getIndentDetail().setTenantId(tenantId);
+         materialIssueJdbcRepository.updateColumn(new IndentDetailEntity().toEntity(materialIssueDetail.getIndentDetail()), "indentdetail", hashMap, null);
+	}
 
 	private BigDecimal getMaterialIssuedFromReceiptData(Store store, Material material, Long issueDate, String tenantId,
 			MaterialIssueDetail materialIssueDetail) {
-		
 		List<MaterialIssuedFromReceipt> materialIssuedFromReceipts = new ArrayList<>();
 		List<FifoEntity> listOfFifoEntity = materialIssueReceiptFifoLogic.implementFifoLogic(store, material, issueDate,
 				tenantId);
-		int k = 0;
-		List<String> materialIssuedFromReceiptsSeqNos = materialIssuedFromReceiptsJdbcRepository
-				.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(), listOfFifoEntity.size());
+
 		BigDecimal unitRate = BigDecimal.ZERO;
 		BigDecimal quantityIssued = materialIssueDetail.getQuantityIssued();
 		for (FifoEntity fifoEntity : listOfFifoEntity) {
@@ -153,27 +168,37 @@ public class MaterialIssuesService extends DomainService {
 			materialReceiptDetail.setId(fifoEntity.getReceiptDetailId());
 			materialIssuedFromReceipt.setMaterialReceiptDetail(materialReceiptDetail);
 			materialIssuedFromReceipt.setMaterialReceiptDetailAddnlinfoId(fifoEntity.getReceiptDetailAddnInfoId());
-			materialIssuedFromReceipt.setId(materialIssuedFromReceiptsSeqNos.get(k));
+			materialIssuedFromReceipt.setId(materialIssuedFromReceiptsJdbcRepository
+					.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(), 1).get(0));
 			materialIssuedFromReceipt.setTenantId(materialIssueDetail.getTenantId());
 			materialIssuedFromReceipt.setStatus(true);
 			materialIssuedFromReceipt.setMaterialReceiptId(fifoEntity.getReceiptId());
-			if (quantityIssued.compareTo(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString())))) >= 0) {
-				materialIssuedFromReceipt.setQuantity(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString()))));
-				unitRate = BigDecimal.valueOf(fifoEntity.getUnitRate())
-						.multiply(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString())))).add(unitRate);
-				quantityIssued = quantityIssued.subtract(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),Double.valueOf(materialIssueDetail.getUom().getConversionFactor() .toString()))));
+			if (quantityIssued.compareTo(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
+					Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString())))) >= 0) {
+				materialIssuedFromReceipt
+						.setQuantity(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
+								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()))));
+				unitRate = BigDecimal.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
+						Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString())))
+						.multiply(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
+								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()))))
+						.add(unitRate);
+				quantityIssued = quantityIssued
+						.subtract(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
+								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()))));
 			} else {
 				materialIssuedFromReceipt.setQuantity(quantityIssued);
-				unitRate = quantityIssued.multiply(BigDecimal.valueOf(fifoEntity.getUnitRate())).add(unitRate);
+				unitRate = quantityIssued
+						.multiply(BigDecimal.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
+								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString())))).add(unitRate);
 				quantityIssued = BigDecimal.ZERO;
 			}
-			k++;
 			materialIssuedFromReceipts.add(materialIssuedFromReceipt);
 			if (quantityIssued.equals(BigDecimal.ZERO))
 				break;
 		}
 		materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts);
-		return unitRate;
+		return unitRate.multiply(materialIssueDetail.getQuantityIssued());
 	}
 
 	private void fetchRelated(MaterialIssueRequest materialIssueRequest) {
@@ -261,14 +286,14 @@ public class MaterialIssuesService extends DomainService {
 						Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
 						Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
 			materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
-			if(!materialIssueDetail.getMaterialIssuedFromReceipts().isEmpty())
-			for(MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()){
-				if(mifr.getQuantity() != null && materialIssueDetail.getUom().getConversionFactor() != null)
-				quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()), Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
-				mifr.setQuantity(BigDecimal.valueOf(quantity));
-			}
-				
-				
+			if (!materialIssueDetail.getMaterialIssuedFromReceipts().isEmpty())
+				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
+					if (mifr.getQuantity() != null && materialIssueDetail.getUom().getConversionFactor() != null)
+						quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()),
+								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
+					mifr.setQuantity(BigDecimal.valueOf(quantity));
+				}
+
 		}
 	}
 
@@ -284,43 +309,48 @@ public class MaterialIssuesService extends DomainService {
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "materialIssues", "null");
 				}
 				for (MaterialIssue materialIssue : materialIssues) {
-					if (StringUtils.isEmpty(materialIssue.getIssueNumber()))
-						errors.addDataError(ErrorCode.NOT_NULL.getCode(), "issueNumber", "null");
-					if (materialIssue.getIssueDate().compareTo(currentDate) > 0){
+					if (materialIssue.getIssueDate().compareTo(currentDate) > 0) {
 						String date = convertEpochtoDate(materialIssue.getIssueDate());
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",date);
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate", date);
 					}
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
+						int i = 1;
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
-										materialIssueDetail.getQuantityIssued().toString());
-							if (materialIssueDetail.getBalanceQuantity() != null)	if (StringUtils.isNotBlank(materialIssueDetail.getBalanceQuantity().toString())) {
+										String.valueOf(i), materialIssueDetail.getQuantityIssued().toString());
+							if(materialIssueDetail.getMaterial() != null && materialIssueDetail.getMaterial().getScrapable() != null)
+							if (materialIssueDetail.getMaterial().getScrapable())
+								errors.addDataError(ErrorCode.DONT_ALLOW_SCRAP_MATERIALS.getCode(), String.valueOf(i));
+							if (StringUtils.isNotBlank(materialIssueDetail.getBalanceQuantity().toString())) {
 								if (materialIssueDetail.getBalanceQuantity().compareTo(BigDecimal.ZERO) <= 0)
 									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "balanceQuantity",
-											materialIssueDetail.getBalanceQuantity().toString());
+											String.valueOf(i), materialIssueDetail.getBalanceQuantity().toString());
 								if (materialIssueDetail.getQuantityIssued()
 										.compareTo(materialIssueDetail.getBalanceQuantity()) > 0) {
 									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
 											"balanceQuantity", materialIssueDetail.getQuantityIssued().toString(),
-											materialIssueDetail.getBalanceQuantity().toString());
+											materialIssueDetail.getBalanceQuantity().toString(), String.valueOf(i));
 								}
 							}
-						if (materialIssueDetail.getIndentDetail() != null) {
-							if (materialIssueDetail.getQuantityIssued()
-									.compareTo(materialIssueDetail.getIndentDetail().getIndentQuantity()) > 0)
-								errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
-										"indentQuantity", materialIssueDetail.getQuantityIssued().toString(),
-										materialIssueDetail.getIndentDetail().getIndentQuantity().toString());
-							if (materialIssueDetail.getIndentDetail().getIndentQuantity()
-									.compareTo(BigDecimal.ZERO) <= 0)
-								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "indentQuantity",
-										materialIssueDetail.getIndentDetail().getIndentQuantity().toString());
+							if (materialIssueDetail.getIndentDetail() != null) {
+								if (materialIssueDetail.getQuantityIssued()
+										.compareTo(materialIssueDetail.getIndentDetail().getIndentQuantity()) > 0)
+									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
+											"indentQuantity", materialIssueDetail.getQuantityIssued().toString(),
+											materialIssueDetail.getIndentDetail().getIndentQuantity().toString(),
+											String.valueOf(i));
+								if (materialIssueDetail.getIndentDetail().getIndentQuantity()
+										.compareTo(BigDecimal.ZERO) <= 0)
+									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "indentQuantity",
+											String.valueOf(i),
+											materialIssueDetail.getIndentDetail().getIndentQuantity().toString());
+							}
+							i++;
 						}
-
+						validateDuplicateMaterials(materialIssue.getMaterialIssueDetails(), materialIssue.getTenantId(),
+								errors);
 					}
-
-				}
 				}
 
 				break;
@@ -328,41 +358,72 @@ public class MaterialIssuesService extends DomainService {
 				for (MaterialIssue materialIssue : materialIssues) {
 					if (StringUtils.isEmpty(materialIssue.getIssueNumber()))
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(), "issueNumber", "null");
-					if (materialIssue.getIssueDate().compareTo(currentDate) > 0){
+					if (materialIssue.getIssueDate().compareTo(currentDate) > 0) {
 						String date = convertEpochtoDate(materialIssue.getIssueDate());
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate",date);
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate", date);
+					}
+					if (materialIssue.getIssueNumber() != null) {
+						MaterialIssueEntity materialIssueEntity = new MaterialIssueEntity();
+						materialIssueEntity.setIssueNumber(materialIssue.getIssueNumber());
+						materialIssueEntity.setTenantId(materialIssue.getTenantId());
+						Object issueEntity = materialIssueJdbcRepository.findById(materialIssueEntity,
+								"MaterialIssueEntity");
+						MaterialIssueEntity issueEntityfromDb = (MaterialIssueEntity) issueEntity;
+						if (issueEntityfromDb != null) {
+							if (materialIssue.getIssueType() != null) {
+								if (!issueEntityfromDb.getIssueType().equals(materialIssue.getIssueType()))
+									errors.addDataError(ErrorCode.NOT_ALLOWED_TO_UPDATE.getCode(), "issueType",
+											"MaterialIssue");
+							}
+							if (materialIssue.getSupplier() != null && materialIssue.getSupplier().getCode() != null) {
+								if (!issueEntityfromDb.getSupplier().equals(materialIssue.getSupplier().getCode()))
+									errors.addDataError(ErrorCode.NOT_ALLOWED_TO_UPDATE.getCode(), "supplier",
+											"MaterialIssue");
+							}
+						}
+						if (materialIssue.getIssueDate() != null) {
+							if (!issueEntityfromDb.getIssueDate().equals(materialIssue.getIssueDate()))
+								errors.addDataError(ErrorCode.NOT_ALLOWED_TO_UPDATE.getCode(), "issueDate",
+										"MaterialIssue");
+						}
 					}
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
+						int i = 1;
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
-										materialIssueDetail.getQuantityIssued().toString());
-							if (materialIssueDetail.getBalanceQuantity() != null)
-								if (StringUtils.isNotBlank(materialIssueDetail.getBalanceQuantity().toString())) {
-									if (materialIssueDetail.getBalanceQuantity().compareTo(BigDecimal.ZERO) <= 0)
-										errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "balanceQuantity",
-												materialIssueDetail.getBalanceQuantity().toString());
-									if (materialIssueDetail.getQuantityIssued()
-											.compareTo(materialIssueDetail.getBalanceQuantity()) > 0) {
-										errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(),
-												"quantityIssued", "balanceQuantity",
-												materialIssueDetail.getQuantityIssued().toString(),
-												materialIssueDetail.getBalanceQuantity().toString());
-									}
+										String.valueOf(i), materialIssueDetail.getQuantityIssued().toString());
+							if(materialIssueDetail.getMaterial() != null && materialIssueDetail.getMaterial().getScrapable() != null)
+							if (materialIssueDetail.getMaterial().getScrapable())
+								errors.addDataError(ErrorCode.DONT_ALLOW_SCRAP_MATERIALS.getCode(), String.valueOf(i));
+							if (StringUtils.isNotBlank(materialIssueDetail.getBalanceQuantity().toString())) {
+								if (materialIssueDetail.getBalanceQuantity().compareTo(BigDecimal.ZERO) <= 0)
+									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "balanceQuantity",
+											String.valueOf(i), materialIssueDetail.getBalanceQuantity().toString());
+								if (materialIssueDetail.getQuantityIssued()
+										.compareTo(materialIssueDetail.getBalanceQuantity()) > 0) {
+									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
+											"balanceQuantity", materialIssueDetail.getQuantityIssued().toString(),
+											materialIssueDetail.getBalanceQuantity().toString(), String.valueOf(i));
 								}
+							}
 							if (materialIssueDetail.getIndentDetail() != null) {
 								if (materialIssueDetail.getQuantityIssued()
 										.compareTo(materialIssueDetail.getIndentDetail().getIndentQuantity()) > 0)
 									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
 											"indentQuantity", materialIssueDetail.getQuantityIssued().toString(),
-											materialIssueDetail.getIndentDetail().getIndentQuantity().toString());
+											materialIssueDetail.getIndentDetail().getIndentQuantity().toString(),
+											String.valueOf(i));
 								if (materialIssueDetail.getIndentDetail().getIndentQuantity()
 										.compareTo(BigDecimal.ZERO) <= 0)
 									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "indentQuantity",
+											String.valueOf(i),
 											materialIssueDetail.getIndentDetail().getIndentQuantity().toString());
 							}
-
+							i++;
 						}
+						validateDuplicateMaterials(materialIssue.getMaterialIssueDetails(), materialIssue.getTenantId(),
+								errors);
 					}
 					break;
 				}
@@ -373,48 +434,123 @@ public class MaterialIssuesService extends DomainService {
 			throw errors;
 
 	}
+	
+	private void validateDuplicateMaterials(List<MaterialIssueDetail> materialIssueDetails, String tenantId,
+			InvalidDataException errors) {
+		HashSet<Material> setMaterial = new HashSet<Material>();
+
+		for (MaterialIssueDetail issueDetail : materialIssueDetails) {
+			Material material = new Material();
+			material.setCode(issueDetail.getMaterial().getCode());
+			material.setTenantId(tenantId);
+			if (!setMaterial.add(material)) {
+				errors.addDataError(ErrorCode.REPEATED_VALUE.getCode(), "material", material.getCode(), "");
+			}
+		}
+	}
 
 	public MaterialIssueResponse update(final MaterialIssueRequest materialIssueRequest, String tenantId) {
 		fetchRelated(materialIssueRequest);
 		validate(materialIssueRequest.getMaterialIssues(), Constants.ACTION_UPDATE);
 		List<MaterialIssue> materialIssues = materialIssueRequest.getMaterialIssues();
 		for (MaterialIssue materialIssue : materialIssues) {
-			List<String> materialIssueDetailsIds = new ArrayList<>();
 			if (StringUtils.isEmpty(materialIssue.getTenantId()))
 				materialIssue.setTenantId(tenantId);
+			MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract();
+			searchContract.setIssueNoteNumber(materialIssue.getIssueNumber());
+			searchContract.setTenantId(materialIssue.getTenantId());
+			MaterialIssueResponse issueResponse = search(searchContract);
+			if(materialIssue.getMaterialIssueStatus() != null )
+			if(materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString())){
+				issueResponse.getMaterialIssues().get(0).setMaterialIssueStatus(MaterialIssueStatusEnum.CANCELED);
+				updateStatusAsCancelled(tenantId, materialIssue);
+				if(!issueResponse.getMaterialIssues().isEmpty() && issueResponse.getMaterialIssues().get(0) != null &&
+						issueResponse.getMaterialIssues().get(0).getIndent()!= null){
+				issueResponse.getMaterialIssues().get(0).setFromStore(issueResponse.getMaterialIssues().get(0).getIndent().getIssueStore());
+				issueResponse.getMaterialIssues().get(0).setToStore(issueResponse.getMaterialIssues().get(0).getIndent().getIndentStore());
+				for(MaterialIssueDetail materialIssueDetail : issueResponse.getMaterialIssues().get(0).getMaterialIssueDetails()){
+					if(materialIssueDetail.getIndentDetail() != null && materialIssueDetail.getIndentDetail().getUom() != null)
+					materialIssueDetail.setUom(materialIssueDetail.getIndentDetail().getUom());
+					if(materialIssueDetail.getIndentDetail() != null && materialIssueDetail.getIndentDetail().getMaterial() != null)
+					materialIssueDetail.setMaterial(materialIssueDetail.getIndentDetail().getMaterial());
+				}
+				materialIssueRequest.setMaterialIssues(Arrays.asList(issueResponse.getMaterialIssues().get(0)));}
+			}
+			List<MaterialIssueDetail> materialIssueDetails = issueResponse.getMaterialIssues().get(0)
+					.getMaterialIssueDetails();
+			List<String> materialIssuedFromReceiptsIds = new ArrayList<>();
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String,Uom> uoms = getUoms(tenantId, objectMapper, new RequestInfo());
+			for (MaterialIssueDetail materialIssueDetail : materialIssueDetails) {
+				Double quantityIssued = getSaveConvertedQuantity(Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
+						Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode()).getConversionFactor().toString()));
+				materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
+				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
+					Double quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()),
+							Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode()).getConversionFactor().toString()));
+					mifr.setQuantity(BigDecimal.valueOf(quantity));
+					materialIssuedFromReceiptsIds.add(mifr.getId());
+					mifr.setStatus(false);
+				}
+			}
+			materialIssuedFromReceiptsJdbcRepository.updateStatus(materialIssuedFromReceiptsIds,
+					materialIssue.getTenantId());
+			
+			if(materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString()))
+				backUpdateIndentInCaseOfUpdate(materialIssueDetails, materialIssue.getTenantId());
+			if( materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString()))
+				break;
 			setMaterialIssueValues(materialIssue, null, Constants.ACTION_UPDATE);
 			materialIssue
 					.setAuditDetails(getAuditDetails(materialIssueRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+			BigDecimal totalIssueValue = BigDecimal.ZERO;
+			List<String> materialIssueDetailsIds = new ArrayList<>();
 			for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
-				List<String> materialIssuedFromReceiptsIds = new ArrayList<>();
 				if (StringUtils.isEmpty(materialIssueDetail.getTenantId()))
 					materialIssueDetail.setTenantId(tenantId);
-				convertToUom(materialIssueDetail);
 				if (StringUtils.isEmpty(materialIssueDetail.getId()))
 					materialIssueDetail.setId(materialIssueDetailsJdbcRepository
 							.getSequence(MaterialIssueDetail.class.getSimpleName(), 1).get(0));
 				materialIssueDetailsIds.add(materialIssueDetail.getId());
-				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
-					if (StringUtils.isEmpty(mifr.getTenantId()))
-						mifr.setTenantId(tenantId);
-					if (StringUtils.isEmpty(mifr.getId()))
-						mifr.setId(materialIssuedFromReceiptsJdbcRepository
-								.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(), 1).get(0));
-					materialIssuedFromReceiptsIds.add(mifr.getId());
-				}
-				materialIssuedFromReceiptsJdbcRepository.markDeleted(materialIssuedFromReceiptsIds, tenantId,
-						"materialissuedfromreceipt", "issuedetailid", materialIssueDetail.getId());
+				BigDecimal value = getMaterialIssuedFromReceiptData(materialIssue.getFromStore(),
+						materialIssueDetail.getMaterial(), materialIssue.getIssueDate(), materialIssue.getTenantId(),
+						materialIssueDetail);
+				totalIssueValue = totalIssueValue.add(value);
+				materialIssueDetail.setValue(value);
+				convertToUom(materialIssueDetail);
 			}
 			materialIssueDetailsJdbcRepository.markDeleted(materialIssueDetailsIds, tenantId, "materialissuedetail",
 					"materialissuenumber", materialIssue.getIssueNumber());
-
+			materialIssue.setTotalIssueValue(totalIssueValue);
+	
 		}
+		
 		kafkaTemplate.send(updateTopic, updateKey, materialIssueRequest);
 		MaterialIssueResponse response = new MaterialIssueResponse();
 		response.setMaterialIssues(materialIssueRequest.getMaterialIssues());
 		response.setResponseInfo(getResponseInfo(materialIssueRequest.getRequestInfo()));
 		return response;
 	}
+
+	private void updateStatusAsCancelled(String tenantId, MaterialIssue materialIssue) {
+	
+         materialIssueJdbcRepository.updateStatus(materialIssue.getIssueNumber(), materialIssue.getTenantId());		
+	}
+
+	private void backUpdateIndentInCaseOfUpdate(List<MaterialIssueDetail> materialIssueDetails, String tenantId) {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String ,Uom> uoms = getUoms(tenantId, mapper, new RequestInfo());
+		for(MaterialIssueDetail mid :materialIssueDetails){
+		mid.setUom(uoms.get(mid.getUom().getCode()));
+			HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("indentissuedquantity", "indentissuedquantity - " +
+            		mid.getQuantityIssued());
+            mid.getIndentDetail().setTenantId(tenantId);
+            materialIssueJdbcRepository.updateColumn(new IndentDetailEntity().toEntity(mid.getIndentDetail()), "indentdetail", hashMap, null);
+		}
+	}
+
+	
 
 	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract) {
 		Pagination<MaterialIssue> materialIssues = materialIssueJdbcRepository.search(searchContract,
@@ -426,15 +562,24 @@ public class MaterialIssuesService extends DomainService {
 						IssueTypeEnum.INDENTISSUE.toString());
 				if (materialIssueDetails.getPagedData().size() > 0) {
 					for (MaterialIssueDetail materialIssueDetail : materialIssueDetails.getPagedData()) {
-						Uom uom = null;
+				Pagination<MaterialIssuedFromReceipt> materialIssuedFromReceipts = materialIssuedFromReceiptsJdbcRepository.search(materialIssueDetail.getId(), materialIssueDetail.getTenantId());
+						ObjectMapper mapper = new ObjectMapper();
+						Map<String, Uom> uoms = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
 						if (materialIssueDetail.getIndentDetail().getUom() != null
 								&& materialIssueDetail.getIndentDetail().getUom().getCode() != null)
-							uom = getUom(materialIssueDetail.getTenantId(),
-									materialIssueDetail.getIndentDetail().getUom().getCode(), new RequestInfo());
+						{
 						Double quantityIssued = getSearchConvertedQuantity(
 								Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
-								Double.valueOf(uom.getConversionFactor().toString()));
+								Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode())
+										.getConversionFactor().toString()));
 						materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
+						for(MaterialIssuedFromReceipt mifr : materialIssuedFromReceipts.getPagedData()){
+						Double quantity =	getSearchConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()), Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode())
+									.getConversionFactor().toString()));
+						mifr.setQuantity(BigDecimal.valueOf(quantity));
+						}
+						}
+						materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts.getPagedData());
 					}
 					materialIssue.setMaterialIssueDetails(materialIssueDetails.getPagedData());
 				}
@@ -524,12 +669,12 @@ public class MaterialIssuesService extends DomainService {
 		}
 		return materialMap;
 	}
-	private String convertEpochtoDate(Long date)
-	 {
-		 Date epoch = new Date(date);
-		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		 String s2 = format.format(epoch);
-		 return s2;
-	 }
+
+	private String convertEpochtoDate(Long date) {
+		Date epoch = new Date(date);
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		String s2 = format.format(epoch);
+		return s2;
+	}
 
 }

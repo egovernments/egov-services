@@ -10,6 +10,7 @@ import org.egov.inv.model.Fifo;
 import org.egov.inv.model.FifoRequest;
 import org.egov.inv.model.FifoResponse;
 import org.egov.inv.model.Material;
+import org.egov.inv.model.MaterialReceiptDetail;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.Uom;
@@ -81,15 +82,23 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 				if (uom.getConversionFactor() != null && fifoEntity.getBalance() != null)
 					balance = BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
 							Double.valueOf(uom.getConversionFactor().toString())));
-				if (balance.compareTo(quantityIssued) <= 0) {
-					if (fifoEntity.getUnitRate() != null)
-						unitRate = BigDecimal.valueOf(fifoEntity.getUnitRate()).multiply(balance).add(unitRate);
-					quantityIssued = quantityIssued.subtract(balance);
-				} else {
-					if (fifoEntity.getUnitRate() != null)
-						unitRate = quantityIssued.multiply(BigDecimal.valueOf(fifoEntity.getUnitRate())).add(unitRate);
-					quantityIssued = quantityIssued.ZERO;
-				}
+				if (uom.getConversionFactor() != null && fifoEntity.getUnitRate() != null)
+
+					if (balance.compareTo(quantityIssued) <= 0) {
+						if (fifoEntity.getUnitRate() != null)
+							unitRate = BigDecimal
+									.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
+											Double.valueOf(uom.getConversionFactor().toString())))
+									.multiply(balance).add(unitRate);
+						quantityIssued = quantityIssued.subtract(balance);
+					} else {
+						if (fifoEntity.getUnitRate() != null)
+							unitRate = quantityIssued
+									.multiply(BigDecimal.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
+											Double.valueOf(uom.getConversionFactor().toString()))))
+									.add(unitRate);
+						quantityIssued = quantityIssued.ZERO;
+					}
 				if (quantityIssued.equals(BigDecimal.ZERO))
 					break;
 			}

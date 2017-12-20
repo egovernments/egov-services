@@ -29,4 +29,6 @@ public class Fifo {
 	private Long issueDate;
 	
 	private String mrnNumber;
+	
+    private String materialIssueDetailId;
 }

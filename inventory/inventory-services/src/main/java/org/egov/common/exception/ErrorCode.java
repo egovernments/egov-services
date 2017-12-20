@@ -131,15 +131,15 @@ public enum ErrorCode {
     ORDQTY_LE_INDQTY("ordqty.le.indqty",
             "order quantity should be less than or equal to indent quantity {0} ",
             "order quantity should be less than or equal to indent quantity {0}."),
-    QUANTITY_GT_ZERO("quantity.greaterthan.zero",
-            "the field {0} should have a value greater than zero. ",
-            "the value {1} for the field {0} is not valid, it should be greater than zero."),
+    QUANTITY_GT_ZERO("quantity.greaterthan.zero.row",
+            "the field {0} should have a value greater than zero at row {1}. ",
+            "the value {2} for the field {0} is not valid, it should be greater than zero."),
     QUANTITY_GT_ZERO_TENDER("quantity.greaterthan.zero",
             "the field {0} should have a value greater than zero incase of tender. ",
             "the value {1} for the field {0} is not valid, it should be greater than zero incase of tender."),
     QUANTITY1_LTE_QUANTITY2("quantity1.lessthanorequalto.quantity2",
-            "the quantity {0} should be less than or equal to quantity {1}",
-            "The value {2} for the field {0} should be less than or equal to the value {3} for the field {1}"),
+            "the quantity {0} should be less than or equal to quantity {1} at row{4}",
+            "The value {2} for the field {0} should be less than or equal to the value {3} for the field {1} at row{4}"),
     COMBINATION_EXISTS("inv.combination.exists",
             "{0} {1} and {2} {3} combination already exists",
             "{0} {1} and {2} {3} combination already exists"),
@@ -182,6 +182,8 @@ public enum ErrorCode {
     ALLOW_SCRAP_MATERIALS("scrap.material.allowed",
             "In case of write off or scrap,only scrapable items are allowed", "when issue purpose is {0} allow only"
             + " scrapable materials"),
+    DONT_ALLOW_SCRAP_MATERIALS("scrap.material.notallowed",
+            "In case of indent issue,scrapable items are not allowed", "material at row {0} is scrappable"),
     CODE_ALREADY_EXISTS("code.already.exist",
             "{0} code {1} already exists ",
             "{0} code {1} already exists"),
@@ -208,7 +210,14 @@ public enum ErrorCode {
             "Material {0} and Uom {1} combination Not Exist In The System {2}"),
     TRANSACTION_USED("transaction.used",
             "{0} {1} cannot be updated as it is used in transactions",
-            "{0} {1} cannot be updated as it is used in transactions");
+            "{0} {1} cannot be updated as it is used in transactions"),
+    FIELD_MANDATORY_IN_CASE("field.mandatory","field {0} is mandatory if issuePurpose is return to supplier at issuedetail level",
+    		"field {0} is not provided at issuedetail level at row {1}"), 
+    NOT_ALLOWED_TO_UPDATE("not.allowed.to.update",
+    		"field {0} of {1} is not allowed to update",
+    		"field {0} of {1} is not allowed to update");
+	
+
 
 
     private final String code;

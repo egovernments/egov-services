@@ -374,7 +374,6 @@ public class MaterialIssue   {
    * @return totalIssueValue
   **/
   @ApiModelProperty(required = true, value = "total issue value of the MaterialIssue")
-  @NotNull
 
   @Valid
 

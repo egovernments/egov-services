@@ -81,6 +81,7 @@ public class MaterialIssueEntity {
 			this.description = materialIssue.getDescription();
 		if (materialIssue.getDesignation() != null)
 			this.designation = materialIssue.getDesignation();
+		if(materialIssue.getIssueType() != null)
 		this.issueType = materialIssue.getIssueType().name();
 		if (materialIssue.getFromStore() != null && StringUtils.isNotBlank(materialIssue.getFromStore().getCode()))
 			this.fromStore = materialIssue.getFromStore().getCode();
@@ -90,6 +91,7 @@ public class MaterialIssueEntity {
 		this.issueDate = materialIssue.getIssueDate();
 		if (materialIssue.getMaterialIssueStatus() != null)
 			this.materialIssueStatus = materialIssue.getMaterialIssueStatus().name();
+		if(materialIssue.getTotalIssueValue() != null)
 		this.totalIssueValue = Double.valueOf(materialIssue.getTotalIssueValue().toString());
 		if (materialIssue.getFileStoreId() != null)
 			this.fileStoreId = materialIssue.getFileStoreId();

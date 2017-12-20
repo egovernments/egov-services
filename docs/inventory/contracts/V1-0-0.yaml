@@ -1624,6 +1624,11 @@ paths:
             in: query
             description: |
               contact no2 of the Store
+          - name: officeLocation
+            type: string
+            in: query
+            description: |
+              office location of the Store
           - name: email
             type: string
             in: query

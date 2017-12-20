@@ -33,10 +33,10 @@ public class JobSearchRequest   {
 	  private List<String> requesterNames;
 	
 	  @JsonProperty("startDate")
-	  private Integer startDate;
+	  private Long startDate;
 	
 	  @JsonProperty("endDate")
-	  private Integer endDate;
+	  private Long endDate;
 	
 	  @JsonProperty("RequestInfo")
 	  private RequestInfo requestInfo;

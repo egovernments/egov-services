@@ -855,6 +855,10 @@ definitions:
             type: boolean
             description: Boolean value to identify whether the object is deleted or not from UI.
             default: false  
+        spillOver:
+            type: boolean
+            description: Boolean value to identify whether the bills are spillover or current.
+            default: false  
     required:
       - tenantId
       - letterOfAcceptanceEstimate
@@ -938,3 +942,4 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
+

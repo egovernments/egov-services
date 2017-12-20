@@ -130,6 +130,60 @@ class Search extends Component {
     }
   }
 
+  tableDataBuilder = (res, currentSpecification, self) => {
+    self.props.setLoadingStatus('hide');
+    var result = currentSpecification.result;
+    var resultList = {
+      resultHeader: [{ label: '#' }, ...result.header],
+      resultValues: [],
+      disableRowClick: result.disableRowClick || false,
+    };
+    var specsValuesList = currentSpecification.result.values;
+    var values = _.get(res, currentSpecification.result.resultPath);
+    if (values && values.length) {
+      for (var i = 0; i < values.length; i++) {
+        var tmp = [i + 1];
+        for (var j = 0; j < specsValuesList.length; j++) {
+          let valuePath = specsValuesList[j];
+          if (typeof valuePath === 'object' && valuePath.valExp) {
+            tmp.push(eval(valuePath.valExp));
+            continue;
+          }
+          if (typeof valuePath === 'object' && valuePath.isObj) {
+            var childArray = [];
+            if (valuePath.childArray && valuePath.childArray.length > 0) {
+              for (var k = 0; k < valuePath.childArray.length; k++) {
+                childArray.push(_.get(values[i], valuePath.childArray[k]));
+              }
+            }
+
+            tmp.push(childArray);
+            continue;
+          }
+          // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
+          //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
+          // } else {
+          tmp.push(_.get(values[i], valuePath));
+          // }
+        }
+        resultList.resultValues.push(tmp);
+      }
+    }
+    if (result.isAction) {
+      resultList.actionItems = result.actionItems;
+    }
+    self.setState({
+      resultList,
+      values,
+      showResult: true,
+    });
+
+    self.props.setFlag(1);
+
+    window.localStorage.setItem('formData', '');
+    window.localStorage.setItem('returnUrl', '');
+  }
+
   search = (e = null, hasDefaultSearch = false) => {
     if (e) {
       e.preventDefault();
@@ -150,66 +204,63 @@ class Search extends Component {
     var currentSpecification = specifications[`${self.props.match.params.moduleName}.${self.props.match.path.split('/')[1]}`];
     let { getVal, getValFromDropdownData } = self;
 
-    Api.commonApiPost(currentSpecification.url, formData, {}, null, currentSpecification.useTimestamp).then(
-      function(res) {
-        self.props.setLoadingStatus('hide');
-        var result = currentSpecification.result;
+    //Master Screen search
+    if(currentSpecification.result.hasOwnProperty("isMasterScreen")) {
+      var moduleDetails = [];
+      var masterDetails = [];
+      let data = { moduleName: '', masterDetails: [] };
+      let k = 0;
+      var masterDetail = {};
+      data.moduleName = self.props.match.params.moduleName;
 
-        var resultList = {
-          resultHeader: [{ label: '#' }, ...result.header],
-          resultValues: [],
-          disableRowClick: result.disableRowClick || false,
-        };
-        var specsValuesList = currentSpecification.result.values;
-        var values = _.get(res, currentSpecification.result.resultPath);
-        if (values && values.length) {
-          for (var i = 0; i < values.length; i++) {
-            var tmp = [i + 1];
-            for (var j = 0; j < specsValuesList.length; j++) {
-              let valuePath = specsValuesList[j];
-              if (typeof valuePath === 'object' && valuePath.valExp) {
-                tmp.push(eval(valuePath.valExp));
-                continue;
-              }
-              if (typeof valuePath === 'object' && valuePath.isObj) {
-                var childArray = [];
-                if (valuePath.childArray && valuePath.childArray.length > 0) {
-                  for (var k = 0; k < valuePath.childArray.length; k++) {
-                    childArray.push(_.get(values[i], valuePath.childArray[k]));
-                  }
-                }
-
-                tmp.push(childArray);
-                continue;
-              }
-              // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
-              //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
-              // } else {
-              tmp.push(_.get(values[i], valuePath));
-              // }
-            }
-            resultList.resultValues.push(tmp);
-          }
-        }
-        if (result.isAction) {
-          resultList.actionItems = result.actionItems;
-        }
-        self.setState({
-          resultList,
-          values,
-          showResult: true,
-        });
-
-        self.props.setFlag(1);
-
-        window.localStorage.setItem('formData', '');
-        window.localStorage.setItem('returnUrl', '');
-      },
-      function(err) {
-        self.props.toggleSnackbarAndSetText(true, err.message, false, true);
-        self.props.setLoadingStatus('hide');
+      var filterData
+      if(_.isEmpty(formData)) {
+        filterData = null;
       }
-    );
+      else {
+        var str = [];
+        for(var i=0; i<Object.keys(formData).length; i++) {
+          str.push(`@.${Object.keys(formData)[i]}=='${Object.values(formData)[i]}'`);
+        }
+        str = str.join('&&')
+        filterData = `[?(${str})]`;
+      }
+      masterDetail.filter = filterData;
+      masterDetail.name = currentSpecification.objectName;
+      data.masterDetails[0] = _.cloneDeep(masterDetail);
+      moduleDetails.push(data);
+
+      var _body = {
+        MdmsCriteria: {
+          tenantId: localStorage.getItem('tenantId'),
+          moduleDetails: moduleDetails,
+        },
+      };
+  
+      Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true)
+        .then(res => {
+          this.tableDataBuilder(res, currentSpecification, self);
+        },
+        function(err) {
+          self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+          self.props.setLoadingStatus('hide');
+        }
+      );
+    }
+    else {
+      Api.commonApiPost(currentSpecification.url, formData, {}, null, currentSpecification.useTimestamp).then(
+        (res) => {
+
+          this.tableDataBuilder(res, currentSpecification, self);
+
+        },
+        function(err) {
+          self.props.toggleSnackbarAndSetText(true, err.message, false, true);
+          self.props.setLoadingStatus('hide');
+        }
+      );
+    }
+    
   };
 
   getVal = path => {

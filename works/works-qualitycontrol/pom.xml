@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov.works</groupId>
-	<artifactId>works-qualitytesting</artifactId>
+	<artifactId>works-qualitycontrol</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>works-qualitytesting</name>
+	<name>works-qualitycontrol</name>
 	<description>Spring Boot project for Works Quality Testing</description>
 
 	<parent>

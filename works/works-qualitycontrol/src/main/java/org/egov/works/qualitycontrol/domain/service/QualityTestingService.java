@@ -4,12 +4,14 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.qualitycontrol.config.PropertiesManager;
 import org.egov.works.qualitycontrol.domain.validator.RequestValidator;
+import org.egov.works.qualitycontrol.persistence.repository.LetterOfAcceptanceRepository;
 import org.egov.works.qualitycontrol.persistence.repository.QualityTestingRepository;
 import org.egov.works.qualitycontrol.utils.QualityTestingUtils;
 import org.egov.works.qualitycontrol.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +32,9 @@ public class QualityTestingService {
 
     @Autowired
     private RequestValidator requestValidator;
+
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
 
     public QualityTestingResponse create(final QualityTestingRequest qualityTestingRequest) {
         requestValidator.validateQualityTesting(qualityTestingRequest);

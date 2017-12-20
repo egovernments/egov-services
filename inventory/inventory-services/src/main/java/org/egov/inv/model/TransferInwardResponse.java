@@ -70,8 +70,6 @@ public class TransferInwardResponse   {
   **/
   @ApiModelProperty(value = "Used for search result and create only")
 
-  @Valid
-
   public List<MaterialReceipt> getTransferInwards() {
     return transferInwards;
   }

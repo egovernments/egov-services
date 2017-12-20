@@ -54,7 +54,7 @@ export default class UiTimeField extends Component {
               size="sm"
               inputFormat="h:mm A"
               inputProps={{
-                placeholder: 'h:mm A',
+                placeholder: 'hh:mm',
                 id: item.jsonPath.split('.').join('-'),
                 disabled: item.isDisabled,
               }}

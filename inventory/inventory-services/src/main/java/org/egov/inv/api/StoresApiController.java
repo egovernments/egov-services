@@ -42,10 +42,12 @@ package org.egov.inv.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.domain.service.StoreService;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.StoreRequest;
 import org.egov.inv.model.StoreResponse;
+import org.egov.inv.model.TransactionUsedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -109,7 +111,7 @@ public class StoresApiController implements StoresApi {
             throws Exception {
 
         StoreGetRequest storeGetRequest = new StoreGetRequest(ids,
-                codes, name, searchPurpose, description, department, contactNo1, officelocation ,billingAddress, deliveryAddress, contactNo2, email, isCentralStore,
+                codes, name, searchPurpose, description, department, contactNo1, officelocation, billingAddress, deliveryAddress, contactNo2, email, isCentralStore,
                 storeInCharge, active, sortBy, pageSize, offset, tenantId);
         StoreResponse response = storesService.search(storeGetRequest);
 
@@ -124,6 +126,16 @@ public class StoresApiController implements StoresApi {
     ) throws Exception {
         StoreResponse storeResponse = storesService.update(storeRequest, tenantId);
         return new ResponseEntity(storeResponse, HttpStatus.OK);
+    }
+
+    public ResponseEntity<TransactionUsedResponse> storesTransactionusedPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
+                                                                             @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
+                                                                             @ApiParam(value = "code of the Store ") @RequestParam(value = "code", required = true) String code) {
+        boolean usedInTransaction = storesService.checkStoreUsedInTransaction(code, tenantId);
+        TransactionUsedResponse transactionUsedResponse = new TransactionUsedResponse();
+        transactionUsedResponse.responseInfo(null)
+                .transactionUsed(usedInTransaction);
+        return new ResponseEntity<TransactionUsedResponse>(transactionUsedResponse, HttpStatus.OK);
     }
 
 

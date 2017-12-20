@@ -7,9 +7,11 @@ package org.egov.inv.api;
 
 
 import io.swagger.annotations.*;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.model.ErrorRes;
 import org.egov.inv.model.StoreRequest;
 import org.egov.inv.model.StoreResponse;
+import org.egov.inv.model.TransactionUsedResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,4 +57,14 @@ public interface StoresApi {
             method = RequestMethod.POST)
     ResponseEntity<StoreResponse> storesUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "common Request info") @Valid @RequestBody StoreRequest storeRequest, @RequestHeader(value = "Accept", required = false) String accept) throws Exception;
 
+    @ApiOperation(value = "Check whether store is used in transaction", notes = "Check whether store is used in transaction", response = TransactionUsedResponse.class, tags = {"Store",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Transaction used response received.", response = TransactionUsedResponse.class),
+            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class)})
+
+    @RequestMapping(value = "/stores/_transactionused",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<TransactionUsedResponse> storesTransactionusedPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo, @ApiParam(value = "code of the Store ") @RequestParam(value = "code", required = true) String code);
 }

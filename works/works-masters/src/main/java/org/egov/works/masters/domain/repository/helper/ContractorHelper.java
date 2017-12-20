@@ -83,7 +83,7 @@ public class ContractorHelper {
     private String accountCode = null;
 
     @JsonProperty("ifscCode")
-    private BigDecimal ifscCode = null;
+    private String ifscCode = null;
 
     @JsonProperty("contractorClass")
     private String contractorClass = null;

@@ -34,6 +34,6 @@ public class WorkOrderRepository {
     public List<WorkOrder> searchWorkorderByLOA(final String tenantId, final List<String> loaIds, final RequestInfo requestInfo) {
         String status = WorkOrderStatus.APPROVED.toString();
         String letterOfAcceptances = loaIds.stream().map(i -> i.toString()).collect(Collectors.joining(","));
-        return restTemplate.postForObject(searchWorkOrderUrl, requestInfo, WorkOrderResponse.class, tenantId, letterOfAcceptances, status).getWorkOrders();
+        return restTemplate.postForObject(searchWorkOrderUrlByLOA, requestInfo, WorkOrderResponse.class, tenantId, letterOfAcceptances, status).getWorkOrders();
     }
 }

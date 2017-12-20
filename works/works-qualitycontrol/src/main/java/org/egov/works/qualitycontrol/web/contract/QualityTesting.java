@@ -170,7 +170,7 @@ public class QualityTesting   {
   @ApiModelProperty(required = true, value = "Status for quality testing.")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public WorksStatus getStatus() {
     return status;

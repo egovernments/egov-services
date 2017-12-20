@@ -17,7 +17,7 @@ import java.util.Map;
 @Repository
 public class QualityTestingDetailJdbcRepository extends JdbcRepository {
 
-    public static final String TABLE_NAME = "egw_qualitytesting_detail";
+    public static final String TABLE_NAME = "egw_qualitytesting_details";
 
     public List<QualityTestingDetail> search(final QualityTestingDetailSearchContract qualityTestingDetailSearchContract) {
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";

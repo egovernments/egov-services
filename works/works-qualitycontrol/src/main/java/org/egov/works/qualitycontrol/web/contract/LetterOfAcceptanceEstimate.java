@@ -79,7 +79,7 @@ public class LetterOfAcceptanceEstimate   {
    * @return tenantId
   **/
   @ApiModelProperty(required = true, value = "Tenant id of the Letter Of Acceptance Estimate")
-  @NotNull
+  //@NotNull
 
  @Size(min=2,max=128)
   public String getTenantId() {
@@ -120,7 +120,7 @@ public class LetterOfAcceptanceEstimate   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "Detailed Estimate reference.")
-  @NotNull
+  //@NotNull
 
   @Valid
 

@@ -166,7 +166,7 @@ class RenewalAgreement extends React.Component {
               };
 
               $.ajax({
-                url: baseUrl + "/lams-services/agreements/_renewal?tenantId=" + tenantId,
+                url: baseUrl + "/lams-services/agreements/_renew?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data: JSON.stringify(body),
@@ -223,7 +223,7 @@ class RenewalAgreement extends React.Component {
       };
 
       $.ajax({
-        url: baseUrl + "/lams-services/agreements/_renewal?tenantId=" + tenantId,
+        url: baseUrl + "/lams-services/agreements/_renew?tenantId=" + tenantId,
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify(body),

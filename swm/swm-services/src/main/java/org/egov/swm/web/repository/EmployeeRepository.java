@@ -80,6 +80,7 @@ public class EmployeeRepository {
         final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        requestInfo.setTs(null);
         wrapper.setRequestInfo(requestInfo);
 
         return restTemplate.postForObject(employeeByDesgAndCodeUrl, wrapper, EmployeeResponse.class, tenantId,

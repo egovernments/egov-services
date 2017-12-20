@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class QualityTestingJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egw_qualitytesting qt";
-    public static final String SEARCH_EXTENTION = ",egw_qualitytesting_details qtd";
+    public static final String SEARCH_LOA_ESTIMATE_EXTENTION = ",egw_letterofacceptanceestimate lea";
 
     @Autowired
     private DetailedEstimateRepository detailedEstimateRepository;
@@ -25,6 +25,9 @@ public class QualityTestingJdbcRepository extends JdbcRepository {
 
     @Autowired
     private QualityTestingDetailJdbcRepository qualityTestingDetailJdbcRepository;
+
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
 
     public List<QualityTesting> search(final QualityTestingSearchContract qualityTestingSearchContract, final RequestInfo requestInfo) {
 
@@ -49,7 +52,7 @@ public class QualityTestingJdbcRepository extends JdbcRepository {
                 StringUtils.isNotBlank(qualityTestingSearchContract.getWorkIdentificationNumberLike()) ||
                 qualityTestingSearchContract.getWorkOrderNumbers() != null && !qualityTestingSearchContract.getWorkOrderNumbers().isEmpty() ||
                 StringUtils.isNotBlank(qualityTestingSearchContract.getWorkOrderNumberLike()))
-            table += SEARCH_EXTENTION;
+            table += SEARCH_LOA_ESTIMATE_EXTENTION;
 
         String orderBy = "order by qt.id";
         if (qualityTestingSearchContract.getSortBy() != null
@@ -72,14 +75,21 @@ public class QualityTestingJdbcRepository extends JdbcRepository {
             paramValues.put("ids", qualityTestingSearchContract.getIds());
         }
 
+        List<String> loaIds = new ArrayList<>();
         if(qualityTestingSearchContract.getLoaNumbers() != null && !qualityTestingSearchContract.getLoaNumbers().isEmpty()) {
-            searchQualityTestingByLoaNumber(qualityTestingSearchContract.getLoaNumbers(),params, paramValues);
+           List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAByLoaNumber(qualityTestingSearchContract.getTenantId(), qualityTestingSearchContract.getLoaNumbers(), requestInfo);
+            if(letterOfAcceptances != null && !letterOfAcceptances.isEmpty()) {
+                loaIds = letterOfAcceptances.stream().map(loa -> loa.getId()).collect(Collectors.toList());
+                searchQualityTestingByLoaNumber(loaIds, params, paramValues);
+            }
         }
 
         if(StringUtils.isNotBlank(qualityTestingSearchContract.getLoaNumberLike())) {
-            addAnd(params);
-            params.append("qt.letterOfAcceptanceEstimate = qtd.id and upper(qtd.letterofacceptance) like (:letterOfAcceptanceEstimate) ");
-            paramValues.put("letterOfAcceptanceEstimate", "%" + qualityTestingSearchContract.getLoaNumberLike().toUpperCase() + "%");
+            List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAByLoaNumber(qualityTestingSearchContract.getTenantId(), Arrays.asList(qualityTestingSearchContract.getLoaNumberLike()), requestInfo);
+            if(letterOfAcceptances != null && !letterOfAcceptances.isEmpty()) {
+                loaIds = letterOfAcceptances.stream().map(loa -> loa.getId()).collect(Collectors.toList());
+                searchQualityTestingByLoaNumber(loaIds.get(0), params, paramValues);
+            }
         }
 
         if(qualityTestingSearchContract.getDetailedEstimateNumbers() != null && !qualityTestingSearchContract.getDetailedEstimateNumbers().isEmpty()) {
@@ -111,7 +121,7 @@ public class QualityTestingJdbcRepository extends JdbcRepository {
         if(qualityTestingSearchContract.getWorkOrderNumbers() != null && !qualityTestingSearchContract.getWorkOrderNumbers().isEmpty()) {
             List<WorkOrder> workOrders = workOrderRepository.searchWorkOrder(qualityTestingSearchContract.getTenantId(),qualityTestingSearchContract.getWorkOrderNumbers(),requestInfo);
             if(workOrders != null && !workOrders.isEmpty()) {
-                loaNumbers = workOrders.stream().map(workorder -> workorder.getLetterOfAcceptance().getLoaNumber()).collect(Collectors.toList());
+                loaNumbers = workOrders.stream().map(workorder -> workorder.getLetterOfAcceptance().getId()).collect(Collectors.toList());
                 searchQualityTestingByLoaNumber(loaNumbers, params, paramValues);
             }
         }
@@ -119,7 +129,7 @@ public class QualityTestingJdbcRepository extends JdbcRepository {
         if(StringUtils.isNotBlank(qualityTestingSearchContract.getWorkOrderNumberLike())) {
             List<WorkOrder> workOrders = workOrderRepository.searchWorkOrder(qualityTestingSearchContract.getTenantId(), Arrays.asList(qualityTestingSearchContract.getWorkOrderNumberLike()),requestInfo);
             if(workOrders != null && !workOrders.isEmpty()) {
-                loaNumbers = workOrders.stream().map(workorder -> workorder.getLetterOfAcceptance().getLoaNumber()).collect(Collectors.toList());
+                loaNumbers = workOrders.stream().map(workorder -> workorder.getLetterOfAcceptance().getId()).collect(Collectors.toList());
                 searchQualityTestingByLoaNumber(loaNumbers.get(0), params, paramValues);
             }
         }
@@ -152,25 +162,25 @@ public class QualityTestingJdbcRepository extends JdbcRepository {
 
     private void searchQualityTestingByLoaNumber(List<String> loaNumbers, StringBuffer params, Map<String, Object> paramValues) {
         addAnd(params);
-        params.append("qt.letterOfAcceptanceEstimate = qtd.id and qtd.letterofacceptance in(:letterOfAcceptanceEstimate) ");
+        params.append("qt.letterOfAcceptanceEstimate = lea.id and lea.letterofacceptance in(:letterOfAcceptanceEstimate) and lea.tenantId=:tenantId and lea.deleted=false");
         paramValues.put("letterOfAcceptanceEstimate", loaNumbers);
     }
 
     private void searchQualityTestingByLoaNumber(String loaNumber, StringBuffer params, Map<String, Object> paramValues) {
         addAnd(params);
-        params.append("qt.letterOfAcceptanceEstimate = qtd.id and qtd.letterofacceptance in(:letterOfAcceptanceEstimate) ");
+        params.append("qt.letterOfAcceptanceEstimate = lea.id and lea.letterofacceptance in(:letterOfAcceptanceEstimate) and lea.tenantId=:tenantId and lea.deleted=false ");
         paramValues.put("letterOfAcceptanceEstimate", "%" + loaNumber + "%");
     }
 
     private void searchQualityTesting(List<String> estimateNumbers, StringBuffer params, Map<String, Object> paramValues) {
         addAnd(params);
-        params.append("qt.letterOfAcceptanceEstimate = qtd.id and qtd.detailedestimate in (:detailedestimate) ");
+        params.append("qt.letterOfAcceptanceEstimate = lea.id and lea.detailedestimate in (:detailedestimate)  and lea.tenantId=:tenantId and lea.deleted=false");
         paramValues.put("detailedestimate", estimateNumbers);
     }
 
     private void searchQualityTesting(String estimateNumber, StringBuffer params, Map<String, Object> paramValues) {
         addAnd(params);
-        params.append("qt.letterOfAcceptanceEstimate = qtd.id and upper(qtd.detailedestimate) like (:detailedestimate) ");
+        params.append("qt.letterOfAcceptanceEstimate = lea.id and lea.detailedestimate like (:detailedestimate) and lea.tenantId=:tenantId and lea.deleted=false ");
         paramValues.put("detailedestimate", "%" + estimateNumber.toUpperCase() + "%");
     }
 

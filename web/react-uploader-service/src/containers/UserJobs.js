@@ -4,11 +4,13 @@ import { connect } from "react-redux";
 import TableUi from "../atomic-components/TableUi";
 import { fetchUserJobs } from "../actions/userJobs";
 import UserJobFilters from "./UserJobFilters";
+import LoadingIndicator from "../atomic-components/LoadingIndicator";
 
 // todo map the header fields with the data keys
 class UserJobsContainer extends Component {
   static propTypes = {
     fetchUserJobs: PropTypes.func.isRequired,
+    isFetching: PropTypes.bool.isRequired,
     userJobs: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string,
@@ -34,13 +36,12 @@ class UserJobsContainer extends Component {
     fieldsType: ["label", "label", "label", "label", "hyperlink"]
   };
   componentDidMount() {
-    //parameters for search
     this.props.fetchUserJobs();
   }
 
   render() {
     const { tableHeader } = this;
-    const { userJobs } = this.props;
+    const { userJobs, isFetching } = this.props;
     return (
       <div className="container">
         <div className="row">
@@ -49,7 +50,11 @@ class UserJobsContainer extends Component {
             <UserJobFilters />
           </div>
           <div className="col-lg-9">
-            <TableUi tableHeader={tableHeader} tableBody={userJobs} />
+            {isFetching ? (
+              <LoadingIndicator />
+            ) : (
+              <TableUi tableHeader={tableHeader} tableBody={userJobs} />
+            )}
           </div>
         </div>
       </div>
@@ -62,6 +67,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = (state, ownProps) => ({
+  isFetching: state.userJobs.isFetching,
   userJobs: state.userJobs.items
 });
 

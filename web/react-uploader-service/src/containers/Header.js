@@ -7,7 +7,7 @@ const Header = () => {
     <header>
       <AppBar
         title="Data Uploader Service"
-        iconElementRight={<FlatButton label="Home" />}
+        iconElementRight={<FlatButton href="/" label="Create Job" />}
       />
     </header>
   );

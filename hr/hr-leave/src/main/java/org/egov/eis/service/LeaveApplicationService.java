@@ -334,31 +334,36 @@ public class LeaveApplicationService {
 							+ applicationConstants.getErrorMessage(ApplicationConstants.MSG_FROMDATE_CUTOFFDATE) + " ";
 			}
 
-			final Map<String, List<String>> weeklyHolidays = hrConfigurationService
-					.getWeeklyHolidays(leaveApplication.getTenantId(), leaveApplicationRequest.getRequestInfo());
-
-			if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
-					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsWeeklyHolidayKey()).get(0))) {
-				if (isSecondSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
-					isHoliday = true;
-			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
-					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsWeeklyHolidayKey()).get(0))) {
-				if (isSecondOrFourthSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
-					isHoliday = true;
-			}
-
-			if (isSunday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
-				isHoliday = true;
-
-			final List<Holiday> holidays = commonMastersRepository.getHolidayByDateRange(
-					leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(),
-					leaveApplication.getToDate(), leaveApplication.getTenantId());
-
-			if (holidays.size() > 0 || isHoliday)
+			if (!(leaveApplication.getLeaveDays() > 0)) {
 				errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_DATE_HOLIDAY);
+			}
 
 			if (leaveApplication.getCompensatoryForDate() != null
 					&& !leaveApplication.getCompensatoryForDate().equals("") && leaveApplication.getStateId() == null) {
+
+				final Map<String, List<String>> weeklyHolidays = hrConfigurationService
+						.getWeeklyHolidays(leaveApplication.getTenantId(), leaveApplicationRequest.getRequestInfo());
+
+				if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday().equals(weeklyHolidays
+						.get(propertiesManager.getHrMastersServiceConfigurationsWeeklyHolidayKey()).get(0))) {
+					if (isSecondSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
+						isHoliday = true;
+				} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
+						.equals(weeklyHolidays
+								.get(propertiesManager.getHrMastersServiceConfigurationsWeeklyHolidayKey()).get(0))) {
+					if (isSecondOrFourthSaturday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
+						isHoliday = true;
+				}
+
+				if (isSunday(leaveApplication.getFromDate(), leaveApplication.getToDate()))
+					isHoliday = true;
+
+				final List<Holiday> holidays = commonMastersRepository.getHolidayByDateRange(
+						leaveApplicationRequest.getRequestInfo(), leaveApplication.getFromDate(),
+						leaveApplication.getToDate(), leaveApplication.getTenantId());
+
+				if (holidays.size() > 0 || isHoliday)
+					errorMsg = errorMsg + applicationConstants.getErrorMessage(ApplicationConstants.MSG_DATE_HOLIDAY);
 				if (employees.size() > 0) {
 
 					if (employees.get(0).getDateOfAppointment() != null
@@ -452,7 +457,7 @@ public class LeaveApplicationService {
 				&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
 			return true;
 		}
-		
+
 		return secondSaturday > 0 ? true : false;
 	}
 
@@ -467,14 +472,13 @@ public class LeaveApplicationService {
 			int fourthSaturday = 0;
 
 			while (c2.after(c1)) {
-				if ((c1.get(Calendar.WEEK_OF_MONTH) == 4)
-						&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+				if ((c1.get(Calendar.WEEK_OF_MONTH) == 4) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
 					fourthSaturday++;
 				}
 				c1.add(Calendar.DATE, 1);
 
 			}
-			
+
 			if (c1.equals(c2) && (c1.get(Calendar.WEEK_OF_MONTH) == 4)
 					&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
 				return true;
@@ -482,7 +486,7 @@ public class LeaveApplicationService {
 			return fourthSaturday > 0 ? true : false;
 		}
 	}
-	
+
 	public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
 		final LeaveApplicationRequest applicationRequest = new LeaveApplicationRequest();
 		List<LeaveApplication> leaveApplications = new ArrayList<>();

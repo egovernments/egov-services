@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS egw_qualitytesting;
 CREATE TABLE egw_qualitytesting
 (
   id character varying(256),
@@ -13,6 +14,7 @@ CREATE TABLE egw_qualitytesting
   CONSTRAINT qualitycontrol_pkey PRIMARY KEY(id,tenantId)
 );
 
+DROP TABLE IF EXISTS egw_qualitytesting_details;
 CREATE TABLE egw_qualitytesting_details
 (
   id character varying(256),

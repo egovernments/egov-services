@@ -3,7 +3,8 @@ import * as actionTypes from "../constants/actionTypes";
 const initialState = {
   isFetching: false,
   error: false,
-  jobId: null
+  jobId: null,
+  inputFile: null
 };
 const jobCreate = (state = initialState, action) => {
   switch (action.type) {
@@ -13,11 +14,15 @@ const jobCreate = (state = initialState, action) => {
       return {
         ...state,
         jobId: action.jobId,
+        inputFile: null,
         isFetching: false,
         error: false
       };
     case actionTypes.JOB_CREATE_FAILED:
       return { ...state, error: true, isFetching: false };
+    case actionTypes.FILE_SELECTED:
+      return { ...state, inputFile: action.file };
+
     default:
       return state;
   }

@@ -26,10 +26,13 @@ const uploadDefinitions = (state = initialState, action) => {
       const uploadDefinitions = transformUploadDefinitions(
         action.uploadDefinitions
       );
+      const selectedModule = Object.keys(uploadDefinitions)[0];
+      const selectedModuleDefinition = uploadDefinitions[selectedModule][0];
       return {
         ...state,
         items: uploadDefinitions,
-        selectedModule: Object.keys(uploadDefinitions)[0],
+        selectedModule,
+        selectedModuleDefinition,
         isFetching: false,
         error: false
       };
@@ -40,8 +43,7 @@ const uploadDefinitions = (state = initialState, action) => {
     case actionTypes.MODULE_SELECTED:
       return {
         ...state,
-        selectedModule: action.moduleName,
-        selectedModuleDefinition: null
+        selectedModule: action.moduleName
       };
 
     case actionTypes.MOUDULE_DEFINITION_SELECTED:

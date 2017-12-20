@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Table,
   TableBody,
@@ -74,4 +75,14 @@ const TableUi = ({ tableHeader, tableBody, styles }) => {
     </Table>
   );
 };
+
+TableUi.propTypes = {
+  tableHeader: PropTypes.shape({
+    fields: PropTypes.array.isRequired,
+    fieldsType: PropTypes.array.isRequired
+  }).isRequired,
+  tableBody: PropTypes.arrayOf(PropTypes.object).isRequired,
+  styles: PropTypes.object
+};
+
 export default TableUi;

@@ -8,6 +8,7 @@ export const requestInfo = authToken => {
     key: "abcdkey",
     msgId: "20170310130900",
     requesterId: "rajesh",
+    userInfo: { id: "1", userName: "narasappa" },
     authToken
   };
   return RequestInfo;

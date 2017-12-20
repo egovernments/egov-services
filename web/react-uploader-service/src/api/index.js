@@ -6,11 +6,7 @@ import {
   fetchFromLocalStorage
 } from "../utils";
 import * as prepareRequestBody from "./createRequestBody";
-import {
-  uploadDefinitionsResponse,
-  createJobResponse,
-  searchUserJobsReponse
-} from "./apiResponse";
+import { searchUserJobsReponse } from "./apiResponse";
 
 // application/x-www-form-urlencoded
 // Authorization: "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0
@@ -31,7 +27,7 @@ export const Api = () => {
     try {
       const response = await instance.post(endPoint, requestBody);
       const responseStatus = parseInt(response.status);
-      if (responseStatus == 200 || responseStatus == 201) {
+      if (responseStatus === 200 || responseStatus === 201) {
         return response.data;
       } else {
         apiError =
@@ -46,17 +42,15 @@ export const Api = () => {
   };
 
   const fetchUploadDefintions = async () => {
-    const response = uploadDefinitionsResponse();
-    const uploadDefinitionsRequestBody = prepareRequestBody.uploadDefinitionsRequest(
-      authToken
-    );
+    const requestBody = prepareRequestBody.uploadDefinitionsRequest(authToken);
     const endPoint = apiEndpoints.UPLOAD_DEFINITIONS_ENDPOINT;
 
-    return new Promise((resolve, reject) => {
-      setTimeout(function() {
-        resolve(response.ModuleDefs);
-      }, 1000);
-    });
+    try {
+      const response = await httpRequest(endPoint, requestBody);
+      return response.ModuleDefs;
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   // job search request
@@ -67,7 +61,7 @@ export const Api = () => {
     endDate
   ) => {
     const response = searchUserJobsReponse();
-    const jobSearchRequestBody = prepareRequestBody.jobSearchRequest(
+    const requestBody = prepareRequestBody.jobSearchRequest(
       authToken,
       tenantId,
       codes,
@@ -77,7 +71,6 @@ export const Api = () => {
     );
 
     const endPoint = apiEndpoints.SEARCH_USER_JOBS_ENDPOINT;
-    console.log(jobSearchRequestBody);
 
     return new Promise((resolve, reject) => {
       setTimeout(function() {
@@ -88,8 +81,7 @@ export const Api = () => {
 
   // upload job request
   const createJob = async (requestFilePath, moduleName, defName) => {
-    const response = createJobResponse();
-    const createJobRequestBody = prepareRequestBody.jobCreateRequest(
+    const requestBody = prepareRequestBody.jobCreateRequest(
       authToken,
       tenantId,
       requestFilePath,
@@ -97,27 +89,20 @@ export const Api = () => {
       defName
     );
     const endPoint = apiEndpoints.CREATE_JOB_ENDPOINT;
-    // create job request body
-    console.log(createJobRequestBody);
 
-    return new Promise((resolve, reject) => {
-      setTimeout(function() {
-        const uploadJobs = response.UploadJobs;
-        resolve(uploadJobs.length ? uploadJobs[0].code : null);
-      }, 1000);
-    });
+    try {
+      const response = await httpRequest(endPoint, requestBody);
+      const { uploadJobs } = response;
+      const jobId = uploadJobs.length ? uploadJobs[0].code : null;
+      return jobId;
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
-  const uploadFileMock = async (module, file) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(function() {
-        const fileStoreId = "2323424243";
-        resolve(fileStoreId);
-      }, 1000);
-    });
-  };
+  const loginUser = async (username, password) => {};
 
-  // upload file API
+  // try to make a generic api call for this
   const uploadFile = async (module, file) => {
     const requestParams = { tenantId, module, file };
     const requestBody = prepareFormData(requestParams);
@@ -145,8 +130,8 @@ export const Api = () => {
   };
 
   return {
+    loginUser,
     uploadFile,
-    uploadFileMock,
     createJob,
     fetchUserJobs,
     fetchUploadDefintions

@@ -45,13 +45,13 @@ class UploadDefinitionsContainer extends Component {
       <div>
         <DropDown
           options={moduleItems}
-          title="Module Name"
+          label="Module Name"
           selected={selectedModule}
           handleChange={handleModuleDropDownChange}
         />
         <DropDown
           options={moduleDefinitons}
-          title="Module Definition"
+          label="Module Definition"
           selected={selectedModuleDefinition}
           handleChange={handleFileTypeDropDownChange}
         />

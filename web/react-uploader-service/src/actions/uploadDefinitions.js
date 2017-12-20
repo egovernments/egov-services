@@ -13,12 +13,10 @@ export const initiateUploadDefinitionsFetch = () => {
   return { type: actionTypes.INITIATE_UPLOAD_DEFINITIONS_FETCH };
 };
 
-// fetch players success
 export const uploadDefinitionsReceived = (uploadDefinitions = []) => {
   return { type: actionTypes.UPLOAD_DEFINTIONS_RECEIVED, uploadDefinitions };
 };
 
-// fetch players failure
 export const fetchUploadDefinitionsFailed = error => {
   return { type: actionTypes.FETCH_UPLOAD_DEFINITIONS_FAILURE, error };
 };

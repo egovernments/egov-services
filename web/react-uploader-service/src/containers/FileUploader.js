@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { setInputFile } from "../actions/fileUpload";
-import { createJob } from "../actions/createJob";
+import { createJob, setInputFile } from "../actions/createJob";
 import RaisedButton from "material-ui/RaisedButton";
 import Snackbar from "material-ui/Snackbar";
 import UploadDefinitionsContainer from "./UploadDefinitions";
@@ -49,12 +48,19 @@ class FileUploaderContainer extends Component {
     this.props.setInputFile(file);
   };
 
+  // set messageBar close
   componentWillReceiveProps(nextProps) {
     const currentJobId = this.props.jobId;
     const nextJobId = nextProps.jobId;
+    const nextFileInput = nextProps.file;
+
     if (currentJobId == null && nextJobId) {
-      const message = `New Job ${nextJobId} is created`;
+      const message = `Job Code - ${nextJobId}`;
       this.setState({ message });
+    }
+
+    if (nextFileInput !== null) {
+      this.setState({ messageBarOpen: false });
     }
   }
 
@@ -96,7 +102,7 @@ class FileUploaderContainer extends Component {
                   </div>
                   <RaisedButton
                     onClick={handleSubmit}
-                    label="Save"
+                    label="Create"
                     secondary={true}
                     fullWidth={true}
                   />
@@ -131,9 +137,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = (state, ownProps) => ({
-  file: state.fileUpload.inputFile,
   moduleName: state.uploadDefinitions.selectedModule,
   moduleDefinition: state.uploadDefinitions.selectedModuleDefinition,
+  file: state.jobCreate.inputFile,
   isLoading: state.jobCreate.isFetching,
   jobId: state.jobCreate.jobId
 });

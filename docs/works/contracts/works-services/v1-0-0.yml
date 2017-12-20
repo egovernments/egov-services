@@ -48,7 +48,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -65,7 +64,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -82,7 +80,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -109,7 +106,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true

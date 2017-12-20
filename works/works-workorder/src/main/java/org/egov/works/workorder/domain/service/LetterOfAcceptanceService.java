@@ -186,6 +186,7 @@ public class LetterOfAcceptanceService {
             if (loaSheet.getId() == null || loaSheet.getId().isEmpty())
                 loaSheet.setId(commonUtils.getUUID());
             loaSheet.setNumber(estimatesheet.getNumber());
+            loaSheet.setMultiplier(estimatesheet.getMultiplier());
             loaSheet.setLength(estimatesheet.getLength());
             loaSheet.setWidth(estimatesheet.getWidth());
             loaSheet.setDepthOrHeight(estimatesheet.getDepthOrHeight());

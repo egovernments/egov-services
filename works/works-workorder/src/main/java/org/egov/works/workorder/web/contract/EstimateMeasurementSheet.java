@@ -1,21 +1,23 @@
 package org.egov.works.workorder.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object holds the basic data of Estimate Measurement Sheet
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Measurement Sheet")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-18T07:35:40.009Z")
 
 public class EstimateMeasurementSheet {
     @JsonProperty("id")
@@ -35,6 +37,9 @@ public class EstimateMeasurementSheet {
 
     @JsonProperty("number")
     private BigDecimal number = null;
+
+    @JsonProperty("multiplier")
+    private BigDecimal multiplier = null;
 
     @JsonProperty("length")
     private BigDecimal length = null;
@@ -67,11 +72,9 @@ public class EstimateMeasurementSheet {
 
     /**
      * Unique Identifier of the Estimate Measurement Sheet
-     *
      * @return id
      **/
     @ApiModelProperty(value = "Unique Identifier of the Estimate Measurement Sheet")
-
 
     public String getId() {
         return id;
@@ -88,7 +91,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * Tenant id of the Estimate Measurement Sheet
-     *
      * @return tenantId
      **/
     @ApiModelProperty(required = true, value = "Tenant id of the Estimate Measurement Sheet")
@@ -110,11 +112,9 @@ public class EstimateMeasurementSheet {
 
     /**
      * Sl No of the Estimate Measurement sheet
-     *
      * @return slNo
      **/
     @ApiModelProperty(value = "Sl No of the Estimate Measurement sheet")
-
 
     public Integer getSlNo() {
         return slNo;
@@ -131,7 +131,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * Identifier of the Estimate Measurement sheet. A-Addition, D-Deduction.
-     *
      * @return identifier
      **/
     @ApiModelProperty(value = "Identifier of the Estimate Measurement sheet. A-Addition, D-Deduction.")
@@ -152,7 +151,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * remarks of the Measurement sheet
-     *
      * @return remarks
      **/
     @ApiModelProperty(value = "remarks of the Measurement sheet")
@@ -174,7 +172,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * No. of the Estimate Measurement sheet
-     *
      * @return number
      **/
     @ApiModelProperty(value = "No. of the Estimate Measurement sheet")
@@ -189,6 +186,27 @@ public class EstimateMeasurementSheet {
         this.number = number;
     }
 
+    public EstimateMeasurementSheet multiplier(BigDecimal multiplier) {
+        this.multiplier = multiplier;
+        return this;
+    }
+
+    /**
+     * Multiplication factor for the number. If the multiplier is entered then number will be multiplied to number.
+     * @return multiplier
+     **/
+    @ApiModelProperty(value = "Multiplication factor for the number. If the unit is entered then number will be multiplied to number.")
+
+    @Valid
+
+    public BigDecimal getMultiplier() {
+        return multiplier;
+    }
+
+    public void setMultiplier(BigDecimal multiplier) {
+        this.multiplier = multiplier;
+    }
+
     public EstimateMeasurementSheet length(BigDecimal length) {
         this.length = length;
         return this;
@@ -196,7 +214,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * length of the Estimate Measurement sheet
-     *
      * @return length
      **/
     @ApiModelProperty(value = "length of the Estimate Measurement sheet")
@@ -218,7 +235,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * Width of the Estimate Measurement sheet
-     *
      * @return width
      **/
     @ApiModelProperty(value = "Width of the Estimate Measurement sheet")
@@ -240,7 +256,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * Depth Or Height of the Estimate Measurement sheet
-     *
      * @return depthOrHeight
      **/
     @ApiModelProperty(value = "Depth Or Height of the Estimate Measurement sheet")
@@ -262,7 +277,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * Quantity of the Estimate Measurement sheet
-     *
      * @return quantity
      **/
     @ApiModelProperty(required = true, value = "Quantity of the Estimate Measurement sheet")
@@ -285,12 +299,10 @@ public class EstimateMeasurementSheet {
 
     /**
      * Estimate Activity reference for the Estimate Measurement sheet
-     *
      * @return estimateActivity
      **/
     @ApiModelProperty(required = true, value = "Estimate Activity reference for the Estimate Measurement sheet")
     @NotNull
-
 
     public String getEstimateActivity() {
         return estimateActivity;
@@ -307,11 +319,9 @@ public class EstimateMeasurementSheet {
 
     /**
      * Parent Estimate Measurement sheet reference for change in quantity of Revision Estimate
-     *
      * @return parent
      **/
     @ApiModelProperty(value = "Parent Estimate Measurement sheet reference for change in quantity of Revision Estimate")
-
 
     public String getParent() {
         return parent;
@@ -328,11 +338,9 @@ public class EstimateMeasurementSheet {
 
     /**
      * Boolean value to identify whether the object is deleted or not from UI.
-     *
      * @return deleted
      **/
     @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
-
 
     public Boolean getDeleted() {
         return deleted;
@@ -349,7 +357,6 @@ public class EstimateMeasurementSheet {
 
     /**
      * Get auditDetails
-     *
      * @return auditDetails
      **/
     @ApiModelProperty(value = "")
@@ -364,9 +371,8 @@ public class EstimateMeasurementSheet {
         this.auditDetails = auditDetails;
     }
 
-
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -380,6 +386,7 @@ public class EstimateMeasurementSheet {
                 Objects.equals(this.identifier, estimateMeasurementSheet.identifier) &&
                 Objects.equals(this.remarks, estimateMeasurementSheet.remarks) &&
                 Objects.equals(this.number, estimateMeasurementSheet.number) &&
+                Objects.equals(this.multiplier, estimateMeasurementSheet.multiplier) &&
                 Objects.equals(this.length, estimateMeasurementSheet.length) &&
                 Objects.equals(this.width, estimateMeasurementSheet.width) &&
                 Objects.equals(this.depthOrHeight, estimateMeasurementSheet.depthOrHeight) &&
@@ -392,7 +399,8 @@ public class EstimateMeasurementSheet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, slNo, identifier, remarks, number, length, width, depthOrHeight, quantity, estimateActivity, parent, deleted, auditDetails);
+        return Objects.hash(id, tenantId, slNo, identifier, remarks, number, multiplier, length, width, depthOrHeight, quantity,
+                estimateActivity, parent, deleted, auditDetails);
     }
 
     @Override
@@ -406,6 +414,7 @@ public class EstimateMeasurementSheet {
         sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
         sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
         sb.append("    number: ").append(toIndentedString(number)).append("\n");
+        sb.append("    multiplier: ").append(toIndentedString(multiplier)).append("\n");
         sb.append("    length: ").append(toIndentedString(length)).append("\n");
         sb.append("    width: ").append(toIndentedString(width)).append("\n");
         sb.append("    depthOrHeight: ").append(toIndentedString(depthOrHeight)).append("\n");
@@ -419,14 +428,12 @@ public class EstimateMeasurementSheet {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
 }
-

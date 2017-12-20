@@ -143,7 +143,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -160,7 +159,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -177,7 +175,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -194,7 +191,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -211,7 +207,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -514,7 +509,7 @@ definitions:
         minLength: 2
       mbRefNo:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Reference number for the Measurement book. 
         maxLength: 50
         minLength: 1
@@ -816,7 +811,7 @@ definitions:
         billSequenceNumber:
           type: string
           description: Bill sequence number of the Bill
-          pattern: '[a-zA-Z0-9-\\]+'
+          pattern: '[a-zA-Z0-9-/]+'
           maxLength: 50
         approvedDate:
           type: integer

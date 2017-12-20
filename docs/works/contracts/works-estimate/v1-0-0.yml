@@ -144,7 +144,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -161,7 +160,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -178,7 +176,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -338,7 +335,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -492,7 +488,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -568,7 +563,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -585,7 +579,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -646,7 +639,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -767,7 +759,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -793,7 +784,6 @@ paths:
           type: array
           items:
             type: string
-          format: autoComplete
           maxItems: 50
           required: false
           allowEmptyValue: true
@@ -1518,7 +1508,7 @@ definitions:
         format: singleValueList
       councilResolutionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Council resolution number of the Detailed Estimate
         maxLength: 50
       councilResolutionDate:

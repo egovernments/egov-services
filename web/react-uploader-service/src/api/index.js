@@ -3,7 +3,8 @@ import * as apiEndpoints from "../constants/ApiEndpoints";
 import {
   prepareFormData,
   getRequestUrl,
-  fetchFromLocalStorage
+  fetchFromLocalStorage,
+  persistInLocalStorage
 } from "../utils";
 import * as prepareRequestBody from "./createRequestBody";
 import { searchUserJobsReponse } from "./apiResponse";
@@ -100,16 +101,42 @@ export const Api = () => {
     }
   };
 
-  const loginUser = async (username, password) => {};
+  const loginUser = async (username, password) => {
+    const grant_type = "password";
+    const scope = "read";
+    const requestParams = { tenantId, username, password, scope, grant_type };
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+    };
+    const endPoint = getRequestUrl(
+      apiEndpoints.USER_LOGIN_ENDPOINT,
+      requestParams
+    );
+    const response = await axios.post(endPoint, {}, { headers });
+    const responseObj = {};
+    responseObj["token"] = response.data.access_token;
+    responseObj["userRequest"] = JSON.stringify(response.data.UserRequest);
+    responseObj["type"] = response.data.UserRequest.type;
+    responseObj["id"] = response.data.UserRequest.id;
+    responseObj["tenantId"] = response.data.UserRequest.tenantId;
+    responseObj["refresh-token"] = response.data.refresh_token;
+    responseObj["expires-in"] = response.data.expires_in;
+
+    // persist the results in local storage
+    persistInLocalStorage(responseObj);
+    return response;
+  };
 
   // try to make a generic api call for this
   const uploadFile = async (module, file) => {
     const requestParams = { tenantId, module, file };
     const requestBody = prepareFormData(requestParams);
-    const endPoint = apiEndpoints.FILE_UPLOAD_ENDPOINT;
+    const endPoint = getRequestUrl(apiEndpoints.FILE_UPLOAD_ENDPOINT, {
+      tenantId
+    });
 
-    const url = "/filestore/v1/files?tenantId=default";
-    const response = await axios.post(url, requestBody, {
+    const response = await axios.post(endPoint, requestBody, {
       headers: {
         "Content-Type": "multipart/form-data"
       }

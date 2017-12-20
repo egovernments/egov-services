@@ -7,7 +7,7 @@ export const slugify = term => {
 export const persistInLocalStorage = obj => {
   Object.keys(obj).forEach(objKey => {
     const objValue = obj[objKey];
-    window.localStorage.setItem(objValue);
+    window.localStorage.setItem(objKey, objValue);
   }, this);
 };
 

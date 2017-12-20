@@ -7,10 +7,6 @@ import {
   persistInLocalStorage
 } from "../utils";
 import * as prepareRequestBody from "./createRequestBody";
-import { searchUserJobsReponse } from "./apiResponse";
-
-// application/x-www-form-urlencoded
-// Authorization: "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0
 
 export const Api = () => {
   const instance = axios.create({
@@ -61,7 +57,6 @@ export const Api = () => {
     startDate,
     endDate
   ) => {
-    const response = searchUserJobsReponse();
     const requestBody = prepareRequestBody.jobSearchRequest(
       authToken,
       tenantId,
@@ -72,12 +67,12 @@ export const Api = () => {
     );
 
     const endPoint = apiEndpoints.SEARCH_USER_JOBS_ENDPOINT;
-
-    return new Promise((resolve, reject) => {
-      setTimeout(function() {
-        resolve(response.UploadJobs);
-      }, 1000);
-    });
+    try {
+      const response = await httpRequest(endPoint, requestBody);
+      return response.uploadJobs;
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   // upload job request

@@ -35,6 +35,7 @@ class UserJobsContainer extends Component {
     ],
     fieldsType: ["label", "label", "label", "label", "hyperlink"]
   };
+
   componentDidMount() {
     this.props.fetchUserJobs();
   }

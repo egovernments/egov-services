@@ -45,12 +45,13 @@ export const jobSearchRequest = (
 ) => {
   const RequestInfo = requestInfo(authToken);
   const JobSearchRequest = {
+    tenantId,
     codes,
     statuses,
     startDate,
     endDate
   };
-  return { RequestInfo, JobSearchRequest };
+  return { RequestInfo, tenantId, codes, statuses, startDate, endDate };
 };
 
 export const uploadDefinitionsRequest = authToken => {

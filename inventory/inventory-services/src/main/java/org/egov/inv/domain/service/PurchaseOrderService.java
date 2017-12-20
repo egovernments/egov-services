@@ -469,6 +469,26 @@ public class PurchaseOrderService extends DomainService {
                     }
                 }
                 
+                //Allow only material which are part of the indent only for creating PO
+                if(eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
+            	for(PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
+            		boolean materialPresent = false;
+                    IndentSearch is1 = IndentSearch.builder().ids(new ArrayList<String>(Arrays.asList(poDetail.getIndentNumber()))).tenantId(tenantId).build();
+                    IndentResponse isr1 = indentService.search(is1, new RequestInfo());
+                    
+                    for(Indent ind : isr1.getIndents()) {
+                    	for(IndentDetail indDetail : ind.getIndentDetails()) {
+                    		if(indDetail.getMaterial().getCode().equals(poDetail.getMaterial().getCode())) {
+                    			materialPresent = true;
+                    		}
+                    	}
+                    }
+                    
+                    if(!materialPresent) {
+                    	errors.addDataError(ErrorCode.MATERIAL_NOT_PART_OF_INDENT.getCode(), poDetail.getMaterial().getCode() + poDetail.getIndentNumber());
+            		}
+            	}
+                
                 //Supplier reference validation
                 if (null != eachPurchaseOrder.getSupplier() && !isEmpty(eachPurchaseOrder.getSupplier().getCode())) {
                     SupplierGetRequest supplierGetRequest = new SupplierGetRequest();

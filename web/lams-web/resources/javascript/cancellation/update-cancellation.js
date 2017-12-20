@@ -553,144 +553,144 @@ class UpdateCancellation extends React.Component {
                     if (window.opener)
                         window.opener.location.reload();
 
-                        this.printNotice(response["responseJSON"].Notices[0]);
+                    this.printNotice(response["responseJSON"].Notices[0]);
                     // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
                 } else {
                     console.log("Something went wrong.");
                 }
 
+            }
+
+
+            if (agreement.documents && agreement.documents.constructor == FileList) {
+                let counter = agreement.documents.length,
+                    breakout = 0,
+                    docs = [];
+                for (let i = 0, len = agreement.documents.length; i < len; i++) {
+                    this.makeAjaxUpload(agreement.documents[i], function (err, res) {
+                        if (breakout == 1) {
+                            console.log("breakout", breakout);
+                            return;
+                        } else if (err) {
+                            showError("Error uploding the files. Please contact Administrator");
+                            breakout = 1;
+                        } else {
+                            counter--;
+                            docs.push({ fileStore: res.files[0].fileStoreId });
+                            console.log("docs", docs);
+                            if (counter == 0 && breakout == 0) {
+                                agreement.documents = docs;
+
+                                var body = {
+                                    "RequestInfo": requestInfo,
+                                    "Agreement": agreement
+                                };
+
+                                $.ajax({
+                                    url: baseUrl + "/lams-services/agreements/cancel/_update?tenantId=" + tenantId,
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: JSON.stringify(body),
+                                    contentType: 'application/json',
+                                    headers: {
+                                        'auth-token': authToken
+                                    },
+                                    success: function (res) {
+
+                                        $.ajax({
+                                            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                                            type: 'POST',
+                                            dataType: 'json',
+                                            contentType: 'application/json',
+                                            headers: {
+                                                'auth-token': authToken
+                                            },
+                                            success: function (res1) {
+                                                if (window.opener)
+                                                    window.opener.location.reload();
+                                                if (res1 && res1.Employee && res1.Employee[0].name)
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                else
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+
+                                            },
+                                            error: function (err) {
+                                                if (window.opener)
+                                                    window.opener.location.reload();
+                                                window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                            }
+                                        })
+
+                                    },
+                                    error: function (err) {
+                                        if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
+                                            showError(err.responseJSON.Error.message);
+                                        else
+                                            showError("Something went wrong. Please contact Administrator");
+                                    }
+
+                                })
+
+                            }
+                        }
+                    })
+                }
+                // if (breakout == 1)
+                //     return;
             } else {
 
+                var body = {
+                    "RequestInfo": requestInfo,
+                    "Agreement": agreement
+                };
 
-                if (agreement.documents && agreement.documents.constructor == FileList) {
-                    let counter = agreement.documents.length,
-                        breakout = 0,
-                        docs = [];
-                    for (let i = 0, len = agreement.documents.length; i < len; i++) {
-                        this.makeAjaxUpload(agreement.documents[i], function (err, res) {
-                            if (breakout == 1) {
-                                console.log("breakout", breakout);
-                                return;
-                            } else if (err) {
-                                showError("Error uploding the files. Please contact Administrator");
-                                breakout = 1;
-                            } else {
-                                counter--;
-                                docs.push({ fileStore: res.files[0].fileStoreId });
-                                console.log("docs", docs);
-                                if (counter == 0 && breakout == 0) {
-                                    agreement.documents = docs;
+                $.ajax({
+                    url: baseUrl + "/lams-services/agreements/cancel/_update?tenantId=" + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(body),
+                    contentType: 'application/json',
+                    headers: {
+                        'auth-token': authToken
+                    },
+                    success: function (res) {
 
-                                    var body = {
-                                        "RequestInfo": requestInfo,
-                                        "Agreement": agreement
-                                    };
+                        $.ajax({
+                            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                            type: 'POST',
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            headers: {
+                                'auth-token': authToken
+                            },
+                            success: function (res1) {
+                                if (window.opener)
+                                    window.opener.location.reload();
+                                if (res1 && res1.Employee && res1.Employee[0].name)
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                else
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
-                                    $.ajax({
-                                        url: baseUrl + "/lams-services/agreements/cancel/_update?tenantId=" + tenantId,
-                                        type: 'POST',
-                                        dataType: 'json',
-                                        data: JSON.stringify(body),
-                                        contentType: 'application/json',
-                                        headers: {
-                                            'auth-token': authToken
-                                        },
-                                        success: function (res) {
-
-                                            $.ajax({
-                                                url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
-                                                type: 'POST',
-                                                dataType: 'json',
-                                                contentType: 'application/json',
-                                                headers: {
-                                                    'auth-token': authToken
-                                                },
-                                                success: function (res1) {
-                                                    if (window.opener)
-                                                        window.opener.location.reload();
-                                                    if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                                    else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-
-                                                },
-                                                error: function (err) {
-                                                    if (window.opener)
-                                                        window.opener.location.reload();
-                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                                }
-                                            })
-
-                                        },
-                                        error: function (err) {
-                                            if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
-                                                showError(err.responseJSON.Error.message);
-                                            else
-                                                showError("Something went wrong. Please contact Administrator");
-                                        }
-
-                                    })
-
-                                }
+                            },
+                            error: function (err) {
+                                if (window.opener)
+                                    window.opener.location.reload();
+                                window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                             }
                         })
+
+                    },
+                    error: function (err) {
+                        if (err.responseJSON.Error && err.responseJSON.Error.message)
+                            showError(err.responseJSON.Error.message);
+                        else
+                            showError("Something went wrong. Please contact Administrator");
                     }
-                    // if (breakout == 1)
-                    //     return;
-                } else {
 
-                    var body = {
-                        "RequestInfo": requestInfo,
-                        "Agreement": agreement
-                    };
+                })
 
-                    $.ajax({
-                        url: baseUrl + "/lams-services/agreements/cancel/_update?tenantId=" + tenantId,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: JSON.stringify(body),
-                        contentType: 'application/json',
-                        headers: {
-                            'auth-token': authToken
-                        },
-                        success: function (res) {
-
-                            $.ajax({
-                                url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
-                                type: 'POST',
-                                dataType: 'json',
-                                contentType: 'application/json',
-                                headers: {
-                                    'auth-token': authToken
-                                },
-                                success: function (res1) {
-                                    if (window.opener)
-                                        window.opener.location.reload();
-                                    if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                    else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-
-                                },
-                                error: function (err) {
-                                    if (window.opener)
-                                        window.opener.location.reload();
-                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
-                                }
-                            })
-
-                        },
-                        error: function (err) {
-                            if (err.responseJSON.Error && err.responseJSON.Error.message)
-                                showError(err.responseJSON.Error.message);
-                            else
-                                showError("Something went wrong. Please contact Administrator");
-                        }
-
-                    })
-
-                }
             }
+
 
         } else {
             showError("Please fill all required feilds");

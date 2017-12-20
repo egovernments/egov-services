@@ -24,7 +24,7 @@ const DropDownUi = ({ label, options = [], name, selected, handleChange }) => {
 DropDownUi.propTypes = {
   label: PropTypes.string,
   handleChange: PropTypes.func,
-  selected: PropTypes.bool,
+  selected: PropTypes.string,
   options: PropTypes.array.isRequired
 };
 

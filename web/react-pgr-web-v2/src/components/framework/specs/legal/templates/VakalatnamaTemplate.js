@@ -258,7 +258,7 @@ export default class VakalatnamaTemplate extends Component {
                   { text: ', ' },
                   { text: year, alignment: 'left' },
                 ],
-                margin: [20, 60, 5, 20],
+                margin: [20, 20, 5, 20],
               },
               {
                 text: [{ text: 'Witness  ' }],

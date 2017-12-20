@@ -40,8 +40,6 @@ public class VehicleMaintenance {
     private String maintenanceUom = null;
 
     @NotNull
-    @Min(1)
-    @Max(50000)
     @JsonProperty("maintenanceAfter")
     private Long maintenanceAfter = null;
 
@@ -51,10 +49,8 @@ public class VehicleMaintenance {
     private String downtimeforMaintenanceUom = null;
 
     @NotNull
-    @Min(1)
-    @Max(720)
     @JsonProperty("downtimeforMaintenance")
-    private Long downtimeforMaintenance = null;
+    private Double downtimeforMaintenance = null;
 
     @Valid
     @JsonProperty("auditDetails")

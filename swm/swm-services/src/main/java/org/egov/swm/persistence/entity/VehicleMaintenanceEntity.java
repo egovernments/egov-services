@@ -29,7 +29,7 @@ public class VehicleMaintenanceEntity {
 
     private String downtimeforMaintenanceUom = null;
 
-    private Long downtimeforMaintenance = null;
+    private Double downtimeforMaintenance = null;
 
     private String createdBy = null;
 

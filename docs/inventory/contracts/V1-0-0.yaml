@@ -1624,6 +1624,11 @@ paths:
             in: query
             description: |
               contact no2 of the Store
+          - name: officeLocation
+            type: string
+            in: query
+            description: |
+              office location of the Store
           - name: email
             type: string
             in: query
@@ -1699,6 +1704,30 @@ paths:
             description: Store updated Successfully
             schema:
               $ref: '#/definitions/StoreResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /stores/_transactionused:
+      post:
+        summary: Check whether store is used in transaction
+        description: Check whether store is used in transaction
+        tags:
+          - Store
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: code
+            type: string
+            in: query
+            description: |
+              code of the Store
+        responses:
+          200:
+            description: Transaction used response received.
+            schema:
+              $ref: '#/definitions/TransactionUsedResponse'
           400:
             description: Invalid Input
             schema:
@@ -2346,6 +2375,31 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /suppliers/_transactionused:
+      post:
+        summary: Check whether supplier is used in transaction
+        description: Check whether supplier is used in transaction
+        tags:
+          - Supplier
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: code
+            type: string
+            in: query
+            description: |
+              code of the supplier
+        responses:
+          200:
+            description: Transaction used response received.
+            schema:
+              $ref: '#/definitions/TransactionUsedResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
 
     /pricelists/_search:
       post:
@@ -4267,6 +4321,16 @@ definitions:
             $ref: '#/definitions/Store'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
+
+    TransactionUsedResponse:
+      description: Contract class to check whether object used in transaction .
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        transactionUsed:
+          description: Used to check whether object used in transaction .
+          type:  boolean
+
 
     Supplier:
       type: object

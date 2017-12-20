@@ -153,6 +153,12 @@ public class StoreJdbcRepository extends JdbcRepository {
             paramValues.put("contactno1", storeGetRequest.getContactNo1());
         }
 
+        if (storeGetRequest.getOfficelocation() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("officelocation = :officelocation");
+            paramValues.put("officelocation", storeGetRequest.getOfficelocation());
+        }
         if (storeGetRequest.getContactNo2() != null) {
             if (params.length() > 0)
                 params.append(" and ");

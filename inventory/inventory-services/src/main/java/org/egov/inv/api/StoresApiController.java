@@ -97,6 +97,7 @@ public class StoresApiController implements StoresApi {
             @ApiParam(value = "delivery address of the Store ") @Valid @RequestParam(value = "deliveryAddress", required = false) String deliveryAddress,
             @ApiParam(value = "contact no1 of the Store ") @Valid @RequestParam(value = "contactNo1", required = false) String contactNo1,
             @ApiParam(value = "contact no2 of the Store ") @Valid @RequestParam(value = "contactNo2", required = false) String contactNo2,
+            @ApiParam(value = "contact no2 of the Store ") @Valid @RequestParam(value = "officelocation", required = false) String officelocation,
             @ApiParam(value = "email of the Store ") @Valid @RequestParam(value = "email", required = false) String email,
             @ApiParam(value = "store in charge of the Store ") @Valid @RequestParam(value = "storeInCharge", required = false) String storeInCharge,
             @ApiParam(value = "is central store of the Store ") @Valid @RequestParam(value = "isCentralStore", required = false) Boolean isCentralStore,
@@ -108,7 +109,7 @@ public class StoresApiController implements StoresApi {
             throws Exception {
 
         StoreGetRequest storeGetRequest = new StoreGetRequest(ids,
-                codes, name, searchPurpose, description, department, contactNo1, billingAddress, deliveryAddress, contactNo2, email, isCentralStore,
+                codes, name, searchPurpose, description, department, contactNo1, officelocation ,billingAddress, deliveryAddress, contactNo2, email, isCentralStore,
                 storeInCharge, active, sortBy, pageSize, offset, tenantId);
         StoreResponse response = storesService.search(storeGetRequest);
 

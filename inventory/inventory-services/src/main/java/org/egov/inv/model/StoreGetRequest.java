@@ -1,14 +1,9 @@
 package org.egov.inv.model;
 
-import java.util.List;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,11 +25,13 @@ public class StoreGetRequest {
     private String department;
 
     private String contactNo1;
-    
+
+    private String officelocation;
+
     private String billingAddress;
-    
+
     private String deliveryAddress;
-    
+
     private String contactNo2;
 
     private String email;

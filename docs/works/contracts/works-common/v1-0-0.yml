@@ -546,7 +546,7 @@ definitions:
         maxLength: 100
         format: autoComplete
       ifscCode:
-        type: number
+        type: string
         description: IFSC Code of the Bank Account for the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.
         pattern: '[a-zA-Z0-9]+'
         maxLength: 20

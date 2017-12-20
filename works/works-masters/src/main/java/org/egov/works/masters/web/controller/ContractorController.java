@@ -33,13 +33,13 @@ public class ContractorController {
     private ContractorService contractorService;
     
     @PostMapping("/_create")
-    public ResponseEntity<?> create(@Valid @RequestBody ContractorRequest contractorRequest, @RequestParam String tenantId) {
-        return contractorService.create(contractorRequest, tenantId);
+    public ResponseEntity<?> create(@Valid @RequestBody ContractorRequest contractorRequest) {
+        return contractorService.create(contractorRequest);
     }
     
     @PostMapping("/_update")
-    public ResponseEntity<?> update(@Valid @RequestBody ContractorRequest contractorRequest, @RequestParam String tenantId) {
-        return contractorService.update(contractorRequest, tenantId);
+    public ResponseEntity<?> update(@Valid @RequestBody ContractorRequest contractorRequest) {
+        return contractorService.update(contractorRequest);
     }
     
     @PostMapping("/_search")

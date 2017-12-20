@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the Contractor Agency/Firm Information
  */
 @ApiModel(description = "An Object that holds the Contractor Agency/Firm Information")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-19T07:03:25.843Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T13:34:33.811Z")
 
 public class Contractor   {
   @JsonProperty("id")
@@ -81,7 +81,7 @@ public class Contractor   {
   private ChartOfAccount accountCode = null;
 
   @JsonProperty("ifscCode")
-  private BigDecimal ifscCode = null;
+  private String ifscCode = null;
 
   @JsonProperty("contractorClass")
   private ContractorClass contractorClass = null;
@@ -510,7 +510,7 @@ public class Contractor   {
     this.accountCode = accountCode;
   }
 
-  public Contractor ifscCode(BigDecimal ifscCode) {
+  public Contractor ifscCode(String ifscCode) {
     this.ifscCode = ifscCode;
     return this;
   }
@@ -521,13 +521,12 @@ public class Contractor   {
   **/
   @ApiModelProperty(value = "IFSC Code of the Bank Account for the Contractor Agency/Firm. If Financial integration is true at state/ULB level configuation then ifscCode is mandatory else its optional.")
 
-  @Valid
-
-  public BigDecimal getIfscCode() {
+ @Pattern(regexp="[a-zA-Z0-9]+") @Size(max=20)
+  public String getIfscCode() {
     return ifscCode;
   }
 
-  public void setIfscCode(BigDecimal ifscCode) {
+  public void setIfscCode(String ifscCode) {
     this.ifscCode = ifscCode;
   }
 
@@ -725,4 +724,3 @@ public class Contractor   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

@@ -37,9 +37,9 @@ public class ContractorService {
     private ContractorRepository contractorRepository;
     
     @Transactional
-    public ResponseEntity<?> create(ContractorRequest contractorRequest, String tenantId) {
+    public ResponseEntity<?> create(ContractorRequest contractorRequest) {
         ContractorResponse response = new ContractorResponse();
-        contractorValidator.validateContractor(contractorRequest,tenantId, true);
+        contractorValidator.validateContractor(contractorRequest, true);
         CommonUtils commonUtils = new CommonUtils();
         for(final Contractor contractor : contractorRequest.getContractors()){
             contractor.setId(commonUtils.getUUID());
@@ -56,9 +56,9 @@ public class ContractorService {
     }
     
     @Transactional
-    public ResponseEntity<?> update(ContractorRequest contractorRequest, String tenantId) {
+    public ResponseEntity<?> update(ContractorRequest contractorRequest) {
         ContractorResponse response = new ContractorResponse();
-        contractorValidator.validateContractor(contractorRequest,tenantId, false);
+        contractorValidator.validateContractor(contractorRequest, false);
         for(final Contractor contractor : contractorRequest.getContractors()){
             contractor.setAuditDetails(masterUtils.getAuditDetails(contractorRequest.getRequestInfo(), true));
         }

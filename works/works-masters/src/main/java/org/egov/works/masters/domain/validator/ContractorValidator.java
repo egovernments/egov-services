@@ -29,27 +29,28 @@ public class ContractorValidator {
     @Autowired
     private ContractorRepository contractorRepository;
 
-    public void validateContractor(ContractorRequest contractorRequest, String tenantId, Boolean isNew) {
+    public void validateContractor(ContractorRequest contractorRequest, Boolean isNew) {
         JSONArray mdmsResponse = null;
         Map<String, String> messages = new HashMap<>();
         Boolean isDataValid = Boolean.FALSE;
         Boolean financialIntegrationReq = Boolean.FALSE;
         Contractor dbContractorObj = null;
 
-        mdmsResponse = mdmsRepository.getByCriteria(tenantId, CommonConstants.MODULENAME_WORKS,
-                CommonConstants.APPCONFIGURATION_MDMS_OBJECT, CommonConstants.CODE,
-                CommonConstants.FINANCIAL_INTEGRATION_REQUIRED_APPCONFIG, contractorRequest.getRequestInfo());
-        if (mdmsResponse != null && !mdmsResponse.isEmpty()) {
-            Map<String, Object> jsonMap = (Map<String, Object>) mdmsResponse.get(0);
-            if (jsonMap.get("value") != null && jsonMap.get("value").toString().equalsIgnoreCase("Yes"))
-                financialIntegrationReq = Boolean.TRUE;
-        }
-
         for (final Contractor contractor : contractorRequest.getContractors()) {
+            
+            mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
+                    CommonConstants.APPCONFIGURATION_MDMS_OBJECT, CommonConstants.CODE,
+                    CommonConstants.FINANCIAL_INTEGRATION_REQUIRED_APPCONFIG, contractorRequest.getRequestInfo());
+            if (mdmsResponse != null && !mdmsResponse.isEmpty()) {
+                Map<String, Object> jsonMap = (Map<String, Object>) mdmsResponse.get(0);
+                if (jsonMap.get("value") != null && jsonMap.get("value").toString().equalsIgnoreCase("Yes"))
+                    financialIntegrationReq = Boolean.TRUE;
+            }
+            
             if (!StringUtils.isBlank(contractor.getCode())) {
                 // In case of create, Validate for code uniqueness.
                 if (isNew) {
-                    dbContractorObj = contractorRepository.getByCode(contractor.getCode(), tenantId);
+                    dbContractorObj = contractorRepository.getByCode(contractor.getCode(), contractor.getTenantId());
                     if (dbContractorObj != null) {
                         messages.put(Constants.KEY_CONTRACTOR_CODE_INVALID, Constants.MESSAGE_CONTRACTOR_CODE_INVALID);
                         isDataValid = Boolean.TRUE;
@@ -57,7 +58,7 @@ public class ContractorValidator {
                 }
                 // In case of update, do not allow to modify code
                 if (!isNew) {
-                    dbContractorObj = contractorRepository.findByID(contractor.getId(), tenantId);
+                    dbContractorObj = contractorRepository.findByID(contractor.getId(), contractor.getTenantId());
                     if (dbContractorObj != null) {
                         if (!dbContractorObj.getCode().equalsIgnoreCase(contractor.getCode())) {
                             messages.put(Constants.KEY_CONTRACTOR_CODE_MODIFY,

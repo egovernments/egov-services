@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Renewal {
 
-	@JsonProperty("renewalOrderNo")
-	private String renewalOrderNo;
+	@JsonProperty("renewalOrderNumber")
+	private String renewalOrderNumber;
 
 	@JsonFormat(pattern="dd/MM/yyyy")
 	@JsonProperty("renewalOrderDate")
 	private Date renewalOrderDate;
 
 	@JsonProperty("reasonForRenewal")
-	private Date reasonForRenewal;
+	private String reasonForRenewal;
 }

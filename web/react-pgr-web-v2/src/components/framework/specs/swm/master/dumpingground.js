@@ -17,23 +17,20 @@ var dat = {
               type: 'text',
               isDisabled: false,
               defaultValue: '',
-              maxLength: 12,
-              minLength: 6,
               patternErrorMsg: '',
-              url: '',
+              url: ''
             },
-
             {
-                name: 'DumpingGroundULB',
-                jsonPath: 'ulbs',
-                label: 'swm.DumpingGround.create.ulbs',
-                pattern: '',
-                type: 'MultiValueList',
-                isDisabled: false,
-                defaultValue: '',
-                patternErrorMsg: '',
-                url: '',
-              },
+              name: 'DumpingGroundULB',
+              jsonPath: 'ulbs',
+              label: 'swm.DumpingGround.create.ulbs',
+              pattern: '',
+              type: 'text',
+              isDisabled: false,
+              defaultValue: '',
+              patternErrorMsg: '',
+              url: ''
+            }
           ],
         },
       ],
@@ -50,9 +47,10 @@ var dat = {
           'name',
           'ulbs',
         ],
-        resultPath: 'DumpingGround',
-        rowClickUrlUpdate: '/update/swm/dumpingground/{name}',
-        rowClickUrlView: '/view/swm/dumpingground/{name}',
+        resultPath: 'MdmsRes.swm.DumpingGround',
+        rowClickUrlUpdate: '/update/swm/dumpingground/{code}',
+        rowClickUrlView: '/view/swm/dumpingground/{code}',
+        isMasterScreen: true
       },
     },
     'swm.create': {
@@ -557,7 +555,6 @@ var dat = {
       numCols: 3,
       useTimestamp: true,
       objectName: 'dumpingground',
-      searchUrl: 'swm-services/dumpingground/_search?code={code}',
       groups: [
         {
           name: 'ULBs',
@@ -878,13 +875,12 @@ var dat = {
         }
       ],
       tenantIdRequired: true,
-      url: '/swm-services/dumpingground/_search?code={code}',
+      url: '/egov-mdms-service/v1/_search?code={code}',
     },
     'swm.update': {
       numCols: 3,
       useTimestamp: true,
-      objectName: 'dumpingground',
-      searchUrl: 'swm-services/dumpingground/_search?code={code}',
+      objectName: 'DumpingGround',
       idJsonPath: 'MasterMetaData.masterData[0].code',
       groups: [
         
@@ -1377,7 +1373,7 @@ var dat = {
       ],
       url: '/egov-mdms-create/v1/_update',
       tenantIdRequired: true,
-      searchUrl: '/swm-services/dumpingground/_search?code={code}',
+      searchUrl: '/egov-mdms-service/v1/_search?code={code}',
     },
   };
   export default dat;

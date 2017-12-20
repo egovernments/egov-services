@@ -159,7 +159,8 @@ class LeaveReport extends React.Component {
       try {
         flag = 1;
         commonApiPost("hr-leave", "leaveapplications", "_leavereport", { ...this.state.searchSet,
-          tenantId
+          tenantId,
+          pageSize: 500 
         }, function(err, res) {
 
           if (res && res.LeaveApplication) {

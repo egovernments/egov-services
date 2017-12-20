@@ -666,6 +666,28 @@ public abstract class JdbcRepository {
 
     }
 
+	public Object findByCode(Object entity, String entityName) {
+		List<String> list = new ArrayList();
+		list.add("code");
+		list.add("tenantId");
+
+		Map<String, Object> paramValues = new HashMap<>();
+
+		for (String s : list) {
+			paramValues.put(s, getValue(getField(entity, s), entity));
+		}
+
+		List<Object> indents = namedParameterJdbcTemplate.query(
+				"select * from " + entityName + " where code=:code and tenantid=:tenantId ", paramValues,
+				new BeanPropertyRowMapper(entity.getClass()));
+		if (indents.isEmpty()) {
+			return null;
+		} else {
+			return indents.get(0);
+		}
+
+	}
+
     @Transactional
     public int changeStatus(Object ob, String status, String tableName, String columnName) {
         StringBuilder updateQuery = new StringBuilder();

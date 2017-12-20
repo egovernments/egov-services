@@ -328,7 +328,7 @@ public class PriceListService extends DomainService {
 				
 				if (null != pl.getSupplier() && !isEmpty(pl.getSupplier().getCode())) {
 
-					if ((supplierJdbcRepository.findById(pl.getSupplier(), "SupplierEntity")) == null)
+					if ((supplierJdbcRepository.findByCode(pl.getSupplier(), "Supplier")) == null)
 						errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "Supplier",
 								pl.getSupplier().getCode());
 

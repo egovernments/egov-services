@@ -165,7 +165,11 @@ public class DataUploadService {
 		            		continue;
 		            	}
 		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-		            	documentContext.put(expression.toString(), key, row.get(i));	            	
+		            	if(key.contains("tenantId")){
+			            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
+		            	}else{
+		            		documentContext.put(expression.toString(), key, row.get(i));
+		            	}
 					} 	
 				    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
 				    try{

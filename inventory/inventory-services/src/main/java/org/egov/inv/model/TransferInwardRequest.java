@@ -62,8 +62,6 @@ public class TransferInwardRequest   {
   @ApiModelProperty(required = true, value = "Used for search result and create only")
   @NotNull
 
-  @Valid
-
   public List<MaterialReceipt> getTransferInwards() {
     return transferInwards;
   }

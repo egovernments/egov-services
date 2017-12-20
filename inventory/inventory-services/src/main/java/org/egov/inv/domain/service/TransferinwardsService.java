@@ -5,7 +5,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -14,17 +13,20 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.IndentDetail;
+import org.egov.inv.model.Material;
+import org.egov.inv.model.MaterialIssue;
+import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
+import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialReceipt;
+import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
 import org.egov.inv.model.MaterialReceiptDetail;
-import org.egov.inv.model.MaterialReceiptResponse;
 import org.egov.inv.model.MaterialReceiptSearch;
-import org.egov.inv.model.PurchaseOrderSearch;
 import org.egov.inv.model.TransferInwardRequest;
 import org.egov.inv.model.TransferInwardResponse;
-import org.egov.inv.persistence.entity.PurchaseOrderDetailEntity;
-import org.egov.inv.persistence.entity.PurchaseOrderEntity;
 import org.egov.inv.persistence.repository.TransferInwardRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,9 @@ public class TransferinwardsService extends DomainService {
 	
 	@Autowired
 	private TransferInwardRepository transferInwardRepository;
+	
+	@Autowired
+	private MaterialIssuesService materialIssuesService;
 	
 	@Autowired
 	private MaterialReceiptService materialReceiptService;
@@ -57,6 +62,7 @@ public class TransferinwardsService extends DomainService {
 	public TransferInwardResponse create(TransferInwardRequest inwardRequest, String tenantId)
 	{
 		try{
+			fetchRelated(inwardRequest);
 			List<MaterialReceipt> inwards = inwardRequest.getTransferInwards();
 	        validate(inwards, tenantId, Constants.ACTION_CREATE);
 	        inwards.forEach(materialReceipt ->
@@ -64,6 +70,7 @@ public class TransferinwardsService extends DomainService {
 	            materialReceipt.setId(transferInwardRepository.getSequence("seq_materialreceipt"));
 	            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
 	            materialReceipt.setMrnNumber(appendString(materialReceipt));
+	            materialReceipt.setReceiptType(ReceiptTypeEnum.INWARD_RECEIPT);
 	            materialReceipt.setAuditDetails(getAuditDetails(inwardRequest.getRequestInfo(), tenantId));
 	            if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
 	                materialReceipt.setTenantId(tenantId);
@@ -183,5 +190,24 @@ public class TransferinwardsService extends DomainService {
         String mrnNumber = code + idgen + "/" + year;
         return mrnNumber;
     }
+	private void fetchRelated(TransferInwardRequest request) {
+		InvalidDataException errors = new InvalidDataException();
+		for (MaterialReceipt receipt : request.getTransferInwards()) {
+
+			if (receipt.getIssueNumber()!= null
+					&& !StringUtils.isEmpty(receipt.getIssueNumber())) {
+				MaterialIssueSearchContract issue = new MaterialIssueSearchContract();
+				issue.setIssueNoteNumber(receipt.getIssueNumber());
+				issue.setTenantId(receipt.getTenantId());
+				List<MaterialIssue> matIssues = materialIssuesService.search(issue).getMaterialIssues();
+				if (matIssues.isEmpty())
+					errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(),"issueNumber", null);
+				else
+					receipt.setIssueNumber(matIssues.get(0).getIssueNumber());
+				
+				}
+		}
+
+	}
 	
 }

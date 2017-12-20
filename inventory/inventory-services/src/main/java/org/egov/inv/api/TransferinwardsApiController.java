@@ -1,7 +1,5 @@
 package org.egov.inv.api;
 
-import static java.util.Arrays.asList;
-
 import java.util.List;
 
 import javax.validation.Valid;
@@ -11,10 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.inv.domain.service.TransferinwardsService;
-import org.egov.inv.model.MaterialReceipt;
-import org.egov.inv.model.MaterialReceiptResponse;
 import org.egov.inv.model.MaterialReceiptSearch;
-import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.TransferInwardRequest;
 import org.egov.inv.model.TransferInwardResponse;
 import org.springframework.beans.factory.annotation.Autowired;

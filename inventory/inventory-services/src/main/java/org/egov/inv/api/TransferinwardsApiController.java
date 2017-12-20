@@ -44,7 +44,7 @@ public class TransferinwardsApiController implements TransferinwardsApi {
         @ApiParam(value = "transfer out ward of the TransferInward ") @RequestParam(value = "issueNumber", required = false) List<String> issueNumber,
         @ApiParam(value = "description of the TransferInward ") @RequestParam(value = "description", required = false) String description,
         @ApiParam(value = "inward note number of the TransferInward ") @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber,
-        @ApiParam(value = "inward note status of the TransferInward ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED") @RequestParam(value = "status", required = false) List<String> status,
+        @ApiParam(value = "inward note status of the TransferInward ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED, RECEIPTED") @RequestParam(value = "status", required = false) List<String> status,
         @ApiParam(value = "state id of the TransferInward ") @RequestParam(value = "stateId", required = false) Long stateId,
         @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
         @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,

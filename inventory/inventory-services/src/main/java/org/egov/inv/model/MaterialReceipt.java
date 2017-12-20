@@ -154,6 +154,8 @@ public class MaterialReceipt {
         CREATED("CREATED"),
 
         APPROVED("APPROVED"),
+        
+        RECEIPTED("RECEIPTED"),
 
         CANCELED("CANCELED");
 

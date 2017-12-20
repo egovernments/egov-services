@@ -239,6 +239,7 @@ public class PriceListService extends DomainService {
 						if (isEmpty(pl.getTenantId())) {
 							pl.setTenantId(tenantId);
 						}
+						pl.getSupplier().setTenantId(tenantId);
 						if (!priceListJdbcRepository.uniqueCheck("rateContractNumber",
 								new PriceListEntity().toEntity(pl))) {
 							errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Rate Contract Number",
@@ -256,7 +257,10 @@ public class PriceListService extends DomainService {
 				for (PriceList pl : priceLists) {
 					if (isEmpty(pl.getTenantId())) {
 						pl.setTenantId(tenantId);
+						
 					}
+					pl.getSupplier().setTenantId(tenantId);
+					
 					if (pl.getId() == null) {
 						throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), pl.getId());
 					}
@@ -274,6 +278,7 @@ public class PriceListService extends DomainService {
 
 			for (PriceList pl : priceLists) {
 
+				
 				if (!Arrays.stream(PriceList.RateTypeEnum.values())
 						.anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(pl.getRateType().toString())))) {
 					throw new CustomException("rateType", "Please enter a valid RateType");
@@ -281,6 +286,8 @@ public class PriceListService extends DomainService {
 
 				for (PriceListDetails pld : pl.getPriceListDetails()) {
 					// VALIDATE ITEM, UOM CODE BEFORE PUSHING DATA.
+					pld.getMaterial().setTenantId(tenantId);
+					pld.getUom().setTenantId(tenantId);
 
 					Material material = materialService.fetchMaterial(tenantId, pld.getMaterial().getCode(),
 							priceListRequest.getRequestInfo());

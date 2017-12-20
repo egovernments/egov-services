@@ -6,17 +6,18 @@ import org.egov.dataupload.model.JobSearchRequest;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DataUploadQueryBuilder {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadQueryBuilder.class);
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getQuery(final JobSearchRequest jobSearchRequest, final List preparedStatementValues) {
-		final StringBuilder selectQuery = new StringBuilder("select * from egdu_uploadregistry");
-		logger.info("get query");
+		final StringBuilder selectQuery = new StringBuilder("select * from egdu_uploadregistry ");
 		addWhereClause(selectQuery, preparedStatementValues, jobSearchRequest);
-		logger.debug("Query for job search : " + selectQuery);
+		logger.info("Query for job search : " + selectQuery);
 		return selectQuery.toString();
 	}
 	

@@ -13,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.Defs;
+import org.egov.dataupload.model.JobSearchRequest;
 import org.egov.dataupload.model.ModuleDefs;
 import org.egov.dataupload.model.ResponseMetaData;
 import org.egov.dataupload.model.UploadDefinition;
@@ -288,8 +289,9 @@ public class DataUploadService {
 	}
 	
 	
-	public List<UploadJob> getUploadJobs(org.egov.dataupload.model.JobSearchRequest jobSearchRequest){
+	public List<UploadJob> getUploadJobs(JobSearchRequest jobSearchRequest){
 		logger.info("fetching upload jobs....");
+		logger.info("JobSearchRequest: "+jobSearchRequest.toString());
 		List<UploadJob> uploadJobs = new ArrayList<>();
 		try{
 			uploadJobs = uploadRegistryRepository.searchJob(jobSearchRequest);

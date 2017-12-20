@@ -446,7 +446,7 @@ public class PurchaseOrderService extends DomainService {
                 	if(eachPurchaseOrder.getPurchaseType().toString().equals("Indent")) {
                 		ie = indentJdbcRepository.findById(IndentEntity.builder().indentNumber(purchaseOrderDetail.getIndentNumber()).tenantId(purchaseOrderDetail.getTenantId()).build());
                 		if(ie.getId() == null)
-                			throw new CustomException("indentnumber", "IndentNumber " + purchaseOrderDetail.getIndentNumber() + " doesn't exists");
+                			errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "IndentNumber", purchaseOrderDetail.getIndentNumber());
                 		indentNumbers += purchaseOrderDetail.getIndentNumber() + ",";
                 	}
                 		
@@ -454,7 +454,7 @@ public class PurchaseOrderService extends DomainService {
                 	
                 	//RateContract reference validation
                 	if(ple.getId() == null) {
-                		throw new CustomException("priceList", "RateContract" + purchaseOrderDetail.getPriceList() + " doesn't exists");
+                		errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "priceList", purchaseOrderDetail.getPriceList().getId().toString());
                 	}
                 }
                 indentNumbers.replaceAll(",$", "");
@@ -496,13 +496,13 @@ public class PurchaseOrderService extends DomainService {
                     supplierGetRequest.setTenantId(eachPurchaseOrder.getTenantId());
                     Pagination<Supplier> supplierPagination = supplierJdbcRepository.search(supplierGetRequest);
                     if (!(supplierPagination.getPagedData().size() > 0)) {
-                        throw new CustomException("supplier", "Supplier " + eachPurchaseOrder.getSupplier().getCode() + " doesn't exists");
+                        errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "Supplier", eachPurchaseOrder.getSupplier().getCode());
                     }
                 }
                 
                 //RateType reference validation
                 if (!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(eachPurchaseOrder.getRateType().toString())))) {
-                    throw new CustomException("rateType", "Please enter a valid RateType");
+                	errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "rateType", eachPurchaseOrder.getRateType().toString());
                 }
                 
                 if (null != eachPurchaseOrder.getPurchaseOrderDetails()) {

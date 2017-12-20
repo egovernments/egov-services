@@ -143,7 +143,7 @@ public class DataUploadService {
 		String request = null;
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 		uploadJob.setEndTime(0L);uploadJob.setFailedRows(0);uploadJob.setStartTime(new Date().getTime());uploadJob.setSuccessfulRows(0);
-		uploadJob.setStatus(StatusEnum.fromValue("InProgress"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size());
+		uploadJob.setStatus(StatusEnum.fromValue("InProgress"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size() - 1);
 		uploadRegistryRepository.updateJob(uploaderRequest);
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
     	List<Object> resJsonPathList = null;
@@ -226,7 +226,7 @@ public class DataUploadService {
 		    }			
 		}
 		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName());
-		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount);
+		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
 		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
 		uploadRegistryRepository.updateJob(uploaderRequest);
 

@@ -39,11 +39,6 @@
  */
 package org.egov.inv.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.Supplier;
@@ -54,206 +49,216 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
 public class SupplierJdbcRepository extends JdbcRepository {
 
-	private static final Logger LOG = LoggerFactory.getLogger(SupplierJdbcRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SupplierJdbcRepository.class);
 
-	static {
-		LOG.debug("init supplier");
-		init(SupplierEntity.class);
-		LOG.debug("end init supplier");
-	}
+    static {
+        LOG.debug("init supplier");
+        init(SupplierEntity.class);
+        LOG.debug("end init supplier");
+    }
 
-	public Pagination<Supplier> search(SupplierGetRequest supplierGetRequest) {
-		String searchQuery = "select * from supplier :condition :orderby";
-		StringBuffer params = new StringBuffer();
-		Map<String, Object> paramValues = new HashMap<>();
-		if (supplierGetRequest.getSortBy() != null && !supplierGetRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(supplierGetRequest.getSortBy());
-			validateEntityFieldName(supplierGetRequest.getSortBy(), SupplierGetRequest.class);
-		}
-		String orderBy = "order by code";
-		if (supplierGetRequest.getSortBy() != null && !supplierGetRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + supplierGetRequest.getSortBy();
-		}
-		if (supplierGetRequest.getId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("id in (:ids)");
-			paramValues.put("ids", supplierGetRequest.getId());
-		}
-		if (supplierGetRequest.getCode() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("UPPER(code) in (:codes)");
-			paramValues.put("codes", supplierGetRequest.getCode());
-		}
-		if (supplierGetRequest.getName() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("name = :name");
-			paramValues.put("name", supplierGetRequest.getName());
-		}
-		if (supplierGetRequest.getType() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("type = :type");
-			paramValues.put("type", supplierGetRequest.getType());
-		}
-		if (supplierGetRequest.getStatus() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("status = :status");
-			paramValues.put("status", supplierGetRequest.getStatus());
-		}
-		if (supplierGetRequest.getInActiveDate() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("inactivedate = :inactivedate");
-			paramValues.put("inactivedate", supplierGetRequest.getInActiveDate());
-		}
-		if (supplierGetRequest.getContactNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("contactno = :contactno");
-			paramValues.put("contactno", supplierGetRequest.getContactNo());
-		}
+    public Pagination<Supplier> search(SupplierGetRequest supplierGetRequest) {
+        String searchQuery = "select * from supplier :condition :orderby";
+        StringBuffer params = new StringBuffer();
+        Map<String, Object> paramValues = new HashMap<>();
+        if (supplierGetRequest.getSortBy() != null && !supplierGetRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(supplierGetRequest.getSortBy());
+            validateEntityFieldName(supplierGetRequest.getSortBy(), SupplierGetRequest.class);
+        }
+        String orderBy = "order by code";
+        if (supplierGetRequest.getSortBy() != null && !supplierGetRequest.getSortBy().isEmpty()) {
+            orderBy = "order by " + supplierGetRequest.getSortBy();
+        }
+        if (supplierGetRequest.getId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("id in (:ids)");
+            paramValues.put("ids", supplierGetRequest.getId());
+        }
+        if (supplierGetRequest.getCode() != null) {
 
-		if (supplierGetRequest.getFaxNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("faxno = :faxno");
-			paramValues.put("faxno", supplierGetRequest.getFaxNo());
-		}
-		if (supplierGetRequest.getWebsite() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("website = :website");
-			paramValues.put("website", supplierGetRequest.getWebsite());
-		}
-		if (supplierGetRequest.getEmail() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("email = :email");
-			paramValues.put("email", supplierGetRequest.getEmail());
-		}
-		if (supplierGetRequest.getPanNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("panno = :panno");
-			paramValues.put("panno", supplierGetRequest.getPanNo());
+            List<String> codesUpperCase = supplierGetRequest.getCode().stream()
+                    .map(code -> code.toUpperCase()).collect(Collectors.toList());
+            supplierGetRequest.setCode(codesUpperCase);
 
-		}
-		if (supplierGetRequest.getTinNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("tinno = :tinno");
-			paramValues.put("tinno", supplierGetRequest.getTinNo());
-		}
-		if (supplierGetRequest.getCstNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("cstno = :cstno");
-			paramValues.put("cstno", supplierGetRequest.getCstNo());
-		}
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("UPPER(code) in (:codes)");
+            paramValues.put("codes", codesUpperCase);
+        }
+        if (supplierGetRequest.getName() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("name = :name");
+            paramValues.put("name", supplierGetRequest.getName());
+        }
+        if (supplierGetRequest.getType() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("type = :type");
+            paramValues.put("type", supplierGetRequest.getType());
+        }
+        if (supplierGetRequest.getStatus() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("status = :status");
+            paramValues.put("status", supplierGetRequest.getStatus());
+        }
+        if (supplierGetRequest.getInActiveDate() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("inactivedate = :inactivedate");
+            paramValues.put("inactivedate", supplierGetRequest.getInActiveDate());
+        }
+        if (supplierGetRequest.getContactNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("contactno = :contactno");
+            paramValues.put("contactno", supplierGetRequest.getContactNo());
+        }
 
-		if (supplierGetRequest.getVatNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("vatno = :vatno");
-			paramValues.put("vatno", supplierGetRequest.getVatNo());
-		}
-		if (supplierGetRequest.getGstNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("gstno = :gstno");
-			paramValues.put("gstno", supplierGetRequest.getGstNo());
-		}
-		if (supplierGetRequest.getContactPerson() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("contactperson = :contactperson");
-			paramValues.put("contactperson", supplierGetRequest.getContactPerson());
-		}
-		if (supplierGetRequest.getContactPersonNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("contactpersonno = :contactpersonno");
-			paramValues.put("contactpersonno", supplierGetRequest.getContactPersonNo());
-		}
-		if (supplierGetRequest.getBankCode() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("bankcode = :bankcode");
-			paramValues.put("bankcode", supplierGetRequest.getBankCode());
-		}
-		if (supplierGetRequest.getBankBranch() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("bankbranch = :bankbranch");
-			paramValues.put("bankbranch", supplierGetRequest.getBankBranch());
-		}
-		if (supplierGetRequest.getBankAccNo() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("bankAcctNo = :bankAcctNo");
-			paramValues.put("bankAcctNo", supplierGetRequest.getBankAccNo());
-		}
-		if (supplierGetRequest.getBankIfsc() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("bankifsc = :bankifsc");
-			paramValues.put("bankifsc", supplierGetRequest.getBankIfsc());
-		}
-		if (supplierGetRequest.getActive() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("active = :active");
-			paramValues.put("active", supplierGetRequest.getActive());
-		}
+        if (supplierGetRequest.getFaxNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("faxno = :faxno");
+            paramValues.put("faxno", supplierGetRequest.getFaxNo());
+        }
+        if (supplierGetRequest.getWebsite() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("website = :website");
+            paramValues.put("website", supplierGetRequest.getWebsite());
+        }
+        if (supplierGetRequest.getEmail() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("email = :email");
+            paramValues.put("email", supplierGetRequest.getEmail());
+        }
+        if (supplierGetRequest.getPanNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("panno = :panno");
+            paramValues.put("panno", supplierGetRequest.getPanNo());
 
-		if (supplierGetRequest.getTenantId() != null) {
-			if (params.length() > 0)
-				params.append(" and ");
-			params.append("tenantid = :tenantid");
-			paramValues.put("tenantid", supplierGetRequest.getTenantId());
-		}
-		Pagination<Supplier> page = new Pagination<>();
-		if (supplierGetRequest.getPageSize() != null)
-			page.setPageSize(supplierGetRequest.getPageSize());
-		if (supplierGetRequest.getOffset() != null)
-			page.setOffset(supplierGetRequest.getOffset());
-		if (params.length() > 0)
-			searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and  " + params.toString());
-		else
-			searchQuery = searchQuery.replace(":condition", "");
+        }
+        if (supplierGetRequest.getTinNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("tinno = :tinno");
+            paramValues.put("tinno", supplierGetRequest.getTinNo());
+        }
+        if (supplierGetRequest.getCstNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("cstno = :cstno");
+            paramValues.put("cstno", supplierGetRequest.getCstNo());
+        }
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
-		page = (Pagination<Supplier>) getPagination(searchQuery, page, paramValues);
+        if (supplierGetRequest.getVatNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("vatno = :vatno");
+            paramValues.put("vatno", supplierGetRequest.getVatNo());
+        }
+        if (supplierGetRequest.getGstNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("gstno = :gstno");
+            paramValues.put("gstno", supplierGetRequest.getGstNo());
+        }
+        if (supplierGetRequest.getContactPerson() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("contactperson = :contactperson");
+            paramValues.put("contactperson", supplierGetRequest.getContactPerson());
+        }
+        if (supplierGetRequest.getContactPersonNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("contactpersonno = :contactpersonno");
+            paramValues.put("contactpersonno", supplierGetRequest.getContactPersonNo());
+        }
+        if (supplierGetRequest.getBankCode() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("bankcode = :bankcode");
+            paramValues.put("bankcode", supplierGetRequest.getBankCode());
+        }
+        if (supplierGetRequest.getBankBranch() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("bankbranch = :bankbranch");
+            paramValues.put("bankbranch", supplierGetRequest.getBankBranch());
+        }
+        if (supplierGetRequest.getBankAccNo() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("bankAcctNo = :bankAcctNo");
+            paramValues.put("bankAcctNo", supplierGetRequest.getBankAccNo());
+        }
+        if (supplierGetRequest.getBankIfsc() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("bankifsc = :bankifsc");
+            paramValues.put("bankifsc", supplierGetRequest.getBankIfsc());
+        }
+        if (supplierGetRequest.getActive() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("active = :active");
+            paramValues.put("active", supplierGetRequest.getActive());
+        }
 
-		searchQuery = searchQuery + " :pagination";
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SupplierEntity.class);
+        if (supplierGetRequest.getTenantId() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("tenantid = :tenantid");
+            paramValues.put("tenantid", supplierGetRequest.getTenantId());
+        }
+        Pagination<Supplier> page = new Pagination<>();
+        if (supplierGetRequest.getPageSize() != null)
+            page.setPageSize(supplierGetRequest.getPageSize());
+        if (supplierGetRequest.getOffset() != null)
+            page.setOffset(supplierGetRequest.getOffset());
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and  " + params.toString());
+        else
+            searchQuery = searchQuery.replace(":condition", "");
 
-		List<Supplier> suppliersList = new ArrayList<>();
+        searchQuery = searchQuery.replace(":orderby", orderBy);
+        page = (Pagination<Supplier>) getPagination(searchQuery, page, paramValues);
 
-		List<SupplierEntity> suppliersEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
-				row);
+        searchQuery = searchQuery + " :pagination";
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(SupplierEntity.class);
 
-		for (SupplierEntity suppliersEntity : suppliersEntities) {
+        List<Supplier> suppliersList = new ArrayList<>();
 
-			suppliersList.add(suppliersEntity.toDomain());
-		}
+        List<SupplierEntity> suppliersEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+                row);
 
-		page.setTotalResults(suppliersList.size());
+        for (SupplierEntity suppliersEntity : suppliersEntities) {
 
-		page.setPagedData(suppliersList);
+            suppliersList.add(suppliersEntity.toDomain());
+        }
 
-		return page;
-	}
+        page.setTotalResults(suppliersList.size());
+
+        page.setPagedData(suppliersList);
+
+        return page;
+    }
 
 }

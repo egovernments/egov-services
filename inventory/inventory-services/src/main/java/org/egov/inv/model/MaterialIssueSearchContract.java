@@ -25,7 +25,9 @@ public class MaterialIssueSearchContract {
 	private String issueNoteNumber;
 	
 	private Long issueDate;
-	
+
+	private String supplier;
+
 	private String materialIssueStatus;
 	
 	private String description;

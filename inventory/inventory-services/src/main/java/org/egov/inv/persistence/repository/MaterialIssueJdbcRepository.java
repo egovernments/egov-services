@@ -4,7 +4,6 @@ import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.MaterialIssue;
 import org.egov.inv.model.MaterialIssueSearchContract;
-import org.egov.inv.persistence.entity.MaterialEntity;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -103,6 +102,12 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
                 params.append(" and ");
             params.append("issuenumber = :issuenumber");
             paramValues.put("issuenumber", searchContract.getIssueNoteNumber());
+        }
+        if (searchContract.getSupplier() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("supplier = :supplier");
+            paramValues.put("supplier", searchContract.getSupplier());
         }
         if (searchContract.getIssueDate() != null) {
             if (params.length() > 0)

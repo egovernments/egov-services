@@ -47,14 +47,13 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.SupplierEntity;
-import org.egov.inv.persistence.repository.SupplierJdbcRepository;
+import org.egov.inv.persistence.repository.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -85,6 +84,18 @@ public class SupplierService extends DomainService {
 
     @Autowired
     private BankContractRepository bankContractRepository;
+
+    @Autowired
+    private IndentJdbcRepository indentJdbcRepository;
+
+    @Autowired
+    private PurchaseOrderJdbcRepository purchaseOrderJdbcRepository;
+
+    @Autowired
+    private MaterialReceiptJdbcRepository materialReceiptJdbcRepository;
+
+    @Autowired
+    private MaterialIssueJdbcRepository materialIssueJdbcRepository;
 
     public SupplierResponse create(SupplierRequest supplierRequest, String tenantId) {
         try {
@@ -177,7 +188,11 @@ public class SupplierService extends DomainService {
                             errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
 
                         }
+                        boolean supplierUsed = checkSupplierUsedInTransaction(supplier.getCode(), supplier.getTenantId());
+                        if (supplierUsed) {
+                            errors.addDataError(ErrorCode.TRANSACTION_USED.getCode(), "Supplier", supplier.getCode());
 
+                        }
                     }
             }
         } catch (IllegalArgumentException e) {
@@ -189,12 +204,6 @@ public class SupplierService extends DomainService {
 
 
     public SupplierResponse search(SupplierGetRequest supplierGetRequest) {
-        if (null != supplierGetRequest.getCode() && supplierGetRequest.getCode().size() > 0) {
-            List<String> codesUpperCase = supplierGetRequest.getCode().stream()
-                    .map(code -> code.toUpperCase()).collect(Collectors.toList());
-            supplierGetRequest.setCode(codesUpperCase);
-        }
-
         SupplierResponse supplierResponse = new SupplierResponse();
         Pagination<Supplier> search = supplierJdbcRepository.search(supplierGetRequest);
         supplierResponse.setSuppliers(search.getPagedData());
@@ -216,6 +225,42 @@ public class SupplierService extends DomainService {
         }
 
         return supplierRequest;
+    }
+
+    public boolean checkSupplierUsedInTransaction(String code, String tenantId) {
+
+        PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+        purchaseOrderSearch.setSupplier(code);
+        purchaseOrderSearch.setTenantId(tenantId);
+
+        Pagination<PurchaseOrder> purchaseOrders = purchaseOrderJdbcRepository.search(purchaseOrderSearch);
+
+        if (purchaseOrders.getPagedData().size() > 0) {
+            return true;
+        }
+
+        MaterialReceiptSearch receiptSearch = new MaterialReceiptSearch();
+        receiptSearch.setSupplierCode(code);
+        receiptSearch.setTenantId(tenantId);
+
+        Pagination<MaterialReceipt> receivingStoreMaterialReceipts = materialReceiptJdbcRepository.search(receiptSearch);
+
+        if (receivingStoreMaterialReceipts.getPagedData().size() > 0) {
+            return true;
+        }
+
+        MaterialIssueSearchContract issueSearch = new MaterialIssueSearchContract();
+        issueSearch.setSupplier(code);
+        issueSearch.setTenantId(tenantId);
+
+
+        Pagination<MaterialIssue> issues = materialIssueJdbcRepository.search(issueSearch, null);
+
+        if (issues.getPagedData().size() > 0) {
+            return true;
+        }
+
+        return false;
     }
 
 }

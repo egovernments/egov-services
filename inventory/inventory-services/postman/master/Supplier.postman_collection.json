@@ -1,19 +1,70 @@
 {
-	"variables": [],
 	"info": {
 		"name": "Supplier",
-		"_postman_id": "3e68db67-0dff-4881-23df-9b78ca9bcd01",
+		"_postman_id": "ac3eedb8-da86-98e2-d1bf-f83bec54780e",
 		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "create",
+			"name": "search",
 			"description": "",
+			"item": [
+				{
+					"name": "Search Supplier",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\":{\n      \"id\":1,\n      \"tenantId\":\"default\",\n      \"username\":\"abc\"\n    }\n  }\n}\n"
+						},
+						"url": {
+							"raw": "{{host}}/inventory-services/suppliers/_search?tenantId=default",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"inventory-services",
+								"suppliers",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "create",
 			"item": [
 				{
 					"name": "{{host}}/inventory-services/suppliers/_create?tenantId=default",
 					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n \"RequestInfo\": {\n   \"apiId\": \"emp\",\n   \"ver\": \"1.0\",\n   \"ts\": \"12345677\",\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"key\": \"abcdkey\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"rajesh\",\n   \"authToken\": \"0f1a559a-9b2a-4bc6-bc56-d6cf746cec50\"\n\n \n },\n \"suppliers\":\n[  {\n\t\n\"tenantId\":\"default\",\n  \"type\":\"FIRM\",\n  \"code\":\"supplier545455\",\n  \"active\":\"false\",\n  \"name\":\"Anand And So\",\n  \"address\":\"btm layout\",\n  \"status\":\"ACTIVE\",\n  \"inActiveDate\":\"15436789\",\n  \"contactNo\":\"0132278956\",\n  \"faxNo\":\"123788890\",\n  \"website\":\"http://www.google.com\",\n  \"email\":\"anand@gmail.com\",\n  \"description\":\"supplier for cosmetics\",\n  \"panNo\":\"DFGPV3459D\",\n  \"tinNo\":\"34676767uiu\",\n  \"cstNo\":\"34676767uiC\",\n  \"vatNo\":\"34676767uiV\",\n  \"gstNo\":\"75AGHFD7890A0Z0\",\n  \"contactPerson\":\"anand dubay\",\n  \"contactPersonNo\":\"8388743488\",\n  \"bankCode\":\"bankcode1\",\n\t   \"bankBranch\":\"bankbranch1\",\n  \"acctNo\":\"3161001500005068\",\n  \"ifsc\":\"IFSC38899\",\n  \"micr\":\"MICR983985\"\n  }\n\n]\n \n}"
+						},
 						"url": {
 							"raw": "{{host}}/inventory-services/suppliers/_create?tenantId=default",
 							"host": [
@@ -28,25 +79,10 @@
 								{
 									"key": "tenantId",
 									"value": "default",
-									"equals": true,
-									"description": ""
+									"equals": true
 								}
-							],
-							"variable": []
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "\n{\n \"RequestInfo\": {\n   \"apiId\": \"emp\",\n   \"ver\": \"1.0\",\n   \"ts\": \"12345677\",\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"key\": \"abcdkey\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"rajesh\",\n   \"authToken\": \"0f1a559a-9b2a-4bc6-bc56-d6cf746cec50\"\n\n \n },\n \"suppliers\":\n[  {\n\t\n\"tenantId\":\"default\",\n  \"type\":\"FIRM\",\n  \"code\":\"supplier545455\",\n  \"active\":\"false\",\n  \"name\":\"Anand And So\",\n  \"address\":\"btm layout\",\n  \"status\":\"ACTIVE\",\n  \"inActiveDate\":\"15436789\",\n  \"contactNo\":\"0132278956\",\n  \"faxNo\":\"123788890\",\n  \"website\":\"http://www.google.com\",\n  \"email\":\"anand@gmail.com\",\n  \"description\":\"supplier for cosmetics\",\n  \"panNo\":\"DFGPV3459D\",\n  \"tinNo\":\"34676767uiu\",\n  \"cstNo\":\"34676767uiC\",\n  \"vatNo\":\"34676767uiV\",\n  \"gstNo\":\"75AGHFD7890A0Z0\",\n  \"contactPerson\":\"anand dubay\",\n  \"contactPersonNo\":\"8388743488\",\n  \"bankCode\":\"bankcode1\",\n\t   \"bankBranch\":\"bankbranch1\",\n  \"acctNo\":\"3161001500005068\",\n  \"ifsc\":\"IFSC38899\",\n  \"micr\":\"MICR983985\"\n  }\n\n]\n \n}"
-						},
-						"description": ""
+							]
+						}
 					},
 					"response": []
 				}
@@ -54,11 +90,21 @@
 		},
 		{
 			"name": "update",
-			"description": "",
 			"item": [
 				{
 					"name": "{{host}}/inventory-services/suppliers/_update?tenantId=default&ids=67",
 					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n \"RequestInfo\": {\n   \"apiId\": \"emp\",\n   \"ver\": \"1.0\",\n   \"ts\": \"12345677\",\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"key\": \"abcdkey\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"rajesh\",\n   \"authToken\": \"8e944626-4a0e-4122-a021-8b1ea2e5a671\"\n\n \n },\n \"suppliers\":\n[  {\n\t\"id\":\"65\",\n\"tenantId\":\"default\",\n  \"type\":\"FIRM\",\n  \"code\":\"supplier545455\",\n  \"active\":\"true\",\n  \"name\":\"Anand And So\",\n  \"address\":\"btm layout\",\n  \"status\":\"ACTIVE\",\n  \"inActiveDate\":\"15436789\",\n  \"contactNo\":\"0132278956\",\n  \"faxNo\":\"123788890\",\n  \"website\":\"http://www.google.com\",\n  \"email\":\"anand@gmail.com\",\n  \"description\":\"supplier for cosmetics\",\n  \"panNo\":\"DFGPV3459D\",\n  \"tinNo\":\"34676767uiu\",\n  \"cstNo\":\"34676767uiC\",\n  \"vatNo\":\"34676767uiV\",\n  \"gstNo\":\"75AGHFD7890A0Z0\",\n  \"contactPerson\":\"anand dubay\",\n  \"contactPersonNo\":\"8388743488\",\n  \"bankCode\":\"bankcode1\",\n\t   \"bankBranch\":\"bankbranch1\",\n  \"acctNo\":\"3161001500005068\",\n  \"ifsc\":\"IFSC38899\",\n  \"micr\":\"MICR983985\"\n  }\n\n]\n \n}"
+						},
 						"url": {
 							"raw": "{{host}}/inventory-services/suppliers/_update?tenantId=default&ids=67",
 							"host": [
@@ -73,35 +119,61 @@
 								{
 									"key": "tenantId",
 									"value": "default",
-									"equals": true,
-									"description": ""
+									"equals": true
 								},
 								{
 									"key": "ids",
 									"value": "67",
-									"equals": true,
-									"description": ""
+									"equals": true
 								}
-							],
-							"variable": []
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"description": ""
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "\n{\n \"RequestInfo\": {\n   \"apiId\": \"emp\",\n   \"ver\": \"1.0\",\n   \"ts\": \"12345677\",\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"key\": \"abcdkey\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"rajesh\",\n   \"authToken\": \"8e944626-4a0e-4122-a021-8b1ea2e5a671\"\n\n \n },\n \"suppliers\":\n[  {\n\t\"id\":\"65\",\n\"tenantId\":\"default\",\n  \"type\":\"FIRM\",\n  \"code\":\"supplier545455\",\n  \"active\":\"true\",\n  \"name\":\"Anand And So\",\n  \"address\":\"btm layout\",\n  \"status\":\"ACTIVE\",\n  \"inActiveDate\":\"15436789\",\n  \"contactNo\":\"0132278956\",\n  \"faxNo\":\"123788890\",\n  \"website\":\"http://www.google.com\",\n  \"email\":\"anand@gmail.com\",\n  \"description\":\"supplier for cosmetics\",\n  \"panNo\":\"DFGPV3459D\",\n  \"tinNo\":\"34676767uiu\",\n  \"cstNo\":\"34676767uiC\",\n  \"vatNo\":\"34676767uiV\",\n  \"gstNo\":\"75AGHFD7890A0Z0\",\n  \"contactPerson\":\"anand dubay\",\n  \"contactPersonNo\":\"8388743488\",\n  \"bankCode\":\"bankcode1\",\n\t   \"bankBranch\":\"bankbranch1\",\n  \"acctNo\":\"3161001500005068\",\n  \"ifsc\":\"IFSC38899\",\n  \"micr\":\"MICR983985\"\n  }\n\n]\n \n}"
-						},
-						"description": ""
+							]
+						}
 					},
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Supplier Used in transaction ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510400603623,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\":{  \n         \"id\":1,\n         \"userName\":\"testUser\",\n         \"name\":\"test user\"\n      }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/suppliers/_transactionused?tenantId=default&code=STR",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"suppliers",
+						"_transactionused"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "code",
+							"value": "STR",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }

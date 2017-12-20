@@ -252,6 +252,12 @@ public class LeaveApplicationQueryBuilder {
 					leaveApplicationGetRequest.getTenantId(), requestInfo).get(0).getId());
 		}
 
+		if (leaveApplicationGetRequest.getStatusId() != null && !leaveApplicationGetRequest.getStatusId().equals("")) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" la.status = ?");
+			preparedStatementValues.add(leaveApplicationGetRequest.getStatusId());
+		}
+
 		if (leaveApplicationGetRequest.getEmployee() != null && !leaveApplicationGetRequest.getEmployee().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" la.employeeId IN " + getIdQuery(leaveApplicationGetRequest.getEmployee()));

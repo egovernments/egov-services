@@ -75,6 +75,8 @@ public class LeaveApplicationGetRequest {
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date toDate;
+	
+	private Long statusId;
 
 	private String sortBy;
 

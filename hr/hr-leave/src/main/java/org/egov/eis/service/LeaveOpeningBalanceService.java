@@ -111,6 +111,9 @@ public class LeaveOpeningBalanceService {
 
 	@Autowired
 	private LeaveTypeService leaveTypeService;
+	
+	@Autowired
+	private HRStatusService hrStatusService;
 
 	@Autowired
 	private LeaveApplicationRepository leaveApplicationRepository;
@@ -168,7 +171,8 @@ public class LeaveOpeningBalanceService {
 
 		EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
 				requestInfo);
-
+		leaveOpeningBalanceGetRequest.setStatusId(hrStatusService.getHRStatuses("APPROVED", leaveOpeningBalanceGetRequest.getTenantId(),
+				requestInfo).get(0).getId());
 		employeeResponse.getEmployees().stream().forEach(employee -> {
 			carryForwardLOB(leaveOpeningBalanceGetRequest, employee, successLeaveOpeningBalanceList, requestInfo);
 		});
@@ -258,10 +262,12 @@ public class LeaveOpeningBalanceService {
 
 		leaveApplicationGetRequest.getEmployee().add(employee.getId());
 		leaveApplicationGetRequest.setLeaveType(leaveOpeningBalanceGetRequest.getLeaveType().get(0));
-		leaveApplicationGetRequest.setStatus(LeaveStatus.APPROVED.toString());
+		leaveApplicationGetRequest.setStatusId(leaveOpeningBalanceGetRequest.getStatusId());
+		leaveApplicationGetRequest.setStatus(null);
 		leaveApplicationGetRequest.setTenantId(leaveOpeningBalanceGetRequest.getTenantId());
 		leaveApplicationGetRequest.setFromDate(fromDate);
 		leaveApplicationGetRequest.setToDate(toDate);
+		
 
 		List<LeaveApplication> leaveApplicationsList = null;
 		leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest, requestInfo);

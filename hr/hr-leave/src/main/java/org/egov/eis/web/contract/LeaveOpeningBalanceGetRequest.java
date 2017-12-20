@@ -63,6 +63,8 @@ public class LeaveOpeningBalanceGetRequest {
 	private List<Long> employee = new ArrayList<Long>();
 
 	private Integer year;
+	
+	private Long statusId;
 
 	private String sortBy;
 

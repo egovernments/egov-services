@@ -44,12 +44,12 @@ public class DataUploadQueryBuilder {
 		}
 
 		if (jobSearchRequest.getStartDate() != null) {
-			selectQuery.append(" AND startTime>?");
+			selectQuery.append(" AND start_time>?");
 			preparedStatementValues.add(jobSearchRequest.getStartDate());
 		}
 		
 		if (jobSearchRequest.getEndDate() != null) {
-			selectQuery.append(" AND endTime<?");
+			selectQuery.append(" AND end_time<?");
 			preparedStatementValues.add(jobSearchRequest.getEndDate());
 		}
 

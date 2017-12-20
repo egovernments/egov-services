@@ -2,6 +2,7 @@ package org.egov.inv.domain.service;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.TransferInwardRequest;
 import org.egov.inv.model.TransferInwardResponse;
+import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.TransferInwardRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class TransferinwardsService extends DomainService {
 	
 	@Autowired
 	private MaterialReceiptService materialReceiptService;
+	
+	@Autowired
+	private MaterialReceiptJdbcRepository materialReceiptJdbcRepository;
 	
 	@Value("${inv.transfer.inward.save.topic}")
 	private String createTopic;
@@ -109,6 +114,10 @@ public class TransferinwardsService extends DomainService {
 	            if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
 	                materialReceipt.setTenantId(tenantId);
 	            }
+	            /*if(materialReceipt.getMrnStatus().toString() == "RECEIPTED")
+	            {
+	            	updateStatusAsReceipted(tenantId, materialReceipt);
+	            }*/
 
 	            materialReceipt.getReceiptDetails().forEach(materialReceiptDetail -> {
 	                if (isEmpty(materialReceiptDetail.getTenantId())) {
@@ -125,6 +134,7 @@ public class TransferinwardsService extends DomainService {
 	                                materialReceiptDetailAddnlInfo.setTenantId(tenantId);
 	                            }
 	                        });
+	                
 	                transferInwardRepository.markDeleted(materialReceiptDetailAddlnInfoIds, tenantId, "materialreceiptdetailaddnlinfo", "receiptdetailid", materialReceiptDetail.getId());
 
 	                transferInwardRepository.markDeleted(materialReceiptDetailIds, tenantId, "materialreceiptdetail", "mrnNumber", materialReceipt.getMrnNumber());
@@ -207,11 +217,16 @@ public class TransferinwardsService extends DomainService {
 				issue.setTenantId(receipt.getTenantId());
 				List<MaterialIssue> matIssues = materialIssuesService.search(issue).getMaterialIssues();
 				Long issueDate = materialIssuesService.search(issue).getMaterialIssues().get(0).getIssueDate();
+				BigDecimal issuedQuantity = materialIssuesService.search(issue).getMaterialIssues().get(0).getMaterialIssueDetails().get(0).getQuantityIssued();
 				if (matIssues.isEmpty())
 					errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(),"issueNumber", null);
 				else
 					receipt.setIssueNumber(matIssues.get(0).getIssueNumber());
 				for(MaterialReceiptDetail details : receipt.getReceiptDetails()){
+					int res =details.getReceivedQty().compareTo(issuedQuantity);
+					if(res == 1){
+			            errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(),"Received","Issued ", null);
+					}
 					for(MaterialReceiptDetailAddnlinfo info: details.getReceiptDetailsAddnInfo()){
 						 if(info.getReceivedDate() <= issueDate){
 			            errors.addDataError(ErrorCode.DATE1_GT_DATE2.getCode(),"Receive Date","Issue ", null);
@@ -220,8 +235,10 @@ public class TransferinwardsService extends DomainService {
 				}
 			}
 		}
-
 	if (errors.getValidationErrors().size() > 0)
         throw errors;
-	}	
+	}
+	/*private void updateStatusAsReceipted(String tenantId, MaterialReceipt receipt) {
+		materialReceiptJdbcRepository.updateStatus(receipt.getId(), receipt.getTenantId());		
+	}*/
 }

@@ -186,7 +186,7 @@ ReportDefinitions:
     wrapper: true
     isMandatory: false
     searchClause : AND lc.casestatus ->> 'code' = $caseStatus
-  query: select lc.caseno, lc.plantiffname, lc.defendant, lc.pleaderengagementdetails  ,lc.sectionapplied, lc.summondate, CONCAT(lc.resloution, ', ', lc.resloutiondate) AS resolutiondetails, lc.vakalatnamagenerationdate, (select name from (VALUES tbl_court) as court (code,name) where court.code=lc.courtname::jsonb ->> 'code')as courtname, lc.departmentperson, lhd.judgementdate, lhd.casejudgement, lhd.advocateopinion, lhd.furtherprocesssdetails, lc.remarks from egov_lcms_case lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON (lc.code = lhd.casecode AND lhd.casestatus ->> 'code'= 'FO') WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate AND lc.tenantid=$tenantid
+  query: select lc.caseno, lc.plantiffname, lc.defendant, lc.pleaderengagementdetails  ,lc.sectionapplied, lc.summondate, CONCAT(lc.resloution, ', ', lc.resloutiondate) AS resolutiondetails, lc.vakalatnamagenerationdate, (select name from (VALUES tbl_court) as court (code,name) where court.code=lc.courtname::jsonb ->> 'code')as courtname, lc.departmentperson, lhd.judgementdate, lhd.casejudgement, lhd.advocateopinion, lhd.furtherprocessdetails, lc.remarks from egov_lcms_case lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON (lc.code = lhd.casecode AND lhd.casestatus ->> 'code'= 'FO') WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate AND lc.tenantid=$tenantid
 - reportName: CaseSummaryReport
   summary: Case Summary Report
   version: 1.0.0

@@ -13,7 +13,7 @@ class LeaveSummary extends React.Component {
             "employeeType": "",
             "employeeStatus": "",
             "leaveType": "",
-            "toDate": ""
+            "asOnDate": ""
         },
         "employeeTypes": [],
         "departments": [],
@@ -90,17 +90,17 @@ class LeaveSummary extends React.Component {
 
     var _this = this;
 
-    $('#toDate').datepicker({
+    $('#asOnDate').datepicker({
       format: 'dd/mm/yyyy',
       autoclose: true,
       defaultDate: ""
     });
 
-    $('#toDate').on('changeDate', function(e) {
+    $('#asOnDate').on('changeDate', function(e) {
       _this.setState({
         searchSet: {
           ..._this.state.searchSet,
-          "toDate": $("#toDate").val(),
+          "asOnDate": $("#asOnDate").val(),
         }
       });
     });
@@ -165,7 +165,7 @@ class LeaveSummary extends React.Component {
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
     let {result, employeeTypes, departments, designations, employeeStatuses, leaveTypes, employeeList, error} = this.state;
-    let {employeeCode, departmentId, designationId, employeeType, employeeStatus, toDate, leaveType} = this.state.searchSet;
+    let {employeeCode, departmentId, designationId, employeeType, employeeStatus, asOnDate, leaveType} = this.state.searchSet;
 
     const renderOptions = function(list)
     {
@@ -326,7 +326,7 @@ class LeaveSummary extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                                 <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                                <input type="text" id="toDate" value={toDate} onChange={(e) => {handleChange(e, "toDate")}} required/>
+                                                <input type="text" id="asOnDate" value={asOnDate} onChange={(e) => {handleChange(e, "asOnDate")}} required/>
                                             </div>
                                     </div>
                                 </div>

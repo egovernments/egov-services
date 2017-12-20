@@ -99,6 +99,10 @@ public class LeaveSearchRequest {
 	private Date toDate;
 
 	private Long leaveStatus;
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	private Date asOnDate;
 
 	@NotNull
 	private String tenantId;

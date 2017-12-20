@@ -177,7 +177,7 @@ public class LeaveApplicationQueryBuilder {
 	public String getLeaveSummaryReportQuery(final LeaveSearchRequest leaveSearchRequest,
 			final List preparedStatementValues, final RequestInfo requestInfo) {
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(leaveSearchRequest.getToDate());
+		calendar.setTime(leaveSearchRequest.getAsOnDate());
 		int year = calendar.get(Calendar.YEAR);
 		calendar.set(Calendar.DAY_OF_YEAR, 1);
 		calendar.set(Calendar.MONTH, 1);
@@ -186,21 +186,18 @@ public class LeaveApplicationQueryBuilder {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
 		String summaryReportQuery = "select la.id AS la_id, la.employeeid AS la_employeeId, lt.id AS lt_id, lt.name AS lt_name, COALESCE(opb.noofdays,0) AS opb_noofdays,"
-				+ " COALESCE(ROUND(((ltt.noofdays+0.0)/356.0) * (TO_DATE(':todate', 'DD-MM-YYYY') - TO_DATE(':fromdate', 'DD-MM-YYYY'))),0) AS eligibleLeaves,"
-				+ " COALESCE(ROUND(((ltt.noofdays+0.0)/356.0) * (TO_DATE(':todate', 'DD-MM-YYYY') - TO_DATE(':fromdate', 'DD-MM-YYYY'))) + COALESCE(opb.noofdays,0) ,0) AS totalLeavesEligible,"
-				+ " COALESCE(leaveappl.approvedcount,0) AS leaveappl_approvedcount, la.tenantid AS la_tenantId,"
-				+ " COALESCE((ROUND(((ltt.noofdays+0.0)/356.0) * (TO_DATE(':todate', 'DD-MM-YYYY') - TO_DATE(':fromdate', 'DD-MM-YYYY'))) + COALESCE(opb.noofdays,0) - COALESCE(leaveappl.approvedcount,0))) AS balance"
-				+ " from  egeis_leaveallotment ltt, egeis_leavetype lt, egeis_leaveapplication la"
+				+ " COALESCE(leaveappl.approvedcount,0) AS leaveappl_approvedcount, la.tenantid AS la_tenantId"
+				+ " from egeis_leavetype lt, egeis_leaveapplication la"
 				+ " LEFT JOIN  egeis_leaveopeningbalance opb ON opb.leavetypeid=la.leavetypeid and opb.employeeid = la.employeeid and opb.calendaryear=:year and opb.tenantid = la.tenantid "
 				+ " LEFT JOIN "
-				+ " (select count(*) as approvedcount,employeeid,status,leavetypeid,tenantid from egeis_leaveapplication where status in (:statusid)"
+				+ " (select count(*) as approvedcount,employeeid,status,leavetypeid,tenantid from egeis_leaveapplication where fromdate >= TO_DATE(':fromdate', 'DD-MM-YYYY') and todate <= TO_DATE(':todate', 'DD-MM-YYYY') and status in (:statusid)"
 				+ " group by employeeid,status,leavetypeid,tenantid"
 				+ " )leaveappl ON leaveappl.employeeid = la.employeeid and leaveappl.leavetypeid=la.leavetypeid and leaveappl.tenantid=la.tenantid  where lt.id=la.leavetypeid ";
 
 		Long statusId = hrStatusService.getHRStatuses("APPROVED", leaveSearchRequest.getTenantId(), requestInfo).get(0)
 				.getId();
 
-		summaryReportQuery = summaryReportQuery.replace(":todate", sdf.format(leaveSearchRequest.getToDate()));
+		summaryReportQuery = summaryReportQuery.replace(":todate", sdf.format(leaveSearchRequest.getAsOnDate()));
 		summaryReportQuery = summaryReportQuery.replace(":fromdate", sdf.format(fromDate));
 		summaryReportQuery = summaryReportQuery.replace(":statusid", statusId.toString());
 		summaryReportQuery = summaryReportQuery.replace(":year", String.valueOf(year));
@@ -350,11 +347,6 @@ public class LeaveApplicationQueryBuilder {
 		if (leaveSearchRequest.getLeaveType() != null) {
 			selectQuery.append(" and la.leavetypeid=?");
 			preparedStatementValues.add(leaveSearchRequest.getLeaveType());
-		}
-
-		if (leaveSearchRequest.getDesignationId() != null) {
-			selectQuery.append(" and ltt.designationid=?");
-			preparedStatementValues.add(leaveSearchRequest.getDesignationId());
 		}
 
 		if (leaveSearchRequest.getEmployeeIds() != null && leaveSearchRequest.getEmployeeIds().size() > 0) {

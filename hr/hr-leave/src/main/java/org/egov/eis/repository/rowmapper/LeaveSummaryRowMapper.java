@@ -59,10 +59,7 @@ public class LeaveSummaryRowMapper implements RowMapper<LeaveApplication> {
         leaveApplication.setId(rs.getLong("la_id"));
         leaveApplication.setEmployee(rs.getLong("la_employeeId"));
         leaveApplication.setNoOfDays(rs.getFloat("opb_noofdays"));
-        leaveApplication.setAvailableDays(rs.getFloat("eligibleLeaves"));
-        leaveApplication.setTotalLeavesEligible(rs.getFloat("totalLeavesEligible"));
         leaveApplication.setLeaveDays(rs.getFloat("leaveappl_approvedcount"));
-        leaveApplication.setBalance(rs.getFloat("balance"));
         final LeaveType leaveType = new LeaveType();
         leaveType.setId(rs.getLong("lt_id"));
         leaveType.setName(rs.getString("lt_name"));

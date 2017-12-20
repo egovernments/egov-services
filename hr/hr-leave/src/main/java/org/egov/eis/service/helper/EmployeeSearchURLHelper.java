@@ -1,5 +1,7 @@
 package org.egov.eis.service.helper;
 
+import java.text.SimpleDateFormat;
+
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.web.contract.LeaveSearchRequest;
@@ -18,6 +20,7 @@ public class EmployeeSearchURLHelper {
 
 	public String searchURL(final LeaveSearchRequest leaveSearchRequest, final String url) {
 		final StringBuilder searchURL = new StringBuilder(url + "?");
+		final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 		if (leaveSearchRequest.getTenantId() == null)
 			return searchURL.toString();
@@ -42,9 +45,8 @@ public class EmployeeSearchURLHelper {
 		if (leaveSearchRequest.getIsPrimary() != null)
 			searchURL.append("&isPrimary=true");
 
-		if (leaveSearchRequest.getToDate() != null && !leaveSearchRequest.getToDate().equals("")
-				&& leaveSearchRequest.getFromDate() == null)
-			searchURL.append("&asOnDate=" + leaveSearchRequest.getToDate());
+		if (leaveSearchRequest.getAsOnDate() != null && !leaveSearchRequest.getAsOnDate().equals(""))
+			searchURL.append("&asOnDate=" + sdf.format(leaveSearchRequest.getAsOnDate()));
 
 		searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
 

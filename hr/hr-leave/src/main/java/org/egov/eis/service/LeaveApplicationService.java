@@ -189,50 +189,37 @@ public class LeaveApplicationService {
 			final RequestInfo requestInfo) {
 		List<LeaveApplication> leaveSummary;
 		leaveSearchRequest.setIsPrimary(true);
-		leaveSearchRequest.setFromDate(null);
-		if (leaveSearchRequest.getDesignationId() != null || leaveSearchRequest.getCode() != null) {
-			getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
-			leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
-		} else {
-			EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
-					requestInfo);
-			leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
-			leaveSummary.stream().forEach(leaveApplication -> {
-				int i = 0;
+		List<LeaveApplication> removeApplication = new ArrayList<>();
 
-				List<EmployeeInfo> employeesInfo = employeeResponse.getEmployees().stream()
-						.filter(employeeDetail -> employeeDetail.getId().equals(leaveApplication.getEmployee()))
-						.collect(Collectors.toList());
-				if (employeesInfo.size() > 0) {
+		List<Long> employeeIds = null;
+		EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
+				requestInfo);
+		employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId())
+				.collect(Collectors.toList());
+		if (employeeIds.isEmpty())
+			return Collections.EMPTY_LIST;
 
-					if (leaveSearchRequest.getEmployeeType() != null
-							&& !employeesInfo.get(0).getEmployeeType().equals(leaveSearchRequest.getEmployeeType())) {
-						leaveSummary.remove(leaveApplication);
+		leaveSearchRequest.setEmployeeIds(employeeIds);
+		leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
 
-					} else if (leaveSearchRequest.getEmployeeStatus() != null && !employeesInfo.get(0)
-							.getEmployeeStatus().equals(leaveSearchRequest.getEmployeeStatus())) {
-						leaveSummary.remove(leaveApplication);
-					} else if (leaveSearchRequest.getDepartmentId() != null) {
-						List<Assignment> assignments = employeesInfo.get(0).getAssignments();
-						for (Assignment assign : assignments) {
-							if (!assign.getDepartment().equals(leaveSearchRequest.getDepartmentId()))
-								i++;
-						}
-						if (i > 0)
-							leaveSummary.remove(leaveApplication);
-					} else {
-						Float eligibleDays = getEligibleDays(leaveSearchRequest.getToDate(), employeesInfo,
-								leaveApplication);
-						leaveApplication.setAvailableDays(eligibleDays);
-						leaveApplication.setTotalLeavesEligible(eligibleDays + leaveApplication.getNoOfDays());
-						leaveApplication.setBalance(
-								leaveApplication.getTotalLeavesEligible() - leaveApplication.getLeaveDays());
-					}
-				}
+		leaveSummary.stream().forEach(leaveApplication -> {
 
-			});
-		}
+			List<EmployeeInfo> employeesInfo = employeeResponse.getEmployees().stream()
+					.filter(employeeDetail -> employeeDetail.getId().equals(leaveApplication.getEmployee()))
+					.collect(Collectors.toList());
+			if (leaveApplication.getLeaveDays() > 0) {
+				Float eligibleDays = getEligibleDays(leaveSearchRequest.getAsOnDate(), employeesInfo, leaveApplication);
+				leaveApplication.setAvailableDays(eligibleDays);
+				leaveApplication.setTotalLeavesEligible(eligibleDays + leaveApplication.getNoOfDays());
+				leaveApplication
+						.setBalance(leaveApplication.getTotalLeavesEligible() - leaveApplication.getLeaveDays());
+			} else {
+				removeApplication.add(leaveApplication);
+			}
+		});
+		leaveSummary.removeAll(removeApplication);
 		return leaveSummary;
+
 	}
 
 	public Float getEligibleDays(Date asOnDate, List<EmployeeInfo> employees, LeaveApplication leaveApplication) {
@@ -255,11 +242,16 @@ public class LeaveApplicationService {
 			}
 		}
 
-		if (dateOfAppointment != null && dateOfAppointment.isAfter(yearStartDate))
+		if (dateOfAppointment != null && yearStartDate != null && dateOfAppointment.isAfter(yearStartDate))
 			yearStartDate = dateOfAppointment;
 
 		List<Map<String, Object>> leaveAllotmentsList = leaveAllotmentRepository.getLeaveAllotmentByDesignation(
 				leaveApplication.getLeaveType().getId(), designationid, leaveApplication.getTenantId());
+
+		if (leaveAllotmentsList.isEmpty()) {
+			leaveAllotmentsList = leaveAllotmentRepository.getLeaveAllotmentByDesignation(
+					leaveApplication.getLeaveType().getId(), null, leaveApplication.getTenantId());
+		}
 
 		if (leaveAllotmentsList != null && !leaveAllotmentsList.isEmpty()) {
 			Object noofdays = leaveAllotmentsList.get(0).get("noofdays");

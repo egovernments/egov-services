@@ -508,7 +508,7 @@ serviceMaps:
       fromTopic: inv-issues-save-topic
       queryMaps:
         - query: >-
-            INSERT INTO materialissue(id, tenantId, issuetype, fromstore, tostore, issuenumber, issuedate, materialissuestatus, description, totalissuevalue, fileStoreId, designation, indentid, issuedtoemployee, issuedtodesignation, issuepurpose,
+            INSERT INTO materialissue(id, tenantId, issuetype, fromstore, tostore, issuenumber, issuedate, materialissuestatus, description, totalissuevalue, fileStoreId, designation, indentnumber, issuedtoemployee, issuedtodesignation, issuepurpose,
               supplier, stateId, createdby, createdTime, lastmodifiedby, lastmodifiedtime)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialIssues.*
@@ -527,7 +527,7 @@ serviceMaps:
               dbType: DOUBLE
             - jsonPath: $.materialIssues.*.fileStoreId
             - jsonPath: $.materialIssues.*.designation
-            - jsonPath: $.materialIssues.*.indent.id
+            - jsonPath: $.materialIssues.*.indent.indentnumber
             - jsonPath: $.materialIssues.*.issuedToEmployee
             - jsonPath: $.materialIssues.*.issuedToDesignation
             - jsonPath: $.materialIssues.*.issuePurpose
@@ -583,7 +583,7 @@ serviceMaps:
       queryMaps:
         - query: >-
                update materialissue set issuetype = ?, fromstore  = ?, tostore = ?, issuedate = ?, materialissuestatus = ?, description = ?,
-               totalissuevalue = ?, fileStoreId = ?, designation = ?, indentid = ?, issuedtoemployee = ?, issuedtodesignation = ?, issuepurpose = ?, supplier = ?, stateId = ?, lastmodifiedby = ?, lastModifiedTime = ? where issuenumber = ? and tenantid = ?;
+               totalissuevalue = ?, fileStoreId = ?, designation = ?, indentnumber = ?, issuedtoemployee = ?, issuedtodesignation = ?, issuepurpose = ?, supplier = ?, stateId = ?, lastmodifiedby = ?, lastModifiedTime = ? where issuenumber = ? and tenantid = ?;
           basePath: $.materialIssues.*
           jsonMaps:
             - jsonPath: $.materialIssues.*.issueType
@@ -596,7 +596,7 @@ serviceMaps:
               dbType: DOUBLE
             - jsonPath: $.materialIssues.*.fileStoreId
             - jsonPath: $.materialIssues.*.designation
-            - jsonPath: $.materialIssues.*.indent.id
+            - jsonPath: $.materialIssues.*.indent.indentnumber
             - jsonPath: $.materialIssues.*.issuedToEmployee
             - jsonPath: $.materialIssues.*.issuedToDesignation
             - jsonPath: $.materialIssues.*.issuePurpose
@@ -1432,6 +1432,7 @@ serviceMaps:
             - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.batchNo
             - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
               type: LONG
+
 
 
 

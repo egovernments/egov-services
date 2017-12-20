@@ -27,7 +27,7 @@ import javax.validation.Valid;
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
 @Controller
-public class MaterailIssuesApiController implements MaterailIssuesApi {
+public class MaterialIssueTransferOutwardApiController implements MaterailIssueTransferOutwardApi {
 
 	@Autowired
 	private MaterialIssuesService materialIssueService;
@@ -36,7 +36,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	public ResponseEntity<MaterialIssueResponse> materialIssuesCreatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest , null);
+		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest, IssueTypeEnum.MATERIALOUTWARD.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 
@@ -55,9 +55,9 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 			@ApiParam(value = "Page number") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
-				issueNoteNumber, issueDate, null, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
+				issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
 				pageSize);
-		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract,IssueTypeEnum.INDENTISSUE.toString());
+		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract, IssueTypeEnum.MATERIALOUTWARD.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 
@@ -65,14 +65,9 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	public ResponseEntity<MaterialIssueResponse> materialIssuesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId,null);
+		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId, IssueTypeEnum.MATERIALOUTWARD.toString());
 		return new ResponseEntity(materialIssueResponse,HttpStatus.OK);
 	}
 	
-	public ResponseEntity<MaterialIssueResponse> materiallIssuesPreparemiFromIndents(
-			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Create  new")  @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.prepareMIFromIndents(indentIssueRequest, tenantId);
-		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
-	}
+	
 }

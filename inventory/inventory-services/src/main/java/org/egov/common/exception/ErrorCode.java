@@ -221,7 +221,12 @@ public enum ErrorCode {
     		"field {0} is not provided at issuedetail level at row {1}"), 
     NOT_ALLOWED_TO_UPDATE("not.allowed.to.update",
     		"field {0} of {1} is not allowed to update",
-    		"field {0} of {1} is not allowed to update");
+    		"field {0} of {1} is not allowed to update"),
+    ACTIVE_STORES_ALLOWED("active.stores.allowed",
+    		"{0} should be active","{0} should be active"),
+    INDENT_NOT_APPROVED("indent.not.approved","associated indent with no {0} is not in approved status",
+    		"issue is not possible"),
+    NO_ITEMS_TO_ISSUE("no.items.to.issue","selected indent has no items to issue", "selected indent has no items to issue");
 	
 
 

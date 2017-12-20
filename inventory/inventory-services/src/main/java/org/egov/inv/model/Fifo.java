@@ -30,5 +30,4 @@ public class Fifo {
 	
 	private String mrnNumber;
 	
-    private String materialIssueDetailId;
 }

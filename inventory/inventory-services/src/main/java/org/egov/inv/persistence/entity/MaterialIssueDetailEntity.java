@@ -56,17 +56,13 @@ public class MaterialIssueDetailEntity {
 		unit.setCode(uom);
 		Material material = new Material();
 		material.setCode(materialCode);
-		if(type.equals(IssueTypeEnum.INDENTISSUE.toString())){
+		if(type.equals(IssueTypeEnum.INDENTISSUE.toString()) || type.equals(IssueTypeEnum.MATERIALOUTWARD.toString())){
 		IndentDetail indentDetail = new IndentDetail();
-		indentDetail.setUom(unit);
-		indentDetail.setMaterial(material);
 		indentDetail.setId(indentDetailId);
 		detail.setIndentDetail(indentDetail);
 		}
-		else{
-			detail.setUom(unit);
-			detail.setMaterial(material);
-		}
+		detail.setUom(unit);
+		detail.setMaterial(material);
 		if(scrapValue != null )
 		detail.scrapValue(BigDecimal.valueOf(scrapValue));
 		detail.setVoucherHeader(voucherHeader);

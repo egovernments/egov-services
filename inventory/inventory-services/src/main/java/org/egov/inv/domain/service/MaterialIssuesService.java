@@ -20,6 +20,7 @@ import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.Department;
+import org.egov.inv.model.Indent.IndentStatusEnum;
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentSearch;
 import org.egov.inv.model.Material;
@@ -32,19 +33,18 @@ import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
 import org.egov.inv.model.MaterialReceiptDetail;
-import org.egov.inv.model.MaterialReceiptDetailSearch;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.FifoEntity;
 import org.egov.inv.persistence.entity.IndentDetailEntity;
+import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
-import org.egov.inv.persistence.entity.PurchaseOrderDetailEntity;
+import org.egov.inv.persistence.repository.IndentDetailJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
-import org.egov.inv.persistence.repository.MaterialReceiptDetailJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -84,10 +84,10 @@ public class MaterialIssuesService extends DomainService {
 	private DepartmentService departmentService;
 
 	@Autowired
-	private MaterialReceiptDetailJdbcRepository materialReceiptDetailJdbcRepository;
-
-	@Autowired
 	private MaterialIssueReceiptFifoLogic materialIssueReceiptFifoLogic;
+	
+	@Autowired
+	private IndentDetailJdbcRepository indentDetailJdbcRepository;
 
 	@Value("${inv.issues.save.topic}")
 	private String createTopic;
@@ -104,17 +104,17 @@ public class MaterialIssuesService extends DomainService {
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	public MaterialIssueResponse create(final MaterialIssueRequest materialIssueRequest) {
+	public MaterialIssueResponse create(final MaterialIssueRequest materialIssueRequest, String type) {
 		try {
-			fetchRelated(materialIssueRequest);
-			validate(materialIssueRequest.getMaterialIssues(), Constants.ACTION_CREATE);
+			fetchRelated(materialIssueRequest, Constants.ACTION_CREATE);
+			validate(materialIssueRequest.getMaterialIssues(), Constants.ACTION_CREATE , type);
 			List<String> sequenceNos = materialIssueJdbcRepository.getSequence(MaterialIssue.class.getSimpleName(),
 					materialIssueRequest.getMaterialIssues().size());
 			int i = 0;
 			for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
 				String seqNo = sequenceNos.get(i);
 				materialIssue.setId(seqNo);
-				setMaterialIssueValues(materialIssue, seqNo, Constants.ACTION_CREATE);
+				setMaterialIssueValues(materialIssue, seqNo, Constants.ACTION_CREATE ,type);
 				materialIssue.setAuditDetails(mapAuditDetails(materialIssueRequest.getRequestInfo()));
 				i++;
 				int j = 0;
@@ -201,8 +201,8 @@ public class MaterialIssuesService extends DomainService {
 		return unitRate.multiply(materialIssueDetail.getQuantityIssued());
 	}
 
-	private void fetchRelated(MaterialIssueRequest materialIssueRequest) {
-
+	private void fetchRelated(MaterialIssueRequest materialIssueRequest, String action) {
+        if(action.equals(Constants.ACTION_CREATE)){
 		for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
 
 			if (materialIssue.getIndent().getIssueStore() != null
@@ -260,11 +260,74 @@ public class MaterialIssuesService extends DomainService {
 			}
 
 		}
+        }
+        else{
+        	for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
+
+    			if (materialIssue.getFromStore() != null
+    					&& StringUtils.isNotBlank(materialIssue.getFromStore().getCode())) {
+    				StoreGetRequest storeGetRequest = new StoreGetRequest();
+    				storeGetRequest.setCode(Arrays.asList(materialIssue.getFromStore().getCode()));
+    				storeGetRequest.setTenantId(materialIssue.getTenantId());
+    				List<Store> stores = storeService.search(storeGetRequest).getStores();
+    				if (stores.isEmpty())
+    					throw new CustomException("invalid.ref.value",
+    							"the field issuestore should have a valid value which exists in the system.");
+    				else
+    					materialIssue.setFromStore(stores.get(0));
+
+    			}
+    			if (materialIssue.getToStore() != null
+    					&& StringUtils.isNotBlank(materialIssue.getToStore().getCode())) {
+    				StoreGetRequest storeGetRequest = new StoreGetRequest();
+    				storeGetRequest.setCode(Arrays.asList(materialIssue.getToStore().getCode()));
+    				storeGetRequest.setTenantId(materialIssue.getTenantId());
+    				List<Store> stores = storeService.search(storeGetRequest).getStores();
+    				if (stores.isEmpty())
+    					throw new CustomException("invalid.ref.value",
+    							"the field indentstore should have a valid value which exists in the system.");
+    				else
+    					materialIssue.setToStore(stores.get(0));
+    			}
+    			if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
+    				ObjectMapper mapper = new ObjectMapper();
+    				Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper,
+    						new RequestInfo());
+    				Map<String, Uom> uomMap = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
+    				for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+    					if (materialIssueDetail.getMaterial() != null
+    							&& StringUtils.isNotBlank(materialIssueDetail.getMaterial().getCode())) {
+    						if (materialMap.get(materialIssueDetail.getMaterial().getCode()) == null)
+    							throw new CustomException("invalid.ref.value",
+    									"the field material should have a valid value which exists in the system.");
+
+    						else
+    							materialIssueDetail.setMaterial(
+    									materialMap.get(materialIssueDetail.getMaterial().getCode()));
+    					}
+    					if (materialIssueDetail.getUom() != null
+    							&& StringUtils.isNotBlank(materialIssueDetail.getUom().getCode())) {
+    						if (uomMap.get(materialIssueDetail.getUom().getCode()) == null)
+    							throw new CustomException("invalid.ref.value",
+    									"the field uom should have a valid value which exists in the system.");
+
+    						else
+    							materialIssueDetail
+    									.setUom(uomMap.get(materialIssueDetail.getUom().getCode()));
+    					}
+    				}
+    			}
+
+    		}
+        }
 
 	}
 
-	private void setMaterialIssueValues(MaterialIssue materialIssue, String seqNo, String action) {
+	private void setMaterialIssueValues(MaterialIssue materialIssue, String seqNo, String action, String type) {
+		if(type.equals(IssueTypeEnum.INDENTISSUE.toString()))
 		materialIssue.setIssueType(IssueTypeEnum.INDENTISSUE);
+		else
+			materialIssue.setIssueType(IssueTypeEnum.MATERIALOUTWARD);
 		if (StringUtils.isNotBlank(materialIssue.getIndent().getIndentCreatedBy()))
 			materialIssue.setIssuedToEmployee(materialIssue.getIndent().getIndentCreatedBy());
 		if (StringUtils.isNotBlank(materialIssue.getIndent().getDesignation()))
@@ -274,7 +337,6 @@ public class MaterialIssuesService extends DomainService {
 			materialIssue.setIssueNumber("MRIN-" + String.valueOf(year) + "-" + seqNo);
 			materialIssue.setMaterialIssueStatus(MaterialIssueStatusEnum.CREATED);
 		}
-
 	}
 
 	private void convertToUom(MaterialIssueDetail materialIssueDetail) {
@@ -293,11 +355,10 @@ public class MaterialIssuesService extends DomainService {
 								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
 					mifr.setQuantity(BigDecimal.valueOf(quantity));
 				}
-
 		}
 	}
 
-	private void validate(List<MaterialIssue> materialIssues, String method) {
+	private void validate(List<MaterialIssue> materialIssues, String method, String type) {
 		InvalidDataException errors = new InvalidDataException();
 		try {
 			Long currentDate = currentEpochWithoutTime();
@@ -313,6 +374,60 @@ public class MaterialIssuesService extends DomainService {
 						String date = convertEpochtoDate(materialIssue.getIssueDate());
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate", date);
 					}
+					if(materialIssue.getIndent() != null &&  StringUtils.isNotBlank(materialIssue.getIndent().getIndentNumber() ))
+					{
+						IndentEntity indentEntity = new IndentEntity();
+						indentEntity.setIndentNumber(materialIssue.getIndent().getIndentNumber());
+						indentEntity.setTenantId(materialIssue.getTenantId());
+						Object indenttEntity = materialIssueJdbcRepository.findById(indentEntity,
+								"IndentEntity");
+						IndentEntity indentEntityfromDb = (IndentEntity) indenttEntity;
+						if (indentEntityfromDb != null) {
+							if(!indentEntityfromDb.getIndentStatus().equals(IndentStatusEnum.APPROVED))
+								errors.addDataError(ErrorCode.INDENT_NOT_APPROVED.getCode(), materialIssue.getIndent().getIndentNumber());
+						}
+						BigDecimal totalIndentQuantity = BigDecimal.ZERO;
+						List <IndentDetailEntity> indentDetailEntity =indentDetailJdbcRepository.find(Arrays.asList(materialIssue.getIndent().getIndentNumber()), materialIssue.getTenantId(), null);
+				if(!indentDetailEntity.isEmpty())
+				{
+					for(IndentDetailEntity indentDetailsEntity :indentDetailEntity){
+						BigDecimal quantity =  BigDecimal.ZERO;
+						IndentDetail indentDetail = indentDetailsEntity.toDomain();
+						if(indentDetail.getIndentQuantity() != null && indentDetail.getIndentIssuedQuantity() != null)
+						 quantity =	indentDetail.getIndentQuantity().subtract(indentDetail.getIndentIssuedQuantity());
+						totalIndentQuantity = totalIndentQuantity.add(quantity);
+					}
+				}
+				if(totalIndentQuantity.equals(BigDecimal.ZERO))
+					errors.addDataError(ErrorCode.NO_ITEMS_TO_ISSUE.getCode());
+					}
+				    if(type != null)
+					if(type.equals(IssueTypeEnum.MATERIALOUTWARD.toString()))
+					{
+						if(materialIssue.getToStore() == null) 
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "toStore", "issueType - Transfer Outward", "");
+							else{
+								if(StringUtils.isBlank(materialIssue.getToStore().getCode()))
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "toStore", "issueType - Transfer Outward", "");
+							}
+						if(materialIssue.getFromStore() == null) 
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "fromStore", "issueType - Transfer Outward", "");
+							else{
+								if(StringUtils.isBlank(materialIssue.getFromStore().getCode()))
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "fromStore", "issueType - Transfer Outward", "");
+							}
+						if(materialIssue.getFromStore() != null  &&
+								materialIssue.getFromStore().getActive() != null){
+						if(!materialIssue.getFromStore().getActive())
+							errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "fromStore");
+						}
+						if(materialIssue.getToStore() != null &&
+								materialIssue.getToStore().getActive()){
+							if(!materialIssue.getToStore().getActive())
+								errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "toStore");
+							}
+					}
+					
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 						int i = 1;
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
@@ -361,6 +476,32 @@ public class MaterialIssuesService extends DomainService {
 					if (materialIssue.getIssueDate().compareTo(currentDate) > 0) {
 						String date = convertEpochtoDate(materialIssue.getIssueDate());
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate", date);
+					}
+				    if(type != null)
+					if(type.equals(IssueTypeEnum.MATERIALOUTWARD.toString()))
+					{
+						if(materialIssue.getToStore() == null) 
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "toStore", "issueType - Transfer Outward", "");
+							else{
+								if(StringUtils.isBlank(materialIssue.getToStore().getCode()))
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "toStore", "issueType - Transfer Outward", "");
+							}
+						if(materialIssue.getFromStore() == null) 
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "fromStore", "issueType - Transfer Outward", "");
+							else{
+								if(StringUtils.isBlank(materialIssue.getFromStore().getCode()))
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "fromStore", "issueType - Transfer Outward", "");
+							}
+						if(materialIssue.getFromStore() != null  &&
+								materialIssue.getFromStore().getActive() != null){
+						if(!materialIssue.getFromStore().getActive())
+							errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "fromStore");
+						}
+						if(materialIssue.getToStore() != null &&
+								materialIssue.getToStore().getActive()){
+							if(!materialIssue.getToStore().getActive())
+								errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "toStore");
+							}
 					}
 					if (materialIssue.getIssueNumber() != null) {
 						MaterialIssueEntity materialIssueEntity = new MaterialIssueEntity();
@@ -449,9 +590,9 @@ public class MaterialIssuesService extends DomainService {
 		}
 	}
 
-	public MaterialIssueResponse update(final MaterialIssueRequest materialIssueRequest, String tenantId) {
-		fetchRelated(materialIssueRequest);
-		validate(materialIssueRequest.getMaterialIssues(), Constants.ACTION_UPDATE);
+	public MaterialIssueResponse update(final MaterialIssueRequest materialIssueRequest, String tenantId, String type) {
+		fetchRelated(materialIssueRequest, Constants.ACTION_UPDATE);
+		validate(materialIssueRequest.getMaterialIssues(), Constants.ACTION_UPDATE, type);
 		List<MaterialIssue> materialIssues = materialIssueRequest.getMaterialIssues();
 		for (MaterialIssue materialIssue : materialIssues) {
 			if (StringUtils.isEmpty(materialIssue.getTenantId()))
@@ -459,23 +600,13 @@ public class MaterialIssuesService extends DomainService {
 			MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract();
 			searchContract.setIssueNoteNumber(materialIssue.getIssueNumber());
 			searchContract.setTenantId(materialIssue.getTenantId());
-			MaterialIssueResponse issueResponse = search(searchContract);
+			MaterialIssueResponse issueResponse = search(searchContract,type);
 			if(materialIssue.getMaterialIssueStatus() != null )
 			if(materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString())){
 				issueResponse.getMaterialIssues().get(0).setMaterialIssueStatus(MaterialIssueStatusEnum.CANCELED);
 				updateStatusAsCancelled(tenantId, materialIssue);
-				if(!issueResponse.getMaterialIssues().isEmpty() && issueResponse.getMaterialIssues().get(0) != null &&
-						issueResponse.getMaterialIssues().get(0).getIndent()!= null){
-				issueResponse.getMaterialIssues().get(0).setFromStore(issueResponse.getMaterialIssues().get(0).getIndent().getIssueStore());
-				issueResponse.getMaterialIssues().get(0).setToStore(issueResponse.getMaterialIssues().get(0).getIndent().getIndentStore());
-				for(MaterialIssueDetail materialIssueDetail : issueResponse.getMaterialIssues().get(0).getMaterialIssueDetails()){
-					if(materialIssueDetail.getIndentDetail() != null && materialIssueDetail.getIndentDetail().getUom() != null)
-					materialIssueDetail.setUom(materialIssueDetail.getIndentDetail().getUom());
-					if(materialIssueDetail.getIndentDetail() != null && materialIssueDetail.getIndentDetail().getMaterial() != null)
-					materialIssueDetail.setMaterial(materialIssueDetail.getIndentDetail().getMaterial());
+				materialIssueRequest.setMaterialIssues(Arrays.asList(issueResponse.getMaterialIssues().get(0)));
 				}
-				materialIssueRequest.setMaterialIssues(Arrays.asList(issueResponse.getMaterialIssues().get(0)));}
-			}
 			List<MaterialIssueDetail> materialIssueDetails = issueResponse.getMaterialIssues().get(0)
 					.getMaterialIssueDetails();
 			List<String> materialIssuedFromReceiptsIds = new ArrayList<>();
@@ -483,11 +614,11 @@ public class MaterialIssuesService extends DomainService {
 			Map<String,Uom> uoms = getUoms(tenantId, objectMapper, new RequestInfo());
 			for (MaterialIssueDetail materialIssueDetail : materialIssueDetails) {
 				Double quantityIssued = getSaveConvertedQuantity(Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
-						Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode()).getConversionFactor().toString()));
+						Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor().toString()));
 				materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
 				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
 					Double quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()),
-							Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode()).getConversionFactor().toString()));
+							Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor().toString()));
 					mifr.setQuantity(BigDecimal.valueOf(quantity));
 					materialIssuedFromReceiptsIds.add(mifr.getId());
 					mifr.setStatus(false);
@@ -500,7 +631,7 @@ public class MaterialIssuesService extends DomainService {
 				backUpdateIndentInCaseOfUpdate(materialIssueDetails, materialIssue.getTenantId());
 			if( materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString()))
 				break;
-			setMaterialIssueValues(materialIssue, null, Constants.ACTION_UPDATE);
+			setMaterialIssueValues(materialIssue, null, Constants.ACTION_UPDATE,type);
 			materialIssue
 					.setAuditDetails(getAuditDetails(materialIssueRequest.getRequestInfo(), Constants.ACTION_UPDATE));
 			BigDecimal totalIssueValue = BigDecimal.ZERO;
@@ -522,9 +653,7 @@ public class MaterialIssuesService extends DomainService {
 			materialIssueDetailsJdbcRepository.markDeleted(materialIssueDetailsIds, tenantId, "materialissuedetail",
 					"materialissuenumber", materialIssue.getIssueNumber());
 			materialIssue.setTotalIssueValue(totalIssueValue);
-	
 		}
-		
 		kafkaTemplate.send(updateTopic, updateKey, materialIssueRequest);
 		MaterialIssueResponse response = new MaterialIssueResponse();
 		response.setMaterialIssues(materialIssueRequest.getMaterialIssues());
@@ -533,7 +662,6 @@ public class MaterialIssuesService extends DomainService {
 	}
 
 	private void updateStatusAsCancelled(String tenantId, MaterialIssue materialIssue) {
-	
          materialIssueJdbcRepository.updateStatus(materialIssue.getIssueNumber(), materialIssue.getTenantId());		
 	}
 
@@ -552,14 +680,14 @@ public class MaterialIssuesService extends DomainService {
 
 	
 
-	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract) {
+	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract, String type) {
 		Pagination<MaterialIssue> materialIssues = materialIssueJdbcRepository.search(searchContract,
-				IssueTypeEnum.INDENTISSUE.toString());
+				type);
 		if (materialIssues.getPagedData().size() > 0)
 			for (MaterialIssue materialIssue : materialIssues.getPagedData()) {
 				Pagination<MaterialIssueDetail> materialIssueDetails = materialIssueDetailsJdbcRepository.search(
 						materialIssue.getIssueNumber(), materialIssue.getTenantId(),
-						IssueTypeEnum.INDENTISSUE.toString());
+						type);
 				if (materialIssueDetails.getPagedData().size() > 0) {
 					for (MaterialIssueDetail materialIssueDetail : materialIssueDetails.getPagedData()) {
 				Pagination<MaterialIssuedFromReceipt> materialIssuedFromReceipts = materialIssuedFromReceiptsJdbcRepository.search(materialIssueDetail.getId(), materialIssueDetail.getTenantId());
@@ -584,16 +712,13 @@ public class MaterialIssuesService extends DomainService {
 					materialIssue.setMaterialIssueDetails(materialIssueDetails.getPagedData());
 				}
 			}
-
 		MaterialIssueResponse materialIssueResponse = new MaterialIssueResponse();
 		materialIssueResponse.setMaterialIssues(materialIssues.getPagedData());
 		return materialIssueResponse;
-
 	}
 
 	public MaterialIssueResponse prepareMIFromIndents(MaterialIssueRequest materialIssueRequest, String tenantId) {
 		for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
-
 			if (materialIssue.getIndent() != null
 					&& StringUtils.isNotBlank(materialIssue.getIndent().getIndentNumber())) {
 				IndentSearch indentSearch = new IndentSearch();
@@ -676,5 +801,4 @@ public class MaterialIssuesService extends DomainService {
 		String s2 = format.format(epoch);
 		return s2;
 	}
-
 }

@@ -55,7 +55,7 @@ public class MaterialIssueTransferOutwardApiController implements MaterailIssueT
 			@ApiParam(value = "Page number") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
-				issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
+				issueNoteNumber, issueDate,null, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
 				pageSize);
 		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract, IssueTypeEnum.MATERIALOUTWARD.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);

@@ -10,94 +10,91 @@ var dat = {
             "label":"swm.search.title",
             "fields":[
                {
-                  "name":"transactionNos",
-                  "jsonPath":"transactionNos",
-                  "label":"swm.create.transactionNos",
-                  "type":"",
-                  "isDisabled":false,
-                  "patternErrorMsg":"swm.create.field.message.transactionNos"
-               },
-               {
-                  "name":"transactionNo",
-                  "jsonPath":"transactionNo",
-                  "label":"swm.create.transactionNo",
-                  "type":"text",
-                  "isDisabled":false,
-                  "patternErrorMsg":"swm.create.field.message.transactionNo"
-               },
-               {
-                  "name":"routeCode",
-                  "jsonPath":"routeCode",
-                  "label":"swm.create.routeCode",
-                  "type":"text",
-                  "isDisabled":false,
-                  "patternErrorMsg":"swm.create.field.message.routeCode"
-               },
-               {
-                  "name":"regNumber",
-                  "jsonPath":"regNumber",
-                  "label":"swm.create.regNumber",
-                  "type":"text",
-                  "isDisabled":false,
-                  "patternErrorMsg":"swm.create.field.message.regNumber"
-               },
-               {
                   "name":"scheduledFrom",
                   "jsonPath":"scheduledFrom",
                   "label":"swm.create.scheduledFrom",
-                  "type":"number",
+                  "pattern":"",
+                  "type":"datePicker",
+                  "isRequired":false,
                   "isDisabled":false,
-                  "patternErrorMsg":"swm.create.field.message.scheduledFrom"
+                  "defaultValue":"",
+                  "patternErrorMsg":""
                },
                {
                   "name":"scheduledTo",
                   "jsonPath":"scheduledTo",
                   "label":"swm.create.scheduledTo",
-                  "type":"number",
+                  "pattern":"",
+                  "type":"datePicker",
+                  "isRequired":false,
                   "isDisabled":false,
-                  "patternErrorMsg":"swm.create.field.message.scheduledTo"
+                  "defaultValue":"",
+                  "patternErrorMsg":""
                },
                {
-                  "name":"offSet",
-                  "jsonPath":"offSet",
-                  "label":"swm.create.offSet",
-                  "type":"number",
-                  "isDisabled":false,
-                  "patternErrorMsg":"swm.create.field.message.offSet"
-               }
+                 "name": "route",
+                 "jsonPath": "name",
+                  "label": "swm.create.route",
+                  "type": "autoCompelete",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "maxLength": 256,
+                  "minLength": 1,
+                  "patternErrorMsg": "",
+                  "url": "swm-services/routes/_search?|$.routes.*.code|$.routes.*.name"
+               },
+               {
+                 "name": "regNumber",
+                 "jsonPath": "regNumber",
+                  "label": "swm.create.regNumber",
+                  "type": "autoCompelete",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "maxLength": 12,
+                  "minLength": 6,
+                  "patternErrorMsg": '',
+                  "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber"
+               },
+               
             ]
          }
       ],
       "result":{
          "header":[
             {
-               "label":"swm.search.result.scheduledFrom"
+               "label":"swm.create.scheduledFrom"
             },
             {
-               "label":"swm.search.result.scheduledTo"
+               "label":"swm.create.scheduledTo"
             },
             {
-               "label":"swm.search.result.targetedGarbage"
+               "label": "swm.create.route"
+            },
+            {
+               "label": "swm.create.regNumber"
             }
          ],
          "values":[
-            "vehicleSchedules[0].scheduledFrom",
-            "vehicleSchedules[0].scheduledTo",
-            "vehicleSchedules[0].targetedGarbage"
+            "scheduledFrom",
+            "scheduledTo",
+            "route.name",
+            "vehicle.regNumber"
          ],
          "resultPath":"vehicleSchedules",
-         "rowClickUrlUpdate":"/update/swm/vehicleSchedules/{transactionNo}",
-         "rowClickUrlView":"/view/swm/vehicleSchedules/{transactionNo}"
+         "rowClickUrlUpdate":"/update/swm/vehicleschedules/{transactionNo}",
+         "rowClickUrlView":"/view/swm/vehicleschedules/{transactionNo}"
       }
    },
    "swm.create":{
       "numCols":4,
       "useTimestamp":true,
+      "idJsonPath": 'vehicleSchedules[0].code',
       "objectName":"vehicleSchedules",
+      "title": "swm.create.page.title.VehicleSchedules",
       "groups":[
          {
             "name":"SourceSegregationDetails",
-            "label":"swm.create.group.title.SourceSegregationDetails",
             "fields":[
                {
                   "name":"scheduledFrom",
@@ -105,7 +102,7 @@ var dat = {
                   "label":"swm.create.scheduledFrom",
                   "pattern":"",
                   "type":"datePicker",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -116,31 +113,85 @@ var dat = {
                   "label":"swm.create.scheduledTo",
                   "pattern":"",
                   "type":"datePicker",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
                },
                {
             	  "name": "route",
-            	  "jsonPath": "vehicleSchedules[0].route",
+            	  "jsonPath": "vehicleSchedules[0].route.code",
                   "label": "swm.create.route",
-                  "type": "singleValueList",
-                  "isRequired": true,
+                  "type": "autoCompelete",
+                  "isRequired": false,
                   "isDisabled": false,
                   "maxLength": 256,
                   "minLength": 1,
                   "patternErrorMsg": "",
+                  "url": "swm-services/routes/_search?|$.routes.*.code|$.routes.*.name",
+                  "autoCompleteDependancy": {
+                    "autoCompleteUrl": "swm-services/routes/_search?code={vehicleSchedules[0].route.code}",
+                    "autoFillFields": {
+                       "vehicleSchedules[0].route.collectionType.name": "routes[0].collectionType.name",
+                     },
+                  },
           	   },
+               {
+                 "name": "regNumber",
+                 "jsonPath": "vehicleSchedules[0].vehicle.regNumber",
+                  "label": "swm.create.regNumber",
+                  "type": "autoCompelete",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "maxLength": 12,
+                  "minLength": 6,
+                  "patternErrorMsg": '',
+                  "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
+                  "autoCompleteDependancy": {
+                    "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleSchedules[0].vehicle.regNumber}",
+                    "autoFillFields": {
+                       "vehicleSchedules[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name",
+                     },
+                  },
+               },
+               {
+                  'name': 'vehicleType',
+                  'jsonPath': 'vehicleSchedules[0].vehicle.vehicleType.code',
+                  'label': 'swm.vehicles.create.vehicleType',
+                  'pattern': '',
+                  'type': 'text',
+                  'isRequired': false,
+                  'isDisabled': true,
+                  'defaultValue': '',
+                  'maxLength': 128,
+                  'minLength': 1,
+                  'patternErrorMsg': '',
+                  'url': '',
+               },
+               {
+                 "name": "collectionType",
+                 "jsonPath": "vehicleSchedules[0].route.collectionType.name",
+                  "label": "swm.create.collectionType",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  'defaultValue': '',
+                  "maxLength": 256,
+                  "minLength": 1,
+                  "patternErrorMsg": "",
+               },
                {
                   "name":"targetedGarbage",
                   "jsonPath":"vehicleSchedules[0].targetedGarbage",
                   "label":"swm.create.targetedGarbage",
                   "pattern":"",
                   "type":"text",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
+                  "maxLength": 256,
+                  "minLength": 1,
                   "patternErrorMsg":""
                }
             ]
@@ -153,6 +204,7 @@ var dat = {
       "numCols":4,
       "useTimestamp":true,
       "objectName":"vehicleSchedules",
+      "idJsonPath": 'vehicleSchedules[0].code',
       "groups":[
          {
             "name":"SourceSegregationDetails",
@@ -163,8 +215,8 @@ var dat = {
                   "jsonPath":"vehicleSchedules[0].scheduledFrom",
                   "label":"swm.create.scheduledFrom",
                   "pattern":"",
-                  "type":"number",
-                  "isRequired":true,
+                  "type":"datePicker",
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -174,11 +226,62 @@ var dat = {
                   "jsonPath":"vehicleSchedules[0].scheduledTo",
                   "label":"swm.create.scheduledTo",
                   "pattern":"",
-                  "type":"number",
-                  "isRequired":true,
+                  "type":"datePicker",
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
+               },
+               {
+                  "name": "route",
+                  "jsonPath": "vehicleSchedules[0].route.name",
+                  "label": "swm.create.route",
+                  "type": "autoCompelete",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "maxLength": 256,
+                  "minLength": 1,
+                  "patternErrorMsg": "",
+                  "url": ""
+               },
+               {
+                  "name": "regNumber",
+                  "jsonPath": "vehicleSchedules[0].vehicle.regNumber",
+                  "label": "swm.create.regNumber",
+                  "type": "autoCompelete",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "maxLength": 12,
+                  "minLength": 6,
+                  "patternErrorMsg": '',
+                  "url": ""
+               },
+               {
+                  "name": "vehicleType",
+                  "jsonPath": "vehicleSchedules[0].vehicle.vehicleType.code",
+                  "label": "swm.vehicles.create.vehicleType",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "defaultValue": "",
+                  "maxLength": 128,
+                  "minLength": 1,
+                  "patternErrorMsg": "",
+                  "url": "",
+               },
+               {
+                  "name": "collectionType",
+                  "jsonPath": "vehicleSchedules[0].route.collectionType.code",
+                  "label": "swm.create.collectionType",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "defaultValue": "",
+                  "maxLength": 256,
+                  "minLength": 1,
+                  "patternErrorMsg": "",
                },
                {
                   "name":"targetedGarbage",
@@ -186,7 +289,7 @@ var dat = {
                   "label":"swm.create.targetedGarbage",
                   "pattern":"",
                   "type":"number",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -195,12 +298,13 @@ var dat = {
          }
       ],
       "tenantIdRequired":true,
-      "url":"/swm-servicesundefined"
+      "url":"/swm-services/vehicleschedules/_search?transactionNo={transactionNo}",
    },
    "swm.update":{
       "numCols":4,
       "useTimestamp":true,
       "objectName":"vehicleSchedules",
+      "idJsonPath": 'vehicleSchedules[0].code',
       "groups":[
          {
             "name":"SourceSegregationDetails",
@@ -211,8 +315,8 @@ var dat = {
                   "jsonPath":"vehicleSchedules[0].scheduledFrom",
                   "label":"swm.create.scheduledFrom",
                   "pattern":"",
-                  "type":"number",
-                  "isRequired":true,
+                  "type":"datePicker",
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -222,11 +326,74 @@ var dat = {
                   "jsonPath":"vehicleSchedules[0].scheduledTo",
                   "label":"swm.create.scheduledTo",
                   "pattern":"",
-                  "type":"number",
-                  "isRequired":true,
+                  "type":"datePicker",
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
+               },
+               {
+                  "name": "route",
+                  "jsonPath": "vehicleSchedules[0].route.name",
+                  "label": "swm.create.route",
+                  "type": "autoCompelete",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "maxLength": 256,
+                  "minLength": 1,
+                  "patternErrorMsg": "",
+                  "url": "swm-services/routes/_search?|$.routes.*.code|$.routes.*.name",
+                  "autoCompleteDependancy": {
+                    "autoCompleteUrl": "swm-services/routes/_search?code={vehicleSchedules[0].route.code}",
+                    "autoFillFields": {
+                       "vehicleSchedules[0].route.collectionType.name": "routes[0].collectionType.name",
+                     },
+                  },
+               },
+               {
+                  "name": "regNumber",
+                  "jsonPath": "vehicleSchedules[0].vehicle.regNumber",
+                  "label": "swm.create.regNumber",
+                  "type": "autoCompelete",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "maxLength": 12,
+                  "minLength": 6,
+                  "patternErrorMsg": '',
+                  "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
+                  "autoCompleteDependancy": {
+                    "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleSchedules[0].vehicle.regNumber}",
+                    "autoFillFields": {
+                       "vehicleSchedules[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name",
+                     },
+                  },
+               },
+               {
+                  'name': 'vehicleType',
+                  'jsonPath': 'vehicleSchedules[0].vehicle.vehicleType.code',
+                  'label': 'swm.vehicles.create.vehicleType',
+                  'pattern': '',
+                  'type': 'text',
+                  'isRequired': false,
+                  'isDisabled': true,
+                  'defaultValue': '',
+                  'maxLength': 128,
+                  'minLength': 1,
+                  'patternErrorMsg': '',
+                  'url': '',
+               },
+               {
+                  "name": "collectionType",
+                  "jsonPath": "vehicleSchedules[0].route.collectionType.name",
+                  "label": "swm.create.collectionType",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  'defaultValue': '',
+                  "maxLength": 256,
+                  "minLength": 1,
+                  "patternErrorMsg": "",
                },
                {
                   "name":"targetedGarbage",
@@ -234,7 +401,7 @@ var dat = {
                   "label":"swm.create.targetedGarbage",
                   "pattern":"",
                   "type":"number",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -244,7 +411,7 @@ var dat = {
       ],
       "url":"/swm-services/vehicleschedules/_update",
       "tenantIdRequired":true,
-      "searchUrl":"/swm-servicesundefined"
-   }
-}
- export default dat;
+      "searchUrl":"/swm-services/vehicleschedules/_search?transactionNo={transactionNo}",
+   },
+};
+export default dat;

@@ -212,7 +212,7 @@ class Search extends Component {
       let k = 0;
       var masterDetail = {};
       data.moduleName = self.props.match.params.moduleName;
-
+      console.log(formData)
       var filterData
       if(_.isEmpty(formData)) {
         filterData = null;

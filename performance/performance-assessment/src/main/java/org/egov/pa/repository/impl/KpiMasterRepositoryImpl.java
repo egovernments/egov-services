@@ -157,7 +157,9 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	if(null != kpiList && kpiList.size() > 0) { 
     		arrangeDeptToKpiList(kpiList, deptList);
     		if(kpiList.size() == 1) { 
-    			kpiList.get(0).setDocuments(getDocumentListForKpi(kpiList.get(0).getCode())); 
+    			List<String> kpiCodeList = new ArrayList<>();
+    			kpiCodeList.add(kpiList.get(0).getCode()); 
+    			kpiList.get(0).setDocuments(getDocumentListForKpi(kpiCodeList)); 
     		}
     	}
     	return kpiList; 
@@ -175,9 +177,25 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 		jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
 		List<KPI> kpiList = new ArrayList<>();
 		Map<String, KPI> kpiMap = mapper.kpiMap;
+		List<String> availableKpiCodeList = new ArrayList<>();
 		Iterator<Entry<String, KPI>> itr = kpiMap.entrySet().iterator();
 		while (itr.hasNext()) {
-			kpiList.add(itr.next().getValue());
+			Entry<String, KPI> kpiEntry = itr.next();
+			availableKpiCodeList.add(kpiEntry.getKey());  
+			kpiList.add(kpiEntry.getValue());
+		}
+		if(availableKpiCodeList.size()>0) { 
+			List<Document> docList = new ArrayList<>();
+			docList = getDocumentListForKpi(availableKpiCodeList);
+			for(KPI kpi : kpiList) {
+				List<Document> kpiDocList = new ArrayList<>(); 
+				kpi.setDocuments(kpiDocList);
+				for(Document doc : docList) { 
+					if(kpi.getCode().equals(doc.getKpiCode())) { 
+						kpi.getDocuments().add(doc);
+					}
+				}
+			}
 		}
 		if (getTargets) {
 			mapTargetToKpi(mapper.kpiTargetMap, kpiList);
@@ -195,7 +213,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 		}
 	}
 	
-	private List<Document> getDocumentListForKpi(String kpiCode) {
+	private List<Document> getDocumentListForKpi(List<String> kpiCode) {
 		String query = queryBuilder.getDocumentForKpi(); 
 		final HashMap<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("kpiCode", kpiCode);

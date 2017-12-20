@@ -191,7 +191,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public String getDocumentForKpi() { 
-    	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
+    	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active FROM egpa_kpi_master_document WHERE kpicode IN (:kpiCode) " ; 
     }
     
     public String targetAvailableForKpi() { 

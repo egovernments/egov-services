@@ -127,9 +127,9 @@ class EvictionAgreement extends React.Component {
     setInitialState(initState) {
         this.setState(initState);
     }
-    
+
     close() {
-              open(location, '_self').close();
+        open(location, '_self').close();
     }
     addOrUpdate(e) {
 
@@ -923,8 +923,8 @@ class EvictionAgreement extends React.Component {
                                         <label for="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks" value=""
-                                            onChange={(e) => { handleChange(e, "remarks") }}></textarea>
+                                        <textarea rows="4" cols="50" id="remarks" name="remarks"
+                                            onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                                     </div>
                                 </div>
                             </div>

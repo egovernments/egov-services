@@ -674,7 +674,7 @@ class UpdateEviction extends React.Component {
     render() {
         var _this = this;
         let { handleChange, handleChangeTwoLevel, addOrUpdate, printNotice, handleProcess } = this;
-        let { agreement, buttons } = this.state;
+        let { agreement, buttons, evictionReasons } = this.state;
         let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
             renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
         let { assetCategory, locationDetails } = this.state.agreement.asset;

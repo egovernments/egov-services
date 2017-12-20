@@ -431,7 +431,7 @@ public class ReceiptNoteService extends DomainService {
                 }
 
                 if (null != addnlinfo.getExpiryDate()
-                        && currentDate > addnlinfo.getExpiryDate()) {
+                        &&  addnlinfo.getExpiryDate() > currentDate) {
                     String date = convertEpochtoDate(addnlinfo.getExpiryDate());
                     errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ", date);
 

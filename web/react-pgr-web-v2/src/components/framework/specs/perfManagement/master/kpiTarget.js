@@ -35,13 +35,13 @@ var dat = {
                 jsonPath: 'kpiTargets[0].kpiCode',
                 type: 'textField',
                 pattern: 'kpiTargets[0].KPI.code|KPIs|code|code',
-                hasFromDropDownOriginalData: false,
+                hasFromDropDownOriginalData: true,
               },
               {
                 jsonPath: 'kpiTargets[0].targetType',
                 type: 'radio',
                 pattern: 'kpiTargets[0].KPI.code|KPIs|code|targetType',
-                hasFromDropDownOriginalData: false,
+                hasFromDropDownOriginalData: true,
               },
               // {
               // "jsonPath": "kpiValues[0].tenantId",

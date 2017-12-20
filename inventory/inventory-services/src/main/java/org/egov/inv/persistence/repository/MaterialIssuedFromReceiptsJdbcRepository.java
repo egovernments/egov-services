@@ -7,16 +7,14 @@ import java.util.Map;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
-import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
-import org.egov.inv.persistence.entity.MaterialIssueDetailEntity;
 import org.egov.inv.persistence.entity.MaterialIssuedFromReceiptEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import scala.annotation.meta.param;
+
 
 @Service
 public class MaterialIssuedFromReceiptsJdbcRepository extends JdbcRepository {

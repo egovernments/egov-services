@@ -435,16 +435,27 @@ public class PurchaseOrderService extends DomainService {
                 String indentNumbers = "";
                 if(null != eachPurchaseOrder.getPurchaseOrderDetails())
                 for (PurchaseOrderDetail purchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
-                	IndentEntity ie = indentJdbcRepository.findById(IndentEntity.builder().indentNumber(purchaseOrderDetail.getIndentNumber()).tenantId(purchaseOrderDetail.getTenantId()).build());
+                	
+                	IndentEntity ie = IndentEntity.builder().build();
+                	
+                	if(eachPurchaseOrder.getPurchaseType().toString().equals("Indent") && purchaseOrderDetail.getIndentNumber() == null) {
+                    	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indentNumber", "null");
+                    }
+                	
+                	//indent reference validation
+                	if(eachPurchaseOrder.getPurchaseType().toString().equals("Indent")) {
+                		ie = indentJdbcRepository.findById(IndentEntity.builder().indentNumber(purchaseOrderDetail.getIndentNumber()).tenantId(purchaseOrderDetail.getTenantId()).build());
+                		if(ie.getId() == null)
+                			throw new CustomException("indentnumber", "IndentNumber " + purchaseOrderDetail.getIndentNumber() + " doesn't exists");
+                		indentNumbers += purchaseOrderDetail.getIndentNumber() + ",";
+                	}
+                		
                 	PriceListEntity ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).tenantId(purchaseOrderDetail.getTenantId()).build());
+                	
                 	//RateContract reference validation
                 	if(ple.getId() == null) {
                 		throw new CustomException("priceList", "RateContract" + purchaseOrderDetail.getPriceList() + " doesn't exists");
                 	}
-                	if(ie.getId() == null) {
-                		throw new CustomException("indentnumber", "IndentNumber " + purchaseOrderDetail.getIndentNumber() + " doesn't exists");
-                	}
-                    indentNumbers += purchaseOrderDetail.getIndentNumber() + ",";
                 }
                 indentNumbers.replaceAll(",$", "");
 
@@ -477,10 +488,6 @@ public class PurchaseOrderService extends DomainService {
                 if (null != eachPurchaseOrder.getPurchaseOrderDetails()) {
                     for (PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                         int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
-                        
-                        if(poDetail.getIndentNumber() == null) {
-                        	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indentNumber", "null");
-                        }
                         
                         //validating ratecontracts for each POLine
                         boolean isRateContractExist =false;

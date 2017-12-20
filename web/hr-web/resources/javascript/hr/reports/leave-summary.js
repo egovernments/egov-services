@@ -234,7 +234,7 @@ class LeaveSummary extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                     <div className="styled-select">
-                                        <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}}>
+                                        <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}} required >
                                             <option value="" >Select Department</option>
                                             {renderOptions(departments)}
                                         </select>

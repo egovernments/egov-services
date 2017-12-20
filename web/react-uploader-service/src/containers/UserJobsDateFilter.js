@@ -29,14 +29,14 @@ class UserJobsDateFilterContainer extends Component {
           onChange={(event, date) => {
             applyFromDateFilter(date);
           }}
-          floatingLabelText="To Date"
+          floatingLabelText="From Date"
           value={fromDate}
         />
         <DatePicker
           onChange={(event, date) => {
             applyToDateFilter(date);
           }}
-          floatingLabelText="From Date"
+          floatingLabelText="To Date"
           value={toDate}
           maxDate={maxDate}
         />

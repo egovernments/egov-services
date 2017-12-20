@@ -23,7 +23,7 @@ export const Api = () => {
     let apiError = "Api Error";
     try {
       const response = await instance.post(endPoint, requestBody);
-      const responseStatus = parseInt(response.status);
+      const responseStatus = parseInt(response.status, 10);
       if (responseStatus === 200 || responseStatus === 201) {
         return response.data;
       } else {
@@ -137,7 +137,7 @@ export const Api = () => {
       }
     });
 
-    const responseStatus = parseInt(response.status);
+    const responseStatus = parseInt(response.status, 10);
     let fileStoreId = false;
 
     if (responseStatus === 201) {

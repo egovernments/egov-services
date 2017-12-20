@@ -35,6 +35,7 @@ export const jobCreateRequest = (
   return { UploadJobs, RequestInfo };
 };
 
+// convert the date to epoch here
 export const jobSearchRequest = (
   authToken,
   tenantId,
@@ -45,13 +46,15 @@ export const jobSearchRequest = (
 ) => {
   const RequestInfo = requestInfo(authToken);
   const JobSearchRequest = {
+    RequestInfo,
     tenantId,
     codes,
     statuses,
-    startDate,
-    endDate
+    startDate: startDate ? new Date(startDate).getTime() : startDate,
+    endDate: endDate ? new Date(endDate).getTime() : endDate
   };
-  return { RequestInfo, tenantId, codes, statuses, startDate, endDate };
+
+  return JobSearchRequest;
 };
 
 export const uploadDefinitionsRequest = authToken => {

@@ -162,8 +162,11 @@ public class MDMSService {
 		Map<String, Map<String, JSONArray>> response = new HashMap<>();
 		Map<String, JSONArray> entry = new HashMap<>();
 		JSONArray data = new JSONArray();
-		data.add(JsonPath.read(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData()), 
-				MDMSConstants.MASTERDATA_JSONPATH));
+		List<Object> list=JsonPath.read(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData()),
+				MDMSConstants.MASTERDATA_JSONPATH);
+		for(Object obj : list){
+		 data.add(obj);
+		}
 		entry.put(mDMSCreateRequest.getMasterMetaData().getMasterName(), data);
 		response.put(mDMSCreateRequest.getMasterMetaData().getModuleName(), entry);
 

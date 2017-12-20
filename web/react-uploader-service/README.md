@@ -39,7 +39,7 @@ Reusable components which can be used across applications.
 App constants such as api endpoints and action types.
 
 ### containers
-Container components which connects to the redux store. Contains the logic.
+Container components which connects to the redux store. Container components are part of a strategy of separating responsibility between high-level and low-level concerns. Containers manage things like subscriptions and state, and pass props to components that handle things like rendering UI. 
 
 ### store
 Redux create store.

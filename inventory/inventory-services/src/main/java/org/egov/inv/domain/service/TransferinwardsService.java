@@ -215,9 +215,11 @@ public class TransferinwardsService extends DomainService {
 				MaterialIssueSearchContract issue = new MaterialIssueSearchContract();
 				issue.setIssueNoteNumber(receipt.getIssueNumber());
 				issue.setTenantId(receipt.getTenantId());
-				List<MaterialIssue> matIssues = materialIssuesService.search(issue).getMaterialIssues();
-				Long issueDate = materialIssuesService.search(issue).getMaterialIssues().get(0).getIssueDate();
-				BigDecimal issuedQuantity = materialIssuesService.search(issue).getMaterialIssues().get(0).getMaterialIssueDetails().get(0).getQuantityIssued();
+				List<MaterialIssue> matIssues = materialIssuesService.search(issue,null).getMaterialIssues();
+				
+				Long issueDate = matIssues.get(0).getIssueDate();
+				BigDecimal issuedQuantity = matIssues.get(0).getMaterialIssueDetails().get(0).getQuantityIssued();
+				
 				if (matIssues.isEmpty())
 					errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(),"issueNumber", null);
 				else

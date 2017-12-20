@@ -25,7 +25,6 @@ import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.PriceListEntity;
-import org.egov.inv.persistence.entity.SupplierEntity;
 import org.egov.inv.persistence.repository.MaterialJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListDetailJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
@@ -86,9 +85,11 @@ public class PriceListService extends DomainService {
         try {
 
             List<String> priceListIdList = priceListJdbcRepository.getSequence(PriceList.class.getSimpleName(), priceListRequest.getPriceLists().size());
+            priceListRequest.getPriceLists().forEach(priceList -> {
+            	priceList.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+            });
             validate(priceListRequest.getPriceLists(), Constants.ACTION_CREATE,tenantId,priceListRequest);
             priceListRequest.getPriceLists().forEach(priceList -> {
-                priceList.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
                 priceList.getPriceListDetails().forEach(priceListDetail -> {
                 	
                 	priceListDetail.setTenantId(priceList.getTenantId());
@@ -152,6 +153,9 @@ public class PriceListService extends DomainService {
         try {
         	
         	// TODO: Do not allow them to modify supplier,rate type, agreement start and end date in modify level.
+        	priceListRequest.getPriceLists().stream().forEach(priceList -> {
+                priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
+        	});
         	
             validate(priceListRequest.getPriceLists(), Constants.ACTION_UPDATE,tenantId,priceListRequest);
             List<String> ids = new ArrayList<String>();

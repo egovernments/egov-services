@@ -252,6 +252,11 @@ public class PriceListService extends DomainService {
 					String agreementStartDate = convertEpochtoDate(pl.getAgreementStartDate());
                     errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "agreementStartDate",agreementStartDate);
                 }
+                
+                if (Long.valueOf(pl.getAgreementEndDate()) < currentMilllis) {
+					String agreementEndDate = convertEpochtoDate(pl.getAgreementEndDate());
+                    errors.addDataError(ErrorCode.DATE_GE_CURRENTDATE.getCode(), "agreementEndDate",agreementEndDate);
+                }
 
                 if (Long.valueOf(pl.getAgreementEndDate()) < Long.valueOf(pl.getAgreementStartDate())) {
                     if (Long.valueOf(pl.getAgreementEndDate()) < 0) {

@@ -1451,7 +1451,7 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="allottee.pan">PAN <span>* <span>  </label>
+                                                            <label for="allottee.pan">PAN </label>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <input type="text"  name="allottee.pan" id="allottee.pan" maxlength="10">
@@ -1485,7 +1485,7 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
-                                                            <label for="allottee.permanentAddress">Address of the Allottee</label>
+                                                            <label for="allottee.permanentAddress">Residential Address of the Allottee</label>
                                                         </div>
                                                         <div class="col-sm-6">
                                                             <textarea name="allottee.permanentAddress" id="allottee.permanentAddress" ></textarea>
@@ -1910,7 +1910,7 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="caseNo">Case No</label>
+                                                          <label for="caseNo">Court Case Number</label>
                                                       </div>
                                                       <div class="col-sm-6">
                                                           <input type="text" name="caseNo" id="caseNo"  class="disabled">
@@ -2110,7 +2110,7 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="commencementDate">Date of Commencement  </label>
+                                                          <label for="commencementDate">Date of Allotment  </label>
                                                       </div>
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
@@ -2123,7 +2123,7 @@
 
                                           </div>
 
-                                          <div class="row">
+                                          <!-- <div class="row">
 
                                               <div class="col-sm-6" id="rendCalculatedMethod">
                                                   <div class="row">
@@ -2140,7 +2140,7 @@
                                                   </div>
                                               </div>
 
-                                          </div>
+                                          </div> -->
                                           <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="row">
@@ -2174,7 +2174,6 @@
                                             </div>
                                           </div>
                                           <div class="row">
-
                                             <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
@@ -2184,17 +2183,78 @@
                                                         <div class="styled-select">
                                                           <select name="timePeriod" id="timePeriod">
                                                             <option value="">Select Time Period </option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
                                                           </select>
                                                       </div>
                                                     </div>
                                                   </div>
                                               </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="gstin">GSTIN  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="styled-select">
+                                                        <input type="text" name="gstin" id="gstin">
+                                                    </div>
+                                                  </div>
+                                              </div>
                                           </div>
+                                        </div>
+                                        <div class="row" id="municipalOrder">
+                                          <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="municipalOrderNumber">Municipal Order Number</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div>
+                                                        <input type="text" id="municipalOrderNumber" name="municipalOrderNumber" >
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="municipalOrderDate">Municipal Order Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="text-no-ui">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        <input type="text" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="governmentOrder">
+                                          <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="governmentOrderNumber">Government Order Number</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div>
+                                                        <input type="text" id="governmentOrderNumber" name="governmentOrderNumber" >
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="governmentOrderDate">Government Order Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="text-no-ui">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        <input type="text" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                           <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="row">
@@ -2218,9 +2278,61 @@
                                                       </div>
                                                   </div>
                                               </div>
-
                                           </div>
                                           <!-- /Row 15 -->
+                                      </div>
+                                    </div>
+
+                                    <div class="form-section" id="historyDetails">
+                                      <h3 class="categoryType">History Details </h3>
+                                      <div class="form-section-inner">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="firstAllotment">Month/Year of First Allotment to the Current Lessee</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="firstAllotment" id="firstAllotment" placeholder="mm/yyyy">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-section" id="subesquentrenewals">
+                                      <h3 class="categoryType">Subsequent Renewals </h3>
+                                      <div class="form-section-inner">
+                                        <div class="row">
+                                          <table class="table table-bordered" id="subesquentrenewalsTable">
+                                            <thead>
+                                              <th>From</th>
+                                              <th>To</th>
+                                              <th>Number of Years</th>
+                                              <th>Monthly Rent (Rs.)</th>
+                                              <th>Action</th>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                <td><input type="text" class="datepicker srFromDate" id="subSeqRenewals[0].fromDate" name="subSeqRenewals[0].fromDate" value="" required></td>
+                                                <td><input type="text" class="datepicker srToDate" id="subSeqRenewals[0].toDate" name="subSeqRenewals[0].toDate" value="" required></td>
+                                                <td><input type="text"  class="srYears" name="subSeqRenewals[0].years" id="subSeqRenewals[0].years" value="" disabled></td>
+                                                <td><input type="text" name="subSeqRenewals[0].rent" id="subSeqRenewals[0].rent" value="" required></td>
+                                                <td><p style="cursor:pointer"><span class="glyphicon glyphicon-trash subsequentRenewalsDelete"></span></p></td>
+                                              </tr>
+                                            </tbody>
+                                            <tfoot>
+                                              <tr>
+                                                <td colspan="2" class="text-right">Total Number of Years</td>
+                                                <td id="sumOfYears"></td>
+                                                <td></td>
+                                                <td></td>
+                                              </tr>
+                                            </tfoot>
+                                          </table>
+                                          <button type="button" class="btn btn-primary pull-right" name="button" id="subsequentRenewalsAdd">Add</button>
+                                        </div>
                                       </div>
                                     </div>
 

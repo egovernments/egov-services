@@ -52,7 +52,7 @@ var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedoc
 
 $(".disabled").attr("disabled", true);
 //Getting data for user input
-$("input").on("keyup", function() {
+$(document).on("keyup","input", function() {
     fillValueToObject(this);
     if (this.id == "rent") {
         $('#securityDeposit').val(this.value * 3);
@@ -63,7 +63,75 @@ $("input").on("keyup", function() {
     }
 });
 
+var index=1;
+
 $(document).ready(function() {
+
+  initDatepicker();
+
+  $("#subesquentrenewalsTable tbody tr:first").find('td:last .subsequentRenewalsDelete').hide();
+
+  $('#subsequentRenewalsAdd').click(function(){
+    var valid = false;
+    //validation check before adding
+    $("#subesquentrenewalsTable tbody tr:eq("+(index-1)+")").find('input').each(function(index){
+      // console.log(index, $(this).attr('id'), $(this).attr('name'), $(this).val());
+      if(!$(this).val()){
+        valid = false;
+        return valid;
+      }else{
+        valid = true;
+      }
+    });
+
+    if(valid){
+      //Add only after validation succeeds
+      $("#subesquentrenewalsTable tbody tr:first").clone().find("input").each(function() {
+        $(this).attr({
+          'id': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
+          'name': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
+          'value': ''
+        });
+        $(this).val('');
+      }).end().appendTo("#subesquentrenewalsTable tbody");
+      $("#subesquentrenewalsTable tbody tr:last").find('td:last .subsequentRenewalsDelete').show();
+      initDatepicker();
+      index++;
+    }
+
+  });
+
+  $(document).on('click', 'td .subsequentRenewalsDelete', function(){
+    agreement['subSeqRenewals'] && agreement['subSeqRenewals'].splice($(this).closest('tr').index(),1);
+    $(this).closest('tr').remove();
+    console.log(agreement);
+    index-=1;
+    $('#subesquentrenewalsTable tbody tr').each(function(i) {
+        $(this).find(':input').attr({
+          'id': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+i+"]") },
+          'name': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+i+"]") },
+        });
+    });
+    $("#subesquentrenewalsTable tbody tr:first").find('td.subsequentRenewalsDelete').hide();
+    calcFooterYearSum();
+  });
+
+  $('#municipalOrder, #governmentOrder').hide();
+
+  for(var i=0;i<25;i++){
+    $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
+  }
+
+  $('#timePeriod').on('change',function(){
+    if(this.value <= 3){
+      $('#governmentOrder').hide();
+      $('#municipalOrder').show();
+    }else{
+      $('#municipalOrder').hide();
+      $('#governmentOrder').show();
+    }
+  })
+
   if(window.opener && window.opener.document) {
      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
      if(logo_ele && logo_ele[0]) {
@@ -126,7 +194,24 @@ $(".onlyNumber").on("keydown", function(e) {
 
 //it will split object string where it has .
 function fillValueToObject(currentState) {
-    if (currentState.id.includes(".")) {
+    // console.log(currentState.id, currentState.value);
+    if(currentState.id.includes("[")){
+      let keys = currentState.name.split('[');
+      let mainKey = keys[0];
+      let idx = keys[1].split(']')[0];
+      let key = currentState.name.split('.')[1];
+      let obj = {};
+      obj[key]=currentState.value;
+      if(agreement.hasOwnProperty(mainKey)){
+        //add to the existing data
+        agreement[mainKey][idx]=Object.assign(agreement[mainKey][idx] || {}, obj)
+      }else{
+        //add new obj
+        agreement[mainKey] = agreement[mainKey] || [];
+        agreement[mainKey].push(obj);
+      }
+      // console.log(agreement);
+    }else if (currentState.id.includes(".")) {
         var splitResult = currentState.id.split(".");
         if (agreement.hasOwnProperty(splitResult[0])) {
             agreement[splitResult[0]][splitResult[1]] = currentState.value;
@@ -134,13 +219,8 @@ function fillValueToObject(currentState) {
             agreement[splitResult[0]] = {};
             agreement[splitResult[0]][splitResult[1]] = currentState.value;
         }
-
-
-
-    } else {
-
+    }else {
         agreement[currentState.id] = currentState.value;
-
     }
 }
 
@@ -155,7 +235,7 @@ var commomFieldsRules = {
         required: true
     },
     natureOfAllotment: {
-        required: true
+        required: false
     },
     "allottee.aadhaarNumber": {
         required: false,
@@ -163,10 +243,10 @@ var commomFieldsRules = {
     },
     "allottee.pan": {
         required: false,
-        panNo: true
+        panNo: false
     },
     "allottee.emailId": {
-        required: true,
+        required: false,
         email: true
     },
     "allottee.mobileNumber": {
@@ -182,11 +262,11 @@ var commomFieldsRules = {
 
     },
     tenderNumber: {
-        required: true,
+        required: false,
         alphaNumer: true
     },
     tenderDate: {
-        required: true
+        required: false
     },
     tin: {
         required: false
@@ -196,7 +276,7 @@ var commomFieldsRules = {
         alphaNumer: true
     },
     caseNo: {
-        required: true
+        required: false
     },
     orderDetails: {
         required: false
@@ -205,7 +285,7 @@ var commomFieldsRules = {
         required: decodeURIComponent(getUrlVars()["type"]) != "land" ? true : false
     },
     registrationFee: {
-        required: true,
+        required: false,
         integerOnly:true
     },
     councilNumber: {
@@ -215,10 +295,10 @@ var commomFieldsRules = {
         required: true
     },
     bankGuaranteeAmount: {
-        required: true
+        required: false
     },
     bankGuaranteeDate: {
-        required: true
+        required: false
     },
     agreementNumber: {
         required: true
@@ -227,10 +307,10 @@ var commomFieldsRules = {
         required: true
     },
     securityDepositDate: {
-        required: true
+        required: false
     },
     securityDeposit: {
-        required: true,
+        required: false,
         integerOnly:true
     },
     commencementDate: {
@@ -259,28 +339,43 @@ var commomFieldsRules = {
         required: false
     },
     solvencyCertificateNo: {
-        required: true,
+        required: false,
         alphaNumer: true
     },
     solvencyCertificateDate: {
-        required: true
+        required: false
     },
     timePeriod: {
         required: true
+    },
+    gstin: {
+        required: false,
+        alphaNumer: true
     },
     collectedGoodWillAmount: {
       required: false,
       integerOnly:true
     },
     collectedSecurityDeposit: {
-      required: true,
+      required: false,
       integerOnly:true
     },
     goodWillAmount: {
       required: false,
       integerOnly:true
+    },
+    municipalOrderNumber:{
+      required :false,
+      alphaNumer: true
+    },
+    governmentOrderNumber :{
+      required :false,
+      alphaNumer: true
+    },
+    firstAllotment :{
+      required :false,
+      'mm/yyyy' : true
     }
-
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     // validation rules for land agreement
@@ -842,7 +937,7 @@ $.validator.addMethod('aadhar', function(value) {
 }, 'Please enter a valid aadhar.');
 
 $.validator.addMethod('panNo', function(value) {
-    return /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10;
+    return value.length > 0 ? /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i.test(value) && value.length === 10 : true;
 }, 'Please enter a valid pan.');
 
 $.validator.addMethod('alloName', function(value) {
@@ -855,7 +950,11 @@ $.validator.addMethod('alphaNumer', function(value) {
 
 $.validator.addMethod('integerOnly',function(value){
   return /^[0-9]*$/.test(value);
-},'please check the value/enter integer numbers only.')
+},'please check the value/enter integer numbers only.');
+
+$.validator.addMethod('mm/yyyy',function(value){
+  return value.length > 0 ? /[\d]{2}\/[\d]{4}/.test(value) : true;
+},'please check the value/enter in mm/yyyy format.')
 
 
 finalValidatinRules["messages"] = {
@@ -973,14 +1072,14 @@ for (var variable in paymentCycle) {
 
     }
 }
-var cityGrade = commonApiPost("tenant", "v1/tenant", "_search", {
-  code: tenantId
-}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {};
-console.log(cityGrade);
-var agreementType = "Create Municipality Agreement";
-if (cityGrade.toLowerCase() === 'corp') {
-  agreementType = "Create Corporation Agreement";
-}
+// var cityGrade = commonApiPost("tenant", "v1/tenant", "_search", {
+//   code: tenantId
+// }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {};
+// console.log(cityGrade);
+var agreementType = "Create Corporation Agreement";
+// if (cityGrade.toLowerCase() === 'corp') {
+//   agreementType = "Create Corporation Agreement";
+// }
 
 
 getDesignations(null, function(designations) {
@@ -1075,7 +1174,7 @@ $('.datepicker').datepicker({
 
         });
 
-$(".datepicker").on("change", function() {
+$(".datepicker").on("changeDate", function() {
     // alert('hey');
     fillValueToObject(this);
 });
@@ -1132,7 +1231,6 @@ $("#createAgreementForm").validate({
     rules: finalValidatinRules,
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
-
     var id1 = $('#collectedGoodWillAmount').val();
     var id2 = $('#goodWillAmount').val();
     if (id1 && id2 && Number(id1) > Number(id2)) {
@@ -1148,9 +1246,9 @@ $("#createAgreementForm").validate({
 
     }
 
-
         // form.submit();
         // form.preventDefault();
+
         agreement["asset"] = {};
         agreement["asset"]["id"] = getUrlVars()["assetId"];
         agreement["asset"]["name"] = assetDetails["name"];
@@ -1162,7 +1260,7 @@ $("#createAgreementForm").validate({
 
         if($("#rentIncrementMethod").val()) {
             agreement["rentIncrementMethod"] = {};
-            agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();    
+            agreement["rentIncrementMethod"]["id"] = $("#rentIncrementMethod").val();
         }
         agreement["tenantId"] = tenantId;
         agreement["source"] = "DATA_ENTRY";
@@ -1281,4 +1379,52 @@ function makeAjaxUpload(file, cb) {
               }]
             });
     }
+}
+
+function initDatepicker(){
+    $('.srFromDate, .srToDate').datepicker({
+      format: 'dd/mm/yyyy',
+      endDate : new Date(),
+      autoclose:true
+    }).on("changeDate", function() {
+        fillValueToObject(this);
+        let fromDate = $(this).closest('tr').find('.srFromDate').val();
+        let toDate = $(this).closest('tr').find('.srToDate').val();
+        // console.log('index:',$(this).closest('tr').index(),fromDate, toDate);
+        if(fromDate && toDate){
+          let years = moment(toDate,"DD/MM/YYYY").diff(moment(fromDate,"DD/MM/YYYY"), 'years');
+          var startMonths = getAbsoulteMonths(moment(fromDate,"DD/MM/YYYY"));
+          var endMonths = getAbsoulteMonths(moment(toDate,"DD/MM/YYYY"));
+          var monthDifference = (endMonths - startMonths);
+          let months = (monthDifference+1)%12;
+          // console.log(years,'.',months);
+          let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
+          $(this).closest('tr').find('.srYears').val(noOfyears);
+          agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
+          //update no.of years
+          calcFooterYearSum();
+        }
+        //set to agreement
+    });
+}
+
+function getAbsoulteMonths(momentDate) {
+  var months = Number(momentDate.format("MM"));
+  var years = Number(momentDate.format("YYYY"));
+  return months + (years * 12);
+}
+
+function calcFooterYearSum(){
+  let totalYear=0, totalMonth=0;
+  $("#subesquentrenewalsTable tbody tr").find('td:eq(2) input').each(function(index){
+    let yearndmonth = $(this).val().split('.');
+    totalMonth+=(Number(yearndmonth[1])%12);
+    if(totalMonth > 12){
+      totalYear+=Number(yearndmonth[0])+Math.floor(totalMonth/12);
+    }else{
+      totalYear+=Number(yearndmonth[0]);
+    }
+    $("#subesquentrenewalsTable tfoot tr td:eq(1)").html(totalYear+'.'+(totalMonth%12));
+    //add years and months
+  });
 }

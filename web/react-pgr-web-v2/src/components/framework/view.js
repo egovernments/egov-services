@@ -276,7 +276,33 @@ class Report extends Component {
       }
     }
 
-    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
+    var _body = {};
+    if(url.includes("/egov-mdms-service/v1/_search")) {
+      var moduleDetails = [];
+      var masterDetails = [];
+      let data = { moduleName: '', masterDetails: [] };
+      let k = 0;
+      var masterDetail = {};
+      data.moduleName = hashLocation.split('/')[2];
+      console.log(data, masterDetail)
+      // console.log(url.split('?')[1].split('={')[0]);
+      var filterData = `[?(@.${specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].url.split('?')[1].split('={')[0]}=='${hashLocation.split('/')[hashLocation.split('/').length-1]}')]`;
+      masterDetail.filter = filterData;
+      masterDetail.name = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName;
+      data.masterDetails[0] = _.cloneDeep(masterDetail);
+      console.log(data);
+      moduleDetails.push(data);
+
+      _body = {
+        MdmsCriteria: {
+          tenantId: localStorage.getItem('tenantId'),
+          moduleDetails: moduleDetails,
+        },
+      };
+      query = '';
+    }
+
+    Api.commonApiPost(url, query, _body, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
       function(res) {
         self.props.setFormData(res);
         self.setInitialUpdateData(

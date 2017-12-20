@@ -452,7 +452,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundProcessingPlant',
-                    jsonPath: 'MasterMetaData.masterData[0].dumpingGroundProcessingPlant',
+                    jsonPath: 'MasterMetaData.masterData[0].processingSite.code',
                     label: 'swm.dumpingGround.create.dumpingGroundProcessingPlant',
                     pattern: '',
                     type: 'text',
@@ -468,7 +468,7 @@ var dat = {
 
                 {
                     name: 'dumpingGroundDistance',
-                    jsonPath: 'MasterMetaData.masterData[0].distance',
+                    jsonPath: 'MasterMetaData.masterData[0].distanceFromProcessingSite',
                     label: 'swm.dumpingGround.create.distance',
                     pattern: '',
                     type: 'text',
@@ -1137,7 +1137,7 @@ var dat = {
             fields: [
                 {
                     name: 'dumpingGroundName',
-                    jsonPath: 'MasterMetaData.masterData[0].name',
+                    jsonPath: 'MdmsRes.swm.DumpingGround.name',
                     label: 'swm.dumpingGround.create.dumpingGroundName',
                     pattern: '',
                     type: 'text',

@@ -11,7 +11,7 @@ var dat = {
           fields: [
             {
               name: 'shiftType',
-              jsonPath: 'code',
+              jsonPath: 'shiftType.code',
               label: 'swm.Shift.create.shiftType',
               pattern: '',
               type: 'autoCompelete',
@@ -24,7 +24,7 @@ var dat = {
             },
             {
               name: 'designationName',
-              jsonPath: 'id',
+              jsonPath: 'designation.id',
               label: 'swm.Shift.create.designation',
               pattern: '',
               type: 'autoCompelete',

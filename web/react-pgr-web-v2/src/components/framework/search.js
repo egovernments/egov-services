@@ -220,9 +220,21 @@ class Search extends Component {
       else {
         var str = [];
         for(var i=0; i<Object.keys(formData).length; i++) {
-          str.push(`@.${Object.keys(formData)[i]}=='${Object.values(formData)[i]}'`);
+
+          if(typeof(formData[Object.keys(formData)[i]]) === "object"){      //Nested feature for single level - Enhancement required
+            var level_1 = Object.keys(formData)[i];
+            for(let item in formData[level_1]){
+              if(_.isEmpty(formData[level_1][item])) {
+                continue;
+              }
+              str.push(`@.${level_1}.${item}=='${formData[level_1][item]}'`);
+            }
+          }
+          else{
+            str.push(`@.${Object.keys(formData)[i]}=='${Object.values(formData)[i]}'`);
+          }
         }
-        str = str.join('&&')
+        str = str.join('&&');
         filterData = `[?(${str})]`;
       }
       masterDetail.filter = filterData;

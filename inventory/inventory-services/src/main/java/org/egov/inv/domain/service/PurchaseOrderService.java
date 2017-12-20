@@ -660,6 +660,8 @@ public class PurchaseOrderService extends DomainService {
                     priceListSearchRequest.setSupplierName(purchaseOrder.getSupplier().getCode());
                     priceListSearchRequest.setRateType(purchaseOrder.getRateType().toString());
                     priceListSearchRequest.setRateContractDate(System.currentTimeMillis());
+//                    Uncomment below line and remove above line once purchaseorderdate is added in the request
+//                    priceListSearchRequest.setRateContractDate(purchaseOrder.getPurchaseOrderDate());
 
                     priceListSearchRequest.setActive(true);
 

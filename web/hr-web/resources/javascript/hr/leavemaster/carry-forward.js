@@ -106,14 +106,14 @@ class CarryForward extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Calender Year<span>*</span> </label>
+                                        <label htmlFor="">Calender Year<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="year" name="year" value={year} required="true" onChange={(e) => {
                                                 handleChange(e, "year")
                                             }} >
-                                                <option>Select Calender Year</option>
+                                                <option value="">Select Calender Year</option>
                                                 {renderOption(this.state.years)}
                                             </select>
                                         </div>
@@ -123,7 +123,7 @@ class CarryForward extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for=""> Leave Type<span>*</span></label>
+                                        <label htmlFor=""> Leave Type<span>*</span></label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">

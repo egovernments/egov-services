@@ -199,7 +199,7 @@ componentDidMount() {
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label for="">Designation </label>
+                    <label htmlFor="">Designation </label>
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
@@ -216,7 +216,7 @@ componentDidMount() {
             <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
-                        <label for=""> Leave Type<span>*</span></label>
+                        <label htmlFor=""> Leave Type<span>*</span></label>
                     </div>
                     <div className="col-sm-6">
                     <div className="styled-select">
@@ -237,7 +237,7 @@ componentDidMount() {
               <div className="col-sm-6">
                   <div className="row">
                       <div className="col-sm-6 label-text">
-                          <label for="">No of day <span>*</span></label>
+                          <label htmlFor="">No of day <span>*</span></label>
                       </div>
                       <div className="col-sm-6">
                       <input type="number" name="noOfDays" value={noOfDays} id="noOfDays" min="0" max = "180" onChange={(e)=>{
@@ -250,7 +250,7 @@ componentDidMount() {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                        <label for="">Active</label>
+                        <label htmlFor="">Active</label>
                     </div>
                         <div className="col-sm-6">
                               <label className="radioUi">

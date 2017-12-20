@@ -10,6 +10,5 @@ import java.util.List;
 @JsonInclude(value = Include.NON_NULL)
 public @Data
 class BankResponse {
-    private ResponseInfo responseInfo;
     private List<BankContract> banks;
 }

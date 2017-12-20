@@ -86,9 +86,6 @@ public class SupplierService extends DomainService {
     private BankContractRepository bankContractRepository;
 
     @Autowired
-    private IndentJdbcRepository indentJdbcRepository;
-
-    @Autowired
     private PurchaseOrderJdbcRepository purchaseOrderJdbcRepository;
 
     @Autowired
@@ -99,8 +96,8 @@ public class SupplierService extends DomainService {
 
     public SupplierResponse create(SupplierRequest supplierRequest, String tenantId) {
         try {
-            //  SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
-            validate(supplierRequest.getSuppliers(), Constants.ACTION_CREATE, tenantId);
+            SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
+            validate(fetchRelated.getSuppliers(), Constants.ACTION_CREATE, tenantId);
             List<String> sequenceNos = supplierJdbcRepository.getSequence(Supplier.class.getSimpleName(), supplierRequest.getSuppliers().size());
             int i = 0;
             for (Supplier supplier : supplierRequest.getSuppliers()) {
@@ -127,8 +124,8 @@ public class SupplierService extends DomainService {
     public SupplierResponse update(SupplierRequest supplierRequest, String tenantId) {
 
         try {
-            //    SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
-            validate(supplierRequest.getSuppliers(), Constants.ACTION_UPDATE, tenantId);
+            SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
+            validate(fetchRelated.getSuppliers(), Constants.ACTION_UPDATE, tenantId);
 
             for (Supplier supplier : supplierRequest.getSuppliers()) {
                 if (isEmpty(supplier.getTenantId())) {

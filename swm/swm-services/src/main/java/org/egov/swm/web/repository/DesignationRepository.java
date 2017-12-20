@@ -67,8 +67,6 @@ public class DesignationRepository {
             final RequestInfo requestInfo) {
 
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
-        //TODO Removed once ts of responseinfo is fixed in hr-masters
-        requestInfo.setTs(null);
         wrapper.setRequestInfo(requestInfo);
 
         return restTemplate.postForObject(designationByNameUrl, wrapper, DesignationResponse.class, designationName,

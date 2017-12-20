@@ -43,8 +43,6 @@ package org.egov.swm.web.contract;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.response.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -61,9 +59,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class DesignationResponse {
-
-    @JsonProperty("ResponseInfo")
-    private ResponseInfo responseInfo;
 
     @JsonProperty("Designation")
     private List<Designation> designation = new ArrayList<>();

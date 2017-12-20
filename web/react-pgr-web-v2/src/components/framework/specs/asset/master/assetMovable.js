@@ -85,7 +85,7 @@ var dat = {
             pattern: '',
             type: 'text',
             url: '',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',

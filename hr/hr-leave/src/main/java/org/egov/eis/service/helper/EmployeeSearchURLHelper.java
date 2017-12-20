@@ -10,41 +10,45 @@ import org.springframework.util.StringUtils;
 @Component
 public class EmployeeSearchURLHelper {
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
-    @Autowired
-    private PropertiesManager propertiesManager;
+	@Autowired
+	private PropertiesManager propertiesManager;
 
-    public String searchURL(final LeaveSearchRequest leaveSearchRequest, final String url) {
-        final StringBuilder searchURL = new StringBuilder(url + "?");
+	public String searchURL(final LeaveSearchRequest leaveSearchRequest, final String url) {
+		final StringBuilder searchURL = new StringBuilder(url + "?");
 
-        if (leaveSearchRequest.getTenantId() == null)
-            return searchURL.toString();
-        else
-            searchURL.append("tenantId=" + leaveSearchRequest.getTenantId());
+		if (leaveSearchRequest.getTenantId() == null)
+			return searchURL.toString();
+		else
+			searchURL.append("tenantId=" + leaveSearchRequest.getTenantId());
 
-        if (!StringUtils.isEmpty(leaveSearchRequest.getCode()))
-            searchURL.append("&code=" + leaveSearchRequest.getCode());
+		if (!StringUtils.isEmpty(leaveSearchRequest.getCode()))
+			searchURL.append("&code=" + leaveSearchRequest.getCode());
 
-        if (leaveSearchRequest.getDepartmentId() != null)
-            searchURL.append("&departmentId=" + leaveSearchRequest.getDepartmentId());
+		if (leaveSearchRequest.getDepartmentId() != null)
+			searchURL.append("&departmentId=" + leaveSearchRequest.getDepartmentId());
 
-        if (leaveSearchRequest.getDesignationId() != null)
-            searchURL.append("&designationId=" + leaveSearchRequest.getDesignationId());
+		if (leaveSearchRequest.getDesignationId() != null)
+			searchURL.append("&designationId=" + leaveSearchRequest.getDesignationId());
 
-        if (leaveSearchRequest.getEmployeeType() != null)
-            searchURL.append("&employeeType=" + leaveSearchRequest.getEmployeeType());
+		if (leaveSearchRequest.getEmployeeType() != null)
+			searchURL.append("&employeeType=" + leaveSearchRequest.getEmployeeType());
 
-        if (leaveSearchRequest.getEmployeeStatus() != null)
-            searchURL.append("&employeeStatus=" + leaveSearchRequest.getEmployeeStatus());
+		if (leaveSearchRequest.getEmployeeStatus() != null)
+			searchURL.append("&employeeStatus=" + leaveSearchRequest.getEmployeeStatus());
 
-        if (leaveSearchRequest.getIsPrimary() != null)
-            searchURL.append("&isPrimary=true");
+		if (leaveSearchRequest.getIsPrimary() != null)
+			searchURL.append("&isPrimary=true");
 
-        searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
+		if (leaveSearchRequest.getToDate() != null && !leaveSearchRequest.getToDate().equals("")
+				&& leaveSearchRequest.getFromDate() == null)
+			searchURL.append("&asOnDate=" + leaveSearchRequest.getToDate());
 
-        return searchURL.toString();
-    }
+		searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
+
+		return searchURL.toString();
+	}
 
 }

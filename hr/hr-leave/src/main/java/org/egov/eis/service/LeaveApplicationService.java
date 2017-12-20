@@ -188,11 +188,12 @@ public class LeaveApplicationService {
 	public List<LeaveApplication> getLeaveSummaryReport(final LeaveSearchRequest leaveSearchRequest,
 			final RequestInfo requestInfo) {
 		List<LeaveApplication> leaveSummary;
+		leaveSearchRequest.setIsPrimary(true);
+		leaveSearchRequest.setFromDate(null);
 		if (leaveSearchRequest.getDesignationId() != null || leaveSearchRequest.getCode() != null) {
 			getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
 			leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
 		} else {
-			leaveSearchRequest.setIsPrimary(true);
 			EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
 					requestInfo);
 			leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
@@ -249,11 +250,8 @@ public class LeaveApplicationService {
 			dateOfAppointment = LocalDate
 					.parse(new SimpleDateFormat("yyyy-MM-dd").format(employees.get(0).getDateOfAppointment()));
 			if (!employees.get(0).getAssignments().isEmpty()) {
-				List<Assignment> assignments = employees.get(0).getAssignments().stream()
-						.filter(assign -> (assign.getIsPrimary().equals(true) && assign.getToDate().after(new Date())))
-						.collect(Collectors.toList());
-				designationid = assignments.stream().map(assign -> assign.getDesignation()).collect(Collectors.toList())
-						.get(0);
+				designationid = employees.get(0).getAssignments().stream().map(assign -> assign.getDesignation())
+						.collect(Collectors.toList()).get(0);
 			}
 		}
 

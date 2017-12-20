@@ -40,14 +40,9 @@
 
 package org.egov.eis.config;
 
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Component
 @Getter
@@ -57,46 +52,46 @@ import lombok.ToString;
 @ToString
 public class PropertiesManager {
 
-	@Value("${egov.services.common_workflow_service.hostname}")
-	private String commonWorkFlowServiceHostName;
+    @Value("${egov.services.common_workflow_service.hostname}")
+    private String commonWorkFlowServiceHostName;
 
-	@Value("${egov.services.common_workflow_service.process.basepath}")
-	private String commonWorkFlowServiceProcessBasePath;
+    @Value("${egov.services.common_workflow_service.process.basepath}")
+    private String commonWorkFlowServiceProcessBasePath;
 
-	@Value("${egov.services.common_workflow_service.process.startpath}")
-	private String commonWorkFlowServiceProcessStartPath;
+    @Value("${egov.services.common_workflow_service.process.startpath}")
+    private String commonWorkFlowServiceProcessStartPath;
 
-	@Value("${egov.services.common_workflow_service.process.updatepath}")
-	private String commonWorkFlowServiceProcessUpdatePath;
+    @Value("${egov.services.common_workflow_service.process.updatepath}")
+    private String commonWorkFlowServiceProcessUpdatePath;
 
-	@Value("${egov.services.workflow_service.hostname.businesskey}")
-	private String workflowServiceBusinessKey;
+    @Value("${egov.services.workflow_service.hostname.businesskey}")
+    private String workflowServiceBusinessKey;
+    
+    @Value("${egov.services.hr_masters_service.hostname}")
+    private String hrMastersServiceHostName;
 
-	@Value("${egov.services.hr_masters_service.hostname}")
-	private String hrMastersServiceHostName;
+    @Value("${egov.services.hr_masters_service.hrstatus.basepath}")
+    private String hrMastersServiceHRStatusBasePath;
 
-	@Value("${egov.services.hr_masters_service.hrstatus.basepath}")
-	private String hrMastersServiceHRStatusBasePath;
+    @Value("${egov.services.hr_masters_service.hrstatuses.searchpath}")
+    private String hrMastersServiceStatusesSearchPath;
 
-	@Value("${egov.services.hr_masters_service.hrstatuses.searchpath}")
-	private String hrMastersServiceStatusesSearchPath;
+    @Value("${egov.services.hr_masters_service.hrstatuses.key}")
+    private String hrMastersServiceStatusesKey;
+    
+    @Value("${egov.services.hr_masters_service.hrconfiguration.basepath}")
+    private String hrMastersServiceHRConfigurationBasePath;
 
-	@Value("${egov.services.hr_masters_service.hrstatuses.key}")
-	private String hrMastersServiceStatusesKey;
+    @Value("${egov.services.hr_masters_service.hrconfigurations.searchpath}")
+    private String hrMastersServiceConfigurationsSearchPath;
 
-	@Value("${egov.services.hr_masters_service.hrconfiguration.basepath}")
-	private String hrMastersServiceHRConfigurationBasePath;
+    @Value("${egov.services.hr_masters_service.hrconfigurations.key}")
+    private String hrMastersServiceConfigurationsKey;
 
-	@Value("${egov.services.hr_masters_service.hrconfigurations.searchpath}")
-	private String hrMastersServiceConfigurationsSearchPath;
-
-	@Value("${egov.services.hr_masters_service.hrconfigurations.key}")
-	private String hrMastersServiceConfigurationsKey;
-
-	@Value("${egov.services.hr_masters_service.hrconfigurations.compensatorykey}")
-	private String hrMastersServiceCompensatoryConfigurationKey;
-
-	@Value("${egov.services.hr_masters_service.hrconfigurations.weeklyholidaykey}")
+    @Value("${egov.services.hr_masters_service.hrconfigurations.compensatorykey}")
+    private String hrMastersServiceCompensatoryConfigurationKey;
+    
+    @Value("${egov.services.hr_masters_service.hrconfigurations.weeklyholidaykey}")
 	private String hrMastersServiceConfigurationsWeeklyHolidayKey;
 
 	@Value("${egov.services.hr_masters_service.hrconfigurations.fivedayweek}")
@@ -110,5 +105,4 @@ public class PropertiesManager {
 
 	@Value("${egov.services.hr_masters_service.hrconfigurations.fivedaywithsecondandfourthsaturday}")
 	private String hrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday;
-
 }

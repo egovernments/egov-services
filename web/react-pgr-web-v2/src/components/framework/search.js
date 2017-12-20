@@ -235,7 +235,9 @@ class Search extends Component {
           }
         }
         str = str.join('&&');
-        filterData = `[?(${str})]`;
+        if(str != '') {
+          filterData = `[?(${str})]`;
+        }
       }
       masterDetail.filter = filterData;
       masterDetail.name = currentSpecification.objectName;

@@ -1,33 +1,32 @@
-//var $=require('jquery'); 
 import Api from '../../../../../api/api';
 import $ from 'jquery';
 
 var curDate = new Date();
-var formattedDate = curDate.getDate()+"/"+(curDate.getMonth()+1)+"/"+curDate.getFullYear();
-let driverDesignaionId="";
-let body={
-          "RequestInfo":{
-            apiId: 'org.egov.pt',
-            ver: '1.0',
-            ts: '27-06-2017 10:30:12',
-            action: 'asd',
-            did: '4354648646',
-            key: 'xyz',
-            msgId: '654654',
-            requesterId: '61',
-            authToken: localStorage.getItem('token'),
-          }
-        };
+var formattedDate = curDate.getDate() + "/" + (curDate.getMonth() + 1) + "/" + curDate.getFullYear();
+let driverDesignaionId = "";
+let body = {
+  "RequestInfo": {
+    apiId: 'org.egov.pt',
+    ver: '1.0',
+    ts: '27-06-2017 10:30:12',
+    action: 'asd',
+    did: '4354648646',
+    key: 'xyz',
+    msgId: '654654',
+    requesterId: '61',
+    authToken: localStorage.getItem('token'),
+  }
+};
 
 $.ajax({
-        url: window.location.origin+'/hr-masters/designations/_search?tenantId='+localStorage.getItem("tenantId")+'&name=Driver',
-        type:"POST",
-        contentType:"application/json",
-        data:JSON.stringify(body),
-        success: function (result) {
-              driverDesignaionId=result.Designation[0].id;       
-        },
-        async: false
+  url: window.location.origin + '/hr-masters/designations/_search?tenantId=' + localStorage.getItem("tenantId") + '&name=Driver',
+  type: "POST",
+  contentType: "application/json",
+  data: JSON.stringify(body),
+  success: function (result) {
+    driverDesignaionId = result.Designation[0].id;
+  },
+  async: false
 });
 
 var dat = {
@@ -71,7 +70,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url: "hr-employee/employees/_search?&designationId="+driverDesignaionId+"&asOnDate="+formattedDate+"|$.Employee[*].code|$.Employee[*].name",
+            url: "hr-employee/employees/_search?&designationId=" + driverDesignaionId + "&asOnDate=" + formattedDate + "|$.Employee[*].code|$.Employee[*].name",
           },
           {
             name: 'engineSrNumber',
@@ -239,7 +238,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url: "hr-employee/employees/_search?&designationId="+driverDesignaionId+"&asOnDate="+formattedDate+"|$.Employee[*].code|$.Employee[*].name",
+            url: "hr-employee/employees/_search?&designationId=" + driverDesignaionId + "&asOnDate=" + formattedDate + "|$.Employee[*].code|$.Employee[*].name",
           },
           {
             name: 'vehicleCapacity',
@@ -822,7 +821,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url: "hr-employee/employees/_search?&designationId="+driverDesignaionId+"&asOnDate="+formattedDate+"|$.Employee[*].code|$.Employee[*].name",
+            url: "hr-employee/employees/_search?&designationId=" + driverDesignaionId + "&asOnDate=" + formattedDate + "|$.Employee[*].code|$.Employee[*].name",
           },
           {
             name: 'vehicleCapacity',

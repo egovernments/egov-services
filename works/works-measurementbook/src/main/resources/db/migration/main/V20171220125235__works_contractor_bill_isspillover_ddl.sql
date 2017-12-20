@@ -1,1 +1,1 @@
-Alter table egw_contractorbill add column isspillover boolean DEFAULT false;
+Alter table egw_contractorbill add column spillover boolean DEFAULT false;

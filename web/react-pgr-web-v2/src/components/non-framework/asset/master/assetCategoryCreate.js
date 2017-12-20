@@ -502,67 +502,67 @@ class assetCategoryCreate extends Component {
       }
     }
     moduleDetails.push(data);
-    var _body = {
+    // var _body = {
       /*    MdmsCriteria: {
         tenantId: localStorage.getItem("tenantId"),
         moduleDetails: moduleDetails
       }
 */
-      MdmsCriteria: {
-        tenantId: localStorage.getItem('tenantId'),
-        moduleDetails: [
-          {
-            moduleName: 'ASSET',
-            masterDetails: [
-              {
-                id: 18,
-              },
-            ],
-          },
-        ],
-      },
-    };
-
-    Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true)
-      .then(res => {
-        this.setState({
-          mdmsData: res.MdmsRes,
-        });
-
-        //set dropdowndata
-        for (let i = 0; i < obj.groups.length; i++) {
-          for (let j = 0; j < obj.groups[i].fields.length; j++) {
-            if (obj.groups[i].fields[j].mdms) {
-              let dropDownData = [];
-              if (Object.keys(res.MdmsRes).includes(obj.groups[i].fields[j].mdms.moduleName)) {
-                for (var prop in res.MdmsRes) {
-                  if (obj.groups[i].fields[j].mdms.dependant) continue;
-                  if (res.MdmsRes.hasOwnProperty(prop)) {
-                    if (prop == obj.groups[i].fields[j].mdms.moduleName)
-                      for (var master in res.MdmsRes[prop]) {
-                        if (res.MdmsRes[prop].hasOwnProperty(master)) {
-                          var moduleObj = res.MdmsRes[prop];
-                          if (master == obj.groups[i].fields[j].mdms.masterName) {
-                            moduleObj[master].forEach(function(item) {
-                              let masterObj = { key: '', value: '' };
-                              masterObj.key = item[obj.groups[i].fields[j].mdms.key];
-                              masterObj.value = item[obj.groups[i].fields[j].mdms.value];
-                              dropDownData.push(masterObj);
-                            });
-                          }
-                        }
-                      }
-                  }
-                }
-              }
-              setDropDownData(obj.groups[i].fields[j].jsonPath, dropDownData);
-            }
-          }
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    //   MdmsCriteria: {
+    //     tenantId: localStorage.getItem('tenantId'),
+    //     moduleDetails: [
+    //       {
+    //         moduleName: 'ASSET',
+    //         masterDetails: [
+    //           {
+    //             id: 18,
+    //           },
+    //         ],
+    //       },
+    //     ],
+    //   },
+    // };
+    //
+    // Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true)
+    //   .then(res => {
+    //     this.setState({
+    //       mdmsData: res.MdmsRes,
+    //     });
+    //
+    //     //set dropdowndata
+    //     for (let i = 0; i < obj.groups.length; i++) {
+    //       for (let j = 0; j < obj.groups[i].fields.length; j++) {
+    //         if (obj.groups[i].fields[j].mdms) {
+    //           let dropDownData = [];
+    //           if (Object.keys(res.MdmsRes).includes(obj.groups[i].fields[j].mdms.moduleName)) {
+    //             for (var prop in res.MdmsRes) {
+    //               if (obj.groups[i].fields[j].mdms.dependant) continue;
+    //               if (res.MdmsRes.hasOwnProperty(prop)) {
+    //                 if (prop == obj.groups[i].fields[j].mdms.moduleName)
+    //                   for (var master in res.MdmsRes[prop]) {
+    //                     if (res.MdmsRes[prop].hasOwnProperty(master)) {
+    //                       var moduleObj = res.MdmsRes[prop];
+    //                       if (master == obj.groups[i].fields[j].mdms.masterName) {
+    //                         moduleObj[master].forEach(function(item) {
+    //                           let masterObj = { key: '', value: '' };
+    //                           masterObj.key = item[obj.groups[i].fields[j].mdms.key];
+    //                           masterObj.value = item[obj.groups[i].fields[j].mdms.value];
+    //                           dropDownData.push(masterObj);
+    //                         });
+    //                       }
+    //                     }
+    //                   }
+    //               }
+    //             }
+    //           }
+    //           setDropDownData(obj.groups[i].fields[j].jsonPath, dropDownData);
+    //         }
+    //       }
+    //     }
+    //   })
+      // .catch(err => {
+      //   console.log(err);
+      // });
   }
 
   checkifHasDependedantMdmsField(path, value) {
@@ -818,10 +818,10 @@ class assetCategoryCreate extends Component {
     if (e) e.preventDefault();
     self.props.setLoadingStatus('loading');
     var formData = { ...this.props.formData };
-
+    console.log(formData);
     if (formData.MasterMetaData) {
-      formData.MasterMetaData.masterData[0].id = this.state.createId;
-      formData.MasterMetaData.masterData[0].code = this.state.createId;
+      formData.MasterMetaData.masterData[0].id = this.state.createId + "";
+      formData.MasterMetaData.masterData[0].code = this.state.createId + "";
       //need to work on the logic
       formData.MasterMetaData.masterData[0].isAssetAllow = true;
       formData.MasterMetaData.masterData[0].tenantId = localStorage.getItem('tenantId');

@@ -1,8 +1,7 @@
 {
   "tenantId": "mh.rohatest",
   "moduleName": "ACCESSCONTROL-ROLEACTIONS",
-  "roleactions": 
-  [
+  "roleactions": [
     {
       "rolecode": "COLL_OPERATOR",
       "actionid": 590,
@@ -9572,7 +9571,108 @@
       "actionid": 1204,
       "actioncode": "",
       "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1067,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1068,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "ULB Operator",
+      "actionid": 1070,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1070,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1404,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1405,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "ULB Operator",
+      "actionid": 1413,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1413,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1101,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "ULB Operator",
+      "actionid": 1071,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "ULB Operator",
+      "actionid": 1072,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "ULB Operator",
+      "actionid": 1073,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1073,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "ULB Operator",
+      "actionid": 1178,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "ULB Operator",
+      "actionid": 1201,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1178,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1201,
+      "actioncode": "",
+      "tenantid": "mh.rohatest"
     }
-
   ]
 }

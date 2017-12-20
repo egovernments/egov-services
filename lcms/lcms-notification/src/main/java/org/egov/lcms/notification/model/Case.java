@@ -97,4 +97,7 @@ public class Case {
 	
 	@JsonProperty("referenceEvidences")
 	private List<ReferenceEvidence> referenceEvidences = null;
+	
+	@JsonProperty("advocateInfo")
+	private String advocateInfo;
 }

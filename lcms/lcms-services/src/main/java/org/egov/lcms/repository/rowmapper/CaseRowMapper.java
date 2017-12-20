@@ -27,6 +27,11 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * 
+ * @author Prasad
+ *
+ */
 @Component
 public class CaseRowMapper implements RowMapper<Case> {
 
@@ -53,6 +58,7 @@ public class CaseRowMapper implements RowMapper<Case> {
 		caseObj.setAge(rs.getString("age"));
 		caseObj.setDays(rs.getInt("days"));
 		caseObj.setTenantId(getString(rs.getString("tenantid")));
+		caseObj.setAdvocateInfo(getString(rs.getString("advocateInfo")));
 
 		Summon summon = new Summon();
 		summon.setCode(getString(rs.getObject("code")));

@@ -8,7 +8,6 @@ import java.util.Map;
 import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.model.ChecklistSearch;
-import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.egov.egf.bill.persistence.entity.ChecklistEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class ChecklistJdbcRepository extends JdbcRepository {
                 && !searchRequest.getSortBy().isEmpty()) {
             validateSortByOrder(searchRequest.getSortBy());
             validateEntityFieldName(searchRequest.getSortBy(),
-                    BillRegisterEntity.class);
+                    ChecklistEntity.class);
         }
 
         String orderBy = "order by billType";
@@ -44,7 +43,7 @@ public class ChecklistJdbcRepository extends JdbcRepository {
             orderBy = "order by " + searchRequest.getSortBy();
 
         searchQuery = searchQuery.replace(":tablename",
-                BillRegisterEntity.TABLE_NAME);
+                ChecklistEntity.TABLE_NAME);
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
         // implement jdbc specfic search

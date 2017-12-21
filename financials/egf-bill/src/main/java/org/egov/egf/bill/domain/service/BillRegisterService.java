@@ -311,7 +311,7 @@ public class BillRegisterService {
                             if (accountDetailType == null || accountDetailType.getId() == null
                                     || accountDetailType.getId().isEmpty())
                                 throw new CustomException("accountDetailType",
-                                        "Given accountDetailType is Invalid: " + detail.getAccountDetailType());
+                                        "Given accountDetailType is Invalid: " + detail.getAccountDetailType().getId());
 
                             adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
                         }
@@ -328,7 +328,7 @@ public class BillRegisterService {
                             if (accountDetailKey == null || accountDetailKey.getId() == null
                                     || accountDetailKey.getId().isEmpty())
                                 throw new CustomException("accountDetailType",
-                                        "Given accountDetailType is Invalid: " + detail.getAccountDetailKey());
+                                        "Given accountDetailType is Invalid: " + detail.getAccountDetailKey().getId());
 
                             adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
                         }

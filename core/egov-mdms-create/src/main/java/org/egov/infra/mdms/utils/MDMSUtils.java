@@ -90,20 +90,36 @@ public class MDMSUtils {
 	
 	public String buildCommitMessage(MDMSCreateRequest mDMSCreateRequest, boolean isCreate, String username){
 		StringBuilder commitMessage = new StringBuilder();
-		if(null != mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()
-				&& !mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName().isEmpty()){
-			if(isCreate){
-				commitMessage.append("commit by "+mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()+" ")
-				             .append("to ADD masterdata")
-						     .append("for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", ")
-						     .append("master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", ")
-						     .append("tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId());
+		if(null != mDMSCreateRequest.getRequestInfo().getUserInfo()){
+			if(null != mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()
+					&& !mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName().isEmpty()){
+				if(isCreate){
+					commitMessage.append("commit by "+mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()+" ")
+					             .append("to ADD masterdata")
+							     .append("for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", ")
+							     .append("master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", ")
+							     .append("tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId());
+				}else{
+					commitMessage.append("commit by "+mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()+" ")
+		             			 .append("to UPDATE masterdata")
+		             			 .append("for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", ")
+		             			 .append("master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", ")
+		             			 .append("tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId());
+				}
 			}else{
-				commitMessage.append("commit by "+mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()+" ")
-	             			 .append("to UPDATE masterdata")
-	             			 .append("for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", ")
-	             			 .append("master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", ")
-	             			 .append("tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId());
+				if(isCreate){
+					commitMessage.append("commit by "+username+" ")
+					             .append("to ADD masterdata")
+							     .append("for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", ")
+							     .append("master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", ")
+							     .append("tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId());
+				}else{
+					commitMessage.append("commit by "+username+" ")
+		             			 .append("to UPDATE masterdata")
+		             			 .append("for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", ")
+		             			 .append("master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", ")
+		             			 .append("tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId());
+				}
 			}
 		}else{
 			if(isCreate){

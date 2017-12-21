@@ -36,7 +36,7 @@ public class ChecklistJdbcRepository extends JdbcRepository {
                     ChecklistEntity.class);
         }
 
-        String orderBy = "order by billType";
+        String orderBy = "order by code";
 
         if (searchRequest.getSortBy() != null
                 && !searchRequest.getSortBy().isEmpty())

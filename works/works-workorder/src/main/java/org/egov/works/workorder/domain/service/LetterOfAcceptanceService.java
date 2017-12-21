@@ -99,6 +99,7 @@ public class LetterOfAcceptanceService {
                             letterOfAcceptanceRequest.getRequestInfo(), false);
                 }
                 letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
+                letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimate);
                 letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
                 
                 
@@ -227,6 +228,7 @@ public class LetterOfAcceptanceService {
                             letterOfAcceptanceRequest.getRequestInfo(), true);
                 }
                 letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
+                letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimate);
                 letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
 
             }

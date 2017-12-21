@@ -16,53 +16,60 @@ import java.util.List;
 @Data
 @Builder
 public class DetailedEstimateSearchContract {
-	
-	@NotNull
-	private String tenantId;
-	
-	private List<String> ids;
 
-	private List<String> detailedEstimateNumbers;
-	
-	private Long fromDate;
+    @NotNull
+    private String tenantId;
 
-	private Long toDate;
-	
-	private Long fromAmount;
+    private List<String> ids;
+    
+    private Integer pageSize;
 
-	private Long toAmount;
-	
-	private String departments;
-	
-	private List<String> typeOfWork;
-	
-	private List<String> subTypeOfWork;
-	
-	private List<String> statuses;
+    private Integer pageNumber;
 
-	private List<String> workIdentificationNumbers;
+    private String sortBy;
 
-	private List<String> abstractEstimateNumbers;
-	
-	private Integer pageSize;
+    private List<String> departments;
+    
+    private Long fromDate;
 
-	private Integer pageNumber;
+    private Long toDate;
 
-	private String sortBy;
+    private Long fromAmount;
 
-	private String nameOfWork;
-	
-	private String estimateAmount;
-	
-	private List<String> wards;
+    private Long toAmount;
 
-	private String currentOwner;
+    private List<String> typeOfWork;
 
-	private Boolean spillOverFlag;
+    private List<String> subTypeOfWork;
 
-	private String createdBy;
+    private List<String> statuses;
+
+    private String nameOfWork;
+
+    private List<String> wards;
+
+    private String currentOwner;
+
+    private Boolean spillOverFlag;
+
+    private String createdBy;
 
     private List<String> technicalSanctionNumbers;
 
+    private List<String> workIdentificationNumbers;
+
+    private List<String> abstractEstimateNumbers;
+
+    private List<String> detailedEstimateNumbers;
+    
+    private String technicalSanctionNumberLike;
+
+    private String workIdentificationNumberLike;
+
+    private String abstractEstimateNumberLike;
+
+    private String detailedEstimateNumberLike;
+
     private String scheduleOfRate;
+
 }

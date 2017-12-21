@@ -18,38 +18,52 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MeasurementBookSearchContract {
 
-	@NotNull
-	private String tenantId;
-	
-	private Integer pageSize;
+    @NotNull
+    private String tenantId;
 
-	private Integer pageNumber;
+    private Integer pageSize;
 
-	private String sortProperty;
-	
-	private List<String> ids;
-	
-	private List<String> workOrderNumbers; //autocomplete
-	
-	private List<String> mbRefNumbers;//autocomplete
-	
-	private List<String> loaNumbers;//autocomplete
-	
-	private List<String> detailedEstimateNumbers; //autocomplete
+    private Integer pageNumber;
 
-	private List<String> department;
+    private String sortProperty;
 
-	private Long fromDate;
+    private List<String> ids;
 
-	private Long toDate;
+    private List<String> department;
 
-	private String createdBy;
-	
-	private List<String> contractorNames;//autocomplete
-	
-	private List<String> contractorCodes;//autocomplete
+    private Long fromDate;
 
-	private List<String> workIdentificationNumbers;//autocomplete
-	
-	private List<String> statuses;
+    private Long toDate;
+
+    private String createdBy;
+
+    private List<String> workOrderNumbers; // autocomplete
+
+    private List<String> mbRefNumbers;// autocomplete
+
+    private List<String> loaNumbers;// autocomplete
+
+    private List<String> detailedEstimateNumbers; // autocomplete
+    
+    private List<String> contractorNames;// autocomplete
+
+    private List<String> contractorCodes;// autocomplete
+
+    private List<String> workIdentificationNumbers;// autocomplete
+    
+    private String workOrderNumberLike; // autocomplete
+
+    private String mbRefNumberLike;// autocomplete
+
+    private String loaNumberLike;// autocomplete
+
+    private String detailedEstimateNumberLike; // autocomplete
+    
+    private String contractorNameLike;// autocomplete
+
+    private String contractorCodeLike;// autocomplete
+
+    private String workIdentificationNumberLike;// autocomplete
+
+    private List<String> statuses;
 }

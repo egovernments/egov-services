@@ -37,7 +37,7 @@ public class EstimateRepository {
 			final RequestInfo requestInfo) {
 
 		StringBuilder url = new StringBuilder();
-		url.append(detailedEstimateUrl).append(tenantId).append("&").append("detailedEstimateNumbers=").append(detailedEstimateSearchContract.getDetailedEstimateNumbers().get(0));
+		url.append(detailedEstimateUrl).append(tenantId).append("&").append("ids=").append(detailedEstimateSearchContract.getIds().get(0));
 
 		return restTemplate.postForObject(url.toString(), requestInfo, DetailedEstimateResponse.class);
 

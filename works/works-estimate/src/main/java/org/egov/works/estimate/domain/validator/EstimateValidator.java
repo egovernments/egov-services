@@ -204,7 +204,7 @@ public class EstimateValidator {
             messages.put(Constants.KEY_COUNCILRESOLUTION_PROPOSAL_DATE, Constants.MESSAGE_COUNCILRESOLUTION_PROPOSAL_DATE);
         if (estimate.getCouncilResolutionNumber() != null) {
             AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
-            searchContract.setCouncilSanctionNumbers(Arrays.asList(estimate.getCouncilResolutionNumber()));
+            searchContract.setCouncilResolutionNumbers(Arrays.asList(estimate.getCouncilResolutionNumber()));
 
             List<AbstractEstimate> oldEstimates = abstractEstimateService.search(searchContract, requestInfo)
                     .getAbstractEstimates();

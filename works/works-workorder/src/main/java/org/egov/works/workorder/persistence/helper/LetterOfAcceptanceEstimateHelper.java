@@ -43,7 +43,7 @@ public class LetterOfAcceptanceEstimateHelper {
         letterOfAcceptanceEstimate.setTenantId(this.tenantId);
         letterOfAcceptanceEstimate.setLetterOfAcceptance(this.letterOfAcceptance);
         DetailedEstimate detailedEstimate = new DetailedEstimate();
-        detailedEstimate.setEstimateNumber(this.detailedEstimate);
+        detailedEstimate.setId(this.detailedEstimate);
         letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimate);
         letterOfAcceptanceEstimate.setWorkCompletionDate(this.workCompletionDate);
         letterOfAcceptanceEstimate.setEstimateLOAAmount(this.estimateLOAAmount);

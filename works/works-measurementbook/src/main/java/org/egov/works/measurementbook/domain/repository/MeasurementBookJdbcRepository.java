@@ -1,5 +1,6 @@
 package org.egov.works.measurementbook.domain.repository;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.measurementbook.common.persistence.repository.JdbcRepository;
 import org.egov.works.measurementbook.persistence.helper.MeasurementBookHelper;
 import org.egov.works.measurementbook.web.contract.*;
@@ -24,8 +25,8 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_measurementbook mb";
     public static final String MB_LOAESTIMATE_EXTENTION = ", egw_letterofacceptanceestimate loaestimate";
 
-
-    public List<MeasurementBook> searchMeasurementBooks(final MeasurementBookSearchContract measurementBookSearchContract, final RequestInfo requestInfo) {
+    public List<MeasurementBook> searchMeasurementBooks(final MeasurementBookSearchContract measurementBookSearchContract,
+            final RequestInfo requestInfo) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -40,8 +41,10 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             validateEntityFieldName(measurementBookSearchContract.getSortProperty(), MeasurementBook.class);
         }
 
-        if (measurementBookSearchContract.getDetailedEstimateNumbers() != null && !measurementBookSearchContract.getDetailedEstimateNumbers().isEmpty()
-                || measurementBookSearchContract.getLoaNumbers() != null && !measurementBookSearchContract.getLoaNumbers().isEmpty())
+        if (measurementBookSearchContract.getDetailedEstimateNumbers() != null
+                && !measurementBookSearchContract.getDetailedEstimateNumbers().isEmpty()
+                || measurementBookSearchContract.getLoaNumbers() != null
+                        && !measurementBookSearchContract.getLoaNumbers().isEmpty())
             tableName += MB_LOAESTIMATE_EXTENTION;
 
         String orderBy = "order by mb.id";
@@ -65,11 +68,31 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             paramValues.put("ids", measurementBookSearchContract.getIds());
         }
         if (measurementBookSearchContract.getLoaNumbers() != null && !measurementBookSearchContract.getLoaNumbers().isEmpty()) {
-            searchByLOANumbers(measurementBookSearchContract.getLoaNumbers(), params, paramValues);
+            addAnd(params);
+            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:loaNumber)");
+            paramValues.put("loaNumber", measurementBookSearchContract.getLoaNumbers());
         }
 
-        if (measurementBookSearchContract.getDetailedEstimateNumbers() != null && !measurementBookSearchContract.getDetailedEstimateNumbers().isEmpty()) {
-            searchByDetailedEstimateNumbers(measurementBookSearchContract.getDetailedEstimateNumbers(), params, paramValues);
+        if (StringUtils.isNotBlank(measurementBookSearchContract.getLoaNumberLike())) {
+            addAnd(params);
+            params.append(
+                    "mb.letterOfAcceptanceEstimate = loaestimate.id and lower(loaestimate.letterOfAcceptance) like (:loaNumberlike)");
+            paramValues.put("loaNumberlike", "%" + measurementBookSearchContract.getLoaNumberLike().toLowerCase() + "%");
+        }
+
+        if (measurementBookSearchContract.getDetailedEstimateNumbers() != null
+                && !measurementBookSearchContract.getDetailedEstimateNumbers().isEmpty()) {
+            addAnd(params);
+            params.append(
+                    "mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:detailedEstimate)");
+            paramValues.put("detailedEstimate", measurementBookSearchContract.getDetailedEstimateNumbers());
+        }
+
+        if (StringUtils.isNotBlank(measurementBookSearchContract.getDetailedEstimateNumberLike())) {
+            addAnd(params);
+            params.append(
+                    "mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance like (:detailedEstimate)");
+            paramValues.put("detailedEstimate", "%" + measurementBookSearchContract.getDetailedEstimateNumberLike() + "%");
         }
 
         if (measurementBookSearchContract.getCreatedBy() != null) {
@@ -89,22 +112,25 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             paramValues.put("createdtime", measurementBookSearchContract.getToDate());
         }
 
-        if (measurementBookSearchContract.getMbRefNumbers() != null && measurementBookSearchContract.getMbRefNumbers().size() == 1) {
+        if (StringUtils.isNotBlank(measurementBookSearchContract.getMbRefNumberLike())) {
             addAnd(params);
-            params.append("upper(mb.mbRefNo) like (:mbRefNo)");
-            paramValues.put("mbRefNo", "%" + measurementBookSearchContract.getMbRefNumbers().get(0).toUpperCase() + "%");
-        } else if (measurementBookSearchContract.getMbRefNumbers() != null && measurementBookSearchContract.getMbRefNumbers().size() > 1) {
+            params.append("upper(mb.mbRefNo) like (:mbRefNoLike)");
+            paramValues.put("mbRefNoLike", "%" + measurementBookSearchContract.getMbRefNumberLike().toUpperCase() + "%");
+        }
+        if (measurementBookSearchContract.getMbRefNumbers() != null
+                && !measurementBookSearchContract.getMbRefNumbers().isEmpty()) {
             addAnd(params);
             params.append("mb.mbRefNo in(:mbRefNo)");
             paramValues.put("mbRefNo", measurementBookSearchContract.getMbRefNumbers());
         }
         List<String> detailedEstimateNumbers = new ArrayList<>();
         if (measurementBookSearchContract.getDepartment() != null && !measurementBookSearchContract.getDepartment().isEmpty()) {
-            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(measurementBookSearchContract.getDepartment(),measurementBookSearchContract.getTenantId(),requestInfo);
-            for(DetailedEstimate detailedEstimate : detailedEstimates)
-              detailedEstimateNumbers.add(detailedEstimate.getEstimateNumber());
-            if(detailedEstimateNumbers != null && !detailedEstimateNumbers.isEmpty())
-            searchByDetailedEstimateNumbers(detailedEstimateNumbers,params,paramValues);
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(
+                    measurementBookSearchContract.getDepartment(), measurementBookSearchContract.getTenantId(), requestInfo);
+            for (DetailedEstimate detailedEstimate : detailedEstimates)
+                detailedEstimateNumbers.add(detailedEstimate.getEstimateNumber());
+            if (detailedEstimateNumbers != null && !detailedEstimateNumbers.isEmpty())
+                searchByDetailedEstimateNumbers(detailedEstimateNumbers, params, paramValues);
         }
 
         if (measurementBookSearchContract.getStatuses() != null) {
@@ -114,21 +140,50 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         }
 
         List<String> loaNumbers = null;
-        if (measurementBookSearchContract.getContractorCodes() != null && !measurementBookSearchContract.getContractorCodes().isEmpty()) {
-           List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(measurementBookSearchContract.getContractorCodes(), null, measurementBookSearchContract.getTenantId(), requestInfo);
+        if (measurementBookSearchContract.getContractorCodes() != null
+                && !measurementBookSearchContract.getContractorCodes().isEmpty()) {
+            List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(
+                    measurementBookSearchContract.getContractorCodes(), null, measurementBookSearchContract.getTenantId(),
+                    requestInfo);
             loaNumbers = new ArrayList<String>();
-            for(LetterOfAcceptance letterOfAcceptance : loas)
+            for (LetterOfAcceptance letterOfAcceptance : loas)
                 loaNumbers.add(letterOfAcceptance.getLoaNumber());
             searchByLOANumbers(loaNumbers, params, paramValues);
 
         }
 
-        if (measurementBookSearchContract.getContractorNames() != null && !measurementBookSearchContract.getContractorNames().isEmpty()) {
-            List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(null,measurementBookSearchContract.getContractorNames(), measurementBookSearchContract.getTenantId(), requestInfo);
+        if (measurementBookSearchContract.getContractorNames() != null
+                && !measurementBookSearchContract.getContractorNames().isEmpty()) {
+            List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(null,
+                    measurementBookSearchContract.getContractorNames(), measurementBookSearchContract.getTenantId(), requestInfo);
             loaNumbers = new ArrayList<String>();
-            for(LetterOfAcceptance letterOfAcceptance : loas)
+            for (LetterOfAcceptance letterOfAcceptance : loas)
                 loaNumbers.add(letterOfAcceptance.getLoaNumber());
             searchByLOANumbers(loaNumbers, params, paramValues);
+
+        }
+
+        List<String> loaNumbersLike = null;
+        if (StringUtils.isNotBlank(measurementBookSearchContract.getContractorCodeLike())) {
+            List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(
+                    Arrays.asList(measurementBookSearchContract.getContractorCodeLike()), null,
+                    measurementBookSearchContract.getTenantId(),
+                    requestInfo);
+            loaNumbers = new ArrayList<String>();
+            for (LetterOfAcceptance letterOfAcceptance : loas)
+                loaNumbers.add(letterOfAcceptance.getLoaNumber());
+            searchByLOANumberLike(loaNumbers, params, paramValues);
+
+        }
+
+        if (StringUtils.isNotBlank(measurementBookSearchContract.getContractorNameLike())) {
+            List<LetterOfAcceptance> loas = letterOfAcceptanceRepository.searchLetterOfAcceptance(null,
+                    Arrays.asList(measurementBookSearchContract.getContractorNameLike()),
+                    measurementBookSearchContract.getTenantId(), requestInfo);
+            loaNumbers = new ArrayList<String>();
+            for (LetterOfAcceptance letterOfAcceptance : loas)
+                loaNumbers.add(letterOfAcceptance.getLoaNumber());
+            searchByLOANumberLike(loaNumbers, params, paramValues);
 
         }
 
@@ -149,11 +204,13 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         for (MeasurementBookHelper measurementBookHelper : loaList) {
             MeasurementBook measurementBook = measurementBookHelper.toDomain();
 
-            MeasurementBookDetailSearchContract measurementBookDetailSearchCriteria = MeasurementBookDetailSearchContract.builder()
+            MeasurementBookDetailSearchContract measurementBookDetailSearchCriteria = MeasurementBookDetailSearchContract
+                    .builder()
                     .tenantId(measurementBook.getTenantId())
                     .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
 
-            measurementBook.setMeasurementBookDetails(measurementBookDetailRepository.searchMeasurementBookDetail(measurementBookDetailSearchCriteria));
+            measurementBook.setMeasurementBookDetails(
+                    measurementBookDetailRepository.searchMeasurementBookDetail(measurementBookDetailSearchCriteria));
 
             measurementBooks.add(measurementBook);
 
@@ -163,26 +220,30 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
     }
 
     private void searchByLOANumbers(List<String> loaNumbers, StringBuilder params, Map<String, Object> paramValues) {
-        if (loaNumbers.size() == 1) {
-            addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and upper(loaestimate.letterOfAcceptance) like (:loaNumber)");
-            paramValues.put("loaNumber", "%" + loaNumbers.get(0).toUpperCase() + "%");
-        } else {
-            addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:loaNumber)");
-            paramValues.put("loaNumber", loaNumbers);
-        }
+        addAnd(params);
+        params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:loaNumber)");
+        paramValues.put("loaNumber", loaNumbers);
     }
 
-    private void searchByDetailedEstimateNumbers(List<String> detailedEstimateNumbers, StringBuilder params, Map<String,Object> paramValues) {
+    private void searchByLOANumberLike(List<String> loaNumbers, StringBuilder params, Map<String, Object> paramValues) {
+        addAnd(params);
+        params.append(
+                "mb.letterOfAcceptanceEstimate = loaestimate.id and upper(loaestimate.letterOfAcceptance) like (:loaNumber)");
+        paramValues.put("loaNumber", "%" + loaNumbers.get(0).toUpperCase() + "%");
+    }
+
+    private void searchByDetailedEstimateNumbers(List<String> detailedEstimateNumbers, StringBuilder params,
+            Map<String, Object> paramValues) {
 
         if (detailedEstimateNumbers.size() == 1) {
             addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and upper(loaestimate.detailedEstimate) like (:detailedEstimate)");
+            params.append(
+                    "mb.letterOfAcceptanceEstimate = loaestimate.id and upper(loaestimate.detailedEstimate) like (:detailedEstimate)");
             paramValues.put("detailedEstimate", "%" + detailedEstimateNumbers.get(0).toUpperCase() + "%");
         } else {
             addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:detailedEstimate)");
+            params.append(
+                    "mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:detailedEstimate)");
             paramValues.put("detailedEstimate", detailedEstimateNumbers);
         }
 

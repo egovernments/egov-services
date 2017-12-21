@@ -14,10 +14,6 @@ public class LetterOfAcceptanceSearchContract {
 
     private List<String> ids;
 
-    private List<String> loaNumbers;
-
-    private List<String> detailedEstimateNumbers;
-
     private String fileNumber;
 
     private Long fromDate;
@@ -31,6 +27,18 @@ public class LetterOfAcceptanceSearchContract {
     private List<String> contractorNames;
 
     private List<String> contractorCodes;
+
+    private List<String> loaNumbers;
+
+    private List<String> detailedEstimateNumbers;
+
+    private String contractorNameLike;
+
+    private String contractorCodeLike;
+
+    private String loaNumberLike;
+
+    private String detailedEstimateNumberLike;
 
     private Boolean spillOverFlag;
 

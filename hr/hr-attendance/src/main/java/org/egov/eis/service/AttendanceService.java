@@ -163,13 +163,14 @@ public class AttendanceService {
 				.getWeeklyHolidays(attendanceReportRequest.getTenantId(), requestInfo);
 
 		int count = 0;
-		if ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY))
-			count++;
+
+		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		count += calendar.getActualMaximum(Calendar.DAY_OF_WEEK_IN_MONTH);
 
 		if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWeek()
 				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
-			if ((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY))
-				count++;
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+			count += calendar.getActualMaximum(Calendar.DAY_OF_WEEK_IN_MONTH);
 		} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
 				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
 			count += 1;

@@ -18,7 +18,9 @@ import org.egov.lams.model.Judgement;
 import org.egov.lams.model.Objection;
 import org.egov.lams.model.Remission;
 import org.egov.lams.model.Renewal;
+import org.egov.lams.model.SubSeqRenewal;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
@@ -47,6 +49,10 @@ public class AgreementRepository {
 	public static final String AGREEMENT_SEARCH_QUERY_FOR_DCB = "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand ON agreement.id = demand.agreementid LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id where agreement.agreement_No=:agreementNumber and agreement.tenant_id=:tenantId and status in ('ACTIVE') order by agreement.id desc";
 
 	public static final String VIEW_DCB = "DCB";
+	
+	public static final String SOURCE_DATAENTRY = "DATA_ENTRY";
+	
+	public static final String SOURCE_SYSTEM = "SYSTEM";
 
 	@Autowired
     private AssetHelper assetHelper;
@@ -291,7 +297,7 @@ public class AgreementRepository {
         try {
             namedParameterJdbcTemplate.update(agreementinsert, agreementParameters);
         } catch (DataAccessException ex) {
-            ex.printStackTrace();
+        	logger.info("exception saving agreement details" + ex);
             throw new RuntimeException(ex.getMessage());
         }
 
@@ -309,7 +315,7 @@ public class AgreementRepository {
             try {
                 jdbcTemplate.batchUpdate(sql, demandBatchArgs);
             } catch (DataAccessException ex) {
-                ex.printStackTrace();
+            	logger.info("exception saving demand details" + ex);
                 throw new RuntimeException(ex.getMessage());
             }
         }
@@ -331,11 +337,34 @@ public class AgreementRepository {
 			try {
 				jdbcTemplate.batchUpdate(sql, documentBatchArgs);
 			} catch (DataAccessException ex) {
-				ex.printStackTrace();
+				logger.info("exception saving agreement document details" + ex);
 				throw new RuntimeException(ex.getMessage());
 			}
 		}
+		
+		List<SubSeqRenewal> renewalDetails = agreement.getSubSeqRenewals();
+		if (Source.DATA_ENTRY.equals(agreement.getSource()) && Action.CREATE.equals(agreement.getAction())
+				&& renewalDetails != null) {
+			String sql = "INSERT INTO eglams_history (id,agreementid,fromdate,todate,years,rent,tenantid) values "
+					+ "(nextval('seq_eglams_history'),?,?,?,?,?,?);";
+			logger.info("query for saving agreement history : " + sql);
+			List<Object[]> renewHistorytBatchArgs = new ArrayList<>();
 
+			for (SubSeqRenewal renewalHistory : renewalDetails) {
+
+				Object[] historyDetailList = { agreement.getId(), renewalHistory.getHistoryFromDate(),
+						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
+						agreement.getTenantId() };
+				renewHistorytBatchArgs.add(historyDetailList);
+			}
+
+			try {
+				jdbcTemplate.batchUpdate(sql, renewHistorytBatchArgs);
+			} catch (DataAccessException ex) {
+				logger.info("exception while saving history details" + ex);
+				throw new RuntimeException(ex.getMessage());
+			}
+		}
     }
 
     public void updateAgreement(AgreementRequest agreementRequest) {
@@ -392,7 +421,8 @@ public class AgreementRepository {
         agreementParameters.put("councilDate", agreement.getCouncilDate());
         agreementParameters.put("councilNumber", agreement.getCouncilNumber());
         agreementParameters.put("expiryDate", agreement.getExpiryDate());
-        agreementParameters.put("natureOfAllotment", agreement.getNatureOfAllotment().toString());
+		agreementParameters.put("natureOfAllotment",
+				agreement.getNatureOfAllotment() == null ? "" : agreement.getNatureOfAllotment().toString());
         agreementParameters.put("orderDate", processMap.get("orderDate"));
         agreementParameters.put("orderDetails", agreement.getOrderDetails());
         agreementParameters.put("orderNumber", processMap.get("orderNumber"));
@@ -416,7 +446,7 @@ public class AgreementRepository {
         agreementParameters.put("allottee", agreement.getAllottee().getId());
         agreementParameters.put("asset", agreement.getAsset().getId());
         agreementParameters.put("rentIncrement",
-        agreement.getRentIncrementMethod() != null ? agreement.getRentIncrementMethod().getId() : null);
+        agreement.getRentIncrementMethod() == null ? null :agreement.getRentIncrementMethod().getId() );
         agreementParameters.put("acknowledgementNumber", agreement.getAcknowledgementNumber());
         agreementParameters.put("stateId", agreement.getStateId());
         agreementParameters.put("tenantId", agreement.getTenantId());
@@ -442,8 +472,14 @@ public class AgreementRepository {
 		agreementParameters.put("remissionOrder", processMap.get("remissionOrder"));
 		agreementParameters.put("adjustmentStartDate", agreement.getAdjustmentStartDate());
 		agreementParameters.put("isUnderWorkflow", agreement.getIsUnderWorkflow());
-        
-        return agreementParameters;
+		agreementParameters.put("firstAllotment", agreement.getFirstAllotment());
+		agreementParameters.put("gstin", agreement.getGstin());
+		agreementParameters.put("municaipalOrderNo", agreement.getMunicipalOrderNumber());
+		agreementParameters.put("municipalOrderDate", agreement.getMunicipalOrderDate());
+		agreementParameters.put("govtOrderNo", agreement.getGovernmentOrderNumber());
+		agreementParameters.put("govtOrderDate", agreement.getGovernmentOrderDate());
+
+		return agreementParameters;
     }
 
     private Map<String, Object> getProcessMap(AgreementRequest agreementRequest) {

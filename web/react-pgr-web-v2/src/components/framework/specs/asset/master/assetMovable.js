@@ -1453,7 +1453,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            //"convertToString": true
+            convertToString: true
           },
           {
             name: 'RefNoOfWIP',
@@ -1462,7 +1462,7 @@ var dat = {
             pattern: '',
             type: 'text',
             url: '',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',

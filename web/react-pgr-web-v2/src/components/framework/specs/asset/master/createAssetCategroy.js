@@ -336,14 +336,11 @@ var dat = {
     url: '',
     tenantIdRequired: true,
     useTimestamp: true,
-    moduleName: 'ASSET',
-    masterName: 'AssetCategory',
-    objectName: 'MasterMetaData',
     customActionsAndUrl: [
       {
         actionName: 'Edit',
         url: '/asset-services-maha/assets/_search?ids={id}',
-      },
+      }
     ],
     groups: [
       {
@@ -385,15 +382,14 @@ var dat = {
           },
           {
             name: 'AssetCategory',
-            jsonPath: 'MdmsRes.ASSET.AssetCategory[0].parent',
+            jsonPath: 'MdmsRes.ASSET.AssetCategory[0].parentName',
             label: 'ac.create.asset.sub.categroy',
             pattern: '',
-            type: 'singleValueList',
+            type: 'text',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg: '',
-            isStateLevel: true,
+            patternErrMsg: ''
           },
           {
             name: 'DepericiationMethod',

@@ -463,11 +463,11 @@ class assetCategoryCreate extends Component {
         });
         }else
         {
-          var maxIdObject = _.maxBy(searchAPI.MdmsRes.ASSET.AssetCategory, function(o) { return o.id;});
+          var maxIdObject = _.maxBy(searchAPI.MdmsRes.ASSET.AssetCategory, function(o) { return Number(o.id);});
           var maxId = maxIdObject.id;
-          console.log(maxId);
+          var maxIdInc = ++maxId;
           this.setState({
-          createId: maxId + 1,
+          createId: maxIdInc
         });
       }
       });
@@ -1744,6 +1744,7 @@ class assetCategoryCreate extends Component {
       if(property=='MasterMetaData.masterData[0].isDepreciationApplicable'){
         console.log("hi");
       }
+
 
       while (pos < str.length) {
         if (str.indexOf('$', pos) > -1) {

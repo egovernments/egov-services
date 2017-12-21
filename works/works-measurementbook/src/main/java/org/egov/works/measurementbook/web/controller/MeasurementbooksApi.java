@@ -42,7 +42,7 @@ public interface MeasurementbooksApi {
 
 	@RequestMapping(value = "/measurementbooks/_create", method = RequestMethod.POST)
 	ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(
-			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest);
+			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
 
 	@ApiOperation(value = "Get the list of Measurement Book(s) defined in the system.", notes = "Search and get Measurement Book(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params.  In case multiple parameters are passed Measurement Book(s) will be searched as an AND combination of all the parameters.  Maximum result size is restricted based on the maxlength of Notice as defined in MeasurementBookResponse model.  Search results will be sorted by the sortProperty Provided in the parameters ", response = MeasurementBookResponse.class, tags = {
 			"Measurement Book", })
@@ -53,7 +53,7 @@ public interface MeasurementbooksApi {
 	@RequestMapping(value = "/measurementbooks/_search", method = RequestMethod.POST)
 	ResponseEntity<MeasurementBookResponse> measurementbooksSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @RequestBody RequestInfo requestInfo,
+			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
 			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
@@ -79,6 +79,6 @@ public interface MeasurementbooksApi {
 
 	@RequestMapping(value = "/measurementbooks/_update", method = RequestMethod.POST)
 	ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
-			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest);
+			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
 
 }

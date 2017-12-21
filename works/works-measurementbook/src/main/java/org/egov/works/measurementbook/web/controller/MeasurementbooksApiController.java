@@ -31,14 +31,14 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 	private MeasurementBookService measurementBookService;
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(
-			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest) {
+			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest) {
 		return new ResponseEntity<>(measurementBookService.create(measurementBookRequest),
 				HttpStatus.OK);
 	}
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @RequestBody RequestInfo requestInfo,
+			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
 			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
 			@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
@@ -66,7 +66,7 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 	}
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
-			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest) {
+			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest) {
 		return new ResponseEntity<>(measurementBookService.update(measurementBookRequest),
 				HttpStatus.OK);
 	}

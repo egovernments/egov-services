@@ -290,7 +290,7 @@ public class MeasurementBook   {
   @ApiModelProperty(required = true, value = "Reference of Letter of Acceptance Estimate")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public LetterOfAcceptanceEstimate getLetterOfAcceptanceEstimate() {
     return letterOfAcceptanceEstimate;
@@ -349,7 +349,7 @@ public class MeasurementBook   {
   **/
   @ApiModelProperty(value = "Array of Measurement Book Details")
 
-  @Valid
+//  @Valid
  @Size(min=1)
   public List<MeasurementBookDetail> getMeasurementBookDetails() {
     return measurementBookDetails;
@@ -450,7 +450,7 @@ public class MeasurementBook   {
   **/
   @ApiModelProperty(value = "Array of document details")
 
-  @Valid
+//  @Valid
 
   public List<DocumentDetail> getDocumentDetails() {
     return documentDetails;

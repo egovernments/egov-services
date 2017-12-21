@@ -16,7 +16,7 @@ import java.util.Objects;
  * AN Object which holds the basic data for AbstractEstimate
  */
 @ApiModel(description = "AN Object which holds the basic data for AbstractEstimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-21T07:26:07.530Z")
 
 public class AbstractEstimate   {
   @JsonProperty("id")
@@ -1150,11 +1150,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Work proposed as per DP. The valid values are 'Yes' and 'No'.
+   * Work proposed as per DP and Non mandatory for spillover. The valid values are 'Yes' and 'No'.
    * @return workProposedAsPerDP
   **/
-  @ApiModelProperty(required = true, value = "Work proposed as per DP. The valid values are 'Yes' and 'No'.")
-  @NotNull
+  @ApiModelProperty(value = "Work proposed as per DP and Non mandatory for spillover. The valid values are 'Yes' and 'No'.")
 
 
   public Boolean getWorkProposedAsPerDP() {
@@ -1171,11 +1170,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * DP Remarks
+   * DP Remarks Non mandatory for spillover.
    * @return dpRemarks
   **/
-  @ApiModelProperty(required = true, value = "DP Remarks")
-  @NotNull
+  @ApiModelProperty(value = "DP Remarks Non mandatory for spillover.")
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(max=512)
   public String getDpRemarks() {
@@ -1357,10 +1355,10 @@ public class AbstractEstimate   {
   }
 
    /**
-   * Array of Asset/Land details
+   * Array of Asset/Land details.Non mandatory for spillover even if configuration is 'Yes'.
    * @return assetDetails
   **/
-  @ApiModelProperty(value = "Array of Asset/Land details")
+  @ApiModelProperty(value = "Array of Asset/Land details.Non mandatory for spillover even if configuration is 'Yes'.")
 
 //  @Valid
 

@@ -1145,13 +1145,13 @@ definitions:
         maxLength: 100
       workProposedAsPerDP:
         type: boolean
-        description: Work proposed as per DP. The valid values are 'Yes' and 'No'.
+        description: Work proposed as per DP and Non mandatory for spillover. The valid values are 'Yes' and 'No'.
         format: singleValueList
         default: false
       dpRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
-        description: DP Remarks
+        description: DP Remarks Non mandatory for spillover.
         maxLength: 512
       landAssetRequired:
         type: boolean
@@ -1186,7 +1186,7 @@ definitions:
           $ref: '#/definitions/AbstractEstimateSanctionDetail'
       assetDetails:
         type: array
-        description: Array of Asset/Land details
+        description: Array of Asset/Land details.Non mandatory for spillover even if configuration is 'Yes'.
         items:
           $ref: '#/definitions/AbstractEstimateAssetDetail'
       documentDetails:
@@ -1210,8 +1210,6 @@ definitions:
       - modeOfAllotment
       - ward
       - locality
-      - workProposedAsPerDP
-      - dpRemarks
       - abstractEstimateDetails
   
   AbstractEstimateDetails:
@@ -1489,7 +1487,7 @@ definitions:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 512
-        description: Location of the Detailed Estimate where the work is executed
+        description: Location of the Detailed Estimate where the work is executed.Non mandatory for spillover even if configuration is 'Yes'.
       latitude:
         type: number
         format: double

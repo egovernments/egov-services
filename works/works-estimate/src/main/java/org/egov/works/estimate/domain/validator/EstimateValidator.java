@@ -71,6 +71,8 @@ public class EstimateValidator {
             validateEstimateDetails(estimate, messages);
             validatePMCData(messages, estimate);
             validateWardAndLocalityMandatory(messages, estimate);
+            if (!estimate.getSpillOverFlag())
+               validateDpRemarks(messages, estimate);
             if (estimate.getSpillOverFlag())
                 validateSpillOverData(estimate, messages);
             validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages, isNew);
@@ -93,6 +95,15 @@ public class EstimateValidator {
             if (!messages.isEmpty())
                 throw new CustomException(messages);
         }
+    }
+
+    private void validateDpRemarks(Map<String, String> messages, AbstractEstimate estimate) {
+        if(StringUtils.isBlank(estimate.getDpRemarks()))
+            messages.put(Constants.KEY_WORKS_ESTIMATE_DPREMARKS_REQUIRED,
+                    Constants.MESSAGE_WORKS_ESTIMATE_DPREMARKS_REQUIRED);
+        if(!estimate.getWorkProposedAsPerDP())
+            messages.put(Constants.KEY_WORKS_ESTIMATE_WORKPROPOSED_AS_PERDPREMARKS_REQUIRED,
+                    Constants.MESSAGE_WORKS_ESTIMATE_WORKPROPOSED_AS_PERDPREMARKS_REQUIRED);
     }
 
     private void validateDuplicateWINCode(Map<String, String> messages, final AbstractEstimate estimate) {
@@ -488,7 +499,7 @@ public class EstimateValidator {
                 }
                 validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
                 validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
-                validateLocationDetails(detailedEstimate, requestInfo, messages);
+                validateLocationDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
                 if(detailedEstimate.getEstimateOverheads() != null && !detailedEstimate.getEstimateOverheads().isEmpty())
                     validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
@@ -873,14 +884,14 @@ public class EstimateValidator {
     }
 
     public void validateLocationDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
-            Map<String, String> messages) {
+            Map<String, String> messages, final AbstractEstimate abstractEstimate) {
         if (propertiesManager.getLocationRequiredForEstimate().toString().equalsIgnoreCase("Yes")) {
             JSONArray mdmsArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
                     Constants.GIS_INTEGRATION_APPCONFIG, detailedEstimate.getTenantId(), requestInfo,
                     CommonConstants.MODULENAME_WORKS);
             if (mdmsArray != null && !mdmsArray.isEmpty()) {
                 Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
-                if (jsonMap.get("value").equals("Yes") && (StringUtils.isBlank(detailedEstimate.getLocation())
+                if (jsonMap.get("value").equals("Yes") && !abstractEstimate.getDetailedEstimateCreated() && (StringUtils.isBlank(detailedEstimate.getLocation())
                         || detailedEstimate.getLatitude() == null || detailedEstimate.getLongitude() == null))
                     messages.put(Constants.KEY_ESTIMATE_LOCATION_REQUIRED,
                             Constants.MESSAGE_ESTIMATE_LOCATION_REQUIRED);
@@ -959,7 +970,7 @@ public class EstimateValidator {
         boolean assetsAdded = false;
         if (mdmsArray != null && !mdmsArray.isEmpty()) {
             Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
-            if (jsonMap.get("value").equals("Yes")) {
+            if (jsonMap.get("value").equals("Yes") && !abstractEstimate.getSpillOverFlag()) {
                 if (abstractEstimate.getAssetDetails() != null && !abstractEstimate.getAssetDetails().isEmpty())
                     assetsAdded = true;
 
@@ -999,17 +1010,15 @@ public class EstimateValidator {
 
                     // TODO FIX aset code validation getting deserialization error
                     // for AttributeDefinition["columns"]
-                    /*
-                     * if( assetsForEstimate.getAsset() != null && StringUtils.isNotBlank(assetsForEstimate.getAsset().getCode()
-                     * )) { List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),
-                     * assetsForEstimate.getAsset().getCode(),requestInfo); if(assets != null && assets.isEmpty())
-                     * messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,
-                     * Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID); }
-                     */
+                     if( abstractEstimateAssetDetail.getAsset() != null && StringUtils.isNotBlank(abstractEstimateAssetDetail.getAsset().getCode())) {
+                         List<Asset> assets = assetRepository.searchAssets(abstractEstimateAssetDetail.getTenantId(),
+                             abstractEstimateAssetDetail.getAsset().getCode(),requestInfo);
+                         if(assets != null && assets.isEmpty())
+                          messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID); }
                     if (asset != null && asset.getCode().equals(abstractEstimateAssetDetail.getAsset().getCode()))
                         messages.put(Constants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS,
                                 Constants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
-                    asset = abstractEstimateAssetDetail.getAsset();
+                        asset = abstractEstimateAssetDetail.getAsset();
                 }
         }
 

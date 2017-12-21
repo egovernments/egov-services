@@ -383,6 +383,12 @@ public class Constants {
     public static final String KEY_DUPLICATE_WINCODES = "KEY_DUPLICATE_WINCODES";
     public static final String MESSAGE_DUPLICATE_WINCODES = "Please provide Unique work identification numbers in abstract estimate details";
 
+    public static final String KEY_WORKS_ESTIMATE_DPREMARKS_REQUIRED = "WORKS_ESTIMATE_DPREMARKS_REQUIRED";
+    public static final String MESSAGE_WORKS_ESTIMATE_DPREMARKS_REQUIRED = "Please enter dp remarks for an estimate";
+
+    public static final String KEY_WORKS_ESTIMATE_WORKPROPOSED_AS_PERDPREMARKS_REQUIRED = "WORKS_ESTIMATE_WORKPROPOSED_AS_PERDPREMARKS_REQUIRED";
+    public static final String MESSAGE_WORKS_ESTIMATE_WORKPROPOSED_AS_PERDPREMARKS_REQUIRED = "Work proposed as per dp remarks should be true";
+
     public static final String KEY_DUPLICATE_ABSTRACTESTIMATENUMBERS = "works.abstractestimate.duplicate.abstractestimatenumber";
     public static final String MESSAGE_DUPLICATE_ABSTRACTESTIMATENUMBERS = "Please provide Unique abstract estimate numbers";
 

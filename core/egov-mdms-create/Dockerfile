@@ -1,4 +1,4 @@
-FROM egovio/apline-jre:8u121-mdms
+FROM egovio/apline-jre:8u121
 
 MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 
@@ -6,8 +6,6 @@ MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-
-RUN cd /opt/mdms && git pull origin master
 
 COPY /target/egov-mdms-create-0.0.1-SNAPSHOT.jar /opt/egov/egov-mdms-create.jar
 

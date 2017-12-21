@@ -158,6 +158,11 @@ public class VehicleJdbcRepository extends JdbcRepository {
             paramValues.put("vendor", searchRequest.getVendorName());
         }
 
+        if(searchRequest.getIsUlbOwned()){
+            addAnd(params);
+            params.append(" vendor IS NULL");
+        }
+
         Pagination<Vehicle> page = new Pagination<>();
         if (searchRequest.getOffset() != null)
             page.setOffset(searchRequest.getOffset());

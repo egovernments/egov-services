@@ -34,4 +34,7 @@ public class SwmProcess {
     @JsonProperty("name")
     private String name = null;
 
+    @JsonProperty("reqInStaffTarget")
+    private Boolean reqInStaffTarget = null;
+
 }

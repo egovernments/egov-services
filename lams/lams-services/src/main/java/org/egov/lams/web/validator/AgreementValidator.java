@@ -108,7 +108,6 @@ public class AgreementValidator {
 		}
 		validateAsset(agreementRequest, errors);
 		validateAllottee(agreementRequest, errors);
-		validateRentIncrementType(agreement, errors);
 		if (agreement.getSource().equals(Source.SYSTEM)) {
 			validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
 		}

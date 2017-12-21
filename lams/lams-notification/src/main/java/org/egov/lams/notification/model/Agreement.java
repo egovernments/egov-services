@@ -37,7 +37,7 @@ public class Agreement {
 	private Date agreementDate;
 
 	@NotNull
-	@Max(5)
+	@Max(26)
 	@Min(1)
 	private Long timePeriod;
 	
@@ -62,7 +62,7 @@ public class Agreement {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date bankGuaranteeDate;
 
-	@NotNull
+	
 	@Min(0)
 	private Double securityDeposit;
 
@@ -73,7 +73,6 @@ public class Agreement {
 	private Date securityDepositDate;
 	private Status status;
 
-	@NotNull
 	private NatureOfAllotment natureOfAllotment;
 	@Min(0)
 	private Double registrationFee;
@@ -139,5 +138,18 @@ public class Agreement {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date adjustmentStartDate;
 	private Boolean isUnderWorkflow;
+	private String firstAllotment;
+	
+	@NotNull
+	private String gstin;
+
+	private String municipalOrderNumber;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date municipalOrderDate;
+
+	private String governmentOrderNumber;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date governmentOrderDate;
+	private List<SubSeqRenewal> subSeqRenewals;
 
 }

@@ -10,6 +10,7 @@ public class CommonConstants {
 
     //Works master names
     public static final String MASTERNAME_SCHEDULE_CATEGORY="ScheduleCategory";
+    public static final String NOTICE="Notice";
     public static final String MASTERNAME_CONTRACTORCLASS="ContractorClass";
     public static final String MDMS_CONTRACTORMASTER_MODULETYPE="Contractor";
     public static final String MASTERNAME_TYPEOFWORK="TypeOfWork";

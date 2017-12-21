@@ -462,6 +462,7 @@ public class PurchaseOrderService extends DomainService {
                 IndentSearch is = IndentSearch.builder().ids(new ArrayList<String>(Arrays.asList(indentNumbers.split(",")))).tenantId(tenantId).build();
                 IndentResponse isr = indentService.search(is, new RequestInfo());
 
+                if(eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
                 for (Indent in : isr.getIndents()) {
                     if (in.getIndentDate().compareTo(eachPurchaseOrder.getPurchaseOrderDate()) > 0) {
 						String date = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
@@ -564,6 +565,7 @@ public class PurchaseOrderService extends DomainService {
                         	}
                         }
 
+                        if(eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
                         if (null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {
                             int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
                             if (res == 1) {

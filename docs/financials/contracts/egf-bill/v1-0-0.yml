@@ -391,7 +391,7 @@ definitions:
         fund:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fund"
           description: |
-                fundsource refers to the fundsounce master
+                fund refers to the fund master
         function:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Function"
           description: |
@@ -459,6 +459,7 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
+      - tenantId
       - billType
       - billDate
       - billAmount
@@ -514,6 +515,7 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
+      - tenantId
       - chartOfAccount
       - glcode
       - debitAmount
@@ -548,8 +550,11 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
+      - tenantId
       - accountDetailKey
+      - accountDetailType
       - amount
+      
     BillRegisterRequest:
       description: Contract class for web request. Array of BillRegister items  are used in case of create or update
       properties:
@@ -618,6 +623,8 @@ definitions:
             description is further detailed discription of the check list values
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      required:
+      - tenantId
           
     ChecklistRequest:
       description: Contract class for web request. Array of Checklist items  are used in case of create or update

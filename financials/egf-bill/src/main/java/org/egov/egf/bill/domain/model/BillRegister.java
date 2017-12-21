@@ -40,19 +40,12 @@
 package org.egov.egf.bill.domain.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import org.egov.common.domain.model.Auditable;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.egov.egf.bill.web.contract.Boundary;
 import org.egov.egf.bill.web.contract.Department;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
@@ -62,128 +55,220 @@ import org.egov.egf.master.web.contract.FundContract;
 import org.egov.egf.master.web.contract.FundsourceContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
-import org.hibernate.validator.constraints.Length;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "status", "fund", "function", "fundsource", "scheme", "subScheme", "functionary",
-	"division", "department", "billDetails" }, callSuper = false)
-public class BillRegister extends Auditable {
-    @Length(max = 50)
-    private String id;
+public class BillRegister {
+
     /**
-     * billType is the type of the bill example is
-     * ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
-     */
+     * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is
+     * created.
+     * @return tenantId
+     **/
     @NotNull
-    @Length(max = 50)
-    private String billType;
+    @Size(min = 0, max = 256)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
+
     /**
-     * billSubType refers with each type of bill what is the subtype .
-     * 
-     * for example ContractorBill will have subType as "FinalBill"
-     */
-    @Length(max = 50)
-    private String billSubType;
+     * billType is the type of the bill example is ExpenseBill,ContractorBill,PurchaseBill,SalaryBill etc
+     * @return billType
+     **/
+    @NotNull
+    @Size(max = 50)
+    @JsonProperty("billType")
+    private String billType = null;
+
+    /**
+     * billSubType refers with each type of bill what is the subtype . for example ContractorBill will have subType as
+     * \"FinalBill\"
+     * @return billSubType
+     **/
+    @Size(max = 50)
+    @JsonProperty("billSubType")
+    private String billSubType = null;
+
     /**
      * billNumber refers to the unique number generated for the bill.
-     * 
-     */
-    @Length(max = 50)
-    private String billNumber;
+     * @return billNumber
+     **/
+    @Size(max = 50)
+    @JsonProperty("billNumber")
+    private String billNumber = null;
+
     /**
      * billDate is the date when the bill is created.
-     */
+     * @return billDate
+     **/
     @NotNull
-    private Date billDate;
+    @JsonProperty("billDate")
+    private Long billDate = null;
+
     /**
-     * billAmount is the total bill Amount . even though the bill is created for
-     * billAmount of x it may be passed for amount x-k
-     */
-    @NotNull
-    private BigDecimal billAmount;
+     * billAmount is the total bill Amount . even though the bill is created for billAmount of x it may be passed for amount x-k
+     * @return billAmount
+     **/
+    @JsonProperty("billAmount")
+    private Double billAmount = null;
+
     /**
-     * passedAmount refers to the amount passed by ulb . even though the bill is
-     * created for billAmount of x it may be passed for amount x-k . This
-     * defaults to the Bill Amount and can be less than or equal to the Bill
-     * Amount.
-     * 
-     */
-    private BigDecimal passedAmount;
-    @Length(max = 50)
+     * passedAmount refers to the amount passed by ulb . even though the bill is created for billAmount of x it may be passed for
+     * amount x-k
+     * @return passedAmount
+     **/
+    @JsonProperty("passedAmount")
+    private Double passedAmount = null;
+
     /**
-     * moduleName is the name of the module who is posting the bill in
-     * financials
-     */
-    private String moduleName;
+     * moduleName is the name of the module who is posting the bill in financials
+     * @return moduleName
+     **/
+    @Size(max = 50)
+    @JsonProperty("moduleName")
+    private String moduleName = null;
+
     /**
      * status refers to the status of the bill like ,created,approved etc
-     */
-    private FinancialStatusContract status;
+     * @return status
+     **/
+    @JsonProperty("status")
+    private FinancialStatusContract status = null;
+
     /**
      * fund refers to the fund master
-     */
-    private FundContract fund;
+     * @return fund
+     **/
+    @JsonProperty("fund")
+    private FundContract fund = null;
+
     /**
      * function refers to the function master
-     */
-    private FunctionContract function;
+     * @return function
+     **/
+    @JsonProperty("function")
+    private FunctionContract function = null;
+
     /**
-     * fundsource refers to the fundsounce master
-     */
-    private FundsourceContract fundsource;
-    
-    private SchemeContract scheme;
-    
-    private SubSchemeContract subScheme;
-    
-    private FunctionaryContract functionary;
-    
-    private Boundary division;
-    
-    private Department department;
-    
-    @Length(max = 256)
-    private String sourcePath;
+     * fundsource of the BillRegister
+     * @return fundsource
+     **/
+    @JsonProperty("fundsource")
+    private FundsourceContract fundsource = null;
+
     /**
-     * budgetCheckRequired is a boolean field is the budget check is required or
-     * not default is true
-     * 
-     */
-    private Boolean budgetCheckRequired;
-    @Length(max = 50)
+     * scheme of the BillRegister
+     * @return scheme
+     **/
+    @JsonProperty("scheme")
+    private SchemeContract scheme = null;
+
     /**
-     * budgetAppropriationNo is the number generated after budget check. This
-     * field will be null if the budget check not done.
-     */
-    private String budgetAppropriationNo;
-    @Length(max = 50)
+     * sub scheme of the BillRegister
+     * @return subScheme
+     **/
+    @JsonProperty("subScheme")
+    private SubSchemeContract subScheme = null;
+
+    /**
+     * functionary of the BillRegister
+     * @return functionary
+     **/
+    @JsonProperty("functionary")
+    private FunctionaryContract functionary = null;
+
+    /**
+     * division of the BillRegister
+     * @return division
+     **/
+    @JsonProperty("division")
+    private Boundary division = null;
+
+    /**
+     * department of the BillRegister
+     * @return department
+     **/
+    @JsonProperty("department")
+    private Department department = null;
+
+    /**
+     * source path of the BillRegister
+     * @return sourcePath
+     **/
+    @JsonProperty("sourcePath")
+    private String sourcePath = null;
+
+    /**
+     * budgetCheckRequired is a boolean field is the budget check is required or not default is true
+     * @return budgetCheckRequired
+     **/
+    @JsonProperty("budgetCheckRequired")
+    private Boolean budgetCheckRequired = null;
+
+    /**
+     * budgetAppropriationNo is the number generated after budget check. This field will be null if the budget check not done.
+     * @return budgetAppropriationNo
+     **/
+    @Size(max = 50)
+    @JsonProperty("budgetAppropriationNo")
+    private String budgetAppropriationNo = null;
+
     /**
      * partyBillNumber is the manual bill number .
-     */
-    private String partyBillNumber;
+     * @return partyBillNumber
+     **/
+    @Size(max = 50)
+    @JsonProperty("partyBillNumber")
+    private String partyBillNumber = null;
+
     /**
      * partyBillDate is the manual bill date .
-     */
-    private Date partyBillDate;
+     * @return partyBillDate
+     **/
+    @JsonProperty("partyBillDate")
+    private Long partyBillDate = null;
+
     /**
      * description is the more detailed information about the bill
-     */
-    @Length(max = 256)
-    private String description;
-    
-    private List<BillDetail> billDetails;
-    
+     * @return description
+     **/
+    @Size(max = 256)
+    @JsonProperty("description")
+    private String description = null;
+
+    /**
+     * bill details of the BillRegister
+     * @return billDetails
+     **/
+    @JsonProperty("billDetails")
+    private List<BillDetail> billDetails = null;
+
+    /**
+     * check Lists of the BillRegister
+     * @return checkLists
+     **/
     private List<BillChecklist> checkLists;
-    
+
+    /**
+     * Get auditDetails
+     * @return auditDetails
+     **/
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
+
     public BigDecimal getTotalAmount() {
-	BigDecimal amount = BigDecimal.ZERO;
-	if (billDetails != null)
-	    for (final BillDetail detail : billDetails)
-		amount = amount.add(detail.getDebitAmount());
-	return amount;
+        BigDecimal amount = BigDecimal.ZERO;
+        if (billDetails != null)
+            for (final BillDetail detail : billDetails)
+                amount = amount.add(detail.getDebitAmount());
+        return amount;
     }
 }

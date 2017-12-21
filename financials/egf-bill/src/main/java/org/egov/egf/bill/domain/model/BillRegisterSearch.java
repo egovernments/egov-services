@@ -13,38 +13,38 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BillRegisterSearch extends BillRegister {
-	
-	private String ids;
 
-	private String sortBy;
-	
-	private Integer pageSize;
-	
-	private Integer offset;
-	
-	private String glcode;
-	
-	private String glcodes;
+    private String ids;
 
-	private BigDecimal debitAmount;
+    private String sortBy;
 
-	private BigDecimal creditAmount;
+    private Integer pageSize;
 
-	private String accountDetailTypeId;
+    private Integer offset;
 
-	private String accountDetailKeyId;
+    private String glcode;
 
-	private BigDecimal subLedgerAmount;
+    private String glcodes;
 
-	private String types;
+    private BigDecimal debitAmount;
 
-	private String names;
+    private BigDecimal creditAmount;
 
-	private String billNumbers;
+    private String accountDetailTypeId;
 
-	private String statuses;
+    private String accountDetailKeyId;
 
-	private Date billFromDate;
+    private BigDecimal subLedgerAmount;
 
-	private Date billToDate;
+    private String types;
+
+    private String names;
+
+    private String billNumbers;
+
+    private String statuses;
+
+    private Date billFromDate;
+
+    private Date billToDate;
 }

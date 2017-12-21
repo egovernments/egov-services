@@ -1,16 +1,16 @@
 
 Create table egf_billpayeedetail( 
   id varchar(50),
-  accountDetailTypeId varchar(50),
-  accountDetailKeyId varchar(50) NOT NULL,
+  accountDetailType varchar(50),
+  accountDetailKey varchar(50) NOT NULL,
   amount numeric (13,2) NOT NULL,
-    BillDetailId varchar(50),
-		createdby varchar(50),
-		createddate timestamp without time zone,
-		lastmodifiedby varchar(50),
-		lastmodifieddate timestamp without time zone,
-		tenantId varchar(250),
-		version bigint
+  billDetail varchar(50),
+  createdby varchar(50),
+  createdtime bigint,
+  lastmodifiedby varchar(50),
+  lastmodifiedtime bigint,
+  tenantId varchar(250),
+  version bigint
 );
-alter table egf_billpayeedetail add constraint pk_egf_billpayeedetail primary key (id);
+alter table egf_billpayeedetail add constraint pk_egf_billpayeedetail primary key (id,tenantId);
 create sequence seq_egf_billpayeedetail;

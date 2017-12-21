@@ -37,18 +37,14 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.bill.domain.model;
+package org.egov.egf.bill.web.contract;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.common.domain.model.Auditable;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,52 +57,29 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class BillPayeeDetail {
+public class Fundsource extends Auditable {
 
-    /**
-     * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is
-     * created.
-     * @return tenantId
-     **/
-    @NotNull
-    @Size(min = 0, max = 256)
-    @JsonProperty("tenantId")
-    private String tenantId = null;
-
-    /**
-     * Unique Identifier of the BillPayeeDetail
-     * @return id
-     **/
     private String id;
 
-    /**
-     * account detail type of the BillPayeeDetail
-     * @return accountDetailType
-     **/
+    @Length(min = 1, max = 25)
     @NotNull
-    private AccountDetailTypeContract accountDetailType;
+    private String code;
 
-    /**
-     * account detail key of the BillPayeeDetail
-     * @return accountDetailKey
-     **/
+    @Length(min = 1, max = 25)
     @NotNull
-    private AccountDetailKeyContract accountDetailKey;
+    private String name;
 
-    /**
-     * amount of the BillPayeeDetail
-     * @return amount
-     **/
+    @Length(min = 1, max = 25)
+    private String type;
+
+    private Fundsource parent;
+
+    private BigDecimal llevel;
+
     @NotNull
-    @Min(1)
-    @Max(value = 999999999)
-    private BigDecimal amount;
+    private Boolean active;
 
-    /**
-     * Get auditDetails
-     * @return auditDetails
-     **/
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails = null;
+    // is this required
+    private Boolean isParent;
 
 }

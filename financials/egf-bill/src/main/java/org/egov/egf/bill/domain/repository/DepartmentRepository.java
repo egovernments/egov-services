@@ -13,32 +13,32 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class DepartmentRepository {
 
-	private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-	private final String departmentByIdUrl;
+    private final String departmentByIdUrl;
 
-	private final DateFactory dateFactory;
+    private final DateFactory dateFactory;
 
-	@Autowired
-	public DepartmentRepository(final RestTemplate restTemplate,
-			@Value("${egov.services.commonmasters.host}") final String departmentServiceHostname,
-			@Value("${egov.services.common_masters.department}") final String departmentByIdUrl,
-			final DateFactory dateFactory) {
+    @Autowired
+    public DepartmentRepository(final RestTemplate restTemplate,
+            @Value("${egov.services.common_masters.host}") final String departmentServiceHostname,
+            @Value("${egov.services.common_masters.department}") final String departmentByIdUrl,
+            final DateFactory dateFactory) {
 
-		this.restTemplate = restTemplate;
-		this.departmentByIdUrl = departmentServiceHostname + departmentByIdUrl;
-		this.dateFactory = dateFactory;
-	}
+        this.restTemplate = restTemplate;
+        this.departmentByIdUrl = departmentServiceHostname + departmentByIdUrl;
+        this.dateFactory = dateFactory;
+    }
 
-	public DepartmentResponse getDepartmentById(final String departmentId, final String tenantId) {
-		final RequestInfo requestInfo = new RequestInfo();
-		requestInfo.setTs(dateFactory.create());
-		final RequestInfoWrapper wrapper = new RequestInfoWrapper();
-		wrapper.setRequestInfo(requestInfo);
-		return restTemplate.postForObject(departmentByIdUrl, wrapper, DepartmentResponse.class, departmentId, tenantId);
-	}
+    public DepartmentResponse getDepartmentById(final String departmentId, final String tenantId) {
+        final RequestInfo requestInfo = new RequestInfo();
+        requestInfo.setTs(dateFactory.create());
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+        return restTemplate.postForObject(departmentByIdUrl, wrapper, DepartmentResponse.class, departmentId, tenantId);
+    }
 
-	public Department findById(Department department) {
-		return getDepartmentById(department.getId(), department.getTenantId()).getDepartment().get(0);
-	}
+    public Department findById(final Department department) {
+        return getDepartmentById(department.getId(), department.getTenantId()).getDepartment().get(0);
+    }
 }

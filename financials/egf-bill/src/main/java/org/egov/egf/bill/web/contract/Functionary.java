@@ -37,18 +37,12 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.bill.domain.model;
+package org.egov.egf.bill.web.contract;
 
-import java.math.BigDecimal;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.common.domain.model.Auditable;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,57 +50,47 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ *
+ * @author mani
+ *
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-public class BillPayeeDetail {
+/*
+ * Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department
+ * discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this.
+ * Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only
+ * for the internal control of the ULB.
+ */
+public class Functionary extends Auditable {
 
     /**
-     * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is
-     * created.
-     * @return tenantId
-     **/
-    @NotNull
-    @Size(min = 0, max = 256)
-    @JsonProperty("tenantId")
-    private String tenantId = null;
-
-    /**
-     * Unique Identifier of the BillPayeeDetail
-     * @return id
-     **/
+     * id is the unique identifier and it is generated internally
+     */
     private String id;
 
     /**
-     * account detail type of the BillPayeeDetail
-     * @return accountDetailType
-     **/
+     * code is uniue identifier and ULB may refer this for short name.
+     */
     @NotNull
-    private AccountDetailTypeContract accountDetailType;
+    @Length(max = 16, min = 1)
+    private String code;
 
     /**
-     * account detail key of the BillPayeeDetail
-     * @return accountDetailKey
-     **/
+     * name is the name of the functionary
+     */
     @NotNull
-    private AccountDetailKeyContract accountDetailKey;
+    @Length(max = 256, min = 1)
+    private String name;
 
     /**
-     * amount of the BillPayeeDetail
-     * @return amount
-     **/
+     * active states whether the functionary is active or not . Only active functionaries will be used in transaction
+     */
     @NotNull
-    @Min(1)
-    @Max(value = 999999999)
-    private BigDecimal amount;
-
-    /**
-     * Get auditDetails
-     * @return auditDetails
-     **/
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails = null;
+    private Boolean active;
 
 }

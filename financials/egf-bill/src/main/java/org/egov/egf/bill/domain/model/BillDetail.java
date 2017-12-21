@@ -46,50 +46,90 @@ import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import org.egov.common.domain.model.Auditable;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.egov.egf.master.web.contract.ChartOfAccountContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.hibernate.validator.constraints.Length;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(exclude = { "chartOfAccount", "function" }, callSuper = false)
+public class BillDetail {
 
-public class BillDetail extends Auditable {
+    /**
+     * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is
+     * created.
+     * @return tenantId
+     **/
+    @NotNull
+    @Size(min = 0, max = 256)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	private String id;
+    /**
+     * Unique Identifier of the BillDetail
+     * @return id
+     **/
+    private String id;
 
-	private Integer orderId;
+    /**
+     * order id of the BillDetail
+     * @return orderId
+     **/
+    private Integer orderId;
 
-	private ChartOfAccountContract chartOfAccount;
-	
-	@NotNull
-	@Length(max = 16)
-	private String glcode;
+    private ChartOfAccountContract chartOfAccount;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal debitAmount;
+    /**
+     * glcode of the BillDetail
+     * @return glcode
+     **/
+    @NotNull
+    @Length(max = 16)
+    private String glcode;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 999999999)
-	private BigDecimal creditAmount;
+    /**
+     * debit amount of the BillDetail
+     * @return debitAmount
+     **/
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal debitAmount;
 
-	private FunctionContract function;
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal creditAmount;
 
-	private List<BillPayeeDetail> billPayeeDetails = new ArrayList<BillPayeeDetail>();
+    /**
+     * function of the BillDetail
+     * @return function
+     **/
+    private FunctionContract function;
+
+    /**
+     * bill payee details of the BillDetail
+     * @return billPayeeDetails
+     **/
+
+    private List<BillPayeeDetail> billPayeeDetails = new ArrayList<>();
+
+    /**
+     * Get auditDetails
+     * @return auditDetails
+     **/
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

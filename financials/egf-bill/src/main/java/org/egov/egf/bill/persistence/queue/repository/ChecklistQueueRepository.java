@@ -1,51 +1,43 @@
 package org.egov.egf.bill.persistence.queue.repository;
 
-import java.util.Map;
-
-import org.egov.egf.bill.persistence.queue.FinancialProducer;
+import org.egov.egf.bill.web.requests.ChecklistRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChecklistQueueRepository {
 
-	private FinancialProducer financialChecklistProducer;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	private String validatedTopic;
+    @Value("${egov.egf.bill.checklist.save.topic}")
+    private String saveTopic;
 
-	private String checklistValidatedKey;
+    @Value("${egov.egf.bill.checklist.update.topic}")
+    private String updateTopic;
 
-	private String completedTopic;
+    @Value("${egov.egf.bill.checklist.indexer.topic}")
+    private String indexerTopic;
 
-	private String checklistCompletedKey;
+    public ChecklistRequest save(final ChecklistRequest checkListRequest) {
 
-	@Autowired
-	public ChecklistQueueRepository(
-			final FinancialProducer financialChecklistProducer,
-			@Value("${kafka.topics.egf.bill.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.bill.bill.checklist.validated.key}") String checklistValidatedKey,
-			@Value("${kafka.topics.egf.bill.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.bill.bill.checklist.completed.key}") String checklistCompletedKey) {
+        kafkaTemplate.send(saveTopic, checkListRequest);
 
-		this.financialChecklistProducer = financialChecklistProducer;
-		this.validatedTopic = validatedTopic;
-		this.checklistValidatedKey = checklistValidatedKey;
-		this.completedTopic = completedTopic;
-		this.checklistCompletedKey = checklistCompletedKey;
-	}
+        kafkaTemplate.send(indexerTopic, checkListRequest);
 
-	public void addToQue(final Map<String, Object> topicMap) {
+        return checkListRequest;
 
-		financialChecklistProducer.sendMessage(validatedTopic,
-				checklistValidatedKey, topicMap);
-	}
+    }
 
-	public void addToSearchQue(final Map<String, Object> topicMap) {
+    public ChecklistRequest update(final ChecklistRequest checkListRequest) {
 
-		financialChecklistProducer.sendMessage(completedTopic,
-				checklistCompletedKey, topicMap);
+        kafkaTemplate.send(updateTopic, checkListRequest);
 
-	}
+        kafkaTemplate.send(indexerTopic, checkListRequest);
 
+        return checkListRequest;
+
+    }
 }

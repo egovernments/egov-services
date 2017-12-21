@@ -1,0 +1,118 @@
+{
+	"id": "8415db6c-f6df-05bd-f247-1c055f32469e",
+	"name": "EGF-Bill",
+	"description": "",
+	"order": [
+		"0f5bac6f-0f50-a8c9-fcef-d374ee74ee10",
+		"28cfd45f-4807-6a31-a95b-c07834146b2e",
+		"d14d3a23-cff0-1531-c3af-7b77c60c7611"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1513771725853,
+	"owner": "1870454",
+	"public": false,
+	"requests": [
+		{
+			"id": "0f5bac6f-0f50-a8c9-fcef-d374ee74ee10",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8680/egf-bill/bills/_create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "8415db6c-f6df-05bd-f247-1c055f32469e",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Bill Create",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1513771726914,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n   \"requestInfo\":{\n      \"resMsgId\":\"placeholder\",\n      \"status\":\"200\",\n      \"apiId\":null,\n      \"ver\":null,\n      \"ts\":\"01-01-2017 01:01:01\",\n      \"key\":null,\n      \"authToken\":\"\",\n      \"userInfo\":{\n         \"id\":1\n      }\n   },\n   \"billRegisters\":[\n      {\n      \t\n      \t \"tenantId\":\"default\",\n         \"billType\":\"billtype4321\",\n         \"billSubType\":\"billSubType\",\n         \"billDate\":\"111111111111\",\n         \"billAmount\":\"4321\",\n         \"passedAmount\":\"1\",\n         \"moduleName\":\"moduleName\",\n         \"status\":\n        \t{\n            \t\"id\":\"status\"\n            },\n         \"fund\":\n        \t{\n            \t\"id\":\"fund\"\n            },\n        \"function\":\n        \t{\n            \t\"id\":\"function\"\n            },\n         \"fundsource\":\n        \t{\n            \t\"id\":\"fundsource\"\n            },\n\n         \"scheme\":\n        \t{\n            \t\"id\":\"scheme\"\n            },\n\n         \"subScheme\":\n        \t{\n            \t\"id\":\"subScheme\"\n            },\n\n         \"functionary\":\n        \t{\n            \t\"id\":\"functionary\"\n            },\n\n         \"division\":\n        \t{\n            \t\"code\":\"division\"\n            },\n         \"department\":\n        \t{\n            \t\"id\":\"department\"\n            },\n\t\t\"sourcePath\":\"sourcePath\",\n\t\t\"budgetCheckRequired\":true,\n\t\t\"budgetAppropriationNo\":\"budgetAppropriationNo\",\n\t\t\"partyBillNumber\":\"partyBillNumber\",\n\t\t\"partyBillDate\":\"11111111111\",\n\t\t\"description\":\"description\",\n         \"billDetails\":[\n            {\n               \"orderId\":\"4321\",\n               \"glcode\":\"3\",\n               \"debitAmount\":\"10000\",\n               \"chartOfAccount\":{\n                  \"id\":\"1\"\n               },\n               \"creditAmount\":\"10000\",\n               \"function\":{\n                  \"id\":\"2\"\n               },\n               \"billPayeeDetails\":[\n                  {\n                     \"accountDetailType\":{\n                        \"id\":\"2\"\n                     },\n                     \"accountDetailKey\":{\n                        \"id\":\"2\"\n                     },\n                     \"amount\":\"4321\"\n                  }\n               ]\n            }\n         ],\n         \"checkLists\":[\n            {\n               \"checklist\":{\n               \t\"code\":\"2\"\n               },\n               \"checklistValue\":\"newValue\"\n            }\n         ]\n      }\n   ]\n}\n"
+		},
+		{
+			"id": "28cfd45f-4807-6a31-a95b-c07834146b2e",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8680/egf-bill/bills/_update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "8415db6c-f6df-05bd-f247-1c055f32469e",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Bill Update",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1513834214783,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n   \"requestInfo\":{\n      \"resMsgId\":\"placeholder\",\n      \"status\":\"200\",\n      \"apiId\":null,\n      \"ver\":null,\n      \"ts\":\"01-01-2017 01:01:01\",\n      \"key\":null,\n      \"authToken\":\"\",\n      \"userInfo\":{\n         \"id\":1\n      }\n   },\n   \"billRegisters\":[\n      {\n      \t \"billNumber\":\"b99eb4c72fe54107862636c1af969d69\",\n      \t \"tenantId\":\"default\",\n         \"billType\":\"billtype4321\",\n         \"billSubType\":\"billSubType\",\n         \"billDate\":\"111111111111\",\n         \"billAmount\":\"4321\",\n         \"passedAmount\":\"1\",\n         \"moduleName\":\"moduleName\",\n         \"status\":\n        \t{\n            \t\"id\":\"status\"\n            },\n         \"fund\":\n        \t{\n            \t\"id\":\"fund\"\n            },\n        \"function\":\n        \t{\n            \t\"id\":\"function\"\n            },\n         \"fundsource\":\n        \t{\n            \t\"id\":\"fundsource\"\n            },\n\n         \"scheme\":\n        \t{\n            \t\"id\":\"scheme\"\n            },\n\n         \"subScheme\":\n        \t{\n            \t\"id\":\"subScheme\"\n            },\n\n         \"functionary\":\n        \t{\n            \t\"id\":\"functionary\"\n            },\n\n         \"division\":\n        \t{\n            \t\"code\":\"divisionU\"\n            },\n         \"department\":\n        \t{\n            \t\"id\":\"departmentU\"\n            },\n\t\t\"sourcePath\":\"sourcePathU\",\n\t\t\"budgetCheckRequired\":true,\n\t\t\"budgetAppropriationNo\":\"budgetAppropriationNoU\",\n\t\t\"partyBillNumber\":\"partyBillNumbeU\",\n\t\t\"partyBillDate\":\"11111111111\",\n\t\t\"description\":\"description\",\n         \"billDetails\":[\n            {\n               \"orderId\":\"4321\",\n               \"glcode\":\"3\",\n               \"debitAmount\":\"222\",\n               \"chartOfAccount\":{\n                  \"id\":\"1\"\n               },\n               \"creditAmount\":\"2222\",\n               \"function\":{\n                  \"id\":\"2\"\n               },\n               \"billPayeeDetails\":[\n                  {\n                     \"accountDetailType\":{\n                        \"id\":\"3\"\n                     },\n                     \"accountDetailKey\":{\n                        \"id\":\"3\"\n                     },\n                     \"amount\":\"22\"\n                  }\n               ]\n            }\n         ],\n         \"checkLists\":[\n            {\n               \"checklist\":{\n               \t\"code\":\"2\"\n               },\n               \"checklistValue\":\"newValue11\"\n            }\n         ]\n      }\n   ]\n}\n"
+		},
+		{
+			"id": "d14d3a23-cff0-1531-c3af-7b77c60c7611",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8680/egf-bill/bills/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "8415db6c-f6df-05bd-f247-1c055f32469e",
+			"data": [],
+			"dataMode": "raw",
+			"name": "Bill Search",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1513835144857,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+		}
+	]
+}

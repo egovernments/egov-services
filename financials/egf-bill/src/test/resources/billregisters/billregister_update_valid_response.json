@@ -1,8 +1,0 @@
-    "billRegisters": [
-        {
-            "id": "30",
-            "billType": "billtype4321",
-            "billAmount": 43215,
-            "tenantId": "default"
-        }
-    ]

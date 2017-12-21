@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BillDetailSearch extends BillDetail {
     private String ids;
+    private String billNumber;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

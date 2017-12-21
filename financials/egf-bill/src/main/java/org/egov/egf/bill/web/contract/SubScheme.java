@@ -37,21 +37,18 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.bill.domain.model;
+package org.egov.egf.bill.web.contract;
 
-import java.math.BigDecimal;
+import java.util.Date;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.common.domain.model.Auditable;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -61,52 +58,32 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class BillPayeeDetail {
+@EqualsAndHashCode(exclude = { "scheme" }, callSuper = false)
 
-    /**
-     * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is
-     * created.
-     * @return tenantId
-     **/
-    @NotNull
-    @Size(min = 0, max = 256)
-    @JsonProperty("tenantId")
-    private String tenantId = null;
+public class SubScheme extends Auditable {
 
-    /**
-     * Unique Identifier of the BillPayeeDetail
-     * @return id
-     **/
     private String id;
 
-    /**
-     * account detail type of the BillPayeeDetail
-     * @return accountDetailType
-     **/
     @NotNull
-    private AccountDetailTypeContract accountDetailType;
+    private Scheme scheme;
 
-    /**
-     * account detail key of the BillPayeeDetail
-     * @return accountDetailKey
-     **/
     @NotNull
-    private AccountDetailKeyContract accountDetailKey;
+    @Length(max = 50, min = 1)
+    private String code;
 
-    /**
-     * amount of the BillPayeeDetail
-     * @return amount
-     **/
     @NotNull
-    @Min(1)
-    @Max(value = 999999999)
-    private BigDecimal amount;
+    @Length(max = 50, min = 1)
+    private String name;
 
-    /**
-     * Get auditDetails
-     * @return auditDetails
-     **/
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails = null;
+    @NotNull
+    private Date validFrom;
+
+    @NotNull
+    private Date validTo;
+
+    @NotNull
+    private Boolean active;
+
+    private String departmentId;
 
 }

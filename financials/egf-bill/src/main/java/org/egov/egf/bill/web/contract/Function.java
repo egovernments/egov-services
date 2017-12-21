@@ -37,21 +37,20 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.bill.domain.model;
+package org.egov.egf.bill.web.contract;
 
-import java.math.BigDecimal;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+/**
+ * @author mani
+ */
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.common.domain.annotation.Unique;
+import org.egov.common.domain.model.Auditable;
+import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -61,52 +60,66 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class BillPayeeDetail {
+@EqualsAndHashCode(exclude = { "parentId" }, callSuper = false)
+/**
+ *
+ * ULB activates are carried out by the concerned Departments . In each department again multiple activities are carried out and
+ * these activities are grouped as functions .Common functions enabled across all ULBs shall be managed in Central Monitoring Cell
+ * based on the requirements for addition, deletion and modification of functions from the ULBs.
+ *
+ */
+
+public class Function extends Auditable {
 
     /**
-     * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is
-     * created.
-     * @return tenantId
-     **/
-    @NotNull
-    @Size(min = 0, max = 256)
-    @JsonProperty("tenantId")
-    private String tenantId = null;
-
-    /**
-     * Unique Identifier of the BillPayeeDetail
-     * @return id
-     **/
+     * id is the unique identifier .
+     */
     private String id;
 
     /**
-     * account detail type of the BillPayeeDetail
-     * @return accountDetailType
-     **/
+     * name is the name of the function .
+     */
+    @Length(max = 128, min = 2)
     @NotNull
-    private AccountDetailTypeContract accountDetailType;
+    @Unique
+    private String name;
 
     /**
-     * account detail key of the BillPayeeDetail
-     * @return accountDetailKey
-     **/
+     * code is a unique number given to each function . ULBs may refer this for the short name.
+     */
+    @Length(max = 16, min = 2)
     @NotNull
-    private AccountDetailKeyContract accountDetailKey;
+    private String code;
+    /**
+     * level identifies what is the level of the function in the tree structure. Top most parent will have level 0 and its child
+     * will have level as 1
+     *
+     */
+    @NotNull
+    private Integer level;
 
     /**
-     * amount of the BillPayeeDetail
-     * @return amount
-     **/
+     * active is a boolean value which says whether function is in use or not . If Function is active, then accounting of
+     * transactions under the Function is enabled. If Function becomes inactive, and no transactions can be accounted under the
+     * Function. Only leaf function can be used in transaction ie function which is not parent to any other function
+     */
     @NotNull
-    @Min(1)
-    @Max(value = 999999999)
-    private BigDecimal amount;
+    private Boolean active;
 
-    /**
-     * Get auditDetails
-     * @return auditDetails
-     **/
-    @JsonProperty("auditDetails")
-    private AuditDetails auditDetails = null;
+    private Function parentId;
+
+    public void add() {
+        if (parentId == null)
+            level = 0;
+        else
+            level = parentId.getLevel() + 1;
+    }
+
+    public void update() {
+        if (parentId == null)
+            level = 0;
+        else
+            level = parentId.getLevel() + 1;
+    }
 
 }

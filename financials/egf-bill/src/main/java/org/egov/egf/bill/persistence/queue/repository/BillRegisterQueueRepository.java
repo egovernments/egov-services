@@ -1,50 +1,72 @@
 package org.egov.egf.bill.persistence.queue.repository;
 
-import java.util.Map;
-
-import org.egov.egf.bill.persistence.queue.FinancialProducer;
+import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.bill.domain.model.BillRegister;
+import org.egov.egf.bill.persistence.repository.BillChecklistJdbcRepository;
+import org.egov.egf.bill.persistence.repository.BillDetailJdbcRepository;
+import org.egov.egf.bill.persistence.repository.BillPayeeDetailJdbcRepository;
+import org.egov.egf.bill.web.requests.BillRegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BillRegisterQueueRepository {
 
-	private FinancialProducer financialBillRegisterProducer;
+    @Autowired
+    private BillDetailJdbcRepository billDetailJdbcRepository;
 
-	private String validatedTopic;
+    @Autowired
+    private BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository;
 
-	private String billValidatedKey;
+    @Autowired
+    private BillChecklistJdbcRepository billChecklistJdbcRepository;
 
-	private String completedTopic;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	private String billCompletedKey;
+    @Value("${egov.egf.bill.billregister.save.topic}")
+    private String saveTopic;
 
-	@Autowired
-	public BillRegisterQueueRepository(
-			final FinancialProducer financialBillRegisterProducer,
-			@Value("${kafka.topics.egf.bill.validated.topic}") String validatedTopic,
-			@Value("${kafka.topics.egf.bill.bill.register.validated.key}") String billValidatedKey,
-			@Value("${kafka.topics.egf.bill.completed.topic}") String completedTopic,
-			@Value("${kafka.topics.egf.bill.bill.register.completed.key}") String billCompletedKey) {
+    @Value("${egov.egf.bill.billregister.update.topic}")
+    private String updateTopic;
 
-		this.financialBillRegisterProducer = financialBillRegisterProducer;
-		this.validatedTopic = validatedTopic;
-		this.billValidatedKey = billValidatedKey;
-		this.completedTopic = completedTopic;
-		this.billCompletedKey = billCompletedKey;
-	}
+    @Value("${egov.egf.bill.billregister.indexer.topic}")
+    private String indexerTopic;
 
-	public void addToQue(final Map<String, Object> topicMap) {
+    public BillRegisterRequest save(final BillRegisterRequest billRegisterRequest) {
 
-		financialBillRegisterProducer.sendMessage(validatedTopic,
-				billValidatedKey, topicMap);
-	}
+        kafkaTemplate.send(saveTopic, billRegisterRequest);
 
-	public void addToSearchQue(final Map<String, Object> topicMap) {
+        kafkaTemplate.send(indexerTopic, billRegisterRequest);
 
-		financialBillRegisterProducer.sendMessage(completedTopic,
-				billCompletedKey, topicMap);
+        return billRegisterRequest;
 
-	}
+    }
+
+    public BillRegisterRequest update(final BillRegisterRequest billRegisterRequest) {
+
+        for (final BillRegister br : billRegisterRequest.getBillRegisters()) {
+
+            billDetailJdbcRepository.delete(br.getTenantId(), br.getBillNumber());
+
+            billChecklistJdbcRepository.delete(br.getTenantId(), br.getBillNumber());
+
+            if (br.getBillDetails() != null && !br.getBillDetails().isEmpty()) {
+
+                for (BillDetail bd : br.getBillDetails()) {
+
+                    billPayeeDetailJdbcRepository.delete(bd.getTenantId(), bd.getId());
+                }
+            }
+        }
+
+        kafkaTemplate.send(updateTopic, billRegisterRequest);
+
+        kafkaTemplate.send(indexerTopic, billRegisterRequest);
+
+        return billRegisterRequest;
+
+    }
 }

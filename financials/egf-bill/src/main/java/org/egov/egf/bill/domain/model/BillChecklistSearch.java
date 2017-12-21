@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillChecklistSearch extends BillChecklist{
+public class BillChecklistSearch extends BillChecklist {
     private String ids;
     private String sortBy;
     private Integer pageSize;

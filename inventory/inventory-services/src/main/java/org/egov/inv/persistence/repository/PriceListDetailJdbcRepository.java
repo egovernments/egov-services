@@ -83,6 +83,14 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
             params.append("priceList =:priceList");
             paramValues.put("priceList", priceListDetailsSearchRequest.getPriceList());
         }
+        if (priceListDetailsSearchRequest.getMaterial()!= null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append(" material =(:materials) ");
+			paramValues.put("materials",
+					priceListDetailsSearchRequest.getMaterial());
+		}
         
         if (priceListDetailsSearchRequest.getActive()!=null) {
         	if (params.length() > 0) {

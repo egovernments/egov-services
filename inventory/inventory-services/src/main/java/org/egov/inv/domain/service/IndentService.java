@@ -28,6 +28,7 @@ import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentRequest;
 import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.IndentSearch;
+import org.egov.inv.model.Material;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Tenant;
 import org.egov.inv.model.Uom;
@@ -241,6 +242,8 @@ public class IndentService extends DomainService {
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Uom> uomMap = getUoms(is.getTenantId(), mapper, info);
+		Map<String, Material> materialMap = getMaterial(is.getTenantId(), mapper, info);
+
 		IndentResponse response = new IndentResponse();
 		Pagination<Indent> search = indentRepository.search(is);
 		if (!search.getPagedData().isEmpty()) {
@@ -260,6 +263,11 @@ public class IndentService extends DomainService {
 						detail = detailEntity.toDomain();
 						detail.setIndentQuantity(InventoryUtilities.getQuantityInSelectedUom(detail.getIndentQuantity(),
 								uomMap.get(detail.getUom().getCode()).getConversionFactor()));
+							Material material = (materialMap.get(detail.getMaterial().getCode()));
+							material.setPurchaseUom(uomMap.get(material.getPurchaseUom().getCode()));
+							material.setStockingUom(uomMap.get(material.getStockingUom().getCode()));
+							material.setBaseUom(uomMap.get(material.getBaseUom().getCode()));
+							detail.setMaterial(material);
 						indent.addIndentDetailsItem(detail);
 					}
 				}
@@ -358,8 +366,6 @@ public class IndentService extends DomainService {
 							errors.addDataError(ErrorCode.SHOULD_BE_DIFFERENT.getCode(), "Indenting Store",
 									"Issuing store");
 					}
-					
-					
 					// commeneted as of now to support the past dated entries
 					/*
 					 * if(indent.getExpectedDeliveryDate().compareTo(
@@ -409,8 +415,6 @@ public class IndentService extends DomainService {
 										"indentPurpose=Repairs and Maintenance", "at seraill no. " + i);
 						}
 
-					
-						
 					}
 				}
 
@@ -433,6 +437,7 @@ public class IndentService extends DomainService {
 		RequestInfo requestInfo = indentRequest.getRequestInfo();
 
 		Map<String, Uom> uomMap = getUoms(tenantId, mapper, requestInfo);
+		Map<String, Material> materialMap = getMaterial(tenantId, mapper, requestInfo);
 
 		for (Indent indent : indentRequest.getIndents()) {
 
@@ -455,6 +460,7 @@ public class IndentService extends DomainService {
 //			 
 			for (IndentDetail detail : indent.getIndentDetails()) {
 				detail.setUom(uomMap.get(detail.getUom().getCode()));
+				detail.setMaterial(materialMap.get(detail.getMaterial().getCode()));
 				/*if(detail.getAsset().getCode()!=null)
 				{
 					Asset a=assetRepository.findByCode(detail.getAsset(),indentRequest.getRequestInfo());
@@ -477,7 +483,20 @@ public class IndentService extends DomainService {
 		return indentRequest;
 	}
 	
-	 
+	private Map<String, Material> getMaterial(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
+		JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "inventory", "Material", null, null,
+				requestInfo);
+		Map<String, Material> materialMap = new HashMap<>();
+
+		if (responseJSONArray != null && responseJSONArray.size() > 0) {
+			for (int i = 0; i < responseJSONArray.size(); i++) {
+				Material material = mapper.convertValue(responseJSONArray.get(i), Material.class);
+				materialMap.put(material.getCode(), material);
+			}
+
+		}
+		return materialMap;
+	}
 
 	private Map<String, Uom> getUoms(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
 		JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "common-masters", "Uom", null, null,

@@ -21,6 +21,7 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.domain.util.InventoryUtilities;
 import org.egov.inv.model.Indent;
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentResponse;
@@ -125,7 +126,6 @@ public class PurchaseOrderService extends DomainService {
     private MdmsRepository mdmsRepository;
 
     private String INDENT_MULTIPLE = "Multiple";
-
     /**
      * 
      * @param purchaseOrderRequest
@@ -575,12 +575,12 @@ public class PurchaseOrderService extends DomainService {
                         }
 
                         if(eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
-                        if (null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {
-                            int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
-                            if (res == 1) {
-                                errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), poDetail.getIndentQuantity().toString() + " at serial no." + detailIndex);
+                            if (null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {
+                                int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
+                                if (res == 1) {
+                                    errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), poDetail.getIndentQuantity().toString() + " at serial no." + detailIndex);
+                                }
                             }
-                        }
                         totalAmount = totalAmount.add(poDetail.getOrderQuantity().multiply(poDetail.getUnitPrice()).add(totalAmount));
                     }
                     eachPurchaseOrder.setTotalAmount(totalAmount);
@@ -637,6 +637,7 @@ public class PurchaseOrderService extends DomainService {
             IndentResponse indentResponse = indentService.search(indentSearch, purchaseOrderRequest.getRequestInfo());
 
             Map<String, PurchaseOrderDetail> purchaseOrderLines = new HashMap<String, PurchaseOrderDetail>();
+            Map<String, List<PriceList> > priceListByMaterialWise = new HashMap<String, List<PriceList> >();
 
             // configure to check whether full quantity of indent to be consider or quantity pending ( out of issue) used to create po.
 
@@ -697,56 +698,87 @@ public class PurchaseOrderService extends DomainService {
 
                     }
 
-                    PriceListSearchRequest priceListSearchRequest = new PriceListSearchRequest();
-                    priceListSearchRequest.setTenantId(tenantId);
-                    priceListSearchRequest.setSupplierName(purchaseOrder.getSupplier().getCode());
-                    priceListSearchRequest.setRateType(purchaseOrder.getRateType().toString());
-                    priceListSearchRequest.setRateContractDate(System.currentTimeMillis());
-//                    Uncomment below line and remove above line once purchaseorderdate is added in the request
-//                    priceListSearchRequest.setRateContractDate(purchaseOrder.getPurchaseOrderDate());
+		     if (pendingQty.compareTo(BigDecimal.ZERO) > 0) {
+                   
+						if (priceListByMaterialWise.get(indentDetail.getMaterial().getCode()) == null) {
 
-                    priceListSearchRequest.setActive(true);
+							PriceListSearchRequest priceListSearchRequest = new PriceListSearchRequest();
+							priceListSearchRequest.setTenantId(tenantId);
+							priceListSearchRequest.setSupplierName(purchaseOrder.getSupplier().getCode());
+							priceListSearchRequest.setRateType(purchaseOrder.getRateType().toString());
+							priceListSearchRequest.setRateContractDate(System.currentTimeMillis());
+							priceListSearchRequest.setMaterialCode(indentDetail.getMaterial().getCode());
+							// Uncomment below line and remove above line once
+							// purchaseorderdate is added in the request
+							// priceListSearchRequest.setRateContractDate(purchaseOrder.getPurchaseOrderDate());
+							// write api to get price list by passing
+							// material,supplier, rate type, active one and with
+							// current date.
 
-                    // write api to get price list by passing material,supplier, rate type, active one and with current date.
+							priceListSearchRequest.setActive(true);
 
-                    PriceListResponse priceListResponse = priceListService.searchPriceList(priceListSearchRequest,
-                            purchaseOrderRequest.getRequestInfo());
+							PriceListResponse priceListResponse = priceListService
+									.searchPriceList(priceListSearchRequest, purchaseOrderRequest.getRequestInfo());
 
+							if (priceListResponse != null && priceListResponse.getPriceLists() != null
+									&& priceListResponse.getPriceLists().size() > 0)
+								priceListByMaterialWise.put(indentDetail.getMaterial().getCode(),
+										priceListResponse.getPriceLists());
+
+						}
                     // get used quantity for each tender type rate types and used ones.
 
                     // save indent number, tender used quantity, total indent  qty?
-
+				
+			//TODO: CHECK RATE CONTRACT IS MANDATORY OR NOT		
+				if(priceListByMaterialWise.get(indentDetail.getMaterial().getCode())!=null) //Mean, Rate contract present for supplier.
+				{	
                     if (purchaseOrderLines.get(indentDetail.getMaterial().getCode()) == null) {
                         purchaseOrderDetail = new PurchaseOrderDetail();
                         purchaseOrderDetail.setMaterial(indentDetail.getMaterial());
                         purchaseOrderDetail.setUom(indentDetail.getMaterial().getPurchaseUom());
-                        purchaseOrderDetail.setIndentQuantity(pendingQty);
+                        purchaseOrderDetail.setIndentQuantity( InventoryUtilities.getQuantityInSelectedUom(pendingQty,
+                        		indentDetail.getMaterial().getPurchaseUom().getConversionFactor()));
+                          
                         if (null != purchaseOrder.getRateType() && purchaseOrder.getRateType().toString().equals("One Time Tender")) {
                             purchaseOrderDetail.setTenderQuantity(new BigDecimal(priceListjdbcRepository.getTenderQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().toString())));
+                            purchaseOrderDetail.setUsedQuantity(new BigDecimal(purchaseOrderRepository.getUsedQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().toString())));
+
                         }
-                        purchaseOrderDetail.setUsedQuantity(new BigDecimal(purchaseOrderRepository.getUsedQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().toString())));
                         purchaseOrderDetail.setIndentNumber(indent.getIndentNumber());
                         purchaseOrderDetail.setTenantId(tenantId);
-                        buildPurchaseOrderIndentDetail(purchaseOrderRequest, purchaseOrder, indentDetail,
+                        buildPurchaseOrderIndentDetail(purchaseOrderRequest,  indentDetail,
                                 purchaseOrderDetail, pendingQty, tenantId);
+                        purchaseOrderLines.put(indentDetail.getMaterial().getCode(), purchaseOrderDetail);
+                        //TODO: SHOULD SUPPORT MULTIPLE PRICE LIST.
+                        purchaseOrderDetail.setPriceList(priceListByMaterialWise.get(indentDetail.getMaterial().getCode()).get(0));
+                       
+                        PriceList pricelist= (priceListByMaterialWise.get(indentDetail.getMaterial().getCode()).get(0));
+                        
+                        for( PriceListDetails priceListDtl: pricelist.getPriceListDetails())
+                        { 
+                            	if(priceListDtl.getMaterial().getCode().equals(indentDetail.getMaterial().getCode())){
 
+                            		purchaseOrderDetail.setUnitPrice((indentDetail.getMaterial().getPurchaseUom().getConversionFactor())
+                            				.multiply(priceListDtl.getRatePerUnit()!=null ? BigDecimal.valueOf(priceListDtl.getRatePerUnit()):BigDecimal.ZERO));
+                            		
+                            	}
+                        } 
+                        purchaseOrder.addPurchaseOrderDetailsItem(purchaseOrderDetail);
                     } else {
                         purchaseOrderDetail = purchaseOrderLines.get(indentDetail.getMaterial().getCode());
-                        purchaseOrderDetail.setIndentQuantity(purchaseOrderDetail.getIndentQuantity().add(pendingQty));
+                        purchaseOrderDetail.setIndentQuantity(purchaseOrderDetail.getIndentQuantity().add( InventoryUtilities.getQuantityInSelectedUom(pendingQty,
+                        		indentDetail.getMaterial().getPurchaseUom().getConversionFactor())));
                         purchaseOrderDetail.setIndentNumber(INDENT_MULTIPLE);
-                        buildPurchaseOrderIndentDetail(purchaseOrderRequest, purchaseOrder, indentDetail,
+                        buildPurchaseOrderIndentDetail(purchaseOrderRequest,  indentDetail,
                                 purchaseOrderDetail, pendingQty, tenantId);
+							}
 
-                    }
+						}
+					}
+				}
 
-                    if (priceListResponse != null && priceListResponse.getPriceLists() != null && priceListResponse.getPriceLists().size() > 0)
-                        purchaseOrderDetail.setPriceList(priceListResponse.getPriceLists().get(0));//TODO: SHOULD SUPPORT MULTIPLE PRICE LIST.
-
-                    purchaseOrder.addPurchaseOrderDetailsItem(purchaseOrderDetail);
-
-                }
-
-            }
+			}
 
             finalPurchaseOrders.add(purchaseOrder);
         }
@@ -811,7 +843,7 @@ public class PurchaseOrderService extends DomainService {
 		return true;
 	}
 	
-    private void buildPurchaseOrderIndentDetail(PurchaseOrderRequest purchaseOrderRequest, PurchaseOrder purchaseOrder,
+    private void buildPurchaseOrderIndentDetail(PurchaseOrderRequest purchaseOrderRequest,
                                                 IndentDetail indentDetail, PurchaseOrderDetail purchaseOrderDetail, BigDecimal pendingQty, String tenantId) {
         PurchaseIndentDetail poIndentDetail = new PurchaseIndentDetail();
         poIndentDetail.setTenantId(tenantId);

@@ -1,15 +1,15 @@
 package org.egov.infra.mdms.utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class MDMSConstants {
 
+	
 	//GitHub host components
 	public static final String GITHUB_HOST = "https://api.github.com/repos/";
-	public static final String EGOV_REPO_OWNER = "egovernments";
-	public static final String EGOV_REPO = "egov-services";
-	public static final String EGOV_REPO_PATH = EGOV_REPO_OWNER +"/"+EGOV_REPO +"/";
 	public static final String EGOV_REF_PATH = "git/refs/heads/master";
 	public static final String EGOV_TREE_PATH = "commits/";
 	public static final String EGOV_CREATE_TREE_PATH = "git/trees";

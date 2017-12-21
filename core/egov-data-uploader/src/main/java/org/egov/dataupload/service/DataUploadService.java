@@ -141,6 +141,7 @@ public class DataUploadService {
 	private String uploadData(List<List<Object>> excelData,
 			     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest) throws Exception{
 		String request = null;
+	    int additionFieldsCount = 0;
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 		uploadJob.setEndTime(0L);uploadJob.setFailedRows(0);uploadJob.setStartTime(new Date().getTime());uploadJob.setSuccessfulRows(0);
 		uploadJob.setStatus(StatusEnum.fromValue("InProgress"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size() - 1);
@@ -149,15 +150,17 @@ public class DataUploadService {
     	List<Object> resJsonPathList = null;
     	if(null != uploadDefinition.getAdditionalResFields()){
     		resJsonPathList = dataUploadUtils.getResJsonPathList(uploadDefinition.getAdditionalResFields(), coloumnHeaders);
+    		additionFieldsCount = uploadDefinition.getAdditionalResFields().size();
     	}
     	coloumnHeaders.add("status"); coloumnHeaders.add("message");
+    	additionFieldsCount+=2;
 		dataUploadUtils.writeToexcelSheet(coloumnHeaders);
 		int successCount = 0; int failureCount = 0;
 
 		for(List<Object> row: excelData){
 			try{
 				if(!row.isEmpty()){
-					for(int i = 0; i < (coloumnHeaders.size() - 2); i++){
+					for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
 		            	StringBuilder expression = new StringBuilder();
 		            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
 		            	if(null == jsonPath){

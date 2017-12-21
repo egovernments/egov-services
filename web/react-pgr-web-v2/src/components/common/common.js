@@ -3045,7 +3045,12 @@ var localization_EN_Data = {
   'swm.Shift.create.remarks': 'Remarks (if any)',
   'swm.create.page.title.shiftmasters': 'Shift Master',
   'swm.shift.create.group.title.ShiftSelection': 'SHIFT SELECTION',
-  'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS'
+  'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS','swm.ProcessingSiteDetails.create.dumpingGroundAddress': 'Processing Site Address',
+  'swm.dumpingground.search.geoCoordinates': 'GEO-COORDINATES',
+  'swm.create.page.title.processingSite.wasteType': 'WASTE TYPE TO BE PROCESSED',
+  'swm.create.group.title.LocationDetails': 'LOCATION DETAILS',
+  'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS',
+  'swm.create.group.title.staffScheduleDetails': 'Staff Schedule',
 
 
 };
@@ -4996,6 +5001,12 @@ var localization_MR_Data = {
   'swm.create.page.title.shiftmasters': 'Shift Master',
   'swm.shift.create.group.title.ShiftSelection': 'SHIFT SELECTION',
   'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS',
+  'swm.ProcessingSiteDetails.create.dumpingGroundAddress': 'Processing Site Address',
+  'swm.dumpingground.search.geoCoordinates': 'GEO-COORDINATES',
+  'swm.create.page.title.processingSite.wasteType': 'WASTE TYPE TO BE PROCESSED',
+  'swm.create.group.title.LocationDetails': 'LOCATION DETAILS',
+  'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS',
+  'swm.create.group.title.staffScheduleDetails': 'Staff Schedule',
 
 
   'referenceEvidence.update.document.title': 'Reference Evidences-marathi',

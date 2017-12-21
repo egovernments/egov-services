@@ -63,7 +63,7 @@ var dat = {
 
       {
         name: 'LocationDetails',
-        label: 'swm.collectionpoints.create.group.title.LocationDetails',
+        label: 'swm.create.group.title.LocationDetails',
         jsonPath: "MasterMetaData.masterData[0].siteDetails.location",
         fields: [
           {
@@ -138,7 +138,7 @@ var dat = {
           },
         ],
       },
-      {
+      /*{
         name: 'ULBs',
         label: 'swm.dumpingGround.create.ulbs',
         fields: [
@@ -169,7 +169,7 @@ var dat = {
           },
 
         ]
-      },
+      },*/
 
       {
         name: 'BankGuaranteeDetails',
@@ -369,39 +369,9 @@ var dat = {
             fullWidth: true,
             patternErrorMsg: '',
             url: '',
-          },
+          },         
 
-          {
-            name: 'dumpingGroundLatitude',
-            jsonPath: 'MasterMetaData.masterData[0].siteDetails.latitude',
-            label: 'swm.dumpingGround.create.dumpingGroundLatitude',
-            pattern: '',
-            type: 'text',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: '',
-            minLength: '',
-            patternErrorMsg: '',
-            url: '',
-          },
-
-          {
-            name: 'dumpingGroundLongitude',
-            jsonPath: 'MasterMetaData.masterData[0].siteDetails.longitude',
-            label: 'swm.dumpingGround.create.dumpingGroundLongitude',
-            pattern: '',
-            type: 'text',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: '',
-            minLength: '',
-            patternErrorMsg: '',
-            url: '',
-          },
-
-          {
+          /*{
             name: 'dumpingGroundisProcessingSite',
             jsonPath: 'MasterMetaData.masterData[0].isProcessingSite',
             label: 'swm.dumpingGround.create.isProcessingSite',
@@ -432,7 +402,7 @@ var dat = {
                 ],
               },
             ],
-          },
+          },*/
 
           {
             name: 'dumpingGroundAddress',
@@ -485,8 +455,43 @@ var dat = {
         ]
       },
       {
+        name: 'geoCoordinates',
+        label: 'swm.dumpingground.search.geoCoordinates',
+        fields: [
+          {
+            name: 'dumpingGroundLatitude',
+            jsonPath: 'MasterMetaData.masterData[0].siteDetails.latitude',
+            label: 'swm.dumpingGround.create.dumpingGroundLatitude',
+            pattern: '',
+            type: 'text',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: '',
+            maxLength: '',
+            minLength: '',
+            patternErrorMsg: '',
+            url: '',
+          },
+
+          {
+            name: 'dumpingGroundLongitude',
+            jsonPath: 'MasterMetaData.masterData[0].siteDetails.longitude',
+            label: 'swm.dumpingGround.create.dumpingGroundLongitude',
+            pattern: '',
+            type: 'text',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: '',
+            maxLength: '',
+            minLength: '',
+            patternErrorMsg: '',
+            url: '',
+          },
+        ],
+      },
+      {
         name: 'wasteType',
-        label: 'swm.create.page.title.wasteType',
+        label: 'swm.create.page.title.processingSite.wasteType',
         fields: [
           {
             name: 'WasteType',

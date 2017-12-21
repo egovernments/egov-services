@@ -54,8 +54,8 @@ var dat = {
     objectName: 'sanitationStaffSchedules',
     idJsonPath: 'sanitationStaffSchedules[0].transactionNo',
     groups: [{
-      name: 'SourceSegregationDetails',
-      label: 'swm.create.group.title.SourceSegregationDetails',
+      name: 'staffScheduleDetails',
+      label: 'swm.create.group.title.staffScheduleDetails',
       fields: [{
           name: 'targetNo',
           jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
@@ -182,8 +182,8 @@ var dat = {
     objectName: 'sanitationStaffSchedules',
     idJsonPath: 'sanitationStaffSchedules[0].transactionNo',
     groups: [{
-      name: 'SourceSegregationDetails',
-      label: 'swm.create.group.title.SourceSegregationDetails',
+      name: 'staffScheduleDetails',
+      label: 'swm.create.group.title.staffScheduleDetails',
       fields: [{
           name: 'targetNo',
           jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
@@ -298,8 +298,8 @@ var dat = {
     objectName: 'sanitationStaffSchedules',
     idJsonPath: 'sanitationStaffSchedules[0].transactionNo',
     groups: [{
-      name: 'SourceSegregationDetails',
-      label: 'swm.create.group.title.SourceSegregationDetails',
+      name: 'staffScheduleDetails',
+      label: 'swm.create.group.title.staffScheduleDetails',
       fields: [{
           name: 'targetNo',
           jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',

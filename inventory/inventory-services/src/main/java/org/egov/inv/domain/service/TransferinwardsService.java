@@ -53,7 +53,6 @@ public class TransferinwardsService extends DomainService {
 	@Autowired
 	private MaterialIssueJdbcRepository materialIssueJdbcRepository;
 	
-	
 	@Value("${inv.transfer.inward.save.topic}")
 	private String createTopic;
 
@@ -66,14 +65,12 @@ public class TransferinwardsService extends DomainService {
     @Value("${inv.transfer.inward.update.key}")
     private String updateTopicKey;
 	
-	public TransferInwardResponse create(TransferInwardRequest inwardRequest, String tenantId)
-	{
+	public TransferInwardResponse create(TransferInwardRequest inwardRequest, String tenantId) {
 		try{
 			fetchRelated(inwardRequest,tenantId);
 			List<MaterialReceipt> inwards = inwardRequest.getTransferInwards();
 	        validate(inwards, tenantId, Constants.ACTION_CREATE);
-	        inwards.forEach(materialReceipt ->
-	        {
+	        inwards.forEach(materialReceipt -> {
 	            materialReceipt.setId(transferInwardRepository.getSequence("seq_materialreceipt"));
 	            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
 	            materialReceipt.setMrnNumber(appendString(materialReceipt));
@@ -86,7 +83,6 @@ public class TransferinwardsService extends DomainService {
 	            materialReceipt.getReceiptDetails().forEach(materialReceiptDetail -> {
 	    	        materialReceiptDetail.setId(transferInwardRepository.getSequence("seq_materialreceiptdetail"));
 	    	        materialReceiptDetail.setTenantId(tenantId);
-
 	    	        materialReceiptDetail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
 						addinfo.setId(transferInwardRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
 						if (isEmpty(addinfo.getTenantId())) {
@@ -107,15 +103,13 @@ public class TransferinwardsService extends DomainService {
 		}
 	}
 	
-	public TransferInwardResponse update(TransferInwardRequest inwardsRequest, String tenantId)
-	{
+	public TransferInwardResponse update(TransferInwardRequest inwardsRequest, String tenantId) {
 		try{
 		    List<MaterialReceipt> inwards = inwardsRequest.getTransferInwards();
 	        validate(inwards, tenantId, Constants.ACTION_UPDATE);
 	        List<String> materialReceiptDetailIds = new ArrayList<>();
 	        List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
-	        inwards.forEach(materialReceipt ->
-	        {
+	        inwards.forEach(materialReceipt -> {
 	            if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
 	                materialReceipt.setTenantId(tenantId);
 	            }
@@ -151,8 +145,7 @@ public class TransferinwardsService extends DomainService {
 		}
 	}
 	
-	public TransferInwardResponse search(MaterialReceiptSearch transferinwardsSearch, String tenantId)
-	{
+	public TransferInwardResponse search(MaterialReceiptSearch transferinwardsSearch, String tenantId) {
 		Pagination<MaterialReceipt> materialReceiptPagination = materialReceiptService.search(transferinwardsSearch);
         TransferInwardResponse response = new TransferInwardResponse();
         return response.
@@ -171,7 +164,6 @@ public class TransferinwardsService extends DomainService {
                     	errors.addDataError("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } 
                 }
-
                 break;
 
                 case Constants.ACTION_UPDATE: {
@@ -179,7 +171,6 @@ public class TransferinwardsService extends DomainService {
                     	errors.addDataError("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } 
                 }
-
                 break;
             }
 	            for (MaterialReceipt rcpt : materialReceipts) {
@@ -242,11 +233,16 @@ public class TransferinwardsService extends DomainService {
 						 }
 					}
 				}
+			}else
+			{
+	            errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSING.getCode(),"IssueNumber", null);
+
 			}
 		}
 	if (errors.getValidationErrors().size() > 0)
         throw errors;
 	}
+	
 	private void updateStatusAsReceipted( String issueNumber,String tenantId) {
 		materialIssueJdbcRepository.updateStatus(issueNumber, "RECEIPTED" ,tenantId);		
 	}

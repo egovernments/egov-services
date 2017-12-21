@@ -256,37 +256,38 @@ public class BillRegisterService {
         final Map<String, ChartOfAccountContract> coaMap = new HashMap<>();
         final Map<String, FunctionContract> functionMap = new HashMap<>();
         final String tenantId = billRegister.getTenantId();
+        if (billRegister.getBillDetails() != null)
+            for (final BillDetail billDetail : billRegister.getBillDetails()) {
+                if (billDetail.getGlcode() != null) {
+                    ChartOfAccountContract coa = null;
+                    if (coaMap.get(billDetail.getGlcode()) == null) {
+                        final ChartOfAccountContract coaContract = new ChartOfAccountContract();
+                        coaContract.setGlcode(billDetail.getGlcode());
+                        coaContract.setTenantId(tenantId);
+                        coa = chartOfAccountContractRepository.findByGlcode(coaContract, requestInfo);
+                        if (coa == null || coa.getId() == null || coa.getId().isEmpty())
+                            throw new CustomException("glCode",
+                                    "Given glCode is Invalid: " + coa.getId());
+                        coaMap.put(billDetail.getGlcode(), coa);
 
-        for (final BillDetail billDetail : billRegister.getBillDetails()) {
-            if (billDetail.getGlcode() != null) {
-                ChartOfAccountContract coa = null;
-                if (coaMap.get(billDetail.getGlcode()) == null) {
-                    final ChartOfAccountContract coaContract = new ChartOfAccountContract();
-                    coaContract.setGlcode(billDetail.getGlcode());
-                    coaContract.setTenantId(tenantId);
-                    coa = chartOfAccountContractRepository.findByGlcode(coaContract, requestInfo);
-                    if (coa == null || coa.getId() == null || coa.getId().isEmpty())
-                        throw new CustomException("glCode",
-                                "Given glCode is Invalid: " + coa.getId());
-                    coaMap.put(billDetail.getGlcode(), coa);
-
-                }
-                billDetail.setChartOfAccount(coaMap.get(billDetail.getGlcode()));
-            }
-
-            if (billDetail.getFunction() != null) {
-                if (functionMap.get(billDetail.getFunction().getId()) == null) {
-                    billDetail.getFunction().setTenantId(tenantId);
-                    final FunctionContract function = functionContractRepository.findById(billDetail.getFunction(), requestInfo);
-                    if (function == null || function.getId() == null || function.getId().isEmpty())
-                        throw new CustomException("function",
-                                "Given function is Invalid: " + function.getId());
-                    functionMap.put(billDetail.getFunction().getId(), function);
+                    }
+                    billDetail.setChartOfAccount(coaMap.get(billDetail.getGlcode()));
                 }
 
-                billDetail.setFunction(functionMap.get(billDetail.getFunction().getId()));
+                if (billDetail.getFunction() != null) {
+                    if (functionMap.get(billDetail.getFunction().getId()) == null) {
+                        billDetail.getFunction().setTenantId(tenantId);
+                        final FunctionContract function = functionContractRepository.findById(billDetail.getFunction(),
+                                requestInfo);
+                        if (function == null || function.getId() == null || function.getId().isEmpty())
+                            throw new CustomException("function",
+                                    "Given function is Invalid: " + function.getId());
+                        functionMap.put(billDetail.getFunction().getId(), function);
+                    }
+
+                    billDetail.setFunction(functionMap.get(billDetail.getFunction().getId()));
+                }
             }
-        }
 
     }
 
@@ -295,70 +296,71 @@ public class BillRegisterService {
         final Map<String, AccountDetailTypeContract> adtMap = new HashMap<>();
         final Map<String, AccountDetailKeyContract> adkMap = new HashMap<>();
         final String tenantId = billRegister.getTenantId();
+        if (billRegister.getBillDetails() != null)
+            for (final BillDetail billDetail : billRegister.getBillDetails())
+                if (billDetail.getBillPayeeDetails() != null)
+                    if (billDetail.getBillPayeeDetails() != null)
+                        for (final BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
 
-        for (final BillDetail billDetail : billRegister.getBillDetails())
-            if (billDetail.getBillPayeeDetails() != null)
+                            if (detail.getAccountDetailType() != null) {
 
-                for (final BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
+                                if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
+                                    detail.getAccountDetailType().setTenantId(tenantId);
+                                    final AccountDetailTypeContract accountDetailType = accountDetailTypeContractRepository
+                                            .findById(detail.getAccountDetailType(), requestInfo);
 
-                    if (detail.getAccountDetailType() != null) {
+                                    if (accountDetailType == null || accountDetailType.getId() == null
+                                            || accountDetailType.getId().isEmpty())
+                                        throw new CustomException("accountDetailType",
+                                                "Given accountDetailType is Invalid: " + detail.getAccountDetailType().getId());
 
-                        if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
-                            detail.getAccountDetailType().setTenantId(tenantId);
-                            final AccountDetailTypeContract accountDetailType = accountDetailTypeContractRepository
-                                    .findById(detail.getAccountDetailType(), requestInfo);
+                                    adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
+                                }
+                                detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
+                            }
 
-                            if (accountDetailType == null || accountDetailType.getId() == null
-                                    || accountDetailType.getId().isEmpty())
-                                throw new CustomException("accountDetailType",
-                                        "Given accountDetailType is Invalid: " + detail.getAccountDetailType().getId());
+                            if (detail.getAccountDetailKey() != null) {
 
-                            adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
+                                if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
+                                    detail.getAccountDetailKey().setTenantId(tenantId);
+                                    final AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRepository
+                                            .findById(detail.getAccountDetailKey(), requestInfo);
+
+                                    if (accountDetailKey == null || accountDetailKey.getId() == null
+                                            || accountDetailKey.getId().isEmpty())
+                                        throw new CustomException("accountDetailType",
+                                                "Given accountDetailType is Invalid: " + detail.getAccountDetailKey().getId());
+
+                                    adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
+                                }
+                                detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
+                            }
                         }
-                        detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
-                    }
-
-                    if (detail.getAccountDetailKey() != null) {
-
-                        if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
-                            detail.getAccountDetailKey().setTenantId(tenantId);
-                            final AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRepository
-                                    .findById(detail.getAccountDetailKey(), requestInfo);
-
-                            if (accountDetailKey == null || accountDetailKey.getId() == null
-                                    || accountDetailKey.getId().isEmpty())
-                                throw new CustomException("accountDetailType",
-                                        "Given accountDetailType is Invalid: " + detail.getAccountDetailKey().getId());
-
-                            adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
-                        }
-                        detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
-                    }
-                }
     }
 
     private void fetchRelatedForChecklist(final BillRegister billRegister) {
 
         final Map<String, Checklist> checklistMap = new HashMap<>();
         final String tenantId = billRegister.getTenantId();
-        for (final BillChecklist billChecklist : billRegister.getCheckLists())
-            if (billChecklist.getChecklist() != null) {
-                if (checklistMap.get(billChecklist.getChecklist().getCode()) == null) {
-                    billChecklist.getChecklist().setTenantId(tenantId);
-                    ChecklistSearch search = new ChecklistSearch();
-                    search.setTenantId(tenantId);
-                    search.setCode(billChecklist.getChecklist().getCode());
-                    Pagination<Checklist> checkListResponse = checklistRepository.search(search);
+        if (billRegister.getCheckLists() != null)
+            for (final BillChecklist billChecklist : billRegister.getCheckLists())
+                if (billChecklist.getChecklist() != null) {
+                    if (checklistMap.get(billChecklist.getChecklist().getCode()) == null) {
+                        billChecklist.getChecklist().setTenantId(tenantId);
+                        ChecklistSearch search = new ChecklistSearch();
+                        search.setTenantId(tenantId);
+                        search.setCode(billChecklist.getChecklist().getCode());
+                        Pagination<Checklist> checkListResponse = checklistRepository.search(search);
 
-                    if (checkListResponse == null || checkListResponse.getPagedData() == null
-                            || !checkListResponse.getPagedData().isEmpty())
-                        throw new CustomException("checklist",
-                                "Given checklist is Invalid: " + billChecklist.getChecklist().getCode());
-                    checklistMap.put(billChecklist.getChecklist().getCode(), checkListResponse.getPagedData().get(0));
+                        if (checkListResponse == null || checkListResponse.getPagedData() == null
+                                || checkListResponse.getPagedData().isEmpty())
+                            throw new CustomException("checklist",
+                                    "Given checklist is Invalid: " + billChecklist.getChecklist().getCode());
+                        checklistMap.put(billChecklist.getChecklist().getCode(), checkListResponse.getPagedData().get(0));
+                    }
+
+                    billChecklist.setChecklist(checklistMap.get(billChecklist.getChecklist().getCode()));
                 }
-
-                billChecklist.setChecklist(checklistMap.get(billChecklist.getChecklist().getCode()));
-            }
     }
 
     public Pagination<BillRegister> search(final BillRegisterSearch billRegisterSearch) {

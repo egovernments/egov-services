@@ -10,7 +10,7 @@ def build(module_name, service_name, commit_id){
 }
 
 def build_image(dockerfile_path, image_name, commit_id){
-        sh "cd ${dockerfile_path} && docker build -t ${image_name} ."
+        sh "cd ${dockerfile_path} && docker build --no-cache -t ${image_name} ."
 	sh "docker tag ${image_name} ${image_name}:${BUILD_ID}-${commit_id}"
 	sh "docker tag ${image_name} ${image_name}:latest"
 }

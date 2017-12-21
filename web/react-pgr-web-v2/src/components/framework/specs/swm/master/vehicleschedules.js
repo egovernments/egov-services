@@ -63,10 +63,12 @@ var dat = {
       "result":{
          "header":[
             {
-               "label":"swm.create.scheduledFrom"
+               "label":"swm.create.scheduledFrom",
+               "isDate": true
             },
             {
-               "label":"swm.create.scheduledTo"
+               "label":"swm.create.scheduledTo",
+               "isDate": true
             },
             {
                "label": "swm.create.route"
@@ -94,7 +96,7 @@ var dat = {
       "title": "swm.create.page.title.VehicleSchedules",
       "groups":[
          {
-            "name":"SourceSegregationDetails",
+            "name":"createVehicleSchedules",
             "fields":[
                {
                   "name":"scheduledFrom",
@@ -102,7 +104,7 @@ var dat = {
                   "label":"swm.create.scheduledFrom",
                   "pattern":"",
                   "type":"datePicker",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -113,7 +115,7 @@ var dat = {
                   "label":"swm.create.scheduledTo",
                   "pattern":"",
                   "type":"datePicker",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -187,7 +189,7 @@ var dat = {
                   "label":"swm.create.targetedGarbage",
                   "pattern":"",
                   "type":"text",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength": 256,
@@ -207,8 +209,8 @@ var dat = {
       "idJsonPath": 'vehicleSchedules[0].code',
       "groups":[
          {
-            "name":"SourceSegregationDetails",
-            "label":"swm.create.group.title.SourceSegregationDetails",
+            "name":"viewVehicleSchedulesView",
+            "label":"swm.create.page.title.VehicleSchedules",
             "fields":[
                {
                   "name":"scheduledFrom",
@@ -307,8 +309,8 @@ var dat = {
       "idJsonPath": 'vehicleSchedules[0].code',
       "groups":[
          {
-            "name":"SourceSegregationDetails",
-            "label":"swm.create.group.title.SourceSegregationDetails",
+            "name":"updateVehicle",
+            "label":"swm.create.page.title.VehicleSchedules",
             "fields":[
                {
                   "name":"scheduledFrom",

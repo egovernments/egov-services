@@ -68,9 +68,11 @@ var dat = {
           },
           {
             label: 'swm.Shift.create.shiftStartTime',
+            isDate: true
           },
           {
             label: 'swm.Shift.create.shiftEndTime',
+            isDate: true
           },
         ],
         values: [

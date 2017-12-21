@@ -54,4 +54,16 @@ public class PropertiesManager {
 
     @Value("${egov.services.works.revisionloa.topic}")
     private String worksRevisionLOACreateUpdateTopic;
+    
+    @Value("${works.noticenumber.format}")
+    private String noticeNumberFormat;
+
+    @Value("${works.noticenumber}")
+    private String worksNoticeNumber;
+
+    @Value("${egov.services.works.notice.createupdate.topic.validated}")
+    private String worksNoticeCreateTopic;
+
+    @Value("${noticenumber.prefix}")
+    private String noticeNumberPrefix;
 }

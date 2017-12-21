@@ -1729,6 +1729,10 @@ definitions:
         description: Tenant id of the Notice
         maxLength: 128
         minLength: 2
+      noticeNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-/]+'
+        description: Notice Number. Auto generated. If the Notice is spillover then the Notice number is user entered.
       letterOfAcceptance:
         $ref: '#/definitions/LetterOfAcceptance'
         description: Reference of LOA
@@ -1753,6 +1757,10 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - letterOfAcceptance

@@ -494,3 +494,103 @@ serviceMaps:
 
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.auditDetails.lastModifiedTime
          dbType: LONG
+
+ - version: 1.0
+   name: Notice
+   description: Persists Notice in egw_notice table
+   fromTopic: works-notice-createupdate-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_notice(id, tenantid, letterofacceptance, noticenumber, closingline, daysofreply, createdby, createdtime,lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET closingline= EXCLUDED.closingline, daysofreply=EXCLUDED.daysofreply, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
+
+      basePath: $.notices.*
+      jsonMaps:
+
+       - jsonPath: $.notices.*.id
+
+       - jsonPath: $.notices.*.tenantId
+
+       - jsonPath: $.notices.*.letterOfAcceptance.id
+
+       - jsonPath: $.notices.*.noticeNumber
+
+       - jsonPath: $.notices.*.closingLine
+
+       - jsonPath: $.notices.*.daysOfReply
+
+       - jsonPath: $.notices.*.auditDetails.createdBy
+
+       - jsonPath: $.notices.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.notices.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.notices.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.notices.*.deleted
+
+    - query: INSERT INTO egw_notice_details(id, tenantid, notice, remarks, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
+
+      basePath: $.notices.*.noticeDetails.*
+      jsonMaps:
+
+       - jsonPath: $.notices.*.noticeDetails.*.id
+
+       - jsonPath: $.notices.*.noticeDetails.*.tenantId
+
+       - jsonPath: $.notices.*.noticeDetails.*.notice
+
+       - jsonPath: $.notices.*.noticeDetails.*.remarks
+
+       - jsonPath: $.notices.*.noticeDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.notices.*.noticeDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.notices.*.noticeDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.notices.*.noticeDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.notices.*.noticeDetails.*.deleted
+
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime,deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
+
+      basePath: $.notices.*.documentDetails.*
+      jsonMaps:
+
+       - jsonPath: $.notices.*.documentDetails.*.id
+
+       - jsonPath: $.notices.*.documentDetails.*.tenantId
+
+       - jsonPath: $.notices.*.documentDetails.*.objectId
+
+       - jsonPath: $.notices.*.documentDetails.*.objectType
+
+       - jsonPath: $.notices.*.documentDetails.*.documentType
+
+       - jsonPath: $.notices.*.documentDetails.*.fileStore
+
+       - jsonPath: $.notices.*.documentDetails.*.latitude
+
+       - jsonPath: $.notices.*.documentDetails.*.longitude
+
+       - jsonPath: $.notices.*.documentDetails.*.description
+
+       - jsonPath: $.notices.*.documentDetails.*.dateOfCapture
+         dbType: LONG
+
+       - jsonPath: $.notices.*.documentDetails.*.workProgress
+
+       - jsonPath: $.notices.*.documentDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.notices.*.documentDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.notices.*.documentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.notices.*.documentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.notices.*.documentDetails.*.deleted

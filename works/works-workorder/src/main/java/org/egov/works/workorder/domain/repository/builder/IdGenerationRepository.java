@@ -83,4 +83,26 @@ public class IdGenerationRepository {
 		return JsonPath.read(response, "$.idResponses[0].id");
 	}
 
+	public String generateNoticeNumber(final String tenantId, final RequestInfo requestInfo) {
+		Object response = null;
+		HashMap<String, String> messages = new HashMap<>();
+		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+		IdRequest idRequest = new IdRequest();
+		idRequest.setTenantId(tenantId);
+		idRequest.setFormat(propertiesManager.getNoticeNumberFormat());
+		idRequest.setIdName(propertiesManager.getWorksNoticeNumber());
+		idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
+		idGenerationRequest.setRequestInfo(requestInfo);
+		try {
+			response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
+		} catch (Exception e) {
+			messages.put(Constants.NOTICE_NUMBER_GENERATION_ERROR,
+					Constants.NOTICE_NUMBER_GENERATION_ERROR);
+			throw new CustomException(messages);
+
+		}
+		log.info("Response from id gen service: " + response.toString());
+
+		return JsonPath.read(response, "$.idResponses[0].id");
+	}
 }

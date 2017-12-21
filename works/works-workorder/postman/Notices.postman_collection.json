@@ -1,0 +1,124 @@
+{
+	"info": {
+		"name": "Notices",
+		"_postman_id": "8f70c895-9018-2dff-7ba1-55efd6a3dea6",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"3522d065-18dc-43e0-a820-b7e5febfe1b7\",\n    \"tenantId\": \"default\",\n    \"userInfo\": {\n    \t\"userName\": \"manoj\"\n    }\n  },\n  \"notices\": [\n  \t{\n  \t\t\"tenantId\": \"default\",\n  \t\t\"letterOfAcceptance\": {\n  \t\t\t\"id\": \"12553\"\n  \t\t},\n  \t\t\"noticeDetails\": [\n  \t\t\t{\n  \t\t\t\t\"tenantId\": \"default\",\n  \t\t\t\t\"remarks\": \"abcd\"\n  \t\t\t}\n  \t\t],\n  \t\t\"closingLine\": \"sfdec\",\n  \t\t\"daysOfReply\": \"10\",\n  \t\t\"documentDetails\": []\n  \t}\n  \t]\n}"
+				},
+				"url": {
+					"raw": "localhost:8280/works-workorder/v1/notices/_create?tenantId=default",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"works-workorder",
+						"v1",
+						"notices",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"3522d065-18dc-43e0-a820-b7e5febfe1b7\",\n    \"tenantId\": \"default\",\n    \"userInfo\": {\n    \t\"userName\": \"manoj\"\n    }\n  },\n  \"notices\": [\n  \t{\n  \t\t\"id\": \"0ca6d77913ea4016a9022ab92b3d18fe\",\n  \t\t\"tenantId\": \"default\",\n  \t\t\"noticeNumber\": \"defa/NOT//ENG/000001/2017-18\",\n  \t\t\"letterOfAcceptance\": {\n  \t\t\t\"id\": \"12553\"\n  \t\t},\n  \t\t\"noticeDetails\": [\n  \t\t\t{\n  \t\t\t\t\"id\": \"0dbb6fff54594967ac0ea4f8280912b6\",\n  \t\t\t\t\"tenantId\": \"default\",\n  \t\t\t\t\"remarks\": \"safdfs\"\n  \t\t\t}\n  \t\t],\n  \t\t\"closingLine\": \"poohjb\",\n  \t\t\"daysOfReply\": \"100\",\n  \t\t\"documentDetails\": []\n  \t}\n  \t]\n}"
+				},
+				"url": {
+					"raw": "localhost:8280/works-workorder/v1/notices/_update?tenantId=default",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"works-workorder",
+						"v1",
+						"notices",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"yosadhara\",\n    \"authToken\": \"744b00cc-3309-423e-a330-02795c1a6f6a\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"default\",\n    \"userInfo\": {\n      \"id\": 73,\n      \"userName\": \"abc\"\n    \t}\n\t}\n}"
+				},
+				"url": {
+					"raw": "localhost:8280/works-workorder/v1/notices/_search?tenantId=default",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"works-workorder",
+						"v1",
+						"notices",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

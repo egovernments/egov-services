@@ -24,6 +24,9 @@ public class Notice {
 
     @JsonProperty("tenantId")
     private String tenantId = null;
+    
+    @JsonProperty("noticeNumber")
+    private String noticeNumber = null;
 
     @JsonProperty("letterOfAcceptance")
     private LetterOfAcceptance letterOfAcceptance = null;
@@ -42,6 +45,9 @@ public class Notice {
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
+    
+    @JsonProperty("deleted")
+    private Boolean deleted = false;
 
     public Notice id(String id) {
         this.id = id;
@@ -86,7 +92,15 @@ public class Notice {
         this.tenantId = tenantId;
     }
 
-    public Notice letterOfAcceptance(LetterOfAcceptance letterOfAcceptance) {
+    public String getNoticeNumber() {
+		return noticeNumber;
+	}
+
+	public void setNoticeNumber(String noticeNumber) {
+		this.noticeNumber = noticeNumber;
+	}
+
+	public Notice letterOfAcceptance(LetterOfAcceptance letterOfAcceptance) {
         this.letterOfAcceptance = letterOfAcceptance;
         return this;
     }
@@ -232,7 +246,15 @@ public class Notice {
     }
 
 
-    @Override
+    public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

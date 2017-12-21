@@ -7,6 +7,7 @@ public class Constants {
 
     public static final String LOA_NUMBER_GENERATION_ERROR = "LOA numebr can not be generated";
     public static final String WORKORDER_NUMBER_GENERATION_ERROR = "Work order numebr can not be generated";
+    public static final String NOTICE_NUMBER_GENERATION_ERROR = "Notice numebr can not be generated";
 
     public static final String APPROVE = "Approve";
     public static final String SUBMIT = "Submit";
@@ -109,5 +110,8 @@ public class Constants {
     
     public static final String KEY_FUTUREDATE_LOADATE_DETAILEDESTIMATE = "works.offlinestatus.loadate.invalid";
     public static final String MESSAGE_FUTUREDATE_LOADATE_DETAILEDESTIMATE = "LOA Date cannot be prior to detailed estimate approved rate";
+    
+    public static final String KEY_NOTICE_WO_NOT_APPROVED = "works.notice.workorder.not.approved";
+    public static final String MESSAGE_NOTICE_WO_NOT_APPROVED = "Work Order should be in approved status before generating Notices";
 
 }

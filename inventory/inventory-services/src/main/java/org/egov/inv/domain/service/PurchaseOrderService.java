@@ -517,7 +517,7 @@ public class PurchaseOrderService extends DomainService {
 	            			break;
 	            		}
                         if(!isRateContractExist)
-                        	throw new CustomException("rateContract", "No RateContracts exist for the given combination of indent, supplier and ratetype");
+                        	errors.addDataError(ErrorCode.OBJECT_NOT_FOUND_COMBINATION.getCode(), "rateContract", "Supplier "+ eachPurchaseOrder.getSupplier().getCode() , "RateType" + eachPurchaseOrder.getRateType().toString() + " at row " + detailIndex);
                         
                         
                         //Validating the POLine price with that in the ratecontract
@@ -528,7 +528,7 @@ public class PurchaseOrderService extends DomainService {
                         
                         //validation of order quantity incase of tender
                         if(( poDetail.getOrderQuantity().add(poDetail.getUsedQuantity()) ).compareTo(poDetail.getTenderQuantity()) > 0) {
-                        	throw new CustomException("orderQuantity", "Order Quantity exceeding the permitted");
+                        	errors.addDataError(ErrorCode.ORDQTY_LE_TENDQTY.getCode(), poDetail.getOrderQuantity().toString() + " at serial no." + detailIndex);
                         }
                         
                         //Material reference validation
@@ -560,14 +560,14 @@ public class PurchaseOrderService extends DomainService {
                         for(PriceListDetails pld : poDetail.getPriceList().getPriceListDetails()) {
                         	if(pld.getMaterial().getCode()!=null && poDetail.getMaterial().getCode()!=null)
                         	if(pld.getMaterial().getCode().equals(poDetail.getMaterial().getCode()) && pld.getRatePerUnit().compareTo(poDetail.getUnitPrice().doubleValue())!=0) {
-                        		throw new CustomException("materialRate", "Material rate entered is not matching with rate contract rate");
+                        		errors.addDataError(ErrorCode.MAT_PRICELEST_CATGRY_MATCH.getCode(), poDetail.getMaterial().getCode(), poDetail.getUnitPrice().toString(), " at serial no." + detailIndex);
                         	}
                         }
 
                         if (null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {
                             int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
                             if (res == 1) {
-                                errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString() + " at serial no." + detailIndex);
+                                errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), poDetail.getIndentQuantity().toString() + " at serial no." + detailIndex);
                             }
                         }
                         totalAmount = totalAmount.add(poDetail.getOrderQuantity().multiply(poDetail.getUnitPrice()).add(totalAmount));
@@ -634,7 +634,7 @@ public class PurchaseOrderService extends DomainService {
             //Logic to check if indent lines are valid for PO Creation
             for(String indentNo:purchaseOrder.getIndentNumbers()){
             	if(!purchaseOrderRepository.getIsIndentValidForPOCreate(indentNo)) {
-            		throw new CustomException("indents", "One / Some of the selected indents is not eligible for Creation of PO");            		
+            		errors.addDataError(ErrorCode.INVALID_INDENT_VALUE.getCode(), "indentNumber", indentNo);
             	}
             }
             
@@ -650,7 +650,7 @@ public class PurchaseOrderService extends DomainService {
             	}
             }
             if(!isRateContractExist)
-            	throw new CustomException("rateContract", "No RateContracts exist for the given combination of indent, supplier and ratetype");
+            	errors.addDataError(ErrorCode.OBJECT_NOT_FOUND_COMBINATION.getCode(), "rateContract", "Supplier "+ purchaseOrder.getSupplier().getCode(), "RateType" + purchaseOrder.getRateType().toString());
             
             for (Indent indent : indentResponse.getIndents()) {
 

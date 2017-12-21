@@ -9,9 +9,8 @@ class SearchDepreciationReport extends React.Component {
       "assetCategory": "",
       "assetCategoryType": "",
       "parent":"",
-      "department": "",
       "financialYear":""
-   },isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],result:[]}
+   },isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],result:[],modify: false}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
@@ -74,14 +73,17 @@ class SearchDepreciationReport extends React.Component {
       //call api call
       var _this = this;
       var searchSet = Object.assign({}, this.state.searchSet);
-      console.log(this.state.searchSet);
       commonApiPost("asset-services","assets/depreciations","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
         if(res) {
           var list = res["DepreciationReportCriteria"];
+          list.sort(function(item1, item2) {
+            return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+          })
           flag = 1;
           _this.setState({
             isSearchClicked: true,
-            list
+            list,
+              modify: true
           })
         }
       })
@@ -98,20 +100,37 @@ class SearchDepreciationReport extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.list.length!=this.state.list.length) {
+        if (this.state.modify) {
             $('#searchDepreciationTable').DataTable({
               dom: 'Bfrtip',
               buttons: [
                        'excel', 'pdf', 'print'
                ],
-               ordering: false,
-               bDestroy: true,
+               "ordering": false,
+               "bDestroy": true,
                language: {
                   "emptyTable": "No Records"
                }
             });
         }
     }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.modify) {
+            $('#searchDepreciationTable').DataTable({
+              dom: 'Bfrtip',
+              buttons: [
+                       'excel', 'pdf', 'print'
+               ],
+               "ordering": false,
+               "bDestroy": true,
+               language: {
+                  "emptyTable": "No Records"
+               }
+            });
+        }
+    }
+
   componentDidMount() {
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
@@ -130,6 +149,10 @@ class SearchDepreciationReport extends React.Component {
 
     getDropdown("asset_category_type", function(res) {
       checkCountNCall("asset_category_type", res);
+    });
+
+    getDropdown("assignments_department", function(res) {
+      checkCountNCall("departments", res);
     });
 
      var location;
@@ -313,7 +336,7 @@ close() {
                         <td><a href={`app/asset/create-asset.html?id=${item.assetId}&type=view`}>{item.assetCode}</a></td>
                         <td>{item.assetName}</td>
                         <td>{item.assetCategoryName}</td>
-                        <td>{getNameById(departments,item.department.id)}</td>
+                        <td>{getNameById(departments,item.department)}</td>
                         <td>{item.assetCategoryType}</td>
                         <td>{item.depreciationRate}</td>
                         <td>{item.grossValue}</td>
@@ -351,16 +374,7 @@ close() {
                   </div>
                 </div>
             </div>
-              <div className="row">
-                <label className="col-sm-3 control-label text-right" > Financial Year<span> *</span></label>
-                <div className="col-sm-3 add-margin">
-                  <select id="financialYear" name="financialYear" className="form-control" required= "true" onChange={(e)=>{handleChange(e,"financialYear")}}>
-                    <option value="">Select</option>
-                    <option value="2016-17">2016-17</option>
-                    <option value="2017-18">2017-18</option>
-                  </select>
-                </div>
-                </div>
+            <div className="row">
               <div className="col-sm-6">
                 <div className="row">
                     <div className="col-sm-6 label-text">
@@ -377,6 +391,24 @@ close() {
                 </div>
             </div>
           </div>
+          <div className="col-sm-6">
+            <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label for="financialYear">Financial Year <span> *</span></label>
+                </div>
+                <div className="col-sm-6">
+                <div className="styled-select">
+                  <select id="financialYear" name="financialYear" className="form-control" required= "true" onChange={(e)=>{handleChange(e,"financialYear")}}>
+                    <option value="">Select</option>
+                    <option value="2016-17">2016-17</option>
+                    <option value="2017-18">2017-18</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div className="row">
             <div className="col-sm-6">
               <div className="row">
                 <div className="col-sm-6 label-text">
@@ -408,6 +440,7 @@ close() {
                     </div>
                   </div>
                 </div>
+              </div>
               </div>
               </div>
               <div className="text-center">

@@ -44,7 +44,8 @@ import Api from '../../../api/api';
 // import 'datatables.net-buttons-bs';
 //
 // pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
+//&filter=%5B%3F%28%40.bankName%3D%3D'{agencies[0].advocates[0].bankName}'%29%5D
+var active = true;
 var dropDownData = {
   'MdmsMetadata.masterData[0].wasteType': {
     url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteSubType|$.MdmsRes.swm.WasteSubType.*.code|$.MdmsRes.swm.WasteSubType.*.name',
@@ -52,6 +53,9 @@ var dropDownData = {
   'MdmsMetadata.masterData[0].wasteType': {
     url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$.MdmsRes.swm.WasteType.*.code|$.MdmsRes.swm.WasteType.*.name',
   },
+  'MdmsMetadata.masterData[0].sideCode': {
+    url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D|$.MdmsRes.lcms.side.*.code|$.MdmsRes.lcms.side.*.name',
+    },
 };
 
 class UiMultiFieldAddToTableForMDMS extends Component {
@@ -438,8 +442,9 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     }
     this.setState(
       {
-        valueList: list,
-        isAddAgain: true,
+        // valueList: list,
+        isBtnDisabled: true,
+        isAddAgain: false,
         formData: {},
         indexes: [],
       },

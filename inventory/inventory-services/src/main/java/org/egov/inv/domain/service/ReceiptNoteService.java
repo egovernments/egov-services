@@ -347,7 +347,7 @@ public class ReceiptNoteService extends DomainService {
 
         StoreResponse storeResponse = storeService.search(storeGetRequest);
         if (storeResponse.getStores().size() == 0) {
-            errors.addDataError(ErrorCode.STORE_NOT_EXIST.getCode(), storeCode);
+            errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "store", storeCode);
         }
     }
 
@@ -359,7 +359,7 @@ public class ReceiptNoteService extends DomainService {
                 .build();
         SupplierResponse suppliers = supplierService.search(supplierGetRequest);
         if (suppliers.getSuppliers().size() == 0) {
-            errors.addDataError(ErrorCode.SUPPLIER_NOT_EXIST.getCode(), materialReceipt.getSupplier().getCode());
+            errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "supplier", materialReceipt.getSupplier().getCode());
 
         }
     }
@@ -431,7 +431,7 @@ public class ReceiptNoteService extends DomainService {
                 }
 
                 if (null != addnlinfo.getExpiryDate()
-                        &&  addnlinfo.getExpiryDate() > currentDate) {
+                        && addnlinfo.getExpiryDate() > currentDate) {
                     String date = convertEpochtoDate(addnlinfo.getExpiryDate());
                     errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ", date);
 

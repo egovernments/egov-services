@@ -87,6 +87,7 @@ public class PriceList   {
   @JsonProperty("agreementDate")
   private Long agreementDate = null;
 
+  //TODO: change the date to bigint in db 
   @JsonProperty("agreementStartDate")
   private Long agreementStartDate = null;
 

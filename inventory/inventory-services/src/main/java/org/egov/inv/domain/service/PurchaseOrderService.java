@@ -126,6 +126,14 @@ public class PurchaseOrderService extends DomainService {
 
     private String INDENT_MULTIPLE = "Multiple";
 
+    /**
+     * 
+     * @param purchaseOrderRequest
+     * @param tenantId
+     * @return
+     * validate store code
+     * store mandatory in db
+     */
     @Transactional
     public PurchaseOrderResponse create(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
 
@@ -202,6 +210,7 @@ public class PurchaseOrderService extends DomainService {
                     }
 
                     //Logic to split PODetail order quantity across multiple indentdetails starts
+                    //TODO:below validation wroing fix
                     BigDecimal totalIndentQuantity = new BigDecimal(0);
                     if(purchaseOrderDetail.getPurchaseIndentDetails()!=null)
                     {
@@ -270,7 +279,7 @@ public class PurchaseOrderService extends DomainService {
             validate(purchaseOrder, Constants.ACTION_UPDATE, tenantId);
 
             for (PurchaseOrder eachPurchaseOrder : purchaseOrder) {
-            	
+            	//TODO: handle the reversal only the amount not entirly zero
             	if(eachPurchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Rejected"))) {
                 	for (PurchaseOrderDetail eachPurchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                 		for(PurchaseIndentDetail purchaseIndentDetail : eachPurchaseOrderDetail.getPurchaseIndentDetails()) {

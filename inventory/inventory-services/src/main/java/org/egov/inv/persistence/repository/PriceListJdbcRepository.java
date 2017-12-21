@@ -83,7 +83,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
     }
 
     public Long getTenderQty(String supplier, String material, String rateType) {
-        String tenderQtyQuery = "select quantity from pricelist where active=true and deleted=false and material ='" + material + "' and pricelist in (select id from pricelist where ratetype='" + rateType + "' and supplier='" + supplier + "') and extract(epoch from now())::bigint * 1000 between agreementstartdate and agreementenddate";
+        String tenderQtyQuery = "select quantity from pricelistdetails where active=true and deleted=false and material ='" + material + "' and pricelist in (select id from pricelist where ratetype='" + rateType + "' and supplier='" + supplier + "' and extract(epoch from now())::bigint * 1000 between agreementstartdate and agreementenddate ) ";
         Long tenderQty = namedParameterJdbcTemplate.queryForObject(tenderQtyQuery, new HashMap(), Long.class);
         return tenderQty;
     }

@@ -346,6 +346,20 @@ public class IndentService extends DomainService {
 						String indentDate = convertEpochtoDate(indent.getIndentDate());
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "indentDate",indentDate);
 					}
+					
+					if (indent.getIndentType().equals(IndentTypeEnum.TRANSFERINDENT)) {
+						
+						
+						if (indent.getIndentStore() == null || indent.getIndentStore().getCode() == null)
+							errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "Indenting Store",
+									"indentType=Transfer Indent", "");
+						else
+						if (indent.getIndentStore().getCode().equalsIgnoreCase(indent.getIssueStore().getCode()))
+							errors.addDataError(ErrorCode.SHOULD_BE_DIFFERENT.getCode(), "Indenting Store",
+									"Issuing store");
+					}
+					
+					
 					// commeneted as of now to support the past dated entries
 					/*
 					 * if(indent.getExpectedDeliveryDate().compareTo(
@@ -395,6 +409,8 @@ public class IndentService extends DomainService {
 										"indentPurpose=Repairs and Maintenance", "at seraill no. " + i);
 						}
 
+					
+						
 					}
 				}
 

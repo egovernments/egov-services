@@ -66,7 +66,7 @@ public class CustomControllerAdvice {
 		return errRes;
 	}
 	
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	/*@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
 	public ErrorRes handleServerError(Exception ex) {
 		ex.printStackTrace();
@@ -86,7 +86,7 @@ public class CustomControllerAdvice {
 
 	  
 	 
-	}
+	}*/
 	
 	 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

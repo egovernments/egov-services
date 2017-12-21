@@ -86,8 +86,10 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	}
 	
 	public boolean getIsIndentValidForPOCreate(String indentNumber) {
-		String validityQuery = "select count(*) from indentdetail where indentquantity=poorderedquantity";
-		Long count = namedParameterJdbcTemplate.queryForObject(validityQuery, new HashMap(), Long.class);
+		String validityQuery = "select count(*) from indentdetail where indentquantity=poorderedquantity and indentNumber=:indentNumber";
+		Map params=new HashMap<String,Object>();
+		params.put("indentNumber",indentNumber );
+		Long count = namedParameterJdbcTemplate.queryForObject(validityQuery,params , Long.class);
 		if(count>0)
 			return false;
 		else
@@ -102,7 +104,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 		else
 			return false;
 	}
-	
+	//TODO: validate on the PO date should happen
 	public boolean isRateContractsExists(String supplier, String rateType, String material){
 		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetails pld where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and  pl.supplier='" + supplier +"' and pl.rateType='" + rateType + "' and pld.material = '" + material + "' and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate and pl.agreementenddate";
 		Long count = namedParameterJdbcTemplate.queryForObject(rateContractQuery, new HashMap(), Long.class);

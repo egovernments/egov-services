@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -245,9 +246,6 @@ public class PurchaseOrder   {
   **/
   @ApiModelProperty(required = true, value = "Store which orders item for purchase order")
   @NotNull
-
-  
-
   public Store getStore() {
     return store;
   }
@@ -577,11 +575,9 @@ public class PurchaseOrder   {
    * @return purchaseOrderDetails
   **/
   @ApiModelProperty(required = true, value = "")
+  @Valid
   @NotNull
-
-  
-
-  public List<PurchaseOrderDetail> getPurchaseOrderDetails() {
+   public List<PurchaseOrderDetail> getPurchaseOrderDetails() {
     return purchaseOrderDetails;
   }
 

@@ -126,8 +126,6 @@ public class PurchaseOrderDetail {
     @ApiModelProperty(required = true, value = "")
     @NotNull
 
-    @Valid
-
     public Material getMaterial() {
         return material;
     }
@@ -169,7 +167,7 @@ public class PurchaseOrderDetail {
      **/
     @ApiModelProperty(value = "Order of items selected.")
 
-    @Valid
+    
 
     public BigDecimal getOrderNumber() {
         return orderNumber;
@@ -191,9 +189,6 @@ public class PurchaseOrderDetail {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
-    @Valid
-
     public Uom getUom() {
         return uom;
     }
@@ -213,9 +208,7 @@ public class PurchaseOrderDetail {
      * @return priceList
      **/
     @ApiModelProperty(value = "")
-
-    @Valid
-
+    @NotNull
     public PriceList getPriceList() {
         return priceList;
     }
@@ -237,7 +230,7 @@ public class PurchaseOrderDetail {
     @ApiModelProperty(required = true, value = "order quantity of the PurchaseMaterial ")
     @NotNull
 
-    @Valid
+   
 
     public BigDecimal getOrderQuantity() {
         return orderQuantity;
@@ -259,7 +252,7 @@ public class PurchaseOrderDetail {
      **/
     @ApiModelProperty(value = "order quantity of the PurchaseMaterial ")
 
-    @Valid
+    
 
     public BigDecimal getReceivedQuantity() {
         return receivedQuantity;
@@ -281,9 +274,7 @@ public class PurchaseOrderDetail {
      **/
     @ApiModelProperty(required = true, value = "unit price of  PurchaseMaterial ")
     @NotNull
-
-    @Valid
-
+     
     public BigDecimal getUnitPrice() {
         return unitPrice;
     }
@@ -345,7 +336,7 @@ public class PurchaseOrderDetail {
       **/
       @ApiModelProperty(value = "temporary field used to show indent pending quantity to be used for purchase order. If multiple indent numbers used, then show total quantity by combining indent pending quantities.    ")
 
-      @Valid
+   
 
       public BigDecimal getIndentQuantity() {
         return indentQuantity;
@@ -366,7 +357,7 @@ public class PurchaseOrderDetail {
       **/
       @ApiModelProperty(value = "temporary field used to show tender quantity. If rate type is tender, then show tender quantity.   ")
 
-      @Valid
+   
 
       public BigDecimal getTenderQuantity() {
         return tenderQuantity;
@@ -392,7 +383,7 @@ public class PurchaseOrderDetail {
         **/
         @ApiModelProperty(value = "temporary field used to show used quantity.")
 
-        @Valid
+       
 
         public BigDecimal getUsedQuantity() {
           return usedQuantity;
@@ -408,7 +399,7 @@ public class PurchaseOrderDetail {
       **/
       @ApiModelProperty(value = "temporary field used to show tender available quantity. If rate type is tender, then show tender quantity which are already used in purchase orders.   ")
 
-      @Valid
+     
 
       public BigDecimal getTenderAvailableQuantity() {
         return tenderAvailableQuantity;
@@ -439,8 +430,7 @@ public class PurchaseOrderDetail {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
-
+  
   public List<PurchaseIndentDetail> getPurchaseIndentDetails() {
     return purchaseIndentDetails;
   }

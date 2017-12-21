@@ -40,7 +40,7 @@ public enum ErrorCode {
             "The  value  {1} for the field {0} not allowed in the system. Please provide correct value"),
     INVALID_REF_VALUE("invalid.ref.value",
             "the field {0} should have a valid value which exists in the system. ",
-            "The  value  {1} for the field {0} does exist in system. Please provide correct value"),
+            "The  value  {1} for the field {0} does not exist in system. Please provide correct value"),
     DATE_LE_CURRENTDATE("date.should.be.le.currentdate",
             "the field {0} should be Less than or Equal to Current Date. ",
             "The  value  {1} for the field {0} should be Less than or Equal to Current Date."),
@@ -235,7 +235,11 @@ public enum ErrorCode {
     		"Material {0} and Pricelist Rate {1} combination Not Exist In The System {2}"),
     INDENT_NOT_APPROVED("indent.not.approved","associated indent with no {0} is not in approved status",
     		"issue is not possible"),
-    NO_ITEMS_TO_ISSUE("no.items.to.issue","selected indent has no items to issue", "selected indent has no items to issue");
+    NO_ITEMS_TO_ISSUE("no.items.to.issue","selected indent has no items to issue", "selected indent has no items to issue"),
+ 
+    SHOULD_BE_DIFFERENT("should.be.different","{0} and {1} values should be different",
+    		"{0} and {1} values should be different");
+ 
 	
 
 

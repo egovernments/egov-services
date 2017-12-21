@@ -324,7 +324,7 @@ class assetCategoryView extends Component {
           );
         } else{
           self.props.setFormData(resHolder);
-        } 
+        }
     self.setInitialUpdateData(resHolder, JSON.parse(JSON.stringify(specifications)), 'asset', 'view', specifications[`asset.view`].objectName);
       },
       function(err) {}

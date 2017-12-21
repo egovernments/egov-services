@@ -1,10 +1,13 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Document;
+import org.egov.swm.domain.model.DocumentSearch;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +22,7 @@ public class DocumentJdbcRepository extends JdbcRepository {
         delete(TABLE_NAME, tenantId, "refCode", refCode);
     }
 
-    public List<Document> search(final Document searchRequest) {
+    public List<Document> search(final DocumentSearch searchRequest) {
 
         String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
@@ -42,6 +45,12 @@ public class DocumentJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("refCode =:refCode");
             paramValues.put("refCode", searchRequest.getRefCode());
+        }
+        
+        if (searchRequest.getRefCodes() != null) {
+            addAnd(params);
+            params.append("refCode in (:refCodes)");
+            paramValues.put("refCodes", new ArrayList<>(Arrays.asList(searchRequest.getRefCodes().split(","))));
         }
 
         if (params.length() > 0)

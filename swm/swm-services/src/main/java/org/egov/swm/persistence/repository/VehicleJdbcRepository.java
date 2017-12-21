@@ -9,7 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.Document;
+import org.egov.swm.domain.model.DocumentSearch;
 import org.egov.swm.domain.model.FuelType;
+import org.egov.swm.domain.model.InsuranceDetails;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
@@ -40,6 +43,9 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
     @Autowired
     private FuelTypeService fuelTypeService;
+
+    @Autowired
+    private DocumentJdbcRepository documentJdbcRepository;
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -180,9 +186,13 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
         final List<VehicleEntity> vehicleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
                 row);
-
+        StringBuffer vehicleCodes = new StringBuffer();
         for (final VehicleEntity vehicleEntity : vehicleEntities) {
 
+            if (vehicleCodes.length() >= 1)
+                vehicleCodes.append(",");
+
+            vehicleCodes.append(vehicleEntity.getRegNumber());
             vehicleList.add(vehicleEntity.toDomain());
         }
 
@@ -195,12 +205,45 @@ public class VehicleJdbcRepository extends JdbcRepository {
             populateVendors(vehicleList);
 
             populateDrivers(vehicleList);
+
+            populateDocument(vehicleList, vehicleCodes.toString());
         }
         page.setTotalResults(vehicleList.size());
 
         page.setPagedData(vehicleList);
 
         return page;
+    }
+
+    private void populateDocument(List<Vehicle> vehicleList, String vehicleCodes) {
+
+        String tenantId = null;
+        Map<String, Document> documentMap = new HashMap<>();
+
+        if (vehicleList != null && !vehicleList.isEmpty())
+            tenantId = vehicleList.get(0).getTenantId();
+
+        DocumentSearch search = new DocumentSearch();
+        search.setTenantId(tenantId);
+        search.setRefCodes(vehicleCodes);
+
+        List<Document> docs = documentJdbcRepository.search(search);
+
+        if (docs != null)
+            for (Document d : docs) {
+
+                documentMap.put(d.getRefCode(), d);
+
+            }
+
+        for (Vehicle vehicle : vehicleList) {
+
+            if (vehicle.getInsuranceDetails() == null)
+                vehicle.setInsuranceDetails(InsuranceDetails.builder().build());
+
+            vehicle.getInsuranceDetails().setInsuranceDocument(documentMap.get(vehicle.getRegNumber()));
+
+        }
     }
 
     private void populateFuelTypes(List<Vehicle> vehicleList) {

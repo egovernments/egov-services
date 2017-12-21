@@ -11,6 +11,8 @@ import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.Document;
+import org.egov.swm.domain.model.DocumentSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.ServicedLocations;
 import org.egov.swm.domain.model.ServicesOffered;
@@ -43,6 +45,9 @@ public class VendorJdbcRepository extends JdbcRepository {
 
     @Autowired
     public ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
+
+    @Autowired
+    private DocumentJdbcRepository documentJdbcRepository;
 
     @Autowired
     private SwmProcessService swmProcessService;
@@ -154,12 +159,43 @@ public class VendorJdbcRepository extends JdbcRepository {
             populateServicedLocations(vendorList, vendorCodes.toString());
 
             populateServicesOffered(vendorList, vendorCodes.toString());
+
+            populateDocument(vendorList, vendorCodes.toString());
         }
         page.setTotalResults(vendorList.size());
 
         page.setPagedData(vendorList);
 
         return page;
+    }
+
+    private void populateDocument(List<Vendor> vendorList, String vendorCodes) {
+
+        String tenantId = null;
+        Map<String, Document> documentMap = new HashMap<>();
+
+        if (vendorList != null && !vendorList.isEmpty())
+            tenantId = vendorList.get(0).getTenantId();
+
+        DocumentSearch search = new DocumentSearch();
+        search.setTenantId(tenantId);
+        search.setRefCodes(vendorCodes);
+
+        List<Document> docs = documentJdbcRepository.search(search);
+
+        if (docs != null)
+            for (Document d : docs) {
+
+                documentMap.put(d.getRefCode(), d);
+
+            }
+
+        for (Vendor vendor : vendorList) {
+
+            vendor.setAgreementDocument(documentMap.get(vendor.getVendorNo()));
+
+        }
+
     }
 
     private void populateSuppliers(List<Vendor> vendorList) {

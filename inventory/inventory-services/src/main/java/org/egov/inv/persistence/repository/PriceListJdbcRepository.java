@@ -26,6 +26,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class PriceListJdbcRepository extends JdbcRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(PriceListJdbcRepository.class);
@@ -82,9 +83,13 @@ public class PriceListJdbcRepository extends JdbcRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Long getTenderQty(String supplier, String material, String rateType) {
-        String tenderQtyQuery = "select quantity from pricelistdetails where active=true and deleted=false and material ='" + material + "' and pricelist in (select id from pricelist where ratetype='" + rateType + "' and supplier='" + supplier + "' and extract(epoch from now())::bigint * 1000 between agreementstartdate and agreementenddate ) ";
-        Long tenderQty = namedParameterJdbcTemplate.queryForObject(tenderQtyQuery, new HashMap(), Long.class);
+    public Long getTenderQty(String supplier, String material, String ratetype) {
+        String tenderQtyQuery = "select quantity from pricelistdetails where active=true and deleted=false and material = :material and pricelist in (select id from pricelist where ratetype=:ratetype and supplier= :supplier and extract(epoch from now())::bigint * 1000 between agreementstartdate and agreementenddate ) ";
+	    Map params=new HashMap<String,Object>();
+		params.put("material",material);
+		params.put("ratetype",ratetype);
+		params.put("supplier",supplier);
+        Long tenderQty = namedParameterJdbcTemplate.queryForObject(tenderQtyQuery, params, Long.class);
         return tenderQty;
     }
 
@@ -419,37 +424,47 @@ public class PriceListJdbcRepository extends JdbcRepository {
 
             for (PriceListDetails plds : pl.getPriceListDetails()) {
 
-                String dupeQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate <= " + pl.getAgreementEndDate() + " and todate >= " + pl.getAgreementStartDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
-                Long dupeCount = namedParameterJdbcTemplate.queryForObject(dupeQuery, new HashMap(), Long.class);
+                Map params=new HashMap<String,Object>();
+                params.put("material", plds.getMaterial().getCode());
+        		params.put("fromdate", pl.getAgreementEndDate());
+        		params.put("todate", pl.getAgreementStartDate());
+        		params.put("rateType", pl.getRateType().toString());
+        		params.put("supplier", pl.getSupplier().getCode());
+            	
+                String dupeQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate <= :fromdate and todate >= :todate ) )and active=true and rateType=:rateType and supplier=:supplier";
+                Long dupeCount = namedParameterJdbcTemplate.queryForObject(dupeQuery, params, Long.class);
                 if (dupeCount != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (dupeCount > 1l && method.equals(Constants.ACTION_UPDATE)) {
                     return true;
                 }
 
-                String searchQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate >= " + pl.getAgreementStartDate() + " and fromdate <= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
-                Long count = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
+                String searchQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate >= :todate and fromdate <= :fromdate ) )and active=true and rateType=:rateType and supplier=:supplier";
+                Long count = namedParameterJdbcTemplate.queryForObject(searchQuery, params, Long.class);
                 if (count != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (count > 1l && method.equals(Constants.ACTION_UPDATE)) {
                     return true;
                 }
-                String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( todate >= " + pl.getAgreementStartDate() + " and todate <= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
-                Long count1 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
+                
+                String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( todate >= :todate and todate <= :fromdate ) )and active=true and rateType=:ratetype and supplier=:supplier";
+                Long count1 = namedParameterJdbcTemplate.queryForObject(searchQuery1, params, Long.class);
                 if (count1 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (count1 > 1l && method.equals(Constants.ACTION_UPDATE)) {
                     return true;
                 }
-                String searchQuery2 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate <= " + pl.getAgreementStartDate() + " and todate >= " + pl.getAgreementStartDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
-                Long count2 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
+                
+                String searchQuery2 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate <= :todate and todate >= :todate ) )and active=true and rateType=:ratetype and supplier=:supplier";
+                Long count2 = namedParameterJdbcTemplate.queryForObject(searchQuery2, params, Long.class);
                 if (count2 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (count2 > 1l && method.equals(Constants.ACTION_UPDATE)) {
                     return true;
                 }
-                String searchQuery3 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate <= " + pl.getAgreementEndDate() + " and todate >= " + pl.getAgreementEndDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'" + " and supplier='" + pl.getSupplier().getCode() + "'";
-                Long count3 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
+                
+                String searchQuery3 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate <= :fromdate and todate >= :fromdate ) )and active=true and rateType=:ratetype and supplier=:supplier";
+                Long count3 = namedParameterJdbcTemplate.queryForObject(searchQuery3, params, Long.class);
                 if (count3 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
                 } else if (count3 > 1l && method.equals(Constants.ACTION_UPDATE)) {

@@ -77,9 +77,13 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 
 	}
 
-	public Long getUsedQty(String supplier, String material, String rateType){
-	    String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = '" + material + "' and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted=false and ratetype='" + rateType + "' and supplier = '" + supplier + "')";
-	    Long usedQty=namedParameterJdbcTemplate.queryForObject(usedQtyQuery, new HashMap(), Long.class);
+	public Long getUsedQty(String supplier, String material, String ratetype){
+	    String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = :material and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted=false and ratetype=:ratetype and supplier = :supplier)";
+	    Map params=new HashMap<String,Object>();
+		params.put("material",material);
+		params.put("ratetype",ratetype);
+		params.put("supplier",supplier);
+	    Long usedQty=namedParameterJdbcTemplate.queryForObject(usedQtyQuery, params, Long.class);
 	    if(usedQty == null)
 	    	return 0l;
 	    return usedQty;
@@ -88,26 +92,32 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	public boolean getIsIndentValidForPOCreate(String indentNumber) {
 		String validityQuery = "select count(*) from indentdetail where indentquantity=poorderedquantity and indentNumber=:indentNumber";
 		Map params=new HashMap<String,Object>();
-		params.put("indentNumber",indentNumber );
-		Long count = namedParameterJdbcTemplate.queryForObject(validityQuery,params , Long.class);
-		if(count>0)
+		params.put("indentNumber",indentNumber);
+		Long count = namedParameterJdbcTemplate.queryForObject(validityQuery, params, Long.class);
+		if(count > 0)
 			return false;
 		else
 			return true;
 	}
 	
-	public boolean getIsIndentPORaised(String indentId) {
-		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity>totalprocessedquantity and totalprocessedquantity!=null and isdeleted=false and indentnumber = '" + indentId +"'";
-		Long count = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, new HashMap(), Long.class);
+	public boolean getIsIndentPORaised(String indentnumber) {
+		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity>totalprocessedquantity and totalprocessedquantity!=null and isdeleted=false and indentnumber = :indentnumber";
+		Map params=new HashMap<String,Object>();
+		params.put("indentnumber", indentnumber);
+		Long count = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, params, Long.class);
 		if(count > 0)
 			return true;
 		else
 			return false;
 	}
-	//TODO: validate on the PO date should happen
-	public boolean isRateContractsExists(String supplier, String rateType, String material){
-		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetails pld where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and  pl.supplier='" + supplier +"' and pl.rateType='" + rateType + "' and pld.material = '" + material + "' and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate and pl.agreementenddate";
-		Long count = namedParameterJdbcTemplate.queryForObject(rateContractQuery, new HashMap(), Long.class);
+
+	public boolean isRateContractsExists(String supplier, String ratetype, String material){
+		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetails pld where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and pl.supplier=:supplier and pl.rateType=:ratetype and pld.material = :material and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate and pl.agreementenddate";
+	    Map params=new HashMap<String,Object>();
+		params.put("material",material);
+		params.put("ratetype",ratetype);
+		params.put("supplier",supplier);
+		Long count = namedParameterJdbcTemplate.queryForObject(rateContractQuery, params, Long.class);
 		if(count > 0)
 			return true;
 		else

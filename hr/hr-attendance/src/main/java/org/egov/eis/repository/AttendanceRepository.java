@@ -95,9 +95,9 @@ public class AttendanceRepository {
         return attendances;
     }
 
-    public List<Attendance> findReportQuery(final AttendanceReportRequest attendanceReportRequest, Long noofdays) throws ParseException {
+    public List<Attendance> findReportQuery(final AttendanceReportRequest attendanceReportRequest, Long noofdays, Long noOfWorkingDays) throws ParseException {
         final List<Object> preparedStatementValues = new ArrayList<Object>();
-        final String queryStr = attendanceQueryBuilder.getAttendanceReportQuery(attendanceReportRequest, noofdays, preparedStatementValues);
+        final String queryStr = attendanceQueryBuilder.getAttendanceReportQuery(attendanceReportRequest, noofdays, noOfWorkingDays, preparedStatementValues);
         LOGGER.info("search attendance Query ::" + queryStr);
 
         final List<Attendance> attendances = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),

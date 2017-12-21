@@ -436,7 +436,7 @@ public class LeaveApplicationService {
 		int secondSaturday = 0;
 
 		while (c2.after(c1)) {
-			if ((c1.getFirstDayOfWeek() == Calendar.SATURDAY) && (c1.get(Calendar.WEEK_OF_MONTH) == 2)
+			if ((c1.get(Calendar.WEEK_OF_MONTH) == 2)
 					&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
 				secondSaturday++;
 			}

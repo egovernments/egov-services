@@ -185,18 +185,18 @@ public class AttendanceQueryBuilder {
 	}
 
 	public String getAttendanceReportQuery(final AttendanceReportRequest attendanceReportRequest, Long noofdays,
-			final List preparedStatementValues) {
-		String searchQuery = "select a.employee AS a_employee , a.presentdays AS a_presentdays, sum(30-(a.PresentDays+a.LeaveDays+a.Holidays) ) AS a_absentdays,"
+			Long noOfWorkingDays, final List preparedStatementValues) {
+		String searchQuery = "select a.employee AS a_employee , a.presentdays AS a_presentdays, sum(:noofdays-(a.PresentDays+a.LeaveDays+(:noOfHolidays)) ) AS a_absentdays,"
 				+ " a.leavedays AS a_leavedays,  0 as a_noofots from ( select employee, sum(case when type =(select id from egeis_attendance_type  where code  ='P' and tenantid=':tenantid')"
 				+ "and month=:month and year=':year' and tenantid=':tenantid' then 1 else 0 end) PresentDays, sum(case when type =(select id from egeis_attendance_type "
-				+ "where code  ='L' and tenantid=':tenantid') and month=:month and year=':year' and tenantid=':tenantid' then 1 else 0 end) LeaveDays,"
-				+ "sum(case when type =(select id from egeis_attendance_type  where code  ='H' and tenantid=':tenantid') and month=:month and year=':year' and "
-				+ "tenantid=':tenantid' then 1 else 0 end) Holidays from egeis_attendance where month=:month and year=':year' and tenantid=':tenantid' ";
+				+ "where code  ='L' and tenantid=':tenantid') and month=:month and year=':year' and tenantid=':tenantid' then 1 else 0 end) LeaveDays "
+				+ "from egeis_attendance where month=:month and year=':year' and tenantid=':tenantid' ";
 
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuffer params = new StringBuffer();
-
+		Long noOfHolidays = noofdays - noOfWorkingDays;
 		searchQuery = searchQuery.replace(":noofdays", noofdays.toString());
+		searchQuery = searchQuery.replace(":noOfHolidays", noOfHolidays.toString());
 		searchQuery = searchQuery.replace(":month", attendanceReportRequest.getMonth().toString());
 		searchQuery = searchQuery.replace(":year", attendanceReportRequest.getYear());
 		searchQuery = searchQuery.replace(":tenantid", attendanceReportRequest.getTenantId());

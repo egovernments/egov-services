@@ -133,7 +133,7 @@ public class AttendanceService {
 	}
 
 	public List<Attendance> getAttendanceReport(final AttendanceReportRequest attendanceReportRequest,
-			RequestInfo requestInfo) throws ParseException {
+			Long noOfDaysInMonth, Long noOfWorkingDays, RequestInfo requestInfo) throws ParseException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		List<Long> ids = null;
 
@@ -143,52 +143,171 @@ public class AttendanceService {
 
 		ids = employeeInfos.stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
 		attendanceReportRequest.setEmployeeIds(ids);
-		Long daysInMonth = getNoOfDaysInMonth(attendanceReportRequest.getMonth(), attendanceReportRequest.getYear());
-		return attendanceRepository.findReportQuery(attendanceReportRequest, daysInMonth);
+		return attendanceRepository.findReportQuery(attendanceReportRequest, noOfDaysInMonth, noOfWorkingDays);
 	}
 
 	public Long getNoOfDaysInMonth(Integer month, String year) {
+		Calendar currentDate = Calendar.getInstance();
+		currentDate.setTime(new Date());
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, Integer.parseInt(year));
 		calendar.set(Calendar.MONTH, month - 1);
-		return Long.valueOf(calendar.getActualMaximum(calendar.DAY_OF_MONTH));
+		if ((currentDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR))
+				&& (currentDate.get(Calendar.MONTH) == calendar.get(Calendar.MONTH))) {
+			return Long.valueOf(currentDate.get(Calendar.DATE));
+		} else {
+
+			return Long.valueOf(calendar.getActualMaximum(calendar.DAY_OF_MONTH));
+		}
 	}
 
-	public Long getNoOfWorkingDays(AttendanceReportRequest attendanceReportRequest, RequestInfo requestInfo) {
-
+	public Long getNoOfWorkingDays(AttendanceReportRequest attendanceReportRequest, Long noOfDaysInMonth,
+			RequestInfo requestInfo) {
+		Calendar currentDate = Calendar.getInstance();
+		currentDate.setTime(new Date());
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(Calendar.YEAR, Integer.parseInt(attendanceReportRequest.getYear()));
 		calendar.set(Calendar.MONTH, attendanceReportRequest.getMonth() - 1);
 		final Map<String, List<String>> weeklyHolidays = hrConfigurationService
 				.getWeeklyHolidays(attendanceReportRequest.getTenantId(), requestInfo);
 
-		int count = 0;
-
-		calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-		count += calendar.getActualMaximum(Calendar.DAY_OF_WEEK_IN_MONTH);
-
-		if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWeek()
-				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
-			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-			count += calendar.getActualMaximum(Calendar.DAY_OF_WEEK_IN_MONTH);
-		} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
-				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
-			count += 1;
-		} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
-				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0)))
-			count += 2;
-
 		calendar.set(Calendar.DAY_OF_MONTH, 1);
 		Date monthStart = calendar.getTime();
 		calendar.add(Calendar.MONTH, 1);
 		calendar.add(Calendar.DAY_OF_MONTH, -1);
-		Date monthEnd = calendar.getTime();
+		Date monthEnd;
+
+		int count = 0;
+
+		if ((currentDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR))
+				&& (currentDate.get(Calendar.MONTH) == calendar.get(Calendar.MONTH))) {
+			monthEnd = currentDate.getTime();
+
+			count += sundaysCount(monthStart, monthEnd);
+			if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWeek()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+				count += saturdayCount(monthStart, monthEnd);
+			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+				count += secondSaturdayCount(monthStart, monthEnd);
+			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0)))
+				count += secondOrFourthSaturdayCount(monthStart, monthEnd);
+
+		} else {
+			monthEnd = calendar.getTime();
+
+			calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+			count += calendar.getActualMaximum(Calendar.DAY_OF_WEEK_IN_MONTH);
+
+			if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWeek()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+				calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+				count += calendar.getActualMaximum(Calendar.DAY_OF_WEEK_IN_MONTH);
+			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+				count += 1;
+			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
+					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0)))
+				count += 2;
+		}
 
 		List<Date> holidaysBetweenDates = holidayService.getHolidaysBetweenDates(attendanceReportRequest.getTenantId(),
 				requestInfo, monthStart, monthEnd);
 		count += holidaysBetweenDates.size();
-		count = calendar.getActualMaximum(calendar.DAY_OF_MONTH) - count;
+		if ((currentDate.get(Calendar.YEAR) == calendar.get(Calendar.YEAR))
+				&& (currentDate.get(Calendar.MONTH) == calendar.get(Calendar.MONTH))) {
+			count = (int) (noOfDaysInMonth - count);
+		} else {
+			count = calendar.getActualMaximum(calendar.DAY_OF_MONTH) - count;
+		}
 		return Long.valueOf(count);
+	}
+
+	public int sundaysCount(Date fromDate, Date toDate) {
+
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(fromDate);
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(toDate);
+		int sundays = 0;
+
+		while (c2.after(c1)) {
+			if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+				sundays++;
+			}
+			c1.add(Calendar.DATE, 1);
+		}
+
+		if (c1.equals(c2) && c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			sundays++;
+		}
+
+		return sundays;
+	}
+
+	public int saturdayCount(Date fromDate, Date toDate) {
+
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(fromDate);
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(toDate);
+		int sundays = 0;
+
+		while (c2.after(c1)) {
+			if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+				sundays++;
+			}
+			c1.add(Calendar.DATE, 1);
+		}
+		if (c1.equals(c2) && c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+			sundays++;
+		}
+		return sundays;
+	}
+
+	public int secondSaturdayCount(Date fromDate, Date toDate) {
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(fromDate);
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(toDate);
+		int secondSaturday = 0;
+
+		while (c2.after(c1)) {
+			if ((c1.get(Calendar.WEEK_OF_MONTH) == 2) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+				secondSaturday++;
+			}
+			c1.add(Calendar.DATE, 1);
+
+		}
+		if (c1.equals(c2) && (c1.get(Calendar.WEEK_OF_MONTH) == 2)
+				&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			secondSaturday++;
+		}
+
+		return secondSaturday;
+	}
+
+	public int secondOrFourthSaturdayCount(Date fromDate, Date toDate) {
+		int fourthSaturday = secondSaturdayCount(fromDate, toDate);
+
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(fromDate);
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(toDate);
+
+		while (c2.after(c1)) {
+			if ((c1.get(Calendar.WEEK_OF_MONTH) == 4) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+				fourthSaturday++;
+			}
+			c1.add(Calendar.DATE, 1);
+
+		}
+		if (c1.equals(c2) && (c1.get(Calendar.WEEK_OF_MONTH) == 4)
+				&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			fourthSaturday++;
+		}
+		return fourthSaturday;
 	}
 
 	public boolean getByEmployeeAndDate(final Long employee, final Date attendanceDate, final String tenantId) {

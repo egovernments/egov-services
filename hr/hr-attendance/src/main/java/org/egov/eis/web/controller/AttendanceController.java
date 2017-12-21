@@ -192,9 +192,9 @@ public class AttendanceController {
         Long noOfDaysInMonth = null;
         Long noOfWorkingDays = null;
         try {
-            attendancesList = attendanceService.getAttendanceReport(attendanceReportRequest, requestInfo);
-            noOfDaysInMonth = attendanceService.getNoOfDaysInMonth(attendanceReportRequest.getMonth(), attendanceReportRequest.getYear());
-            noOfWorkingDays = attendanceService.getNoOfWorkingDays(attendanceReportRequest, requestInfo);
+        	 noOfDaysInMonth = attendanceService.getNoOfDaysInMonth(attendanceReportRequest.getMonth(), attendanceReportRequest.getYear());
+             noOfWorkingDays = attendanceService.getNoOfWorkingDays(attendanceReportRequest, noOfDaysInMonth, requestInfo);
+             attendancesList = attendanceService.getAttendanceReport(attendanceReportRequest,noOfDaysInMonth,noOfWorkingDays, requestInfo);      
         } catch (final Exception exception) {
             logger.error("Error while processing request " + attendanceReportRequest, exception);
             return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

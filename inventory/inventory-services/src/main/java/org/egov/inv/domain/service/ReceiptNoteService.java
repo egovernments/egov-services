@@ -422,7 +422,6 @@ public class ReceiptNoteService extends DomainService {
     }
 
     private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, Long acceptedQuantity, String tenantId, int i, InvalidDataException errors) {
-        Long currentDate = currentEpochWithoutTime() + (24 * 60 * 60) - 1;
         Long totalQuantity = 0L;
         for (MaterialReceiptDetailAddnlinfo addnlinfo : materialReceiptDetailAddnlinfos) {
             {
@@ -431,7 +430,7 @@ public class ReceiptNoteService extends DomainService {
                 }
 
                 if (null != addnlinfo.getExpiryDate()
-                        && addnlinfo.getExpiryDate() > currentDate) {
+                        && addnlinfo.getExpiryDate() > getCurrentDate()) {
                     String date = convertEpochtoDate(addnlinfo.getExpiryDate());
                     errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ", date);
 

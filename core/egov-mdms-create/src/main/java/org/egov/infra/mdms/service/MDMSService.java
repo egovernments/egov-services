@@ -136,19 +136,7 @@ public class MDMSService {
 		
 		logger.info("Step 4: Creating a New Commit......");
 		startTime = new Date().getTime();
-		String commitMessage = null;
-		if(null != mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()
-				&& !mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName().isEmpty()){
-			commitMessage = "commit by "+mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()+" "
-					+ "for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", "
-					+ "master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", "
-					+ "tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId();
-		}else{
-			commitMessage = "commit by "+userName+" "
-					+ "for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", "
-					+ "master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", "
-					+ "tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId();
-		}
+		String commitMessage = mDMSUtils.buildCommitMessage(mDMSCreateRequest, isCreate, userName);
 		String newCommitSHA = createCommit(branchHeadSHA, newTreeSHA, commitMessage);
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");

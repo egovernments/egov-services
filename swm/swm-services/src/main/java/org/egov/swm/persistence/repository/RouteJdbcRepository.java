@@ -96,9 +96,11 @@ public class RouteJdbcRepository extends JdbcRepository {
             paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
         }
 
-        if(searchRequest.getCollectionTypeCode() != null){
-
-            addOr(params);
+        if (searchRequest.getCollectionPointCode() != null) {
+            
+            addAnd(params);
+            
+            params.append("(");
             params.append("startingcollectionpoint =:startingcollectionpoint");
             paramValues.put("startingcollectionpoint", searchRequest.getCollectionPointCode());
 
@@ -111,13 +113,17 @@ public class RouteJdbcRepository extends JdbcRepository {
                     .tenantId(searchRequest.getTenantId())
                     .build();
 
-            List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository.search(routeCollectionPointMap);
+            List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository
+                    .search(routeCollectionPointMap);
             List<String> routeCodes = routeCollectionPointMaps.stream()
                     .map(RouteCollectionPointMap::getRoute)
                     .collect(Collectors.toList());
+            if (routeCodes != null && !routeCodes.isEmpty()) {
+                params.append(" or code in (:routecodes) ");
+                paramValues.put("routecodes", routeCodes);
+            }
 
-            params.append(" or code in (:routecodes) ");
-            paramValues.put("routecodes", routeCodes);
+            params.append(")");
         }
 
         if (searchRequest.getDistance() != null) {

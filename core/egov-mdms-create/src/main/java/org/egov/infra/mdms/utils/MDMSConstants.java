@@ -1,6 +1,5 @@
 package org.egov.infra.mdms.utils;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
@@ -14,11 +13,9 @@ public class MDMSConstants {
 	public static final String EGOV_TREE_PATH = "commits/";
 	public static final String EGOV_CREATE_TREE_PATH = "git/trees";
 	public static final String EGOV_CREATE_COMMIT_PATH = "git/commits";
-	public static final String FINAL_FILE_PATH_APPEND = "https://github.com/egovernments/egov-services/blob/master/";
 	
 	
 	public static final String GIT_BLOB_MODE = "100644";
-	//public static final String DATA_ROOT_FOLDER = "test-data";
 	public static final String CONFIG_ARRAY_KEY= "mdms-config";
 
 

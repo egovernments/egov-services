@@ -65,7 +65,9 @@ public class MDMSService {
 	@Value("${egov.repo.owner}")
 	private String egovRepo;
 	
-	public  String EGOV_REPO_PATH = egovRepoOwner +"/"+egovRepo +"/";
+	public String EGOV_REPO_PATH = egovRepoOwner +"/"+egovRepo +"/";
+	public String FINAL_FILE_PATH_APPEND = "https://github.com/"+egovRepoOwner +"/"+egovRepo+"/blob/master/";
+
 
 	
 	@Autowired
@@ -134,7 +136,19 @@ public class MDMSService {
 		
 		logger.info("Step 4: Creating a New Commit......");
 		startTime = new Date().getTime();
-		String commitMessage = "commit by "+userName+" at epoch time: "+new Date().getTime();
+		String commitMessage = null;
+		if(null != mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()
+				&& !mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName().isEmpty()){
+			commitMessage = "commit by "+mDMSCreateRequest.getRequestInfo().getUserInfo().getUserName()+" "
+					+ "for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", "
+					+ "master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", "
+					+ "tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId();
+		}else{
+			commitMessage = "commit by "+userName+" "
+					+ "for module: "+mDMSCreateRequest.getMasterMetaData().getModuleName()+", "
+					+ "master: "+mDMSCreateRequest.getMasterMetaData().getMasterName()+", "
+					+ "tenant: "+mDMSCreateRequest.getMasterMetaData().getTenantId();
+		}
 		String newCommitSHA = createCommit(branchHeadSHA, newTreeSHA, commitMessage);
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
@@ -166,7 +180,7 @@ public class MDMSService {
 				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
 			}
 		}
-		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + filePath);
+		logger.info("Find your changes at: "+ FINAL_FILE_PATH_APPEND + filePath);
 		
 		Map<String, Map<String, JSONArray>> response = new HashMap<>();
 		Map<String, JSONArray> entry = new HashMap<>();

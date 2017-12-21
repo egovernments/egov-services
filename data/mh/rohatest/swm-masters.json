@@ -579,32 +579,38 @@
     {
       "code": "Process 1",
       "tenantId": "mh.rohatest",
-      "name": "Collection"
+      "name": "Collection",
+      "reqInStaffTarget":true
     },
     {
       "code": "Process 2",
       "tenantId": "mh.rohatest",
-      "name": "Segregation"
+      "name": "Segregation",
+      "reqInStaffTarget":true
     },
     {
       "code": "Process 3",
       "tenantId": "mh.rohatest",
-      "name": "Transportation"
+      "name": "Transportation",
+      "reqInStaffTarget":false
     },
     {
       "code": "Process 4",
       "tenantId": "mh.rohatest",
-      "name": "Disposal"
+      "name": "Disposal",
+      "reqInStaffTarget":true
     },
     {
       "code": "Process 5",
       "tenantId": "mh.rohatest",
-      "name": "Waste Treatment"
+      "name": "Waste Treatment",
+      "reqInStaffTarget":false
     },
     {
       "code": "Process 6",
       "tenantId": "mh.rohatest",
-      "name": "Other"
+      "name": "Other",
+      "reqInStaffTarget":false
     }
   ],
   "PaymentTerms": [

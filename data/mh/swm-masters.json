@@ -585,32 +585,38 @@
     {
       "code": "Process 1",
       "tenantId": "mh",
-      "name": "Collection"
+      "name": "Collection",
+      "reqInStaffTarget":true
     },
     {
       "code": "Process 2",
       "tenantId": "mh",
-      "name": "Segregation"
+      "name": "Segregation",
+      "reqInStaffTarget":true
     },
     {
       "code": "Process 3",
       "tenantId": "mh",
-      "name": "Transportation"
+      "name": "Transportation",
+      "reqInStaffTarget":false
     },
     {
       "code": "Process 4",
       "tenantId": "mh",
-      "name": "Disposal"
+      "name": "Disposal",
+      "reqInStaffTarget":true
     },
     {
       "code": "Process 5",
-      "tenantId": "mh",
-      "name": "Waste Treatment"
+      "tenantId": "default",
+      "name": "Waste Treatment",
+      "reqInStaffTarget":false
     },
     {
       "code": "Process 6",
       "tenantId": "mh",
-      "name": "Other"
+      "name": "Other",
+      "reqInStaffTarget":false
     }
   ],
   "PaymentTerms": [

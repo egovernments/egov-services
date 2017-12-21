@@ -155,7 +155,6 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
             vehicleFuellingDetailsList.add(vehicleFuellingDetailsEntity.toDomain());
         }
         if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty()) {
-            populateFuelTypes(vehicleFuellingDetailsList);
 
             populateVehicles(vehicleFuellingDetailsList);
 
@@ -166,30 +165,6 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
         page.setPagedData(vehicleFuellingDetailsList);
 
         return page;
-    }
-
-    private void populateFuelTypes(List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
-        Map<String, FuelType> fuelTypeMap = new HashMap<>();
-        String tenantId = null;
-
-        if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty())
-            tenantId = vehicleFuellingDetailsList.get(0).getTenantId();
-
-        List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
-
-        for (FuelType ft : fuelTypes) {
-            fuelTypeMap.put(ft.getCode(), ft);
-        }
-
-        for (VehicleFuellingDetails vehicleFuellingDetails : vehicleFuellingDetailsList) {
-
-            if (vehicleFuellingDetails.getTypeOfFuel() != null && vehicleFuellingDetails.getTypeOfFuel().getCode() != null
-                    && !vehicleFuellingDetails.getTypeOfFuel().getCode().isEmpty()) {
-
-                vehicleFuellingDetails.setTypeOfFuel(fuelTypeMap.get(vehicleFuellingDetails.getTypeOfFuel().getCode()));
-            }
-
-        }
     }
 
     private void populateVehicles(List<VehicleFuellingDetails> vehicleFuellingDetailsList) {

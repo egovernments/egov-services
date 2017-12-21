@@ -107,16 +107,6 @@ public class VehicleFuellingDetailsService {
 
         for (final VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
-            if (details.getTypeOfFuel() != null
-                    && (details.getTypeOfFuel().getCode() == null || details.getTypeOfFuel().getCode().isEmpty()))
-                throw new CustomException("FuelType",
-                        "The field FuelType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-            // Validate Fuel Type
-            if (details.getTypeOfFuel() != null)
-                details.setTypeOfFuel(fuelTypeService.getFuelType(details.getTenantId(),
-                        details.getTypeOfFuel().getCode(), vehicleFuellingDetailsRequest.getRequestInfo()));
-
             if (details.getVehicle() != null
                     && (details.getVehicle().getRegNumber() == null || details.getVehicle().getRegNumber().isEmpty()))
                 throw new CustomException("Vehicle",

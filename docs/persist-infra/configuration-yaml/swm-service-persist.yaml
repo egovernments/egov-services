@@ -6,7 +6,7 @@ serviceMaps:
    description: create vehicleFuellingDetails in egswm_vehiclefuellingdetails
    fromTopic: swm-vehiclefuellingdetails-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehiclefuellingdetails( tenantid, transactionno, transactiondate, vehicle, vehiclereadingduringfuelling, refuellingstation, fuelfilled, typeoffuel, totalcostincurred, receiptno, receiptdate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehiclefuellingdetails( tenantid, transactionno, transactiondate, vehicle, vehiclereadingduringfuelling, refuellingstation, fuelfilled, totalcostincurred, receiptno, receiptdate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicleFuellingDetails.*
       jsonMaps:
        
@@ -26,8 +26,6 @@ serviceMaps:
 
        - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
          dbType: DOUBLE
-
-       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel.code
 
        - jsonPath: $.vehicleFuellingDetails.*.totalCostIncurred
          dbType: DOUBLE
@@ -53,7 +51,7 @@ serviceMaps:
    fromTopic: swm-vehiclefuellingdetails-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehiclefuellingdetails SET transactiondate=?,vehicle=?,vehiclereadingduringfuelling=?, refuellingstation=?,fuelfilled=?,typeoffuel=?,totalcostincurred=?,receiptno=?,receiptdate=?,lastmodifiedby=?,lastmodifiedtime=? WHERE transactionno=? AND tenantid=?;
+    - query: UPDATE egswm_vehiclefuellingdetails SET transactiondate=?,vehicle=?,vehiclereadingduringfuelling=?, refuellingstation=?,fuelfilled=?,totalcostincurred=?,receiptno=?,receiptdate=?,lastmodifiedby=?,lastmodifiedtime=? WHERE transactionno=? AND tenantid=?;
       basePath: $.vehicleFuellingDetails.*
       jsonMaps:
 
@@ -69,8 +67,6 @@ serviceMaps:
 
        - jsonPath: $.vehicleFuellingDetails.*.fuelFilled
          dbType: DOUBLE
-
-       - jsonPath: $.vehicleFuellingDetails.*.typeOfFuel.code
 
        - jsonPath: $.vehicleFuellingDetails.*.totalCostIncurred
          dbType: DOUBLE

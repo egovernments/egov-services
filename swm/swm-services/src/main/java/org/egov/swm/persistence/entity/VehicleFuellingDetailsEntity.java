@@ -37,8 +37,6 @@ public class VehicleFuellingDetailsEntity {
 
     private Double fuelFilled = null;
 
-    private String typeOfFuel = null;
-
     private Double totalCostIncurred = null;
 
     private String receiptNo = null;
@@ -63,7 +61,6 @@ public class VehicleFuellingDetailsEntity {
         vehicleFuellingDetails.setVehicleReadingDuringFuelling(vehicleReadingDuringFuelling);
         vehicleFuellingDetails.setRefuellingStation(RefillingPumpStation.builder().code(refuellingStation).build());
         vehicleFuellingDetails.setFuelFilled(fuelFilled);
-        vehicleFuellingDetails.setTypeOfFuel(FuelType.builder().code(typeOfFuel).build());
         vehicleFuellingDetails.setTotalCostIncurred(totalCostIncurred);
         vehicleFuellingDetails.setReceiptNo(receiptNo);
         vehicleFuellingDetails.setReceiptDate(receiptDate);

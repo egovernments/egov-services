@@ -55,10 +55,6 @@ public class VehicleFuellingDetails {
     private Double fuelFilled = null;
 
     @NotNull
-    @JsonProperty("typeOfFuel")
-    private FuelType typeOfFuel = null;
-
-    @NotNull
     @JsonProperty("totalCostIncurred")
     private Double totalCostIncurred = null;
 

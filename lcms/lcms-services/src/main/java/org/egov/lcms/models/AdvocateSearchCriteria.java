@@ -16,27 +16,28 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class AdvocateSearchCriteria {
-	
 
 	@NotNull
 	@NotEmpty
 	private String tenantId;
-	
+
 	private String[] code;
-	
+
 	private Boolean isIndividual;
-	
+
 	private String advocateName;
-	
+
 	private String organizationName;
-	
+
 	private Boolean isActive;
-	
+
 	private Integer pageSize;
-	
+
 	private Integer pageNumber;
-	
+
 	private String[] sort;
-	
+
 	private Integer offSet;
+
+	private String status;
 }

@@ -2,6 +2,7 @@ package org.egov.lcms.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
@@ -40,6 +41,12 @@ public class AdvocateRepository {
 	@Autowired
 	AgencyRowMapper agencyRowMapper;
 
+	/**
+	 * This method is to search Advocates based on advcate search criteria
+	 * 
+	 * @param advocateSearchCriteria
+	 * @return List of Advocates
+	 */
 	public List<Advocate> search(AdvocateSearchCriteria advocateSearchCriteria) {
 
 		if (advocateSearchCriteria.getPageNumber() == null || advocateSearchCriteria.getPageNumber() == 0)
@@ -64,7 +71,7 @@ public class AdvocateRepository {
 	}
 
 	/**
-	 * This will give the case codes for the given advocateName
+	 * This method is to give the case codes for the given advocateName
 	 * 
 	 * @param advocateCode
 	 * @return {@link String} AdvocateName
@@ -76,6 +83,13 @@ public class AdvocateRepository {
 
 	}
 
+	/**
+	 * This method is to fetch PersonalDetails based on Agency code
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @return List of PersonDetails
+	 */
 	public List<PersonDetails> getPersonalDetailsUsingCode(String tenantId, String code) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(tenantId, code,
@@ -85,6 +99,14 @@ public class AdvocateRepository {
 		return personDetails;
 	}
 
+	/**
+	 * This method is to fetch Advocates based on Advocate code
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param isIndividual
+	 * @return List of Advocates
+	 */
 	public List<Advocate> getAdvocatesUsingCode(String tenantId, String code, Boolean isIndividual) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		String searchQuery = AdvocateBuilders.getAgencyFieldsSearchQuery(tenantId, code,
@@ -94,12 +116,30 @@ public class AdvocateRepository {
 		return advocates;
 	}
 
+	/**
+	 * This method is to delete Advocate based on code and teanatId
+	 * 
+	 * @param code
+	 * @param tenantId
+	 * @param tableName
+	 */
 	public void delete(String code, String tenantId, String tableName) {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		String deleteQuery = AdvocateBuilders.getDeleteQuery(code, tenantId, tableName, preparedStatementValues);
 		jdbcTemplate.update(deleteQuery, preparedStatementValues.toArray());
 	}
 
+	/**
+	 * This method is to search agencies
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param isIndividual
+	 * @param advocateName
+	 * @param agencyName
+	 * @param requestInfoWrapper
+	 * @return List of Agencies
+	 */
 	public List<Agency> searchAgencies(String tenantId, String code, Boolean isIndividual, String advocateName,
 			String agencyName, RequestInfoWrapper requestInfoWrapper) {
 
@@ -137,6 +177,12 @@ public class AdvocateRepository {
 		return agencies;
 	}
 
+	/**
+	 * This method is to fetch advocates
+	 * 
+	 * @param agencies
+	 * @param advocateName
+	 */
 	private void getAdvocates(List<Agency> agencies, String advocateName) {
 
 		List<Advocate> advocates = new ArrayList<Advocate>();
@@ -149,6 +195,11 @@ public class AdvocateRepository {
 		}
 	}
 
+	/**
+	 * This method is to fetch PersonDetails
+	 * 
+	 * @param agencies
+	 */
 	private void getPersonDetails(List<Agency> agencies) {
 
 		List<PersonDetails> personDetails = new ArrayList<PersonDetails>();
@@ -160,5 +211,19 @@ public class AdvocateRepository {
 			personDetails = jdbcTemplate.query(searchQuery, preparedStatementValues.toArray(), personDetailRowMapper);
 			agency.setPersonDetails(personDetails);
 		}
+	}
+
+	/**
+	 * This method is to fetch Agency based on list of codes and status 
+	 * 
+	 * @param codeList
+	 * @param status
+	 * @return List of Agencies
+	 */
+	public List<Agency> getAgenciesWithAgencyCodeList(Set<String> codeList,String status) {
+		List<Object> preparedStatementValues = new ArrayList<Object>();
+		String agencySearchQuery = AdvocateBuilders.getAgenciesWithAgencyCodeList(codeList,status,preparedStatementValues);
+		List<Agency> agencies = jdbcTemplate.query(agencySearchQuery,preparedStatementValues.toArray(), agencyRowMapper);
+		return agencies;
 	}
 }

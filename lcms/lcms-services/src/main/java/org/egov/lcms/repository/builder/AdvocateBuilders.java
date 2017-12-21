@@ -1,9 +1,11 @@
 package org.egov.lcms.repository.builder;
 
 import java.util.List;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.util.ConstantUtility;
@@ -14,6 +16,13 @@ public class AdvocateBuilders {
 
 	private static final String BASE_QUERY = "SELECT * from egov_lcms_advocate ";
 
+	/**
+	 * This method is to build SELECT query to serch Advocate
+	 * 
+	 * @param advocateSearchCriteria
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public static String getSearchQuery(AdvocateSearchCriteria advocateSearchCriteria,
 			List<Object> preparedStatementValues) {
 
@@ -25,6 +34,13 @@ public class AdvocateBuilders {
 		return selectQuery.toString();
 	}
 
+	/**
+	 * This method is to append WHERE clause and condtions to SELECT Query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param advocateSearchCriteria
+	 */
 	private static void addWhereClause(StringBuffer selectQuery, List<Object> preparedStatementValues,
 			AdvocateSearchCriteria advocateSearchCriteria) {
 
@@ -75,6 +91,12 @@ public class AdvocateBuilders {
 		}
 	}
 
+	/**
+	 * This method is to append ORDER BY clause to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param advocateSearchCriteria
+	 */
 	private static void addOrderByClause(StringBuffer selectQuery, AdvocateSearchCriteria advocateSearchCriteria) {
 
 		selectQuery.append(" ORDER BY ");
@@ -101,6 +123,13 @@ public class AdvocateBuilders {
 		selectQuery.append(" lastmodifiedtime desc ");
 	}
 
+	/**
+	 * This method is to append offset, and limit to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param advocateSearchCriteria
+	 */
 	private static void addPagingClause(StringBuffer selectQuery, List<Object> preparedStatementValues,
 			AdvocateSearchCriteria advocateSearchCriteria) {
 
@@ -123,6 +152,16 @@ public class AdvocateBuilders {
 
 	public static final String SEARCH_CASE_CODE_BY_ADVOCATE = "select casecode from egov_lcms_case_advocate where advocate->>'code'=?";
 
+	/**
+	 * This method is to build SELECT query to search Agencies
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param tableName
+	 * @param isIndividual
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public static String getAgencyFieldsSearchQuery(String tenantId, String code, String tableName,
 			Boolean isIndividual, List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();
@@ -134,7 +173,7 @@ public class AdvocateBuilders {
 		if (isIndividual) {
 			searchQuery.append(" AND code =?");
 			preparedStatementValues.add(code);
-		}else{
+		} else {
 			searchQuery.append(" AND agencycode =?");
 			preparedStatementValues.add(code);
 			searchQuery.append(" order by createdtime asc");
@@ -143,6 +182,15 @@ public class AdvocateBuilders {
 		return searchQuery.toString();
 	}
 
+	/**
+	 * This method is to build DELETE query to delete Advocates
+	 * 
+	 * @param code
+	 * @param tenantId
+	 * @param tableName
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public static String getDeleteQuery(String code, String tenantId, String tableName,
 			List<Object> preparedStatementValues) {
 		StringBuilder deleteQuery = new StringBuilder();
@@ -159,6 +207,17 @@ public class AdvocateBuilders {
 		return deleteQuery.toString();
 	}
 
+	/**
+	 * This method is to build SELECT query to search Advocates
+	 * 
+	 * @param tenantId
+	 * @param isIndividual
+	 * @param advocateName
+	 * @param agencyCode
+	 * @param agencyName
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public static String getAdvocateSearchQuery(String tenantId, Boolean isIndividual, String advocateName,
 			String agencyCode, String agencyName, List<Object> preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder();
@@ -202,6 +261,16 @@ public class AdvocateBuilders {
 		return selectQuery.toString();
 	}
 
+	/**
+	 * This method is to build SELECT query to search Agencies
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param isIndividual
+	 * @param agencyName
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public static String getAgencySearchQuery(String tenantId, String code, Boolean isIndividual, String agencyName,
 			List<Object> preparedStatementValues) {
 
@@ -222,7 +291,7 @@ public class AdvocateBuilders {
 		}
 
 		if (agencyName != null) {
-			
+
 			StringJoiner nameParam = new StringJoiner("", "%", "%");
 			nameParam.add(agencyName);
 			searchQuery.append(" AND LOWER(name) LIKE ?");
@@ -232,5 +301,29 @@ public class AdvocateBuilders {
 		searchQuery.append(" ORDER BY lastmodifiedtime DESC");
 
 		return searchQuery.toString();
+	}
+
+	/**
+	 * This method is to build SELECT query to search agencies
+	 * 
+	 * @param codeList
+	 * @param status
+	 * @return String
+	 */
+	public static String getAgenciesWithAgencyCodeList(Set<String> codeList, String status,
+			List<Object> preparedStatementValues) {
+		StringBuilder searchQuery = new StringBuilder();
+		searchQuery.append("SELECT * FROM " + ConstantUtility.AGENCY_TABLE_NAME);
+
+		String[] codes = new String[codeList.size()];
+		codes = codeList.toArray(codes);
+		searchQuery.append(" WHERE code in(" + Stream.of(codes).collect(Collectors.joining("','", "'", "'")) + ")");
+
+		if (status != null && !status.isEmpty()) {
+			searchQuery.append(" And lower(status)=?");
+			preparedStatementValues.add(status);
+		}
+		return searchQuery.toString();
+
 	}
 }

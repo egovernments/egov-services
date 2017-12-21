@@ -2,6 +2,7 @@ package org.egov.lcms.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -16,8 +17,8 @@ import org.egov.lcms.models.AgencyResponse;
 import org.egov.lcms.models.PersonDetails;
 import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.AdvocateRepository;
-import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.lcms.util.ConstantUtility;
+import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,13 @@ public class AdvocateService {
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
+	/**
+	 * This method is to create Advocate or Agency
+	 * 
+	 * @param agencyRequest
+	 * @return AgencyResponse
+	 * @throws Exception
+	 */
 	public AgencyResponse createAgency(AgencyRequest agencyRequest) throws Exception {
 
 		RequestInfo requestInfo = agencyRequest.getRequestInfo();
@@ -169,6 +177,13 @@ public class AdvocateService {
 				agencyRequest.getAgencies());
 	}
 
+	/**
+	 * This method is to update Advocate or Agency
+	 * 
+	 * @param agencyRequest
+	 * @return AgencyResponse
+	 * @throws Exception
+	 */
 	@Transactional
 	public AgencyResponse updateAgency(AgencyRequest agencyRequest) throws Exception {
 
@@ -241,6 +256,13 @@ public class AdvocateService {
 
 	}
 
+	/**
+	 * This method is to validate Agency data
+	 * 
+	 * @param agency
+	 * @param createAgencyRequest
+	 * @throws Exception
+	 */
 	private void validatePersonDetails(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getPersonDetails() != null && agency.getPersonDetails().size() > 0) {
@@ -292,6 +314,13 @@ public class AdvocateService {
 		}
 	}
 
+	/**
+	 * This method is to validate Advocate data
+	 * 
+	 * @param agency
+	 * @param createAgencyRequest
+	 * @throws Exception
+	 */
 	private void validateAdvocates(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0) {
@@ -376,6 +405,17 @@ public class AdvocateService {
 		}
 	}
 
+	/**
+	 * This method is to fetch Agency based on searching criteria
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param isIndividual
+	 * @param advocateName
+	 * @param agencyName
+	 * @param requestInfoWrapper
+	 * @return AgencyResponse
+	 */
 	public AgencyResponse searchAgency(String tenantId, String code, Boolean isIndividual, String advocateName,
 			String agencyName, RequestInfoWrapper requestInfoWrapper) {
 		List<Agency> agencies = advocateRepository.searchAgencies(tenantId, code, isIndividual, advocateName,
@@ -384,9 +424,44 @@ public class AdvocateService {
 				responseInfoFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(), HttpStatus.CREATED), agencies);
 	}
 
+	/**
+	 * This method is to fetch Advocate based on searching criteria
+	 * 
+	 * @param advocateSearchCriteria
+	 * @param requestInfo
+	 * @return AdvocateResponse
+	 */
 	public AdvocateResponse searchAdvocate(AdvocateSearchCriteria advocateSearchCriteria, RequestInfo requestInfo) {
 
 		List<Advocate> advocates = advocateRepository.search(advocateSearchCriteria);
+		if (advocateSearchCriteria.getStatus() != null && !advocateSearchCriteria.getStatus().isEmpty()) {
+			List<Advocate> agencyAdvocates = advocates.stream()
+					.filter(advocate -> advocate.getAgencyCode() != null && !advocate.getAgencyCode().isEmpty())
+					.collect(Collectors.toList());
+			List<Advocate> inactiveAdvocateList = null;
+			if (agencyAdvocates != null && agencyAdvocates.size() > 0) {
+
+				Set<String> agencyCodes = agencyAdvocates.stream().map(advocate -> advocate.getAgencyCode())
+						.collect(Collectors.toSet());
+
+				List<Agency> agencies = advocateRepository.getAgenciesWithAgencyCodeList(agencyCodes,
+						advocateSearchCriteria.getStatus());
+
+				inactiveAdvocateList = new ArrayList<Advocate>();
+				for (Advocate advocate : agencyAdvocates) {
+					List<Agency> agencyList = agencies.stream()
+							.filter(agency -> agency.getCode().equalsIgnoreCase(advocate.getAgencyCode()))
+							.collect(Collectors.toList());
+					if (agencyList.size()==0 ) {
+						inactiveAdvocateList.add(advocate);
+					}
+				}
+			}
+			if (inactiveAdvocateList != null && inactiveAdvocateList.size() > 0) {
+				advocates.removeAll(inactiveAdvocateList);
+			}
+		}
+
 		return new AdvocateResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), advocates);
 	}
 }

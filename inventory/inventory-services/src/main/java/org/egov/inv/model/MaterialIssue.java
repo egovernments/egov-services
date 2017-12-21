@@ -34,7 +34,7 @@ public class MaterialIssue   {
     NONINDENTISSUE("NONINDENTISSUE"),
     
     MATERIALOUTWARD("MATERIALOUTWARD");
-
+	  
     private String value;
 
     IssueTypeEnum(String value) {
@@ -83,8 +83,10 @@ public class MaterialIssue   {
     
     REJECTED("REJECTED"),
     
-    CANCELED("CANCELED");
-
+    CANCELED("CANCELED"),
+	  
+	RECEIPTED("RECEIPTED");
+	
     private String value;
 
     MaterialIssueStatusEnum(String value) {

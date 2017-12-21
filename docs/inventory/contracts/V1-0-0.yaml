@@ -3444,6 +3444,7 @@ definitions:
             - APPROVED
             - REJECTED
             - CANCELED
+            - RECEIPTED
           maxLength: 50
           minLength: 5
           description: |

@@ -118,25 +118,6 @@ public class SanitationStaffTargetService {
 
         for (final SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
-            // Validate Boundary
-
-            if (sanitationStaffTarget.getLocation() != null && (sanitationStaffTarget.getLocation().getCode() == null
-                    || sanitationStaffTarget.getLocation().getCode().isEmpty()))
-                throw new CustomException("Location",
-                        "The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-            if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null) {
-
-                boundary = boundaryRepository.fetchBoundaryByCode(sanitationStaffTarget.getLocation().getCode(),
-                        sanitationStaffTarget.getTenantId());
-
-                if (boundary != null)
-                    sanitationStaffTarget.setLocation(boundary);
-                else
-                    throw new CustomException("Location",
-                            "Given Location is Invalid: " + sanitationStaffTarget.getLocation().getCode());
-            }
-
             if (sanitationStaffTarget.getSwmProcess() != null
                     && (sanitationStaffTarget.getSwmProcess().getCode() == null
                             || sanitationStaffTarget.getSwmProcess().getCode().isEmpty()))

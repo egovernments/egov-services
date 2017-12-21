@@ -151,8 +151,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
             populateSwmProcesses(sanitationStaffTargetList);
 
-            populateBoundarys(sanitationStaffTargetList);
-
             populateEmployees(sanitationStaffTargetList);
 
             populateRoutes(sanitationStaffTargetList);
@@ -330,60 +328,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
                     sanitationStaffTarget.setCollectionPoints(collectionPointsMap.get(sanitationStaffTarget.getTargetNo()));
 
                 }
-            }
-        }
-
-    }
-
-    private void populateBoundarys(List<SanitationStaffTarget> sanitationStaffTargetList) {
-
-        StringBuffer boundaryCodes = new StringBuffer();
-        Set<String> boundaryCodesSet = new HashSet<>();
-
-        for (SanitationStaffTarget sst : sanitationStaffTargetList) {
-
-            if (sst.getLocation() != null && sst.getLocation().getCode() != null
-                    && !sst.getLocation().getCode().isEmpty()) {
-
-                boundaryCodesSet.add(sst.getLocation().getCode());
-
-            }
-
-        }
-
-        List<String> locationCodes = new ArrayList(boundaryCodesSet);
-
-        for (String code : locationCodes) {
-
-            if (boundaryCodes.length() >= 1)
-                boundaryCodes.append(",");
-
-            boundaryCodes.append(code);
-
-        }
-
-        String tenantId = null;
-        Map<String, Boundary> boundaryMap = new HashMap<>();
-
-        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
-            tenantId = sanitationStaffTargetList.get(0).getTenantId();
-        if (boundaryCodes != null && boundaryCodes.length() > 0) {
-            List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
-
-            for (Boundary bd : boundarys) {
-
-                boundaryMap.put(bd.getCode(), bd);
-
-            }
-
-            for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
-
-                if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null
-                        && !sanitationStaffTarget.getLocation().getCode().isEmpty()) {
-
-                    sanitationStaffTarget.setLocation(boundaryMap.get(sanitationStaffTarget.getLocation().getCode()));
-                }
-
             }
         }
 

@@ -838,15 +838,13 @@ serviceMaps:
    description: create sanitationstafftarget in egswm_sanitationstafftarget
    fromTopic: swm-sanitationstafftarget-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_sanitationstafftarget(targetNo, tenantid, location, swmProcess, route, employee, targetFrom, targetTo, targetedGarbage, wetWaste, dryWaste, dumpingGround, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_sanitationstafftarget(targetNo, tenantid, swmProcess, route, employee, targetFrom, targetTo, targetedGarbage, wetWaste, dryWaste, dumpingGround, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.sanitationStaffTargets.*
       jsonMaps:
        
        - jsonPath: $.sanitationStaffTargets.*.targetNo
 
        - jsonPath: $.sanitationStaffTargets.*.tenantId
-
-       - jsonPath: $.sanitationStaffTargets.*.location.code
 
        - jsonPath: $.sanitationStaffTargets.*.swmProcess.code
          
@@ -896,11 +894,9 @@ serviceMaps:
    description: update sanitationstafftarget in egswm_sanitationstafftarget
    fromTopic: swm-sanitationstafftarget-update-topic
    queryMaps: 
-    - query: update egswm_sanitationstafftarget set location=?, swmProcess=?, route=?, employee=?, targetFrom=?, targetTo=?, targetedGarbage=?, wetWaste=?, dryWaste=?, dumpingGround=?, lastmodifiedby=?, lastmodifiedtime=? where targetNo=? and tenantId=?;
+    - query: update egswm_sanitationstafftarget set swmProcess=?, route=?, employee=?, targetFrom=?, targetTo=?, targetedGarbage=?, wetWaste=?, dryWaste=?, dumpingGround=?, lastmodifiedby=?, lastmodifiedtime=? where targetNo=? and tenantId=?;
       basePath: $.sanitationStaffTargets.*
       jsonMaps:
-       
-       - jsonPath: $.sanitationStaffTargets.*.location.code
 
        - jsonPath: $.sanitationStaffTargets.*.swmProcess.code
          

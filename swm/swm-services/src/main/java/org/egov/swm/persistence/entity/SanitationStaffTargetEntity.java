@@ -31,8 +31,6 @@ public class SanitationStaffTargetEntity {
 
     private String swmProcess = null;
 
-    private String location = null;
-
     private String route = null;
 
     private String employee = null;
@@ -60,7 +58,6 @@ public class SanitationStaffTargetEntity {
         sanitationStaffTarget.setTargetNo(targetNo);
         sanitationStaffTarget.setTargetFrom(targetFrom);
         sanitationStaffTarget.setTargetTo(targetTo);
-        sanitationStaffTarget.setLocation(Boundary.builder().code(location).build());
         sanitationStaffTarget.setSwmProcess(SwmProcess.builder().code(swmProcess).build());
         sanitationStaffTarget.setRoute(Route.builder().code(route).build());
         sanitationStaffTarget.setEmployee(Employee.builder().code(employee).build());

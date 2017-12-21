@@ -44,9 +44,6 @@ public class SanitationStaffTarget {
     @JsonProperty("swmProcess")
     private SwmProcess swmProcess = null;
 
-    @JsonProperty("location")
-    private Boundary location = null;
-
     @JsonProperty("route")
     private Route route = null;
 

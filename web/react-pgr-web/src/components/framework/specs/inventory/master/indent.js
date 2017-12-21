@@ -415,6 +415,7 @@ var dat = {
       "numCols": 4,
       "useTimestamp": true,
       "objectName": "indents",
+      "printUrl":"/non-framework/inventory/transaction/indent/print/{code}",
       "groups": [
         {
           "name": "indent",

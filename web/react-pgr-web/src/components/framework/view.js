@@ -285,6 +285,15 @@ class Report extends Component {
   }
 
   printer = () => {
+
+    let {moduleName, mockData, actionName} = this.props;
+    let currentActionData = mockData[`${moduleName}.${actionName}`];
+
+    if(currentActionData && currentActionData.printUrl){
+      this.props.setRoute(currentActionData.printUrl.replace(/\{(.*?)\}/, this.props.match.params.id));
+      return;
+    }
+
     var mywindow = window.open('', 'PRINT', 'height=400,width=600');
 
    var cdn = `
@@ -420,6 +429,7 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
-  }
+  },
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Report);

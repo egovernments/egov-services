@@ -2194,9 +2194,7 @@
                                                         <label for="gstin">GSTIN  </label>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                      <div class="styled-select">
-                                                        <input type="text" name="gstin" id="gstin">
-                                                    </div>
+                                                      <input type="text" name="gstin" id="gstin">
                                                   </div>
                                               </div>
                                           </div>
@@ -2307,10 +2305,10 @@
                                         <div class="row">
                                           <table class="table table-bordered" id="subesquentrenewalsTable">
                                             <thead>
-                                              <th>From</th>
-                                              <th>To</th>
-                                              <th>Number of Years</th>
-                                              <th>Monthly Rent (Rs.)</th>
+                                              <th><label style="color:#fff">From<span> *</span></label></th>
+                                              <th><label style="color:#fff">To<span> *</span></label></th>
+                                              <th><label style="color:#fff">Number of Years<span> *</span></label></th>
+                                              <th><label style="color:#fff">Monthly Rent (Rs.)<span> *</span></label></th>
                                               <th>Action</th>
                                             </thead>
                                             <tbody>
@@ -2318,7 +2316,7 @@
                                                 <td><input type="text" class="datepicker srFromDate" id="subSeqRenewals[0].fromDate" name="subSeqRenewals[0].fromDate" value="" required></td>
                                                 <td><input type="text" class="datepicker srToDate" id="subSeqRenewals[0].toDate" name="subSeqRenewals[0].toDate" value="" required></td>
                                                 <td><input type="text"  class="srYears" name="subSeqRenewals[0].years" id="subSeqRenewals[0].years" value="" disabled></td>
-                                                <td><input type="text" name="subSeqRenewals[0].rent" id="subSeqRenewals[0].rent" value="" required></td>
+                                                <td><input type="text" class="srRent" name="subSeqRenewals[0].rent" id="subSeqRenewals[0].rent" value="" required></td>
                                                 <td><p style="cursor:pointer"><span class="glyphicon glyphicon-trash subsequentRenewalsDelete"></span></p></td>
                                               </tr>
                                             </tbody>

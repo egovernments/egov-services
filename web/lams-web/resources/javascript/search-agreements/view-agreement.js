@@ -60,7 +60,7 @@ try {
 
     if (rentInc && rentInc.constructor == Array) {
         for (var i = 0; i < rentInc.length; i++) {
-            console.log(rentInc[i]['id']);
+            // console.log(rentInc[i]['id']);
             $(`#rentIncrementMethod.percentage`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`);
         }
     }
@@ -102,21 +102,78 @@ $(document).ready(function() {
         open(location, '_self').close();
     })
 
-    // $('#printNotice').on("click", function() {
-    //     // call api
-    //     // alert("asda");
-    //
-    // })
+    function createFileStore(noticeData, blob){
+      var promiseObj = new Promise(function(resolve, reject){
+        let formData = new FormData();
+        formData.append("jurisdictionId", "ap.kurnool");
+        formData.append("module", "LAMS");
+        formData.append("file", blob);
+        $.ajax({
+            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (res) {
+                let obj={
+                  noticeData : noticeData,
+                  fileStoreId : res.files[0].fileStoreId
+                }
+                resolve(obj);
+            },
+            error: function (jqXHR, exception) {
+                reject(jqXHR.status);
+            }
+        });
+      });
+      return promiseObj;
+    }
+
+    function createNotice(obj){
+      $.ajax({
+          url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify({
+              RequestInfo: requestInfo,
+              Notice: {
+                  tenantId,
+                  agreementNumber: obj.noticeData.agreementNumber,
+                  fileStore:obj.fileStoreId
+              }
+          }),
+          headers: {
+              'auth-token': authToken
+          },
+          contentType: 'application/json',
+          success:function(res){
+            // console.log('notice created');
+            open(location, '_self').close();
+            if(window.opener)
+                window.opener.location.reload();
+          },
+          error:function(jqXHR, exception){
+            console.log('error');
+            showError('Error while creating notice');
+          }
+      });
+
+    }
+
+    function errorHandler(statusCode){
+     console.log("failed with status", status);
+     showError('Error');
+    }
 
     function printNotice(noticeData) {
         var commencementDate=noticeData.commencementDate;
         var expiryDate= noticeData.expiryDate;
         var rentPayableDate = noticeData.rentPayableDate;
 
-
         var doc = new jsPDF();
-        doc.setFontSize(14);
         doc.setFontType("bold");
+        doc.setFontSize(14);
         doc.text(105, 20, tenantId.split(".")[1] , 'center');
         doc.text(105, 27, tenantId.split(".")[1] + ' District', 'center');
         doc.text(105, 34, 'Asset Category Lease/Agreement Notice', 'center');
@@ -128,26 +185,26 @@ $(document).ready(function() {
         doc.text(110, 57, 'Asset No: ' + noticeData.assetNo);
         doc.text(15, 67, (noticeData.allotteeMobileNumber ? noticeData.allotteeMobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allotteeAddress ? noticeData.allotteeAddress + ", " : "") + tenantId.split(".")[1] + ".");
 
-        
+
         doc.setFontType("normal");
         doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be ' ));
         doc.setFontType("bold");
         doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.agreementPeriod * 12 + ' '));
         doc.setFontType("normal");
-        doc.text(93, 77, doc.splitTextToSize('months commencing from')); 
+        doc.text(93, 77, doc.splitTextToSize('months commencing from'));
         doc.setFontType("bold");
         doc.text(15, 83, doc.splitTextToSize(' ' + commencementDate + ' '));
         doc.setFontType("normal");
-        doc.text(42, 83, doc.splitTextToSize('(dd/mm/yyyy) to' )); 
+        doc.text(42, 83, doc.splitTextToSize('(dd/mm/yyyy) to' ));
         doc.setFontType("bold");
-        doc.text(77, 83, doc.splitTextToSize(' ' + expiryDate + ' ')); 
+        doc.text(77, 83, doc.splitTextToSize(' ' + expiryDate + ' '));
         doc.setFontType("normal");
         doc.text(104, 83, doc.splitTextToSize('(dd/mm/yyyy).', (210 - 15 - 15)));
         doc.text(15, 91, doc.splitTextToSize('2.    The property leased is shop No'));
         doc.setFontType("bold");
         doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.assetNo + ' '));
         doc.setFontType("normal");
-        doc.text(101, 91, doc.splitTextToSize('and shall be leased for a sum of ')); 
+        doc.text(101, 91, doc.splitTextToSize('and shall be leased for a sum of '));
         doc.setFontType("bold");
         doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- (' + noticeData.rentInWord + ')'));
         doc.setFontType("normal");
@@ -155,7 +212,7 @@ $(document).ready(function() {
         doc.text(15, 103, doc.splitTextToSize('of electricity and other charges.', (210 - 15 - 15)));
         doc.text(15, 112, doc.splitTextToSize('3.   The lessee has paid a sum of '));
         doc.setFontType("bold");
-        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- (' + noticeData.securityDepositInWord + ')')); 
+        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- (' + noticeData.securityDepositInWord + ')'));
         doc.setFontType("normal");
         doc.text(15, 118, doc.splitTextToSize('as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
         doc.text(15, 143, doc.splitTextToSize('4.   The rent for every month shall be payable on or before'));
@@ -181,27 +238,20 @@ $(document).ready(function() {
         doc.text(160, 274, 'Signature:  ');
         doc.setFontType("bold");
         doc.text(15, 282, tenantId.split(".")[1]);
-        
-        
-        
-        
-        
 
-        
-        
-        
-        
         doc.save('Notice-' + noticeData.agreementNumber + '.pdf');
-        setTimeout(function () {
-          open(location, '_self').close();
-        }, 5000);
+        var blob = doc.output('blob');
+        createFileStore(noticeData, blob).then(createNotice, errorHandler);
+        // setTimeout(function () {
+        //   open(location, '_self').close();
+        // }, 5000);
     }
 
     function setFonttype(doc, text){
          doc.setFontType("bold");
         //  var text= noticeData.agreementPeriod * 12;
         //   doc.setFontType("normal");
-        
+
         return text;
     }
 
@@ -484,7 +534,7 @@ $(document).ready(function() {
         if(process && process.status && process.status.toUpperCase() == "REJECTED") {
           $('.details-label').remove();
           $('.details-input').show();
-          if (rentInc && rentInc.constructor == Array) 
+          if (rentInc && rentInc.constructor == Array)
               for(var i=0; i<rentInc.length; i++)
                 $(`#rentIncrementMethod\\.percentage`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`);
         } else {
@@ -548,49 +598,50 @@ $(document).ready(function() {
      }*/
 
     _type = getUrlVars()["type"] ? decodeURIComponent(getUrlVars()["type"]) : getValueByName("name", agreementDetail.asset.assetCategory.id);
-    if (_type.toLowerCase() == "land") {
+    // console.log(_type);
+    if (_type && _type.toLowerCase() == "land") {
 
         // remove all other Asset Details block from DOM except land asset related fields
         $(".shopAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateTwo,.agreementDetailsBlockTemplateThree").remove();
         setRentPrefix("Land");
-    } else if (_type.toLowerCase() == "shop") {
+    } else if (_type && _type.toLowerCase() == "shop") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateThree").remove();
         setRentPrefix("Shop");
-    } else if (_type.toLowerCase() == "market") {
+    } else if (_type && _type.toLowerCase() == "market") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         setRentPrefix("Market");
-    } else if (_type.toLowerCase() == "kalyana mandapam") {
+    } else if (_type && _type.toLowerCase() == "kalyana mandapam") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         setRentPrefix("Kalyana Mandapam");
-    } else if (_type.toLowerCase() == "parking space") {
+    } else if (_type && _type.toLowerCase() == "parking space") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         setRentPrefix("Parking Space");
-    } else if (_type.toLowerCase() == "slaughter house") {
+    } else if (_type && _type.toLowerCase() == "slaughter house") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         setRentPrefix("Slaughter House");
-    } else if (_type.toLowerCase() == "usufruct") {
+    } else if (_type && _type.toLowerCase() == "usufruct") {
 
 
         // remove all other Asset Details block from DOM except shop asset related fields
@@ -599,28 +650,28 @@ $(document).ready(function() {
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         $("#rrReadingNo").remove();
         setRentPrefix("Usufruct");
-    } else if (_type.toLowerCase() == "community toilet complex") {
+    } else if (_type && _type.toLowerCase() == "community toilet complex") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .fishTankAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         setRentPrefix("Community Toilet Complex");
-    } else if (_type.toLowerCase() == "fish tanks") {
+    } else if (_type && _type.toLowerCase() == "fish tanks") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .parkAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         setRentPrefix("Fish Tanks");
-    } else if (_type.toLowerCase() == "parks") {
+    } else if (_type && _type.toLowerCase() == "parks") {
 
         // remove all other Asset Details block from DOM except shop asset related fields
         $(".rendCalculatedMethod,.shopAssetDetailsBlock, .landAssetDetailsBlock, .marketAssetDetailsBlock, .kalyanamandapamAssetDetailsBlock, .parkingSpaceAssetDetailsBlock, .slaughterHousesAssetDetailsBlock, .usfructsAssetDetailsBlock, .communityAssetDetailsBlock, .fishTankAssetDetailsBlock").remove();
         //remove agreement template two and three from screen
         $(".agreementDetailsBlockTemplateOne,.agreementDetailsBlockTemplateTwo").remove();
         setRentPrefix("Parks");
-    }   
+    }
     final_validatin_rules = Object.assign(validation_rules, commom_fields_rules);
     for (var key in final_validatin_rules) {
         if (final_validatin_rules[key].required) {
@@ -698,7 +749,6 @@ $(document).ready(function() {
             }
         } else {
             delete _agrmntDet.workflowDetails.assignee;
-
             var response = $.ajax({
                 url: baseUrl + `/lams-services/agreements/_update/${agreementDetail.acknowledgementNumber}?tenantId=` + tenantId,
                 type: 'POST',
@@ -715,33 +765,8 @@ $(document).ready(function() {
             });
 
             if (response["status"] === 201) {
-                var response = $.ajax({
-                    url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: JSON.stringify({
-                        RequestInfo: requestInfo,
-                        Notice: {
-                            tenantId,
-                            agreementNumber: _agrmntDet.agreementNumber
-                        }
-                    }),
-                    async: false,
-                    headers: {
-                        'auth-token': authToken
-                    },
-                    contentType: 'application/json'
-                });
-
-                if (response["status"] === 201) {
-                    if(window.opener)
-                        window.opener.location.reload();
-
-                    printNotice(response["responseJSON"].Notices[0]);
-                    // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
-                } else {
-                    console.log("Something went wrong.");
-                }
+              //call notice
+              printNotice(agreementDetail);
             } else {
                 showError(response["statusText"]);
             }

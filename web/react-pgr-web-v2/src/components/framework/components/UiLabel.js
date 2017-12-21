@@ -173,10 +173,35 @@ export default class UiLabel extends Component {
     );
   }
 
+  showObjectInTable = (field) => {
+        var flag = false;
+        var str = "";
+        if(Array.isArray(field)){
+        field.forEach(function(item, index){
+        console.log(typeof(item))
+        if(typeof(item) == "object"){
+        console.log(item);
+        str += ((item.name?item.name:item.code) + ",");
+        }
+        else{
+        console.log("Here");
+        str += (item + ",");
+        }
+        })
+        console.log(str);
+        return str.slice(0,-1);
+
+        }
+        else{
+        return field;
+        }
+  }
+
   renderLabel = item => {
+    let {showObjectInTable}=this;
     // console.log(item.jsonPath, this.props.getVal(item.jsonPath,item.isDate));
     if(item.enableDownload){
-      return ( 
+      return (
         <div>
         <Row>
         <Col
@@ -236,7 +261,7 @@ export default class UiLabel extends Component {
               style={item.hasOwnProperty('textAlign') ? { textAlign: item.textAlign } : { textAlign: 'left' }}
               xs={12}
             >
-              {this.state.value || this.props.getVal(item.jsonPath, item.isDate) || 'NA'}
+              {this.state.value || showObjectInTable(this.props.getVal(item.jsonPath, item.isDate)) || 'NA'}
             </Col>
           )}
         </Row>

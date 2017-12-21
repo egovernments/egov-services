@@ -502,7 +502,7 @@ class UiMultiFieldTable extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.values.map((v, i) => {
+            {(!item.tableList.actionsNotRequired || _.get(formData,item.jsonPath)) && this.state.values.map((v, i) => {
               let startIndex = item.startIndex || 0;
               if (i >= startIndex)
                 return (
@@ -575,7 +575,7 @@ class UiMultiFieldTable extends Component {
 
   render() {
     // console.log(this.props.item.jsonPath, this.state.values, this.state.index);
-    return <div>{this.renderTable(this.props.item)}</div>;
+    return <div style={{margin:"15px"}}>{this.renderTable(this.props.item)}</div>;
   }
 }
 

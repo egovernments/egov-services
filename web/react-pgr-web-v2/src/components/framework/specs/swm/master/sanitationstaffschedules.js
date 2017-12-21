@@ -25,6 +25,13 @@ var dat = {
           patternErrorMsg: 'swm.create.field.message.name',
           url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
         },
+        {
+          name: 'targetNo',
+          jsonPath: 'targetNo',
+          label: 'swm.create.sanitationStaffTargets.targetNumber',
+          type: 'text',
+          isDisabled: false
+        }
       ],
     }, ],
     result: {
@@ -227,7 +234,7 @@ var dat = {
         },
         {
           name: 'departmentName',
-          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.departmentName',
+          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.employee.assignments[0].department',
           label: 'swm.create.sanitationstaffschedules.departmentName',
           pattern: '',
           type: 'singleValueList',
@@ -242,7 +249,7 @@ var dat = {
         },
         {
           name: 'employeeName',
-          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.employeeName',
+          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.employee.name',
           label: 'swm.create.sanitationstaffschedules.employeeName',
           pattern: '',
           type: 'text',
@@ -356,7 +363,7 @@ var dat = {
         },
         {
           name: 'departmentName',
-          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.departmentName',
+          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.employee.assignments[0].department',
           label: 'swm.create.sanitationstaffschedules.departmentName',
           pattern: '',
           type: 'singleValueList',
@@ -371,7 +378,7 @@ var dat = {
         },
         {
           name: 'employeeName',
-          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.employeeName',
+          jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.employee.name',
           label: 'swm.create.sanitationstaffschedules.employeeName',
           pattern: '',
           type: 'text',

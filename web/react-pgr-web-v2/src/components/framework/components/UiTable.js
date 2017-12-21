@@ -42,6 +42,30 @@ class UiTable extends Component {
     this.state = {};
   }
 
+  showObjectInTable = (field) => {
+        var flag = false;
+        var str = "";
+        if(Array.isArray(field)){
+        field.forEach(function(item, index){
+        console.log(typeof(item))
+        if(typeof(item) == "object"){
+        console.log(item);
+        str += (item.name?item.name:item.code + ",");
+        }
+        else{
+        console.log("Here");
+        str += (item + ",");
+        }
+        })
+        console.log(str);
+        return str.slice(0,-1);
+
+        }
+        else{
+        return field;
+        }
+  }
+
   componentWillMount() {
     $('#searchTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
@@ -207,13 +231,13 @@ class UiTable extends Component {
             },
           },
           customize: function(doc) {
-            doc.defaultStyle.fontSize = 10; 
+            doc.defaultStyle.fontSize = 10;
           },
           text: 'Pdf/Print',
         },
         'copy',
         'csv',
- 
+
       ],
       bDestroy: true,
       language: {
@@ -231,7 +255,7 @@ class UiTable extends Component {
       rowButtonClickHandler,
       rowCheckboxClickHandler,
       rowIconClickHandler,
-      selectedValue,
+      selectedValue
     } = this.props;
     let self = this;
 
@@ -342,7 +366,7 @@ class UiTable extends Component {
                     return (
                       <tr key={i}>
                         {item.map((item2, i2) => {
-                          return <td key={i2}>{typeof item2 != 'undefined' ? getNameById(item2, i2) : ''}</td>;
+                          return <td key={i2}>{typeof item2 != 'undefined' ? getNameById(self.showObjectInTable(item2),i2) : ''}</td>;
                         })}
 
                         <td style={{ textAlign: 'center', marginRight: '10px' }}>

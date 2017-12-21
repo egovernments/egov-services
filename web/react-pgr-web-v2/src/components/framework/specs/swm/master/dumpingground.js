@@ -578,7 +578,7 @@ var dat = {
               'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name',
             minLength: 1,
             patternErrorMsg: ''
-            
+
           },
           {
             name: 'Zone',
@@ -622,7 +622,7 @@ var dat = {
           {
             name: 'ulbs',
             label: 'swm.create.servicesOffered',
-            jsonPath: 'MdmsRes.swm.DumpingGround[0].ulbs[0].name',
+            jsonPath: 'MdmsRes.swm.DumpingGround[0].ulbs',
             type: 'multiValueList',
             pattern: '',
             isRequired: false,

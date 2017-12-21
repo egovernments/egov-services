@@ -38,7 +38,13 @@ class UiAutoComplete extends Component {
 
   componentWillReceiveProps(nextProps, nextState) {
     // 	console.log(nextProps.item.jsonPath, this.props.getVal(nextProps.item.jsonPath));
-    this.setState({ searchText: this.props.getVal(nextProps.item.jsonPath) });
+    //  this.setState({ searchText: this.props.getVal(nextProps.item.jsonPath) });
+  }
+
+  getNameById=(id,jsonPath)=>
+  {
+    let {dropDownData}=this.props;
+    return dropDownData[jsonPath] && _.filter(dropDownData[jsonPath], { 'key': id}).length>0 && _.filter(dropDownData[jsonPath], { 'key': id})[0].value?_.filter(dropDownData[jsonPath], { 'key': id})[0].value:id;
   }
 
   componentDidMount() {
@@ -126,6 +132,7 @@ class UiAutoComplete extends Component {
 
   renderAutoComplete = item => {
     let { dropDownData } = this.props;
+    let {getNameById}=this;
     const dataSourceConfig = {
       text: 'value',
       value: 'key',
@@ -146,7 +153,7 @@ class UiAutoComplete extends Component {
               listStyle={{ maxHeight: 100, overflow: 'auto' }}
               onUpdateInput={this.handleUpdateInput}
               filter={(searchText, key) => {
-                return key.toLowerCase().includes(searchText.toLowerCase());
+                return key.toLowerCase().includes(searchText && searchText.toLowerCase());
               }}
               floatingLabelStyle={{ color: item.isDisabled ? '#A9A9A9' : '#696969', fontSize: '20px', 'white-space': 'nowrap' }}
               inputStyle={{ color: '#5F5C57' }}
@@ -161,7 +168,7 @@ class UiAutoComplete extends Component {
                 </span>
               }
               fullWidth={true}
-              searchText={this.state.searchText}
+              searchText={getNameById(this.props.getVal(item.jsonPath),item.jsonPath)}
               disabled={item.isDisabled}
               errorText={this.props.fieldErrors[item.jsonPath]}
               onKeyUp={e => {

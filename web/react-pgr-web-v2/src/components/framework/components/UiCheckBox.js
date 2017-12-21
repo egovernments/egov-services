@@ -32,8 +32,8 @@ class UiCheckBox extends Component {
               marginTop: '25px', //For DumpingGround Changed from 43px
               marginLeft: '-5px',
             }}
-            label={item.label + (item.isRequired ? ' *' : '')}
-            checked={this.props.getVal ? this.props.getVal(item.jsonPath) : isSelected}
+            label={item.label?item.label:"" + (item.isRequired ? ' *' : '')}
+            checked={this.props.getVal ? this.props.getVal(item.jsonPath): isSelected}
             disabled={tempDisabled}
             errorText={this.props.fieldErrors ? this.props.fieldErrors[item.jsonPath] : 'Empty'}
             onCheck={e =>

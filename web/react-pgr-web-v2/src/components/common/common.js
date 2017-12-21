@@ -1,4 +1,22 @@
 var localization_EN_Data = {
+  'swm.create.sanitationStaffTargets.targetNumber':"Target Number",
+  'swm.create.sanitationStaffTargets.employeeName':"Employee Name",
+  'swm.create.sanitationstaffschedules.colletionPoint.isSelected':"Is Checked",
+  'swm.create.sanitationstaffschedules.colletionPoint.location':"Location",
+  'swm.create.sanitationstaffschedules.colletionPoint.name':"Collection Point",
+  'swm.create.sanitationStaffTarget.code':"Collection Points",
+  'swm.create.sanitationstaffschedules.dumpingGround.code':'Dumping Ground Name',
+  'swm.create.sanitationStaffTargets.wetWaste':'Wet Waste (tons)',
+  'swm.create.sanitationStaffTargets.dryWaste':'Dry Waste (tons)',
+  'swm.create.sanitationStaffTargets.targetedGarbage':'Targeted Garbage (tons)',
+  'swm.create.sanitationStaffTarget.cardThree.header':'Assign Target',
+  'swm.create.sanitationstaffschedules.route.code':'Route',
+  'swm.create.sanitationStaffTargets.swmProcess':'SWM Process',
+  'swm.create.sanitationStaffTargets.targetfrom':'Date From',
+  'swm.create.sanitationStaffTargets.targetto':'Date To',
+  'swm.create.sanitationStaffTargets.departmentName':'Deparment Name',
+  'swm.create.sanitationStaffTargets.designationName':'Designation Name',
+  'swm.create.sanitationStaffTargets.employeeName':'Employee Name',
   'swm.create.sanitationstaffschedules.departmentName':"Department Name",
   'swm.create.sanitationstaffschedules.employeeName':"Employee Name",
   'works.search.title': 'Search Rate Master',
@@ -2196,7 +2214,7 @@ var localization_EN_Data = {
   'swm.create.group.title.CollectionTypeDetails': 'Collection Type Details',
   'swm.sanitationstaffschedules.search.title': 'Sanitation Staff Schedules Search',
   'swm.create.sanitationstaffschedules.shift': 'Shift',
-  'swm.create.sanitationstaffschedules.targetNo': 'Sanitation Staff TaretNo',
+  'swm.create.sanitationstaffschedules.targetNo': 'Sanitation Staff TargetNo',
   'swm.create.sanitationstaffschedules.targetfrom': 'Target From',
   'swm.create.sanitationstaffschedules.targetto': 'Target To',
   'swm.create.sanitationstaffschedules.route': 'Route',
@@ -3024,11 +3042,11 @@ var localization_EN_Data = {
   'swm.Shift.create.lunchEndTime': 'Lunch End Time',
   'swm.Shift.create.graceTimeFrom': 'Grace Time From',
   'swm.Shift.create.graceTimeTo': 'Grace Time To',
-  'swm.Shift.create.remarks': 'Remarks (if any)', 
+  'swm.Shift.create.remarks': 'Remarks (if any)',
   'swm.create.page.title.shiftmasters': 'Shift Master',
   'swm.shift.create.group.title.ShiftSelection': 'SHIFT SELECTION',
   'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS'
-  
+
 
 };
 
@@ -4978,7 +4996,7 @@ var localization_MR_Data = {
   'swm.create.page.title.shiftmasters': 'Shift Master',
   'swm.shift.create.group.title.ShiftSelection': 'SHIFT SELECTION',
   'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS',
-  
+
 
   'referenceEvidence.update.document.title': 'Reference Evidences-marathi',
   'referenceEvidence.create.group.title.addReferenceEvidences': 'Add Reference Evidences-marathi',

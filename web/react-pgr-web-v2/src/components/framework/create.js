@@ -636,7 +636,7 @@ class Report extends Component {
     // Loop on array and delete
 
 
-    /*Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
+    Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
@@ -711,7 +711,7 @@ class Report extends Component {
         self.props.setLoadingStatus('hide');
         self.props.toggleSnackbarAndSetText(true, err.message);
       }
-    );*/
+    );
   };
 
   //Needs to be changed later for more customfields

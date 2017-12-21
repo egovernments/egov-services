@@ -162,7 +162,7 @@ public class ReceiptNoteService extends DomainService {
             if (MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString().equalsIgnoreCase(materialReceipt.getReceiptType().toString())) {
                 for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
                     HashMap<String, String> hashMap = new HashMap<>();
-                    hashMap.put("acceptedquantity", "acceptedquantity + " + materialReceiptDetail.getAcceptedQty());
+                    hashMap.put("receivedquantity", "receivedquantity + " + materialReceiptDetail.getAcceptedQty());
                     materialReceiptDetail.getPurchaseOrderDetail().setTenantId(tenantId);
                     receiptNoteRepository.updateColumn(new PurchaseOrderDetailEntity().toEntity(materialReceiptDetail.getPurchaseOrderDetail()), "purchaseorderdetail", hashMap, null);
 
@@ -177,7 +177,7 @@ public class ReceiptNoteService extends DomainService {
                     if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch))
                         receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(), "status = (case when status = 'RECEIPTED' then 'APPROVED' ELSE status end)"
                                 + " where purchaseordernumber = " + orderDetailEntity.getOrderNumber() + "') and tenantid = '" + tenantId + "'");
-                    ;
+
                 }
             }
         });

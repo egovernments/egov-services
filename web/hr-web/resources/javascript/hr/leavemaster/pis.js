@@ -206,6 +206,8 @@ class PersonalInform extends React.Component {
 
     commonApiPost("hr-leave", "leaveopeningbalances", "_search", {
             tenantId,
+            leaveType:leaveType||null,
+            year:calendarYear||null,
             pageSize: 500
     }, function(err, res) {
       if(res) {

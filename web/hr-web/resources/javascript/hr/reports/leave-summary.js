@@ -185,11 +185,12 @@ class LeaveSummary extends React.Component {
             return (
                 <tr key={ind}>
                 <td>{getNameById(employeeList, item.employee)}</td>
-                <td>{item.name}</td>
-                <td>{item.employeeStatus}</td>
-                <td>{item.employeeType}</td>
-                <td>{item.fromdate}</td>
-                <td>{item.enddate}</td>
+                <td>{item.leaveType.name}</td>
+                <td>{item.noofdays}</td>
+                <td>{item.availableDays}</td>
+                <td>{item.totalLeavesEligible}</td>
+                <td>{item.leavedays}</td>
+                <th>{item.balance} </th>
 
                 </tr>
             )
@@ -230,7 +231,7 @@ class LeaveSummary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Department </label>
+                                        <label htmlFor="">Department<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
                                     <div className="styled-select">

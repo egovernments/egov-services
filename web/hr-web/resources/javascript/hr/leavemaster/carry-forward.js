@@ -96,6 +96,18 @@ class CarryForward extends React.Component {
             }
         }
 
+        const renderOptionYear = function (list) {
+            if (list) {
+                return list.map((item) => {
+                    return (<option key={item.id} value={item.name}>
+                        {item.name}
+                    </option>)
+                })
+            }
+        }
+
+        
+
 
         return (
             <div>
@@ -114,7 +126,7 @@ class CarryForward extends React.Component {
                                                 handleChange(e, "year")
                                             }} >
                                                 <option value="">Select Calender Year</option>
-                                                {renderOption(this.state.years)}
+                                                {renderOptionYear(this.state.years)}
                                             </select>
                                         </div>
                                     </div>

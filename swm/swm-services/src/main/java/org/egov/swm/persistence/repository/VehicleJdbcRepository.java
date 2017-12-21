@@ -158,7 +158,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
             paramValues.put("vendor", searchRequest.getVendorName());
         }
 
-        if(searchRequest.getIsUlbOwned()){
+        if (searchRequest.getIsUlbOwned() && searchRequest.getIsUlbOwned()) {
             addAnd(params);
             params.append(" vendor IS NULL");
         }

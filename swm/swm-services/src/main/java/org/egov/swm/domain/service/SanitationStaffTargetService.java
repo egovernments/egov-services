@@ -175,8 +175,7 @@ public class SanitationStaffTargetService {
             }
 
             if (sanitationStaffTarget.getDumpingGround() != null
-                    && (sanitationStaffTarget.getDumpingGround().getCode() == null
-                            || sanitationStaffTarget.getDumpingGround().getCode().isEmpty()))
+                    && (sanitationStaffTarget.getDumpingGround().getCode().isEmpty()))
                 throw new CustomException("DumpingGround",
                         "The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 

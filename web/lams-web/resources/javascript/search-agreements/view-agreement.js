@@ -105,7 +105,7 @@ $(document).ready(function() {
     function createFileStore(noticeData, blob){
       var promiseObj = new Promise(function(resolve, reject){
         let formData = new FormData();
-        formData.append("jurisdictionId", "ap.kurnool");
+        formData.append("tenantId", tenantId);
         formData.append("module", "LAMS");
         formData.append("file", blob);
         $.ajax({
@@ -149,9 +149,9 @@ $(document).ready(function() {
           contentType: 'application/json',
           success:function(res){
             // console.log('notice created');
-            open(location, '_self').close();
             if(window.opener)
                 window.opener.location.reload();
+            open(location, '_self').close();
           },
           error:function(jqXHR, exception){
             console.log('error');

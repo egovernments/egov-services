@@ -57,7 +57,8 @@ var dat = {
     numCols: 3,
     useTimestamp: true,
     objectName: 'MasterMetaData',
-    idJsonPath: 'MasterMetaData.masterData[0].code',
+    //idJsonPath: 'MasterMetaData.masterData[0].code',
+    idJsonPath: 'MdmsRes.swm.ProcessingSite[0].code',
     title: 'swm.create.page.title.processingsite',
     groups: [
 
@@ -587,7 +588,7 @@ var dat = {
         fields: [
           {
             name: 'mpcbAuthorisation',
-            jsonPath: 'MasterMetaData.masterData[0].mpcbAuthorisation',
+            jsonPath: 'MdmsRes.swm.ProcessingSite[0].mpcbAuthorisation',
             label: 'swm.dumpingGround.create.mpcbAuthorisation',
             pattern: '',
             type: 'checkbox',

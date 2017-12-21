@@ -3051,6 +3051,8 @@ var localization_EN_Data = {
   'swm.create.group.title.LocationDetails': 'LOCATION DETAILS',
   'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS',
   'swm.create.group.title.staffScheduleDetails': 'Staff Schedule',
+  'swm.dumpingground.search.title' : 'Dumping Ground Search',
+  'swm.collectionpoints.create.complex': 'Location',
 
 
 };
@@ -4974,6 +4976,7 @@ var localization_MR_Data = {
   'swm.collectionpoints.create.zone': 'Zone',
   'swm.collectionpoints.create.block': 'Road / Street',
   'swm.collectionpoints.create.colony': 'Colony / Society / Complex',
+  'swm.collectionpoints.create.complex': 'Location',
   'swm.collectionpoints.create.title': 'Collection Point Entry Master',
   'swm.collectionpoints.create.group.title.LocationSelection': 'Locationselection',
   'swm.collectionpoints.create.group.title.CollectionPointDetails': 'Collection Type Details',
@@ -5007,6 +5010,7 @@ var localization_MR_Data = {
   'swm.create.group.title.LocationDetails': 'LOCATION DETAILS',
   'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS',
   'swm.create.group.title.staffScheduleDetails': 'Staff Schedule',
+  'swm.dumpingground.search.title' : 'Dumping Ground Search',
 
 
   'referenceEvidence.update.document.title': 'Reference Evidences-marathi',

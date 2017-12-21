@@ -567,6 +567,17 @@ var dat = {
         jsonPath: "MdmsRes.swm.DumpingGround[0].siteDetails.location",
         fields: [
           {
+            name: 'complex',
+            jsonPath: 'MdmsRes.swm.DumpingGround[0].siteDetails.location.code',
+            label: 'swm.collectionpoints.create.complex',
+            type: 'singleValueList',
+            isRequired: true,
+            isDisabled: false,
+            maxLength: 128,
+            minLength: 1,
+            patternErrorMsg: '',
+          },
+          {
             name: 'Ward',
             jsonPath: '',
             label: 'swm.collectionpoints.create.ward',
@@ -577,7 +588,8 @@ var dat = {
             url:
               'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name',
             minLength: 1,
-            patternErrorMsg: ''
+            patternErrorMsg: '',
+            isHidden: true
 
           },
           {
@@ -589,7 +601,8 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: ''
+            patternErrorMsg: '',
+            isHidden: true
           },
           {
             name: 'Road/Street',
@@ -600,19 +613,10 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: ''
-          },
-          {
-            name: 'Colony',
-            jsonPath: 'MdmsRes.swm.DumpingGround[0].siteDetails.location.code',
-            label: 'swm.collectionpoints.create.colony',
-            type: 'singleValueList',
-            isRequired: true,
-            isDisabled: false,
-            maxLength: 128,
-            minLength: 1,
             patternErrorMsg: '',
+            isHidden: true
           },
+          
         ],
       },
       {

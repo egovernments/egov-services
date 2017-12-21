@@ -91,7 +91,7 @@ var dat = {
    "swm.create":{
       "numCols":4,
       "useTimestamp":true,
-      "idJsonPath": 'vehicleSchedules[0].code',
+      "idJsonPath": 'vehicleSchedules[0].transactionNo',
       "objectName":"vehicleSchedules",
       "title": "swm.create.page.title.VehicleSchedules",
       "groups":[

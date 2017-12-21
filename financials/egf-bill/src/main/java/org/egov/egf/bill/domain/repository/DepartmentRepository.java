@@ -21,7 +21,7 @@ public class DepartmentRepository {
 
     @Autowired
     public DepartmentRepository(final RestTemplate restTemplate,
-            @Value("${egov.services.common_masters.host}") final String departmentServiceHostname,
+            @Value("${egov.services.commonmasters.host}") final String departmentServiceHostname,
             @Value("${egov.services.common_masters.department}") final String departmentByIdUrl,
             final DateFactory dateFactory) {
 

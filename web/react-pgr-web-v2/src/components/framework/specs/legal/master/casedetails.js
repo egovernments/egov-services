@@ -272,6 +272,15 @@ var dat = {
             patternErrorMsg: '',
           },
           {
+            name: 'orignatedBYULB',
+            jsonPath: 'cases[0].summon.isUlbinitiated',
+            label: 'legal.create.orignatedBYULB',
+            type: 'checkbox',
+            isRequired: false,
+            isDisabled: false,
+            patternErrorMsg: '',
+          },
+          {
             name: 'referenceNo',
             jsonPath: 'cases[0].summon.summonReferenceNo',
             label: 'legal.create.referenceNo',

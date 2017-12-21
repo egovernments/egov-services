@@ -35,6 +35,41 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 		init(PurchaseOrderEntity.class);
 		LOG.debug("end init purchase order");
 	}
+	
+	public static synchronized void init(Class T) {
+        String TABLE_NAME = "";
+
+        List<String> insertFields = new ArrayList<>();
+        List<String> updateFields = new ArrayList<>();
+        List<String> uniqueFields = new ArrayList<>();
+
+        String insertQuery = "";
+        String updateQuery = "";
+        String searchQuery = "";
+
+        try {
+
+            TABLE_NAME = (String) T.getDeclaredField("TABLE_NAME").get(null);
+        } catch (Exception e) {
+
+        }
+        insertFields.addAll(fetchFields(T));
+        uniqueFields.add("purchaseOrderNumber");
+        uniqueFields.add("tenantId");
+        insertFields.removeAll(uniqueFields);
+        allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
+        updateFields.addAll(insertFields);
+        updateFields.remove("createdBy");
+        updateQuery = updateQuery(updateFields, TABLE_NAME, uniqueFields);
+        System.out.println(T.getSimpleName() + "--------" + insertFields);
+        allInsertFields.put(T.getSimpleName(), insertFields);
+        allUpdateFields.put(T.getSimpleName(), updateFields);
+        allIdentitiferFields.put(T.getSimpleName(), uniqueFields);
+        // allInsertQuery.put(T.getSimpleName(), insertQuery);
+        allUpdateQuery.put(T.getSimpleName(), updateQuery);
+        getByIdQuery.put(T.getSimpleName(), getByIdQuery(TABLE_NAME, uniqueFields));
+        System.out.println(allInsertQuery);
+    }
 
 	public PurchaseOrderJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;

@@ -424,19 +424,19 @@ public class ReceiptNoteService extends DomainService {
     private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, Long acceptedQuantity, String tenantId, int i, InvalidDataException errors) {
         Long totalQuantity = 0L;
         for (MaterialReceiptDetailAddnlinfo addnlinfo : materialReceiptDetailAddnlinfos) {
-            {
+            
                 if (null != addnlinfo.getQuantity()) {
                     totalQuantity = totalQuantity + addnlinfo.getQuantity().longValue();
                 }
 
-                if (null != addnlinfo.getExpiryDate()
-                        && addnlinfo.getExpiryDate() > getCurrentDate()) {
+                if (null != addnlinfo.getExpiryDate()&& addnlinfo.getExpiryDate() <= getCurrentDate()) {
+ 
                     String date = convertEpochtoDate(addnlinfo.getExpiryDate());
-                    errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Expiry date ", date);
+                    errors.addDataError(ErrorCode.DATE_GE_CURRENTDATE.getCode(), "Expiry date ", date);
 
                 }
             }
-        }
+        
 
         if (totalQuantity.longValue() != acceptedQuantity.longValue()) {
             errors.addDataError(ErrorCode.FIELD_DOESNT_MATCH.getCode(), "Accepted Quantity", "Sum of quantity of additional details");
@@ -457,53 +457,54 @@ public class ReceiptNoteService extends DomainService {
 
     private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String store, Long receiptDate, String supplier, String tenantId, int i, InvalidDataException errors) {
 
-        if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
+        if (null != materialReceiptDetail.getPurchaseOrderDetail())
+        {
             PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
             purchaseOrderDetailSearch.setTenantId(tenantId);
             purchaseOrderDetailSearch.setIds(Collections.singletonList(materialReceiptDetail.getPurchaseOrderDetail().getId()));
 
             Pagination<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrderDetailService.search(purchaseOrderDetailSearch);
 
-            if (purchaseOrderDetails.getPagedData().size() > 0) {
-                for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
+            if (purchaseOrderDetails.getPagedData().size() > 0) 
+            {
+                for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) 
+                {
 
-                    if (null != materialReceiptDetail.getReceivedQty() &&
-                            materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
+                    if ( materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
                         errors.addDataError(ErrorCode.RCVED_QTY_LS_ODRQTY.getCode(), String.valueOf(i));
                     }
 
-                    if (null != materialReceiptDetail.getReceivedQty() &&
+                    if (null != purchaseOrderDetail.getReceivedQuantity() &&
                             materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getReceivedQuantity().longValue()) {
                         errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(), String.valueOf(i));
                     }
 
-                    PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
-                    purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
-                    purchaseOrderSearch.setSupplier(supplier);
-                    purchaseOrderSearch.setStore(store);
-                    purchaseOrderSearch.setPurchaseOrderDate(receiptDate);
-                    purchaseOrderSearch.setTenantId(purchaseOrderDetail.getTenantId());
+                    PurchaseOrderEntity po = new PurchaseOrderEntity();
+                    po.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
+                    po.setTenantId(tenantId);
+                    
 
-                    PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
-                    if (purchaseOrders.getPurchaseOrders().size() > 0) {
-                        for (PurchaseOrder purchaseOrder : purchaseOrders.getPurchaseOrders()) {
-                            if (null != purchaseOrder.getPurchaseOrderDate()
-                                    && purchaseOrder.getPurchaseOrderDate() > receiptDate) {
+                    PurchaseOrderEntity poe = (PurchaseOrderEntity)purchaseOrderJdbcRepository.findById(po,"PurchaseOrderEntity");
+                    
+                    
+                            if ( poe.getPurchaseOrderDate() > receiptDate) {
                                 errors.addDataError(ErrorCode.DATE1_GT_DATE2ROW.getCode(), "Receipt Date ", "purchase order date ", String.valueOf(i));
                             }
 
-                            if (!isEmpty(supplier) && !isEmpty(purchaseOrder.getSupplier().getCode())
-                                    && !supplier.equalsIgnoreCase(purchaseOrder.getSupplier().getCode())) {
+                            if (!isEmpty(supplier) && !supplier.equalsIgnoreCase(poe.getSupplier())) {
 
                                 errors.addDataError(ErrorCode.MATCH_TWO_FIELDS.getCode(), "Supplier ", "purchase order supplier ", String.valueOf(i));
                             }
-                        }
-                    } else
-                        errors.addDataError(ErrorCode.FIELD_NOT_EXIST.getCode(), "purchase order", materialReceiptDetail.getPurchaseOrderDetail().getId(), String.valueOf(i));
+                            
+                            if (!isEmpty(store) && !store.equalsIgnoreCase(poe.getStore())) {
+
+                                errors.addDataError(ErrorCode.MATCH_TWO_FIELDS.getCode(), "Store ", "purchase order Store ", String.valueOf(i));
+                            }
+                        
+                        
                 }
-            } else
-                errors.addDataError(ErrorCode.FIELD_NOT_EXIST.getCode(), "purchase order", materialReceiptDetail.getPurchaseOrderDetail().getId(), String.valueOf(i));
-        }
+            }
+    }
     }
 
 

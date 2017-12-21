@@ -97,7 +97,7 @@ public class BillRegisterService {
     @Transactional
     public BillRegisterRequest create(BillRegisterRequest billRegisterRequest) {
 
-        // fetchRelated(billRegisterRequest.getBillRegisters(), billRegisterRequest.getRequestInfo());
+        fetchRelated(billRegisterRequest.getBillRegisters(), billRegisterRequest.getRequestInfo());
         validate(billRegisterRequest);
         populateAuditDetails(billRegisterRequest);
         populateBillRegisterIds(billRegisterRequest.getBillRegisters());
@@ -109,7 +109,7 @@ public class BillRegisterService {
     @Transactional
     public BillRegisterRequest update(BillRegisterRequest billRegisterRequest) {
 
-        // fetchRelated(billRegisterRequest.getBillRegisters(), billRegisterRequest.getRequestInfo());
+        fetchRelated(billRegisterRequest.getBillRegisters(), billRegisterRequest.getRequestInfo());
         populateAuditDetails(billRegisterRequest);
         populateDependentEntityIds(billRegisterRequest.getBillRegisters());
         validate(billRegisterRequest);

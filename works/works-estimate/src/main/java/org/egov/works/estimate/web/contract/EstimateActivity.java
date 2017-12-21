@@ -340,7 +340,7 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Measurement sheet list for the Estimate Activity")
 
-  @Valid
+//  @Valid
 
   public List<EstimateMeasurementSheet> getEstimateMeasurementSheets() {
     return estimateMeasurementSheets;

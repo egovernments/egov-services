@@ -1833,7 +1833,6 @@ definitions:
       required:
         - tenantId
         - quantity
-        - estimateActivity
         
   MultiYearEstimate:
       type: object

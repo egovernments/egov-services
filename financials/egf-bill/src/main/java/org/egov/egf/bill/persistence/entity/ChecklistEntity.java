@@ -15,8 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class ChecklistEntity {
-    public static final String TABLE_NAME = "egf_billchecklist";
-    public static final String SEQUENCE_NAME = "seq_egf_billchecklist";
+    public static final String TABLE_NAME = "egf_checklist";
+    public static final String SEQUENCE_NAME = "seq_egf_checklist";
     private String tenantId;
     private String code;
     private String type;

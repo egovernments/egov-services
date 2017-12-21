@@ -199,7 +199,7 @@ public enum ErrorCode {
     OBJECT_NOT_FOUND("object.not.found",
             "{0} {1} not found for {2}",
             "{0} {1} not found for {2}"),
-    OBJECT_NOT_FOUND_ROW("object.not.found",
+    OBJECT_NOT_FOUND_ROW("objectrow.not.found",
             "{0} {1} not found at row {2}",
             "{0} {1} not found at row {2}"),
     OBJECT_NOT_FOUND_COMBINATION("object.combination.found",

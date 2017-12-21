@@ -324,7 +324,7 @@ public class MaterialIssuesService extends DomainService {
 	}
 
 	private void setMaterialIssueValues(MaterialIssue materialIssue, String seqNo, String action, String type) {
-		if(type.equals(IssueTypeEnum.INDENTISSUE.toString()))
+		if(type .equals(IssueTypeEnum.INDENTISSUE.toString()))
 		materialIssue.setIssueType(IssueTypeEnum.INDENTISSUE);
 		else
 			materialIssue.setIssueType(IssueTypeEnum.MATERIALOUTWARD);
@@ -383,7 +383,7 @@ public class MaterialIssuesService extends DomainService {
 								"IndentEntity");
 						IndentEntity indentEntityfromDb = (IndentEntity) indenttEntity;
 						if (indentEntityfromDb != null) {
-							if(!indentEntityfromDb.getIndentStatus().equals(IndentStatusEnum.APPROVED))
+							if(!indentEntityfromDb.getIndentStatus().equals(IndentStatusEnum.APPROVED.toString()))
 								errors.addDataError(ErrorCode.INDENT_NOT_APPROVED.getCode(), materialIssue.getIndent().getIndentNumber());
 						}
 						BigDecimal totalIndentQuantity = BigDecimal.ZERO;
@@ -398,10 +398,9 @@ public class MaterialIssuesService extends DomainService {
 						totalIndentQuantity = totalIndentQuantity.add(quantity);
 					}
 				}
-				if(totalIndentQuantity.equals(BigDecimal.ZERO))
+				if(totalIndentQuantity.compareTo(BigDecimal.ZERO) == 0)
 					errors.addDataError(ErrorCode.NO_ITEMS_TO_ISSUE.getCode());
 					}
-				    if(type != null)
 					if(type.equals(IssueTypeEnum.MATERIALOUTWARD.toString()))
 					{
 						if(materialIssue.getToStore() == null) 
@@ -422,7 +421,7 @@ public class MaterialIssuesService extends DomainService {
 							errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "fromStore");
 						}
 						if(materialIssue.getToStore() != null &&
-								materialIssue.getToStore().getActive()){
+								materialIssue.getToStore().getActive() != null){
 							if(!materialIssue.getToStore().getActive())
 								errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "toStore");
 							}
@@ -693,16 +692,16 @@ public class MaterialIssuesService extends DomainService {
 				Pagination<MaterialIssuedFromReceipt> materialIssuedFromReceipts = materialIssuedFromReceiptsJdbcRepository.search(materialIssueDetail.getId(), materialIssueDetail.getTenantId());
 						ObjectMapper mapper = new ObjectMapper();
 						Map<String, Uom> uoms = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
-						if (materialIssueDetail.getIndentDetail().getUom() != null
-								&& materialIssueDetail.getIndentDetail().getUom().getCode() != null)
+						if (materialIssueDetail.getUom() != null
+								&& materialIssueDetail.getUom().getCode() != null)
 						{
 						Double quantityIssued = getSearchConvertedQuantity(
 								Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
-								Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode())
+								Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode())
 										.getConversionFactor().toString()));
 						materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
 						for(MaterialIssuedFromReceipt mifr : materialIssuedFromReceipts.getPagedData()){
-						Double quantity =	getSearchConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()), Double.valueOf(uoms.get(materialIssueDetail.getIndentDetail().getUom().getCode())
+						Double quantity =	getSearchConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()), Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode())
 									.getConversionFactor().toString()));
 						mifr.setQuantity(BigDecimal.valueOf(quantity));
 						}

@@ -36,7 +36,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	public ResponseEntity<MaterialIssueResponse> materialIssuesCreatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest , null);
+		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest , IssueTypeEnum.INDENTISSUE.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 
@@ -65,7 +65,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	public ResponseEntity<MaterialIssueResponse> materialIssuesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId,null);
+		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId,IssueTypeEnum.INDENTISSUE.toString());
 		return new ResponseEntity(materialIssueResponse,HttpStatus.OK);
 	}
 	

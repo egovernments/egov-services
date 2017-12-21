@@ -527,7 +527,7 @@ serviceMaps:
               dbType: DOUBLE
             - jsonPath: $.materialIssues.*.fileStoreId
             - jsonPath: $.materialIssues.*.designation
-            - jsonPath: $.materialIssues.*.indent.indentnumber
+            - jsonPath: $.materialIssues.*.indent.indentNumber
             - jsonPath: $.materialIssues.*.issuedToEmployee
             - jsonPath: $.materialIssues.*.issuedToDesignation
             - jsonPath: $.materialIssues.*.issuePurpose
@@ -596,7 +596,7 @@ serviceMaps:
               dbType: DOUBLE
             - jsonPath: $.materialIssues.*.fileStoreId
             - jsonPath: $.materialIssues.*.designation
-            - jsonPath: $.materialIssues.*.indent.indentnumber
+            - jsonPath: $.materialIssues.*.indent.indentNumber
             - jsonPath: $.materialIssues.*.issuedToEmployee
             - jsonPath: $.materialIssues.*.issuedToDesignation
             - jsonPath: $.materialIssues.*.issuePurpose
@@ -1282,14 +1282,13 @@ serviceMaps:
       fromTopic: inv-transfer-inward-save-topic
       queryMaps:
         - query: >-
-               INSERT INTO materialreceipt(id, mrnnumber, issuenumber, receivingstore, issueingstore,receiptDate, receiptType, suppliercode, supplierbillno, supplierbilldate,
+               INSERT INTO materialreceipt(id, mrnnumber, receivingstore, issueingstore,receiptDate, receiptType, suppliercode, supplierbillno, supplierbilldate,
                challanno, challandate, description, paymentterms, receivedby, designation, mrnstatus, inspectedby, inspectiondate, inspectionremarks,
-               tenantid, createdby, createdTime, lastmodifiedby,lastModifiedTime) VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?,?);
+               tenantid, createdby, createdTime, lastmodifiedby,lastModifiedTime) VALUES ( ?,?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?,?);
           basePath: $.transferInwards.*
           jsonMaps:
             - jsonPath: $.transferInwards.*.id
             - jsonPath: $.transferInwards.*.mrnNumber
-            - jsonPath: $.transferInwards.*.issueNumber            
             - jsonPath: $.transferInwards.*.receivingStore.code
             - jsonPath: $.transferInwards.*.issueingStore.code
             - jsonPath: $.transferInwards.*.receiptDate

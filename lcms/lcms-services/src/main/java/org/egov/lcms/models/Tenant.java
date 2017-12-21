@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * @author Shubham
+ *	This object holds information about the tenant
+ */
 @Getter
 @Builder
 @AllArgsConstructor

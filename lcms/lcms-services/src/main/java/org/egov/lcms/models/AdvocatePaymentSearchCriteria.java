@@ -10,12 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-/**
- * 
- * @author Shubham Pratap
+/** 
+ * @author Shubham 
+ * This object holds information about the Advocate Payment Search criteria
  *
  */
-
 @Getter
 @Setter
 @NoArgsConstructor

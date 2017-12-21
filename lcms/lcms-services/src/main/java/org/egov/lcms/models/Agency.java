@@ -12,6 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** 
+ * @author Veswanth 
+ * This object holds information about the Agency
+ *
+ */
 @Getter
 @Setter
 @NoArgsConstructor

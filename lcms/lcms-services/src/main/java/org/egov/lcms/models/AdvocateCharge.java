@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** 
+ * @author Prasad 
+ * This object holds information about the Advocate Charge
+ *
+ */
 @Getter
 @Setter
 @NoArgsConstructor

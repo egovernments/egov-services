@@ -7,6 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * @author Veswanth
+ *	This object holds information about the Register Response
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

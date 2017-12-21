@@ -11,6 +11,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** 
+ * @author Veswanth 
+ * This object holds information about the Agency Response
+ *
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,7 +24,7 @@ public class AgencyResponse {
 
 	@JsonProperty("responseInfo")
 	private ResponseInfo responseInfo;
-	
+
 	@JsonProperty("agencies")
 	private List<Agency> agencies;
 }

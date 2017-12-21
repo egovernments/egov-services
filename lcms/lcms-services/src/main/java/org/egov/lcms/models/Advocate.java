@@ -9,8 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Advocate
+/** 
+ * @author Veswanth 
+ * This object holds information about the Person Details
+ *
  */
 @Getter
 @Setter

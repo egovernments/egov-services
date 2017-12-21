@@ -3,11 +3,15 @@ package org.egov.lcms.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-
+/**
+ * 
+ * @author Shubham
+ *	This Enum holds information about the voucher type
+ */
 public enum VocherType {
 
 	PAYMENT("Payment"),
-	
+
 	RECEIPT("Receipt");
 
 	private String value;
@@ -31,5 +35,5 @@ public enum VocherType {
 		}
 		return null;
 	}
-	
+
 }

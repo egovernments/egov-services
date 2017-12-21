@@ -50,6 +50,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 
+ * @author Veswanth
+ *	This object holds information about the Department response
+ */
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter

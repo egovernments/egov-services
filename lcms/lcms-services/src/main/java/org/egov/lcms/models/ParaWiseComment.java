@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * This object holds information about parawise comments about the case
+ * 
+ * @author Veswanth
+ *	This object holds information about the parawise comment
  */
 @Getter
 @Setter

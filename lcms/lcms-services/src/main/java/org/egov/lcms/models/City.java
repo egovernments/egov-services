@@ -13,7 +13,7 @@ import lombok.ToString;
 /**
  * 
  * @author Prasad
- *
+ *	This object holds information about the city
  */
 @Setter
 @Getter

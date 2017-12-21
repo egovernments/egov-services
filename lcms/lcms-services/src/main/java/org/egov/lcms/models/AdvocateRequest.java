@@ -12,6 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** 
+ * @author Yosadhara 
+ * This object holds information about the Advocate Request
+ *
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

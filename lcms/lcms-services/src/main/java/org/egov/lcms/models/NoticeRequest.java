@@ -12,17 +12,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 
+ * @author Yosadhara
+ *	This object holds information about the Notice Request
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class NoticeRequest {
-	
+
 	@Valid
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
-	
+
 	@Valid
 	@JsonProperty("notice")
 	private Notice notice;

@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
+/** 
+ * @author Shubham 
+ * This object holds information about the AdvocatePayment
+ *
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -65,7 +70,7 @@ public class AdvocatePayment {
 
 	@JsonProperty("resolutionNo")
 	private String resolutionNo = null;
-	
+
 	@JsonProperty("resolution")
 	private String resolution = null;
 
@@ -86,10 +91,10 @@ public class AdvocatePayment {
 
 	@JsonProperty("stateId")
 	private String stateId = null;
-	
+
 	@JsonProperty("voucherNo")
 	private String voucherNo = null;
-	
+
 	@JsonProperty("voucherDate")
 	private Long voucherDate = null;
 

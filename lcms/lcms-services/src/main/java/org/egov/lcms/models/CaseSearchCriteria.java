@@ -2,8 +2,6 @@ package org.egov.lcms.models;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.lcms.enums.EntryType;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +11,8 @@ import lombok.ToString;
 /**
  * 
  * @author Prasad
- *
+ *	This object holds information about the case search criteria
  */
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -55,6 +52,6 @@ public class CaseSearchCriteria {
 	private String caseNo;
 
 	private String searchResultLevel;
-	
+
 	private String entryType;
 }

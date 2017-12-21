@@ -14,9 +14,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * This object holds information about the opinion request
+ * 
+ * @author Veswanth
+ *	This object holds information about the opinion Request
  */
-
 @Getter
 @Setter
 @NoArgsConstructor

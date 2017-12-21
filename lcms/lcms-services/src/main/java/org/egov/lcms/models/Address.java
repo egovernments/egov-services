@@ -8,6 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/** 
+ * @author Prasad 
+ * This object holds information about the Address
+ *
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

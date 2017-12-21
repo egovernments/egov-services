@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 
+ * @author Yosadhara
+ *	This object holds information about the Notice response
+ */
 @Getter
 @Setter
 @AllArgsConstructor

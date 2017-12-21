@@ -12,6 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 
+ * @author Shubham 
+ *	This object holds information about the tenant role
+ */
 @Getter
 @Setter
 @NoArgsConstructor

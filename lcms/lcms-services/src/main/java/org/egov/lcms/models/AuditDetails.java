@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
+ * 
+ * @author Shubham
  * Collection of audit related fields used by most models
  */
 @Getter

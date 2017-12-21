@@ -12,6 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 
+ * @author Prasad
+ *	This object holds information about the case status
+ */
 @Getter
 @Setter
 @NoArgsConstructor

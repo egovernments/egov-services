@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/** 
+ * @author Yosadhara 
+ * This object holds information about the Advocate Search Criteria
+ *
+ */
 @Getter
 @Setter
 @NoArgsConstructor

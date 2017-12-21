@@ -12,7 +12,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * This object holds information about the opinion response
+ * 
+ * @author Veswanth
+ *	This object holds information about the opinion Response
  */
 @Getter
 @Setter

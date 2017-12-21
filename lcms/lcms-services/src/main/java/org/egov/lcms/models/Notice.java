@@ -11,6 +11,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 
+ * @author Yosadhara
+ *	This object holds information about the Notice
+ */
 @Data
 @Builder
 @AllArgsConstructor

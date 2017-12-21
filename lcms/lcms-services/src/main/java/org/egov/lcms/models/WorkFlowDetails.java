@@ -7,6 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 
+ * @author Veswanth 
+ * This object holds information about the work flow details
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -632,6 +632,20 @@ function getDropdown(name, cb, params) {
                 cb(JSON.parse(localStorage.getItem("leaveTypes")));
             }
             break;
+        case 'accumulativeLeaveTypes':
+            if (!localStorage.getItem("accleaveTypes") || localStorage.getItem("accleaveTypes") == "undefined") {
+                commonApiPost("hr-leave", "leavetypes", "_search", {tenantId:tenantId,accumulative:true,pageSize:500}, function(err, res) {
+                    if (res) {
+                        localStorage.setItem("accleaveTypes", JSON.stringify(res["LeaveType"]));
+                        cb(res["LeaveType"]);
+                    } else {
+                        cb([]);
+                    }
+                })
+            } else {
+                cb(JSON.parse(localStorage.getItem("accleaveTypes")));
+            }
+            break;
         case 'gender':
             if (!localStorage.getItem("gender") || localStorage.getItem("gender") == "undefined") {
                 getCommonMaster("egov-common-masters", "genders", function(err, res) {

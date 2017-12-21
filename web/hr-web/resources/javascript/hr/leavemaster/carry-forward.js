@@ -75,7 +75,7 @@ class CarryForward extends React.Component {
         getDropdown("years", function (res) {
             checkCountAndCall("years", res);
         });
-        getDropdown("leaveTypes", function (res) {
+        getDropdown("accumulativeLeaveTypes", function (res) {
             checkCountAndCall("leaveTypeList", res);
         });
 

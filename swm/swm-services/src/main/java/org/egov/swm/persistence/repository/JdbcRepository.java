@@ -130,4 +130,9 @@ public abstract class JdbcRepository {
         if (params.length() > 0)
             params.append(" and ");
     }
+
+    protected void addOr(final StringBuffer params) {
+        if (params.length() > 0)
+            params.append(" or ");
+    }
 }

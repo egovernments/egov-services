@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.CollectionPoint;
@@ -95,16 +96,28 @@ public class RouteJdbcRepository extends JdbcRepository {
             paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
         }
 
-        if (searchRequest.getEndingCollectionPointCode() != null) {
-            addAnd(params);
-            params.append("endingCollectionPoint =:endingCollectionPoint");
-            paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointCode());
-        }
+        if(searchRequest.getCollectionTypeCode() != null){
 
-        if (searchRequest.getEndingDumpingGroundPointCode() != null) {
-            addAnd(params);
-            params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
-            paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointCode());
+            addOr(params);
+            params.append("startingcollectionpoint =:startingcollectionpoint");
+            paramValues.put("startingcollectionpoint", searchRequest.getCollectionPointCode());
+
+            addOr(params);
+            params.append("endingCollectionPoint =:endingCollectionPoint");
+            paramValues.put("endingCollectionPoint", searchRequest.getCollectionPointCode());
+
+            RouteCollectionPointMap routeCollectionPointMap = RouteCollectionPointMap.builder()
+                    .collectionPoint(searchRequest.getCollectionPointCode())
+                    .tenantId(searchRequest.getTenantId())
+                    .build();
+
+            List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository.search(routeCollectionPointMap);
+            List<String> routeCodes = routeCollectionPointMaps.stream()
+                    .map(RouteCollectionPointMap::getRoute)
+                    .collect(Collectors.toList());
+
+            params.append(" or code in (:routecodes) ");
+            paramValues.put("routecodes", routeCodes);
         }
 
         if (searchRequest.getDistance() != null) {

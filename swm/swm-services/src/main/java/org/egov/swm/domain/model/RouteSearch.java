@@ -12,9 +12,8 @@ import lombok.Setter;
 public class RouteSearch extends Route {
     private String codes;
     private String collectionTypeCode;
-    private String startingCollectionPointCode;
-    private String endingCollectionPointCode;
     private String endingDumpingGroundPointCode;
+    private String collectionPointCode;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

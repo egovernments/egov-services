@@ -11,6 +11,12 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		10th ov 2107						initial commit for caseDetails row mapper
+*/
 @Component
 public class CaseDetailsRowMapper implements RowMapper<CaseDetails> {
 	@Autowired
@@ -28,6 +34,13 @@ public class CaseDetailsRowMapper implements RowMapper<CaseDetails> {
 		return caseDetails;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}

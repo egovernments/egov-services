@@ -12,6 +12,12 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		15th Nov 2107						Initial commit for EventRowMapper
+*/
 @Component
 public class EventRowMapper implements RowMapper<Event> {
 
@@ -45,10 +51,24 @@ public class EventRowMapper implements RowMapper<Event> {
 		return event;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
 
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
 	private Long getLong(Object object) {
 		return object == null ? null : Long.parseLong(object.toString());
 	}

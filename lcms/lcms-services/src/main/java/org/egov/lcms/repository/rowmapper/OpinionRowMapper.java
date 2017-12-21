@@ -20,6 +20,17 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		28th Oct 2107						Initial commit for OpinionRowMapper
+* Veswanth		28th Oct 2107						Added null check for the searchResult parameters
+* Shubham		31st Oct 2107						Changed to documentReference type to Document for OpinionSearch result
+* Veswanth		03rd Nov 2107						Added department and advocateDetails in opinionSearch
+* Veswanth		07th Nov 2107						Added additionalAdvoate for opinionSearch
+* Veswanth		10th Nov 2107						Added summonReferenceNo for opinionSearch
+*/
 @Component
 public class OpinionRowMapper implements RowMapper<Opinion> {
 
@@ -42,12 +53,12 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		opinion.setTenantId(getString(rs.getString("tenantid")));
 		opinion.setStateId(getString(rs.getString("stateid")));
 		opinion.setAdditionalAdvocate(getString(rs.getString("additionaladvocate")));
-		
+
 		CaseDetails caseDetails = new CaseDetails();
 		caseDetails.setSummonReferenceNo(getString(rs.getString("summonreferenceno")));
-		
-		opinion.setCaseDetails(caseDetails);		
-		
+
+		opinion.setCaseDetails(caseDetails);
+
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
 		auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
@@ -76,10 +87,24 @@ public class OpinionRowMapper implements RowMapper<Opinion> {
 		return opinion;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
 
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
 	private Long getLong(Object object) {
 		return object == null ? null : Long.parseLong(object.toString());
 	}

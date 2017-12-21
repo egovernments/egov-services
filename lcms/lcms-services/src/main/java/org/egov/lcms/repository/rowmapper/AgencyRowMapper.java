@@ -12,6 +12,13 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		14th Nov 2107						Initial commit for agency row mapper
+* Yosadhara		15th Nov 2107						Added status for agency search
+*/
 @Component
 public class AgencyRowMapper implements RowMapper<Agency> {
 
@@ -60,10 +67,24 @@ public class AgencyRowMapper implements RowMapper<Agency> {
 		return agency;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
 
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
 	private Long getLong(Object object) {
 		return object == null ? null : Long.parseLong(object.toString());
 	}

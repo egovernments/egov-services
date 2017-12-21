@@ -15,6 +15,14 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Prasad		02nd Nov 2107						Initial commit for AdvocateDetails Rowmapper 
+* Prasad		02nd Nov 2107						Renamed assignedDate to assignDate
+* Prasad		02nd Nov 2107						Added audit details and tenantId for AdvocateDetails search
+*/
 @Component
 public class AdvocateDetailsRowMapper implements RowMapper<AdvocateDetails> {
 	@Autowired
@@ -54,15 +62,36 @@ public class AdvocateDetailsRowMapper implements RowMapper<AdvocateDetails> {
 
 		return advocateDetails;
 	}
-	
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
-	
+
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
 	private Long getLong(Object object) {
 		return object == null ? 0 : Long.parseLong(object.toString());
 	}
 
+	/**
+	 * This method will cast the given object to Double
+	 * 
+	 * @param object
+	 *            that need to be cast to Double
+	 * @return {@link Double}
+	 */
 	private Double getDouble(Object object) {
 		return object == null ? 0 : Double.parseDouble(object.toString());
 	}

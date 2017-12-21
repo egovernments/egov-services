@@ -12,6 +12,12 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		14th Nov 2107						Initial commit for PersonalDetails RowMapper
+*/
 @Component
 public class PersonDetailRowMapper implements RowMapper<PersonDetails> {
 
@@ -44,7 +50,7 @@ public class PersonDetailRowMapper implements RowMapper<PersonDetails> {
 		personDetails.setEmailId(getString(rs.getString("emailid")));
 		personDetails.setPan(getString(rs.getString("pan")));
 		personDetails.setTenantId(getString(rs.getString("tenantid")));
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
 		auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
@@ -55,10 +61,24 @@ public class PersonDetailRowMapper implements RowMapper<PersonDetails> {
 		return personDetails;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
 
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
 	private Long getLong(Object object) {
 		return object == null ? null : Long.parseLong(object.toString());
 	}

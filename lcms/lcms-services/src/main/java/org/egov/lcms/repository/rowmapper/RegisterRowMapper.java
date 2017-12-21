@@ -7,12 +7,18 @@ import org.egov.lcms.models.Register;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		31st Oct 2107						Initial commit for RegisterRowMapper
+*/
 @Component
-public class RegisterRowMapper implements RowMapper<Register>{
+public class RegisterRowMapper implements RowMapper<Register> {
 
 	@Override
 	public Register mapRow(ResultSet rs, int rowNum) throws SQLException {
-		
+
 		Register register = new Register();
 		register.setCode(rs.getString("code"));
 		register.setRegister(rs.getString("register"));
@@ -24,8 +30,7 @@ public class RegisterRowMapper implements RowMapper<Register>{
 		auditDetails.setCreatedTime(rs.getBigDecimal("createdTime"));
 		auditDetails.setLastModifiedTime(rs.getBigDecimal("lastModifiedTime"));
 		register.setAuditDetails(auditDetails);
-		
+
 		return register;
 	}
-
 }

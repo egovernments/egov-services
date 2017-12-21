@@ -20,12 +20,16 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * 
- * @author Shubham Pratap
- *
- */
-
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Shubham		28th Oct 2107						Initial commit for AdvocatePayment Rowmapper 
+* Shubham		31st Oct 2107						Added invoice document, casestatus, caseType for advocatePayment search
+* Shubham		01st Nov 2107						Added VoucherNo and VoucherDate for advocatePayement search
+* Veswanth		02nd Nov 2107						Added exception code and message for exception handler
+* Shubham		07th Nov 2107						Added case number for advocatePayement search
+*/
 @Component
 public class AdvocatePaymentRowMapper implements RowMapper<AdvocatePayment> {
 

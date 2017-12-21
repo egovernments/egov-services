@@ -17,6 +17,13 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		08th Nov 2107						Initial commit for EvidenceRowMapper
+* Veswanth		20th Nov 2107						Added caseNo and referenceCaseNo for ReferenceEvidence search
+*/
 @Component
 public class EvidenceRowMapper implements RowMapper<ReferenceEvidence> {
 	@Autowired
@@ -37,7 +44,7 @@ public class EvidenceRowMapper implements RowMapper<ReferenceEvidence> {
 		referenceEvidence.setDescription(getString(rs.getString("description")));
 		referenceEvidence.setCaseCode(getString(rs.getString("casecode")));
 		referenceEvidence.setReferenceCaseNo(getString(rs.getString("referencecaseno")));
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));
 		auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
@@ -58,10 +65,24 @@ public class EvidenceRowMapper implements RowMapper<ReferenceEvidence> {
 		return referenceEvidence;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
 
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
 	private Long getLong(Object object) {
 		return object == null ? null : Long.parseLong(object.toString());
 	}

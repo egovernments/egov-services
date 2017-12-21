@@ -16,14 +16,22 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		31st Oct 2107						Initial commit for NoticeRowMapper
+* Yosadhara		16th Nov 2107						Added caseNo, caseCode, caseReferenceNo and summonReferenceNo for Notice Search
+*/
 @Component
-public class NoticeRowMapper implements RowMapper<Notice>{
-	
+public class NoticeRowMapper implements RowMapper<Notice> {
+
 	@Autowired
 	private ObjectMapper objectMapper;
+
 	@Override
 	public Notice mapRow(ResultSet rs, int rowNum) throws SQLException {
-		
+
 		Notice notice = new Notice();
 		notice.setCode(rs.getString("code"));
 		notice.setTenantId(rs.getString("tenantId"));
@@ -41,14 +49,14 @@ public class NoticeRowMapper implements RowMapper<Notice>{
 		notice.setCaseCode(rs.getString("caseCode"));
 		notice.setCaseRefernceNo(rs.getString("caseRefernceNo"));
 		notice.setSummonReferenceNo(rs.getString("summonReferenceNo"));
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdBy"));
 		auditDetails.setLastModifiedBy(rs.getString("lastModifiedBy"));
 		auditDetails.setCreatedTime(rs.getBigDecimal("createdTime"));
 		auditDetails.setLastModifiedTime(rs.getBigDecimal("lastModifiedTime"));
 		notice.setAuditDetails(auditDetails);
-		
+
 		if (rs.getString("witness") != null) {
 			List<String> witness = new ArrayList<String>();
 			TypeReference<List<String>> witnessRefType = new TypeReference<List<String>>() {
@@ -61,10 +69,10 @@ public class NoticeRowMapper implements RowMapper<Notice>{
 			}
 			notice.setWitness(witness);
 		}
-		
+
 		return notice;
 	}
-	
+
 	/**
 	 * This method will cast the given object to String
 	 * 
@@ -75,6 +83,5 @@ public class NoticeRowMapper implements RowMapper<Notice>{
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
-
 
 }

@@ -18,6 +18,15 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		01st Nov 2107						Initial commit for HearingDetailsRowMapper
+* Shubham		01st Nov 2107						Changed the nextHearingTime type to String
+* Veswanth		02nd Nov 2107						Added exception code and message while throwing exception
+* Yosadhara		18th Nov 2107						Corrected the spell mistake furtherProcessDetails
+*/
 @Component
 public class HearingDetailsRowMapper implements RowMapper<HearingDetails> {
 	@Autowired
@@ -70,10 +79,24 @@ public class HearingDetailsRowMapper implements RowMapper<HearingDetails> {
 		return hearingDetails;
 	}
 
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
 
+	/**
+	 * This method will cast the given object to Long
+	 * 
+	 * @param object
+	 *            that need to be cast to Long
+	 * @return {@link Long}
+	 */
 	private Long getLong(Object object) {
 		return object == null ? null : Long.parseLong(object.toString());
 	}

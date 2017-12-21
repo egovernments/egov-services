@@ -8,12 +8,21 @@ import org.egov.lcms.models.AuditDetails;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		31st Oct 2107						Moved advocateRowmapper to repository folder
+* Veswanth		14th Nov 2107						Added agencyName and agencyCode for advocate search
+* Yosadhara		14th Nov 2107						Renamed isfccode to ifscCode
+* Yosadhara		15th Nov 2107						Added status for advocate search
+*/
 @Component
-public class AdvocateRowMapper implements RowMapper<Advocate>{
+public class AdvocateRowMapper implements RowMapper<Advocate> {
 
 	@Override
 	public Advocate mapRow(ResultSet rs, int rowNum) throws SQLException {
-		
+
 		Advocate advocate = new Advocate();
 		advocate.setCode(rs.getString("code"));
 		advocate.setName(rs.getString("name"));
@@ -53,17 +62,24 @@ public class AdvocateRowMapper implements RowMapper<Advocate>{
 		advocate.setReasonOfTermination(rs.getString("reasonOfTermination"));
 		advocate.setTenantId(rs.getString("tenantId"));
 		advocate.setStatus(getString(rs.getString("status")));
-		
+
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdBy"));
 		auditDetails.setLastModifiedBy(rs.getString("lastModifiedBy"));
 		auditDetails.setCreatedTime(rs.getBigDecimal("createdTime"));
 		auditDetails.setLastModifiedTime(rs.getBigDecimal("lastModifiedTime"));
 		advocate.setAuditDetails(auditDetails);
-		
+
 		return advocate;
 	}
-	
+
+	/**
+	 * This method will cast the given object to String
+	 * 
+	 * @param object
+	 *            that need to be cast to string
+	 * @return {@link String}
+	 */
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}

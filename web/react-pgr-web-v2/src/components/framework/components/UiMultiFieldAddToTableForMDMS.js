@@ -442,9 +442,9 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     }
     this.setState(
       {
-        // valueList: list,
-        isBtnDisabled: true,
-        isAddAgain: false,
+         valueList: list,
+        //isBtnDisabled: true,
+        isAddAgain: true,
         formData: {},
         indexes: [],
       },

@@ -12,7 +12,7 @@ var dat = {
           {
             name: 'advocateTitle',
             jsonPath: 'title',
-            label: 'advocates.create.advocateTitle',
+            label: 'advocates.create.ownerTitle',
             type: 'windowsSingleValueList',
             isRequired: false,
             isDisabled: false,

@@ -128,6 +128,104 @@ class UiWindowForm extends Component {
     }
   };
 
+
+  enField = (_mockData, enableStr, reset) => {
+    debugger;
+    let { moduleName, actionName, setFormData } = this.props;
+    let _formData = { ...this.props.formData };
+    for (let i = 0; i < _mockData[moduleName + '.create'].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.create'].groups[i].fields.length; j++) {
+        if (enableStr == _mockData[moduleName  + '.create'].groups[i].fields[j].name) {
+          _mockData[moduleName + '.create'].groups[i].fields[j].isDisabled = reset ? true : false;
+          // if (!reset) {
+          //   _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+          //   setFormData(_formData);
+          // }
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  };
+
+  disField = (_mockData, disableStr, reset) => {
+    debugger;
+    let { moduleName, actionName, setFormData } = this.props;
+    let _formData = { ...this.props.formData };
+    for (let i = 0; i < _mockData[moduleName + '.create'].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.create'].groups[i].fields.length; j++) {
+        if (disableStr == _mockData[moduleName + '.create'].groups[i].fields[j].name) {
+          _mockData[moduleName + '.create'].groups[i].fields[j].isDisabled = reset ? false : true;
+          // if (!reset) {
+          //   _.set(_formData, _mockData[moduleName + '.create'].groups[i].fields[j].jsonPath, '');
+          //   setFormData(_formData);
+          // }
+
+          break;
+        }
+      }
+    }
+
+    return _mockData;
+  };
+
+  checkIfHasEnDisFields = (jsonPath, val) => {
+debugger;
+  //  let _mockData = { ...this.props.mockData };
+  let { mockData } = this.state;
+    let { moduleName, actionName, setMockData } = this.props;
+     for (let i = 0; i < mockData[moduleName + '.create'].groups.length; i++) {
+      for (let j = 0; j < mockData[moduleName + '.create'].groups[i].fields.length; j++) {
+         if ( jsonPath == mockData[moduleName + '.create'].groups[i].fields[j].jsonPath && 
+              mockData[moduleName + '.create'].groups[i].fields[j].enableDisableFields &&
+              mockData[moduleName + '.create'].groups[i].fields[j].enableDisableFields.length
+              ){
+                console.log("Condition 1 satisfied");
+                for (let k = 0; k < mockData[moduleName + '.create'].groups[i].fields[j].enableDisableFields.length; k++){
+                  if (val == mockData[moduleName  + '.create'].groups[i].fields[j].enableDisableFields[k].ifValue) {
+                    console.log("Value matched is:", val);
+                    for (let y = 0; y < mockData[moduleName + '.create'].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                        mockData = this.disField(mockData, mockData[moduleName + '.create'].groups[i].fields[j].enableDisableFields[k].disable[y]);
+                    }
+                    for (let z = 0; z < mockData[moduleName + '.create'].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                                  mockData = this.enField(mockData, mockData[moduleName + '.create'].groups[i].fields[j].enableDisableFields[k].enable[z]);
+                                }
+
+                  }
+
+                }
+               
+              }
+
+      }
+     }
+    // for (let i = 0; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+    //   for (let j = 0; j < mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+    //     if (
+    //       jsonPath == mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+    //       mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields &&
+    //       mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length
+    //     ) {
+    //       for (let k = 0; k < mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+    //         if (val == mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+    //           for (let y = 0; y < mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+    //             mockData = this.disField(mockData, mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
+    //           }
+
+    //           for (let z = 0; z < mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+    //             mockData = this.enField(mockData, mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
+    //           }
+    //         }
+           
+    //       }
+    //     }
+    //   }
+    // }
+
+    // setMockData(mockData);
+  };
+
   getFileList = (mockObject, formData, fileList = {}) => {
     for (let i = 0; i < mockObject.groups.length; i++) {
       for (let j = 0; j < mockObject.groups[i].fields.length; j++) {
@@ -629,6 +727,7 @@ class UiWindowForm extends Component {
     //    console.log('error in autocomplete . It is version issue');
     //    console.log(e);
     //  }
+    this.checkIfHasEnDisFields(property, e.target.value);
 
     this.affectDependants(obj, e, property);
   };
@@ -639,6 +738,8 @@ class UiWindowForm extends Component {
       : _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
   handleOpen = () => {
+    //console.log("Popup states",this.state);
+   // console.log("Popup Props",this.props);
     this.setState({
       valuesObj: {},
       open: true,
@@ -672,6 +773,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setMockData: mockData => {
     dispatch({ type: 'SET_MOCK_DATA', mockData });
+  },
+  setFormData: data => {
+    dispatch({ type: 'SET_FORM_DATA', data });
   },
   setModuleName: moduleName => {
     dispatch({ type: 'SET_MODULE_NAME', moduleName });

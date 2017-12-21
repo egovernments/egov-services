@@ -151,13 +151,19 @@ export default (state = defaultState, action) => {
 };
 
 function validate(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
-  //if(property == "cases[0].witness")
+  //debugger;
   let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
   let isFormValid = true;
   // console.log(requiredFields);
   for (var i = 0; i < requiredFields.length; i++) {
+    if( requiredFields[i] == "agencies[0].reasonOfTermination" && ( _.get(form, requiredFields[i]) == '' || _.get(form, requiredFields[i]) == null) && _.get(form, "agencies[0].status") == 'active' ){
+      continue;
+    }
+    if( requiredFields[i] == "agencies[0].advocates[0].reasonOfTermination" && ( _.get(form, requiredFields[i]) == '' || _.get(form, requiredFields[i]) == null) && _.get(form, "agencies[0].advocates[0].status") == 'active' ){
+      continue;
+    }
+
     if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '' || _.get(form, requiredFields[i]) === 0 || _.get(form, requiredFields[i]).length <= 0) {
-      // console.log(requiredFields[i], _.get(form, requiredFields[i]));
       isFormValid = false;
       break;
     }

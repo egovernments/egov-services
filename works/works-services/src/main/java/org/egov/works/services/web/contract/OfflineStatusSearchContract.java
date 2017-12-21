@@ -13,24 +13,30 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OfflineStatusSearchContract {
 
-	private String tenantId;
+    private String tenantId;
 
-	private List<String> loaNumbers;
+    private List<String> loaNumbers;
 
-	private List<String> workOrderNumbers;
-	
-	private List<String> detailedEstimateNumbers;
+    private List<String> workOrderNumbers;
 
-	private String objectType;
-	
-	private List<String> statuses;
+    private List<String> detailedEstimateNumbers;
 
-	private List<String> ids;
+    private String objectType;
 
-	private Integer pageSize;
+    private List<String> statuses;
 
-	private Integer pageNumber;
+    private List<String> ids;
 
-	private String sortBy;
+    private Integer pageSize;
+
+    private Integer pageNumber;
+
+    private String sortBy;
+
+    private String loaNumberLike;
+
+    private String workOrderNumberLike;
+
+    private String detailedEstimateNumberLike;
 
 }

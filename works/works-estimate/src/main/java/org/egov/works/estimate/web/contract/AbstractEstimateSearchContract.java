@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Contract class to get search request.
@@ -14,43 +17,52 @@ import lombok.*;
 @Data
 @Builder
 public class AbstractEstimateSearchContract {
-	
-	@NotNull
-	private String tenantId;
-	
-	private List<String> ids;
 
-	private List<String> adminSanctionNumbers;
+    @NotNull
+    private String tenantId;
 
-	private Integer pageSize;
+    private List<String> ids;
 
-	private Integer pageNumber;
+    private Integer pageSize;
 
-	private String sortBy;
+    private Integer pageNumber;
 
-	private List<String> departments;
+    private String sortBy;
 
-	private List<String> fundCodes;
+    private List<String> departments;
 
-	private List<String> functionCodes;
+    private List<String> funds;
 
-	private List<String> budgetHeadCodes;
-	
-	private Long adminSanctionFromDate;
+    private List<String> functions;
 
-	private Long adminSanctionToDate;
+    private List<String> budgetHeads;
 
-	private Boolean spillOverFlag;
+    private Long adminSanctionFromDate;
 
-	private String createdBy;
+    private Long adminSanctionToDate;
 
-	private List<String> abstractEstimateNumbers;
+    private Boolean spillOverFlag;
 
-	private List<String> workIdentificationNumbers;
-	
-	private List<String> statuses;
-	
-	private String nameOfWork;
-	
-	private List<String> councilSanctionNumbers;
+    private String createdBy;
+
+    private List<String> statuses;
+
+    private String nameOfWork;
+
+    private List<String> abstractEstimateNumbers;
+
+    private List<String> workIdentificationNumbers;
+
+    private List<String> adminSanctionNumbers;
+
+    private List<String> councilResolutionNumbers;
+
+    private String abstractEstimateNumberLike;
+
+    private String workIdentificationNumberLike;
+
+    private String adminSanctionNumberLike;
+
+    private String councilResolutionNumberLike;
+
 }

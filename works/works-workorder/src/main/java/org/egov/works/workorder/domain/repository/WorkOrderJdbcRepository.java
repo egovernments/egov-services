@@ -1,5 +1,6 @@
 package org.egov.works.workorder.domain.repository;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.common.persistence.repository.JdbcRepository;
 import org.egov.works.workorder.persistence.helper.WorkOrderHelper;
 import org.egov.works.workorder.web.contract.*;
@@ -94,31 +95,34 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             paramValues.put("todate", workOrderSearchContract.getToDate());
         }
 
-        if (workOrderSearchContract.getWorkOrderNumbers() != null && workOrderSearchContract.getWorkOrderNumbers().size() == 1) {
+        if (StringUtils.isNotBlank(workOrderSearchContract.getWorkOrderNumberLike())) {
             addAnd(params);
-            params.append("lower(wo.workordernumber) like :workordernumbers");
-            paramValues.put("workordernumbers", "%" + workOrderSearchContract.getWorkOrderNumbers().get(0).toLowerCase() + "%");
-        } else if (workOrderSearchContract.getWorkOrderNumbers() != null) {
+            params.append("lower(wo.workordernumber) like :workordernumberslike");
+            paramValues.put("workordernumberslike", "%" + workOrderSearchContract.getWorkOrderNumberLike().toLowerCase() + "%");
+        } 
+        if (workOrderSearchContract.getWorkOrderNumbers() != null && !workOrderSearchContract.getWorkOrderNumbers().isEmpty()) {
             addAnd(params);
             params.append("wo.workordernumber in (:workordernumbers))");
             paramValues.put("workordernumbers", workOrderSearchContract.getWorkOrderNumbers());
         }
 
-        if (workOrderSearchContract.getLoaNumbers() != null && workOrderSearchContract.getLoaNumbers().size() == 1) {
+        if (StringUtils.isNotBlank(workOrderSearchContract.getLoaNumberLike())) {
             addAnd(params);
             params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where lower(loa.loanumber) like :loaNumber and loa.tenantId=:tenantId)");
-            paramValues.put("loaNumber", "%" + workOrderSearchContract.getLoaNumbers().get(0).toLowerCase() + "%");
-        } else if (workOrderSearchContract.getLoaNumbers() != null) {
+            paramValues.put("loaNumber", "%" + workOrderSearchContract.getLoaNumberLike().toLowerCase() + "%");
+        } 
+        if (workOrderSearchContract.getLoaNumbers() != null && !workOrderSearchContract.getLoaNumbers().isEmpty()) {
             addAnd(params);
             params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers) and loa.tenantId=:tenantId)");
             paramValues.put("loaNumbers", workOrderSearchContract.getLoaNumbers());
         }
 
-        if (workOrderSearchContract.getContractorCodes() != null && !workOrderSearchContract.getContractorCodes().isEmpty() && workOrderSearchContract.getContractorCodes().size() == 1) {
+        if (StringUtils.isNotBlank(workOrderSearchContract.getContractorCodeLike())) {
             addAnd(params);
             params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where lower(loa.contractor) like (:contractorcode))");
-            paramValues.put("contractorcode", "%" + workOrderSearchContract.getContractorCodes().get(0).toLowerCase() + "%");
-        } else if (workOrderSearchContract.getContractorCodes() != null) {
+            paramValues.put("contractorcode", "%" + workOrderSearchContract.getContractorCodeLike().toLowerCase() + "%");
+        } 
+        if (workOrderSearchContract.getContractorCodes() != null && !workOrderSearchContract.getContractorCodes().isEmpty()) {
             addAnd(params);
             params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
             paramValues.put("contractorcodes", workOrderSearchContract.getContractorCodes());
@@ -143,12 +147,13 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             }
         }
 
-        if (workOrderSearchContract.getDetailedEstimateNumbers() != null && workOrderSearchContract.getDetailedEstimateNumbers().size() == 1) {
+        if (StringUtils.isNotBlank(workOrderSearchContract.getDetailedEstimateNumberLike())) {
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and upper(loaestimate.detailedestimate) like :detailedestimatenumber and loaestimate.tenantid=:tenantid ");
-            paramValues.put("detailedestimatenumber", '%' + workOrderSearchContract.getDetailedEstimateNumbers().get(0).toUpperCase() + '%');
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and upper(loaestimate.detailedestimate) like :detailedestimatenumberlike and loaestimate.tenantid=:tenantid ");
+            paramValues.put("detailedestimatenumberlike", '%' + workOrderSearchContract.getDetailedEstimateNumberLike().toUpperCase() + '%');
             paramValues.put("tenantid",workOrderSearchContract.getTenantId());
-        } else if (workOrderSearchContract.getDetailedEstimateNumbers() != null && workOrderSearchContract.getDetailedEstimateNumbers().size() > 1) {
+        }
+        if (workOrderSearchContract.getDetailedEstimateNumbers() != null && workOrderSearchContract.getDetailedEstimateNumbers().size() > 1) {
             addAnd(params);
             params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid ");
             paramValues.put("detailedestimatenumber", workOrderSearchContract.getDetailedEstimateNumbers());
@@ -176,6 +181,18 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid");
             paramValues.put("detailedestimatenumber", winEstimateNumbers);
+            paramValues.put("tenantid",workOrderSearchContract.getTenantId());
+        }
+        
+        List<String> winEstimateNumberLike = new ArrayList<>();
+        if (StringUtils.isNotBlank(workOrderSearchContract.getWorkIdentificationNumberLike())) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByProjectCode(Arrays.asList(workOrderSearchContract.getWorkIdentificationNumberLike()), workOrderSearchContract.getTenantId(), requestInfo);
+            for (DetailedEstimate detailedEstimate : detailedEstimates)
+                winEstimateNumberLike.add(detailedEstimate.getEstimateNumber());
+
+            addAnd(params);
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and lower(loaestimate.detailedestimate) like :detailedestimatenumberlike and loaestimate.tenantid=:tenantid");
+            paramValues.put("detailedestimatenumberlike", "%" + winEstimateNumberLike.get(0).toLowerCase() + "%");
             paramValues.put("tenantid",workOrderSearchContract.getTenantId());
         }
 

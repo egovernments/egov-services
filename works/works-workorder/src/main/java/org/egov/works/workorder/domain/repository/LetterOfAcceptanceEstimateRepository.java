@@ -87,7 +87,7 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = letterOfAcceptanceEstimateHelper.toDomain();
 
             DetailedEstimateSearchContract detailedEstimateSearchContract = new DetailedEstimateSearchContract();
-            detailedEstimateSearchContract.setDetailedEstimateNumbers(Arrays.asList(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber()));
+            detailedEstimateSearchContract.setIds(Arrays.asList(letterOfAcceptanceEstimate.getDetailedEstimate().getId()));
             detailedEstimateSearchContract.setStatuses(Arrays.asList(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()));
             letterOfAcceptanceEstimate.setDetailedEstimate(estimateRepository.getDetailedEstimateById(detailedEstimateSearchContract,letterOfAcceptanceEstimateSearchCriteria.getTenantId(),requestInfo).getDetailedEstimates().get(0));
 

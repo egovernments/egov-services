@@ -18,10 +18,6 @@ public class WorkOrderSearchContract {
 
     private List<String> ids;
 
-    private List<String> workOrderNumbers;
-
-    private List<String> loaNumbers;
-
     private Long fromDate;
 
     private Long toDate;
@@ -35,6 +31,22 @@ public class WorkOrderSearchContract {
     private List<String> detailedEstimateNumbers;
 
     private List<String> workIdentificationNumbers;
+    
+    private List<String> workOrderNumbers;
+
+    private List<String> loaNumbers;
+    
+    private String contractorNameLike;
+
+    private String contractorCodeLike;
+
+    private String detailedEstimateNumberLike;
+
+    private String workIdentificationNumberLike;
+    
+    private String workOrderNumberLike;
+
+    private String loaNumberLike;
 
     private List<String> department;
 

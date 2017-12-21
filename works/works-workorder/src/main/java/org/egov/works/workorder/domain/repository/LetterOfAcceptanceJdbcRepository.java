@@ -25,12 +25,11 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
     @Autowired
     private LetterOfAcceptanceEstimateRepository letterOfAcceptanceEstimateRepository;
 
-
     public static final String TABLE_NAME = "egw_letterofacceptance loa";
     public static final String LOA_ESTIMATESEARCH_EXTENTION = " , egw_letterofacceptanceestimate loaestimate";
 
-
-    public List<LetterOfAcceptance> searchLOAs(final LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria, final RequestInfo requestInfo) {
+    public List<LetterOfAcceptance> searchLOAs(final LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria,
+            final RequestInfo requestInfo) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -45,8 +44,10 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             validateEntityFieldName(letterOfAcceptanceSearchCriteria.getSortBy(), LetterOfAcceptance.class);
         }
 
-        if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && !letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().isEmpty()
-                || letterOfAcceptanceSearchCriteria.getDepartment() != null && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty())
+        if ((letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null
+                && !letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().isEmpty())
+                || (letterOfAcceptanceSearchCriteria.getDepartment() != null
+                        && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty()) || StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike()))
             tableName += LOA_ESTIMATESEARCH_EXTENTION;
 
         String orderBy = "order by loa.id";
@@ -69,11 +70,13 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             params.append("loa.id in(:ids) ");
             paramValues.put("ids", letterOfAcceptanceSearchCriteria.getIds());
         }
-        if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() == 1) {
+        if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getLoaNumberLike())) {
             addAnd(params);
-            params.append("loa.loaNumber like (:loaNumbers)");
-            paramValues.put("loaNumbers", "%" + letterOfAcceptanceSearchCriteria.getLoaNumbers().get(0).toUpperCase() + "%");
-        } else if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() > 1) {
+            params.append("upper(loa.loaNumber) like (:loaNumberLike)");
+            paramValues.put("loaNumberLike", "%" + letterOfAcceptanceSearchCriteria.getLoaNumberLike().toUpperCase() + "%");
+        }
+        if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null
+                && !letterOfAcceptanceSearchCriteria.getLoaNumbers().isEmpty()) {
             addAnd(params);
             params.append("loa.loaNumber in(:loaNumbers)");
             paramValues.put("loaNumbers", letterOfAcceptanceSearchCriteria.getLoaNumbers());
@@ -105,46 +108,79 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             paramValues.put("status", letterOfAcceptanceSearchCriteria.getStatuses());
         }
 
-        if (letterOfAcceptanceSearchCriteria.getContractorCodes() != null && !letterOfAcceptanceSearchCriteria.getContractorCodes().isEmpty()) {
-            searchByContractorCodes(letterOfAcceptanceSearchCriteria.getContractorCodes(), params, paramValues);
+        if (letterOfAcceptanceSearchCriteria.getContractorCodes() != null
+                && !letterOfAcceptanceSearchCriteria.getContractorCodes().isEmpty()) {
+            addAnd(params);
+            params.append("loa.contractor in (:contractorcode)");
+            paramValues.put("contractorcode", letterOfAcceptanceSearchCriteria.getContractorCodes());
+        }
+
+        if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getContractorCodeLike())) {
+            addAnd(params);
+            params.append("lower(loa.contractor) like :contractorcodeLike");
+            paramValues.put("contractorcodeLike",
+                    "%" + letterOfAcceptanceSearchCriteria.getContractorCodeLike().toLowerCase() + "%");
         }
 
         List<String> contractorCodes = new ArrayList<>();
-        if (letterOfAcceptanceSearchCriteria.getContractorNames() != null && !letterOfAcceptanceSearchCriteria.getContractorNames().isEmpty()) {
-            List<Contractor> contractors = worksMastersRepository.searchContractors(letterOfAcceptanceSearchCriteria.getTenantId(), letterOfAcceptanceSearchCriteria.getContractorNames(), requestInfo);
+        if (letterOfAcceptanceSearchCriteria.getContractorNames() != null
+                && !letterOfAcceptanceSearchCriteria.getContractorNames().isEmpty()) {
+            List<Contractor> contractors = worksMastersRepository.searchContractors(
+                    letterOfAcceptanceSearchCriteria.getTenantId(), letterOfAcceptanceSearchCriteria.getContractorNames(),
+                    requestInfo);
             for (Contractor contractor : contractors)
                 contractorCodes.add(contractor.getCode());
-            if(!contractorCodes.isEmpty())
-              searchByContractorCodes(contractorCodes, params, paramValues);
+            if (!contractorCodes.isEmpty())
+                searchByContractorCodes(contractorCodes, params, paramValues);
+        }
+        
+        List<String> contractorCodesLike = new ArrayList<>();
+        if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getContractorNameLike())) {
+            List<Contractor> contractors = worksMastersRepository.searchContractors(
+                    letterOfAcceptanceSearchCriteria.getTenantId(), Arrays.asList(letterOfAcceptanceSearchCriteria.getContractorNameLike()),
+                    requestInfo);
+            for (Contractor contractor : contractors)
+                contractorCodesLike.add(contractor.getCode());
+            if (!contractorCodesLike.isEmpty()) {
+                addAnd(params);
+                params.append("upper(loa.contractor) like :contractorcode");
+                paramValues.put("contractorcode", '%' + contractorCodesLike.get(0).toUpperCase() + '%');
+            }
         }
 
-        List<String> estimateNumbers = new ArrayList<>();
-        if(letterOfAcceptanceSearchCriteria.getDepartment() != null && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty()) {
-            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(letterOfAcceptanceSearchCriteria.getDepartment(),letterOfAcceptanceSearchCriteria.getTenantId(),requestInfo);
-            for(DetailedEstimate detailedEstimate : detailedEstimates)
-                estimateNumbers.add(detailedEstimate.getEstimateNumber());
+        List<String> deIds = new ArrayList<>();
+        if (letterOfAcceptanceSearchCriteria.getDepartment() != null
+                && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty()) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(
+                    letterOfAcceptanceSearchCriteria.getDepartment(), letterOfAcceptanceSearchCriteria.getTenantId(),
+                    requestInfo);
+            for (DetailedEstimate detailedEstimate : detailedEstimates)
+                deIds.add(detailedEstimate.getId());
 
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantId =:tenantId");
-            paramValues.put("detailedestimatenumber", letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers());
-            paramValues.put("tenantId", letterOfAcceptanceSearchCriteria.getTenantId());
+            params.append(
+                    "loaestimate.letterofacceptance = loa.id and loaestimate.detailedestimate in (:deIds) and loaestimate.tenantId =:tenantId");
+            paramValues.put("deIds", deIds);
 
         }
 
-        if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().size() == 1) {
+        if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike())) {
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = loa.loanumber and upper(loaestimate.detailedestimate) like :detailedestimatenumber  and loaestimate.tenantId =:tenantId");
-            paramValues.put("tenantId", letterOfAcceptanceSearchCriteria.getTenantId());
-            paramValues.put("detailedestimatenumber", '%' + letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().get(0).toUpperCase() + '%');
-        } else if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().size() > 1) {
+            params.append(
+                    "loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in (select id from egw_detailedestimate where lower(estimatenumber) like (:detailedestimatenumberlike))  and loaestimate.tenantId =:tenantId");
+            paramValues.put("detailedestimatenumberlike",
+                    '%' + letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike().toLowerCase() + '%');
+        }
+        if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null
+                && !letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().isEmpty()) {
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber  and loaestimate.tenantId =:tenantId");
-            paramValues.put("tenantId", letterOfAcceptanceSearchCriteria.getTenantId());
+            params.append(
+                    "loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in (select id from egw_detailedestimate where estimatenumber in (:detailedestimatenumber))  and loaestimate.tenantId =:tenantId");
             paramValues.put("detailedestimatenumber", letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers());
         }
 
         params.append(" and loa.deleted = false");
-        
+
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());
@@ -162,34 +198,30 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         for (LetterOfAcceptanceHelper letterOfAcceptanceHelper : loaList) {
             LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceHelper.toDomain();
 
-            LetterOfAcceptanceEstimateSearchContract letterOfAcceptanceEstimateSearchCriteria = LetterOfAcceptanceEstimateSearchContract.builder()
-                    .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
+            LetterOfAcceptanceEstimateSearchContract letterOfAcceptanceEstimateSearchCriteria = LetterOfAcceptanceEstimateSearchContract
+                    .builder()
+                    .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId()))
+                    .build();
 
             SecurityDepositSearchContract securityDepositeSearchCriteria = SecurityDepositSearchContract.builder()
-                    .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
+                    .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId()))
+                    .build();
 
-            letterOfAcceptance.setSecurityDeposits(securityDepositeJdbcRepository.searchSecurityDeposite(securityDepositeSearchCriteria));
-            letterOfAcceptance.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimateRepository.searchLOAs(letterOfAcceptanceEstimateSearchCriteria,requestInfo));
+            letterOfAcceptance
+                    .setSecurityDeposits(securityDepositeJdbcRepository.searchSecurityDeposite(securityDepositeSearchCriteria));
+            letterOfAcceptance.setLetterOfAcceptanceEstimates(
+                    letterOfAcceptanceEstimateRepository.searchLOAs(letterOfAcceptanceEstimateSearchCriteria, requestInfo));
 
             loas.add(letterOfAcceptance);
-
 
         }
         return loas;
     }
 
-
-
     private void searchByContractorCodes(List<String> contractorCodes, StringBuilder params, Map<String, Object> paramValues) {
-
-        if (contractorCodes.size() == 1) {
-            addAnd(params);
-            params.append("upper(loa.contractor) like :contractorcode");
-            paramValues.put("contractorcode", '%' + contractorCodes.get(0).toUpperCase() + '%');
-        } else {
-            addAnd(params);
-            params.append("loa.contractor in :contractorcode");
-            paramValues.put("contractorcode", contractorCodes);
-        }
+        addAnd(params);
+        params.append("loa.contractor in :contractorcode");
+        paramValues.put("contractorcode", contractorCodes);
     }
+
 }

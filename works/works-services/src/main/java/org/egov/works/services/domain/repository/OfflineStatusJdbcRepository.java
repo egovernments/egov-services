@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.works.services.web.contract.OfflineStatus;
 import org.egov.works.services.web.contract.OfflineStatusSearchContract;
@@ -45,6 +46,12 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
             params.append("objectnumber in (:detailedEstimateNumbers)");
             paramValues.put("detailedEstimateNumbers", offlineStatusSearchContract.getDetailedEstimateNumbers());
         }
+        
+        if (StringUtils.isNotBlank(offlineStatusSearchContract.getDetailedEstimateNumberLike())) {
+            addAnd(params);
+            params.append("lower(objectnumber) like (:detailedEstimateNumberLike)");
+            paramValues.put("detailedEstimateNumberLike", "%" + offlineStatusSearchContract.getDetailedEstimateNumberLike().toLowerCase() + "%");
+        }
 
         if (offlineStatusSearchContract.getIds() != null) {
             addAnd(params);
@@ -57,11 +64,23 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
             params.append("objectnumber in (:workOrderNumbers)");
             paramValues.put("workOrderNumbers", offlineStatusSearchContract.getWorkOrderNumbers());
         }
+        
+        if (StringUtils.isNotBlank(offlineStatusSearchContract.getWorkOrderNumberLike())) {
+            addAnd(params);
+            params.append("lower(objectnumber) like (:workOrderNumberLike)");
+            paramValues.put("workOrderNumberLike", "%" + offlineStatusSearchContract.getWorkOrderNumberLike().toLowerCase() + "%");
+        }
 
         if (offlineStatusSearchContract.getLoaNumbers() != null) {
             addAnd(params);
             params.append("objectnumber in (:loaNumbers)");
             paramValues.put("loaNumbers", offlineStatusSearchContract.getLoaNumbers());
+        }
+        
+        if (StringUtils.isNotBlank(offlineStatusSearchContract.getLoaNumberLike())) {
+            addAnd(params);
+            params.append("lower(objectnumber) like (:loaNumberLike)");
+            paramValues.put("loaNumberLike", "%" + offlineStatusSearchContract.getLoaNumberLike().toLowerCase() + "%");
         }
 
         if (offlineStatusSearchContract.getStatuses() != null) {

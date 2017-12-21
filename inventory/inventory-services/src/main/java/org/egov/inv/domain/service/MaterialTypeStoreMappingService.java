@@ -115,10 +115,24 @@ public class MaterialTypeStoreMappingService extends DomainService {
             }
 
             for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStoreMappings) {
-                uniqueCheck(errors, materialTypeStoreMapping);
-                validateMaterial(tenantId, errors, materialTypeStoreMapping);
-                validateStore(tenantId, errors, materialTypeStoreMapping);
+
                 validateChartOfAccount(errors, materialTypeStoreMapping);
+
+                if (!isEmpty(materialTypeStoreMapping.getStore().getCode())) {
+                    validateStore(tenantId, errors, materialTypeStoreMapping);
+                } else {
+                    errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSING.getCode(), "Store");
+                }
+
+                if (!isEmpty(materialTypeStoreMapping.getMaterialType().getCode()) && !isEmpty(materialTypeStoreMapping.getStore().getCode())) {
+                    uniqueCheck(errors, materialTypeStoreMapping);
+                }
+
+                if (!isEmpty(materialTypeStoreMapping.getMaterialType().getCode())) {
+                    validateMaterial(tenantId, errors, materialTypeStoreMapping);
+                } else {
+                    errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSING.getCode(), "Material", materialTypeStoreMapping.getMaterialType().getCode());
+                }
                 i++;
             }
 

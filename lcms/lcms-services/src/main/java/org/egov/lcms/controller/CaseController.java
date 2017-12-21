@@ -20,11 +20,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * 
- * @author Veswanth
- *
- */
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		28th Oct 2107						ParawiseComment Api implementation 
+* Shubham		30th Oct 2017						Added legacy load code
+* Veswanth		31st Oct 2017						Hearing details api implementation
+* Veswanth		10th Nov 2017						Get caseNumber api implementation
+* Veswanth		15th Nov 2017						Get Events api implementation
+* 
+*/
 @RestController
 @RequestMapping(path = "/legalcase")
 public class CaseController {
@@ -55,6 +61,13 @@ public class CaseController {
 		return new ResponseEntity<>(caseService.updateParaWiseComment(caseRequest), HttpStatus.OK);
 	}
 
+	/**
+	 * API for case Registration
+	 * 
+	 * @param caseRequest
+	 * @return caseResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "/case/_registration", method = RequestMethod.POST)
 	public ResponseEntity<?> caseRegistration(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		CaseResponse summonResponse = caseService.createCase(caseRequest);
@@ -62,6 +75,13 @@ public class CaseController {
 
 	}
 
+	/**
+	 * API for Case Search
+	 * @param caseSearchCriteria
+	 * @param requestInfoWrapper
+	 * @return caseResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "/case/_search", method = RequestMethod.POST)
 	public ResponseEntity<?> searchCase(@ModelAttribute @Valid CaseSearchCriteria caseSearchCriteria,
 			@RequestBody RequestInfoWrapper requestInfoWrapper) throws Exception {
@@ -70,6 +90,12 @@ public class CaseController {
 
 	}
 
+	/**
+	 * API for Vakalatnama create
+	 * @param caseRequest
+	 * @return caseResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "/case/_vakalatnamageneration", method = RequestMethod.POST)
 	public ResponseEntity<?> createVakalatnama(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		CaseResponse caseResponse = caseService.createVakalatnama(caseRequest);
@@ -77,6 +103,13 @@ public class CaseController {
 
 	}
 
+	/**
+	 * API for legacy case create
+	 * 
+	 * @param caseRequest
+	 * @return caseResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "/case/_dataentry", method = RequestMethod.POST)
 	public ResponseEntity<?> createLegacyCase(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
 		CaseResponse caseResponse = caseService.createLegacyCase(caseRequest);
@@ -88,7 +121,7 @@ public class CaseController {
 	 * Create method for Hearing Details API service
 	 * 
 	 * @param caseRequest
-	 * @return
+	 * @return caseResponse
 	 * @throws Exception
 	 */
 	@RequestMapping(path = "/hearingdetails/_create", method = RequestMethod.POST)
@@ -100,7 +133,7 @@ public class CaseController {
 	 * Update method for Hearing details API service
 	 * 
 	 * @param caseRequest
-	 * @return
+	 * @return caseResponse
 	 */
 	@RequestMapping(path = "/hearingdetails/_update")
 	public ResponseEntity<?> updateHearingDetails(@RequestBody @Valid CaseRequest caseRequest) {

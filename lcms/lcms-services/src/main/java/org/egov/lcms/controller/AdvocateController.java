@@ -21,6 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		28th Oct 2107						Initial commit for advocate controller 
+* Yosadhara		30th Oct 2017						Changes in advocate API's
+* Anil	 		14th Nov 2017						Agency Api implementation
+* Veswanth 		14th Nov 2017						Advocate search implementation
+* Veswanth 		14th Nov 2017						Added code in agency search
+*/
 @RestController
 @RequestMapping("/legalcase/advocate/")
 public class AdvocateController {
@@ -34,6 +44,15 @@ public class AdvocateController {
 	@Autowired
 	PropertiesManager propertiesManager;
 
+	/**
+	 * API for advocate search
+	 * 
+	 * @param requestInfoWrapper
+	 * @param advocateSearchCriteria
+	 * @param bindingResult
+	 * @return agencyResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_search")
 	public ResponseEntity<?> searchAdvocate(@RequestBody RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid AdvocateSearchCriteria advocateSearchCriteria, BindingResult bindingResult)
@@ -47,6 +66,13 @@ public class AdvocateController {
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
 	}
 
+	/**
+	 * API for Agency create
+	 * 
+	 * @param agencyRequest
+	 * @return agencyResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_create")
 	public ResponseEntity<?> createAgency(@RequestBody @Valid AgencyRequest agencyRequest) throws Exception {
 
@@ -54,6 +80,13 @@ public class AdvocateController {
 		return new ResponseEntity<>(agencyResponse, HttpStatus.CREATED);
 	}
 
+	/**
+	 * API for Advocate update
+	 * 
+	 * @param agencyRequest
+	 * @return agencyResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_update")
 	public ResponseEntity<?> updateAdvocate(@RequestBody @Valid AgencyRequest agencyRequest) throws Exception {
 
@@ -61,6 +94,18 @@ public class AdvocateController {
 		return new ResponseEntity<>(advocateResponse, HttpStatus.CREATED);
 	}
 
+	/**
+	 * API for Agency Search
+	 * 
+	 * @param tenantId
+	 * @param code
+	 * @param isIndividual
+	 * @param advocateName
+	 * @param agencyName
+	 * @param requestInfoWrapper
+	 * @return agencyResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "agency/_search")
 	public ResponseEntity<?> searchAgency(@RequestParam(name = "tenantId", required = true) String tenantId,
 			@RequestParam(name = "code", required = false) String code,
@@ -69,8 +114,8 @@ public class AdvocateController {
 			@RequestParam(name = "agencyName", required = false) String agencyName,
 			@RequestBody @Valid RequestInfoWrapper requestInfoWrapper) throws Exception {
 
-		AgencyResponse agencyResponse = advocateService.searchAgency(tenantId, code, isIndividual, advocateName, agencyName,
-				requestInfoWrapper);
+		AgencyResponse agencyResponse = advocateService.searchAgency(tenantId, code, isIndividual, advocateName,
+				agencyName, requestInfoWrapper);
 		return new ResponseEntity<>(agencyResponse, HttpStatus.CREATED);
 	}
 

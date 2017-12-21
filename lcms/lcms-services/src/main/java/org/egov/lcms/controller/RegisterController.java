@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		31st Oct 2107						Initial commit for Register Api
+*/
 @RestController
 @RequestMapping("/legalcase/register/")
 public class RegisterController {
@@ -31,6 +37,13 @@ public class RegisterController {
 	@Autowired
 	PropertiesManager propertiesManager;
 
+	/**
+	 * API for Register create
+	 * 
+	 * @param registerRequest
+	 * @return RegisterResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_create")
 	public ResponseEntity<?> createRegister(@RequestBody @Valid RegisterRequest registerRequest) throws Exception {
 
@@ -38,6 +51,13 @@ public class RegisterController {
 		return new ResponseEntity<>(registerResponse, HttpStatus.CREATED);
 	}
 
+	/**
+	 * API for Register update
+	 * 
+	 * @param registerRequest
+	 * @return RegisterResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_update")
 	public ResponseEntity<?> updateRegister(@RequestBody @Valid RegisterRequest registerRequest) throws Exception {
 
@@ -45,14 +65,25 @@ public class RegisterController {
 		return new ResponseEntity<>(registerResponse, HttpStatus.CREATED);
 	}
 
+	/**
+	 * API for Register search
+	 * 
+	 * @param requestInfoWrapper
+	 * @param registerSearchCriteria
+	 * @param bindingResult
+	 * @return RegisterResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_search")
 	public ResponseEntity<?> searchRegister(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid RegisterSearchCriteria registerSearchCriteria, BindingResult bindingResult) throws Exception {
+			@ModelAttribute @Valid RegisterSearchCriteria registerSearchCriteria, BindingResult bindingResult)
+			throws Exception {
 		if (bindingResult.hasErrors()) {
 			throw new CustomException(propertiesManager.getInvalidTenantCode(),
 					propertiesManager.getExceptionMessage());
 		}
-		RegisterResponse registerResponse = registerService.searchRegister(registerSearchCriteria, requestInfoWrapper.getRequestInfo());
+		RegisterResponse registerResponse = registerService.searchRegister(registerSearchCriteria,
+				requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(registerResponse, HttpStatus.CREATED);
 	}
 }

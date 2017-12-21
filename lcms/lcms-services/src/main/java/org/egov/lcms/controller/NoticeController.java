@@ -19,6 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		31st Oct 2107						Initial commit for Notice controller
+*/
 @RestController
 @RequestMapping("/legalcase/notice/")
 public class NoticeController {
@@ -32,6 +38,13 @@ public class NoticeController {
 	@Autowired
 	PropertiesManager propertiesManager;
 
+	/**
+	 * API for Notice create
+	 * 
+	 * @param noticeRequest
+	 * @return NoticeResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_create")
 	public ResponseEntity<?> createNotice(@RequestBody @Valid NoticeRequest noticeRequest) throws Exception {
 
@@ -39,6 +52,13 @@ public class NoticeController {
 		return new ResponseEntity<>(noticeResponse, HttpStatus.CREATED);
 	}
 
+	/**
+	 * API for Notice update
+	 * 
+	 * @param noticeRequest
+	 * @return NoticeResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_update")
 	public ResponseEntity<?> updateNotice(@RequestBody @Valid NoticeRequest noticeRequest) throws Exception {
 
@@ -46,9 +66,19 @@ public class NoticeController {
 		return new ResponseEntity<>(noticeResponse, HttpStatus.CREATED);
 	}
 
+	/**
+	 * API for Notice search
+	 * 
+	 * @param requestInfoWrapper
+	 * @param noticeSearchCriteria
+	 * @param bindingResult
+	 * @return NoticeResponse
+	 * @throws Exception
+	 */
 	@RequestMapping(path = "_search")
 	public ResponseEntity<?> searchNotice(@RequestBody RequestInfoWrapper requestInfoWrapper,
-			@ModelAttribute @Valid NoticeSearchCriteria noticeSearchCriteria, BindingResult bindingResult) throws Exception {
+			@ModelAttribute @Valid NoticeSearchCriteria noticeSearchCriteria, BindingResult bindingResult)
+			throws Exception {
 		if (bindingResult.hasErrors()) {
 			throw new CustomException(propertiesManager.getInvalidTenantCode(),
 					propertiesManager.getExceptionMessage());

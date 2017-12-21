@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Controller class for opinion service
- * 
- * @author Veswanth
- *
- */
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		26th Oct 2107						Initial commit for Opinion Api 
+* Veswanth		28th Oct 2017						Added opinion tag for RequestMapping path
+* Veswanth		03rd Nov 2017						Changed requestInfo to requestInfoWrapper
+*/
 @RestController
 @RequestMapping(path = "/legalcase")
 public class OpinonController {
@@ -29,6 +31,7 @@ public class OpinonController {
 	OpinionService opinionService;
 
 	/**
+	 * API for opinion create
 	 * 
 	 * @param opinionRequest
 	 * @return opinionResponse
@@ -40,7 +43,7 @@ public class OpinonController {
 	}
 
 	/**
-	 * Update method for opinion service
+	 * Update API for opinion service
 	 * 
 	 * @param opinionRequest
 	 * @return opinionResponse
@@ -51,7 +54,7 @@ public class OpinonController {
 	}
 
 	/**
-	 * Search method for opinion service.
+	 * Search API for opinion service.
 	 * 
 	 * @param requestInfoWrapper
 	 * @param opinionSearchCriteria
@@ -61,8 +64,7 @@ public class OpinonController {
 	@RequestMapping(path = "/opinion/_search", method = RequestMethod.POST)
 	public ResponseEntity<?> searchOpinion(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			@Valid @ModelAttribute OpinionSearchCriteria opinionSearchCriteria) throws Exception {
-		return new ResponseEntity<>(
-				opinionService.searchOpinion(requestInfoWrapper, opinionSearchCriteria),
+		return new ResponseEntity<>(opinionService.searchOpinion(requestInfoWrapper, opinionSearchCriteria),
 				HttpStatus.OK);
 	}
 }

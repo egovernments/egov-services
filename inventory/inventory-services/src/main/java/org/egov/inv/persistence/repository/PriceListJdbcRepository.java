@@ -84,10 +84,10 @@ public class PriceListJdbcRepository extends JdbcRepository {
     }
 
     public Long getTenderQty(String supplier, String material, String ratetype) {
-        String tenderQtyQuery = "select quantity from pricelistdetails where active=true and deleted=false and material = :material and pricelist in (select id from pricelist where ratetype=:ratetype and supplier= :supplier and extract(epoch from now())::bigint * 1000 between agreementstartdate and agreementenddate ) ";
+        String tenderQtyQuery = "select quantity from pricelistdetails where active=true and deleted=false and material = :material and pricelist in (select id from pricelist where ratetype=:rateType and supplier= :supplier and extract(epoch from now())::bigint * 1000 between agreementstartdate and agreementenddate ) ";
 	    Map params=new HashMap<String,Object>();
 		params.put("material",material);
-		params.put("ratetype",ratetype);
+		params.put("rateType",ratetype);
 		params.put("supplier",supplier);
         Long tenderQty = namedParameterJdbcTemplate.queryForObject(tenderQtyQuery, params, Long.class);
         return tenderQty;
@@ -447,7 +447,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
                     return true;
                 }
                 
-                String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( todate >= :todate and todate <= :fromdate ) )and active=true and rateType=:ratetype and supplier=:supplier";
+                String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( todate >= :todate and todate <= :fromdate ) )and active=true and rateType=:rateType and supplier=:supplier";
                 Long count1 = namedParameterJdbcTemplate.queryForObject(searchQuery1, params, Long.class);
                 if (count1 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
@@ -455,7 +455,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
                     return true;
                 }
                 
-                String searchQuery2 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate <= :todate and todate >= :todate ) )and active=true and rateType=:ratetype and supplier=:supplier";
+                String searchQuery2 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate <= :todate and todate >= :todate ) )and active=true and rateType=:rateType and supplier=:supplier";
                 Long count2 = namedParameterJdbcTemplate.queryForObject(searchQuery2, params, Long.class);
                 if (count2 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;
@@ -463,7 +463,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
                     return true;
                 }
                 
-                String searchQuery3 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate <= :fromdate and todate >= :fromdate ) )and active=true and rateType=:ratetype and supplier=:supplier";
+                String searchQuery3 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = :material and active=true and ( fromdate <= :fromdate and todate >= :fromdate ) )and active=true and rateType=:rateType and supplier=:supplier";
                 Long count3 = namedParameterJdbcTemplate.queryForObject(searchQuery3, params, Long.class);
                 if (count3 != 0l && method.equals(Constants.ACTION_CREATE)) {
                     return true;

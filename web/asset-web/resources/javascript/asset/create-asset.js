@@ -99,6 +99,8 @@ const defaultAssetSetState = {
     "status": "",
     "grossValue": "",
     "accumulatedDepreciation": "",
+    "marketValue":"",
+    "surveyNumber":"",
     "description": "",
     "dateOfCreation": "",
     "locationDetails": {
@@ -134,6 +136,7 @@ class CreateAsset extends React.Component {
     super(props);
     this.state = {
         list: [],
+        ifassetLandIM : false,
         tblSet: {
           removeCustom: false
         },
@@ -541,7 +544,7 @@ class CreateAsset extends React.Component {
                 || (seen[currentObject.financialYear] = false);
         });
 
-        if(hasDuplicates) 
+        if(hasDuplicates)
           return showError("Duplicate financial years not allowed.");
       }
       //return console.log(JSON.stringify(tempInfo));
@@ -732,7 +735,11 @@ class CreateAsset extends React.Component {
                 break;
             }
          }
-
+         if (type==='LAND' ||type==='IMMOVABLE' ){
+           this.setState({ifassetLandIM:true});
+         }else{
+           this.setState({ifassetLandIM:false});
+         }
       }
       if(multi) {
         var options = e.target.options;
@@ -819,7 +826,7 @@ class CreateAsset extends React.Component {
         }, 1200);
       });
 
-			if(getUrlVars()["type"]) 
+			if(getUrlVars()["type"])
         $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
       else $('#hpCitizenTitle').text("Create Asset");
 
@@ -910,7 +917,7 @@ class CreateAsset extends React.Component {
                   if(asset.assetAttributes[i].type == "File") {
                     _files.push(asset.assetAttributes[i]);
                   }
-                }  
+                }
               } else {
                 asset.assetAttributes = [];
               }
@@ -1116,6 +1123,8 @@ class CreateAsset extends React.Component {
       revenueWard,
       accumulatedDepreciation,
       grossValue,
+      marketValue,
+      surveyNumber,
       status,
       assetAttributes,
       assetReferenceName,
@@ -1294,7 +1303,7 @@ class CreateAsset extends React.Component {
         return (
           <button type="button" className="btn btn-close" style={{"color": "#000000"}} onClick={() => addToRemovedFiles(name, fileId)}>Delete</button>
         )
-      else 
+      else
         return (
           <button type="button" className="btn btn-close" style={{"color": "#000000"}} onClick={() => addToRemovedFiles(name, fileId, true)}>Undo</button>
         )
@@ -1316,7 +1325,7 @@ class CreateAsset extends React.Component {
             </tr>
           )
         })
-      }) 
+      })
     }
 
     const showAttachedFiles = function() {
@@ -1699,7 +1708,7 @@ class CreateAsset extends React.Component {
         return (now.getFullYear() + '-' + month + '-' + day);
     }
 
-    const renderIfCapitalized = function(capitalized) {
+    const renderIfCapitalized = function(capitalized,ifassetLandIM) {
       if(capitalized) {
         return (
           <div className="row">
@@ -1725,10 +1734,25 @@ class CreateAsset extends React.Component {
                     </div>
                   </div>
               </div>
+              {ifassetLandIM &&
+                <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6 label-text">
+                          <label for="marketValue">Market Value(Rs.)</label>
+                      </div>
+                      <div className="col-sm-6">
+                          <input type="number" id="marketValue" name="marketValue" value= {marketValue}
+                            onChange={(e)=>{handleChange(e, "marketValue")}} min="1" maxlength="16" disabled={readonly}/>
+                      </div>
+                    </div>
+                </div>
+              }
           </div>
         )
       }
     }
+
+
 		const showCodeonUpdate = function(){
 
 			var type = getUrlVars()["type"];
@@ -1915,7 +1939,7 @@ class CreateAsset extends React.Component {
 
          </table>
         )
-      }  
+      }
     }
 
     return (
@@ -2211,6 +2235,7 @@ class CreateAsset extends React.Component {
                           </div>
                         </div>
                     </div>
+
                     <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">
@@ -2222,6 +2247,21 @@ class CreateAsset extends React.Component {
                           </div>
                         </div>
                     </div>
+
+                  {this.state.ifassetLandIM &&
+                    <div className="col-sm-6">
+                        <div className="row">
+                           <div className="col-sm-6 label-text">
+                               <label for="surveyNumber"> Survey Number </label>
+                           </div>
+                           <div className="col-sm-6">
+                               <input type="text" name="surveyNumber" id= "surveyNumber" value= {surveyNumber} maxLength= "15"
+                                 onChange={(e)=>{handleChange(e,"surveyNumber")}} disabled={readonly}/>
+                           </div>
+                       </div>
+                    </div>
+                  }
+
                   </div>
               </div>
             </div>
@@ -2248,7 +2288,7 @@ class CreateAsset extends React.Component {
                         </div>
                     </div>
                   </div>
-                  {renderIfCapitalized(this.state.capitalized)}
+                  {renderIfCapitalized(this.state.capitalized, this.state.ifassetLandIM)}
               </div>
             </div>
             <br/>

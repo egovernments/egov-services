@@ -194,7 +194,7 @@ public class MaterialIssuesService extends DomainService {
 				quantityIssued = BigDecimal.ZERO;
 			}
 			materialIssuedFromReceipts.add(materialIssuedFromReceipt);
-			if (quantityIssued.equals(BigDecimal.ZERO))
+			if (quantityIssued.compareTo(BigDecimal.ZERO) == 0)
 				break;
 		}
 		materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts);
@@ -476,7 +476,6 @@ public class MaterialIssuesService extends DomainService {
 						String date = convertEpochtoDate(materialIssue.getIssueDate());
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate", date);
 					}
-				    if(type != null)
 					if(type.equals(IssueTypeEnum.MATERIALOUTWARD.toString()))
 					{
 						if(materialIssue.getToStore() == null) 
@@ -497,7 +496,7 @@ public class MaterialIssuesService extends DomainService {
 							errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "fromStore");
 						}
 						if(materialIssue.getToStore() != null &&
-								materialIssue.getToStore().getActive()){
+								materialIssue.getToStore().getActive() != null){
 							if(!materialIssue.getToStore().getActive())
 								errors.addDataError(ErrorCode.ACTIVE_STORES_ALLOWED.getCode(), "toStore");
 							}

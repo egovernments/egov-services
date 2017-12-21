@@ -179,7 +179,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 			}
 	
 			materialIssuedFromReceipts.add(materialIssuedFromReceipt);
-			if (quantityIssued.equals(BigDecimal.ZERO))
+			if (quantityIssued.compareTo(BigDecimal.ZERO) == 0)
 				break;
 		}
 		materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts);

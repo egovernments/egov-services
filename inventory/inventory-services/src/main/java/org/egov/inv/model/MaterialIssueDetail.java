@@ -262,7 +262,7 @@ public class MaterialIssueDetail   {
   **/
   @ApiModelProperty(value = "Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. Mandatory in case of indent issue.")
 
-  @Valid
+ 
 
   public IndentDetail getIndentDetail() {
     return indentDetail;

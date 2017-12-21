@@ -1,0 +1,425 @@
+{
+	"variables": [],
+	"info": {
+		"name": "materialIssue",
+		"_postman_id": "e273d7e7-09e4-3507-2847-1abd8f14eabf",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create indent case",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues/_create?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues/_create?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  },\n  \"materialIssues\":[\n    {\n    \"tenantId\":\"default\",\n    \"fromStore\":null,\n    \"toStore\":null,\n    \"issueDate\":\"123456987\",\n    \"description\":\"this is a defect\",\n    \"designation\":\"issue inspector\",\n    \"indent\":{\n      \"id\":\"1\",\n      \"tenantId\":\"default\",\n      \"issueStore\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"indentStore\": null,\n      \"indentNumber\":\"In75834\",\n      \"indentDate\":\"1512864000000\",\n      \"indentType\":\"Indent\",\n      \"indentPurpose\":\"Consumption\",\n      \"indentCreatedBy\":\"mansi\",\n      \"designation\":\"assistant manager\",\n      \"indentDetails\":[\n        {\n          \"id\":\"1\",\n          \"uom\":{\n            \"id\":\"1\"\n          },\n          \"indentQuantity\":\"56\",\n          \"material\":{\n            \"id\":\"1\"\n          }\n        }]\n     },\n     \"issuedToEmployee\":null,\n     \"issuedToDesignation\":null,\n     \"supplier\":{\n       \"id\":\"1\",\n       \"tenantId\":\"default\",\n       \"type\":\"OTHERS\",\n       \"code\":\"SUPP123\",\n       \"name\":\"ANAND\",\n       \"ifsc\":\"6767676787\",\n       \"contactNo\":\"7878988899\",\n       \"bankCode\":\"bank123\",\n       \"address\":\"jjdshcfjdh\",\n       \"acctNo\":\"9844989489\"\n   \n     },\n     \"materialIssueDetails\":[\n       {\n    \n         \"tenantId\":\"default\",\n         \"material\":null,\n         \"orderNumber\":\"5\",\n         \"quantityIssued\":5,\n         \"balanceQuantity\":20,\n         \"value\":\"100\",\n         \"uom\": null,\n         \"voucherHeader\":\"vou123\",\n         \"indentDetail\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"indentQuantity\":8,\n           \"uom\":{\n           \"id\":\"1\",\n           \"code\":\"CUL\",\n           \"name\":\"dozens\"\n            },\n           \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"pensss\",\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         }\n         \n         },\n         \"description\":\"broken pens\"\n       \n       }\n       ]\n    }]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search indent case",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues/_search?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues/_search?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "update indent case",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues/_update?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues/_update?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  },\n  \"materialIssues\":[\n    {\n    \"materialIssueStatus\":\"APPROVED\",\n     \"issueNumber\":\"MRIN-2017-45\",\n    \"tenantId\":\"default\",\n    \"fromStore\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n      \"officeLocation\":{\n      \t\"code\":\"loc\"\n      },\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"toStore\":null,\n    \"issueDate\":\"123456987\",\n    \"description\":\"this is  a defect\",\n    \"designation\":\"issue inspector\",\n    \"indent\":{\n      \"id\":\"1\",\n      \"tenantId\":\"default\",\n      \"issueStore\":null,\n      \"indentStore\":null,\n      \"indentNumber\":\"In75834\",\n      \"indentDate\":\"1512864000000\",\n      \"indentType\":\"Indent\",\n      \"indentPurpose\":\"Consumption\",\n      \"indentCreatedBy\":\"aastha\",\n      \"designation\":\"assistant\",\n      \"indentDetails\":[\n        {\n          \"id\":\"1\",\n          \"uom\":{\n            \"id\":\"1\"\n          },\n          \"indentQuantity\":\"56\",\n          \"material\":{\n            \"id\":\"1\"\n          }\n        }]\n     },\n     \"issuedToEmployee\":null,\n     \"issuedToDesignation\":null,\n     \"supplier\":{\n       \"id\":\"1\",\n       \"tenantId\":\"default\",\n       \"type\":\"OTHERS\",\n       \"code\":\"SUPP123\",\n       \"name\":\"ANAND\",\n       \"ifsc\":\"6767676787\",\n       \"contactNo\":\"7878988899\",\n       \"bankCode\":\"bank123\",\n       \"address\":\"jjdshcfjdh\",\n       \"acctNo\":\"9844989489\"\n   \n     },\n     \"materialIssueDetails\":[\n       {\n\n         \"tenantId\":\"default\",\n         \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"pensss\",\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         },\n         \"orderNumber\":\"5\",\n         \"quantityIssued\":5,\n         \"balanceQuantity\":12,\n         \"uom\": {\n           \"id\":\"1\",\n           \"code\":\"CUL\",\n           \"name\":\"dozens\"\n            },\n         \"voucherHeader\":\"vou12367\",\n         \"indentDetail\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"indentQuantity\":8,\n           \"uom\": null,\n           \"material\":null\n         \n         },\n         \"description\":\"broken pencils\"\n\n       }\n       ]\n    }]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "create non indent case",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues-ni/_create?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues-ni/_create?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues-ni",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  },\n  \"materialIssues\":[\n    {\n    \"tenantId\":\"default\",\n    \"issuePurpose\":\"RETURNTOSUPPLIER\",\n    \"fromStore\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n      \"officeLocation\":{\n      \t\"code\":\"bchb\"\n      },\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"toStore\":  null,\n    \"issueDate\":\"123456987\",\n    \"description\":\"this is a not defect\",\n    \"designation\":\"issue inspector\",\n    \"indent\":null,\n     \"issuedToEmployee\":\"shipra\",\n     \"issuedToDesignation\":\"assistant\",\n     \"supplier\":{\n       \"id\":\"1\",\n       \"tenantId\":\"default\",\n       \"type\":\"OTHERS\",\n       \"code\":\"SUPP123\",\n       \"name\":\"ANAND\",\n       \"ifsc\":\"6767676787\",\n       \"contactNo\":\"7878988899\",\n       \"bankCode\":\"bank123\",\n       \"address\":\"jjdshcfjdh\",\n       \"acctNo\":\"9844989489\"\n   \n     },\n     \"materialIssueDetails\":[\n       {\n     \n         \"mrnNumber\":\"MRN/00003/2017\",\n         \"tenantId\":\"default\",\n         \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"penssss\",\n           \"scrapable\":false,\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         },\n         \"orderNumber\":\"5\",\n         \"balanceQuantity\":\"15\",\n         \"quantityIssued\":\"3\",\n         \"uom\": {\n           \"id\":\"1\",\n           \"code\":\"CUL\",\n           \"name\":\"dozens\"\n            },\n         \"voucherHeader\":\"vou123\",\n         \"indentDetail\":null,\n         \"description\":\"broken pens\"\n      \n       }\n       ]\n    }]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search non indent case",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues-ni/_search?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues-ni/_search?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues-ni",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "update non indent case",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues-ni/_create?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues-ni/_update?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues-ni",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  },\n  \"materialIssues\":[\n    {\n    \"materialIssueStatus\":\"APPROVED\",\t\n    \"tenantId\":\"default\",\n     \"issueNumber\": \"MRIN-2017-46\",\n    \"issuePurpose\":\"RETURNTOSUPPLIER\",\n    \"fromStore\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"officeLocation\":\n      {\n      \t\"code\":\"office\"\n      },\n      \"name\":\"manyavars\",\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"toStore\":  null,\n    \"issueDate\":\"123456987\",\n    \"description\":\"this is a not defect\",\n    \"designation\":\"issue inspector\",\n    \"indent\":null,\n     \"issuedToEmployee\":\"aastha\",\n     \"issuedToDesignation\":\"assistant\",\n     \"supplier\":{\n       \"id\":\"1\",\n       \"tenantId\":\"default\",\n       \"type\":\"OTHERS\",\n       \"code\":\"SUPP123\",\n       \"name\":\"ANAND\",\n       \"ifsc\":\"6767676787\",\n       \"contactNo\":\"7878988899\",\n       \"bankCode\":\"bank123\",\n       \"address\":\"jjdshcfjdh\",\n       \"acctNo\":\"9844989489\"\n   \n     },\n     \"materialIssueDetails\":[\n       {\n     \n         \"mrnNumber\":\"MRN/00003/2017\",\n         \"tenantId\":\"default\",\n         \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"penssss\",\n           \"scrapable\":false,\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         },\n         \"orderNumber\":\"5\",\n         \"balanceQuantity\":\"5\",\n         \"quantityIssued\":\"2\",\n         \"uom\": {\n           \"id\":\"1\",\n           \"code\":\"CUL\",\n           \"name\":\"dozens\"\n            },\n         \"voucherHeader\":\"vou123\",\n         \"indentDetail\":null,\n         \"description\":\"broken pens\"\n      \n       }\n       ]\n    }]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "create transfer outward case",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues-to/_create?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues-to/_create?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues-to",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  },\n  \"materialIssues\":[\n    {\n    \"tenantId\":\"default\",\n    \"fromStore\":null,\n    \"toStore\":null,\n    \"issueDate\":\"123456987\",\n    \"description\":\"this is a defect\",\n    \"designation\":\"issue inspector\",\n    \"indent\":{\n      \"id\":\"1\",\n      \"tenantId\":\"default\",\n      \"issueStore\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"indentStore\": {\n      \"id\":\"1\",\n      \"code\":\"store234\",\n      \"name\":\"manyavars\",\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n      \"indentNumber\":\"In75834\",\n      \"indentDate\":\"1512864000000\",\n      \"indentType\":\"Indent\",\n      \"indentPurpose\":\"Consumption\",\n      \"indentCreatedBy\":\"mansi\",\n      \"designation\":\"assistant manager\",\n      \"indentDetails\":[\n        {\n          \"id\":\"1\",\n          \"uom\":{\n            \"id\":\"1\"\n          },\n          \"indentQuantity\":\"56\",\n          \"material\":{\n            \"id\":\"1\"\n          }\n        }]\n     },\n     \"issuedToEmployee\":null,\n     \"issuedToDesignation\":null,\n     \"supplier\":{\n       \"id\":\"1\",\n       \"tenantId\":\"default\",\n       \"type\":\"OTHERS\",\n       \"code\":\"SUPP123\",\n       \"name\":\"ANAND\",\n       \"ifsc\":\"6767676787\",\n       \"contactNo\":\"7878988899\",\n       \"bankCode\":\"bank123\",\n       \"address\":\"jjdshcfjdh\",\n       \"acctNo\":\"9844989489\"\n   \n     },\n     \"materialIssueDetails\":[\n       {\n    \n         \"tenantId\":\"default\",\n         \"material\":null,\n         \"orderNumber\":\"5\",\n         \"quantityIssued\":5,\n         \"balanceQuantity\":20,\n         \"value\":\"100\",\n         \"uom\": null,\n         \"voucherHeader\":\"vou123\",\n         \"indentDetail\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"indentQuantity\":8,\n           \"uom\":{\n           \"id\":\"1\",\n           \"code\":\"CUL\",\n           \"name\":\"dozens\"\n            },\n           \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"pensss\",\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         }\n         \n         },\n         \"description\":\"broken pens\"\n       \n       }\n       ]\n    }]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search transfer outward",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues-to/_search?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues-to/_search?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues-to",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "update transfer outward",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/materialissues-to/_update?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/materialissues-to/_update?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"materialissues-to",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"8453e0d5-cabc-4e15-ad43-a9c84fa5ad94\",\n    \"userInfo\":\n    {\n      \"id\":\"1\",\n      \"userName\":\"mansi\",\n      \"tenantId\":\"default\"\n    }\n\n  },\n  \"materialIssues\":[\n    {\n    \"materialIssueStatus\":\"APPROVED\",\n     \"issueNumber\":\"MRIN-2017-47\",\n    \"tenantId\":\"default\",\n    \"fromStore\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n      \"officeLocation\":{\n      \t\"code\":\"loc\"\n      },\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"toStore\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n      \"officeLocation\":{\n      \t\"code\":\"loc\"\n      },\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"issueDate\":\"123456987\",\n    \"description\":\"this is  a defect\",\n    \"designation\":\"issue inspector\",\n    \"indent\":{\n      \"id\":\"1\",\n      \"tenantId\":\"default\",\n      \"issueStore\":null,\n      \"indentStore\":null,\n      \"indentNumber\":\"In75834\",\n      \"indentDate\":\"1512864000000\",\n      \"indentType\":\"Indent\",\n      \"indentPurpose\":\"Consumption\",\n      \"indentCreatedBy\":\"aastha\",\n      \"designation\":\"assistant\",\n      \"indentDetails\":[\n        {\n          \"id\":\"1\",\n          \"uom\":{\n            \"id\":\"1\"\n          },\n          \"indentQuantity\":\"56\",\n          \"material\":{\n            \"id\":\"1\"\n          }\n        }]\n     },\n     \"issuedToEmployee\":null,\n     \"issuedToDesignation\":null,\n     \"supplier\":{\n       \"id\":\"1\",\n       \"tenantId\":\"default\",\n       \"type\":\"OTHERS\",\n       \"code\":\"SUPP123\",\n       \"name\":\"ANAND\",\n       \"ifsc\":\"6767676787\",\n       \"contactNo\":\"7878988899\",\n       \"bankCode\":\"bank123\",\n       \"address\":\"jjdshcfjdh\",\n       \"acctNo\":\"9844989489\"\n   \n     },\n     \"materialIssueDetails\":[\n       {\n\n         \"tenantId\":\"default\",\n         \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"pensss\",\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         },\n         \"orderNumber\":\"5\",\n         \"quantityIssued\":5,\n         \"balanceQuantity\":12,\n         \"uom\": {\n           \"id\":\"1\",\n           \"code\":\"CUL\",\n           \"name\":\"dozens\"\n            },\n         \"voucherHeader\":\"vou12367\",\n         \"indentDetail\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"indentQuantity\":8,\n           \"uom\": null,\n           \"material\":null\n         \n         },\n         \"description\":\"broken pencils\"\n\n       }\n       ]\n    }]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

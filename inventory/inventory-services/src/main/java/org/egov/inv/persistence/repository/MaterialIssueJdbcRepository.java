@@ -18,8 +18,9 @@ import java.util.Map;
 @Service
 public class MaterialIssueJdbcRepository extends JdbcRepository {
 
-	 private static final String updateQuery = "update materialissue set materialissuestatus ='CANCELED' where issuenumber =:issuenumber and tenantId =:tenantId";
 
+	 private static final String updateQuery = "UPDATE materialissue SET materialissuestatus =:materialissuestatus WHERE issuenumber =:issuenumber AND tenantId =:tenantId";
+   
     static {
         init(MaterialIssueEntity.class);
     }
@@ -180,15 +181,17 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
         return page;
     }
 
-
-	public void updateStatus(String issueNumber, String tenantId) {
+    public void updateStatus(String issuenumber, String materialissuestatus, String tenantId) {
 
 		 Map<String,String> paramValues = new HashMap<>();
-		 paramValues.put("issuenumber", issueNumber);
+		 paramValues.put("issuenumber", issuenumber);
+		 paramValues.put("materialissuestatus",materialissuestatus);
 		 paramValues.put("tenantId", tenantId);
 		namedParameterJdbcTemplate.update(updateQuery,paramValues);
 		
 	}
+
+	
 
 
 }

@@ -482,7 +482,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 
 	private void updateStatusAsCancelled(String tenantId, MaterialIssue materialIssue) {
 	
-         materialIssueJdbcRepository.updateStatus(materialIssue.getIssueNumber(), materialIssue.getTenantId());		
+         materialIssueJdbcRepository.updateStatus(materialIssue.getIssueNumber(),"CANCELED", materialIssue.getTenantId());		
 	}
 
 	public MaterialIssueResponse search(MaterialIssueSearchContract searchContract) {

@@ -235,13 +235,15 @@ public enum ErrorCode {
     		"Material {0} and Pricelist Rate {1} combination Not Exist In The System {2}"),
     INDENT_NOT_APPROVED("indent.not.approved","associated indent with no {0} is not in approved status",
     		"issue is not possible"),
-    NO_ITEMS_TO_ISSUE("no.items.to.issue","selected indent has no items to issue", "selected indent has no items to issue"),
- 
-    SHOULD_BE_DIFFERENT("should.be.different","{0} and {1} values should be different",
+    NO_ITEMS_TO_ISSUE("no.items.to.issue",
+    		"selected indent has no items to issue", 
+    		"selected indent has no items to issue"),
+    QTY1_EQ_QTY2("qty1.eq.qty2",
+    		"The Field {0} Must Be Equal To {1} At Row {2}",
+            "The Field {0} Must Be Equal To {1} At Row {2}"),
+    SHOULD_BE_DIFFERENT("should.be.different",
+    		"{0} and {1} values should be different",
     		"{0} and {1} values should be different");
- 
-	
-
 
 
     private final String code;

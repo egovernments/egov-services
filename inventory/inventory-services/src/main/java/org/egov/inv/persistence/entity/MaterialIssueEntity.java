@@ -130,8 +130,8 @@ public class MaterialIssueEntity {
 		Store indentStore = new Store();
 		indentStore.setCode(toStore);
 
-		if (null != type && type.equals(IssueTypeEnum.INDENTISSUE.toString())
-				|| type.equals(IssueTypeEnum.MATERIALOUTWARD.toString())) {
+		if (null != type && (type.equals(IssueTypeEnum.INDENTISSUE.toString())
+				|| type.equals(IssueTypeEnum.MATERIALOUTWARD.toString()))) {
 
 			Indent indent = new Indent();
 			indent.setIndentNumber(indentNumber);

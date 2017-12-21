@@ -56,7 +56,7 @@ public class MaterialIssueDetailEntity {
 		unit.setCode(uom);
 		Material material = new Material();
 		material.setCode(materialCode);
-		if(type.equals(IssueTypeEnum.INDENTISSUE.toString()) || type.equals(IssueTypeEnum.MATERIALOUTWARD.toString())){
+		if(null != type && (type.equals(IssueTypeEnum.INDENTISSUE.toString()) || (type.equals(IssueTypeEnum.MATERIALOUTWARD.toString())))){
 		IndentDetail indentDetail = new IndentDetail();
 		indentDetail.setId(indentDetailId);
 		detail.setIndentDetail(indentDetail);

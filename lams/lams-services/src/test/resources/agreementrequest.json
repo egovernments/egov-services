@@ -95,6 +95,8 @@
       },
       "goodWillAmount": 450,
       "stateId": "627",
-      "source" : "DATA_ENTRY"
+      "source" : "DATA_ENTRY",
+      "firstAllotment" : "04/2015",
+      "gstin" : "28ABCDE2015Q2Z5"
    }
 }

@@ -335,10 +335,32 @@ class Report extends Component {
       }
 
       self.props.setLoadingStatus('loading');
-      Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
+      var _body = {};
+      if(url.includes("/egov-mdms-service/v1/_search")) {
+        var moduleDetails = [];
+        var masterDetails = [];
+        let data = { moduleName: '', masterDetails: [] };
+        let k = 0;
+        var masterDetail = {};
+        data.moduleName = hashLocation.split('/')[2];
+        var filterData = `[?(@.${specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].searchUrl.split('?')[1].split('={')[0]}=='${hashLocation.split('/')[hashLocation.split('/').length-1]}')]`;
+        masterDetail.filter = filterData;
+        masterDetail.name = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName;
+        data.masterDetails[0] = _.cloneDeep(masterDetail);
+        // console.log(data);
+        moduleDetails.push(data);
+  
+        _body = {
+          MdmsCriteria: {
+            tenantId: localStorage.getItem('tenantId'),
+            moduleDetails: moduleDetails,
+          },
+        };
+        query = '';
+      }
+      
+      Api.commonApiPost(url, query, _body, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
-          
-          console.log("this is respons efrom ", res)
           self.props.setLoadingStatus('hide');
           if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
             var obj = {};
@@ -359,11 +381,11 @@ class Report extends Component {
               hashLocation.split('/')[1],
               specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName
             );
+            // console.log(this.props.formData);
             self.props.setFormData(res);
           }
           let obj1 = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
           self.depedantValue(obj1.groups);
-
         },
         function(err) {
           self.props.setLoadingStatus('hide');
@@ -400,7 +422,7 @@ class Report extends Component {
                   hashLocation.split('/')[1],
                   specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName
                 );
-              } else {
+              } else { 
                 self.setInitialUpdateData(
                   res,
                   JSON.parse(JSON.stringify(specifications)),
@@ -458,7 +480,8 @@ class Report extends Component {
       },
     };
 
-    Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true)
+    if(jp.query(obj, `$.groups..fields..mdms`) != '') {
+      Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true)
       .then(res => {
         this.setState({
           mdmsData: res.MdmsRes,
@@ -504,6 +527,8 @@ class Report extends Component {
       .catch(err => {
         console.log(err);
       });
+    }
+    
   }
 
   checkifHasDependedantMdmsField(path, value) {
@@ -664,7 +689,7 @@ class Report extends Component {
         } else {
           let hashLocation = window.location.hash;
           if(hashLocation == "#/create/legal/advocatepayment"){
-            $('input[type=file]').val('');
+            $('input[type=file]').val('');  
           }
           self.props.toggleSnackbarAndSetText(
             true,
@@ -848,7 +873,6 @@ class Report extends Component {
     //Check if documents, upload and get fileStoreId
     let formdocumentData = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName];
     let documentPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].documentsPath;
-
     formdocumentData = (formdocumentData && formdocumentData.length && formdocumentData[0]) || formdocumentData;
     if (documentPath) {
       formdocumentData = _.get(formData, documentPath);
@@ -1870,7 +1894,7 @@ class Report extends Component {
         ? mockData[`${moduleName}.${actionName}`]['customActionsAndUrl'][0].url
         : '';
     //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
-    //  console.log({...this.props.formData})
+     console.log({...this.props.formData})
     return (
       <div className="Report">
         <Row>

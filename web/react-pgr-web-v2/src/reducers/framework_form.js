@@ -151,7 +151,7 @@ export default (state = defaultState, action) => {
 };
 
 function validate(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
-  //debugger;
+  debugger;
   let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
   let isFormValid = true;
   // console.log(requiredFields);
@@ -163,7 +163,7 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
       continue;
     }
 
-    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '' || _.get(form, requiredFields[i]) === 0 || _.get(form, requiredFields[i]).length <= 0) {
+    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '' || _.get(form, requiredFields[i]) === 0) {
       isFormValid = false;
       break;
     }
@@ -209,7 +209,7 @@ function reValidate(form, fieldErrors, requiredFields) {
   }
 
   for (var i = 0; i < requiredFields.length; i++) {
-    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '' || _.get(form, requiredFields[i]) === 0 || _.get(form, requiredFields[i]).length <= 0) {
+    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '' || _.get(form, requiredFields[i]) === 0) {
       // console.log(requiredFields[i], _.get(form, requiredFields[i]));
       return false;
     }

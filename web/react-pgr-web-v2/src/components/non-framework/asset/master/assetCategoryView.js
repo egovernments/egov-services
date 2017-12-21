@@ -294,34 +294,38 @@ class assetCategoryView extends Component {
         // console.log(res.MdmsRes.ASSET.AssetCategory[0].parent);
         // console.log(specifications[`asset.view`].objectName);
         //self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'view', specifications[`asset.view`].objectName);
-
-        Api.commonApiPost(
-      '/egov-mdms-service/v1/_get',
-      {
-        moduleName: 'ASSET',
-        masterName: 'AssetCategory',
-        filter: '%5B%3F%28%40.id+%3D%3D' + res.MdmsRes.ASSET.AssetCategory[0].parent + '%29%5D',
-      },
-      {},
-      false,
-      false,
-      false,
-      '',
-      '',
-      true
-    ).then(
-      function(subResponse) {
-        //this.handleChange({ target: { value: subResponse.MdmsRes.ASSET.AssetCategory[0].name } }, 'MdmsRes.ASSET.AssetCategory[0].parent');
-      //  if(subResponse.MdmsRes.ASSET && subResponse.MdmsRes.ASSET.AssetCategory && subResponse.MdmsRes.ASSET.AssetCategory[0].name){
-          resHolder.MdmsRes.ASSET.AssetCategory[0].parentName = subResponse.MdmsRes.ASSET.AssetCategory[0].name;
+        if(res.MdmsRes.ASSET.AssetCategory[0].parent){
+          Api.commonApiPost(
+            '/egov-mdms-service/v1/_get',
+            {
+              moduleName: 'ASSET',
+              masterName: 'AssetCategory',
+              filter: '%5B%3F%28%40.id+%3D%3D' + res.MdmsRes.ASSET.AssetCategory[0].parent + '%29%5D',
+            },
+            {},
+            false,
+            false,
+            false,
+            '',
+            '',
+            true
+          ).then(
+            function(subResponse) {
+              //this.handleChange({ target: { value: subResponse.MdmsRes.ASSET.AssetCategory[0].name } }, 'MdmsRes.ASSET.AssetCategory[0].parent');
+            //  if(subResponse.MdmsRes.ASSET && subResponse.MdmsRes.ASSET.AssetCategory && subResponse.MdmsRes.ASSET.AssetCategory[0].name){
+                resHolder.MdmsRes.ASSET.AssetCategory[0].parentName = subResponse.MdmsRes.ASSET.AssetCategory[0].name;
+                self.props.setFormData(resHolder);
+              //}
+              // console.log(self.props.formData.MdmsRes.ASSET.AssetCategory);
+            },
+            function(err) {
+              console.log(err);
+            }
+          );
+        } else{
           self.props.setFormData(resHolder);
-        //}
-        // console.log(self.props.formData.MdmsRes.ASSET.AssetCategory);
-      },
-      function(err) {
-        console.log(err);
-      }
-    );
+        }
+
     self.setInitialUpdateData(resHolder, JSON.parse(JSON.stringify(specifications)), 'asset', 'view', specifications[`asset.view`].objectName);
       },
       function(err) {}

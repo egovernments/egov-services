@@ -189,9 +189,8 @@ class LeaveSummary extends React.Component {
                 <td>{item.noofdays}</td>
                 <td>{item.availableDays}</td>
                 <td>{item.totalLeavesEligible}</td>
-                <td>{item.leavedays}</td>
-                <th>{item.balance} </th>
-
+                <td>{item.leaveDays}</td>
+                <td>{item.balance} </td>
                 </tr>
             )
         })

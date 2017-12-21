@@ -192,10 +192,9 @@ public class DataUploadUtils {
 		}
 	}
 	
-	public String mockIdGen(String module){
+	public String mockIdGen(String module, String defName){
 		StringBuilder id = new StringBuilder();
-		id.append("DU-").append(module+"-").append(new Date().getTime());
-		
+		id.append(module+"-").append(defName+"-").append(new Date().getTime());
 		logger.info("JOB CODE: "+id.toString());
 		return id.toString();
 	}

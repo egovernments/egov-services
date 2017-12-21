@@ -1,5 +1,6 @@
 package org.egov.dataupload.service;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +87,7 @@ public class DataUploadService {
 					"No .xls file found for: fileStoreId = "+uploadJob.getRequestFilePath()
 					+" AND tenantId = "+uploadJob.getTenantId());		
 		}
-		uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName()));
+		uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName(), uploadJob.getDefName()));
 		uploadJob.setRequesterName(uploaderRequest.getRequestInfo().getUserInfo().getUserName());
 		uploadRegistryRepository.createJob(uploaderRequest);
 		uploadJob.setLocalFilePath(filePath);
@@ -228,7 +229,7 @@ public class DataUploadService {
 		    	continue;
 		    }			
 		}
-		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName());
+		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), uploadJob.getCode());
 		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
 		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
 		uploadRegistryRepository.updateJob(uploaderRequest);
@@ -256,10 +257,20 @@ public class DataUploadService {
 		
 	}
 	
-	private String getFileStoreId(String tenantId, String module) throws Exception{
+	private String getFileStoreId(String tenantId, String module, String jobId) throws Exception{
 		logger.info("Uploading result excel to filestore....");
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Object> result = dataUploadRepository.postFileContents(tenantId, module, resultFilePath);
+		File resultXls = new File(resultFilePath);
+		File from = new File(resultXls,"result.xls");
+		File to = new File(resultXls, jobId+".xls");
+		boolean isRenameSuccess = from.renameTo(to);
+		String filePath = null;
+		if(isRenameSuccess){
+			filePath = resultFilePath.replace("result.xls", jobId+".xls");
+		}else{
+			filePath = resultFilePath;
+		}
+		Map<String, Object> result = dataUploadRepository.postFileContents(tenantId, module, filePath);
 		List<Object> objects = (List<Object>) result.get("files");
 		String id = null;
 		try{

@@ -62,12 +62,8 @@ public class MDMSService {
 	@Value("${egov.repo.owner}")
 	private String egovRepoOwner;
 	
-	@Value("${egov.repo.owner}")
+	@Value("${egov.repo}")
 	private String egovRepo;
-	
-	public String EGOV_REPO_PATH = egovRepoOwner +"/"+egovRepo +"/";
-	public String FINAL_FILE_PATH_APPEND = "https://github.com/"+egovRepoOwner +"/"+egovRepo+"/blob/master/";
-
 
 	
 	@Autowired
@@ -168,6 +164,7 @@ public class MDMSService {
 				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
 			}
 		}
+		String FINAL_FILE_PATH_APPEND = "https://github.com/"+egovRepoOwner +"/"+egovRepo+"/blob/master/";
 		logger.info("Find your changes at: "+ FINAL_FILE_PATH_APPEND + filePath);
 		
 		Map<String, Map<String, JSONArray>> response = new HashMap<>();
@@ -352,7 +349,7 @@ public class MDMSService {
 	
 	public String getBranchHead(){
 		StringBuilder getBranchHeadUri = new StringBuilder();
-		getBranchHeadUri.append(MDMSConstants.GITHUB_HOST).append(EGOV_REPO_PATH)
+		getBranchHeadUri.append(MDMSConstants.GITHUB_HOST).append(egovRepoOwner +"/"+egovRepo +"/")
 		                .append(MDMSConstants.EGOV_REF_PATH);
 		logger.info("URI: "+getBranchHeadUri.toString());
 		Object branchHeadResponse = mDMSCreateRepository.
@@ -366,7 +363,7 @@ public class MDMSService {
 	
 	public String getBaseTree(String branchHeadSHA){
 		StringBuilder getBaseTreeUri = new StringBuilder();
-		getBaseTreeUri.append(MDMSConstants.GITHUB_HOST).append(EGOV_REPO_PATH)
+		getBaseTreeUri.append(MDMSConstants.GITHUB_HOST).append(egovRepoOwner +"/"+egovRepo +"/")
 		                .append(MDMSConstants.EGOV_TREE_PATH).append(branchHeadSHA);
 		logger.info("URI: "+getBaseTreeUri.toString());
 		Object baseTreeResponse = mDMSCreateRepository.
@@ -381,7 +378,7 @@ public class MDMSService {
 	
 	public String createTree(String baseTreeSHA, String filePath, String contents){
 		StringBuilder getCreateTreeUri = new StringBuilder();
-		getCreateTreeUri.append(MDMSConstants.GITHUB_HOST).append(EGOV_REPO_PATH)
+		getCreateTreeUri.append(MDMSConstants.GITHUB_HOST).append(egovRepoOwner +"/"+egovRepo +"/")
 		                .append(MDMSConstants.EGOV_CREATE_TREE_PATH);
 		logger.info("URI: "+getCreateTreeUri.toString());
     	DocumentContext documentContext = JsonPath.parse(MDMSConstants.CREATE_TREE_REQ);
@@ -403,7 +400,7 @@ public class MDMSService {
 	
 	public String createCommit(String branchHeadSHA, String newTreeSHA, String message) throws JsonProcessingException{
 		StringBuilder getCreateTreeUri = new StringBuilder();
-		getCreateTreeUri.append(MDMSConstants.GITHUB_HOST).append(EGOV_REPO_PATH)
+		getCreateTreeUri.append(MDMSConstants.GITHUB_HOST).append(egovRepoOwner +"/"+egovRepo +"/")
 		                .append(MDMSConstants.EGOV_CREATE_COMMIT_PATH);
 		logger.info("URI: "+getCreateTreeUri.toString());
     	DocumentContext documentContext = JsonPath.parse(MDMSConstants.CREATE_COMMIT_REQ);
@@ -425,7 +422,7 @@ public class MDMSService {
 	
 	public String pushTheContents(String newCommitSHA){
 		StringBuilder getPushUri = new StringBuilder();
-		getPushUri.append(MDMSConstants.GITHUB_HOST).append(EGOV_REPO_PATH)
+		getPushUri.append(MDMSConstants.GITHUB_HOST).append(egovRepoOwner +"/"+egovRepo +"/")
 		                .append(MDMSConstants.EGOV_REF_PATH);
 		logger.info("URI: "+getPushUri.toString());
     	DocumentContext documentContext = JsonPath.parse(MDMSConstants.PUSH_CONTENT_REQ);

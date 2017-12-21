@@ -6,7 +6,7 @@ serviceMaps:
     description: create summon
     fromTopic: lcms-create-summon-validated
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,defendant,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,register,caseDetails,plantiffAddress,entryType,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,defendant,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,register,caseDetails,plantiffAddress,entryType,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents,isUlbinitiated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.summons.*
       jsonMaps:       
       - jsonPath: $.summons.*.code
@@ -88,12 +88,15 @@ serviceMaps:
       - jsonPath: $.summons.*.documents
         type: JSON
         dbType: JSONB
+
+      - jsonPath: $.summons.*.isUlbinitiated
+        type: BOOLEAN
   - version: 1.0
     name: lcms summon update
     description: update summon
     fromTopic: lcms-update-summon-validated
     queryMaps:
-    - query: UPDATE egov_lcms_case SET isSummon=?, summonReferenceNo=?, caseNo=?, summonDate=?, year=?, caseType=?, plantiffName=?, defendant=?, caseCategory=?, courtName=?, departmentName=?, sectionApplied=?, hearingDate=?, hearingTime=?, ward=?, bench=?, side=?, register=?, caseDetails=?, plantiffAddress=?, entryType=?, stateId=?, documents=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId=?;
+    - query: UPDATE egov_lcms_case SET isSummon=?, summonReferenceNo=?, caseNo=?, summonDate=?, year=?, caseType=?, plantiffName=?, defendant=?, caseCategory=?, courtName=?, departmentName=?, sectionApplied=?, hearingDate=?, hearingTime=?, ward=?, bench=?, side=?, register=?, caseDetails=?, plantiffAddress=?, entryType=?, stateId=?, documents=?, isUlbinitiated=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId=?;
       basePath: $.summons.*
       jsonMaps:
       - jsonPath: $.summons.*.isSummon
@@ -141,6 +144,8 @@ serviceMaps:
       - jsonPath: $.summons.*.documents
         type: JSON
         dbType: JSONB
+      - jsonPath: $.summons.*.isUlbinitiated
+        type: BOOLEAN
       - jsonPath: $.summons.*.auditDetails.lastModifiedBy
       - jsonPath: $.summons.*.auditDetails.lastModifiedTime
         type: LONG

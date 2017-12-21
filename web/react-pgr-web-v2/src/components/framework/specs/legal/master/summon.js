@@ -147,13 +147,7 @@ var dat = {
         },
         {
           label: 'legal.create.referenceNo',
-          isAction: true,
-          actionItems: [
-            {
-              label: 'View',
-              url: '/view/legal/casedetails/',
-            },
-          ],
+         
         },
         {
           label: 'caseRegistration.create.referenceCaseNo',
@@ -176,10 +170,7 @@ var dat = {
       ],
       values: [
         'code',
-        {
-          childArray: ['summon.summonReferenceNo', 'code'],
-          isObj: true,
-        },
+       'summon.summonReferenceNo',
         'caseRefernceNo',
         'caseStatus.name',
         'summon.caseNo',
@@ -275,7 +266,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
             depedants: [
               {
                 jsonPath: 'summons[0].caseType.code',
@@ -304,7 +295,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name',
           },
           {
             name: 'caseNo',

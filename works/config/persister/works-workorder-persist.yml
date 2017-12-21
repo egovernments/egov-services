@@ -82,7 +82,7 @@ serviceMaps:
          
        - jsonPath: $.letterOfAcceptances.letterOfAcceptanceEstimates.*.letterOfAcceptance
        
-       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.estimateNumber
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.id
        
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.workCompletionDate
          dbType: LONG
@@ -187,7 +187,7 @@ serviceMaps:
 
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.deleted
 
-    - query: INSERT INTO egw_loameasurementsheet(id, tenantid, "number", length, width, depthorheight, quantity, loaactivity, estimatemeasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, multiplier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on CONFLICT (id,tenantid) DO UPDATE SET "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, loaactivity=EXCLUDED.loaactivity, estimatemeasurementsheet=EXCLUDED.estimatemeasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted, multiplier=EXCLUDE.multiplier;
+    - query: INSERT INTO egw_loameasurementsheet(id, tenantid, "number", length, width, depthorheight, quantity, loaactivity, estimatemeasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, multiplier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on CONFLICT (id,tenantid) DO UPDATE SET "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, loaactivity=EXCLUDED.loaactivity, estimatemeasurementsheet=EXCLUDED.estimatemeasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted, multiplier=EXCLUDED.multiplier;
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*
       jsonMaps:
          

@@ -37,9 +37,9 @@ import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
 import org.egov.inv.persistence.entity.FifoEntity;
 import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
-import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialIssueDetailJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
-import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -61,10 +61,10 @@ public class NonIndentMaterialIssueService extends DomainService {
 	private MaterialIssueJdbcRepository materialIssueJdbcRepository;
 
 	@Autowired
-	private MaterialIssueDetailsJdbcRepository materialIssueDetailsJdbcRepository;
+	private MaterialIssueDetailJdbcRepository materialIssueDetailsJdbcRepository;
 
 	@Autowired
-	private MaterialIssuedFromReceiptsJdbcRepository materialIssuedFromReceiptsJdbcRepository;
+	private MaterialIssuedFromReceiptJdbcRepository materialIssuedFromReceiptsJdbcRepository;
 
 	@Autowired
 	private MdmsRepository mdmsRepository;

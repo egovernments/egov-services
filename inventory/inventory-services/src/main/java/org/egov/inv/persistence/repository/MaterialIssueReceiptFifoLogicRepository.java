@@ -36,11 +36,6 @@ public class MaterialIssueReceiptFifoLogicRepository {
 			+ " rctdtl.deleted is null ) and receivingstore= :store  and materialreceipt.tenantid= :tenantId"
 			+ " and  material= :material and mrnstatus in ('APPROVED') and receiptdate <= :date";
 
-
-	private static final String balanceQuery = "select sum(quantity) from materialissuedfromreceipt"
-			+ " where receiptid = :receiptid and receiptdetailid = : receiptdetailid and  issuedetailid :: integer >"
-			+ " :issuedetailid ::integer and status = true and (deleted = false or deleted is null)";
-
 	public List<FifoEntity> implementFifoLogic(Store store, Material material, Long issueDate, String tenantId) {
 		Map<String, Object> paramValues = new HashMap<>();
 		StringBuilder baseQuery = new StringBuilder(query);
@@ -80,18 +75,5 @@ public class MaterialIssueReceiptFifoLogicRepository {
 		List<FifoEntity> listOfFifoEntities = namedParameterJdbcTemplate.query(baseQuery.toString(), paramValues, row);
 		return listOfFifoEntities;
 	}
-
-	public Double getActualBalanceQuantity(String materialReceiptId, String materialReceiptDetailId, String issuedetailid) {
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuilder baseQuery = new StringBuilder(balanceQuery);
-	
-			paramValues.put("receiptid", materialReceiptId);
-			paramValues.put("receiptdetailid", materialReceiptDetailId);
-			paramValues.put("issuedetailid", issuedetailid);
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(FifoEntity.class);
-		return namedParameterJdbcTemplate.queryForObject(baseQuery.toString(), paramValues, Double.class);
-	}
-
-	
 
 }

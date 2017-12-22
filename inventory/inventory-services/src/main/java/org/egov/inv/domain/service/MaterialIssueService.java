@@ -42,9 +42,9 @@ import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.egov.inv.persistence.repository.IndentDetailJdbcRepository;
-import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialIssueDetailJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
-import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -58,9 +58,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONArray;
 
 @Service
-public class MaterialIssuesService extends DomainService {
+public class MaterialIssueService extends DomainService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(MaterialIssuesService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MaterialIssueService.class);
 
 	@Autowired
 	private MaterialIssueJdbcRepository materialIssueJdbcRepository;
@@ -75,10 +75,10 @@ public class MaterialIssuesService extends DomainService {
 	private StoreService storeService;
 
 	@Autowired
-	private MaterialIssueDetailsJdbcRepository materialIssueDetailsJdbcRepository;
+	private MaterialIssueDetailJdbcRepository materialIssueDetailsJdbcRepository;
 
 	@Autowired
-	private MaterialIssuedFromReceiptsJdbcRepository materialIssuedFromReceiptsJdbcRepository;
+	private MaterialIssuedFromReceiptJdbcRepository materialIssuedFromReceiptsJdbcRepository;
 
 	@Autowired
 	private DepartmentService departmentService;

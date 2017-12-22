@@ -1,6 +1,6 @@
 package org.egov.inv.api;
 
-import org.egov.inv.domain.service.MaterialIssuesService;
+import org.egov.inv.domain.service.MaterialIssueService;
 import org.egov.inv.model.MaterialIssue;
 import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
 import org.egov.inv.model.MaterialIssueRequest;
@@ -27,20 +27,20 @@ import javax.validation.Valid;
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
 @Controller
-public class MaterialIssueTransferOutwardApiController implements MaterailIssueTransferOutwardApi {
+public class MaterialIssueTransferOutwardApiController implements MaterialIssueTransferOutwardApi {
 
 	@Autowired
-	private MaterialIssuesService materialIssueService;
+	private MaterialIssueService materialIssueService;
 
 	@Override
-	public ResponseEntity<MaterialIssueResponse> materialIssuesCreatePost(
+	public ResponseEntity<MaterialIssueResponse> materialIssueCreatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
 		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest, IssueTypeEnum.MATERIALOUTWARD.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 
-	public ResponseEntity<MaterialIssueResponse> materialissuesSearchPost(
+	public ResponseEntity<MaterialIssueResponse> materialIssueSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
@@ -62,7 +62,7 @@ public class MaterialIssueTransferOutwardApiController implements MaterailIssueT
 	}
 
 	@Override
-	public ResponseEntity<MaterialIssueResponse> materialIssuesUpdatePost(
+	public ResponseEntity<MaterialIssueResponse> materialIssueUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
 		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId, IssueTypeEnum.MATERIALOUTWARD.toString());

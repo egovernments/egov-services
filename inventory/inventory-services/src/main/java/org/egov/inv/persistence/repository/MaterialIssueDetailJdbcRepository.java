@@ -15,8 +15,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MaterialIssueDetailsJdbcRepository extends JdbcRepository {
-
+public class MaterialIssueDetailJdbcRepository extends JdbcRepository {
+	
 	public Pagination<MaterialIssueDetail> search(String issueNumber, String tenantId, String issueType) {
 		String searchQuery = "select * from materialissuedetail :condition :orderby";
 		StringBuffer params = new StringBuffer();

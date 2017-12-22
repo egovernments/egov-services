@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class MaterialIssuedFromReceiptsJdbcRepository extends JdbcRepository {
+public class MaterialIssuedFromReceiptJdbcRepository extends JdbcRepository {
 	
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;

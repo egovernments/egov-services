@@ -27,7 +27,7 @@ import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-06T06:54:07.407Z")
 
 @Api(value = "materialissues-ni", description = "the materialissues-ni API")
-public interface MaterialIssuesNonIndentApi {
+public interface MaterialIssueNonIndentApi {
 
     @ApiOperation(value = "Create  new  materialissues for non indent case", notes = "This API holds the common information of Non Indent Issue. Whenver Non Indent Issue is created in the system, this API will be invoked internally and the common information will be hold by this API.", response = MaterialIssueResponse.class, tags={ "Material Issue", })
     @ApiResponses(value = { 

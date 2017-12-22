@@ -762,7 +762,8 @@ public class PurchaseOrderService extends DomainService {
 
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
-                    if (purchaseOrderDetail.getOrderQuantity().longValue() != purchaseOrderDetail.getReceivedQuantity().longValue()) {
+                    if (null != purchaseOrderDetail.getReceivedQuantity() &&
+                            purchaseOrderDetail.getOrderQuantity().longValue() != purchaseOrderDetail.getReceivedQuantity().longValue()) {
                         return false;
                     }
                 }

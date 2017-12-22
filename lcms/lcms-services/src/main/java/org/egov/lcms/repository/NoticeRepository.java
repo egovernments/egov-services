@@ -14,6 +14,14 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Yosadhara	31st Oct 2107								Initial commit of Notice Repository
+ * Prasad		02nd Nov 2017								Added Custom exception and exception message
+ * 
+ */
 @Repository
 @Slf4j
 public class NoticeRepository {
@@ -26,7 +34,13 @@ public class NoticeRepository {
 
 	@Autowired
 	NoticeRowMapper noticeRowMapper;
-
+	
+	/**
+	 * This method is to search Notice
+	 * 
+	 * @param noticeSearchCriteria
+	 * @return List of Notice
+	 */
 	public List<Notice> search(NoticeSearchCriteria noticeSearchCriteria) {
 
 		if (noticeSearchCriteria.getPageNumber() == null || noticeSearchCriteria.getPageNumber() == 0)

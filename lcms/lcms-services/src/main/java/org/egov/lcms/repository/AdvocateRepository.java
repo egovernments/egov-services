@@ -22,6 +22,15 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Yosadhara	28th Oct 2107								Initial commit of Advocate Repository
+ * Prasad		02nd Nov 2017								Added Custom Exception and exception message
+ * Prasad       04th Nov 2017                               Added getcaseCodeByAdvocateCode method
+ * Veswanth     14th Nov 2017                               Implemented personaldetails method for Agency API      
+ */
 @Repository
 @Slf4j
 public class AdvocateRepository {

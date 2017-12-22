@@ -27,10 +27,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
-/**
+/** 
  * 
- * @author Veswanth
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Prasad		28th Oct 2017								Initial commit of Opinion Repository
+ * Prasad       02nd Nov 2017                               Added logger statement
+ * Prasad       03rd Nov 2017                               Added searchDepartments and setAdvocates methods
+ * Narendra     11th Nov 2017                               Fixed Opinion search issue
+ * Narendra     22nd Nov 2017                               Modified searchDepartments method logic 
  */
 @Service
 @Slf4j
@@ -56,7 +61,15 @@ public class OpinionRepository {
 
 	@Autowired
 	ObjectMapper objectMapper;
-
+	
+	/**
+	 * This method is to search Opinion
+	 * 
+	 * @param opinionSearch
+	 * @param requestInfoWrapper
+	 * @return List of Opinion
+	 * @throws Exception
+	 */
 	public List<Opinion> search(OpinionSearchCriteria opinionSearch, RequestInfoWrapper requestInfoWrapper)
 			throws Exception {
 
@@ -79,7 +92,15 @@ public class OpinionRepository {
 		}
 		return opinions;
 	}
-
+	
+	/**
+	 * This method is to search Departments
+	 * 
+	 * @param opinions
+	 * @param tenantId
+	 * @param requestInfoWrapper
+	 * @throws Exception
+	 */
 	private void searchDepartments(List<Opinion> opinions, String tenantId, RequestInfoWrapper requestInfoWrapper)
 			throws Exception {
 
@@ -105,7 +126,15 @@ public class OpinionRepository {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is to add particular Master values to Opinion
+	 * 
+	 * @param masterName
+	 * @param opinion
+	 * @param mastersmap
+	 * @throws Exception
+	 */
 	private void addParticularMastervalues(String masterName, Opinion opinion, Map<String, JSONArray> mastersmap)
 			throws Exception {
 		if (mastersmap.get(masterName) != null) {
@@ -121,7 +150,13 @@ public class OpinionRepository {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is to set Advocate to Opinion
+	 * 
+	 * @param opinions
+	 * @param requestInfoWrapper
+	 */
 	private void setAdvocates(List<Opinion> opinions, RequestInfoWrapper requestInfoWrapper) {
 
 		List<String> codes = opinions.stream()
@@ -145,7 +180,12 @@ public class OpinionRepository {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is to get case Number from Summon Reeference number
+	 * 
+	 * @param opinions
+	 */
 	private void getCaseNoWithSummonReference(List<Opinion> opinions) {
 
 		for (Opinion opinion : opinions) {

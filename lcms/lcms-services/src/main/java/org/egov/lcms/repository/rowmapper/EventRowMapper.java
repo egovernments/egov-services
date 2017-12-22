@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		15th Nov 2107						Initial commit for EventRowMapper
+* Veswanth		15th Nov 2017						Initial commit for EventRowMapper
 */
 @Component
 public class EventRowMapper implements RowMapper<Event> {

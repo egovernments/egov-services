@@ -12,10 +12,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.util.UriComponentsBuilder;
 
-/**
+/** 
  * 
- * @author Prasad
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Prasad		26th Oct 2017								Initial commit of Tenant Repository
+ * Prasad       28th Oct 2017                               Added Custom Exception and exception message
+ * Prasad       02nd Nov 2017                               Added logger statement
+ * Prasad       20ty Oct 2017                               Modified getTenantRepository method
+ * 
  */
 @Repository
 public class TenantRepository {

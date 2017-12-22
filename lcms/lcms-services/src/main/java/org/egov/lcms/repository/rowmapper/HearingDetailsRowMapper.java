@@ -22,10 +22,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		01st Nov 2107						Initial commit for HearingDetailsRowMapper
-* Shubham		01st Nov 2107						Changed the nextHearingTime type to String
-* Veswanth		02nd Nov 2107						Added exception code and message while throwing exception
-* Yosadhara		18th Nov 2107						Corrected the spell mistake furtherProcessDetails
+* Veswanth		01st Nov 2017						Initial commit for HearingDetailsRowMapper
+* Shubham		01st Nov 2017						Changed the nextHearingTime type to String
+* Veswanth		02nd Nov 2017						Added exception code and message while throwing exception
+* Yosadhara		18th Nov 2017						Corrected the spell mistake furtherProcessDetails
 */
 @Component
 public class HearingDetailsRowMapper implements RowMapper<HearingDetails> {

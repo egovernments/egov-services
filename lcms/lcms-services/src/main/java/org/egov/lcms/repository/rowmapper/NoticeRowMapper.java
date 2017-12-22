@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Yosadhara		31st Oct 2107						Initial commit for NoticeRowMapper
-* Yosadhara		16th Nov 2107						Added caseNo, caseCode, caseReferenceNo and summonReferenceNo for Notice Search
+* Yosadhara		31st Oct 2017						Initial commit for NoticeRowMapper
+* Yosadhara		16th Nov 2017						Added caseNo, caseCode, caseReferenceNo and summonReferenceNo for Notice Search
 */
 @Component
 public class NoticeRowMapper implements RowMapper<Notice> {

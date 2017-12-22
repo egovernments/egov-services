@@ -2,10 +2,11 @@ package org.egov.lcms.repository.builder;
 
 import java.util.List;
 
-/**
+/** 
  * 
- * @author Prasad
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Shubham	    08th Nov 2017								Initial commit of Summon QueryBuilder and fixed Assign advocate issue
  */
 public class SummonBuilder {
 
@@ -13,6 +14,12 @@ public class SummonBuilder {
 
 	public static final String DELETE_RECORD_BY_ADVOCATE_CODE = "delete from egov_lcms_case_advocate where code=?";
 	
+	/**
+	 * This method is to build DELETE query to delete Advocates
+	 * 
+	 * @param advocateCodes
+	 * @return String
+	 */
 	public static String deleteAdvocates(List<String> advocateCodes){
 		
 		StringBuffer queryString = new StringBuffer();

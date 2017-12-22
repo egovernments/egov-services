@@ -10,6 +10,20 @@ import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.util.ConstantUtility;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Yosadhara	28th Oct 2017								Initial commit of Advocate query Builder
+ * Yosadhara    31st Oct 2017								Modified Advocate search criteria condition
+ * Yosadhara    01st Nov 2017                               Modified Advocate search query
+ * Prasad       04th Nov 2017                               Added SELECT query to search Advocate by case code
+ * Yosadhara    08th Nov 2017                               Modified ORDER BY clause based on lastmodifiedtime
+ * Veswanth     14th Nov 2017                               Added search Agency api implementation
+ * Prasad       15th Nov 2017                               Added individual and agencycode condition to search agency
+ * Narendra     28th Nov 2017                               Fixed primary advocate issue
+ * Yosadhara    21st Dec 2017                               Fixed inactive agencies' advocate issue
+ */
 public class AdvocateBuilders {
 
 	static PropertiesManager propertiesManager;

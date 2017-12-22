@@ -5,10 +5,24 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.egov.lcms.models.NoticeSearchCriteria;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Yosadhara	31st Oct 2017								Initial commit of  Notice QueryBuilder
+ * Yosadhara    08th Nov 2017                               Modified ORDER BY clause based on lastmodifiedtime
+ */
 public class NoticeBuilder {
 		
 	private static final String BASE_QUERY = "SELECT * from egov_lcms_notice ";
-
+	
+	/**
+	 * This method is to build SELECT query to serch Notice
+	 * 
+	 * @param noticeSearchCriteria
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public static String getSearchQuery(NoticeSearchCriteria noticeSearchCriteria,
 			List<Object> preparedStatementValues) {
 
@@ -19,7 +33,14 @@ public class NoticeBuilder {
 
 		return selectQuery.toString();
 	}
-
+	
+	/**
+	 * This method is to append WHERE clause and condtions to SELECT Query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param noticeSearchCriteria
+	 */
 	private static void addWhereClause(StringBuffer selectQuery, List<Object> preparedStatementValues,
 			NoticeSearchCriteria noticeSearchCriteria) {
 
@@ -73,7 +94,13 @@ public class NoticeBuilder {
 					+ Stream.of(noticeSearchCriteria.getCode()).collect(Collectors.joining("','", "'", "'")) + ")");
 		}
 	}
-
+	
+	/**
+	 * This method is to append ORDER BY clause to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param noticeSearchCriteria
+	 */
 	private static void addOrderByClause(StringBuffer selectQuery, NoticeSearchCriteria noticeSearchCriteria) {
 
 		selectQuery.append(" ORDER BY ");
@@ -99,7 +126,14 @@ public class NoticeBuilder {
 			selectQuery.append(" lastmodifiedtime desc ");
 		}
 	}
-
+	
+	/**
+	 * This method is to append offset, and limit to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param noticeSearchCriteria
+	 */
 	private static void addPagingClause(StringBuffer selectQuery, List<Object> preparedStatementValues,
 			NoticeSearchCriteria noticeSearchCriteria) {
 

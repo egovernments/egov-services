@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		14th Nov 2107						Initial commit for agency row mapper
-* Yosadhara		15th Nov 2107						Added status for agency search
+* Veswanth		14th Nov 2017						Initial commit for agency row mapper
+* Yosadhara		15th Nov 2017						Added status for agency search
 */
 @Component
 public class AgencyRowMapper implements RowMapper<Agency> {

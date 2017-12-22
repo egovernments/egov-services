@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		14th Nov 2107						Initial commit for PersonalDetails RowMapper
+* Veswanth		14th Nov 2017						Initial commit for PersonalDetails RowMapper
 */
 @Component
 public class PersonDetailRowMapper implements RowMapper<PersonDetails> {

@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Yosadhara		31st Oct 2107						Moved advocateRowmapper to repository folder
-* Veswanth		14th Nov 2107						Added agencyName and agencyCode for advocate search
-* Yosadhara		14th Nov 2107						Renamed isfccode to ifscCode
-* Yosadhara		15th Nov 2107						Added status for advocate search
+* Yosadhara		31st Oct 2017						Moved advocateRowmapper to repository folder
+* Veswanth		14th Nov 2017						Added agencyName and agencyCode for advocate search
+* Yosadhara		14th Nov 2017						Renamed isfccode to ifscCode
+* Yosadhara		15th Nov 2017						Added status for advocate search
 */
 @Component
 public class AdvocateRowMapper implements RowMapper<Advocate> {

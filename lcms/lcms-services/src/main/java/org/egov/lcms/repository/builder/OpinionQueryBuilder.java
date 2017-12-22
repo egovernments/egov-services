@@ -12,6 +12,16 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Prasad   	28th Oct 2017								Initial commit of  Opinion QueryBuilder
+ * Prasad       02nd Nov 2017                               Modified search condition for list of codes
+ * Prasad       03rd Nov 2017								Modified opinion search criteria condition
+ * Prasad       08th Nov 2017                               Added ORDER BY clause
+ * Prasad       10th Nov 2017                               Added search caseNo SELECT query * 
+ */
 @Component
 @Slf4j
 public class OpinionQueryBuilder {
@@ -20,7 +30,15 @@ public class OpinionQueryBuilder {
 	PropertiesManager propertiesManager;
 
 	public static final String BASE_SEARCH_QUERY = "select * from " + ConstantUtility.OPINION_TABLE_NAME + " WHERE";
-
+	
+	/**
+	 * This method is to build SELECT query to serch Opinion
+	 * 
+	 * @param opinionSearchCriteria
+	 * @param preparedStatementValues
+	 * @return String
+	 * @throws Exception
+	 */
 	public String getOpinionSearchQuery(final OpinionSearchCriteria opinionSearchCriteria,
 			final List<Object> preparedStatementValues) throws Exception {
 		final StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
@@ -32,7 +50,15 @@ public class OpinionQueryBuilder {
 		log.info("preparedstmt values : " + preparedStatementValues);
 		return selectQuery.toString();
 	}
-
+	
+	/**
+	 * This method is to append WHERE clause and condtions to SELECT Query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param opinionSearchCriteria
+	 * @throws Exception
+	 */
 	private void addWhereClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final OpinionSearchCriteria opinionSearchCriteria) throws Exception {
 
@@ -75,7 +101,14 @@ public class OpinionQueryBuilder {
 			preparedStatementValues.add(opinionSearchCriteria.getToDate());
 		}
 	}
-
+	
+	/**
+	 * This method is to append ORDER BY clause to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param opinionSearchCriteria
+	 */
 	private void addOrderByClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final OpinionSearchCriteria opinionSearchCriteria) {
 		String sort = opinionSearchCriteria.getSort();
@@ -86,7 +119,14 @@ public class OpinionQueryBuilder {
 			selectQuery.append(" ORDER BY " + propertiesManager.getLastModifiedTime() + " DESC");
 		}
 	}
-
+	
+	/**
+	 * This method is to append offset, and limit to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param opinionSearchCriteria
+	 */
 	private void addPagingClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final OpinionSearchCriteria opinionSearchCriteria) {
 
@@ -104,7 +144,15 @@ public class OpinionQueryBuilder {
 			preparedStatementValues.add(limit);
 		}
 	}
-
+	
+	/**
+	 * This method is to build SELECT query to fetch caseNo
+	 * 
+	 * @param summonReferenceNo
+	 * @param tenantId
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public String getCaseNo(String summonReferenceNo, String tenantId, List<Object> preparedStatementValues) {
 
 		StringBuilder searchQuery = new StringBuilder();

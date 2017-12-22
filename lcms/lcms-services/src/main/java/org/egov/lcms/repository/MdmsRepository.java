@@ -21,10 +21,13 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
-/**
+/** 
  * 
- * @author Prasad
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Prasad		03rd Nov 2017								Initial commit of MDMS Repository
+ * Prasad		03rd Nov 2017								Modified getMasterData method logic
+ * Veswanth     22nd Nov 2017                               Added getCommaSepratedValues method
  */
 @Repository
 @Slf4j
@@ -38,7 +41,17 @@ public class MdmsRepository {
 
 	@Autowired
 	ObjectMapper objectMapper;
-
+	
+	/**
+	 * This method is to fetch Master data
+	 * 
+	 * @param tenantId
+	 * @param masterCodeAndValue
+	 * @param requestInfo
+	 * @param moduleName
+	 * @return MdmsResponse
+	 * @throws Exception
+	 */
 	public MdmsResponse getMasterData(String tenantId, Map<String, String> masterCodeAndValue,
 			RequestInfoWrapper requestInfo,String moduleName) throws Exception {
 		MdmsResponse mdmsResponse = null;
@@ -110,6 +123,12 @@ public class MdmsRepository {
 		return mdmsResponse;
 	}
 	
+	/**
+	 * This method is to form a String with comma separated value of code
+	 * 
+	 * @param code
+	 * @return String
+	 */
 	public String getCommaSepratedValues(String[] code) {
 
 		if (code.length > 0) {

@@ -13,6 +13,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import lombok.extern.slf4j.Slf4j;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Yosadhara	31st Oct 2017								Initial commit of  Register repository
+ * Prasad		02nd Nov 2017								Added Custom Exception and exception messages
+ * 
+ */
 @Repository
 @Slf4j
 public class RegisterRepository {
@@ -25,7 +33,13 @@ public class RegisterRepository {
 
 	@Autowired
 	RegisterRowMapper registerRowMapper;
-
+	
+	/**
+	 * This method is to search registers based on register search criterias 
+	 * 
+	 * @param registerSearchCriteria
+	 * @return List of Registers
+	 */
 	public List<Register> search(RegisterSearchCriteria registerSearchCriteria) {
 
 		if (registerSearchCriteria.getPageNumber() == null || registerSearchCriteria.getPageNumber() == 0)

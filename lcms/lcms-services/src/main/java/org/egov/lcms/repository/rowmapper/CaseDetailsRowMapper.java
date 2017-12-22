@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		10th ov 2107						initial commit for caseDetails row mapper
+* Veswanth		10th Nov 2017						initial commit for caseDetails row mapper
 */
 @Component
 public class CaseDetailsRowMapper implements RowMapper<CaseDetails> {

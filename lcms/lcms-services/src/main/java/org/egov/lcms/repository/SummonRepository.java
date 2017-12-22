@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
+/** 
  * 
- * @author Prasad
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Shubham		08th Nov 2107								Initial commit of Summon repository and fixed assign advocateissue 
+ * 				
  */
 @Repository
 public class SummonRepository {

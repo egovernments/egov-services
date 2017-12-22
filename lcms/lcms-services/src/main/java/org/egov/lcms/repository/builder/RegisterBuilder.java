@@ -7,10 +7,25 @@ import java.util.stream.Stream;
 
 import org.egov.lcms.models.RegisterSearchCriteria;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Yosadhara	31st Oct 2017								Initial commit of  Register QueryBuilder
+ * Yosadhara    03rd Nov 2017                               Modified Register search query condition
+ * Yosadhara    08th Nov 2017                               Modified ORDERY BY clause
+ */
 public class RegisterBuilder {
 
 	private static final String BASE_QUERY = "SELECT * from egov_lcms_register ";
-
+	
+	/**
+	 * This method is to build SELECT query to serch registers
+	 * 
+	 * @param registerSearchCriteria
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public static String getSearchQuery(RegisterSearchCriteria registerSearchCriteria,
 			List<Object> preparedStatementValues) {
 
@@ -21,7 +36,14 @@ public class RegisterBuilder {
 
 		return selectQuery.toString();
 	}
-
+	
+	/**
+	 * This method is to append WHERE clause and condtions to SELECT Query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param registerSearchCriteria
+	 */
 	private static void addWhereClause(StringBuffer selectQuery, List<Object> preparedStatementValues,
 			RegisterSearchCriteria registerSearchCriteria) {
 
@@ -60,7 +82,13 @@ public class RegisterBuilder {
 			
 		}
 	}
-
+	
+	/**
+	 * This method is to append ORDER BY clause to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param registerSearchCriteria
+	 */
 	private static void addOrderByClause(StringBuffer selectQuery, RegisterSearchCriteria registerSearchCriteria) {
 
 		selectQuery.append(" ORDER BY ");
@@ -86,7 +114,14 @@ public class RegisterBuilder {
 
 		selectQuery.append(" lastmodifiedtime desc ");
 	}
-
+	
+	/**
+	 * This method is to append offset, and limit to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param registerSearchCriteria
+	 */
 	private static void addPagingClause(StringBuffer selectQuery, List<Object> preparedStatementValues,
 			RegisterSearchCriteria registerSearchCriteria) {
 		

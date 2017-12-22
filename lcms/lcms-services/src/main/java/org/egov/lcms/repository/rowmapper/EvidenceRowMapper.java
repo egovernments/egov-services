@@ -21,8 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		08th Nov 2107						Initial commit for EvidenceRowMapper
-* Veswanth		20th Nov 2107						Added caseNo and referenceCaseNo for ReferenceEvidence search
+* Veswanth		08th Nov 2017						Initial commit for EvidenceRowMapper
+* Veswanth		20th Nov 2017						Added caseNo and referenceCaseNo for ReferenceEvidence search
 */
 @Component
 public class EvidenceRowMapper implements RowMapper<ReferenceEvidence> {

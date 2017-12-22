@@ -31,12 +31,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
-/**
+/** 
  * 
- * @author Shubham Pratap
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Shubham		28th Oct 2107								Added Advocate Payment repository
+ * Prasad		02nd Nov 2017								Added logger statement
+ * Shubham      03rd Nov 2017								Added Advocate Payment search changes
+ * Shubham      04th Nov 2017                               Modified setCaseDetails method logic
+ * Shubham      07th Nov 2017                               Modified Advocate payment search conditions
+ * Prasad       10th Nov 2017                               Added getCaseNoFromSummonReferenceNo method
  */
-
 @Repository
 @Slf4j
 public class AdvocatePaymentRepository {
@@ -64,7 +69,15 @@ public class AdvocatePaymentRepository {
 
 	@Autowired
 	OpinionQueryBuilder opinionBuilder;
-
+	
+	/**
+	 * This method is to search AdvocatePayment based on search criterias
+	 * 
+	 * @param advocatePaymentSearchCriteria
+	 * @param requestInfo
+	 * @return List of AdvocatePayment
+	 * @throws Exception
+	 */
 	public List<AdvocatePayment> search(final AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria,
 			RequestInfo requestInfo) throws Exception {
 
@@ -87,7 +100,12 @@ public class AdvocatePaymentRepository {
 
 		return advocatePayments;
 	}
-
+	
+	/**
+	 * This method is to fetch Case number from given Summon reference number
+	 * 
+	 * @param advocatePayments
+	 */
 	private void getCaseNoFromSummonReferenceNo(List<AdvocatePayment> advocatePayments) {
 
 		for (AdvocatePayment advocatePayment : advocatePayments) {
@@ -120,7 +138,15 @@ public class AdvocatePaymentRepository {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is to set the case deatils for AdvocatePayment
+	 * 
+	 * @param advocatePayments
+	 * @param tenantId
+	 * @param requestInfo
+	 * @throws Exception
+	 */
 	private void setCaseDetails(List<AdvocatePayment> advocatePayments, String tenantId, RequestInfo requestInfo)
 			throws Exception {
 
@@ -167,7 +193,13 @@ public class AdvocatePaymentRepository {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is to set Advocate for AdvocatePayment
+	 * 
+	 * @param advocatePayments
+	 * @param tenantId
+	 */
 	private void setAdvocate(List<AdvocatePayment> advocatePayments, String tenantId) {
 
 		List<String> codes = advocatePayments.stream()
@@ -190,7 +222,16 @@ public class AdvocatePaymentRepository {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is to add particular master value for AdvocatePayment
+	 * such as caseStatus, caseType
+	 * 
+	 * @param masterName
+	 * @param advocatePayment
+	 * @param mastersmap
+	 * @throws Exception
+	 */
 	private void addParticularMastervalues(String masterName, AdvocatePayment advocatePayment,
 			Map<String, JSONArray> mastersmap) throws Exception {
 

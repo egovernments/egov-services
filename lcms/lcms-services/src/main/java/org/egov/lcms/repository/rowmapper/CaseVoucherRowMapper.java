@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		02nd Nov 2107						Initial commit for case Voucher row mapper.
-* Veswanth		02nd Nov 2107						Added null check for casevoucher type
+* Veswanth		02nd Nov 2017						Initial commit for case Voucher row mapper.
+* Veswanth		02nd Nov 2017						Added null check for casevoucher type
 */
 @Component
 public class CaseVoucherRowMapper implements RowMapper<CaseVoucher> {

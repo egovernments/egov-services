@@ -15,10 +15,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-/**
+/** 
  * 
- * @author Prasad
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Prasad		26th Oct 2017								Initial commit of IdGeneration Repository 
+ * Yosadhara    31st Oct 2017                               Added Custom exception and exception message
+ * Prasad       02nd Nov 2017                               Added logger statement
+ * 	
  */
 @Repository
 public class IdGenerationRepository {

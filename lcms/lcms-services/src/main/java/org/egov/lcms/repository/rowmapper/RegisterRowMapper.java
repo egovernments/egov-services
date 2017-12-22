@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Yosadhara		31st Oct 2107						Initial commit for RegisterRowMapper
+* Yosadhara		31st Oct 2017						Initial commit for RegisterRowMapper
 */
 @Component
 public class RegisterRowMapper implements RowMapper<Register> {

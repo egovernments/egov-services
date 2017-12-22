@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		01st Nov 2107						Initial commit for parawiseComments RowMapper
-* Veswanth		02nd Nov 2107						Renamed assgnedDate to assignDate in opinionSearch Result
+* Veswanth		01st Nov 2017						Initial commit for parawiseComments RowMapper
+* Veswanth		02nd Nov 2017						Renamed assgnedDate to assignDate in opinionSearch Result
 */
 @Component
 public class ParaWiseRowMapper implements RowMapper<ParaWiseComment> {

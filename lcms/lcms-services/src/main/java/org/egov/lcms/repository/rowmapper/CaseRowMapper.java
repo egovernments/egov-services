@@ -31,11 +31,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Shuham		31st Oct 2107						Added department name and document for case search
-* Prasad		01st Nov 2107						Added tenantId and parawiseComments for case search
-* Veswanth		02nd Nov 2107						Added caseVoucher and advocate Details for case search
-* Yosadhara		29th Nov 2107						Added case Entry for case search
-* Yosadhara		20th dec 2107						Added AdvocateInfo for case search
+* Shuham		31st Oct 2017						Added department name and document for case search
+* Prasad		01st Nov 2017						Added tenantId and parawiseComments for case search
+* Veswanth		02nd Nov 2017						Added caseVoucher and advocate Details for case search
+* Yosadhara		29th Nov 2017						Added case Entry for case search
+* Yosadhara		20th dec 2017						Added AdvocateInfo for case search
 */
 @Component
 public class CaseRowMapper implements RowMapper<Case> {

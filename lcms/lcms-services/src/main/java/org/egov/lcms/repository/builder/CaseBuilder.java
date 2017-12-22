@@ -15,6 +15,20 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/** 
+ * 
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Prasad		28th Oct 2017								Initial commit of  Case QueryBuilder
+ * Prasad       30ty Oct 2017                               Modified saerch query condition
+ * Prasad       01st Nov 2017                               Added search query to search Case based on caseCode
+ * Prasad       10th Nov 2017                               Added search query to search CaseDetails based on TenantId
+ * Prasad       15th Nov 2017                               Modified caseDetails search scenario and added query to search event
+ * Veswanth     24th Nov 2017                               Added issummon condition to SELECT query 
+ * Narendra     28th Nov 2017                               Added ORDER BY clause to search Case by caseCode SELECT query
+ * Yosadhara    29th Nov 2017								Modified search condition
+ * Yosadhara    08th Dec 2017                               Modified seach condition for list of codes
+ */
 @Component
 @Slf4j
 public class CaseBuilder {
@@ -26,7 +40,14 @@ public class CaseBuilder {
 	HearingRepository hearingRepository;
 
 	private static final String SELECT_BASE_QUERY = "SELECT * FROM egov_lcms_case";
-
+	
+	/**
+	 * This method is to build SELECT query for Case based on search criteria
+	 * 
+	 * @param caseSearchCriteria
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public String getQuery(final CaseSearchCriteria caseSearchCriteria, final List<Object> preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder(SELECT_BASE_QUERY);
 
@@ -37,7 +58,14 @@ public class CaseBuilder {
 		log.info("preparedstmt values : " + preparedStatementValues);
 		return selectQuery.toString();
 	}
-
+	
+	/**
+	 * This method is to add WHERE cluse and append condtions to SELECT Query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param caseSearchCriteria
+	 */
 	private void addWhereClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final CaseSearchCriteria caseSearchCriteria) {
 
@@ -151,7 +179,14 @@ public class CaseBuilder {
 			queryString.append(" AND");
 		return true;
 	}
-
+	
+	/**
+	 * This method is to append offset, and limit to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param preparedStatementValues
+	 * @param caseSearchCriteria
+	 */
 	private void addPagingClause(final StringBuilder selectQuery, final List<Object> preparedStatementValues,
 			final CaseSearchCriteria caseSearchCriteria) {
 
@@ -169,7 +204,13 @@ public class CaseBuilder {
 			preparedStatementValues.add(limit);
 		}
 	}
-
+	
+	/**
+	 * This method is to append ORDER BY clause to SELECT query
+	 * 
+	 * @param selectQuery
+	 * @param caseSearchCriteria
+	 */
 	private void addOrderByClause(final StringBuilder selectQuery, final CaseSearchCriteria caseSearchCriteria) {
 
 		if (caseSearchCriteria.getSort() != null && !caseSearchCriteria.getSort().isEmpty()) {
@@ -178,7 +219,15 @@ public class CaseBuilder {
 			selectQuery.append(" ORDER BY lastmodifiedtime desc");
 		}
 	}
-
+	
+	/**
+	 * This method is to build SELECT query to search case
+	 * 
+	 * @param caseObj
+	 * @param tableName
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public String searchByCaseCodeQuery(Case caseObj, String tableName, final List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();
 		searchQuery.append("SELECT * FROM " + tableName);
@@ -192,7 +241,16 @@ public class CaseBuilder {
 
 		return searchQuery.toString();
 	}
-
+	
+	/**
+	 * This method is to build SELECT query to search case details
+	 * 
+	 * @param tenantId
+	 * @param advocateName
+	 * @param caseTableName
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public String searchCaseDetailsByTenantId(String tenantId, String advocateName, String caseTableName,
 			List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();
@@ -221,7 +279,14 @@ public class CaseBuilder {
 
 		return searchQuery.toString();
 	}
-
+	
+	/**
+	 * This method is to buils SELECT query to search Event
+	 * 
+	 * @param eventSearchCriteria
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public String searchEvent(EventSearchCriteria eventSearchCriteria, List<Object> preparedStatementValues) {
 		StringBuilder eventSearchQuery = new StringBuilder();
 		eventSearchQuery.append("SELECT * FROM " + ConstantUtility.EVENT_TABLE_NAME);
@@ -251,7 +316,16 @@ public class CaseBuilder {
 
 		return eventSearchQuery.toString();
 	}
-
+	
+	/**
+	 * This method is to build SELECT query to search Hearing Details
+	 * 
+	 * @param code
+	 * @param tenantId
+	 * @param tableName
+	 * @param preparedStatementValues
+	 * @return String
+	 */
 	public String searchHearingDetails(String code, String tenantId, String tableName,
 			List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();

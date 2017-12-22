@@ -43,10 +43,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
-/**
+/** 
  * 
- * @author Prasad
- *
+ * @author			Date			eGov-JIRA ticket			Commit message
+ * ---------------------------------------------------------------------------
+ * Prasad		28th Oct 2107								Initial commit of Case search repository
+ * Prasad		01st Nov 2017								Added Hearingdeatils and Parawise comments for case search
+ * Prasad       04th Nov 2017							    Added searchAdvocateDetails method
+ * Narendra		07th Nov 2017                               Added logger statement
+ * Veswanth     15th Nov 2017                               Added getEvent mthod to search event
+ * 
  */
 @Repository
 @Slf4j
@@ -95,7 +101,7 @@ public class CaseSearchRepository {
 	ObjectMapper objectMapper;
 
 	/**
-	 * This will search the cases based on the given casesearchCriteria
+	 * This method is to search the cases based on the given casesearchCriteria
 	 * 
 	 * @param caseSearchCriteria
 	 * @param requestInfo
@@ -162,7 +168,12 @@ public class CaseSearchRepository {
 
 		return cases;
 	}
-
+	
+	/**
+	 * This method is to search ParaWiseComments
+	 * @param casee
+	 * @return List of ParaWiseComments
+	 */
 	private List<ParaWiseComment> searchParaWiseComments(Case casee) {
 		List<ParaWiseComment> paraWiseComments = new ArrayList<ParaWiseComment>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -176,7 +187,13 @@ public class CaseSearchRepository {
 		}
 		return paraWiseComments;
 	}
-
+	
+	/**
+	 * This method is to search HearingDetails
+	 * 
+	 * @param caseObj
+	 * @return List of HearingDetails
+	 */
 	private List<HearingDetails> searchHearingDetails(Case caseObj) {
 		List<HearingDetails> hearingDetails = new ArrayList<HearingDetails>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -193,9 +210,10 @@ public class CaseSearchRepository {
 	}
 
 	/**
+	 * This method is to search Advocate details
 	 * 
 	 * @param casee
-	 * @return
+	 * @return List AdvocateDetails
 	 */
 	private List<AdvocateDetails> searchAdvocateDetails(Case casee) {
 		List<AdvocateDetails> advocateDetails = new ArrayList<>();
@@ -214,7 +232,7 @@ public class CaseSearchRepository {
 	}
 
 	/**
-	 * This Api will set the advocate details based on the given advocateDetails
+	 * This method is to set the advocate details based on the given advocateDetails
 	 * 
 	 * @param advocateDetails
 	 */
@@ -231,7 +249,14 @@ public class CaseSearchRepository {
 			}
 		}
 	}
-
+	
+	/**
+	 * This method is to search CaseVoucher
+	 * 
+	 * @param casee
+	 * @return CaseVoucher
+	 */
+	@SuppressWarnings("unused")
 	private CaseVoucher searchCaseVoucher(Case casee) {
 		List<CaseVoucher> caseVouchers = new ArrayList<>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -248,7 +273,13 @@ public class CaseSearchRepository {
 
 		return null;
 	}
-
+	
+	/**
+	 * This method is to search RefernceEvidence
+	 * 
+	 * @param casee
+	 * @return List of ReferenceEvidence
+	 */
 	private List<ReferenceEvidence> searchRefernceEvidence(Case casee) {
 		List<ReferenceEvidence> referenceEvidences = new ArrayList<>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -266,7 +297,14 @@ public class CaseSearchRepository {
 
 		return null;
 	}
-
+	
+	/**
+	 * This method is to fetch CaseDetails
+	 * 
+	 * @param tenantId
+	 * @param advocateName
+	 * @return List of CaseDetails
+	 */
 	public List<CaseDetails> getCaseDetails(String tenantId, String advocateName) {
 		List<CaseDetails> caseDetails = new ArrayList<>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -286,7 +324,13 @@ public class CaseSearchRepository {
 
 		return null;
 	}
-
+	
+	/**
+	 * This method is to fetch Events
+	 * 
+	 * @param eventSearchCriteria
+	 * @return List of Event
+	 */
 	public List<Event> getEvent(EventSearchCriteria eventSearchCriteria) {
 		List<Event> events = new ArrayList<Event>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
@@ -305,7 +349,14 @@ public class CaseSearchRepository {
 
 		return null;
 	}
-
+	
+	/**
+	 * This method is to search HearingDetails
+	 * 
+	 * @param code
+	 * @param tenantId
+	 * @return
+	 */
 	public List<Map<String, Object>> searchHearingDetailsQuery(String code, String tenantId) {
 
 		final List<Object> preparedStatementValues = new ArrayList<Object>();

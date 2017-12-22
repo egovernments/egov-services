@@ -19,9 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Prasad		02nd Nov 2107						Initial commit for AdvocateDetails Rowmapper 
-* Prasad		02nd Nov 2107						Renamed assignedDate to assignDate
-* Prasad		02nd Nov 2107						Added audit details and tenantId for AdvocateDetails search
+* Prasad		02nd Nov 2017						Initial commit for AdvocateDetails Rowmapper 
+* Prasad		02nd Nov 2017						Renamed assignedDate to assignDate
+* Prasad		02nd Nov 2017						Added audit details and tenantId for AdvocateDetails search
 */
 @Component
 public class AdvocateDetailsRowMapper implements RowMapper<AdvocateDetails> {

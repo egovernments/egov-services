@@ -162,7 +162,7 @@ function validate(fieldErrors, property, value, isRequired, form, requiredFields
       continue;
     }
 
-    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '' || _.get(form, requiredFields[i]) === 0) {
+    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '' || _.get(form, requiredFields[i]) === 0 || _.get(form, requiredFields[i]) == null ) {
       isFormValid = false;
       break;
     }

@@ -242,6 +242,10 @@ class UiMultiFieldAddToTableForMDMS extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!_.isEqual(nextProps, this.props)) {
+      this.setState({
+       isAddAgain:true
+      });
+  
       this.updateValueList(nextProps);
     }
   }
@@ -428,6 +432,38 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   };
 
   deleteRow = index => {
+    let list = _.cloneDeep(this.state.valueList);
+    let { indexes, isInlineEdit } = this.state;
+    if (indexes.indexOf(index) == -1) {
+      list.splice(index, 1);
+    }
+    this.setState(
+      {
+         valueList: list,
+       // isBtnDisabled: false,
+        isAddAgain: true,
+        formData: {},
+        indexes: [],
+      },
+      function() {
+        if (this.props.setDisabled) this.props.setDisabled(true);
+      }
+    );
+  };
+
+  resetRow = index => {
+    this.handler(
+      {
+        target: {
+          value: this.state.valueList.length ? this.state.valueList : '',
+        },
+      },
+      this.props.item.jsonPath,
+      this.props.item.isRequired ? true : false,
+      '',
+      this.props.item.requiredErrMsg,
+      this.props.item.patternErrMsg
+    );
     // let formData = _.cloneDeep(this.props.formData);
     // let myTableInParent = _.get(formData, this.props.item.jsonPath);
     // if(myTableInParent) {
@@ -440,11 +476,12 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     if (indexes.indexOf(index) == -1) {
       list.splice(index, 1);
     }
+
     this.setState(
       {
-         valueList: list,
-        //isBtnDisabled: true,
-        isAddAgain: true,
+        // valueList: list,
+        isBtnDisabled: true,
+        isAddAgain: false,
         formData: {},
         indexes: [],
       },
@@ -469,7 +506,6 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   };
 
   renderFields = (item, screen) => {
-    console.log('item', item);
     if (screen == 'view' && ['documentList', 'fileTable', 'arrayText', 'arrayNumber'].indexOf(item.type) > -1) {
       if (item.type == 'datePicker') {
         item.isDate = true;
@@ -659,6 +695,14 @@ class UiMultiFieldAddToTableForMDMS extends Component {
                             <br />
                             <FlatButton
                               label={translate('Reset')}
+                              secondary={true}
+                              onClick={e => {
+                                this.resetRow(index);
+                              }}
+                            />
+                            <br />
+                            <FlatButton
+                              label={translate('Delete')}
                               secondary={true}
                               onClick={e => {
                                 this.deleteRow(index);

@@ -1,6 +1,6 @@
 var dat = {
   'legal.update': {
-    testhearing: true,
+    customDoc: "hearingdetails",
     numCols: 4,
     title: 'hearingdetails.update.document.title',
     useTimestamp: true,

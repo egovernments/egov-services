@@ -1,5 +1,6 @@
 var dat = {
   'legal.update': {
+    customDoc: "parawisecomments",
     numCols: 12 / 3,
     title: 'parawisecomments.create.document.title',
     searchUrl: '/lcms-services/legalcase/case/_search?code={id}',

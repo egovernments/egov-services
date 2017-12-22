@@ -451,6 +451,7 @@ class Report extends Component {
   }
 
   handleMasterData(specifications) {
+   
     let self = this;
     let moduleDetails = [];
     let { setDropDownData } = this.props;
@@ -638,6 +639,7 @@ class Report extends Component {
   };
 
   makeAjaxCall = (formData, url) => {
+    
     let self = this;
     var hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
@@ -663,6 +665,7 @@ class Report extends Component {
 
     Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
+       
         self.props.setLoadingStatus('hide');
         self.initData();
         console.log('Back response');
@@ -1886,6 +1889,7 @@ class Report extends Component {
   };
 
   render() {
+
     let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
 
     let { create, handleChange, setVal, getVal, addNewCard, removeCard, autoComHandler, initiateWF } = this;
@@ -1893,6 +1897,11 @@ class Report extends Component {
       !_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty('customActionsAndUrl')
         ? mockData[`${moduleName}.${actionName}`]['customActionsAndUrl'][0].url
         : '';
+         let customBtnLabel = 'Update';
+        if(!_.isEmpty(mockData[`${moduleName}.${actionName}`]) && (mockData[`${moduleName}.${actionName}`].customDoc === "parawisecomments" || mockData[`${moduleName}.${actionName}`].customDoc === "hearingdetails")){
+          customBtnLabel = 'Create';
+        }
+    
     //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
      console.log({...this.props.formData})
     return (
@@ -1960,7 +1969,7 @@ class Report extends Component {
                 {actionName == 'update' && (
                   <UiButton
                     item={{
-                      label: 'Update',
+                      label: customBtnLabel,
                       uiType: 'submit',
                       isDisabled: isFormValid ? false : true,
                     }}

@@ -114,6 +114,8 @@ public class PurchaseOrderService extends DomainService {
             int i = 0;
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
 
+            	BigDecimal totalAmount = new BigDecimal(0);
+            	
                 if (purchaseOrder.getAdvanceAmount() != null) {
                     if (purchaseOrder.getAdvanceAmount().compareTo(purchaseOrder.getTotalAmount()) > 0) {
                         errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), purchaseOrder.getAdvanceAmount() + " at serial no." + (purchaseOrders.indexOf(purchaseOrder) + 1));
@@ -153,6 +155,9 @@ public class PurchaseOrderService extends DomainService {
                 List<String> detailSequenceNos = purchaseOrderRepository.getSequence(PurchaseOrderDetail.class.getSimpleName(), purchaseOrder.getPurchaseOrderDetails().size());
 
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+                	
+                	totalAmount = totalAmount.add(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUnitPrice()).add(totalAmount));
+                	
                     purchaseOrderDetail.setId(detailSequenceNos.get(j));
                     purchaseOrderDetail.setTenantId(purchaseOrder.getTenantId());
 
@@ -215,6 +220,7 @@ public class PurchaseOrderService extends DomainService {
                     j++;
                 }
 
+                purchaseOrder.setTotalAmount(totalAmount);
             }
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,

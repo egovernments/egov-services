@@ -97,7 +97,13 @@ public class AdvocateBuilders {
 			selectQuery.append(" AND isactive = ?");
 			preparedStatementValues.add(advocateSearchCriteria.getIsActive());
 		}
-
+		
+		if (advocateSearchCriteria.getStatus() != null) {
+			
+			selectQuery.append(" AND lower(status)=?");
+			preparedStatementValues.add(advocateSearchCriteria.getStatus());
+		}
+		
 		if (advocateSearchCriteria.getCode() != null) {
 
 			selectQuery.append(" AND code IN ("

@@ -42,7 +42,7 @@ public class TransferinwardsService extends DomainService {
 	private TransferInwardRepository transferInwardRepository;
 	
 	@Autowired
-	private MaterialIssuesService materialIssuesService;
+	private MaterialIssueService materialIssuesService;
 	
 	@Autowired
 	private MaterialReceiptService materialReceiptService;

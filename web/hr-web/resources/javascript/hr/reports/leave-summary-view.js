@@ -21,7 +21,7 @@ class LeaveSummaryView extends React.Component {
 
         var _this = this;
 
-        var leaveStatus = leaveStatuses.forEach(function (item) {
+        var leaveStatus = this.state.leaveStatuses.forEach(function (item) {
             if (item.code === "APPROVED") {
                 return item.id;
             }

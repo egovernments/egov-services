@@ -15,7 +15,7 @@ var dat = {
             label: 'inventory.financialYear',
             type: 'singleValueList',
             isDisabled: false,
-            defaultValue: [{ key: null, value: '-- Please Select --' }, { key: '2017-2018', value: '2017-2018' }],
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange",
             patternErrorMsg: 'inventory.create.field.message.financialYear',
           },
           {
@@ -72,7 +72,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            defaultValue: [{ key: null, value: '-- Please Select --' }, { key: '2017-2018', value: '2017-2018' }],
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange",
             patternErrorMsg: '',
           },
           {
@@ -259,7 +259,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            defaultValue: [{ key: null, value: '-- Please Select --' }, { key: '2017-2018', value: '2017-2018' }],
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..id|$..finYearRange",
             patternErrorMsg: '',
           },
           {
@@ -336,8 +336,7 @@ var dat = {
                   displayJsonPath: 'materialReceipt[0].receiptDetails[0].material.name',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code',
                   depedants: [
                     {
                       jsonPath: 'materialReceipt[0].receiptDetails[0].uom.code',
@@ -462,7 +461,7 @@ var dat = {
             pattern: '',
             type: 'singleValueList',
             isDisabled: true,
-            defaultValue: [{ key: '2017-2018', value: '2017-2018' }],
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange",
             patternErrorMsg: '',
           },
           {
@@ -537,8 +536,7 @@ var dat = {
                   displayJsonPath: 'materialReceipt[0].receiptDetails[0].material.name',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code',
                   depedants: [
                     {
                       jsonPath: 'materialReceipt[0].receiptDetails[0].uom.code',

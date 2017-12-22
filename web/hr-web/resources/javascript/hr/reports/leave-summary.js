@@ -183,7 +183,7 @@ class LeaveSummary extends React.Component {
             var code = codeName.split("-")[0].trim();
 
             return (
-                <a href={`app/hr/reports/leave-summary-view.html?code=${code}&leaveType=${item.leaveType.id}&toDate=${item.asOnDate}`}>{item.leaveDays}</a>
+                <a href={`app/hr/reports/leave-summary-view.html?code=${code}&leaveType=${item.leaveType.id}&toDate=${asOnDate}`}>{item.leaveDays}</a>
             );
         }
 

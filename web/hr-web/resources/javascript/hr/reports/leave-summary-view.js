@@ -49,12 +49,12 @@ class LeaveSummaryView extends React.Component {
                 if (res && res.LeaveApplication) {
 
                     _this.setState({
-                        ...this.state,
+                        ..._this.state,
                         result: res.LeaveApplication
                     })
                 } else {
                     _this.setState({
-                        ...this.state,
+                        ..._this.state,
                         result: []
                     })
                 }
@@ -67,6 +67,7 @@ class LeaveSummaryView extends React.Component {
 
 
         commonApiPost("hr-employee", "employees", "_search", {
+            code: getUrlVars()["code"],
             tenantId,
             pageSize: 500
         }, function (err, res) {

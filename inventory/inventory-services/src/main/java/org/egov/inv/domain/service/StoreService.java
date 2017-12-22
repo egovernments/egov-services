@@ -56,7 +56,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -130,12 +129,28 @@ public class StoreService extends DomainService {
         try {
             StoreRequest fetchRelated = fetchRelated(storeRequest, tenantId);
             validate(fetchRelated.getStores(), Constants.ACTION_UPDATE, tenantId);
+
+
             for (Store store : storeRequest.getStores()) {
-                store.setCode(store.getCode().toUpperCase());
-                if (isEmpty(store.getTenantId())) {
-                    store.setTenantId(tenantId);
+                boolean storeUsed = checkStoreUsedInTransaction(store.getCode(), store.getTenantId());
+                if (storeUsed) {
+                    Boolean active = store.getActive();
+                    StoreEntity storeEntity = new StoreEntity();
+                    storeEntity.setId(store.getId());
+                    storeEntity.setTenantId(tenantId);
+                    StoreEntity storeResult = (StoreEntity) storeJdbcRepository.findById(storeEntity, StoreEntity.class.getSimpleName());
+
+                    store = storeResult.toDomain();
+                    store.setActive(active);
+
+                } else {
+                    store.setCode(store.getCode().toUpperCase());
+                    if (isEmpty(store.getTenantId())) {
+                        store.setTenantId(tenantId);
+                    }
+                    store.setAuditDetails(mapAuditDetailsForUpdate(storeRequest.getRequestInfo()));
                 }
-                store.setAuditDetails(mapAuditDetailsForUpdate(storeRequest.getRequestInfo()));
+
             }
             kafkaTemplate.send(updateTopic, updateKey, storeRequest);
             StoreResponse response = new StoreResponse();
@@ -180,11 +195,6 @@ public class StoreService extends DomainService {
 
                         if (isEmpty(store.getTenantId())) {
                             store.setTenantId(tenantId);
-                        }
-
-                        boolean storeUsed = checkStoreUsedInTransaction(store.getCode(), store.getTenantId());
-                        if (storeUsed) {
-                            errors.addDataError(ErrorCode.TRANSACTION_USED.getCode(), "Store", store.getCode());
                         }
 
                     }

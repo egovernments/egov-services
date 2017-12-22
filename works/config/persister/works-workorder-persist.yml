@@ -82,7 +82,7 @@ serviceMaps:
          
        - jsonPath: $.letterOfAcceptances.letterOfAcceptanceEstimates.*.letterOfAcceptance
        
-       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.id
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.estimateNumber
        
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.workCompletionDate
          dbType: LONG

@@ -57,8 +57,7 @@ public class MDMSController {
 			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
 			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
 				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-			mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, "
-					+ "Please rectify and retry, UniqueKeys are: "+keys);
+			mDMSCreateErrorResponse.setMessage("This record already exists. The keys for this record are: "+keys);
 			mDMSCreateErrorResponse.setData(errorData);
 			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}
@@ -85,8 +84,8 @@ public class MDMSController {
 			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
 			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
 				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-			mDMSCreateErrorResponse.setMessage("Following records dont exist hence update failed, "
-					+ "Please rectify and retry, UniqueKeys are: "+keys);
+			mDMSCreateErrorResponse.setMessage("You have attempted to update a key that defines this record or the record does not exist. "
+					+ "To create a new entry, please use the Create screen. The keys for this record are: "+keys);
 			mDMSCreateErrorResponse.setData(errorData);
 			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}

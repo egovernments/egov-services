@@ -183,7 +183,7 @@ public class DataUploadService {
 				    	documentContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
 					    request = documentContext.jsonString().toString();
 				    }         	
-				    Object apiResponse = hitApi(request, uploadDefinition.getUri());	
+				    Object apiResponse = hitApi(request, dataUploadUtils.getURI(uploadDefinition.getUri()));	
 				    if(null == apiResponse){
 				    	throw new CustomException("500", "Module API failed");
 				    }

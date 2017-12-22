@@ -40,6 +40,9 @@ public class DataUploadUtils {
 	@Value("${result.file.path}")
 	private String resultFilePath;
 	
+	@Value("${business.module.host}")
+	private String businessModuleHost;
+	
 	@SuppressWarnings({ "deprecation", "static-access" })
 	public List<List<Object>> readExcelFile(HSSFSheet sheet, List<Object> coloumnHeaders){
         List<List<Object>> excelData = new ArrayList<>(); 
@@ -199,6 +202,14 @@ public class DataUploadUtils {
 		return id.toString();
 	}
 
+	public String getURI(String endPoint){
+		logger.info("endpoint: "+endPoint);
+		StringBuilder uri = new StringBuilder();
+		uri.append(businessModuleHost).append(endPoint);
+		
+		return uri.toString();
+
+	}
 }
 
 

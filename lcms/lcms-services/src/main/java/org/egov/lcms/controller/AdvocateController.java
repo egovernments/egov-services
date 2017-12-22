@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Yosadhara		28th Oct 2107						Initial commit for advocate controller 
+* Yosadhara		28th Oct 2017						Initial commit for advocate controller 
 * Yosadhara		30th Oct 2017						Changes in advocate API's
 * Anil	 		14th Nov 2017						Agency Api implementation
 * Veswanth 		14th Nov 2017						Advocate search implementation

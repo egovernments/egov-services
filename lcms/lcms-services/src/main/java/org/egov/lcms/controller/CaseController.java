@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Veswanth		28th Oct 2107						ParawiseComment Api implementation 
+* Veswanth		28th Oct 2017						ParawiseComment Api implementation 
 * Shubham		30th Oct 2017						Added legacy load code
 * Veswanth		31st Oct 2017						Hearing details api implementation
 * Veswanth		10th Nov 2017						Get caseNumber api implementation

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Yosadhara		31st Oct 2107						Initial commit for Register Api
+* Yosadhara		31st Oct 2017						Initial commit for Register Api
 */
 @RestController
 @RequestMapping("/legalcase/register/")

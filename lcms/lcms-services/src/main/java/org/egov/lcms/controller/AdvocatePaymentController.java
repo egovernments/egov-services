@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Shubham		28th Oct 2107						Initial commit for advocate payment controller 
+* Shubham		28th Oct 2017						Initial commit for advocate payment controller 
 * Prasad		30th Oct 2017						Changed requestInfo to requestInfoWrapper
 * Prasad		03rd Nov 2017						Added throws statement for searchAdvocatePayment
 */

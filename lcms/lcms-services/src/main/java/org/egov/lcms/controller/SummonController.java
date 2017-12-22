@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;;
 * 
 * Author		Date			eGov-JIRA ticket	Commit message
 * ---------------------------------------------------------------------------
-* Prasad		26th Oct 2107						Initial commit for Summon Controller Api 
+* Prasad		26th Oct 2017						Initial commit for Summon Controller Api 
 * Prasad		26th Oct 2017						Added hearing details, parawise comments, vakaltanama endpoints
 * prasad		01st Dec 2017						Summon update implementation
 * Narendra		02nd Dec 2017						Added case request and case response for update summon

@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Contract class to get search request.
@@ -14,51 +17,59 @@ import lombok.*;
 @Data
 @Builder
 public class DetailedEstimateSearchContract {
-	
-	@NotNull
-	private String tenantId;
-	
-	private List<String> ids;
 
-	private List<String> detailedEstimateNumbers;
-	
-	private Long fromDate;
+    @NotNull
+    private String tenantId;
 
-	private Long toDate;
-	
-	private Long fromAmount;
+    private List<String> ids;
 
-	private Long toAmount;
-	
-	private String department;
-	
-	private List<String> typeOfWork;
-	
-	private List<String> subTypeOfWork;
-	
-	private List<String> statuses;
+    private List<String> detailedEstimateNumbers;
 
-	private List<String> workIdentificationNumbers;
+    private Long fromDate;
 
-	private List<String> abstractEstimateNumbers;
-	
-	private Integer pageSize;
+    private Long toDate;
 
-	private Integer pageNumber;
+    private Long fromAmount;
 
-	private String sortBy;
+    private Long toAmount;
 
-	private String nameOfWork;
-	
-	private String estimateAmount;
-	
-	private List<String> wards;
+    private String department;
 
-	private String currentOwner;
+    private List<String> typeOfWork;
 
-	private Boolean spillOverFlag;
+    private List<String> subTypeOfWork;
 
-	private String createdBy;
+    private List<String> statuses;
+
+    private List<String> workIdentificationNumbers;
+
+    private List<String> abstractEstimateNumbers;
+
+    private Integer pageSize;
+
+    private Integer pageNumber;
+
+    private String sortBy;
+
+    private String nameOfWork;
+
+    private String estimateAmount;
+
+    private List<String> wards;
+
+    private String currentOwner;
+
+    private Boolean spillOverFlag;
+
+    private String createdBy;
 
     private List<String> technicalSanctionNumbers;
+
+    private String technicalSanctionNumberLike;
+
+    private String workIdentificationNumberLike;
+
+    private String abstractEstimateNumberLike;
+
+    private String detailedEstimateNumberLike;
 }

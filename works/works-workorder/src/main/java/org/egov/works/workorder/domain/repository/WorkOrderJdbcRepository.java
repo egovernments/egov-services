@@ -102,7 +102,7 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
         } 
         if (workOrderSearchContract.getWorkOrderNumbers() != null && !workOrderSearchContract.getWorkOrderNumbers().isEmpty()) {
             addAnd(params);
-            params.append("wo.workordernumber in (:workordernumbers))");
+            params.append("wo.workordernumber in (:workordernumbers)");
             paramValues.put("workordernumbers", workOrderSearchContract.getWorkOrderNumbers());
         }
 

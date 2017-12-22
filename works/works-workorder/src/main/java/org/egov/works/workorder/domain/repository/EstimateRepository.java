@@ -32,12 +32,12 @@ public class EstimateRepository {
         this.detailedEstimateByWINUrl = worksEstimateHostname + detailedEstimateByWINUrl;
 	}
 
-	public DetailedEstimateResponse getDetailedEstimateById(
+	public DetailedEstimateResponse getDetailedEstimateByEstimateNumber(
 			final DetailedEstimateSearchContract detailedEstimateSearchContract, final String tenantId,
 			final RequestInfo requestInfo) {
 
 		StringBuilder url = new StringBuilder();
-		url.append(detailedEstimateUrl).append(tenantId).append("&").append("ids=").append(detailedEstimateSearchContract.getIds().get(0));
+		url.append(detailedEstimateUrl).append(tenantId).append("&").append("detailedEstimateNumberLike=").append(detailedEstimateSearchContract.getDetailedEstimateNumberLike());
 
 		return restTemplate.postForObject(url.toString(), requestInfo, DetailedEstimateResponse.class);
 

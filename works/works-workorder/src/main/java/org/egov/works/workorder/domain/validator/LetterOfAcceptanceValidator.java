@@ -77,7 +77,7 @@ public class LetterOfAcceptanceValidator {
             for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
                     .getLetterOfAcceptanceEstimates()) {
                 List<DetailedEstimate> detailedEstimates = estimateService
-                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getId(),
+                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
                                 letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
                         .getDetailedEstimates();
 
@@ -89,7 +89,7 @@ public class LetterOfAcceptanceValidator {
                 if (messages != null && !messages.isEmpty())
                     throw new CustomException(messages);
 
-                if (!detailedEstimate.getWorkOrderCreated() && isRevision == null || (isRevision != null && !isRevision)) {
+                if (!detailedEstimate.getWorkOrderCreated() && (isRevision == null || (isRevision != null && !isRevision))) {
                     validateOfflineStatus(letterOfAcceptanceRequest, messages, letterOfAcceptance,
                             letterOfAcceptanceEstimate);
 

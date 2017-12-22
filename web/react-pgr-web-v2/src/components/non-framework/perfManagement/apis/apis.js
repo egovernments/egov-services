@@ -81,7 +81,7 @@ export const fetchCompareSearchAPI = (finYears, kpis, ulbs, cb) => {
 
   // TEXT TYPE TEST
   // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18&kpiCodes=TPV2&ulbs=default&tenantId=default`, [], {}, false, true).then(
-  
+
   // ACTUAL API CALLING
   Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(
     function(res) {

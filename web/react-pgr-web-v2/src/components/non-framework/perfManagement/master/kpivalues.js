@@ -8,6 +8,9 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+
 import { Collapse, Grid, Row, Col, Table, DropdownButton, Button, OverlayTrigger, Popover, Glyphicon } from 'react-bootstrap';
 
 import { Card, CardHeader, CardText } from 'material-ui/Card';
@@ -20,6 +23,8 @@ import UiButton from '../../../framework/components/UiButton';
 import { fileUpload } from '../../../framework/utility/utility';
 
 import { parseFinancialYearResponse } from '../apis/apis';
+
+import KPIDocumentField from '../kpidoc/kpidocumentfield';
 
 class kpivalues extends Component {
   constructor(props) {
@@ -47,7 +52,6 @@ class kpivalues extends Component {
       KPIResult: [],
       documents: [],
 
-      uploadPane: [],
       anchorEl: [],
       response: [],
       filelist: [],
@@ -55,6 +59,16 @@ class kpivalues extends Component {
       search: false,
       currentFileList: [],
       showAlert: false,
+
+      /****/
+      documentsFields: [],
+
+      open: false,
+      uploadPane: false,
+      cellItem: [],
+
+      /****/
+
       headerList: [
         { 4: 'April' },
         { 5: 'May' },
@@ -90,6 +104,7 @@ class kpivalues extends Component {
     this.prevSection = this.prevSection.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
     this.uploadFile = this.uploadFile.bind(this);
+    this.setUploadedFiles = this.setUploadedFiles.bind(this);
   }
 
   componentDidMount() {
@@ -284,7 +299,7 @@ class kpivalues extends Component {
               type="file"
               accept=".xls,.xlsx,.txt,.json,.doc,.docx"
               style={{ display: 'none' }}
-              onChange={e => this.handleFile(e, item.valueid, item.period)}
+              onChange={e => this.handleFile(e, item.valueid, item.period, '')}
             />
             <span className="glyphicon glyphicon-upload" aria-hidden="true" />&nbsp;
             <strong>{item.documents && item.documents.length ? 'Upload more' : 'Upload'}</strong>
@@ -368,7 +383,13 @@ class kpivalues extends Component {
     );
   }
 
+  uploadDocs(self) {
+    console.log(self.state.cellItem);
+  }
+
   setFileName(item, self, e) {
+    //self.state.uploadPane = true;
+    //self.state.open = true;
     if (item.documents) {
       let filelistClone = self.state.filelist.slice();
       console.log(item.documents);
@@ -511,14 +532,13 @@ class kpivalues extends Component {
                 )}
 
                 <div>
-                  <OverlayTrigger trigger="click" overlay={this.prepareUploadPanel(itemValue)} placement="bottom" rootClose>
-                    <span style={{ color: 'orange' }}>
-                      <span className="glyphicon glyphicon-upload" aria-hidden="true" /> &nbsp;&nbsp;
-                      <span id={itemValue.valueid + '' + itemValue.period} onClick={e => this.setFileName(itemValue, this, e)}>
-                        <strong>{translate('perfManagement.create.KPIs.groups.Uploads')}</strong>
-                      </span>
+                  <span style={{ color: 'orange' }}>
+                    <span className="glyphicon glyphicon-upload" aria-hidden="true" /> &nbsp;&nbsp;
+                    <span id={itemValue.valueid + '' + itemValue.period} onClick={e => this.getDialog(item.kpi, itemValue, this, e)}>
+                      <strong>{translate('perfManagement.create.KPIs.groups.Uploads')}</strong>
                     </span>
-                  </OverlayTrigger>
+                  </span>
+
                   <br />
                 </div>
               </td>
@@ -528,6 +548,21 @@ class kpivalues extends Component {
         </tr>
       );
     });
+  }
+
+  getDialog(kpi, item, self, e) {
+    // console.log(kpi.documentsReq, 'fields for doc');
+    // self.setState({ uploadPane: true });
+    self.setState({ open: true });
+    self.setState({ documentsFields: kpi.documentsReq });
+    self.setState({ cellItem: item });
+    // console.log(self.state.open);
+    console.log(self.state.documentsFields);
+    console.log(self.state.documentsReq);
+  }
+
+  closeDialog(self) {
+    //self.setState({uploadPane:false});
   }
 
   handleChange(kpiValueID, period, event, type) {
@@ -571,6 +606,25 @@ class kpivalues extends Component {
     this.setState({ KPIResult: KPIsClone });
 
     //console.log(this.state.KPIs);
+  }
+
+  setUploadedFiles(filedetails) {
+    let resultClone = this.state.KPIResult.slice();
+
+    resultClone.map(kpi => {
+      kpi.kpiValue.valueList.map(kpiValue => {
+        if (kpiValue.valueid == filedetails.valueid && kpiValue.period == filedetails.period) {
+          if (!kpiValue.documents) {
+            kpiValue.documents = [];
+          }
+
+          kpiValue.documents.push({ fileStoreId: filedetails.fileStoreId, name: filedetails.name });
+        }
+      });
+    });
+
+    this.setState({ KPIResult: resultClone });
+    console.log(resultClone);
   }
 
   uploadFile(valueid, period, e) {
@@ -669,7 +723,7 @@ class kpivalues extends Component {
     oReq.send();
   }
 
-  handleFile(event, valueid, period) {
+  handleFile(event, valueid, period, doc) {
     let files = this.state.documents.slice();
 
     if (!files[valueid]) {
@@ -823,13 +877,23 @@ class kpivalues extends Component {
     );
   }
 
+  switchDialog = dialogState => {
+    this.setState({ open: dialogState });
+  };
+
   render() {
     let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
     let { create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF } = this;
-
+    console.log(moduleName);
+    console.log(actionName);
     let tableStyle = {
       align: 'center',
     };
+
+    const actions = [
+      <FlatButton label="Cancel" primary={true} onClick={this.closeDialog(this)} />,
+      <FlatButton label="Submit" primary={true} keyboardFocused={true} onClick={this.uploadDocs} />,
+    ];
 
     let body = this.prepareBodyobject(this.state.data);
     let header = this.header();
@@ -1014,6 +1078,15 @@ class kpivalues extends Component {
             </CardText>
           </Card>
         )}
+
+        <KPIDocumentField
+          {...this.props}
+          data={this.state.documentsFields}
+          cell={this.state.cellItem}
+          open={this.state.open}
+          switchDialog={this.switchDialog}
+          setUploadedFiles={this.setUploadedFiles}
+        />
       </div>
     );
   }

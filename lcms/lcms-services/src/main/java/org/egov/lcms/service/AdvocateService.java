@@ -198,7 +198,8 @@ public class AdvocateService {
 	 */
 	@Transactional
 	public AgencyResponse updateAgency(AgencyRequest agencyRequest) throws Exception {
-
+		List<Agency> agenciesList = new ArrayList<Agency>();
+		
 		for (Agency agency : agencyRequest.getAgencies()) {
 			AgencyRequest createAgencyRequest = new AgencyRequest();
 			List<Agency> agencies = new ArrayList<>();
@@ -260,11 +261,13 @@ public class AdvocateService {
 
 				kafkaTemplate.send(propertiesManager.getUpdateAdvocateTopic(), agencyRequest);
 			}
+			Agency updatedAgency = getAgency(agency, createAgencyRequest.getAgencies());
+			agenciesList.add(updatedAgency);
 		}
 
 		return new AgencyResponse(
 				responseInfoFactory.getResponseInfo(agencyRequest.getRequestInfo(), HttpStatus.CREATED),
-				agencyRequest.getAgencies());
+				agenciesList);
 
 	}
 
@@ -304,7 +307,6 @@ public class AdvocateService {
 					reqPersonDetails.setCode(code);
 					reqPersonDetails.setAgencyName(agency.getName());
 					createPersonDetails.add(reqPersonDetails);
-					break;
 				} else {
 					List<PersonDetails> personDetails = personDetailsOnDb.stream()
 							.filter(details -> details.getCode().equalsIgnoreCase(reqPersonDetails.getCode()))
@@ -395,7 +397,6 @@ public class AdvocateService {
 							+ advocateCode.substring(reqAdvocate.getTenantId().length(), advocateCode.length());
 					reqAdvocate.setCode(advocateCode);
 					createAdvocates.add(reqAdvocate);
-					break;
 				} else {
 					List<Advocate> advocates = advocatesOnDb.stream()
 							.filter(Advocate -> Advocate.getCode().equalsIgnoreCase(reqAdvocate.getCode()))
@@ -476,4 +477,14 @@ public class AdvocateService {
 
 		return new AdvocateResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), advocates);
 	}
+	
+	
+	private Agency getAgency(Agency agency, List<Agency> updatedagencies) {
+
+		agency.getPersonDetails().addAll(updatedagencies.get(0).getPersonDetails());
+		agency.getAdvocates().addAll(updatedagencies.get(0).getAdvocates());
+
+		return agency;
+
+		}
 }

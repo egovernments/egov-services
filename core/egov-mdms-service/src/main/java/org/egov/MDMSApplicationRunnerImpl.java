@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -36,22 +37,29 @@ public class MDMSApplicationRunnerImpl {
 	@Value("${egov.mdms.conf.path}")
 	public String mdmsFileDirectory;
 
+	@Value("${state.level.masters}")
+	public String stateLevelMasters;
+
 	private static Map<String, Map<String, Map<String, JSONArray>>> tenantMap = new HashMap<>();
 
+	private static Map<String, List<String>> stateLevelMastermap = new HashMap<>();
+
 	ObjectMapper objectMapper = new ObjectMapper();
+
 	@PostConstruct
 	public void run() {
 		try {
 			log.info("Reading yaml files from: " + mdmsFileDirectory);
 			readFiles(mdmsFileDirectory);
+			getStateLevelMap(stateLevelMasters);
 			log.info("tenantMap1:" + tenantMap);
-		     
+
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);
 		}
 
 	}
-	
+
 	public void readFiles(String baseFoderPath) {
 		ObjectMapper jsonReader = new ObjectMapper();
 		File folder = new File(baseFoderPath);
@@ -94,59 +102,96 @@ public class MDMSApplicationRunnerImpl {
 		}
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void prepareTenantMap(Map<String, Object> map) {
 		// ObjectMapper objectMapper = new ObjectMapper();
-		
-		String tenantId = (String)map.get("tenantId");
-		String moduleName = (String)map.get("moduleName");
+
+		String tenantId = (String) map.get("tenantId");
+		String moduleName = (String) map.get("moduleName");
 		Set<String> masterKeys = map.keySet();
 		String nonMasterKeys = "tenantId,moduleName";
 		List<String> ignoreKey = new ArrayList<String>(Arrays.asList(nonMasterKeys.split(",")));
 		masterKeys.removeAll(ignoreKey);
-		
+
 		Map<String, JSONArray> masterDataMap = new HashMap<>();
-		
+
 		Iterator<String> masterKeyIterator = masterKeys.iterator();
 		String masterName = null;
 		JSONArray masterDataJsonArray = null;
-		while(masterKeyIterator.hasNext()) {
+		while (masterKeyIterator.hasNext()) {
 			masterName = masterKeyIterator.next();
-			
+
 			try {
-				masterDataJsonArray = JsonPath.read(objectMapper.writeValueAsString((List<Object>)map.get(masterName)),"$");
+				masterDataJsonArray = JsonPath.read(objectMapper.writeValueAsString((List<Object>) map.get(masterName)),
+						"$");
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			masterDataMap.put(masterName, masterDataJsonArray);
 		}
-		
-		if(!tenantMap.containsKey(tenantId)) {
+
+		if (!tenantMap.containsKey(tenantId)) {
 			Map<String, Map<String, JSONArray>> moduleMap = new HashMap<>();
 			moduleMap.put(moduleName, masterDataMap);
 			tenantMap.put(tenantId, moduleMap);
-		}
-		else {
-			Map<String, Map<String, JSONArray>> tenantModule= tenantMap.get(tenantId);
-			
-			if(!tenantModule.containsKey(moduleName)) {
+		} else {
+			Map<String, Map<String, JSONArray>> tenantModule = tenantMap.get(tenantId);
+
+			if (!tenantModule.containsKey(moduleName)) {
 				tenantModule.put(moduleName, masterDataMap);
 			} else {
 				Map<String, JSONArray> moduleMaster = tenantModule.get(moduleName);
 				moduleMaster.putAll(masterDataMap);
-				//moduleMaster.put(masterName, masterDataJsonArray);
+				// moduleMaster.put(masterName, masterDataJsonArray);
 				tenantModule.put(moduleName, moduleMaster);
 			}
-			
+
 			tenantMap.put(tenantId, tenantModule);
 		}
 
 	}
-	
-	public static  Map<String, Map<String, Map<String, JSONArray>>> getTenantMap() {
+
+	/**
+	 * Preparing StateLevel Map By configured (state.level.masters) in
+	 * application properties.
+	 * 
+	 * @param stateLevelMasters
+	 */
+	public void getStateLevelMap(String stateLevelMasters) {
+		if (!StringUtils.isEmpty(stateLevelMasters)) {
+			if (stateLevelMasters.contains(",")) {
+				List<String> list = Arrays.asList(stateLevelMasters.split("\\,"));
+				for (String key : list) {
+					String[] array = key.split("\\.");
+					if (!stateLevelMastermap.containsKey(array[0])) {
+						List<String> values = new ArrayList<String>();
+						values.add(array[1]);
+						stateLevelMastermap.put(array[0], values);
+					} else {
+						List<String> values = stateLevelMastermap.get(array[0]);
+						values.add(array[1]);
+						stateLevelMastermap.put(array[0], values);
+					}
+				}
+			} else {
+				// Assuming Data Always Given like ModuleName.MasterName
+				String[] array = stateLevelMasters.split("\\.");
+				List<String> values = new ArrayList<String>();
+				values.add(array[1]);
+				stateLevelMastermap.put(array[0], values);
+			}
+		}
+	}
+
+	public static Map<String, Map<String, Map<String, JSONArray>>> getTenantMap() {
 		return tenantMap;
 	}
 
+	public static Map<String, List<String>> getStateWideMastersMap() {
+		return stateLevelMastermap;
+	}
+
 }
+

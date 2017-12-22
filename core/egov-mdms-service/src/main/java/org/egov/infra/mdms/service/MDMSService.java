@@ -25,68 +25,114 @@ import net.minidev.json.JSONArray;
 @Service
 @Slf4j
 public class MDMSService {
-	
+
 	@Autowired
 	private KafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	@Value("${egov.kafka.topics.reload}")
 	private String reloadTopic;
-	
-	public Map<String, Map<String, JSONArray>> searchMaster(MdmsCriteriaReq mdmsCriteriaReq) {
-		Map<String, Map<String, JSONArray>> responseMap = new HashMap<>();
-		Map<String, Map<String, Map<String, JSONArray>>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
-		Map<String, Map<String, JSONArray>> moduleMap = tenantIdMap.get(mdmsCriteriaReq.getMdmsCriteria().getTenantId());
 
-		if (moduleMap == null)
-			throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");
+	private final Map<String, List<String>> stateLevelMastermap = MDMSApplicationRunnerImpl.getStateWideMastersMap();
+
+	public Map<String, Map<String, JSONArray>> searchMaster(MdmsCriteriaReq mdmsCriteriaReq) {
+
+		Map<String, Map<String, Map<String, JSONArray>>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
+
+		String tenantId = mdmsCriteriaReq.getMdmsCriteria().getTenantId();
+
+		Map<String, Map<String, JSONArray>> stateLevel = null;
+		Map<String, Map<String, JSONArray>> ulbLevel = null;
+
+		if (tenantId.contains(".")) {
+			String array[] = tenantId.split("\\.");
+			stateLevel = tenantIdMap.get(array[0]);
+			ulbLevel = tenantIdMap.get(tenantId);
+			if (ulbLevel == null)
+				throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");
+		} else {
+			stateLevel = tenantIdMap.get(tenantId);
+			if (stateLevel == null)
+				throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");
+		}
 
 		List<ModuleDetail> moduleDetails = mdmsCriteriaReq.getMdmsCriteria().getModuleDetails();
-		
-		for(ModuleDetail moduleDetail : moduleDetails) {
+		Map<String, Map<String, JSONArray>> responseMap = new HashMap<>();
+		for (ModuleDetail moduleDetail : moduleDetails) {
 			List<MasterDetail> masterDetails = moduleDetail.getMasterDetails();
-			Map<String, JSONArray> masters = moduleMap.get(moduleDetail.getModuleName());
-			if(masters == null) 
-			continue;
-			
+
+			if (stateLevel != null || ulbLevel != null) {
+				if (stateLevel != null && ulbLevel == null) {
+					if (stateLevel.get(moduleDetail.getModuleName()) == null)
+						continue;
+				} else if (ulbLevel != null && stateLevel == null) {
+					if (ulbLevel.get(moduleDetail.getModuleName()) == null)
+						continue;
+				}
+				if (stateLevel != null || ulbLevel != null) {
+					if (stateLevel.get(moduleDetail.getModuleName()) == null
+							&& ulbLevel.get(moduleDetail.getModuleName()) == null)
+						continue;
+				}
+			}
+
 			Map<String, JSONArray> finalMasterMap = new HashMap<>();
-			for(MasterDetail masterDetail : masterDetails) {
-				JSONArray masterData = masters.get(masterDetail.getName());
-				
-				if(masterData == null) 
-				continue;
-				
+
+			for (MasterDetail masterDetail : masterDetails) {
+				// JSONArray masterData = masters.get(masterDetail.getName());
+				JSONArray masterData = getMasterData(stateLevel, ulbLevel, moduleDetail.getModuleName(),
+						masterDetail.getName());
+				if (masterData == null)
+					continue;
+
 				if (masterDetail.getFilter() != null)
 					masterData = filterMaster(masterData, masterDetail.getFilter());
-				
+
 				finalMasterMap.put(masterDetail.getName(), masterData);
 			}
 			responseMap.put(moduleDetail.getModuleName(), finalMasterMap);
 		}
 		return responseMap;
 	}
-	
+
+	private JSONArray getMasterData(Map<String, Map<String, JSONArray>> stateLevel,
+			Map<String, Map<String, JSONArray>> ulbLevel, String moduleName, String masterName) {
+
+		if (ulbLevel == null || (stateLevelMastermap.get(moduleName) != null
+				&& stateLevelMastermap.get(moduleName).contains(masterName))) {
+			if (stateLevel.get(moduleName) != null) {
+				return stateLevel.get(moduleName).get(masterName);
+			} else {
+				return null;
+			}
+		} else if (ulbLevel.get(moduleName) != null) {
+			return ulbLevel.get(moduleName).get(masterName);
+		} else {
+			return null;
+		}
+	}
+
 	public JSONArray filterMaster(JSONArray masters, String filterExp) {
 		JSONArray filteredMasters = JsonPath.read(masters, filterExp);
 		return filteredMasters;
 	}
-	
+
 	public void updateCache(String path, String tenantId) {
 
 		ObjectMapper jsonReader = new ObjectMapper();
-		
-			try {
-				URL jsonFileData = new URL(path);
-				Map<String, Object> map = jsonReader.readValue(new InputStreamReader(jsonFileData.openStream()), Map.class);
-				kafkaTemplate.send(reloadTopic, map);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new CustomException("mdms_invalid_file_path","invalid file path");
-			}
 
+		try {
+			URL jsonFileData = new URL(path);
+			Map<String, Object> map = jsonReader.readValue(new InputStreamReader(jsonFileData.openStream()), Map.class);
+			kafkaTemplate.send(reloadTopic, map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new CustomException("mdms_invalid_file_path", "invalid file path");
+		}
 
 	}
-	
+
 	public void reloadObj(Map<String, Object> map) {
 		kafkaTemplate.send(reloadTopic, map);
 	}
 }
+

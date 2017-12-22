@@ -15,7 +15,7 @@ class LeaveSummaryView extends React.Component {
     }
 
 
-    componentWillMount() {
+    componentDidMount() {
 
         var _this = this;
 
@@ -40,12 +40,12 @@ class LeaveSummaryView extends React.Component {
                 if (res && res.LeaveApplication) {
 
                     _this.setState({
-                        ..._this.state,
+                        ...this.state,
                         result: res.LeaveApplication[0]
                     })
                 } else {
                     _this.setState({
-                        ..._this.state,
+                        ...this.state,
                         result: []
                     })
                 }

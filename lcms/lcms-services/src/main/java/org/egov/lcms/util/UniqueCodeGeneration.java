@@ -11,11 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-/**
- * 
- * @author Prasad
- *
- */
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Prasad		26th Oct 2017						Initial commit of UniqueCodeGeneration 
+* Prasad        28th Oct 2017                       Added parameters to UniqueCodeGeneration method
+* Yosadhara     31st Oct 2017                       Added Custom Exception and exception message
+* Prasad        08th Nov 2017                       Added isSummon parameter to UniqueCodeGeneration method
+*/
 @Service
 public class UniqueCodeGeneration {
 
@@ -29,7 +33,7 @@ public class UniqueCodeGeneration {
 	PropertiesManager propertiesManager;
 
 	/**
-	 * This will generate the unique code based on the given parameters
+	 * This method is to generate the unique code based on the given parameters
 	 * 
 	 * @param tenantId
 	 * @param requestInfo

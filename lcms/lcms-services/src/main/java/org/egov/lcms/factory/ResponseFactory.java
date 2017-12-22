@@ -52,9 +52,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Prasad		26th Oct 2017						Initial commit of common request, response and error response
+*/
 @Configuration
 public class ResponseFactory {
-
+	
+	/**
+	 * This method is to get response info
+	 * 
+	 * @param requestInfo
+	 * @param status
+	 * @return ResponseInfo
+	 */
 	public ResponseInfo getResponseInfo(RequestInfo requestInfo, HttpStatus status) {
 
 		ResponseInfo responseInfo = new ResponseInfo();
@@ -68,7 +81,14 @@ public class ResponseFactory {
 		}
 		return responseInfo;
 	}
-
+	
+	/**
+	 * This method is to get Error response info
+	 * 
+	 * @param bindingResult
+	 * @param requestInfo
+	 * @return ErrorResponse
+	 */
 	public ErrorResponse getErrorResponse(Errors bindingResult, RequestInfo requestInfo) {
 
 		Error error = new Error();

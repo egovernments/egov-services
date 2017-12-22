@@ -14,17 +14,25 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Prasad		01st Nov 2017						Initial commit of SummonValidator
+* Yosadhara     01st Dec 2017                       Added validation method to validate Duplicate Advocates
+*/
 @Service
 public class SummonValidator {
-	/**
-	 * * This API will validate the summon object
-	 * 
-	 * @param summonRequest
-	 * @throws Exception
-	 */
+	
 	@Autowired
 	PropertiesManager propertiesManager;
 
+	/**
+	 * This method is to validate the summon object
+	 * 
+	 * @param caseRequest
+	 * @throws Exception
+	 */
 	public void validateSummon(CaseRequest caseRequest) throws Exception {
 		for (Case legalCase : caseRequest.getCases()) {
 			Summon summon = legalCase.getSummon();
@@ -82,6 +90,11 @@ public class SummonValidator {
 		}
 	}
 	
+	/**
+	 * This method is to validate Advocate duplicacy
+	 * 
+	 * @param caseObj
+	 */
 	public void validateDuplicateAdvocates(Case caseObj) {
 		List<String> advocateCodes = new ArrayList<String>();
 		for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {

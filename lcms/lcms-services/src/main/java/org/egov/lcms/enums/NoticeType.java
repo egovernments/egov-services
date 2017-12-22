@@ -3,6 +3,13 @@ package org.egov.lcms.enums;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * 
+ * @author Yosadhara
+ * 
+ * NoticeType Enum
+ *
+ */
 public enum NoticeType {
 
 	CREATE_VAKALATNAMA("CREATE_VAKALATNAMA");

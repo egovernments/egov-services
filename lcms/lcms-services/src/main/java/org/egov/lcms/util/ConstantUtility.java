@@ -1,5 +1,12 @@
 package org.egov.lcms.util;
 
+/**
+ * 
+ * @author Prasad
+ * 
+ * This class contains table names
+ *
+ */
 public class ConstantUtility {
 
 	public static final String OPINION_TABLE_NAME = "egov_lcms_opinion";

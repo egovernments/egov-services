@@ -151,7 +151,6 @@ export default (state = defaultState, action) => {
 };
 
 function validate(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
-  debugger;
   let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
   let isFormValid = true;
   // console.log(requiredFields);

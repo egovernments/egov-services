@@ -37,7 +37,7 @@ public class ContractorValidator {
         Contractor dbContractorObj = null;
 
         for (final Contractor contractor : contractorRequest.getContractors()) {
-            
+
             mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
                     CommonConstants.APPCONFIGURATION_MDMS_OBJECT, CommonConstants.CODE,
                     CommonConstants.FINANCIAL_INTEGRATION_REQUIRED_APPCONFIG, contractorRequest.getRequestInfo());
@@ -46,7 +46,7 @@ public class ContractorValidator {
                 if (jsonMap.get("value") != null && jsonMap.get("value").toString().equalsIgnoreCase("Yes"))
                     financialIntegrationReq = Boolean.TRUE;
             }
-            
+
             if (!StringUtils.isBlank(contractor.getCode())) {
                 // In case of create, Validate for code uniqueness.
                 if (isNew) {
@@ -68,7 +68,7 @@ public class ContractorValidator {
                     }
                 }
             }
-            
+
             // Contractor status reference validation
             if (contractor.getStatus() != null) {
                 mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
@@ -85,12 +85,12 @@ public class ContractorValidator {
                             if (ws.getModuleType() != null
                                     && ws.getModuleType()
                                             .equalsIgnoreCase(CommonConstants.MDMS_CONTRACTORMASTER_MODULETYPE)
-                                    && ws.getCode()!=null && ws.getCode().equalsIgnoreCase(ws.getCode())) {
+                                    && ws.getCode() != null && ws.getCode().equalsIgnoreCase(ws.getCode())) {
                                 isValidStatus = Boolean.TRUE;
                                 break;
-                            } 
+                            }
                         }
-                        if(!isValidStatus){
+                        if (!isValidStatus) {
                             messages.put(Constants.KEY_CONTRACTOR_STATUS_INVALID,
                                     Constants.MESSAGE_CONTRACTOR_STATUS_INVALID + contractor.getStatus());
                             isDataValid = Boolean.TRUE;
@@ -147,19 +147,26 @@ public class ContractorValidator {
                 }
             }
             // Contractorclass reference validation
-            if (contractor.getContractorClass() != null && contractor.getContractorClass().getPropertyClass() != null) {
-                mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(), CommonConstants.MODULENAME_WORKS,
-                        CommonConstants.MASTERNAME_CONTRACTORCLASS, "class",
-                        contractor.getContractorClass().getPropertyClass(), contractorRequest.getRequestInfo());
-                if (mdmsResponse == null || mdmsResponse.size() == 0) {
+            if (contractor.getContractorClass() != null) {
+                if (contractor.getContractorClass().getPropertyClass() == null) {
                     messages.put(Constants.KEY_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID,
                             Constants.MESSAGE_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID
                                     + contractor.getContractorClass().getPropertyClass());
                     isDataValid = Boolean.TRUE;
+                } else {
+                    mdmsResponse = mdmsRepository.getByCriteria(contractor.getTenantId(),
+                            CommonConstants.MODULENAME_WORKS, CommonConstants.MASTERNAME_CONTRACTORCLASS, "class",
+                            contractor.getContractorClass().getPropertyClass(), contractorRequest.getRequestInfo());
+                    if (mdmsResponse == null || mdmsResponse.size() == 0) {
+                        messages.put(Constants.KEY_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID,
+                                Constants.MESSAGE_CONTRACTOR_CONTRACTORCLASS_CLASS_INVALID
+                                        + contractor.getContractorClass().getPropertyClass());
+                        isDataValid = Boolean.TRUE;
+                    }
                 }
             }
+            if (isDataValid)
+                throw new CustomException(messages);
         }
-        if (isDataValid)
-            throw new CustomException(messages);
     }
 }

@@ -53,7 +53,7 @@ public class ContractorHelper {
     private String narration = null;
 
     @JsonProperty("mobileNumber")
-    private BigDecimal mobileNumber = null;
+    private String mobileNumber = null;
 
     @JsonProperty("panNumber")
     private String panNumber = null;

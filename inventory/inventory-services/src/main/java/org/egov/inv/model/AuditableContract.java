@@ -14,11 +14,4 @@ import java.util.Date;
 @NoArgsConstructor
 public class AuditableContract {
     protected String tenantId;
-    protected User createdBy;
-    protected User lastModifiedBy;
-    protected Date createdDate;
-    protected Date lastModifiedDate;
-    protected String deleteReason;
-
-
 }

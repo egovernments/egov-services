@@ -55,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -130,7 +131,7 @@ public class StoreService extends DomainService {
             StoreRequest fetchRelated = fetchRelated(storeRequest, tenantId);
             validate(fetchRelated.getStores(), Constants.ACTION_UPDATE, tenantId);
 
-
+            List<Store> storeList = new ArrayList<>();
             for (Store store : storeRequest.getStores()) {
                 boolean storeUsed = checkStoreUsedInTransaction(store.getCode(), store.getTenantId());
                 if (storeUsed) {
@@ -142,16 +143,17 @@ public class StoreService extends DomainService {
 
                     store = storeResult.toDomain();
                     store.setActive(active);
-
+                    storeList.add(store);
                 } else {
                     store.setCode(store.getCode().toUpperCase());
                     if (isEmpty(store.getTenantId())) {
                         store.setTenantId(tenantId);
                     }
                     store.setAuditDetails(mapAuditDetailsForUpdate(storeRequest.getRequestInfo()));
+                    storeList.add(store);
                 }
-
             }
+            storeRequest.setStores(storeList);
             kafkaTemplate.send(updateTopic, updateKey, storeRequest);
             StoreResponse response = new StoreResponse();
             response.setStores(storeRequest.getStores());
@@ -166,6 +168,7 @@ public class StoreService extends DomainService {
 
         StoreResponse storeResponse = new StoreResponse();
         Pagination<Store> search = storeJdbcRepository.search(storeGetRequest);
+        storeResponse.setResponseInfo(null);
         storeResponse.setStores(search.getPagedData());
         return storeResponse;
     }

@@ -47,12 +47,16 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.SupplierEntity;
-import org.egov.inv.persistence.repository.*;
+import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
+import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
+import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -127,16 +131,35 @@ public class SupplierService extends DomainService {
             SupplierRequest fetchRelated = fetchRelated(supplierRequest, tenantId);
             validate(fetchRelated.getSuppliers(), Constants.ACTION_UPDATE, tenantId);
 
+            List<Supplier> supplierList = new ArrayList<>();
             for (Supplier supplier : supplierRequest.getSuppliers()) {
-                if (isEmpty(supplier.getTenantId())) {
-                    supplier.setTenantId(tenantId);
+
+                boolean supplierUsed = checkSupplierUsedInTransaction(supplier.getCode(), supplier.getTenantId());
+
+                if (supplierUsed) {
+                    Boolean active = supplier.getActive();
+
+                    SupplierEntity supplierEntity = new SupplierEntity();
+                    supplierEntity.setId(supplier.getId());
+                    supplierEntity.setTenantId(tenantId);
+                    SupplierEntity supplierResult = (SupplierEntity) supplierJdbcRepository.findById(supplierEntity, SupplierEntity.class.getSimpleName());
+
+                    supplier = supplierResult.toDomain();
+                    supplier.setActive(active);
+                    supplierList.add(supplier);
+                } else {
+                    if (isEmpty(supplier.getTenantId())) {
+                        supplier.setTenantId(tenantId);
+                    }
+                    supplier.setCode(supplier.getCode().toUpperCase());
+                    if (!supplier.getActive()) {
+                        supplier.setStatus(Supplier.StatusEnum.INACTIVE);
+                    }
+                    supplier.setAuditDetails(mapAuditDetailsForUpdate(supplierRequest.getRequestInfo()));
+                    supplierList.add(supplier);
                 }
-                supplier.setCode(supplier.getCode().toUpperCase());
-                if (!supplier.getActive()) {
-                    supplier.setStatus(Supplier.StatusEnum.INACTIVE);
-                }
-                supplier.setAuditDetails(mapAuditDetailsForUpdate(supplierRequest.getRequestInfo()));
             }
+            supplierRequest.setSuppliers(supplierList);
             kafkaTemplate.send(updateTopic, updateKey, supplierRequest);
             SupplierResponse response = new SupplierResponse();
             response.setSuppliers(supplierRequest.getSuppliers());
@@ -185,11 +208,6 @@ public class SupplierService extends DomainService {
                             errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Supplier", supplier.getCode());
 
                         }
-                        boolean supplierUsed = checkSupplierUsedInTransaction(supplier.getCode(), supplier.getTenantId());
-                        if (supplierUsed) {
-                            errors.addDataError(ErrorCode.TRANSACTION_USED.getCode(), "Supplier", supplier.getCode());
-
-                        }
                     }
             }
         } catch (IllegalArgumentException e) {
@@ -203,6 +221,7 @@ public class SupplierService extends DomainService {
     public SupplierResponse search(SupplierGetRequest supplierGetRequest) {
         SupplierResponse supplierResponse = new SupplierResponse();
         Pagination<Supplier> search = supplierJdbcRepository.search(supplierGetRequest);
+        supplierResponse.setResponseInfo(null);
         supplierResponse.setSuppliers(search.getPagedData());
         return supplierResponse;
     }

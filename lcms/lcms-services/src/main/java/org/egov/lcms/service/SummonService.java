@@ -26,6 +26,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Prasad		26th Oct 2017						Initial commit for Summon service 
+* Shubham		30th Oct 2017						Added lcmsLegacyLoad code
+* Narendra		01st Nov 2017						Added summon validator class for summon related validations
+* Prasad		20th Nov 2017						Added case status search for searchResult level false case
+* Narendra		29th Nov 2017						Fixed duplicate advocates issue
+* Yosadhara		01st Nov 2017						Summon update API implementation
+*/
 @Service
 public class SummonService {
 
@@ -54,10 +65,11 @@ public class SummonService {
 	private SummonRepository summonRepository;
 
 	/**
-	 * This API will create the summon
+	 * This method is to create Summon
 	 * 
 	 * @param summonRequest
-	 * @return {@link SummonResponse}
+	 * @return SummonResponse
+	 * @throws Exception
 	 */
 	public SummonResponse createSummon(SummonRequest summonRequest) throws Exception {
 
@@ -85,10 +97,11 @@ public class SummonService {
 	}
 
 	/**
-	 * This API will update the summon
+	 * This method is to update Summon
 	 * 
-	 * @param summonRequest
-	 * @return {@link SummonResponse}
+	 * @param caseRequest
+	 * @return CaseResponse
+	 * @throws Exception
 	 */
 	public CaseResponse updateSummon(CaseRequest caseRequest) throws Exception {
 		for (Case caseObj : caseRequest.getCases()) {
@@ -116,7 +129,12 @@ public class SummonService {
 				caseRequest.getCases());
 
 	}
-
+	
+	/**
+	 * This method is to push Summon to indexer 
+	 * 
+	 * @param summonRequest
+	 */
 	private void pushSummonToIndexer(SummonRequest summonRequest) {
 
 		for (Summon summon : summonRequest.getSummons()) {
@@ -127,7 +145,13 @@ public class SummonService {
 		}
 
 	}
-
+	
+	/**
+	 * This method is to generate Summon Reference number 
+	 * 
+	 * @param summonRequest
+	 * @throws Exception
+	 */
 	private void generateSummonReferenceNumber(SummonRequest summonRequest) throws Exception {
 
 		for (Summon summon : summonRequest.getSummons()) {
@@ -148,10 +172,10 @@ public class SummonService {
 	}
 
 	/**
-	 * This will assign the advocate for the case
+	 * This method is to assign advocate for the case
 	 * 
 	 * @param caseRequest
-	 * @return {@link CaseResponse}
+	 * @return CaseResponse
 	 * @throws Exception
 	 */
 	public CaseResponse assignAdvocate(CaseRequest caseRequest) throws Exception {
@@ -163,6 +187,7 @@ public class SummonService {
 	}
 
 	/**
+	 * This method is to create or update advocate for the case
 	 * 
 	 * @param caseRequest
 	 * @throws Exception
@@ -216,11 +241,12 @@ public class SummonService {
 	}
 
 	/**
-	 * This API will generate the advocate code
+	 * This method is to generate advocate code
 	 * 
 	 * @param caseRequest
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unused")
 	private void generateAdvocateCode(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
 
@@ -238,8 +264,8 @@ public class SummonService {
 	}
 
 	/**
-	 * This will search the cases based on the given parameters
-	 * 
+	 * This method is to search cases based on case search criterias
+	 *  
 	 * @param caseSearchCriteria
 	 * @param requestInfo
 	 * @return {@link CaseResponse}
@@ -254,7 +280,7 @@ public class SummonService {
 	}
 
 	/**
-	 * This API will validate the assign advocate details
+	 * This method is to validate assign advocate details
 	 * 
 	 * @param caseRequest
 	 */

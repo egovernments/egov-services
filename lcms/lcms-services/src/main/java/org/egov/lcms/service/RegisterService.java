@@ -15,6 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* yosadhara		31st Oct 2017						Initial commit for Register service 
+* Prasad		08th Nov 2017						Added isSummon value for getUniqueCode method calling
+* Yosadhara		28th Nov 2017						Made isActive value as true if it is null
+*/
 @Service
 public class RegisterService {
 
@@ -32,7 +40,14 @@ public class RegisterService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
+	
+	/**
+	 * This method is to create register
+	 * 
+	 * @param registerRequest
+	 * @return RegisterResponse
+	 * @throws Exception
+	 */
 	public RegisterResponse createRegister(RegisterRequest registerRequest) throws Exception {
 
 		String code = null;
@@ -50,7 +65,14 @@ public class RegisterService {
 				responseInfoFactory.getResponseInfo(registerRequest.getRequestInfo(), HttpStatus.CREATED),
 				registerRequest.getRegisters());
 	}
-
+	
+	/**
+	 * This method is to update register
+	 * 
+	 * @param registerRequest
+	 * @return RegisterResponse
+	 * @throws Exception
+	 */
 	public RegisterResponse updateRegister(RegisterRequest registerRequest) throws Exception {
 
 		kafkaTemplate.send(propertiesManager.getUpdateRegisterTopic(), registerRequest);
@@ -59,7 +81,14 @@ public class RegisterService {
 				responseInfoFactory.getResponseInfo(registerRequest.getRequestInfo(), HttpStatus.CREATED),
 				registerRequest.getRegisters());
 	}
-
+	
+	/**
+	 * This method is to search register based on search criteria
+	 * 
+	 * @param registerSearchCriteria
+	 * @param requestInfo
+	 * @return RegisterResponse
+	 */
 	public RegisterResponse searchRegister(RegisterSearchCriteria registerSearchCriteria, RequestInfo requestInfo) {
 		
 		if (registerSearchCriteria.getIsActive() == null) {

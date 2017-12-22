@@ -16,6 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		31st Oct 2017						Initial commit for Notice service 
+* Prasad		08th Nov 2017						Added isSummon value for getUniqueCode method calling
+*/
 @Service
 public class NoticeService {
 
@@ -33,7 +40,14 @@ public class NoticeService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
+	
+	/**
+	 * This method is to create Notice
+	 * 
+	 * @param noticeRequest
+	 * @return NoticeResponse
+	 * @throws Exception
+	 */
 	public NoticeResponse createNotice(NoticeRequest noticeRequest) throws Exception {
 
 		String code = uniqueCodeGeneration.getUniqueCode(noticeRequest.getNotice().getTenantId(), noticeRequest.getRequestInfo(),
@@ -45,7 +59,14 @@ public class NoticeService {
 				responseInfoFactory.getResponseInfo(noticeRequest.getRequestInfo(), HttpStatus.CREATED),
 				noticeRequest.getNotice());
 	}
-
+	
+	/**
+	 * This method is to update Notice
+	 * 
+	 * @param noticeRequest
+	 * @return NoticeResponse
+	 * @throws Exception
+	 */
 	public NoticeResponse updateNotice(NoticeRequest noticeRequest) throws Exception {
 
 		kafkaTemplate.send(propertiesManager.getUpdateNoticeTopic(), noticeRequest);
@@ -53,7 +74,14 @@ public class NoticeService {
 				responseInfoFactory.getResponseInfo(noticeRequest.getRequestInfo(), HttpStatus.CREATED),
 				noticeRequest.getNotice());
 	}
-
+	
+	/**
+	 * This method is to search Notice based on Notice search criterias
+	 * 
+	 * @param noticeSearchCriteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public NoticeSearchResponse searchNotice(NoticeSearchCriteria noticeSearchCriteria, RequestInfo requestInfo) {
 		List<Notice> notices = noticeRepository.search(noticeSearchCriteria);
 		return new NoticeSearchResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), notices);

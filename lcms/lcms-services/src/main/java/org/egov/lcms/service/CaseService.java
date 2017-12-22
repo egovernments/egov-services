@@ -58,6 +58,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		28th Oct 2017						Initial commit for case service 
+* Shubham		31st Oct 2017						Added legacy create API files
+* Veswanth		31st Oct 2017						Hearing details API implementation
+* Prasad 		31st Nov 2017						Added validation for caseRegister, assignAdvocate, summon and vakalatnama
+* Narendra 		01st Nov 2017						Added summon validator class for case validations
+* Prasad 		20th Nov 2017						Added address in courtdetails for case search
+* Veswanth 		30th Nov 2017						Added master details fetching for all the cases
+* Narendra 		15th Dec 2017						Added entry type in legacy case
+*/
 @Service
 @Slf4j
 public class CaseService {
@@ -94,7 +107,14 @@ public class CaseService {
 
 	@Autowired
 	ObjectMapper objectMapper;
-
+	
+	/**
+	 * This method is to create Para wise comment
+	 * 
+	 * @param caseRequest
+	 * @return CaseResponse
+	 * @throws Exception
+	 */
 	public CaseResponse createParaWiseComment(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
 		RequestInfo requestInfo = caseRequest.getRequestInfo();
@@ -112,12 +132,24 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getParaWiseCreateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-
+	
+	/**
+	 * This method is to update Para wise comments
+	 * 
+	 * @param caseRequest
+	 * @return CaseResponse
+	 */
 	public CaseResponse updateParaWiseComment(CaseRequest caseRequest) {
 		kafkaTemplate.send(propertiesManager.getParaWiseUpdateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-
+	
+	/**
+	 * This method is to get response info for CaseRequest object
+	 * 
+	 * @param caseRequest
+	 * @return CaseResponse
+	 */
 	private CaseResponse getResponseInfo(CaseRequest caseRequest) {
 		ResponseInfo responseInfo = responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED);
 		CaseResponse caseResponse = new CaseResponse();
@@ -128,7 +160,7 @@ public class CaseService {
 	}
 
 	/**
-	 * This API will create the case
+	 * This  method is to create Case
 	 * 
 	 * @param caseRequest
 	 * @return {@link CaseResponse}
@@ -143,7 +175,7 @@ public class CaseService {
 	}
 
 	/**
-	 * This will validate the case object
+	 * This method is to validate the Case object
 	 * 
 	 * @param caseRequest
 	 * @throws Exception
@@ -166,7 +198,7 @@ public class CaseService {
 	}
 
 	/**
-	 * This will generate the case code and case reference number
+	 * This method is to generate the case code and case reference number
 	 * 
 	 * @param caseRequest
 	 * @throws Exception
@@ -186,7 +218,7 @@ public class CaseService {
 	}
 
 	/**
-	 * This will search the cases based on the given parameters
+	 * This method is to search the cases based on the given parameters
 	 * 
 	 * @param caseSearchCriteria
 	 * @param requestInfo
@@ -208,9 +240,13 @@ public class CaseService {
 	}
 
 	/**
-	 * This Will add the master details for the list of cases object
+	 * This method is to add the master details for the list of case objects
 	 * 
 	 * @param cases
+	 * @param serachResultLevel
+	 * @param tenantId
+	 * @param requestInfo
+	 * @throws Exception
 	 */
 	private void addMasterDetails(List<Case> cases, String serachResultLevel, String tenantId, RequestInfo requestInfo)
 			throws Exception {
@@ -324,7 +360,16 @@ public class CaseService {
 		}
 
 	}
-
+	
+	/**
+	 * This method is to add particular master values 
+	 * such as court, side, caseType, caseCategory, bench, caseStatus, Department
+	 * 
+	 * @param masterName
+	 * @param cases
+	 * @param mastersmap
+	 * @throws Exception
+	 */
 	private void addParticularMastervalues(String masterName, List<Case> cases, Map<String, JSONArray> mastersmap)
 			throws Exception {
 
@@ -461,7 +506,7 @@ public class CaseService {
 	}
 
 	/**
-	 * This will filter the Hearing detail
+	 * This method is to filter Hearing details
 	 * 
 	 * @param hearingDetail
 	 * @param caseStatus
@@ -478,7 +523,7 @@ public class CaseService {
 	}
 
 	/**
-	 * This APi will add the stamp details for the given case object
+	 * This method is to add stamp details for the given case object
 	 * 
 	 * @param caseObj
 	 */
@@ -498,9 +543,10 @@ public class CaseService {
 	}
 
 	/**
-	 * This will Add the department details for the given cases
+	 * This method is to add department details for the given cases
 	 * 
 	 * @param cases
+	 * @param tenantId
 	 * @param requestInfo
 	 * @throws Exception
 	 */
@@ -531,10 +577,11 @@ public class CaseService {
 	}
 
 	/**
-	 * This will create the vakalatnama for the case
+	 * This method is to create the vakalatnama for the case
 	 * 
 	 * @param caseRequest
-	 * @return
+	 * @return CaseResponse
+	 * @throws Exception
 	 */
 	public CaseResponse createVakalatnama(CaseRequest caseRequest) throws Exception {
 		summonValidator.validateSummon(caseRequest);
@@ -545,10 +592,11 @@ public class CaseService {
 	}
 
 	/**
-	 * This API will load legacy
+	 * This method is to create leagcy case
 	 * 
 	 * @param caseRequest
 	 * @return {@link CaseResponse}
+	 * @throws Exception
 	 */
 	public CaseResponse createLegacyCase(CaseRequest caseRequest) throws Exception {
 
@@ -622,7 +670,14 @@ public class CaseService {
 		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
 	}
-
+	
+	/**
+	 * This method is to create Hearing detail
+	 * 
+	 * @param caseRequest
+	 * @return CaseResponse
+	 * @throws Exception
+	 */
 	public CaseResponse createHearingDetails(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
 		RequestInfo requestInfo = caseRequest.getRequestInfo();
@@ -666,7 +721,15 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getHearingCreateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-
+	
+	/**
+	 * This method is to create Events
+	 * 
+	 * @param casee
+	 * @param hearingDetails
+	 * @param requestInfo
+	 * @throws Exception
+	 */
 	private void createEvents(Case casee, HearingDetails hearingDetails, RequestInfo requestInfo) throws Exception {
 
 		Event event = new Event();
@@ -698,7 +761,13 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getEventCreateValidated(), event);
 
 	}
-
+	
+	/**
+	 * This method is to update the Hearing details
+	 * 
+	 * @param caseRequest
+	 * @return CaseResponse
+	 */
 	public CaseResponse updateHearingDetails(CaseRequest caseRequest) {
 
 		for (Case casee : caseRequest.getCases()) {
@@ -714,7 +783,8 @@ public class CaseService {
 	}
 
 	/**
-	 * This APi wil validate the vakalatnama
+	 * This method is to validate the Vakalatnama object
+	 * which is inside Case objet
 	 * 
 	 * @param caseRequest
 	 * @throws Exception
@@ -756,7 +826,14 @@ public class CaseService {
 		}
 
 	}
-
+	
+	/**
+	 * This method is to create the Reference Evidence
+	 * 
+	 * @param caseRequest
+	 * @return CaseResponse
+	 * @throws Exception
+	 */
 	public CaseResponse createReferenceEvidence(CaseRequest caseRequest) throws Exception {
 		List<Case> cases = caseRequest.getCases();
 		for (Case casee : cases) {
@@ -776,7 +853,13 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getEvidenceCreateTopic(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-
+	
+	/**
+	 * This method is to update Reference Evidence
+	 * 
+	 * @param caseRequest
+	 * @return CaseResponse
+	 */
 	public CaseResponse updateReferenceEvidence(CaseRequest caseRequest) {
 		List<Case> cases = caseRequest.getCases();
 		for (Case casee : cases) {
@@ -792,7 +875,15 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getEvidenceUpdateTopic(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-
+	
+	/**
+	 * This method is to fetch the Case details
+	 * 
+	 * @param tenantId
+	 * @param advocateName
+	 * @param requestInfo
+	 * @return CaseDetailsResponse 
+	 */
 	public CaseDetailsResponse getCaseNo(String tenantId, String advocateName, RequestInfo requestInfo) {
 
 		List<CaseDetails> caseDetails = caseSearchRepository.getCaseDetails(tenantId, advocateName);
@@ -800,7 +891,14 @@ public class CaseService {
 
 		return new CaseDetailsResponse(responseInfo, caseDetails);
 	}
-
+	
+	/**
+	 * This method is to fetch Events based on Event search criteria
+	 * 
+	 * @param eventSearchCriteria
+	 * @param requestInfo
+	 * @return EventResponse
+	 */
 	public EventResponse getEvent(EventSearchCriteria eventSearchCriteria, RequestInfo requestInfo) {
 
 		if (requestInfo.getUserInfo() != null & requestInfo.getUserInfo().getName() != null) {

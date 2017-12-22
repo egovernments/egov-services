@@ -20,11 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-/**
- * 
- * @author Veswanth
- *
- */
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Veswanth		26th Oct 2017						Initial commit for Opinion service 
+* Veswanth		03rd Nov 2017						Added department and advocateDetails for opinion search
+* Veswanth		23rd Nov 2017						Added current hearing date and time in hearing details API's
+*/
 @Service
 public class OpinionService {
 
@@ -45,7 +48,14 @@ public class OpinionService {
 
 	@Autowired
 	IdGenerationRepository idGenerationRepository;
-
+	
+	/**
+	 * This method is to create Opinion
+	 * 
+	 * @param opinionRequest
+	 * @return OpinionResponse
+	 * @throws Exception
+	 */
 	public OpinionResponse createOpinion(OpinionRequest opinionRequest) throws Exception {
 		List<Opinion> opinions = opinionRequest.getOpinions();
 		RequestInfo requestInfo = opinionRequest.getRequestInfo();
@@ -63,12 +73,26 @@ public class OpinionService {
 		kafkaTemplate.send(propertiesManager.getOpinionCreateValidated(), opinionRequest);
 		return getResponseInfo(opinionRequest);
 	}
-
+	
+	/**
+	 * This method is to update Opinion
+	 * 
+	 * @param opinionRequest
+	 * @return OpinionResponse
+	 */
 	public OpinionResponse updateOpinion(OpinionRequest opinionRequest) {
 		kafkaTemplate.send(propertiesManager.getOpinionUpdateValidated(), opinionRequest);
 		return getResponseInfo(opinionRequest);
 	}
-
+	
+	/**
+	 * This method is to search Opinion based on Opinion search criterias
+	 * 
+	 * @param requestInfoWrapper
+	 * @param opinionRequest
+	 * @return OpinionResponse
+	 * @throws Exception
+	 */
 	public OpinionResponse searchOpinion(RequestInfoWrapper requestInfoWrapper, OpinionSearchCriteria opinionRequest)
 			throws Exception {
 		List<Opinion> opinions = opinionRepository.search(opinionRequest, requestInfoWrapper);
@@ -77,7 +101,13 @@ public class OpinionService {
 		OpinionResponse response = new OpinionResponse(responseInfo, opinions);
 		return response;
 	}
-
+	
+	/**
+	 * This method is to get ResponseInfo
+	 * 
+	 * @param opinionRequest
+	 * @return OpinionResponse
+	 */
 	private OpinionResponse getResponseInfo(OpinionRequest opinionRequest) {
 		ResponseInfo responseInfo = responseFactory.getResponseInfo(opinionRequest.getRequestInfo(),
 				HttpStatus.CREATED);

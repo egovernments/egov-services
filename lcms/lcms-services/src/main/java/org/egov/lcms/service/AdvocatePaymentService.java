@@ -17,14 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-
-
-/**
- * 
- * @author Shubham Pratap
- *
- */
-
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Shubham		28th Oct 2017						Initial commit for AdvocatePayment service 
+* Shubham		03rd Nov 2017						Added requestInfo and throws statement for advocatePayment search
+* Shubham		06th Nov 2017						Added null validation for partialPayment property
+* Prasad 		08th Nov 2017						Added isSummon parameter to getUniqueCode method
+*/
 @Service
 public class AdvocatePaymentService {
 	
@@ -42,7 +43,14 @@ public class AdvocatePaymentService {
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
+	
+	/**
+	 * This method is to create AdvocatePayment
+	 * 
+	 * @param advocatePaymentRequest
+	 * @return AdvocatePaymentResponse
+	 * @throws Exception
+	 */
 	public AdvocatePaymentResponse createAdvocatePayment(AdvocatePaymentRequest advocatePaymentRequest) throws Exception {
 		
 		for(AdvocatePayment advocatePayment : advocatePaymentRequest.getAdvocatePayments()){
@@ -58,7 +66,13 @@ public class AdvocatePaymentService {
 		
 		return new AdvocatePaymentResponse(responseInfoFactory.getResponseInfo(advocatePaymentRequest.getRequestInfo(), HttpStatus.CREATED), advocatePaymentRequest.getAdvocatePayments());
 	}
-
+	
+	/**
+	 * This method is to update AdvocatePayment
+	 * 
+	 * @param advocatePaymentRequest
+	 * @return AdvocatePaymentResponse
+	 */
 	public AdvocatePaymentResponse updateAdvocatePayment(AdvocatePaymentRequest advocatePaymentRequest) {
 		
 		for(AdvocatePayment advocatePayment : advocatePaymentRequest.getAdvocatePayments()){
@@ -70,7 +84,16 @@ public class AdvocatePaymentService {
 		kafkaTemplate.send(propertiesManager.getAdvocatePaymentUpdate(), advocatePaymentRequest);
 		return new AdvocatePaymentResponse(responseInfoFactory.getResponseInfo(advocatePaymentRequest.getRequestInfo(), HttpStatus.CREATED), advocatePaymentRequest.getAdvocatePayments());
 	}
-
+	
+	/**
+	 * This method is to search the AdvocatePayment 
+	 * based on AdvocatePayment search criterias
+	 * 
+	 * @param requestInfo
+	 * @param advocatePaymentSearchCriteria
+	 * @return AdvocatePaymentResponse
+	 * @throws Exception
+	 */
 	public AdvocatePaymentResponse searchAdvocatePayment(RequestInfo requestInfo,
 			AdvocatePaymentSearchCriteria advocatePaymentSearchCriteria) throws Exception {
 		

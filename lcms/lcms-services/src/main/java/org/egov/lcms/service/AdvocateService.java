@@ -26,6 +26,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/** 
+* 
+* Author		Date			eGov-JIRA ticket	Commit message
+* ---------------------------------------------------------------------------
+* Yosadhara		28th Oct 2017						Initial commit for Advocate service 
+* Prasad		08th Nov 2017						Added isSummon value for getUniqueCode method calling
+* Veswanth		14th Nov 2017						Added validation for agency and agency address
+* Veswanth 		15th Nov 2017						Added agencyCode for new advocate in agency update
+* Veswanth 		15th Nov 2017						Added agency and advocate differentiating string in corresponding codes
+* Narendra 		16th Nov 2017						Added default title
+* Narendra 		28th Nov 2017						Added agencyName for personDetails
+*/
 @Service
 public class AdvocateService {
 

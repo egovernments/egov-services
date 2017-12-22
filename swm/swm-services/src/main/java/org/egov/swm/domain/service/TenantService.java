@@ -23,10 +23,12 @@ public class TenantService {
     @Autowired
     private MdmsRepository mdmsRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public Tenant getTenant(final String tenantId, final String code, final RequestInfo requestInfo) {
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.TENANT_MODULE_CODE,
                 Constants.TENANTS_MASTER_NAME, "code", code, requestInfo);
@@ -43,7 +45,6 @@ public class TenantService {
         List<Tenant> tenants = new ArrayList<>();
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.TENANT_MODULE_CODE,
                 Constants.TENANTS_MASTER_NAME, null, null, requestInfo);

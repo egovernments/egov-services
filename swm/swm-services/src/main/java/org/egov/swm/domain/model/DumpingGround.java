@@ -22,7 +22,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DumpingGround {
 
     @JsonProperty("code")

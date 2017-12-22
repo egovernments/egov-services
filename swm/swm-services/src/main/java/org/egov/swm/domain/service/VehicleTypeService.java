@@ -23,10 +23,12 @@ public class VehicleTypeService {
     @Autowired
     private MdmsRepository mdmsRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public VehicleType getVehicleType(final String tenantId, final String code, final RequestInfo requestInfo) {
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
                 Constants.VEHICLETYPE_MASTER_NAME, "code", code, requestInfo);
@@ -43,7 +45,6 @@ public class VehicleTypeService {
         List<VehicleType> vehicleTypes = new ArrayList<>();
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
                 Constants.VEHICLETYPE_MASTER_NAME, null, null, requestInfo);

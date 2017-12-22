@@ -23,10 +23,12 @@ public class DumpingGroundService {
     @Autowired
     private MdmsRepository mdmsRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public DumpingGround getDumpingGround(final String tenantId, final String code, final RequestInfo requestInfo) {
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
                 Constants.DUMPINGGROUND_MASTER_NAME, "code", code, requestInfo);
@@ -43,7 +45,6 @@ public class DumpingGroundService {
         List<DumpingGround> dgs = new ArrayList<>();
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
                 Constants.DUMPINGGROUND_MASTER_NAME, null, null, requestInfo);

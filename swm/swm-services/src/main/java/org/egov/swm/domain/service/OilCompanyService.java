@@ -23,10 +23,12 @@ public class OilCompanyService {
     @Autowired
     private MdmsRepository mdmsRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public OilCompany getOilCompany(final String tenantId, final String code, final RequestInfo requestInfo) {
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
                 Constants.OILCOMPANY_MASTER_NAME, "code", code, requestInfo);
@@ -43,7 +45,6 @@ public class OilCompanyService {
         List<OilCompany> ocs = new ArrayList<>();
 
         JSONArray responseJSONArray;
-        final ObjectMapper mapper = new ObjectMapper();
 
         responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
                 Constants.OILCOMPANY_MASTER_NAME, null, null, requestInfo);

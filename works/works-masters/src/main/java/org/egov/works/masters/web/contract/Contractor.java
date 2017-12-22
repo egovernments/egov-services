@@ -51,7 +51,7 @@ public class Contractor   {
   private String narration = null;
 
   @JsonProperty("mobileNumber")
-  private BigDecimal mobileNumber = null;
+  private String mobileNumber = null;
 
   @JsonProperty("panNumber")
   private String panNumber = null;
@@ -304,7 +304,7 @@ public class Contractor   {
     this.narration = narration;
   }
 
-  public Contractor mobileNumber(BigDecimal mobileNumber) {
+  public Contractor mobileNumber(String mobileNumber) {
     this.mobileNumber = mobileNumber;
     return this;
   }
@@ -316,13 +316,12 @@ public class Contractor   {
   @ApiModelProperty(required = true, value = "Mobile Number of the Contractor Agency/Firm")
   @NotNull
 
-  @Valid
-
-  public BigDecimal getMobileNumber() {
+  @Pattern(regexp="[0-9]+") @Size(min=10,max=10)
+  public String getMobileNumber() {
     return mobileNumber;
   }
 
-  public void setMobileNumber(BigDecimal mobileNumber) {
+  public void setMobileNumber(String mobileNumber) {
     this.mobileNumber = mobileNumber;
   }
 

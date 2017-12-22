@@ -155,10 +155,10 @@ public class CollectionPointService {
 
     private void findDuplicatesInUniqueFields(final CollectionPointRequest collectionPointRequest) {
 
-        final Map<String, String> assetOrBinIdsMap = new HashMap<>();
-        final Map<String, String> rfidsMap = new HashMap<>();
+        Map<String, String> assetOrBinIdsMap = new HashMap<>();
+        Map<String, String> rfidsMap = new HashMap<>();
         final Map<String, String> nameMap = new HashMap<>();
-        final Map<String, String> codeMap = new HashMap<>();
+        Map<String, String> codeMap = new HashMap<>();
 
         for (final CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
             if (collectionPoint.getName() != null) {
@@ -171,16 +171,22 @@ public class CollectionPointService {
 
             }
 
-            for(CollectionPointDetails collectionPointDetails : collectionPoint.getCollectionPointDetails()){
+            for (CollectionPointDetails collectionPointDetails : collectionPoint.getCollectionPointDetails()) {
 
+                codeMap = new HashMap<>();
                 if (codeMap.get(collectionPointDetails.getCollectionType().getCode()) != null)
                     throw new CustomException("Collection Type",
-                            "Collection types shall be unique per record.: " + collectionPointDetails.getCollectionType().getCode());
+                            "Collection types shall be unique per record.: "
+                                    + collectionPointDetails.getCollectionType().getCode());
 
-                codeMap.put(collectionPointDetails.getCollectionType().getCode(), collectionPointDetails.getCollectionType().getCode());
+                codeMap.put(collectionPointDetails.getCollectionType().getCode(),
+                        collectionPointDetails.getCollectionType().getCode());
             }
 
             for (final BinDetails bd : collectionPoint.getBinDetails()) {
+
+                assetOrBinIdsMap = new HashMap<>();
+                rfidsMap = new HashMap<>();
 
                 if (bd.getAssetOrBinId() != null) {
 

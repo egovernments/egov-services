@@ -73,6 +73,7 @@ addOrUpdate(e,mode) {
   delete tempInfo.name;
   delete tempInfo.code;
   tempInfo.toDate = tempInfo.fromDate;
+  tempInfo.leaveDays = 1;
   commonApiPost("hr-employee","hod/employees","_search",{tenantId,asOnDate,departmentId}, function(err, res) {
       if(res && res["Employee"] && res["Employee"][0]){
         employee = res["Employee"][0];

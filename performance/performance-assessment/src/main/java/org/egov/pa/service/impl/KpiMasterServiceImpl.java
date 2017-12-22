@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.pa.model.AuditDetails;
-import org.egov.pa.model.Document;
 import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
@@ -110,10 +109,10 @@ public class KpiMasterServiceImpl implements KpiMasterService {
 	private void prepareDocumentObjects(KPIRequest kpiRequest) { 
     	List<KPI> kpiList = kpiRequest.getKpIs(); 
     	for(KPI kpi : kpiList) {
-    		if(null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
-    			for(Document doc : kpi.getDocuments()) { 
-    				doc.setKpiCode(kpi.getCode());
-    				doc.setCode(kpi.getCode().concat("_") + new Date().getTime());
+    		if(null != kpi.getDocuments() && kpi.getDocuments().size() > 0) {
+    			for(int i=0 ; i< kpi.getDocuments().size() ; i++) { 
+    				kpi.getDocuments().get(i).setKpiCode(kpi.getCode());
+    				kpi.getDocuments().get(i).setCode(kpi.getCode().concat("_"+i+"_") + new Date().getTime());
     			}
     		}
     	}

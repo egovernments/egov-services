@@ -1,32 +1,32 @@
 
 
-var serviceProvided = {
-  name: 'serviceProvidedMain',
-  version: 'v1',
-  level: 0,
-  hide: false,
-  groups: [
-    {
-      name: 'serviceProvided',
-      multiple: false,
-      fields: [
-        {
-          name: 'ChecBxGrp',
-          jsonPath: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
-          label: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
-          pattern: '',
-          type: 'checkBoxGroup',
-          isRequired: false,
-          isDisabled: false,
-          defaultValue: false,
-          requiredErrMsg: '',
-          patternErrMsg: '',
-          colSpan:6
-        }
-      ],
-    },
-  ],
-};
+// var serviceProvided = {
+//   name: 'serviceProvidedMain',
+//   version: 'v1',
+//   level: 0,
+//   hide: false,
+//   groups: [
+//     {
+//       name: 'serviceProvided',
+//       multiple: false,
+//       fields: [
+//         {
+//           name: 'ChecBxGrp',
+//           jsonPath: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
+//           label: ['vendors[0].supplier.abc','vendors[0].supplier.abc2','vendors[0].supplier.abc3','vendors[0].supplier.abc4'],
+//           pattern: '',
+//           type: 'checkBoxGroup',
+//           isRequired: false,
+//           isDisabled: false,
+//           defaultValue: false,
+//           requiredErrMsg: '',
+//           patternErrMsg: '',
+//           colSpan:6
+//         }
+//       ],
+//     },
+//   ],
+// };
 
 
 var dat = {
@@ -79,47 +79,6 @@ var dat = {
             minLength: 1,
             patternErrorMsg: 'swm.create.field.message.registrationNo',
           }
-
-
-          /*{
-            name: 'ServicesOffered',
-            label: 'swm.create.servicesOffered',
-            jsonPath: 'servicesOffered.name',
-            type: 'text',
-            isRequired: false,
-            isDisabled: false,
-            maxLength: 128,
-            url:'',
-            minLength: 1,
-            patternErrorMsg: ''
-          }*/
-
-
-          /*{
-            name: 'vendorNo',
-            jsonPath: 'vendorNo',
-            label: 'swm.create.vendorNo',
-            type: 'text',
-            isDisabled: false,
-            patternErrorMsg: 'swm.create.field.message.vendorNo',
-          },
-          {
-            name: 'name',
-            jsonPath: 'name',
-            label: 'swm.create.name',
-            type: 'text',
-            isDisabled: false,
-            patternErrorMsg: 'swm.create.field.message.name',
-          },
-          {
-            name: 'registrationNo',
-            jsonPath: 'registrationNo',
-            label: 'swm.create.registrationNo',
-            type: 'text',
-            isDisabled: false,
-            maxLength: 256,
-            patternErrorMsg: 'swm.create.field.message.registrationNo',
-          }*/
         ],
       },
     ],
@@ -139,6 +98,7 @@ var dat = {
     numCols: 3,
     useTimestamp: true,
     objectName: 'vendors',
+    idJsonPath: 'vendors[0].vendorNo',
     groups: [
       // {
       //   name: 'vendors',
@@ -475,7 +435,7 @@ var dat = {
           {
             name: 'name',
             jsonPath: 'vendors[0].name',
-            label: 'swm.create.name',
+            label: 'swm.create.supplier.name',
             pattern: '',
             type: 'text',
             isRequired: true,
@@ -617,6 +577,7 @@ var dat = {
   'swm.update': {
     numCols: 3,
     useTimestamp: true,
+    idJsonPath: 'vendors[0].vendorNo',
     objectName: 'vendors',
     groups: [
       // {

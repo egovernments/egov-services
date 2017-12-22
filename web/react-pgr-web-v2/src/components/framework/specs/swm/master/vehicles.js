@@ -109,7 +109,7 @@ var dat = {
         label: 'swm.vehicles.create.group.title.VehicleDetails2',
         fields: [
           {
-            name: 'vendorname',
+            name: 'vendor_name',
             jsonPath: 'vendorName',
             label: 'swm.vehicles.search.result.vendor',
             type: 'singleValueList',
@@ -393,6 +393,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
+            isHidden: false,
             defaultValue: '',
             maxLength: 256,
             minLength: 1,
@@ -677,7 +678,7 @@ var dat = {
             ],
           },
           {
-            name: 'vendorname',
+            name: 'vendor_name',
             jsonPath: 'vehicles[0].vendor.name',
             label: 'swm.vehicles.create.vendor',
             type: 'text',
@@ -814,7 +815,7 @@ var dat = {
           },
           {
             name: 'driverCode',
-            jsonPath: 'vehicles[0].driver',
+            jsonPath: 'vehicles[0].driver.code',
             label: 'swm.vehicles.create.driver',
             type: 'singleValueList',
             isDisabled: false,
@@ -954,17 +955,25 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            defaultValue: '',
+            defaultValue: false,
+            valueBasedOn: [
+              {
+                jsonPath: 'vehicles[0].vendor.vendorNo',
+                valueIfDataFound: false,
+              },
+            ],
             showHideFields: [
               {
-                ifValue: false,
-                hide: [],
-                show: [
+                ifValue: true,
+                hide: [
                   {
                     name: 'vendorname',
                     isGroup: false,
                     isField: true,
                   },
+                ],
+                show: [
+                  
                 ],
               },
             ],
@@ -976,7 +985,6 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            hide: true,
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
@@ -1021,7 +1029,7 @@ var dat = {
             minLength: 1,
             patternErrorMsg: '',
           },
-        ],
+        ], 
       },
       {
         name: 'PurchaseDetails',

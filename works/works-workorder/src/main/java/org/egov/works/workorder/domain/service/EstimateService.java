@@ -14,12 +14,12 @@ public class EstimateService {
     @Autowired
     private EstimateRepository estimateRepository;
 
-    public DetailedEstimateResponse getDetailedEstimate(final String estimateNumber, final String tenantId,
+    public DetailedEstimateResponse getDetailedEstimate(final String id, final String tenantId,
             final RequestInfo requestInfo) {
         DetailedEstimateSearchContract detailedEstimateSearchContract = new DetailedEstimateSearchContract();
-        final List<String> estimateNumbers = new ArrayList<>();
-        estimateNumbers.add(estimateNumber);
-        detailedEstimateSearchContract.setDetailedEstimateNumbers(estimateNumbers);
+        final List<String> ids = new ArrayList<>();
+        ids.add(id);
+        detailedEstimateSearchContract.setDetailedEstimateNumbers(ids);
         List<String> statuses = new ArrayList<>();
         statuses.add(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString());
         detailedEstimateSearchContract.setStatuses(statuses);

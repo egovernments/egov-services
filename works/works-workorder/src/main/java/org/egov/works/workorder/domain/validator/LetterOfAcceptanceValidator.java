@@ -77,7 +77,7 @@ public class LetterOfAcceptanceValidator {
             for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
                     .getLetterOfAcceptanceEstimates()) {
                 List<DetailedEstimate> detailedEstimates = estimateService
-                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
+                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getId(),
                                 letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
                         .getDetailedEstimates();
 

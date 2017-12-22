@@ -88,7 +88,7 @@ public class LetterOfAcceptanceService {
                 letterOfAcceptanceEstimate.setAuditDetails(
                         workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
                 DetailedEstimate detailedEstimate = estimateService
-                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
+                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getId(),
                                 letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
                         .getDetailedEstimates().get(0);
 
@@ -217,7 +217,7 @@ public class LetterOfAcceptanceService {
                 letterOfAcceptanceEstimate.setAuditDetails(
                         workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
                 DetailedEstimate detailedEstimate = estimateService
-                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
+                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getId(),
                                 letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
                         .getDetailedEstimates().get(0);
 

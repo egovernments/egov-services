@@ -2,6 +2,7 @@ package org.egov.pa.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,18 +60,19 @@ public class KpiValueServiceImpl implements KpiValueService {
 		}
 		List<String> idList = kpiValueRepository.getNewKpiIds(count);
 		int i=0; 
-		for(ValueResponse vr : valueResponseList) { 
+		for (ValueResponse vr : valueResponseList) {
 			KpiValue value = vr.getKpiValue();
-			if(null != value && null != value.getValueList()) {
-				for(KpiValueDetail valueDetail : value.getValueList()) {
+			if (null != value && null != value.getValueList()) {
+				for (KpiValueDetail valueDetail : value.getValueList()) {
 					valueDetail.setId(idList.get(i));
-					if(null != valueDetail.getDocumentList() && valueDetail.getDocumentList().size() > 0) { 
-						for(ValueDocument doc : valueDetail.getDocumentList()) { 
+					if (null != valueDetail.getDocumentList() && valueDetail.getDocumentList().size() > 0) {
+						for (ValueDocument doc : valueDetail.getDocumentList()) {
 							doc.setValueId(idList.get(i));
 							doc.setKpiCode(valueDetail.getKpiCode());
+							doc.setDocumentCode(valueDetail.getKpiCode().concat("_") + new Date().getTime());
 						}
 					}
-					i++; 
+					i++;
 				}
 			}
 		}

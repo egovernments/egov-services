@@ -60,6 +60,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.LeaveApplication;
+import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.model.LeaveType;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.CommonMastersRepository;
@@ -76,6 +77,7 @@ import org.egov.eis.web.contract.LeaveApplicationRequest;
 import org.egov.eis.web.contract.LeaveApplicationResponse;
 import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
 import org.egov.eis.web.contract.LeaveApplicationUploadResponse;
+import org.egov.eis.web.contract.LeaveOpeningBalanceGetRequest;
 import org.egov.eis.web.contract.LeaveSearchRequest;
 import org.egov.eis.web.contract.LeaveTypeGetRequest;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -127,6 +129,9 @@ public class LeaveApplicationService {
 
 	@Autowired
 	private HRConfigurationService hrConfigurationService;
+
+	@Autowired
+	private LeaveOpeningBalanceService leaveOpeningBalanceService;
 
 	@Autowired
 	private PropertiesManager propertiesManager;
@@ -189,7 +194,6 @@ public class LeaveApplicationService {
 			final RequestInfo requestInfo) {
 		List<LeaveApplication> leaveSummary;
 		leaveSearchRequest.setIsPrimary(true);
-		List<LeaveApplication> removeApplication = new ArrayList<>();
 
 		List<Long> employeeIds = null;
 		EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
@@ -207,19 +211,37 @@ public class LeaveApplicationService {
 			List<EmployeeInfo> employeesInfo = employeeResponse.getEmployees().stream()
 					.filter(employeeDetail -> employeeDetail.getId().equals(leaveApplication.getEmployee()))
 					.collect(Collectors.toList());
-			if (leaveApplication.getLeaveDays() > 0) {
-				Float eligibleDays = getEligibleDays(leaveSearchRequest.getAsOnDate(), employeesInfo, leaveApplication);
-				leaveApplication.setAvailableDays(eligibleDays);
-				leaveApplication.setTotalLeavesEligible(eligibleDays + leaveApplication.getNoOfDays());
-				leaveApplication
-						.setBalance(leaveApplication.getTotalLeavesEligible() - leaveApplication.getLeaveDays());
-			} else {
-				removeApplication.add(leaveApplication);
-			}
+
+			leaveApplication.setNoOfDays(getLOB(employeesInfo, leaveApplication, leaveSearchRequest.getAsOnDate()));
+			Float eligibleDays = getEligibleDays(leaveSearchRequest.getAsOnDate(), employeesInfo, leaveApplication);
+			leaveApplication.setAvailableDays(eligibleDays);
+			leaveApplication.setTotalLeavesEligible(eligibleDays + leaveApplication.getNoOfDays());
+			leaveApplication.setBalance(leaveApplication.getTotalLeavesEligible() - leaveApplication.getLeaveDays());
+
 		});
-		leaveSummary.removeAll(removeApplication);
 		return leaveSummary;
 
+	}
+
+	public Float getLOB(List<EmployeeInfo> employees, LeaveApplication leaveApplication, Date asOnDate) {
+		Float openingBalanceValue = 0f;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(asOnDate);
+		int year = calendar.get(Calendar.YEAR);
+		if (employees.size() > 0) {
+			final LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest = new LeaveOpeningBalanceGetRequest();
+			leaveOpeningBalanceGetRequest.getEmployee().add(employees.get(0).getId());
+			leaveOpeningBalanceGetRequest.getLeaveType().add(leaveApplication.getLeaveType().getId());
+			leaveOpeningBalanceGetRequest.setTenantId(leaveApplication.getTenantId());
+			leaveOpeningBalanceGetRequest.setYear(year);
+
+			List<LeaveOpeningBalance> leaveOpeningBalancesList = leaveOpeningBalanceService
+					.getLeaveOpeningBalances(leaveOpeningBalanceGetRequest);
+
+			if (leaveOpeningBalancesList != null && !leaveOpeningBalancesList.isEmpty())
+				openingBalanceValue = leaveOpeningBalancesList.get(0).getNoOfDays();
+		}
+		return openingBalanceValue;
 	}
 
 	public Float getEligibleDays(Date asOnDate, List<EmployeeInfo> employees, LeaveApplication leaveApplication) {
@@ -436,8 +458,7 @@ public class LeaveApplicationService {
 		int secondSaturday = 0;
 
 		while (c2.after(c1)) {
-			if ((c1.get(Calendar.WEEK_OF_MONTH) == 2)
-					&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
+			if ((c1.get(Calendar.WEEK_OF_MONTH) == 2) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
 				secondSaturday++;
 			}
 			c1.add(Calendar.DATE, 1);

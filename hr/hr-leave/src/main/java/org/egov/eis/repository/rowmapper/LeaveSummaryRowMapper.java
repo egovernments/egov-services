@@ -56,9 +56,7 @@ public class LeaveSummaryRowMapper implements RowMapper<LeaveApplication> {
     public LeaveApplication mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
         final LeaveApplication leaveApplication = new LeaveApplication();
-        leaveApplication.setId(rs.getLong("la_id"));
         leaveApplication.setEmployee(rs.getLong("la_employeeId"));
-        leaveApplication.setNoOfDays(rs.getFloat("opb_noofdays"));
         leaveApplication.setLeaveDays(rs.getFloat("leaveappl_approvedcount"));
         final LeaveType leaveType = new LeaveType();
         leaveType.setId(rs.getLong("lt_id"));

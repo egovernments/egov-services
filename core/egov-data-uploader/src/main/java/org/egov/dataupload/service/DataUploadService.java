@@ -260,9 +260,8 @@ public class DataUploadService {
 	private String getFileStoreId(String tenantId, String module, String jobId) throws Exception{
 		logger.info("Uploading result excel to filestore....");
 		ObjectMapper mapper = new ObjectMapper();
-		File resultXls = new File(resultFilePath);
-		File from = new File(resultXls,"result.xls");
-		File to = new File(resultXls, jobId+".xls");
+		File from = new File(resultFilePath);
+		File to = new File(resultFilePath.replace("result.xls", jobId+".xls"));
 		boolean isRenameSuccess = from.renameTo(to);
 		String filePath = null;
 		if(isRenameSuccess){
@@ -270,6 +269,7 @@ public class DataUploadService {
 		}else{
 			filePath = resultFilePath;
 		}
+		logger.info("result.xls renamed to: "+filePath);
 		Map<String, Object> result = dataUploadRepository.postFileContents(tenantId, module, filePath);
 		List<Object> objects = (List<Object>) result.get("files");
 		String id = null;
@@ -278,8 +278,16 @@ public class DataUploadService {
 		}catch(Exception e){
 			logger.error("Couldn't fetch fileStore id from post file response: ",e);
 		}
-		
 		logger.info("responsefile fileStoreId: "+id);
+		try{
+			File fromFile = new File(resultFilePath.replace("result.xls", jobId+".xls"));
+			File toFile = new File(resultFilePath);
+			boolean isSuccess = fromFile.renameTo(toFile);
+			if(isSuccess)
+				logger.info("result file renamed back to: "+resultFilePath);
+		}catch(Exception e){
+			logger.error("Renaming the file back to result.xls failed: ", e);
+		}
 		return id;
 	}
 	

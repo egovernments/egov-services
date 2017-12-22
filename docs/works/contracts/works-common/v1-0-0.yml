@@ -498,7 +498,8 @@ definitions:
         type: number
         format: mobileNumber
         description: Mobile Number of the Contractor Agency/Firm
-        pattern: "[0-9]"
+        pattern: "[0-9]+"
+        minLength: 10
         maxLength: 10
         exclusiveMaximum: true
       panNumber:

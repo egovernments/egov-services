@@ -223,6 +223,13 @@ public class ReceiptNoteService extends DomainService {
                         materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
                         if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
                             materialReceiptDetailAddnlInfo.setTenantId(tenantId);
+                            Uom uom = getUom(tenantId, materialReceiptDetail.getUom().getCode(), new RequestInfo());
+
+                            if (null != materialReceiptDetailAddnlInfo.getQuantity() && null != uom.getConversionFactor()) {
+                                Double convertedQuantity = getSaveConvertedQuantity( materialReceiptDetailAddnlInfo.getQuantity().doubleValue(), uom.getConversionFactor().doubleValue());
+                                materialReceiptDetailAddnlInfo.setQuantity(BigDecimal.valueOf(convertedQuantity));
+                            }
+
                         }
                     }
             );

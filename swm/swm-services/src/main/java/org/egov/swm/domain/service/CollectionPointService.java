@@ -161,6 +161,11 @@ public class CollectionPointService {
         Map<String, String> codeMap = new HashMap<>();
 
         for (final CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
+            
+            codeMap = new HashMap<>();
+            assetOrBinIdsMap = new HashMap<>();
+            rfidsMap = new HashMap<>();
+            
             if (collectionPoint.getName() != null) {
 
                 if (nameMap.get(collectionPoint.getName()) != null)
@@ -170,10 +175,10 @@ public class CollectionPointService {
                 nameMap.put(collectionPoint.getName(), collectionPoint.getName());
 
             }
-
+            
             for (CollectionPointDetails collectionPointDetails : collectionPoint.getCollectionPointDetails()) {
 
-                codeMap = new HashMap<>();
+                
                 if (codeMap.get(collectionPointDetails.getCollectionType().getCode()) != null)
                     throw new CustomException("Collection Type",
                             "Collection types shall be unique per record.: "
@@ -185,8 +190,7 @@ public class CollectionPointService {
 
             for (final BinDetails bd : collectionPoint.getBinDetails()) {
 
-                assetOrBinIdsMap = new HashMap<>();
-                rfidsMap = new HashMap<>();
+              
 
                 if (bd.getAssetOrBinId() != null) {
 

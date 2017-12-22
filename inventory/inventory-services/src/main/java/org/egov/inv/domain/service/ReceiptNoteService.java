@@ -98,6 +98,9 @@ public class ReceiptNoteService extends DomainService {
             materialReceipt.getReceiptDetails().forEach(materialReceiptDetail -> {
                 setMaterialDetails(tenantId, materialReceiptDetail);
             });
+
+            backUpdatePo(tenantId, materialReceipt);
+
         });
 
         logAwareKafkaTemplate.send(createTopic, createTopicKey, materialReceiptRequest);
@@ -159,27 +162,7 @@ public class ReceiptNoteService extends DomainService {
                 }
             }
 
-            if (MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString().equalsIgnoreCase(materialReceipt.getReceiptType().toString())) {
-                for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
-                    HashMap<String, String> hashMap = new HashMap<>();
-                    hashMap.put("receivedquantity", "receivedquantity + " + materialReceiptDetail.getAcceptedQty());
-                    materialReceiptDetail.getPurchaseOrderDetail().setTenantId(tenantId);
-                    receiptNoteRepository.updateColumn(new PurchaseOrderDetailEntity().toEntity(materialReceiptDetail.getPurchaseOrderDetail()), "purchaseorderdetail", hashMap, null);
-
-                    PurchaseOrderDetailEntity purchaseOrderDetailEntity = new PurchaseOrderDetailEntity();
-                    purchaseOrderDetailEntity.setId(materialReceiptDetail.getPurchaseOrderDetail().getId());
-                    purchaseOrderDetailEntity.setTenantId(tenantId);
-                    PurchaseOrderDetailEntity orderDetailEntity = purchaseOrderDetailJdbcRepository.findById(purchaseOrderDetailEntity);
-
-                    PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
-                    purchaseOrderSearch.setPurchaseOrderNumber(orderDetailEntity.getPurchaseOrder());
-                    purchaseOrderSearch.setTenantId(tenantId);
-                    if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch))
-                        receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(), "status = (case when status = 'RECEIPTED' then 'APPROVED' ELSE status end)"
-                                + " where purchaseordernumber = " + orderDetailEntity.getOrderNumber() + "') and tenantid = '" + tenantId + "'");
-
-                }
-            }
+            backUpdatePo(tenantId, materialReceipt);
         });
 
         logAwareKafkaTemplate.send(updateTopic, updateTopicKey, materialReceiptRequest);
@@ -188,6 +171,29 @@ public class ReceiptNoteService extends DomainService {
 
         return materialReceiptResponse.responseInfo(null)
                 .materialReceipt(materialReceipts);
+    }
+
+    private void backUpdatePo(String tenantId, MaterialReceipt materialReceipt) {
+        if (MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString().equalsIgnoreCase(materialReceipt.getReceiptType().toString())) {
+            for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("receivedquantity", "receivedquantity + " + materialReceiptDetail.getAcceptedQty());
+                materialReceiptDetail.getPurchaseOrderDetail().setTenantId(tenantId);
+                receiptNoteRepository.updateColumn(new PurchaseOrderDetailEntity().toEntity(materialReceiptDetail.getPurchaseOrderDetail()), "purchaseorderdetail", hashMap, null);
+
+                PurchaseOrderDetailEntity purchaseOrderDetailEntity = new PurchaseOrderDetailEntity();
+                purchaseOrderDetailEntity.setId(materialReceiptDetail.getPurchaseOrderDetail().getId());
+                purchaseOrderDetailEntity.setTenantId(tenantId);
+                PurchaseOrderDetailEntity orderDetailEntity = purchaseOrderDetailJdbcRepository.findById(purchaseOrderDetailEntity);
+
+                PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+                purchaseOrderSearch.setPurchaseOrderNumber(orderDetailEntity.getPurchaseOrder());
+                purchaseOrderSearch.setTenantId(tenantId);
+                if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch))
+                    receiptNoteRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(), "status = (case when status = 'RECEIPTED' then 'APPROVED' ELSE status end)"
+                            + " where purchaseordernumber = '" + purchaseOrderSearch.getPurchaseOrderNumber() + "') and tenantid = '" + tenantId + "'");
+            }
+        }
     }
 
 
@@ -498,7 +504,12 @@ public class ReceiptNoteService extends DomainService {
                         errors.addDataError(ErrorCode.MATCH_TWO_FIELDS.getCode(), "Store ", "purchase order Store ", String.valueOf(i));
                     }
 
-
+                    PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+                    purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
+                    purchaseOrderSearch.setTenantId(tenantId);
+                    if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch)) {
+                        errors.addDataError(ErrorCode.PO_SUPPLIED.getCode(), purchaseOrderDetail.getPurchaseOrderNumber());
+                    }
                 }
             }
         }

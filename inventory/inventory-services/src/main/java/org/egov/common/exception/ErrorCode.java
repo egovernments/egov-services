@@ -243,7 +243,10 @@ public enum ErrorCode {
             "The Field {0} Must Be Equal To {1} At Row {2}"),
     SHOULD_BE_DIFFERENT("should.be.different",
     		"{0} and {1} values should be different",
-    		"{0} and {1} values should be different");
+    		"{0} and {1} values should be different"),
+    PO_SUPPLIED("po.material.supplied",
+            "All materials are supplied for the purchase order {0}",
+            "All materials are supplied for the purchase order {0}");
 
 
     private final String code;

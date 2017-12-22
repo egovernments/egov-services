@@ -11,10 +11,19 @@ import areIntlLocalesSupported from 'intl-locales-supported';
 export default class ShowField extends Component {
   constructor(props) {
     super(props);
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear());
+    maxDate.setHours(0, 0, 0, 0);
+
+    this.state = {
+      maxDate: maxDate
+    };
   }
 
   renderFields = obj => {
     let des = translate(obj.label);
+    let {maxDate}=this.state;
+    console.log(maxDate);
     // let mandatory = obj.isMandatory ? " *" : "";
     // let description = des + mandatory;
     let description = des;
@@ -87,6 +96,7 @@ export default class ShowField extends Component {
         return (
           <Col xs={12} sm={4} md={3} lg={3}>
             <DatePicker
+              autoOk={true}
               className="custom-form-control-for-textfield"
               id={obj.label.split('.').join('-')}
               fullWidth={true}
@@ -96,6 +106,7 @@ export default class ShowField extends Component {
                   {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
+              maxDate={maxDate}
               value={typeof obj.value == 'object' ? obj.value : {}}
               onChange={(first, object) => {
                 let e = {
@@ -118,6 +129,7 @@ export default class ShowField extends Component {
               autoOk={true}
               fullWidth={true}
               floatingLabelFixed={true}
+              maxDate={maxDate}
               floatingLabelText={
                 <span>
                   {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
@@ -178,7 +190,7 @@ export default class ShowField extends Component {
               }}
               maxHeight={200}
             >
-              <MenuItem value="" primaryText="Select" />
+              
               {dropDownData.map((dd, index) => <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />)}
             </SelectField>
           </Col>
@@ -216,7 +228,7 @@ export default class ShowField extends Component {
               }}
               maxHeight={200}
             >
-              <MenuItem value="" primaryText="Select" />
+
               {dropDownData.map((dd, index) => <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />)}
             </SelectField>
           </Col>

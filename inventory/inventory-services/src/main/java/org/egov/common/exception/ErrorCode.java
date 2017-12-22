@@ -246,7 +246,10 @@ public enum ErrorCode {
     		"{0} and {1} values should be different"),
     PO_SUPPLIED("po.material.supplied",
             "All materials are supplied for the purchase order {0}",
-            "All materials are supplied for the purchase order {0}");
+            "All materials are supplied for the purchase order {0}"),
+    FIN_CUR_YEAR("fin.cur.year",
+    		"The Field {0} Must Be Equal To Current Financial Year",
+            "The Field {0} Must Be Equal To Current Financial Year");
 
 
     private final String code;

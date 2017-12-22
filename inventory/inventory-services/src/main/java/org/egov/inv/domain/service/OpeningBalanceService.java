@@ -17,6 +17,7 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.FinancialYear;
 import org.egov.inv.model.Material;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
@@ -25,12 +26,18 @@ import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
+import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
+
 
 @Service
 public class OpeningBalanceService extends DomainService {
@@ -61,7 +68,7 @@ public class OpeningBalanceService extends DomainService {
 
 	public List<MaterialReceipt> create(OpeningBalanceRequest openBalReq, String tenantId) {
 		try {
-			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_CREATE,tenantId);
+			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_CREATE,tenantId,openBalReq.getRequestInfo());
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
 				materialReceipt.setId(jdbcRepository.getSequence("seq_materialreceipt"));
 				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.APPROVED);
@@ -103,7 +110,7 @@ public class OpeningBalanceService extends DomainService {
 
 	public List<MaterialReceipt> update(OpeningBalanceRequest openBalReq, String tenantId) {
 		try {
-			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_UPDATE,tenantId);
+			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_UPDATE,tenantId,openBalReq.getRequestInfo());
 			List<String> materialReceiptDetailIds = new ArrayList<>();
 			List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
@@ -156,7 +163,7 @@ public class OpeningBalanceService extends DomainService {
 		return mrnNumber;
 	}
 
-	private void validate(List<MaterialReceipt> receipt, String method, String tenantId) {
+	private void validate(List<MaterialReceipt> receipt, String method, String tenantId,RequestInfo info) {
 		InvalidDataException errors = new InvalidDataException();
 
 		try {
@@ -180,6 +187,22 @@ public class OpeningBalanceService extends DomainService {
 			for (MaterialReceipt rcpt : receipt) 
 				{
 					int index = receipt.indexOf(rcpt) + 1;
+					ObjectMapper mapper = new ObjectMapper();
+					JSONArray finYears = mdmsRepository.getByCriteria("default", "egf-master", "financialYears", "finYearRange",rcpt.getFinancialYear() , info);
+					if(finYears != null && finYears.size() > 0)
+					{
+					for (int i = 0; i < finYears.size(); i++) {
+						FinancialYear fin = mapper.convertValue(finYears.get(i), FinancialYear.class);
+						if (getCurrentDate() >= fin.getStartingDate().getTime()  && getCurrentDate() <= fin.getEndingDate().getTime()) {
+							rcpt.setFinancialYear(fin.getFinYearRange());
+						}
+						else
+							errors.addDataError( ErrorCode.FIN_CUR_YEAR.getCode(),rcpt.getFinancialYear());
+						}
+					}
+					else
+						errors.addDataError( ErrorCode.FIN_YEAR_NOT_EXIST.getCode(),rcpt.getFinancialYear());
+					
 					if (isEmpty(rcpt.getFinancialYear())) {
 						errors.addDataError( ErrorCode.FIN_YEAR_NOT_EXIST.getCode(),rcpt.getFinancialYear());
 					}

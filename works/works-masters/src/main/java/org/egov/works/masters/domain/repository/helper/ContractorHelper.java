@@ -108,6 +108,7 @@ public class ContractorHelper {
 
     public Contractor toDomain() {
         Contractor contractor = new Contractor();
+        contractor.setId(this.id);
         contractor.setTenantId(this.tenantId);
         contractor.setCode(this.code);
         contractor.setName(this.name);

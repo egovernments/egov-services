@@ -102,19 +102,19 @@ class LeaveSummaryView extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (flag === 1) {
-          flag = 0;
-          $('#employeeTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-              'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
-            ordering: false,
-            language: {
-              "emptyTable": "No Records"
-            }
-          });
+            flag = 0;
+            $('#employeeTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                ordering: false,
+                language: {
+                    "emptyTable": "No Records"
+                }
+            });
         }
-      }
+    }
 
 
     closeWindow() {
@@ -129,51 +129,51 @@ class LeaveSummaryView extends React.Component {
         let { result, leaveStatuses, employeeList } = this.state;
 
         const renderTr = () => {
-            if(result){
-              return result.map((item, ind) => {
-                  return (
-                      <tr key={ind}>
-                      <td>{getNameById(employeeList, item.employee)}</td>
-                      <td>{item.applicationNumber}</td>
-                      <td>{item.leaveType.name}</td>
-                      <td>{item.fromDate +"-"+ item.toDate}</td>
-                      <td>{item.leaveDays}</td>
-                      <td>{getNameById(leaveStatuses,item.status,"code")}</td>
-                      <td>{item.reason}</td>
-                      </tr>
-                  )
-              })
-            }
-          }
-
-        const showTable = () => {
-            if (this.state.isSearchClicked) {
-                return (
-                    <div>
-                        <div className="land-table">
-                            <table id="employeeTable" className="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Employee Code-Name</th>
-                                        <th>Application Number </th>
-                                        <th>Leave Type</th>
-                                        <th>Date Range</th>
-                                        <th>Number Of Days</th>
-                                        <th>Status</th>
-                                        <th>Comments</th>
-
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {renderTr()}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )
+            if (result) {
+                return result.map((item, ind) => {
+                    return (
+                        <tr key={ind}>
+                            <td>{getNameById(employeeList, item.employee)}</td>
+                            <td>{item.applicationNumber}</td>
+                            <td>{item.leaveType.name}</td>
+                            <td>{item.fromDate + "-" + item.toDate}</td>
+                            <td>{item.leaveDays}</td>
+                            <td>{getNameById(leaveStatuses, item.status, "code")}</td>
+                            <td>{item.reason}</td>
+                        </tr>
+                    )
+                })
             }
         }
+
+        const showTable = () => {
+
+            return (
+                <div>
+                    <div className="land-table">
+                        <table id="employeeTable" className="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Employee Code-Name</th>
+                                    <th>Application Number </th>
+                                    <th>Leave Type</th>
+                                    <th>Date Range</th>
+                                    <th>Number Of Days</th>
+                                    <th>Status</th>
+                                    <th>Comments</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {renderTr()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )
+        }
+
 
 
         return (

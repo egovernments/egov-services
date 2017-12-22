@@ -1,6 +1,7 @@
 package org.egov.pa.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.pa.model.AuditDetails;
@@ -112,6 +113,7 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     		if(null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
     			for(Document doc : kpi.getDocuments()) { 
     				doc.setKpiCode(kpi.getCode());
+    				doc.setCode(kpi.getCode().concat("_") + new Date().getTime());
     			}
     		}
     	}

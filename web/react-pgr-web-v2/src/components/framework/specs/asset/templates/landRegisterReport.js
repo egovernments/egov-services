@@ -84,7 +84,7 @@ export default class assetImmovableReport extends Component {
               </tr>
               <tr>
                 <td colSpan={8} style={{ textAlign: 'center' }}>
-                  <b>नमुना क्रमांक १६</b>
+                  <b>नमुना क्रमांक १५</b>
                 </td>
               </tr>
               <tr>
@@ -95,7 +95,7 @@ export default class assetImmovableReport extends Component {
             </tbody>
             <tbody>
               <td colSpan={12} style={{ textAlign: 'center' }}>
-                <b>जमिनींची नोंदवहीी</b>
+                <b>जमिनींची नोंदवही</b>
               </td>
             </tbody>
 

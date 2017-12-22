@@ -89,7 +89,7 @@ public class ReceiptNoteService extends DomainService {
         {
             materialReceipt.setId(receiptNoteRepository.getSequence("seq_materialreceipt"));
             materialReceipt.setMrnNumber(appendString(materialReceipt));
-            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
+            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.APPROVED);
             materialReceipt.setAuditDetails(getAuditDetails(materialReceiptRequest.getRequestInfo(), tenantId));
             if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
                 materialReceipt.setTenantId(tenantId);
@@ -424,19 +424,19 @@ public class ReceiptNoteService extends DomainService {
     private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, Long acceptedQuantity, String tenantId, int i, InvalidDataException errors) {
         Long totalQuantity = 0L;
         for (MaterialReceiptDetailAddnlinfo addnlinfo : materialReceiptDetailAddnlinfos) {
-            
-                if (null != addnlinfo.getQuantity()) {
-                    totalQuantity = totalQuantity + addnlinfo.getQuantity().longValue();
-                }
 
-                if (null != addnlinfo.getExpiryDate()&& addnlinfo.getExpiryDate() <= getCurrentDate()) {
- 
-                    String date = convertEpochtoDate(addnlinfo.getExpiryDate());
-                    errors.addDataError(ErrorCode.DATE_GE_CURRENTDATE.getCode(), "Expiry date ", date);
-
-                }
+            if (null != addnlinfo.getQuantity()) {
+                totalQuantity = totalQuantity + addnlinfo.getQuantity().longValue();
             }
-        
+
+            if (null != addnlinfo.getExpiryDate() && addnlinfo.getExpiryDate() <= getCurrentDate()) {
+
+                String date = convertEpochtoDate(addnlinfo.getExpiryDate());
+                errors.addDataError(ErrorCode.DATE_GE_CURRENTDATE.getCode(), "Expiry date ", date);
+
+            }
+        }
+
 
         if (totalQuantity.longValue() != acceptedQuantity.longValue()) {
             errors.addDataError(ErrorCode.FIELD_DOESNT_MATCH.getCode(), "Accepted Quantity", "Sum of quantity of additional details");
@@ -457,20 +457,17 @@ public class ReceiptNoteService extends DomainService {
 
     private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String store, Long receiptDate, String supplier, String tenantId, int i, InvalidDataException errors) {
 
-        if (null != materialReceiptDetail.getPurchaseOrderDetail())
-        {
+        if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
             PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
             purchaseOrderDetailSearch.setTenantId(tenantId);
             purchaseOrderDetailSearch.setIds(Collections.singletonList(materialReceiptDetail.getPurchaseOrderDetail().getId()));
 
             Pagination<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrderDetailService.search(purchaseOrderDetailSearch);
 
-            if (purchaseOrderDetails.getPagedData().size() > 0) 
-            {
-                for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) 
-                {
+            if (purchaseOrderDetails.getPagedData().size() > 0) {
+                for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
 
-                    if ( materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
+                    if (materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
                         errors.addDataError(ErrorCode.RCVED_QTY_LS_ODRQTY.getCode(), String.valueOf(i));
                     }
 
@@ -482,35 +479,31 @@ public class ReceiptNoteService extends DomainService {
                     PurchaseOrderEntity po = new PurchaseOrderEntity();
                     po.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
                     po.setTenantId(tenantId);
-                    
 
-                    PurchaseOrderEntity poe = (PurchaseOrderEntity)purchaseOrderJdbcRepository.findById(po,"PurchaseOrderEntity");
-                    
-                    
-                            if ( poe.getPurchaseOrderDate() > receiptDate) {
-                                errors.addDataError(ErrorCode.DATE1_GT_DATE2ROW.getCode(), "Receipt Date ", "purchase order date ", String.valueOf(i));
-                            }
 
-                            if (!isEmpty(supplier) && !supplier.equalsIgnoreCase(poe.getSupplier())) {
+                    PurchaseOrderEntity poe = (PurchaseOrderEntity) purchaseOrderJdbcRepository.findById(po, "PurchaseOrderEntity");
 
-                                errors.addDataError(ErrorCode.MATCH_TWO_FIELDS.getCode(), "Supplier ", "purchase order supplier ", String.valueOf(i));
-                            }
-                            
-                            if (!isEmpty(store) && !store.equalsIgnoreCase(poe.getStore())) {
 
-                                errors.addDataError(ErrorCode.MATCH_TWO_FIELDS.getCode(), "Store ", "purchase order Store ", String.valueOf(i));
-                            }
-                        
-                        
+                    if (poe.getPurchaseOrderDate() > receiptDate) {
+                        errors.addDataError(ErrorCode.DATE1_GT_DATE2ROW.getCode(), "Receipt Date ", "purchase order date ", String.valueOf(i));
+                    }
+
+                    if (!isEmpty(supplier) && !supplier.equalsIgnoreCase(poe.getSupplier())) {
+
+                        errors.addDataError(ErrorCode.MATCH_TWO_FIELDS.getCode(), "Supplier ", "purchase order supplier ", String.valueOf(i));
+                    }
+
+                    if (!isEmpty(store) && !store.equalsIgnoreCase(poe.getStore())) {
+
+                        errors.addDataError(ErrorCode.MATCH_TWO_FIELDS.getCode(), "Store ", "purchase order Store ", String.valueOf(i));
+                    }
+
+
                 }
             }
-    }
+        }
     }
 
-
-    private PurchaseOrderResponse getPurchaseOrderResponse(PurchaseOrderSearch purchaseOrderSearch) {
-        return purchaseOrderService.search(purchaseOrderSearch);
-    }
 
     private String appendString(MaterialReceipt materialReceipt) {
         Calendar cal = Calendar.getInstance();

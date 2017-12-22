@@ -56,7 +56,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         {
             materialReceipt.setId(receiptNoteRepository.getSequence("seq_materialreceipt"));
             materialReceipt.setMrnNumber(appendString(materialReceipt));
-            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
+            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.APPROVED);
             materialReceipt.setReceiptType(MaterialReceipt.ReceiptTypeEnum.MISCELLANEOUS_RECEIPT);
             materialReceipt.setAuditDetails(getAuditDetails(materialReceiptRequest.getRequestInfo(), tenantId));
             if (StringUtils.isEmpty(materialReceipt.getTenantId())) {

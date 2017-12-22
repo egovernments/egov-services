@@ -88,6 +88,16 @@ public class MDMSUtils {
 		return uniqueKeys;
 	}
 	
+	public String getJsonPathKey(String jsonPath, StringBuilder expression){
+		String[] expressionArray = (jsonPath).split("[.]");
+    	for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
+    		expression.append(expressionArray[j]);
+    		if(j != expressionArray.length - 2)
+    			expression.append(".");
+    	}
+    	return expressionArray[expressionArray.length - 1];
+	}
+	
 	public String buildCommitMessage(MDMSCreateRequest mDMSCreateRequest, boolean isCreate, String username){
 		StringBuilder commitMessage = new StringBuilder();
 		if(null != mDMSCreateRequest.getRequestInfo().getUserInfo()){

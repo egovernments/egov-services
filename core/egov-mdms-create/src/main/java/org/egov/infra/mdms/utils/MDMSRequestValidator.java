@@ -82,7 +82,10 @@ public class MDMSRequestValidator {
 			return result;
 		}else {
 			logger.info("uniqueKeys: "+uniqueKeys);
-			keys.addAll(uniqueKeys);
+			StringBuilder expression = new StringBuilder();
+			for(String key: uniqueKeys){
+				keys.add(mDMSUtils.getJsonPathKey(key, expression));
+			}
 			List<Object> masters = masterData;
 			for(int i = 0; i < masterDataArray.length() ; i++){
 				List<Object> filterResult = new ArrayList<>();

@@ -113,7 +113,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	}
 
 	public Long getUsedQty(String supplier, String material, String ratetype){
-	    String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = :material and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted=false and ratetype=:ratetype and supplier = :supplier)";
+	    String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail where material = :material and purchaseorder in (select purchaseordernumber from purchaseorder where isdeleted is not true and ratetype=:ratetype and supplier = :supplier)";
 	    Map params=new HashMap<String,Object>();
 		params.put("material",material);
 		params.put("ratetype",ratetype);
@@ -136,7 +136,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	}
 	
 	public boolean getIsIndentPORaised(String indentnumber) {
-		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity>totalprocessedquantity and totalprocessedquantity!=null and isdeleted=false and indentnumber = :indentnumber";
+		String totalProcessedQuery = "select count(*) from indentdetail where indentquantity>totalprocessedquantity and totalprocessedquantity!=null and isdeleted is not true and indentnumber = :indentnumber";
 		Map params=new HashMap<String,Object>();
 		params.put("indentnumber", indentnumber);
 		Long count = namedParameterJdbcTemplate.queryForObject(totalProcessedQuery, params, Long.class);
@@ -147,7 +147,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	}
 
 	public boolean isRateContractsExists(String supplier, String ratetype, String material){
-		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetails pld where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted=false and pl.supplier=:supplier and pl.rateType=:ratetype and pld.material = :material and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate and pl.agreementenddate";
+		String rateContractQuery = "select count(*) from pricelist pl, pricelistdetails pld where pld.pricelist=pl.id and pl.active=true and pld.active=true and pld.deleted is not true and pl.supplier=:supplier and pl.rateType=:ratetype and pld.material = :material and extract(epoch from now())::bigint * 1000 between pl.agreementstartdate and pl.agreementenddate";
 	    Map params=new HashMap<String,Object>();
 		params.put("material",material);
 		params.put("ratetype",ratetype);

@@ -56,7 +56,7 @@ class ShowForm extends Component {
 
           if (metaData.reportDetails.searchParams[i].pattern.indexOf('{' + property + '}') == -1) continue;
 
-          if (metaData.reportDetails.searchParams[i].pattern.search(property) > -1) {
+          if (metaData.reportDetails.searchParams[i].pattern.search('{' + property + '}') > -1) {
             let splitArray = metaData.reportDetails.searchParams[i].pattern.split('?');
             let url = splitArray[0];
             let queryString = splitArray[1].split('|')[0].split('&');
@@ -83,7 +83,7 @@ class ShowForm extends Component {
                   defaultValue[keys[k]] = values[k];
                 }
                 for (var l = 0; l < metaData.reportDetails.searchParams.length; l++) {
-                  if (metaData.reportDetails.searchParams[l].type == 'url' && metaData.reportDetails.searchParams[l].pattern.search(property) > -1) {
+                  if (metaData.reportDetails.searchParams[l].type == 'url' && metaData.reportDetails.searchParams[l].pattern.search('{' + property + '}') > -1) {
                     metaData.reportDetails.searchParams[l].defaultValue = defaultValue;
                   }
                 }

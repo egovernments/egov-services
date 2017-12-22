@@ -89,7 +89,6 @@ public class MDMSService {
 
 				finalMasterMap.put(masterDetail.getName(), masterData);
 			}
-			if(!finalMasterMap.isEmpty())
 			responseMap.put(moduleDetail.getModuleName(), finalMasterMap);
 		}
 		return responseMap;

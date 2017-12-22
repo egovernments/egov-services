@@ -1,9 +1,10 @@
+var flag = 0
 class LeaveSummaryView extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            "result" :{leaveType:""},
+            "result": { leaveType: "" },
             "leaveStatuses": [],
             "employeeList": []
         };
@@ -20,20 +21,27 @@ class LeaveSummaryView extends React.Component {
 
         var _this = this;
 
+        var leaveStatus = leaveStatuses.forEach(function (item) {
+            if (item.code === "APPROVED") {
+                return item.id;
+            }
+        });
+
+
 
 
         try {
-            
+            flag = 1;
             commonApiPost("hr-leave", "leaveapplications", "_leavereport", {
-                code : getUrlVars()["code"],
-                departmentId: getUrlVars()["departmentId"]?getUrlVars()["departmentId"]:"",
-                designationId: getUrlVars()["designationId"]?getUrlVars()["designationId"]:"",
-                employeeType: getUrlVars()["employeeType"]?getUrlVars()["employeeType"]:"",
-                employeeStatus: getUrlVars()["employeeStatus"]?getUrlVars()["employeeStatus"]:"",
+                code: getUrlVars()["code"],
+                // departmentId: getUrlVars()["departmentId"]?getUrlVars()["departmentId"]:"",
+                // designationId: getUrlVars()["designationId"]?getUrlVars()["designationId"]:"",
+                // employeeType: getUrlVars()["employeeType"]?getUrlVars()["employeeType"]:"",
+                // employeeStatus: getUrlVars()["employeeStatus"]?getUrlVars()["employeeStatus"]:"",
                 leaveType: getUrlVars()["leaveType"],
-                fromDate: getUrlVars()["fromDate"],
-                toDate: getUrlVars()["toDate"],
-                leaveStatus: getUrlVars()["leaveStatus"],
+                fromDate: "01/01/" + new Date().getFullYear(),//starting date of current year
+                toDate: getUrlVars()["toDate"],//asondate in leave summary page
+                leaveStatus: leaveStatus,
                 tenantId,
                 pageSize: 500
             }, function (err, res) {
@@ -42,7 +50,7 @@ class LeaveSummaryView extends React.Component {
 
                     _this.setState({
                         ...this.state,
-                        result: res.LeaveApplication[0]
+                        result: res.LeaveApplication
                     })
                 } else {
                     _this.setState({
@@ -91,6 +99,22 @@ class LeaveSummaryView extends React.Component {
 
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (flag === 1) {
+          flag = 0;
+          $('#employeeTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+              'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            ordering: false,
+            language: {
+              "emptyTable": "No Records"
+            }
+          });
+        }
+      }
+
 
     closeWindow() {
         open(location, '_self').close();
@@ -103,93 +127,64 @@ class LeaveSummaryView extends React.Component {
         let { closeWindow } = this;
         let { result, leaveStatuses, employeeList } = this.state;
 
+        const renderTr = () => {
+            if(result){
+              return result.map((item, ind) => {
+                  return (
+                      <tr key={ind}>
+                      <td>{getNameById(employeeList, item.employee)}</td>
+                      <td>{item.applicationNumber}</td>
+                      <td>{item.leaveType.name}</td>
+                      <td>{item.fromDate +"-"+ item.toDate}</td>
+                      <td>{item.leaveDays}</td>
+                      <td>{getNameById(leaveStatuses,item.status,"code")}</td>
+                      <td>{item.reason}</td>
+                      </tr>
+                  )
+              })
+            }
+          }
+
+        const showTable = () => {
+            if (this.state.isSearchClicked) {
+                return (
+                    <div>
+                        <div className="land-table">
+                            <table id="employeeTable" className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Employee Code-Name</th>
+                                        <th>Application Number </th>
+                                        <th>Leave Type</th>
+                                        <th>Date Range</th>
+                                        <th>Number Of Days</th>
+                                        <th>Status</th>
+                                        <th>Comments</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {renderTr()}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )
+            }
+        }
+
+
         return (
             <div>
-                <form>
-                    <fieldset>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Employee Code-Name </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <label htmlFor="">{getNameById(employeeList, result.employee)}</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Application Number </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <label htmlFor="">{result.applicationNumber}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Leave Type </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <label htmlFor="">{result.leaveType.name}</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Date Range </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <label htmlFor="">{result.fromDate + "-" + result.toDate}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Number Of Days </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <label htmlFor="">{result.leaveDays}</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Status </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <label htmlFor="">{getNameById(leaveStatuses, result.status, "code")}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Comments </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <label htmlFor="">{result.reason}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="text-center">
-                            <button type="button" className="btn btn-close" onClick={(e) => { this.closeWindow() }}>Close</button>
-                        </div>
-                    </fieldset>
-                </form>
+                <fieldset>
+
+                    {showTable()}
+
+                    <div className="text-center">
+                        <button type="button" className="btn btn-close" onClick={(e) => { this.closeWindow() }}>Close</button>
+                    </div>
+                </fieldset>
             </div>
         );
     }

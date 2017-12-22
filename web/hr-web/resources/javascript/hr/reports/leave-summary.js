@@ -177,13 +177,13 @@ class LeaveSummary extends React.Component {
             }
         }
 
-        const renderAction = function (item) {
+        const renderAction = function (item, asOnDate) {
 
             var codeName=getNameById(employeeList, item.employee);
             var code = codeName.split("-")[0].trim();
 
             return (
-                <a href={`app/hr/reports/leave-summary-view.html?code=${code}&leaveType=${item.leaveType.id}&fromDate=${item.fromDate}&toDate=${item.toDate}&leaveStatus=${item.status}`}>{item.leaveDays}</a>
+                <a href={`app/hr/reports/leave-summary-view.html?code=${code}&leaveType=${item.leaveType.id}&toDate=${item.asOnDate}`}>{item.leaveDays}</a>
             );
         }
 
@@ -197,7 +197,7 @@ class LeaveSummary extends React.Component {
                         <td>{item.noofdays?item.noofdays:"0"}</td>
                         <td>{item.availableDays}</td>
                         <td>{item.totalLeavesEligible}</td>
-                        <td>{renderAction(item)}</td>
+                        <td>{renderAction(item, asOnDate)}</td>
                         <td>{item.balance} </td>
                     </tr>
                 )

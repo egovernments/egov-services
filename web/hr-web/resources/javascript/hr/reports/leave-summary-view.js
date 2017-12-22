@@ -4,7 +4,7 @@ class LeaveSummaryView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            "result": { leaveType: "" },
+            "result": [{ leaveType: "" }],
             "leaveStatuses": [],
             "employeeList": []
         };

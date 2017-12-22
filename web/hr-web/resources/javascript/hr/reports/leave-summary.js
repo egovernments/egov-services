@@ -194,7 +194,7 @@ class LeaveSummary extends React.Component {
                     <tr key={ind}>
                         <td>{getNameById(employeeList, item.employee)}</td>
                         <td>{item.leaveType.name}</td>
-                        <td>{item.noofdays}</td>
+                        <td>{item.noofdays?item.noofdays:"0"}</td>
                         <td>{item.availableDays}</td>
                         <td>{item.totalLeavesEligible}</td>
                         <td>{renderAction(item)}</td>

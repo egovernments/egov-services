@@ -4,7 +4,8 @@ import { getFileDownloadLink } from "../utils";
 const initialState = {
   isFetching: false,
   error: false,
-  items: []
+  items: [],
+  filter: {}
 };
 
 const transformUserJobs = userJobs => {
@@ -12,7 +13,6 @@ const transformUserJobs = userJobs => {
     const id = userJob.code;
     const status = userJob.status;
     const moduleName = userJob.moduleName;
-    const moduleDefiniton = userJob.defName;
     const startTime = userJob.startTime;
     const endTime = userJob.endTime;
     const download = { label: "Download" };
@@ -89,7 +89,11 @@ const userJobs = (state = initialState, action) => {
       return { ...state, error: true, isFetching: false };
 
     case actionTypes.FILTER_USER_JOBS:
-      return { ...state, items: filterUserJobs(action.filter, state.items) };
+      return {
+        ...state,
+        items: filterUserJobs(action.filter, state.items),
+        filter: { ...state.filter, ...action.filter }
+      };
     default:
       return state;
   }

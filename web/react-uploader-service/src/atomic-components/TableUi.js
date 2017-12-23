@@ -18,8 +18,7 @@ const TableUi = ({ tableSchema, tableBody, styles }) => {
       case "label":
         return field;
       case "hyperlink":
-        const label = field.label;
-        const href = field.href;
+        const { href, label } = field;
         const buttonProps = { label, href };
         if (href) {
           buttonProps.target = "_blank";

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.egf.bill.constants.Constants;
 import org.egov.egf.bill.domain.model.AuditDetails;
 import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.bill.domain.model.BillDetail;
@@ -28,15 +29,24 @@ import org.egov.egf.bill.web.contract.Function;
 import org.egov.egf.bill.web.repository.AccountDetailKeyContractRepository;
 import org.egov.egf.bill.web.repository.AccountDetailTypeContractRepository;
 import org.egov.egf.bill.web.repository.ChartOfAccountContractRepository;
+import org.egov.egf.bill.web.repository.IdgenRepository;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
 public class BillRegisterService {
+
+    @Value("${egf.bill.default.number.format.name}")
+    private String idGenFormatNameForBillPath;
+
+    @Value("${egf.bill.number.auto.gen}")
+    private Boolean billNumberAutoGen;
+
     @Autowired
     private BillRegisterRepository billRegisterRepository;
 
@@ -79,13 +89,17 @@ public class BillRegisterService {
     @Autowired
     private SubSchemeService subSchemeService;
 
+    @Autowired
+    private IdgenRepository idgenRepository;
+
     @Transactional
     public BillRegisterRequest create(BillRegisterRequest billRegisterRequest) {
 
         fetchRelated(billRegisterRequest);
-        validate(billRegisterRequest);
+        validate(billRegisterRequest, Constants.ACTION_CREATE);
         populateAuditDetails(billRegisterRequest);
-        populateBillRegisterIds(billRegisterRequest.getBillRegisters());
+        if (billNumberAutoGen != null && billNumberAutoGen)
+            populateBillNumbers(billRegisterRequest);
         populateDependentEntityIds(billRegisterRequest.getBillRegisters());
 
         return billRegisterRepository.save(billRegisterRequest);
@@ -97,7 +111,7 @@ public class BillRegisterService {
         fetchRelated(billRegisterRequest);
         populateAuditDetails(billRegisterRequest);
         populateDependentEntityIds(billRegisterRequest.getBillRegisters());
-        validate(billRegisterRequest);
+        validate(billRegisterRequest, Constants.ACTION_UPDATE);
 
         return billRegisterRepository.update(billRegisterRequest);
     }
@@ -134,12 +148,22 @@ public class BillRegisterService {
         }
     }
 
-    private void validate(BillRegisterRequest billRegisterRequest) {
+    private void validate(BillRegisterRequest billRegisterRequest, String action) {
 
         for (BillRegister br : billRegisterRequest.getBillRegisters()) {
+            if (action != null && action.equalsIgnoreCase(Constants.ACTION_CREATE)) {
+                if (billNumberAutoGen != null && !billNumberAutoGen
+                        && (br.getBillNumber() == null || br.getBillNumber().isEmpty()))
+                    throw new CustomException("billNumber",
+                            "The field BillNumber is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            } else if (action != null && action.equalsIgnoreCase(Constants.ACTION_UPDATE)) {
+                if (br.getBillNumber() == null || br.getBillNumber().isEmpty())
+                    throw new CustomException("billNumber",
+                            "The field BillNumber is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            }
+
             if (br.getPassedAmount().compareTo(br.getBillAmount()) > 0)
-                throw new CustomException("passedAmount",
-                        "passedAmount must be less than billAmount");
+                throw new CustomException("passedAmount", "passedAmount must be less than billAmount");
         }
 
     }
@@ -235,16 +259,17 @@ public class BillRegisterService {
                 if (billRegister.getDepartment() != null && billRegister.getDepartment().getCode() != null)
                     billRegister.setDepartment(departmentService.getDepartment(billRegister.getTenantId(),
                             billRegister.getDepartment().getCode(), billRegisterRequest.getRequestInfo()));
-/*
+
                 if (billRegister.getLocation() != null) {
                     billRegister.getLocation().setTenantId(billRegister.getTenantId());
-                    final Boundary location = boundaryRepository
-                            .findById(billRegister.getLocation());
-                    if (location == null || location.getId() == null || location.getId().isEmpty())
+                    final Boundary location = boundaryRepository.findById(billRegister.getLocation());
+                    if (location == null ||
+                            location.getId() == null || location.getId().isEmpty())
                         throw new CustomException("location",
                                 "Given location is Invalid: " + location.getId());
                     billRegister.setLocation(location);
-                }*/
+                }
+
                 fetchRelatedForBillDetail(billRegister, billRegisterRequest.getRequestInfo());
                 fetchRelatedForBillPayeeDetail(billRegister, billRegisterRequest.getRequestInfo());
                 fetchRelatedForChecklist(billRegister);
@@ -258,20 +283,21 @@ public class BillRegisterService {
         final String tenantId = billRegister.getTenantId();
         if (billRegister.getBillDetails() != null)
             for (final BillDetail billDetail : billRegister.getBillDetails()) {
-                /*if (billDetail.getGlcode() != null) {
+
+                if (billDetail.getGlcode() != null) {
                     ChartOfAccount coa = null;
                     if (coaMap.get(billDetail.getGlcode()) == null) {
                         final ChartOfAccount coaContract = new ChartOfAccount();
                         coaContract.setGlcode(billDetail.getGlcode());
                         coaContract.setTenantId(tenantId);
-                        coa = chartOfAccountContractRepository.findByGlcode(coaContract, requestInfo);
+                        coa = chartOfAccountContractRepository.findByGlcode(coaContract,
+                                requestInfo);
                         if (coa == null || coa.getId() == null || coa.getId().isEmpty())
                             throw new CustomException("glCode", "Given glCode is Invalid: " + coa.getId());
                         coaMap.put(billDetail.getGlcode(), coa);
-
                     }
                     billDetail.setChartOfAccount(coaMap.get(billDetail.getGlcode()));
-                }*/
+                }
 
                 if (billDetail.getFunction() != null) {
                     if (functionMap.get(billDetail.getFunction().getId()) == null) {
@@ -294,46 +320,39 @@ public class BillRegisterService {
         final Map<String, AccountDetailType> adtMap = new HashMap<>();
         final Map<String, AccountDetailKey> adkMap = new HashMap<>();
         final String tenantId = billRegister.getTenantId();
-        /* if (billRegister.getBillDetails() != null)
+        if (billRegister.getBillDetails() != null)
             for (final BillDetail billDetail : billRegister.getBillDetails())
-                 if (billDetail.getBillPayeeDetails() != null)
+                if (billDetail.getBillPayeeDetails() != null)
                     if (billDetail.getBillPayeeDetails() != null)
                         for (final BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
-
                             if (detail.getAccountDetailType() != null) {
-
                                 if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
                                     detail.getAccountDetailType().setTenantId(tenantId);
                                     final AccountDetailType accountDetailType = accountDetailTypeContractRepository
                                             .findById(detail.getAccountDetailType(), requestInfo);
-
                                     if (accountDetailType == null || accountDetailType.getId() == null
                                             || accountDetailType.getId().isEmpty())
                                         throw new CustomException("accountDetailType",
                                                 "Given accountDetailType is Invalid: " + detail.getAccountDetailType().getId());
-
                                     adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
                                 }
                                 detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
                             }
-
                             if (detail.getAccountDetailKey() != null) {
-
                                 if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
                                     detail.getAccountDetailKey().setTenantId(tenantId);
                                     final AccountDetailKey accountDetailKey = accountDetailKeyContractRepository
                                             .findById(detail.getAccountDetailKey(), requestInfo);
-
-                                    if (accountDetailKey == null || accountDetailKey.getId() == null
-                                            || accountDetailKey.getId().isEmpty())
+                                    if (accountDetailKey == null
+                                            || accountDetailKey.getId() == null || accountDetailKey.getId().isEmpty())
                                         throw new CustomException("accountDetailType",
                                                 "Given accountDetailType is Invalid: " + detail.getAccountDetailKey().getId());
-
                                     adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
                                 }
                                 detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
                             }
-                        }*/
+                        }
+
     }
 
     private void fetchRelatedForChecklist(final BillRegister billRegister) {
@@ -365,26 +384,11 @@ public class BillRegisterService {
         return billRegisterRepository.search(billRegisterSearch);
     }
 
-    private void populateBillRegisterIds(final List<BillRegister> billregisters) {
+    private void populateBillNumbers(BillRegisterRequest billRegisterRequest) {
 
-        for (final BillRegister billregister : billregisters) {
-            billregister.setBillNumber(UUID.randomUUID().toString().replace("-", ""));
-            if (null != billregister.getBillDetails())
-                for (final BillDetail billDetail : billregister.getBillDetails()) {
-                    billDetail.setId(UUID.randomUUID().toString().replace("-", ""));
-                    billDetail.setTenantId(billregister.getTenantId());
-                    if (null != billDetail.getBillPayeeDetails())
-                        for (final BillPayeeDetail billPayeeDetail : billDetail.getBillPayeeDetails()) {
-                            billPayeeDetail.setId(UUID.randomUUID().toString().replace("-", ""));
-                            billPayeeDetail.setTenantId(billregister.getTenantId());
-                        }
-                }
-
-            if (null != billregister.getCheckLists())
-                for (final BillChecklist checklist : billregister.getCheckLists()) {
-                    checklist.setId(UUID.randomUUID().toString().replace("-", ""));
-                    checklist.setTenantId(billregister.getTenantId());
-                }
+        for (final BillRegister billregister : billRegisterRequest.getBillRegisters()) {
+            billregister
+                    .setBillNumber(generateDefaultBillNumber(billregister.getTenantId(), billRegisterRequest.getRequestInfo()));
         }
 
     }
@@ -410,6 +414,11 @@ public class BillRegisterService {
                 }
         }
 
+    }
+
+    private String generateDefaultBillNumber(final String tenantId, final RequestInfo requestInfo) {
+
+        return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenFormatNameForBillPath);
     }
 
     private void setAuditDetails(final BillRegister contract, final Long userId) {

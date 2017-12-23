@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class AccountDetailTypeContractRepository {
+public class AccountDetailTypeRepository {
 
     private RestTemplate restTemplate;
     private String hostUrl;
     public static final String SEARCH_URL = "/egf-master/accountdetailtypes/_search?";
 
-    public AccountDetailTypeContractRepository(@Value("${egf.master.host.url}") String hostUrl,
+    public AccountDetailTypeRepository(@Value("${egf.master.host.url}") String hostUrl,
             RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.hostUrl = hostUrl;

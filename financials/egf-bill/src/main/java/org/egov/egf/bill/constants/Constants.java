@@ -22,5 +22,7 @@ public class Constants {
     public static final String FUNCTIONARY_MASTER_NAME = "Functionary";
     public static final String DEPARTMENT_MASTER_NAME = "Department";
     public static final String BILLSTATUS_MASTER_NAME = "BillStatus";
+    public static final String CONFIG_MODULE_NAME = "egf-bill";
+    public static final String DEFAULT_TXN_MIS_ATTRRIBUTES_CONFIG_NAME = "Default transaction mis attrributes";
 
 }

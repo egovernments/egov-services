@@ -1,5 +1,6 @@
 package org.egov.egf.bill.domain.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.bill.constants.Constants;
 import org.egov.egf.bill.domain.model.AuditDetails;
@@ -25,13 +27,18 @@ import org.egov.egf.bill.web.contract.AccountDetailKey;
 import org.egov.egf.bill.web.contract.AccountDetailType;
 import org.egov.egf.bill.web.contract.Boundary;
 import org.egov.egf.bill.web.contract.ChartOfAccount;
+import org.egov.egf.bill.web.contract.FinancialConfiguration;
+import org.egov.egf.bill.web.contract.FinancialConfigurationValue;
 import org.egov.egf.bill.web.contract.Function;
-import org.egov.egf.bill.web.repository.AccountDetailKeyContractRepository;
-import org.egov.egf.bill.web.repository.AccountDetailTypeContractRepository;
-import org.egov.egf.bill.web.repository.ChartOfAccountContractRepository;
+import org.egov.egf.bill.web.repository.AccountDetailKeyRepository;
+import org.egov.egf.bill.web.repository.AccountDetailTypeRepository;
+import org.egov.egf.bill.web.repository.ChartOfAccountRepository;
+import org.egov.egf.bill.web.repository.FinancialConfigurationRepository;
 import org.egov.egf.bill.web.repository.IdgenRepository;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
 import org.egov.tracer.model.CustomException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,6 +47,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class BillRegisterService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BillRegisterService.class);
 
     @Value("${egf.bill.default.number.format.name}")
     private String idGenFormatNameForBillPath;
@@ -63,16 +72,16 @@ public class BillRegisterService {
     private FunctionService functionService;
 
     @Autowired
-    private ChartOfAccountContractRepository chartOfAccountContractRepository;
+    private ChartOfAccountRepository chartOfAccountRepository;
 
     @Autowired
     private ChecklistRepository checklistRepository;
 
     @Autowired
-    private AccountDetailTypeContractRepository accountDetailTypeContractRepository;
+    private AccountDetailTypeRepository accountDetailTypeRepository;
 
     @Autowired
-    private AccountDetailKeyContractRepository accountDetailKeyContractRepository;
+    private AccountDetailKeyRepository accountDetailKeyRepository;
 
     @Autowired
     private FundSourceService fundSourceService;
@@ -91,6 +100,9 @@ public class BillRegisterService {
 
     @Autowired
     private IdgenRepository idgenRepository;
+
+    @Autowired
+    private FinancialConfigurationRepository financialConfigurationRepository;
 
     @Transactional
     public BillRegisterRequest create(BillRegisterRequest billRegisterRequest) {
@@ -150,6 +162,12 @@ public class BillRegisterService {
 
     private void validate(BillRegisterRequest billRegisterRequest, String action) {
 
+        String tenantId = null;
+
+        if (billRegisterRequest.getBillRegisters() != null && !billRegisterRequest.getBillRegisters().isEmpty()) {
+            tenantId = billRegisterRequest.getBillRegisters().get(0).getTenantId();
+        }
+
         for (BillRegister br : billRegisterRequest.getBillRegisters()) {
             if (action != null && action.equalsIgnoreCase(Constants.ACTION_CREATE)) {
                 if (billNumberAutoGen != null && !billNumberAutoGen
@@ -164,7 +182,11 @@ public class BillRegisterService {
 
             if (br.getPassedAmount().compareTo(br.getBillAmount()) > 0)
                 throw new CustomException("passedAmount", "passedAmount must be less than billAmount");
+
         }
+
+        List<String> mandatoryFields = getHeaderMandateFields(tenantId, billRegisterRequest.getRequestInfo());
+        validateMandatoryFields(mandatoryFields, billRegisterRequest.getBillRegisters());
 
     }
 
@@ -290,7 +312,7 @@ public class BillRegisterService {
                         final ChartOfAccount coaContract = new ChartOfAccount();
                         coaContract.setGlcode(billDetail.getGlcode());
                         coaContract.setTenantId(tenantId);
-                        coa = chartOfAccountContractRepository.findByGlcode(coaContract,
+                        coa = chartOfAccountRepository.findByGlcode(coaContract,
                                 requestInfo);
                         if (coa == null || coa.getId() == null || coa.getId().isEmpty())
                             throw new CustomException("glCode", "Given glCode is Invalid: " + coa.getId());
@@ -328,7 +350,7 @@ public class BillRegisterService {
                             if (detail.getAccountDetailType() != null) {
                                 if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
                                     detail.getAccountDetailType().setTenantId(tenantId);
-                                    final AccountDetailType accountDetailType = accountDetailTypeContractRepository
+                                    final AccountDetailType accountDetailType = accountDetailTypeRepository
                                             .findById(detail.getAccountDetailType(), requestInfo);
                                     if (accountDetailType == null || accountDetailType.getId() == null
                                             || accountDetailType.getId().isEmpty())
@@ -341,7 +363,7 @@ public class BillRegisterService {
                             if (detail.getAccountDetailKey() != null) {
                                 if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
                                     detail.getAccountDetailKey().setTenantId(tenantId);
-                                    final AccountDetailKey accountDetailKey = accountDetailKeyContractRepository
+                                    final AccountDetailKey accountDetailKey = accountDetailKeyRepository
                                             .findById(detail.getAccountDetailKey(), requestInfo);
                                     if (accountDetailKey == null
                                             || accountDetailKey.getId() == null || accountDetailKey.getId().isEmpty())
@@ -413,6 +435,69 @@ public class BillRegisterService {
                     checklist.setTenantId(billregister.getTenantId());
                 }
         }
+
+    }
+
+    private List<String> getHeaderMandateFields(String tenantId, RequestInfo requestInfo) {
+
+        List<String> mandatoryFields = new ArrayList<String>();
+
+        FinancialConfiguration financialConfiguration = new FinancialConfiguration();
+        financialConfiguration.setModule(Constants.CONFIG_MODULE_NAME);
+        financialConfiguration.setName(Constants.DEFAULT_TXN_MIS_ATTRRIBUTES_CONFIG_NAME);
+        financialConfiguration.setTenantId(tenantId);
+
+        FinancialConfiguration response = financialConfigurationRepository
+                .findByModuleAndName(financialConfiguration, requestInfo);
+
+        if (response != null)
+            for (FinancialConfigurationValue configValue : response.getValues()) {
+                String value = configValue.getValue();
+                final String header = value.substring(0, value.indexOf("|"));
+                final String mandate = value.substring(value.indexOf("|") + 1);
+                if (mandate.equalsIgnoreCase("M"))
+                    mandatoryFields.add(header);
+            }
+
+        mandatoryFields.add("voucherdate");
+
+        return mandatoryFields;
+    }
+
+    private void validateMandatoryFields(List<String> mandatoryFields, List<BillRegister> vouchers) {
+
+        if (vouchers != null)
+            for (BillRegister voucher : vouchers) {
+
+                checkMandatoryField(mandatoryFields, "fund",
+                        voucher.getFund() != null ? voucher.getFund().getId() : null);
+                checkMandatoryField(mandatoryFields, "function",
+                        voucher.getFunction() != null ? voucher.getFunction().getId() : null);
+                checkMandatoryField(mandatoryFields, "department",
+                        voucher.getDepartment() != null ? voucher.getDepartment().getId() : null);
+                checkMandatoryField(mandatoryFields, "scheme",
+                        voucher.getScheme() != null ? voucher.getScheme().getId() : null);
+                checkMandatoryField(mandatoryFields, "subscheme",
+                        voucher.getSubScheme() != null ? voucher.getSubScheme().getId() : null);
+                checkMandatoryField(mandatoryFields, "functionary",
+                        voucher.getFunctionary() != null ? voucher.getFunctionary().getId() : null);
+                checkMandatoryField(mandatoryFields, "fundsource",
+                        voucher.getFundsource() != null ? voucher.getFundsource().getId() : null);
+                checkMandatoryField(mandatoryFields, "location",
+                        voucher.getLocation() != null ? voucher.getLocation().getId() : null);
+            }
+
+    }
+
+    private void checkMandatoryField(final List<String> mandatoryFields, final String fieldName, final Object value) {
+
+        LOG.warn("checkMandatoryField---------fieldName--" + fieldName);
+        LOG.warn("checkMandatoryField---------value--" + value);
+        LOG.warn("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"
+                + (null != value ? StringUtils.isEmpty(value.toString()) : ""));
+        if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))
+            throw new CustomException(fieldName,
+                    "The field " + fieldName + " is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
     }
 

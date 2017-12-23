@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <header>
       <AppBar
-        title="Data Uploader Service"
+        title="Data Upload Service"
         iconElementRight={<FlatButton href="/" label="Create Job" />}
       />
     </header>

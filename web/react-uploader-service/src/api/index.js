@@ -17,7 +17,8 @@ export const Api = () => {
   });
 
   const authToken = fetchFromLocalStorage("token");
-  const tenantId = fetchFromLocalStorage("tenantId");
+  // const tenantId = fetchFromLocalStorage("tenantId");
+  const tenantId = "default";
 
   const httpRequest = async (endPoint, requestBody, headers) => {
     let apiError = "Api Error";
@@ -99,6 +100,7 @@ export const Api = () => {
   const loginUser = async (username, password) => {
     const grant_type = "password";
     const scope = "read";
+    const tenantId = "default";
     const requestParams = { tenantId, username, password, scope, grant_type };
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",

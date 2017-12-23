@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import CheckboxUi from "../atomic-components/CheckboxUi";
-import { applyJobsStatusFilter } from "../actions/filter";
+import { applyUserJobFilters } from "../actions/userJobs";
 
 class UserJobsStatusFilterContainer extends Component {
   static propTypes = {
-    applyJobsStatusFilter: PropTypes.func.isRequired
+    applyUserJobFilters: PropTypes.func.isRequired
   };
   state = {
     checkedValues: []
@@ -41,7 +41,7 @@ class UserJobsStatusFilterContainer extends Component {
     } else {
       jobStatuses = checkedValues.concat(value);
     }
-    this.props.applyJobsStatusFilter(jobStatuses);
+    this.props.applyUserJobFilters({ statuses: jobStatuses });
     this.setState({ checkedValues: jobStatuses });
   };
 
@@ -58,7 +58,7 @@ class UserJobsStatusFilterContainer extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  applyJobsStatusFilter: jobStatus => dispatch(applyJobsStatusFilter(jobStatus))
+  applyUserJobFilters: filter => dispatch(applyUserJobFilters(filter))
 });
 
 export default connect(null, mapDispatchToProps)(UserJobsStatusFilterContainer);

@@ -2,24 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import DatePicker from "material-ui/DatePicker";
-import { applyFromDateFilter, applyToDateFilter } from "../actions/filter";
+import { applyUserJobFilters } from "../actions/userJobs";
 
 class UserJobsDateFilterContainer extends Component {
   static propTypes = {
-    applyFromDateFilter: PropTypes.func.isRequired,
-    applyToDateFilter: PropTypes.func.isRequired,
-    fromDate: PropTypes.instanceOf(Date),
-    toDate: PropTypes.instanceOf(Date)
+    applyUserJobFilters: PropTypes.func.isRequired
   };
 
   maxDate = new Date();
   render() {
-    const {
-      applyFromDateFilter,
-      applyToDateFilter,
-      fromDate,
-      toDate
-    } = this.props;
+    const { applyUserJobFilters } = this.props;
     const { maxDate } = this;
 
     return (
@@ -27,18 +19,16 @@ class UserJobsDateFilterContainer extends Component {
         <h5>By Date</h5>
         <DatePicker
           onChange={(event, date) => {
-            applyFromDateFilter(date);
+            applyUserJobFilters({ startDate: date });
           }}
           floatingLabelText="From Date"
-          value={fromDate}
           maxDate={maxDate}
         />
         <DatePicker
           onChange={(event, date) => {
-            applyToDateFilter(date);
+            applyUserJobFilters({ endDate: date });
           }}
           floatingLabelText="To Date"
-          value={toDate}
         />
       </div>
     );
@@ -46,15 +36,7 @@ class UserJobsDateFilterContainer extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  applyFromDateFilter: fromDate => dispatch(applyFromDateFilter(fromDate)),
-  applyToDateFilter: toDate => dispatch(applyToDateFilter(toDate))
+  applyUserJobFilters: filter => dispatch(applyUserJobFilters(filter))
 });
 
-const mapStateToProps = (state, ownProps) => ({
-  fromDate: state.filter.fromDate,
-  toDate: state.filter.toDate
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(
-  UserJobsDateFilterContainer
-);
+export default connect(null, mapDispatchToProps)(UserJobsDateFilterContainer);

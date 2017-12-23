@@ -14,7 +14,7 @@ class UserJobsContainer extends Component {
     userJobs: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string,
-        status: PropTypes.oneOf(["completed", "new", "in-progress", "failed"]),
+        status: PropTypes.oneOf(["completed", "new", "InProgress", "failed"]),
         moduleName: PropTypes.string,
         moduleDefiniton: PropTypes.string,
         download: PropTypes.shape({
@@ -25,36 +25,32 @@ class UserJobsContainer extends Component {
     )
   };
 
-  tableHeader = {
-    fields: [
-      "Job ID",
-      "Module Name",
-      "Module Definition",
-      "Status",
-      "Download"
-    ],
-    fieldsType: ["label", "label", "label", "label", "hyperlink"]
-  };
+  // ordering of row in a schema is important to preserve the ordering in the table
+  tableSchema = [
+    { key: "id", label: "Job ID", fieldType: "label" },
+    { key: "moduleName", label: "Module", fieldType: "label" },
+    { key: "status", label: "Status", fieldType: "label" },
+    { key: "download", label: "Download", fieldType: "hyperlink" }
+  ];
 
   componentDidMount() {
     this.props.fetchUserJobs();
   }
 
   render() {
-    const { tableHeader } = this;
+    const { tableSchema } = this;
     const { userJobs, isFetching } = this.props;
     return (
       <div className="container">
         <div className="row">
           <div className="col-lg-3">
-            <h4>Filter Jobs</h4>
             <UserJobFilters />
           </div>
           <div className="col-lg-9">
             {isFetching ? (
               <LoadingIndicator />
             ) : (
-              <TableUi tableHeader={tableHeader} tableBody={userJobs} />
+              <TableUi tableSchema={tableSchema} tableBody={userJobs} />
             )}
           </div>
         </div>
@@ -63,13 +59,17 @@ class UserJobsContainer extends Component {
   }
 }
 
+const filterUserJobs = userJobs => {
+  return userJobs.filter(userJob => !userJob.softDelete);
+};
+
 const mapDispatchToProps = dispatch => ({
   fetchUserJobs: () => dispatch(fetchUserJobs())
 });
 
 const mapStateToProps = (state, ownProps) => ({
   isFetching: state.userJobs.isFetching,
-  userJobs: state.userJobs.items
+  userJobs: filterUserJobs(state.userJobs.items)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserJobsContainer);

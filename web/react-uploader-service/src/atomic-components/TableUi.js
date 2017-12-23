@@ -10,9 +10,9 @@ import {
 } from "material-ui/Table";
 import FlatButton from "material-ui/FlatButton";
 
-const TableUi = ({ tableHeader, tableBody, styles }) => {
-  const renderTableCell = (fieldType, row, fieldName) => {
-    const field = row[fieldName];
+const TableUi = ({ tableSchema, tableBody, styles }) => {
+  const renderTableCell = (fieldType, row, fieldKey) => {
+    const field = row[fieldKey];
 
     switch (fieldType) {
       case "label":
@@ -37,9 +37,9 @@ const TableUi = ({ tableHeader, tableBody, styles }) => {
     return (
       <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
         <TableRow>
-          {tableHeader.fields.map((fieldHeader, index) => {
+          {tableSchema.map((row, index) => {
             return (
-              <TableHeaderColumn key={index}>{fieldHeader}</TableHeaderColumn>
+              <TableHeaderColumn key={index}>{row.label}</TableHeaderColumn>
             );
           })}
         </TableRow>
@@ -53,11 +53,12 @@ const TableUi = ({ tableHeader, tableBody, styles }) => {
         {tableBody.map((row, index) => {
           return (
             <TableRow key={index}>
-              {Object.keys(row).map((fieldName, index) => {
-                const fieldType = tableHeader.fieldsType[index];
+              {tableSchema.map(schema => {
+                const fieldKey = schema.key;
+                const fieldType = schema.fieldType;
                 return (
                   <TableRowColumn key={index}>
-                    {renderTableCell(fieldType, row, fieldName)}
+                    {renderTableCell(fieldType, row, fieldKey)}
                   </TableRowColumn>
                 );
               })}
@@ -77,10 +78,13 @@ const TableUi = ({ tableHeader, tableBody, styles }) => {
 };
 
 TableUi.propTypes = {
-  tableHeader: PropTypes.shape({
-    fields: PropTypes.array.isRequired,
-    fieldsType: PropTypes.array.isRequired
-  }).isRequired,
+  tableSchema: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      fieldType: PropTypes.string.isRequired
+    }).isRequired
+  ),
   tableBody: PropTypes.arrayOf(PropTypes.object).isRequired,
   styles: PropTypes.object
 };

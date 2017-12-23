@@ -24,7 +24,6 @@ export const createJob = (moduleName, definitionName, file) => {
     try {
       // first upload the file
       const requestFilePath = await Api().uploadFile(moduleName, file);
-      console.log(definitionName);
       //create a request for job create
       const jobId = await Api().createJob(
         requestFilePath,

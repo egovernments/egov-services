@@ -13,6 +13,8 @@ const transformUserJobs = userJobs => {
     const status = userJob.status;
     const moduleName = userJob.moduleName;
     const moduleDefiniton = userJob.defName;
+    const startTime = userJob.startTime;
+    const endTime = userJob.endTime;
     const download = { label: "Download" };
 
     if (status === "completed") {
@@ -24,10 +26,51 @@ const transformUserJobs = userJobs => {
     return {
       id,
       moduleName,
-      moduleDefiniton,
       status,
-      download
+      download,
+      startTime,
+      endTime,
+      softDelete: false
     };
+  });
+};
+
+// TODO : build a generic filter which is agnostic of the keys and value
+const filterUserJobs = (filter, userJobs) => {
+  return userJobs.map(userJob => {
+    let shouldInclude = true;
+    // apply the filters
+    Object.keys(filter).forEach(filterKey => {
+      let filterValue = filter[filterKey];
+
+      if (
+        Array.isArray(filterValue) &&
+        filterValue.filter(value => value.trim().length > 0).length < 1
+      ) {
+        filterValue = null;
+      }
+
+      if (filterValue) {
+        switch (filterKey) {
+          case "startDate":
+            shouldInclude &=
+              new Date(userJob.startTime).getTime() >= filterValue;
+            break;
+          case "endDate":
+            shouldInclude &= new Date(userJob.endTime).getTime() <= filterValue;
+            break;
+          case "statuses":
+            shouldInclude &= filterValue.indexOf(userJob.status) !== -1;
+            break;
+          case "codes":
+            shouldInclude &= filterValue.indexOf(userJob.id) !== -1;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+    return { ...userJob, softDelete: !shouldInclude };
   });
 };
 
@@ -44,6 +87,9 @@ const userJobs = (state = initialState, action) => {
       };
     case actionTypes.FETCH_USER_JOBS_FAILURE:
       return { ...state, error: true, isFetching: false };
+
+    case actionTypes.FILTER_USER_JOBS:
+      return { ...state, items: filterUserJobs(action.filter, state.items) };
     default:
       return state;
   }

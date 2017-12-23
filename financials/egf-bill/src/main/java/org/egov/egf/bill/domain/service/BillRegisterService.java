@@ -282,9 +282,9 @@ public class BillRegisterService {
                     billRegister.setDepartment(departmentService.getDepartment(billRegister.getTenantId(),
                             billRegister.getDepartment().getCode(), billRegisterRequest.getRequestInfo()));
 
-                if (billRegister.getLocation() != null) {
-                    billRegister.getLocation().setTenantId(billRegister.getTenantId());
-                    final Boundary location = boundaryRepository.findById(billRegister.getLocation());
+                if (billRegister.getLocation() != null && billRegister.getLocation().getCode() != null) {
+                    final Boundary location = boundaryRepository.fetchBoundaryByCode(billRegister.getLocation().getCode(),
+                            billRegister.getTenantId());
                     if (location == null ||
                             location.getId() == null || location.getId().isEmpty())
                         throw new CustomException("location",

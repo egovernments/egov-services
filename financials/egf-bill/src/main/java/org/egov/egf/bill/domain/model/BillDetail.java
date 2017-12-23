@@ -81,6 +81,9 @@ public class BillDetail {
      **/
     private String id;
 
+    @JsonProperty("bill")
+    private String bill = null;
+
     /**
      * order id of the BillDetail
      * @return orderId

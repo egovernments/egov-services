@@ -1,12 +1,13 @@
 package org.egov.egf.bill.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.bill.domain.model.BillChecklistSearch;
-import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.persistence.entity.BillChecklistEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class BillChecklistJdbcRepository extends JdbcRepository {
         delete(BillChecklistEntity.TABLE_NAME, tenantId, "bill", billNumber);
     }
 
-    public List<Checklist> search(final BillChecklistSearch searchRequest) {
+    public List<BillChecklist> search(final BillChecklistSearch searchRequest) {
 
         String searchQuery = "select * from " + BillChecklistEntity.TABLE_NAME + " :condition ";
 
@@ -44,6 +45,12 @@ public class BillChecklistJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("bill =:bill");
             paramValues.put("bill", searchRequest.getBill());
+        }
+
+        if (searchRequest.getBillNumbers() != null) {
+            addAnd(params);
+            params.append("bill in (:billNumbers)");
+            paramValues.put("billNumbers", new ArrayList<>(Arrays.asList(searchRequest.getBillNumbers().split(","))));
         }
 
         if (params.length() > 0)

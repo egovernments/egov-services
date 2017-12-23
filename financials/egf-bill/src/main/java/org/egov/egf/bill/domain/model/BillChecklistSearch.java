@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BillChecklistSearch extends BillChecklist {
     private String ids;
+    private String billNumbers;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

@@ -2,19 +2,98 @@ package org.egov.egf.bill.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.egf.bill.domain.model.BillChecklist;
+import org.egov.egf.bill.domain.model.BillChecklistSearch;
+import org.egov.egf.bill.domain.model.BillDetail;
+import org.egov.egf.bill.domain.model.BillDetailSearch;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.domain.model.BillStatus;
 import org.egov.egf.bill.domain.model.Pagination;
+import org.egov.egf.bill.domain.repository.BoundaryRepository;
+import org.egov.egf.bill.domain.repository.ChecklistRepository;
+import org.egov.egf.bill.domain.service.BillStatusService;
+import org.egov.egf.bill.domain.service.DepartmentService;
+import org.egov.egf.bill.domain.service.FunctionService;
+import org.egov.egf.bill.domain.service.FunctionaryService;
+import org.egov.egf.bill.domain.service.FundService;
+import org.egov.egf.bill.domain.service.FundSourceService;
+import org.egov.egf.bill.domain.service.SchemeService;
+import org.egov.egf.bill.domain.service.SubSchemeService;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
+import org.egov.egf.bill.web.contract.Boundary;
+import org.egov.egf.bill.web.contract.Department;
+import org.egov.egf.bill.web.contract.Function;
+import org.egov.egf.bill.web.contract.Functionary;
+import org.egov.egf.bill.web.contract.Fund;
+import org.egov.egf.bill.web.contract.Fundsource;
+import org.egov.egf.bill.web.contract.Scheme;
+import org.egov.egf.bill.web.contract.SubScheme;
+import org.egov.egf.bill.web.repository.AccountDetailKeyRepository;
+import org.egov.egf.bill.web.repository.AccountDetailTypeRepository;
+import org.egov.egf.bill.web.repository.ChartOfAccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class BillRegisterJdbcRepository extends JdbcRepository {
+
+    @Autowired
+    private SchemeService schemeService;
+
+    @Autowired
+    private BillDetailJdbcRepository billDetailJdbcRepository;
+
+    @Autowired
+    private BillPayeeDetailJdbcRepository billPayeeDetailJdbcRepository;
+
+    @Autowired
+    private BillChecklistJdbcRepository billChecklistJdbcRepository;
+
+    @Autowired
+    private BoundaryRepository boundaryRepository;
+
+    @Autowired
+    private FunctionaryService functionaryService;
+
+    @Autowired
+    private FunctionService functionService;
+
+    @Autowired
+    private ChartOfAccountRepository chartOfAccountRepository;
+
+    @Autowired
+    private ChecklistRepository checklistRepository;
+
+    @Autowired
+    private AccountDetailTypeRepository accountDetailTypeRepository;
+
+    @Autowired
+    private AccountDetailKeyRepository accountDetailKeyRepository;
+
+    @Autowired
+    private FundSourceService fundSourceService;
+
+    @Autowired
+    private BillStatusService billStatusService;
+
+    @Autowired
+    private FundService fundService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
+    @Autowired
+    private SubSchemeService subSchemeService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -288,13 +367,375 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
                 row);
 
         page.setTotalResults(billRegisterEntities.size());
-        final List<BillRegister> billregisters = new ArrayList<>();
+        final List<BillRegister> billRegisterList = new ArrayList<>();
+        StringBuffer billNumbers = new StringBuffer();
 
-        for (final BillRegisterEntity billRegisterEntity : billRegisterEntities)
-            billregisters.add(billRegisterEntity.toDomain());
+        for (final BillRegisterEntity billRegisterEntity : billRegisterEntities) {
 
-        page.setPagedData(billregisters);
+            if (billNumbers.length() >= 1)
+                billNumbers.append(",");
+
+            billNumbers.append(billRegisterEntity.getBillNumber());
+
+            billRegisterList.add(billRegisterEntity.toDomain());
+
+        }
+
+        if (billRegisterList != null && !billRegisterList.isEmpty()) {
+
+            populateBillDetail(billRegisterList, billNumbers.toString());
+            
+            populateBillChecklist(billRegisterList, billNumbers.toString());
+
+            populateBillStatuses(billRegisterList);
+
+            populateDepartments(billRegisterList);
+
+            populateFunctionarys(billRegisterList);
+
+            populateFunctions(billRegisterList);
+
+            populateFunds(billRegisterList);
+
+            populateFundsources(billRegisterList);
+
+            populateSchemes(billRegisterList);
+
+            populateSubSchemes(billRegisterList);
+
+            populateBoundarys(billRegisterList);
+
+        }
+
+        page.setPagedData(billRegisterList);
         return page;
+    }
+
+    private void populateBillDetail(List<BillRegister> billRegisterList, String billRegisterCodes) {
+        Map<String, List<BillDetail>> billDetailMap = new HashMap<>();
+        String tenantId = null;
+        BillDetailSearch bds;
+        bds = new BillDetailSearch();
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        bds.setBillNumbers(billRegisterCodes);
+        bds.setTenantId(tenantId);
+
+        List<BillDetail> billDetail = billDetailJdbcRepository.search(bds);
+
+        for (BillDetail bd : billDetail) {
+
+            if (billDetailMap.get(bd.getBill()) == null) {
+
+                billDetailMap.put(bd.getBill(), Collections.singletonList(bd));
+
+            } else {
+
+                List<BillDetail> bdList = new ArrayList<>(billDetailMap.get(bd.getBill()));
+
+                bdList.add(bd);
+
+                billDetailMap.put(bd.getBill(), bdList);
+
+            }
+        }
+
+        for (BillRegister billRegister : billRegisterList) {
+
+            billRegister.setBillDetails(billDetailMap.get(billRegister.getBillNumber()));
+
+        }
+
+    }
+
+    private void populateBillChecklist(List<BillRegister> billRegisterList, String billRegisterCodes) {
+        Map<String, List<BillChecklist>> billChecklistMap = new HashMap<>();
+        String tenantId = null;
+        BillChecklistSearch bds;
+        bds = new BillChecklistSearch();
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        bds.setBillNumbers(billRegisterCodes);
+        bds.setTenantId(tenantId);
+
+        List<BillChecklist> billChecklist = billChecklistJdbcRepository.search(bds);
+
+        for (BillChecklist bd : billChecklist) {
+
+            if (billChecklistMap.get(bd.getBill().getBillNumber()) == null) {
+
+                billChecklistMap.put(bd.getBill().getBillNumber(), Collections.singletonList(bd));
+
+            } else {
+
+                List<BillChecklist> bdList = new ArrayList<>(billChecklistMap.get(bd.getBill().getBillNumber()));
+
+                bdList.add(bd);
+
+                billChecklistMap.put(bd.getBill().getBillNumber(), bdList);
+
+            }
+        }
+
+        for (BillRegister billRegister : billRegisterList) {
+
+           // billRegister.setBillChecklist(billChecklistMap.get(billRegister.getBillNumber()));
+
+        }
+
+    }
+
+    private void populateFunds(List<BillRegister> billRegisterList) {
+        Map<String, Fund> fundMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<Fund> funds = fundService.getAll(tenantId, new RequestInfo());
+
+        for (Fund ft : funds) {
+            fundMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getFund() != null && br.getFund().getCode() != null
+                    && !br.getFund().getCode().isEmpty()) {
+
+                br.setFund(fundMap.get(br.getFund().getCode()));
+            }
+
+        }
+    }
+
+    private void populateFunctions(List<BillRegister> billRegisterList) {
+        Map<String, Function> functionMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<Function> functions = functionService.getAll(tenantId, new RequestInfo());
+
+        for (Function ft : functions) {
+            functionMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getFunction() != null && br.getFunction().getCode() != null
+                    && !br.getFunction().getCode().isEmpty()) {
+
+                br.setFunction(functionMap.get(br.getFunction().getCode()));
+            }
+
+        }
+    }
+
+    private void populateFunctionarys(List<BillRegister> billRegisterList) {
+        Map<String, Functionary> functionaryMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<Functionary> functionarys = functionaryService.getAll(tenantId, new RequestInfo());
+
+        for (Functionary ft : functionarys) {
+            functionaryMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getFunctionary() != null && br.getFunctionary().getCode() != null
+                    && !br.getFunctionary().getCode().isEmpty()) {
+
+                br.setFunctionary(functionaryMap.get(br.getFunctionary().getCode()));
+            }
+
+        }
+    }
+
+    private void populateFundsources(List<BillRegister> billRegisterList) {
+        Map<String, Fundsource> fundsourceMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<Fundsource> fundsources = fundSourceService.getAll(tenantId, new RequestInfo());
+
+        for (Fundsource ft : fundsources) {
+            fundsourceMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getFundsource() != null && br.getFundsource().getCode() != null
+                    && !br.getFundsource().getCode().isEmpty()) {
+
+                br.setFundsource(fundsourceMap.get(br.getFundsource().getCode()));
+            }
+
+        }
+    }
+
+    private void populateSchemes(List<BillRegister> billRegisterList) {
+        Map<String, Scheme> schemeMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<Scheme> schemes = schemeService.getAll(tenantId, new RequestInfo());
+
+        for (Scheme ft : schemes) {
+            schemeMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getScheme() != null && br.getScheme().getCode() != null
+                    && !br.getScheme().getCode().isEmpty()) {
+
+                br.setScheme(schemeMap.get(br.getScheme().getCode()));
+            }
+
+        }
+    }
+
+    private void populateSubSchemes(List<BillRegister> billRegisterList) {
+        Map<String, SubScheme> subSchemeMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<SubScheme> subSchemes = subSchemeService.getAll(tenantId, new RequestInfo());
+
+        for (SubScheme ft : subSchemes) {
+            subSchemeMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getSubScheme() != null && br.getSubScheme().getCode() != null
+                    && !br.getSubScheme().getCode().isEmpty()) {
+
+                br.setSubScheme(subSchemeMap.get(br.getSubScheme().getCode()));
+            }
+
+        }
+    }
+
+    private void populateBillStatuses(List<BillRegister> billRegisterList) {
+        Map<String, BillStatus> billStatusMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<BillStatus> billStatuss = billStatusService.getAll(tenantId, new RequestInfo());
+
+        for (BillStatus ft : billStatuss) {
+            billStatusMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getStatus() != null && br.getStatus().getCode() != null
+                    && !br.getStatus().getCode().isEmpty()) {
+
+                br.setStatus(billStatusMap.get(br.getStatus().getCode()));
+            }
+
+        }
+    }
+
+    private void populateDepartments(List<BillRegister> billRegisterList) {
+        Map<String, Department> departmentMap = new HashMap<>();
+        String tenantId = null;
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        List<Department> departments = departmentService.getAll(tenantId, new RequestInfo());
+
+        for (Department ft : departments) {
+            departmentMap.put(ft.getCode(), ft);
+        }
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getDepartment() != null && br.getDepartment().getCode() != null
+                    && !br.getDepartment().getCode().isEmpty()) {
+
+                br.setDepartment(departmentMap.get(br.getDepartment().getCode()));
+            }
+
+        }
+    }
+
+    private void populateBoundarys(List<BillRegister> billRegisterList) {
+
+        StringBuffer boundaryCodes = new StringBuffer();
+        Set<String> boundaryCodesSet = new HashSet<>();
+
+        for (BillRegister br : billRegisterList) {
+
+            if (br.getLocation() != null && br.getLocation().getCode() != null
+                    && !br.getLocation().getCode().isEmpty()) {
+
+                boundaryCodesSet.add(br.getLocation().getCode());
+
+            }
+
+        }
+
+        List<String> locationCodes = new ArrayList(boundaryCodesSet);
+
+        for (String code : locationCodes) {
+
+            if (boundaryCodes.length() >= 1)
+                boundaryCodes.append(",");
+
+            boundaryCodes.append(code);
+
+        }
+
+        String tenantId = null;
+        Map<String, Boundary> boundaryMap = new HashMap<>();
+
+        if (billRegisterList != null && !billRegisterList.isEmpty())
+            tenantId = billRegisterList.get(0).getTenantId();
+
+        if (boundaryCodes != null && boundaryCodes.length() > 0) {
+
+            List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
+
+            for (Boundary bd : boundarys) {
+
+                boundaryMap.put(bd.getCode(), bd);
+
+            }
+
+            for (BillRegister br : billRegisterList) {
+
+                if (br.getLocation() != null && br.getLocation().getCode() != null
+                        && !br.getLocation().getCode().isEmpty()) {
+
+                    br.setLocation(boundaryMap.get(br.getLocation().getCode()));
+                }
+
+            }
+
+        }
+
     }
 
 }

@@ -1,5 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +53,12 @@ public class BillDetailJdbcRepository extends JdbcRepository {
             paramValues.put("billNumber", searchRequest.getBillNumber());
         }
 
+        if (searchRequest.getBillNumbers() != null) {
+            addAnd(params);
+            params.append("bill in (:billNumbers)");
+            paramValues.put("billNumbers",
+                    new ArrayList<>(Arrays.asList(searchRequest.getBillNumbers().split(","))));
+        }
         if (params.length() > 0)
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());
         else

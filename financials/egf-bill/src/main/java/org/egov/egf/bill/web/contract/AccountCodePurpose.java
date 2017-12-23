@@ -31,7 +31,7 @@
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
@@ -45,51 +45,24 @@ import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-/**
- *
- * @author mani
- *
- */
-@NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Getter
+@NoArgsConstructor
 @Setter
+@ToString
 @Builder
-/*
- * Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department
- * discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this.
- * Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only
- * for the internal control of the ULB.
- */
-public class Functionary {
+public class AccountCodePurpose {
 
-    /**
-     * id is the unique identifier and it is generated internally
-     */
     private String id;
 
-    /**
-     * code is uniue identifier and ULB may refer this for short name.
-     */
     @NotNull
-    @Length(max = 16, min = 1)
-    private String code;
-
-    /**
-     * name is the name of the functionary
-     */
-    @NotNull
-    @Length(max = 256, min = 1)
+    @Length(max = 256, min = 3)
     private String name;
-
-    /**
-     * active states whether the functionary is active or not . Only active functionaries will be used in transaction
-     */
-    @NotNull
-    private Boolean active;
-
 }

@@ -2,7 +2,6 @@ package org.egov;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -17,14 +16,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Import({ TracerConfiguration.class })
 @SpringBootApplication
@@ -58,30 +50,6 @@ public class EgfBillApplication {
         final InetSocketTransportAddress transportAddress = new InetSocketTransportAddress(esAddress,
                 elasticSearchTransportPort);
         client = new PreBuiltTransportClient(settings).addTransportAddress(transportAddress);
-    }
-
-    @Bean
-    public MappingJackson2HttpMessageConverter jacksonConverter() {
-
-        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
-        mapper.setTimeZone(TimeZone.getTimeZone(timeZone));
-        converter.setObjectMapper(mapper);
-        return converter;
-    }
-
-    @Bean
-    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
-        return new WebMvcConfigurerAdapter() {
-
-            @Override
-            public void configureContentNegotiation(final ContentNegotiationConfigurer configurer) {
-                configurer.defaultContentType(MediaType.APPLICATION_JSON_UTF8);
-            }
-
-        };
     }
 
     @Bean

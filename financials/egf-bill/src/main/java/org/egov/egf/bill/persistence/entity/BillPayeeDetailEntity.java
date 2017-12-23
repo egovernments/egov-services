@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.egov.egf.bill.domain.model.AuditDetails;
 import org.egov.egf.bill.domain.model.BillPayeeDetail;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.egf.bill.web.contract.AccountDetailKey;
+import org.egov.egf.bill.web.contract.AccountDetailType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,8 +36,8 @@ public class BillPayeeDetailEntity {
         final BillPayeeDetail billPayeeDetail = new BillPayeeDetail();
         billPayeeDetail.setTenantId(tenantId);
         billPayeeDetail.setId(id);
-        billPayeeDetail.setAccountDetailType(AccountDetailTypeContract.builder().id(accountDetailType).build());
-        billPayeeDetail.setAccountDetailKey(AccountDetailKeyContract.builder().id(accountDetailKey).build());
+        billPayeeDetail.setAccountDetailType(AccountDetailType.builder().id(accountDetailType).build());
+        billPayeeDetail.setAccountDetailKey(AccountDetailKey.builder().id(accountDetailKey).build());
         billPayeeDetail.setAmount(amount);
         billPayeeDetail.setAuditDetails(new AuditDetails());
         billPayeeDetail.getAuditDetails().setCreatedBy(createdBy);

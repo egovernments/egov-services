@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.AuditDetails;
 import org.egov.egf.bill.domain.model.BillChecklist;
 import org.egov.egf.bill.domain.model.BillDetail;
@@ -17,33 +16,19 @@ import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
 import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.model.ChecklistSearch;
+import org.egov.egf.bill.domain.model.Pagination;
 import org.egov.egf.bill.domain.repository.BillRegisterRepository;
 import org.egov.egf.bill.domain.repository.BoundaryRepository;
 import org.egov.egf.bill.domain.repository.ChecklistRepository;
-import org.egov.egf.bill.domain.repository.DepartmentRepository;
+import org.egov.egf.bill.web.contract.AccountDetailKey;
+import org.egov.egf.bill.web.contract.AccountDetailType;
 import org.egov.egf.bill.web.contract.Boundary;
-import org.egov.egf.bill.web.contract.Department;
+import org.egov.egf.bill.web.contract.ChartOfAccount;
+import org.egov.egf.bill.web.contract.Function;
+import org.egov.egf.bill.web.repository.AccountDetailKeyContractRepository;
+import org.egov.egf.bill.web.repository.AccountDetailTypeContractRepository;
+import org.egov.egf.bill.web.repository.ChartOfAccountContractRepository;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
-import org.egov.egf.master.web.contract.FinancialStatusContract;
-import org.egov.egf.master.web.contract.FunctionContract;
-import org.egov.egf.master.web.contract.FunctionaryContract;
-import org.egov.egf.master.web.contract.FundContract;
-import org.egov.egf.master.web.contract.FundsourceContract;
-import org.egov.egf.master.web.contract.SchemeContract;
-import org.egov.egf.master.web.contract.SubSchemeContract;
-import org.egov.egf.master.web.repository.AccountDetailKeyContractRepository;
-import org.egov.egf.master.web.repository.AccountDetailTypeContractRepository;
-import org.egov.egf.master.web.repository.ChartOfAccountContractRepository;
-import org.egov.egf.master.web.repository.FinancialStatusContractRepository;
-import org.egov.egf.master.web.repository.FunctionContractRepository;
-import org.egov.egf.master.web.repository.FunctionaryContractRepository;
-import org.egov.egf.master.web.repository.FundContractRepository;
-import org.egov.egf.master.web.repository.FundsourceContractRepository;
-import org.egov.egf.master.web.repository.SchemeContractRepository;
-import org.egov.egf.master.web.repository.SubSchemeContractRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,16 +41,16 @@ public class BillRegisterService {
     private BillRegisterRepository billRegisterRepository;
 
     @Autowired
-    private SchemeContractRepository schemeContractRepository;
+    private SchemeService schemeService;
 
     @Autowired
     private BoundaryRepository boundaryRepository;
 
     @Autowired
-    private FunctionaryContractRepository functionaryContractRepository;
+    private FunctionaryService functionaryService;
 
     @Autowired
-    private FunctionContractRepository functionContractRepository;
+    private FunctionService functionService;
 
     @Autowired
     private ChartOfAccountContractRepository chartOfAccountContractRepository;
@@ -80,24 +65,24 @@ public class BillRegisterService {
     private AccountDetailKeyContractRepository accountDetailKeyContractRepository;
 
     @Autowired
-    private FundsourceContractRepository fundsourceContractRepository;
+    private FundSourceService fundSourceService;
 
     @Autowired
-    private FinancialStatusContractRepository financialStatusContractRepository;
+    private BillStatusService billStatusService;
 
     @Autowired
-    private FundContractRepository fundContractRepository;
+    private FundService fundService;
 
     @Autowired
-    private DepartmentRepository departmentRepository;
+    private DepartmentService departmentService;
 
     @Autowired
-    private SubSchemeContractRepository subSchemeContractRepository;
+    private SubSchemeService subSchemeService;
 
     @Transactional
     public BillRegisterRequest create(BillRegisterRequest billRegisterRequest) {
 
-        fetchRelated(billRegisterRequest.getBillRegisters(), billRegisterRequest.getRequestInfo());
+        fetchRelated(billRegisterRequest);
         validate(billRegisterRequest);
         populateAuditDetails(billRegisterRequest);
         populateBillRegisterIds(billRegisterRequest.getBillRegisters());
@@ -109,7 +94,7 @@ public class BillRegisterService {
     @Transactional
     public BillRegisterRequest update(BillRegisterRequest billRegisterRequest) {
 
-        fetchRelated(billRegisterRequest.getBillRegisters(), billRegisterRequest.getRequestInfo());
+        fetchRelated(billRegisterRequest);
         populateAuditDetails(billRegisterRequest);
         populateDependentEntityIds(billRegisterRequest.getBillRegisters());
         validate(billRegisterRequest);
@@ -159,129 +144,142 @@ public class BillRegisterService {
 
     }
 
-    public List<BillRegister> fetchRelated(final List<BillRegister> billregisters, final RequestInfo requestInfo) {
-        if (null != billregisters)
-            for (final BillRegister billRegister : billregisters) {
-                // fetch related items
-                if (billRegister.getStatus() != null) {
-                    billRegister.getStatus().setTenantId(billRegister.getTenantId());
-                    final FinancialStatusContract status = financialStatusContractRepository
-                            .findById(billRegister.getStatus(), requestInfo);
-                    if (status == null || status.getCode() == null || status.getCode().isEmpty())
-                        throw new CustomException("status",
-                                "Given status is Invalid: " + status.getCode());
-                    billRegister.setStatus(status);
-                }
-                if (billRegister.getFund() != null) {
-                    billRegister.getFund().setTenantId(billRegister.getTenantId());
-                    final FundContract fund = fundContractRepository
-                            .findById(billRegister.getFund(), requestInfo);
-                    if (fund == null || fund.getCode() == null || fund.getCode().isEmpty())
-                        throw new CustomException("fund",
-                                "Given fund is Invalid: " + fund.getCode());
-                    billRegister.setFund(fund);
-                }
-                if (billRegister.getFunction() != null) {
-                    billRegister.getFunction().setTenantId(billRegister.getTenantId());
-                    final FunctionContract function = functionContractRepository
-                            .findById(billRegister.getFunction(), requestInfo);
-                    if (function == null || function.getCode() == null || function.getCode().isEmpty())
-                        throw new CustomException("function",
-                                "Given function is Invalid: " + function.getCode());
-                    billRegister.setFunction(function);
-                }
-                if (billRegister.getFundsource() != null) {
-                    billRegister.getFundsource().setTenantId(billRegister.getTenantId());
-                    final FundsourceContract fundsource = fundsourceContractRepository
-                            .findById(billRegister.getFundsource(), requestInfo);
-                    if (fundsource == null || fundsource.getCode() == null || fundsource.getCode().isEmpty())
-                        throw new CustomException("fundsource",
-                                "Given fundsource is Invalid: " + fundsource.getCode());
-                    billRegister.setFundsource(fundsource);
-                }
-                if (billRegister.getScheme() != null) {
-                    billRegister.getScheme().setTenantId(billRegister.getTenantId());
-                    final SchemeContract scheme = schemeContractRepository
-                            .findById(billRegister.getScheme(), requestInfo);
-                    if (scheme == null || scheme.getCode() == null || scheme.getCode().isEmpty())
-                        throw new CustomException("scheme",
-                                "Given scheme is Invalid: " + scheme.getCode());
-                    billRegister.setScheme(scheme);
-                }
-                if (billRegister.getSubScheme() != null) {
-                    billRegister.getSubScheme().setTenantId(billRegister.getTenantId());
-                    final SubSchemeContract subScheme = subSchemeContractRepository
-                            .findById(billRegister.getSubScheme(), requestInfo);
-                    if (subScheme == null || subScheme.getCode() == null || subScheme.getCode().isEmpty())
-                        throw new CustomException("subScheme",
-                                "Given subScheme is Invalid: " + subScheme.getCode());
-                    billRegister.setSubScheme(subScheme);
-                }
-                if (billRegister.getFunctionary() != null) {
-                    billRegister.getFunctionary().setTenantId(billRegister.getTenantId());
-                    final FunctionaryContract functionary = functionaryContractRepository
-                            .findById(billRegister.getFunctionary(), requestInfo);
-                    if (functionary == null || functionary.getCode() == null || functionary.getCode().isEmpty())
-                        throw new CustomException("functionary",
-                                "Given functionary is Invalid: " + functionary.getCode());
-                    billRegister.setFunctionary(functionary);
-                }
-                if (billRegister.getDivision() != null) {
-                    billRegister.getDivision().setTenantId(billRegister.getTenantId());
-                    final Boundary division = boundaryRepository
-                            .findById(billRegister.getDivision());
-                    if (division == null || division.getId() == null || division.getId().isEmpty())
-                        throw new CustomException("division",
-                                "Given division is Invalid: " + division.getId());
-                    billRegister.setDivision(division);
-                }
-                if (billRegister.getDepartment() != null) {
-                    billRegister.getDepartment().setTenantId(billRegister.getTenantId());
-                    final Department department = departmentRepository
-                            .findById(billRegister.getDepartment());
-                    if (department == null || department.getId() == null || department.getId().isEmpty())
-                        throw new CustomException("department",
-                                "Given department is Invalid: " + department.getId());
-                    billRegister.setDepartment(department);
-                }
-                fetchRelatedForBillDetail(billRegister, requestInfo);
-                fetchRelatedForBillPayeeDetail(billRegister, requestInfo);
+    public void fetchRelated(final BillRegisterRequest billRegisterRequest) {
+        if (null != billRegisterRequest.getBillRegisters())
+            for (final BillRegister billRegister : billRegisterRequest.getBillRegisters()) {
+
+                // Validate Bill Status
+
+                if (billRegister.getStatus() != null && (billRegister.getStatus().getCode() == null
+                        || billRegister.getStatus().getCode().isEmpty()))
+                    throw new CustomException("BillStatus",
+                            "The field BillStatus Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getStatus() != null && billRegister.getStatus().getCode() != null)
+                    billRegister.setStatus(billStatusService.getBillStatus(billRegister.getTenantId(),
+                            billRegister.getStatus().getCode(), billRegisterRequest.getRequestInfo()));
+
+                // Validate Fund
+
+                if (billRegister.getFund() != null && (billRegister.getFund().getCode() == null
+                        || billRegister.getFund().getCode().isEmpty()))
+                    throw new CustomException("Fund",
+                            "The field Fund Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getFund() != null && billRegister.getFund().getCode() != null)
+                    billRegister.setFund(fundService.getFund(billRegister.getTenantId(),
+                            billRegister.getFund().getCode(), billRegisterRequest.getRequestInfo()));
+
+                // Validate Function
+
+                if (billRegister.getFunction() != null && (billRegister.getFunction().getCode() == null
+                        || billRegister.getFunction().getCode().isEmpty()))
+                    throw new CustomException("Function",
+                            "The field Function Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getFunction() != null && billRegister.getFunction().getCode() != null)
+                    billRegister.setFunction(functionService.getFunction(billRegister.getTenantId(),
+                            billRegister.getFunction().getCode(), billRegisterRequest.getRequestInfo()));
+
+                // Validate Functionary
+
+                if (billRegister.getFunctionary() != null && (billRegister.getFunctionary().getCode() == null
+                        || billRegister.getFunctionary().getCode().isEmpty()))
+                    throw new CustomException("Functionary",
+                            "The field Functionary Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getFunctionary() != null && billRegister.getFunctionary().getCode() != null)
+                    billRegister.setFunctionary(functionaryService.getFunctionary(billRegister.getTenantId(),
+                            billRegister.getFunctionary().getCode(), billRegisterRequest.getRequestInfo()));
+
+                // Validate FundSource
+
+                if (billRegister.getFundsource() != null && (billRegister.getFundsource().getCode() == null
+                        || billRegister.getFundsource().getCode().isEmpty()))
+                    throw new CustomException("FundSource",
+                            "The field FundSource Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getFundsource() != null && billRegister.getFundsource().getCode() != null)
+                    billRegister.setFundsource(fundSourceService.getFundSource(billRegister.getTenantId(),
+                            billRegister.getFundsource().getCode(), billRegisterRequest.getRequestInfo()));
+
+                // Validate Scheme
+
+                if (billRegister.getScheme() != null && (billRegister.getScheme().getCode() == null
+                        || billRegister.getScheme().getCode().isEmpty()))
+                    throw new CustomException("Scheme",
+                            "The field Scheme Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getScheme() != null && billRegister.getScheme().getCode() != null)
+                    billRegister.setScheme(schemeService.getScheme(billRegister.getTenantId(),
+                            billRegister.getScheme().getCode(), billRegisterRequest.getRequestInfo()));
+
+                // Validate SubScheme
+
+                if (billRegister.getSubScheme() != null && (billRegister.getSubScheme().getCode() == null
+                        || billRegister.getSubScheme().getCode().isEmpty()))
+                    throw new CustomException("SubScheme",
+                            "The field SubScheme Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getSubScheme() != null && billRegister.getSubScheme().getCode() != null)
+                    billRegister.setSubScheme(subSchemeService.getSubScheme(billRegister.getTenantId(),
+                            billRegister.getSubScheme().getCode(), billRegisterRequest.getRequestInfo()));
+
+                // Validate Department
+
+                if (billRegister.getDepartment() != null && (billRegister.getDepartment().getCode() == null
+                        || billRegister.getDepartment().getCode().isEmpty()))
+                    throw new CustomException("Department",
+                            "The field Department Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                if (billRegister.getDepartment() != null && billRegister.getDepartment().getCode() != null)
+                    billRegister.setDepartment(departmentService.getDepartment(billRegister.getTenantId(),
+                            billRegister.getDepartment().getCode(), billRegisterRequest.getRequestInfo()));
+/*
+                if (billRegister.getLocation() != null) {
+                    billRegister.getLocation().setTenantId(billRegister.getTenantId());
+                    final Boundary location = boundaryRepository
+                            .findById(billRegister.getLocation());
+                    if (location == null || location.getId() == null || location.getId().isEmpty())
+                        throw new CustomException("location",
+                                "Given location is Invalid: " + location.getId());
+                    billRegister.setLocation(location);
+                }*/
+                fetchRelatedForBillDetail(billRegister, billRegisterRequest.getRequestInfo());
+                fetchRelatedForBillPayeeDetail(billRegister, billRegisterRequest.getRequestInfo());
                 fetchRelatedForChecklist(billRegister);
             }
-        return billregisters;
     }
 
     private void fetchRelatedForBillDetail(final BillRegister billRegister, final RequestInfo requestInfo) {
 
-        final Map<String, ChartOfAccountContract> coaMap = new HashMap<>();
-        final Map<String, FunctionContract> functionMap = new HashMap<>();
+        final Map<String, ChartOfAccount> coaMap = new HashMap<>();
+        final Map<String, Function> functionMap = new HashMap<>();
         final String tenantId = billRegister.getTenantId();
         if (billRegister.getBillDetails() != null)
             for (final BillDetail billDetail : billRegister.getBillDetails()) {
-                if (billDetail.getGlcode() != null) {
-                    ChartOfAccountContract coa = null;
+                /*if (billDetail.getGlcode() != null) {
+                    ChartOfAccount coa = null;
                     if (coaMap.get(billDetail.getGlcode()) == null) {
-                        final ChartOfAccountContract coaContract = new ChartOfAccountContract();
+                        final ChartOfAccount coaContract = new ChartOfAccount();
                         coaContract.setGlcode(billDetail.getGlcode());
                         coaContract.setTenantId(tenantId);
                         coa = chartOfAccountContractRepository.findByGlcode(coaContract, requestInfo);
                         if (coa == null || coa.getId() == null || coa.getId().isEmpty())
-                            throw new CustomException("glCode",
-                                    "Given glCode is Invalid: " + coa.getId());
+                            throw new CustomException("glCode", "Given glCode is Invalid: " + coa.getId());
                         coaMap.put(billDetail.getGlcode(), coa);
 
                     }
                     billDetail.setChartOfAccount(coaMap.get(billDetail.getGlcode()));
-                }
+                }*/
 
                 if (billDetail.getFunction() != null) {
                     if (functionMap.get(billDetail.getFunction().getId()) == null) {
                         billDetail.getFunction().setTenantId(tenantId);
-                        final FunctionContract function = functionContractRepository.findById(billDetail.getFunction(),
-                                requestInfo);
+                        final Function function = functionService.getFunction(billRegister.getTenantId(),
+                                billDetail.getFunction().getCode(), requestInfo);
                         if (function == null || function.getId() == null || function.getId().isEmpty())
-                            throw new CustomException("function",
-                                    "Given function is Invalid: " + function.getId());
+                            throw new CustomException("function", "Given function is Invalid: " + function.getId());
                         functionMap.put(billDetail.getFunction().getId(), function);
                     }
 
@@ -293,12 +291,12 @@ public class BillRegisterService {
 
     private void fetchRelatedForBillPayeeDetail(final BillRegister billRegister, final RequestInfo requestInfo) {
 
-        final Map<String, AccountDetailTypeContract> adtMap = new HashMap<>();
-        final Map<String, AccountDetailKeyContract> adkMap = new HashMap<>();
+        final Map<String, AccountDetailType> adtMap = new HashMap<>();
+        final Map<String, AccountDetailKey> adkMap = new HashMap<>();
         final String tenantId = billRegister.getTenantId();
-        if (billRegister.getBillDetails() != null)
+        /* if (billRegister.getBillDetails() != null)
             for (final BillDetail billDetail : billRegister.getBillDetails())
-                if (billDetail.getBillPayeeDetails() != null)
+                 if (billDetail.getBillPayeeDetails() != null)
                     if (billDetail.getBillPayeeDetails() != null)
                         for (final BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
 
@@ -306,7 +304,7 @@ public class BillRegisterService {
 
                                 if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
                                     detail.getAccountDetailType().setTenantId(tenantId);
-                                    final AccountDetailTypeContract accountDetailType = accountDetailTypeContractRepository
+                                    final AccountDetailType accountDetailType = accountDetailTypeContractRepository
                                             .findById(detail.getAccountDetailType(), requestInfo);
 
                                     if (accountDetailType == null || accountDetailType.getId() == null
@@ -323,7 +321,7 @@ public class BillRegisterService {
 
                                 if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
                                     detail.getAccountDetailKey().setTenantId(tenantId);
-                                    final AccountDetailKeyContract accountDetailKey = accountDetailKeyContractRepository
+                                    final AccountDetailKey accountDetailKey = accountDetailKeyContractRepository
                                             .findById(detail.getAccountDetailKey(), requestInfo);
 
                                     if (accountDetailKey == null || accountDetailKey.getId() == null
@@ -335,7 +333,7 @@ public class BillRegisterService {
                                 }
                                 detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
                             }
-                        }
+                        }*/
     }
 
     private void fetchRelatedForChecklist(final BillRegister billRegister) {

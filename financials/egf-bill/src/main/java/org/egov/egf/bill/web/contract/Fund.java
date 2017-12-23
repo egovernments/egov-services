@@ -42,13 +42,11 @@ package org.egov.egf.bill.web.contract;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -62,8 +60,6 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "parent" }, callSuper = false)
-
 /**
  *
  * Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into
@@ -72,7 +68,7 @@ import lombok.Setter;
  * funds may be defined – i.e. each fund can have multiple sub-funds and so on.
  */
 
-public class Fund extends Auditable {
+public class Fund {
 
     /**
      * id is the unique field .

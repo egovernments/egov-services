@@ -47,8 +47,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.egov.egf.master.web.contract.AccountDetailKeyContract;
-import org.egov.egf.master.web.contract.AccountDetailTypeContract;
+import org.egov.egf.bill.web.contract.AccountDetailKey;
+import org.egov.egf.bill.web.contract.AccountDetailType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -84,14 +84,14 @@ public class BillPayeeDetail {
      * @return accountDetailType
      **/
     @NotNull
-    private AccountDetailTypeContract accountDetailType;
+    private AccountDetailType accountDetailType;
 
     /**
      * account detail key of the BillPayeeDetail
      * @return accountDetailKey
      **/
     @NotNull
-    private AccountDetailKeyContract accountDetailKey;
+    private AccountDetailKey accountDetailKey;
 
     /**
      * amount of the BillPayeeDetail

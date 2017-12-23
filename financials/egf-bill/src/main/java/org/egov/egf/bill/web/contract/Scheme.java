@@ -43,7 +43,6 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -59,7 +58,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @EqualsAndHashCode(exclude = { "fund" }, callSuper = false)
-public class Scheme extends Auditable {
+public class Scheme {
 
     private String id;
 

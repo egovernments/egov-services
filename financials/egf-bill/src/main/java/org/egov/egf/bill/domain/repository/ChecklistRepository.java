@@ -1,8 +1,8 @@
 package org.egov.egf.bill.domain.repository;
 
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.model.ChecklistSearch;
+import org.egov.egf.bill.domain.model.Pagination;
 import org.egov.egf.bill.persistence.queue.repository.ChecklistQueueRepository;
 import org.egov.egf.bill.persistence.repository.ChecklistJdbcRepository;
 import org.egov.egf.bill.web.requests.ChecklistRequest;

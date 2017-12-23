@@ -13,7 +13,7 @@ Create table egf_billregister(
 	scheme varchar(50),
 	subScheme varchar(50),
 	functionary varchar(50),
-	division varchar(50),
+	location varchar(50),
 	department varchar(50),
 	sourcePath varchar(50),
 	budgetCheckRequired boolean,

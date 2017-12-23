@@ -43,7 +43,6 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -57,7 +56,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Fundsource extends Auditable {
+public class Fundsource {
 
     private String id;
 

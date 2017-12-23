@@ -42,7 +42,6 @@ package org.egov.egf.bill.web.contract;
 
 import javax.validation.constraints.NotNull;
 
-import org.egov.common.domain.model.Auditable;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -56,7 +55,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class AccountDetailType extends Auditable {
+public class AccountDetailType {
+
+    private String tenantId;
 
     private String id;
 

@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.common.domain.model.Pagination;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.domain.model.Pagination;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -203,11 +203,11 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
                     billRegisterSearch.getFunctionary());
         }
 
-        if (billRegisterSearch.getDivision() != null) {
+        if (billRegisterSearch.getLocation() != null) {
             addAnd(params);
-            params.append("division =:division");
-            paramValues.put("division",
-                    billRegisterSearch.getDivision());
+            params.append("location =:location");
+            paramValues.put("location",
+                    billRegisterSearch.getLocation());
         }
 
         if (billRegisterSearch.getDepartment() != null) {

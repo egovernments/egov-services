@@ -1,12 +1,11 @@
 package org.egov.egf.bill.web.controller;
 
-import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
+import org.egov.egf.bill.constants.Constants;
 import org.egov.egf.bill.domain.model.Checklist;
 import org.egov.egf.bill.domain.model.ChecklistSearch;
+import org.egov.egf.bill.domain.model.Pagination;
 import org.egov.egf.bill.domain.service.ChecklistService;
 import org.egov.egf.bill.web.requests.ChecklistRequest;
 import org.egov.egf.bill.web.requests.ChecklistResponse;
@@ -60,7 +59,7 @@ public class ChecklistController {
         final Pagination<Checklist> checklistList = checklistService.search(checklistSearch);
 
         return ChecklistResponse.builder().responseInfo(getResponseInfo(requestInfo))
-                .checklists(checklistList.getPagedData()).page(new PaginationContract(checklistList))
+                .checklists(checklistList.getPagedData()).page(new Pagination(checklistList))
                 .build();
     }
 

@@ -37,59 +37,46 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.egf.bill.web.contract;
+package org.egov.egf.bill.domain.model;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Max;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-/**
- *
- * @author mani
- *
- */
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Builder
-/*
- * Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department
- * discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this.
- * Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only
- * for the internal control of the ULB.
- */
-public class Functionary {
+public class Pagination<T> {
 
-    /**
-     * id is the unique identifier and it is generated internally
-     */
-    private String id;
+    public static int DEFAULT_PAGE_SIZE = 500;
+    public static int DEFAULT_PAGE_OFFSET = 0;
 
-    /**
-     * code is uniue identifier and ULB may refer this for short name.
-     */
-    @NotNull
-    @Length(max = 16, min = 1)
-    private String code;
+    private Integer totalResults;
 
-    /**
-     * name is the name of the functionary
-     */
-    @NotNull
-    @Length(max = 256, min = 1)
-    private String name;
+    private Integer totalPages;
 
-    /**
-     * active states whether the functionary is active or not . Only active functionaries will be used in transaction
-     */
-    @NotNull
-    private Boolean active;
+    @Max(500l)
+    private Integer pageSize = DEFAULT_PAGE_SIZE;
+
+    private Integer currentPage;
+
+    private Integer offset = DEFAULT_PAGE_OFFSET;
+
+    @JsonProperty(access = Access.WRITE_ONLY)
+    List<T> pagedData;
+
+    public Pagination(Pagination<?> page) {
+        this.pageSize = page.getPageSize();
+        this.currentPage = page.getCurrentPage();
+        this.offset = page.getOffset();
+        this.totalPages = page.getTotalPages();
+        this.totalResults = page.getTotalResults();
+
+    }
 
 }

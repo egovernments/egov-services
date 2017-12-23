@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.persistence.repository.ESRepository;
-import org.egov.common.util.ElasticSearchUtils;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.domain.model.Pagination;
 import org.egov.egf.bill.persistence.entity.BillRegisterEntity;
+import org.egov.egf.bill.persistence.repository.ESRepository;
+import org.egov.egf.bill.util.ElasticSearchUtils;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -34,6 +34,9 @@ public class BillRegisterESRepository extends ESRepository {
 
     private final ElasticSearchUtils elasticSearchUtils;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
@@ -53,7 +56,7 @@ public class BillRegisterESRepository extends ESRepository {
     @SuppressWarnings("deprecation")
     private Pagination<BillRegister> mapToBillRegisterList(final SearchResponse searchResponse) {
 
-        final Pagination<BillRegister> page = new Pagination<>();
+        final Pagination<BillRegister> page = new Pagination<BillRegister>();
 
         if (searchResponse.getHits() == null || searchResponse.getHits().getTotalHits() == 0L)
             return page;
@@ -63,7 +66,6 @@ public class BillRegisterESRepository extends ESRepository {
 
         for (final SearchHit hit : searchResponse.getHits()) {
 
-            final ObjectMapper mapper = new ObjectMapper();
             // JSON from file to Object
             try {
                 billRegister = mapper.readValue(hit.sourceAsString(), BillRegister.class);
@@ -152,8 +154,8 @@ public class BillRegisterESRepository extends ESRepository {
         if (billRegisterSearchContract.getDepartment() != null && billRegisterSearchContract.getDepartment().getId() != null)
             elasticSearchUtils.add(billRegisterSearchContract.getDepartment().getId(), "department.id", boolQueryBuilder);
 
-        if (billRegisterSearchContract.getDivision() != null && billRegisterSearchContract.getDivision().getId() != null)
-            elasticSearchUtils.add(billRegisterSearchContract.getDivision().getId(), "division.id", boolQueryBuilder);
+        if (billRegisterSearchContract.getLocation() != null && billRegisterSearchContract.getLocation().getId() != null)
+            elasticSearchUtils.add(billRegisterSearchContract.getLocation().getId(), "location.id", boolQueryBuilder);
 
         if (billRegisterSearchContract.getFunctionary() != null && billRegisterSearchContract.getFunctionary().getId() != null)
             elasticSearchUtils.add(billRegisterSearchContract.getFunctionary().getId(), "functionary.id", boolQueryBuilder);

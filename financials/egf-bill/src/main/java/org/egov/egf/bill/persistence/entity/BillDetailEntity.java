@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.egov.egf.bill.domain.model.AuditDetails;
 import org.egov.egf.bill.domain.model.BillDetail;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
-import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.bill.web.contract.ChartOfAccount;
+import org.egov.egf.bill.web.contract.Function;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,11 +40,11 @@ public class BillDetailEntity {
         billDetail.setTenantId(tenantId);
         billDetail.setId(id);
         billDetail.setOrderId(orderId);
-        billDetail.setChartOfAccount(ChartOfAccountContract.builder().id(chartOfAccount).build());
+        billDetail.setChartOfAccount(ChartOfAccount.builder().id(chartOfAccount).build());
         billDetail.setGlcode(glcode);
         billDetail.setDebitAmount(debitAmount);
         billDetail.setCreditAmount(creditAmount);
-        billDetail.setFunction(FunctionContract.builder().id(function).build());
+        billDetail.setFunction(Function.builder().id(function).build());
         billDetail.setAuditDetails(new AuditDetails());
         billDetail.getAuditDetails().setCreatedBy(createdBy);
         billDetail.getAuditDetails().setCreatedTime(createdTime);

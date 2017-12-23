@@ -6,7 +6,7 @@ serviceMaps:
    description: create bills in egf_billregister
    fromTopic: egf-bill-billregister-save-topic
    queryMaps: 
-    - query: INSERT INTO egf_billregister( tenantid, billtype, billsubtype, billnumber, billdate, billamount, passedamount, modulename, status, fund, function, fundsource, scheme, subscheme, functionary, division, department, sourcepath, budgetcheckrequired, budgetappropriationno, partybillnumber, partybilldate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egf_billregister( tenantid, billtype, billsubtype, billnumber, billdate, billamount, passedamount, modulename, status, fund, function, fundsource, scheme, subscheme, functionary, location, department, sourcepath, budgetcheckrequired, budgetappropriationno, partybillnumber, partybilldate, description, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.billRegisters.*
       jsonMaps:
        
@@ -43,7 +43,7 @@ serviceMaps:
 
        - jsonPath: $.billRegisters.*.functionary.id
 
-       - jsonPath: $.billRegisters.*.division.code
+       - jsonPath: $.billRegisters.*.location.code
 
        - jsonPath: $.billRegisters.*.department.id
 
@@ -162,7 +162,7 @@ serviceMaps:
    description: update bills in egf_billregister
    fromTopic: egf-bill-billregister-update-topic
    queryMaps: 
-    - query: update egf_billregister set billtype=? , billsubtype=? , billdate=? , billamount=? , passedamount=? , modulename=? , status=? , fund=? , function=? , fundsource=? , scheme=? , subscheme=? , functionary=? , division=? , department=? , sourcepath=? , budgetcheckrequired=? , budgetappropriationno=? , partybillnumber=? , partybilldate=? , description=? ,lastmodifiedby=? , lastmodifiedtime=? where tenantId=? and billNumber=?;
+    - query: update egf_billregister set billtype=? , billsubtype=? , billdate=? , billamount=? , passedamount=? , modulename=? , status=? , fund=? , function=? , fundsource=? , scheme=? , subscheme=? , functionary=? , location=? , department=? , sourcepath=? , budgetcheckrequired=? , budgetappropriationno=? , partybillnumber=? , partybilldate=? , description=? ,lastmodifiedby=? , lastmodifiedtime=? where tenantId=? and billNumber=?;
       basePath: $.billRegisters.*
       jsonMaps:
        
@@ -195,7 +195,7 @@ serviceMaps:
 
        - jsonPath: $.billRegisters.*.functionary.id
 
-       - jsonPath: $.billRegisters.*.division.code
+       - jsonPath: $.billRegisters.*.location.code
 
        - jsonPath: $.billRegisters.*.department.id
 

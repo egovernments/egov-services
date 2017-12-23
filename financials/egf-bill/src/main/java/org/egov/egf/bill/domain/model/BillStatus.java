@@ -38,12 +38,10 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.egf.bill.web.contract;
+package org.egov.egf.bill.domain.model;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.egov.common.domain.model.Auditable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -58,7 +56,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder
-public class FinancialStatus extends Auditable {
+public class BillStatus {
 
     private String id;
 
@@ -74,8 +72,9 @@ public class FinancialStatus extends Auditable {
     @Size(min = 3, max = 20)
     private String name;
 
-    @NotNull
-    @Size(min = 3, max = 250)
+    @Size(min = 0, max = 250)
     private String description;
+    
+    private Long orderNumber;
 
 }

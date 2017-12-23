@@ -49,8 +49,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.egov.egf.master.web.contract.ChartOfAccountContract;
-import org.egov.egf.master.web.contract.FunctionContract;
+import org.egov.egf.bill.web.contract.ChartOfAccount;
+import org.egov.egf.bill.web.contract.Function;
 import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
@@ -88,7 +88,7 @@ public class BillDetail {
      **/
     private Integer orderId;
 
-    private ChartOfAccountContract chartOfAccount;
+    private ChartOfAccount chartOfAccount;
 
     /**
      * glcode of the BillDetail
@@ -116,7 +116,7 @@ public class BillDetail {
      * function of the BillDetail
      * @return function
      **/
-    private FunctionContract function;
+    private Function function;
 
     /**
      * bill payee details of the BillDetail

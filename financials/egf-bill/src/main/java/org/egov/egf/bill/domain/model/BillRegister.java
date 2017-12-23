@@ -48,13 +48,12 @@ import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.egov.egf.bill.web.contract.Boundary;
 import org.egov.egf.bill.web.contract.Department;
-import org.egov.egf.master.web.contract.FinancialStatusContract;
-import org.egov.egf.master.web.contract.FunctionContract;
-import org.egov.egf.master.web.contract.FunctionaryContract;
-import org.egov.egf.master.web.contract.FundContract;
-import org.egov.egf.master.web.contract.FundsourceContract;
-import org.egov.egf.master.web.contract.SchemeContract;
-import org.egov.egf.master.web.contract.SubSchemeContract;
+import org.egov.egf.bill.web.contract.Function;
+import org.egov.egf.bill.web.contract.Functionary;
+import org.egov.egf.bill.web.contract.Fund;
+import org.egov.egf.bill.web.contract.Fundsource;
+import org.egov.egf.bill.web.contract.Scheme;
+import org.egov.egf.bill.web.contract.SubScheme;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -141,56 +140,56 @@ public class BillRegister {
      * @return status
      **/
     @JsonProperty("status")
-    private FinancialStatusContract status = null;
+    private BillStatus status = null;
 
     /**
      * fund refers to the fund master
      * @return fund
      **/
     @JsonProperty("fund")
-    private FundContract fund = null;
+    private Fund fund = null;
 
     /**
      * function refers to the function master
      * @return function
      **/
     @JsonProperty("function")
-    private FunctionContract function = null;
+    private Function function = null;
 
     /**
      * fundsource of the BillRegister
      * @return fundsource
      **/
     @JsonProperty("fundsource")
-    private FundsourceContract fundsource = null;
+    private Fundsource fundsource = null;
 
     /**
      * scheme of the BillRegister
      * @return scheme
      **/
     @JsonProperty("scheme")
-    private SchemeContract scheme = null;
+    private Scheme scheme = null;
 
     /**
      * sub scheme of the BillRegister
      * @return subScheme
      **/
     @JsonProperty("subScheme")
-    private SubSchemeContract subScheme = null;
+    private SubScheme subScheme = null;
 
     /**
      * functionary of the BillRegister
      * @return functionary
      **/
     @JsonProperty("functionary")
-    private FunctionaryContract functionary = null;
+    private Functionary functionary = null;
 
     /**
-     * division of the BillRegister
-     * @return division
+     * location of the BillRegister
+     * @return location
      **/
-    @JsonProperty("division")
-    private Boundary division = null;
+    @JsonProperty("location")
+    private Boundary location = null;
 
     /**
      * department of the BillRegister

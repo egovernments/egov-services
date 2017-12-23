@@ -32,7 +32,7 @@ public class DepartmentRepository {
 
     public DepartmentResponse getDepartmentById(final String departmentId, final String tenantId) {
         final RequestInfo requestInfo = new RequestInfo();
-        requestInfo.setTs(dateFactory.create());
+        requestInfo.setTs(dateFactory.create().getTime());
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
         return restTemplate.postForObject(departmentByIdUrl, wrapper, DepartmentResponse.class, departmentId, tenantId);

@@ -1,12 +1,11 @@
 package org.egov.egf.bill.web.controller;
 
-import org.egov.common.constants.Constants;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.common.domain.model.Pagination;
-import org.egov.common.web.contract.PaginationContract;
+import org.egov.egf.bill.constants.Constants;
 import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.BillRegisterSearch;
+import org.egov.egf.bill.domain.model.Pagination;
 import org.egov.egf.bill.domain.service.BillRegisterService;
 import org.egov.egf.bill.web.requests.BillRegisterRequest;
 import org.egov.egf.bill.web.requests.BillRegisterResponse;
@@ -63,7 +62,7 @@ public class BillRegisterController {
         final Pagination<BillRegister> billRegisterList = billRegisterService.search(billRegisterSearch);
 
         return BillRegisterResponse.builder().responseInfo(getResponseInfo(requestInfo))
-                .billRegisters(billRegisterList.getPagedData()).page(new PaginationContract(billRegisterList))
+                .billRegisters(billRegisterList.getPagedData()).page(new Pagination(billRegisterList))
                 .build();
     }
 

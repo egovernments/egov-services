@@ -5,7 +5,7 @@ import UserJobs from "../containers/UserJobs";
 
 const Main = () => {
   return (
-    <main style={{ marginTop: "50px", marginBottom: "50px" }}>
+    <main style={{ marginTop: "80px", marginBottom: "50px" }}>
       <Switch>
         <Route exact path="/" component={FileUploader} />
         <Route exact path="/user-jobs" component={UserJobs} />

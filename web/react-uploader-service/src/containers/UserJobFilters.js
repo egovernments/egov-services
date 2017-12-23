@@ -6,7 +6,7 @@ import UserJobsCodeFilter from "./UserJobsCodeFilter";
 export default class Filters extends Component {
   render() {
     return (
-      <div>
+      <div style={{ position: "fixed" }}>
         <UserJobsCodeFilter />
         <JobStatusFilter />
         <DateFilter />

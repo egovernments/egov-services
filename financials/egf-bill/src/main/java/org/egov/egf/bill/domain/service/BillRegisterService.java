@@ -306,22 +306,22 @@ public class BillRegisterService {
         if (billRegister.getBillDetails() != null)
             for (final BillDetail billDetail : billRegister.getBillDetails()) {
 
-                if (billDetail.getGlcode() != null) {
+                if (billDetail.getChartOfAccount() != null && billDetail.getChartOfAccount().getGlcode() != null) {
                     ChartOfAccount coa = null;
-                    if (coaMap.get(billDetail.getGlcode()) == null) {
+                    if (coaMap.get(billDetail.getChartOfAccount().getGlcode()) == null) {
                         final ChartOfAccount coaContract = new ChartOfAccount();
-                        coaContract.setGlcode(billDetail.getGlcode());
+                        coaContract.setGlcode(billDetail.getChartOfAccount().getGlcode());
                         coaContract.setTenantId(tenantId);
                         coa = chartOfAccountRepository.findByGlcode(coaContract,
                                 requestInfo);
                         if (coa == null || coa.getId() == null || coa.getId().isEmpty())
                             throw new CustomException("glCode", "Given glCode is Invalid: " + coa.getId());
-                        coaMap.put(billDetail.getGlcode(), coa);
+                        coaMap.put(billDetail.getChartOfAccount().getGlcode(), coa);
                     }
-                    billDetail.setChartOfAccount(coaMap.get(billDetail.getGlcode()));
+                    billDetail.setChartOfAccount(coaMap.get(billDetail.getChartOfAccount().getGlcode()));
                 }
 
-                if (billDetail.getFunction() != null) {
+                if (billDetail.getFunction() != null && billDetail.getFunction().getId() != null) {
                     if (functionMap.get(billDetail.getFunction().getId()) == null) {
                         billDetail.getFunction().setTenantId(tenantId);
                         final Function function = functionService.getFunction(billRegister.getTenantId(),

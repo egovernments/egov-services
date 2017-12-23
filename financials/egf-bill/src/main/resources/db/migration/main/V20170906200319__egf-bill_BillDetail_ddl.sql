@@ -3,7 +3,6 @@ Create table egf_billdetail(
   id varchar(50),
   orderId smallint,
   chartOfAccount varchar(50) NOT NULL,
-  glcode varchar(50) NOT NULL,
   debitAmount numeric (13,2) NOT NULL,
   creditAmount numeric (13,2) NOT NULL,
   function varchar(50),

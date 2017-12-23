@@ -483,15 +483,9 @@ definitions:
           description: |
             order id of the BillDetail
         chartOfAccount:
-          allOf:
-            - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
-            - description: |
-                chart of account of the BillDetail
-        glcode:
-          type: string
-          maxLength: 16
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
           description: |
-            glcode of the BillDetail
+                chart of account of the BillDetail
         debitAmount:
           type: number
           format: double
@@ -517,7 +511,6 @@ definitions:
       required:
       - tenantId
       - chartOfAccount
-      - glcode
       - debitAmount
       - creditAmount
     BillPayeeDetail:
@@ -687,3 +680,4 @@ parameters:
     in: query
     description: pageSize          
           
+

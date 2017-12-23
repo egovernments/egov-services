@@ -92,13 +92,6 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
             paramValues.put("names", new ArrayList<>(Arrays.asList(billRegisterSearch.getNames().split(","))));
         }
 
-        if (billRegisterSearch.getBillNumbers() != null) {
-            addAnd(params);
-            params.append("billNumber in (:billNumbers)");
-            paramValues.put("billNumbers",
-                    new ArrayList<>(Arrays.asList(billRegisterSearch.getBillNumbers().split(","))));
-        }
-
         if (billRegisterSearch.getBillFromDate() != null) {
             addAnd(params);
             params.append("billDate >= (:billFromDate)");
@@ -107,20 +100,8 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
 
         if (billRegisterSearch.getBillToDate() != null) {
             addAnd(params);
-            params.append("billDate >= (:billToDate)");
+            params.append("billDate <= (:billToDate)");
             paramValues.put("billToDate", billRegisterSearch.getBillToDate());
-        }
-
-        if (billRegisterSearch.getStatuses() != null) {
-            addAnd(params);
-            params.append("statusId >= (:statusId)");
-            paramValues.put("statusId", billRegisterSearch.getStatuses());
-        }
-
-        if (billRegisterSearch.getStatuses() != null) {
-            addAnd(params);
-            params.append("statusid in (:statusids)");
-            paramValues.put("statusids", new ArrayList<>(Arrays.asList(billRegisterSearch.getStatuses().split(","))));
         }
 
         if (billRegisterSearch.getBillNumber() != null) {
@@ -128,6 +109,13 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
             params.append("billNumber =:billNumber");
             paramValues.put("billNumber",
                     billRegisterSearch.getBillNumber());
+        }
+
+        if (billRegisterSearch.getBillNumbers() != null) {
+            addAnd(params);
+            params.append("billNumber in (:billNumbers)");
+            paramValues.put("billNumbers",
+                    new ArrayList<>(Arrays.asList(billRegisterSearch.getBillNumbers().split(","))));
         }
 
         if (billRegisterSearch.getBillDate() != null) {
@@ -157,66 +145,71 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
                     billRegisterSearch.getModuleName());
         }
 
-        if (billRegisterSearch.getStatus() != null) {
-            addAnd(params);
-            params.append("status =:status");
-            paramValues.put("status", billRegisterSearch.getStatus());
-        }
-
-        if (billRegisterSearch.getFund() != null) {
+        if (billRegisterSearch.getFundCode() != null) {
             addAnd(params);
             params.append("fund =:fund");
-            paramValues.put("fund", billRegisterSearch.getFund());
+            paramValues.put("fund", billRegisterSearch.getFundCode());
         }
 
-        if (billRegisterSearch.getFunction() != null) {
+        if (billRegisterSearch.getFunctionCode() != null) {
             addAnd(params);
             params.append("function =:function");
-            paramValues.put("function",
-                    billRegisterSearch.getFunction());
+            paramValues.put("function", billRegisterSearch.getFunctionCode());
         }
 
-        if (billRegisterSearch.getFundsource() != null) {
+        if (billRegisterSearch.getFundSourceCode() != null) {
             addAnd(params);
             params.append("fundsource =:fundsource");
-            paramValues.put("fundsource",
-                    billRegisterSearch.getFundsource());
+            paramValues.put("fundsource", billRegisterSearch.getFundSourceCode());
         }
 
-        if (billRegisterSearch.getScheme() != null) {
+        if (billRegisterSearch.getStatusCode() != null) {
+            addAnd(params);
+            params.append("status =:status");
+            paramValues.put("status", billRegisterSearch.getStatusCode());
+        }
+
+        if (billRegisterSearch.getStatusCodes() != null) {
+            addAnd(params);
+            params.append("status in (:statusCodes)");
+            paramValues.put("statusCodes", billRegisterSearch.getStatusCodes());
+        }
+
+        if (billRegisterSearch.getSchemeCode() != null) {
             addAnd(params);
             params.append("scheme =:scheme");
-            paramValues.put("scheme", billRegisterSearch.getScheme());
+            paramValues.put("scheme", billRegisterSearch.getSchemeCode());
         }
 
-        if (billRegisterSearch.getSubScheme() != null) {
+        if (billRegisterSearch.getSubSchemeCode() != null) {
             addAnd(params);
             params.append("subscheme =:subScheme");
-            paramValues.put("subScheme",
-                    billRegisterSearch.getSubScheme());
+            paramValues.put("subScheme", billRegisterSearch.getSubSchemeCode());
         }
 
-        if (billRegisterSearch.getFunctionary() != null) {
+        if (billRegisterSearch.getFunctionaryCode() != null) {
             addAnd(params);
             params.append("functionary =:functionary");
-            paramValues.put("functionary",
-                    billRegisterSearch.getFunctionary());
+            paramValues.put("functionary", billRegisterSearch.getFunctionaryCode());
         }
 
-        if (billRegisterSearch.getLocation() != null) {
+        if (billRegisterSearch.getLocationCode() != null) {
             addAnd(params);
             params.append("location =:location");
-            paramValues.put("location",
-                    billRegisterSearch.getLocation());
+            paramValues.put("location", billRegisterSearch.getLocationCode());
         }
 
-        if (billRegisterSearch.getDepartment() != null) {
+        if (billRegisterSearch.getDepartmentCode() != null) {
             addAnd(params);
             params.append("department =:department");
-            paramValues.put("department",
-                    billRegisterSearch.getDepartment());
+            paramValues.put("department", billRegisterSearch.getDepartmentCode());
         }
 
+        if (billRegisterSearch.getDepartmentCodes() != null) {
+            addAnd(params);
+            params.append("department in (:departmentCodes)");
+            paramValues.put("departmentCodes", billRegisterSearch.getDepartmentCodes());
+        }
         if (billRegisterSearch.getSourcePath() != null) {
             addAnd(params);
             params.append("sourcepath =:sourcePath");

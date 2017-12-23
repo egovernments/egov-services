@@ -42,9 +42,29 @@ public class BillRegisterSearch extends BillRegister {
 
     private String billNumbers;
 
-    private String statuses;
-
     private Date billFromDate;
 
     private Date billToDate;
+
+    private String fundCode;
+
+    private String functionCode;
+
+    private String functionaryCode;
+
+    private String fundSourceCode;
+
+    private String schemeCode;
+
+    private String subSchemeCode;
+
+    private String statusCode;
+    
+    private String statusCodes;
+
+    private String locationCode;
+
+    private String departmentCode;
+
+    private String departmentCodes;
 }

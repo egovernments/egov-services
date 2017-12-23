@@ -51,7 +51,6 @@ import javax.validation.constraints.Size;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.egov.egf.bill.web.contract.ChartOfAccount;
 import org.egov.egf.bill.web.contract.Function;
-import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -88,15 +87,8 @@ public class BillDetail {
      **/
     private Integer orderId;
 
-    private ChartOfAccount chartOfAccount;
-
-    /**
-     * glcode of the BillDetail
-     * @return glcode
-     **/
     @NotNull
-    @Length(max = 16)
-    private String glcode;
+    private ChartOfAccount chartOfAccount;
 
     /**
      * debit amount of the BillDetail

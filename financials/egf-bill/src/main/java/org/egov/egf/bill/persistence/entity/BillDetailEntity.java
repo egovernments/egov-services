@@ -26,7 +26,6 @@ public class BillDetailEntity {
     private String bill;
     private Integer orderId;
     private String chartOfAccount;
-    private String glcode;
     private BigDecimal debitAmount;
     private BigDecimal creditAmount;
     private String function;
@@ -40,11 +39,10 @@ public class BillDetailEntity {
         billDetail.setTenantId(tenantId);
         billDetail.setId(id);
         billDetail.setOrderId(orderId);
-        billDetail.setChartOfAccount(ChartOfAccount.builder().id(chartOfAccount).build());
-        billDetail.setGlcode(glcode);
+        billDetail.setChartOfAccount(ChartOfAccount.builder().glcode(chartOfAccount).build());
         billDetail.setDebitAmount(debitAmount);
         billDetail.setCreditAmount(creditAmount);
-        billDetail.setFunction(Function.builder().id(function).build());
+        billDetail.setFunction(Function.builder().code(function).build());
         billDetail.setAuditDetails(new AuditDetails());
         billDetail.getAuditDetails().setCreatedBy(createdBy);
         billDetail.getAuditDetails().setCreatedTime(createdTime);
@@ -57,11 +55,10 @@ public class BillDetailEntity {
         tenantId = billDetail.getTenantId();
         id = billDetail.getId();
         orderId = billDetail.getOrderId();
-        chartOfAccount = billDetail.getChartOfAccount() != null ? billDetail.getChartOfAccount().getId() : null;
-        glcode = billDetail.getGlcode();
+        chartOfAccount = billDetail.getChartOfAccount() != null ? billDetail.getChartOfAccount().getGlcode() : null;
         debitAmount = billDetail.getDebitAmount();
         creditAmount = billDetail.getCreditAmount();
-        function = billDetail.getFunction() != null ? billDetail.getFunction().getId() : null;
+        function = billDetail.getFunction() != null ? billDetail.getFunction().getCode() : null;
         createdBy = billDetail.getAuditDetails() != null ? billDetail.getAuditDetails().getCreatedBy() : null;
         createdTime = billDetail.getAuditDetails() != null ? billDetail.getAuditDetails().getCreatedTime() : null;
         lastModifiedBy = billDetail.getAuditDetails() != null ? billDetail.getAuditDetails().getLastModifiedBy() : null;

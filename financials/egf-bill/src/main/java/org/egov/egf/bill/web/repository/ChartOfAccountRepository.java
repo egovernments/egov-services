@@ -1,5 +1,7 @@
 package org.egov.egf.bill.web.repository;
 
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.bill.web.contract.ChartOfAccount;
 import org.egov.egf.bill.web.contract.RequestInfoWrapper;
@@ -66,6 +68,31 @@ public class ChartOfAccountRepository {
 
         if (result.getChartOfAccounts() != null && result.getChartOfAccounts().size() == 1) {
             return result.getChartOfAccounts().get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+    public List<ChartOfAccount> findByGlcodes(ChartOfAccount chartOfAccountContract, RequestInfo requestInfo) {
+
+        String url = String.format("%s%s", hostUrl, SEARCH_URL);
+        StringBuffer content = new StringBuffer();
+        if (chartOfAccountContract.getGlcodes() != null) {
+            content.append("glcodes=" + chartOfAccountContract.getGlcodes());
+        }
+
+        if (chartOfAccountContract.getTenantId() != null) {
+            content.append("&tenantId=" + chartOfAccountContract.getTenantId());
+        }
+        url = url + content.toString();
+        ChartOfAccountResponse result;
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        result = restTemplate.postForObject(url, requestInfoWrapper, ChartOfAccountResponse.class);
+
+        if (result.getChartOfAccounts() != null && !result.getChartOfAccounts().isEmpty()) {
+            return result.getChartOfAccounts();
         } else {
             return null;
         }

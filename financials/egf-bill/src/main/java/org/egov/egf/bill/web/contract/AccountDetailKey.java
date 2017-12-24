@@ -58,6 +58,8 @@ public class AccountDetailKey {
     private String tenantId;
 
     private String id;
+    
+    private String ids;
 
     @NotNull
     private String key;

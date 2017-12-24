@@ -2,7 +2,6 @@ package org.egov.egf.bill.persistence.entity;
 
 import org.egov.egf.bill.domain.model.AuditDetails;
 import org.egov.egf.bill.domain.model.BillChecklist;
-import org.egov.egf.bill.domain.model.BillRegister;
 import org.egov.egf.bill.domain.model.Checklist;
 
 import lombok.AllArgsConstructor;
@@ -33,7 +32,7 @@ public class BillChecklistEntity {
         final BillChecklist billChecklist = new BillChecklist();
         billChecklist.setTenantId(tenantId);
         billChecklist.setId(id);
-        billChecklist.setBill(BillRegister.builder().billNumber(bill).build());
+        billChecklist.setBill(bill);
         billChecklist.setChecklist(Checklist.builder().code(checklist).build());
         billChecklist.setChecklistValue(checklistValue);
         billChecklist.setAuditDetails(new AuditDetails());
@@ -47,7 +46,7 @@ public class BillChecklistEntity {
     public BillChecklistEntity toEntity(final BillChecklist billChecklist) {
         tenantId = billChecklist.getTenantId();
         id = billChecklist.getId();
-        bill = billChecklist.getBill() != null ? billChecklist.getBill().getBillNumber() : null;
+        bill = billChecklist.getBill() != null ? billChecklist.getBill() : null;
         checklist = billChecklist.getChecklist() != null ? billChecklist.getChecklist().getCode() : null;
         checklistValue = billChecklist.getChecklistValue();
         createdBy = billChecklist.getAuditDetails() != null ? billChecklist.getAuditDetails().getCreatedBy() : null;

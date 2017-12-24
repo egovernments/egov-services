@@ -109,4 +109,6 @@ public class BillPayeeDetail {
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
 
+    private String billDetail;
+
 }

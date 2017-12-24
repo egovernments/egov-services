@@ -1,5 +1,7 @@
 package org.egov.egf.bill.web.repository;
 
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.egf.bill.web.contract.AccountDetailKey;
 import org.egov.egf.bill.web.contract.RequestInfoWrapper;
@@ -41,6 +43,32 @@ public class AccountDetailKeyRepository {
 
         if (result.getAccountDetailKeys() != null && result.getAccountDetailKeys().size() == 1) {
             return result.getAccountDetailKeys().get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+    public List<AccountDetailKey> findByIds(AccountDetailKey accountDetailKey, RequestInfo requestInfo) {
+
+        String url = String.format("%s%s", hostUrl, SEARCH_URL);
+        StringBuffer content = new StringBuffer();
+        if (accountDetailKey.getIds() != null) {
+            content.append("ids=" + accountDetailKey.getIds());
+        }
+
+        if (accountDetailKey.getTenantId() != null) {
+            content.append("&tenantId=" + accountDetailKey.getTenantId());
+        }
+        url = url + content.toString();
+        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+        requestInfoWrapper.setRequestInfo(requestInfo);
+        AccountDetailKeyResponse result;
+
+        result = restTemplate.postForObject(url, requestInfoWrapper, AccountDetailKeyResponse.class);
+
+        if (result.getAccountDetailKeys() != null && !result.getAccountDetailKeys().isEmpty()) {
+            return result.getAccountDetailKeys();
         } else {
             return null;
         }

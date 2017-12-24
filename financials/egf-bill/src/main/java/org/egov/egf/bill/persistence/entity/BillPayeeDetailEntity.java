@@ -44,6 +44,7 @@ public class BillPayeeDetailEntity {
         billPayeeDetail.getAuditDetails().setCreatedTime(createdTime);
         billPayeeDetail.getAuditDetails().setLastModifiedBy(lastModifiedBy);
         billPayeeDetail.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        billPayeeDetail.setBillDetail(billDetail);
         return billPayeeDetail;
     }
 

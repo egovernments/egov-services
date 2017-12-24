@@ -165,4 +165,6 @@ public class ChartOfAccount {
 
     private Boolean isSubLedger;
 
+    private String glcodes;
+
 }

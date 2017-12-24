@@ -59,8 +59,17 @@ public class BillChecklistJdbcRepository extends JdbcRepository {
 
             searchQuery = searchQuery.replace(":condition", "");
 
-        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(BillChecklist.class);
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(BillChecklistEntity.class);
+        final List<BillChecklist> billChecklistList = new ArrayList<>();
+        final List<BillChecklistEntity> billChecklistEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+                paramValues,
+                row);
 
-        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        for (final BillChecklistEntity billChecklistEntity : billChecklistEntities) {
+
+            billChecklistList.add(billChecklistEntity.toDomain());
+
+        }
+        return billChecklistList;
     }
 }

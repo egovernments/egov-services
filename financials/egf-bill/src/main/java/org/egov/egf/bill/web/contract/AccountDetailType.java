@@ -60,6 +60,8 @@ public class AccountDetailType {
     private String tenantId;
 
     private String id;
+    
+    private String ids;
 
     @NotNull
     @Length(max = 50, min = 1)

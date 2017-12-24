@@ -342,39 +342,40 @@ public class BillRegisterService {
         final Map<String, AccountDetailType> adtMap = new HashMap<>();
         final Map<String, AccountDetailKey> adkMap = new HashMap<>();
         final String tenantId = billRegister.getTenantId();
-        if (billRegister.getBillDetails() != null)
-            for (final BillDetail billDetail : billRegister.getBillDetails())
-                if (billDetail.getBillPayeeDetails() != null)
-                    if (billDetail.getBillPayeeDetails() != null)
-                        for (final BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
-                            if (detail.getAccountDetailType() != null) {
-                                if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
-                                    detail.getAccountDetailType().setTenantId(tenantId);
-                                    final AccountDetailType accountDetailType = accountDetailTypeRepository
-                                            .findById(detail.getAccountDetailType(), requestInfo);
-                                    if (accountDetailType == null || accountDetailType.getId() == null
-                                            || accountDetailType.getId().isEmpty())
-                                        throw new CustomException("accountDetailType",
-                                                "Given accountDetailType is Invalid: " + detail.getAccountDetailType().getId());
-                                    adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
-                                }
-                                detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
+        if (billRegister.getBillDetails() != null) {
+            for (final BillDetail billDetail : billRegister.getBillDetails()) {
+                if (billDetail.getBillPayeeDetails() != null) {
+                    for (final BillPayeeDetail detail : billDetail.getBillPayeeDetails()) {
+                        if (detail.getAccountDetailType() != null) {
+                            if (adtMap.get(detail.getAccountDetailType().getId()) == null) {
+                                detail.getAccountDetailType().setTenantId(tenantId);
+                                final AccountDetailType accountDetailType = accountDetailTypeRepository
+                                        .findById(detail.getAccountDetailType(), requestInfo);
+                                if (accountDetailType == null || accountDetailType.getId() == null
+                                        || accountDetailType.getId().isEmpty())
+                                    throw new CustomException("accountDetailType",
+                                            "Given accountDetailType is Invalid: " + detail.getAccountDetailType().getId());
+                                adtMap.put(detail.getAccountDetailType().getId(), accountDetailType);
                             }
-                            if (detail.getAccountDetailKey() != null) {
-                                if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
-                                    detail.getAccountDetailKey().setTenantId(tenantId);
-                                    final AccountDetailKey accountDetailKey = accountDetailKeyRepository
-                                            .findById(detail.getAccountDetailKey(), requestInfo);
-                                    if (accountDetailKey == null
-                                            || accountDetailKey.getId() == null || accountDetailKey.getId().isEmpty())
-                                        throw new CustomException("accountDetailType",
-                                                "Given accountDetailType is Invalid: " + detail.getAccountDetailKey().getId());
-                                    adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
-                                }
-                                detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
-                            }
+                            detail.setAccountDetailType(adtMap.get(detail.getAccountDetailType().getId()));
                         }
-
+                        if (detail.getAccountDetailKey() != null) {
+                            if (adkMap.get(detail.getAccountDetailKey().getId()) == null) {
+                                detail.getAccountDetailKey().setTenantId(tenantId);
+                                final AccountDetailKey accountDetailKey = accountDetailKeyRepository
+                                        .findById(detail.getAccountDetailKey(), requestInfo);
+                                if (accountDetailKey == null
+                                        || accountDetailKey.getId() == null || accountDetailKey.getId().isEmpty())
+                                    throw new CustomException("accountDetailType",
+                                            "Given accountDetailType is Invalid: " + detail.getAccountDetailKey().getId());
+                                adkMap.put(detail.getAccountDetailKey().getId(), accountDetailKey);
+                            }
+                            detail.setAccountDetailKey(adkMap.get(detail.getAccountDetailKey().getId()));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void fetchRelatedForChecklist(final BillRegister billRegister) {

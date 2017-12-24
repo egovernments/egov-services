@@ -1,6 +1,7 @@
 package org.egov.egf.bill.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,12 @@ public class ChecklistJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("code =:code");
             paramValues.put("code", searchRequest.getCode());
+        }
+
+        if (searchRequest.getCodes() != null) {
+            addAnd(params);
+            params.append("code in (:codes)");
+            paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
         }
 
         if (searchRequest.getKey() != null) {

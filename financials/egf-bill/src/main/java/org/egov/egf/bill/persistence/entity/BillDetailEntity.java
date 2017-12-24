@@ -48,6 +48,7 @@ public class BillDetailEntity {
         billDetail.getAuditDetails().setCreatedTime(createdTime);
         billDetail.getAuditDetails().setLastModifiedBy(lastModifiedBy);
         billDetail.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        billDetail.setBill(bill);
         return billDetail;
     }
 

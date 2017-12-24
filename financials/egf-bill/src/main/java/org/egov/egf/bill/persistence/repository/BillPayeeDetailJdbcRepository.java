@@ -65,8 +65,18 @@ public class BillPayeeDetailJdbcRepository extends JdbcRepository {
 
             searchQuery = searchQuery.replace(":condition", "");
 
-        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(BillPayeeDetail.class);
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(BillPayeeDetailEntity.class);
 
-        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        final List<BillPayeeDetail> billPayeeDetailList = new ArrayList<>();
+        final List<BillPayeeDetailEntity> billPayeeDetailsEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+                paramValues,
+                row);
+
+        for (final BillPayeeDetailEntity billPayeeDetailEntity : billPayeeDetailsEntities) {
+
+            billPayeeDetailList.add(billPayeeDetailEntity.toDomain());
+
+        }
+        return billPayeeDetailList;
     }
 }

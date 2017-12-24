@@ -36,7 +36,7 @@ public class BillChecklist {
     /**
      * bill is the id of the bill
      */
-    private BillRegister bill;
+    private String bill;
 
     /**
      * checklist is the id of the check list

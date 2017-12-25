@@ -781,7 +781,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
-        - name: department
+        - name: departments
           in: query
           type: array
           items:
@@ -1838,7 +1838,7 @@ definitions:
         $ref: '#/definitions/LetterOfAcceptanceEstimate'
         description: Reference of Letter of Acceptance
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MilestoneStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
       milestoneActivities:
         type: array
         description: Array of Milestone Activity
@@ -1861,6 +1861,10 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Milestone, Required only while cancelling Milestone
         maxLength: 512
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1964,7 +1968,7 @@ definitions:
         $ref: '#/definitions/Milestone'
         description: Reference of Milestone
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TrackMilestoneStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
         description: Track Milestone status
       totalPercentage:
         type: number
@@ -1980,6 +1984,10 @@ definitions:
         minItems: 1
         items:
           $ref: '#/definitions/TrackMilestoneActivity'
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -2028,7 +2036,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of the actual end date for the milestone.
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/TrackMilestoneActivityStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       deleted:
@@ -2041,6 +2049,7 @@ definitions:
       - actualStartDate
       - trackMilestone
       - milestoneActivity
+      - status
 
   TrackMilestoneRequest:
       description: Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update

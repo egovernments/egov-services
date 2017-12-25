@@ -594,3 +594,73 @@ serviceMaps:
          dbType: LONG
 
        - jsonPath: $.notices.*.documentDetails.*.deleted
+
+ - version: 1.0
+   name: Milestone
+   description: Persists Milestone in egw_milestone table
+   fromTopic: works-milestone-saveorupdate-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_milestone(id, tenantid, letterofacceptanceestimate, status, cancellationreason, cancellationremarks, deleted, createdby, createdtime,lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, status= EXCLUDED.status, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.milestones.*
+      jsonMaps:
+
+       - jsonPath: $.milestones.*.id
+
+       - jsonPath: $.milestones.*.tenantId
+
+       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.id
+
+       - jsonPath: $.milestones.*.status.code
+
+       - jsonPath: $.milestones.*.cancellationReason
+
+       - jsonPath: $.milestones.*.cancellationRemarks
+
+       - jsonPath: $.milestones.*.deleted
+
+       - jsonPath: $.milestones.*.auditDetails.createdBy
+
+       - jsonPath: $.milestones.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.milestones.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.milestones.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_milestoneactivity(id, tenantid, milestone, schedulestartdate, scheduleenddate, percentage, description, stageordernumber, deleted, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET milestone=EXCLUDED.milestone, schedulestartdate=EXCLUDED.schedulestartdate, scheduleenddate=EXCLUDED.scheduleenddate, percentage=EXCLUDED.percentage, description=EXCLUDED.description, stageordernumber=EXCLUDED.stageordernumber, deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.milestones.*.milestoneActivities.*
+      jsonMaps:
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.id
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.tenantId
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.milestone
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.scheduleStartDate
+         dbType: LONG
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.scheduleEndDate
+         dbType: LONG
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.percentage
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.description
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.stageOrderNumber
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.deleted
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.auditDetails.createdBy
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.milestones.*.milestoneActivities.*.auditDetails.lastModifiedTime
+         dbType: LONG

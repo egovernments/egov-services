@@ -1,5 +1,6 @@
 package org.egov.works.workorder.domain.repository;
 
+import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +12,7 @@ import java.util.List;
 @Repository
 public class EstimateRepository {
 
-	private final RestTemplate restTemplate;
+	private final LogAwareRestTemplate restTemplate;
 
 	private final String detailedEstimateUrl;
 
@@ -20,7 +21,7 @@ public class EstimateRepository {
 	private String detailedEstimateByWINUrl;
 
 	@Autowired
-	public EstimateRepository(final RestTemplate restTemplate,
+	public EstimateRepository(final LogAwareRestTemplate restTemplate,
 			@Value("${egov.services.egov_works_estimate.hostname}") final String worksEstimateHostname,
 			@Value("${egov.services.egov_works_estimate.searchpath}") final String detailedEstimateUrl,
             @Value("${egov.services.egov_works_estimate.searchbydepartment}") final String detailedEstimateByDepartmentUrl,
@@ -35,11 +36,12 @@ public class EstimateRepository {
 	public DetailedEstimateResponse getDetailedEstimateByEstimateNumber(
 			final DetailedEstimateSearchContract detailedEstimateSearchContract, final String tenantId,
 			final RequestInfo requestInfo) {
-
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
 		StringBuilder url = new StringBuilder();
 		url.append(detailedEstimateUrl).append(tenantId).append("&").append("detailedEstimateNumberLike=").append(detailedEstimateSearchContract.getDetailedEstimateNumberLike());
 
-		return restTemplate.postForObject(url.toString(), requestInfo, DetailedEstimateResponse.class);
+		return restTemplate.postForObject(url.toString(), requestInfoWrapper, DetailedEstimateResponse.class);
 
 	}
 

@@ -114,4 +114,25 @@ public class Constants {
     public static final String KEY_NOTICE_WO_NOT_APPROVED = "works.notice.workorder.not.approved";
     public static final String MESSAGE_NOTICE_WO_NOT_APPROVED = "Work Order should be in approved status before generating Notices";
 
+    public static final String KEY_MILESTONE_LOA_ESTIMATE_ID_REQUIRED = "WORKS.MILESTONE.LOA.ESTIMATE.ID.REQUIRED";
+    public static final String MESSAGE_MILESTONE_LOA_ESTIMATE_ID_REQUIRED = "LOA Estimate id is required";
+
+    public static final String KEY_MILESTONE_LOA_ESTIMATE_ID_INVALID = "WORKS.MILESTONE.LOA.ESTIMATE.ID.INVALID";
+    public static final String MESSAGE_MILESTONE_LOA_ESTIMATE_ID_INVALID = "Given LOA Estimate id is invalid:";
+
+    public static final String KEY_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE = "WORKS.MILESTONE.WORKORDER.SHOULD.BE.APPROVED.STATE";
+    public static final String MESSAGE_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE = "Work order should be in approved state to create a milestone";
+
+    public static final String KEY_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100 = "WORKS.MILESTONE.ACTIVITY.TOTALPERCENTAGE.SHOULDNOT.CROSS100";
+    public static final String MESSAGE_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100 = "Milestone Activity total percentage should not cross 100";
+
+    public static final String KEY_MILESTONE_ACTIVITY_SSD_CANNOT_BEFORE_WOD= "WORKS.MILESTONE.ACTIVITY.SSD.CANNOT.BEFORE.WOD";
+    public static final String MESSAGE_MILESTONE_ACTIVITY_SSD_CANNOT_BEFORE_WOD = "Milestone schedule start date cannot be before work order approved date";
+
+    public static final String KEY_MILESTONE_ACTIVITY_SED_CANNOT_BEFORE_SSD= "WORKS.MILESTONE.ACTIVITY.SED.CANNOT.BEFORE.SSD";
+    public static final String MESSAGE_MILESTONE_ACTIVITY_SED_CANNOT_BEFORE_SSD = "Milestone schedule end date cannot be before schedule start date";
+
+    public static final String KEY_MILESTONE_ACTIVITY_SSD_SED_CANNOTBE_FUTURE= "WORKS.MILESTONE.ACTIVITY.SSD.SED.CANNOTBE.FUTURE";
+    public static final String MESSAGE_MILESTONE_ACTIVITY_SSD_SED_CANNOTBE_FUTURE = "Milestone schedule start or end date cannot be future date";
+
 }

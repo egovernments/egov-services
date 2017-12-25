@@ -66,4 +66,10 @@ public class PropertiesManager {
 
     @Value("${noticenumber.prefix}")
     private String noticeNumberPrefix;
+
+    @Value("${egov.services.works.milestone.saveorupdate.validated}")
+    private String worksMilestoneSaveOrUpdateValidatedTopic;
+
+    @Value("${egov.services.works.trackmilestone.saveorupdate.validated}")
+    private String worksTrackMilestoneSaveOrUpdateValidatedTopic;
 }

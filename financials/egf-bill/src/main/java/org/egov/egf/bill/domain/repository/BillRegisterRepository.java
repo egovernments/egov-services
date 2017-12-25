@@ -13,17 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class BillRegisterRepository {
 
-    private final BillRegisterJdbcRepository billRegisterJdbcRepository;
-
-    private final BillRegisterQueueRepository billRegisterQueueRepository;
+    @Autowired
+    private BillRegisterJdbcRepository billRegisterJdbcRepository;
 
     @Autowired
-    public BillRegisterRepository(final BillRegisterJdbcRepository billRegisterJdbcRepository,
-            final BillRegisterQueueRepository billRegisterQueueRepository,
-            final BillRegisterESRepository billRegisterESRepository) {
-        this.billRegisterJdbcRepository = billRegisterJdbcRepository;
-        this.billRegisterQueueRepository = billRegisterQueueRepository;
-    }
+    private BillRegisterQueueRepository billRegisterQueueRepository;
 
     @Transactional
     public BillRegisterRequest save(BillRegisterRequest billRegisterRequest) {

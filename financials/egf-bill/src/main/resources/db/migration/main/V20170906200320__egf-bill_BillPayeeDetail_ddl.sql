@@ -1,13 +1,13 @@
 
 Create table egf_billpayeedetail( 
-  id varchar(50),
-  accountDetailType varchar(50),
-  accountDetailKey varchar(50) NOT NULL,
+  id varchar(256),
+  accountDetailType varchar(256) NOT NULL,
+  accountDetailKey varchar(256) NOT NULL,
   amount numeric (13,2) NOT NULL,
-  billDetail varchar(50),
-  createdby varchar(50),
+  billDetail varchar(256),
+  createdby varchar(256),
   createdtime bigint,
-  lastmodifiedby varchar(50),
+  lastmodifiedby varchar(256),
   lastmodifiedtime bigint,
   tenantId varchar(250),
   version bigint

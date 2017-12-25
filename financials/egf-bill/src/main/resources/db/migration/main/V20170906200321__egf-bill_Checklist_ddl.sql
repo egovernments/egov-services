@@ -1,15 +1,15 @@
 
 Create table egf_checklist( 
-  code varchar(50),
+  code varchar(256),
   type varchar(50),
   subType varchar(50),
-  key varchar(250),
+  key varchar(256),
   description varchar(250),
-  createdby varchar(50),
+  createdby varchar(256),
   createdtime bigint,
-  lastmodifiedby varchar(50),
+  lastmodifiedby varchar(256),
   lastmodifiedtime bigint,
-  tenantId varchar(250),
+  tenantId varchar(256),
   version bigint
 );
 alter table egf_checklist add constraint pk_egf_checklist primary key (code,tenantId);

@@ -22,14 +22,45 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
+          - name: billNumbers
             type: array
             items: 
              type: string
             in: query
             maxItems: 50
-            description: comma seperated list of Ids 
+            description: comma seperated list of billNumbers 
             maxLength: 50
+          - name: types
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of type 
+            maxLength: 50
+          - name: names
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of name 
+            maxLength: 50
+          - name: statusCodes
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of statusCode 
+            maxLength: 50
+          - name: departmentCodes
+            type: array
+            items: 
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of department Code 
           - name: billType
             type: string
             in: query
@@ -51,8 +82,8 @@ paths:
               billNumber refers to the unique number generated for the bill.
             maxLength: 50
           - name: billDate
-            type: string
-            format: date
+            type: integer
+            format: int64
             in: query
             description: |
               billDate is the date when the bill is created.
@@ -78,57 +109,48 @@ paths:
             description: |
               moduleName is the name of the module who is posting the bill in financials
             maxLength: 50
-          - name: status
-            type: integer
-            format: int64
+          - name: statusCode
+            type: string
             in: query
             description: |
               status refers to the status of the bill like ,created,approved etc
-          - name: fund
-            type: integer
-            format: int64
+          - name: fundCode
+            type: string
             in: query
             description: |
               fundsource refers to the fundsounce master
-          - name: function
-            type: integer
-            format: int64
+          - name: functionCode
+            type: string
             in: query
             description: |
               function refers to the function master
-          - name: fundsource
-            type: integer
-            format: int64
+          - name: fundSourceCode
+            type: string
             in: query
             description: |
               fundsource of the BillRegister
-          - name: scheme
-            type: integer
-            format: int64
+          - name: schemeCode
+            type: string
             in: query
             description: |
               scheme of the BillRegister
-          - name: subScheme
-            type: integer
-            format: int64
+          - name: subSchemeCode
+            type: string
             in: query
             description: |
               sub scheme of the BillRegister
-          - name: functionary
-            type: integer
-            format: int64
+          - name: functionaryCode
+            type: string
             in: query
             description: |
               functionary of the BillRegister
-          - name: division
-            type: integer
-            format: int64
+          - name: locationCode
+            type: string
             in: query
             description: |
-              division of the BillRegister
-          - name: department
-            type: integer
-            format: int64
+              location of the BillRegister
+          - name: departmentCode
+            type: string
             in: query
             description: |
               department of the BillRegister
@@ -156,8 +178,8 @@ paths:
               partyBillNumber is the manual bill number .
             maxLength: 50
           - name: partyBillDate
-            type: string
-            format: date
+            type: integer
+            format: int64
             in: query
             description: |
               partyBillDate is the manual bill date .
@@ -235,13 +257,13 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: ids
+          - name: codes
             type: array
             items: 
              type: string
             in: query
             maxItems: 50
-            description: comma seperated list of Ids 
+            description: comma seperated list of code 
           - name: type
             type: string
             in: query
@@ -261,11 +283,6 @@ paths:
               key is the content of the check list .
               exmaple. 1. Passport copy attached
               2. Ration card copy attached etc
-          - name: description
-            type: string
-            in: query
-            description: |
-              description is further detailed discription of the check list values
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/offset"
           - name: sortBy
@@ -680,4 +697,5 @@ parameters:
     in: query
     description: pageSize          
           
+
 

@@ -30,22 +30,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class BillRegisterESRepository extends ESRepository {
 
-    private final TransportClient esClient;
+    @Autowired
+    private TransportClient esClient;
 
-    private final ElasticSearchUtils elasticSearchUtils;
+    @Autowired
+    private ElasticSearchUtils elasticSearchUtils;
 
     @Autowired
     private ObjectMapper mapper;
 
     public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-    @Autowired
-    public BillRegisterESRepository(final TransportClient esClient, final ElasticSearchUtils elasticSearchUtils) {
-
-        this.esClient = esClient;
-        this.elasticSearchUtils = elasticSearchUtils;
-
-    }
 
     public Pagination<BillRegister> search(final BillRegisterSearch billRegisterSearch) {
         final SearchRequestBuilder searchRequestBuilder = getSearchRequest(billRegisterSearch);

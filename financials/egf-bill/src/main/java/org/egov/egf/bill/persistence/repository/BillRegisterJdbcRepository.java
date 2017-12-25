@@ -148,24 +148,6 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
                     billRegisterSearch.getBillSubType());
         }
 
-        if (billRegisterSearch.getGlcode() != null) {
-            addAnd(params);
-            params.append("glcode =:glcode");
-            paramValues.put("glcode", billRegisterSearch.getGlcode());
-        }
-
-        if (billRegisterSearch.getDebitAmount() != null) {
-            addAnd(params);
-            params.append("debitAmount =:debitAmount");
-            paramValues.put("debitAmount", billRegisterSearch.getDebitAmount());
-        }
-
-        if (billRegisterSearch.getCreditAmount() != null) {
-            addAnd(params);
-            params.append("creditAmount =:creditAmount");
-            paramValues.put("creditAmount", billRegisterSearch.getCreditAmount());
-        }
-
         if (billRegisterSearch.getTypes() != null) {
             addAnd(params);
             params.append("type in (:types)");
@@ -329,13 +311,6 @@ public class BillRegisterJdbcRepository extends JdbcRepository {
             params.append("partybilldate =:partyBillDate");
             paramValues.put("partyBillDate",
                     billRegisterSearch.getPartyBillDate());
-        }
-
-        if (billRegisterSearch.getDescription() != null) {
-            addAnd(params);
-            params.append("description =:description");
-            paramValues.put("description",
-                    billRegisterSearch.getDescription());
         }
 
         if (billRegisterSearch.getTenantId() != null) {

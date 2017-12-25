@@ -13,17 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ChecklistRepository {
 
-    private final ChecklistJdbcRepository checklistJdbcRepository;
-
-    private final ChecklistQueueRepository checklistQueueRepository;
+    @Autowired
+    private ChecklistJdbcRepository checklistJdbcRepository;
 
     @Autowired
-    public ChecklistRepository(final ChecklistJdbcRepository checklistJdbcRepository,
-            final ChecklistQueueRepository checklistQueueRepository) {
-        this.checklistJdbcRepository = checklistJdbcRepository;
-        this.checklistQueueRepository = checklistQueueRepository;
-
-    }
+    private ChecklistQueueRepository checklistQueueRepository;
 
     @Transactional
     public ChecklistRequest save(ChecklistRequest checklistRequest) {

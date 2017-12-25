@@ -278,3 +278,61 @@ serviceMaps:
 
        - jsonPath: $.billRegisters.*.billDetails.*.billPayeeDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
+
+ - version: 1.0
+   name: checklist create
+   description: create checklists in egf_checklist
+   fromTopic: egf-bill-checklist-save-topic
+   queryMaps: 
+    - query: INSERT INTO egf_checklist(code, type, subType, key, description,  createdby, lastmodifiedby, createdtime, lastmodifiedtime, tenantId) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.checklists.*
+      jsonMaps:
+       
+       - jsonPath: $.checklists.*.code
+         
+       - jsonPath: $.checklists.*.type
+
+       - jsonPath: $.checklists.*.subType
+
+       - jsonPath: $.checklists.*.key
+
+       - jsonPath: $.checklists.*.description
+
+       - jsonPath: $.checklists.*.auditDetails.createdBy
+
+       - jsonPath: $.checklists.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.checklists.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.checklists.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.checklists.*.tenantId
+
+
+ - version: 1.0
+   name: checklist update
+   description: update checklists in egf_checklist
+   fromTopic: egf-bill-checklist-update-topic
+   queryMaps: 
+    - query: update egf_checklist set type=?, subType=?, key=?, description=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+      basePath: $.checklists.*
+      jsonMaps:
+       
+       - jsonPath: $.checklists.*.type
+
+       - jsonPath: $.checklists.*.subType
+
+       - jsonPath: $.checklists.*.key
+
+       - jsonPath: $.checklists.*.description
+
+       - jsonPath: $.checklists.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.checklists.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.checklists.*.code
+
+       - jsonPath: $.checklists.*.tenantId

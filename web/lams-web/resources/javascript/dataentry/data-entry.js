@@ -67,6 +67,40 @@ var index=1;
 
 $(document).ready(function() {
 
+  basedOnType();
+
+  // console.log(getUrlVars()["agreementNumber"]);
+  if(getUrlVars()["agreementNumber"]){
+    //modify - autopopulate the fields
+    $.ajax({
+        url: baseUrl + "/lams-services/agreements/_search?tenantId=" + tenantId + "&agreementNumber=" +getUrlVars()["agreementNumber"],
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+            RequestInfo: requestInfo,
+        }),
+        async: false,
+        headers: {
+            'auth-token': authToken
+        },
+        contentType: 'application/json',
+        success:function(response){
+            if(response.Agreements[0].source === 'DATA_ENTRY' ){
+              let modifyAgreements = response.Agreements[0];
+              console.log(modifyAgreements);
+              $("#createAgreementForm :input, #createAgreementForm select, , #createAgreementForm textarea").each(function(index, elm){
+                console.log($(this).attr('name'));
+              });
+            }else{
+              alert('This agreement number is not data entry screen.')
+            }
+        },
+        error:function(jqXHR){
+          console.log(jqXHR.responseText);
+        }
+    });
+  }
+
   initDatepicker();
 
   $("#subesquentrenewalsTable tbody tr:first").find('td:last .subsequentRenewalsDelete').hide();
@@ -138,6 +172,7 @@ $(document).ready(function() {
        document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
      }
    }
+
  });
 
 //Getting data for user input
@@ -377,526 +412,6 @@ var commomFieldsRules = {
       'mm/yyyy' : true
     }
 };
-if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
-    // validation rules for land agreement
-    validationRules = {
-            // landRegisterNumber: {
-            //     required: true
-            // },
-            // particularsOfLand: {
-            //     required: true
-            // },
-            // resurveyNumber: {
-            //     required: true
-            // },
-            // landAddress: {
-            //     required: true
-            // },
-            // townSurveyNumber: {
-            //     required: true
-            // }
-            // ,
-            // assetCategory: {
-            //     required: true
-            // },
-            // assetName: {
-            //     required: true
-            // },
-            // assetCode: {
-            //     required: true
-            // },
-            // assetArea: {
-            //     required: true
-            // },
-            // assetLocality: {
-            //     required: true
-            // },
-            // assetStreet: {
-            //     required: true
-            // },
-            // assetRevenueZone: {
-            //     required: true
-            // },
-            // assetrevenueWards: {
-            //     required: true
-            // },
-            // assetRevenueBlock: {
-            //     required: true
-            // },
-            // assetElectionWard: {
-            //     required: true
-            // },
-            // assetAssetAddress: {
-            //     required: true
-            // }
-        }
-        // remove all other Asset Details block from DOM except land asset related fields
-    $("#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
-    //disabling input tag of asset details
-    $("#landAssetDetailsBlock input").attr("disabled", true);
-    //disabling text tag of asset details
-    $("#landAssetDetailsBlock textarea").attr("disabled", true);
-
-    //append category text
-    $(".categoryType").prepend("Land ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Shop") {
-    // validation rules for shop agreement
-    validationRules = {
-        // shoppingComplexName: {
-        //     required: true
-        // },
-        // shoppingComplexNo: {
-        //     required: true
-        // },
-        // shoppingComplexShopNo: {
-        //     required: true
-        // },
-        // shoppingComplexFloorNo: {
-        //     required: true
-        // },
-        // shopArea: {
-        //     required: true
-        // },
-        // shoppingComplexAddress: {
-        //     required: true
-        // }
-        // ,
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
-    //disabling input tag of asset details
-    $("#shopAssetDetailsBlock input").attr("disabled", true);
-    //disabling textarea tag of asset details
-    $("#shopAssetDetailsBlock textarea").attr("disabled", true);
-    //disabling select tag of asset details
-    $("#shopAssetDetailsBlock select").attr("disabled", true);
-    //append category text
-    $(".categoryType").prepend("Shop ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
-    // validation rules for shop agreement
-    validationRules = {
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetArea: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#marketAssetDetailsBlock input").attr("disabled", true);
-    $("#marketAssetDetailsBlock textarea").attr("disabled", true);
-    //append category text
-    $(".categoryType").prepend("Market ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Kalyana Mandapam") {
-    // validation rules for shop agreement
-    validationRules = {
-        // kalyanamandapamName: {
-        //     required: true
-        // },
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#kalyanamandapamAssetDetailsBlock input").attr("disabled", true);
-    $("#kalyanamandapamAssetDetailsBlock textarea").attr("disabled", true);
-    //append category text
-    $(".categoryType").prepend("Kalyanamandapam ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Parking Space") {
-    // validation rules for shop agreement
-    validationRules = {
-        // parkingSpaceName: {
-        //     required: true
-        // },
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetArea: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
-    $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
-
-    //append category text
-    $(".categoryType").prepend("Parking Space ");
-
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Slaughter House") {
-    // validation rules for shop agreement
-    validationRules = {
-        // slaughterHouseName: {
-        //     required: true
-        // },
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#slaughterHousesAssetDetailsBlock input").attr("disabled", true);
-    $("#slaughterHousesAssetDetailsBlock textarea").attr("disabled", true);
-    //append category text
-    $(".categoryType").prepend("Slaughter House ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Usufruct") {
-    // validation rules for shop agreement
-    validationRules = {
-        // usfructName: {
-        //     required: true
-        // },
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#usfructsAssetDetailsBlock input").attr("disabled", true);
-    $("#usfructsAssetDetailsBlock textarea").attr("disabled", true);
-
-    //append category text
-    $(".categoryType").prepend("Usfructs ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Community Toilet Complex") {
-    // validation rules for shop agreement
-    validationRules = {
-        // toiletComplexName: {
-        //     required: true
-        // },
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#communityAssetDetailsBlock input").attr("disabled", true);
-    $("#communityAssetDetailsBlock textarea").attr("disabled", true);
-    //append category text
-    $(".categoryType").prepend("Community ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Fish Tanks") {
-    // validation rules for shop agreement
-    validationRules = {
-        // fishTankName: {
-        //     required: true
-        // },
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#fishTankAssetDetailsBlock input").attr("disabled", true);
-    $("#fishTankAssetDetailsBlock textarea").attr("disabled", true);
-    //append category text
-    $(".categoryType").prepend("Fish Tank ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Parks") {
-    // validation rules for shop agreement
-    validationRules = {
-        // park_name: {
-        //     required: true
-        // },
-        // assetCategory: {
-        //     required: true
-        // },
-        // assetName: {
-        //     required: true
-        // },
-        // assetCode: {
-        //     required: true
-        // },
-        // assetLocality: {
-        //     required: true
-        // },
-        // assetStreet: {
-        //     required: true
-        // },
-        // assetRevenueZone: {
-        //     required: true
-        // },
-        // assetrevenueWards: {
-        //     required: true
-        // },
-        // assetRevenueBlock: {
-        //     required: true
-        // },
-        // assetElectionWard: {
-        //     required: true
-        // },
-        // assetAssetAddress: {
-        //     required: true
-        // }
-    }
-
-    // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
-    //disabling input tag of asset details
-    $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
-    $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
-    //append category text
-    $(".categoryType").prepend("Park ");
-} else {
-    // remove all other Asset Details block from DOM except land asset related fields
-    $("#landAssetDetailsBlock,#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
-    //remove agreement template two and three from screen
-    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
-    alert("Agreement is not applicable for selected category");
-    window.open(location, '_self').close();
-}
 
 try {
     rentInc = commonApiPost("lams-services", "getrentincrements", "", {
@@ -1427,4 +942,527 @@ function calcFooterYearSum(){
     $("#subesquentrenewalsTable tfoot tr td:eq(1)").html(totalYear+'.'+(totalMonth%12));
     //add years and months
   });
+}
+
+function basedOnType(){
+  if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
+      // validation rules for land agreement
+      validationRules = {
+              // landRegisterNumber: {
+              //     required: true
+              // },
+              // particularsOfLand: {
+              //     required: true
+              // },
+              // resurveyNumber: {
+              //     required: true
+              // },
+              // landAddress: {
+              //     required: true
+              // },
+              // townSurveyNumber: {
+              //     required: true
+              // }
+              // ,
+              // assetCategory: {
+              //     required: true
+              // },
+              // assetName: {
+              //     required: true
+              // },
+              // assetCode: {
+              //     required: true
+              // },
+              // assetArea: {
+              //     required: true
+              // },
+              // assetLocality: {
+              //     required: true
+              // },
+              // assetStreet: {
+              //     required: true
+              // },
+              // assetRevenueZone: {
+              //     required: true
+              // },
+              // assetrevenueWards: {
+              //     required: true
+              // },
+              // assetRevenueBlock: {
+              //     required: true
+              // },
+              // assetElectionWard: {
+              //     required: true
+              // },
+              // assetAssetAddress: {
+              //     required: true
+              // }
+          }
+          // remove all other Asset Details block from DOM except land asset related fields
+      $("#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      //disabling input tag of asset details
+      $("#landAssetDetailsBlock input").attr("disabled", true);
+      //disabling text tag of asset details
+      $("#landAssetDetailsBlock textarea").attr("disabled", true);
+
+      //append category text
+      $(".categoryType").prepend("Land ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Shop") {
+      // validation rules for shop agreement
+      validationRules = {
+          // shoppingComplexName: {
+          //     required: true
+          // },
+          // shoppingComplexNo: {
+          //     required: true
+          // },
+          // shoppingComplexShopNo: {
+          //     required: true
+          // },
+          // shoppingComplexFloorNo: {
+          //     required: true
+          // },
+          // shopArea: {
+          //     required: true
+          // },
+          // shoppingComplexAddress: {
+          //     required: true
+          // }
+          // ,
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
+      //disabling input tag of asset details
+      $("#shopAssetDetailsBlock input").attr("disabled", true);
+      //disabling textarea tag of asset details
+      $("#shopAssetDetailsBlock textarea").attr("disabled", true);
+      //disabling select tag of asset details
+      $("#shopAssetDetailsBlock select").attr("disabled", true);
+      //append category text
+      $(".categoryType").prepend("Shop ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
+      // validation rules for shop agreement
+      validationRules = {
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetArea: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#marketAssetDetailsBlock input").attr("disabled", true);
+      $("#marketAssetDetailsBlock textarea").attr("disabled", true);
+      //append category text
+      $(".categoryType").prepend("Market ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Kalyana Mandapam") {
+      // validation rules for shop agreement
+      validationRules = {
+          // kalyanamandapamName: {
+          //     required: true
+          // },
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#kalyanamandapamAssetDetailsBlock input").attr("disabled", true);
+      $("#kalyanamandapamAssetDetailsBlock textarea").attr("disabled", true);
+      //append category text
+      $(".categoryType").prepend("Kalyanamandapam ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Parking Space") {
+      // validation rules for shop agreement
+      validationRules = {
+          // parkingSpaceName: {
+          //     required: true
+          // },
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetArea: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
+      $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
+
+      //append category text
+      $(".categoryType").prepend("Parking Space ");
+
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Slaughter House") {
+      // validation rules for shop agreement
+      validationRules = {
+          // slaughterHouseName: {
+          //     required: true
+          // },
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#slaughterHousesAssetDetailsBlock input").attr("disabled", true);
+      $("#slaughterHousesAssetDetailsBlock textarea").attr("disabled", true);
+      //append category text
+      $(".categoryType").prepend("Slaughter House ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Usufruct") {
+      // validation rules for shop agreement
+      validationRules = {
+          // usfructName: {
+          //     required: true
+          // },
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#usfructsAssetDetailsBlock input").attr("disabled", true);
+      $("#usfructsAssetDetailsBlock textarea").attr("disabled", true);
+
+      //append category text
+      $(".categoryType").prepend("Usfructs ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Community Toilet Complex") {
+      // validation rules for shop agreement
+      validationRules = {
+          // toiletComplexName: {
+          //     required: true
+          // },
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#communityAssetDetailsBlock input").attr("disabled", true);
+      $("#communityAssetDetailsBlock textarea").attr("disabled", true);
+      //append category text
+      $(".categoryType").prepend("Community ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Fish Tanks") {
+      // validation rules for shop agreement
+      validationRules = {
+          // fishTankName: {
+          //     required: true
+          // },
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#fishTankAssetDetailsBlock input").attr("disabled", true);
+      $("#fishTankAssetDetailsBlock textarea").attr("disabled", true);
+      //append category text
+      $(".categoryType").prepend("Fish Tank ");
+  } else if (decodeURIComponent(getUrlVars()["type"]) == "Parks") {
+      // validation rules for shop agreement
+      validationRules = {
+          // park_name: {
+          //     required: true
+          // },
+          // assetCategory: {
+          //     required: true
+          // },
+          // assetName: {
+          //     required: true
+          // },
+          // assetCode: {
+          //     required: true
+          // },
+          // assetLocality: {
+          //     required: true
+          // },
+          // assetStreet: {
+          //     required: true
+          // },
+          // assetRevenueZone: {
+          //     required: true
+          // },
+          // assetrevenueWards: {
+          //     required: true
+          // },
+          // assetRevenueBlock: {
+          //     required: true
+          // },
+          // assetElectionWard: {
+          //     required: true
+          // },
+          // assetAssetAddress: {
+          //     required: true
+          // }
+      }
+
+      // remove all other Asset Details block from DOM except shop asset related fields
+      $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
+      //disabling input tag of asset details
+      $("#parkingSpaceAssetDetailsBlock input").attr("disabled", true);
+      $("#parkingSpaceAssetDetailsBlock textarea").attr("disabled", true);
+      //append category text
+      $(".categoryType").prepend("Park ");
+  } else {
+      // remove all other Asset Details block from DOM except land asset related fields
+      $("#landAssetDetailsBlock,#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+      //remove agreement template two and three from screen
+      $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
+      alert("Agreement is not applicable for selected category");
+      window.open(location, '_self').close();
+  }
 }

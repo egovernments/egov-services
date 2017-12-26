@@ -3,7 +3,6 @@ package org.egov.infra.mdms.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.egov.MDMSApplicationRunnerImpl;
 import org.egov.infra.mdms.service.MDMSService;
@@ -45,6 +44,7 @@ public class MDMSRequestValidator {
 		List<Object> masterData = new ArrayList<>();
 		if(cacheFetch){
 			masterContentFromCache = mDMSService.getContentFromCache(filePathMap, mDMSCreateRequest);
+			
 			if(null == masterContentFromCache){
 				logger.info("Failed to get content from cache, fall back to fetch from git triggered....");
 			}else{
@@ -61,14 +61,18 @@ public class MDMSRequestValidator {
 		if(null != masterContentFromCache){
 			Object masterFromCache = mapper.writeValueAsString(masterContentFromCache);
 			logger.info("masterContentsFromCache: "+masterContentFromCache);
-			masterFromCache = JsonPath.read(masterFromCache.toString(), 
-					"$.MdmsRes."+mDMSCreateRequest.getMasterMetaData().getModuleName()+"."+
-					 mDMSCreateRequest.getMasterMetaData().getMasterName());
-			logger.info("masterData fetched from cache: "+masterFromCache);
-			
-			DocumentContext documentContext = JsonPath.parse(fileContents.toString());
-			documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(), masterFromCache);
-			fileContents = documentContext.jsonString().toString();
+			Map<String,Object> map =JsonPath.read(masterFromCache.toString(),"$.MdmsRes."+mDMSCreateRequest.getMasterMetaData().getModuleName());
+			if(!map.toString().equals("{}")){
+				masterFromCache = JsonPath.read(masterFromCache.toString(), 
+						"$.MdmsRes."+mDMSCreateRequest.getMasterMetaData().getModuleName()+"."+
+						 mDMSCreateRequest.getMasterMetaData().getMasterName());
+
+				logger.info("masterData fetched from cache: "+masterFromCache);
+				
+				DocumentContext documentContext = JsonPath.parse(fileContents.toString());
+				documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(), masterFromCache);
+				fileContents = documentContext.jsonString().toString();
+			}
 		}
 		Map<String, Object> allMasters = mapper.readValue(fileContents.toString(), Map.class);
 		masterData = (List<Object>) allMasters.get(mDMSCreateRequest.getMasterMetaData().getMasterName());	
@@ -81,6 +85,10 @@ public class MDMSRequestValidator {
 			logger.info("Skipping Validation....");
 			return result;
 		}else {
+			if(null == masterData){
+				logger.info("Config available for this master nut no data");
+				return result;
+			}
 			logger.info("uniqueKeys: "+uniqueKeys);
 			StringBuilder expression = new StringBuilder();
 			for(String key: uniqueKeys){

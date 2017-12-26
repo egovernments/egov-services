@@ -1,17 +1,13 @@
 package org.egov;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -19,8 +15,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -36,13 +30,19 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 	@Value("${egov.mdms.conf.path}")
 	public String mdmsFileDirectory;
 	
+	@Value("${state.level.masters}")
+	public String stateLevelMasters;
+	
 	private static Map<String, String> filePathMap = new HashMap<>();
+	
+	private static Map<String, List<String>> stateLevelMastermap = new HashMap<>();
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		try {
 			log.info("Reading data files from: "+mdmsFileDirectory);
 			readDirectory(mdmsFileDirectory);
+			getStateLevelMap(stateLevelMasters);
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);
 		}
@@ -103,7 +103,42 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 	
 	public static Map<String, String> getFilePathMap(){
 		return filePathMap;
+	}
 	
+	/**
+	 * Preparing StateLevel Map By configured (state.level.masters) in
+	 * application properties.
+	 * 
+	 * @param stateLevelMasters
+	 */
+	public void getStateLevelMap(String stateLevelMasters) {
+		if (!StringUtils.isEmpty(stateLevelMasters)) {
+			if (stateLevelMasters.contains(",")) {
+				List<String> list = Arrays.asList(stateLevelMasters.split("\\,"));
+				for (String key : list) {
+					String[] array = key.split("\\.");
+					if (!stateLevelMastermap.containsKey(array[0])) {
+						List<String> values = new ArrayList<String>();
+						values.add(array[1]);
+						stateLevelMastermap.put(array[0], values);
+					} else {
+						List<String> values = stateLevelMastermap.get(array[0]);
+						values.add(array[1]);
+						stateLevelMastermap.put(array[0], values);
+					}
+				}
+			} else {
+				// Assuming Data Always Given like ModuleName.MasterName
+				String[] array = stateLevelMasters.split("\\.");
+				List<String> values = new ArrayList<String>();
+				values.add(array[1]);
+				stateLevelMastermap.put(array[0], values);
+			}
+		}
+	}
+
+	public static Map<String, List<String>> getStateWideMastersMap() {
+		return stateLevelMastermap;
 	}
 	
 }

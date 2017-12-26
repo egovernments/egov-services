@@ -54,9 +54,50 @@ function getType(type) {
     }
 }
 
+getPropertyStatus = (module, master, property) => {
+	var scopeObj = uniqueKeyObj;
+	
+	if(scopeObj[module.toLowerCase()][master.toLowerCase()]){
+		
+		if(scopeObj[module.toLowerCase()][master.toLowerCase()].indexOf(property) > -1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	else{
+		// console.log(module, master);
+		return false;
+	}
+}
+
+getHeaderStatus = (module, master, property) => {
+	var scopeObj = specificHeaderObj;
+	if(specificHeaderObj[module.toLowerCase()].isSpecificHeader && scopeObj[module.toLowerCase()][master.toLowerCase()]){
+		if(scopeObj[module.toLowerCase()][master.toLowerCase()].indexOf(property) > -1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	else{
+		return true;
+	}
+}
+
+
+
+
+
+
 var getFieldsFromInnerObject = function(fields, header, properties, module, master, jPath, isArray, required) {
     // console.log("Iner object called with - " + jPath);
     for (let key in properties) {
+		var isUnique = getPropertyStatus(module, master, key, false);
+		var isSpecificHeader = getPropertyStatus(module, master, key, true);
+		// console.log(module, master, key, getPropertyStatus(module, master, key));
     	//Adding tenantId and id as per discussion on Friday (08-12-2017)
         if ([/*"id", "tenantId",*/ "auditDetails", "assigner"].indexOf(key) > -1) continue;
         if(properties[key].properties) 	{
@@ -65,7 +106,7 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
 
             //Adding custom specs for Address Block as per discussion on Friday (08-12-2017)
             if(key == "address"){
-            	console.log(properties[key].properties);
+            	// console.log(properties[key].properties);
             	getFieldsFromInnerObject(fields, header, properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []));
             }
             else{
@@ -80,11 +121,15 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
 	                "url": "/egov-mdms-service/v1/_get?&moduleName=" +  module + "&masterName=" 
 	                	+ master + "|$.MdmsRes." + module + "." + key + ".*.id|$.MdmsRes." + module + "." + key + ".*.name",
 	                "isStateLevel":true,
-	                "apiKey": jPath + "." + key							
-	            });
-	            header.push({
-	            	"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
-	            })
+					"apiKey": jPath + "." + key,
+					"isUnique": isUnique							
+				});
+				if(getHeaderStatus(module, master, key)){
+					header.push({
+						"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
+					})
+				}
+	           
         	}
         } else if(properties[key].items && properties[key].items.properties) {
             if(jPath == "WasteSubType") console.log(jPath + " is an array");
@@ -102,13 +147,14 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
                 "defaultValue": properties[key].default || "",
                 "maxLength": properties[key].maxLength,
                 "minLength": properties[key].minLength,
-                "patternErrorMsg": properties[key].pattern ? (module + ".create.field.message." + key) : ""
-            });
-            header.push({
-            	"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
-            })
-            
-
+				"patternErrorMsg": properties[key].pattern ? (module + ".create.field.message." + key) : "",
+				"isUnique": isUnique
+			});
+			if(getHeaderStatus(module, master, key)){
+				header.push({
+					"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
+				})
+			}
         }
         
     }
@@ -125,11 +171,28 @@ var finalSpecs = {};
 var finalSpecsRaw = {};
 var urls = [];
 var modules = [];
+var uniqueKeyObj = {};
+var specificHeaderObj = {};
 
 for(module in configData){
 	urls.push(configData[module].url);
 	modules.push(module);
+	if(!specificHeaderObj[module.toLowerCase()]) specificHeaderObj[module.toLowerCase()] = {};
+	specificHeaderObj[module.toLowerCase()].isSpecificHeader = configData[module].isSpecificHeader;
+	if(!uniqueKeyObj[module.toLowerCase()]) uniqueKeyObj[module.toLowerCase()] = {};
+	for(var i = 0; i < configData[module].masters.length; i++){
+		if(!uniqueKeyObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()]) uniqueKeyObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = {};
+		
+		uniqueKeyObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = configData[module].masters[i].uniqueKeys;
+		if(configData[module].isSpecificHeader && configData[module].masters[i].hasOwnProperty("specificHeaders")){
+			if(!specificHeaderObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()]) specificHeaderObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = {};
+			specificHeaderObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = configData[module].masters[i].specificHeaders;
+		}
+	}
 }
+
+console.log(specificHeaderObj);
+console.log(getHeaderStatus("swm", "CollectionType", "code"));
 
 
 // for(module in modules){
@@ -159,13 +222,18 @@ for(module in configData){
 	            // console.log(mainObj);
 
 	            for(moduleName in mainObj){
-	            	// console.log("Main Object module- " + moduleName);
+
+					// 1. get unique keys from config for each master
+					// 2. find unique property in mainObj
+					// 3. if exists set flag as true
+
+
+					
 	            	console.log("module name is - " + moduleName);
 	            	finalSpecs[moduleName.toLowerCase()] = {};
 	            	finalSpecsRaw[moduleName.toLowerCase()] = {};
 	            	for(master in mainObj[moduleName.toLowerCase()]){
-	            		// console.log(property);
-	            		// console.log("Master in Object module- " + master);
+	            		
 	            		finalSpecsRaw[moduleName.toLowerCase()][master.toLowerCase()] = mainObj[moduleName][master];
 	            		if(!finalSpecs[moduleName.toLowerCase()].masters) finalSpecs[moduleName.toLowerCase()].masters = {};
 
@@ -190,32 +258,8 @@ for(module in configData){
 	            	
 	            }
 
-	            console.log(finalSpecs.lcms.masters.casetype);
-	            console.log(finalSpecsRaw.lcms);
-
-	            /*
-	            var run = false;
-	            var count = 0;
-	            if(run){
-	            	var temp = [];
-		            var result = [];
-
-	            	for(var i = 0; i < finalSpecs.lcms.masters.advocate.values.length; i++){
-	            		temp.push(finalSpecs.lcms.masters.advocate.values[i].name);
-	            		if(finalSpecs.lcms.masters.advocate.values[i].isRequired){
-	            			count++;
-	            		}
-	            	}
-	            	console.log(count);
-		            
-	            	for(property in finalSpecsRaw.lcms.advocate.properties){
-	            		if(!temp.includes(property)){
-	            			result.push(property)
-	            		}
-	            	}
-
-	            	console.log(result);
-					*/	            
+	            // console.log(finalSpecs.swm.masters.vehicletype);
+	            // console.log(finalSpecsRaw.lcms);
 	        
 	        }
 		})
@@ -231,10 +275,12 @@ app.post('/spec-directory/:module/:master', function(req, res, next) {
 	for (var key in req.params){ 
 		req.params[key] = req.params[key].toLowerCase();
 	}
+	
 	console.log(req.params);
 	console.log(req.params.master);
 	var master = req.params.master;
 	var module = req.params.module;
+	console.log(getPropertyStatus(module, master, "code"));
 	if(finalSpecs[module] && finalSpecs[module].masters[master]){
 		res.status(200).json(finalSpecs[module].masters[master]);
 	}

@@ -114,8 +114,10 @@ public class BillRegisterService {
 
         fetchRelated(billRegisterRequest);
         populateAuditDetails(billRegisterRequest);
+
         if (billNumberAutoGen != null && billNumberAutoGen)
             populateBillNumbers(billRegisterRequest);
+
         populateDependentEntityIds(billRegisterRequest.getBillRegisters());
 
         validate(billRegisterRequest, Constants.ACTION_CREATE);
@@ -215,7 +217,8 @@ public class BillRegisterService {
                 billDetailAmt = BigDecimal.ZERO;
 
                 // validate coa is active for posting
-                if (bd.getChartOfAccount() != null && !bd.getChartOfAccount().getIsActiveForPosting()) {
+                if (bd.getChartOfAccount() != null && bd.getChartOfAccount().getIsActiveForPosting() != null
+                        && !bd.getChartOfAccount().getIsActiveForPosting()) {
                     throw new CustomException("AccountCode",
                             "The field Account code is not active for posting.Please provide correct account code: "
                                     + bd.getChartOfAccount().getGlcode());
@@ -271,7 +274,7 @@ public class BillRegisterService {
                 }
 
                 for (BillPayeeDetail bpd : bd.getBillPayeeDetails()) {
-                    payeeDetailSum.add(bpd.getAmount());
+                    payeeDetailSum = payeeDetailSum.add(bpd.getAmount());
                 }
 
                 billDetailAmt = bd.getDebitAmount().compareTo(BigDecimal.ZERO) > 0 ? bd.getDebitAmount()
@@ -285,8 +288,8 @@ public class BillRegisterService {
                                     + bd.getChartOfAccount().getGlcode());
                 }
 
-                debitSum.add(bd.getDebitAmount());
-                creditSum.add(bd.getCreditAmount());
+                debitSum = debitSum.add(bd.getDebitAmount());
+                creditSum = creditSum.add(bd.getCreditAmount());
             }
 
             // validate sum(debit)-sum(credit) should be 0

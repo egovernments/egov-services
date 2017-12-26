@@ -169,7 +169,7 @@ public class IndentService extends DomainService {
 			errors.addDataError(ErrorCode.CITY_CODE_NOT_AVAILABLE.getCode(), b.getTenantId());
 		}
 		String finYearRange = "";
-		JSONArray finYears = mdmsRepository.getByCriteria("default", "egf-master", "financialYears", null, null, info);
+		JSONArray finYears = mdmsRepository.getByCriteria("default", "egf-master", "FinancialYear", null, null, info);
 		outer: for (int i = 0; i < finYears.size(); i++) {
 			FinancialYear fin = mapper.convertValue(finYears.get(i), FinancialYear.class);
 			LOG.info("Indentdate" + b.getIndentDate());

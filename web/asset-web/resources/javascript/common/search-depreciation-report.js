@@ -76,9 +76,10 @@ class SearchDepreciationReport extends React.Component {
       commonApiPost("asset-services","assets/depreciations","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
         if(res) {
           var list = res["DepreciationReportCriteria"];
-          // list.sort(function(item1, item2) {
-          //   return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
-          // })
+          list.sort(function(item1, item2) {
+            console.log(item1 , item2);
+            return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+          })
           flag = 1;
           _this.setState({
             isSearchClicked: true,

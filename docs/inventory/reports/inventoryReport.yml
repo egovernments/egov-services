@@ -70,7 +70,7 @@ ReportDefinitions:
   - name: financialYear
     label: inventory.financialYear
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange
     source: materialReceipt
     isMandatory: true
 
@@ -656,7 +656,7 @@ ReportDefinitions:
   - name: financialYear
     label: inventory.financialYear
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange
     source: inventory
     isMandatory: true
 

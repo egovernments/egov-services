@@ -58,9 +58,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class FinancialConfiguration {
 
-    
     private String tenantId;
-    
+
     @NotNull
     private String id;
 

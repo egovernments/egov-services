@@ -59,7 +59,7 @@ public class BillRegisterSearch extends BillRegister {
     private String subSchemeCode;
 
     private String statusCode;
-    
+
     private String statusCodes;
 
     private String locationCode;

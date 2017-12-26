@@ -74,7 +74,7 @@ public class BillStatus {
 
     @Size(min = 0, max = 250)
     private String description;
-    
+
     private Long orderNumber;
 
 }

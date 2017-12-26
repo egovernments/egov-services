@@ -12,7 +12,7 @@ import lombok.Setter;
 public class BillPayeeDetailSearch extends BillPayeeDetail {
     private String ids;
     private String billDetail;
-    private String billDetails;    
+    private String billDetails;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

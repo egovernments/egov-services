@@ -1,5 +1,19 @@
 package org.egov.inv.domain.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.MdmsRepository;
@@ -8,25 +22,41 @@ import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.domain.util.InventoryUtilities;
-import org.egov.inv.model.*;
+import org.egov.inv.model.Indent;
+import org.egov.inv.model.IndentDetail;
+import org.egov.inv.model.IndentResponse;
+import org.egov.inv.model.IndentSearch;
+import org.egov.inv.model.Material;
+import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetails;
+import org.egov.inv.model.PriceListResponse;
+import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.model.PurchaseIndentDetail;
+import org.egov.inv.model.PurchaseOrder;
 import org.egov.inv.model.PurchaseOrder.PurchaseTypeEnum;
 import org.egov.inv.model.PurchaseOrder.StatusEnum;
+import org.egov.inv.model.PurchaseOrderDetail;
+import org.egov.inv.model.PurchaseOrderDetailSearch;
+import org.egov.inv.model.PurchaseOrderRequest;
+import org.egov.inv.model.PurchaseOrderResponse;
+import org.egov.inv.model.PurchaseOrderSearch;
+import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Supplier;
+import org.egov.inv.model.SupplierGetRequest;
+import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.entity.PriceListEntity;
-import org.egov.inv.persistence.repository.*;
+import org.egov.inv.persistence.repository.IndentJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
+import org.egov.inv.persistence.repository.PriceListJdbcRepository;
+import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
+import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 @Transactional(readOnly = true)
@@ -226,6 +256,9 @@ public class PurchaseOrderService extends DomainService {
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
             // PUSH DATA TO KAFKA.
 
+            if (errors.getValidationErrors().size() > 0)
+                throw errors;
+            
             if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {
                 if (purchaseOrders.get(0).getPurchaseType().toString()
                         .equalsIgnoreCase(PurchaseTypeEnum.INDENT.toString()))
@@ -251,6 +284,7 @@ public class PurchaseOrderService extends DomainService {
         try {
             List<PurchaseOrder> purchaseOrder = purchaseOrderRequest.getPurchaseOrders();
             validate(purchaseOrder, Constants.ACTION_UPDATE, tenantId);
+            InvalidDataException errors = new InvalidDataException();
 
             for (PurchaseOrder eachPurchaseOrder : purchaseOrder) {
                 //TODO: handle the reversal only the amount not entirly zero
@@ -262,7 +296,6 @@ public class PurchaseOrderService extends DomainService {
                         }
                     }
                 } else {
-                    InvalidDataException errors = new InvalidDataException();
 
                     if (eachPurchaseOrder.getPurchaseOrderNumber() == null) {
                         errors.addDataError(ErrorCode.NULL_VALUE.getCode(), eachPurchaseOrder.getPurchaseOrderNumber() + " at serial no." + (purchaseOrder.indexOf(eachPurchaseOrder) + 1));
@@ -321,6 +354,9 @@ public class PurchaseOrderService extends DomainService {
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
             // PUSH DATA TO KAFKA.
+            
+            if (errors.getValidationErrors().size() > 0)
+                throw errors;
 
             if (purchaseOrder.size() > 0 && purchaseOrder.get(0).getPurchaseType() != null) {
                 if (purchaseOrder.get(0).getPurchaseType().toString()

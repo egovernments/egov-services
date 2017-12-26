@@ -32,17 +32,21 @@ public class DataUploadQueryBuilder {
 		preparedStatementValues.add(jobSearchRequest.getTenantId());
 
 		if (null != jobSearchRequest.getCodes() && !jobSearchRequest.getCodes().isEmpty()) {
-			selectQuery.append(" AND code IN (" + getIdQuery(jobSearchRequest.getCodes()) + ")");
+			selectQuery.append(" AND code IN (" + getListAppendQuery(jobSearchRequest.getCodes()) + ")");
 		}
 		
 		if (null != jobSearchRequest.getStatuses() && !jobSearchRequest.getStatuses().isEmpty()) {
-			selectQuery.append(" AND status IN (" + getIdQuery(jobSearchRequest.getStatuses()) + ")");
+			selectQuery.append(" AND status IN (" + getListAppendQuery(jobSearchRequest.getStatuses()) + ")");
 		}
 		
 		if (null != jobSearchRequest.getRequesterNames() && !jobSearchRequest.getRequesterNames().isEmpty()) {
-			selectQuery.append(" AND requesterName IN (" + getIdQuery(jobSearchRequest.getRequesterNames()) + ")");
+			selectQuery.append(" AND requester_name IN (" + getListAppendQuery(jobSearchRequest.getRequesterNames()) + ")");
 		}
 
+		if (null != jobSearchRequest.getRequestFileNames() && !jobSearchRequest.getRequestFileNames().isEmpty()) {
+			selectQuery.append(" AND file_name IN (" + getListAppendQuery(jobSearchRequest.getRequestFileNames()) + ")");
+		}
+		
 		if (jobSearchRequest.getStartDate() != null) {
 			selectQuery.append(" AND start_time>?");
 			preparedStatementValues.add(jobSearchRequest.getStartDate());
@@ -55,7 +59,7 @@ public class DataUploadQueryBuilder {
 
 	}
 	
-	private String getIdQuery(final List<String> codes) {
+	private String getListAppendQuery(final List<String> codes) {
 		StringBuilder query = new StringBuilder();
 		query.append("'").append(codes.get(0)).append("'");
 		for(int i = 1; i < codes.size(); i++){

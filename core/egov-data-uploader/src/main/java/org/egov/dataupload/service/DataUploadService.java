@@ -68,6 +68,9 @@ public class DataUploadService {
 	@Value("${write.file.path}")
 	private String writeFilePath;
 	
+	@Value("${response.file.name.prefix}")
+	private String resFilePrefix;
+	
 	@Autowired
 	private DataUploadProducer dataUploadProducer;
 	
@@ -76,6 +79,10 @@ public class DataUploadService {
 	public List<UploadJob> createUploadJob(UploaderRequest uploaderRequest){
 		StringBuilder uri = new StringBuilder();
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
+		if(null == uploadJob.getRequestFileName()){
+			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
+					"Please provide the requestFileName.");
+		}
 		uri.append(fileStoreHost).append(getFileEndpoint);
 		uri.append("?fileStoreId="+uploadJob.getRequestFilePath())
 		   .append("&tenantId="+uploadJob.getTenantId());
@@ -229,7 +236,7 @@ public class DataUploadService {
 		    	continue;
 		    }			
 		}
-		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), uploadJob.getCode());
+		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), uploadJob.getRequestFileName());
 		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
 		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
 		uploadRegistryRepository.updateJob(uploaderRequest);
@@ -257,15 +264,15 @@ public class DataUploadService {
 		
 	}
 	
-	private String getFileStoreId(String tenantId, String module, String jobId) throws Exception{
+	private String getFileStoreId(String tenantId, String module, String requestFileName) throws Exception{
 		logger.info("Uploading result excel to filestore....");
 		ObjectMapper mapper = new ObjectMapper();
 		File from = new File(resultFilePath);
-		File to = new File(resultFilePath.replace("result.xls", jobId+".xls"));
+		File to = new File(resultFilePath.replace("result.xls", resFilePrefix+requestFileName+".xls"));
 		boolean isRenameSuccess = from.renameTo(to);
 		String filePath = null;
 		if(isRenameSuccess){
-			filePath = resultFilePath.replace("result.xls", jobId+".xls");
+			filePath = resultFilePath.replace("result.xls", resFilePrefix+requestFileName+".xls");
 		}else{
 			filePath = resultFilePath;
 		}
@@ -280,7 +287,7 @@ public class DataUploadService {
 		}
 		logger.info("responsefile fileStoreId: "+id);
 		try{
-			File fromFile = new File(resultFilePath.replace("result.xls", jobId+".xls"));
+			File fromFile = new File(resultFilePath.replace("result.xls", resFilePrefix+requestFileName+".xls"));
 			File toFile = new File(resultFilePath);
 			boolean isSuccess = fromFile.renameTo(toFile);
 			if(isSuccess)

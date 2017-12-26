@@ -37,6 +37,9 @@ public class JobSearchRequest   {
 	
 	  @JsonProperty("endDate")
 	  private Long endDate;
+	  
+	  @JsonProperty("requestFileNames")
+	  private List<String> requestFileNames;
 	
 	  @JsonProperty("RequestInfo")
 	  private RequestInfo requestInfo;

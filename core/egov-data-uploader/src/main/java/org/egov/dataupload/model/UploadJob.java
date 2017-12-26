@@ -37,6 +37,9 @@ public class UploadJob   {
   @JsonProperty("responseFilePath")
   private String responseFilePath;
 
+  @JsonProperty("requestFileName")
+  private String requestFileName;
+  
   public enum StatusEnum {
     NEW("new"),
     

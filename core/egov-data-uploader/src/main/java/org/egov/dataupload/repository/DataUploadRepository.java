@@ -73,7 +73,7 @@ public class DataUploadRepository {
 		    }
 	    }catch(Exception e){
 			LOGGER.error("Exception while fetching file from: "+filePath, e);
-			throw new CustomException("400", "Exception while fetching file from");
+			throw new CustomException("400", "Exception while fetching file");
 	    }
 	    
 	    return writeFilePath;

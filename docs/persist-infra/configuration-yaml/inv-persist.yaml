@@ -1282,13 +1282,14 @@ serviceMaps:
       fromTopic: inv-transfer-inward-save-topic
       queryMaps:
         - query: >-
-               INSERT INTO materialreceipt(id, mrnnumber, receivingstore, issueingstore,receiptDate, receiptType, suppliercode, supplierbillno, supplierbilldate,
+               INSERT INTO materialreceipt(id, mrnnumber, issuenumber, receivingstore, issueingstore,receiptDate, receiptType, suppliercode, supplierbillno, supplierbilldate,
                challanno, challandate, description, paymentterms, receivedby, designation, mrnstatus, inspectedby, inspectiondate, inspectionremarks,
-               tenantid, createdby, createdTime, lastmodifiedby,lastModifiedTime) VALUES ( ?,?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?,?);
+               tenantid, createdby, createdTime, lastmodifiedby,lastModifiedTime) VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?,?);
           basePath: $.transferInwards.*
           jsonMaps:
             - jsonPath: $.transferInwards.*.id
             - jsonPath: $.transferInwards.*.mrnNumber
+            - jsonPath: $.transferInwards.*.issueNumber            
             - jsonPath: $.transferInwards.*.receivingStore.code
             - jsonPath: $.transferInwards.*.issueingStore.code
             - jsonPath: $.transferInwards.*.receiptDate
@@ -1335,7 +1336,7 @@ serviceMaps:
             - jsonPath: $.transferInwards.*.receiptDetails.*.auditDetails.lastModifiedBy
             - type: CURRENTDATE
               dbType: LONG
-        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, quantity, manufacturedate, lotNo, expiryDate, batchno, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, quantity, manufacturedate,receivedDate, lotNo, expiryDate, batchno, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:
             - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
@@ -1343,6 +1344,7 @@ serviceMaps:
             - jsonPath: $.transferInwards.*.tenantId
             - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
             - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.manufactureDate
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.receivedDate
             - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.transferInwards.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
               type: LONG

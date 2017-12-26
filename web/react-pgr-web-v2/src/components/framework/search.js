@@ -758,6 +758,9 @@ class Search extends Component {
       pathname: this.props.history.location.pathname,
       showResult: false,
     });
+    //=======Autocomplete field reset===>
+    var autoComField = document.querySelectorAll('[autoComplete="off"]');
+    autoComField[0].value = '';
   };
 
   render() {

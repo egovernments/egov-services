@@ -527,12 +527,6 @@ sync:
           shouldSource: True
           shouldSync: True
 
-        - source: attributename
-          destination: attributename
-          type: String
-          shouldSource: True
-          shouldSync: True
-
         - source: NA
           destination: createdby
           type: Integer

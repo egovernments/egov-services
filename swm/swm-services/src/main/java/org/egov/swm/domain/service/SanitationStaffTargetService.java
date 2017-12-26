@@ -15,7 +15,6 @@ import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
 import org.egov.swm.domain.repository.SanitationStaffTargetRepository;
 import org.egov.swm.web.contract.EmployeeResponse;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.SanitationStaffTargetRequest;
@@ -46,9 +45,6 @@ public class SanitationStaffTargetService {
 
     @Autowired
     private SwmProcessService swmProcessService;
-
-    @Autowired
-    private BoundaryRepository boundaryRepository;
 
     @Autowired
     private CollectionPointService collectionPointService;

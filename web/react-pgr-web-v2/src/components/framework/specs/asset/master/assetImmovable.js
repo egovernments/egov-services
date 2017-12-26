@@ -1376,7 +1376,7 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
             isStateLevel: true,
-          },
+          }, 
           {
             name: 'SecurityDepositRetained',
             jsonPath: 'Assets[0].securityDepositRetained',

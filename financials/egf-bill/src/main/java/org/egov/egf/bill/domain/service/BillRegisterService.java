@@ -1,11 +1,16 @@
 package org.egov.egf.bill.domain.service;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -108,11 +113,12 @@ public class BillRegisterService {
     public BillRegisterRequest create(BillRegisterRequest billRegisterRequest) {
 
         fetchRelated(billRegisterRequest);
-        validate(billRegisterRequest, Constants.ACTION_CREATE);
         populateAuditDetails(billRegisterRequest);
         if (billNumberAutoGen != null && billNumberAutoGen)
             populateBillNumbers(billRegisterRequest);
         populateDependentEntityIds(billRegisterRequest.getBillRegisters());
+
+        validate(billRegisterRequest, Constants.ACTION_CREATE);
 
         return billRegisterRepository.save(billRegisterRequest);
     }
@@ -162,6 +168,11 @@ public class BillRegisterService {
 
     private void validate(BillRegisterRequest billRegisterRequest, String action) {
 
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
+        findDuplicateAccountCodes(billRegisterRequest);
+
         String tenantId = null;
 
         if (billRegisterRequest.getBillRegisters() != null && !billRegisterRequest.getBillRegisters().isEmpty()) {
@@ -184,9 +195,156 @@ public class BillRegisterService {
                 throw new CustomException("passedAmount", "passedAmount must be less than billAmount");
 
         }
+        BigDecimal creditSum = BigDecimal.ZERO;
+        BigDecimal debitSum = BigDecimal.ZERO;
+        BigDecimal billDetailAmt = BigDecimal.ZERO;
+        BigDecimal payeeDetailSum = BigDecimal.ZERO;
+
+        for (BillRegister br : billRegisterRequest.getBillRegisters()) {
+
+            if (br.getBillDate() != null && new Date().before(new Date(br.getBillDate())))
+                throw new CustomException("BillDate ",
+                        "Given Bill Date is invalid: " + dateFormat.format(new Date(br.getBillDate())));
+
+            creditSum = BigDecimal.ZERO;
+            debitSum = BigDecimal.ZERO;
+
+            for (BillDetail bd : br.getBillDetails()) {
+
+                payeeDetailSum = BigDecimal.ZERO;
+                billDetailAmt = BigDecimal.ZERO;
+
+                // validate coa is active for posting
+                if (bd.getChartOfAccount() != null && !bd.getChartOfAccount().getIsActiveForPosting()) {
+                    throw new CustomException("AccountCode",
+                            "The field Account code is not active for posting.Please provide correct account code: "
+                                    + bd.getChartOfAccount().getGlcode());
+                }
+
+                // validate coa is of classification 4
+                if (bd.getChartOfAccount() != null && bd.getChartOfAccount().getClassification() != null
+                        && bd.getChartOfAccount().getClassification() != 4) {
+                    throw new CustomException("AccountCode",
+                            "The field Account code is not valid detail code.Please provide correct account code: "
+                                    + bd.getChartOfAccount().getGlcode());
+                }
+
+                // validate both debit and credit can not have non zero value
+                if (bd.getDebitAmount() != null && bd.getCreditAmount() != null
+                        && bd.getDebitAmount().compareTo(BigDecimal.ZERO) > 0
+                        && bd.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
+
+                    throw new CustomException("DebitAmount",
+                            "Positive amount is not allowed in both debit and credit amount of "
+                                    + bd.getChartOfAccount().getGlcode() + ",Any time only one can be greater than 0");
+
+                }
+
+                // validate both debit and credit can not have zero value
+                if (bd.getDebitAmount() != null && bd.getCreditAmount() != null
+                        && bd.getDebitAmount().compareTo(BigDecimal.ZERO) == 0
+                        && bd.getCreditAmount().compareTo(BigDecimal.ZERO) == 0) {
+
+                    throw new CustomException("DebitAmount", "Zero amount is not allowed in both debit and credit amount of "
+                            + bd.getChartOfAccount().getGlcode() + ",Any time only one can be greater than 0 ");
+
+                }
+
+                // validate subledger data if account code is control code
+                if (bd.getChartOfAccount() != null && bd.getChartOfAccount().getIsSubLedger() != null
+                        && bd.getChartOfAccount().getIsSubLedger()
+                        && (bd.getBillPayeeDetails() == null || bd.getBillPayeeDetails().isEmpty())) {
+
+                    throw new CustomException("BillDetail",
+                            "Subledger(Payee details) details are missing for the control account code "
+                                    + bd.getChartOfAccount().getGlcode());
+                }
+
+                // validate subledger data if account code is non control code
+                if (bd.getChartOfAccount() != null && bd.getChartOfAccount().getIsSubLedger() != null
+                        && !bd.getChartOfAccount().getIsSubLedger()
+                        && bd.getBillPayeeDetails() != null && !bd.getBillPayeeDetails().isEmpty()) {
+
+                    throw new CustomException("BillDetail",
+                            "Invalid Subledger(Payee details) details for the non control account code "
+                                    + bd.getChartOfAccount().getGlcode());
+                }
+
+                for (BillPayeeDetail bpd : bd.getBillPayeeDetails()) {
+                    payeeDetailSum.add(bpd.getAmount());
+                }
+
+                billDetailAmt = bd.getDebitAmount().compareTo(BigDecimal.ZERO) > 0 ? bd.getDebitAmount()
+                        : bd.getCreditAmount();
+
+                // validate subledger sum and ledger amount
+                if (billDetailAmt.compareTo(payeeDetailSum) != 0) {
+
+                    throw new CustomException("BillDetail",
+                            "Subledger(Payee details) total amount is not matching the control account code: "
+                                    + bd.getChartOfAccount().getGlcode());
+                }
+
+                debitSum.add(bd.getDebitAmount());
+                creditSum.add(bd.getCreditAmount());
+            }
+
+            // validate sum(debit)-sum(credit) should be 0
+            if (debitSum.compareTo(creditSum) != 0) {
+                throw new CustomException("Bill",
+                        "Ledger total amount is not matching. Sum of debit should be equal to sum of credit");
+            }
+        }
 
         List<String> mandatoryFields = getHeaderMandateFields(tenantId, billRegisterRequest.getRequestInfo());
         validateMandatoryFields(mandatoryFields, billRegisterRequest.getBillRegisters());
+
+    }
+
+    private void findDuplicateAccountCodes(BillRegisterRequest billRegisterRequest) {
+
+        Map<String, List<String>> coaFunCodeMap = new HashMap<>();
+        List<String> functionCodes = new ArrayList<>();
+
+        for (BillRegister br : billRegisterRequest.getBillRegisters()) {
+
+            coaFunCodeMap = new HashMap<>();
+
+            for (BillDetail bd : br.getBillDetails()) {
+
+                if (bd.getChartOfAccount() != null && bd.getChartOfAccount().getGlcode() != null && bd.getFunction() != null
+                        && bd.getFunction().getCode() != null) {
+
+                    if (coaFunCodeMap.get(bd.getChartOfAccount().getGlcode()) != null) {
+                        functionCodes = coaFunCodeMap.get(bd.getChartOfAccount().getGlcode());
+
+                        if (functionCodes != null && functionCodes.contains(bd.getFunction().getCode())) {
+                            throw new CustomException("BillDetails",
+                                    "Duplicate account code and function in given bill: " + bd.getChartOfAccount().getGlcode());
+                        } else if (functionCodes == null || functionCodes.isEmpty()) {
+                            throw new CustomException("BillDetails",
+                                    "Duplicate account code and function in given bill: " + bd.getChartOfAccount().getGlcode());
+                        } else {
+                            functionCodes.add(bd.getFunction().getCode());
+                            coaFunCodeMap.put((bd.getChartOfAccount().getGlcode()), functionCodes);
+                        }
+                    }
+
+                    coaFunCodeMap.put((bd.getChartOfAccount().getGlcode()),
+                            new ArrayList<>(Arrays.asList(bd.getFunction().getCode())));
+
+                } else if (bd.getChartOfAccount() != null && bd.getChartOfAccount().getGlcode() != null
+                        && (bd.getFunction() == null || bd.getFunction().getCode() == null
+                                || bd.getFunction().getCode().isEmpty())) {
+
+                    if (coaFunCodeMap.get(bd.getChartOfAccount().getGlcode()) != null)
+                        throw new CustomException("BillDetails",
+                                "Duplicate account code in given bill: " + bd.getChartOfAccount().getGlcode());
+
+                    coaFunCodeMap.put((bd.getChartOfAccount().getGlcode()), new ArrayList<>());
+                }
+            }
+        }
 
     }
 
@@ -460,32 +618,34 @@ public class BillRegisterService {
                     mandatoryFields.add(header);
             }
 
-        mandatoryFields.add("voucherdate");
+        mandatoryFields.add("billdate");
 
         return mandatoryFields;
     }
 
-    private void validateMandatoryFields(List<String> mandatoryFields, List<BillRegister> vouchers) {
+    private void validateMandatoryFields(List<String> mandatoryFields, List<BillRegister> bills) {
 
-        if (vouchers != null)
-            for (BillRegister voucher : vouchers) {
+        if (bills != null)
+            for (BillRegister bill : bills) {
 
                 checkMandatoryField(mandatoryFields, "fund",
-                        voucher.getFund() != null ? voucher.getFund().getId() : null);
+                        bill.getFund() != null ? bill.getFund().getId() : null);
                 checkMandatoryField(mandatoryFields, "function",
-                        voucher.getFunction() != null ? voucher.getFunction().getId() : null);
+                        bill.getFunction() != null ? bill.getFunction().getId() : null);
                 checkMandatoryField(mandatoryFields, "department",
-                        voucher.getDepartment() != null ? voucher.getDepartment().getId() : null);
+                        bill.getDepartment() != null ? bill.getDepartment().getId() : null);
                 checkMandatoryField(mandatoryFields, "scheme",
-                        voucher.getScheme() != null ? voucher.getScheme().getId() : null);
+                        bill.getScheme() != null ? bill.getScheme().getId() : null);
                 checkMandatoryField(mandatoryFields, "subscheme",
-                        voucher.getSubScheme() != null ? voucher.getSubScheme().getId() : null);
+                        bill.getSubScheme() != null ? bill.getSubScheme().getId() : null);
                 checkMandatoryField(mandatoryFields, "functionary",
-                        voucher.getFunctionary() != null ? voucher.getFunctionary().getId() : null);
+                        bill.getFunctionary() != null ? bill.getFunctionary().getId() : null);
                 checkMandatoryField(mandatoryFields, "fundsource",
-                        voucher.getFundsource() != null ? voucher.getFundsource().getId() : null);
+                        bill.getFundsource() != null ? bill.getFundsource().getId() : null);
                 checkMandatoryField(mandatoryFields, "location",
-                        voucher.getLocation() != null ? voucher.getLocation().getId() : null);
+                        bill.getLocation() != null ? bill.getLocation().getId() : null);
+                checkMandatoryField(mandatoryFields, "billdate",
+                        bill.getBillDate() != null ? bill.getBillDate() : null);
             }
 
     }
@@ -493,7 +653,6 @@ public class BillRegisterService {
     private void checkMandatoryField(final List<String> mandatoryFields, final String fieldName, final Object value) {
 
         LOG.warn("checkMandatoryField---------fieldName--" + fieldName);
-        LOG.warn("checkMandatoryField---------value--" + value);
         LOG.warn("checkMandatoryField---------StringUtils.isEmpty(value.toString())--"
                 + (null != value ? StringUtils.isEmpty(value.toString()) : ""));
         if (mandatoryFields.contains(fieldName) && (value == null || StringUtils.isEmpty(value.toString())))

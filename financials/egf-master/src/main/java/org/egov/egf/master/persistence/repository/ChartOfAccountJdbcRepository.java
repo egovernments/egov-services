@@ -282,6 +282,7 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
         for (ChartOfAccount coa : chartofaccounts) {
 
             if (coaDetailsMap.get(coa.getId()) != null) {
+                coa.setChartOfAccountDetails(coaDetailsMap.get(coa.getId()));
                 coa.setIsSubLedger(true);
             } else {
                 coa.setIsSubLedger(false);

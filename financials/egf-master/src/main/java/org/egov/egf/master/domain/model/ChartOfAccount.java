@@ -40,6 +40,8 @@
 
 package org.egov.egf.master.domain.model;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.domain.model.Auditable;
@@ -183,5 +185,7 @@ public class ChartOfAccount extends Auditable {
 	 */
 
 	private Boolean isSubLedger;
+	
+	private List<ChartOfAccountDetail> chartOfAccountDetails;
 
 }

@@ -17,7 +17,6 @@ import org.egov.egf.master.persistence.entity.ChartOfAccountEntity;
 import org.egov.egf.master.persistence.entity.ChartOfAccountSearchEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,7 @@ import org.springframework.stereotype.Service;
 public class ChartOfAccountJdbcRepository extends JdbcRepository {
     private static final Logger LOG = LoggerFactory.getLogger(ChartOfAccountJdbcRepository.class);
 
-    @Autowired
-    private ChartOfAccountDetailJdbcRepository chartOfAccountDetailJdbcRepository;
+    private final ChartOfAccountDetailJdbcRepository chartOfAccountDetailJdbcRepository;
 
     static {
         LOG.debug("init chartOfAccount");
@@ -35,8 +33,10 @@ public class ChartOfAccountJdbcRepository extends JdbcRepository {
         LOG.debug("end init chartOfAccount");
     }
 
-    public ChartOfAccountJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public ChartOfAccountJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+            ChartOfAccountDetailJdbcRepository chartOfAccountDetailJdbcRepository) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.chartOfAccountDetailJdbcRepository = chartOfAccountDetailJdbcRepository;
     }
 
     public ChartOfAccountEntity create(ChartOfAccountEntity entity) {

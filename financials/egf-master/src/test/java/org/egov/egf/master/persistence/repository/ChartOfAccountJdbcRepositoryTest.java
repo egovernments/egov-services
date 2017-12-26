@@ -33,10 +33,13 @@ public class ChartOfAccountJdbcRepositoryTest {
 	
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	
+	@Autowired
+        private ChartOfAccountDetailJdbcRepository chartOfAccountDetailJdbcRepository;
 
 	@Before
 	public void setUp() throws Exception {
-		chartOfAccountJdbcRepository = new ChartOfAccountJdbcRepository(namedParameterJdbcTemplate);
+		chartOfAccountJdbcRepository = new ChartOfAccountJdbcRepository(namedParameterJdbcTemplate,chartOfAccountDetailJdbcRepository);
 	}
 	
 	@Test

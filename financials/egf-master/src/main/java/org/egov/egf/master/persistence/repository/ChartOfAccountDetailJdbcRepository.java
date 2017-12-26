@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.egov.common.domain.model.Pagination;
 import org.egov.common.persistence.repository.JdbcRepository;
+import org.egov.egf.master.domain.model.AccountDetailType;
+import org.egov.egf.master.domain.model.AccountDetailTypeSearch;
 import org.egov.egf.master.domain.model.ChartOfAccountDetail;
 import org.egov.egf.master.domain.model.ChartOfAccountDetailSearch;
 import org.egov.egf.master.persistence.entity.ChartOfAccountDetailEntity;
@@ -22,14 +24,18 @@ import org.springframework.stereotype.Service;
 public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
     private static final Logger LOG = LoggerFactory.getLogger(ChartOfAccountDetailJdbcRepository.class);
 
+    private final AccountDetailTypeJdbcRepository accountDetailTypeJdbcRepository;
+
     static {
         LOG.debug("init chartOfAccountDetail");
         init(ChartOfAccountDetailEntity.class);
         LOG.debug("end init chartOfAccountDetail");
     }
 
-    public ChartOfAccountDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public ChartOfAccountDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+            AccountDetailTypeJdbcRepository accountDetailTypeJdbcRepository) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.accountDetailTypeJdbcRepository = accountDetailTypeJdbcRepository;
     }
 
     public ChartOfAccountDetailEntity create(ChartOfAccountDetailEntity entity) {
@@ -140,6 +146,7 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
                 "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(ChartOfAccountDetailEntity.class);
+        StringBuffer adtIds = new StringBuffer();
 
         List<ChartOfAccountDetailEntity> chartOfAccountDetailEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
@@ -148,12 +155,51 @@ public class ChartOfAccountDetailJdbcRepository extends JdbcRepository {
 
         List<ChartOfAccountDetail> chartofaccountdetails = new ArrayList<>();
         for (ChartOfAccountDetailEntity chartOfAccountDetailEntity : chartOfAccountDetailEntities) {
+            if (adtIds.length() >= 1)
+                adtIds.append(",");
 
+            adtIds.append(chartOfAccountDetailEntity.getAccountDetailTypeId());
             chartofaccountdetails.add(chartOfAccountDetailEntity.toDomain());
         }
+
+        populateAccountDetailTypes(chartofaccountdetails, adtIds.toString());
+
         page.setPagedData(chartofaccountdetails);
 
         return page;
+    }
+
+    private void populateAccountDetailTypes(List<ChartOfAccountDetail> chartOfAccountDetails, String adtIds) {
+        Map<String, AccountDetailType> adtMap = new HashMap<>();
+        String tenantId = null;
+        AccountDetailTypeSearch search;
+        search = new AccountDetailTypeSearch();
+
+        if (chartOfAccountDetails != null && !chartOfAccountDetails.isEmpty())
+            tenantId = chartOfAccountDetails.get(0).getTenantId();
+
+        search.setIds(adtIds);
+        search.setTenantId(tenantId);
+
+        Pagination<AccountDetailType> adts = accountDetailTypeJdbcRepository.search(search);
+
+        if (adts != null && adts.getPagedData() != null && !adts.getPagedData().isEmpty()) {
+
+            for (AccountDetailType adt : adts.getPagedData()) {
+
+                adtMap.put(adt.getId(), adt);
+
+            }
+        }
+
+        for (ChartOfAccountDetail coad : chartOfAccountDetails) {
+
+            if (adtMap.get(coad.getId()) != null) {
+                coad.setAccountDetailType(adtMap.get(coad.getAccountDetailType().getId()));
+            }
+
+        }
+
     }
 
     public ChartOfAccountDetailEntity findById(ChartOfAccountDetailEntity entity) {

@@ -10,7 +10,7 @@ public class Constants {
     public static final String WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR = "Work identification numebr can not be generated";
 
     public static final String TYPEOFWORK_OBJECT = "TypeOfWork";
-    public static final String FUND_OBJECT = "funds";
+    public static final String FUND_OBJECT = "Fund";
     public static final String FUNCTION_OBJECT = "Function";
     public static final String SUBTYPEOFWORK_OBJECT = "SubTypeOfWork";
     public static final String SCHEME_OBJECT = "Scheme";
@@ -395,6 +395,10 @@ public class Constants {
     public static final String KEY_ESTIMATEAPPROPRIATION_BUDGET_NOTAVAILABLE = "works.estimateappropriation.budget.notavailable";
     public static final String MESSAGE_ESTIMATEAPPROPRIATION_BUDGET_NOTAVAILABLE = "There is no budget availble for the given combination";
 
-    
+    public static final String KEY_WORKS_ESTIMATE_STATUS_REQUIRED = "WORKS_ESTIMATE_STATUS_REQUIRED";
+    public static final String MESSAGE_WORKS_ESTIMATE_STATUS_REQUIRED = "Work estimate status is required";
+
+    public static final String KEY_WORKS_ESTIMATE_STATUS_INVALID = "WORKS_ESTIMATE_STATUS_INVALID";
+    public static final String MESSAGE_WORKS_ESTIMATE_STATUS_INVALID = "Work estimate status is invalid";
     
 }

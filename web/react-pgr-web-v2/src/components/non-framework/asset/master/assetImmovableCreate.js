@@ -773,8 +773,27 @@ class assetImmovableCreate extends Component {
     let self = this,
       _url;
     e.preventDefault();
-    self.props.setLoadingStatus('loading');
+    var flag = 0;
     var formData = JSON.parse(JSON.stringify(this.props.formData));
+
+    if(formData.Asset && formData.Asset.landDetails && formData.Asset.landDetails[0].code){
+      var AutoCompleteData = _.get(formData, 'Asset.landDetails[0].code');
+      var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], { 'key': AutoCompleteData } );
+      if(CheckAutoCompleteData.length){
+        flag = 1;
+      } else{
+        flag = 0;
+        formData.Asset.landDetails[0].code = null;
+        formData.Asset.landDetails = null;
+      }
+    } else if(formData.Asset.landDetails[0].code == "" || formData.Asset.landDetails[0].code == null){
+      flag = 1;
+      formData.Asset.landDetails[0].code = null;
+      formData.Asset.landDetails = null;
+    }
+    console.log(flag);
+    if(flag == 1){
+      self.props.setLoadingStatus('loading');
 
     if (formData.Asset.titleDocumentsAvailable) {
       formData.Asset.titleDocumentsAvailable = formData.Asset.titleDocumentsAvailable.split(',');
@@ -868,6 +887,9 @@ class assetImmovableCreate extends Component {
     } else {
       self.makeAjaxCall(formData, _url);
     }
+  } else{
+    self.props.toggleSnackbarAndSetText(true, 'Please Enter Valid Land Details', false, true);
+  }
   };
 
   getVal = (path, dateBool) => {
@@ -1423,12 +1445,23 @@ class assetImmovableCreate extends Component {
     let hashLocation = window.location.hash;
     let obj = specifications[`asset.create`];
 
+     if(property == 'Asset.landDetails[0].code'){
+      var AutoCompleteData = _.get(formData, 'Asset.landDetails[0].code');
+      var x;
+      console.log(e.target.value);
+      console.log(self.props.dropDownData['Asset.landDetails[0].code']);
+      var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], { 'key': e.target.value });
+      //var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], {e.target.value});
+      console.log(CheckAutoCompleteData);
+      CheckAutoCompleteData.length ? x = 0 : x = 1;
+      console.log(x);
+    }
+
     if (property == 'Asset.assetCategory.id') {
       if (self.state.depericiationValue[e.target.value]) {
         var newVal = Math.round(100 / self.state.depericiationValue[e.target.value]);
         this.props.handleChange({ target: { value: newVal } }, 'Asset.anticipatedLife', true, '', '', '');
       }
-
       self.customFieldDataFun(self.state.customFieldsGen[e.target.value]);
     }
 
@@ -1478,34 +1511,39 @@ class assetImmovableCreate extends Component {
       SubProperty.pop();
       SubProperty = SubProperty.join('.');
       var _val = e.target.value;
-      Api.commonApiPost('/asset-services-maha/assets/_search', { name: _val }, {}, false, false, false, '', '', false).then(
-        function(response) {
-          if (response && response.Assets && response.Assets[0] && response.Assets[0].assetAttributes) {
-            for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
-              if (response.Assets[0].assetAttributes[i].key == 'Survey Number') {
-                var _surveyNo = response.Assets[0].assetAttributes[i].value;
-                self.props.handleChange({ target: { value: _surveyNo } }, SubProperty + '.surveyNo', false, '', '', '');
-              } else if (response.Assets[0].assetAttributes[i].key == 'Area of Land') {
-                var _area = response.Assets[0].assetAttributes[i].value;
-                self.props.handleChange({ target: { value: _area } }, SubProperty + '.area', false, '', '', '');
-              }
+        Api.commonApiPost('/asset-services-maha/assets/_search', { name: _val }, {}, false, false, false, '', '', false).then(
+          function(response) {
+            if(_val == null || _val == "" || !response.Assets.length){
+              self.handleChange({ target: { value: null } }, 'Asset.landDetails[0].surveyNo');
+              self.handleChange({ target: { value: null } }, 'Asset.landDetails[0].area');
             }
-
-            setTimeout(function() {
-              if (self.props.formData.Asset.landDetails && self.props.formData.Asset.landDetails.length) {
-                let area = 0;
-                for (let i = 0; i < self.props.formData.Asset.landDetails.length; i++) {
-                  area += Number(self.props.formData.Asset.landDetails[i].area || 0);
+            if (response && response.Assets && response.Assets[0] && response.Assets[0].assetAttributes) {
+              for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
+                if (response.Assets[0].assetAttributes[i].key == 'Survey Number') {
+                  var _surveyNo = response.Assets[0].assetAttributes[i].value;
+                  self.props.handleChange({ target: { value: _surveyNo } }, SubProperty + '.surveyNo', false, '', '', '');
+                } else if (response.Assets[0].assetAttributes[i].key == 'Area of Land') {
+                  var _area = response.Assets[0].assetAttributes[i].value;
+                  self.props.handleChange({ target: { value: _area } }, SubProperty + '.area', false, '', '', '');
                 }
-                self.props.handleChange({ target: { value: area } }, 'Asset.totalArea', false, '', '', '');
               }
-            }, 500);
+
+              setTimeout(function() {
+                if (self.props.formData.Asset.landDetails && self.props.formData.Asset.landDetails.length) {
+                  let area = 0;
+                  for (let i = 0; i < self.props.formData.Asset.landDetails.length; i++) {
+                    area += Number(self.props.formData.Asset.landDetails[i].area || 0);
+                  }
+                  self.props.handleChange({ target: { value: area } }, 'Asset.totalArea', false, '', '', '');
+                }
+              }, 500);
+            }
+          },
+          function(err) {
+            console.log(err);
           }
-        },
-        function(err) {
-          console.log(err);
-        }
-      );
+        );
+
     }
 
     if (property == 'Asset.warrantyAvailable') {

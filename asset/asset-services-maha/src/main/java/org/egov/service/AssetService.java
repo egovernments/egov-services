@@ -196,7 +196,7 @@ public class AssetService {
 		Map<Long, AssetCategory> assetCatMap = mDService
 				.getAssetCategoryMapFromJSONArray(rsAssetMap.get("AssetCategory"));
 		Map<String, FundSource> fundMap = mDService
-				.getFundSourceMapFromJSONArray(rsMasterMap.get("egf-master").get("funds"));
+				.getFundSourceMapFromJSONArray(rsMasterMap.get("egf-master").get("Fund"));
 
 		Map<String, Department> departmentMap = mDService
 				.getDepartmentMapFromJSONArray(rsMasterMap.get("common-masters").get("Department"));

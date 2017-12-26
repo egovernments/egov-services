@@ -82,7 +82,7 @@ public class MasterDataRepository {
 		List<ModuleDetail> moduleDetailList = new ArrayList<>();
 		List<MasterDetail> masterDetailList = new ArrayList<>();
 
-		masterDetailList.add(MasterDetail.builder().name("financialYears")
+		masterDetailList.add(MasterDetail.builder().name("FinancialYear")
 				.filter("[?( @.startingDate <= " + toDate + " && @.endingDate >=" + toDate + ")]").build());
 
 		moduleDetailList.add(ModuleDetail.builder().moduleName("egf-master").masterDetails(masterDetailList).build());
@@ -94,7 +94,7 @@ public class MasterDataRepository {
 				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailList).tenantId(tenantId).build())
 				.build();
 
-		JSONArray jsonArray = getMdmsResponse(mdmsCriteriaReq).getMdmsRes().get("egf-master").get("financialYears");
+		JSONArray jsonArray = getMdmsResponse(mdmsCriteriaReq).getMdmsRes().get("egf-master").get("FinancialYear");
 
 		if (CollectionUtils.isEmpty(jsonArray))
 			return null;

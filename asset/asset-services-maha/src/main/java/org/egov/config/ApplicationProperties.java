@@ -72,7 +72,103 @@ public class ApplicationProperties {
     
     @Value("${mdms.service.basepath}")
     private String mdmsServiceBasePath;
-     
+    
+    @Value("${errcode.asset.wifrefnumber}")
+    private String wifRefNumber;
+    
+    @Value("${errcode.asset.warranty}")
+    private String warranty;
+    
+    @Value("${errcode.asset.parentcategory}")
+    private String parentCategory;
+    
+    @Value("${errcode.asset.dateofcreation}")
+    private String dateOfCreation;
+    
+    @Value("${errcode.asset.orderdate}")
+    private String orderDate;
+    
+    @Value("${errcode.asset.openingdate}")
+    private String openingDate;
+    
+    @Value("${errcode.asset.acquisitiondate}")
+    private String acquisitionDate;
+    
+    @Value("${errcode.asset.originalvalue}")
+    private String originalValue;
+    
+    @Value("${errcode.asset.grossvalue}")
+    private String grossValue;
+    
+    @Value("${errcode.asset.accumulateddepreciation}")
+    private String accumulatedDepreciation;
+    
+    @Value("${errcode.asset.assetcategory}")
+    private String assetCategory;
+    
+    @Value("${errcode.asset.departmant}")
+    private String departmant;
+    
+    @Value("${errcode.asset.fundsource}")
+    private String fundSource;
+    
+    @Value("${errcode.asset.anticipatedlife}")
+    private String anticipatedLife;
+    
+    @Value("${errcode.asset.depreciationrate}")
+    private String assetdepreciationRate;
+    
+    @Value("${errcode.asset.landdetails}")
+    private String landDetails;
+    
+    @Value("${errcode.asset.update}")
+    private String assetModify;
+    
+    @Value("${errcode.asset}")
+    private String asset;
+    
+    @Value("${errcode.revaluation}")
+    private String revaluation;
+    
+    @Value("${errcode.revaluation.revaluationamount}")
+    private String revaluationAmount;
+    
+    @Value("${errcode.revaluation.revaluationdate}")
+    private String revaluationDate;
+    
+    @Value("${errcode.revaluation.orderdate}")
+    private String revaluationOrderDate;
+    
+    @Value("${errcode.revaluation.valueafterrevaluation}")
+    private String valueAfterRevaluation;
+    
+    @Value("${errcode.revaluation.valuationamount}")
+    private String valuationAmount;
+    
+    @Value("${errcode.disposal.asset}")    
+    private String disposalAsset;
+    
+    @Value("${errcode.disposal.saleamount}")
+    private String saleAmount;
+    
+    @Value("${errcode.disposal.date}")
+    private String date;
+    
+    @Value("${errcode.disposal.orderdate}")
+    private String disposalOrderDate;
+    
+    @Value("${errcode.depreciation.depreciationrate}")
+    private String assetcategoryDepreciationRate;
+    
+    @Value("${errcode.depreciation.assetcategory}")
+    private String depreciationAssetCategory;
+    
+    @Value("${errcode.depreciation.financialyear}")
+    private String financialYear;
+    
+    @Value("${errcode.depreciation.depreciationdate}")
+    private String depreciationDate;
+    
     @Autowired
     private Environment environment;
 

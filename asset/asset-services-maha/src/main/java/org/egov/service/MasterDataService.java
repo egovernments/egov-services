@@ -44,7 +44,7 @@ public class MasterDataService {
 
 	public Map<String, Map<String, JSONArray>> getStateWideMastersByListParams(List<Asset> assets, RequestInfo requestInfo, String tenantId) {
 
-		if (!tenantId.equals("default"))
+		if (!tenantId.equals("default")) 
 			tenantId = tenantId.split("\\.")[0];
 		return mDRepo.getMastersByListParams(getStateWideParams(assets), requestInfo, tenantId);
 	}
@@ -108,7 +108,7 @@ public class MasterDataService {
 		// egf-master and fundsource
 		if (!fundSet.isEmpty())
 			fundSourceFieldMap.put("code", assetCommonService.getIdQueryFromString(fundSet));
-			egfMastersMap.put("funds", fundSourceFieldMap);
+			egfMastersMap.put("Fund", fundSourceFieldMap);
 			moduleMapInput.put("egf-master", egfMastersMap);
 		
 		return moduleMapInput;

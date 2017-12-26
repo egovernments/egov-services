@@ -74,7 +74,7 @@ public class DepreciationService {
 
 		if (criteria.getToDate() > new Date().getTime()) {
 			Map<String, String> map = new HashMap<>();
-			map.put("egasset_depreciation_depreciationdate", "Assets cannot be depreciated for future dates");
+			map.put(applicationProperties.getDepreciationDate(), "Assets cannot be depreciated for future dates");
 			throw new CustomException(map);
 		}
 		getFinancialYearData(depreciationRequest);
@@ -273,7 +273,7 @@ public class DepreciationService {
 		if(financialYear==null)
 		{
 			Map<String, String> errormap = new HashMap<>();
-			errormap.put("EGASSET_DEPRECIATION_FINANCIALYEAR", " No Financial Found For The Given ToDate");
+			errormap.put(applicationProperties.getFinancialYear(), " No Financial Found For The Given ToDate");
 			throw new CustomException(errormap);
 		}
 		// setting the toDate hours to 23 and mins to 59
@@ -321,7 +321,7 @@ public class DepreciationService {
 
 		depreciationInputsList.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));
 		}else {
-			errorMap.put("EGASSET_DEPRECIATION_ASSETCATEGORIES", "No Asset Categories found for the chosen Assets");
+			errorMap.put(applicationProperties.getDepreciationAssetCategory(), "No Asset Categories found for the chosen Assets");
 			throw new CustomException(errorMap);
 		}
 	}

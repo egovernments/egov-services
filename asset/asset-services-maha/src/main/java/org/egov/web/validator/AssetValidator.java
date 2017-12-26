@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.config.ApplicationProperties;
 import org.egov.contract.AssetRequest;
 import org.egov.contract.DisposalRequest;
 import org.egov.contract.RevaluationRequest;
@@ -46,6 +47,9 @@ public class AssetValidator implements Validator {
 
 	@Autowired
 	private AssetService assetService;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
 	@Override
 	public boolean supports(Class<?> clazz) {
@@ -75,44 +79,44 @@ public class AssetValidator implements Validator {
 		}/* assetAccountValidate(asset, errorMap); */
 		
 		if ((assetCategory.getAssetCategoryType().equals(AssetCategoryType.IMMOVABLE)) && asset.getWipReferenceNo() == null && StringUtils.isEmpty(asset.getWipReferenceNo())) {
-			errorMap.put("EGASSET_WIP_REF_NUMBER",
+			errorMap.put(applicationProperties.getWifRefNumber(),
 					"WIP Reference number is mandatory for " + assetCategory.getAssetCategoryType() + " Assets");
 		}
 	
 		
 		if (asset.getWarrantyAvailable()) {
 			if (asset.getWarrantyExpiryDate() == null)
-				errorMap.put("Asset_warranty", "warrantyExpiryDate is Mandatory if Warranty is available");
+				errorMap.put(applicationProperties.getWarranty(), "warrantyExpiryDate is Mandatory if Warranty is available");
 			else if (asset.getWarrantyExpiryDate().compareTo(asset.getDateOfCreation()) <= 0)
-				errorMap.put("Asset_warranty", "warrantyExpiryDate should be greater than asset date");
+				errorMap.put(applicationProperties.getWarranty(), "warrantyExpiryDate should be greater than asset date");
 		}
 		
 	    if(asset.getAssetCategory().getIsAssetAllow().equals(false)) 
-		   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
+		   errorMap.put(applicationProperties.getParentCategory(), "Cannot Create asset with parent category");
            
 		  
 		if(asset.getDateOfCreation().compareTo(new Date().getTime()) > 0) 
-			errorMap.put("Asset_DateOfCreation", "DateOfCreation cannot be future Date");
+			errorMap.put(applicationProperties.getDateOfCreation(), "DateOfCreation cannot be future Date");
 		
 		if(asset.getOrderDate()!=null && asset.getOrderDate().compareTo(new Date().getTime()) > 0) 
-			errorMap.put("Asset_OderDate", "OderDate cannot be future Date");
+			errorMap.put(applicationProperties.getOrderDate(), "OderDate cannot be future Date");
 		
 		if(asset.getOpeningDate()!=null && asset.getOpeningDate().compareTo(new Date().getTime()) > 0) 
-			errorMap.put("Asset_OpeningDate", "OpeningDate cannot be future Date");
+			errorMap.put(applicationProperties.getOpeningDate(), "OpeningDate cannot be future Date");
 		
 		if((asset.getAcquisitionDate().compareTo(new Date().getTime()) > 0))
-			errorMap.put("Asset_AcquisitionDate", "AcquisitionDate cannot be futureDate");
+			errorMap.put(applicationProperties.getAcquisitionDate(), "AcquisitionDate cannot be futureDate");
 		/*else if((asset.getAcquisitionDate().compareTo(asset.getDateOfCreation())<0))
 			errorMap.put("Asset_AcquisitionDate", "AcquisitionDate cannot be less than Dateofcreation");*/
 			
 		if(asset.getOriginalValue()!=null && asset.getOriginalValue().longValue()<0)
-			errorMap.put("Asset_OriginalValue", "Negative  Amount Cannot Be Accepted for OriginalValue");
+			errorMap.put(applicationProperties.getOriginalValue(), "Negative  Amount Cannot Be Accepted for OriginalValue");
 		
 		if(asset.getGrossValue()!=null && asset.getGrossValue().longValue()<=0)
-			errorMap.put("Asset_GrossValue", "Negative  Amount Cannot Be Accepted for GrossValue");
+			errorMap.put(applicationProperties.getGrossValue(), "Negative  Amount Cannot Be Accepted for GrossValue");
 				
 		if(asset.getAccumulatedDepreciation()!=null && asset.getAccumulatedDepreciation().longValue()<0)
-			errorMap.put("Asset_AccumulatedDepreciation", "Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
+			errorMap.put(applicationProperties.getAccumulatedDepreciation(), "Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
 		
 
 		if (!errorMap.isEmpty())
@@ -130,23 +134,23 @@ public class AssetValidator implements Validator {
 		
 		log.debug(" the response for master : "+ResultDataMap);
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET").get("AssetCategory"));
-		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("funds"));
+		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("Fund"));
 		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Department"));
 
 		
 		AssetCategory masterAssetCat = assetCatMap.get(asset.getAssetCategory().getId());
 		if (masterAssetCat == null)
-			errorMap.put("EGASSET_INVALID_ASSETCATEGORY", "the given AssetCategory Id is Invalid");
+			errorMap.put(applicationProperties.getAssetCategory(), "the given AssetCategory Id is Invalid");
 		else {
 			System.err.println("masterAssetCat"+masterAssetCat);
 			if (masterAssetCat.getIsAssetAllow().equals(false))
 			/* if(asset.getAssetCategory().getIsAssetAllow().equals(false)) */
-				   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
+				   errorMap.put(applicationProperties.getParentCategory(), "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
 		}
 		Department department = departmentMap.get(asset.getDepartment().getCode());
 		if (department == null)
-			errorMap.put("EGASSET_INVALID_DEPARTMENT", "the  given Department code is Invalid");
+			errorMap.put(applicationProperties.getDepartmant(), "the  given Department code is Invalid");
 		else
 			asset.setDepartment(department);
 		
@@ -156,7 +160,7 @@ public class AssetValidator implements Validator {
 		if (fundSourceCode != null && !fundSourceCode.isEmpty()) {
 			FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
 			if (fundSource == null)
-				errorMap.put("EGASSET_INVALID_FUNDSOURCE", "The given FundSource code is Invalid");
+				errorMap.put(applicationProperties.getFundSource(), "The given FundSource code is Invalid");
 			else
 				asset.setFundSource(fundSource);
 		}
@@ -174,18 +178,19 @@ public class AssetValidator implements Validator {
 
 		if(anticipatedLife!=null&&depreciationRate!=null) {
 		long newVal = new Double(Math.round(100 / depreciationRate)).longValue();
+		System.err.println(newVal+"newVal");
 		if (anticipatedLife-newVal != 0) {
-			errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");
+			errorMap.put(applicationProperties.getAnticipatedLife(), "anticipatedLife Value is wrong");
 		}
 		}else
-			errorMap.put("Asset_anticipatedLife", "anticipatedLife Cannot be Null For "+ type.toString()+ " Assets");			
+			errorMap.put(applicationProperties.getAnticipatedLife(), "anticipatedLife Cannot be Null For "+ type.toString()+ " Assets");			
 	}
 	
 	private void validateDepreciationRate(Double depreciationRate,AssetCategoryType type ,Map<String, String> errorMap) {
 		/*if(type.equals(AssetCategoryType.LAND)||type.equals(AssetCategoryType.IMMOVABLE)||type.equals(AssetCategoryType.MOVABLE))*/
 		if ((!type.equals(AssetCategoryType.LAND)))
 		if(depreciationRate==null)
-			errorMap.put("AssetCategory_depreciationRate", "depreciationRate Cannot be Null For "+type.toString()+ " AssetCategory");
+			errorMap.put(applicationProperties.getAssetdepreciationRate(), "depreciationRate Cannot be Null For "+type.toString()+ " AssetCategory");
 			}
 
 	public void addMissingPathForPersister(Asset asset) {
@@ -213,21 +218,22 @@ public class AssetValidator implements Validator {
 		Revaluation revaluation= revaluationRequest.getRevaluation();
 		Asset asset = assetService.getAsset(revaluationRequest.getRevaluation().getTenantId(),
 				revaluationRequest.getRevaluation().getAssetId(), revaluationRequest.getRequestInfo());
+		System.err.println("asset"+asset);
 		
 		if(asset == null)
-			errorMap.put("EGASSET_REVALUATION_ASSET", "Given Asset For Revaluation Cannot Be Found");
+			errorMap.put(applicationProperties.getRevaluation(), "Given Asset For Revaluation Cannot Be Found");
 		
 		if(revaluation.getRevaluationAmount()!=null && revaluation.getRevaluationAmount().longValue()<=0)
-			errorMap.put("EGASSET_REVALUATION_AMOUNT", "Negative Revaluation Amount Cannot Be Accepted");
+			errorMap.put(applicationProperties.getRevaluationAmount(), "Negative Revaluation Amount Cannot Be Accepted");
 		
 		if(revaluation.getRevaluationDate().compareTo(new Date().getTime()) > 0)
-			errorMap.put("EGASSET_REVALUATION_DATE", "Assets Cannot be Revaluated For Future Dates");
+			errorMap.put(applicationProperties.getRevaluationDate(), "Assets Cannot be Revaluated For Future Dates");
 		
 		if(revaluation.getOrderDate()!=null && revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
-			errorMap.put("EGASSET_REVALUATION_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
+			errorMap.put(applicationProperties.getRevaluationOrderDate(), "Future Dates Cannot Be Given For Order Date");
 		
 		if(revaluation.getValueAfterRevaluation().longValue()<=0)
-			errorMap.put("EGASSET_REVALUATION_VALUEAFTERREVALUATION", "Negative Amount Cannot Be Accepted for value after revaluation");
+			errorMap.put(applicationProperties.getValueAfterRevaluation(), "Negative Amount Cannot Be Accepted for value after revaluation");
 			
 		
 		if (asset != null) {
@@ -238,12 +244,12 @@ public class AssetValidator implements Validator {
 			if (revaluation.getTypeOfChange().equals(TypeOfChange.DECREASED))
 				if (!(asset.getCurrentValue().subtract(revaluation.getRevaluationAmount()).doubleValue()
 						- (revaluation.getValueAfterRevaluation().doubleValue()) == 0))
-					errorMap.put("EGASSET_REVALUATION_VALUATION_AMOUNT", "THE Valuation Amount Calculation Is Wrong");
+					errorMap.put(applicationProperties.getValuationAmount(), "THE Valuation Amount Calculation Is Wrong");
 
 			if (revaluation.getTypeOfChange().equals(TypeOfChange.INCREASED))
 				if (!(asset.getCurrentValue().add(revaluation.getRevaluationAmount()).doubleValue()
 						- (revaluation.getValueAfterRevaluation().doubleValue()) == 0))
-					errorMap.put("EGASSET_REVALUATION_VALUATION_AMOUNT", "THE Valuation Amount Calculation Is Wrong");
+					errorMap.put(applicationProperties.getValuationAmount(), "THE Valuation Amount Calculation Is Wrong");
 		}
 		
 		if (!errorMap.isEmpty())
@@ -261,16 +267,16 @@ public class AssetValidator implements Validator {
 				disposalRequest.getRequestInfo());
 
 		if (asset == null)
-			errorMap.put("EGASSET_DISPOSAL_ASSET", "Given Asset For Disposal Cannot Be Found");
+			errorMap.put(applicationProperties.getDisposalAsset(), "Given Asset For Disposal Cannot Be Found");
 
 		if (disposal.getSaleValue() != null && disposal.getSaleValue().longValue() <= 0)
-			errorMap.put("EGASSET_DISPOSAL_AMOUNT", "Negative Sale Amount Cannot Be Accepted");
+			errorMap.put(applicationProperties.getSaleAmount(), "Negative Sale Amount Cannot Be Accepted");
 
 		if (disposal.getDisposalDate().compareTo(new Date().getTime()) > 0)
-			errorMap.put("EGASSET_DISPOSAL_DATE", "Assets Cannot be Disposed/Sold For Future Dates");
+			errorMap.put(applicationProperties.getDate(), "Assets Cannot be Disposed/Sold For Future Dates");
 
 		if (disposal.getOrderDate().compareTo(new Date().getTime()) > 0)
-			errorMap.put("EGASSET_DISPOSAL_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
+			errorMap.put(applicationProperties.getDisposalOrderDate(), "Future Dates Cannot Be Given For Order Date");
 	
 
 		if (!errorMap.isEmpty())
@@ -300,7 +306,7 @@ public class AssetValidator implements Validator {
 			if((!landDetailCode.isEmpty())&&(!landDetailCode.contains(landDetails.get(i).getCode())))
 			landDetailCode.add(landDetails.get(i).getCode());
 			else
-				errorMap.put("Asset_LandDetails", "Same landdetails cannot be attached multiple times to the asset");
+				errorMap.put(applicationProperties.getLandDetails(), "Same landdetails cannot be attached multiple times to the asset");
 		}
 		}
 		
@@ -310,13 +316,13 @@ public class AssetValidator implements Validator {
 
 		Map<String, String> errorMap = new HashMap<>();
 		if (assetRequest.getAsset().getId() == null) {
-			errorMap.put("EGASSET_ASSET", " asset id cannot be null");
+			errorMap.put(applicationProperties.getAsset(), " asset id cannot be null");
 
 		} else {
 			Asset asset = assetService.getAsset(assetRequest.getAsset().getTenantId(), assetRequest.getAsset().getId(),
 					assetRequest.getRequestInfo());
 			if (asset == null)
-				errorMap.put("EGASSET_ASSET_MODIFY", "No Asset found to modify");
+				errorMap.put(applicationProperties.getAssetModify(), "No Asset found to modify");
 		}
 
 		if (!errorMap.isEmpty())

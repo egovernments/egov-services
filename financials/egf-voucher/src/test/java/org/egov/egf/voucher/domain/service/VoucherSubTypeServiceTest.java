@@ -144,7 +144,7 @@ public class VoucherSubTypeServiceTest {
 		List<VoucherSubType> voucherSubTypes = new ArrayList<VoucherSubType>();
 		
 		VoucherSubType voucherSubType = VoucherSubType.builder().id("b96561462fdc484fa97fa72c3944ad89")
-				.voucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA)
+				.voucherType(VoucherType.CONTRA)
 				.voucherName("BankToBank").exclude(true).build();
 		voucherSubType.setTenantId("default");
 		

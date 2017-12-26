@@ -162,7 +162,7 @@ public class VoucherSubTypeRepositoryTest {
 	    	VoucherSubType voucherSubTypeDetail = new VoucherSubType();
 	    	voucherSubTypeDetail.setId("b96561462fdc484fa97fa72c3944ad89");
 	    	voucherSubTypeDetail.setVoucherName("BankToBank");
-	    	voucherSubTypeDetail.setVoucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA);
+	    	voucherSubTypeDetail.setVoucherType(VoucherType.CONTRA);
 	    	voucherSubTypeDetail.setTenantId("default");
 	        return voucherSubTypeDetail;
 	    }
@@ -171,7 +171,7 @@ public class VoucherSubTypeRepositoryTest {
 	    	VoucherSubTypeEntity entity = new VoucherSubTypeEntity();
 	        entity.setId("");
 	        entity.setVoucherName("BankToBank");
-	        entity.setVoucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA.toString());
+	        entity.setVoucherType(VoucherType.CONTRA.toString());
 	        entity.setTenantId("default");
 	        return entity;
 	    }
@@ -181,7 +181,7 @@ public class VoucherSubTypeRepositoryTest {
 			List<VoucherSubType> voucherSubTypes = new ArrayList<VoucherSubType>();
 			
 			VoucherSubType voucherSubType = VoucherSubType.builder().id("b96561462fdc484fa97fa72c3944ad89")
-					.voucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA)
+					.voucherType(VoucherType.CONTRA)
 					.voucherName("BankToBank").exclude(true).build();
 			voucherSubType.setTenantId("default");
 			

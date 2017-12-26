@@ -63,31 +63,39 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = { "chartOfAccount", "function" }, callSuper = false)
-
 public class Ledger extends Auditable {
-
     private String id;
-
+    /**
+     * orderId refers to the order in which account heads are created. This
+     * field is used to send back the result in same order as created.
+     */
     private Integer orderId;
-
+    @NotNull
     private ChartOfAccountContract chartOfAccount;
-
+    /**
+     * glcode refers to the unique account code .
+     */
     @NotNull
     @Length(max = 16)
     private String glcode;
-
+    /**
+    * debitAmount - this field will have value only if the amount is debited.
+    * No negetive amount allowed
+    */
     @NotNull
     @Min(value = 0)
     @Max(value = 999999999)
     private BigDecimal debitAmount;
-
+    /**
+     * creaditAmount - this field will have value only if the amount is debited.
+     * No negetive amount allowed
+     */
     @NotNull
     @Min(value = 0)
     @Max(value = 999999999)
     private BigDecimal creditAmount;
-
     private FunctionContract function;
-
     private Set<SubLedger> subLedgers = new HashSet<SubLedger>();
+ 
 
 }

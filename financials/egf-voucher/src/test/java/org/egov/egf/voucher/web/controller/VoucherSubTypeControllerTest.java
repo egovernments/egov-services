@@ -51,20 +51,25 @@ public class VoucherSubTypeControllerTest {
 	@Test
 	public void test_create() throws IOException, Exception {
 
-		when(voucherSubTypeService.create(any(List.class),any(BindingResult.class), any(RequestInfo.class))).thenReturn(getVoucherSubTypes());
+		when(voucherSubTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getVoucherSubTypes());
 
-		mockMvc.perform(post("/vouchersubtype/_create").content(resources.readRequest("vouchersubtype/vouchersubtype_create_valid_request.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-						.andExpect(content().json(resources.readResponse("vouchersubtype/vouchersubtype_create_valid_response.json")));
+		mockMvc.perform(post("/vouchersubtype/_create")
+				.content(resources.readRequest("vouchersubtype/vouchersubtype_create_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+						.json(resources.readResponse("vouchersubtype/vouchersubtype_create_valid_response.json")));
 	}
 
 	@Test
 	public void test_create_error() throws IOException, Exception {
 
-		when(voucherSubTypeService.create(any(List.class),any(BindingResult.class), any(RequestInfo.class))).thenReturn(getVoucherSubTypes());
+		when(voucherSubTypeService.create(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(getVoucherSubTypes());
 
-		mockMvc.perform(post("/vouchersubtype/_create").content(resources.readRequest("vouchersubtype/vouchersubtype_create_invalid_field_value.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+		mockMvc.perform(post("/vouchersubtype/_create")
+				.content(resources.readRequest("vouchersubtype/vouchersubtype_create_invalid_field_value.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 	}
 
 	@Test
@@ -73,20 +78,25 @@ public class VoucherSubTypeControllerTest {
 		List<VoucherSubType> voucherSubTypes = getVoucherSubTypes();
 		voucherSubTypes.get(0).setVoucherName("BankToBankk");
 
-		when(voucherSubTypeService.update(any(List.class),any(BindingResult.class), any(RequestInfo.class))).thenReturn(voucherSubTypes);
+		when(voucherSubTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn(voucherSubTypes);
 
-		mockMvc.perform(post("/vouchersubtype/_update").content(resources.readRequest("vouchersubtype/vouchersubtype_update_valid_request.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-						.andExpect(content().json(resources.readResponse("vouchersubtype/vouchersubtype_update_valid_response.json")));
+		mockMvc.perform(post("/vouchersubtype/_update")
+				.content(resources.readRequest("vouchersubtype/vouchersubtype_update_valid_request.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(201))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+						.json(resources.readResponse("vouchersubtype/vouchersubtype_update_valid_response.json")));
 	}
 
 	@Test
 	public void test_update_error() throws IOException, Exception {
 
-		when(voucherSubTypeService.update(any(List.class),any(BindingResult.class), any(RequestInfo.class))).thenReturn((getVoucherSubTypes()));
+		when(voucherSubTypeService.update(any(List.class), any(BindingResult.class), any(RequestInfo.class)))
+				.thenReturn((getVoucherSubTypes()));
 
-		mockMvc.perform(post("/vouchersubtype/_update").content(resources.readRequest("vouchersubtype/vouchersubtype_create_invalid_field_value.json"))
-						.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
+		mockMvc.perform(post("/vouchersubtype/_update")
+				.content(resources.readRequest("vouchersubtype/vouchersubtype_create_invalid_field_value.json"))
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is5xxServerError());
 	}
 
 	@Test
@@ -99,23 +109,22 @@ public class VoucherSubTypeControllerTest {
 		page.setPagedData(getVoucherSubTypes());
 		page.getPagedData().get(0).setId("1");
 
-		when(voucherSubTypeService.search(any(VoucherSubTypeSearch.class)))
-				.thenReturn(page);
+		when(voucherSubTypeService.search(any(VoucherSubTypeSearch.class))).thenReturn(page);
 
-		mockMvc.perform(post("/vouchersubtype/_search").content(resources.getRequestInfo()).contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().is(200)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json(resources.readResponse("vouchersubtype/vouchersubtype_search_valid_response.json")));
+		mockMvc.perform(post("/vouchersubtype/_search").content(resources.getRequestInfo())
+				.contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(status().is(200))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andExpect(content()
+						.json(resources.readResponse("vouchersubtype/vouchersubtype_search_valid_response.json")));
 	}
-	
+
 	private List<VoucherSubType> getVoucherSubTypes() {
 
 		List<VoucherSubType> voucherSubTypes = new ArrayList<VoucherSubType>();
-		
+
 		VoucherSubType voucherSubType = VoucherSubType.builder().id("b96561462fdc484fa97fa72c3944ad89")
-				.voucherType(VoucherType.STANDARD_VOUCHER_TYPE_CONTRA)
-				.voucherName("BankToBank").exclude(true).build();
+				.voucherType(VoucherType.CONTRA).voucherName("BankToBank").exclude(true).build();
 		voucherSubType.setTenantId("default");
-		
+
 		voucherSubTypes.add(voucherSubType);
 		return voucherSubTypes;
 	}

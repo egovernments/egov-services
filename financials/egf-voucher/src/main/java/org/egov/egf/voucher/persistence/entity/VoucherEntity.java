@@ -5,6 +5,7 @@ import java.util.Date;
 import org.egov.common.domain.model.Auditable;
 import org.egov.common.domain.model.Task;
 import org.egov.common.persistence.entity.AuditableEntity;
+import org.egov.common.web.contract.TaskContract;
 import org.egov.egf.master.web.contract.FinancialStatusContract;
 import org.egov.egf.master.web.contract.FunctionContract;
 import org.egov.egf.master.web.contract.FunctionaryContract;
@@ -13,6 +14,7 @@ import org.egov.egf.master.web.contract.FundsourceContract;
 import org.egov.egf.master.web.contract.SchemeContract;
 import org.egov.egf.master.web.contract.SubSchemeContract;
 import org.egov.egf.voucher.domain.model.Voucher;
+import org.egov.egf.voucher.domain.model.VoucherType;
 import org.egov.egf.voucher.web.contract.Boundary;
 import org.egov.egf.voucher.web.contract.Department;
 
@@ -87,7 +89,7 @@ public class VoucherEntity extends AuditableEntity {
 		super.toDomain(domain);
 
 		domain.setId(this.id);
-		domain.setType(this.type);
+		domain.setType(VoucherType.valueOf(this.type));
 		domain.setName(this.name);
 		domain.setDescription(this.description);
 		domain.setVoucherNumber(this.voucherNumber);
@@ -108,7 +110,7 @@ public class VoucherEntity extends AuditableEntity {
 		domain.setSourcePath(this.sourcePath);
 		domain.setBudgetCheckRequired(this.budgetCheckRequired);
 		domain.setBudgetAppropriationNo(this.budgetAppropriationNo);
-		domain.setState(Task.builder().id(stateId).build());
+		domain.setState(TaskContract.builder().id(stateId).build());
 
 		return domain;
 	}
@@ -118,7 +120,7 @@ public class VoucherEntity extends AuditableEntity {
 		super.toEntity((Auditable) domain);
 
 		this.id = domain.getId();
-		this.type = domain.getType();
+		this.type = domain.getType().name();
 		this.name = domain.getName();
 		this.description = domain.getDescription();
 		this.voucherNumber = domain.getVoucherNumber();

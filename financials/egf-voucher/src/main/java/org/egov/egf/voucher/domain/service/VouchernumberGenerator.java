@@ -99,12 +99,12 @@ public class VouchernumberGenerator {
 					"Financial Year is not defined for the voucher date");
 
 		sequenceName = "sq_" + voucher.getFund().getCode() + "_"
-				+ getVoucherNumberPrefix(voucher.getType(), voucher.getName()) + "_" + financialYear.getFinYearRange();
+				+ getVoucherNumberPrefix(voucher.getType().toString(), voucher.getName()) + "_" + financialYear.getFinYearRange();
 
 		final Serializable nextSequence = getSequenceValue(sequenceName.replace("-", "_"));
 
 		voucherNumber = String.format("%s/%s/%08d/%02d/%s", voucher.getFund().getCode(),
-				getVoucherNumberPrefix(voucher.getType(), voucher.getName()), Integer.parseInt(nextSequence.toString()),
+				getVoucherNumberPrefix(voucher.getType().toString(), voucher.getName()), Integer.parseInt(nextSequence.toString()),
 				month, financialYear.getFinYearRange());
 
 		return voucherNumber;

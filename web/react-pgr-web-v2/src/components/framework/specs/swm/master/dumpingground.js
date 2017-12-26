@@ -37,10 +37,10 @@ var dat = {
     result: {
       header: [
         {
-          label: 'swm.DumpingGround.create.name',
+          label: 'swm.dumpingGround.create.dumpingGroundName',
         },
         {
-          label: 'swm.DumpingGround.create.ulbs',
+          label: 'swm.dumpingGround.create.ulbs',
         },
       ],
       values: [
@@ -76,7 +76,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.ward',
             label: 'swm.collectionpoints.create.ward',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             url:
@@ -97,7 +97,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
             label: 'swm.collectionpoints.create.zone',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
@@ -116,7 +116,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
             label: 'swm.collectionpoints.create.block',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
@@ -135,7 +135,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
             label: 'swm.collectionpoints.create.colony',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
@@ -1036,19 +1036,23 @@ var dat = {
     useTimestamp: true,
     objectName: 'DumpingGround',
     idJsonPath: 'MasterMetaData.masterData[0].code',
+    omittableFields: [
+      "delete formData['MasterMetaData']['masterData'][0]['siteDetails']['location']['ward']",
+      "delete formData['MasterMetaData']['masterData'][0]['siteDetails']['location']['zone']",
+      "delete formData['MasterMetaData']['masterData'][0]['siteDetails']['location']['block']",
+    ],
     groups: [
       
       {
         name: 'LocationDetails',
         label: 'swm.collectionpoints.create.group.title.LocationDetails',
-        jsonPath: "MasterMetaData.masterData[0].siteDetails.location",
         fields: [
           {
             name: 'Ward',
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.ward',
             label: 'swm.collectionpoints.create.ward',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             url:
@@ -1069,7 +1073,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
             label: 'swm.collectionpoints.create.zone',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
@@ -1088,7 +1092,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
             label: 'swm.collectionpoints.create.block',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
@@ -1104,10 +1108,10 @@ var dat = {
           },
           {
             name: 'Colony',
-            jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
+            jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.name',
             label: 'swm.collectionpoints.create.colony',
             type: 'singleValueList',
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             maxLength: 128,
             minLength: 1,

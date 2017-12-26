@@ -14,6 +14,7 @@ export default class UiLabel extends Component {
     };
   }
 
+
   setVal = () => {
     let { item, useTimestamp } = this.props;
     let self = this;
@@ -173,29 +174,27 @@ export default class UiLabel extends Component {
     );
   }
 
+  
   showObjectInTable = (field) => {
-        var flag = false;
-        var str = "";
-        if(Array.isArray(field)){
-        field.forEach(function(item, index){
-        console.log(typeof(item))
+    var flag = false;
+    var str = "";
+    console.log(field);
+    if(Array.isArray(field)){
+      field.forEach(function(item, index){
         if(typeof(item) == "object"){
-        console.log(item);
-        str += ((item.name?item.name:item.code) + ",");
+          console.log(item);
+          str += ((item.name?item.name:item.code) + ",");
         }
         else{
-        console.log("Here");
-        str += (item + ",");
+          str += (item + ",");
         }
-        })
-        console.log(str);
-        return str.slice(0,-1);
-
-        }
-        else{
-        return field;
-        }
-  }
+    })
+    return str.slice(0,-1);
+    }
+    else{
+      return field;
+    }
+}
 
   renderLabel = item => {
     let {showObjectInTable}=this;
@@ -251,7 +250,7 @@ export default class UiLabel extends Component {
           ) : (
             ''
           )}
-          {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath, item.isDate)) ? (
+          {item.hyperLink && (this.state.value || this.showObjectInTable(this.props.getVal(item.jsonPath, item.isDate))) ? (
             <Col style={{ textAlign: 'left' }} xs={12}>
               <FlatButton label={this.state.value || this.props.getVal(item.jsonPath, item.isDate)} primary={true} />
             </Col>

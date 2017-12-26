@@ -43,27 +43,24 @@ class UiTable extends Component {
   }
 
   showObjectInTable = (field) => {
-        var flag = false;
-        var str = "";
-        if(Array.isArray(field)){
-        field.forEach(function(item, index){
-        console.log(typeof(item))
+    var flag = false;
+    var str = "";
+    if(Array.isArray(field)){
+      field.forEach(function(item, index){
         if(typeof(item) == "object"){
-        console.log(item);
-        str += (item.name?item.name:item.code + ",");
+          console.log(item);
+          str += ((item.name?item.name:item.code) + ",");
         }
         else{
-        console.log("Here");
-        str += (item + ",");
+          str += (item + ",");
         }
-        })
-        console.log(str);
-        return str.slice(0,-1);
-
-        }
-        else{
-        return field;
-        }
+    })
+    console.log(str);
+    return str.slice(0,-1);
+    }
+    else{
+      return field;
+    }
   }
 
   componentWillMount() {

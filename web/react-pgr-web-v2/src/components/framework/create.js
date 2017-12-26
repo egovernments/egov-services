@@ -38,6 +38,46 @@ class Report extends Component {
     return formData;
   }
 
+  showObjectInTable = (field, inArrayFormat=false, property="name") => {
+    var str;
+    if(inArrayFormat){
+      str = [];
+    }
+    else{
+      str = "";
+    }
+    
+    console.log(field);
+    
+    if(Array.isArray(field)){
+      field.forEach(function(item, index){
+        if(typeof(item) == "object"){
+          console.log(item);
+          if(inArrayFormat){
+            str[index] = item[property]?item[property]:item["code"];
+          }
+          else{
+            str += ((item[property]?item[property]:item["code"]) + ",");
+          }
+          
+        }
+        else{
+          str += (item + ",");
+        }
+      })
+      if(inArrayFormat){
+        return str;
+      }
+      else{
+        return str.slice(0,-1);
+      }
+    
+    }
+    else{
+      return field;
+    }
+}
+
   setLabelAndReturnRequired(configObject) {
     if (configObject && configObject.groups) {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
@@ -361,6 +401,26 @@ class Report extends Component {
       
       Api.commonApiPost(url, query, _body, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
+          
+          if(specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isMDMSScreen){
+            var masterName = "";
+            var moduleName = "";
+            console.log(res);
+            if(Object.keys(res.MdmsRes).length === 1){
+              moduleName = Object.keys(res.MdmsRes)[0];
+              masterName = Object.keys(res.MdmsRes[Object.keys(res.MdmsRes)[0]])[0]
+            }
+            let mdmsReq = {};
+            mdmsReq.MasterMetaData = {};
+            mdmsReq.MasterMetaData.masterData = [];
+            mdmsReq.MasterMetaData.moduleName = moduleName;
+            mdmsReq.MasterMetaData.masterName = masterName
+            mdmsReq.MasterMetaData.tenantId = "default";
+            mdmsReq.MasterMetaData.masterData[0] = res.MdmsRes[moduleName][masterName][0];
+            console.log(mdmsReq);
+            res = mdmsReq;
+          }
+          // 
           self.props.setLoadingStatus('hide');
           if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
             var obj = {};
@@ -381,7 +441,17 @@ class Report extends Component {
               hashLocation.split('/')[1],
               specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName
             );
-            // console.log(this.props.formData);
+            // var hashLocation = window.location.hash;
+            let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
+            let fields = jp.query(obj, `$.groups..fields[?(@.hasATOAATransform==true)]`);
+            console.log(fields);
+            for (var i = 0; i < fields.length; i++) {
+              let values=_.get(res, fields[i].jsonPath);
+              console.log(values);
+              res=_.set(res, fields[i]["aATransformInfo"].to, self.showObjectInTable(values, true, "code"));
+            }
+            
+            console.log(res);
             self.props.setFormData(res);
           }
           let obj1 = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
@@ -656,11 +726,6 @@ class Report extends Component {
       this.generateSpecificForm(formData, obj['omittableFields']);
     }
     console.log(formData);
-
-    // TODO
-    // Find whether object have "omittableFields"
-    // If there fetch array from specs
-    // Loop on array and delete
 
 
     Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(

@@ -140,11 +140,15 @@ definitions:
       requesterName:
         description: userName of the user requesting this job
         type: string
+      requestFileName:
+        description: name of hte excel file that is uploaded
+        type: string
     required:
       - tenantId
       - moduleName
       - defName
       - requestFilePath
+      - requestFileName
 
   JobResponse:
     type: object
@@ -245,6 +249,11 @@ definitions:
           type: string
       requesterNames: 
         description: Requester names of the jobs to be searched
+        type: array
+        items:
+          type: string
+      requestFilerNames: 
+        description: Excel file names of the jobs to be searched
         type: array
         items:
           type: string

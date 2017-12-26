@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import RaisedButton from "material-ui/RaisedButton";
 import UploadDefinitionsContainer from "../containers/UploadDefinitions";
@@ -41,9 +40,12 @@ const JobCreate = ({ handleOnChange, handleSubmit, message }) => {
         />
       </CardText>
       <CardActions>
-        <Link to="/user-jobs">
-          <FlatButton fullWidth={true} primary={true} label="My Jobs" />
-        </Link>
+        <FlatButton
+          href="#/user-jobs"
+          fullWidth={true}
+          primary={true}
+          label="My Jobs"
+        />
       </CardActions>
       {message.length ? <h3 style={styles.jobCreationAck}>{message}</h3> : ""}
     </Card>

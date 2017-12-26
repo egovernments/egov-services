@@ -1,3 +1,8 @@
+// user login
+export const INITIATE_USER_LOGIN = "INITIATE_USER_LOGIN";
+export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
+export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
+
 // filters
 export const FROM_DATE_FILTER = "FROM_DATE_FILTER";
 export const TO_DATE_FILTER = "TO_DATE_FILTER";

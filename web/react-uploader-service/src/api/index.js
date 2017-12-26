@@ -3,8 +3,7 @@ import * as apiEndpoints from "../constants/ApiEndpoints";
 import {
   prepareFormData,
   getRequestUrl,
-  fetchFromLocalStorage,
-  persistInLocalStorage
+  fetchFromLocalStorage
 } from "../utils";
 import * as prepareRequestBody from "./createRequestBody";
 
@@ -111,18 +110,7 @@ export const Api = () => {
       requestParams
     );
     const response = await axios.post(endPoint, {}, { headers });
-    const responseObj = {};
-    responseObj["token"] = response.data.access_token;
-    responseObj["userRequest"] = JSON.stringify(response.data.UserRequest);
-    responseObj["type"] = response.data.UserRequest.type;
-    responseObj["id"] = response.data.UserRequest.id;
-    responseObj["tenantId"] = response.data.UserRequest.tenantId;
-    responseObj["refresh-token"] = response.data.refresh_token;
-    responseObj["expires-in"] = response.data.expires_in;
-
-    // persist the results in local storage
-    persistInLocalStorage(responseObj);
-    return response;
+    return response.data;
   };
 
   // try to make a generic api call for this

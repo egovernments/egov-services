@@ -32,6 +32,7 @@ import org.egov.egf.bill.web.contract.AccountDetailKey;
 import org.egov.egf.bill.web.contract.AccountDetailType;
 import org.egov.egf.bill.web.contract.Boundary;
 import org.egov.egf.bill.web.contract.ChartOfAccount;
+import org.egov.egf.bill.web.contract.ChartOfAccountDetail;
 import org.egov.egf.bill.web.contract.FinancialConfiguration;
 import org.egov.egf.bill.web.contract.FinancialConfigurationValue;
 import org.egov.egf.bill.web.contract.Function;
@@ -201,6 +202,7 @@ public class BillRegisterService {
         BigDecimal debitSum = BigDecimal.ZERO;
         BigDecimal billDetailAmt = BigDecimal.ZERO;
         BigDecimal payeeDetailSum = BigDecimal.ZERO;
+        Boolean check = false;
 
         for (BillRegister br : billRegisterRequest.getBillRegisters()) {
 
@@ -275,6 +277,26 @@ public class BillRegisterService {
 
                 for (BillPayeeDetail bpd : bd.getBillPayeeDetails()) {
                     payeeDetailSum = payeeDetailSum.add(bpd.getAmount());
+
+                    // validate passed subledger data is correct or not
+                    if (bd.getChartOfAccount() != null && bd.getChartOfAccount().getChartOfAccountDetails() != null
+                            && !bd.getChartOfAccount().getChartOfAccountDetails().isEmpty() && bd.getBillPayeeDetails() != null
+                            && !bd.getBillPayeeDetails().isEmpty()) {
+
+                        check = false;
+
+                        for (ChartOfAccountDetail coad : bd.getChartOfAccount().getChartOfAccountDetails()) {
+                            if (coad.getAccountDetailType() != null && coad.getAccountDetailType().getId() != null
+                                    && bpd.getAccountDetailType() != null && bpd.getAccountDetailType().getId() != null
+                                    && coad.getAccountDetailType().getId().equalsIgnoreCase(bpd.getAccountDetailType().getId()))
+                                check = true;
+                        }
+                        if (!check)
+                            throw new CustomException("AccountDetailType",
+                                    "Invalid Account detail type " + bpd.getAccountDetailType().getId()
+                                            + ", for the non control account code "
+                                            + bd.getChartOfAccount().getGlcode());
+                    }
                 }
 
                 billDetailAmt = bd.getDebitAmount().compareTo(BigDecimal.ZERO) > 0 ? bd.getDebitAmount()

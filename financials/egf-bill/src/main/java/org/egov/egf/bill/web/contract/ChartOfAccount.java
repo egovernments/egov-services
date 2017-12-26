@@ -40,6 +40,8 @@
 
 package org.egov.egf.bill.web.contract;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -166,5 +168,7 @@ public class ChartOfAccount {
     private Boolean isSubLedger;
 
     private String glcodes;
+
+    private List<ChartOfAccountDetail> chartOfAccountDetails;
 
 }

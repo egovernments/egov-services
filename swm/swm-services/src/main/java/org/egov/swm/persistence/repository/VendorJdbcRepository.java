@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Boundary;
@@ -111,6 +112,22 @@ public class VendorJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("supplier =:supplier");
             paramValues.put("supplier", searchRequest.getSupplierNo());
+        }
+
+        if (searchRequest.getServices() != null) {
+
+            ServicesOffered servicesOfferedSearch = ServicesOffered.builder().services(searchRequest.getServices())
+                    .tenantId(searchRequest.getTenantId())
+                    .build();
+            List<ServicesOffered> servicesOffereds = servicesOfferedJdbcRepository.search(servicesOfferedSearch);
+            List<String> vendorNos = servicesOffereds.stream()
+                    .map(ServicesOffered::getVendor).distinct().collect(Collectors.toList());
+            if (vendorNos != null && !vendorNos.isEmpty()) {
+                addAnd(params);
+                params.append("vendorNo in (:vendorNos)");
+                paramValues.put("vendorNos", vendorNos);
+            }
+
         }
 
         Pagination<Vendor> page = new Pagination<>();

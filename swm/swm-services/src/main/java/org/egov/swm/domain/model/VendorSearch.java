@@ -12,6 +12,7 @@ import lombok.Setter;
 public class VendorSearch extends Vendor {
     private String vendorNos;
     private String supplierNo;
+    private String services;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

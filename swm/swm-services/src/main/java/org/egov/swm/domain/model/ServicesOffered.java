@@ -20,6 +20,8 @@ public class ServicesOffered {
     private String vendorNos;
 
     private String service;
+    
+    private String services;
 
     private String createdBy;
 

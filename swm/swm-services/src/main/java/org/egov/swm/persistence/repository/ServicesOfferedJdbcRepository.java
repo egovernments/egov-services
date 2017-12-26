@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ServicesOfferedJdbcRepository extends JdbcRepository {
 
-    public static final String TABLE_NAME = "egswm_vendorservicedlocations";
+    public static final String TABLE_NAME = "egswm_vendorservicesoffered";
 
     @Transactional
     public void delete(final String tenantId, final String vendor) {
@@ -40,12 +40,18 @@ public class ServicesOfferedJdbcRepository extends JdbcRepository {
             paramValues.put("service", searchRequest.getService());
         }
 
+        if (searchRequest.getServices() != null) {
+            addAnd(params);
+            params.append("service in (:services)");
+            paramValues.put("services", new ArrayList<>(Arrays.asList(searchRequest.getServices().split(","))));
+        }
+
         if (searchRequest.getVendor() != null) {
             addAnd(params);
             params.append("vendor =:vendor");
             paramValues.put("vendor", searchRequest.getVendor());
         }
-        
+
         if (searchRequest.getVendorNos() != null) {
             addAnd(params);
             params.append("vendor in (:vendors)");

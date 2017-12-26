@@ -2974,9 +2974,6 @@ definitions:
           $ref: '#/definitions/SwmProcess'
           format: singleValueList
           description: Sanitary staff target is defined based on SWM process. However ,transportation is excluded from this list. Target will be assigned for Collection, Segregation and Disposal process.
-        location:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
-          description: Admin will select the location (Ward / Zone / colony etc)
         route:
           $ref: "#/definitions/Route"
           format: singleValueList
@@ -3117,9 +3114,6 @@ definitions:
           type: number
           format: double
           description: fuel Filled in the Vehicle in liters. e.g. 40.67
-        typeOfFuel:
-          $ref: "#/definitions/FuelType"
-          description: Type of Fuel. e.g. Petrol. Shall be autofilled based on Vehicle registration number
         totalCostIncurred:
           type: number 
           format: double
@@ -3144,7 +3138,6 @@ definitions:
       - vehicleReadingDuringFuelling
       - refuellingStation
       - fuelFilled
-      - typeOfFuel
       - totalCostIncurred
       - receiptNo
       - receiptDate
@@ -3639,5 +3632,6 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 

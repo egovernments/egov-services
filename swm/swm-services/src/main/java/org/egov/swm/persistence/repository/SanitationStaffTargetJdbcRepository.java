@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.DumpingGround;
@@ -27,7 +26,6 @@ import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.SanitationStaffTargetEntity;
 import org.egov.swm.web.contract.Employee;
 import org.egov.swm.web.contract.EmployeeResponse;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -49,9 +47,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
     @Autowired
     private SwmProcessService swmProcessService;
-
-    @Autowired
-    private BoundaryRepository boundaryRepository;
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -92,6 +87,18 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             paramValues.put("tenantId", searchRequest.getTenantId());
         }
 
+        if (searchRequest.getTargetFrom() != null) {
+            addAnd(params);
+            params.append("targetFrom =:targetFrom");
+            paramValues.put("targetFrom", searchRequest.getTargetFrom());
+        }
+
+        if (searchRequest.getTargetTo() != null) {
+            addAnd(params);
+            params.append("targetTo =:targetTo");
+            paramValues.put("targetTo", searchRequest.getTargetTo());
+        }
+
         if (searchRequest.getRouteCode() != null) {
             addAnd(params);
             params.append("route =:route");
@@ -108,6 +115,12 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("employee =:employee");
             paramValues.put("employee", searchRequest.getEmployeeCode());
+        }
+
+        if (searchRequest.getDumpingGroundCode() != null) {
+            addAnd(params);
+            params.append("dumpingGround =:dumpingGround");
+            paramValues.put("dumpingGround", searchRequest.getDumpingGroundCode());
         }
 
         Pagination<SanitationStaffTarget> page = new Pagination<>();
@@ -360,7 +373,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
         }
         if (employeeCodes != null && employeeCodes.length() > 0) {
-            
+
             String tenantId = null;
             Map<String, Employee> employeeMap = new HashMap<>();
 

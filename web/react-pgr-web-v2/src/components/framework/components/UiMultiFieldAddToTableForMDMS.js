@@ -472,18 +472,19 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     // }
 
     let list = _.cloneDeep(this.state.valueList);
-    let { indexes, isInlineEdit } = this.state;
-    if (indexes.indexOf(index) == -1) {
-      list.splice(index, 1);
-    }
-
+    // let { indexes, isInlineEdit } = this.state;
+    // if (indexes.indexOf(index) == -1) {
+    //   list.splice(index, 1);
+    // }
+    let formData ={};
+     _.set(formData, this.props.item.jsonPath + '[0]', list[index]);
     this.setState(
       {
         // valueList: list,
         isBtnDisabled: true,
         isAddAgain: false,
-        formData: {},
-        indexes: [],
+        formData,
+        //indexes:,
       },
       function() {
         if (this.props.setDisabled) this.props.setDisabled(true);
@@ -597,7 +598,6 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   };
 
   renderArrayField = item => {
-    // console.log(this.props.match);
     switch (this.props.ui) {
       case 'google':
         return (
@@ -702,7 +702,7 @@ class UiMultiFieldAddToTableForMDMS extends Component {
                             />
                             <br />
                             <FlatButton
-                              label={translate('Delete')}
+                              label={translate('Close')}
                               secondary={true}
                               onClick={e => {
                                 this.deleteRow(index);
@@ -860,7 +860,6 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   };
 
   render() {
-    // console.log(this.props);
     return <div>{this.renderArrayField(this.props.item)}</div>;
   }
 }

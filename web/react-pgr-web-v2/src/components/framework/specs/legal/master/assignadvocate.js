@@ -238,20 +238,21 @@ var dat = {
                   pattern: '',
                   type: 'singleValueList',
                   jsonPath: 'cases[0].advocateDetails[0].advocate.code',
+                  filterMenu: true,
                   isRequired: true,
                   isKeyOtherPair: 'agencyName',
                   isDisabled: false,
-                  url: '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
+                  url: '/lcms-services/legalcase/advocate/_search?&status=active|$..code|$..name',
                   depedants: [
                     {
-                      jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                      jsonPath: 'cases[0].advocateDetails[0].advocate.status',
                       type: 'autoFill',
                       //  pattern:
                       //   "/lcms-services/legalcase/advocate/_search?code={cases[0].advocateDetails[0].advocate.code}|$..status|$..status",
                       pattern:
                         '/lcms-services/legalcase/advocate/_search?tenantId=default&code={cases[0].advocateDetails[0].advocate.code}|$..status|$..status',
                       autoFillFields: {
-                        'cases[0].advocateDetails[0].advocatestaus': 'advocates[0].status',
+                        'cases[0].advocateDetails[0].advocate.status': 'advocates[0].status',
                       },
                     },
                   ],
@@ -268,7 +269,7 @@ var dat = {
                   name: 'advocatestaus',
                   pattern: '',
                   type: 'text',
-                  jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                  jsonPath: 'cases[0].advocateDetails[0].advocate.status',
                   isRequired: false,
                   isDisabled: true,
                 },

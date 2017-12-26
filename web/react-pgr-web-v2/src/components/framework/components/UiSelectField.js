@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -12,8 +13,18 @@ let tracker = [];
 class UiSelectField extends Component {
   constructor(props) {
     super(props);
+    this.state={
+      filter:true,
+      getAdocateValue:''
+    }
   }
 
+  componentWillMount() {
+    // add event listener for clicks
+    document.addEventListener('click', this.handleClick, false);
+  }
+
+ 
   initData(props) {
     //console.log("UiSelectField, initData() called", props);
     let { item, setDropDownData, setDropDownOriginalData, useTimestamp, dropDownOringalData } = props;
@@ -147,17 +158,26 @@ class UiSelectField extends Component {
           item.expression,
           item.expressionMsg
         );
-    }
-
+    } 
+   
     if (this.props.location.pathname != nextProps.history.location.pathname || dropDownData === undefined) {
       this.initData(nextProps);
     }
   }
-
+ 
   renderSelect = item => {
-    let { dropDownData, value } = this.props;
+   let  {getAdocateValue, filter} = this.state;
+    let { dropDownData, value , name } = this.props;
     // if(item.jsonPath == 'abstractEstimates[0].natureOfWork.code' || item.jsonPath == 'abstractEstimates[0].pmcName' || item.jsonPath == 'abstractEstimates[0].department.code')
     // console.log(item.jsonPath, '<--->', value, typeof(value) );
+    var dropDownDataArray = dropDownData;
+         
+       if(item.filterMenu && filter){
+        dropDownDataArray = [{
+          key:value,
+          value:name
+        }]
+       }
 
     switch (this.props.ui) {
       case 'google':
@@ -191,6 +211,9 @@ class UiSelectField extends Component {
             underlineDisabledStyle={{ backgroundColor: '#eee!important' }}
             {...labelProperty}
             onChange={(event, key, value) => {
+              this.setState({
+                getAdocateValue : value
+              })
               this.props.handler(
                 { target: { value: value } },
                 item.jsonPath,
@@ -202,11 +225,19 @@ class UiSelectField extends Component {
                 item.expressionMsg
               );
             }}
+            onClick={
+              (event)=>{
+                event.stopPropagation();
+               (this.state.filter)?this.setState({
+                filter:false
+              }):''
+              }
+            }
             disabled={item.isDisabled}
             errorText={this.props.fieldErrors[item.jsonPath]}
             maxHeight={200}
           >
-            {dropDownData && dropDownData.map((dd, index) => <MenuItem value={dd.key} key={index} primaryText={dd.value} />)}
+            {dropDownDataArray && dropDownDataArray.map((dd, index) => <MenuItem value={dd.key} key={index} primaryText={dd.value} />)}
           </SelectField>
         );
     }
@@ -215,11 +246,32 @@ class UiSelectField extends Component {
   render() {
     return this.renderSelect(this.props.item);
   }
+
+  componentWillUnmount() {
+    // make sure you remove the listener when the component is destroyed
+    document.removeEventListener('click', this.handleClick, false);
+  }
+
+  handleClick = e => {
+    if(this.state.getAdocateValue == ''){
+      if(!ReactDOM.findDOMNode(this).contains(e.target)) {
+        // the click was outside your component, so handle closing here
+        this.setState({
+          filter:true
+        });
+      }
+    }
+  }
+
 }
 
 const mapStateToProps = (state, props) => {
   let { item } = props;
   let value = _.get(state.frameworkForm.form, item.jsonPath);
+  let name =  _.get(state.frameworkForm.form, _.replace(item.jsonPath, 'code', 'name'));
+  if(name != undefined){
+    var advocateName = name;
+  }
   // console.log(item.jsonPath , '---->', _.get(state.frameworkForm.form, item.jsonPath));
   if (item.convertToString && value) value = value.toString();
   else if (item.convertToNumber && value) {
@@ -230,6 +282,7 @@ const mapStateToProps = (state, props) => {
     dropDownData: state.framework.dropDownData[item.jsonPath],
     dropDownOringalData: state.framework.dropDownOringalData,
     value: value,
+    name: advocateName
   };
 };
 

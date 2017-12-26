@@ -1608,10 +1608,10 @@ class Report extends Component {
                 id[queryStringObject[i].split('=')[0]] = e.target.value || '';
               } else {
                 id[queryStringObject[i].split('=')[0]] = getVal(
-                  queryStringObject[i]
+                  replaceLastIdxOnJsonPath(queryStringObject[1]
                     .split('=')[1]
                     .split('{')[1]
-                    .split('}')[0]
+                    .split('}')[0],dependantIdx)
                 );
               }
             } else {

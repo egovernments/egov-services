@@ -15,7 +15,7 @@ var dat = {
             label: 'inventory.financialYear',
             type: 'singleValueList',
             isDisabled: false,
-            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange",
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange",
             patternErrorMsg: 'inventory.create.field.message.financialYear',
           },
           {
@@ -72,7 +72,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange",
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange",
             patternErrorMsg: '',
           },
           {
@@ -259,7 +259,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..id|$..finYearRange",
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=FinancialYear|$..id|$..finYearRange",
             patternErrorMsg: '',
           },
           {
@@ -461,7 +461,7 @@ var dat = {
             pattern: '',
             type: 'singleValueList',
             isDisabled: true,
-            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=financialYears|$..finYearRange|$..finYearRange",
+            url: "/egov-mdms-service/v1/_get?tenantId=default&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange",
             patternErrorMsg: '',
           },
           {

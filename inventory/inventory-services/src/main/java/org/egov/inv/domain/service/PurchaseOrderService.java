@@ -455,12 +455,13 @@ public class PurchaseOrderService extends DomainService {
 
                             IndentEntity ie = IndentEntity.builder().build();
 
+                            //Indent Number mandatory for each PurchaseOrder
                             if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent") && purchaseOrderDetail.getIndentNumber() == null) {
                                 errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indentNumber", "null");
                             }
 
                             //indent reference validation
-                            if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent")) {
+                            if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent") && purchaseOrderDetail.getIndentNumber() != null) {
                                 ie = indentJdbcRepository.findById(IndentEntity.builder().indentNumber(purchaseOrderDetail.getIndentNumber()).tenantId(purchaseOrderDetail.getTenantId()).build());
                                 if (ie.getId() == null)
                                     errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "IndentNumber", purchaseOrderDetail.getIndentNumber());

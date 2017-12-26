@@ -350,6 +350,7 @@ public class MaterialIssueService extends DomainService {
 			materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
 			if (!materialIssueDetail.getMaterialIssuedFromReceipts().isEmpty())
 				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
+					//TODO: CHECK mifr.getQuantity() IS CONVERTED ALREADY USING CONVERSION FACTOR ?
 					if (mifr.getQuantity() != null && materialIssueDetail.getUom().getConversionFactor() != null)
 						quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()),
 								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
@@ -430,6 +431,8 @@ public class MaterialIssueService extends DomainService {
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 						int i = 1;
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+							
+							//TODO: CHECK QUANTITY ISSUES IS IN CONVERSION FACTOR REQUIRED ?
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
 										String.valueOf(i), materialIssueDetail.getQuantityIssued().toString());
@@ -440,6 +443,7 @@ public class MaterialIssueService extends DomainService {
 								if (materialIssueDetail.getBalanceQuantity().compareTo(BigDecimal.ZERO) <= 0)
 									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "balanceQuantity",
 											String.valueOf(i), materialIssueDetail.getBalanceQuantity().toString());
+								//TODO: CHECK QUANTITY ISSUES IS IN CONVERSION FACTOR REQUIRED ?
 								if (materialIssueDetail.getQuantityIssued()
 										.compareTo(materialIssueDetail.getBalanceQuantity()) > 0) {
 									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
@@ -448,12 +452,14 @@ public class MaterialIssueService extends DomainService {
 								}
 							}
 							if (materialIssueDetail.getIndentDetail() != null) {
+								//TODO: CANNOT CONVERTED TO CONVERSION FACTOR HERE.
 								if (materialIssueDetail.getQuantityIssued()
 										.compareTo(materialIssueDetail.getIndentDetail().getIndentQuantity()) > 0)
 									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
 											"indentQuantity", materialIssueDetail.getQuantityIssued().toString(),
 											materialIssueDetail.getIndentDetail().getIndentQuantity().toString(),
 											String.valueOf(i));
+								//TODO: CHECK QUANTITY ISSUES IS IN CONVERSION FACTOR REQUIRED ?	
 								if (materialIssueDetail.getIndentDetail().getIndentQuantity()
 										.compareTo(BigDecimal.ZERO) <= 0)
 									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "indentQuantity",
@@ -620,14 +626,15 @@ public class MaterialIssueService extends DomainService {
 					mifr.setQuantity(BigDecimal.valueOf(quantity));
 					materialIssuedFromReceiptsIds.add(mifr.getId());
 					mifr.setStatus(false);
-				}
+				} 
 			}
 			materialIssuedFromReceiptsJdbcRepository.updateStatus(materialIssuedFromReceiptsIds,
 					materialIssue.getTenantId());
-			
+			//TODO: If issue size increase or decrease ??? then how you are backupdating indent ?
 			if(materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString()))
 				backUpdateIndentInCaseOfUpdate(materialIssueDetails, materialIssue.getTenantId());
-			if( materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString()))
+		//TODO: WHATS THE USE OF BELOW LINE ?
+			if(materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString()))
 				break;
 			setMaterialIssueValues(materialIssue, null, Constants.ACTION_UPDATE,type);
 			materialIssue
@@ -720,6 +727,8 @@ public class MaterialIssueService extends DomainService {
 			if (materialIssue.getIndent() != null
 					&& StringUtils.isNotBlank(materialIssue.getIndent().getIndentNumber())) {
 				IndentSearch indentSearch = new IndentSearch();
+				
+				//TODO: THROW ERROR IF INDENT NOT FOUND.
 				indentSearch.setIndentNumber(materialIssue.getIndent().getIndentNumber());
 				indentSearch.setTenantId(tenantId);
 				materialIssue.setIndent(indentService.search(indentSearch, new RequestInfo()).getIndents().get(0));
@@ -751,6 +760,7 @@ public class MaterialIssueService extends DomainService {
 						if (indentDetail.getUom() != null && StringUtils.isNotBlank(indentDetail.getUom().getCode())) {
 							indentDetail.setUom(uomMap.get(indentDetail.getUom().getCode()));
 						}
+						//TODO: ALSO SET THE QUANTITY AND CONVERSION FACTORS.AVAILABLE BALANCE ALSO.
 						materialIssueDet.setIndentDetail(indentDetail);
 						materialIssueDetail.add(materialIssueDet);
 					}

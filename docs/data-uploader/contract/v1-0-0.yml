@@ -252,7 +252,7 @@ definitions:
         type: array
         items:
           type: string
-      requestFilerNames: 
+      requestFileNames: 
         description: Excel file names of the jobs to be searched
         type: array
         items:

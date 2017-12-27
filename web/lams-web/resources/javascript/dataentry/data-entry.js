@@ -47,6 +47,7 @@ $('#close').on("click", function() {
 
 var CONST_API_GET_FILE = "/filestore/v1/files/id?fileStoreId=";
 var agreement = {};
+var assetDetails;
 var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 
@@ -373,7 +374,7 @@ var commomFieldsRules = {
         required: true
     },
     gstin: {
-        required: false,
+        required: true,
         alphaNumer: true
     },
     collectedGoodWillAmount: {
@@ -559,7 +560,7 @@ finalValidatinRules["messages"] = {
 }
 
 function onLoadAsset(){
-  var assetDetails = commonApiPost("asset-services", "assets", "_search", { id: getUrlVars()["assetId"], tenantId }).responseJSON["Assets"][0] || {};
+  assetDetails = commonApiPost("asset-services", "assets", "_search", { id: getUrlVars()["assetId"], tenantId }).responseJSON["Assets"][0] || {};
 
   for (var variable in natureOfAllotments) {
       if (natureOfAllotments.hasOwnProperty(variable)) {

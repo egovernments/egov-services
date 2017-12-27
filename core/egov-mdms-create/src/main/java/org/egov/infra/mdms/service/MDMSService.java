@@ -20,6 +20,7 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,8 @@ public class MDMSService {
 	private String egovRepo;
 
 	private final Map<String, List<String>> stateLevelMastermap = MDMSApplicationRunnerImpl.getStateWideMastersMap();
+	
+	private final Map<String, Map<String, Object>> MasterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
 
 	@Autowired
 	private MDMSCreateRepository mDMSCreateRepository;
@@ -80,12 +83,20 @@ public class MDMSService {
 		Long startTime = null;
 		Long endTime = null;
 		Map<String, Object> masterContentFromCache = null;
+		Object masterDataFromCache = null;
 		Object fileContents = null;
 		startTime = new Date().getTime();
 		if (cacheFetch) {
 			masterContentFromCache = getContentFromCache(filePathMap, mDMSCreateRequest);
+			if (masterContentFromCache != null) {
+				masterDataFromCache = mapper.writeValueAsString(masterContentFromCache);
+				masterDataFromCache = JsonPath.read(masterDataFromCache.toString(),
+						"$.MdmsRes." + mDMSCreateRequest.getMasterMetaData().getModuleName());
+			}
 			if (null == masterContentFromCache) {
 				logger.info("Failed to get content from cache, fall back to fetch from git triggered....");
+			} else if(masterDataFromCache!=null && masterDataFromCache.toString().equals("{}")){
+				fileContents = new Object();
 			} else {
 				fileContents = getFileContents(filePathMap, mDMSCreateRequest);
 			}
@@ -96,12 +107,9 @@ public class MDMSService {
 		logger.info("Time taken for this step: " + (endTime - startTime) + "ms");
 		if (null == fileContents)
 			throw new CustomException("400", "Invalid Tenant Id");
-		if (null != masterContentFromCache) {
+		if (null != masterContentFromCache && !masterDataFromCache.toString().equals("{}")) {
 			Object masterFromCache = mapper.writeValueAsString(masterContentFromCache);
 			logger.info("masterContentsFromCache: " + masterContentFromCache);
-			Map<String, Object> map = JsonPath.read(masterFromCache.toString(),
-					"$.MdmsRes." + mDMSCreateRequest.getMasterMetaData().getModuleName());
-			if (!map.toString().equals("{}")) {
 				masterFromCache = JsonPath.read(masterFromCache.toString(),
 						"$.MdmsRes." + mDMSCreateRequest.getMasterMetaData().getModuleName() + "."
 								+ mDMSCreateRequest.getMasterMetaData().getMasterName());
@@ -110,10 +118,18 @@ public class MDMSService {
 				DocumentContext documentContext = JsonPath.parse(fileContents.toString());
 				documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(), masterFromCache);
 				fileContents = mapper.readValue(documentContext.jsonString().toString(), Map.class);
-			}
 		}
 		startTime = new Date().getTime();
-		String content = getContentForPush(fileContents, mDMSCreateRequest, isCreate);
+		String content = "";
+		if (masterDataFromCache.toString().equals("{}")) {
+			  JSONObject obj = new JSONObject();
+		        obj.put("tenantId",mDMSCreateRequest.getMasterMetaData().getTenantId());
+		        obj.put("moduleName",mDMSCreateRequest.getMasterMetaData().getModuleName());
+		        obj.put(mDMSCreateRequest.getMasterMetaData().getMasterName(),mDMSCreateRequest.getMasterMetaData().getMasterData());
+	       content =obj.toString();
+		} else {
+		   content = getContentForPush(fileContents, mDMSCreateRequest, isCreate);
+		}
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: " + (endTime - startTime) + "ms");
 		String filePath = null; 
@@ -296,7 +312,8 @@ public class MDMSService {
 			if (null == masterData) {
 				throw new CustomException("400", "No master data available for this master");
 			}
-			List<String> keys = mDMSUtils.getUniqueKeys(mDMSCreateRequest, moduleDataMap);
+			
+			List<String> keys = mDMSUtils.getUniqueKeys(mDMSCreateRequest, MasterConfigMap.get(mDMSCreateRequest.getMasterMetaData().getModuleName()));
 			if (null == keys) {
 				throw new CustomException("400", "There are duplicate mdms-configs for this master: "
 						+ mDMSCreateRequest.getMasterMetaData().getMasterName());
@@ -363,12 +380,13 @@ public class MDMSService {
 	}
 
 	public String getFilePath(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest) {
-		String fileName = filePathMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() + "-"
-				+ mDMSCreateRequest.getMasterMetaData().getModuleName());
+		String fileName = filePathMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() + "-"	+ mDMSCreateRequest.getMasterMetaData().getModuleName() + "-"
+				                              + mDMSCreateRequest.getMasterMetaData().getMasterName());
 		if (null == fileName) {
-			throw new CustomException("400",
+/*			throw new CustomException("400",
 					"No data available for this module. NOTE: Please check if the json file exists for this module."
-							+ "If it does, please check your spelling of moduleName param, It is case-sensitive.");
+							+ "If it does, please check your spelling of moduleName param, It is case-sensitive.");*/
+			fileName = mDMSCreateRequest.getMasterMetaData().getMasterName()+".json";
 		}
 		StringBuilder filePath = new StringBuilder();
 		filePath.append(dataRootFolder);
@@ -377,7 +395,7 @@ public class MDMSService {
 		for (int i = 0; i < tenantArray.length; i++) {
 			folderPath.append(tenantArray[i]).append("/");
 		}
-		filePath.append("/").append(folderPath.toString()).append(fileName);
+		filePath.append("/").append(folderPath.toString()).append(mDMSCreateRequest.getMasterMetaData().getModuleName()).append("/").append(fileName);
 		logger.info("filePath: " + filePath.toString());
 
 		return filePath.toString();
@@ -389,17 +407,19 @@ public class MDMSService {
 		if (tenantId.contains(".")) {
 			tenantArray = tenantId.split("\\.");
 		}
-		String fileName = filePathMap.get(tenantArray[0] + "-" + mDMSCreateRequest.getMasterMetaData().getModuleName());
+		String fileName = filePathMap.get(tenantArray[0] + "-"	+ mDMSCreateRequest.getMasterMetaData().getModuleName() + "-"
+                + mDMSCreateRequest.getMasterMetaData().getMasterName());
 		if (null == fileName) {
-			throw new CustomException("400",
+/*			throw new CustomException("400",
 					"No data available for this module. NOTE: Please check if the json file exists for this module."
-							+ "If it does, please check your spelling of moduleName param, It is case-sensitive.");
+							+ "If it does, please check your spelling of moduleName param, It is case-sensitive.");*/
+			fileName = mDMSCreateRequest.getMasterMetaData().getMasterName()+".json";
 		}
 		StringBuilder filePath = new StringBuilder();
 		filePath.append(dataRootFolder);
 		StringBuilder folderPath = new StringBuilder();
 		folderPath.append(tenantArray[0]).append("/");
-		filePath.append("/").append(folderPath.toString()).append(fileName);
+		filePath.append("/").append(folderPath.toString()).append(mDMSCreateRequest.getMasterMetaData().getModuleName()).append("/").append(fileName);
 		logger.info("filePath: " + filePath.toString());
 
 		return filePath.toString();

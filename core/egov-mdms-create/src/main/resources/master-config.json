@@ -1,0 +1,62 @@
+{
+  "ASSET": {
+    "AssetCategory": {
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.id",
+        "$.tenantId"
+      ]
+    },
+    "ModeOfAcquisition": {
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "LayerType": {
+      "masterName": "LayerType",
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.id",
+        "$.tenantId"
+      ]
+    },
+   "NewAssetMaster12": {
+      "masterName": "NewAssetMaster12",
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.id",
+        "$.tenantId"
+      ]
+    }
+  },
+  "common-masters": {
+    "Department": {
+      "masterName": "",
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    }
+  },
+    "swm": {
+    "VehicleType": {
+      "masterName": "VehicleType",
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "NewTestSwmMaster":{
+      "masterName": "NewTestSwmMaster",
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    }
+  }
+}

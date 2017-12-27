@@ -1,11 +1,14 @@
 package org.egov;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +18,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +43,8 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 	private static Map<String, String> filePathMap = new HashMap<>();
 	
 	private static Map<String, List<String>> stateLevelMastermap = new HashMap<>();
+	
+	private static  Map<String, Map<String,Object>> masterConfigMap = new HashMap<>();
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -43,6 +52,8 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 			log.info("Reading data files from: "+mdmsFileDirectory);
 			readDirectory(mdmsFileDirectory);
 			getStateLevelMap(stateLevelMasters);
+			//readMdmsConfigFiles("/home/kiranmayi/egovernments/latest/egov-services/core/egov-mdms-create/src/main/resources/"+"master-config.json");
+			readMdmsConfigFiles("master-config.json");
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);
 		}
@@ -94,9 +105,10 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 		log.info("filePathMap: "+filePathMap);
 	}		
 	private void buildFilePathMap(Map<String, Object> map, String filePath){
-		StringBuilder key = new StringBuilder();
-		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
-		
+		Set<String> set = map.keySet();
+		String masterName = set.stream().filter(line -> !"tenantId".equals(line) && !"moduleName".equals(line) && !"mdms-config".equals(line)).findAny().get();    
+        StringBuilder key = new StringBuilder();
+        key.append(map.get("tenantId")).append("-").append(map.get("moduleName")).append("-").append(masterName);
 		filePathMap.put(key.toString(), filePath);
 	}
 
@@ -136,9 +148,66 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 			}
 		}
 	}
+	
+	public void readMdmsConfigFiles(String baseFoderPath) {
+		ObjectMapper jsonReader = new ObjectMapper();
+		File file = new File(getClass().getClassLoader().getResource(baseFoderPath).getFile());
+	
+				String name = file.getName();
+				String[] fileName = name.split("[.]");
+				if (fileName[fileName.length - 1].equals("json")) {
+					log.debug("Reading json file....:- " + name);
+					try {
+						Map<String, Object> jsonMap = jsonReader.readValue(file, Map.class);
+						prepareMasterConfigMap(jsonMap);
+						log.debug("json str:" + jsonMap);
+					} catch (JsonGenerationException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JsonMappingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				} else {
+					log.info("file is not of a valid type please change and retry");
+					log.info("Note: file can either be .yml/.yaml or .json");
 
+				}
+	}
+	@SuppressWarnings("unchecked")
+	public void prepareMasterConfigMap(Map<String, Object> map) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		Set<String> moduleKeys = map.keySet();
+		Iterator<String> moduleKeyIterator = moduleKeys.iterator();
+		String masterName = null;
+		Map<String,Object> masterDataJsonArray = null;
+		while(moduleKeyIterator.hasNext()) {
+			masterName = moduleKeyIterator.next();
+			
+			try {
+				masterDataJsonArray = JsonPath.read(objectMapper.writeValueAsString(map.get(masterName)),"$");
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			masterConfigMap.put(masterName, masterDataJsonArray);
+		}
+		log.info("MasterConfigMap: "+masterConfigMap);
+	}
+		
 	public static Map<String, List<String>> getStateWideMastersMap() {
 		return stateLevelMastermap;
 	}
+	
+	public static Map<String, Map<String,Object>> getMasterConfigMap() {
+		return masterConfigMap;
+	}
+
 	
 }

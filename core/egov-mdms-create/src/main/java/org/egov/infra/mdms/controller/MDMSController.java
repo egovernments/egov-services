@@ -37,81 +37,84 @@ public class MDMSController {
 
 	@Autowired
 	private MDMSService mdmsService;
-	
+
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-	
+
 	@Autowired
 	private MDMSRequestValidator mDMSRequestValidator;
-	
+
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		List<String> keys = new ArrayList<>();
 		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, true);
-		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
+		}.getType();
 		Gson gson = new Gson();
 		Object errorData = gson.fromJson(validationError.toString(), type);
-		if(!validationError.isEmpty()){
+		if (!validationError.isEmpty()) {
 			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
-			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
-				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-			mDMSCreateErrorResponse.setMessage("This record already exists. The keys for this record are: "+keys);
+			mDMSCreateErrorResponse.setResponseInfo(
+					responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+			mDMSCreateErrorResponse.setMessage("This record already exists. The keys for this record are: " + keys);
 			mDMSCreateErrorResponse.setData(errorData);
 			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}
 		Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, true);
 		MdmsResponse mdmsResponse = new MdmsResponse();
 		mdmsResponse.setMdmsRes(response);
-		mdmsResponse.setResponseInfo(responseInfoFactory.
-				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
-			
-		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
+		mdmsResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
 
+		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("_update")
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		List<String> keys = new ArrayList<>();
 		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, false);
-		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
+		}.getType();
 		Gson gson = new Gson();
 		Object errorData = gson.fromJson(validationError.toString(), type);
-		if(!validationError.isEmpty()){
+		if (!validationError.isEmpty()) {
 			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
-			mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
-				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-			mDMSCreateErrorResponse.setMessage("You have attempted to update a key that defines this record or the record does not exist. "
-					+ "To create a new entry, please use the Create screen. The keys for this record are: "+keys);
+			mDMSCreateErrorResponse.setResponseInfo(
+					responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+			mDMSCreateErrorResponse.setMessage(
+					"You have attempted to update a key that defines this record or the record does not exist. "
+							+ "To create a new entry, please use the Create screen. The keys for this record are: "
+							+ keys);
 			mDMSCreateErrorResponse.setData(errorData);
 			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}
 		Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, false);
 		MdmsResponse mdmsResponse = new MdmsResponse();
 		mdmsResponse.setMdmsRes(response);
-		mdmsResponse.setResponseInfo(responseInfoFactory.
-				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
-			
+		mdmsResponse.setResponseInfo(
+				responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
+
 		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
 	}
-		
+
 	@PostMapping("config/_search")
 	@ResponseBody
-	private ResponseEntity<?> configSearch(@RequestBody RequestInfo requestInfo, @RequestParam("tenantId") String tenantId, 
-			@RequestParam("module") String module, @RequestParam(value = "master", required = false) String master) throws Exception {
-		log.info("Search criteria: " + tenantId+","+module+","+master);
-		try{
+	private ResponseEntity<?> configSearch(@RequestBody RequestInfo requestInfo,
+			@RequestParam("tenantId") String tenantId, @RequestParam("module") String module,
+			@RequestParam(value = "master", required = false) String master) throws Exception {
+		log.info("Search criteria: " + tenantId + "," + module + "," + master);
+		try {
 			List<Object> response = mdmsService.getConfigs(tenantId, module, master);
-			return new ResponseEntity<>(response, HttpStatus.OK);		
-		}catch(Exception e){
-			log.error("Error ",e);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error ", e);
 			throw e;
 		}
 
-		
-	} 
-	
+	}
+
 }

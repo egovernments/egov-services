@@ -86,6 +86,12 @@ public class MeasurementBook   {
 
   @JsonProperty("cancellationRemarks")
   private String cancellationRemarks = null;
+  
+  @JsonProperty("billNumber")
+  private String billNumber = null;
+
+  @JsonProperty("billDate")
+  private Long billDate = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -541,7 +547,23 @@ public class MeasurementBook   {
     this.cancellationRemarks = cancellationRemarks;
   }
 
-  public MeasurementBook auditDetails(AuditDetails auditDetails) {
+  public String getBillNumber() {
+	return billNumber;
+}
+
+public void setBillNumber(String billNumber) {
+	this.billNumber = billNumber;
+}
+
+public Long getBillDate() {
+	return billDate;
+}
+
+public void setBillDate(Long billDate) {
+	this.billDate = billDate;
+}
+
+public MeasurementBook auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
   }

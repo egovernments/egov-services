@@ -593,6 +593,17 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description: Remarks for cancellation of the Measurement book, Required only while cancelling Measurement book
         maxLength: 512
+      billNumber:
+        type: string
+        pattern: '[a-zA-Z0-9-/]+'
+        description: Comma separated Bill Numbers. 
+        maxLength: 256
+        minLength: 1
+      billDate:
+        type: integer
+        format: int64
+        x-displayformat: 'dd/MM/yyyy'
+        description: Epoch time of when the bills created
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       deleted:

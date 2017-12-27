@@ -167,7 +167,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike())) {
             addAnd(params);
             params.append(
-                    "loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in (select id from egw_detailedestimate where lower(estimatenumber) like (:detailedestimatenumberlike))  and loaestimate.tenantId =:tenantId");
+                    "loaestimate.letterofacceptance = loa.id and loaestimate.detailedestimate in (select id from egw_detailedestimate where lower(estimatenumber) like (:detailedestimatenumberlike))  and loaestimate.tenantId =:tenantId");
             paramValues.put("detailedestimatenumberlike",
                     '%' + letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike().toLowerCase() + '%');
         }

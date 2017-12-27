@@ -300,7 +300,7 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_DETAILEDESTIMATE_STATUS, Constants.MESSAGE_DETAILEDESTIMATE_STATUS);
         }
 
-        if (detailedEstimate.getApprovedDate() != null && detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
+        if (detailedEstimate != null && detailedEstimate.getApprovedDate() != null && detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
             messages.put(Constants.KEY_INVALID_LOADATE_DATE, Constants.MESSAGE_INVALID_LOADATE_DATE);
         }
 

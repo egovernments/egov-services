@@ -42,8 +42,17 @@ class LeaveSummaryView extends React.Component {
             }
         });
 
+        var leaveStatus ;
+
 
         getDropdown("leaveStatus", function (res) {
+
+            for(var i=0;i<res.length;i++){
+                if (res[i].code === "APPROVED") {
+                    leaveStatus = res[i].id;
+                }
+            }
+
             _this.setState({
                 ..._this.state,
                 leaveStatuses: res
@@ -51,17 +60,7 @@ class LeaveSummaryView extends React.Component {
 
         });
 
-        var leaveStatuses = this.state.leaveStatuses;
-
-        var leaveStatus ;
-
-        for(var i=0;i<leaveStatuses.length;i++){
-            if (leaveStatuses[i].code === "APPROVED") {
-                leaveStatus = leaveStatuses[i].id;
-            }
-        }
-
-
+        console.log("leaveStatus",leaveStatus);
 
         try {
             flag = 1;

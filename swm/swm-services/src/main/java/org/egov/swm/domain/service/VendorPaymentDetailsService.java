@@ -29,8 +29,6 @@ public class VendorPaymentDetailsService {
 
     private final VendorContractService vendorContractService;
 
-    private final VendorPaymentDetailsService vendorPaymentDetailsService;
-
     private final EmployeeRepository employeeRepository;
 
     private final IdgenRepository idgenRepository;
@@ -40,14 +38,12 @@ public class VendorPaymentDetailsService {
     public VendorPaymentDetailsService(final VendorPaymentDetailsRepository vendorPaymentDetailsRepository,
             final VendorContractService vendorContractService, final EmployeeRepository employeeRepository,
             final IdgenRepository idgenRepository,
-            @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath,
-                                       VendorPaymentDetailsService vendorPaymentDetailsService) {
+            @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath) {
         this.vendorPaymentDetailsRepository = vendorPaymentDetailsRepository;
         this.vendorContractService = vendorContractService;
         this.employeeRepository = employeeRepository;
         this.idgenRepository = idgenRepository;
         this.idGenNameForPaymentNumberPath = idGenNameForPaymentNumberPath;
-        this.vendorPaymentDetailsService = vendorPaymentDetailsService;
     }
 
     public VendorPaymentDetailsRequest create(final VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
@@ -168,7 +164,7 @@ public class VendorPaymentDetailsService {
             vendorPaymentDetailsSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
             vendorPaymentDetailsSearch.setToDate(vendorPaymentDetail.getToDate());
 
-            Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsService.search(vendorPaymentDetailsSearch);
+            Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
 
             if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())
                 throw new CustomException("VendorContractNo",

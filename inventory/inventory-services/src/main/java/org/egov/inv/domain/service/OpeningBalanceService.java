@@ -27,8 +27,11 @@ import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Store;
 import org.egov.inv.model.Uom;
+import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
+import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,6 +65,9 @@ public class OpeningBalanceService extends DomainService {
 	
 	@Autowired
 	private MaterialService materialService;
+	
+	@Autowired
+	private StoreJdbcRepository storeJdbcRepository;
 
 	@Autowired
 	private MaterialReceiptService materialReceiptService;
@@ -208,6 +214,10 @@ public class OpeningBalanceService extends DomainService {
 					}
 					if (isEmpty(rcpt.getReceivingStore().getCode())) {
 						errors.addDataError(ErrorCode.RECEIVING_STORE_NOT_EXIST.getCode(),rcpt.getReceivingStore().getCode());
+					}else{
+						if(validateStore(tenantId,rcpt)){
+							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(),rcpt.getReceivingStore().getCode());
+						}
 					}
 
 					if (null != rcpt.getReceiptDetails()) {
@@ -225,17 +235,24 @@ public class OpeningBalanceService extends DomainService {
 								errors.addDataError( ErrorCode.UOM_CODE_NOT_EXIST.getCode(),detail.getUom().getCode()+" at serial no."+ detailIndex);
 							}
 							if (isEmpty(detail.getReceivedQty())) {
-								errors.addDataError(ErrorCode.RCVED_QTY_NOT_EXIST.getCode(),detail.getReceivedQty()+" at serial no."+ detailIndex);							}
-							if (detail.getReceivedQty().doubleValue() <= 0) {
-								errors.addDataError(ErrorCode.RCVED_QTY_GT_ZERO.getCode(),detail.getReceivedQty()+" at serial no."+ detailIndex);
-							}
+								errors.addDataError(ErrorCode.RCVED_QTY_NOT_EXIST.getCode(),detail.getReceivedQty()+" at serial no."+ detailIndex);	
+							}else
+								{
+									int res1 =detail.getReceivedQty().compareTo(BigDecimal.ZERO);
+								if (res1 != 1) {
+									errors.addDataError(ErrorCode.RCVED_QTY_GT_ZERO.getCode(),detail.getReceivedQty()+" at serial no."+ detailIndex);
+								}
+								}
+							if (isEmpty(detail.getUnitRate())) {
+								errors.addDataError(ErrorCode.UNIT_RATE_NOT_EXIST.getCode(),detail.getUnitRate()+" at serial no."+ detailIndex);
+							}else
+							{
 							int res =detail.getUnitRate().compareTo(BigDecimal.ZERO);
 								if (res != 1) {
 								errors.addDataError(ErrorCode.UNIT_RATE_GT_ZERO.getCode(),detail.getUnitRate()+" at serial no."+ detailIndex);
 							}
-							if (isEmpty(detail.getUnitRate())) {
-								errors.addDataError(ErrorCode.UNIT_RATE_NOT_EXIST.getCode(),detail.getUnitRate()+" at serial no."+ detailIndex);
 							}
+							
 							Material material = materialService.fetchMaterial(tenantId, detail.getMaterial().getCode(), new org.egov.inv.model.RequestInfo());
 
 							if (null != detail.getReceiptDetailsAddnInfo()) {
@@ -315,6 +332,19 @@ public class OpeningBalanceService extends DomainService {
 			uomList.add(uom.getCode());
 		}
 		return  uomList.stream().anyMatch(Collections.singletonList(detail.getUom().getCode()) ::contains);
+	}
+	
+	private boolean validateStore(String tenantId, MaterialReceipt rcpt) {
+		StoreEntity storeEntity = StoreEntity.builder()
+											 .code(rcpt.getReceivingStore().getCode())
+										     .tenantId(tenantId)
+											 .build();
+		Object store =storeJdbcRepository.findByCode(storeEntity, "store");
+		if(isEmpty(store))
+		{
+			return true;
+		}
+		return  false;
 	}
 	
 	private void convertRate(String tenantId, MaterialReceiptDetail detail) {

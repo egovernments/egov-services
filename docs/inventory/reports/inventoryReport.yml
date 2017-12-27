@@ -70,14 +70,14 @@ ReportDefinitions:
   - name: financialYear
     label: inventory.financialYear
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service-test/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange
     source: materialReceipt
     isMandatory: true
 
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
     wrapper: true

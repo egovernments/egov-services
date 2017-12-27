@@ -3,6 +3,7 @@ package org.egov.works.workorder.domain.service;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
+import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.config.PropertiesManager;
 import org.egov.works.workorder.domain.repository.NoticeRepository;
 import org.egov.works.workorder.domain.repository.builder.IdGenerationRepository;
@@ -14,6 +15,7 @@ import org.egov.works.workorder.web.contract.NoticeDetail;
 import org.egov.works.workorder.web.contract.NoticeRequest;
 import org.egov.works.workorder.web.contract.NoticeResponse;
 import org.egov.works.workorder.web.contract.NoticeSearchContract;
+import org.egov.works.workorder.web.contract.NoticeStatus;
 import org.egov.works.workorder.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -72,6 +74,7 @@ public class NoticeService {
 					documentDetail
 							.setAuditDetails(workOrderUtils.setAuditDetails(noticeRequest.getRequestInfo(), false));
 				}
+			updateStatus(notice, true);
 
 		}
 		kafkaTemplate.send(propertiesManager.getWorksNoticeCreateTopic(), noticeRequest);
@@ -101,6 +104,7 @@ public class NoticeService {
 					documentDetail
 							.setAuditDetails(workOrderUtils.setAuditDetails(noticeRequest.getRequestInfo(), false));
 				}
+			updateStatus(notice, false);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksNoticeCreateTopic(), noticeRequest);
 		NoticeResponse noticeResponse = new NoticeResponse();
@@ -113,5 +117,26 @@ public class NoticeService {
 		NoticeResponse noticeResponse = new NoticeResponse();
 		noticeResponse.setNotices(noticeRepository.search(noticeSearchContract, requestInfo));
 		return noticeResponse;
+	}
+	
+	private void updateStatus(Notice notice, boolean isNew) {
+		String action = notice.getWorkFlowDetails().getAction();
+		if (isNew) {
+			notice.setStatus(NoticeStatus.CREATED);
+		} else {
+			if (action.equalsIgnoreCase(Constants.SUBMIT)
+					&& notice.getStatus().equals(NoticeStatus.CREATED))
+				notice.setStatus(NoticeStatus.APPROVED);
+			else if (action.equalsIgnoreCase(Constants.REJECT)
+					&& !(notice.getStatus().equals(NoticeStatus.APPROVED)
+							|| notice.getStatus().equals(NoticeStatus.CANCELLED)))
+				notice.setStatus(NoticeStatus.REJECTED);
+			else if (action.equalsIgnoreCase(Constants.CANCEL)
+					&& notice.getStatus().equals(NoticeStatus.REJECTED))
+				notice.setStatus(NoticeStatus.CANCELLED);
+			else if (action.equalsIgnoreCase(Constants.FORWARD)
+					&& notice.getStatus().equals(NoticeStatus.REJECTED))
+				notice.setStatus(NoticeStatus.RESUBMITTED);
+		}
 	}
 }

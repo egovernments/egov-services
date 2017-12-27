@@ -2,6 +2,7 @@ package org.egov.works.workorder.web.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -28,7 +29,7 @@ public class NoticesApiController implements NoticesApi {
 	@Autowired
 	private NoticeService noticeService;
 
-    public ResponseEntity<NoticeResponse> noticesCreatePost(@ApiParam(value = "Details of new Notice(s) + RequestInfo meta data." ,required=true ) @RequestBody NoticeRequest noticeRequest) {
+    public ResponseEntity<NoticeResponse> noticesCreatePost(@ApiParam(value = "Details of new Notice(s) + RequestInfo meta data." ,required=true ) @Valid @RequestBody NoticeRequest noticeRequest) {
     	NoticeResponse noticeResponse = noticeService.create(noticeRequest);
         return new ResponseEntity<NoticeResponse>(noticeResponse, HttpStatus.OK);
     }
@@ -53,7 +54,7 @@ public class NoticesApiController implements NoticesApi {
         return new ResponseEntity<NoticeResponse>(noticeResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity<NoticeResponse> noticesUpdatePost(@ApiParam(value = "Details of Notice(s) + RequestInfo meta data." ,required=true ) @RequestBody NoticeRequest noticeRequest) {
+    public ResponseEntity<NoticeResponse> noticesUpdatePost(@ApiParam(value = "Details of Notice(s) + RequestInfo meta data." ,required=true ) @Valid @RequestBody NoticeRequest noticeRequest) {
     	NoticeResponse noticeResponse = noticeService.update(noticeRequest);
         return new ResponseEntity<NoticeResponse>(noticeResponse, HttpStatus.OK);
     }

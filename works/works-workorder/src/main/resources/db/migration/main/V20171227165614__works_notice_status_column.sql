@@ -1,0 +1,1 @@
+ALTER TABLE egw_notice ADD COLUMN status character varying(100);

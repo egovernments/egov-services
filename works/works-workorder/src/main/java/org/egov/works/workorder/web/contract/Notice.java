@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,12 +40,18 @@ public class Notice {
 
     @JsonProperty("daysOfReply")
     private Integer daysOfReply = null;
+    
+    @JsonProperty("status")
+    private NoticeStatus status;
 
     @JsonProperty("documentDetails")
     private List<DocumentDetail> documentDetails = null;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
+    
+    @JsonProperty("workFlowDetails")
+    private WorkFlowDetails workFlowDetails = null;
     
     @JsonProperty("deleted")
     private Boolean deleted = false;
@@ -193,7 +200,15 @@ public class Notice {
         this.daysOfReply = daysOfReply;
     }
 
-    public Notice documentDetails(List<DocumentDetail> documentDetails) {
+    public NoticeStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(NoticeStatus status) {
+		this.status = status;
+	}
+
+	public Notice documentDetails(List<DocumentDetail> documentDetails) {
         this.documentDetails = documentDetails;
         return this;
     }
@@ -246,7 +261,15 @@ public class Notice {
     }
 
 
-    public Boolean getDeleted() {
+    public WorkFlowDetails getWorkFlowDetails() {
+		return workFlowDetails;
+	}
+
+	public void setWorkFlowDetails(WorkFlowDetails workFlowDetails) {
+		this.workFlowDetails = workFlowDetails;
+	}
+
+	public Boolean getDeleted() {
 		return deleted;
 	}
 

@@ -14,6 +14,7 @@ public class Constants {
     public static final String REJECT = "Reject";
     public static final String FORWARD = "Forward";
     public static final String CANCEL = "Cancel";
+    public static final String SAVE = "Save";
 
     public static final String KEY_FUTUREDATE_LOADATE = "INVALID_LOADATE";
     public static final String MESSAGE_FUTUREDATE_LOADATE = "LOA Date cannot be future date";

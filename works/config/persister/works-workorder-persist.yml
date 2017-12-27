@@ -501,7 +501,7 @@ serviceMaps:
    fromTopic: works-notice-createupdate-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_notice(id, tenantid, letterofacceptance, noticenumber, closingline, daysofreply, createdby, createdtime,lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET closingline= EXCLUDED.closingline, daysofreply=EXCLUDED.daysofreply, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
+    - query: INSERT INTO egw_notice(id, tenantid, letterofacceptance, noticenumber, closingline, daysofreply, status, createdby, createdtime,lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET closingline= EXCLUDED.closingline, daysofreply=EXCLUDED.daysofreply, status = EXCLUDED.status, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
 
       basePath: $.notices.*
       jsonMaps:
@@ -517,6 +517,8 @@ serviceMaps:
        - jsonPath: $.notices.*.closingLine
 
        - jsonPath: $.notices.*.daysOfReply
+
+       - jsonPath: $.notices.*.status
 
        - jsonPath: $.notices.*.auditDetails.createdBy
 

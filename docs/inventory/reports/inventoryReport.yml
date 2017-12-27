@@ -70,7 +70,7 @@ ReportDefinitions:
   - name: financialYear
     label: inventory.financialYear
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange
+    pattern: http://egov-mdms-service:8080/egov-mdms-service-test/v1/_get?tenantId=$tenantid&moduleName=egf-master&masterName=FinancialYear|$..finYearRange|$..finYearRange
     source: materialReceipt
     isMandatory: true
 
@@ -93,6 +93,7 @@ ReportDefinitions:
   - name: materialName
     label: inventory.materialName
     type: string
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     source: materialReceipt
     isMandatory: false
     searchClause: AND mat.name = $materialName
@@ -313,7 +314,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     type: singlevaluelist
     source: inventory
     isMandatory: false
@@ -423,7 +424,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     type: singlevaluelist
     source: inventory
     isMandatory: false
@@ -912,113 +913,43 @@ ReportDefinitions:
     type: string
     source: material
 
-  - name: accountCode
-    label: inventory.accountCode
-    type: string
-    source: inventory
-
-  - name: suppliername
+  - name: supplierName
     label: inventory.suppliername
     type: string
     source: inventory
 
-  - name: openingBalQty
-    label: inventory.openingBalQty
+  - name: qty
+    label: inventory.qty
     type: string
     source: inventory
 
-  - name: openingBalUnit
-    label: inventory.openingBalUnit
+  - name: uom
+    label: inventory.uom
     type: string
     source: inventory
 
-  - name: openingBalValue
-    label: inventory.openingBalValue
+  - name: unitRate
+    label: inventory.unitrate
+    type: string
+    source: inventory
+
+  - name: totalAmount
+    label: inventory.totalAmount
     type: string
     source: inventory
 
   - name: receiptDate
-    label: inventory.receiptDate
+    label: inventory.date
     type: string
     source: inventory
 
-  - name: materialreceiptNo
-    label: inventory.materialreceiptNo
+  - name: transactionNumber
+    label: inventory.transactionnumber
     type: string
     source: inventory
 
-  - name: purcahseMadeByDept
-    label: inventory.purcahseMadeByDept
-    type: string
-    source: inventory
-
-  - name: purchasedQty
-    label: inventory.purchasedQty
-    type: string
-    source: inventory
-
-  - name: purchasedUnit
-    label: inventory.purchasedUnit
-    type: string
-    source: inventory
-
-  - name: receiptRatePerUnit
-    label: inventory.receiptRatePerUnit
-    type: string
-    source: inventory
-
-  - name: receiptTotalValue
-    label: inventory.receiptTotalValue
-    type: string
-    source: inventory
-
-  - name: issueDate
-    label: inventory.issueDate
-    type: string
-    source: inventory
-
-  - name: materialIssueNo
-    label: inventory.materialIssueNo
-    type: string
-    source: inventory
-
-  - name: issuedByDept
-    label: inventory.issuedByDept
-    type: string
-    source: inventory
-
-  - name: issuedQty
-    label: inventory.issuedQty
-    type: string
-    source: inventory
-
-  - name: issuedUnit
-    label: inventory.issuedUnit
-    type: string
-    source: inventory
-
-  - name: issueRatePerUnit
-    label: inventory.issueRatePerUnit
-    type: string
-    source: inventory
-
-  - name: issueTotalValue
-    label: inventory.issueTotalValue
-    type: string
-    source: inventory
-
-  - name: balanceQty
-    label: inventory.balanceQty
-    type: string
-    source: inventory
-
-  - name: balanceUnit
-    label: inventory.balanceUnit
-    type: string
-    source: inventory
-
-  - name: balanceValue
-    label: inventory.balanceValue
+  - name: receiptType
+    label: inventory.receiptType
     type: string
     source: inventory
 
@@ -1026,7 +957,7 @@ ReportDefinitions:
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
     wrapper: true
@@ -1034,10 +965,25 @@ ReportDefinitions:
   - name: materialName
     label: inventory.materialName
     type: string
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     source: materialReceipt
     isMandatory: false
     searchClause: AND mat.name = $materialName
-  query: select * from material;
+  query: select store.name as storeName,store.department as deptName,
+       sup.name as supplierName,
+       detail.receivedqty as qty,detail.uomno as uom,detail.unitrate as unitRate,
+       (detail.receivedqty * detail.unitrate) as totalAmount,
+       (select to_date(to_char(to_timestamp(Trunc(CAST(mat.receiptdate as bigint)/1000 )), 'YYYY/MM/DD'), 'YYYY-MM-DD')) as receiptDate,
+       detail.mrnnumber as transactionNumber,mat.receipttype as receipttype
+        from materialreceiptdetail  detail,materialreceipt mat,store store,supplier sup
+        where detail.tenantid=$tenantid
+        AND mat.tenantid=detail.tenantid
+        AND store.tenantid=mat.tenantid
+        AND sup.tenantid= store.tenantid
+        AND mat.suppliercode =sup.code
+        AND mat.receivingstore=store.code
+        AND mat.mrnnumber=detail.mrnnumber
+       order by receipttype
 
 
 

@@ -67,11 +67,11 @@ var index=1;
 
 $(document).ready(function() {
 
+  basedOnType();
+
   for(var i=0;i<25;i++){
     $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
   }
-
-  basedOnType();
 
   onLoadAsset();
 

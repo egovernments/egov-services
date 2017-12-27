@@ -197,12 +197,17 @@ import kpivalues from './components/non-framework/perfManagement/master/kpivalue
 import KPIDashboard from './components/non-framework/perfManagement/dashboard/kpi';
 
 import MdmsComponent from './components/framework/mdms/list';
+
+// iframe loader
+import IframeLoader from './components/framework/iframeloader';
+
 const base = '';
 
 const Main = () => {
   return (
     <main style={{ marginBottom: '50px' }}>
       <Switch>
+        <Route exact path={base + '/uploader'} component={IframeLoader} />
         <Route exact path={base + '/:tenantId?'} component={Login} />
         <Route exact path={base + '/service/request/search'} component={ServiceRequests} />
         <Route exact path={base + '/coming/soon'} component={ComingSoon} />
@@ -333,6 +338,7 @@ const Main = () => {
         {/* KPI */}
         <Route exact path={base + '/non-framework/perfManagement/master/kpivalues'} component={kpivalues} />
         <Route exact path={base + '/non-framework/perfManagement/dashboard/kpi'} component={KPIDashboard} />
+        <Route exact path={base + '/mdms/:module/:master'} component={MdmsComponent} />
         <Route exact path={base + '/mdms/:module/:master'} component={MdmsComponent} />
         <Route component={NoMatch} />
       </Switch>

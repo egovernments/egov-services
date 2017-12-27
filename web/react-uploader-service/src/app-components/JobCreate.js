@@ -42,7 +42,7 @@ const JobCreate = ({ handleOnChange, handleSubmit, message }) => {
       </CardText>
       <CardActions>
         <FlatButton
-          href="/user-jobs"
+          href="#/user-jobs"
           fullWidth={true}
           primary={true}
           label="My Jobs"

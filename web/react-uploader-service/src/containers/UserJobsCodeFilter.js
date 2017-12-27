@@ -14,7 +14,7 @@ class UserJobsCodeFilterContainer extends Component {
 
     return (
       <div>
-        <h5>By Job Code</h5>
+        <h5>By Job Code(Comma Seperated)</h5>
         <TextField
           onChange={e =>
             applyUserJobFilters({
@@ -23,7 +23,7 @@ class UserJobsCodeFilterContainer extends Component {
                 .split(",")
                 .map(value => value.trim())
             })}
-          hintText="Job Code"
+          hintText="Job Codes"
         />
       </div>
     );

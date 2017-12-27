@@ -15,7 +15,7 @@ class RequesterFileNamesFilterContainer extends Component {
 
     return (
       <div>
-        <h5>By Requester File Names</h5>
+        <h5>By Requester File Names(Comma Seperated)</h5>
         <TextField
           onChange={e =>
             applyUserJobFilters({

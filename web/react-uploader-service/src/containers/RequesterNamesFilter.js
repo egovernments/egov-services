@@ -15,7 +15,7 @@ class RequesterNamesFilterContainer extends Component {
 
     return (
       <div>
-        <h5>By Requester Names</h5>
+        <h5>By Requester Names(Comma Seperated)</h5>
         <TextField
           onChange={e =>
             applyUserJobFilters({

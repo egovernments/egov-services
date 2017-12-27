@@ -56,7 +56,7 @@ class FileUploaderContainer extends Component {
 
   render() {
     const { handleSubmit, handleOnChange } = this;
-    const { isLoading } = this.props;
+    const { isLoading, history } = this.props;
     const { message, messageBarOpen, errorMessage } = this.state;
 
     return (
@@ -72,6 +72,7 @@ class FileUploaderContainer extends Component {
               <LoadingIndicator />
             ) : (
               <JobCreate
+                history={history}
                 handleOnChange={handleOnChange}
                 handleSubmit={handleSubmit}
                 message={message}

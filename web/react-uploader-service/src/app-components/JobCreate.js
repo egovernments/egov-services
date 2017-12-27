@@ -22,7 +22,7 @@ const styles = {
   }
 };
 
-const JobCreate = ({ handleOnChange, handleSubmit, message }) => {
+const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
   return (
     <Card>
       <div style={styles.cardHeaderStyle} className="card-header">
@@ -42,7 +42,10 @@ const JobCreate = ({ handleOnChange, handleSubmit, message }) => {
       </CardText>
       <CardActions>
         <FlatButton
-          href="#/user-jobs"
+          onClick={() => {
+            history.push("/user-jobs");
+            window.location.reload();
+          }}
           fullWidth={true}
           primary={true}
           label="My Jobs"

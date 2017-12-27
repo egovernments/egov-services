@@ -7,8 +7,8 @@ const Main = () => {
   return (
     <main>
       <Switch>
-        <Route exact path="/" component={FileUploader} />
         <Route exact path="/user-jobs" component={UserJobs} />
+        <Route exact path="/" component={FileUploader} />
       </Switch>
     </main>
   );

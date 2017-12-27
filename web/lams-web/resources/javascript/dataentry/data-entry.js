@@ -70,6 +70,9 @@ $(document).ready(function() {
 
   basedOnType();
 
+  $('#municipalOrder, #governmentOrder').hide();
+
+  $('#timePeriod').append($("<option/>").val('').text('Select Time Period'));
   for(var i=0;i<25;i++){
     $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
   }
@@ -86,7 +89,15 @@ $(document).ready(function() {
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){
           let value = JSONPath({json: modifyAgreements, path: `$.${$(this).attr('name')}`});
-          console.log($(this).attr('name'));
+          if($(this).attr('name') === 'timePeriod' && value){
+            if(value <= 3){
+              $('#governmentOrder').hide();
+              $('#municipalOrder').show();
+            }else{
+              $('#municipalOrder').hide();
+              $('#governmentOrder').show();
+            }
+          }
           $(this).val(value[0] && value[0].toString())
         });
       }else{
@@ -133,7 +144,7 @@ $(document).ready(function() {
   $(document).on('click', 'td .subsequentRenewalsDelete', function(){
     agreement['subSeqRenewals'] && agreement['subSeqRenewals'].splice($(this).closest('tr').index(),1);
     $(this).closest('tr').remove();
-    console.log(agreement);
+    // console.log(agreement);
     index-=1;
     $('#subesquentrenewalsTable tbody tr').each(function(i) {
         $(this).find(':input').attr({
@@ -144,8 +155,6 @@ $(document).ready(function() {
     $("#subesquentrenewalsTable tbody tr:first").find('td.subsequentRenewalsDelete').hide();
     calcFooterYearSum();
   });
-
-  $('#municipalOrder, #governmentOrder').hide();
 
   $('#timePeriod').on('change',function(){
     if(this.value <= 3){

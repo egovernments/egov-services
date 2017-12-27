@@ -75,7 +75,7 @@ const filterUserJobs = (filter, userJobs) => {
             break;
           case "requesterFileNames":
             shouldInclude &=
-              filterValue.indexOf(userJob.requesterFileName) !== -1;
+              filterValue.indexOf(userJob.requestFileName) !== -1;
             break;
           case "requesterNames":
             shouldInclude &= filterValue.indexOf(userJob.requesterName) !== -1;

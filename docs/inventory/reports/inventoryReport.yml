@@ -959,6 +959,7 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: store
+    searchClause: AND store.code = $storeName
     isMandatory: true
     wrapper: true
 
@@ -968,7 +969,6 @@ ReportDefinitions:
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     source: materialReceipt
     isMandatory: false
-    searchClause: AND mat.name = $materialName
   query: select store.name as storeName,store.department as deptName,
        sup.name as supplierName,
        detail.receivedqty as qty,detail.uomno as uom,detail.unitrate as unitRate,
@@ -983,7 +983,6 @@ ReportDefinitions:
         AND mat.suppliercode =sup.code
         AND mat.receivingstore=store.code
         AND mat.mrnnumber=detail.mrnnumber
-       order by receipttype
 
 
 

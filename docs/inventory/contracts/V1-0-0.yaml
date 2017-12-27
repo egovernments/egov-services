@@ -2543,7 +2543,7 @@ definitions:
          This object holds information required for indent note and transfer indent.
       properties:
         id:
-          type: string
+          type: string 
           description: |
             Unique Identifier of the Indent
         tenantId:
@@ -2886,12 +2886,17 @@ definitions:
           type: number
           format: BigDecimal
           description: |
-            advance amount of the PurchaseOrder
+            advance amount of the PurchaseOrder which is approved 
         advancePercentage:
           type: number
           format: BigDecimal
           description: |
-            advance percentage of the PurchaseOrder
+            advance percentage of the PurchaseOrder. Either advance amount or advance percentage will be used
+        totalAdvancePaidAmount:
+          type: number
+          format: BigDecimal
+          description: |
+            Total advance paid in advance requisition. 
         expectedDeliveryDate:
           type: integer
           format: int64
@@ -5016,7 +5021,7 @@ definitions:
             $ref: '#/definitions/PriceList'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-
+    
     PriceListDetails:
       type: object
       description: |
@@ -5063,7 +5068,164 @@ definitions:
           description: Delete flag of the material in the system
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-
+    
+    SupplierAdvanceRequisition:
+      description: |
+         An Object gives information about advance issued againest purchase order. There are multiple times advance requisition possible for selected purchase order. But it should not cross alloted advance amount or advance percentage defined in purchase order.
+      allOf:
+      - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-advancerequisition/v1-0-0.yaml#/definitions/AdvanceRequisition'
+      - type: object
+      - description: Supplier advance extends AdvanceRequisition object
+      - properties:
+          id:
+            type: string
+            description: Unique Identifier of the Supplier Bill
+          tenantId:
+            type: string
+            description: tenant id of the Contractor Advance Requisition Form
+            maxLength: 128
+            minLength: 2
+          purchaseOrder:
+            $ref: '#/definitions/PurchaseOrder'
+            description: Purchase order reference
+          auditDetails:
+            $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          advanceAdjustedAmount:
+            type: number
+            format: BigDecimal
+            description: Total Advance adjested amount in each supplier bill
+        required:
+          - tenantId
+          - purchaseOrder
+      
+    SupplierBillReceipt:
+      type: object
+      description: Asset information for the Contractor Bill
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Supplier Bill
+        tenantId:
+          type: string
+          description: Tenant id of the Supplier Bill
+          maxLength: 128
+          minLength: 2
+        supplierBill:
+          type: string
+          description: supplier bill number id as reference
+        materialReceipt:
+          description: >-
+             Material receipt used in supplier bill. There is no partial payment allowed in supplier bill for a selecte4d material receipt. On cancellation of supplier bill, samereceipt can be used to recreate new supplier bill.
+          $ref: "#/definitions/MaterialReceipt"
+        auditDetails:
+            $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+      required:
+        - tenantId
+        - materialReceipt
+        - supplierBill
+        
+    SupplierBillAdvanceAdjustment:
+      type: object
+      description: Asset information for the Contractor Bill
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the Supplier Bill
+        tenantId:
+          type: string
+          description: Tenant id of the Supplier Bill
+          maxLength: 128
+          minLength: 2  
+        supplierBill:
+          type: string
+          description: supplier bill number id as reference
+        supplierAdvanceRequisition:  
+          $ref: '#/definitions/SupplierAdvanceRequisition'
+          description: SupplierAdvanceRequisition  reference 
+        advanceAdjustedAmount:
+          type: number
+          format: BigDecimal
+          description: |
+            advance adjested amount in each advance requisition object.
+        advanceFullyAdjustedInBill:
+          type: boolean
+          description: Boolean value to identify whether the advance fully adjusted in supplier bill.
+          default: false        
+      required:
+        - tenantId
+        - advanceAdjustedAmount
+        - supplierBill      
+    SupplierBill:
+      description: An Object that holds the basic data for a supplier Bill
+      allOf:
+      - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-bill/v1-0-0.yml#/definitions/BillRegister'
+      - type: object
+      - description: Supplier Bill object extends Bill Register object
+      - properties:
+          id:
+            type: string
+            description: Unique Identifier of the Supplier Bill
+          tenantId:
+            type: string
+            description: Tenant id of the Supplier Bill
+            maxLength: 128
+            minLength: 2
+          store:
+            $ref: "#/definitions/Store"
+          invoiceNumber:
+            type: string
+            description: Invoice number of the Bill
+            pattern: '[a-zA-Z0-9-/]+'
+            maxLength: 5
+          invoiceDate:
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            description: Epoch time of invoice date
+          approvedDate:
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            description: Epoch time of when the Bill approved
+          approvedBy:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+            description: User name of the User who approved the Bill
+          cancellationReason:
+            type: string
+            pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+            description: Reason for cancellation of the Bill, Required only while cancelling Supplier Bill
+            maxLength: 100
+          cancellationRemarks:
+            type: string
+            pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
+            description: Remarks for cancellation of the Bill, Required only while cancelling Bill
+            maxLength: 512
+          supplierBillReceipts:
+            type: array
+            description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
+            items:
+              $ref: '#/definitions/SupplierBillReceipt' 
+          supplierBillAdvanceAdjustments:
+            type: array
+            description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
+            items:
+              $ref: '#/definitions/SupplierBillAdvanceAdjustment' 
+          workFlowDetails:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
+          stateId:
+            type: string
+            description: State id of the workflow
+          auditDetails:
+            $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+          deleted:
+              type: boolean
+              description: Boolean value to identify whether the object is deleted or not from UI.
+              default: false  
+      required:
+        - tenantId
+        - store
+        - supplierBillReceipts
+      
 parameters:
   pageSize:
     name: pageSize

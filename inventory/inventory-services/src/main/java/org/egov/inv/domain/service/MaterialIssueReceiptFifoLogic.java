@@ -10,7 +10,6 @@ import org.egov.inv.model.Fifo;
 import org.egov.inv.model.FifoRequest;
 import org.egov.inv.model.FifoResponse;
 import org.egov.inv.model.Material;
-import org.egov.inv.model.MaterialReceiptDetail;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.Uom;
@@ -51,8 +50,8 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 			for (FifoEntity fifoEntity : listOfEntities) {
 				if (uom.getConversionFactor() != null && fifoEntity.getBalance() != null)
 					availableQuantityInStock = availableQuantityInStock
-							.add(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
-									Double.valueOf(uom.getConversionFactor().toString()))));
+							.add(getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
+									uom.getConversionFactor()));
 			}
 		FifoResponse fifoResponse = new FifoResponse();
 		fifoResponse.setResponseInfo(getResponseInfo(fifoRequest.getRequestInfo()));
@@ -80,22 +79,21 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 			for (FifoEntity fifoEntity : listOfEntities) {
 				BigDecimal balance = BigDecimal.ZERO;
 				if (uom.getConversionFactor() != null && fifoEntity.getBalance() != null)
-					balance = BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
-							Double.valueOf(uom.getConversionFactor().toString())));
+					balance = getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
+							uom.getConversionFactor());
 				if (uom.getConversionFactor() != null && fifoEntity.getUnitRate() != null)
 
 					if (balance.compareTo(quantityIssued) <= 0) {
 						if (fifoEntity.getUnitRate() != null)
-							unitRate = BigDecimal
-									.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
-											Double.valueOf(uom.getConversionFactor().toString())))
+							unitRate = getSearchConvertedRate(new BigDecimal(fifoEntity.getUnitRate()),
+									uom.getConversionFactor())
 									.multiply(balance).add(unitRate);
 						quantityIssued = quantityIssued.subtract(balance);
 					} else {
 						if (fifoEntity.getUnitRate() != null)
 							unitRate = quantityIssued
-									.multiply(BigDecimal.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
-											Double.valueOf(uom.getConversionFactor().toString()))))
+									.multiply(getSearchConvertedRate(new BigDecimal(fifoEntity.getUnitRate()),
+											uom.getConversionFactor()))
 									.add(unitRate);
 						quantityIssued = quantityIssued.ZERO;
 					}

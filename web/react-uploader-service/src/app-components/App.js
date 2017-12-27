@@ -6,9 +6,7 @@ import Main from "./Router";
 const App = () => {
   return (
     <div className="App">
-      <Header />
       <Main />
-      <Footer />
     </div>
   );
 };

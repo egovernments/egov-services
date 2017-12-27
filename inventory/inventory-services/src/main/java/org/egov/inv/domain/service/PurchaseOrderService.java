@@ -564,6 +564,10 @@ public class PurchaseOrderService extends DomainService {
                             if (null != poDetail.getMaterial() && StringUtils.isEmpty(poDetail.getMaterial().getCode())) {
                                 errors.addDataError(ErrorCode.MAT_DETAIL.getCode(), " at serial no." + detailIndex);
                             }
+                            
+                            if(null == poDetail.getReceivedQuantity() || poDetail.getReceivedQuantity().compareTo(new BigDecimal(0)) <= 0) {
+                            	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "receivedQuantity", "null");
+                            }
 
                             //ratecontract mandatory, then rate, price, quantity are mandatory at each line level
                             if (priceListConfig && null == poDetail.getPriceList().getId()) {
@@ -811,7 +815,7 @@ public class PurchaseOrderService extends DomainService {
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
                     if (null != purchaseOrderDetail.getReceivedQuantity() &&
-                            purchaseOrderDetail.getOrderQuantity().longValue() != purchaseOrderDetail.getReceivedQuantity().longValue()) {
+                            purchaseOrderDetail.getOrderQuantity().compareTo(purchaseOrderDetail.getReceivedQuantity()) != 0) {
                         return false;
                     }
                 }

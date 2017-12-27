@@ -838,7 +838,7 @@ serviceMaps:
    description: create sanitationstafftarget in egswm_sanitationstafftarget
    fromTopic: swm-sanitationstafftarget-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_sanitationstafftarget(targetNo, tenantid, swmProcess, route, employee, targetFrom, targetTo, targetedGarbage, wetWaste, dryWaste, dumpingGround, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_sanitationstafftarget(targetNo, tenantid, swmProcess, route, employee, targetFrom, targetTo, targetedGarbage, wetWaste, dryWaste, dumpingGround, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.sanitationStaffTargets.*
       jsonMaps:
        

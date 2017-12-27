@@ -88,6 +88,26 @@ public class CustomControllerAdvice {
 	 
 	}*/
 	
+	
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(NullPointerException.class)
+	public ErrorRes handleServerError(NullPointerException ex) {
+		ex.printStackTrace();
+		ErrorRes errRes = new ErrorRes();
+		ex.printStackTrace();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(StatusEnum.FAILED);
+		errRes.setResponseInfo(responseInfo);
+		Error error = new  Error();
+		error.setCode(ErrorCode.NULL_POINTER_ERROR.getCode());
+		error.setMessage(ErrorCode.NULL_POINTER_ERROR.getMessage());
+		error.setDescription(ErrorCode.NULL_POINTER_ERROR.getDescription());
+		List<Error> errors = new ArrayList<>();
+		errors.add(error);
+		errRes.setErrors(errors);
+		return errRes;
+	}
 	 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(InvalidDataAccessApiUsageException.class )

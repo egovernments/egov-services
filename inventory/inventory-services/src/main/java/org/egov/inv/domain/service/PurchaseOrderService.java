@@ -137,6 +137,19 @@ public class PurchaseOrderService extends DomainService {
     public PurchaseOrderResponse create(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
 
         try {
+        	
+        	for(PurchaseOrder po:purchaseOrderRequest.getPurchaseOrders())
+        	{
+        		for(PurchaseOrderDetail purchaseOrderDetail : po.getPurchaseOrderDetails())
+        		{
+        			 Uom uom=getUom(tenantId, purchaseOrderDetail.getUom().getCode(), purchaseOrderRequest.getRequestInfo())	;
+         		     purchaseOrderDetail.setUom(uom);
+        			 if (purchaseOrderDetail.getUserQuantity() != null) {
+                         purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getUserQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
+                     }
+        		}
+        	}
+        	
             List<PurchaseOrder> purchaseOrders = purchaseOrderRequest.getPurchaseOrders();
             InvalidDataException errors = new InvalidDataException();
             validate(purchaseOrders, Constants.ACTION_CREATE, tenantId);
@@ -185,6 +198,8 @@ public class PurchaseOrderService extends DomainService {
                 List<String> detailSequenceNos = purchaseOrderRepository.getSequence(PurchaseOrderDetail.class.getSimpleName(), purchaseOrder.getPurchaseOrderDetails().size());
 
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+                
+                	 
                 	
                 	totalAmount = totalAmount.add(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUnitPrice()).add(totalAmount));
                 	
@@ -232,9 +247,7 @@ public class PurchaseOrderService extends DomainService {
                     Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", purchaseOrderDetail.getUom().getCode(), Uom.class);
                     purchaseOrderDetail.setUom((Uom) uom);
                     // purchaseOrderDetail.setUom(uomService.getUom(purchaseOrderDetail.getTenantId(), purchaseOrderDetail.getUom().getCode(),new RequestInfo()));
-                    if (purchaseOrderDetail.getOrderQuantity() != null) {
-                        purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
-                    }
+                   
                     if (purchaseOrderDetail.getIndentQuantity() != null) {
                         purchaseOrderDetail.setIndentQuantity(purchaseOrderDetail.getIndentQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
                     }
@@ -283,6 +296,18 @@ public class PurchaseOrderService extends DomainService {
 
         try {
             List<PurchaseOrder> purchaseOrder = purchaseOrderRequest.getPurchaseOrders();
+            
+            for(PurchaseOrder po:purchaseOrderRequest.getPurchaseOrders())
+        	{
+        		for(PurchaseOrderDetail purchaseOrderDetail : po.getPurchaseOrderDetails())
+        		{
+        		    Uom uom=getUom(tenantId, purchaseOrderDetail.getUom().getCode(), purchaseOrderRequest.getRequestInfo())	;
+        		    purchaseOrderDetail.setUom(uom);
+        			 if (purchaseOrderDetail.getUserQuantity() != null) {
+                         purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getUserQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
+                     }
+        		}
+        	}
             validate(purchaseOrder, Constants.ACTION_UPDATE, tenantId);
             InvalidDataException errors = new InvalidDataException();
 
@@ -328,12 +353,10 @@ public class PurchaseOrderService extends DomainService {
                         //Logic to split PODetail order quantity across multiple indentdetails ends
 
                         //populating the below Uom to get the conversion factor for populating the line level details
-                        Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", eachPurchaseOrderDetail.getUom().getCode(), Uom.class);
-                        eachPurchaseOrderDetail.setUom((Uom) uom);
+                    /*    Object uom = mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", eachPurchaseOrderDetail.getUom().getCode(), Uom.class);
+                        eachPurchaseOrderDetail.setUom((Uom) uom);*/
 
-                        if (eachPurchaseOrderDetail.getOrderQuantity() != null) {
-                            eachPurchaseOrderDetail.setOrderQuantity(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
-                        }
+                       
                         if (eachPurchaseOrderDetail.getIndentQuantity() != null) {
                             eachPurchaseOrderDetail.setIndentQuantity(eachPurchaseOrderDetail.getIndentQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
                         }

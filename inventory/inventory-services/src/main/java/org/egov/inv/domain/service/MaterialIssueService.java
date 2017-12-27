@@ -21,6 +21,7 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.domain.util.InventoryUtilities;
 import org.egov.inv.model.Department;
 import org.egov.inv.model.Indent.IndentStatusEnum;
 import org.egov.inv.model.IndentDetail;
@@ -431,8 +432,14 @@ public class MaterialIssueService extends DomainService {
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 						int i = 1;
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+ 
 							
 							//TODO: CHECK QUANTITY ISSUES IS IN CONVERSION FACTOR REQUIRED ?
+ 
+							materialIssueDetail.setQuantityIssued(InventoryUtilities.getQuantityInBaseUom(
+									materialIssueDetail.getUserQuantityIssued(),materialIssueDetail.getUom().getConversionFactor() ));
+							
+ 
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
 										String.valueOf(i), materialIssueDetail.getQuantityIssued().toString());
@@ -535,6 +542,10 @@ public class MaterialIssueService extends DomainService {
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
 						int i = 1;
 						for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+							
+							materialIssueDetail.setQuantityIssued(InventoryUtilities.getQuantityInBaseUom(
+									materialIssueDetail.getUserQuantityIssued(),materialIssueDetail.getUom().getConversionFactor() ));
+							
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
 										String.valueOf(i), materialIssueDetail.getQuantityIssued().toString());

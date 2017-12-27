@@ -139,7 +139,7 @@ public class IndentService extends DomainService {
 				setUpdatedQuantities(b);
 				for (IndentDetail d : b.getIndentDetails()) {
 					// save quantity in base uom
-					BigDecimal quantityInBaseUom = InventoryUtilities.getQuantityInBaseUom(d.getIndentQuantity(),
+					BigDecimal quantityInBaseUom = InventoryUtilities.getQuantityInBaseUom(d.getUserQuantity(),
 							d.getUom().getConversionFactor());
 					d.setIndentQuantity(quantityInBaseUom);
 					d.setId(detailSequenceNos.get(j));
@@ -216,7 +216,7 @@ public class IndentService extends DomainService {
 					if (d.getId() == null)
 						d.setId(indentRepository.getSequence(IndentDetail.class.getSimpleName(), 1).get(0));
 					ids.add(d.getId());
-					BigDecimal quantityInBaseUom = InventoryUtilities.getQuantityInBaseUom(d.getIndentQuantity(),
+					BigDecimal quantityInBaseUom = InventoryUtilities.getQuantityInBaseUom(d.getUserQuantity(),
 							d.getUom().getConversionFactor());
 					d.setIndentQuantity(quantityInBaseUom);
 					d.setTenantId(b.getTenantId());
@@ -261,9 +261,10 @@ public class IndentService extends DomainService {
 				for (IndentDetailEntity detailEntity : indentDetails) {
 					if (indent.getIndentNumber().equalsIgnoreCase(detailEntity.getIndentNumber())) {
 						detail = detailEntity.toDomain();
-						detail.setIndentQuantity(InventoryUtilities.getQuantityInSelectedUom(detail.getIndentQuantity(),
-								uomMap.get(detail.getUom().getCode()).getConversionFactor()));
 							Material material = (materialMap.get(detail.getMaterial().getCode()));
+						/*	LOG.debug(material.getCode());
+							LOG.debug(material.getPurchaseUom().getCode());
+							LOG.debug(uomMap.get(material.getPurchaseUom().getCode()).getCode());*/
 							material.setPurchaseUom(uomMap.get(material.getPurchaseUom().getCode()));
 							material.setStockingUom(uomMap.get(material.getStockingUom().getCode()));
 							material.setBaseUom(uomMap.get(material.getBaseUom().getCode()));
@@ -461,6 +462,7 @@ public class IndentService extends DomainService {
 			for (IndentDetail detail : indent.getIndentDetails()) {
 				detail.setUom(uomMap.get(detail.getUom().getCode()));
 				detail.setMaterial(materialMap.get(detail.getMaterial().getCode()));
+				
 				/*if(detail.getAsset().getCode()!=null)
 				{
 					Asset a=assetRepository.findByCode(detail.getAsset(),indentRequest.getRequestInfo());

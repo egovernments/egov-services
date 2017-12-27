@@ -14,10 +14,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This object holds the indent details information i.e., material requested in indent.   
+ * This object holds the indent details information i.e., material requested in indent. 
  */
-@ApiModel(description = "This object holds the indent details information i.e., material requested in indent.   ")
-@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
+@ApiModel(description = "This object holds the indent details information i.e., material requested in indent. ")
+@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-12-27T10:36:36.253Z")
 
 public class IndentDetail   {
   @JsonProperty("id")
@@ -43,6 +43,9 @@ public class IndentDetail   {
 
   @JsonProperty("asset")
   private Asset asset = null;
+
+  @JsonProperty("userQuantity")
+  private BigDecimal userQuantity = null;
 
   @JsonProperty("indentQuantity")
   private BigDecimal indentQuantity = null;
@@ -96,7 +99,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Tenant id of the Indent Detail")
 
-  @Size(min=4,max=128)
+ @Size(min=4,max=128)
   public String getTenantId() {
     return tenantId;
   }
@@ -118,6 +121,7 @@ public class IndentDetail   {
   @NotNull
 
   
+
   public Material getMaterial() {
     return material;
   }
@@ -179,7 +183,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Order of items selected.")
 
-   
+  
 
   public BigDecimal getOrderNumber() {
     return orderNumber;
@@ -221,7 +225,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Mandatory if the purpose is Repair and Maintenance.Refer asset code format: autoComplete ")
 
- 
+  
 
   public Asset getAsset() {
     return asset;
@@ -231,19 +235,40 @@ public class IndentDetail   {
     this.asset = asset;
   }
 
+  public IndentDetail userQuantity(BigDecimal userQuantity) {
+    this.userQuantity = userQuantity;
+    return this;
+  }
+
+   /**
+   * indent quantity of the IndentDetail. Quantity requested by indentor. 
+   * @return userQuantity
+  **/
+  @ApiModelProperty(required = true, value = "indent quantity of the IndentDetail. Quantity requested by indentor. ")
+  @NotNull
+
+  
+
+  public BigDecimal getUserQuantity() {
+    return userQuantity;
+  }
+
+  public void setUserQuantity(BigDecimal userQuantity) {
+    this.userQuantity = userQuantity;
+  }
+
   public IndentDetail indentQuantity(BigDecimal indentQuantity) {
     this.indentQuantity = indentQuantity;
     return this;
   }
 
    /**
-   * indent quantity of the IndentDetail. Quantity requested by indentor. 
+   * indent quantity of the IndentDetail. Quantity after converting to base uom. 
    * @return indentQuantity
   **/
-  @ApiModelProperty(required = true, value = "indent quantity of the IndentDetail. Quantity requested by indentor. ")
-  @NotNull
+  @ApiModelProperty(value = "indent quantity of the IndentDetail. Quantity after converting to base uom. ")
 
- 
+  
 
   public BigDecimal getIndentQuantity() {
     return indentQuantity;
@@ -264,7 +289,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Quantity issued from indent issue. ")
 
- 
+  
 
   public BigDecimal getTotalProcessedQuantity() {
     return totalProcessedQuantity;
@@ -285,7 +310,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Quantity issued from material indent screen. ")
 
- 
+  
 
   public BigDecimal getIndentIssuedQuantity() {
     return indentIssuedQuantity;
@@ -306,7 +331,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "How many quantities ordered for purchase order. ")
 
- 
+  
 
   public BigDecimal getPoOrderedQuantity() {
     return poOrderedQuantity;
@@ -327,7 +352,7 @@ public class IndentDetail   {
   **/
   @ApiModelProperty(value = "Quantity requsted via inter store indent.")
 
- 
+  
 
   public BigDecimal getInterstoreRequestQuantity() {
     return interstoreRequestQuantity;
@@ -395,6 +420,7 @@ public class IndentDetail   {
         Objects.equals(this.orderNumber, indentDetail.orderNumber) &&
         Objects.equals(this.projectCode, indentDetail.projectCode) &&
         Objects.equals(this.asset, indentDetail.asset) &&
+        Objects.equals(this.userQuantity, indentDetail.userQuantity) &&
         Objects.equals(this.indentQuantity, indentDetail.indentQuantity) &&
         Objects.equals(this.totalProcessedQuantity, indentDetail.totalProcessedQuantity) &&
         Objects.equals(this.indentIssuedQuantity, indentDetail.indentIssuedQuantity) &&
@@ -406,7 +432,7 @@ public class IndentDetail   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, material, uom, parentIndentLine, orderNumber, projectCode, asset, indentQuantity, totalProcessedQuantity, indentIssuedQuantity, poOrderedQuantity, interstoreRequestQuantity, deliveryTerms, remarks);
+    return Objects.hash(id, tenantId, material, uom, parentIndentLine, orderNumber, projectCode, asset, userQuantity, indentQuantity, totalProcessedQuantity, indentIssuedQuantity, poOrderedQuantity, interstoreRequestQuantity, deliveryTerms, remarks);
   }
 
   @Override
@@ -422,6 +448,7 @@ public class IndentDetail   {
     sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
     sb.append("    projectCode: ").append(toIndentedString(projectCode)).append("\n");
     sb.append("    asset: ").append(toIndentedString(asset)).append("\n");
+    sb.append("    userQuantity: ").append(toIndentedString(userQuantity)).append("\n");
     sb.append("    indentQuantity: ").append(toIndentedString(indentQuantity)).append("\n");
     sb.append("    totalProcessedQuantity: ").append(toIndentedString(totalProcessedQuantity)).append("\n");
     sb.append("    indentIssuedQuantity: ").append(toIndentedString(indentIssuedQuantity)).append("\n");

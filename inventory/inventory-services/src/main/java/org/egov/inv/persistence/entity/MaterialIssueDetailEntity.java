@@ -45,6 +45,8 @@ public class MaterialIssueDetailEntity {
 	private Double quantityIssued;
 	
 	private String description;
+	
+	private BigDecimal userQuantityIssued;
 
 	public MaterialIssueDetail toDomain(String type) {
 		MaterialIssueDetail detail = new MaterialIssueDetail();
@@ -66,6 +68,7 @@ public class MaterialIssueDetailEntity {
 		if(scrapValue != null )
 		detail.scrapValue(BigDecimal.valueOf(scrapValue));
 		detail.setVoucherHeader(voucherHeader);
+		detail.setUserQuantityIssued(userQuantityIssued);
 		detail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
 		detail.setDescription(description);
 		return detail;

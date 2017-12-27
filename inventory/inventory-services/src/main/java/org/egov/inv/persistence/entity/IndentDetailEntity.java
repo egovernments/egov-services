@@ -32,6 +32,7 @@ public class IndentDetailEntity  {
 	private String indentNumber;
 	private String asset;
 	private BigDecimal indentQuantity;
+	private BigDecimal userQuantity;
 	private BigDecimal totalProcessedQuantity;
 	private BigDecimal indentIssuedQuantity;
 	private BigDecimal poOrderedQuantity;
@@ -49,6 +50,7 @@ public class IndentDetailEntity  {
 		indentDetail.setOrderNumber(this.orderNumber);
 		indentDetail.setProjectCode(new ProjectCode().id(projectCode));
 		indentDetail.setAsset(new Asset().code(asset));
+		indentDetail.setUserQuantity(this.userQuantity); 
 		indentDetail.setIndentQuantity(this.indentQuantity);
 		indentDetail.setTotalProcessedQuantity(this.totalProcessedQuantity);
 		indentDetail.setIndentIssuedQuantity(this.indentIssuedQuantity);
@@ -70,6 +72,7 @@ public class IndentDetailEntity  {
 		this.projectCode = indentDetail.getProjectCode() != null ? indentDetail.getProjectCode().getId() : null;
 		this.asset = indentDetail.getAsset() != null ? indentDetail.getAsset().getCode() : null;
 		this.indentQuantity = indentDetail.getIndentQuantity();
+		this.userQuantity = indentDetail.getUserQuantity();
 		this.totalProcessedQuantity = indentDetail.getTotalProcessedQuantity();
 		this.indentIssuedQuantity = indentDetail.getIndentIssuedQuantity();
 		this.poOrderedQuantity = indentDetail.getPoOrderedQuantity();

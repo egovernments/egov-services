@@ -79,7 +79,7 @@ public class IndentDetailJdbcRepository extends JdbcRepository {
 		paramValues.put("tenantId", tenantId);
 		if(searchPurpose!=null && searchPurpose.equalsIgnoreCase("PurchaseOrder"))
 		{
-			query=query+(" and ( totalProcessedQuantity is  null or indentQuantity - totalProcessedQuantity > 0 )");
+			query=query+(" and ( poOrderedQuantity is  null or indentQuantity - poOrderedQuantity > 0 )");
 		}
 		
 		LOG.info(query);

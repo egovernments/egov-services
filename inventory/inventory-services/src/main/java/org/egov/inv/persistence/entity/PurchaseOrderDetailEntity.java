@@ -28,6 +28,7 @@ public class PurchaseOrderDetailEntity  {
 	private String uom;
 	private String priceList;
 	private BigDecimal orderQuantity;
+	private BigDecimal userQuantity;
 	private BigDecimal usedQuantity;
 	private BigDecimal receivedQuantity;
 	private BigDecimal unitPrice;
@@ -41,6 +42,7 @@ public class PurchaseOrderDetailEntity  {
 		poDetails.setUom(new Uom().code(uom));
 		poDetails.setOrderNumber(this.orderNumber);
 		poDetails.setPriceList(new PriceList().id(priceList));
+		poDetails.setUserQuantity(userQuantity);
 		poDetails.setOrderQuantity(orderQuantity);
 		poDetails.setUsedQuantity(usedQuantity);
 		poDetails.setReceivedQuantity(receivedQuantity);
@@ -58,6 +60,7 @@ public class PurchaseOrderDetailEntity  {
 		this.orderNumber = po.getOrderNumber();
 		this.priceList = po.getPriceList() != null ? po.getPriceList().getId() : null;
 		this.orderQuantity = po.getOrderQuantity() != null ? po.getOrderQuantity(): null;
+		this.userQuantity = po.getUserQuantity() != null ? po.getUserQuantity(): null;
 		this.usedQuantity = po.getUsedQuantity() != null ? po.getUsedQuantity(): null;
 		this.receivedQuantity =  po.getReceivedQuantity() != null ? po.getReceivedQuantity(): null;
 		this.unitPrice = po.getUnitPrice();

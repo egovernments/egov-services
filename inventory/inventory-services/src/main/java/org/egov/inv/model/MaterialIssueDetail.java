@@ -2,8 +2,13 @@ package org.egov.inv.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.egov.inv.model.IndentDetail;
+import org.egov.inv.model.Material;
+import org.egov.inv.model.MaterialIssuedFromReceipt;
+import org.egov.inv.model.Uom;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +16,10 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This object holds the material issue detail information for both indent and non indent. 
+ * This object holds the materail issue detail information for both indent and non indent. 
  */
 @ApiModel(description = "This object holds the materail issue detail information for both indent and non indent. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T08:36:20.118Z")
+@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-12-27T10:36:36.253Z")
 
 public class MaterialIssueDetail   {
   @JsonProperty("id")
@@ -28,12 +33,15 @@ public class MaterialIssueDetail   {
 
   @JsonProperty("orderNumber")
   private BigDecimal orderNumber = null;
-  
-  @JsonProperty("mrnNumber")
-  private String mrnNumber = null;
+
+  @JsonProperty("userQuantityIssued")
+  private BigDecimal userQuantityIssued = null;
 
   @JsonProperty("quantityIssued")
   private BigDecimal quantityIssued = null;
+
+  @JsonProperty("balanceQuantity")
+  private BigDecimal balanceQuantity = null;
 
   @JsonProperty("value")
   private BigDecimal value = null;
@@ -49,12 +57,12 @@ public class MaterialIssueDetail   {
 
   @JsonProperty("quantityToBeIssued")
   private BigDecimal quantityToBeIssued = null;
-  
-  @JsonProperty("balanceQuantity")
-  private BigDecimal balanceQuantity = null;
 
   @JsonProperty("scrapValue")
   private BigDecimal scrapValue = null;
+
+  @JsonProperty("mrnNumber")
+  private String mrnNumber = null;
 
   @JsonProperty("description")
   private String description = null;
@@ -113,7 +121,9 @@ public class MaterialIssueDetail   {
    * @return material
   **/
   @ApiModelProperty(required = true, value = "Applicable for Non Indent Issue. ")
-  @Valid
+  @NotNull
+
+  
 
   public Material getMaterial() {
     return material;
@@ -134,7 +144,7 @@ public class MaterialIssueDetail   {
   **/
   @ApiModelProperty(value = "Order of items issued.")
 
-  @Valid
+  
 
   public BigDecimal getOrderNumber() {
     return orderNumber;
@@ -143,29 +153,27 @@ public class MaterialIssueDetail   {
   public void setOrderNumber(BigDecimal orderNumber) {
     this.orderNumber = orderNumber;
   }
-  
-  public MaterialIssueDetail mrnNumber(String mrnNumber) {
-	    this.mrnNumber = mrnNumber;
-	    return this;
-	  }
 
-	   /**
-	   * receiptNumber of receipt in case of issueType return to supplier.
-	   * @return mrnNumber
-	  **/
-	  @ApiModelProperty(value = "Order of items issued.")
+  public MaterialIssueDetail userQuantityIssued(BigDecimal userQuantityIssued) {
+    this.userQuantityIssued = userQuantityIssued;
+    return this;
+  }
 
-	  @Valid
+   /**
+   * Quantity issued of the Material Issue Detail. 
+   * @return userQuantityIssued
+  **/
+  @ApiModelProperty(value = "Quantity issued of the Material Issue Detail. ")
 
-	  public String getMrnNumber() {
-	    return mrnNumber;
-	  }
-
-	  public void setMrnNumber(String mrnNumber) {
-	    this.mrnNumber = mrnNumber;
-	  }
   
 
+  public BigDecimal getUserQuantityIssued() {
+    return userQuantityIssued;
+  }
+
+  public void setUserQuantityIssued(BigDecimal userQuantityIssued) {
+    this.userQuantityIssued = userQuantityIssued;
+  }
 
   public MaterialIssueDetail quantityIssued(BigDecimal quantityIssued) {
     this.quantityIssued = quantityIssued;
@@ -173,13 +181,13 @@ public class MaterialIssueDetail   {
   }
 
    /**
-   * Quantity issued of the Material Issue Detail. 
+   * Quantity issued of the Material Issue Detail in Base UOM 
    * @return quantityIssued
   **/
-  @ApiModelProperty(required = true, value = "Quantity issued of the Material Issue Detail. ")
+  @ApiModelProperty(required = true, value = "Quantity issued of the Material Issue Detail in Base UOM ")
   @NotNull
 
-  @Valid
+  
 
   public BigDecimal getQuantityIssued() {
     return quantityIssued;
@@ -189,19 +197,40 @@ public class MaterialIssueDetail   {
     this.quantityIssued = quantityIssued;
   }
 
+  public MaterialIssueDetail balanceQuantity(BigDecimal balanceQuantity) {
+    this.balanceQuantity = balanceQuantity;
+    return this;
+  }
+
+   /**
+   * Quantity issued of the Material Issue Detail in Base UOM 
+   * @return balanceQuantity
+  **/
+  @ApiModelProperty(value = "Quantity issued of the Material Issue Detail in Base UOM ")
+
+  
+
+  public BigDecimal getBalanceQuantity() {
+    return balanceQuantity;
+  }
+
+  public void setBalanceQuantity(BigDecimal balanceQuantity) {
+    this.balanceQuantity = balanceQuantity;
+  }
+
   public MaterialIssueDetail value(BigDecimal value) {
     this.value = value;
     return this;
   }
 
    /**
-   * Total value of issued material.   Send value 0 if price not defined.  
+   * Total value of issued material.   Send value 0 if price not defined. 
    * @return value
   **/
-  @ApiModelProperty(required = true, value = "Total value of issued material.   Send value 0 if price not defined.  ")
- 
+  @ApiModelProperty(required = true, value = "Total value of issued material.   Send value 0 if price not defined. ")
+  @NotNull
 
-  @Valid
+  
 
   public BigDecimal getValue() {
     return value;
@@ -221,7 +250,9 @@ public class MaterialIssueDetail   {
    * @return uom
   **/
   @ApiModelProperty(required = true, value = "unit of measure of selected material.")
-  @Valid
+  @NotNull
+
+  
 
   public Uom getUom() {
     return uom;
@@ -262,7 +293,7 @@ public class MaterialIssueDetail   {
   **/
   @ApiModelProperty(value = "Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. Mandatory in case of indent issue.")
 
- 
+  
 
   public IndentDetail getIndentDetail() {
     return indentDetail;
@@ -272,49 +303,26 @@ public class MaterialIssueDetail   {
     this.indentDetail = indentDetail;
   }
 
-  public MaterialIssueDetail balanceQuantity(BigDecimal balanceQuantity) {
-    this.balanceQuantity = balanceQuantity;
+  public MaterialIssueDetail quantityToBeIssued(BigDecimal quantityToBeIssued) {
+    this.quantityToBeIssued = quantityToBeIssued;
     return this;
   }
 
    /**
-   * Balance quantity of material in stock. 
-   * @return balanceQuantity
+   * Balance quantity to be issued of the IndentDetails. 
+   * @return quantityToBeIssued
   **/
-  @ApiModelProperty(value = "Balance quantity of material in stock. ")
+  @ApiModelProperty(value = "Balance quantity to be issued of the IndentDetails. ")
 
-  @Valid
+  
 
-  public BigDecimal getBalanceQuantity() {
-    return balanceQuantity;
+  public BigDecimal getQuantityToBeIssued() {
+    return quantityToBeIssued;
   }
 
-  public void setBalanceQuantity(BigDecimal balanceQuantity) {
-    this.balanceQuantity = balanceQuantity;
+  public void setQuantityToBeIssued(BigDecimal quantityToBeIssued) {
+    this.quantityToBeIssued = quantityToBeIssued;
   }
-  
-  public MaterialIssueDetail quantityToBeIssued(BigDecimal quantityToBeIssued) {
-	    this.quantityToBeIssued = quantityToBeIssued;
-	    return this;
-	  }
-
-	   /**
-	   * Balance quantity to be issued of the IndentDetails. 
-	   * @return quantityToBeIssued
-	  **/
-	  @ApiModelProperty(value = "Balance quantity to be issued of the IndentDetails. ")
-
-	  @Valid
-
-	  public BigDecimal getQuantityToBeIssued() {
-	    return quantityToBeIssued;
-	  }
-
-	  public void setQuantityToBeIssued(BigDecimal quantityToBeIssued) {
-	    this.quantityToBeIssued = quantityToBeIssued;
-	  }
-  
-  
 
   public MaterialIssueDetail scrapValue(BigDecimal scrapValue) {
     this.scrapValue = scrapValue;
@@ -327,7 +335,7 @@ public class MaterialIssueDetail   {
   **/
   @ApiModelProperty(value = "If item writeoffed or scrapped, then define the scrap value. ")
 
-  @Valid
+  
 
   public BigDecimal getScrapValue() {
     return scrapValue;
@@ -335,6 +343,26 @@ public class MaterialIssueDetail   {
 
   public void setScrapValue(BigDecimal scrapValue) {
     this.scrapValue = scrapValue;
+  }
+
+  public MaterialIssueDetail mrnNumber(String mrnNumber) {
+    this.mrnNumber = mrnNumber;
+    return this;
+  }
+
+   /**
+   * Receipt number reference. 
+   * @return mrnNumber
+  **/
+  @ApiModelProperty(value = "Receipt number reference. ")
+
+ @Size(max=100)
+  public String getMrnNumber() {
+    return mrnNumber;
+  }
+
+  public void setMrnNumber(String mrnNumber) {
+    this.mrnNumber = mrnNumber;
   }
 
   public MaterialIssueDetail description(String description) {
@@ -376,7 +404,7 @@ public class MaterialIssueDetail   {
   **/
   @ApiModelProperty(value = "List of materials issued from receipt detail")
 
-  @Valid
+  
 
   public List<MaterialIssuedFromReceipt> getMaterialIssuedFromReceipts() {
     return materialIssuedFromReceipts;
@@ -400,20 +428,23 @@ public class MaterialIssueDetail   {
         Objects.equals(this.tenantId, materialIssueDetail.tenantId) &&
         Objects.equals(this.material, materialIssueDetail.material) &&
         Objects.equals(this.orderNumber, materialIssueDetail.orderNumber) &&
+        Objects.equals(this.userQuantityIssued, materialIssueDetail.userQuantityIssued) &&
         Objects.equals(this.quantityIssued, materialIssueDetail.quantityIssued) &&
+        Objects.equals(this.balanceQuantity, materialIssueDetail.balanceQuantity) &&
         Objects.equals(this.value, materialIssueDetail.value) &&
         Objects.equals(this.uom, materialIssueDetail.uom) &&
         Objects.equals(this.voucherHeader, materialIssueDetail.voucherHeader) &&
         Objects.equals(this.indentDetail, materialIssueDetail.indentDetail) &&
         Objects.equals(this.quantityToBeIssued, materialIssueDetail.quantityToBeIssued) &&
         Objects.equals(this.scrapValue, materialIssueDetail.scrapValue) &&
+        Objects.equals(this.mrnNumber, materialIssueDetail.mrnNumber) &&
         Objects.equals(this.description, materialIssueDetail.description) &&
         Objects.equals(this.materialIssuedFromReceipts, materialIssueDetail.materialIssuedFromReceipts);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, material, orderNumber, quantityIssued, value, uom, voucherHeader, indentDetail, quantityToBeIssued, scrapValue, description, materialIssuedFromReceipts);
+    return Objects.hash(id, tenantId, material, orderNumber, userQuantityIssued, quantityIssued, balanceQuantity, value, uom, voucherHeader, indentDetail, quantityToBeIssued, scrapValue, mrnNumber, description, materialIssuedFromReceipts);
   }
 
   @Override
@@ -425,13 +456,16 @@ public class MaterialIssueDetail   {
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    material: ").append(toIndentedString(material)).append("\n");
     sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
+    sb.append("    userQuantityIssued: ").append(toIndentedString(userQuantityIssued)).append("\n");
     sb.append("    quantityIssued: ").append(toIndentedString(quantityIssued)).append("\n");
+    sb.append("    balanceQuantity: ").append(toIndentedString(balanceQuantity)).append("\n");
     sb.append("    value: ").append(toIndentedString(value)).append("\n");
     sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
     sb.append("    voucherHeader: ").append(toIndentedString(voucherHeader)).append("\n");
     sb.append("    indentDetail: ").append(toIndentedString(indentDetail)).append("\n");
     sb.append("    quantityToBeIssued: ").append(toIndentedString(quantityToBeIssued)).append("\n");
     sb.append("    scrapValue: ").append(toIndentedString(scrapValue)).append("\n");
+    sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    materialIssuedFromReceipts: ").append(toIndentedString(materialIssuedFromReceipts)).append("\n");
     sb.append("}");
@@ -449,3 +483,4 @@ public class MaterialIssueDetail   {
     return o.toString().replace("\n", "\n    ");
   }
 }
+

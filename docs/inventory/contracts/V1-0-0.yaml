@@ -2714,11 +2714,16 @@ definitions:
           description: |
             Mandatory if the purpose is Repair and Maintenance.Refer asset code
             format: autoComplete
-        indentQuantity:
+        userQuantity:
           type: number
           format: BigDecimal
           description: |
             indent quantity of the IndentDetail. Quantity requested by indentor.
+        indentQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            indent quantity of the IndentDetail. Quantity after converting to base uom.
         totalProcessedQuantity:
           type: number
           format: BigDecimal
@@ -2751,7 +2756,7 @@ definitions:
       required:
       - uom
       - material
-      - indentQuantity
+      - userQuantity
 
     OpeningBalanceRequest:
       type: object
@@ -3009,12 +3014,22 @@ definitions:
         priceList:
           $ref: "#/definitions/PriceList"
           format: singleValueList
+        userQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            user orderd quantity of the PurchaseMaterial
         orderQuantity:
           type: number
           format: BigDecimal
           description: |
-            order quantity of the PurchaseMaterial
+            order quantity of the PurchaseMaterial in base uom 
         receivedQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            order quantity of the PurchaseMaterial
+       usedQuantity:
           type: number
           format: BigDecimal
           description: |
@@ -3056,7 +3071,7 @@ definitions:
       required:
       - material
       - uom
-      - orderQuantity
+      - userQuantity
       - unitPrice
 
     PurchaseIndentDetail:
@@ -3273,14 +3288,22 @@ definitions:
         purchaseOrderDetail:
           $ref: "#/definitions/PurchaseOrderDetail"
           description: po line mandatory if receipt type is purchase receipt.
+        userReceivedQty:
+          type: number
+          format: BigDecimal
+          description: The quantity of the material received for this particular purchase order or inter store  transfer. 
         receivedQty:
           type: number
           format: BigDecimal
-          description: The quantity of the material received for this particular purchase order or inter store  transfer. All the quantity needs to be saved in the database in the based UOM.
+          description: The quantity of the material received for this particular purchase order or inter store  transfer in the based UOM.
+        userAcceptedQty:
+          type: number
+          format: BigDecimal
+          description: The quantity of the material accepted from the total quantity of materials received.  This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.
         acceptedQty:
           type: number
           format: BigDecimal
-          description: The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity. This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.
+          description: The quantity of the material accepted from the total quantity of materials received in Base UOM. Accepted quantity cannot be greater than the received quantity. This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.
         unitRate:
           type: number
           description: Per unit rate of the material as per the Purchase Order.
@@ -3317,7 +3340,8 @@ definitions:
             $ref: '#/definitions/MaterialReceiptDetailAddnlinfo'
       required:
         - id
-        - receivedQty
+        - userReceivedQty
+				- userAcceptedQty
         - tenantId
 
     MaterialReceiptDetailAddnlinfo:
@@ -3369,6 +3393,15 @@ definitions:
             than the receipt date.
           format: int64
           x-displayformat: 'dd/MM/yyyy'
+        userQuantity:
+          type: number
+          format: BigDecimal
+          description: The quantity of the material received for this particular purchase order or inter store  transfer .
+        quantity:
+          type: number
+          format: BigDecimal
+          description: The quantity of the material received for this particular purchase order or inter store  transfer in the base UOM.
+
 
     MaterialReceiptRequest:
       type: object
@@ -3555,11 +3588,21 @@ definitions:
           type: number
           format: int32
           description: Order of items issued.
-        quantityIssued:
+        userQuantityIssued:
           type: number
           format: BigDecimal
           description: |
             Quantity issued of the Material Issue Detail.
+        quantityIssued:
+          type: number
+          format: BigDecimal
+          description: |
+            Quantity issued of the Material Issue Detail in Base UOM
+        balanceQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            Quantity issued of the Material Issue Detail in Base UOM
         value:
           type: number
           format: BigDecimal
@@ -3586,6 +3629,12 @@ definitions:
           format: BigDecimal
           description: |
             If item writeoffed or scrapped, then define the scrap value.
+        mrnNumber:
+          type: string
+          maxLength: 100
+          description: |
+            Receipt number reference.
+ 
         description:
           type: string
           maxLength: 512

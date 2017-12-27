@@ -26,6 +26,10 @@ public class MaterialDetailAddInfoEntity {
     private String oldReceiptNumber;
 
     private BigDecimal receivedDate;
+    
+    private BigDecimal quantity;
+   
+    private BigDecimal userQuantity;
 
     private BigDecimal expiryDate;
 
@@ -41,6 +45,8 @@ public class MaterialDetailAddInfoEntity {
                 .id(id)
                 .tenantId(tenantId)
                 .lotNo(lotNo)
+                .userQuantity(userQuantity)
+                .quantity(quantity)
                 .serialNo(serialNo)
                 .manufactureDate(null != manufactureDate ? Long.valueOf(manufactureDate.toString()) : null)
                 .oldReceiptNumber(oldReceiptNumber)

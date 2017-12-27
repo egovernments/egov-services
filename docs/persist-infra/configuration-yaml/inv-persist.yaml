@@ -542,8 +542,8 @@ serviceMaps:
               dbType: LONG
 
         - query: >-
-            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, materialcode, quantityissued,description)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, materialcode,userQuantityIssued, quantityissued,description)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?);
           basePath: $.materialIssues.*.materialIssueDetails.*
           jsonMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.id
@@ -558,6 +558,7 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.code
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.userQuantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
 
@@ -838,7 +839,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
               dbType: LONG
             - jsonPath: $.purchaseOrders.*.totalAmount
-        - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+        - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList,userQuantity, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.id
@@ -848,6 +849,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderNumber
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.uom.code
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.userQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.unitPrice
@@ -901,7 +903,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderNumber
             - jsonPath: $.purchaseOrders.*.tenantId
         - query: >-
-               INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ON CONFLICT(id, tenantId) DO UPDATE SET
+               INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList,userQuantity, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ? ) ON CONFLICT(id, tenantId) DO UPDATE SET
                material=EXCLUDED.material, purchaseOrder=EXCLUDED.purchaseOrder, orderNumber=EXCLUDED.orderNumber, uom=EXCLUDED.uom, pricelist=EXCLUDED.pricelist, orderQuantity=EXCLUDED.orderQuantity, receivedQuantity=EXCLUDED.receivedQuantity, unitPrice=EXCLUDED.unitPrice, description=EXCLUDED.description, tenderquantity=EXCLUDED.tenderquantity, usedquantity=EXCLUDED.usedquantity;
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
@@ -912,6 +914,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderNumber
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.uom.code
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.userQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.unitPrice
@@ -965,7 +968,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
               dbType: LONG
             - jsonPath: $.purchaseOrders.*.totalAmount
-        - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+        - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList,userQuantity, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ? );
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.id
@@ -975,6 +978,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderNumber
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.uom.code
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.userQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.unitPrice
@@ -1015,7 +1019,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderNumber
             - jsonPath: $.purchaseOrders.*.tenantId
         - query: >-
-               INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ON CONFLICT(id, tenantId) DO UPDATE SET
+               INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList,userQuantity, orderQuantity, receivedQuantity, unitPrice, description, tenderquantity, usedquantity)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ? ) ON CONFLICT(id, tenantId) DO UPDATE SET
                material=EXCLUDED.material, purchaseOrder=EXCLUDED.purchaseOrder, orderNumber=EXCLUDED.orderNumber, uom=EXCLUDED.uom, pricelist=EXCLUDED.pricelist, orderQuantity=EXCLUDED.orderQuantity, receivedQuantity=EXCLUDED.receivedQuantity, unitPrice=EXCLUDED.unitPrice, description=EXCLUDED.description, tenderquantity=EXCLUDED.tenderquantity, usedquantity=EXCLUDED.usedquantity;
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
@@ -1026,6 +1030,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderNumber
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.uom.code
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.userQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.unitPrice
@@ -1076,9 +1081,9 @@ serviceMaps:
             - jsonPath: $.indents.*.id
             - jsonPath: $.indents.*.tenantId
         - query: >-
-            insert into indentdetail (material, uom, parentIndentLine, orderNumber, projectCode, indentNumber, asset, indentQuantity,
+            insert into indentdetail (material, uom, parentIndentLine, orderNumber, projectCode, indentNumber, asset,userQuantity, indentQuantity,
             totalProcessedQuantity, indentIssuedQuantity, poOrderedQuantity, interstoreRequestQuantity, deliveryTerms, remarks, id, tenantId)
-             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
+             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
              material=EXCLUDED.material , uom=EXCLUDED.uom ,parentIndentLine=EXCLUDED.parentIndentLine,orderNumber=EXCLUDED.orderNumber,projectCode=EXCLUDED.projectCode ,indentNumber=EXCLUDED.indentNumber,asset=EXCLUDED.asset,
              indentQuantity=EXCLUDED.indentQuantity;
           basePath: $.indents.*.indentDetails.*
@@ -1091,6 +1096,7 @@ serviceMaps:
             - jsonPath: $.indents[?({id} in @.indentDetails[*].id)].indentNumber
             - jsonPath: $.indents.*.indentDetails.*.asset.code
             - jsonPath: $.indents.*.indentDetails.*.indentQuantity
+						- jsonPath: $.indents.*.indentDetails.*.userQuantity
             - jsonPath: $.indents.*.indentDetails.*.totalProcessedQuantity
             - jsonPath: $.indents.*.indentDetails.*.indentIssuedQuantity
             - jsonPath: $.indents.*.indentDetails.*.poOrderedQuantity
@@ -1208,8 +1214,8 @@ serviceMaps:
             - type: CURRENTDATE
               dbType: LONG
         - query: >-
-                 INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark,
-                 mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo,userReceivedQty, receivedQty,userAcceptedQty, acceptedQty, unitRate, rejectionremark,
+                 mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?,?, ?, ?,?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  material = EXCLUDED.material, uomno  = EXCLUDED.uomno, receivedQty = EXCLUDED.receivedQty,
                  acceptedQty = EXCLUDED.acceptedQty, unitRate = EXCLUDED.unitRate, rejectionremark = EXCLUDED.rejectionremark,
                  podetailid = EXCLUDED.podetailid, mrnnumber = EXCLUDED.mrnnumber, lastmodifiedby = EXCLUDED.lastmodifiedby,
@@ -1220,7 +1226,9 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
             - jsonPath: $.materialReceipt.*.receiptDetails.*.material.code
             - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.userReceivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.userAcceptedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.acceptedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
             - jsonPath: $.materialReceipt.*.receiptDetails.*.rejectionRemark
@@ -1232,8 +1240,8 @@ serviceMaps:
             - type: CURRENTDATE
               dbType: LONG
         - query: >-
-                 INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, quantity, manufacturedate, lotNo, expiryDate, batchno, serialno)
-                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, userQuantity, quantity, manufacturedate, lotNo, expiryDate, batchno, serialno)
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?,?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  receiptDetailId = EXCLUDED.receiptdetailid, manufacturedate = EXCLUDED.manufacturedate,
                  lotNo = EXCLUDED.lotno, batchNo = EXCLUDED.batchno,
                  expiryDate = EXCLUDED.expirydate, serialno = EXCLUDED.serialno ;
@@ -1243,6 +1251,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
             - jsonPath: $.materialReceipt.*.tenantId
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.manufactureDate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userQuantity
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate

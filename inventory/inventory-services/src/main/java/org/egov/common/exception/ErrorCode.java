@@ -17,6 +17,10 @@ public enum ErrorCode {
             "org.egov.service.internal.error",
             "Internal Server error",
             "Some required service is down. Please contact Administrator"),
+    NULL_POINTER_ERROR(
+            "org.egov.service.null.error",
+            "Internal Server error",
+            "Unhandled Null error is thrown. Please contact Administrator "),
     SQL_ERROR(
             "org.egov.service.sql.error",
             "Error in the sql statements ",

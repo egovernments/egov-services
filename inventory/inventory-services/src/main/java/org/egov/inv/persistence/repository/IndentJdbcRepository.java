@@ -228,7 +228,7 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 			paramValues.put("indentStatus", IndentStatusEnum.APPROVED.name());
 			if (params.length() > 0)
 				params.append(" and  ");
-			params.append(" (details.totalProcessedQuantity is null or details.indentQuantity - details.totalProcessedQuantity > :value)");
+			params.append(" (details.poOrderedQuantity is null or details.indentQuantity - details.poOrderedQuantity > :value)");
 			paramValues.put("value", Integer.valueOf(0));
 		} 
 		

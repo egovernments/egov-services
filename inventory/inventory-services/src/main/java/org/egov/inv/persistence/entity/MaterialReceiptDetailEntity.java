@@ -29,8 +29,10 @@ public class MaterialReceiptDetailEntity {
     private String poDetailId;
 
     private BigDecimal receivedQty;
+    private BigDecimal userReceivedQty;
 
     private BigDecimal acceptedQty;
+    private BigDecimal userAcceptedQty;
 
     private BigDecimal unitRate;
 
@@ -63,6 +65,8 @@ public class MaterialReceiptDetailEntity {
                 .mrnNumber(!isEmpty(mrnNumber) ? mrnNumber : null)
                 .purchaseOrderDetail(buildPurchaseOrderDetail())
                 .receivedQty(receivedQty)
+                .userReceivedQty(userReceivedQty)
+                .userAcceptedQty(userAcceptedQty)
                 .acceptedQty(acceptedQty)
                 .unitRate(unitRate)
                 .asset(!isEmpty(asset) ? buildAsset() : null)

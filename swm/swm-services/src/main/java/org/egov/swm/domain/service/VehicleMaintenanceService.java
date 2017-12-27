@@ -102,31 +102,36 @@ public class VehicleMaintenanceService {
 
             }
 
-            //validate for maintenance after
-            if(vehicleMaintenance.getMaintenanceUom() != null && !vehicleMaintenance.getMaintenanceUom().isEmpty()){
-                if(vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("days")){
-                    if(vehicleMaintenance.getMaintenanceAfter() < 30 || vehicleMaintenance.getMaintenanceAfter() > 700)
+            // validate for maintenance after
+            if (vehicleMaintenance.getMaintenanceUom() != null && !vehicleMaintenance.getMaintenanceUom().isEmpty()) {
+                if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("days")) {
+                    if (vehicleMaintenance.getMaintenanceAfter() < 30 || vehicleMaintenance.getMaintenanceAfter() > 700)
                         throw new CustomException("Maintenance After",
-                                "Maintenance After should be between 30 and 700: Received value " + vehicleMaintenance.getMaintenanceAfter());
-                }
-                else{
-                    if(vehicleMaintenance.getMaintenanceAfter() < 1 || vehicleMaintenance.getMaintenanceAfter() > 50000)
+                                " Maintenance after shall be between 0 and 50000 Kms OR between 30 and 700 days: "
+                                        + vehicleMaintenance.getMaintenanceAfter());
+                } else {
+                    if (vehicleMaintenance.getMaintenanceAfter() < 1 || vehicleMaintenance.getMaintenanceAfter() > 50000)
                         throw new CustomException("Maintenance After",
-                                "Maintenance After should be between 1 and 50000: Received value " + vehicleMaintenance.getMaintenanceAfter());
+                                "Maintenance after shall be between 0 and 50000 Kms OR between 30 and 700 days: "
+                                        + vehicleMaintenance.getMaintenanceAfter());
                 }
             }
 
-            //validate downtime maintenance
-            if(vehicleMaintenance.getDowntimeforMaintenanceUom() != null && !vehicleMaintenance.getDowntimeforMaintenanceUom().isEmpty()){
-                if(vehicleMaintenance.getDowntimeforMaintenanceUom().equalsIgnoreCase("days")) {
-                    if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0 || vehicleMaintenance.getDowntimeforMaintenance() > 30.0)
+            // validate downtime maintenance
+            if (vehicleMaintenance.getDowntimeforMaintenanceUom() != null
+                    && !vehicleMaintenance.getDowntimeforMaintenanceUom().isEmpty()) {
+                if (vehicleMaintenance.getDowntimeforMaintenanceUom().equalsIgnoreCase("days")) {
+                    if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0
+                            || vehicleMaintenance.getDowntimeforMaintenance() > 30.0)
                         throw new CustomException("DowntimeForMaintenance",
-                                "Downtime For Maintenance should be between 1 and 30: Received value " + vehicleMaintenance.getDowntimeforMaintenance());
-                }
-                else{
-                    if(vehicleMaintenance.getDowntimeforMaintenance() < 1.0 || vehicleMaintenance.getDowntimeforMaintenance() > 720.0)
+                                "Maintenance Downtime shall be between 0 and 720 hours OR between 1 and 30 days: "
+                                        + vehicleMaintenance.getDowntimeforMaintenance());
+                } else {
+                    if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0
+                            || vehicleMaintenance.getDowntimeforMaintenance() > 720.0)
                         throw new CustomException("DowntimeForMaintenance",
-                                "Downtime For Maintenance should be between 1 and 720: Received value " + vehicleMaintenance.getDowntimeforMaintenance());
+                                "Maintenance Downtime shall be between 0 and 720 hours OR between 1 and 30 days: "
+                                        + vehicleMaintenance.getDowntimeforMaintenance());
                 }
             }
 

@@ -36,18 +36,6 @@ public class WorkOrderSearchContract {
 
     private List<String> loaNumbers;
     
-    private String contractorNameLike;
-
-    private String contractorCodeLike;
-
-    private String detailedEstimateNumberLike;
-
-    private String workIdentificationNumberLike;
-    
-    private String workOrderNumberLike;
-
-    private String loaNumberLike;
-
     private List<String> department;
 
     private String tenantId;
@@ -59,5 +47,17 @@ public class WorkOrderSearchContract {
     private String sortBy;
     
     private List<String> letterOfAcceptances;
+    
+    private String contractorNameLike;
+
+    private String contractorCodeLike;
+
+    private String detailedEstimateNumberLike;
+
+    private String workIdentificationNumberLike;
+    
+    private String workOrderNumberLike;
+
+    private String loaNumberLike;
 
 }

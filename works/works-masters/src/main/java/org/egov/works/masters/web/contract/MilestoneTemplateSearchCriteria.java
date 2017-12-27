@@ -27,4 +27,6 @@ public class MilestoneTemplateSearchCriteria {
     private Integer pageSize;
     private Integer pageNumber;
     private Boolean isUpdateUniqueCheck = Boolean.FALSE;
+    
+    private String codeLike;
 }

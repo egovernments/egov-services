@@ -1,6 +1,7 @@
 package org.egov.works.workorder.domain.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,13 +9,18 @@ import java.util.Map;
 import org.egov.works.common.persistence.repository.JdbcRepository;
 import org.egov.works.workorder.persistence.helper.LoaActivityHelper;
 import org.egov.works.workorder.web.contract.LOAActivity;
+import org.egov.works.workorder.web.contract.LOAMeasurementSheetSearchContract;
 import org.egov.works.workorder.web.contract.LoaActivitySearchContract;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class LoaActivityRepository extends JdbcRepository {
 
+    @Autowired
+    private LOAMeasurementSheetRepository loaMeasurementSheetRepository;
+    
     public static final String TABLE_NAME = "egw_loaactivity loaactivity";
 
     public List<LOAActivity> searchLoaActivity(final LoaActivitySearchContract loaActivitySearchCriteria) {
@@ -78,6 +84,10 @@ public class LoaActivityRepository extends JdbcRepository {
         List<LOAActivity> loaActivities = new ArrayList<>();
         for (LoaActivityHelper loaActivityHelper : assetsForLoaList) {
             LOAActivity loaActivity = loaActivityHelper.toDomain();
+            
+            LOAMeasurementSheetSearchContract loaMeasurementSheetSearchCriteria = new LOAMeasurementSheetSearchContract();
+            loaMeasurementSheetSearchCriteria.setLoaActivity(Arrays.asList(loaActivity.getId()));
+            loaActivity.setLoaMeasurements(loaMeasurementSheetRepository.searchLoaMeasurementSheet(loaMeasurementSheetSearchCriteria));
             loaActivities.add(loaActivity);
 
         }

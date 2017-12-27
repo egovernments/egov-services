@@ -37,33 +37,33 @@ public class MeasurementBookSearchContract {
 
     private String createdBy;
 
-    private List<String> workOrderNumbers; // autocomplete
+    private List<String> workOrderNumbers; 
 
-    private List<String> mbRefNumbers;// autocomplete
+    private List<String> mbRefNumbers;
 
-    private List<String> loaNumbers;// autocomplete
+    private List<String> loaNumbers;
 
-    private List<String> detailedEstimateNumbers; // autocomplete
+    private List<String> detailedEstimateNumbers; 
     
-    private List<String> contractorNames;// autocomplete
+    private List<String> contractorNames;
 
-    private List<String> contractorCodes;// autocomplete
+    private List<String> contractorCodes;
 
-    private List<String> workIdentificationNumbers;// autocomplete
+    private List<String> workIdentificationNumbers;
     
-    private String workOrderNumberLike; // autocomplete
-
-    private String mbRefNumberLike;// autocomplete
-
-    private String loaNumberLike;// autocomplete
-
-    private String detailedEstimateNumberLike; // autocomplete
+    private String loaNumberLike;
     
-    private String contractorNameLike;// autocomplete
+    private String workOrderNumberLike; 
 
-    private String contractorCodeLike;// autocomplete
+    private String mbRefNumberLike;
 
-    private String workIdentificationNumberLike;// autocomplete
+    private String detailedEstimateNumberLike; 
+    
+    private String contractorNameLike;
+
+    private String contractorCodeLike;
+
+    private String workIdentificationNumberLike;
 
     private List<String> statuses;
 }

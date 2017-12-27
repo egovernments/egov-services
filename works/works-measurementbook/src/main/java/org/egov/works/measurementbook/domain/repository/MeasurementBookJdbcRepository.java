@@ -95,6 +95,22 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             paramValues.put("detailedEstimate", "%" + measurementBookSearchContract.getDetailedEstimateNumberLike() + "%");
         }
 
+        
+        if (measurementBookSearchContract.getWorkOrderNumbers() != null
+                && !measurementBookSearchContract.getWorkOrderNumbers().isEmpty()) {
+            addAnd(params);
+            params.append(
+                    "mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in ((select letterofacceptance from egw_workorder as wo where wo.status = 'APPROVED' and wo.deleted = false and wo.tenantId =:tenantId and upper(wo.workordernumber) in (:workordernumbers)))");
+
+            paramValues.put("workordernumbers", measurementBookSearchContract.getWorkOrderNumbers());
+        }
+
+        if (StringUtils.isNotBlank(measurementBookSearchContract.getWorkOrderNumberLike())) {
+            addAnd(params);
+            params.append(
+                    "mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in ((select letterofacceptance from egw_workorder as wo where wo.status = 'APPROVED' and wo.deleted = false and wo.tenantId =:tenantId and upper(wo.workordernumber) like (:workordernumberlike)))");
+            paramValues.put("workordernumberlike", "%" + measurementBookSearchContract.getWorkOrderNumberLike().toUpperCase() + "%");
+        }
         if (measurementBookSearchContract.getCreatedBy() != null) {
             addAnd(params);
             params.append("upper(mb.createdBy) =:createdBy");

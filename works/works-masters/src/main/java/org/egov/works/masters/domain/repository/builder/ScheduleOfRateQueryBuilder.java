@@ -1,5 +1,6 @@
 package org.egov.works.masters.domain.repository.builder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.masters.web.contract.ScheduleOfRateSearchCriteria;
 import org.springframework.stereotype.Service;
 
@@ -72,18 +73,20 @@ public class ScheduleOfRateQueryBuilder {
             params.put("sorIds", scheduleOfRateSearchCriteria.getIds());
         }
 
-        if (scheduleOfRateSearchCriteria.getSorCodes() != null && !scheduleOfRateSearchCriteria.getSorCodes().isEmpty() && scheduleOfRateSearchCriteria.getSorCodes().size() == 1) {
-            selectQuery.append(" and lower(sor.code) like :sorCodes ");
-            params.put("sorCodes", '%' + scheduleOfRateSearchCriteria.getSorCodes().get(0).toLowerCase() + '%');
-        } else if (scheduleOfRateSearchCriteria.getSorCodes() != null) {
+        if (StringUtils.isNotBlank(scheduleOfRateSearchCriteria.getSorCodeLike())) {
+            selectQuery.append(" and lower(sor.code) like :sorCodeLike ");
+            params.put("sorCodeLike", '%' + scheduleOfRateSearchCriteria.getSorCodeLike().toLowerCase() + '%');
+        } 
+        if (scheduleOfRateSearchCriteria.getSorCodes() != null && !scheduleOfRateSearchCriteria.getSorCodes().isEmpty()) {
             selectQuery.append(" and sor.code in (:sorCodes)");
             params.put("sorCodes", scheduleOfRateSearchCriteria.getSorCodes());
         }
 
-        if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null && !scheduleOfRateSearchCriteria.getScheduleCategoryCodes().isEmpty() && scheduleOfRateSearchCriteria.getScheduleCategoryCodes().size() == 1) {
-            selectQuery.append(" and lower(sor.schedulecategory) like :scheduleCategoryCodes ");
-            params.put("scheduleCategoryCodes", '%' + scheduleOfRateSearchCriteria.getScheduleCategoryCodes().get(0).toLowerCase() + '%');
-        } else if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null) {
+        if (StringUtils.isNotBlank(scheduleOfRateSearchCriteria.getScheduleCategoryCodeLike())) {
+            selectQuery.append(" and lower(sor.schedulecategory) like :scheduleCategoryCodeLike ");
+            params.put("scheduleCategoryCodeLike", '%' + scheduleOfRateSearchCriteria.getScheduleCategoryCodeLike().toLowerCase() + '%');
+        }
+        if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null && !scheduleOfRateSearchCriteria.getScheduleCategoryCodes().isEmpty()) {
             selectQuery.append(" and sor.schedulecategory in (:scheduleCategoryCodes)");
             params.put("scheduleCategoryCodes", scheduleOfRateSearchCriteria.getScheduleCategoryCodes());
         }

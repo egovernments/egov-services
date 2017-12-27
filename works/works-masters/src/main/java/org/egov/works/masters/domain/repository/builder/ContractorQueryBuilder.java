@@ -2,78 +2,84 @@ package org.egov.works.masters.domain.repository.builder;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.masters.web.contract.ContractorSearchCriteria;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ContractorQueryBuilder {
-	public static final String BASE_SEARCH_QUERY = "SELECT * FROM egw_contractor ec where ec.id is not null";
+    public static final String BASE_SEARCH_QUERY = "SELECT * FROM egw_contractor ec where ec.id is not null";
 
-	public String getSearchQuery(ContractorSearchCriteria contractorSearchCriteria, Map params) {
-		StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
-		appendParams(contractorSearchCriteria, params, selectQuery);
-		appendLimitAndOffset(contractorSearchCriteria, params, selectQuery);
-		return selectQuery.toString();
-	}
+    public String getSearchQuery(ContractorSearchCriteria contractorSearchCriteria, Map params) {
+        StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
+        appendParams(contractorSearchCriteria, params, selectQuery);
+        appendLimitAndOffset(contractorSearchCriteria, params, selectQuery);
+        return selectQuery.toString();
+    }
 
-	private void appendParams(ContractorSearchCriteria contractorSearchCriteria, Map params,
-			StringBuilder selectQuery) {
+    private void appendParams(ContractorSearchCriteria contractorSearchCriteria, Map params,
+            StringBuilder selectQuery) {
 
-		if (contractorSearchCriteria.getTenantId() != null) {
-			selectQuery.append(" and ec.tenantid = :tenantId");
-			params.put("tenantId", contractorSearchCriteria.getTenantId());
-		}
+        if (contractorSearchCriteria.getTenantId() != null) {
+            selectQuery.append(" and ec.tenantid = :tenantId");
+            params.put("tenantId", contractorSearchCriteria.getTenantId());
+        }
 
-		if (contractorSearchCriteria.getIds() != null && !contractorSearchCriteria.getIds().isEmpty()) {
-			selectQuery.append(" and ec.id in (:contractorIds)");
-			params.put("contractorIds", contractorSearchCriteria.getIds());
-		}
+        if (contractorSearchCriteria.getIds() != null && !contractorSearchCriteria.getIds().isEmpty()) {
+            selectQuery.append(" and ec.id in (:contractorIds)");
+            params.put("contractorIds", contractorSearchCriteria.getIds());
+        }
 
-		if (contractorSearchCriteria.getCode() != null && !contractorSearchCriteria.getCode().isEmpty()) {
-			selectQuery.append(" and ec.code = :code");
-			params.put("code", contractorSearchCriteria.getCode());
-		}
+        if (contractorSearchCriteria.getCode() != null && !contractorSearchCriteria.getCode().isEmpty()) {
+            selectQuery.append(" and ec.code = :code");
+            params.put("code", contractorSearchCriteria.getCode());
+        }
 
-		if (contractorSearchCriteria.getName() != null && !contractorSearchCriteria.getName().isEmpty()) {
-			selectQuery.append(" and ec.name = :name");
-			params.put("name", contractorSearchCriteria.getName());
-		}
+        if (contractorSearchCriteria.getName() != null && !contractorSearchCriteria.getName().isEmpty()) {
+            selectQuery.append(" and ec.name = :name");
+            params.put("name", contractorSearchCriteria.getName());
+        }
 
-		if (contractorSearchCriteria.getContractClass() != null
-				&& !contractorSearchCriteria.getContractClass().isEmpty()) {
-			selectQuery.append(" and ec.contractorclass in (:contractorClass)");
-			params.put("contractorClass", contractorSearchCriteria.getContractClass());
-		}
+        if (contractorSearchCriteria.getContractClass() != null
+                && !contractorSearchCriteria.getContractClass().isEmpty()) {
+            selectQuery.append(" and ec.contractorclass in (:contractorClass)");
+            params.put("contractorClass", contractorSearchCriteria.getContractClass());
+        }
 
-		if (contractorSearchCriteria.getStatuses() != null && !contractorSearchCriteria.getStatuses().isEmpty()) {
-			selectQuery.append(" and ec.status in (:contractorStatus)");
-			params.put("contractorStatus", contractorSearchCriteria.getStatuses());
-		}
+        if (contractorSearchCriteria.getStatuses() != null && !contractorSearchCriteria.getStatuses().isEmpty()) {
+            selectQuery.append(" and ec.status in (:contractorStatus)");
+            params.put("contractorStatus", contractorSearchCriteria.getStatuses());
+        }
 
-		if (contractorSearchCriteria.getPmc() != null) {
-			selectQuery.append(" and ec.pmc = :pmc");
-			params.put("pmc", contractorSearchCriteria.getPmc());
-		}
-	}
+        if (StringUtils.isNotBlank(contractorSearchCriteria.getStatusLike())) {
+            selectQuery.append(" and lower(ec.status) like (:contractorStatusLike)");
+            params.put("contractorStatusLike", "%" + contractorSearchCriteria.getStatusLike().toLowerCase() + "%");
+        }
 
-	private StringBuilder appendLimitAndOffset(ContractorSearchCriteria contractorSearchCriteria,
-			@SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
+        if (contractorSearchCriteria.getPmc() != null) {
+            selectQuery.append(" and ec.pmc = :pmc");
+            params.put("pmc", contractorSearchCriteria.getPmc());
+        }
+    }
 
-		selectQuery.append(" order by ec.id");
-		selectQuery.append(" limit :pageSize");
-		if (contractorSearchCriteria.getPageSize() != null)
-			params.put("pageSize", contractorSearchCriteria.getPageSize());
-		else
-			params.put("pageSize", 500);
+    private StringBuilder appendLimitAndOffset(ContractorSearchCriteria contractorSearchCriteria,
+            @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
-		selectQuery.append(" offset :pageNumber");
+        selectQuery.append(" order by ec.id");
+        selectQuery.append(" limit :pageSize");
+        if (contractorSearchCriteria.getPageSize() != null)
+            params.put("pageSize", contractorSearchCriteria.getPageSize());
+        else
+            params.put("pageSize", 500);
 
-		if (contractorSearchCriteria.getPageNumber() != null)
-			params.put("pageNumber", contractorSearchCriteria.getPageNumber());
-		else
-			params.put("pageNumber", 0);
+        selectQuery.append(" offset :pageNumber");
 
-		return selectQuery;
-	}
+        if (contractorSearchCriteria.getPageNumber() != null)
+            params.put("pageNumber", contractorSearchCriteria.getPageNumber());
+        else
+            params.put("pageNumber", 0);
+
+        return selectQuery;
+    }
 
 }

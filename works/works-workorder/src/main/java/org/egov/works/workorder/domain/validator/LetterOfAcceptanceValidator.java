@@ -76,6 +76,14 @@ public class LetterOfAcceptanceValidator {
 
             for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
                     .getLetterOfAcceptanceEstimates()) {
+                
+                
+                if (!isUpdate) {
+                    checkLoaExistForDE(letterOfAcceptanceRequest, messages, letterOfAcceptanceEstimate);     
+                    if (messages != null && !messages.isEmpty())
+                        throw new CustomException(messages);
+                }
+                
                 List<DetailedEstimate> detailedEstimates = estimateService
                         .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
                                 letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
@@ -117,6 +125,21 @@ public class LetterOfAcceptanceValidator {
 
         }
 
+    }
+
+    private void checkLoaExistForDE(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, HashMap<String, String> messages,
+            LetterOfAcceptanceEstimate letterOfAcceptanceEstimate) {
+        LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
+        letterOfAcceptanceSearchContract.setDetailedEstimateNumberLike(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber());
+        
+        List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract, letterOfAcceptanceRequest.getRequestInfo());
+        
+        for(LetterOfAcceptance acceptance : letterOfAcceptances) {
+            if(acceptance.getStatus() != null && !acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) { 
+                messages.put(Constants.KEY_WORKS_LOA_DE_EXISTS, Constants.MESSAGE_WORKS_LOA_DE_EXISTS);
+                break;
+            }
+        }
     }
 
     private void validateCouncilDetails(HashMap<String, String> messages, LetterOfAcceptance letterOfAcceptance) {

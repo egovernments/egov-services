@@ -26,4 +26,8 @@ public class ScheduleOfRateSearchCriteria {
     private Integer pageSize;
     private Integer pageNumber;
     private Boolean isUpdateUniqueCheck = Boolean.FALSE;
+    
+    private String sorCodeLike;
+    private String scheduleCategoryCodeLike;
+
 }

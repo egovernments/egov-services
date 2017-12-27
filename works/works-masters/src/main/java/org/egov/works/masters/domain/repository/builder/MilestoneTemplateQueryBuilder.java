@@ -1,5 +1,6 @@
 package org.egov.works.masters.domain.repository.builder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.masters.web.contract.MilestoneTemplateSearchCriteria;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,8 @@ public class MilestoneTemplateQueryBuilder {
         return GET_MILESTONETEMPLATE_ACTIVTIES_BY_MT;
     }
 
-    private void appendParams(MilestoneTemplateSearchCriteria milestoneTemplateSearchCriteria, Map params, StringBuilder selectQuery) {
+    private void appendParams(MilestoneTemplateSearchCriteria milestoneTemplateSearchCriteria, Map params,
+            StringBuilder selectQuery) {
 
         selectQuery.append(" where mt.id is not null and deleted=false");
 
@@ -48,24 +50,31 @@ public class MilestoneTemplateQueryBuilder {
             params.put("codes", milestoneTemplateSearchCriteria.getCodes());
         }
 
-        if (milestoneTemplateSearchCriteria.getActive()!=null) {
+        if (StringUtils.isNotBlank(milestoneTemplateSearchCriteria.getCodeLike())) {
+            selectQuery.append(" and lower(mt.code) like (:codeLike)");
+            params.put("codeLike", "%" + milestoneTemplateSearchCriteria.getCodeLike().toLowerCase() + "%");
+        }
+
+        if (milestoneTemplateSearchCriteria.getActive() != null) {
             selectQuery.append(" and mt.active = :active");
             params.put("active", milestoneTemplateSearchCriteria.getActive());
         }
 
-        if (milestoneTemplateSearchCriteria.getTypeOfWork() != null && !milestoneTemplateSearchCriteria.getTypeOfWork().isEmpty()) {
+        if (milestoneTemplateSearchCriteria.getTypeOfWork() != null
+                && !milestoneTemplateSearchCriteria.getTypeOfWork().isEmpty()) {
             selectQuery.append(" and mt.typeofwork in (:typeOfWork)");
             params.put("typeOfWork", milestoneTemplateSearchCriteria.getTypeOfWork());
         }
 
-        if (milestoneTemplateSearchCriteria.getSubTypeOfWork() != null && !milestoneTemplateSearchCriteria.getSubTypeOfWork().isEmpty()) {
+        if (milestoneTemplateSearchCriteria.getSubTypeOfWork() != null
+                && !milestoneTemplateSearchCriteria.getSubTypeOfWork().isEmpty()) {
             selectQuery.append(" and mt.subtypeofwork in (:subTypeOfWork)");
             params.put("subTypeOfWork", milestoneTemplateSearchCriteria.getSubTypeOfWork());
         }
     }
 
     private StringBuilder appendLimitAndOffset(MilestoneTemplateSearchCriteria milestoneTemplateSearchCriteria,
-                                               @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
+            @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
         selectQuery.append(" order by mt.id");
         selectQuery.append(" limit :pageSize");

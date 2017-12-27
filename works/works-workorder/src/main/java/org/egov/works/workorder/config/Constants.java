@@ -136,4 +136,8 @@ public class Constants {
     public static final String KEY_MILESTONE_ACTIVITY_SSD_SED_CANNOTBE_FUTURE= "WORKS.MILESTONE.ACTIVITY.SSD.SED.CANNOTBE.FUTURE";
     public static final String MESSAGE_MILESTONE_ACTIVITY_SSD_SED_CANNOTBE_FUTURE = "Milestone schedule start or end date cannot be future date";
 
+    public static final String KEY_WORKS_LOA_DE_EXISTS = "works.loa.de.created";
+    public static final String MESSAGE_WORKS_LOA_DE_EXISTS = "Letter of Acceptance already create for the given Detailed Estimate";
+
+    
 }

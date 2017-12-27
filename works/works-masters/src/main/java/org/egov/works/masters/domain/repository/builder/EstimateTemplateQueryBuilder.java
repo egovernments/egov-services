@@ -1,5 +1,6 @@
 package org.egov.works.masters.domain.repository.builder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.masters.web.contract.EstimateTemplateSearchCriteria;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,8 @@ public class EstimateTemplateQueryBuilder {
         return GET_NONSORRATE_BY_ID;
     }
 
-    private void appendParams(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria, Map params, StringBuilder selectQuery) {
+    private void appendParams(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria, Map params,
+            StringBuilder selectQuery) {
 
         selectQuery.append(" where et.id is not null and deleted=false");
 
@@ -55,19 +57,25 @@ public class EstimateTemplateQueryBuilder {
             params.put("codes", estimateTemplateSearchCriteria.getCodes());
         }
 
+        if (StringUtils.isNotBlank(estimateTemplateSearchCriteria.getCodeLike())) {
+            selectQuery.append(" and lower(et.code) like (:codeLike)");
+            params.put("codeLike", "%" + estimateTemplateSearchCriteria.getCodeLike().toLowerCase() + "%");
+        }
+
         if (estimateTemplateSearchCriteria.getTypeOfWork() != null && !estimateTemplateSearchCriteria.getTypeOfWork().isEmpty()) {
             selectQuery.append(" and et.typeofwork in (:typeOfWork)");
             params.put("typeOfWork", estimateTemplateSearchCriteria.getTypeOfWork());
         }
 
-        if (estimateTemplateSearchCriteria.getSubTypeOfWork() != null && !estimateTemplateSearchCriteria.getSubTypeOfWork().isEmpty()) {
+        if (estimateTemplateSearchCriteria.getSubTypeOfWork() != null
+                && !estimateTemplateSearchCriteria.getSubTypeOfWork().isEmpty()) {
             selectQuery.append(" and et.subtypeofwork in (:subTypeOfWork)");
             params.put("subTypeOfWork", estimateTemplateSearchCriteria.getSubTypeOfWork());
         }
     }
 
     private StringBuilder appendLimitAndOffset(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria,
-                                               @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
+            @SuppressWarnings("rawtypes") Map params, StringBuilder selectQuery) {
 
         selectQuery.append(" order by et.id");
         selectQuery.append(" limit :pageSize");

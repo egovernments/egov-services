@@ -81,15 +81,16 @@ public class AgreementValidator {
 		if (securityDeposit < rent * Integer.valueOf(securityDepositFactor))
 			errors.rejectValue("Agreement.securityDeposit", "",
 					"security deposit value should be greater than or equal to thrice rent value");
-
-		if (solvencyCertificateDate.compareTo(new Date()) >= 0)
+		if (Source.SYSTEM.equals(agreement.getSource())) {
+			if (solvencyCertificateDate.compareTo(new Date()) >= 0)
 			errors.rejectValue("Agreement.solvencyCertificateDate", "",
 					"solvency certificate date should be lesser than current date");
 
 		if (bankGuaranteeDate.compareTo(new Date()) >= 0)
 			errors.rejectValue("Agreement.bankGuaranteeDate", "",
-					"bank Guarantee Date date should be lesser than current date");
-		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+						"bank Guarantee Date date should be lesser than current date");
+		}
+		else {
 
 			if (agreement.getCollectedSecurityDeposit() != null
 					&& (agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))

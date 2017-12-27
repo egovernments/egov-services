@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import net.minidev.json.JSONArray;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
@@ -54,8 +56,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class MaterialIssueService extends DomainService {
@@ -173,24 +173,24 @@ public class MaterialIssueService extends DomainService {
 			materialIssuedFromReceipt.setTenantId(materialIssueDetail.getTenantId());
 			materialIssuedFromReceipt.setStatus(true);
 			materialIssuedFromReceipt.setMaterialReceiptId(fifoEntity.getReceiptId());
-			if (quantityIssued.compareTo(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
-					Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString())))) >= 0) {
+			if (quantityIssued.compareTo(getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
+					materialIssueDetail.getUom().getConversionFactor())) >= 0) {
 				materialIssuedFromReceipt
-						.setQuantity(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
-								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()))));
-				unitRate = BigDecimal.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
-						Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString())))
-						.multiply(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
-								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()))))
+						.setQuantity(getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
+								materialIssueDetail.getUom().getConversionFactor()));
+				unitRate = getSearchConvertedRate(new BigDecimal(fifoEntity.getUnitRate()),
+						materialIssueDetail.getUom().getConversionFactor())
+						.multiply(getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
+								materialIssueDetail.getUom().getConversionFactor()))
 						.add(unitRate);
 				quantityIssued = quantityIssued
-						.subtract(BigDecimal.valueOf(getSearchConvertedQuantity(fifoEntity.getBalance(),
-								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()))));
+						.subtract(getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
+								materialIssueDetail.getUom().getConversionFactor()));
 			} else {
 				materialIssuedFromReceipt.setQuantity(quantityIssued);
 				unitRate = quantityIssued
-						.multiply(BigDecimal.valueOf(getSearchConvertedRate(fifoEntity.getUnitRate(),
-								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString())))).add(unitRate);
+						.multiply(getSearchConvertedRate(new BigDecimal(fifoEntity.getUnitRate()),
+								materialIssueDetail.getUom().getConversionFactor())).add(unitRate);
 				quantityIssued = BigDecimal.ZERO;
 			}
 			materialIssuedFromReceipts.add(materialIssuedFromReceipt);
@@ -340,21 +340,21 @@ public class MaterialIssueService extends DomainService {
 	}
 
 	private void convertToUom(MaterialIssueDetail materialIssueDetail) {
-		Double quantityIssued = 0d;
-		Double quantity = 0d;
+		BigDecimal quantityIssued = new BigDecimal(0);
+		BigDecimal quantity = new BigDecimal(0);
 		if (materialIssueDetail.getUom() != null && StringUtils.isNotEmpty(materialIssueDetail.getUom().getCode())) {
 			if (materialIssueDetail.getQuantityIssued() != null)
 				quantityIssued = getSaveConvertedQuantity(
-						Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
-						Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
-			materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
+						materialIssueDetail.getQuantityIssued(),
+						materialIssueDetail.getUom().getConversionFactor());
+			materialIssueDetail.setQuantityIssued(quantityIssued);
 			if (!materialIssueDetail.getMaterialIssuedFromReceipts().isEmpty())
 				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
 					//TODO: CHECK mifr.getQuantity() IS CONVERTED ALREADY USING CONVERSION FACTOR ?
 					if (mifr.getQuantity() != null && materialIssueDetail.getUom().getConversionFactor() != null)
-						quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()),
-								Double.valueOf(materialIssueDetail.getUom().getConversionFactor().toString()));
-					mifr.setQuantity(BigDecimal.valueOf(quantity));
+						quantity = getSaveConvertedQuantity(mifr.getQuantity(),
+								materialIssueDetail.getUom().getConversionFactor());
+					mifr.setQuantity(quantity);
 				}
 		}
 	}
@@ -617,13 +617,13 @@ public class MaterialIssueService extends DomainService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			Map<String,Uom> uoms = getUoms(tenantId, objectMapper, new RequestInfo());
 			for (MaterialIssueDetail materialIssueDetail : materialIssueDetails) {
-				Double quantityIssued = getSaveConvertedQuantity(Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
-						Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor().toString()));
-				materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
+				BigDecimal quantityIssued = getSaveConvertedQuantity(materialIssueDetail.getQuantityIssued(),
+						uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor());
+				materialIssueDetail.setQuantityIssued(quantityIssued);
 				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
-					Double quantity = getSaveConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()),
-							Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor().toString()));
-					mifr.setQuantity(BigDecimal.valueOf(quantity));
+					BigDecimal quantity = getSaveConvertedQuantity(mifr.getQuantity(),
+							uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor());
+					mifr.setQuantity(quantity);
 					materialIssuedFromReceiptsIds.add(mifr.getId());
 					mifr.setStatus(false);
 				} 
@@ -701,15 +701,15 @@ public class MaterialIssueService extends DomainService {
 						if (materialIssueDetail.getUom() != null
 								&& materialIssueDetail.getUom().getCode() != null)
 						{
-						Double quantityIssued = getSearchConvertedQuantity(
-								Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
-								Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode())
-										.getConversionFactor().toString()));
-						materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
+						BigDecimal quantityIssued = getSearchConvertedQuantity(
+								materialIssueDetail.getQuantityIssued(),
+								uoms.get(materialIssueDetail.getUom().getCode())
+								.getConversionFactor());
+						materialIssueDetail.setQuantityIssued(quantityIssued);
 						for(MaterialIssuedFromReceipt mifr : materialIssuedFromReceipts.getPagedData()){
-						Double quantity =	getSearchConvertedQuantity(Double.valueOf(mifr.getQuantity().toString()), Double.valueOf(uoms.get(materialIssueDetail.getUom().getCode())
-									.getConversionFactor().toString()));
-						mifr.setQuantity(BigDecimal.valueOf(quantity));
+						BigDecimal quantity =	getSearchConvertedQuantity(mifr.getQuantity(), uoms.get(materialIssueDetail.getUom().getCode())
+								.getConversionFactor());
+						mifr.setQuantity(quantity);
 						}
 						}
 						materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts.getPagedData());

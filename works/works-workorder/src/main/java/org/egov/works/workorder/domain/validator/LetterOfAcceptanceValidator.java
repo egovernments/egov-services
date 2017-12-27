@@ -131,7 +131,7 @@ public class LetterOfAcceptanceValidator {
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate) {
         LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
         letterOfAcceptanceSearchContract.setDetailedEstimateNumberLike(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber());
-        
+        letterOfAcceptanceSearchContract.setTenantId(letterOfAcceptanceEstimate.getTenantId());
         List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract, letterOfAcceptanceRequest.getRequestInfo());
         
         for(LetterOfAcceptance acceptance : letterOfAcceptances) {

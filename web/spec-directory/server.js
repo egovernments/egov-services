@@ -107,13 +107,13 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
             //Adding custom specs for Address Block as per discussion on Friday (08-12-2017)
             if(key == "address"){
             	// console.log(properties[key].properties);
-            	getFieldsFromInnerObject(fields, header, properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []));
+            	getFieldsFromInnerObject(fields, header, properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []));
             }
             else{
 	        
 	            fields.push({
 	                "name": key,
-	                "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
+	                "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
 	                "label": "MdmsMetadata.masterData." + module + "." + master + "." + key,	//Changes (08-12-2017)
 	                "type": "singleValueList",
 	                "isRequired": (properties[key].required || (required && required.constructor == Array && required.indexOf(key) > -1) ? true : false),
@@ -138,7 +138,7 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
         } else {
             fields.push({
                 "name": key,
-                "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
+                "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
                 "label": "MdmsMetadata.masterData." + module + "." + master + "." + key,	//Changes (08-12-2017)
                 "pattern": properties[key].pattern || "",
                 "type": properties[key].enum ? "singleValueList" : properties[key].format && ["number", "integer", "double", "long", "float"].indexOf(properties[key].type) == -1 ? getType(properties[key].format) : getType(properties[key].type),
@@ -248,7 +248,7 @@ console.log(getHeaderStatus("swm", "CollectionType", "code"));
 	            		
 	            		var header = [];
 	            		var fields = [];
-	            		var spec = getFieldsFromInnerObject(fields, header, mainObj[moduleName][master].properties, moduleName, master, master, true, mainObj[moduleName][master].required || []);
+	            		var spec = getFieldsFromInnerObject(fields, header, mainObj[moduleName][master].properties, moduleName, master, "MdmsMetadata.masterData", true, mainObj[moduleName][master].required || []);
 
 	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].header = spec.header;
 	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].values = spec.fields;

@@ -383,6 +383,7 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     } else {
       Api.commonApiPost('/egov-mdms-create/v1/_update', {}, { MasterMetaData: MasterMetaData }, false, true)
         .then(function(res) {
+
           myTableInParent[self.state.index] = temp[0];
           self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
           self.props.setLoadingStatus('hide');
@@ -598,6 +599,14 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   };
 
   renderArrayField = item => {
+    console.log(this.state);
+    if(this.state.index === 0){
+      this.props.item.values.map((property, index) => {
+        property.isDisabled = property.isUnique;
+      });
+    }
+    console.log(this.props.item);
+
     switch (this.props.ui) {
       case 'google':
         return (

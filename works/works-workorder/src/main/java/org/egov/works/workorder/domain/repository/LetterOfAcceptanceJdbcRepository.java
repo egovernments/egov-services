@@ -167,7 +167,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike())) {
             addAnd(params);
             params.append(
-                    "loaestimate.letterofacceptance = loa.id and loaestimate.detailedestimate in (select id from egw_detailedestimate where lower(estimatenumber) like (:detailedestimatenumberlike))  and loaestimate.tenantId =:tenantId");
+                    "loaestimate.letterofacceptance = loa.id and loaestimate.detailedestimate in (select estimatenumber from egw_detailedestimate where lower(estimatenumber) like (:detailedestimatenumberlike))  and loaestimate.tenantId =:tenantId");
             paramValues.put("detailedestimatenumberlike",
                     '%' + letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike().toLowerCase() + '%');
         }
@@ -175,7 +175,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
                 && !letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().isEmpty()) {
             addAnd(params);
             params.append(
-                    "loaestimate.letterofacceptance = loa.id and loaestimate.detailedestimate in (select id from egw_detailedestimate where estimatenumber in (:detailedestimatenumber))  and loaestimate.tenantId =:tenantId and loaestimate.deleted = false");
+                    "loaestimate.letterofacceptance = loa.id and loaestimate.detailedestimate in (select estimatenumber from egw_detailedestimate where estimatenumber in (:detailedestimatenumber))  and loaestimate.tenantId =:tenantId and loaestimate.deleted = false");
             paramValues.put("detailedestimatenumber", letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers());
         }
 

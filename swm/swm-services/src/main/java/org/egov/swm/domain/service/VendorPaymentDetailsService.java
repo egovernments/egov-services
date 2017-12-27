@@ -29,6 +29,8 @@ public class VendorPaymentDetailsService {
 
     private final VendorContractService vendorContractService;
 
+    private final VendorPaymentDetailsService vendorPaymentDetailsService;
+
     private final EmployeeRepository employeeRepository;
 
     private final IdgenRepository idgenRepository;
@@ -38,12 +40,14 @@ public class VendorPaymentDetailsService {
     public VendorPaymentDetailsService(final VendorPaymentDetailsRepository vendorPaymentDetailsRepository,
             final VendorContractService vendorContractService, final EmployeeRepository employeeRepository,
             final IdgenRepository idgenRepository,
-            @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath) {
+            @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath,
+                                       VendorPaymentDetailsService vendorPaymentDetailsService) {
         this.vendorPaymentDetailsRepository = vendorPaymentDetailsRepository;
         this.vendorContractService = vendorContractService;
         this.employeeRepository = employeeRepository;
         this.idgenRepository = idgenRepository;
         this.idGenNameForPaymentNumberPath = idGenNameForPaymentNumberPath;
+        this.vendorPaymentDetailsService = vendorPaymentDetailsService;
     }
 
     public VendorPaymentDetailsRequest create(final VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
@@ -156,6 +160,19 @@ public class VendorPaymentDetailsService {
                 else
                     vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
             }
+
+            //validation for duplicate service periods
+            VendorPaymentDetailsSearch vendorPaymentDetailsSearch = new VendorPaymentDetailsSearch();
+            vendorPaymentDetailsSearch.setTenantId(vendorPaymentDetail.getTenantId());
+            vendorPaymentDetailsSearch.setFromDate(vendorPaymentDetail.getFromDate());
+            vendorPaymentDetailsSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
+            vendorPaymentDetailsSearch.setToDate(vendorPaymentDetail.getToDate());
+
+            Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsService.search(vendorPaymentDetailsSearch);
+
+            if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())
+                throw new CustomException("VendorContractNo",
+                        "Invoice period is overlapping with earlier records: " + vendorPaymentDetail.getVendorContract().getContractNo());
         }
 
     }

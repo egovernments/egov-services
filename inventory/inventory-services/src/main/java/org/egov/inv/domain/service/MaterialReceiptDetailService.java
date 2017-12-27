@@ -31,17 +31,17 @@ public class MaterialReceiptDetailService extends DomainService {
                 Uom uom = getUom(materialReceiptDetail.getTenantId(), materialReceiptDetail.getUom().getCode(), new RequestInfo());
 
                 if (null != materialReceiptDetail.getReceivedQty() && null != uom.getConversionFactor()) {
-                    Double receivedQuantity = getSearchConvertedQuantity(materialReceiptDetail.getReceivedQty().doubleValue(), uom.getConversionFactor().doubleValue());
-                    materialReceiptDetail.setReceivedQty(BigDecimal.valueOf(receivedQuantity));
+                	BigDecimal receivedQuantity = getSearchConvertedQuantity(materialReceiptDetail.getReceivedQty(), uom.getConversionFactor());
+                    materialReceiptDetail.setReceivedQty(receivedQuantity);
                 }
 
                 if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
-                    Double acceptedQuantity = getSearchConvertedQuantity(materialReceiptDetail.getAcceptedQty().doubleValue(), uom.getConversionFactor().doubleValue());
-                    materialReceiptDetail.setAcceptedQty(BigDecimal.valueOf(acceptedQuantity));
+                	BigDecimal acceptedQuantity = getSearchConvertedQuantity(materialReceiptDetail.getAcceptedQty(), uom.getConversionFactor());
+                    materialReceiptDetail.setAcceptedQty(acceptedQuantity);
                 }
                 if (null != materialReceiptDetail.getUnitRate() && null != uom.getConversionFactor()) {
-                    Double unitRate = getSearchConvertedRate((materialReceiptDetail.getUnitRate().doubleValue()), uom.getConversionFactor().doubleValue());
-                    materialReceiptDetail.setUnitRate(BigDecimal.valueOf(unitRate));
+                	BigDecimal unitRate = getSearchConvertedRate((materialReceiptDetail.getUnitRate()), uom.getConversionFactor());
+                    materialReceiptDetail.setUnitRate(unitRate);
                 }
                 MaterialReceiptAddInfoSearch materialReceiptAddInfoSearch = MaterialReceiptAddInfoSearch.builder()
                         .receiptDetailId(Arrays.asList(materialReceiptDetail.getId()))

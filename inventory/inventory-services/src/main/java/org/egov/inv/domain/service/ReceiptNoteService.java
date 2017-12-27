@@ -226,8 +226,8 @@ public class ReceiptNoteService extends DomainService {
                             Uom uom = getUom(tenantId, materialReceiptDetail.getUom().getCode(), new RequestInfo());
 
                             if (null != materialReceiptDetailAddnlInfo.getQuantity() && null != uom.getConversionFactor()) {
-                                Double convertedQuantity = getSaveConvertedQuantity( materialReceiptDetailAddnlInfo.getQuantity().doubleValue(), uom.getConversionFactor().doubleValue());
-                                materialReceiptDetailAddnlInfo.setQuantity(BigDecimal.valueOf(convertedQuantity));
+                            	BigDecimal convertedQuantity = getSaveConvertedQuantity( materialReceiptDetailAddnlInfo.getQuantity(), uom.getConversionFactor());
+                                materialReceiptDetailAddnlInfo.setQuantity(convertedQuantity);
                             }
 
                         }
@@ -241,13 +241,13 @@ public class ReceiptNoteService extends DomainService {
         materialReceiptDetail.setUom(uom);
 
         if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
-            Double convertedReceivedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getReceivedQty().doubleValue(), uom.getConversionFactor().doubleValue());
-            materialReceiptDetail.setReceivedQty(BigDecimal.valueOf(convertedReceivedQuantity));
+        	BigDecimal convertedReceivedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getReceivedQty(), uom.getConversionFactor());
+            materialReceiptDetail.setReceivedQty(convertedReceivedQuantity);
         }
 
         if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
-            Double convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty().doubleValue(), uom.getConversionFactor().doubleValue());
-            materialReceiptDetail.setAcceptedQty(BigDecimal.valueOf(convertedAcceptedQuantity));
+        	BigDecimal convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty(), uom.getConversionFactor());
+            materialReceiptDetail.setAcceptedQty(convertedAcceptedQuantity);
         }
     }
 
@@ -257,9 +257,9 @@ public class ReceiptNoteService extends DomainService {
         detail.setUom(uom);
 
         if (null != detail.getUnitRate() && null != uom.getConversionFactor()) {
-            Double convertedRate = getSaveConvertedRate(detail.getUnitRate().doubleValue(),
-                    uom.getConversionFactor().doubleValue());
-            detail.setUnitRate((BigDecimal.valueOf(convertedRate)));
+        	BigDecimal convertedRate = getSaveConvertedRate(detail.getUnitRate(),
+                    uom.getConversionFactor());
+            detail.setUnitRate(convertedRate);
         }
 
     }

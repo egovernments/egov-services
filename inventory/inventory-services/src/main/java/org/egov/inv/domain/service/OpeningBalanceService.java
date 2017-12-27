@@ -229,7 +229,8 @@ public class OpeningBalanceService extends DomainService {
 							if (detail.getReceivedQty().doubleValue() <= 0) {
 								errors.addDataError(ErrorCode.RCVED_QTY_GT_ZERO.getCode(),detail.getReceivedQty()+" at serial no."+ detailIndex);
 							}
-							if (detail.getUnitRate().doubleValue() <= 0) {
+							int res =detail.getUnitRate().compareTo(BigDecimal.ZERO);
+								if (res != 1) {
 								errors.addDataError(ErrorCode.UNIT_RATE_GT_ZERO.getCode(),detail.getUnitRate()+" at serial no."+ detailIndex);
 							}
 							if (isEmpty(detail.getUnitRate())) {
@@ -297,9 +298,9 @@ public class OpeningBalanceService extends DomainService {
 		detail.setUom(uom);
 
 		if (null != detail.getReceivedQty() && null != uom.getConversionFactor()) {
-			Double convertedReceivedQuantity = getSaveConvertedQuantity(detail.getReceivedQty().doubleValue(),
-					uom.getConversionFactor().doubleValue());
-			detail.setReceivedQty(BigDecimal.valueOf(convertedReceivedQuantity));
+			BigDecimal convertedReceivedQuantity = getSaveConvertedQuantity(detail.getReceivedQty(),
+					uom.getConversionFactor());
+			detail.setReceivedQty(convertedReceivedQuantity);
 		}
 
 	}
@@ -321,9 +322,9 @@ public class OpeningBalanceService extends DomainService {
         detail.setUom(uom);
 
 		if (null != detail.getUnitRate() && null != uom.getConversionFactor()) {
-			Double convertedRate = getSaveConvertedRate(detail.getUnitRate().doubleValue(),
-					uom.getConversionFactor().doubleValue());
-			detail.setUnitRate((BigDecimal.valueOf(convertedRate)));
+			BigDecimal convertedRate = getSaveConvertedRate(detail.getUnitRate(),
+					uom.getConversionFactor());
+			detail.setUnitRate(convertedRate);
 		}
 
 	}

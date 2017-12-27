@@ -259,19 +259,19 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                 materialReceiptDetail.setUom(uom);
 
                 if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
-                    Double convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty().doubleValue(), uom.getConversionFactor().doubleValue());
-                    materialReceiptDetail.setAcceptedQty(BigDecimal.valueOf(convertedAcceptedQuantity));
+                	BigDecimal convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty(), uom.getConversionFactor());
+                    materialReceiptDetail.setAcceptedQty(convertedAcceptedQuantity);
                 }
 
                 if (null != materialReceiptDetail.getReceivedQty() && null != uom.getConversionFactor()) {
-                    Double convertedReceivedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getReceivedQty().doubleValue(), uom.getConversionFactor().doubleValue());
-                    materialReceiptDetail.setReceivedQty(BigDecimal.valueOf(convertedReceivedQuantity));
+                	BigDecimal convertedReceivedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getReceivedQty(), uom.getConversionFactor());
+                    materialReceiptDetail.setReceivedQty(convertedReceivedQuantity);
                 }
 
                 if (null != materialReceiptDetail.getUnitRate() && null != uom.getConversionFactor()) {
-                    Double convertedRate = getSaveConvertedRate(materialReceiptDetail.getUnitRate().doubleValue(),
-                            uom.getConversionFactor().doubleValue());
-                    materialReceiptDetail.setUnitRate((BigDecimal.valueOf(convertedRate)));
+                	BigDecimal convertedRate = getSaveConvertedRate(materialReceiptDetail.getUnitRate(),
+                            uom.getConversionFactor());
+                    materialReceiptDetail.setUnitRate(convertedRate);
                 }
             }
         }

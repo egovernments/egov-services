@@ -1,6 +1,7 @@
 package org.egov.common;
 
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -97,20 +98,20 @@ public class DomainService {
     
  
 
-    public Double getSaveConvertedQuantity(Double quantity, Double conversionFactor) {
-        return quantity * conversionFactor;
+    public BigDecimal getSaveConvertedQuantity(BigDecimal quantity, BigDecimal conversionFactor) {
+        return quantity.multiply(conversionFactor);
     }
 
-    public Double getSearchConvertedQuantity(Double quantity, Double conversionFactor) {
-        return quantity / conversionFactor;
+    public BigDecimal getSearchConvertedQuantity(BigDecimal quantity, BigDecimal conversionFactor) {
+        return quantity.divide(conversionFactor);
     }
     
-    public Double getSaveConvertedRate(Double rate, Double conversionFactor) {
-        return rate / conversionFactor;
+    public BigDecimal getSaveConvertedRate(BigDecimal rate, BigDecimal conversionFactor) {
+        return rate.divide(conversionFactor);
     }
 
-    public Double getSearchConvertedRate(Double rate, Double conversionFactor) {
-        return rate * conversionFactor;
+    public BigDecimal getSearchConvertedRate(BigDecimal rate, BigDecimal conversionFactor) {
+        return rate.multiply(conversionFactor);
     }
     
     public  String 	toDateStr(Long epoch)

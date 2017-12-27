@@ -222,6 +222,16 @@ definitions:
       - IN_PROGRESS
       - COMPLETED
 
+  NoticeStatus:
+    type: string
+    enum:
+      - CREATED
+      - REJECTED
+      - APPROVED
+      - CANCELLED
+      - RESUBMITTED
+      - CHECKED
+
       
 ##### MASTERS #######
       

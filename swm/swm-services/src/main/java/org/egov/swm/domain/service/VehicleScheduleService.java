@@ -1,6 +1,9 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -83,6 +86,9 @@ public class VehicleScheduleService {
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicleList;
 
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
         for (final VehicleSchedule vehicleSchedule : vehicleScheduleRequest.getVehicleSchedules()) {
 
             if (vehicleSchedule.getVehicle() != null && (vehicleSchedule.getVehicle().getRegNumber() == null
@@ -141,7 +147,8 @@ public class VehicleScheduleService {
             if (vehicleSchedule.getScheduledFrom() != null && vehicleSchedule.getScheduledTo() != null)
                 if (new Date(vehicleSchedule.getScheduledTo()).before(new Date(vehicleSchedule.getScheduledFrom())))
                     throw new CustomException("ScheduledToDate ",
-                            "Given Scheduled To Date is invalid: " + new Date(vehicleSchedule.getScheduledTo()));
+                            "Schedule can not be created for past dates. Please select Today's or Future date: " +
+                                    dateFormat.format(new Date(vehicleSchedule.getScheduledTo())));
         }
     }
 

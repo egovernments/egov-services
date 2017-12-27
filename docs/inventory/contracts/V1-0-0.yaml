@@ -3029,7 +3029,7 @@ definitions:
           format: BigDecimal
           description: |
             order quantity of the PurchaseMaterial
-       usedQuantity:
+        usedQuantity:
           type: number
           format: BigDecimal
           description: |
@@ -3341,7 +3341,7 @@ definitions:
       required:
         - id
         - userReceivedQty
-				- userAcceptedQty
+        - userAcceptedQty
         - tenantId
 
     MaterialReceiptDetailAddnlinfo:

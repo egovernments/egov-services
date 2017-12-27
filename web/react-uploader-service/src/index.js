@@ -4,7 +4,7 @@ import "./styles/bootstrap-grid.css";
 import App from "./containers/App";
 import store from "./store";
 import { Provider } from "react-redux";
-import { HashRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import registerServiceWorker from "./registerServiceWorker";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 

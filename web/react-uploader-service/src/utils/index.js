@@ -32,6 +32,14 @@ export const prepareFormData = params => {
   return formData;
 };
 
+export const getDateFromEpoch = epoch => {
+  const dateObj = new Date(epoch);
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth();
+  const day = dateObj.getDay();
+  return day + "-" + month + "-" + year;
+};
+
 export const getFileDownloadLink = (tenantId, fileStoreId) => {
   const requestParams = { tenantId, fileStoreId };
   let downloadLink = getRequestUrl(FILE_DOWNLOAD_ENDPOINT, requestParams);

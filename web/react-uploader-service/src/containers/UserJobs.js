@@ -27,10 +27,77 @@ class UserJobsContainer extends Component {
 
   // ordering of row in a schema is important to preserve the ordering in the table
   tableSchema = [
-    { key: "id", label: "Job ID", fieldType: "label" },
-    { key: "moduleName", label: "Module", fieldType: "label" },
-    { key: "status", label: "Status", fieldType: "label" },
-    { key: "download", label: "Download", fieldType: "hyperlink" }
+    {
+      key: "id",
+      label: "Job ID",
+      fieldType: "label",
+      style: {
+        width: "180px",
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    },
+    {
+      key: "moduleName",
+      label: "Module",
+      fieldType: "label",
+      style: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    },
+    {
+      key: "startTime",
+      label: "Created Date",
+      fieldType: "time",
+      style: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    },
+    {
+      key: "successfulRows",
+      label: "Successful Rows",
+      fieldType: "label",
+      style: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    },
+    {
+      key: "failedRows",
+      label: "Failed Rows",
+      fieldType: "label",
+      style: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    },
+    {
+      key: "status",
+      label: "Status",
+      fieldType: "label",
+      style: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    },
+    {
+      key: "download",
+      label: "Download",
+      fieldType: "hyperlink",
+      style: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    }
   ];
 
   componentDidMount() {

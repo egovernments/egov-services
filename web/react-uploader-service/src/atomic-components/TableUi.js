@@ -8,6 +8,7 @@ import {
   TableRow,
   TableRowColumn
 } from "material-ui/Table";
+import { getDateFromEpoch } from "../utils";
 import FlatButton from "material-ui/FlatButton";
 
 const TableUi = ({ tableSchema, tableBody, styles }) => {
@@ -17,6 +18,8 @@ const TableUi = ({ tableSchema, tableBody, styles }) => {
     switch (fieldType) {
       case "label":
         return field;
+      case "time":
+        return getDateFromEpoch(field);
       case "hyperlink":
         const { href, label } = field;
         const buttonProps = { label, href };
@@ -38,7 +41,9 @@ const TableUi = ({ tableSchema, tableBody, styles }) => {
         <TableRow>
           {tableSchema.map((row, index) => {
             return (
-              <TableHeaderColumn key={index}>{row.label}</TableHeaderColumn>
+              <TableHeaderColumn style={row.style} key={index}>
+                {row.label}
+              </TableHeaderColumn>
             );
           })}
         </TableRow>
@@ -55,8 +60,9 @@ const TableUi = ({ tableSchema, tableBody, styles }) => {
               {tableSchema.map(schema => {
                 const fieldKey = schema.key;
                 const fieldType = schema.fieldType;
+                const style = schema.style;
                 return (
-                  <TableRowColumn key={index}>
+                  <TableRowColumn style={style} key={index}>
                     {renderTableCell(fieldType, row, fieldKey)}
                   </TableRowColumn>
                 );

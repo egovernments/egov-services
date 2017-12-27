@@ -13,8 +13,12 @@ const transformUserJobs = userJobs => {
     const id = userJob.code;
     const status = userJob.status;
     const moduleName = userJob.moduleName;
+    const successfulRows = userJob.successfulRows;
+    const failedRows = userJob.failedRows;
     const startTime = userJob.startTime;
     const endTime = userJob.endTime;
+    const requesterName = userJob.requesterName;
+    const requestFileName = userJob.requestFileName;
     const download = { label: "Download" };
 
     if (status === "completed") {
@@ -29,6 +33,10 @@ const transformUserJobs = userJobs => {
       status,
       download,
       startTime,
+      requesterName,
+      requestFileName,
+      successfulRows,
+      failedRows,
       endTime,
       softDelete: false
     };
@@ -64,6 +72,13 @@ const filterUserJobs = (filter, userJobs) => {
             break;
           case "codes":
             shouldInclude &= filterValue.indexOf(userJob.id) !== -1;
+            break;
+          case "requesterFileNames":
+            shouldInclude &=
+              filterValue.indexOf(userJob.requesterFileName) !== -1;
+            break;
+          case "requesterNames":
+            shouldInclude &= filterValue.indexOf(userJob.requesterName) !== -1;
             break;
           default:
             break;

@@ -54,6 +54,8 @@ export const Api = () => {
   const fetchUserJobs = async (
     codes = [],
     statuses = [],
+    requesterNames = [],
+    fileNames = [],
     startDate,
     endDate
   ) => {
@@ -62,6 +64,8 @@ export const Api = () => {
       tenantId,
       codes,
       statuses,
+      requesterNames,
+      fileNames,
       startDate,
       endDate
     );
@@ -76,11 +80,17 @@ export const Api = () => {
   };
 
   // upload job request
-  const createJob = async (requestFilePath, moduleName, defName) => {
+  const createJob = async (
+    requestFilePath,
+    requestFileName,
+    moduleName,
+    defName
+  ) => {
     const requestBody = prepareRequestBody.jobCreateRequest(
       authToken,
       tenantId,
       requestFilePath,
+      requestFileName,
       moduleName,
       defName
     );

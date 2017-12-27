@@ -18,6 +18,7 @@ export const jobCreateRequest = (
   authToken,
   tenantId,
   requestFilePath,
+  requestFileName,
   moduleName,
   defName
 ) => {
@@ -28,6 +29,7 @@ export const jobCreateRequest = (
       moduleName,
       defName,
       requestFilePath,
+      requestFileName,
       status: "new"
     }
   ];
@@ -41,6 +43,8 @@ export const jobSearchRequest = (
   tenantId,
   codes = [],
   statuses = [],
+  requesterNames = [],
+  requestFileNames = [],
   startDate,
   endDate
 ) => {
@@ -50,6 +54,8 @@ export const jobSearchRequest = (
     tenantId,
     codes,
     statuses,
+    requesterNames,
+    requestFileNames,
     startDate: startDate ? new Date(startDate).getTime() : startDate,
     endDate: endDate ? new Date(endDate).getTime() : endDate
   };

@@ -1,5 +1,8 @@
 package org.egov.swm.domain.model;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -35,6 +38,9 @@ public class CollectionPointDetails {
 
     @NotNull
     @JsonProperty("garbageEstimate")
+    @Digits(fraction = 2, integer = 3, message = "garbageEstimate shall be with 2 decimal points")
+    @DecimalMin(value = "1", message = "garbageEstimate shall be between 1 and 100 Tons")
+    @DecimalMax(value = "100", message = "garbageEstimate shall be between 1 and 100 Tons")
     private Double garbageEstimate = null;
 
     @Length(min = 0, max = 300)

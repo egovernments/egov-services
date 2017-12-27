@@ -21,12 +21,45 @@ class LeaveSummaryView extends React.Component {
 
         var _this = this;
 
-        var leaveStatus = this.state.leaveStatuses.forEach(function (item) {
-            if (item.code === "APPROVED") {
-                return item.id;
+        commonApiPost("hr-employee", "employees", "_search", {
+            code: getUrlVars()["code"],
+            tenantId,
+            pageSize: 500
+        }, function (err, res) {
+            if (res && res.Employee) {
+                res.Employee.forEach(function (item, index, theArray) {
+                    theArray[index] = {
+                        "id": item.id,
+                        "name": item.code + " - " + item.name
+                    };
+                });
+
+                _this.setState({
+                    ..._this.state,
+                    employeeList: res.Employee
+                });
+
             }
         });
 
+
+        getDropdown("leaveStatus", function (res) {
+            _this.setState({
+                ..._this.state,
+                leaveStatuses: res
+            });
+
+        });
+
+        var leaveStatuses = this.state.leaveStatuses;
+
+        var leaveStatus ;
+
+        for(var i=0;i<leaveStatuses.length;i++){
+            if (leaveStatuses[i].code === "APPROVED") {
+                leaveStatus = leaveStatuses[i].id;
+            }
+        }
 
 
 
@@ -66,39 +99,10 @@ class LeaveSummaryView extends React.Component {
 
 
 
-        commonApiPost("hr-employee", "employees", "_search", {
-            code: getUrlVars()["code"],
-            tenantId,
-            pageSize: 500
-        }, function (err, res) {
-            if (res && res.Employee) {
-                res.Employee.forEach(function (item, index, theArray) {
-                    theArray[index] = {
-                        "id": item.id,
-                        "name": item.code + " - " + item.name
-                    };
-                });
-
-                _this.setState({
-                    ..._this.state,
-                    employeeList: res.Employee
-                });
-
-            }
-        });
-
-
-        getDropdown("leaveStatus", function (res) {
-            _this.setState({
-                ..._this.state,
-                leaveStatuses: res
-            });
-
-        });
-
-
-
     }
+
+
+
 
     componentDidUpdate(prevProps, prevState) {
         if (flag === 1) {

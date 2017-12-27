@@ -15,13 +15,17 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class TrackMilestoneSearchContract {
+    private String tenantId;
     private List<String> ids;
     private List<String> statuses;
     private List<String> workOrderNumbers;
     private List<String> loaNumbers;
     private List<String> detailedEstimateNumbers;
     private List<String> workIdentificationNumbers;
-    private String department;
+    private List<String> departments;
     private List<String> contractorNames;
     private List<String> contractorCodes;
+    private Integer pageSize;
+    private Integer pageNumber;
+    private String sortBy;
 }

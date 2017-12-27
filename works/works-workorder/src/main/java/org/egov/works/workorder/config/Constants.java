@@ -16,6 +16,13 @@ public class Constants {
     public static final String CANCEL = "Cancel";
     public static final String SAVE = "Save";
 
+    public static final String STATUS_MILESTONE_APPROVED = "APPROVED";
+    public static final String STATUS_MILESTONE_CANCELLED = "CANCELLED";
+
+    public static final String STATUS_TRACKMILESTONE_NOT_YET_STARTED = "NOT_YET_STARTED";
+    public static final String STATUS_TRACKMILESTONE_IN_PROGRESS = "IN_PROGRESS";
+    public static final String STATUS_TRACKMILESTONE_COMPLETED = "COMPLETED";
+
     public static final String KEY_FUTUREDATE_LOADATE = "INVALID_LOADATE";
     public static final String MESSAGE_FUTUREDATE_LOADATE = "LOA Date cannot be future date";
 
@@ -138,6 +145,34 @@ public class Constants {
 
     public static final String KEY_WORKS_LOA_DE_EXISTS = "works.loa.de.created";
     public static final String MESSAGE_WORKS_LOA_DE_EXISTS = "Letter of Acceptance already create for the given Detailed Estimate";
-
     
+    public static final String KEY_TRACKMILESTONE_MILESTONEID_IS_MANDATORY= "WORKS.TRACKMILESTONE.MILESTONEID.IS.MANDATORY";
+    public static final String MESSAGE_TRACKMILESTONE_MILESTONEID_IS_MANDATORY = "Milestone is mandatory";
+
+    public static final String KEY_TRACKMILESTONE_MILESTONEID_INVALID= "WORKS.TRACKMILESTONE.MILESTONEID.INVALID";
+    public static final String MESSAGE_TRACKMILESTONE_MILESTONEID_INVALID = "Given Milestone is invalid:";
+
+    public static final String KEY_TRACKMILESTONE_COMPLETED= "WORKS.TRACKMILESTONE.COMPLETED";
+    public static final String MESSAGE_TRACKMILESTONE_COMPLETED = "This milestone is not completed hence total percentage should be 100";
+
+    public static final String KEY_TRACKMILESTONE_NOT_STARTED= "WORKS.TRACKMILESTONE.NOT.STARTED";
+    public static final String MESSAGE_TRACKMILESTONE_NOT_STARTED = "This milestone is not yet started hence total percentage cannot be more than zero";
+
+    public static final String KEY_TRACKMILESTONE_IN_PROGRESS= "WORKS.TRACKMILESTONE.IN.PROGRESS";
+    public static final String MESSAGE_TRACKMILESTONE_IN_PROGRESS = "This milestone is in progress hence total percentage should be more than zero and less than 100";
+
+    public static final String KEY_TRACKMILESTONE_TENANTID_IS_MANDATORY= "WORKS.TRACKMILESTONE.TENANTID.IS.MANDATORY";
+    public static final String MESSAGE_TRACKMILESTONE_TENANTID_IS_MANDATORY = "Track Milestone tenantid is mandatory";
+
+    public static final String KEY_TRACKMILESTONE_ACTIVITY_ASD_AED_CANNOTBE_FUTURE= "WORKS.TRACKMILESTONE.ACTIVITY.ASD.AED.CANNOTBE.FUTURE";
+    public static final String MESSAGE_TRACKMILESTONE_ACTIVITY_ASD_AED_CANNOTBE_FUTURE = "Track Milestone actual start or end date cannot be future date";
+
+    public static final String KEY_TRACKMILESTONE_ACTIVITY_AED_CANNOT_BEFORE_ASD= "WORKS.TRACKMILESTONE.ACTIVITY.AED.CANNOT.BEFORE.ASD";
+    public static final String MESSAGE_TRACKMILESTONE_ACTIVITY_AED_CANNOT_BEFORE_ASD = "Track Milestone actual end date cannot be before actual start date";
+
+    public static final String KEY_TRACKMILESTONE_MILESTONEACTIVITYID_IS_MANDATORY= "WORKS.TRACKMILESTONE.MILESTONEACTIVITYID.IS.MANDATORY";
+    public static final String MESSAGE_TRACKMILESTONE_MILESTONEACTIVITYID_IS_MANDATORY = "Milestone Activity is mandatory";
+
+    public static final String KEY_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID= "WORKS.TRACKMILESTONE.MILESTONEACTIVITYID.INVALID";
+    public static final String MESSAGE_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID = "Given Milestone Activity is invalid:";
 }

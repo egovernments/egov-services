@@ -47,7 +47,7 @@ public class MilestonesApiController implements MilestonesApi {
          @Size(max=50)@ApiParam(value = "Comma separated list of Names of the contractor to which Milestone belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
          @Size(max=50)@ApiParam(value = "Comma separated list of codes of the contractor to which Milestone belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes) {
         MilestoneSearchContract milestoneSearchContract = MilestoneSearchContract.builder()
-                .tenantId(tenantId).ids(ids).statuses(statuses).workOrderNumbers(workOrderNumbers).loaNumbers(loaNumbers).detailedEstimateNumbers(detailedEstimateNumbers)
+                .pageSize(pageSize).pageNumber(pageNumber).tenantId(tenantId).ids(ids).statuses(statuses).workOrderNumbers(workOrderNumbers).loaNumbers(loaNumbers).detailedEstimateNumbers(detailedEstimateNumbers)
                 .workIdentificationNumbers(workIdentificationNumbers).departments(departments).contractorNames(contractorNames).contractorCodes(contractorCodes)
                 .pageNumber(pageNumber).pageSize(pageSize).build();
         MilestoneResponse milestoneResponse = milestoneService.search(milestoneSearchContract, requestInfo);

@@ -960,7 +960,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
-        - name: department
+        - name: departments
           in: query
           type: array
           items:

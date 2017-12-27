@@ -125,8 +125,6 @@ public class TrackMilestoneActivity   {
   @ApiModelProperty(required = true, value = "Milestone Activity reference")
   @NotNull
 
-  @Valid
-
   public MilestoneActivity getMilestoneActivity() {
     return milestoneActivity;
   }
@@ -229,8 +227,6 @@ public class TrackMilestoneActivity   {
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
-  @Valid
 
   public WorksStatus getStatus() {
     return status;

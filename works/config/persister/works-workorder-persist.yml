@@ -632,7 +632,7 @@ serviceMaps:
        - jsonPath: $.milestones.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egw_milestoneactivity(id, tenantid, milestone, schedulestartdate, scheduleenddate, percentage, description, stageordernumber, deleted, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET milestone=EXCLUDED.milestone, schedulestartdate=EXCLUDED.schedulestartdate, scheduleenddate=EXCLUDED.scheduleenddate, percentage=EXCLUDED.percentage, description=EXCLUDED.description, stageordernumber=EXCLUDED.stageordernumber, deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+    - query: INSERT INTO egw_milestoneactivity(id, tenantid, milestone, schedulestartdate, scheduleenddate, percentage, description, stageordernumber, deleted, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET schedulestartdate=EXCLUDED.schedulestartdate, scheduleenddate=EXCLUDED.scheduleenddate, percentage=EXCLUDED.percentage, description=EXCLUDED.description, stageordernumber=EXCLUDED.stageordernumber, deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
 
       basePath: $.milestones.*.milestoneActivities.*
       jsonMaps:
@@ -665,4 +665,74 @@ serviceMaps:
        - jsonPath: $.milestones.*.milestoneActivities.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.milestones.*.milestoneActivities.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+ - version: 1.0
+   name: Milestone
+   description: Persists Track Milestone in egw_trackmilestone table
+   fromTopic: works-trackmilestone-saveorupdate-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_trackmilestone(id, tenantid, milestone, status, totalpercentage, projectcompleted, deleted, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET milestone=EXCLUDED.milestone, status= EXCLUDED.status, totalpercentage=EXCLUDED.totalpercentage, projectcompleted=EXCLUDED.projectcompleted, deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.trackMilestones.*
+      jsonMaps:
+
+       - jsonPath: $.trackMilestones.*.id
+
+       - jsonPath: $.trackMilestones.*.tenantId
+
+       - jsonPath: $.trackMilestones.*.milestone.id
+
+       - jsonPath: $.trackMilestones.*.status.code
+
+       - jsonPath: $.trackMilestones.*.totalPercentage
+
+       - jsonPath: $.trackMilestones.*.projectCompleted
+
+       - jsonPath: $.trackMilestones.*.deleted
+
+       - jsonPath: $.trackMilestones.*.auditDetails.createdBy
+
+       - jsonPath: $.trackMilestones.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.trackMilestones.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.trackMilestones.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_trackmilestoneactivity(id, tenantid, trackmilestone, milestoneactivity, remarks, percentage, actualstartdate, actualenddate, status, deleted, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET milestoneactivity=EXCLUDED.milestoneactivity, remarks=EXCLUDED.remarks, percentage=EXCLUDED.percentage, actualstartdate=EXCLUDED.actualstartdate, actualenddate=EXCLUDED.actualenddate, status=EXCLUDED.status, deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.trackMilestones.*.trackMilestoneActivities.*
+      jsonMaps:
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.id
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.tenantId
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.trackMilestone
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.milestoneActivity.id
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.remarks
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.percentage
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.actualStartDate
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.actualEndDate
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.status.code
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.deleted
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.auditDetails.createdBy
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.auditDetails.lastModifiedTime
          dbType: LONG

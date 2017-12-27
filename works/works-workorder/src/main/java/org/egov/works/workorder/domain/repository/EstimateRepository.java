@@ -49,7 +49,9 @@ public class EstimateRepository {
 
         String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
         String departments = String.join(",", departmentCodes);
-        return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class, tenantId, departments, status).getDetailedEstimates();
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+        return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfoWrapper, DetailedEstimateResponse.class, tenantId, departments, status).getDetailedEstimates();
     }
 
 	public List<DetailedEstimate> searchDetailedEstimatesByProjectCode(final List<String> winCodes, final String tenantId,final RequestInfo requestInfo) {

@@ -78,6 +78,7 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript" src="resources/javascript/jquery.min.js"></script>
     <script type="text/javascript" src="resources/javascript/bootstrap.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/jsonpath.js"></script>
 
     <script type="text/javascript" src="resources/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
 
@@ -1836,6 +1837,7 @@
                                                     <div class="col-sm-6">
                                                       <input type="text" name="gstin" id="gstin">
                                                   </div>
+                                                </div>
                                               </div>
                                             </div>
 
@@ -2285,59 +2287,6 @@
                                       </div>
                                     </div>
 
-                                    <div class="form-section" id="historyDetails">
-                                      <h3 class="categoryType">History Details </h3>
-                                      <div class="form-section-inner">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="row">
-                                                    <div class="col-sm-6 label-text">
-                                                        <label for="firstAllotment">Month/Year of First Allotment to the Current Lessee</label>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" name="firstAllotment" id="firstAllotment" placeholder="mm/yyyy">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                      </div>
-                                    </div>
-
-                                    <div class="form-section" id="subesquentrenewals">
-                                      <h3 class="categoryType">Subsequent Renewals </h3>
-                                      <div class="form-section-inner">
-                                        <div class="row">
-                                          <table class="table table-bordered" id="subesquentrenewalsTable">
-                                            <thead>
-                                              <th><label style="color:#fff">From<span> *</span></label></th>
-                                              <th><label style="color:#fff">To<span> *</span></label></th>
-                                              <th><label style="color:#fff">Number of Years<span> *</span></label></th>
-                                              <th><label style="color:#fff">Monthly Rent (Rs.)<span> *</span></label></th>
-                                              <th>Action</th>
-                                            </thead>
-                                            <tbody>
-                                              <tr>
-                                                <td><input type="text" class="datepicker srFromDate" id="subSeqRenewals[0].fromDate" name="subSeqRenewals[0].fromDate" value="" required></td>
-                                                <td><input type="text" class="datepicker srToDate" id="subSeqRenewals[0].toDate" name="subSeqRenewals[0].toDate" value="" required></td>
-                                                <td><input type="text"  class="srYears" name="subSeqRenewals[0].years" id="subSeqRenewals[0].years" value="" disabled></td>
-                                                <td><input type="text" class="srRent" name="subSeqRenewals[0].rent" id="subSeqRenewals[0].rent" value="" required></td>
-                                                <td><p style="cursor:pointer"><span class="glyphicon glyphicon-trash subsequentRenewalsDelete"></span></p></td>
-                                              </tr>
-                                            </tbody>
-                                            <tfoot>
-                                              <tr>
-                                                <td colspan="2" class="text-right">Total Number of Years</td>
-                                                <td id="sumOfYears"></td>
-                                                <td></td>
-                                                <td></td>
-                                              </tr>
-                                            </tfoot>
-                                          </table>
-                                          <button type="button" class="btn btn-primary pull-right" name="button" id="subsequentRenewalsAdd">Add</button>
-                                        </div>
-                                      </div>
-                                    </div>
-
                                     <div class="form-section" id="agreementDetailsBlockTemplateThree">
                                       <h3 class="categoryType">Agreement Details </h3>
                                       <div class="form-section-inner">
@@ -2387,10 +2336,10 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="caseNo">Case No  </label>
+                                                          <label for="caseNo">Court Case Number </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <input type="text" name="caseNo" id="caseNo"  class="disabled">
+                                                          <input type="text" name="caseNo" id="caseNo" class="disabled" placeholder="Sq.mtrs">
                                                       </div>
                                                   </div>
                                               </div>
@@ -2651,8 +2600,7 @@
                                             </div>
                                           </div>
                                           <div class="row">
-
-                                            <div class="col-sm-6">
+                                              <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
                                                           <label for="timePeriod">Time Period  </label>
@@ -2673,6 +2621,7 @@
                                                     <div class="col-sm-6">
                                                       <input type="text" name="gstin" id="gstin">
                                                   </div>
+                                                </div>
                                               </div>
                                           </div>
                                           <div class="row">
@@ -2703,6 +2652,62 @@
                                           <!-- /Row 15 -->
                                       </div>
                                     </div>
+
+                                    <div class="form-section" id="historyDetails">
+                                      <h3 class="categoryType">History Details </h3>
+                                      <div class="form-section-inner">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="firstAllotment">Month/Year of First Allotment to the Current Lessee</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="text" name="firstAllotment" id="firstAllotment" placeholder="mm/yyyy">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div class="form-section" id="subesquentrenewals">
+                                      <h3 class="categoryType">Subsequent Renewals </h3>
+                                      <div class="form-section-inner">
+                                        <div class="row">
+                                          <table class="table table-bordered" id="subesquentrenewalsTable">
+                                            <thead>
+                                              <th><label style="color:#fff">From<span> *</span></label></th>
+                                              <th><label style="color:#fff">To<span> *</span></label></th>
+                                              <th><label style="color:#fff">Number of Years<span> *</span></label></th>
+                                              <th><label style="color:#fff">Monthly Rent (Rs.)<span> *</span></label></th>
+                                              <th>Action</th>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                <td><input type="text" class="datepicker srFromDate" id="subSeqRenewals[0].fromDate" name="subSeqRenewals[0].fromDate" value="" required></td>
+                                                <td><input type="text" class="datepicker srToDate" id="subSeqRenewals[0].toDate" name="subSeqRenewals[0].toDate" value="" required></td>
+                                                <td><input type="text"  class="srYears" name="subSeqRenewals[0].years" id="subSeqRenewals[0].years" value="" disabled></td>
+                                                <td>
+                                                  <input type="text" class="srRent" name="subSeqRenewals[0].rent" id="subSeqRenewals[0].rent" value="" required>
+                                                </td>
+                                                <td><p style="cursor:pointer"><span class="glyphicon glyphicon-trash subsequentRenewalsDelete"></span></p></td>
+                                              </tr>
+                                            </tbody>
+                                            <tfoot>
+                                              <tr>
+                                                <td colspan="2" class="text-right">Total Number of Years</td>
+                                                <td id="sumOfYears"></td>
+                                                <td></td>
+                                                <td></td>
+                                              </tr>
+                                            </tfoot>
+                                          </table>
+                                          <button type="button" class="btn btn-primary pull-right" name="button" id="subsequentRenewalsAdd">Add</button>
+                                        </div>
+                                      </div>
+                                    </div>
+
                                     <!-- /Argeement Details -->
 
                                     <!-- Work flow details -->

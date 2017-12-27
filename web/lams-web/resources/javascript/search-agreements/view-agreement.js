@@ -169,7 +169,7 @@ $(document).ready(function() {
     function printNotice(noticeData) {
         var commencementDate=noticeData.commencementDate;
         var expiryDate= noticeData.expiryDate;
-        var rentPayableDate = noticeData.rentPayableDate;
+        // var rentPayableDate = noticeData.rentPayableDate;
 
         var doc = new jsPDF();
         doc.setFontType("bold");
@@ -181,15 +181,15 @@ $(document).ready(function() {
         doc.line(15, 38, 195, 38);
         doc.text(15, 47, 'Lease details: ');
         doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
-        doc.text(15, 57, 'Lease Name: ' + noticeData.allotteeName);
-        doc.text(110, 57, 'Asset No: ' + noticeData.assetNo);
-        doc.text(15, 67, (noticeData.allotteeMobileNumber ? noticeData.allotteeMobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allotteeAddress ? noticeData.allotteeAddress + ", " : "") + tenantId.split(".")[1] + ".");
+        doc.text(15, 57, 'Lease Name: ' + noticeData.allottee.name);
+        doc.text(110, 57, 'Asset No: ' + noticeData.asset.code);
+        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress + ", " : "") + tenantId.split(".")[1] + ".");
 
 
         doc.setFontType("normal");
         doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be ' ));
         doc.setFontType("bold");
-        doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.agreementPeriod * 12 + ' '));
+        doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.timePeriod * 12 + ' '));
         doc.setFontType("normal");
         doc.text(93, 77, doc.splitTextToSize('months commencing from'));
         doc.setFontType("bold");
@@ -202,22 +202,22 @@ $(document).ready(function() {
         doc.text(104, 83, doc.splitTextToSize('(dd/mm/yyyy).', (210 - 15 - 15)));
         doc.text(15, 91, doc.splitTextToSize('2.    The property leased is shop No'));
         doc.setFontType("bold");
-        doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.assetNo + ' '));
+        doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.asset.code + ' '));
         doc.setFontType("normal");
-        doc.text(101, 91, doc.splitTextToSize('and shall be leased for a sum of '));
+        doc.text(112, 91, doc.splitTextToSize('and shall be leased for a sum of '));
         doc.setFontType("bold");
-        doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- (' + noticeData.rentInWord + ')'));
+        doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- '));
         doc.setFontType("normal");
         doc.text(111, 97, doc.splitTextToSize('per month exclusive of the payment'));
         doc.text(15, 103, doc.splitTextToSize('of electricity and other charges.', (210 - 15 - 15)));
         doc.text(15, 112, doc.splitTextToSize('3.   The lessee has paid a sum of '));
         doc.setFontType("bold");
-        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- (' + noticeData.securityDepositInWord + ')'));
+        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- '));
         doc.setFontType("normal");
         doc.text(15, 118, doc.splitTextToSize('as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
         doc.text(15, 143, doc.splitTextToSize('4.   The rent for every month shall be payable on or before'));
         doc.setFontType("bold");
-        doc.text(143, 143, doc.splitTextToSize(' ' + rentPayableDate + ' '));
+        doc.text(143, 143, doc.splitTextToSize(' '));
         doc.setFontType("normal");
         doc.text(169, 143, doc.splitTextToSize('of the'));
         doc.text(15, 149, doc.splitTextToSize('succeeding month.', (210 - 15 - 15)));
@@ -242,9 +242,6 @@ $(document).ready(function() {
         doc.save('Notice-' + noticeData.agreementNumber + '.pdf');
         var blob = doc.output('blob');
         createFileStore(noticeData, blob).then(createNotice, errorHandler);
-        // setTimeout(function () {
-        //   open(location, '_self').close();
-        // }, 5000);
     }
 
     function setFonttype(doc, text){

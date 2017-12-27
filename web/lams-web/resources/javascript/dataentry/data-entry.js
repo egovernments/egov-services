@@ -67,37 +67,30 @@ var index=1;
 
 $(document).ready(function() {
 
+  for(var i=0;i<25;i++){
+    $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
+  }
+
   basedOnType();
+
+  onLoadAsset();
 
   // console.log(getUrlVars()["agreementNumber"]);
   if(getUrlVars()["agreementNumber"]){
     //modify - autopopulate the fields
-    $.ajax({
-        url: baseUrl + "/lams-services/agreements/_search?tenantId=" + tenantId + "&agreementNumber=" +getUrlVars()["agreementNumber"],
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify({
-            RequestInfo: requestInfo,
-        }),
-        async: false,
-        headers: {
-            'auth-token': authToken
-        },
-        contentType: 'application/json',
-        success:function(response){
-            if(response.Agreements[0].source === 'DATA_ENTRY' ){
-              let modifyAgreements = response.Agreements[0];
-              console.log(modifyAgreements);
-              $("#createAgreementForm :input, #createAgreementForm select, , #createAgreementForm textarea").each(function(index, elm){
-                console.log($(this).attr('name'));
-              });
-            }else{
-              alert('This agreement number is not data entry screen.')
-            }
-        },
-        error:function(jqXHR){
-          console.log(jqXHR.responseText);
-        }
+    commonApiPost('lams-services/agreements/_search', '','',{tenantId:tenantId,agreementNumber:getUrlVars()["agreementNumber"]}).then(function(response){
+      if(response.Agreements[0].source === 'DATA_ENTRY' ){
+        let modifyAgreements = response.Agreements[0];
+        // console.log(modifyAgreements);
+        // #createAgreementForm select, #createAgreementForm textarea
+        $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){
+          let value = JSONPath({json: modifyAgreements, path: `$.${$(this).attr('name')}`});
+          console.log($(this).attr('name'));
+          $(this).val(value[0] && value[0].toString())
+        });
+      }else{
+        alert('This agreement number is not data entry screen.')
+      }
     });
   }
 
@@ -131,8 +124,9 @@ $(document).ready(function() {
       $("#subesquentrenewalsTable tbody tr:last").find('td:last .subsequentRenewalsDelete').show();
       initDatepicker();
       index++;
+    }else{
+      alert('Please fill the mandatory fields')
     }
-
   });
 
   $(document).on('click', 'td .subsequentRenewalsDelete', function(){
@@ -151,10 +145,6 @@ $(document).ready(function() {
   });
 
   $('#municipalOrder, #governmentOrder').hide();
-
-  for(var i=0;i<25;i++){
-    $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
-  }
 
   $('#timePeriod').on('change',function(){
     if(this.value <= 3){
@@ -278,7 +268,7 @@ var commomFieldsRules = {
     },
     "allottee.pan": {
         required: false,
-        panNo: false
+        panNo: true
     },
     "allottee.emailId": {
         required: false,
@@ -293,8 +283,7 @@ var commomFieldsRules = {
         alloName: true
     },
     "allottee.permanentAddress": {
-        required: true,
-
+        required: true
     },
     tenderNumber: {
         required: false,
@@ -567,112 +556,110 @@ finalValidatinRules["messages"] = {
         required: "Enter Solvency certificate date"
     }
 
-
 }
 
-// $("#"+name).val("murali");
+function onLoadAsset(){
+  var assetDetails = commonApiPost("asset-services", "assets", "_search", { id: getUrlVars()["assetId"], tenantId }).responseJSON["Assets"][0] || {};
 
-var assetDetails = commonApiPost("asset-services", "assets", "_search", { id: getUrlVars()["assetId"], tenantId }).responseJSON["Assets"][0] || {};
+  for (var variable in natureOfAllotments) {
+      if (natureOfAllotments.hasOwnProperty(variable)) {
+          $(`#natureOfAllotment`).append(`<option value='${variable}'>${natureOfAllotments[variable]}</option>`)
 
-for (var variable in natureOfAllotments) {
-    if (natureOfAllotments.hasOwnProperty(variable)) {
-        $(`#natureOfAllotment`).append(`<option value='${variable}'>${natureOfAllotments[variable]}</option>`)
+      }
+  }
 
-    }
-}
-
-for (var variable in paymentCycle) {
-    if (paymentCycle.hasOwnProperty(variable)) {
-        $(`#paymentCycle`).append(`<option value='${variable}'>${paymentCycle[variable]}</option>`)
-
-    }
-}
-// var cityGrade = commonApiPost("tenant", "v1/tenant", "_search", {
-//   code: tenantId
-// }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {};
-// console.log(cityGrade);
-var agreementType = "Create Corporation Agreement";
-// if (cityGrade.toLowerCase() === 'corp') {
-//   agreementType = "Create Corporation Agreement";
-// }
+  for (var variable in paymentCycle) {
+      if (paymentCycle.hasOwnProperty(variable)) {
+          $(`#paymentCycle`).append(`<option value='${variable}'>${paymentCycle[variable]}</option>`)
+      }
+  }
+  // var cityGrade = commonApiPost("tenant", "v1/tenant", "_search", {
+  //   code: tenantId
+  // }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {};
+  // console.log(cityGrade);
+  var agreementType = "Create Corporation Agreement";
+  // if (cityGrade.toLowerCase() === 'corp') {
+  //   agreementType = "Create Corporation Agreement";
+  // }
 
 
-getDesignations(null, function(designations) {
-    for (let variable in designations) {
-        if (!designations[variable]["id"]) {
-            var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
-            designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
-        }
+  getDesignations(null, function(designations) {
+      for (let variable in designations) {
+          if (!designations[variable]["id"]) {
+              var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
+              designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
+          }
 
-        $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
-    }
-},agreementType);
+          $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
+      }
+  },agreementType);
 
-if (assetDetails && Object.keys(assetDetails).length) {
-    $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
+  if (assetDetails && Object.keys(assetDetails).length) {
+      $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);
 
-    $("#aName").val(assetDetails["name"]);
+      $("#aName").val(assetDetails["name"]);
 
-    $("#totalArea").val(assetDetails["totalArea"]);
+      $("#totalArea").val(assetDetails["totalArea"]);
 
-    $("#code").val(assetDetails["code"]);
+      $("#code").val(assetDetails["code"]);
 
-    $("#locationDetails\\.locality").val(getNameById(locality, assetDetails["locationDetails"]["locality"]));
+      $("#locationDetails\\.locality").val(getNameById(locality, assetDetails["locationDetails"]["locality"]));
 
-    $("#locationDetails\\.street").val(getNameById(street, assetDetails["locationDetails"]["street"]));
+      $("#locationDetails\\.street").val(getNameById(street, assetDetails["locationDetails"]["street"]));
 
-    $("#locationDetails\\.zone").val(getNameById(revenueZone, assetDetails["locationDetails"]["zone"]));
+      $("#locationDetails\\.zone").val(getNameById(revenueZone, assetDetails["locationDetails"]["zone"]));
 
-    $("#locationDetails\\.revenueWard").val(getNameById(revenueWards, assetDetails["locationDetails"]["revenueWard"]));
+      $("#locationDetails\\.revenueWard").val(getNameById(revenueWards, assetDetails["locationDetails"]["revenueWard"]));
 
-    $("#locationDetails\\.block").val(getNameById(revenueBlock, assetDetails["locationDetails"]["block"]));
+      $("#locationDetails\\.block").val(getNameById(revenueBlock, assetDetails["locationDetails"]["block"]));
 
-    $("#locationDetails\\.electionWard").val(getNameById(electionwards, assetDetails["locationDetails"]["electionWard"]));
+      $("#locationDetails\\.electionWard").val(getNameById(electionwards, assetDetails["locationDetails"]["electionWard"]));
 
-    if(assetDetails.assetAttributes) {
-        var attrs = assetDetails.assetAttributes;
-        for(var i=0, len = attrs.length; i<len; i++) {
-            switch (attrs[i].key) {
-                case 'Land Register Number':
-                    $("#landRegisterNumber").val(attrs[i].value);
-                    break;
-                case 'Particulars of Land':
-                    $("#particularsOfLand").val(attrs[i].value);
-                    break;
-                case 'Re-survey Number':
-                    $("#resurveyNumber").val(attrs[i].value);
-                    break;
-                case 'Land Address':
-                    $("#landAddress").val(attrs[i].value);
-                    break;
-                case 'Land Survey Number':
-                    $("#townSurveyNo").val(attrs[i].value);
-                    break;
-                case 'Usage Reference Number':
-                    $("#usageReferenceNumber").val(attrs[i].value);
-                    break;
-                case 'Shopping Complex Name':
-                    $("#shoppingComplexName").val(attrs[i].value);
-                    break;
-                case 'Shopping Complex No.':
-                    $("#shoppingComplexNo").val(attrs[i].value);
-                    break;
-                case 'Shop No':
-                    $("#shoppingComplexShopNo").val(attrs[i].value);
-                    break;
-                case 'Floor No.':
-                    $("#shoppingComplexFloorNo").val(attrs[i].value);
-                    break;
-                case 'Shop Area':
-                    $("#shopArea").val(attrs[i].value);
-                    break;
-                case 'Shopping Complex Address':
-                    $("#shoppingComplexAddress").val(attrs[i].value);
-                    break;
+      if(assetDetails.assetAttributes) {
+          var attrs = assetDetails.assetAttributes;
+          for(var i=0, len = attrs.length; i<len; i++) {
+              switch (attrs[i].key) {
+                  case 'Land Register Number':
+                      $("#landRegisterNumber").val(attrs[i].value);
+                      break;
+                  case 'Particulars of Land':
+                      $("#particularsOfLand").val(attrs[i].value);
+                      break;
+                  case 'Re-survey Number':
+                      $("#resurveyNumber").val(attrs[i].value);
+                      break;
+                  case 'Land Address':
+                      $("#landAddress").val(attrs[i].value);
+                      break;
+                  case 'Land Survey Number':
+                      $("#townSurveyNo").val(attrs[i].value);
+                      break;
+                  case 'Usage Reference Number':
+                      $("#usageReferenceNumber").val(attrs[i].value);
+                      break;
+                  case 'Shopping Complex Name':
+                      $("#shoppingComplexName").val(attrs[i].value);
+                      break;
+                  case 'Shopping Complex No.':
+                      $("#shoppingComplexNo").val(attrs[i].value);
+                      break;
+                  case 'Shop No':
+                      $("#shoppingComplexShopNo").val(attrs[i].value);
+                      break;
+                  case 'Floor No.':
+                      $("#shoppingComplexFloorNo").val(attrs[i].value);
+                      break;
+                  case 'Shop Area':
+                      $("#shopArea").val(attrs[i].value);
+                      break;
+                  case 'Shopping Complex Address':
+                      $("#shoppingComplexAddress").val(attrs[i].value);
+                      break;
 
-            }
-        }
-    }
+              }
+          }
+      }
+  }
 }
 
 $('#commencementDate').datepicker({
@@ -1466,3 +1453,8 @@ function basedOnType(){
       window.open(location, '_self').close();
   }
 }
+
+///^[0-9]*$/.test(value);
+$(document).on('keyup','.srRent',function(){
+  $(this).val($(this).val().replace(/[^0-9]/g,''));
+})

@@ -1,7 +1,10 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -110,7 +113,7 @@ public class VehicleMaintenanceDetailsService {
             return DateUtils.addDays(new Date(lastServiceDate), noOfDays).getTime();
         } else
             throw new CustomException("VehicleMaintenanceDetail", "Next Scheduled Date is not applicable for vehicle :" +
-            vehicleRegNumber);
+                    vehicleRegNumber);
     }
 
     private void validateForUniqueCodesInRequest(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
@@ -123,6 +126,9 @@ public class VehicleMaintenanceDetailsService {
     }
 
     private void validate(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleMaintenanceDetails vehicleMaintenanceDetails : vehicleMaintenanceDetailsRequest
                 .getVehicleMaintenanceDetails()) {
@@ -149,21 +155,24 @@ public class VehicleMaintenanceDetailsService {
 
             }
 
-            //validation for actual maintenance date
-            if(new Date(vehicleMaintenanceDetails.getActualMaintenanceDate()).after(new Date()))
+            // validation for actual maintenance date
+            if (new Date(vehicleMaintenanceDetails.getActualMaintenanceDate()).after(new Date()))
                 throw new CustomException("ActualMaintenanceDate",
-                        "Actual Maintenance date cannot be future date: " + vehicleMaintenanceDetails.getActualMaintenanceDate());
+                        "Actual Maintenance date cannot be future date: "
+                                + dateFormat.format(new Date(vehicleMaintenanceDetails.getActualMaintenanceDate())));
 
-            //validation for vehiclemaintenance if scheduled
-            if(vehicleMaintenanceDetails.getIsScheduled() && vehicleMaintenanceDetails.getVehicle() != null
+            // validation for vehiclemaintenance if scheduled
+            if (vehicleMaintenanceDetails.getIsScheduled() && vehicleMaintenanceDetails.getVehicle() != null
                     && vehicleMaintenanceDetails.getVehicle().getRegNumber() != null &&
-                    !vehicleMaintenanceDetails.getVehicle().getRegNumber().isEmpty()){
+                    !vehicleMaintenanceDetails.getVehicle().getRegNumber().isEmpty()) {
 
-                final Pagination<VehicleMaintenance> vehicleMaintenancePage = fetchVehicleMaintenanceForVehicle(vehicleMaintenanceDetails);
+                final Pagination<VehicleMaintenance> vehicleMaintenancePage = fetchVehicleMaintenanceForVehicle(
+                        vehicleMaintenanceDetails);
 
-                if(vehicleMaintenancePage.getPagedData().isEmpty())
+                if (vehicleMaintenancePage.getPagedData().isEmpty())
                     throw new CustomException("VehicleMaintenance",
-                            "Vehicle Maintenance not defined for vehicle: " + vehicleMaintenanceDetails.getVehicle().getRegNumber());
+                            "Vehicle Maintenance not defined for vehicle: "
+                                    + vehicleMaintenanceDetails.getVehicle().getRegNumber());
             }
         }
     }
@@ -188,13 +197,15 @@ public class VehicleMaintenanceDetailsService {
                 return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(
                         vehicleMaintenanceDetail, vehicleMaintenance.getMaintenanceAfter()));
         } else
-            throw new CustomException("VehicleMaintenance", "Next scheduled date not applicable since Vehicle Maintenance not defined for vehicle :"
-                    + vehicleMaintenanceDetail.getVehicle().getRegNumber());
+            throw new CustomException("VehicleMaintenance",
+                    "Next scheduled date not applicable since Vehicle Maintenance not defined for vehicle :"
+                            + vehicleMaintenanceDetail.getVehicle().getRegNumber());
 
         return 0;
     }
 
-    private Pagination<VehicleMaintenance> fetchVehicleMaintenanceForVehicle(final VehicleMaintenanceDetails vehicleMaintenanceDetail){
+    private Pagination<VehicleMaintenance> fetchVehicleMaintenanceForVehicle(
+            final VehicleMaintenanceDetails vehicleMaintenanceDetail) {
         final VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
         vehicleMaintenanceSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
         vehicleMaintenanceSearch.setRegNumber(vehicleMaintenanceDetail.getVehicle().getRegNumber());
@@ -223,35 +234,36 @@ public class VehicleMaintenanceDetailsService {
             // Days calculation for filtered set of routes
             for (final VehicleSchedule vehicleSchedule : vehicleScheduleList) {
 
-                final RouteSearch routeSearch = new RouteSearch();
-                routeSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
-                routeSearch.setCode(vehicleSchedule.getRoute().getCode());
+            final RouteSearch routeSearch = new RouteSearch();
+            routeSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+            routeSearch.setCode(vehicleSchedule.getRoute().getCode());
 
-                final Pagination<Route> routePage = routeService.search(routeSearch);
+            final Pagination<Route> routePage = routeService.search(routeSearch);
 
-                if (!routePage.getPagedData().isEmpty()) {
-                    final Long dateDifferenceInMilliseconds = vehicleSchedule.getScheduledTo()
-                            - vehicleSchedule.getScheduledFrom();
-                    final Long days = TimeUnit.DAYS.convert(dateDifferenceInMilliseconds, TimeUnit.MILLISECONDS);
-                    totalDays = totalDays + days;
-                    final Double totalKilometersOnRoute = days * routePage.getPagedData().get(0).getDistance();
+            if (!routePage.getPagedData().isEmpty()) {
+            final Long dateDifferenceInMilliseconds = vehicleSchedule.getScheduledTo()
+                    - vehicleSchedule.getScheduledFrom();
+            final Long days = TimeUnit.DAYS.convert(dateDifferenceInMilliseconds, TimeUnit.MILLISECONDS);
+            totalDays = totalDays + days;
+            final Double totalKilometersOnRoute = days * routePage.getPagedData().get(0).getDistance();
 
-                    if (totalKilometers + totalKilometersOnRoute < vehicleMaintenanceAfter)
-                        totalKilometers = totalKilometers + days * routePage.getPagedData().get(0).getDistance();
-                    else {
-                        final Double distanceDifference = vehicleMaintenanceAfter - totalKilometers;
-                        totalDays = totalDays + distanceDifference.longValue()
-                                / routePage.getPagedData().get(0).getDistance().longValue();
+            if (totalKilometers + totalKilometersOnRoute < vehicleMaintenanceAfter)
+            totalKilometers = totalKilometers + days * routePage.getPagedData().get(0).getDistance();
+            else {
+            final Double distanceDifference = vehicleMaintenanceAfter - totalKilometers;
+            totalDays = totalDays + distanceDifference.longValue()
+                    / routePage.getPagedData().get(0).getDistance().longValue();
 
-                        return totalDays.intValue();
-                    }
-                } else
-                    throw new CustomException("Route", "Next scheduled date not applicable since Route not defined for veicle :" +
-                            vehicleMaintenanceDetail.getVehicle().getRegNumber());
+            return totalDays.intValue();
+            }
+            } else
+            throw new CustomException("Route", "Next scheduled date not applicable since Route not defined for veicle :" +
+                    vehicleMaintenanceDetail.getVehicle().getRegNumber());
             }
         else
-            throw new CustomException("VehicleSchedule", "Next scheduled date not applicable since Vehicle Schedule not defined for vehicle :" +
-                    vehicleMaintenanceDetail.getVehicle().getRegNumber());
+            throw new CustomException("VehicleSchedule",
+                    "Next scheduled date not applicable since Vehicle Schedule not defined for vehicle :" +
+                            vehicleMaintenanceDetail.getVehicle().getRegNumber());
         return totalDays.intValue();
     }
 

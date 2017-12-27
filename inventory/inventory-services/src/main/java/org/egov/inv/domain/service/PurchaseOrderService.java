@@ -545,9 +545,14 @@ public class PurchaseOrderService extends DomainService {
 
 
                             //validation of order quantity incase of tender
-                            if ((poDetail.getOrderQuantity().add(poDetail.getUsedQuantity())).compareTo(poDetail.getTenderQuantity()) > 0) {
-                                errors.addDataError(ErrorCode.ORDQTY_LE_TENDQTY.getCode(), poDetail.getOrderQuantity().toString() + " at serial no." + detailIndex);
+                            if(poDetail.getTenderQuantity() != null) {
+                            	if ((poDetail.getOrderQuantity().add(poDetail.getUsedQuantity())).compareTo(poDetail.getTenderQuantity()) > 0) {
+                                    errors.addDataError(ErrorCode.ORDQTY_LE_TENDQTY.getCode(), poDetail.getOrderQuantity().toString() + " at serial no." + detailIndex);
+                                }
+                            } else {
+                            	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "tenderQuantity", "null");
                             }
+                            
 
                             //Material reference validation
                             if (null != poDetail.getMaterial()) {
@@ -565,11 +570,11 @@ public class PurchaseOrderService extends DomainService {
                                 errors.addDataError(ErrorCode.RATE_CONTRACT.getCode(), " at serial no." + detailIndex);
                             }
 
-                            if (priceListConfig && (null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(new BigDecimal(0)) < 0)) {
+                            if (priceListConfig && (null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(new BigDecimal(0)) <= 0)) {
                                 errors.addDataError(ErrorCode.NOT_NULL.getCode(), "orderQuantity", "null");
                             }
 
-                            if (priceListConfig && (null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0)) < 0)) {
+                            if (priceListConfig && (null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0)) <= 0)) {
                                 errors.addDataError(ErrorCode.NOT_NULL.getCode(), "unitPrice", "null");
                             }
 

@@ -303,6 +303,10 @@ public class PriceListService extends DomainService {
 								+ " at serial no." + (pl.getPriceListDetails().indexOf(pld) + 1));
 					}
 
+					if(pld.getRatePerUnit()<=0) {
+						errors.addDataError(ErrorCode.UNIT_PRICE_GT_ZERO.getCode(), null + " at serial no." + (pl.getPriceListDetails().indexOf(pld) + 1));
+					}
+					
 					for (PriceListDetails plds : pl.getPriceListDetails()) {
 
 						if (pld != plds && pld.getMaterial().getCode().toString()
@@ -324,7 +328,7 @@ public class PriceListService extends DomainService {
 						if (priceListDetail.getQuantity() == null) {
 							errors.addDataError(ErrorCode.QUANTITY_GT_ZERO_TENDER.getCode(), "quantity", "");
 						} else if (priceListDetail.getQuantity() != null
-								&& priceListDetail.getQuantity().doubleValue() < 0) {
+								&& priceListDetail.getQuantity().doubleValue() <= 0) {
 							errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantity",
 									priceListDetail.getQuantity().toString());
 						}

@@ -68,8 +68,10 @@ public class EstimateValidator {
             validateDuplicateAbstractEstimateNumber(messages, abstractEstimateRequest);
         }
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
-            validateEstimateDetails(estimate, messages);
-            validatePMCData(messages, estimate);
+//            validateEstimateDetails(estimate, messages);
+            validatePMCData(messages, estimate, abstractEstimateRequest.getRequestInfo());
+            if (!messages.isEmpty())
+                throw new CustomException(messages);
             validateWardAndLocalityMandatory(messages, estimate);
             if (!estimate.getSpillOverFlag())
                validateDpRemarks(messages, estimate);
@@ -158,15 +160,24 @@ public class EstimateValidator {
         }
     }
 
-    private void validatePMCData(Map<String, String> messages, final AbstractEstimate estimate) {
+    private void validatePMCData(Map<String, String> messages, final AbstractEstimate estimate, final RequestInfo requestInfo) {
         if (estimate.getPmcRequired() && estimate.getPmcType() == null) {
             messages.put(Constants.KEY_PMCTYPE_INVALID, Constants.MESSAGE_PMCTYPE_INVALID);
         }
 
         if (estimate.getPmcRequired() && StringUtils.isNotBlank(estimate.getPmcType())
                 && estimate.getPmcType().equalsIgnoreCase("Panel")
-                && StringUtils.isBlank(estimate.getPmcName())) {
+                && (estimate.getPmcName() == null || (estimate.getPmcName() != null && StringUtils.isBlank(estimate.getPmcName().getCode())))) {
             messages.put(Constants.KEY_PMCNAME_INVALID, Constants.MESSAGE_PMCNAME_INVALID);
+        }
+        
+        if(estimate.getPmcRequired() && StringUtils.isNotBlank(estimate.getPmcType())
+                && estimate.getPmcType().equalsIgnoreCase("Panel")
+                && estimate.getPmcName() != null && StringUtils.isNotBlank(estimate.getPmcName().getCode())) {
+            List<Contractor> contractors = worksMastersRepository.searchContractorByCode(estimate.getTenantId(), estimate.getPmcName().getCode(), requestInfo);
+            if(contractors.isEmpty()) {
+                messages.put(Constants.KEY_PMC_CONTRACTOR_INVALID, Constants.MESSAGE_PMC_CONTRACTOR_INVALID);
+            }
         }
     }
 

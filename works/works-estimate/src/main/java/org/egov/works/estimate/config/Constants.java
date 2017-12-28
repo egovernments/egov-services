@@ -410,4 +410,6 @@ public class Constants {
     public static final String KEY_WORKS_ESTIMATE_STATUS_INVALID = "WORKS_ESTIMATE_STATUS_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_STATUS_INVALID = "Work estimate status is invalid";
     
+    public static final String KEY_PMC_CONTRACTOR_INVALID = "works.ae.pmc.notexist";
+    public static final String MESSAGE_PMC_CONTRACTOR_INVALID = "The given PMC Does not exist in the system";
 }

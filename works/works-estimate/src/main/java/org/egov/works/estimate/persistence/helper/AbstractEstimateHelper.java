@@ -219,7 +219,9 @@ public class AbstractEstimateHelper {
 		abstractEstimate.getModeOfAllotment().setCode(this.modeOfAllotment);
 		abstractEstimate.setNatureOfWork(new NatureOfWork());
 		abstractEstimate.getNatureOfWork().setCode(this.natureOfWork);
-		abstractEstimate.setPmcName(this.pmcName);
+		Contractor contractor = new Contractor();
+		contractor.setCode(this.pmcName);
+		abstractEstimate.setPmcName(contractor);
 		abstractEstimate.setPmcRequired(this.pmcRequired);
 		abstractEstimate.setPmcType(this.pmcType);
 		abstractEstimate.setReferenceNumber(this.referenceNumber);

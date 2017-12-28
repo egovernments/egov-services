@@ -13,7 +13,7 @@ public class ContractorQueryBuilder {
     public String getSearchQuery(ContractorSearchCriteria contractorSearchCriteria, Map params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
         appendParams(contractorSearchCriteria, params, selectQuery);
-        appendLimitAndOffset(contractorSearchCriteria, params, selectQuery);
+//        appendLimitAndOffset(contractorSearchCriteria, params, selectQuery);
         return selectQuery.toString();
     }
 
@@ -77,7 +77,7 @@ public class ContractorQueryBuilder {
         if (contractorSearchCriteria.getPageNumber() != null)
             params.put("pageNumber", contractorSearchCriteria.getPageNumber());
         else
-            params.put("pageNumber", 0);
+            params.put("pageNumber", 1);
 
         return selectQuery;
     }

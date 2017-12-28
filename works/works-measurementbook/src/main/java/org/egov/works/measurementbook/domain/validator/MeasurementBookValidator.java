@@ -63,13 +63,15 @@ public class MeasurementBookValidator {
 			WorkOrderResponse workOrderResponse = workOrderRepository.searchWorkOrder(
 					Arrays.asList(measurementBook.getLetterOfAcceptanceEstimate().getLetterOfAcceptance()),
 					measurementBook.getTenantId(), requestInfo);
-			if (letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty()) {
+			List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByIds(
+					Arrays.asList(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getId()),
+					measurementBook.getTenantId(), requestInfo);
+			if (letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty())
 			    messages.put(Constants.KEY_MB_LOA_DOES_NOT_EXIST, Constants.MSG_MB_LOA_DOES_NOT_EXIST);
-			}
-			if(workOrderResponse.getWorkOrders().isEmpty()) {
+			if(workOrderResponse.getWorkOrders().isEmpty())
 			    messages.put(Constants.KEY_MB_WO_DOES_NOT_EXIST, Constants.MSG_MB_WO_DOES_NOT_EXIST);
-			}
-				
+			if (detailedEstimates.isEmpty())
+				messages.put(Constants.KEY_MB_DE_DOES_NOT_EXIST, Constants.MSG_MB_DE_DOES_NOT_EXIST);
 			
 			if (!messages.isEmpty())
 		                throw new CustomException(messages);

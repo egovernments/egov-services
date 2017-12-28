@@ -1096,7 +1096,7 @@ serviceMaps:
             - jsonPath: $.indents[?({id} in @.indentDetails[*].id)].indentNumber
             - jsonPath: $.indents.*.indentDetails.*.asset.code
             - jsonPath: $.indents.*.indentDetails.*.indentQuantity
-						- jsonPath: $.indents.*.indentDetails.*.userQuantity
+            - jsonPath: $.indents.*.indentDetails.*.userQuantity
             - jsonPath: $.indents.*.indentDetails.*.totalProcessedQuantity
             - jsonPath: $.indents.*.indentDetails.*.indentIssuedQuantity
             - jsonPath: $.indents.*.indentDetails.*.poOrderedQuantity

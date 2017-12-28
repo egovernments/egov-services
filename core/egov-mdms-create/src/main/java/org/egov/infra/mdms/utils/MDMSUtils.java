@@ -93,6 +93,8 @@ public class MDMSUtils {
 	}
 	
 	public List<String> getUniqueKeys(Map<String, Map<String, Object>> masterConfigMap, MDMSCreateRequest mDMSCreateRequest){
+		
+		logger.info(" entering getUniqueKeys : "+ masterConfigMap);
 		List<String> uniqueKeys = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> moduleMap = masterConfigMap.get(mDMSCreateRequest.getMasterMetaData().getModuleName());

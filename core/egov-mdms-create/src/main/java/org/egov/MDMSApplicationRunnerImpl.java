@@ -159,6 +159,7 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 	public void readMdmsConfigFiles(String masterConfigUrl) {
 		ObjectMapper jsonReader = new ObjectMapper();
 		
+		log.info(" the git hub url for config : "+masterConfigUrl);
 		Map file = null;
 		URL yamlFile = null;
 		try {
@@ -172,7 +173,9 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 		} catch (Exception e) {
 		log.error("Exception while fetching service map for: " + e.getMessage());
 		}
+		log.info("the Master config Map : "+ file);
 		masterConfigMap = file;
+		log.info("the Master config Map : "+ masterConfigMap);
 		
 		  //File file = new File(getClass().getClassLoader().getResource(baseFoderPath).getFile());
 			/*	String name = file.getName();

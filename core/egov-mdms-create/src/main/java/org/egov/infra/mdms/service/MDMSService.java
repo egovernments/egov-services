@@ -78,6 +78,7 @@ public class MDMSService {
 
 	public Map<String, Map<String, JSONArray>> gitPush(MDMSCreateRequest mDMSCreateRequest, Boolean isCreate)
 			throws Exception {
+		
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		ObjectMapper mapper = new ObjectMapper();
 		Long startTime = null;
@@ -279,6 +280,8 @@ public class MDMSService {
 
 	public String getContentForPush(Object fileContents, MDMSCreateRequest mDMSCreateRequest, Boolean isCreate)
 			throws Exception {
+		
+		 Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
 		logger.info("Building content for git push.....");
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
@@ -313,7 +316,7 @@ public class MDMSService {
 				throw new CustomException("400", "No master data available for this master");
 			}
 			
-			List<String> keys = mDMSUtils.getUniqueKeys(mDMSCreateRequest, MasterConfigMap.get(mDMSCreateRequest.getMasterMetaData().getModuleName()));
+			List<String> keys = mDMSUtils.getUniqueKeys(masterConfigMap,mDMSCreateRequest);
 			if (null == keys) {
 				throw new CustomException("400", "There are duplicate mdms-configs for this master: "
 						+ mDMSCreateRequest.getMasterMetaData().getMasterName());

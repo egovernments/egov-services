@@ -63,6 +63,14 @@ public class MDMSUtils {
 		return filterResult;
 	}
 
+	/***
+	 * To get the mdms config list when it comes from the Data folder itself
+	 * 
+	 * @param mDMSCreateRequest
+	 * @param allMasters
+	 * @return
+	 * @throws Exception
+	 */
 	public List<String> getUniqueKeys(MDMSCreateRequest mDMSCreateRequest, Map<String, Object> allMasters)
 			throws Exception {
 		List<String> uniqueKeys = new ArrayList<>();
@@ -92,6 +100,13 @@ public class MDMSUtils {
 		return uniqueKeys;
 	}
 	
+	/***
+	 * To Get Mdms-config map when it comes from resources or external sources other than Data folder itself
+	 * 
+	 * @param masterConfigMap
+	 * @param mDMSCreateRequest
+	 * @return
+	 */
 	public List<String> getUniqueKeys(Map<String, Map<String, Object>> masterConfigMap, MDMSCreateRequest mDMSCreateRequest){
 		
 		logger.info(" entering getUniqueKeys : "+ masterConfigMap);

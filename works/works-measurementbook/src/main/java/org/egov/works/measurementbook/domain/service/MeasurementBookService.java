@@ -107,7 +107,7 @@ public class MeasurementBookService {
 				createUpdateRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo(), false);
 
 			if (measurementBook.getIsLegacyMB())
-				measurementBook.setApprovedDate(new Date().getTime());
+				measurementBook.setApprovedDate(measurementBook.getMbDate());
 			if (measurementBook.getIsLegacyMB() && isWorkflowReq) {
 				updateStatus(measurementBook, true);
 			} else

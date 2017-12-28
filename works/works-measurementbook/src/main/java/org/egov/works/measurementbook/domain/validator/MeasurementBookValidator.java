@@ -235,6 +235,8 @@ public class MeasurementBookValidator {
                     mbSheetQuantity -= sheet.getQuantity().doubleValue();
                 else
                     mbSheetQuantity += sheet.getQuantity().doubleValue();
+                
+                estimateSheetId = null;
             }
             if (!mbSheetQuantity.equals(detail.getQuantity()))
     			messages.put(Constants.KEY_MB_MEASUREMENTS_QUANTITY_NOT_EQUAL_DETAIL,

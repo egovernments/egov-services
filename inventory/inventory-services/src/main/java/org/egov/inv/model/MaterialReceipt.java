@@ -18,7 +18,7 @@ import java.util.Objects;
  * Hold the material receipt specific information.
  */
 @ApiModel(description = "Hold the material receipt specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-07T10:28:02.933Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-28T10:46:24.811Z")
 
 public class MaterialReceipt {
     @JsonProperty("id")
@@ -154,10 +154,10 @@ public class MaterialReceipt {
         CREATED("CREATED"),
 
         APPROVED("APPROVED"),
-        
-        RECEIPTED("RECEIPTED"),
 
-        CANCELED("CANCELED");
+        CANCELED("CANCELED"),
+
+        RECEIPTED("RECEIPTED");
 
         private String value;
 
@@ -208,6 +208,9 @@ public class MaterialReceipt {
 
     @JsonProperty("paymentTerms")
     private String paymentTerms = null;
+
+    @JsonProperty("supplierBillPaid")
+    private Boolean supplierBillPaid = false;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
@@ -817,7 +820,7 @@ public class MaterialReceipt {
      *
      * @return paymentTerms
      **/
-    @ApiModelProperty(value = "payment terms of the Material Receipt             ")
+    @ApiModelProperty(value = "payment terms of the Material Receipt ")
 
     @Size(max = 1000)
     public String getPaymentTerms() {
@@ -826,6 +829,27 @@ public class MaterialReceipt {
 
     public void setPaymentTerms(String paymentTerms) {
         this.paymentTerms = paymentTerms;
+    }
+
+    public MaterialReceipt supplierBillPaid(Boolean supplierBillPaid) {
+        this.supplierBillPaid = supplierBillPaid;
+        return this;
+    }
+
+    /**
+     * Boolean value to identify whether the supplierbill paid for the selected receipt.
+     *
+     * @return supplierBillPaid
+     **/
+    @ApiModelProperty(value = "Boolean value to identify whether the supplierbill paid for the selected receipt.")
+
+
+    public Boolean getSupplierBillPaid() {
+        return supplierBillPaid;
+    }
+
+    public void setSupplierBillPaid(Boolean supplierBillPaid) {
+        this.supplierBillPaid = supplierBillPaid;
     }
 
     public MaterialReceipt auditDetails(AuditDetails auditDetails) {
@@ -887,12 +911,13 @@ public class MaterialReceipt {
                 Objects.equals(this.receiptDetails, materialReceipt.receiptDetails) &&
                 Objects.equals(this.fileStoreId, materialReceipt.fileStoreId) &&
                 Objects.equals(this.paymentTerms, materialReceipt.paymentTerms) &&
+                Objects.equals(this.supplierBillPaid, materialReceipt.supplierBillPaid) &&
                 Objects.equals(this.auditDetails, materialReceipt.auditDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, mrnNumber, manualReceiptNumber, issueNumber, receiptDate, financialYear, manualReceiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, challanDate, description, receivedBy, designation, mrnStatus, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, paymentTerms, auditDetails);
+        return Objects.hash(id, tenantId, mrnNumber, manualReceiptNumber, issueNumber, receiptDate, financialYear, manualReceiptDate, receiptType, receiptPurpose, receivingStore, issueingStore, supplier, supplierBillNo, supplierBillDate, challanNo, challanDate, description, receivedBy, designation, mrnStatus, bill, inspectedBy, inspectionDate, inspectionRemarks, totalReceiptValue, receiptDetails, fileStoreId, paymentTerms, supplierBillPaid, auditDetails);
     }
 
     @Override
@@ -929,6 +954,7 @@ public class MaterialReceipt {
         sb.append("    receiptDetails: ").append(toIndentedString(receiptDetails)).append("\n");
         sb.append("    fileStoreId: ").append(toIndentedString(fileStoreId)).append("\n");
         sb.append("    paymentTerms: ").append(toIndentedString(paymentTerms)).append("\n");
+        sb.append("    supplierBillPaid: ").append(toIndentedString(supplierBillPaid)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("}");
         return sb.toString();

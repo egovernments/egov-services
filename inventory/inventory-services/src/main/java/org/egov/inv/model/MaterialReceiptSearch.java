@@ -31,6 +31,8 @@ public class MaterialReceiptSearch {
 
     private String supplierCode;
 
+    private Boolean supplierBillPaid;
+
     private String receivedBy;
     
     private String materialTypeName;

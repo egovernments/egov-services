@@ -39,11 +39,6 @@
  */
 package org.egov.inv.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.MaterialReceipt;
@@ -55,6 +50,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MaterialReceiptJdbcRepository extends JdbcRepository {
@@ -141,20 +141,27 @@ public class MaterialReceiptJdbcRepository extends JdbcRepository {
             paramValues.put("receiptPurpose", materialReceiptSearch.getReceiptPurpose());
         }
 
+        if (materialReceiptSearch.getSupplierBillPaid() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("supplierbillpaid = :supplierBillPaid");
+            paramValues.put("supplierBillPaid", materialReceiptSearch.getSupplierBillPaid());
+        }
+
         if (materialReceiptSearch.getFinancialYear() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("financialyear = :financialYear");
             paramValues.put("financialYear", materialReceiptSearch.getFinancialYear());
         }
-        
+
         if (materialReceiptSearch.getMrnStatus() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("mrnStatus = :mrnStatus");
             paramValues.put("mrnStatus", materialReceiptSearch.getMrnStatus());
         }
-        
+
         if (materialReceiptSearch.getIssueNumber() != null) {
             if (params.length() > 0)
                 params.append(" and ");

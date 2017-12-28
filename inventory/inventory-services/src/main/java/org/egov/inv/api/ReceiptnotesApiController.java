@@ -47,6 +47,7 @@ public class ReceiptnotesApiController implements ReceiptnotesApi {
                                                                           @ApiParam(value = "Unique Supplier code from which the receipt was made.") @RequestParam(value = "supplierCode", required = false) String supplierCode,
                                                                           @ApiParam(value = "From which receipt date onwards the data needs to be fetched.") @RequestParam(value = "receiptDateFrom", required = false) Long receiptDateFrom,
                                                                           @ApiParam(value = "Till which receipt date the data needs to be fetched.") @RequestParam(value = "receiptDateT0", required = false) Long receiptDateT0,
+                                                                          @ApiParam(value = "supplier bill paid for receipt or not .") @RequestParam(value = "supplierBillPaid", required = false) Boolean supplierBillPaid,
                                                                           @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
                                                                           @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
                                                                           @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
@@ -59,6 +60,7 @@ public class ReceiptnotesApiController implements ReceiptnotesApi {
                 .supplierCode(supplierCode)
                 .receiptDate(receiptDateFrom)
                 .receiptDate(receiptDateT0)
+                .supplierBillPaid(supplierBillPaid)
                 .pageNumber(pageNumber)
                 .pageSize(pageSize)
                 .build();

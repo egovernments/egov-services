@@ -9,7 +9,6 @@ import io.swagger.annotations.*;
 import org.egov.inv.model.ErrorRes;
 import org.egov.inv.model.MaterialReceiptRequest;
 import org.egov.inv.model.MaterialReceiptResponse;
-import org.egov.inv.model.RequestInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,44 +21,46 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-17T10:03:53.250Z")
 
 @Api(value = "receiptnotes", description = "the receiptnotes API")
 public interface ReceiptnotesApi {
 
-    @ApiOperation(value = "Create New Material Receipt Note.", notes = "Create a new material receipt note. This will handle both purchase receipt as well as miscellaneous material receipts.", response = MaterialReceiptResponse.class, tags={ "MRN", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Material Receipt created", response = MaterialReceiptResponse.class),
-        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
-    
+    @ApiOperation(value = "Create New Material Receipt Note.", notes = "Create a new material receipt note. This will handle both purchase receipt as well as miscellaneous material receipts.", response = MaterialReceiptResponse.class, tags = {"MRN",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Material Receipt created", response = MaterialReceiptResponse.class),
+            @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class)})
+
     @RequestMapping(value = "/receiptnotes/_create",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
     ResponseEntity<MaterialReceiptResponse> receiptnotesCreatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Details for the new material receipt.", required = true) @Valid @RequestBody MaterialReceiptRequest materialReceipt);
 
 
-    @ApiOperation(value = "Get list of material receipt notes based on below search parameter(s).", notes = "Provides the list of material receipt note information based on the search paramaters. Both purchase order receipts as well as miscallaneous receipt are coveredf here. ", response = MaterialReceiptResponse.class, tags={ "MRN", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Successful response, returns list of Material Receipt Note(s).", response = MaterialReceiptResponse.class),
-        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
-    
+    @ApiOperation(value = "Get list of material receipt notes based on below search parameter(s).", notes = "Provides the list of material receipt note information based on the search paramaters. Both purchase order receipts as well as miscallaneous receipt are coveredf here. ", response = MaterialReceiptResponse.class, tags = {"MRN",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful response, returns list of Material Receipt Note(s).", response = MaterialReceiptResponse.class),
+            @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class)})
+
     @RequestMapping(value = "/receiptnotes/_search",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<MaterialReceiptResponse> receiptnotesSearchPost(@ApiParam(value = "Request header for the service request details.", required = true) @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo, @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @Size(max = 100) @ApiParam(value = "Pass List of unique mrn number(s) then the API will returns list of receipts.") @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber, @Size(max = 3) @ApiParam(value = "Mention the type of the receipt.") @RequestParam(value = "receiptType", required = false) List<String> receiptType, @ApiParam(value = "Unique status code of the receipt.") @RequestParam(value = "mrnStatus", required = false) String mrnStatus, @ApiParam(value = "The store code from which the receipt was received.") @RequestParam(value = "receivingStore", required = false) String receivingStore, @ApiParam(value = "Unique Supplier code from which the receipt was made.") @RequestParam(value = "supplierCode", required = false) String supplierCode, @ApiParam(value = "From which receipt date onwards the data needs to be fetched.") @RequestParam(value = "receiptDateFrom", required = false) Long receiptDateFrom, @ApiParam(value = "Till which receipt date the data needs to be fetched.") @RequestParam(value = "receiptDateT0", required = false) Long receiptDateT0, @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize, @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber, @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<MaterialReceiptResponse> receiptnotesSearchPost(@ApiParam(value = "Request header for the service request details.", required = true) @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo, @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @Size(max = 100) @ApiParam(value = "Pass List of unique mrn number(s) then the API will returns list of receipts.") @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber, @Size(max = 3) @ApiParam(value = "Mention the type of the receipt.") @RequestParam(value = "receiptType", required = false) List<String> receiptType, @ApiParam(value = "Unique status code of the receipt.") @RequestParam(value = "mrnStatus", required = false) String mrnStatus, @ApiParam(value = "The store code from which the receipt was received.") @RequestParam(value = "receivingStore", required = false) String receivingStore, @ApiParam(value = "Unique Supplier code from which the receipt was made.") @RequestParam(value = "supplierCode", required = false) String supplierCode, @ApiParam(value = "From which receipt date onwards the data needs to be fetched.") @RequestParam(value = "receiptDateFrom", required = false) Long receiptDateFrom, @ApiParam(value = "Till which receipt date the data needs to be fetched.") @RequestParam(value = "receiptDateT0", required = false) Long receiptDateT0,
+                                                                   @ApiParam(value = "supplier bill paid for receipt or not .") @RequestParam(value = "supplierBillPaid", required = false) Boolean supplierBillPaid, @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize, @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber, @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy);
 
 
-    @ApiOperation(value = "Update existing Material Receipts.", notes = "Existing material receipt notes can be updated except the mrn number.", response = MaterialReceiptResponse.class, tags={ "MRN", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Material Receipt(s) Updated Successfully.", response = MaterialReceiptResponse.class),
-        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
-    
+    @ApiOperation(value = "Update existing Material Receipts.", notes = "Existing material receipt notes can be updated except the mrn number.", response = MaterialReceiptResponse.class, tags = {"MRN",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Material Receipt(s) Updated Successfully.", response = MaterialReceiptResponse.class),
+            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class)})
+
     @RequestMapping(value = "/receiptnotes/_update",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
     ResponseEntity<MaterialReceiptResponse> receiptnotesUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Details for the new material receipts.", required = true) @Valid @RequestBody MaterialReceiptRequest materialReceipt);
 
 }

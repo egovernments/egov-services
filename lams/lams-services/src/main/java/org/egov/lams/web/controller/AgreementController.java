@@ -88,6 +88,7 @@ public class AgreementController {
 			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,null, requestInfo);
 		}
 		if (agreements != null && !agreements.isEmpty()) {
+			agreements.sort((agreement1, agreement2) -> agreement2.getId().compareTo(agreement1.getId()));
 			agreementRequest.setRequestInfo(requestInfo);
 			agreementRequest.setAgreement(agreements.get(0));
 			agreementValidator.validateAgreementForWorkFLow(agreementRequest, bindingResult,

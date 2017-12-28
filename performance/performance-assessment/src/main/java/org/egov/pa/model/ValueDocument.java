@@ -10,6 +10,9 @@ public class ValueDocument {
 	@JsonProperty("code")
 	private String documentCode;
 	
+	@JsonProperty("name")
+	private String documentName; 
+	
 	@JsonProperty("kpiCode")
 	private String kpiCode;
 	
@@ -27,6 +30,13 @@ public class ValueDocument {
 	
 	
 	
+	
+	public String getDocumentName() {
+		return documentName;
+	}
+	public void setDocumentName(String documentName) {
+		this.documentName = documentName;
+	}
 	public String getId() {
 		return id;
 	}

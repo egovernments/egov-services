@@ -397,6 +397,7 @@ public class PerformanceAssessmentRowMapper {
 					ValueDocument doc = new ValueDocument();
 					doc.setFileStoreId(rs.getString("fileStoreId"));
 					doc.setDocumentCode(rs.getString("docDocumentCode"));
+					doc.setDocumentName(rs.getString("docMasterDocName")); 
  	 				doc.setKpiCode(rs.getString("docKpiCode"));
 					docList.add(doc);
 				}
@@ -407,6 +408,7 @@ public class PerformanceAssessmentRowMapper {
  					ValueDocument doc = new ValueDocument();
  	 				doc.setFileStoreId(rs.getString("fileStoreId"));
  	 				doc.setDocumentCode(rs.getString("docDocumentCode"));
+					doc.setDocumentName(rs.getString("docMasterDocName"));	
  	 				doc.setKpiCode(rs.getString("docKpiCode"));
  	 				docList.add(doc);
  				}

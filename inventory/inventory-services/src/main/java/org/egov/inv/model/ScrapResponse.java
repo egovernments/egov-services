@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
+
 import org.egov.inv.model.Page;
 import org.egov.inv.model.ResponseInfo;
 import org.egov.inv.model.Scrap;
@@ -18,7 +20,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Contract class for web response. Array of Scrap items  are used in case of search ,create or update request.")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@Builder
 public class ScrapResponse   {
   @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo = null;

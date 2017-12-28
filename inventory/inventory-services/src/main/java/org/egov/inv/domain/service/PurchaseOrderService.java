@@ -164,7 +164,13 @@ public class PurchaseOrderService extends DomainService {
                         errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), purchaseOrder.getAdvanceAmount() + " at serial no." + (purchaseOrders.indexOf(purchaseOrder) + 1));
                     }
                 }
-
+                
+                if (purchaseOrder.getAdvancePercentage() != null) {
+                	if (purchaseOrder.getAdvancePercentage().compareTo(new BigDecimal(100)) > 1) {
+                        errors.addDataError(ErrorCode.ADVPCT_GE_HUN.getCode(), purchaseOrder.getAdvancePercentage() + " at serial no." + (purchaseOrders.indexOf(purchaseOrder) + 1));
+                    }
+                }
+                
                 if (purchaseOrder.getAdvanceAmount() != null && purchaseOrder.getAdvancePercentage() != null) {
 
                     if (purchaseOrder.getAdvancePercentage().compareTo(new BigDecimal(100)) > 1) {

@@ -15,7 +15,7 @@ class UiSelectField extends Component {
     super(props);
     this.state={
       filter:true,
-      getAdocateValue:''
+      getDisplayValue:''
     }
   }
 
@@ -166,11 +166,11 @@ class UiSelectField extends Component {
   }
  
   renderSelect = item => {
-   let  {getAdocateValue, filter} = this.state;
+   let  {getDisplayValue, filter} = this.state;
     let { dropDownData, value , name } = this.props;
     // if(item.jsonPath == 'abstractEstimates[0].natureOfWork.code' || item.jsonPath == 'abstractEstimates[0].pmcName' || item.jsonPath == 'abstractEstimates[0].department.code')
     // console.log(item.jsonPath, '<--->', value, typeof(value) );
-    var dropDownDataArray = dropDownData;
+    let dropDownDataArray = dropDownData;
          
        if(item.filterMenu && filter){
         dropDownDataArray = [{
@@ -212,7 +212,7 @@ class UiSelectField extends Component {
             {...labelProperty}
             onChange={(event, key, value) => {
               this.setState({
-                getAdocateValue : value
+                getDisplayValue : value
               })
               this.props.handler(
                 { target: { value: value } },
@@ -253,7 +253,7 @@ class UiSelectField extends Component {
   }
 
   handleClick = e => {
-    if(this.state.getAdocateValue == ''){
+    if(this.state.getDisplayValue == ''){
       if(!ReactDOM.findDOMNode(this).contains(e.target)) {
         // the click was outside your component, so handle closing here
         this.setState({
@@ -268,10 +268,9 @@ class UiSelectField extends Component {
 const mapStateToProps = (state, props) => {
   let { item } = props;
   let value = _.get(state.frameworkForm.form, item.jsonPath);
-  let name =  _.get(state.frameworkForm.form, _.replace(item.jsonPath, 'code', 'name'));
-  if(name != undefined){
-    var advocateName = name;
-  }
+
+  let name = (item.filterMenu) ? _.get(state.frameworkForm.form, _.replace(item.jsonPath, 'code', 'name')) : '';
+  
   // console.log(item.jsonPath , '---->', _.get(state.frameworkForm.form, item.jsonPath));
   if (item.convertToString && value) value = value.toString();
   else if (item.convertToNumber && value) {
@@ -282,7 +281,7 @@ const mapStateToProps = (state, props) => {
     dropDownData: state.framework.dropDownData[item.jsonPath],
     dropDownOringalData: state.framework.dropDownOringalData,
     value: value,
-    name: advocateName
+    name: name
   };
 };
 

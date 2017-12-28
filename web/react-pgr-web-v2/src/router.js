@@ -161,7 +161,7 @@ import acknowledgeDepreciation from './components/non-framework/asset/acknowledg
 import TemplateParser from './components/framework/templates/templateParser/templateParser';
 
 //LegalTemplate parser
-import LegalTemplateParser from './components/framework/specs/legal/templateParser/legalTemplateParser';
+import LegalTemplateParser from './components/framework/specs/lcms/templateParser/legalTemplateParser';
 
 //Assets
 import assetImmovableCreate from './components/non-framework/asset/master/assetImmovableCreate';

@@ -497,6 +497,10 @@ public class PurchaseOrderService extends DomainService {
                                 indentNumbers += purchaseOrderDetail.getIndentNumber() + ",";
                             }
 
+                            if(purchaseOrderDetail.getPriceList() == null || purchaseOrderDetail.getPriceList().getId() == null) {
+                            	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "rateContract", "null");                            	
+                            }
+                            
                             PriceListEntity ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).tenantId(purchaseOrderDetail.getTenantId()).build());
 
                             //RateContract reference validation

@@ -107,7 +107,6 @@ public class StoreService extends DomainService {
             int i = 0;
             for (Store store : storeRequest.getStores()) {
                 store.setId(sequenceNos.get(i));
-                store.setCode(store.getCode().toUpperCase());
                 if (isEmpty(store.getTenantId())) {
                     store.setTenantId(tenantId);
                 }
@@ -145,7 +144,6 @@ public class StoreService extends DomainService {
                     store.setActive(active);
                     storeList.add(store);
                 } else {
-                    store.setCode(store.getCode().toUpperCase());
                     if (isEmpty(store.getTenantId())) {
                         store.setTenantId(tenantId);
                     }
@@ -247,6 +245,7 @@ public class StoreService extends DomainService {
                 store.setOfficeLocation((Location) object);
             }
 
+            store.setCode(store.getCode().toUpperCase());
         }
 
         return storeRequest;

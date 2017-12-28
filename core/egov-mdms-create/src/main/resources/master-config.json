@@ -1,30 +1,7 @@
 {
   "ASSET": {
     "AssetCategory": {
-       "masterName": "AssetCategory",
-      "moduleDefinition": "a/b/c",
-      "uniqueKeys": [
-        "$.id",
-        "$.tenantId"
-      ]
-    },
-    "ModeOfAcquisition": {
-      "moduleDefinition": "a/b/c",
-      "uniqueKeys": [
-        "$.code",
-        "$.tenantId"
-      ]
-    },
-    "LayerType": {
-      "masterName": "LayerType",
-      "moduleDefinition": "a/b/c",
-      "uniqueKeys": [
-        "$.id",
-        "$.tenantId"
-      ]
-    },
-   "NewAssetMaster12": {
-      "masterName": "NewAssetMaster12",
+      "masterName": "AssetCategory",
       "moduleDefinition": "a/b/c",
       "uniqueKeys": [
         "$.id",
@@ -32,30 +9,166 @@
       ]
     }
   },
-  "common-masters": {
-    "Department": {
-      "masterName": "",
-      "moduleDefinition": "a/b/c",
+  "lcms": {
+    "court": {
+      "masterName": "court",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "side": {
+      "masterName": "side",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "caseType": {
+      "masterName": "caseType",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "caseCategory": {
+      "masterName": "caseCategory",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "bench": {
+      "masterName": "bench",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "caseStatus": {
+      "masterName": "caseStatus",
+      "moduleDefinition": null,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
       ]
     }
   },
-    "swm": {
+  "swm": {
     "VehicleType": {
       "masterName": "VehicleType",
-      "moduleDefinition": "a/b/c",
+      "moduleDefinition": null,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
       ]
     },
-    "NewTestSwmMaster":{
-      "masterName": "NewTestSwmMaster",
-      "moduleDefinition": "a/b/c",
+    "FuelType": {
+      "masterName": "FuelType",
+      "moduleDefinition": null,
       "uniqueKeys": [
         "$.code",
+        "$.tenantId"
+      ]
+    },
+    "OilCompany": {
+      "masterName": "OilCompany",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "WasteType": {
+      "masterName": "WasteType",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "WasteSubType": {
+      "masterName": "WasteSubType",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "DumpingGround": {
+      "masterName": "DumpingGround",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "ProcessingSite": {
+      "masterName": "ProcessingSite",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "ShiftType": {
+      "masterName": "ShiftType",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "Shift": {
+      "masterName": "Shift",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "CollectionType": {
+      "masterName": "CollectionType",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "Population": {
+      "masterName": "Population",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "Toilet": {
+      "masterName": "Toilet",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "SwmProcess": {
+      "masterName": "SwmProcess",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "PaymentTerms": {
+      "masterName": "PaymentTerms",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.label",
         "$.tenantId"
       ]
     }

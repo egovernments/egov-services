@@ -333,7 +333,7 @@ class UpdateObjection extends React.Component {
     printNotice(noticeData) {
         var commencementDate = noticeData.commencementDate;
         var expiryDate = noticeData.expiryDate;
-        var rentPayableDate = noticeData.rentPayableDate;
+        // var rentPayableDate = noticeData.rentPayableDate;
         var doc = new jsPDF();
 
         doc.setFontSize(14);
@@ -345,13 +345,14 @@ class UpdateObjection extends React.Component {
         doc.line(15, 38, 195, 38);
         doc.text(15, 47, 'Lease details: ');
         doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
-        doc.text(15, 57, 'Lease Name: ' + noticeData.allotteeName);
-        doc.text(110, 57, 'Asset No: ' + noticeData.assetNo);
-        doc.text(15, 67, (noticeData.allotteeMobileNumber ? noticeData.allotteeMobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allotteeAddress ? noticeData.allotteeAddress + ", " : "") + tenantId.split(".")[1] + ".");
+        doc.text(15, 57, 'Lease Name: ' + noticeData.allottee.name);
+        doc.text(110, 57, 'Asset No: ' + noticeData.asset.code);
+        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress.replace(/(\r\n|\n|\r)/gm,"") + ", " : "") + tenantId.split(".")[1] + ".");
+
         doc.setFontType("normal");
         doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be '));
         doc.setFontType("bold");
-        doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.agreementPeriod * 12 + ' '));
+        doc.text(85, 77, doc.splitTextToSize(' ' + noticeData.timePeriod * 12 + ' '));
         doc.setFontType("normal");
         doc.text(93, 77, doc.splitTextToSize('months commencing from'));
         doc.setFontType("bold");
@@ -364,22 +365,22 @@ class UpdateObjection extends React.Component {
         doc.text(104, 83, doc.splitTextToSize('(dd/mm/yyyy).', (210 - 15 - 15)));
         doc.text(15, 91, doc.splitTextToSize('2.    The property leased is shop No'));
         doc.setFontType("bold");
-        doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.assetNo + ' '));
+        doc.text(93, 91, doc.splitTextToSize(' ' + noticeData.asset.code + ' '));
         doc.setFontType("normal");
-        doc.text(101, 91, doc.splitTextToSize('and shall be leased for a sum of '));
+        doc.text(112, 91, doc.splitTextToSize('and shall be leased for a sum of '));
         doc.setFontType("bold");
-        doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- (' + noticeData.rentInWord + ')'));
+        doc.text(15, 97, doc.splitTextToSize('Rs.' + noticeData.rent + '/- '));
         doc.setFontType("normal");
         doc.text(111, 97, doc.splitTextToSize('per month exclusive of the payment'));
         doc.text(15, 103, doc.splitTextToSize('of electricity and other charges.', (210 - 15 - 15)));
         doc.text(15, 112, doc.splitTextToSize('3.   The lessee has paid a sum of '));
         doc.setFontType("bold");
-        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- (' + noticeData.securityDepositInWord + ')'));
+        doc.text(90, 112, doc.splitTextToSize('Rs.' + noticeData.securityDeposit + '/- '));
         doc.setFontType("normal");
         doc.text(15, 118, doc.splitTextToSize('as security deposit for the tenancy and the said sum is repayable or adjusted only at the end of the tenancy on the lease delivery vacant possession of the shop let out, subject to deductions, if any, lawfully and legally payable by the lessee under the terms of this lease deed and in law.', (210 - 15 - 15)));
         doc.text(15, 143, doc.splitTextToSize('4.   The rent for every month shall be payable on or before'));
         doc.setFontType("bold");
-        doc.text(143, 143, doc.splitTextToSize(' ' + rentPayableDate + ' '));
+        doc.text(143, 143, doc.splitTextToSize(''));
         doc.setFontType("normal");
         doc.text(169, 143, doc.splitTextToSize('of the'));
         doc.text(15, 149, doc.splitTextToSize('succeeding month.', (210 - 15 - 15)));
@@ -401,11 +402,75 @@ class UpdateObjection extends React.Component {
         doc.setFontType("bold");
         doc.text(15, 282, tenantId.split(".")[1]);
         doc.save('Notice-' + noticeData.agreementNumber + '.pdf');
-        setTimeout(function () {
-            open(location, '_self').close();
-        }, 5000);
+        var blob = doc.output('blob');
+        this.createFileStore(noticeData, blob).then(this.createNotice, this.errorHandler);
     }
 
+    createFileStore(noticeData, blob){
+      // console.log('upload to filestore');
+      var promiseObj = new Promise(function(resolve, reject){
+        let formData = new FormData();
+        formData.append("tenantId", tenantId);
+        formData.append("module", "LAMS");
+        formData.append("file", blob);
+        $.ajax({
+            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (res) {
+                let obj={
+                  noticeData : noticeData,
+                  fileStoreId : res.files[0].fileStoreId
+                }
+                resolve(obj);
+            },
+            error: function (jqXHR, exception) {
+                reject(jqXHR.status);
+            }
+        });
+      });
+      return promiseObj;
+    }
+
+    createNotice(obj){
+      // console.log('notice create');
+      $.ajax({
+          url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+          type: 'POST',
+          dataType: 'json',
+          data: JSON.stringify({
+              RequestInfo: requestInfo,
+              Notice: {
+                  tenantId,
+                  agreementNumber: obj.noticeData.agreementNumber,
+                  fileStore:obj.fileStoreId
+              }
+          }),
+          headers: {
+              'auth-token': authToken
+          },
+          contentType: 'application/json',
+          success:function(res){
+            // console.log('notice created');
+            if(window.opener)
+                window.opener.location.reload();
+            open(location, '_self').close();
+          },
+          error:function(jqXHR, exception){
+            console.log('error');
+            showError('Error while creating notice');
+          }
+      });
+
+    }
+
+    errorHandler(statusCode){
+     console.log("failed with status", status);
+     showError('Error');
+    }
 
     componentDidMount() {
 
@@ -521,37 +586,33 @@ class UpdateObjection extends React.Component {
             console.log("Agreement", agreement);
 
             if (ID === "Print Notice") {
-                var response = $.ajax({
-                    url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: JSON.stringify({
-                        RequestInfo: requestInfo,
-                        Notice: {
-                            tenantId,
-                            agreementNumber: agreement.agreementNumber
-                        }
-                    }),
-                    async: false,
-                    headers: {
-                        'auth-token': authToken
-                    },
-                    contentType: 'application/json'
+              //lams update
+              var body = {
+                  "RequestInfo": requestInfo,
+                  "Agreement": agreement
+              };
+
+              $.ajax({
+                  url: baseUrl + "/lams-services/agreements/objection/_update?tenantId=" + tenantId,
+                  type: 'POST',
+                  dataType: 'json',
+                  data: JSON.stringify(body),
+                  contentType: 'application/json',
+                  headers: {
+                      'auth-token': authToken
+                  },
+                  success: function (res) {
+                      _this.printNotice(agreement);
+                  },
+                  error:function(err){
+                    if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
+                        showError(err.responseJSON.Error.message);
+                    else
+                        showError("Something went wrong. Please contact Administrator");
+                  }
                 });
 
-                if (response["status"] === 201) {
-                    if (window.opener)
-                        window.opener.location.reload();
-
-                    printNotice(response["responseJSON"].Notices[0]);
-                    // window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + responseJSON["Agreements"][0]["acknowledgementNumber"];
-                } else {
-                    console.log("Something went wrong.");
-                }
-
             } else {
-
-
                 if (agreement.documents && agreement.documents.constructor == FileList) {
                     let counter = agreement.documents.length,
                         breakout = 0,

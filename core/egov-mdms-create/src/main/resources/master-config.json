@@ -2,7 +2,15 @@
   "ASSET": {
     "AssetCategory": {
       "masterName": "AssetCategory",
-      "moduleDefinition": "a/b/c",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.id",
+        "$.tenantId"
+      ]
+    },
+     "LayerType": {
+      "masterName": "LayerType",
+      "moduleDefinition": "null",
       "uniqueKeys": [
         "$.id",
         "$.tenantId"

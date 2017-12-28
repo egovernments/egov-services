@@ -1,6 +1,7 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 import org.egov.swm.web.contract.Employee;
@@ -47,7 +48,7 @@ public class Vehicle {
     @NotNull
     @JsonProperty("operatorsReq")
     private Long operatorsReq = null;
-    
+
     @NotNull
     @JsonProperty("driver")
     private Employee driver = null;
@@ -63,6 +64,7 @@ public class Vehicle {
     @JsonProperty("insuranceDetails")
     private InsuranceDetails insuranceDetails = null;
 
+    @Max(value = 100000, message = "kilometers shall be between 1 and 100000")
     @JsonProperty("kilometers")
     private Long kilometers = null;
 

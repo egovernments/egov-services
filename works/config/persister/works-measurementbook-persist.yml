@@ -35,7 +35,7 @@ serviceMaps:
 
        - jsonPath: $.measurementBooks.*.revisionloa
 
-       - jsonPath: $.measurementBooks.*.status
+       - jsonPath: $.measurementBooks.*.status.code
        
        - jsonPath: $.measurementBooks.*.isLegacyMB
                  

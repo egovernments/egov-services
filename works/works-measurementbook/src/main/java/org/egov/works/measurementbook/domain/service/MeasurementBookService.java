@@ -17,28 +17,7 @@ import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceReposi
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.domain.validator.MeasurementBookValidator;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
-import org.egov.works.measurementbook.web.contract.AuditDetails;
-import org.egov.works.measurementbook.web.contract.DetailedEstimate;
-import org.egov.works.measurementbook.web.contract.DetailedEstimateRequest;
-import org.egov.works.measurementbook.web.contract.DetailedEstimateResponse;
-import org.egov.works.measurementbook.web.contract.DocumentDetail;
-import org.egov.works.measurementbook.web.contract.EstimateActivity;
-import org.egov.works.measurementbook.web.contract.EstimateMeasurementSheet;
-import org.egov.works.measurementbook.web.contract.LOAActivity;
-import org.egov.works.measurementbook.web.contract.LOAMeasurementSheet;
-import org.egov.works.measurementbook.web.contract.LOAStatus;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceEstimate;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.measurementbook.web.contract.MBMeasurementSheet;
-import org.egov.works.measurementbook.web.contract.MeasurementBook;
-import org.egov.works.measurementbook.web.contract.MeasurementBookDetail;
-import org.egov.works.measurementbook.web.contract.MeasurementBookRequest;
-import org.egov.works.measurementbook.web.contract.MeasurementBookResponse;
-import org.egov.works.measurementbook.web.contract.MeasurementBookSearchContract;
-import org.egov.works.measurementbook.web.contract.MeasurementBookStatus;
-import org.egov.works.measurementbook.web.contract.RequestInfo;
+import org.egov.works.measurementbook.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,9 +88,20 @@ public class MeasurementBookService {
 			if (measurementBook.getIsLegacyMB())
 				measurementBook.setApprovedDate(measurementBook.getMbDate());
 			if (measurementBook.getIsLegacyMB() && isWorkflowReq) {
-				updateStatus(measurementBook, true);
-			} else
-				measurementBook.setStatus(MeasurementBookStatus.APPROVED);
+				updateStatus(measurementBook, measurementBookRequest.getRequestInfo());
+
+			} else {
+                List<String> filterNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                List<String> filterValuesList = new ArrayList<>(Arrays.asList(Constants.STATUS_APPROVED, Constants.MEASUREMENTBOOK_OBJECT));
+                JSONArray dBStatusArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filterNamesList,
+                        filterValuesList, measurementBook.getTenantId(), measurementBookRequest.getRequestInfo(),
+                        CommonConstants.MODULENAME_WORKS);
+                if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                    WorksStatus status = new WorksStatus();
+                    status.code(Constants.STATUS_APPROVED);
+                    measurementBook.setStatus(status);
+                }
+            }
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);
 		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
@@ -119,7 +109,37 @@ public class MeasurementBookService {
 		return measurementBookResponse;
 	}
 
-	private void updateStatus(MeasurementBook measurementBook, boolean isNew) {
+    private void updateStatus(MeasurementBook measurementBook, RequestInfo requestInfo) {
+        String action = measurementBook.getWorkFlowDetails().getAction();
+        List<String> filterNamesList = null;
+        List<String> filterValuesList = null;
+        WorksStatus status = null;
+        if (!action.equalsIgnoreCase(Constants.SAVE)) {
+            filterNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+            filterValuesList = new ArrayList<>(Arrays.asList(Constants.STATUS_CREATED, Constants.MEASUREMENTBOOK_OBJECT));
+            JSONArray dBStatusArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filterNamesList,
+                    filterValuesList, measurementBook.getTenantId(), requestInfo,
+                    CommonConstants.MODULENAME_WORKS);
+            if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                status = new WorksStatus();
+                status.setCode(Constants.STATUS_CREATED);
+            }
+        }
+        else {
+            filterNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+            filterValuesList = new ArrayList<>(Arrays.asList(Constants.STATUS_SAVED, Constants.MEASUREMENTBOOK_OBJECT));
+            JSONArray dBStatusArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filterNamesList,
+                    filterValuesList, measurementBook.getTenantId(), requestInfo,
+                    CommonConstants.MODULENAME_WORKS);
+            if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                status = new WorksStatus();
+                status.setCode(Constants.STATUS_SAVED);
+            }
+        }
+        measurementBook.setStatus(status);
+    }
+
+	/*private void updateStatus(MeasurementBook measurementBook, boolean isNew, RequestInfo requestInfo) {
 		String action = measurementBook.getWorkFlowDetails().getAction();
 		if (isNew) {
 			if (!action.equalsIgnoreCase(Constants.SAVE))
@@ -145,7 +165,7 @@ public class MeasurementBookService {
 				measurementBook.setStatus(MeasurementBookStatus.RESUBMITTED);
 		}
 	}
-
+*/
 	private void createUpdateRevisionEstimate(MeasurementBook measurementBook, RequestInfo requestInfo,
 			Boolean isUpdate) {
 		DetailedEstimateRequest detailedEstimateRequest = new DetailedEstimateRequest();
@@ -328,7 +348,7 @@ public class MeasurementBookService {
 			if (measurementBook.getLumpSumMBDetails() != null && !measurementBook.getLumpSumMBDetails().isEmpty())
 				createUpdateRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo(), true);
 			
-			updateStatus(measurementBook, false);
+			//updateStatus(measurementBook, false);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);
 		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();

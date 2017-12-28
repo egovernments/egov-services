@@ -122,7 +122,7 @@ public class LetterOfAcceptanceEstimate   {
   @ApiModelProperty(required = true, value = "Detailed Estimate reference.")
   //@NotNull
 
-  @Valid
+  //@Valid
 
   public DetailedEstimate getDetailedEstimate() {
     return detailedEstimate;

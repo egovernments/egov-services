@@ -79,7 +79,9 @@ public class MeasurementBookHelper {
         mb.getLetterOfAcceptanceEstimate().setId(this.letterOfAcceptanceEstimate);
         mb.setApprovedDate(this.approvedDate);
         mb.stateId(this.stateId);
-        mb.status(MeasurementBookStatus.valueOf(this.status));
+        WorksStatus worksStatus = new WorksStatus();
+        worksStatus.setCode(this.status);
+        mb.status(worksStatus);
         mb.setIsLegacyMB(this.isLegacyMB);
         mb.setMbAmount(this.mbAmount);
         mb.setCancellationRemarks(this.cancellationRemarks);

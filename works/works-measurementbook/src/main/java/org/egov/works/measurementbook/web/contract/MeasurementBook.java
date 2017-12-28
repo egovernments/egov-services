@@ -18,7 +18,7 @@ import java.util.Objects;
  * An Object that holds the basic data for Measurement Book
  */
 @ApiModel(description = "An Object that holds the basic data for Measurement Book")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T07:36:21.338Z")
 
 public class MeasurementBook   {
   @JsonProperty("id")
@@ -50,16 +50,16 @@ public class MeasurementBook   {
 
   @JsonProperty("letterOfAcceptanceEstimate")
   private LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = null;
-  
+
   @JsonProperty("revisionLOA")
   private String revisionLOA = null;
 
   @JsonProperty("status")
-  private MeasurementBookStatus status = null;
+  private WorksStatus status = null;
 
   @JsonProperty("measurementBookDetails")
   private List<MeasurementBookDetail> measurementBookDetails = null;
-  
+
   @JsonProperty("lumpSumMBDetails")
   private List<MeasurementBookDetail> lumpSumMBDetails = null;
 
@@ -95,9 +95,9 @@ public class MeasurementBook   {
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
-  
+
   @JsonProperty("deleted")
-  private Boolean deleted = null;
+  private Boolean deleted = false;
 
   public MeasurementBook id(String id) {
     this.id = id;
@@ -152,7 +152,7 @@ public class MeasurementBook   {
   @ApiModelProperty(required = true, value = "Reference number for the Measurement book.")
   @NotNull
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(min=1,max=50)
   public String getMbRefNo() {
     return mbRefNo;
   }
@@ -307,14 +307,14 @@ public class MeasurementBook   {
   }
 
   public String getRevisionLOA() {
-	return revisionLOA;
+    return revisionLOA;
   }
 
   public void setRevisionLOA(String revisionLOA) {
-	this.revisionLOA = revisionLOA;
+    this.revisionLOA = revisionLOA;
   }
 
-  public MeasurementBook status(MeasurementBookStatus status) {
+  public MeasurementBook status(WorksStatus status) {
     this.status = status;
     return this;
   }
@@ -328,11 +328,11 @@ public class MeasurementBook   {
 
   @Valid
 
-  public MeasurementBookStatus getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(MeasurementBookStatus status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
   }
 
@@ -364,8 +364,8 @@ public class MeasurementBook   {
   public void setMeasurementBookDetails(List<MeasurementBookDetail> measurementBookDetails) {
     this.measurementBookDetails = measurementBookDetails;
   }
-  
-  
+
+
 
   public List<MeasurementBookDetail> getLumpSumMBDetails() {
 	return lumpSumMBDetails;
@@ -585,12 +585,19 @@ public MeasurementBook auditDetails(AuditDetails auditDetails) {
   }
 
 
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
   public Boolean getDeleted() {
-	return deleted;
+    return deleted;
   }
 
   public void setDeleted(Boolean deleted) {
-	this.deleted = deleted;
+    this.deleted = deleted;
   }
 
   @Override
@@ -612,6 +619,7 @@ public MeasurementBook auditDetails(AuditDetails auditDetails) {
         Objects.equals(this.fromPageNo, measurementBook.fromPageNo) &&
         Objects.equals(this.toPageNo, measurementBook.toPageNo) &&
         Objects.equals(this.letterOfAcceptanceEstimate, measurementBook.letterOfAcceptanceEstimate) &&
+        Objects.equals(this.revisionLOA, measurementBook.revisionLOA) &&
         Objects.equals(this.status, measurementBook.status) &&
         Objects.equals(this.measurementBookDetails, measurementBook.measurementBookDetails) &&
         Objects.equals(this.isLegacyMB, measurementBook.isLegacyMB) &&
@@ -622,12 +630,13 @@ public MeasurementBook auditDetails(AuditDetails auditDetails) {
         Objects.equals(this.stateId, measurementBook.stateId) &&
         Objects.equals(this.cancellationReason, measurementBook.cancellationReason) &&
         Objects.equals(this.cancellationRemarks, measurementBook.cancellationRemarks) &&
-        Objects.equals(this.auditDetails, measurementBook.auditDetails);
+        Objects.equals(this.auditDetails, measurementBook.auditDetails) &&
+        Objects.equals(this.deleted, measurementBook.deleted);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, auditDetails);
+    return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, revisionLOA, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, auditDetails, deleted);
   }
 
   @Override
@@ -645,6 +654,7 @@ public MeasurementBook auditDetails(AuditDetails auditDetails) {
     sb.append("    fromPageNo: ").append(toIndentedString(fromPageNo)).append("\n");
     sb.append("    toPageNo: ").append(toIndentedString(toPageNo)).append("\n");
     sb.append("    letterOfAcceptanceEstimate: ").append(toIndentedString(letterOfAcceptanceEstimate)).append("\n");
+    sb.append("    revisionLOA: ").append(toIndentedString(revisionLOA)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    measurementBookDetails: ").append(toIndentedString(measurementBookDetails)).append("\n");
     sb.append("    isLegacyMB: ").append(toIndentedString(isLegacyMB)).append("\n");
@@ -656,6 +666,7 @@ public MeasurementBook auditDetails(AuditDetails auditDetails) {
     sb.append("    cancellationReason: ").append(toIndentedString(cancellationReason)).append("\n");
     sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("}");
     return sb.toString();
   }

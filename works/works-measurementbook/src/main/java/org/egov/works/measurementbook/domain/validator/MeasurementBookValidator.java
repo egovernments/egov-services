@@ -1,20 +1,19 @@
 package org.egov.works.measurementbook.domain.validator;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
+import net.minidev.json.JSONArray;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.domain.repository.EstimateRepository;
 import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.domain.repository.OfflineStatusRepository;
 import org.egov.works.measurementbook.domain.repository.WorkOrderRepository;
+import org.egov.works.measurementbook.utils.MeasurementBookUtils;
 import org.egov.works.measurementbook.web.contract.DetailedEstimate;
 import org.egov.works.measurementbook.web.contract.EstimateActivity;
 import org.egov.works.measurementbook.web.contract.EstimateMeasurementSheet;
@@ -53,6 +52,9 @@ public class MeasurementBookValidator {
 
 	@Autowired
 	private EstimateRepository estimateRepository;
+
+    @Autowired
+    private MeasurementBookUtils measurementBookUtils;
 
 	public void validateMB(MeasurementBookRequest measurementBookRequest, Boolean isNew) {
 		final RequestInfo requestInfo = measurementBookRequest.getRequestInfo();
@@ -116,6 +118,10 @@ public class MeasurementBookValidator {
 								Constants.MSG_MB_DATE_WORK_COMMENCED_DATE);
 				}
 			}
+
+            if(measurementBook.getId() != null)
+                validateUpdateStatus(measurementBook, measurementBookRequest.getRequestInfo(), messages);
+
 		}
 		if (!messages.isEmpty())
 	                throw new CustomException(messages);
@@ -272,4 +278,50 @@ public class MeasurementBookValidator {
 				messages.put(Constants.MSG_MB_DATE_PREVIOUS_DATE, Constants.MSG_MB_DATE_PREVIOUS_DATE);
 		}
 	}
+
+    private void validateUpdateStatus(MeasurementBook measurementBook, RequestInfo requestInfo, Map<String, String> messages) {
+        if(measurementBook.getId() != null) {
+            List<MeasurementBook> measurementBooks = searchMeasurementBookById(measurementBook, requestInfo);
+            List<String> filetsNamesList = null;
+            List<String> filetsValuesList = null;
+            if(measurementBooks != null && !measurementBooks.isEmpty()) {
+                String status = measurementBooks.get(0).getStatus().getCode();
+                if (status.equals(Constants.STATUS_CANCELLED) || status.equals(Constants.STATUS_APPROVED)) {
+                    messages.put(Constants.KEY_MB_CANNOT_UPDATE_STATUS, Constants.MSG_MB_CANNOT_UPDATE_STATUS);
+                } else if((status.equals(Constants.STATUS_REJECTED) && !measurementBook.getStatus().getCode().equals(Constants.STATUS_RESUBMITTED)) ||
+                        (status.equals(Constants.STATUS_RESUBMITTED) && !(measurementBook.getStatus().toString().equals(Constants.STATUS_CHECKED) ||
+                                measurementBook.getStatus().getCode().equals(Constants.STATUS_CANCELLED)) )) {
+                    messages.put(Constants.KEY_MB_INVALID_STATUS, Constants.MSG_MB_INVALID_STATUS);
+                } else if (!measurementBook.getStatus().getCode().equals(Constants.STATUS_REJECTED)) {
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(measurementBook.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
+                    JSONArray statusRequestArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, measurementBook.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(status.toUpperCase(),CommonConstants.DETAILEDESTIMATE));
+                    JSONArray dBStatusArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, measurementBook.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    if (statusRequestArray != null && !statusRequestArray.isEmpty() && dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                        Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
+                        Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
+                        Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("orderNumber");
+                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
+                        if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
+                            messages.put(Constants.KEY_MB_INVALID_STATUS, Constants.MSG_MB_INVALID_STATUS);
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private List<MeasurementBook> searchMeasurementBookById(MeasurementBook measurementBook, final RequestInfo requestInfo) {
+        MeasurementBookSearchContract measurementBookSearchContract = MeasurementBookSearchContract.builder()
+                .tenantId(measurementBook.getTenantId()).ids(Arrays.asList(measurementBook.getId())).build();
+        return measurementBookRepository.searchMeasurementBooks(measurementBookSearchContract,requestInfo);
+    }
+
 }

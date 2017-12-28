@@ -1,21 +1,19 @@
-package org.egov.works.qualitycontrol.web.contract;
+package org.egov.works.measurementbook.web.contract;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 
 /**
  * An Object that holds Status of all Works Module
  */
 @ApiModel(description = "An Object that holds Status of all Works Module")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-19T07:20:24.051Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:35:39.062Z")
 
 public class WorksStatus   {
   @JsonProperty("tenantId")
@@ -66,7 +64,7 @@ public class WorksStatus   {
   @ApiModelProperty(required = true, value = "Status Code")
   @NotNull
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=100)
+ @Pattern(regexp="[a-zA-Z0-9-_\\\\]+") @Size(min=1,max=100)
   public String getCode() {
     return code;
   }

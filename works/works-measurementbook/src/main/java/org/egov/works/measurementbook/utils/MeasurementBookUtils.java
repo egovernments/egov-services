@@ -1,6 +1,7 @@
 package org.egov.works.measurementbook.utils;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.works.commons.web.contract.MasterDetails;
@@ -98,4 +99,39 @@ public class MeasurementBookUtils {
 
 		return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
 	}
+
+    /**
+     *
+     * @param objectName accepts the name of entity like : ScheduleOfRate,Contractor camelcase should be follwed
+     * @param tenantId tenantId for which the data to should be retrived
+     * @param requestInfo
+     *
+     * @param fieldName - List of fields as search
+     * @param fieldvalue - List of values
+     * @return the json map it to your object.
+     */
+
+    public JSONArray getMDMSData(final String objectName, final List<String> fieldNames, final List<String> fieldValues,
+                                 final String tenantId, final RequestInfo requestInfo, final String moduleName) {
+        MasterDetails[] masterDetailsArray;
+        ModuleDetails[] moduleDetailsArray;
+        MdmsRequest mdmsRequest;
+        MdmsResponse mdmsResponse;
+        StringBuilder filter = new StringBuilder();
+        filter.append("[?(@." + fieldNames.get(0) + " == '" + fieldValues.get(0) + "'&&@." + fieldNames.get(1) + "=='" + fieldValues.get(1) + "')]");
+
+        masterDetailsArray = new MasterDetails[1];
+        masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter.toString()).build();
+        moduleDetailsArray = new ModuleDetails[1];
+        moduleDetailsArray[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetailsArray)
+                .build();
+
+        mdmsRequest = MdmsRequest.builder()
+                .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray).tenantId(tenantId).build())
+                .requestInfo(requestInfo).build();
+
+        mdmsResponse = restTemplate.postForObject(mdmsBySearchCriteriaUrl, mdmsRequest, MdmsResponse.class);
+
+        return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
+    }
 }

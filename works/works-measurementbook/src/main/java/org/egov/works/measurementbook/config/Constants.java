@@ -12,6 +12,15 @@ public class Constants {
 	public static final String CANCEL = "Cancel";
 	public static final String SAVE = "Save";
 
+    public static final String STATUS_APPROVED = "APPROVE";
+    public static final String STATUS_CREATED = "CREATED";
+    public static final String STATUS_SAVED = "SAVED";
+    public static final String STATUS_CANCELLED = "CANCELLED";
+    public static final String STATUS_REJECTED = "REJECTED";
+    public static final String STATUS_RESUBMITTED = "RESUBMITTED";
+    public static final String STATUS_CHECKED = "CHECKED";
+    public static final String MEASUREMENTBOOK_OBJECT = "MeasurementBook";
+
 	// Error messages
 	public static final String KEY_COMMON_ERROR_CODE = "SOMETHING_WENT_WRONG";
 	public static final String MESSAGE_RE_COMMON_ERROR_CODE = "Something went wrong while persisting Revision Detailed Estimate";
@@ -88,5 +97,11 @@ public class Constants {
 	
 	public static final String KEY_MB_MEASUREMENTS_LOA_NOT_VALID = "MB_MEASUREMENTS_LOA_NOT_VALID";
 	public static final String MSG_MB_MEASUREMENTS_LOA_NOT_VALID = "In MB Msheet, reference to LOA msheet should be valid";
+
+    public static final String KEY_MB_CANNOT_UPDATE_STATUS = "MB_CANNOT_UPDATE_STATUS";
+    public static final String MSG_MB_CANNOT_UPDATE_STATUS = "Status cannot be updated for MB";
+
+    public static final String KEY_MB_INVALID_STATUS = "INVALID_STATUS";
+    public static final String MSG_MB_INVALID_STATUS = "Status is invalid for MB, please give proper status";
 
 }

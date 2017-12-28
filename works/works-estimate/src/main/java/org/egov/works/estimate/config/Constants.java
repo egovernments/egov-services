@@ -410,6 +410,21 @@ public class Constants {
 
     public static final String KEY_WORKS_ESTIMATE_STATUS_INVALID = "WORKS_ESTIMATE_STATUS_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_STATUS_INVALID = "Work estimate status is invalid";
+
+    public static final String KEY_ESIMATE_OVERHEAD_TENANTID_REQUIRED = "ESIMATE_OVERHEAD_TENANTID_REQUIRED";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_TENANTID_REQUIRED = "Tenantid is required for estimate overhead";
+
+    public static final String KEY_ESIMATE_ACTIVITY_TENANTID_REQUIRED = "ESIMATE_ACTIVITY_TENANTID_REQUIRED";
+    public static final String MESSAGE_ESIMATE_ACTIVITY_TENANTID_REQUIRED = "Tenantid is required for estimate activity";
+
+    public static final String KEY_ESIMATE_TECHNICALSANCTION_TENANTID_REQUIRED = "ESIMATE_TECHNICALSANCTION_TENANTID_REQUIRED";
+    public static final String MESSAGE_ESIMATE_TECHNICALSANCTION_TENANTID_REQUIRED = "Tenantid is required for estimate technical sanction details";
+
+    public static final String KEY_ESIMATE_DOCUMENTDETAILS_TENANTID_REQUIRED = "ESIMATE_DOCUMENTDETAILS_TENANTID_REQUIRED";
+    public static final String MESSAGE_ESIMATE_DOCUMENTDETAILS_TENANTID_REQUIRED = "Tenantid is required for estimate document details";
+
+    public static final String KEY_ESIMATE_DEDUCTIONS_TENANTID_REQUIRED = "ESIMATE_DEDUCTIONS_TENANTID_REQUIRED";
+    public static final String MESSAGE_ESIMATE_DEDUCTIONS_TENANTID_REQUIRED = "Tenantid is required for estimate deductions";
     
     public static final String KEY_PMC_CONTRACTOR_INVALID = "works.ae.pmc.notexist";
     public static final String MESSAGE_PMC_CONTRACTOR_INVALID = "The given PMC Does not exist in the system";

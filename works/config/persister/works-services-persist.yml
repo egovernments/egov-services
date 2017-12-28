@@ -107,7 +107,7 @@ serviceMaps:
        - jsonPath: $.offlineStatuses.*.statusDate
          dbType: LONG
          
-       - jsonPath: $.offlineStatuses.*.status
+       - jsonPath: $.offlineStatuses.*.status.code
        
        - jsonPath: $.offlineStatuses.*.auditDetails.createdBy
        

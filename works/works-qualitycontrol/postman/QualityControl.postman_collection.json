@@ -1,0 +1,115 @@
+{
+	"owner": "3022735",
+	"lastUpdatedBy": "3022735",
+	"lastRevision": 2851364056,
+	"team": null,
+	"id": "536efcf6-a1a6-2b90-fe26-f16a22f1f942",
+	"name": "QualityControl",
+	"description": null,
+	"variables": null,
+	"auth": null,
+	"events": null,
+	"folders_order": [],
+	"order": [
+		"10c492ff-5dbf-2b23-b026-eb150b43c851",
+		"d8626c76-c6ac-7f52-f2a7-4a279380ca29",
+		"b233fb27-3794-4f90-29d3-b9529cd947cf"
+	],
+	"requests": [
+		{
+			"id": "10c492ff-5dbf-2b23-b026-eb150b43c851",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-qualitycontrol/v1/qualitytestings/_create",
+			"folder": null,
+			"queryParams": [],
+			"events": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1514454109501,
+			"name": "Create quality testing",
+			"description": null,
+			"collectionId": "536efcf6-a1a6-2b90-fe26-f16a22f1f942",
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"de95bb03-506c-4aae-912c-550ff76e7dd4\",\n    \"tenantId\": \"default\",\n     \"userInfo\":{\n     \"tenantId\" : \"default\",\n     \"username\" : \"narasappa\",\n     \"id\":1,\n       \"roles\" : []\n   }\n  },\n  \n  \"qualityTestings\": [\n    {\n      \"tenantId\": \"default\",\n      \"letterOfAcceptanceEstimate\" : {\n        \"tenantId\": \"default\",\n        \"id\" : \"4c3dc3b9a4fd46e19a7df6350a9ebf7d\",\n        \"letterOfAcceptance\" : \"c87a9f9e28ea44908cd01aa6bee960fd\"\n    },\n    \"remarks\" : \"testing quality\",\n    \"status\" : {\n      \"code\" :  \"APPROVED\"\n    },\n    \"qualityTestingDetails\" : [\n     {\n       \"tenantId\": \"default\",\n       \"materialName\" : \"materialName\",\n       \"hodRemarks\" : \"hodRemarks\",\n       \"maximumValue\" : 100,\n       \"coRemarks\" : \"coRemarks\",\n       \"testName\" : \"testName\",\n       \"minimumValue\" : 10,\n       \"resultUnit\" : \"resultUnit\"\n     }\n      ]\n      \n    \n    }\n  ]\n}\n"
+		},
+		{
+			"id": "b233fb27-3794-4f90-29d3-b9529cd947cf",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-qualitycontrol/v1/qualitytestings/_update",
+			"folder": null,
+			"queryParams": [],
+			"events": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1514454130075,
+			"name": "Update quality testing",
+			"description": null,
+			"collectionId": "536efcf6-a1a6-2b90-fe26-f16a22f1f942",
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"fa548db8-2407-4848-93a9-81eed5cc8ad5\",\n    \"tenantId\": \"default\",\n     \"userInfo\":{\n     \"tenantId\" : \"default\",\n     \"username\" : \"narasappa\",\n     \"id\":1,\n       \"roles\" : []\n   }\n  },\n  \n  \"qualityTestings\": [\n    {\n      \"id\" : \"2d692b9559b040fd923765621982561a\",\n      \"tenantId\": \"default\",\n      \"letterOfAcceptanceEstimate\" : {\n        \"tenantId\": \"default\",\n        \"id\" : \"86fa17bb861f4486a617c79fd9f97b52\",\n        \"letterOfAcceptance\" : \"ee4f28fe5bd34b18ad9955a73fbf96f0\"\n    },\n    \"remarks\" : \"testing quality update\",\n    \"status\" : {\n      \"code\" :  \"APPROVED\"\n    },\n    \"qualityTestingDetails\" : [\n     {\n       \"tenantId\": \"default\",\n       \"materialName\" : \"materialName111\",\n       \"hodRemarks\" : \"hodRemarks1\",\n       \"maximumValue\" : 100,\n       \"coRemarks\" : \"coRemarks\",\n       \"testName\" : \"testName\",\n       \"minimumValue\" : 10,\n       \"resultUnit\" : \"resultUnit\"\n     }\n      ]\n      \n    \n    }\n  ]\n}\n"
+		},
+		{
+			"id": "d8626c76-c6ac-7f52-f2a7-4a279380ca29",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-qualitycontrol/v1/qualitytestings/_search?tenantId=default",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"events": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"auth": null,
+			"time": 1514454144683,
+			"name": "Search Quality testing",
+			"description": null,
+			"collectionId": "536efcf6-a1a6-2b90-fe26-f16a22f1f942",
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"fa548db8-2407-4848-93a9-81eed5cc8ad5\",\n    \"tenantId\": \"default\",\n     \"userInfo\":{\n     \"tenantId\" : \"default\",\n     \"username\" : \"narasappa\",\n     \"id\":1,\n       \"roles\" : []\n   }\n  }\n}"
+		}
+	]
+}

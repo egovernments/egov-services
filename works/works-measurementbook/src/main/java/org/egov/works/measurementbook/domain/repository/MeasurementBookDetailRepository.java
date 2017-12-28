@@ -21,6 +21,7 @@ public class MeasurementBookDetailRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_measurementbook_details mbdetail";
 
 
+    //TODO Check for tendered and lumpsum items
     public List<MeasurementBookDetail> searchMeasurementBookDetail(final MeasurementBookDetailSearchContract measurementBookDetailSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";

@@ -1,10 +1,8 @@
 package org.egov.works.services.domain.validator;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
@@ -14,14 +12,8 @@ import org.egov.works.commons.web.contract.WorkOrderOfflineStatus;
 import org.egov.works.services.config.Constants;
 import org.egov.works.services.domain.repository.FileStoreRepository;
 import org.egov.works.services.domain.service.OfflineStatusService;
-import org.egov.works.services.web.contract.DocumentDetail;
-import org.egov.works.services.web.contract.DocumentDetailRequest;
-import org.egov.works.services.web.contract.DocumentDetailSearchCriteria;
-import org.egov.works.services.web.contract.EstimateAppropriationSearchContract;
-import org.egov.works.services.web.contract.OfflineStatus;
-import org.egov.works.services.web.contract.OfflineStatusRequest;
-import org.egov.works.services.web.contract.OfflineStatusResponse;
-import org.egov.works.services.web.contract.OfflineStatusSearchContract;
+import org.egov.works.services.utils.ServiceUtils;
+import org.egov.works.services.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +25,9 @@ public class RequestValidator {
 
     @Autowired
     private FileStoreRepository fileStoreRepository;
+
+    @Autowired
+    private ServiceUtils serviceUtils;
 
     public void validateAppropriationSearchContract(EstimateAppropriationSearchContract estimateAppropriationSearchContract) {
         Map<String, String> messages = new HashMap<>();
@@ -60,9 +55,27 @@ public class RequestValidator {
 
         validateStatusNameOrder(OffStatuses, offlineStatusRequest, messages);
         validateStatusDate(offlineStatusRequest, messages);
+        validateStatus(offlineStatusRequest, messages, offlineStatusRequest.getRequestInfo());
 
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
+
+    }
+
+    private void validateStatus(OfflineStatusRequest offlineStatusRequest, Map<String, String> messages, RequestInfo requestInfo) {
+
+        for(OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
+            if (offlineStatus.getStatus() != null && StringUtils.isNotBlank(offlineStatus.getStatus().getCode())) {
+                List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE, CommonConstants.MODULE_TYPE));
+                List<String> filetsValuesList = new ArrayList<>(Arrays.asList(offlineStatus.getStatus().getCode().toUpperCase(), offlineStatus.getObjectType()));
+                JSONArray dBStatusArray = serviceUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                        filetsValuesList, offlineStatus.getStatus().getTenantId(), requestInfo,
+                        CommonConstants.MODULENAME_WORKS);
+                if (dBStatusArray != null && dBStatusArray.isEmpty())
+                    messages.put(Constants.KEY_OFFLINE_STATUS_VALUE_INVALID,
+                            Constants.MESSAGE_OFFLINE_STATUS_VALUE_INVALID);
+            }
+        }
 
     }
 
@@ -125,7 +138,7 @@ public class RequestValidator {
         int b = 0;
         final String[] selectedStatusArr = new String[offlineStatusRequest.getOfflineStatuses().size()];
         for (int i = 0; i < offlineStatusRequest.getOfflineStatuses().size(); i++) {
-            selectedStatusArr[i] = offlineStatusRequest.getOfflineStatuses().get(i).getStatus();
+            selectedStatusArr[i] = offlineStatusRequest.getOfflineStatuses().get(i).getStatus().getCode();
         }
         
         for (final String statName : offlineStatusService.getStatusNameDetails(selectedStatusArr)) {

@@ -37,4 +37,8 @@ public class Constants {
     public static final String KEY_OBJECTDATE_STATUSDATE_LOA_INVALID = "works.offlinestatus.loa.statusdate.invalid";
     public static final String MESSAGE_OBJECTDATE_STATUSDATE_LOA_INVALID = "Status Date cannot be greater then Approved date of letter of acceptance";
 
+    public static final String KEY_OFFLINE_STATUS_VALUE_INVALID = "OFFLINE_STATUS_VALUE_INVALID";
+    public static final String MESSAGE_OFFLINE_STATUS_VALUE_INVALID = "Status value is invalid";
+
+
 }

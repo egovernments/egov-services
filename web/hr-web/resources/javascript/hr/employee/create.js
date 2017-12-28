@@ -1592,7 +1592,7 @@ function getPositions(_this, cb) {
                     departmentId: $("#assignments\\.department").val(),
                     designationId: $("#assignments\\.designation").val(),
                     asOnDate: _date,
-                    pageSize: 100
+                    pageSize: 500
                 }, function(err, res) {
                     if (res) {
                         commonObject["assignments_position"] = res.Position;
@@ -1610,7 +1610,7 @@ function getPositions(_this, cb) {
                 tenantId,
                 departmentId: $("#assignments\\.department").val(),
                 designationId: $("#assignments\\.designation").val(),
-                pageSize: 100
+                pageSize: 500
             }, function(err, res) {
                 if (res) {
                     commonObject["assignments_position"] = res.Position;

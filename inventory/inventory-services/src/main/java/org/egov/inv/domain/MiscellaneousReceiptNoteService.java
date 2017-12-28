@@ -19,11 +19,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -180,7 +176,7 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                 validateReceiptdate(errors, materialReceipt);
                 for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
                     int j = 0;
-                    validateNonIssueQuantity(tenantId, materialReceiptDetail, errors, j);
+                    validateNonIssueQuantity(materialReceiptDetail, errors, j);
                     validateReceivedQuantity(errors, materialReceiptDetail, j);
                     j++;
                 }
@@ -193,13 +189,13 @@ public class MiscellaneousReceiptNoteService extends DomainService {
 
     private void validateReceiptdate(InvalidDataException errors, MaterialReceipt materialReceipt) {
         if (null != materialReceipt.getReceiptDate() && materialReceipt.getReceiptDate() > getCurrentDate()) {
-			String date = convertEpochtoDate(materialReceipt.getReceiptDate());
-            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ",date);
+            String date = convertEpochtoDate(materialReceipt.getReceiptDate());
+            errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "Receipt date ", date);
         }
     }
 
     private void validateReceivedQuantity(InvalidDataException errors, MaterialReceiptDetail materialReceiptDetail, int j) {
-        if (materialReceiptDetail.getReceivedQty().longValue() <= 0) {
+        if (materialReceiptDetail.getReceivedQty().compareTo(BigDecimal.ZERO) <= 0) {
             errors.addDataError(ErrorCode.RCVED_QTY_GT_ZERO.getCode(), String.valueOf(j));
         }
     }
@@ -214,8 +210,8 @@ public class MiscellaneousReceiptNoteService extends DomainService {
         }
     }
 
-    private void validateNonIssueQuantity(String tenantId, MaterialReceiptDetail materialReceiptDetail, InvalidDataException errors, int row) {
-        if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()) {
+    private void validateNonIssueQuantity(MaterialReceiptDetail materialReceiptDetail, InvalidDataException errors, int row) {
+        if (materialReceiptDetail.getAcceptedQty().compareTo(materialReceiptDetail.getReceivedQty()) == -1) {
             errors.addDataError(ErrorCode.QTY_LE_SCND_ROW.getCode(), "Issued Quantity", "Received Quantity", String.valueOf(row));
         }
     }
@@ -259,17 +255,17 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                 materialReceiptDetail.setUom(uom);
 
                 if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
-                	BigDecimal convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty(), uom.getConversionFactor());
+                    BigDecimal convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty(), uom.getConversionFactor());
                     materialReceiptDetail.setAcceptedQty(convertedAcceptedQuantity);
                 }
 
                 if (null != materialReceiptDetail.getReceivedQty() && null != uom.getConversionFactor()) {
-                	BigDecimal convertedReceivedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getReceivedQty(), uom.getConversionFactor());
+                    BigDecimal convertedReceivedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getReceivedQty(), uom.getConversionFactor());
                     materialReceiptDetail.setReceivedQty(convertedReceivedQuantity);
                 }
 
                 if (null != materialReceiptDetail.getUnitRate() && null != uom.getConversionFactor()) {
-                	BigDecimal convertedRate = getSaveConvertedRate(materialReceiptDetail.getUnitRate(),
+                    BigDecimal convertedRate = getSaveConvertedRate(materialReceiptDetail.getUnitRate(),
                             uom.getConversionFactor());
                     materialReceiptDetail.setUnitRate(convertedRate);
                 }
@@ -282,13 +278,12 @@ public class MiscellaneousReceiptNoteService extends DomainService {
     private Long getCurrentDate() {
         return currentEpochWithoutTime() + (24 * 60 * 60 * 1000) - 1;
     }
-    
-    private String convertEpochtoDate(Long date)
-	 {
-		 Date epoch = new Date(date);
-		 SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-		 String s2 = format.format(epoch);
-		 return s2;
-	 }
+
+    private String convertEpochtoDate(Long date) {
+        Date epoch = new Date(date);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        String s2 = format.format(epoch);
+        return s2;
+    }
 
 }

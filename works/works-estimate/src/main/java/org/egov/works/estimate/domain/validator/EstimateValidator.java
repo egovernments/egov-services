@@ -92,28 +92,13 @@ public class EstimateValidator {
             validateCouncilSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             if (estimate.getId() != null) {
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
-                validateStatus(estimate, abstractEstimateRequest.getRequestInfo(), messages);
+                validateStatus(estimate.getStatus(), estimate.getTenantId(), abstractEstimateRequest.getRequestInfo(), messages);
             }
             if (!messages.isEmpty())
                 throw new CustomException(messages);
         }
     }
 
-    private void validateStatus(AbstractEstimate estimate, RequestInfo requestInfo, Map<String, String> messages) {
-
-        if(estimate.getStatus() != null && StringUtils.isNotBlank(estimate.getStatus().toString())) {
-            List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
-            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(estimate.getStatus().getCode().toUpperCase(),CommonConstants.DETAILEDESTIMATE));
-            JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
-                    filetsValuesList, estimate.getTenantId(), requestInfo,
-                    CommonConstants.MODULENAME_WORKS);
-            if(dBStatusArray != null && dBStatusArray.isEmpty())
-                messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_INVALID,
-                        Constants.MESSAGE_WORKS_ESTIMATE_STATUS_INVALID);
-        } else
-            messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_REQUIRED,
-                    Constants.MESSAGE_WORKS_ESTIMATE_STATUS_REQUIRED);
-    }
 
     private void validateDpRemarks(Map<String, String> messages, AbstractEstimate estimate) {
         if(StringUtils.isBlank(estimate.getDpRemarks()))
@@ -528,7 +513,7 @@ public class EstimateValidator {
             validateActivities(detailedEstimate, messages, requestInfo);
             if (StringUtils.isNotBlank(detailedEstimate.getId())) {
                 validateIsModified(detailedEstimate, requestInfo, messages);
-                validateStatus(detailedEstimate, requestInfo, messages);
+                validateStatus(detailedEstimate.getStatus(), detailedEstimate.getTenantId(), requestInfo, messages);
             }
             if (detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
                 messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
@@ -570,13 +555,13 @@ public class EstimateValidator {
         }
     }
 
-    private void validateStatus(DetailedEstimate estimate, RequestInfo requestInfo, Map<String, String> messages) {
+    private void validateStatus(WorksStatus status, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
 
-        if(estimate.getStatus() != null && StringUtils.isNotBlank(estimate.getStatus().toString())) {
+        if(status != null && StringUtils.isNotBlank(status.getCode())) {
             List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
-            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(estimate.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(status.getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
             JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
-                    filetsValuesList, estimate.getTenantId(), requestInfo,
+                    filetsValuesList, status.getTenantId(), requestInfo,
                     CommonConstants.MODULENAME_WORKS);
             if(dBStatusArray != null && dBStatusArray.isEmpty())
                 messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_INVALID,

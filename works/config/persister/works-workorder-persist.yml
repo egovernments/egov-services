@@ -35,7 +35,7 @@ serviceMaps:
 
        - jsonPath: $.letterOfAcceptances.*.loaAmount
        
-       - jsonPath: $.letterOfAcceptances.*.status
+       - jsonPath: $.letterOfAcceptances.*.status.code
                  
        - jsonPath: $.letterOfAcceptances.*.tenderFinalizedPercentage
                  
@@ -285,7 +285,7 @@ serviceMaps:
 
        - jsonPath: $.workOrders.*.workOrderNumber
 
-       - jsonPath: $.workOrders.*.status
+       - jsonPath: $.workOrders.*.status.code
 
        - jsonPath: $.workOrders.*.stateId
 

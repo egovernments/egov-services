@@ -133,7 +133,7 @@ serviceMaps:
             
        - jsonPath: $.abstractEstimates.*.pmcType
            
-       - jsonPath: $.abstractEstimates.*.pmcName
+       - jsonPath: $.abstractEstimates.*.pmcName.code
 
        - jsonPath: $.abstractEstimates.*.workProposedAsPerDP
 

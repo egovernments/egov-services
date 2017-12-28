@@ -177,10 +177,17 @@ public class Constants {
 
     public static final String KEY_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID= "WORKS.TRACKMILESTONE.MILESTONEACTIVITYID.INVALID";
     public static final String MESSAGE_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID = "Given Milestone Activity is invalid:";
-
+    
     public static final String KEY_WORKORDER_STATUS_REQUIRED= "WORKORDER_STATUS_REQUIRED";
     public static final String MESSAGE_WORKORDER_STATUS_REQUIRED = "Work order status is required";
 
     public static final String KEY_WORKORDER_STATUS_INVALID= "WORKORDER_STATUS_INVALID";
     public static final String MESSAGE_WORKORDER_STATUS_INVALID = "Work order status is invalid";
+    
+    public static final String KEY_LOA_ENGINEERINCHARGE_INVALID= "works.loa.engineerincharge.notexist";
+    public static final String MESSAGE_LOA_ENGINEERINCHARGE_INVALID = "Engineer incharge does not exist in system";
+    
+    public static final String KEY_LOA_ENGINEERINCHARGE_NULL= "works.loa.engineerincharge.null";
+    public static final String MESSAGE_LOA_ENGINEERINCHARGE_NULL = "Please pass data for Engineer incharge";
+
 }

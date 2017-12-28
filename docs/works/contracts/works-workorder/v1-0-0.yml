@@ -1224,7 +1224,7 @@ definitions:
         maxLength: 12
         minLength: 1
       engineerIncharge:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
         description: User who is incharge of the work, primary key is reference here.
         format: singleValueList
       defectLiabilityPeriod:
@@ -2148,3 +2148,4 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+

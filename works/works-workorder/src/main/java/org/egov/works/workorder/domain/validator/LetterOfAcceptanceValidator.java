@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.web.contract.LOAStatus;
 import org.egov.works.workorder.config.Constants;
+import org.egov.works.workorder.domain.repository.EmployeeRepository;
 import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.workorder.domain.repository.WorksMastersRepository;
 import org.egov.works.workorder.domain.service.EstimateService;
@@ -17,6 +18,7 @@ import org.egov.works.workorder.domain.service.OfflineStatusService;
 import org.egov.works.workorder.web.contract.Contractor;
 import org.egov.works.workorder.web.contract.DetailedEstimate;
 import org.egov.works.workorder.web.contract.DetailedEstimateStatus;
+import org.egov.works.workorder.web.contract.EmployeeResponse;
 import org.egov.works.workorder.web.contract.LOAActivity;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
@@ -44,6 +46,9 @@ public class LetterOfAcceptanceValidator {
 
     @Autowired
     private WorksMastersRepository worksMastersRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     private static void validateUniqueLOANumber(LetterOfAcceptanceRequest letterOfAcceptanceRequest,
             HashMap<String, String> messages, LetterOfAcceptance letterOfAcceptance,
@@ -76,14 +81,13 @@ public class LetterOfAcceptanceValidator {
 
             for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
                     .getLetterOfAcceptanceEstimates()) {
-                
-                
+
                 if (!isUpdate) {
-                    checkLoaExistForDE(letterOfAcceptanceRequest, messages, letterOfAcceptanceEstimate);     
+                    checkLoaExistForDE(letterOfAcceptanceRequest, messages, letterOfAcceptanceEstimate);
                     if (messages != null && !messages.isEmpty())
                         throw new CustomException(messages);
                 }
-                
+
                 List<DetailedEstimate> detailedEstimates = estimateService
                         .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
                                 letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
@@ -115,7 +119,7 @@ public class LetterOfAcceptanceValidator {
             }
 
             validateLOA(messages, letterOfAcceptance, letterOfAcceptanceRequest.getRequestInfo(), detailedEstimate);
-
+            validateEngineerIncharge(letterOfAcceptanceRequest, messages, letterOfAcceptance);
             if (letterOfAcceptance.getSpillOverFlag()
                     || letterOfAcceptance.getWorkFlowDetails().getAction().equalsIgnoreCase("APPROVE"))
                 validateCouncilDetails(messages, letterOfAcceptance);
@@ -127,15 +131,36 @@ public class LetterOfAcceptanceValidator {
 
     }
 
+    private void validateEngineerIncharge(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+            HashMap<String, String> messages, LetterOfAcceptance letterOfAcceptance) {
+        if (letterOfAcceptance.getEngineerIncharge() == null || (letterOfAcceptance.getEngineerIncharge() != null
+                && (StringUtils.isBlank(letterOfAcceptance.getEngineerIncharge().getCode())))) {
+            messages.put(Constants.KEY_LOA_ENGINEERINCHARGE_NULL, Constants.MESSAGE_LOA_ENGINEERINCHARGE_NULL);
+        }
+
+        if (letterOfAcceptance.getEngineerIncharge() != null
+                && StringUtils.isNotBlank(letterOfAcceptance.getEngineerIncharge().getCode())) {
+            EmployeeResponse employeeResponse = employeeRepository.getEmployeeByCode(
+                    letterOfAcceptance.getEngineerIncharge().getCode(), letterOfAcceptance.getTenantId(),
+                    letterOfAcceptanceRequest.getRequestInfo());
+            if (employeeResponse.getEmployees().isEmpty()) {
+                messages.put(Constants.KEY_LOA_ENGINEERINCHARGE_INVALID, Constants.MESSAGE_LOA_ENGINEERINCHARGE_INVALID);
+            }
+        }
+    }
+
     private void checkLoaExistForDE(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, HashMap<String, String> messages,
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate) {
         LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
-        letterOfAcceptanceSearchContract.setDetailedEstimateNumberLike(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber());
+        letterOfAcceptanceSearchContract
+                .setDetailedEstimateNumberLike(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber());
         letterOfAcceptanceSearchContract.setTenantId(letterOfAcceptanceEstimate.getTenantId());
-        List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract, letterOfAcceptanceRequest.getRequestInfo());
-        
-        for(LetterOfAcceptance acceptance : letterOfAcceptances) {
-            if(acceptance.getStatus() != null && !acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) { 
+        List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract,
+                letterOfAcceptanceRequest.getRequestInfo());
+
+        for (LetterOfAcceptance acceptance : letterOfAcceptances) {
+            if (acceptance.getStatus() != null
+                    && !acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
                 messages.put(Constants.KEY_WORKS_LOA_DE_EXISTS, Constants.MESSAGE_WORKS_LOA_DE_EXISTS);
                 break;
             }
@@ -272,19 +297,21 @@ public class LetterOfAcceptanceValidator {
                     Constants.MESSAGE_FUTUREDATE_LOADATE_DETAILEDESTIMATE);
         }
 
-        approvedAmount = approvedAmount.add(approvedAmount.multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage())).divide(new BigDecimal(100)));
+        approvedAmount = approvedAmount.add(approvedAmount
+                .multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage())).divide(new BigDecimal(100)));
 
         if (letterOfAcceptance.getLoaAmount().compareTo(approvedAmount) != 0) {
             messages.put(Constants.KEY_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID,
                     Constants.MESSAGE_WORKORDER_LOAAMOUNT_LOAACTIVITYAMOUNT_INVALID);
         }
-        
-        BigDecimal workValue = detailedEstimate.getWorkValue().add(detailedEstimate.getWorkValue().multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage())).divide(new BigDecimal(100)));
+
+        BigDecimal workValue = detailedEstimate.getWorkValue().add(detailedEstimate.getWorkValue()
+                .multiply(BigDecimal.valueOf(letterOfAcceptance.getTenderFinalizedPercentage())).divide(new BigDecimal(100)));
         if (letterOfAcceptance.getLoaAmount().compareTo(workValue) != 0) {
             messages.put(Constants.KEY_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER,
                     Constants.MESSAGE_WORKORDER_LOAAMOUNT_WORKVALUE_INPROPER);
         }
-        
+
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
     }
@@ -300,7 +327,8 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_DETAILEDESTIMATE_STATUS, Constants.MESSAGE_DETAILEDESTIMATE_STATUS);
         }
 
-        if (detailedEstimate != null && detailedEstimate.getApprovedDate() != null && detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
+        if (detailedEstimate != null && detailedEstimate.getApprovedDate() != null
+                && detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
             messages.put(Constants.KEY_INVALID_LOADATE_DATE, Constants.MESSAGE_INVALID_LOADATE_DATE);
         }
 

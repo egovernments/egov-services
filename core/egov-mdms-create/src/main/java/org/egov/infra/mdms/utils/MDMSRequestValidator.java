@@ -94,9 +94,7 @@ public class MDMSRequestValidator {
 		if (masterDataFromCache.toString().equals("{}") && masterData.isEmpty()) {
 			return result;
 		}
-
-		List<String> uniqueKeys = mDMSUtils.getUniqueKeys(mDMSCreateRequest,
-				MasterConfigMap.get(mDMSCreateRequest.getMasterMetaData().getModuleName()));
+		List<String> uniqueKeys = mDMSUtils.getUniqueKeys(MasterConfigMap, mDMSCreateRequest);
 		if (null == uniqueKeys) {
 			throw new CustomException("400", "There are duplicate mdms-configs for this master: "
 					+ mDMSCreateRequest.getMasterMetaData().getMasterName());

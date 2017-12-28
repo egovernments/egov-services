@@ -9,9 +9,6 @@ public class MDMSConstants {
 	
 	//GitHub host components
 	public static final String GITHUB_HOST = "https://api.github.com/repos/";
-	public static final String EGOV_REPO_OWNER = "kiranmai-tarento";
-	public static final String EGOV_REPO = "test";
-	public static final String EGOV_REPO_PATH = EGOV_REPO_OWNER +"/"+EGOV_REPO +"/";
 	public static final String EGOV_REF_PATH = "git/refs/heads/master";
 	public static final String EGOV_TREE_PATH = "commits/";
 	public static final String EGOV_CREATE_TREE_PATH = "git/trees";
@@ -21,6 +18,8 @@ public class MDMSConstants {
 	
 	public static final String GIT_BLOB_MODE = "100644";
 	public static final String CONFIG_ARRAY_KEY= "mdms-config";
+	public static final String UNIQUE_KEY= "uniqueKeys";
+
 
 
 

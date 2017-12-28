@@ -91,6 +91,25 @@ public class MDMSUtils {
 
 		return uniqueKeys;
 	}
+	
+	public List<String> getUniqueKeys(Map<String, Map<String, Object>> masterConfigMap, MDMSCreateRequest mDMSCreateRequest){
+		List<String> uniqueKeys = new ArrayList<>();
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, Object> moduleMap = masterConfigMap.get(mDMSCreateRequest.getMasterMetaData().getModuleName());
+		if(null == moduleMap) {
+			return uniqueKeys;
+		}
+		Object masterConfig = moduleMap.get(mDMSCreateRequest.getMasterMetaData().getMasterName());
+		if(null == masterConfig) {
+			return uniqueKeys;
+		}
+		Map<String, Object> masterConfigs = mapper.convertValue(masterConfig, Map.class);
+		uniqueKeys = (List<String>) masterConfigs.get(MDMSConstants.UNIQUE_KEY);
+		
+		logger.info("uniqueKeys: "+uniqueKeys);
+		
+		return uniqueKeys;
+	}
 
 	public String getJsonPathKey(String jsonPath, StringBuilder expression) {
 		String[] expressionArray = (jsonPath).split("[.]");

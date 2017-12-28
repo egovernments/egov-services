@@ -659,6 +659,11 @@ paths:
             required: false
             type: integer
             format: int64
+          - name: supplierBillPaid
+            in: query
+            description: supplier bill paid for receipt or not .
+            required: false
+            type: boolean
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
@@ -850,6 +855,98 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /supplierbillreceipts/_create:
+      post:
+        summary: Create Supplier Bill Receipt.
+        description: >-
+          Create a new supplier bill receipt.
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: supplierBillReceipt
+            in: body
+            description: Details for the new supplier bill receipt.
+            required: true
+            schema:
+              $ref: '#/definitions/SupplierBillReceiptRequest'
+        tags:
+          - SBR
+        responses:
+          '200':
+            description: Supplier Bill Receipt created
+            schema:
+              $ref: '#/definitions/SupplierBillReceiptRequest'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+    /supplierbillreceipts/_update:
+      post:
+        summary: Update existing supplier bill receipt.
+        description: Existing supplier bill receipt can be updated.
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: supplierBillReceipt
+            in: body
+            description: Details for the new material receipts.
+            required: true
+            schema:
+              $ref: '#/definitions/SupplierBillReceiptRequest'
+        tags:
+          - SBR
+        responses:
+          '200':
+            description: Supplier Bill Receipt(s) Updated Successfully.
+            schema:
+              $ref: '#/definitions/SupplierBillReceiptResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /supplierbillreceipts/_search:
+      post:
+        summary: Get list of supplier bill receipt notes based on below search parameter(s).
+        description: >
+          Provides the list of supplier bill receipt information based on the
+          search parameters.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+          - name: supplierBill
+            in: query
+            description: >-
+              Pass List of unique supplier bill(s) then the API will returns list of
+              receipts.
+            required: false
+            type: array
+            items:
+              type: string
+            maxItems: 100
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        tags:
+          - SBR
+        responses:
+          '200':
+            description: 'Successful response, returns list of Supplier Bill Receipt(s).'
+            schema:
+              $ref: '#/definitions/SupplierBillReceiptResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
 
     /materialissues/_search:
       post:
@@ -3437,6 +3534,33 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
+
+    SupplierBillReceiptRequest:
+      type: object
+      description: Hold the supplier bill receipt request information.
+      properties:
+        RequestInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+        supplierBillReceipts:
+          type: array
+          items:
+            $ref: '#/definitions/SupplierBillReceipt'
+      required:
+      - RequestInfo
+      - supplierBillReceipts
+
+    SupplierBillReceiptResponse:
+      type: object
+      description: Hold the supplier bill receipt response information.
+      properties:
+        ResponseInfo:
+          $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+        supplierBillReceipts:
+          type: array
+          items:
+            $ref: '#/definitions/SupplierBillReceipt'
 
     MaterialIssue:
       type: object

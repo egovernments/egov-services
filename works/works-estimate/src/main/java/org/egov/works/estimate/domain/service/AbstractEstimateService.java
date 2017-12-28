@@ -1,9 +1,6 @@
 package org.egov.works.estimate.domain.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
@@ -15,22 +12,7 @@ import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.validator.EstimateValidator;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.AbstractEstimate;
-import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetail;
-import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
-import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
-import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
-import org.egov.works.estimate.web.contract.AbstractEstimateSanctionDetail;
-import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
-import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
-import org.egov.works.estimate.web.contract.DocumentDetail;
-import org.egov.works.estimate.web.contract.EstimateAppropriation;
-import org.egov.works.estimate.web.contract.EstimateAppropriationRequest;
-import org.egov.works.estimate.web.contract.EstimateAppropriationResponse;
-import org.egov.works.estimate.web.contract.ProjectCode;
-import org.egov.works.estimate.web.contract.ProjectCodeRequest;
-import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.WorkFlowDetails;
+import org.egov.works.estimate.web.contract.*;
 import org.egov.works.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,11 +99,22 @@ public class AbstractEstimateService {
                             estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
                 }
             }
+            List<String> filetsNamesList = null;
+            List<String> filetsValuesList = null;
             if (estimate.getSpillOverFlag())
                 isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
                         abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
             if (!isSpilloverWFReq && estimate.getSpillOverFlag()) {
-                estimate.setStatus(AbstractEstimateStatus.ADMIN_SANCTIONED);
+                filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                filetsValuesList = new ArrayList<>(Arrays.asList(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED,CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY));
+                JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                        filetsValuesList, estimate.getTenantId(), abstractEstimateRequest.getRequestInfo(),
+                        CommonConstants.MODULENAME_WORKS);
+                if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                    WorksStatus status = new WorksStatus();
+                    status.code(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED);
+                    estimate.setStatus(status);
+                }
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
@@ -134,7 +127,9 @@ public class AbstractEstimateService {
                 Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
                         estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
                 estimate.setStateId(workFlowResponse.get("id"));
-                estimate.setStatus(AbstractEstimateStatus.valueOf(workFlowResponse.get("status")));
+                WorksStatus status = new WorksStatus();
+                status.code(workFlowResponse.get("status"));
+                estimate.setStatus(status);
             }
 
         }
@@ -187,7 +182,9 @@ public class AbstractEstimateService {
             Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
                     estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
             estimate.setStateId(workFlowResponse.get("id"));
-            estimate.setStatus(AbstractEstimateStatus.valueOf(workFlowResponse.get("status")));
+            WorksStatus status = new WorksStatus();
+            status.setCode(workFlowResponse.get("status"));
+            estimate.setStatus(status);
 
             Boolean isFinIntReq = isConfigRequired(CommonConstants.FINANCIAL_INTEGRATION_KEY,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());

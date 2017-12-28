@@ -16,7 +16,7 @@ import java.util.Objects;
  * AN Object which holds the basic data for AbstractEstimate
  */
 @ApiModel(description = "AN Object which holds the basic data for AbstractEstimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-21T07:26:07.530Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:10:27.515Z")
 
 public class AbstractEstimate   {
   @JsonProperty("id")
@@ -47,7 +47,7 @@ public class AbstractEstimate   {
   private Department department = null;
 
   @JsonProperty("status")
-  private AbstractEstimateStatus status = null;
+  private WorksStatus status = null;
 
   @JsonProperty("beneficiary")
   private Beneficiary beneficiary = null;
@@ -379,7 +379,7 @@ public class AbstractEstimate   {
     this.department = department;
   }
 
-  public AbstractEstimate status(AbstractEstimateStatus status) {
+  public AbstractEstimate status(WorksStatus status) {
     this.status = status;
     return this;
   }
@@ -392,11 +392,11 @@ public class AbstractEstimate   {
 
 //  @Valid
 
-  public AbstractEstimateStatus getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(AbstractEstimateStatus status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
   }
 

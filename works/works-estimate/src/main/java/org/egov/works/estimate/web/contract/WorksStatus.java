@@ -1,19 +1,21 @@
-package org.egov.works.workorder.web.contract;
+package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that holds Status of all Works Module
  */
 @ApiModel(description = "An Object that holds Status of all Works Module")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:14:22.308Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:10:27.515Z")
 
 public class WorksStatus   {
   @JsonProperty("tenantId")

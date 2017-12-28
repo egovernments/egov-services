@@ -166,17 +166,41 @@ public class DetailedEstimateService {
                 }
 			}
 
+            List<String> filetsNamesList = null;
+            List<String> filetsValuesList = null;
             if(validator.workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&
                     (isRevision == null || (isRevision != null && !isRevision))) {
 				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
 				Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
 						detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
 				detailedEstimate.setStateId(workFlowResponse.get("id"));
-				detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
-			} else if(detailedEstimate.getSpillOverFlag())
-				detailedEstimate.setStatus(DetailedEstimateStatus.TECHNICAL_SANCTIONED);
-            else
-                detailedEstimate.setStatus(DetailedEstimateStatus.CREATED);
+                WorksStatus status = new WorksStatus();
+                status.code(workFlowResponse.get("status"));
+				detailedEstimate.setStatus(status);
+			} else if(detailedEstimate.getSpillOverFlag()) {
+                filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                filetsValuesList = new ArrayList<>(Arrays.asList(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED,CommonConstants.DETAILEDESTIMATE));
+                JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                        filetsValuesList, detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo(),
+                        CommonConstants.MODULENAME_WORKS);
+                if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                    WorksStatus status = new WorksStatus();
+                    status.code(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED);
+                    detailedEstimate.setStatus(status);
+                }
+            }
+            else {
+                filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                filetsValuesList = new ArrayList<>(Arrays.asList(Constants.ESTIMATE_STATUS_CREATED,CommonConstants.DETAILEDESTIMATE));
+                JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                        filetsValuesList, detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo(),
+                        CommonConstants.MODULENAME_WORKS);
+                if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                    WorksStatus status = new WorksStatus();
+                    status.code(Constants.ESTIMATE_STATUS_CREATED);
+                    detailedEstimate.setStatus(status);
+                }
+            }
 		}
 		if (isRevision == null || (isRevision != null && !isRevision))
 			kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
@@ -277,7 +301,9 @@ public class DetailedEstimateService {
                 Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
                         detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
                 detailedEstimate.setStateId(workFlowResponse.get("id"));
-                detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
+                WorksStatus status = new WorksStatus();
+                status.setCode(workFlowResponse.get("status"));
+                detailedEstimate.setStatus(status);
             }
             
             if(!detailedEstimate.getSpillOverFlag() && detailedEstimate.getStatus().toString().equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {

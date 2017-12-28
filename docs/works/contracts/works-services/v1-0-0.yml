@@ -499,7 +499,7 @@ definitions:
         format: int64
         description: In case of Detailed estimate object date will be the date on which detatiled estimate is technical sanctioned and in case of Work Order/LOA the object date will be the date on which Work Order/LOA is approved.
       status:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
         description: Offline status for the object type.
       statusDate:
         type: integer

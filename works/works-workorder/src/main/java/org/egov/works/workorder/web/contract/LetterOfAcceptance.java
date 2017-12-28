@@ -1,25 +1,23 @@
 package org.egov.works.workorder.web.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data of Letter Of Acceptance
  */
 @ApiModel(description = "An Object holds the basic data of Letter Of Acceptance")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T07:18:54.555Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:14:22.308Z")
 
 public class LetterOfAcceptance   {
   @JsonProperty("id")
@@ -59,7 +57,7 @@ public class LetterOfAcceptance   {
   private List<DocumentDetail> documentDetails = null;
 
   @JsonProperty("status")
-  private LOAStatus status = null;
+  private WorksStatus status = null;
 
   @JsonProperty("tenderFinalizedPercentage")
   private Double tenderFinalizedPercentage = null;
@@ -372,7 +370,7 @@ public class LetterOfAcceptance   {
     this.documentDetails = documentDetails;
   }
 
-  public LetterOfAcceptance status(LOAStatus status) {
+  public LetterOfAcceptance status(WorksStatus status) {
     this.status = status;
     return this;
   }
@@ -386,11 +384,11 @@ public class LetterOfAcceptance   {
 
   @Valid
 
-  public LOAStatus getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(LOAStatus status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
   }
 
@@ -737,7 +735,7 @@ public class LetterOfAcceptance   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -823,7 +821,7 @@ public class LetterOfAcceptance   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

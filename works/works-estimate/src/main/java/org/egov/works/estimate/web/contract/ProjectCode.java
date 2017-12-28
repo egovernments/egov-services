@@ -15,7 +15,7 @@ import java.util.Objects;
  * An Object that holds the basic data for a Project Code
  */
 @ApiModel(description = "An Object that holds the basic data for a Project Code")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:10:27.515Z")
 
 public class ProjectCode   {
   @JsonProperty("id")
@@ -34,7 +34,7 @@ public class ProjectCode   {
   private String description = null;
 
   @JsonProperty("status")
-  private ProjectCodeStatus status = null;
+  private WorksStatus status = null;
 
   @JsonProperty("active")
   private Boolean active = false;
@@ -153,25 +153,25 @@ public class ProjectCode   {
     this.description = description;
   }
 
-  public ProjectCode status(ProjectCodeStatus status) {
+  public ProjectCode status(WorksStatus status) {
     this.status = status;
     return this;
   }
 
    /**
-   * Enum representing the list of possible values for Project code status
+   * Project code status
    * @return status
   **/
-  @ApiModelProperty(required = true, value = "Enum representing the list of possible values for Project code status")
+  @ApiModelProperty(required = true, value = "Project code status")
   @NotNull
 
   @Valid
 
-  public ProjectCodeStatus getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(ProjectCodeStatus status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
   }
 

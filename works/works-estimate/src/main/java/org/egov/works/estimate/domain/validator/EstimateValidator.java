@@ -90,11 +90,29 @@ public class EstimateValidator {
                 validateAdminSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             validateEstimateAssetDetails(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             validateCouncilSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
-            if (estimate.getId() != null)
+            if (estimate.getId() != null) {
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
+                validateStatus(estimate, abstractEstimateRequest.getRequestInfo(), messages);
+            }
             if (!messages.isEmpty())
                 throw new CustomException(messages);
         }
+    }
+
+    private void validateStatus(AbstractEstimate estimate, RequestInfo requestInfo, Map<String, String> messages) {
+
+        if(estimate.getStatus() != null && StringUtils.isNotBlank(estimate.getStatus().toString())) {
+            List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(estimate.getStatus().getCode().toUpperCase(),CommonConstants.DETAILEDESTIMATE));
+            JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                    filetsValuesList, estimate.getTenantId(), requestInfo,
+                    CommonConstants.MODULENAME_WORKS);
+            if(dBStatusArray != null && dBStatusArray.isEmpty())
+                messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_INVALID,
+                        Constants.MESSAGE_WORKS_ESTIMATE_STATUS_INVALID);
+        } else
+            messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_REQUIRED,
+                    Constants.MESSAGE_WORKS_ESTIMATE_STATUS_REQUIRED);
     }
 
     private void validateDpRemarks(Map<String, String> messages, AbstractEstimate estimate) {
@@ -354,7 +372,7 @@ public class EstimateValidator {
 
     public void validateFund(Fund fund, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (fund != null && fund.getCode() != null) {
+        if (fund != null && StringUtils.isNotBlank(fund.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.FUND_OBJECT, CommonConstants.CODE, fund.getCode(),
                     tenantId, requestInfo, Constants.EGF_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -367,7 +385,7 @@ public class EstimateValidator {
     public void validateFunction(Function function, String tenantId, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (function != null && function.getCode() != null) {
+        if (function != null && StringUtils.isNotBlank(function.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.FUNCTION_OBJECT, CommonConstants.CODE,
                     function.getCode(), tenantId, requestInfo, Constants.EGF_MODULE_CODE);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -379,7 +397,7 @@ public class EstimateValidator {
 
     public void validateScheme(Scheme scheme, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (scheme != null && scheme.getCode() != null) {
+        if (scheme != null && StringUtils.isNotBlank(scheme.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.SCHEME_OBJECT, CommonConstants.CODE,
                     scheme.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -391,7 +409,7 @@ public class EstimateValidator {
     public void validateSubScheme(SubScheme subScheme, String tenantId, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (subScheme != null && subScheme.getCode() != null) {
+        if (subScheme != null && StringUtils.isNotBlank(subScheme.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.SUBSCHEME_OBJECT, CommonConstants.CODE,
                     subScheme.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -403,7 +421,7 @@ public class EstimateValidator {
     public void validateBudgetGroup(BudgetGroup budgetGroup, String tenantId, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (budgetGroup != null && budgetGroup.getName() != null) {
+        if (budgetGroup != null && StringUtils.isNotBlank(budgetGroup.getName())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.BUDGETGROUP_OBJECT, CommonConstants.NAME,
                     budgetGroup.getName(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -422,7 +440,7 @@ public class EstimateValidator {
     public void validateTypeOfWork(TypeOfWork typeOfWork, String tenantId, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (typeOfWork != null && typeOfWork.getCode() != null) {
+        if (typeOfWork != null && StringUtils.isNotBlank(typeOfWork.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT, CommonConstants.CODE,
                     typeOfWork.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -435,7 +453,7 @@ public class EstimateValidator {
     public void validateSubTypeOfWork(TypeOfWork subTypeOfWork, String tenantId, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (subTypeOfWork != null && subTypeOfWork.getCode() != null) {
+        if (subTypeOfWork != null && StringUtils.isNotBlank(subTypeOfWork.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT, CommonConstants.CODE,
                     subTypeOfWork.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -448,7 +466,7 @@ public class EstimateValidator {
     public void validateDepartment(Department department, String tenantId, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (department != null && department.getCode() != null) {
+        if (department != null && StringUtils.isNotBlank(department.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.DEPARTMENT_OBJECT, CommonConstants.CODE,
                     department.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_COMMON);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
@@ -508,8 +526,10 @@ public class EstimateValidator {
                     validateDeductions(detailedEstimate, requestInfo, messages);
             }
             validateActivities(detailedEstimate, messages, requestInfo);
-            if (StringUtils.isNotBlank(detailedEstimate.getId()))
+            if (StringUtils.isNotBlank(detailedEstimate.getId())) {
                 validateIsModified(detailedEstimate, requestInfo, messages);
+                validateStatus(detailedEstimate, requestInfo, messages);
+            }
             if (detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
                 messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
                         Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
@@ -550,29 +570,51 @@ public class EstimateValidator {
         }
     }
 
+    private void validateStatus(DetailedEstimate estimate, RequestInfo requestInfo, Map<String, String> messages) {
+
+        if(estimate.getStatus() != null && StringUtils.isNotBlank(estimate.getStatus().toString())) {
+            List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(estimate.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
+            JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                    filetsValuesList, estimate.getTenantId(), requestInfo,
+                    CommonConstants.MODULENAME_WORKS);
+            if(dBStatusArray != null && dBStatusArray.isEmpty())
+                messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_INVALID,
+                        Constants.MESSAGE_WORKS_ESTIMATE_STATUS_INVALID);
+        } else
+            messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_REQUIRED,
+                    Constants.MESSAGE_WORKS_ESTIMATE_STATUS_REQUIRED);
+    }
+
     private void validateUpdateStatus(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
         if(detailedEstimate.getId() != null) {
             List<DetailedEstimateHelper> lists = searchDetailedEstimatesById(detailedEstimate);
+            List<String> filetsNamesList = null;
+            List<String> filetsValuesList = null;
             if(lists != null && !lists.isEmpty()) {
                 String status = lists.get(0).getStatus();
-                if (status.equals(DetailedEstimateStatus.CANCELLED.toString()) || status.equals(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
+                if (status.equals(Constants.ESTIMATE_STATUS_CANCELLED) || status.equals(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED)) {
                     messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE);
-                } else if((status.equals(DetailedEstimateStatus.REJECTED.toString()) && !detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.RESUBMITTED.toString())) ||
-                        (status.equals(DetailedEstimateStatus.RESUBMITTED.toString()) && !(detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.CHECKED.toString()) ||
-                                detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.CANCELLED.toString())) )) {
+                } else if((status.equals(Constants.ESTIMATE_STATUS_REJECTED) && !detailedEstimate.getStatus().toString().equals(Constants.ESTIMATE_STATUS_RESUBMITTED)) ||
+                        (status.equals(Constants.ESTIMATE_STATUS_RESUBMITTED) && !(detailedEstimate.getStatus().toString().equals(Constants.ESTIMATE_STATUS_CHECKED) ||
+                                detailedEstimate.getStatus().toString().equals(Constants.ESTIMATE_STATUS_CANCELLED)) )) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
-                } else if (!detailedEstimate.getStatus().toString().equals(DetailedEstimateStatus.REJECTED.toString())) {
-                    JSONArray statusRequestArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE,
-                            detailedEstimate.getStatus().toString().toUpperCase(), detailedEstimate.getTenantId(), requestInfo,
+                } else if (!detailedEstimate.getStatus().toString().equals(Constants.ESTIMATE_STATUS_REJECTED)) {
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(detailedEstimate.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
+                    JSONArray statusRequestArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, detailedEstimate.getTenantId(), requestInfo,
                             CommonConstants.MODULENAME_WORKS);
-                    JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, CommonConstants.CODE,
-                            status.toUpperCase(), detailedEstimate.getTenantId(), requestInfo,
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(status.toUpperCase(),CommonConstants.DETAILEDESTIMATE));
+                    JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, detailedEstimate.getTenantId(), requestInfo,
                             CommonConstants.MODULENAME_WORKS);
                     if (statusRequestArray != null && !statusRequestArray.isEmpty() && dBStatusArray != null && !dBStatusArray.isEmpty()) {
                         Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
                         Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
-                        Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("ordernumber");
-                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("ordernumber");
+                        Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("orderNumber");
+                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
                         if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
                             messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
                         }
@@ -586,14 +628,14 @@ public class EstimateValidator {
 
     private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,
             Map<String, String> messages) {
-        if (abstractEstimate != null && detailedEstimate == null) {
+        if (abstractEstimate != null && StringUtils.isBlank(detailedEstimate.getId())) {
             String projectCode = abstractEstimate.getAbstractEstimateDetails().get(0).getProjectCode().getCode();
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
                     .workIdentificationNumbers(Arrays.asList(projectCode)).build();
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
-                if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
+                if (!detailedEstimateHelper.getStatus().equals(Constants.ESTIMATE_STATUS_CANCELLED))
                     messages.put(Constants.KEY_DE_EXISTS_FOR_AE, Constants.MESSAGE_DE_EXISTS_FOR_AE);
             }
         }
@@ -661,7 +703,7 @@ public class EstimateValidator {
                     .tenantId(detailedEstimate.getTenantId())
                     .workIdentificationNumbers(
                             Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getProjectCode().getCode()))
-                    .statuses(Arrays.asList(AbstractEstimateStatus.ADMIN_SANCTIONED.toString()))
+                    .statuses(Arrays.asList(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED))
                     .build();
             List<AbstractEstimate> abstractEstimates = abstractEstimateRepository
                     .search(abstractEstimateSearchContract);
@@ -699,7 +741,7 @@ public class EstimateValidator {
                     .detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
-                if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
+                if (!detailedEstimateHelper.getStatus().equals(Constants.ESTIMATE_STATUS_CANCELLED))
                     messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
                             Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
             }
@@ -1059,7 +1101,7 @@ public class EstimateValidator {
         DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                 .tenantId(detailedEstimate.getTenantId())
                 .technicalSanctionNumbers(Arrays.asList(estimateTechnicalSanction.getTechnicalSanctionNumber()))
-                .statuses(Arrays.asList(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()))
+                .statuses(Arrays.asList(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED))
                 .build();
         if (StringUtils.isNotBlank(detailedEstimate.getId())) {
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));

@@ -1,25 +1,21 @@
 package org.egov.works.estimate.domain.service;
 
+import net.minidev.json.JSONArray;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.ProjectCodeRepository;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.ProjectCode;
-import org.egov.works.estimate.web.contract.ProjectCodeRequest;
-import org.egov.works.estimate.web.contract.ProjectCodeSearchContract;
-import org.egov.works.estimate.web.contract.ProjectCodeStatus;
+import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,7 +49,16 @@ public class ProjectCodeService {
 
             projectCode.setAuditDetails(estimateUtils.setAuditDetails(projectCodeRequest.getRequestInfo(), false));
             projectCode.setActive(true);
-            projectCode.setStatus(ProjectCodeStatus.CREATED);
+            List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE, CommonConstants.MODULE_TYPE));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(Constants.ESTIMATE_STATUS_CREATED,Constants.PROJECTCODE_OBJECT));
+            JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                    filetsValuesList, projectCode.getTenantId(), projectCodeRequest.getRequestInfo(),
+                    CommonConstants.MODULENAME_WORKS);
+            if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                WorksStatus status = new WorksStatus();
+                status.code(Constants.ESTIMATE_STATUS_CREATED);
+                projectCode.setStatus(status);
+            }
 
             if (projectCode.getCode() == null || projectCode.getCode().isEmpty()) {
                 workIdentificationNumber = idGenerationRepository.generateWorkIdentificationNumber(

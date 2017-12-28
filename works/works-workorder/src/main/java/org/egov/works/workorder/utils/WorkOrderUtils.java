@@ -75,18 +75,30 @@ public class WorkOrderUtils {
      */
 
     public JSONArray getMDMSData(final String objectName, final String fieldName, final String fieldValue, final String tenantId,
-                                 final RequestInfo requestInfo, final String moduleName) {
+                                 final RequestInfo requestInfo, final String moduleName)
+
+    /**
+     *
+     * @param objectName accepts the name of entity like : ScheduleOfRate,Contractor camelcase should be follwed
+     * @param tenantId tenantId for which the data to should be retrived
+     * @param requestInfo
+     *
+     * @param fieldName - List of fields as search
+     * @param fieldvalue - List of values
+     * @return the json map it to your object.
+     */
+
+    public JSONArray getMDMSData(final String objectName, final List<String> fieldNames, final List<String> fieldValues,
+                                 final String tenantId, final RequestInfo requestInfo, final String moduleName) {
         MasterDetails[] masterDetailsArray;
         ModuleDetails[] moduleDetailsArray;
         MdmsRequest mdmsRequest;
         MdmsResponse mdmsResponse;
-        String filter = "";
-
-        if (StringUtils.isNotBlank(fieldName) && StringUtils.isNotBlank(fieldValue))
-            filter = "[?(@." + fieldName + " == '" + fieldValue + "')]";
+        StringBuilder filter = new StringBuilder();
+        filter.append("[?(@." + fieldNames.get(0) + " == '" + fieldValues.get(0) + "'&&@." + fieldNames.get(1) + "=='" + fieldValues.get(1) + "')]");
 
         masterDetailsArray = new MasterDetails[1];
-        masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter).build();
+        masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter.toString()).build();
         moduleDetailsArray = new ModuleDetails[1];
         moduleDetailsArray[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetailsArray)
                 .build();

@@ -991,7 +991,7 @@ definitions:
         description: Department for which Abstract Estimate belongs to
         format: singleValueList
       status:       
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/AbstractEstimateStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
         description: Status of the Abstract Estimate
       beneficiary:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Beneficiary'
@@ -1426,7 +1426,7 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
         description: User who admin sanctioned Detailed Estimate
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DetailedEstimateStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
         description: Status of the Detailed Estimate
       workValue:
         type: number
@@ -1982,8 +1982,8 @@ definitions:
           description: Description of the Project
           maxLength: 1024
         status:
-          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/ProjectCodeStatus'
-          description: Enum representing the list of possible values for Project code status
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
+          description: Project code status
         active:
           type: boolean
           description: The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.

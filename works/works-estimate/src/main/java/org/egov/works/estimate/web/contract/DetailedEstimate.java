@@ -17,7 +17,7 @@ import java.util.Objects;
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-11T07:31:23.845Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:10:27.515Z")
 
 public class DetailedEstimate   {
   @JsonProperty("id")
@@ -51,7 +51,7 @@ public class DetailedEstimate   {
   private User adminSanctionBy = null;
 
   @JsonProperty("status")
-  private DetailedEstimateStatus status = null;
+  private WorksStatus status = null;
 
   @JsonProperty("workValue")
   private BigDecimal workValue = null;
@@ -398,7 +398,7 @@ public class DetailedEstimate   {
     this.adminSanctionBy = adminSanctionBy;
   }
 
-  public DetailedEstimate status(DetailedEstimateStatus status) {
+  public DetailedEstimate status(WorksStatus status) {
     this.status = status;
     return this;
   }
@@ -412,11 +412,11 @@ public class DetailedEstimate   {
 
   @Valid
 
-  public DetailedEstimateStatus getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(DetailedEstimateStatus status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
   }
 

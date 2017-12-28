@@ -73,7 +73,7 @@ serviceMaps:
        
        - jsonPath: $.abstractEstimates.*.adminSanctionBy.userName
        
-       - jsonPath: $.abstractEstimates.*.status
+       - jsonPath: $.abstractEstimates.*.status.code
        
        - jsonPath: $.abstractEstimates.*.beneficiary
               
@@ -305,7 +305,7 @@ serviceMaps:
        
        - jsonPath: $.projectCodes.*.name
        
-       - jsonPath: $.projectCodes.*.status
+       - jsonPath: $.projectCodes.*.status.code
        
        - jsonPath: $.projectCodes.*.completionDate
         
@@ -329,7 +329,7 @@ serviceMaps:
       basePath: $.projectCodes.*
       jsonMaps:
          
-       - jsonPath: $.projectCodes.*.status
+       - jsonPath: $.projectCodes.*.status.code
 
        - jsonPath: $.projectCodes.*.active
 
@@ -402,7 +402,7 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.adminSanctionBy.name
        
-       - jsonPath: $.detailedEstimates.*.status
+       - jsonPath: $.detailedEstimates.*.status.code
        
        - jsonPath: $.detailedEstimates.*.workValue
              

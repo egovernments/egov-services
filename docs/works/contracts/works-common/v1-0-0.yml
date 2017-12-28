@@ -1303,7 +1303,7 @@ definitions:
       code:
         type: string
         description: Status Code
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-_\\]+'
         maxLength: 100
         minLength: 1  
       description:

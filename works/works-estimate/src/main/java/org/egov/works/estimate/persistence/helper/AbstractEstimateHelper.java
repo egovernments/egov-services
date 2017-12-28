@@ -1,22 +1,6 @@
 package org.egov.works.estimate.persistence.helper;
 
-import org.egov.works.estimate.web.contract.AbstractEstimate;
-import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
-import org.egov.works.estimate.web.contract.AuditDetails;
-import org.egov.works.estimate.web.contract.Beneficiary;
-import org.egov.works.estimate.web.contract.Boundary;
-import org.egov.works.estimate.web.contract.BudgetGroup;
-import org.egov.works.estimate.web.contract.Department;
-import org.egov.works.estimate.web.contract.Function;
-import org.egov.works.estimate.web.contract.Fund;
-import org.egov.works.estimate.web.contract.ModeOfAllotment;
-import org.egov.works.estimate.web.contract.NatureOfWork;
-import org.egov.works.estimate.web.contract.ReferenceType;
-import org.egov.works.estimate.web.contract.Scheme;
-import org.egov.works.estimate.web.contract.SubScheme;
-import org.egov.works.estimate.web.contract.TypeOfWork;
-import org.egov.works.estimate.web.contract.User;
-import org.egov.works.estimate.web.contract.WorkCategory;
+import org.egov.works.estimate.web.contract.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -245,7 +229,9 @@ public class AbstractEstimateHelper {
 		abstractEstimate.getScheme().setCode(this.scheme);
 		abstractEstimate.setSpillOverFlag(this.spillOverFlag);
 		abstractEstimate.setStateId(this.stateId);
-		abstractEstimate.setStatus(AbstractEstimateStatus.valueOf(this.status));
+        WorksStatus worksStatus = new WorksStatus();
+        worksStatus.setCode(this.abstractEstimateNumber);
+		abstractEstimate.setStatus(worksStatus);
 		abstractEstimate.setSubject(this.subject);
 		abstractEstimate.setSubScheme(new SubScheme());
 		abstractEstimate.getSubScheme().setCode(this.subScheme);

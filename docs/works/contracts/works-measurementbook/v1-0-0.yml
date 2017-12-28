@@ -551,7 +551,7 @@ definitions:
         type: string
         description: Reference of Revision LOA
       status:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MeasurementBookStatus'
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorksStatus'
         description: Status of the Measurement Book
       measurementBookDetails:
         type: array

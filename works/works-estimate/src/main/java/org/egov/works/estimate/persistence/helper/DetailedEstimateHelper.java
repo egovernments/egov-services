@@ -2,22 +2,7 @@ package org.egov.works.estimate.persistence.helper;
 
 import java.math.BigDecimal;
 
-import org.egov.works.estimate.web.contract.Beneficiary;
-import org.egov.works.estimate.web.contract.BudgetGroup;
-import org.egov.works.estimate.web.contract.Department;
-import org.egov.works.estimate.web.contract.DetailedEstimate;
-import org.egov.works.estimate.web.contract.DetailedEstimateStatus;
-import org.egov.works.estimate.web.contract.Function;
-import org.egov.works.estimate.web.contract.Functionary;
-import org.egov.works.estimate.web.contract.Fund;
-import org.egov.works.estimate.web.contract.ModeOfAllotment;
-import org.egov.works.estimate.web.contract.NatureOfWork;
-import org.egov.works.estimate.web.contract.ProjectCode;
-import org.egov.works.estimate.web.contract.Scheme;
-import org.egov.works.estimate.web.contract.SubScheme;
-import org.egov.works.estimate.web.contract.TypeOfWork;
-import org.egov.works.estimate.web.contract.User;
-import org.egov.works.estimate.web.contract.WorkCategory;
+import org.egov.works.estimate.web.contract.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -235,7 +220,9 @@ public class DetailedEstimateHelper   {
 		detailedEstimate.setScheme(scheme);
 		detailedEstimate.setSubScheme(subScheme);
 		detailedEstimate.setNameOfWork(this.nameOfWork);
-		detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(this.status));
+        WorksStatus worksStatus = new WorksStatus();
+        worksStatus.setCode(this.status);
+		detailedEstimate.setStatus(worksStatus);
 		detailedEstimate.setWorkValue(this.workValue);
 		ProjectCode projectCode = new ProjectCode();
 		projectCode.setCode(this.projectCode);

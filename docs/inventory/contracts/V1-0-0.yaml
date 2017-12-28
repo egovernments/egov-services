@@ -5232,6 +5232,9 @@ definitions:
             description: tenant id of the Contractor Advance Requisition Form
             maxLength: 128
             minLength: 2
+          supplier:
+            $ref: '#/definitions/Supplier'
+            description: Supplier reference
           purchaseOrder:
             $ref: '#/definitions/PurchaseOrder'
             description: Purchase order reference
@@ -5353,12 +5356,12 @@ definitions:
             type: array
             description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
             items:
-              $ref: '#/definitions/SupplierBillReceipt' 
+              $ref: '#/definitions/SupplierBillReceipt'
           supplierBillAdvanceAdjustments:
             type: array
             description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
             items:
-              $ref: '#/definitions/SupplierBillAdvanceAdjustment' 
+              $ref: '#/definitions/SupplierBillAdvanceAdjustment'
           workFlowDetails:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
           stateId:
@@ -5369,12 +5372,12 @@ definitions:
           deleted:
               type: boolean
               description: Boolean value to identify whether the object is deleted or not from UI.
-              default: false  
+              default: false
       required:
         - tenantId
         - store
         - supplierBillReceipts
-      
+
 parameters:
   pageSize:
     name: pageSize

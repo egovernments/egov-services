@@ -107,6 +107,12 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setIsAdvancePaid(rs.getBoolean("is_advancepaid"));
 					agreement.setAdjustmentStartDate(rs.getTimestamp("adjustment_start_date"));
 					agreement.setIsUnderWorkflow(rs.getBoolean("is_under_workflow"));
+					agreement.setFirstAllotment(rs.getString("first_allotment"));
+					agreement.setGstin(rs.getString("gstin"));
+					agreement.setMunicipalOrderNumber(rs.getString("municipal_order_no"));
+					agreement.setMunicipalOrderDate(rs.getTimestamp("municipal_order_date"));
+					agreement.setGovernmentOrderNumber(rs.getString("govt_order_no"));
+					agreement.setGovernmentOrderDate(rs.getTimestamp("govt_order_date"));
 
 					RentIncrementType rentIncrementType = new RentIncrementType();
 					rentIncrementType.setId((Long) rs.getObject("rent_increment_method"));

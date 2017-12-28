@@ -33,11 +33,12 @@ public class MDMSRequestValidator {
 	@Value("${cache.fetch.enabled}")
 	private Boolean cacheFetch;
 
-	private final Map<String, Map<String, Object>> MasterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
+	
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<Object> validateRequest(MDMSCreateRequest mDMSCreateRequest, List<String> keys, Boolean isCreate)
 			throws Exception {
+		 Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
 		ArrayList<Object> result = new ArrayList<>();
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		ObjectMapper mapper = new ObjectMapper();
@@ -94,7 +95,9 @@ public class MDMSRequestValidator {
 		if (masterDataFromCache.toString().equals("{}") && masterData.isEmpty()) {
 			return result;
 		}
-		List<String> uniqueKeys = mDMSUtils.getUniqueKeys(MasterConfigMap, mDMSCreateRequest);
+		
+		logger.info(" the map before passing for get uniquekeys : "+masterConfigMap);
+		List<String> uniqueKeys = mDMSUtils.getUniqueKeys(masterConfigMap, mDMSCreateRequest);
 		if (null == uniqueKeys) {
 			throw new CustomException("400", "There are duplicate mdms-configs for this master: "
 					+ mDMSCreateRequest.getMasterMetaData().getMasterName());

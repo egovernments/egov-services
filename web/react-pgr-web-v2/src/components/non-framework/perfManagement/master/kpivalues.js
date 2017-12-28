@@ -611,6 +611,9 @@ class kpivalues extends Component {
   setUploadedFiles(filedetails) {
     let resultClone = this.state.KPIResult.slice();
 
+    //console.log('result clone',resultClone);
+    let docCode = null;
+
     resultClone.map(kpi => {
       kpi.kpiValue.valueList.map(kpiValue => {
         if (kpiValue.valueid == filedetails.valueid && kpiValue.period == filedetails.period) {
@@ -618,13 +621,32 @@ class kpivalues extends Component {
             kpiValue.documents = [];
           }
 
-          kpiValue.documents.push({ fileStoreId: filedetails.fileStoreId, name: filedetails.name });
+          console.log('kpi object', kpi);
+          console.log('doc filed', kpi.kpi.documentsReq);
+          docCode = kpi.kpi.documentsReq.map(fileField => {
+            console.log('file field', fileField);
+            console.log('file field', kpiValue.documents[0].kpiCode);
+            if (/*kpiValue.kpiCode*/ kpiValue.documents[0].kpiCode == fileField.kpiCode) {
+              console.log('lalu KD');
+              return fileField.code;
+            }
+          });
+          let docUpdate = false;
+          kpiValue.documents.map(doc => {
+            if (doc.code == docCode[0]) {
+              doc.fileStoreId = filedetails.fileStoreId;
+              docUpdate = true;
+            }
+          });
+          if (!docUpdate) {
+            kpiValue.documents.push({ fileStoreId: filedetails.fileStoreId, name: filedetails.name, code: docCode[0] });
+          }
         }
       });
     });
 
     this.setState({ KPIResult: resultClone });
-    console.log(resultClone);
+    console.log('final set', resultClone);
   }
 
   uploadFile(valueid, period, e) {
@@ -1078,10 +1100,12 @@ class kpivalues extends Component {
             </CardText>
           </Card>
         )}
+        
 
         <KPIDocumentField
           {...this.props}
           data={this.state.documentsFields}
+          kpiresult={this.state.KPIResult}
           cell={this.state.cellItem}
           open={this.state.open}
           switchDialog={this.switchDialog}

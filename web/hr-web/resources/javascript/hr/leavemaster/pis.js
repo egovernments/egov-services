@@ -147,6 +147,13 @@ class PersonalInform extends React.Component {
         calendarYear
     } = this.state.searchSet;
     e.preventDefault();
+
+
+    if(!employee&&!department){
+        return showError("Either Employee Code or Department is mandatory");
+    }
+
+
     var _emps = [], leaveBal = [], count = 2, _this = this;
     const calculate = function() {
       var employees = [];
@@ -543,6 +550,10 @@ class PersonalInform extends React.Component {
                         </div>
                     </div>
                 </div>
+
+          <div className="text-right text-danger">
+                          Note: Either Employee Code or Department is mandatory.
+                    </div>
 
             <div className="text-center">
                 <button id="sub" type="submit"  className="btn btn-submit">Search</button>&nbsp;&nbsp;

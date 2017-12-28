@@ -170,9 +170,13 @@ public class MiscellaneousReceiptNoteService extends DomainService {
                 break;
             }
             for (MaterialReceipt materialReceipt : materialReceipts) {
-                validateReceiptPurpose(materialReceipt.getMrnNumber(), materialReceipt.getReceiptPurpose().toString(),
-                        tenantId, errors);
-                validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
+                if (!isEmpty(materialReceipt.getReceiptPurpose())) {
+                    validateReceiptPurpose(materialReceipt.getMrnNumber(), materialReceipt.getReceiptPurpose().toString(),
+                            tenantId, errors);
+                }
+                if (!isEmpty(materialReceipt.getIssueNumber())) {
+                    validateIssue(tenantId, errors, materialReceipt.getIssueNumber());
+                }
                 validateReceiptdate(errors, materialReceipt);
                 for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
                     int j = 0;

@@ -388,7 +388,7 @@ var dat = {
                 },
                 {
                   name: 'indentQuantity',
-                  jsonPath: 'indents[0].indentDetails[0].indentQuantity',
+                  jsonPath: 'indents[0].indentDetails[0].userQuantity',
                   pattern: '',
                   type: 'number',
                   isRequired: true,
@@ -651,7 +651,7 @@ var dat = {
                 },
                 {
                   name: 'indentQuantity',
-                  jsonPath: 'indents[0].indentDetails[0].indentQuantity',
+                  jsonPath: 'indents[0].indentDetails[0].userQuantity',
                   pattern: '',
                   type: 'number',
                   isRequired: true,
@@ -934,7 +934,7 @@ var dat = {
                 },
                 {
                   name: 'indentQuantity',
-                  jsonPath: 'indents[0].indentDetails[0].indentQuantity',
+                  jsonPath: 'indents[0].indentDetails[0].userQuantity',
                   pattern: '',
                   type: 'number',
                   isRequired: true,

@@ -172,7 +172,7 @@ var dat = {
 
                 {
                   name: 'receivedQty',
-                  jsonPath: 'materialReceipt[0].receiptDetails[0].receivedQty',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].userReceivedQty',
                   pattern: '',
                   type: 'number',
                   isRequired: true,
@@ -372,7 +372,7 @@ var dat = {
 
                 {
                   name: 'receivedQty',
-                  jsonPath: 'materialReceipt[0].receiptDetails[0].receivedQty',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].userReceivedQty',
                   pattern: '',
                   type: 'number',
                   isRequired: true,
@@ -572,7 +572,7 @@ var dat = {
 
                 {
                   name: 'receivedQty',
-                  jsonPath: 'materialReceipt[0].receiptDetails[0].receivedQty',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].userReceivedQty',
                   pattern: '',
                   type: 'number',
                   isDisabled: true,

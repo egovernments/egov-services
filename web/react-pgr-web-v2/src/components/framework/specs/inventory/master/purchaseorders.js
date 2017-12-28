@@ -393,7 +393,7 @@ var dat = {
                 },
                 {
                   name: 'orderQuantity',
-                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].userQuantity',
                   label: '',
                   pattern: '',
                   type: 'number',
@@ -715,7 +715,7 @@ var dat = {
                 },
                 {
                   name: 'orderQuantity',
-                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].userQuantity',
                   label: 'purchaseorder.create.purchaseOrderDetails[0].orderQuantity',
                   pattern: '',
                   type: 'number',
@@ -1003,7 +1003,7 @@ var dat = {
                 },
                 {
                   name: 'orderQuantity',
-                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].userQuantity',
                   label: 'purchaseorder.create.purchaseOrderDetails[0].orderQuantity',
                   pattern: '',
                   type: 'number',

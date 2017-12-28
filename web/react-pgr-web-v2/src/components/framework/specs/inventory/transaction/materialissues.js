@@ -371,7 +371,7 @@ var dat = {
                 },
                 {
                   name: 'quantityIssued',
-                  jsonPath: 'materialIssues[0].materialIssueDetails[0].quantityIssued',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].userQuantityIssued',
                   pattern: '',
                   type: 'text',
                   isRequired: true,

@@ -53,7 +53,6 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.LeaveOpeningBalance;
 import org.egov.eis.model.LeaveType;
-import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.CommonMastersRepository;
 import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.repository.LeaveAllotmentRepository;
@@ -111,7 +110,7 @@ public class LeaveOpeningBalanceService {
 
 	@Autowired
 	private LeaveTypeService leaveTypeService;
-	
+
 	@Autowired
 	private HRStatusService hrStatusService;
 
@@ -171,8 +170,8 @@ public class LeaveOpeningBalanceService {
 
 		EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
 				requestInfo);
-		leaveOpeningBalanceGetRequest.setStatusId(hrStatusService.getHRStatuses("APPROVED", leaveOpeningBalanceGetRequest.getTenantId(),
-				requestInfo).get(0).getId());
+		leaveOpeningBalanceGetRequest.setStatusId(hrStatusService
+				.getHRStatuses("APPROVED", leaveOpeningBalanceGetRequest.getTenantId(), requestInfo).get(0).getId());
 		employeeResponse.getEmployees().stream().forEach(employee -> {
 			carryForwardLOB(leaveOpeningBalanceGetRequest, employee, successLeaveOpeningBalanceList, requestInfo);
 		});
@@ -267,7 +266,6 @@ public class LeaveOpeningBalanceService {
 		leaveApplicationGetRequest.setTenantId(leaveOpeningBalanceGetRequest.getTenantId());
 		leaveApplicationGetRequest.setFromDate(fromDate);
 		leaveApplicationGetRequest.setToDate(toDate);
-		
 
 		List<LeaveApplication> leaveApplicationsList = null;
 		leaveApplicationsList = leaveApplicationService.getLeaveApplications(leaveApplicationGetRequest, requestInfo);
@@ -298,8 +296,6 @@ public class LeaveOpeningBalanceService {
 		}
 		CalendarYearResponse calendarYearResponse = commonMastersRepository
 				.getCalendaryears(leaveOpeningBalanceRequest.getRequestInfo(), tenantId);
-		EmployeeInfoResponse employeeResponse = employeeRepository
-				.getEmployees(leaveOpeningBalanceRequest.getRequestInfo(), tenantId);
 		LeaveTypeGetRequest leaveTypeGetRequest = new LeaveTypeGetRequest();
 		leaveTypeGetRequest.setTenantId(tenantId);
 		leaveTypeGetRequest.setAccumulative(true);
@@ -312,9 +308,6 @@ public class LeaveOpeningBalanceService {
 			calendarYearMap.put(cy.getName(), cy);
 		}
 
-		for (EmployeeInfo e : employeeResponse.getEmployees()) {
-			employeeMap.put(e.getId(), e);
-		}
 		for (LeaveType lt : leaveTypes) {
 			leaveTypeMap.put(lt.getId(), lt);
 		}
@@ -322,13 +315,6 @@ public class LeaveOpeningBalanceService {
 			errorMsg = "";
 			if (calendarYearMap.get(leaveOpeningBalance.getCalendarYear()) == null) {
 				errorMsg = "CalendarYear " + leaveOpeningBalance.getCalendarYear() + " does not exist in the system";
-			}
-			if (employeeMap.get(leaveOpeningBalance.getEmployee()) == null) {
-				errorMsg = errorMsg + " Employee with id " + leaveOpeningBalance.getEmployee()
-						+ " does not exist in the system";
-			} else {
-				leaveOpeningBalance.setEmployeeName(employeeMap.get(leaveOpeningBalance.getEmployee()).getName());
-				leaveOpeningBalance.setEmployeeCode(employeeMap.get(leaveOpeningBalance.getEmployee()).getCode());
 			}
 			if (leaveTypeMap.get(leaveOpeningBalance.getLeaveType().getId()) == null) {
 				errorMsg = errorMsg + " Leave Type with id " + leaveOpeningBalance.getLeaveType().getId()

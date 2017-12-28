@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.domain.repository.EstimateRepository;
@@ -215,13 +216,13 @@ public class MeasurementBookValidator {
                             for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
                                 if (loaMeasurementSheet.getId().equals(sheet.getLoaMeasurementSheet().getId()))
                                     estimateSheetId = loaMeasurementSheet.getEstimateMeasurementSheet();
-                                else
-                                    messages.put(Constants.KEY_MB_MEASUREMENTS_LOA_NOT_VALID,
-                                            Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
                             }
                         }
                     }
                 }
+                if (StringUtils.isEmpty(estimateSheetId))
+                	messages.put(Constants.KEY_MB_MEASUREMENTS_LOA_NOT_VALID,
+                            Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
                 for (EstimateActivity estimateActivity : detailedEstimates.get(0).getEstimateActivities()) {
                     if (estimateActivity.getEstimateMeasurementSheets() != null) {
                         for (EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity.getEstimateMeasurementSheets()) {

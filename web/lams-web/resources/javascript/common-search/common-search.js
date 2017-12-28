@@ -15,6 +15,7 @@ class CommonSearch extends React.Component {
     var action = getUrlVars()["action"].toUpperCase();
     var assetId = "";
     var agreement = "";
+    var assetType = "";
     e.preventDefault();
     //call api call
     var response = $.ajax({
@@ -36,6 +37,7 @@ class CommonSearch extends React.Component {
     if (response["status"] === 200) {
           agreement = response.responseJSON.Agreements[0];
           assetId=agreement.asset.id;
+          assetType=agreement.asset.assetCategory.name;
         if (typeof(response["responseJSON"]["Error"]) != "undefined") {
             showError(response["responseJSON"]["Error"]["message"]);
         } else {
@@ -54,6 +56,8 @@ class CommonSearch extends React.Component {
             window.location.href = "app/judgement/create-judgement.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }else if(action.toLowerCase()==='remission'){
             window.location.href = "app/remission/create-remission.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
+          }else if(action.toLowerCase()==='modify'){
+            window.location.href = "lams-web/app/dataentry/data-entry.html?type="+assetType+"&assetId="+assetId+"&agreementNumber="+agreementNumber+"&tenantId="+tenantId;
           }
            }
         }

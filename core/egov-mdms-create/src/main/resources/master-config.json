@@ -1,6 +1,7 @@
 {
   "ASSET": {
     "AssetCategory": {
+       "masterName": "AssetCategory",
       "moduleDefinition": "a/b/c",
       "uniqueKeys": [
         "$.id",

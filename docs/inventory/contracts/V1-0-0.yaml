@@ -3254,6 +3254,10 @@ definitions:
           maxLength: 1000
           description: |
             payment terms of the Material Receipt
+        supplierBillPaid:
+          type: boolean
+          description: Boolean value to identify whether the supplierbill paid for the selected receipt.
+          default: false      
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

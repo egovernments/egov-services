@@ -42,6 +42,7 @@ package org.egov.eis.service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -131,6 +132,30 @@ public class LeaveOpeningBalanceService {
 
 	public List<LeaveOpeningBalance> getLeaveOpeningBalances(
 			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
+		return leaveOpeningBalanceRepository.findForCriteria(leaveOpeningBalanceGetRequest);
+	}
+
+	public List<LeaveOpeningBalance> getLeaveOpeningBalance(LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest,
+			RequestInfo requestInfo) {
+		LeaveSearchRequest leaveSearchRequest = new LeaveSearchRequest();
+		leaveSearchRequest.setIsPrimary(true);
+		if (leaveOpeningBalanceGetRequest.getCode()!=null && !leaveOpeningBalanceGetRequest.getCode().equals(""))
+			leaveSearchRequest.setCode(leaveOpeningBalanceGetRequest.getCode());
+    	else
+			leaveSearchRequest.setDepartmentId(leaveOpeningBalanceGetRequest.getDepartmentId());
+
+		leaveSearchRequest.setAsOnDate(new Date());
+		leaveSearchRequest.setTenantId(leaveOpeningBalanceGetRequest.getTenantId());
+		List<Long> employeeIds = new ArrayList<>();
+
+		EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
+				requestInfo);
+		employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId())
+				.collect(Collectors.toList());
+		if (employeeIds.isEmpty())
+			return Collections.EMPTY_LIST;
+
+		leaveOpeningBalanceGetRequest.setEmployee(employeeIds);
 		return leaveOpeningBalanceRepository.findForCriteria(leaveOpeningBalanceGetRequest);
 	}
 

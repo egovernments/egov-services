@@ -48,7 +48,7 @@ public class EmployeeSearchURLHelper {
 		if (leaveSearchRequest.getAsOnDate() != null && !leaveSearchRequest.getAsOnDate().equals(""))
 			searchURL.append("&asOnDate=" + sdf.format(leaveSearchRequest.getAsOnDate()));
 
-		searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
+		searchURL.append("&active=true&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
 
 		return searchURL.toString();
 	}

@@ -105,7 +105,7 @@ public class LeaveOpeningBalanceController {
 		List<LeaveOpeningBalance> leaveOpeningBalancesList = null;
 		try {
 			leaveOpeningBalancesList = leaveOpeningBalanceService
-					.getLeaveOpeningBalances(leaveOpeningBalanceGetRequest);
+					.getLeaveOpeningBalance(leaveOpeningBalanceGetRequest, requestInfo);
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + leaveOpeningBalanceGetRequest, exception);
 			return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);

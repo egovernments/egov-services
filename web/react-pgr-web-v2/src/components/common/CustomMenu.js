@@ -323,6 +323,8 @@ const menuConvention = {
   'Solid Waste Management.SWM Masters.Collection type.Collection type': '/mdms/swm/CollectionType',
   'Solid Waste Management.SWM Masters.Population.Population': '/mdms/swm/Population',
   'Solid Waste Management.SWM Masters.Toilet.Toilet': '/mdms/swm/Toilet',
+  'Solid Waste Management.SWM Masters.Shift.Shift': '/search/swm/shiftmasters/view',
+  'Solid Waste Management.SWM Masters.Dumping Ground.Dumping Ground': '/search/swm/dumpingground/view',
 
   //legal case
   'Legal Case Management.Legal Case Transactions.Case.Legacy Case Create': '/create/legal/legacycase',

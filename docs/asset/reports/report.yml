@@ -148,8 +148,8 @@ ReportDefinitions:
   viewPath: assetImmovableReport
   selectiveDownload: true
   externalService:
-  - entity: $.MdmsRes.egf-master.financialYears
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=financialYears&tenantId=$tenantid&filter=%5B%3F(%20%40.startingDate%20%3C%3D%20$currentTime%20%26%26%20%40.endingDate%20%3E%3D%20$currentTime)%5D
+  - entity: $.MdmsRes.egf-master.FinancialYear
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F(%20%40.startingDate%20%3C%3D%20$currentTime%20%26%26%20%40.endingDate%20%3E%3D%20$currentTime)%5D
     keyOrder: startingDate,endingDate
     tableName: tbl_financialYears
     stateData: true
@@ -163,8 +163,8 @@ ReportDefinitions:
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
     stateData: true
-  - entity: $.MdmsRes.egf-master.funds
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=$tenantid
+  - entity: $.MdmsRes.egf-master.Fund
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=Fund&tenantId=$tenantid
     keyOrder: id,tenantId,name,code
     tableName: tbl_funds
     stateData: true
@@ -601,8 +601,8 @@ ReportDefinitions:
   viewPath: assetMovableReport
   selectiveDownload: true
   externalService:
-  - entity: $.MdmsRes.egf-master.financialYears
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=financialYears&tenantId=$tenantid&filter=%5B%3F(%20%40.startingDate%20%3C%3D%20$currentTime%20%26%26%20%40.endingDate%20%3E%3D%20$currentTime)%5D
+  - entity: $.MdmsRes.egf-master.FinancialYear
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F(%20%40.startingDate%20%3C%3D%20$currentTime%20%26%26%20%40.endingDate%20%3E%3D%20$currentTime)%5D
     keyOrder: startingDate,endingDate
     tableName: tbl_financialYears
     stateData: true
@@ -616,8 +616,8 @@ ReportDefinitions:
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
     stateData: true
-  - entity: $.MdmsRes.egf-master.funds
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=$tenantid
+  - entity: $.MdmsRes.egf-master.Fund
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=Fund&tenantId=$tenantid
     keyOrder: id,tenantId,name,code
     tableName: tbl_funds
     stateData: true
@@ -898,8 +898,8 @@ ReportDefinitions:
   moduleName: asset
   viewPath: assetScheduleReport
   externalService:
-  - entity: $.MdmsRes.egf-master.financialYears
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=financialYears&tenantId=$tenantid&filter=%5B%3F(%20%40.startingDate%20%3C%3D%20$currentTime%20%26%26%20%40.endingDate%20%3E%3D%20$currentTime)%5D
+  - entity: $.MdmsRes.egf-master.FinancialYear
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F(%20%40.startingDate%20%3C%3D%20$currentTime%20%26%26%20%40.endingDate%20%3E%3D%20$currentTime)%5D
     keyOrder: startingDate,endingDate
     tableName: tbl_financialYears
     stateData: true
@@ -1240,8 +1240,8 @@ ReportDefinitions:
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
     stateData: true
-  - entity: $.MdmsRes.egf-master.funds
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=$tenantid
+  - entity: $.MdmsRes.egf-master.Fund
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=Fund&tenantId=$tenantid
     keyOrder: id,tenantId,name,code
     tableName: tbl_funds
     stateData: true

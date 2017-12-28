@@ -500,7 +500,7 @@ public class PurchaseOrderService extends DomainService {
                             PriceListEntity ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).tenantId(purchaseOrderDetail.getTenantId()).build());
 
                             //RateContract reference validation
-                            if (ple.getId() == null) {
+                            if (ple == null || ple.getId() == null) {
                                 errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "priceList", purchaseOrderDetail.getPriceList().getId().toString());
                             }
                         }
@@ -574,7 +574,7 @@ public class PurchaseOrderService extends DomainService {
 
 
                             //validation of order quantity incase of tender
-                            if(poDetail.getTenderQuantity() != null) {
+                            if(poDetail == null || poDetail.getTenderQuantity() != null) {
                             	if ((poDetail.getOrderQuantity().add(poDetail.getUsedQuantity())).compareTo(poDetail.getTenderQuantity()) > 0) {
                                     errors.addDataError(ErrorCode.ORDQTY_LE_TENDQTY.getCode(), poDetail.getOrderQuantity().toString() + " at serial no." + detailIndex);
                                 }
@@ -584,7 +584,7 @@ public class PurchaseOrderService extends DomainService {
                             
 
                             //Material reference validation
-                            if (null != poDetail.getMaterial()) {
+                            if (poDetail == null || null != poDetail.getMaterial()) {
                                 if (validateMaterial(tenantId, poDetail.getMaterial())) {
                                     errors.addDataError(ErrorCode.MATERIAL_NAME_NOT_EXIST.getCode(), poDetail.getMaterial().getCode() + " at serial no." + detailIndex);
                                 }
@@ -594,25 +594,25 @@ public class PurchaseOrderService extends DomainService {
                                 errors.addDataError(ErrorCode.MAT_DETAIL.getCode(), " at serial no." + detailIndex);
                             }
                             
-                            if(null == poDetail.getReceivedQuantity() || poDetail.getReceivedQuantity().compareTo(new BigDecimal(0)) <= 0) {
+                            if(poDetail == null || null == poDetail.getReceivedQuantity() || poDetail.getReceivedQuantity().compareTo(new BigDecimal(0)) <= 0) {
                             	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "receivedQuantity", "null");
                             }
 
                             //ratecontract mandatory, then rate, price, quantity are mandatory at each line level
-                            if (priceListConfig && null == poDetail.getPriceList().getId()) {
+                            if (priceListConfig && (poDetail == null || null == poDetail.getPriceList().getId())) {
                                 errors.addDataError(ErrorCode.RATE_CONTRACT.getCode(), " at serial no." + detailIndex);
                             }
 
-                            if (priceListConfig && (null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(new BigDecimal(0)) <= 0)) {
+                            if (priceListConfig && (poDetail == null || null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(new BigDecimal(0)) <= 0)) {
                                 errors.addDataError(ErrorCode.NOT_NULL.getCode(), "orderQuantity", "null");
                             }
 
-                            if (priceListConfig && (null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0)) <= 0)) {
+                            if (priceListConfig && (poDetail == null || null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0)) <= 0)) {
                                 errors.addDataError(ErrorCode.NOT_NULL.getCode(), "unitPrice", "null");
                             }
 
                             //validate the rates entered for creating PO with the one's in pricelist
-                            if (poDetail.getPriceList() != null && poDetail.getPriceList().getPriceListDetails() != null)
+                            if (poDetail != null && poDetail.getPriceList() != null && poDetail.getPriceList().getPriceListDetails() != null)
                                 for (PriceListDetails pld : poDetail.getPriceList().getPriceListDetails()) {
                                     if (pld.getMaterial().getCode() != null && poDetail.getMaterial().getCode() != null)
                                         if (pld.getMaterial().getCode().equals(poDetail.getMaterial().getCode()) && pld.getRatePerUnit().compareTo(poDetail.getUnitPrice().doubleValue()) != 0) {
@@ -621,7 +621,7 @@ public class PurchaseOrderService extends DomainService {
                                 }
 
                             if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
-                                if (null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {
+                                if (poDetail != null && null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {
                                     int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
                                     if (res == 1) {
                                         errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), poDetail.getIndentQuantity().toString() + " at serial no." + detailIndex);

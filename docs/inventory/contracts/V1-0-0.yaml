@@ -1979,8 +1979,7 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids
           - name: store
-            type: integer
-            format: int64
+            type: string
             in: query
             description: |
               store of the Scrap

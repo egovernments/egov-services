@@ -1139,10 +1139,9 @@ definitions:
         format: singleValueList
         maxLength: 100
       pmcName:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/Contractor'
         description: Name of the PMC for PMC type Panel. The PMC(Project Management Consultant) data will fetch from Contractor master based on the boolean flag pmc=true. This field is not required if pmcType is 'New Appointment'.
         format: singleValueList
-        maxLength: 100
       workProposedAsPerDP:
         type: boolean
         description: Work proposed as per DP and Non mandatory for spillover. The valid values are 'Yes' and 'No'.
@@ -2115,3 +2114,4 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+

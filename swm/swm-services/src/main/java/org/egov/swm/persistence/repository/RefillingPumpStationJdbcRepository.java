@@ -7,13 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.OilCompany;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
-import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.OilCompanyService;
@@ -140,8 +138,6 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty()) {
 
-            populateBoundarys(refillingPumpStationList);
-
             populateFuelTypes(refillingPumpStationList);
 
             populateTypeOfPumps(refillingPumpStationList);
@@ -202,31 +198,4 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
         }
     }
 
-    private void populateBoundarys(List<RefillingPumpStation> refillingPumpStationList) {
-
-        String tenantId = null;
-        Map<String, Boundary> boundaryMap = new HashMap<>();
-
-        if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
-            tenantId = refillingPumpStationList.get(0).getTenantId();
-
-        List<TenantBoundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
-
-        for (TenantBoundary bd : boundarys) {
-
-            boundaryMap.put(bd.getBoundary().getCode(), bd.getBoundary());
-
-        }
-
-        for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
-
-            if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null
-                    && !refillingPumpStation.getLocation().getCode().isEmpty()) {
-
-                refillingPumpStation.setLocation(boundaryMap.get(refillingPumpStation.getLocation().getCode()));
-            }
-
-        }
-
-    }
 }

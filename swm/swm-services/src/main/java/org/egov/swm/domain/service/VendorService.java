@@ -158,7 +158,7 @@ public class VendorService {
                     // Validate Location
                     if (location.getCode() != null) {
 
-                        boundary = boundaryService.getTenantBoundary(vendor.getTenantId(), location.getCode(), new RequestInfo());
+                        boundary = boundaryService.getByCode(vendor.getTenantId(), location.getCode(), new RequestInfo());
 
                         if (boundary != null && boundary.getBoundary() != null)
                             location.builder().id(boundary.getBoundary().getId()).name(boundary.getBoundary().getName())

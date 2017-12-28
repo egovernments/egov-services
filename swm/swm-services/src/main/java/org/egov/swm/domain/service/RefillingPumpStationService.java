@@ -110,7 +110,7 @@ public class RefillingPumpStationService {
 
             if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
 
-                final TenantBoundary boundary = boundaryService.getTenantBoundary(refillingPumpStation.getTenantId(),
+                final TenantBoundary boundary = boundaryService.getByCode(refillingPumpStation.getTenantId(),
                         refillingPumpStation.getLocation().getCode(), new RequestInfo());
 
                 if (boundary != null && boundary.getBoundary() != null)

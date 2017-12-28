@@ -11,15 +11,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Document;
 import org.egov.swm.domain.model.DocumentSearch;
 import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.ServicedLocations;
 import org.egov.swm.domain.model.ServicesOffered;
 import org.egov.swm.domain.model.Supplier;
 import org.egov.swm.domain.model.SwmProcess;
-import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.SupplierRepository;
@@ -174,8 +171,6 @@ public class VendorJdbcRepository extends JdbcRepository {
 
             populateSuppliers(vendorList);
 
-            populateServicedLocations(vendorList, vendorCodes.toString());
-
             populateServicesOffered(vendorList, vendorCodes.toString());
 
             populateDocument(vendorList, vendorCodes.toString());
@@ -270,63 +265,6 @@ public class VendorJdbcRepository extends JdbcRepository {
                 vendor.setSupplier(supplierMap.get(vendor.getSupplier().getSupplierNo()));
             }
 
-        }
-
-    }
-
-    private void populateServicedLocations(List<Vendor> vendorList, String vendorCodes) {
-        Map<String, List<ServicedLocations>> servicedLocationsMap = new HashMap<>();
-        Map<String, List<Boundary>> boundaryListMap = new HashMap<>();
-        Map<String, Boundary> boundaryMap = new HashMap<>();
-        String tenantId = null;
-        ServicedLocations sls;
-        sls = new ServicedLocations();
-
-        if (vendorList != null && !vendorList.isEmpty())
-            tenantId = vendorList.get(0).getTenantId();
-
-        sls.setVendorNos(vendorCodes);
-        sls.setTenantId(tenantId);
-
-        List<ServicedLocations> servicedLocations = servicedLocationsJdbcRepository.search(sls);
-        if (servicedLocations != null && !servicedLocations.isEmpty()) {
-
-            List<TenantBoundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
-
-            for (TenantBoundary b : boundarys) {
-                boundaryMap.put(b.getBoundary().getCode(), b.getBoundary());
-            }
-
-            for (ServicedLocations sl : servicedLocations) {
-
-                if (servicedLocationsMap.get(sl.getVendor()) == null) {
-
-                    boundaryListMap.put(sl.getVendor(), Collections.singletonList(boundaryMap.get(sl.getLocation())));
-
-                    servicedLocationsMap.put(sl.getVendor(), Collections.singletonList(sl));
-
-                } else {
-
-                    List<Boundary> bList = new ArrayList<>(boundaryListMap.get(sl.getVendor()));
-
-                    bList.add(boundaryMap.get(sl.getLocation()));
-
-                    boundaryListMap.put(sl.getVendor(), bList);
-
-                    List<ServicedLocations> cpdList = new ArrayList<>(servicedLocationsMap.get(sl.getVendor()));
-
-                    cpdList.add(sl);
-
-                    servicedLocationsMap.put(sl.getVendor(), cpdList);
-
-                }
-            }
-
-            for (Vendor vendor : vendorList) {
-
-                vendor.setServicedLocations(boundaryListMap.get(vendor.getVendorNo()));
-
-            }
         }
 
     }

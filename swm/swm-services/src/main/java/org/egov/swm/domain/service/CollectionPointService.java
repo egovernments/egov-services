@@ -121,7 +121,7 @@ public class CollectionPointService {
 
             if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
-                final TenantBoundary boundary = boundaryService.getTenantBoundary(collectionPoint.getTenantId(),
+                final TenantBoundary boundary = boundaryService.getByCode(collectionPoint.getTenantId(),
                         collectionPoint.getLocation().getCode(), new RequestInfo());
 
                 if (boundary != null && boundary.getBoundary() != null)

@@ -3,10 +3,8 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Boundary;
@@ -15,10 +13,11 @@ import org.egov.swm.domain.model.OilCompany;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
+import org.egov.swm.domain.model.TenantBoundary;
+import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.OilCompanyService;
 import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -35,7 +34,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
     private FuelTypeService fuelTypeService;
 
     @Autowired
-    private BoundaryRepository boundaryRepository;
+    private BoundaryService boundaryService;
 
     public Boolean checkForUniqueRecords(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -140,7 +139,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
         }
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty()) {
-         
+
             populateBoundarys(refillingPumpStationList);
 
             populateFuelTypes(refillingPumpStationList);
@@ -205,55 +204,26 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
     private void populateBoundarys(List<RefillingPumpStation> refillingPumpStationList) {
 
-        StringBuffer boundaryCodes = new StringBuffer();
-        Set<String> boundaryCodesSet = new HashSet<>();
-
-        for (RefillingPumpStation rps : refillingPumpStationList) {
-
-            if (rps.getLocation() != null && rps.getLocation().getCode() != null
-                    && !rps.getLocation().getCode().isEmpty()) {
-
-                boundaryCodesSet.add(rps.getLocation().getCode());
-
-            }
-
-        }
-
-        List<String> locationCodes = new ArrayList(boundaryCodesSet);
-
-        for (String code : locationCodes) {
-
-            if (boundaryCodes.length() >= 1)
-                boundaryCodes.append(",");
-
-            boundaryCodes.append(code);
-
-        }
-
         String tenantId = null;
         Map<String, Boundary> boundaryMap = new HashMap<>();
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
-        if (boundaryCodes != null && boundaryCodes.length() > 0) {
+        List<TenantBoundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
 
-            List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
+        for (TenantBoundary bd : boundarys) {
 
-            for (Boundary bd : boundarys) {
+            boundaryMap.put(bd.getBoundary().getCode(), bd.getBoundary());
 
-                boundaryMap.put(bd.getCode(), bd);
+        }
 
-            }
+        for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
 
-            for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
+            if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null
+                    && !refillingPumpStation.getLocation().getCode().isEmpty()) {
 
-                if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null
-                        && !refillingPumpStation.getLocation().getCode().isEmpty()) {
-
-                    refillingPumpStation.setLocation(boundaryMap.get(refillingPumpStation.getLocation().getCode()));
-                }
-
+                refillingPumpStation.setLocation(boundaryMap.get(refillingPumpStation.getLocation().getCode()));
             }
 
         }

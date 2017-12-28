@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
+import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.swm.domain.repository.RefillingPumpStationRepository;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class RefillingPumpStationService {
     private FuelTypeService fuelTypeService;
 
     @Autowired
-    private BoundaryRepository boundaryRepository;
+    private BoundaryService boundaryService;
 
     public RefillingPumpStationRequest create(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
@@ -110,11 +110,11 @@ public class RefillingPumpStationService {
 
             if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
 
-                final Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
-                        refillingPumpStation.getTenantId());
+                final TenantBoundary boundary = boundaryService.getTenantBoundary(refillingPumpStation.getTenantId(),
+                        refillingPumpStation.getLocation().getCode(), new RequestInfo());
 
-                if (boundary != null)
-                    refillingPumpStation.setLocation(boundary);
+                if (boundary != null && boundary.getBoundary() != null)
+                    refillingPumpStation.setLocation(boundary.getBoundary());
                 else
                     throw new CustomException("Boundary",
                             "Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());

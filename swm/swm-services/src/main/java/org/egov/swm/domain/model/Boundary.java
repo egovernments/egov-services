@@ -1,6 +1,7 @@
 package org.egov.swm.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -25,10 +26,10 @@ public class Boundary {
     @JsonProperty("code")
     private String code = null;
 
-    @JsonProperty("boundary_num")
+    @JsonProperty("boundaryNum")
     private String boundaryNum = null;
 
-    @JsonProperty("bndry_id")
-    private String bndryId = null;
+    @JsonProperty("children")
+    private List<Boundary> children;
 
 }

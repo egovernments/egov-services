@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.BinDetails;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.swm.domain.repository.BinDetailsRepository;
 import org.egov.swm.domain.repository.CollectionPointRepository;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.requests.CollectionPointRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class CollectionPointService {
     private BinDetailsRepository binDetailsRepository;
 
     @Autowired
-    private BoundaryRepository boundaryRepository;
+    private BoundaryService boundaryService;
 
     @Autowired
     private CollectionTypeService collectionTypeService;
@@ -121,11 +121,11 @@ public class CollectionPointService {
 
             if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
-                final Boundary boundary = boundaryRepository.fetchBoundaryByCode(collectionPoint.getLocation().getCode(),
-                        collectionPoint.getTenantId());
+                final TenantBoundary boundary = boundaryService.getTenantBoundary(collectionPoint.getTenantId(),
+                        collectionPoint.getLocation().getCode(), new RequestInfo());
 
-                if (boundary != null)
-                    collectionPoint.setLocation(boundary);
+                if (boundary != null && boundary.getBoundary() != null)
+                    collectionPoint.setLocation(boundary.getBoundary());
                 else
                     throw new CustomException("Location",
                             "Given Location is Invalid: " + collectionPoint.getLocation().getCode());
@@ -161,11 +161,11 @@ public class CollectionPointService {
         Map<String, String> codeMap = new HashMap<>();
 
         for (final CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
-            
+
             codeMap = new HashMap<>();
             assetOrBinIdsMap = new HashMap<>();
             rfidsMap = new HashMap<>();
-            
+
             if (collectionPoint.getName() != null) {
 
                 if (nameMap.get(collectionPoint.getName()) != null)
@@ -175,10 +175,9 @@ public class CollectionPointService {
                 nameMap.put(collectionPoint.getName(), collectionPoint.getName());
 
             }
-            
+
             for (CollectionPointDetails collectionPointDetails : collectionPoint.getCollectionPointDetails()) {
 
-                
                 if (codeMap.get(collectionPointDetails.getCollectionType().getCode()) != null)
                     throw new CustomException("Collection Type",
                             "Collection types shall be unique per record.: "
@@ -189,8 +188,6 @@ public class CollectionPointService {
             }
 
             for (final BinDetails bd : collectionPoint.getBinDetails()) {
-
-              
 
                 if (bd.getAssetOrBinId() != null) {
 

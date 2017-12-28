@@ -30,7 +30,7 @@ public class VehicleTypeService {
 
         JSONArray responseJSONArray;
 
-        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.SWM_MODULE_CODE,
                 Constants.VEHICLETYPE_MASTER_NAME, "code", code, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
@@ -46,7 +46,7 @@ public class VehicleTypeService {
 
         JSONArray responseJSONArray;
 
-        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.SWM_MODULE_CODE,
                 Constants.VEHICLETYPE_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)

@@ -11,11 +11,11 @@ import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Document;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SwmProcess;
+import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.SupplierRepository;
 import org.egov.swm.domain.repository.VendorRepository;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.VendorRequest;
 import org.egov.tracer.model.CustomException;
@@ -47,7 +47,7 @@ public class VendorService {
     private SwmProcessService swmProcessService;
 
     @Autowired
-    private BoundaryRepository boundaryRepository;
+    private BoundaryService boundaryService;
 
     @Transactional
     public VendorRequest create(final VendorRequest vendorRequest) {
@@ -123,7 +123,7 @@ public class VendorService {
     private void validate(final VendorRequest vendorRequest) {
 
         SwmProcess p;
-        Boundary boundary;
+        TenantBoundary boundary;
         findDuplicatesInUniqueFields(vendorRequest);
 
         for (final Vendor vendor : vendorRequest.getVendors()) {
@@ -158,11 +158,12 @@ public class VendorService {
                     // Validate Location
                     if (location.getCode() != null) {
 
-                        boundary = boundaryRepository.fetchBoundaryByCode(location.getCode(), vendor.getTenantId());
+                        boundary = boundaryService.getTenantBoundary(vendor.getTenantId(), location.getCode(), new RequestInfo());
 
-                        if (boundary != null)
-                            Boundary.builder().id(String.valueOf(boundary.getId())).name(boundary.getName())
-                                    .boundaryNum(String.valueOf(boundary.getBoundaryNum())).code(boundary.getCode())
+                        if (boundary != null && boundary.getBoundary() != null)
+                            location.builder().id(boundary.getBoundary().getId()).name(boundary.getBoundary().getName())
+                                    .boundaryNum(String.valueOf(boundary.getBoundary().getBoundaryNum()))
+                                    .code(boundary.getBoundary().getCode())
                                     .build();
                         else
                             throw new CustomException("Location", "Given Location is Invalid: " + location.getCode());

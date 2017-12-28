@@ -11,7 +11,8 @@ public class Constants {
     public static final String ACTION_VIEW = "view";
     public static final String ACTION_EDIT = "edit";
     public static final String ACTION_SEARCH = "search";
-    public static final String MODULE_CODE = "swm";
+    public static final String SWM_MODULE_CODE = "swm";
+    public static final String EGOV_LOCATION_MODULE_CODE = "egov-location";
     public static final String TENANT_MODULE_CODE = "tenant";
     public static final String VEHICLETYPE_MASTER_NAME = "VehicleType";
     public static final String TENANTS_MASTER_NAME = "tenants";
@@ -21,6 +22,7 @@ public class Constants {
     public static final String OILCOMPANY_MASTER_NAME = "OilCompany";
     public static final String SWMPROCESS_MASTER_NAME = "SwmProcess";
     public static final String SHIFT_MASTER_NAME = "Shift";
+    public static final String TENANTBOUNDARY_MASTER_NAME = "TenantBoundary";
 
 }
 

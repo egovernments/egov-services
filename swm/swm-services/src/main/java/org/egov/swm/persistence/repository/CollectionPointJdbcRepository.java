@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.BinDetails;
@@ -19,9 +17,10 @@ import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.TenantBoundary;
+import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
     public BinDetailsJdbcRepository binIdDetailsJdbcRepository;
 
     @Autowired
-    private BoundaryRepository boundaryRepository;
+    private BoundaryService boundaryService;
 
     @Autowired
     public CollectionPointDetailsJdbcRepository collectionPointDetailsJdbcRepository;
@@ -131,8 +130,6 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         if (collectionPointList != null && !collectionPointList.isEmpty()) {
 
             StringBuffer collectionPointCodes = new StringBuffer();
-            StringBuffer boundaryCodes = new StringBuffer();
-            Set<String> boundaryCodesSet = new HashSet<>();
 
             for (CollectionPoint collectionPoint : collectionPointList) {
 
@@ -141,27 +138,9 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
                 collectionPointCodes.append(collectionPoint.getCode());
 
-                if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
-                        && !collectionPoint.getLocation().getCode().isEmpty()) {
-
-                    boundaryCodesSet.add(collectionPoint.getLocation().getCode());
-
-                }
-
             }
 
-            List<String> locationCodes = new ArrayList(boundaryCodesSet);
-
-            for (String code : locationCodes) {
-
-                if (boundaryCodes.length() >= 1)
-                    boundaryCodes.append(",");
-
-                boundaryCodes.append(code);
-
-            }
-
-            populateBoundarys(collectionPointList, boundaryCodes.toString());
+            populateBoundarys(collectionPointList);
 
             populateBinDetails(collectionPointList, collectionPointCodes.toString());
 
@@ -174,32 +153,28 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateBoundarys(List<CollectionPoint> collectionPointList, String boundaryCodes) {
+    private void populateBoundarys(List<CollectionPoint> collectionPointList) {
 
-        if (boundaryCodes != null && !boundaryCodes.isEmpty()) {
-            String tenantId = null;
-            Map<String, Boundary> boundaryMap = new HashMap<>();
+        String tenantId = null;
+        Map<String, Boundary> boundaryMap = new HashMap<>();
 
-            if (collectionPointList != null && !collectionPointList.isEmpty())
-                tenantId = collectionPointList.get(0).getTenantId();
+        if (collectionPointList != null && !collectionPointList.isEmpty())
+            tenantId = collectionPointList.get(0).getTenantId();
 
-            List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes,
-                    tenantId);
+        List<TenantBoundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
 
-            for (Boundary bd : boundarys) {
+        for (TenantBoundary bd : boundarys) {
 
-                boundaryMap.put(bd.getCode(), bd);
+            boundaryMap.put(bd.getBoundary().getCode(), bd.getBoundary());
 
-            }
+        }
 
-            for (CollectionPoint collectionPoint : collectionPointList) {
+        for (CollectionPoint collectionPoint : collectionPointList) {
 
-                if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
-                        && !collectionPoint.getLocation().getCode().isEmpty()) {
+            if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
+                    && !collectionPoint.getLocation().getCode().isEmpty()) {
 
-                    collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
-                }
-
+                collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
             }
 
         }

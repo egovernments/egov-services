@@ -13,12 +13,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HierarchyType {
+public class TenantBoundary {
 
-    @JsonProperty("code")
-    private String code = null;
+    @JsonProperty("hierarchyType")
+    private HierarchyType hierarchyType;
 
-    @JsonProperty("name")
-    private String name = null;
+    @JsonProperty("boundary")
+    private Boundary boundary;
 
 }

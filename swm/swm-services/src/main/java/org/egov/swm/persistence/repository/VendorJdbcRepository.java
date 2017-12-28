@@ -19,12 +19,13 @@ import org.egov.swm.domain.model.ServicedLocations;
 import org.egov.swm.domain.model.ServicesOffered;
 import org.egov.swm.domain.model.Supplier;
 import org.egov.swm.domain.model.SwmProcess;
+import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.SupplierRepository;
+import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.VendorEntity;
-import org.egov.swm.web.repository.BoundaryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class VendorJdbcRepository extends JdbcRepository {
     private SwmProcessService swmProcessService;
 
     @Autowired
-    private BoundaryRepository boundaryRepository;
+    private BoundaryService boundaryService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -289,38 +290,11 @@ public class VendorJdbcRepository extends JdbcRepository {
 
         List<ServicedLocations> servicedLocations = servicedLocationsJdbcRepository.search(sls);
         if (servicedLocations != null && !servicedLocations.isEmpty()) {
-            StringBuffer boundaryCodes = new StringBuffer();
-            Set<String> boundaryCodesSet = new HashSet<>();
 
-            for (ServicedLocations sl : servicedLocations) {
+            List<TenantBoundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
 
-                if (sl.getLocation() != null && sl.getLocation() != null
-                        && !sl.getLocation().isEmpty()) {
-
-                    boundaryCodesSet.add(sl.getLocation());
-
-                }
-
-            }
-
-            List<String> locationCodes = new ArrayList(boundaryCodesSet);
-
-            for (String code : locationCodes) {
-
-                if (boundaryCodes.length() >= 1)
-                    boundaryCodes.append(",");
-
-                boundaryCodes.append(code);
-
-            }
-
-            if (boundaryCodes != null && boundaryCodes.length() > 0) {
-
-                List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
-
-                for (Boundary b : boundarys) {
-                    boundaryMap.put(b.getCode(), b);
-                }
+            for (TenantBoundary b : boundarys) {
+                boundaryMap.put(b.getBoundary().getCode(), b.getBoundary());
             }
 
             for (ServicedLocations sl : servicedLocations) {

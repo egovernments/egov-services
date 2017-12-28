@@ -508,7 +508,7 @@ public class PurchaseOrderService extends DomainService {
 
                             //RateContract reference validation
                             if (ple == null || ple.getId() == null) {
-                                errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "priceList", purchaseOrderDetail.getPriceList().getId().toString());
+                                errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "priceList", null);
                             }
                         }
                     indentNumbers.replaceAll(",$", "");

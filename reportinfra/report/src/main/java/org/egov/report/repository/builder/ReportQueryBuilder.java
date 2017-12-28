@@ -39,12 +39,7 @@ public class ReportQueryBuilder {
 	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
 		String baseQuery = null;
-			try {
-		if(reportDefinition.getExternalService().size() > 0) {
-			baseQuery = populateExternalServiceValues(reportDefinition, reportDefinition.getQuery(),tenantId);
-		} } catch(JSONException e){
-			e.printStackTrace();
-		}
+		
 		
 		StringBuffer csinput = new StringBuffer();
 		LOGGER.info("searchParams:" + searchParams);
@@ -58,6 +53,14 @@ public class ReportQueryBuilder {
 			baseQuery = generateQuery(searchParams, tenantId, reportDefinition,baseQuery);
 			
 		}
+		
+		try {
+			if(reportDefinition.getExternalService().size() > 0) {
+				baseQuery = populateExternalServiceValues(reportDefinition, baseQuery,tenantId);
+			} } catch(JSONException e){
+				e.printStackTrace();
+			}
+		
 		baseQuery = baseQuery.replaceAll("\\$tenantid","'"+tenantId+"'");
 		
 		for(SearchParam searchParam : searchParams){
@@ -307,7 +310,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
       }
       LOGGER.info("generate baseUnionQuery with union all:"+finalQuery);
       
-      return finalUnionQuery.toString();
+      return finalQuery.toString();
     }
 	public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		

@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import { translate } from '../../common/common';
+import $ from 'jquery';
 var DateTime = require('react-datetime');
 var moment = require('moment');
+
 
 const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
 class UiDatePicker extends Component {
@@ -28,6 +30,28 @@ class UiDatePicker extends Component {
    			return "";
    		}
    	}*/
+
+  componentDidMount(){
+    let {handler}=this.props;
+    $(".custom-form-control-for-datepicker input").on("focusout",e =>{
+      // console.log(e.target.value);
+      if (!e.target.value.match(/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)) {
+        handler(
+          { target: { value: ""} },
+          e.target.id.split("-").join("."),
+          false,
+          /\d{12,13}/,
+          "",
+          "" || translate('framework.date.error.message')
+        );
+        // console.log(e);
+        // $("#"+e.target.id).val("")
+        var autoComField = document.getElementById(e.target.id)
+        // document.querySelectorAll("#"+e.target.id);
+        autoComField.value = '';
+      }
+    })
+  }
 
   calcMinMaxDate = dateStr => {
     if (dateStr) {
@@ -147,6 +171,7 @@ class UiDatePicker extends Component {
                 placeholder: 'DD/MM/YYYY',
                 id: item.jsonPath.split('.').join('-'),
                 disabled: item.isDisabled,
+
               }}
               isValidDate={currentDate => {
                 if (item.minDate && item.maxDate) {
@@ -162,6 +187,8 @@ class UiDatePicker extends Component {
               onChange={e => {
                 this.minMaxvalidation(e, item);
               }}
+
+
             />
             <div
               style={{

@@ -500,8 +500,11 @@ public class PurchaseOrderService extends DomainService {
                             if(purchaseOrderDetail.getPriceList() == null || purchaseOrderDetail.getPriceList().getId() == null) {
                             	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "rateContract", "null");                            	
                             }
+
+                            PriceListEntity ple = PriceListEntity.builder().build();
                             
-                            PriceListEntity ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).tenantId(purchaseOrderDetail.getTenantId()).build());
+                            if(purchaseOrderDetail.getPriceList() != null)
+                            	ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).tenantId(purchaseOrderDetail.getTenantId()).build());
 
                             //RateContract reference validation
                             if (ple == null || ple.getId() == null) {
@@ -553,10 +556,15 @@ public class PurchaseOrderService extends DomainService {
                     }
 
                     //RateType reference validation
+                    if(eachPurchaseOrder.getRateType() != null)
                     if (!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(eachPurchaseOrder.getRateType().toString())))) {
                         errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "rateType", eachPurchaseOrder.getRateType().toString());
                     }
 
+                    if(eachPurchaseOrder.getPurchaseOrderDetails() == null) {
+                    	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "purchaseOrderDetails", "null");
+                    }
+                    
                     if (null != eachPurchaseOrder.getPurchaseOrderDetails()) {
                         for (PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                             int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;

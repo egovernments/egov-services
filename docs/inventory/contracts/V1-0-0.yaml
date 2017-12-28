@@ -856,36 +856,36 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /supplierbillreceipts/_create:
+    /supplierbills/_create:
       post:
-        summary: Create Supplier Bill Receipt.
+        summary: Create Supplier Bill .
         description: >-
-          Create a new supplier bill receipt.
+          Create a new Supplier Bill .
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: supplierBillReceipt
             in: body
-            description: Details for the new supplier bill receipt.
+            description: Details for the new Supplier Bill .
             required: true
             schema:
-              $ref: '#/definitions/SupplierBillReceiptRequest'
+              $ref: '#/definitions/SupplierBillRequest'
         tags:
-          - SBR
+          - SB
         responses:
           '200':
-            description: Supplier Bill Receipt created
+            description: supplier bill created
             schema:
-              $ref: '#/definitions/SupplierBillReceiptRequest'
+              $ref: '#/definitions/SupplierBillResponse'
           '400':
             description: Invalid input.
             schema:
               $ref: >-
                 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
 
-    /supplierbillreceipts/_update:
+    /supplierbills/_update:
       post:
-        summary: Update existing supplier bill receipt.
-        description: Existing supplier bill receipt can be updated.
+        summary: Update existing supplier bill.
+        description: Existing supplier bill can be updated.
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: supplierBillReceipt
@@ -893,24 +893,24 @@ paths:
             description: Details for the new material receipts.
             required: true
             schema:
-              $ref: '#/definitions/SupplierBillReceiptRequest'
+              $ref: '#/definitions/SupplierBillRequest'
         tags:
-          - SBR
+          - SB
         responses:
           '200':
-            description: Supplier Bill Receipt(s) Updated Successfully.
+            description: Supplier Bill (s) Updated Successfully.
             schema:
-              $ref: '#/definitions/SupplierBillReceiptResponse'
+              $ref: '#/definitions/SupplierBillResponse'
           400:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /supplierbillreceipts/_search:
+    /supplierbills/_search:
       post:
-        summary: Get list of supplier bill receipt notes based on below search parameter(s).
+        summary: Get list of supplier bill based on below search parameter(s).
         description: >
-          Provides the list of supplier bill receipt information based on the
+          Provides the list of supplier bill information based on the
           search parameters.
         parameters:
           - name: requestInfo
@@ -922,26 +922,46 @@ paths:
                 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
           - $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
-          - name: supplierBill
-            in: query
-            description: >-
-              Pass List of unique supplier bill(s) then the API will returns list of
-              receipts.
-            required: false
+          - name: ids
             type: array
             items:
-              type: string
-            maxItems: 100
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: store
+            in: query
+            description: The store code of the supplier bill
+            required: false
+            type: string
+          - name: invoiceNumber
+            in: query
+            description: invoice number of the supplier bill.
+            required: false
+            type: integer
+            format: int64
+          - name: invoiceDate
+            in: query
+            description: invoice date of the supplier bill.
+            required: false
+            type: integer
+            format: int64
+          - name: approvedDate
+            in: query
+            description: approved date of the supplier bill
+            required: false
+            type: integer
+            format: int64
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         tags:
-          - SBR
+          - SB
         responses:
           '200':
-            description: 'Successful response, returns list of Supplier Bill Receipt(s).'
+            description: 'Successful response, returns list of Supplier Bill (s).'
             schema:
-              $ref: '#/definitions/SupplierBillReceiptResponse'
+              $ref: '#/definitions/SupplierBillResponse'
           '400':
             description: Invalid input.
             schema:
@@ -2639,7 +2659,7 @@ definitions:
          This object holds information required for indent note and transfer indent.
       properties:
         id:
-          type: string 
+          type: string
           description: |
             Unique Identifier of the Indent
         tenantId:
@@ -2982,7 +3002,7 @@ definitions:
           type: number
           format: BigDecimal
           description: |
-            advance amount of the PurchaseOrder which is approved 
+            advance amount of the PurchaseOrder which is approved
         advancePercentage:
           type: number
           format: BigDecimal
@@ -2992,7 +3012,7 @@ definitions:
           type: number
           format: BigDecimal
           description: |
-            Total advance paid in advance requisition. 
+            Total advance paid in advance requisition.
         expectedDeliveryDate:
           type: integer
           format: int64
@@ -3124,7 +3144,7 @@ definitions:
           type: number
           format: BigDecimal
           description: |
-            order quantity of the PurchaseMaterial in base uom 
+            order quantity of the PurchaseMaterial in base uom
         receivedQuantity:
           type: number
           format: BigDecimal
@@ -3353,7 +3373,7 @@ definitions:
         supplierBillPaid:
           type: boolean
           description: Boolean value to identify whether the supplierbill paid for the selected receipt.
-          default: false      
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -3396,7 +3416,7 @@ definitions:
         userReceivedQty:
           type: number
           format: BigDecimal
-          description: The quantity of the material received for this particular purchase order or inter store  transfer. 
+          description: The quantity of the material received for this particular purchase order or inter store  transfer.
         receivedQty:
           type: number
           format: BigDecimal
@@ -3535,32 +3555,32 @@ definitions:
           items:
             $ref: '#/definitions/MaterialReceipt'
 
-    SupplierBillReceiptRequest:
+    SupplierBillRequest:
       type: object
-      description: Hold the supplier bill receipt request information.
+      description: Hold the supplier bill request information.
       properties:
         RequestInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        supplierBillReceipts:
+        supplierBills:
           type: array
           items:
-            $ref: '#/definitions/SupplierBillReceipt'
+            $ref: '#/definitions/SupplierBill'
       required:
       - RequestInfo
-      - supplierBillReceipts
+      - supplierBills
 
-    SupplierBillReceiptResponse:
+    SupplierBillResponse:
       type: object
-      description: Hold the supplier bill receipt response information.
+      description: Hold the supplier bill response information.
       properties:
         ResponseInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-        supplierBillReceipts:
+        supplierBills:
           type: array
           items:
-            $ref: '#/definitions/SupplierBillReceipt'
+            $ref: '#/definitions/SupplierBill'
 
     MaterialIssue:
       type: object
@@ -3766,7 +3786,7 @@ definitions:
           maxLength: 100
           description: |
             Receipt number reference.
- 
+
         description:
           type: string
           maxLength: 512
@@ -5148,7 +5168,7 @@ definitions:
             $ref: '#/definitions/PriceList'
         page:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
-    
+
     PriceListDetails:
       type: object
       description: |
@@ -5195,7 +5215,7 @@ definitions:
           description: Delete flag of the material in the system
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-    
+
     SupplierAdvanceRequisition:
       description: |
          An Object gives information about advance issued againest purchase order. There are multiple times advance requisition possible for selected purchase order. But it should not cross alloted advance amount or advance percentage defined in purchase order.
@@ -5224,7 +5244,7 @@ definitions:
         required:
           - tenantId
           - purchaseOrder
-      
+
     SupplierBillReceipt:
       type: object
       description: Asset information for the Contractor Bill
@@ -5245,12 +5265,12 @@ definitions:
              Material receipt used in supplier bill. There is no partial payment allowed in supplier bill for a selecte4d material receipt. On cancellation of supplier bill, samereceipt can be used to recreate new supplier bill.
           $ref: "#/definitions/MaterialReceipt"
         auditDetails:
-            $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+            $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - tenantId
         - materialReceipt
         - supplierBill
-        
+
     SupplierBillAdvanceAdjustment:
       type: object
       description: Asset information for the Contractor Bill
@@ -5262,13 +5282,13 @@ definitions:
           type: string
           description: Tenant id of the Supplier Bill
           maxLength: 128
-          minLength: 2  
+          minLength: 2
         supplierBill:
           type: string
           description: supplier bill number id as reference
-        supplierAdvanceRequisition:  
+        supplierAdvanceRequisition:
           $ref: '#/definitions/SupplierAdvanceRequisition'
-          description: SupplierAdvanceRequisition  reference 
+          description: SupplierAdvanceRequisition  reference
         advanceAdjustedAmount:
           type: number
           format: BigDecimal
@@ -5277,12 +5297,14 @@ definitions:
         advanceFullyAdjustedInBill:
           type: boolean
           description: Boolean value to identify whether the advance fully adjusted in supplier bill.
-          default: false        
+          default: false
       required:
         - tenantId
         - advanceAdjustedAmount
-        - supplierBill      
+        - supplierBill
+
     SupplierBill:
+      type: object
       description: An Object that holds the basic data for a supplier Bill
       allOf:
       - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-bill/v1-0-0.yml#/definitions/BillRegister'

@@ -3457,6 +3457,16 @@ definitions:
           type: boolean
           description: is scrap item flag. Donot use this data to issue material and show in any stock ledger report.
           default: false
+        scrapedQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            Quantity utilized in scrap creation. In scrap notes, received scrap items also can be used. The user can partially scrap existing items for disposal purpose.
+        scrapCreated:
+          type: boolean
+          description: |
+            If material receipt detail used in srap process then enable this flag. This will help in recreation of scrap notes using receipt details. By default value is false.
+          default: false
         receiptDetailsAddnInfo:
           type: array
           description: >-
@@ -3776,6 +3786,16 @@ definitions:
           format: BigDecimal
           description: |
             Balance quantity to be issued of the IndentDetails.
+        scrapedQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            Quantity utilized in scrap creation
+        scrapCreated:
+          type: boolean
+          description: |
+            If material issue used in srap process then enable this flag. This will help in recreation of scrap notes using issue details. By default value is false.
+          default: false
         scrapValue:
           type: number
           format: BigDecimal
@@ -4838,12 +4858,30 @@ definitions:
           description: Tenant id of the Scrap Details
           maxLength: 128
           minLength: 4
+        scrapNumber:
+          type: string
+          readOnly: true
+          description: |
+            scrapNumber reference in scrap details.
         material:
           $ref: "#/definitions/Material"
+        uom:
+          $ref: "#/definitions/Uom"
+          description: Auto populate unit of material from receipt or issue
+        receiptDetail:
+          $ref: "#/definitions/MaterialReceiptDetail"
+          description: id reference from receipt detail.
+        issueDetail:
+          $ref: "#/definitions/MaterialIssueDetail"
+          description: id reference from material issue detail.
         lotNumber:
           type: string
           description: |
             lot number of the ScrapDetails
+        expiryDate:
+          type: integer
+          description: |
+            expiry date of material   
         scrapReason:
           type: string
           enum:
@@ -4855,16 +4893,26 @@ definitions:
             - DeadStock
           description: |
             scrap reason of the ScrapDetails
-        scrapQuantity:
+        quantity:
           type: number
           format: BigDecimal
           description: |
             scrap quantity of the ScrapDetails
+        disposalQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            scrap quantity utilized in disposal of scrap materials
+        scrapValue:
+          type: number
+          format: BigDecimal
+          description: |
+            scrap value of the ScrapDetails    
       required:
       - material
       - lotNumber
       - scrapReason
-      - scrapQuantity
+      - quantity
 
     ScrapRequest:
       description: Contract class for web request. Array of Scrap items  are used in case of create or update
@@ -4896,7 +4944,7 @@ definitions:
     Disposal:
       type: object
       description: |
-        This object holds the disposal information.
+        This object holds the disposal information. The multiple scrap notes will be used to create disposal. 
       properties:
         id:
           type: string
@@ -4955,7 +5003,7 @@ definitions:
             state id of the Disposal
         totalDisposalValue:
           type: number
-          format: double
+          format: BigDecimal
           description: |
             totalDisposalValue  denormalized value from Disposal Details
       required:
@@ -4982,7 +5030,7 @@ definitions:
             disposal quantity of the DisposalDetails
         disposalValue:
           type: number
-          format: double
+          format: BigDecimal
           description: |
             disposal value of the DisposalDetails
       required:

@@ -97,7 +97,9 @@ public class LetterOfAcceptanceHelper {
         letterOfAcceptance.engineerIncharge(this.engineerIncharge);
         letterOfAcceptance.defectLiabilityPeriod(this.defectLiabilityPeriod);
         letterOfAcceptance.setLoaAmount(this.loaAmount);
-        letterOfAcceptance.setStatus(LOAStatus.valueOf(this.status));
+        WorksStatus worksStatus = new WorksStatus();
+        worksStatus.setCode(this.status);
+        letterOfAcceptance.setStatus(worksStatus);
         letterOfAcceptance.setTenderFinalizedPercentage(this.tenderFinalizedPercentage);
         letterOfAcceptance.setApprovedDate(this.approvedDate);
         letterOfAcceptance.setFileNumber(this.fileNumber);

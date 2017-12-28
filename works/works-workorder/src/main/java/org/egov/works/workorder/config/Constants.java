@@ -15,6 +15,8 @@ public class Constants {
     public static final String FORWARD = "Forward";
     public static final String CANCEL = "Cancel";
     public static final String SAVE = "Save";
+    public static final String LETTEROFACCEPTANCE_OBJECT = "LetterOfAcceptance";
+    public static final String STATUS_APPROVED = "APPROVED";
 
     public static final String STATUS_MILESTONE_APPROVED = "APPROVED";
     public static final String STATUS_MILESTONE_CANCELLED = "CANCELLED";
@@ -175,4 +177,10 @@ public class Constants {
 
     public static final String KEY_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID= "WORKS.TRACKMILESTONE.MILESTONEACTIVITYID.INVALID";
     public static final String MESSAGE_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID = "Given Milestone Activity is invalid:";
+
+    public static final String KEY_WORKORDER_STATUS_REQUIRED= "WORKORDER_STATUS_REQUIRED";
+    public static final String MESSAGE_WORKORDER_STATUS_REQUIRED = "Work order status is required";
+
+    public static final String KEY_WORKORDER_STATUS_INVALID= "WORKORDER_STATUS_INVALID";
+    public static final String MESSAGE_WORKORDER_STATUS_INVALID = "Work order status is invalid";
 }

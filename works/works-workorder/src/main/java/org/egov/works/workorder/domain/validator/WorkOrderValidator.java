@@ -14,6 +14,7 @@ import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.WorkOrderRepository;
 import org.egov.works.workorder.domain.service.LetterOfAcceptanceService;
 import org.egov.works.workorder.domain.service.OfflineStatusService;
+import org.egov.works.workorder.utils.WorkOrderUtils;
 import org.egov.works.workorder.web.contract.LOAStatus;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
@@ -51,6 +52,9 @@ public class WorkOrderValidator {
     @Autowired
     private MdmsRepository mdmsRepository;
 
+    @Autowired
+    private WorkOrderUtils workOrderUtils;
+
     public void validateWorkOrder(final WorkOrderRequest workOrderRequest, Boolean isUpdate) {
         HashMap<String, String> messages = new HashMap<>();
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
@@ -71,10 +75,26 @@ public class WorkOrderValidator {
             if (workOrder.getLetterOfAcceptance() != null && !workOrder.getLetterOfAcceptance().getSpillOverFlag())
                 validateOfflineStatus(workOrderRequest, messages, workOrder);
             validateWorkOrder(messages, workOrder, letterOfAcceptanceResponse);
+            validateStatus(workOrder, messages, workOrderRequest.getRequestInfo());
             if (!messages.isEmpty())
                 throw new CustomException(messages);
 
         }
+    }
+
+    private void validateStatus(WorkOrder workOrder, HashMap<String, String> messages, RequestInfo requestInfo) {
+        if(workOrder.getStatus() != null && StringUtils.isNotBlank(workOrder.getStatus().getCode())) {
+            List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(workOrder.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
+            JSONArray dBStatusArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                    filetsValuesList, workOrder.getTenantId(), requestInfo,
+                    CommonConstants.MODULENAME_WORKS);
+            if(dBStatusArray != null && dBStatusArray.isEmpty())
+                messages.put(Constants.KEY_WORKORDER_STATUS_INVALID,
+                        Constants.MESSAGE_WORKORDER_STATUS_INVALID);
+        } else
+            messages.put(Constants.KEY_WORKORDER_STATUS_REQUIRED,
+                    Constants.MESSAGE_WORKORDER_STATUS_REQUIRED);
     }
 
     private void validateWorkOrderDetail(final WorkOrderRequest workOrderRequest, HashMap<String, String> messages,

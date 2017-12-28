@@ -75,7 +75,30 @@ public class WorkOrderUtils {
      */
 
     public JSONArray getMDMSData(final String objectName, final String fieldName, final String fieldValue, final String tenantId,
-                                 final RequestInfo requestInfo, final String moduleName)
+                                 final RequestInfo requestInfo, final String moduleName) {
+        MasterDetails[] masterDetailsArray;
+        ModuleDetails[] moduleDetailsArray;
+        MdmsRequest mdmsRequest;
+        MdmsResponse mdmsResponse;
+        String filter = "";
+
+        if (StringUtils.isNotBlank(fieldName) && StringUtils.isNotBlank(fieldValue))
+            filter = "[?(@." + fieldName + " == '" + fieldValue + "')]";
+
+        masterDetailsArray = new MasterDetails[1];
+        masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter).build();
+        moduleDetailsArray = new ModuleDetails[1];
+        moduleDetailsArray[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetailsArray)
+                .build();
+
+        mdmsRequest = MdmsRequest.builder()
+                .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetailsArray).tenantId(tenantId).build())
+                .requestInfo(requestInfo).build();
+
+        mdmsResponse = restTemplate.postForObject(mdmsBySearchCriteriaUrl, mdmsRequest, MdmsResponse.class);
+
+        return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
+    }
 
     /**
      *
@@ -134,8 +157,8 @@ public class WorkOrderUtils {
         }
         return cityCode;
     }
-    
-    
+
+
     public String getRemarks(final String tenantId, final RequestInfo requestInfo,final String remarksCode) {
         String cityCode = "";
         JSONArray responseJSONArray = getMDMSData(CommonConstants.REMARKS_OBJECTNAME,
@@ -145,7 +168,7 @@ public class WorkOrderUtils {
         if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
 //            List<Remarks> remarks = mapper.readV
-            
+
             Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
             cityCode = ((Map) jsonMap.get("city")).get("code").toString();
         }

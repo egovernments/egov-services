@@ -105,7 +105,7 @@ public class WorksStatus   {
   @ApiModelProperty(required = true, value = "Type of Module")
   //@NotNull
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=100)
+ @Pattern(regexp="[a-zA-Z0-9-_\\\\]+") @Size(min=1,max=100)
   public String getModuleType() {
     return moduleType;
   }

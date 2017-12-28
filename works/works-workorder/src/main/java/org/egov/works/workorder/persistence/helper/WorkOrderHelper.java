@@ -5,6 +5,7 @@ import lombok.Data;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.WorkOrder;
 import org.egov.works.workorder.web.contract.WorkOrderStatus;
+import org.egov.works.workorder.web.contract.WorksStatus;
 
 @Data
 public class WorkOrderHelper {
@@ -41,7 +42,9 @@ public class WorkOrderHelper {
         workOrder.setLetterOfAcceptance(letterOfAcceptance);
         workOrder.setWorkOrderNumber(this.workOrderNumber);
         workOrder.setWorkOrderDate(this.workOrderDate);
-        workOrder.setStatus(WorkOrderStatus.fromValue(this.status));
+        WorksStatus worksStatus = new WorksStatus();
+        worksStatus.setCode(this.status);
+        workOrder.setStatus(worksStatus);
         return workOrder;
     }
 }

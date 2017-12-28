@@ -2,31 +2,20 @@ package org.egov.works.workorder.domain.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
+import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.config.PropertiesManager;
 import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.workorder.domain.repository.builder.IdGenerationRepository;
 import org.egov.works.workorder.domain.validator.LetterOfAcceptanceValidator;
 import org.egov.works.workorder.utils.WorkOrderUtils;
-import org.egov.works.workorder.web.contract.DetailedEstimate;
-import org.egov.works.workorder.web.contract.DocumentDetail;
-import org.egov.works.workorder.web.contract.EstimateActivity;
-import org.egov.works.workorder.web.contract.EstimateMeasurementSheet;
-import org.egov.works.workorder.web.contract.LOAActivity;
-import org.egov.works.workorder.web.contract.LOAMeasurementSheet;
-import org.egov.works.workorder.web.contract.LOAStatus;
-import org.egov.works.workorder.web.contract.LetterOfAcceptance;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
-import org.egov.works.workorder.web.contract.RequestInfo;
-import org.egov.works.workorder.web.contract.SecurityDeposit;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +64,16 @@ public class LetterOfAcceptanceService {
                 isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
                         letterOfAcceptanceRequest.getRequestInfo(), letterOfAcceptance.getTenantId());
             if (!isSpilloverWFReq && letterOfAcceptance.getSpillOverFlag()) {
-                letterOfAcceptance.setStatus(LOAStatus.APPROVED);
+                List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE, CommonConstants.MODULE_TYPE));
+                List<String> filetsValuesList = new ArrayList<>(Arrays.asList(Constants.STATUS_APPROVED,Constants.LETTEROFACCEPTANCE_OBJECT));
+                JSONArray dBStatusArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                        filetsValuesList, letterOfAcceptance.getTenantId(), letterOfAcceptanceRequest.getRequestInfo(),
+                        CommonConstants.MODULENAME_WORKS);
+                if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                    WorksStatus status = new WorksStatus();
+                    status.code(Constants.STATUS_APPROVED);
+                    letterOfAcceptance.setStatus(status);
+                }
             }
             
             if(letterOfAcceptance.getSpillOverFlag()) {

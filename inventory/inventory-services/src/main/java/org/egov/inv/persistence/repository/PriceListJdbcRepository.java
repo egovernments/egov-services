@@ -120,7 +120,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             if (priceListSearchRequest.getMaterialCode() != null
                     && priceListSearchRequest.getRateContractDate() != null) {
                 params.append(" and  id in ( select pricelist from pricelistdetails "
-                        + "where material=:materialCode  and :rateContractDate between fromdate and todate and todate > (extract(epoch from now())::bigint * 1000) )  ");
+                        + "where material=:materialCode  and :rateContractDate between fromdate and todate and todate >= (extract(epoch from now())::bigint * 1000) )  ");
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
                 paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
             } else if (priceListSearchRequest.getMaterialCode() != null) {
@@ -129,7 +129,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
             } else if (priceListSearchRequest.getRateContractDate() != null) {
                 params.append(" and id in ( select pricelist from pricelistdetails "
-                        + "where  :rateContractDate between fromdate and todate and todate > (extract(epoch from now())::bigint * 1000)  )  ");
+                        + "where  :rateContractDate between fromdate and todate and todate >= (extract(epoch from now())::bigint * 1000)  )  ");
                 paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
 
             }

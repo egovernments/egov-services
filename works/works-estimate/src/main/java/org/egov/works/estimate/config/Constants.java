@@ -8,6 +8,7 @@ public class Constants {
     public static final String ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR = "Abstract estimate numebr can not be generated";
     public static final String DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR = "Detailed estimate numebr can not be generated";
     public static final String WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR = "Work identification numebr can not be generated";
+    public static final String TECHNICAL_SANCTION_NUMBER_GENERATION_ERROR = "Technical Sanction numebr can not be generated";
 
     public static final String TYPEOFWORK_OBJECT = "TypeOfWork";
     public static final String FUND_OBJECT = "Fund";

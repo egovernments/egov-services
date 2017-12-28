@@ -79,5 +79,15 @@ public class PropertiesManager {
 
     @Value("${egov.services.works.revision.detailedestimate.topic}")
     private String worksRECreateUpdateTopic;
+    
+    @Value("${technicalsanctionnumber.prefix}")
+    private String technicalSanctionNumberPrefix;
+    
+    @Value("${works.technicalsanctionnumber}")
+    private String worksTechnicalSanctionNumber;
+
+    @Value("${works.technicalsanctionnumber.format}")
+    private String worksTechnicalSanctionNumberFormat;
+
 
 }

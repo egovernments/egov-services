@@ -22,85 +22,107 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class IdGenerationRepository {
 
-	@Autowired
-	private RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
-	private String url;
+    private String url;
 
-	@Autowired
-	private PropertiesManager propertiesManager;
+    @Autowired
+    private PropertiesManager propertiesManager;
 
-	public IdGenerationRepository(final RestTemplate restTemplate,
-			@Value("${egov.idgen.hostname}") final String idGenHostName,
-			@Value("${works.numbergeneration.uri}") final String url) {
-		this.restTemplate = restTemplate;
-		this.url = idGenHostName + url;
-	}
+    public IdGenerationRepository(final RestTemplate restTemplate,
+            @Value("${egov.idgen.hostname}") final String idGenHostName,
+            @Value("${works.numbergeneration.uri}") final String url) {
+        this.restTemplate = restTemplate;
+        this.url = idGenHostName + url;
+    }
 
-	public String generateAbstractEstimateNumber(final String tenantId, final RequestInfo requestInfo) {
-		Object response = null;
-		HashMap<String, String> messages = new HashMap<>();
-		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
-		IdRequest idRequest = new IdRequest();
-		idRequest.setTenantId(tenantId);
-		idRequest.setFormat(propertiesManager.getWorksAbstractEstimateNumberFormat());
-		idRequest.setIdName(propertiesManager.getWorksAbstractEstimateNumber());
-		idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
-		idGenerationRequest.setRequestInfo(requestInfo);
-		try {
-			response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
-		} catch (Exception e) {
-			messages.put(Constants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR,
-					Constants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR);
-			throw new CustomException(messages);
+    public String generateAbstractEstimateNumber(final String tenantId, final RequestInfo requestInfo) {
+        Object response = null;
+        HashMap<String, String> messages = new HashMap<>();
+        IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+        IdRequest idRequest = new IdRequest();
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(propertiesManager.getWorksAbstractEstimateNumberFormat());
+        idRequest.setIdName(propertiesManager.getWorksAbstractEstimateNumber());
+        idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
+        idGenerationRequest.setRequestInfo(requestInfo);
+        try {
+            response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
+        } catch (Exception e) {
+            messages.put(Constants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR,
+                    Constants.ABSTRACT_ESTIMATE_NUMBER_GENERATION_ERROR);
+            throw new CustomException(messages);
 
-		}
-		log.info("Response from id gen service: " + response.toString());
+        }
+        log.info("Response from id gen service: " + response.toString());
 
-		return JsonPath.read(response, "$.idResponses[0].id");
-	}
+        return JsonPath.read(response, "$.idResponses[0].id");
+    }
 
-	public String generateDetailedEstimateNumber(final String tenantId, final RequestInfo requestInfo) {
-		Object response = null;
-		HashMap<String, String> messages = new HashMap<>();
-		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
-		IdRequest idRequest = new IdRequest();
-		idRequest.setTenantId(tenantId);
-		idRequest.setFormat(propertiesManager.getWorksDetailedEstimateNumberFormat());
-		idRequest.setIdName(propertiesManager.getWorksDetailedEstimateNumber());
-		idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
-		idGenerationRequest.setRequestInfo(requestInfo);
-		try {
-			response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
-		} catch (Exception e) {
-			messages.put(Constants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR,
-					Constants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR);
-			throw new CustomException(messages);
-		}
-		log.info("Response from id gen service: " + response.toString());
+    public String generateDetailedEstimateNumber(final String tenantId, final RequestInfo requestInfo) {
+        Object response = null;
+        HashMap<String, String> messages = new HashMap<>();
+        IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+        IdRequest idRequest = new IdRequest();
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(propertiesManager.getWorksDetailedEstimateNumberFormat());
+        idRequest.setIdName(propertiesManager.getWorksDetailedEstimateNumber());
+        idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
+        idGenerationRequest.setRequestInfo(requestInfo);
+        try {
+            response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
+        } catch (Exception e) {
+            messages.put(Constants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR,
+                    Constants.DETAILED_ESTIMATE_NUMBER_GENERATION_ERROR);
+            throw new CustomException(messages);
+        }
+        log.info("Response from id gen service: " + response.toString());
 
-		return JsonPath.read(response, "$.idResponses[0].id");
-	}
+        return JsonPath.read(response, "$.idResponses[0].id");
+    }
 
-	public String generateWorkIdentificationNumber(final String tenantId, final RequestInfo requestInfo) {
-		Object response = null;
-		HashMap<String, String> messages = new HashMap<>();
-		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
-		IdRequest idRequest = new IdRequest();
-		idRequest.setTenantId(tenantId);
-		idRequest.setFormat(propertiesManager.getWorksWorkIdentificationNumberFormat());
-		idRequest.setIdName(propertiesManager.getWorksWorkIdentificationNumber());
-		idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
-		idGenerationRequest.setRequestInfo(requestInfo);
-		try {
-			response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
-		} catch (Exception e) {
-			messages.put(Constants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR,
-					Constants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR);
-			throw new CustomException(messages);
-		}
-		log.info("Response from id gen service: " + response.toString());
+    public String generateWorkIdentificationNumber(final String tenantId, final RequestInfo requestInfo) {
+        Object response = null;
+        HashMap<String, String> messages = new HashMap<>();
+        IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+        IdRequest idRequest = new IdRequest();
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(propertiesManager.getWorksWorkIdentificationNumberFormat());
+        idRequest.setIdName(propertiesManager.getWorksWorkIdentificationNumber());
+        idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
+        idGenerationRequest.setRequestInfo(requestInfo);
+        try {
+            response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
+        } catch (Exception e) {
+            messages.put(Constants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR,
+                    Constants.WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR);
+            throw new CustomException(messages);
+        }
+        log.info("Response from id gen service: " + response.toString());
 
-		return JsonPath.read(response, "$.idResponses[0].id");
-	}
+        return JsonPath.read(response, "$.idResponses[0].id");
+    }
+
+    public String generateTechnicalSanctionNumber(final String tenantId, final RequestInfo requestInfo) {
+        Object response = null;
+        HashMap<String, String> messages = new HashMap<>();
+        IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
+        IdRequest idRequest = new IdRequest();
+        idRequest.setTenantId(tenantId);
+        idRequest.setFormat(propertiesManager.getWorksTechnicalSanctionNumberFormat());
+        idRequest.setIdName(propertiesManager.getWorksTechnicalSanctionNumber());
+        idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
+        idGenerationRequest.setRequestInfo(requestInfo);
+        try {
+            response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
+        } catch (Exception e) {
+            messages.put(Constants.TECHNICAL_SANCTION_NUMBER_GENERATION_ERROR,
+                    Constants.TECHNICAL_SANCTION_NUMBER_GENERATION_ERROR);
+            throw new CustomException(messages);
+        }
+        log.info("Response from id gen service: " + response.toString());
+
+        return JsonPath.read(response, "$.idResponses[0].id");
+    }
 }

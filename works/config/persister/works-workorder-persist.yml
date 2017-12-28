@@ -29,7 +29,7 @@ serviceMaps:
        
        - jsonPath: $.letterOfAcceptances.*.stampPaperAmount
        
-       - jsonPath: $.letterOfAcceptances.*.engineerIncharge
+       - jsonPath: $.letterOfAcceptances.*.engineerIncharge.code
        
        - jsonPath: $.letterOfAcceptances.*.defectLiabilityPeriod
 

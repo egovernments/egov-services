@@ -8,7 +8,7 @@ class Iframe extends React.Component {
     const { source, height, width } = this.props;
     return (
       <div>
-        <iframe src={source} height={height} width={width} />
+        <iframe frameBorder="0" src={source} height={height} width={width} />
       </div>
     );
   }

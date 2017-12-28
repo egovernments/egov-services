@@ -1,8 +1,11 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -105,6 +108,9 @@ public class VehicleFuellingDetailsService {
         Pagination<Vehicle> vehicleList;
         RefillingPumpStationSearch refillingPumpStationSearch;
 
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
         for (final VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
             if (details.getVehicle() != null
@@ -152,7 +158,7 @@ public class VehicleFuellingDetailsService {
             if (details.getReceiptDate() != null && details.getTransactionDate() != null)
                 if (new Date(details.getReceiptDate()).compareTo(new Date(details.getTransactionDate())) > 0)
                     throw new CustomException("ReceiptDate",
-                            "Given ReceiptDate is invalid: " + new Date(details.getReceiptDate())
+                            "Given ReceiptDate is invalid: " + dateFormat.format(new Date(details.getReceiptDate()))
                                     + " Receipt date should not be after transaction Date");
 
             validateUniqueFields(details);

@@ -1,9 +1,8 @@
 package org.egov.swm.domain.service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
@@ -121,6 +120,9 @@ public class VehicleService {
         String designationId = null;
         EmployeeResponse employeeResponse = null;
 
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
         findDuplicatesInUniqueFields(vehicleRequest);
 
         for (final Vehicle vehicle : vehicleRequest.getVehicles()) {
@@ -169,14 +171,14 @@ public class VehicleService {
                 if (!utils.isFutureDate(new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate())))
                     throw new CustomException("InsuranceValidityDate",
                             "Given InsuranceValidityDate is invalid: "
-                                    + new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate())
+                                    + dateFormat.format(new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate()))
                                     + " It is not a future date");
 
             if (vehicle.getPurchaseInfo() != null && vehicle.getPurchaseInfo().getPurchaseDate() != null)
                 if (utils.isFutureDate(new Date(vehicle.getPurchaseInfo().getPurchaseDate())))
                     throw new CustomException("PurchaseDate",
                             "Given PurchaseDate is invalid: "
-                                    + new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate())
+                                    + dateFormat.format(new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate()))
                                     + " It should not be a future date");
 
             // Validate Driver

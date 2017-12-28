@@ -2,6 +2,9 @@ package org.egov;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,6 +43,10 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 	@Value("${state.level.masters}")
 	public String stateLevelMasters;
 	
+	@Value("${masters.config.url}")
+	public String masterConfigUrl;
+	
+	
 	private static Map<String, String> filePathMap = new HashMap<>();
 	
 	private static Map<String, List<String>> stateLevelMastermap = new HashMap<>();
@@ -53,7 +60,7 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 			readDirectory(mdmsFileDirectory);
 			getStateLevelMap(stateLevelMasters);
 			//readMdmsConfigFiles("/home/kiranmayi/egovernments/latest/egov-services/core/egov-mdms-create/src/main/resources/"+"master-config.json");
-			readMdmsConfigFiles("master-config.json");
+			readMdmsConfigFiles(masterConfigUrl);
 		} catch (Exception e) {
 			log.error("Exception while loading yaml files: ", e);
 		}
@@ -149,16 +156,31 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 		}
 	}
 	
-	public void readMdmsConfigFiles(String baseFoderPath) {
+	public void readMdmsConfigFiles(String masterConfigUrl) {
 		ObjectMapper jsonReader = new ObjectMapper();
-		File file = new File(getClass().getClassLoader().getResource(baseFoderPath).getFile());
-	
-				String name = file.getName();
+		
+		Map file = null;
+		URL yamlFile = null;
+		try {
+		yamlFile = new URL(masterConfigUrl);
+		} catch (MalformedURLException e1) {
+		// TODO Auto-generated catch block
+		log.error("Exception while fetching service map for: " + e1.getMessage());
+		}
+		try {
+		file = jsonReader.readValue(new InputStreamReader(yamlFile.openStream()), Map.class);
+		} catch (Exception e) {
+		log.error("Exception while fetching service map for: " + e.getMessage());
+		}
+		masterConfigMap = file;
+		
+		  //File file = new File(getClass().getClassLoader().getResource(baseFoderPath).getFile());
+			/*	String name = file.getName();
 				String[] fileName = name.split("[.]");
 				if (fileName[fileName.length - 1].equals("json")) {
 					log.debug("Reading json file....:- " + name);
 					try {
-						Map<String, Object> jsonMap = jsonReader.readValue(file, Map.class);
+						Map<String, Object> jsonMap = jsonReader.convertValue(file, Map.class);
 						prepareMasterConfigMap(jsonMap);
 						log.debug("json str:" + jsonMap);
 					} catch (JsonGenerationException e) {
@@ -177,7 +199,7 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 					log.info("file is not of a valid type please change and retry");
 					log.info("Note: file can either be .yml/.yaml or .json");
 
-				}
+				}*/
 	}
 	@SuppressWarnings("unchecked")
 	public void prepareMasterConfigMap(Map<String, Object> map) {

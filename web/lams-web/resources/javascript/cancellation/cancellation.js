@@ -134,6 +134,10 @@ class CancellationAgreement extends React.Component {
     this.setState(initState);
   }
 
+  close() {
+    // widow.close();
+    open(location, '_self').close();
+}
 
   addOrUpdate(e) {
 

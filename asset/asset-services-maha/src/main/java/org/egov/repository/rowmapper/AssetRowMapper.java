@@ -162,7 +162,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
             
 			if (assetId.equals(rs.getLong("landassetid"))) {
 				LandDetail landDetail = LandDetail.builder().surveyNo(rs.getString("surveynumber"))
-						.id(rs.getLong("id")).tenantId(rs.getString("tenantid"))
+						.id(rs.getLong("landid")).tenantId(rs.getString("tenantid"))
 						.area(getDoubleFromBigDecimal(rs.getBigDecimal("area"))).code(rs.getString("landcode")).build();
 				if (asset.getLandDetails() != null)
 					asset.getLandDetails().add(landDetail);

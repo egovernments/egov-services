@@ -21,7 +21,7 @@ public class AssetQueryBuilder {
 
 	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 
-	private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid,currentval.currentamount "
+	private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid,asd.id as landid,currentval.currentamount "
 
 			+ "from egasset_asset asset left outer join egasset_asset_landdetails asd ON  asset.id=asd.assetid AND asset.tenantid=asd.tenantid "
 

@@ -33,12 +33,15 @@ public class MDMSRequestValidator {
 	@Value("${cache.fetch.enabled}")
 	private Boolean cacheFetch;
 
-	
+	private final Map<String, List<String>> stateLevelMastermap = MDMSApplicationRunnerImpl.getStateWideMastersMap();
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<Object> validateRequest(MDMSCreateRequest mDMSCreateRequest, List<String> keys, Boolean isCreate)
 			throws Exception {
 		 Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
+		 
+		 verifyMasterIsState(mDMSCreateRequest,stateLevelMastermap);
+		 
 		ArrayList<Object> result = new ArrayList<>();
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		ObjectMapper mapper = new ObjectMapper();
@@ -119,6 +122,7 @@ public class MDMSRequestValidator {
 				List<Object> filterResult = new ArrayList<>();
 				masterData = masters;
 				for (String key : uniqueKeys) {
+					//TODO ERROR IS BEING THROWN IF KEYS FIELDS ARE MISSING IN INCOMING JSON 
 					Object value;
 					value = JsonPath.read(masterDataArray.get(i).toString(), key.toString());
 					filterResult = mDMSUtils.filter(masterData, key, value);
@@ -141,5 +145,28 @@ public class MDMSRequestValidator {
 			return result;
 		}
 	}
+
+	/***
+	 *  TO turn the tenantId to stateLevel if the data is present in stateWideMaster list
+	 * @param mDMSCreateRequest
+	 * @param stateLevelMastermap
+	 */
+		private void verifyMasterIsState(MDMSCreateRequest mDMSCreateRequest,
+				Map<String, List<String>> stateLevelMastermap) {
+
+			String tenantId = mDMSCreateRequest.getMasterMetaData().getTenantId();
+			List<String> stateMasterName = stateLevelMastermap.get(mDMSCreateRequest.getMasterMetaData().moduleName);
+			if (tenantId.contains(".") &&  stateMasterName!= null && stateMasterName.contains(mDMSCreateRequest.getMasterMetaData().masterName) ) {
+				
+				List<Object> dataList = mDMSCreateRequest.getMasterMetaData().getMasterData();
+				String updatedtenantId =  tenantId.split("\\.")[0];
+				mDMSCreateRequest.getMasterMetaData().setTenantId(updatedtenantId);
+				dataList.forEach(a -> {
+					Map<String, Object> map = (Map<String, Object>) a;
+					map.put("tenantId",updatedtenantId);
+				});
+			}
+			System.err.println(mDMSCreateRequest);
+		}
 
 }

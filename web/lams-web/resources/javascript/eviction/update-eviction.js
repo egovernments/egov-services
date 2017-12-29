@@ -301,7 +301,7 @@ class UpdateEviction extends React.Component {
         }
 
         getDesignations(process.status, function (designations) {
-            console.log(designations);
+            // console.log(designations);
             _this.setState({
                 ..._this.state,
                 designationList: designations
@@ -318,6 +318,11 @@ class UpdateEviction extends React.Component {
             agreement.workflowDetails = {};
         }
 
+        // console.log(_btns ? _btns : []);
+        var wf = {};
+        if(_btns.length > 0){
+          wf = _btns.find((obj)=> {return obj.key === 'Approve'});
+        }
 
         this.setState({
             ...this.state,
@@ -325,6 +330,7 @@ class UpdateEviction extends React.Component {
             departmentList: departmentList,
             //owner:process.owner.id,
             wfStatus: process.status,
+            wfdisbale: Object.keys(wf).length !== 0 ? true : false,
             buttons: _btns ? _btns : []
         });
 
@@ -558,10 +564,9 @@ class UpdateEviction extends React.Component {
             agreement.workflowDetails.action = ID;
             agreement.workflowDetails.status = this.state.wfStatus;
 
-
             if (ID === "Reject") {
 
-                if (agreement.workflowDetails.comments || agreement.workflowDetails.comments === "")
+                if (!agreement.workflowDetails.comments)
                     return showError("Please enter the Comments, If you are rejecting");
 
             }
@@ -1171,7 +1176,7 @@ class UpdateEviction extends React.Component {
             );
         }
 
-        const renderWorkFlowDetails = function () {
+        const renderWorkFlowDetails = function (obj) {
             return (
                 <div className="form-section">
                     <div className="row">
@@ -1179,6 +1184,7 @@ class UpdateEviction extends React.Component {
                             <h3 className="categoryType">Workflow Details </h3>
                         </div>
                     </div>
+                    {!obj.state.wfdisbale &&
                     <div className="row">
                         <div className="col-sm-6">
                             <div className="row">
@@ -1213,7 +1219,9 @@ class UpdateEviction extends React.Component {
                             </div>
                         </div>
                     </div>
+                    }
                     <div className="row">
+                      {!obj.state.wfdisbale &&
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
@@ -1230,6 +1238,7 @@ class UpdateEviction extends React.Component {
                                 </div>
                             </div>
                         </div>
+                      }
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
@@ -1257,7 +1266,7 @@ class UpdateEviction extends React.Component {
                         {renderAllottee()}
                         {renderAgreementDetails()}
                         {renederEvictionDetails()}
-                        {renderWorkFlowDetails()}
+                        {renderWorkFlowDetails(this)}
 
                         <br />
                         <div className="text-center">

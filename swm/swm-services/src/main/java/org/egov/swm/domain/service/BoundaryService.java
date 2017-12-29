@@ -74,9 +74,12 @@ public class BoundaryService {
         if (filterFieldValue != null && !filterFieldValue.isEmpty())
 
             masterDetails.get(0).setFilter("[?((@.boundary.code=='"
-                    + filterFieldValue + "' || '" + filterFieldValue + "' in @.boundary.children[*].code || '" + filterFieldValue
+                    + filterFieldValue + "' || '" + filterFieldValue
+                    + "' in @.boundary.children[*].code || '" + filterFieldValue
                     + "' in @.boundary.children[*].children[*].code || '" + filterFieldValue
-                    + "' in @.boundary.children[*].children[*].children[*].code ) && @.hierarchyType.code=='" + hierarchyTypeCode
+                    + "' in @.boundary.children[*].children[*].children[*].code || '" + filterFieldValue
+                    + "' in @.boundary.children[*].children[*].children[*].children[*].code ) && @.hierarchyType.code=='"
+                    + hierarchyTypeCode
                     + "' )]");
 
         moduleDetails.add(ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build());

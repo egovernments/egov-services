@@ -3921,80 +3921,6 @@
 					"description": "",
 					"item": [
 						{
-							"name": "Create Supplier copy",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"pm.test(\"Status code is 200\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"var responseBody = JSON.parse(responseBody);",
-											"",
-											"var supplierId = responseBody.suppliers[0].id;",
-											"pm.environment.set(\"supplierId\",supplierId);",
-											"",
-											"",
-											"postman.setNextRequest(\"Search Supplier\");"
-										]
-									}
-								},
-								{
-									"listen": "prerequest",
-									"script": {
-										"type": "text/javascript",
-										"exec": [
-											"var name1 = Math.floor(Math.random() * 10000);",
-											"",
-											"postman.setEnvironmentVariable(\"SupplierCode\",\"SupplierCode\"+name1);",
-											"",
-											"",
-											"",
-											"",
-											"",
-											""
-										]
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n \"RequestInfo\": {\n   \"apiId\": \"emp\",\n   \"ver\": \"1.0\",\n   \"ts\": \"12345677\",\n   \"action\": \"create\",\n   \"did\": \"1\",\n   \"key\": \"abcdkey\",\n   \"msgId\": \"20170310130900\",\n   \"requesterId\": \"rajesh\",\n   \"authToken\": \"{{access_token}}\"\n\n  \n },\n \"suppliers\":\n[  {\n\"tenantId\":\"{{tenantId}}\",\n \t\"type\":\"INDIVIDUAL\",\n \t\"code\":\"{{SupplierCode}}\",\n \t\"active\":\"true\",\n \t\"name\":\"Anand And Sons\",\n \t\"address\":\"btm layout\",\n \t\"status\":\"ACTIVE\",\n \t\"inActiveDate\":\"15436789\",\n \t\"contactNo\":\"0132278956\",\n \t\"faxNo\":\"123788890\",\n \t\"website\":\"http://www.google.com\",\n \t\"email\":\"anand@gmail.com\",\n \t\"description\":\"supplier for cosmetics\",\n \t\"panNo\":\"DFGPV3459D\",\n \t\"tinNo\":\"34676767uiu\",\n \t\"cstNo\":\"34676767uiC\",\n \t\"vatNo\":\"34676767uiV\",\n \t\"gstNo\":\"75AGHFD7890A0Z0\",\n \t\"contactPerson\":\"anand dubay\",\n \t\"contactPersonNo\":\"8388743488\",\n \t\"bankCode\":\"bankcode1\",\n   \"bankBranch\":\"bankbranch1\",\n \t\"acctNo\":\"3161001500005068\",\n \t\"ifsc\":\"IFSC38899\",\n \t\"micr\":\"MICR983985\"\n \t}\n\n]\n \n}"
-								},
-								"url": {
-									"raw": "{{url}}/inventory-services/suppliers/_create?tenantId={{tenantId}}",
-									"host": [
-										"{{url}}"
-									],
-									"path": [
-										"inventory-services",
-										"suppliers",
-										"_create"
-									],
-									"query": [
-										{
-											"key": "tenantId",
-											"value": "{{tenantId}}",
-											"equals": true
-										}
-									]
-								},
-								"description": ""
-							},
-							"response": []
-						},
-						{
 							"name": "Login",
 							"event": [
 								{
@@ -4140,7 +4066,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"indents\": [\n    {\n      \"issueStore\": {\n        \"code\": \"MED001\"\n      },\n      \"indentDate\": 1512412200000,\n      \"indentNumber\": \"\",\n      \"indentType\": \"Indent\",\n      \"expectedDeliveryDate\": 1512412200000,\n      \"narration\": \"fgfd\",\n      \"materialHandOverTo\": \"fdgdf\",\n      \"designation\": \"\",\n      \"indentDetails\": [\n        {\n          \"uom\": {\n            \"code\": \"CUL\"\n          },\n          \"material\": {\n            \"code\": \"MAT19\"\n          },\n          \"indentQuantity\": \"25\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        },\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"CM\"\n          },\n          \"indentQuantity\": \"3\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        }\n      ],\n      \"indentPurpose\": \"Consumption\",\n      \"inventoryType\": \"Asset\",\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511527847642,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+									"raw": "{\n  \"indents\": [\n    {\n      \"issueStore\": {\n        \"code\": \"MED001\"\n      },\n      \"indentDate\": 1512412200000,\n      \"indentNumber\": \"\",\n      \"indentType\": \"Indent\",\n      \"expectedDeliveryDate\": 1512412200000,\n      \"narration\": \"fgfd\",\n      \"materialHandOverTo\": \"fdgdf\",\n      \"designation\": \"\",\n      \"indentDetails\": [\n        {\n          \"uom\": {\n            \"code\": \"CUL\"\n          },\n          \"material\": {\n            \"code\": \"MAT19\"\n          },\n          \"userQuantity\": \"25\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        },\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"CM\"\n          },\n          \"userQuantity\": \"3\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        }\n      ],\n      \"indentPurpose\": \"Consumption\",\n      \"inventoryType\": \"Asset\",\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511527847642,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/inventory-services/indents/_create?tenantId={{tenantId}}",
@@ -4270,17 +4196,17 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"indents\": [\n  \t\n    {\n    \t\"id\":\"{{ResIndentId}}\",\n      \"issueStore\": {\n        \"code\": \"MED001\"\n      },\n      \"indentDate\": 1512412200000,\n      \"indentNumber\": \"{{ResindentNumber}}\",\n      \"indentType\": \"Indent\",\n      \"expectedDeliveryDate\": 1512412200000,\n      \"narration\": \"fgfd\",\n      \"materialHandOverTo\": \"fdgdf\",\n      \"designation\": \"\",\n      \"indentDetails\": [\n        {\n        \t\"id\":\"{{ResIndentdetailId}}\",\n          \"uom\": {\n            \"code\": \"CUL\"\n          },\n          \"material\": {\n            \"code\": \"MAT19\"\n          },\n          \"indentQuantity\": \"25\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        },\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"CM\"\n          },\n          \"indentQuantity\": \"3\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        }\n      ],\n      \"indentPurpose\": \"Consumption\",\n      \"inventoryType\": \"Asset\",\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511527847642,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+									"raw": "{\n  \"indents\": [\n  \t\n    {\n    \t\"id\":\"{{ResIndentId}}\",\n      \"issueStore\": {\n        \"code\": \"MED001\"\n      },\n      \"indentDate\": 1512412200000,\n      \"indentNumber\": \"{{ResindentNumber}}\",\n      \"indentType\": \"Indent\",\n      \"expectedDeliveryDate\": 1512412200000,\n      \"narration\": \"fgfd\",\n      \"materialHandOverTo\": \"fdgdf\",\n      \"designation\": \"\",\n      \"indentDetails\": [\n        {\n        \t\"id\":\"{{ResIndentdetailId}}\",\n          \"uom\": {\n            \"code\": \"CUL\"\n          },\n          \"material\": {\n            \"code\": \"MAT19\"\n          },\n          \"userQuantity\": \"25\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        },\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"CM\"\n          },\n          \"userQuantity\": \"3\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        }\n      ],\n      \"indentPurpose\": \"Consumption\",\n      \"inventoryType\": \"Asset\",\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511527847642,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
 								},
 								"url": {
-									"raw": "{{url}}/inventory-services/indents/_create?tenantId={{tenantId}}&indentNumber={{indentNumber}}",
+									"raw": "{{url}}/inventory-services/indents/_update?tenantId={{tenantId}}&indentNumber={{indentNumber}}",
 									"host": [
 										"{{url}}"
 									],
 									"path": [
 										"inventory-services",
 										"indents",
-										"_create"
+										"_update"
 									],
 									"query": [
 										{
@@ -4559,8 +4485,8 @@
 											"var indentNumber=responseBody.indents[0].indentNumber;",
 											"pm.environment.set(\"indentNumber\",indentNumber);",
 											"",
-											"var indentQuantity=requestBody.indents[0].indentDetails[0].indentQuantity;",
-											"pm.environment.set(\"indentQuantity\",indentQuantity);",
+											"var userQuantity=requestBody.indents[0].indentDetails[0].userQuantity;",
+											"pm.environment.set(\"userQuantity\",userQuantity);",
 											"",
 											"postman.setNextRequest(\"Create Supplier\");",
 											"",
@@ -4579,7 +4505,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"indents\": [\n    {\n      \"issueStore\": {\n        \"code\": \"MED001\"\n      },\n      \"indentDate\": 1512412200000,\n      \"indentNumber\": \"\",\n      \"indentType\": \"Indent\",\n      \"expectedDeliveryDate\": 1512412200000,\n      \"narration\": \"fgfd\",\n      \"materialHandOverTo\": \"fdgdf\",\n      \"designation\": \"\",\n      \"indentDetails\": [\n        {\n          \"material\": {\n            \"code\": \"{{materialCode}}\"\n          },\n          \"uom\": {\n            \"code\": \"{{UomCode}}\"\n          },\n          \"indentQuantity\": \"3\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        }\n      ],\n      \"indentPurpose\": \"Consumption\",\n      \"inventoryType\": \"Asset\",\n      \"tenantId\": \"{{tenantId}}\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511527847642,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+									"raw": "{\n  \"indents\": [\n    {\n      \"issueStore\": {\n        \"code\": \"MED001\"\n      },\n      \"indentDate\": 1512412200000,\n      \"indentNumber\": \"\",\n      \"indentType\": \"Indent\",\n      \"expectedDeliveryDate\": 1512412200000,\n      \"narration\": \"fgfd\",\n      \"materialHandOverTo\": \"fdgdf\",\n      \"designation\": \"\",\n      \"indentDetails\": [\n        {\n          \"material\": {\n            \"code\": \"{{materialCode}}\"\n          },\n          \"uom\": {\n            \"code\": \"{{UomCode}}\"\n          },\n          \"userQuantity\": \"3\",\n          \"asset\": {\n            \"code\": \"2\"\n          }\n        }\n      ],\n      \"indentPurpose\": \"Consumption\",\n      \"inventoryType\": \"Asset\",\n      \"tenantId\": \"{{tenantId}}\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511527847642,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/inventory-services/indents/_create?tenantId={{tenantId}}",
@@ -4865,8 +4791,7 @@
 											"var ResPriceListPO= responseBody.purchaseOrders[0].purchaseOrderDetails[0].priceList.id;",
 											"pm.environment.set(\"ResPriceListPO\",ResPriceListPO);",
 											"",
-											"",
-											" postman.setNextRequest(\"Create Purchase Order\");",
+											"postman.setNextRequest(\"Create Purchase Order\");",
 											""
 										]
 									}
@@ -4945,7 +4870,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1513930422037,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"purchaseOrders\": [\n    {\n      \"store\": {\n        \"code\": \"{{storeCode}}\"\n      },\n      \"purchaseType\": \"Indent\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"purchaseOrderDate\": \"{{today}}\",\n      \"rateType\": \"Quotation\",\n      \"supplier\": {\n        \"code\": \"{{SupplierCode}}\"\n      },\n      \"purchaseOrderDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"material\": {\n            \"tenantId\": \"{{tenantId}}\",\n            \"code\": \"{{materialCode}}\",\n            \"name\": \"SEAL\",\n            \"description\": \"Seal\",\n            \"materialType\": {\n              \"code\": \"MAT1\"\n            },\n            \"baseUom\": {\n              \"id\": \"1\",\n              \"tenantId\": \"default\",\n              \"code\": \"NOS\",\n              \"description\": \"Numbers\",\n              \"baseUom\": true,\n              \"uomCategory\": \"QUANTITY\",\n              \"fromDate\": 1508740856,\n              \"toDate\": 1893436200,\n              \"conversionFactor\": 1\n            },\n            \"purchaseUom\": {\n              \"id\": \"1\",\n              \"tenantId\": \"default\",\n              \"code\": \"NOS\",\n              \"description\": \"Numbers\",\n              \"baseUom\": true,\n              \"uomCategory\": \"QUANTITY\",\n              \"fromDate\": 1508740856,\n              \"toDate\": 1893436200,\n              \"conversionFactor\": 1\n            },\n            \"expenseAccount\": {\n              \"glCode\": \"44001\"\n            },\n            \"minQuantity\": 2,\n            \"maxQuantity\": 20,\n            \"stockingUom\": {\n              \"id\": \"1\",\n              \"tenantId\": \"default\",\n              \"code\": \"NOS\",\n              \"description\": \"Numbers\",\n              \"baseUom\": true,\n              \"uomCategory\": \"QUANTITY\",\n              \"fromDate\": 1508740856,\n              \"toDate\": 1893436200,\n              \"conversionFactor\": 1\n            },\n            \"reorderLevel\": 10,\n            \"reorderQuantity\": 12,\n            \"lotControl\": false,\n            \"shelfLifeControl\": false,\n            \"serialNumber\": false\n          },\n          \"uom\": {\n            \"id\": \"1\",\n            \"tenantId\": \"default\",\n            \"code\": \"NOS\",\n            \"description\": \"Numbers\",\n            \"baseUom\": true,\n            \"uomCategory\": \"QUANTITY\",\n            \"fromDate\": 1508740856,\n            \"toDate\": 1893436200,\n            \"conversionFactor\": 1\n          },\n          \"priceList\": {\n            \"id\": \"{{ResPriceListPO}}\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"supplier\": {\n              \"id\": \"100\",\n              \"tenantId\": \"default\",\n              \"type\": \"INDIVIDUAL\",\n              \"code\": \"{{SupplierCode}}\",\n              \"name\": \"Anand And Sons\",\n              \"address\": \"btm layout\",\n              \"status\": \"ACTIVE\",\n              \"inActiveDate\": 15436789,\n              \"active\": true,\n              \"contactNo\": \"0132278956\",\n              \"faxNo\": \"123788890\",\n              \"website\": \"http://www.google.com\",\n              \"email\": \"anand@gmail.com\",\n              \"description\": \"supplier for cosmetics\",\n              \"panNo\": \"DFGPV3459D\",\n              \"tinNo\": \"34676767uiu\",\n              \"cstNo\": \"34676767uiC\",\n              \"vatNo\": \"34676767uiV\",\n              \"gstNo\": \"75AGHFD7890A0Z0\",\n              \"contactPerson\": \"anand dubay\",\n              \"contactPersonNo\": \"8388743488\",\n              \"bankCode\": \"SBI\",\n              \"bankBranch\": \"bankbranch1\",\n              \"acctNo\": \"3161001500005068\",\n              \"ifsc\": \"IFSC38899\",\n              \"micr\": \"MICR983985\",\n              \"auditDetails\": {\n                \"createdBy\": \"22534\",\n                \"lastModifiedBy\": \"22534\",\n                \"createdTime\": 12345677,\n                \"lastModifiedTime\": 12345677\n              }\n            },\n            \"rateType\": \"Quotation\",\n            \"rateContractNumber\": \"{{rateContractNumber}}\",\n            \"rateContractDate\": 1489224710000,\n            \"agreementNumber\": \"DEC11AN1\",\n            \"agreementDate\": 1491903110000,\n            \"agreementStartDate\": 1328367398850,\n            \"agreementEndDate\": 1527771650467,\n            \"active\": true,\n            \"fileStoreId\": \"\",\n            \"priceListDetails\": [\n              {\n                \"id\": \"201\",\n                \"material\": {\n                  \"code\": \"MAT1\"\n                },\n                \"fromDate\": 1328367398850,\n                \"toDate\": 1527771650467,\n                \"ratePerUnit\": 12,\n                \"quantity\": 11,\n                \"uom\": {\n                  \"id\": \"1\",\n                  \"tenantId\": \"default\",\n                  \"code\": \"NOS\",\n                  \"description\": \"Numbers\",\n                  \"baseUom\": true,\n                  \"uomCategory\": \"QUANTITY\",\n                  \"fromDate\": 1508740856,\n                  \"toDate\": 1893436200,\n                  \"conversionFactor\": 1\n                },\n                \"active\": true,\n                \"auditDetails\": {\n                  \"createdBy\": \"22534\",\n                  \"lastModifiedBy\": \"22534\",\n                  \"createdTime\": 1512988123880,\n                  \"lastModifiedTime\": 1512988123880\n                }\n              }\n            ],\n            \"auditDetails\": {\n              \"createdBy\": \"22534\",\n              \"lastModifiedBy\": \"22534\",\n              \"createdTime\": 1512988123880,\n              \"lastModifiedTime\": 1512988123880\n            }\n          },\n          \"unitPrice\": 12,\n          \"indentNumber\": \"{{indentNumber}}\",\n          \"indentQuantity\": \"{{indentQuantity}}\",\n          \"orderQuantity\": \"{{indentQuantity}}\",\n          \"tenderQuantity\" : 0,\n          \"receivedQuantity\": 0,\n          \"usedQuantity\": 0,\n          \"purchaseIndentDetails\": [\n            {\n              \"tenantId\": \"default\",\n              \"indentDetail\": {\n                \"id\": \"158\",\n                \"tenantId\": \"default\",\n                \"material\": {\n                  \"tenantId\": \"default\",\n                  \"code\": \"MAT1\",\n                  \"name\": \"SEAL\",\n                  \"description\": \"Seal\",\n                  \"materialType\": {\n                    \"code\": \"MT1\"\n                  },\n                  \"baseUom\": {\n                    \"id\": \"1\",\n                    \"tenantId\": \"default\",\n                    \"code\": \"NOS\",\n                    \"description\": \"Numbers\",\n                    \"baseUom\": true,\n                    \"uomCategory\": \"QUANTITY\",\n                    \"fromDate\": 1508740856,\n                    \"toDate\": 1893436200,\n                    \"conversionFactor\": 1\n                  },\n                  \"purchaseUom\": {\n                    \"id\": \"1\",\n                    \"tenantId\": \"default\",\n                    \"code\": \"NOS\",\n                    \"description\": \"Numbers\",\n                    \"baseUom\": true,\n                    \"uomCategory\": \"QUANTITY\",\n                    \"fromDate\": 1508740856,\n                    \"toDate\": 1893436200,\n                    \"conversionFactor\": 1\n                  },\n                  \"expenseAccount\": {\n                    \"glCode\": \"44001\"\n                  },\n                  \"minQuantity\": 2,\n                  \"maxQuantity\": 20,\n                  \"stockingUom\": {\n                    \"id\": \"1\",\n                    \"tenantId\": \"default\",\n                    \"code\": \"NOS\",\n                    \"description\": \"Numbers\",\n                    \"baseUom\": true,\n                    \"uomCategory\": \"QUANTITY\",\n                    \"fromDate\": 1508740856,\n                    \"toDate\": 1893436200,\n                    \"conversionFactor\": 1\n                  },\n                  \"reorderLevel\": 10,\n                  \"reorderQuantity\": 12,\n                  \"lotControl\": false,\n                  \"shelfLifeControl\": false,\n                  \"serialNumber\": false\n                },\n                \"uom\": {\n                  \"code\": \"NOS\",\n                  \"baseUom\": false\n                },\n                \"projectCode\": {\n                  \n                },\n                \"asset\": {\n                  \"code\": \"2\"\n                },\n                \"indentQuantity\": 3,\n                \"totalProcessedQuantity\": 0,\n                \"indentIssuedQuantity\": 0,\n                \"poOrderedQuantity\": 0,\n                \"interstoreRequestQuantity\": 0\n              },\n              \"quantity\": 3,\n              \"auditDetails\": {\n                \"createdBy\": \"22534\",\n                \"lastModifiedBy\": \"22534\",\n                \"createdTime\": 1514354899171,\n                \"lastModifiedTime\": 1514354899171\n              }\n            }\n          ]\n        }\n      ],\n      \"indentNumbers\": [\n        \"{{indentNumber}}\"\n      ]\n    }\n  ]\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1513930422037,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"purchaseOrders\": [\n    {\n      \"store\": {\n        \"code\": \"{{storeCode}}\"\n      },\n      \"purchaseType\": \"Indent\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"purchaseOrderDate\": \"{{today}}\",\n      \"rateType\": \"Quotation\",\n      \"supplier\": {\n        \"code\": \"{{SupplierCode}}\"\n      },\n      \"purchaseOrderDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"material\": {\n            \"tenantId\": \"{{tenantId}}\",\n            \"code\": \"{{materialCode}}\",\n            \"name\": \"SEAL\",\n            \"description\": \"Seal\",\n            \"materialType\": {\n              \"code\": \"MAT1\"\n            },\n            \"baseUom\": {\n              \"id\": \"1\",\n              \"tenantId\": \"default\",\n              \"code\": \"NOS\",\n              \"description\": \"Numbers\",\n              \"baseUom\": true,\n              \"uomCategory\": \"QUANTITY\",\n              \"fromDate\": 1508740856,\n              \"toDate\": 1893436200,\n              \"conversionFactor\": 1\n            },\n            \"purchaseUom\": {\n              \"id\": \"1\",\n              \"tenantId\": \"default\",\n              \"code\": \"NOS\",\n              \"description\": \"Numbers\",\n              \"baseUom\": true,\n              \"uomCategory\": \"QUANTITY\",\n              \"fromDate\": 1508740856,\n              \"toDate\": 1893436200,\n              \"conversionFactor\": 1\n            },\n            \"expenseAccount\": {\n              \"glCode\": \"44001\"\n            },\n            \"minQuantity\": 2,\n            \"maxQuantity\": 20,\n            \"stockingUom\": {\n              \"id\": \"1\",\n              \"tenantId\": \"default\",\n              \"code\": \"NOS\",\n              \"description\": \"Numbers\",\n              \"baseUom\": true,\n              \"uomCategory\": \"QUANTITY\",\n              \"fromDate\": 1508740856,\n              \"toDate\": 1893436200,\n              \"conversionFactor\": 1\n            },\n            \"reorderLevel\": 10,\n            \"reorderQuantity\": 12,\n            \"lotControl\": false,\n            \"shelfLifeControl\": false,\n            \"serialNumber\": false\n          },\n          \"uom\": {\n            \"id\": \"1\",\n            \"tenantId\": \"default\",\n            \"code\": \"NOS\",\n            \"description\": \"Numbers\",\n            \"baseUom\": true,\n            \"uomCategory\": \"QUANTITY\",\n            \"fromDate\": 1508740856,\n            \"toDate\": 1893436200,\n            \"conversionFactor\": 1\n          },\n          \"priceList\": {\n            \"id\": \"{{ResPriceListPO}}\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"supplier\": {\n              \"id\": \"100\",\n              \"tenantId\": \"default\",\n              \"type\": \"INDIVIDUAL\",\n              \"code\": \"{{SupplierCode}}\",\n              \"name\": \"Anand And Sons\",\n              \"address\": \"btm layout\",\n              \"status\": \"ACTIVE\",\n              \"inActiveDate\": 15436789,\n              \"active\": true,\n              \"contactNo\": \"0132278956\",\n              \"faxNo\": \"123788890\",\n              \"website\": \"http://www.google.com\",\n              \"email\": \"anand@gmail.com\",\n              \"description\": \"supplier for cosmetics\",\n              \"panNo\": \"DFGPV3459D\",\n              \"tinNo\": \"34676767uiu\",\n              \"cstNo\": \"34676767uiC\",\n              \"vatNo\": \"34676767uiV\",\n              \"gstNo\": \"75AGHFD7890A0Z0\",\n              \"contactPerson\": \"anand dubay\",\n              \"contactPersonNo\": \"8388743488\",\n              \"bankCode\": \"SBI\",\n              \"bankBranch\": \"bankbranch1\",\n              \"acctNo\": \"3161001500005068\",\n              \"ifsc\": \"IFSC38899\",\n              \"micr\": \"MICR983985\",\n              \"auditDetails\": {\n                \"createdBy\": \"22534\",\n                \"lastModifiedBy\": \"22534\",\n                \"createdTime\": 12345677,\n                \"lastModifiedTime\": 12345677\n              }\n            },\n            \"rateType\": \"Quotation\",\n            \"rateContractNumber\": \"{{rateContractNumber}}\",\n            \"rateContractDate\": 1489224710000,\n            \"agreementNumber\": \"DEC11AN1\",\n            \"agreementDate\": 1491903110000,\n            \"agreementStartDate\": 1328367398850,\n            \"agreementEndDate\": 1527771650467,\n            \"active\": true,\n            \"fileStoreId\": \"\",\n            \"priceListDetails\": [\n              {\n                \"id\": \"201\",\n                \"material\": {\n                  \"code\": \"MAT1\"\n                },\n                \"fromDate\": 1328367398850,\n                \"toDate\": 1527771650467,\n                \"ratePerUnit\": 12,\n                \"quantity\": 11,\n                \"uom\": {\n                  \"id\": \"1\",\n                  \"tenantId\": \"default\",\n                  \"code\": \"NOS\",\n                  \"description\": \"Numbers\",\n                  \"baseUom\": true,\n                  \"uomCategory\": \"QUANTITY\",\n                  \"fromDate\": 1508740856,\n                  \"toDate\": 1893436200,\n                  \"conversionFactor\": 1\n                },\n                \"active\": true,\n                \"auditDetails\": {\n                  \"createdBy\": \"22534\",\n                  \"lastModifiedBy\": \"22534\",\n                  \"createdTime\": 1512988123880,\n                  \"lastModifiedTime\": 1512988123880\n                }\n              }\n            ],\n            \"auditDetails\": {\n              \"createdBy\": \"22534\",\n              \"lastModifiedBy\": \"22534\",\n              \"createdTime\": 1512988123880,\n              \"lastModifiedTime\": 1512988123880\n            }\n          },\n          \"unitPrice\": 12,\n          \"indentNumber\": \"{{indentNumber}}\",\n          \"userQuantity\": \"{{userQuantity}}\",\n          \"orderQuantity\": \"{{userQuantity}}\",\n          \"tenderQuantity\" : 0,\n          \"receivedQuantity\": 0,\n          \"usedQuantity\": 0,\n          \"purchaseIndentDetails\": [\n            {\n              \"tenantId\": \"default\",\n              \"indentDetail\": {\n                \"id\": \"158\",\n                \"tenantId\": \"default\",\n                \"material\": {\n                  \"tenantId\": \"default\",\n                  \"code\": \"MAT1\",\n                  \"name\": \"SEAL\",\n                  \"description\": \"Seal\",\n                  \"materialType\": {\n                    \"code\": \"MT1\"\n                  },\n                  \"baseUom\": {\n                    \"id\": \"1\",\n                    \"tenantId\": \"default\",\n                    \"code\": \"NOS\",\n                    \"description\": \"Numbers\",\n                    \"baseUom\": true,\n                    \"uomCategory\": \"QUANTITY\",\n                    \"fromDate\": 1508740856,\n                    \"toDate\": 1893436200,\n                    \"conversionFactor\": 1\n                  },\n                  \"purchaseUom\": {\n                    \"id\": \"1\",\n                    \"tenantId\": \"default\",\n                    \"code\": \"NOS\",\n                    \"description\": \"Numbers\",\n                    \"baseUom\": true,\n                    \"uomCategory\": \"QUANTITY\",\n                    \"fromDate\": 1508740856,\n                    \"toDate\": 1893436200,\n                    \"conversionFactor\": 1\n                  },\n                  \"expenseAccount\": {\n                    \"glCode\": \"44001\"\n                  },\n                  \"minQuantity\": 2,\n                  \"maxQuantity\": 20,\n                  \"stockingUom\": {\n                    \"id\": \"1\",\n                    \"tenantId\": \"default\",\n                    \"code\": \"NOS\",\n                    \"description\": \"Numbers\",\n                    \"baseUom\": true,\n                    \"uomCategory\": \"QUANTITY\",\n                    \"fromDate\": 1508740856,\n                    \"toDate\": 1893436200,\n                    \"conversionFactor\": 1\n                  },\n                  \"reorderLevel\": 10,\n                  \"reorderQuantity\": 12,\n                  \"lotControl\": false,\n                  \"shelfLifeControl\": false,\n                  \"serialNumber\": false\n                },\n                \"uom\": {\n                  \"code\": \"NOS\",\n                  \"baseUom\": false\n                },\n                \"projectCode\": {\n                  \n                },\n                \"asset\": {\n                  \"code\": \"2\"\n                },\n                \"indentQuantity\": 3,\n                \"totalProcessedQuantity\": 0,\n                \"indentIssuedQuantity\": 0,\n                \"poOrderedQuantity\": 0,\n                \"interstoreRequestQuantity\": 0\n              },\n              \"quantity\": 3,\n              \"auditDetails\": {\n                \"createdBy\": \"22534\",\n                \"lastModifiedBy\": \"22534\",\n                \"createdTime\": 1514354899171,\n                \"lastModifiedTime\": 1514354899171\n              }\n            }\n          ]\n        }\n      ],\n      \"indentNumbers\": [\n        \"{{indentNumber}}\"\n      ]\n    }\n  ]\n}"
 								},
 								"url": {
 									"raw": "{{url}}/inventory-services/purchaseorders/_create?tenantId={{tenantId}}",
@@ -7503,6 +7428,243 @@
 											]
 										},
 										"description": "create pricelist"
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Miscellaneous Material Receipt",
+					"description": "",
+					"item": [
+						{
+							"name": "Format",
+							"description": "",
+							"item": [],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Functional",
+							"description": "",
+							"item": [
+								{
+									"name": "Login copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"var jsonData = JSON.parse(responseBody);",
+													"",
+													"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+													"",
+													"tests[\"Status code is 200\"] = responseCode.code === 200;",
+													"",
+													"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+													"",
+													"postman.setNextRequest(\"Create Indents\");"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\")){",
+													"    postman.setEnvironmentVariable(\"username\",\"sanjeev\");",
+													"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+													"}",
+													"",
+													"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+													"    postman.setEnvironmentVariable(\"username\",\"narasappa\");",
+													"    postman.setEnvironmentVariable(\"password\",\"demo\");",
+													"}",
+													"",
+													"",
+													"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.roha\")){",
+													"    postman.setEnvironmentVariable(\"username\",\"kartik\");",
+													"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+													"}",
+													"",
+													"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"mh.rohatest\")){",
+													"    postman.setEnvironmentVariable(\"username\",\"uday\");",
+													"    postman.setEnvironmentVariable(\"password\",\"12345678\");",
+													"}"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											},
+											{
+												"key": "Authorization",
+												"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"type": "text",
+													"value": "{{username}}"
+												},
+												{
+													"key": "password",
+													"type": "text",
+													"value": "{{password}}"
+												},
+												{
+													"key": "grant_type",
+													"type": "text",
+													"value": "password"
+												},
+												{
+													"key": "scope",
+													"type": "text",
+													"value": "read"
+												},
+												{
+													"key": "tenantId",
+													"type": "text",
+													"value": "{{tenantId}}"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url}}/user/oauth/token",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"user",
+												"oauth",
+												"token"
+											]
+										},
+										"description": ""
+									},
+									"response": []
+								},
+								{
+									"name": "Create Miscellaneous Material Receipt Note",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"userInfo\": {\n      \"id\": 73\n    }\n  },\n  \"materialReceipt\": [\n    {\n      \"receivingStore\": {\n        \"code\": \"STR\"\n      },\n      \"receiptPurpose\":\"SCRAP\",\n      \"receiptDate\": 1512432086399,\n      \"receiptType\": \"PURCHASE RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"issueNumber\":null,\n      \"supplierBillNo\": \"AB-PO-2017\",\n      \"supplierBillDate\": 1512365762000,\n      \"challanNo\": \"CD-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt\",\n      \"paymentTerms\": \"paymentTerms for receipt\",\n      \"receivedBy\": \"Bimal\",\n      \"designation\": \"ASST-ENG\",\n      \"inspectedBy\": \"ramesh\",\n      \"inspectionDate\": 45698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt\",\n      \"receiptDetails\": [\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 20,\n          \"acceptedQty\": 20,\n          \"unitRate\": 5,\n          \"rejectionRemark\": \"rejection remark for receipt detail\",\n          \"purchaseOrderDetail\": {\n            \"id\": 1\n          },\n         \"receiptDetailsAddnInfo\": [\n            {\n              \"manufactureDate\": 12345698,\n              \"serialNo\": \"SR-02\",\n              \"expiryDate\": 1512538562000,\n              \"batchNo\": \"BA-NO-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+										},
+										"url": {
+											"raw": "{{url}}/inventory-services/miscellaneousreceiptnotes/_create?tenantId={{tenantId}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"inventory-services",
+												"miscellaneousreceiptnotes",
+												"_create"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "{{tenantId}}",
+													"equals": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Search Miscellaneous Material Receipt Note",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\":{\n      \"id\":1,\n      \"tenantId\":\"default\",\n      \"username\":\"abc\"\n    }\n  }\n}\n"
+										},
+										"url": {
+											"raw": "{{host}}:8080/inventory-services/miscellaneousreceiptnotes/_search?tenantId=default&mrnNumber=MRN/00155/2017",
+											"host": [
+												"{{host}}"
+											],
+											"port": "8080",
+											"path": [
+												"inventory-services",
+												"miscellaneousreceiptnotes",
+												"_search"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default",
+													"equals": true
+												},
+												{
+													"key": "mrnNumber",
+													"value": "MRN/00155/2017",
+													"equals": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Miscellaneous Material Receipt Note",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"materialReceipt\": [\n    {\n      \"id\": 154,\n      \"receivingStore\": {\n        \"code\": \"STR\"\n      },\n      \"mrnNumber\":\"MRN/00155/2017\",\n      \"receiptDate\": 1512432086399,\n      \"mrnStatus\": \"CANCELED\",\n      \"receiptType\": \"MISCELLANEOUS RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"supplierBillNo\": \"ABC-PO-2017\",\n      \"supplierBillDate\": 3654799,\n      \"challanNo\": \"CDE-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt update\",\n      \"paymentTerms\": \"paymentTerms for receipt update\",\n      \"receivedBy\": \"sanjeev prasad\",\n      \"designation\": \"ASST-ENG1\",\n      \"inspectedBy\": \"ramesh babu\",\n      \"inspectionDate\": 1245698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt update\",\n      \"receiptDetails\": [\n        {\n          \"id\": 67,\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 29.5,\n          \"acceptedQty\": 1,\n          \"unitRate\": 10,\n          \"rejectionRemark\": \"rejection remark for receipt detail update\",\n          \"purchaseOrderDetail\": {\n            \"id\": 2\n          },\n          \"tenantid\":\"default\",\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"id\": 80,\n              \"manufactureDate\": 345698,\n              \"lotNo\": \"LOTU-01\",\n              \"serialNo\": \"SRU-02\",\n              \"expiryDate\": 1512538562000,\n              \"batchNo\": \"BAC-NO-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+										},
+										"url": {
+											"raw": "{{host}}:8080/inventory-services/miscellaneousreceiptnotes/_update?tenantId=default",
+											"host": [
+												"{{host}}"
+											],
+											"port": "8080",
+											"path": [
+												"inventory-services",
+												"miscellaneousreceiptnotes",
+												"_update"
+											],
+											"query": [
+												{
+													"key": "tenantId",
+													"value": "default"
+												}
+											]
+										}
 									},
 									"response": []
 								}

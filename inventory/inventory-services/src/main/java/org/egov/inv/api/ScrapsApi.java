@@ -52,7 +52,7 @@ public interface ScrapsApi {
 			@RequestBody RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") 
 			@RequestParam(value = "ids", required = false) List<String> ids,
-			@ApiParam(value = "store of the Scrap ") @RequestParam(value = "store", required = false) Long store,
+			@ApiParam(value = "store of the Scrap ") @RequestParam(value = "store", required = false) String store,
 			@ApiParam(value = "scrapNumber  Auto generated number, read only ") 
 			@RequestParam(value = "scrapNumber", required = false) String scrapNumber,
 			@ApiParam(value = "scrap date of the Scrap ") 

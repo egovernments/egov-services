@@ -1,15 +1,20 @@
 package org.egov.inv.domain.service;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.egov.common.Constants;
+import org.egov.common.DomainService;
+import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Scrap;
 import org.egov.inv.model.ScrapRequest;
+import org.egov.inv.model.ScrapResponse;
+import org.egov.inv.model.ScrapSearch;
 import org.egov.inv.persistence.repository.ScrapJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ScrapService {
+public class ScrapService extends DomainService{
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -50,6 +55,13 @@ public class ScrapService {
 			throw e;
 		}
 		}
+	
+	public ScrapResponse search(ScrapSearch scrapSearch) {
+		Pagination<Scrap> scrapPagination = scrapJdbcRepository.search(scrapSearch);
+		ScrapResponse response = new ScrapResponse();
+		return response.responseInfo(null).scraps(scrapPagination.getPagedData().size() > 0
+				? scrapPagination.getPagedData() : Collections.EMPTY_LIST);
+	}
 	
 	private void validate(List<Scrap> receipt, String method, String tenantId,RequestInfo info) {
 		InvalidDataException errors = new InvalidDataException();

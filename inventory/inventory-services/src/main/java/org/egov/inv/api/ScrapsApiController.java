@@ -9,12 +9,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.inv.domain.service.ScrapService;
-import org.egov.inv.model.MaterialReceipt;
-import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Scrap;
 import org.egov.inv.model.ScrapRequest;
 import org.egov.inv.model.ScrapResponse;
+import org.egov.inv.model.ScrapSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +36,7 @@ public class ScrapsApiController implements ScrapsApi {
     		@ApiParam(value = "Create  new"  )  @Valid @RequestBody ScrapRequest scrapRequest) {
     	
     	List<Scrap> scrap = scrapService.create(scrapRequest, tenantId);
-		ScrapResponse scrapResponse = buildOpenBalanceResponse(scrap, scrapRequest.getRequestInfo());
+		ScrapResponse scrapResponse = buildScrapResponse(scrap, scrapRequest.getRequestInfo());
 		
 		return new ResponseEntity<ScrapResponse>(scrapResponse, HttpStatus.OK);
     }
@@ -49,7 +48,7 @@ public class ScrapsApiController implements ScrapsApi {
         @RequestBody RequestInfo requestInfo,
         @Size(max=50)@ApiParam(value = "comma seperated list of Ids") 
     	@RequestParam(value = "ids", required = false) List<String> ids,
-        @ApiParam(value = "store of the Scrap ") @RequestParam(value = "store", required = false) Long store,
+        @ApiParam(value = "store of the Scrap ") @RequestParam(value = "store", required = false) String store,
         @ApiParam(value = "scrapNumber  Auto generated number, read only ")
     	@RequestParam(value = "scrapNumber", required = false) String scrapNumber,
         @ApiParam(value = "scrap date of the Scrap ") 
@@ -65,7 +64,17 @@ public class ScrapsApiController implements ScrapsApi {
     	@RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
         @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") 
     	@RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
-        return new ResponseEntity<ScrapResponse>(HttpStatus.OK);
+    	
+    	ScrapSearch scrapSearch = ScrapSearch.builder()
+    										 .ids(ids)
+    										 .tenantId(tenantId)
+    										 .store(store)
+    										 .scrapStatus(scrapStatus)
+    										 .ScrapNumber(scrapNumber)
+    										 .pageNumber(pageNumber)
+    										 .pageSize(pageSize)
+    										 .build();
+		return new ResponseEntity<>(scrapService.search(scrapSearch), HttpStatus.OK);
     }
 
     public ResponseEntity<ScrapResponse> scrapsUpdatePost(
@@ -74,12 +83,12 @@ public class ScrapsApiController implements ScrapsApi {
         @ApiParam(value = "common Request info"  )  
     	@Valid @RequestBody ScrapRequest scrapRequest) {
 		List<Scrap> scrap = scrapService.update(scrapRequest, tenantId);
-		ScrapResponse scrapResponse = buildOpenBalanceResponse(scrap, scrapRequest.getRequestInfo());
+		ScrapResponse scrapResponse = buildScrapResponse(scrap, scrapRequest.getRequestInfo());
 		return new ResponseEntity<ScrapResponse>(scrapResponse, HttpStatus.OK);
     }
 
 
-	private ScrapResponse buildOpenBalanceResponse(List<Scrap> scrap,
+	private ScrapResponse buildScrapResponse(List<Scrap> scrap,
 			org.egov.inv.model.RequestInfo requestInfo) {
 		return ScrapResponse.builder()
 							.responseInfo(getResponseInfo(requestInfo))

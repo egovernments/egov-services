@@ -81,15 +81,15 @@ public class RequestValidator {
 
     private void validateObjectDateAndStatusDate(OfflineStatusRequest offlineStatusRequest, Map<String, String> messages) {
         for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
-            if (offlineStatus.getObjectType().equalsIgnoreCase(CommonConstants.WORKORDER)
+            if (offlineStatus.getObjectType().equalsIgnoreCase(Constants.WORKORDER)
                     && offlineStatus.getObjectDate() > offlineStatus.getStatusDate()) {
                 messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_DE_INVALID,
                         Constants.MESSAGE_OBJECTDATE_STATUSDATE_DE_INVALID);
-            } else if (offlineStatus.getObjectType().equalsIgnoreCase(CommonConstants.LETTEROFACCEPTANCE)
+            } else if (offlineStatus.getObjectType().equalsIgnoreCase(Constants.LETTEROFACCEPTANCE)
                     && offlineStatus.getObjectDate() > offlineStatus.getStatusDate()) {
                 messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_LOA_INVALID,
                         Constants.MESSAGE_OBJECTDATE_STATUSDATE_LOA_INVALID);
-            } else if (offlineStatus.getObjectType().equalsIgnoreCase(CommonConstants.DETAILEDESTIMATE)
+            } else if (offlineStatus.getObjectType().equalsIgnoreCase(Constants.DETAILEDESTIMATE)
                     && offlineStatus.getObjectDate() > offlineStatus.getStatusDate()) {
                 messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_WO_INVALID,
                         Constants.MESSAGE_OBJECTDATE_STATUSDATE_WO_INVALID);
@@ -157,19 +157,19 @@ public class RequestValidator {
 
         String[] statusName;
         List<String> OffStatuses = null;
-        if (ObjectType.equalsIgnoreCase(CommonConstants.WORKORDER)) {
+        if (ObjectType.equalsIgnoreCase(Constants.WORKORDER)) {
             final WorkOrderOfflineStatus[] workOrderOfflineStatus = WorkOrderOfflineStatus.values();
             statusName = new String[workOrderOfflineStatus.length];
             for (int j = 0; j < workOrderOfflineStatus.length; j++)
                 statusName[j] = workOrderOfflineStatus[j].name();
             OffStatuses = Arrays.asList(statusName);
-        } else if (ObjectType.equalsIgnoreCase(CommonConstants.LETTEROFACCEPTANCE)) {
+        } else if (ObjectType.equalsIgnoreCase(Constants.LETTEROFACCEPTANCE)) {
             final LOAOfflineStatuses[] loaOfflineStatuses = LOAOfflineStatuses.values();
             statusName = new String[loaOfflineStatuses.length];
             for (int j = 0; j < loaOfflineStatuses.length; j++)
                 statusName[j] = loaOfflineStatuses[j].name();
             OffStatuses = Arrays.asList(statusName);
-        } else if (ObjectType.equalsIgnoreCase(CommonConstants.DETAILEDESTIMATE)) {
+        } else if (ObjectType.equalsIgnoreCase(Constants.DETAILEDESTIMATE)) {
             final DetailedEstimateOfflineStatus[] detailedEstimateOfflineStatus = DetailedEstimateOfflineStatus.values();
             statusName = new String[detailedEstimateOfflineStatus.length];
             for (int j = 0; j < detailedEstimateOfflineStatus.length; j++)

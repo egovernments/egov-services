@@ -176,7 +176,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
     }
 
     private void validateChartOfAccount(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
-        if (isFinancialEnabled && isEmpty(materialTypeStoreMapping.getChartofAccount().getGlCode())) {
+        if (isFinancialEnabled && isEmpty(materialTypeStoreMapping.getChartofAccount().getGlcode())) {
             errors.addDataError(ErrorCode.NULL_VALUE.getCode(), "Account Code");
         }
     }

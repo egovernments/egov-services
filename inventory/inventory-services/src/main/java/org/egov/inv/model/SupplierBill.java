@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class SupplierBill extends BillRegister {
      * @return tenantId
      **/
     @ApiModelProperty(value = "Tenant id of the Supplier Bill")
-
+    @NotNull
     @Size(min = 2, max = 128)
     public String getTenantId() {
         return tenantId;

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -26,7 +25,7 @@ public class MaterialTypeStoreMapping {
     private Store store = null;
 
     @JsonProperty("chartofAccount")
-    private ChartofAccount chartofAccount = null;
+    private ChartOfAccount chartofAccount = null;
 
     @JsonProperty("active")
     private Boolean active = null;
@@ -103,7 +102,7 @@ public class MaterialTypeStoreMapping {
         this.store = store;
     }
 
-    public MaterialTypeStoreMapping chartofAccount(ChartofAccount chartofAccount) {
+    public MaterialTypeStoreMapping chartofAccount(ChartOfAccount chartofAccount) {
         this.chartofAccount = chartofAccount;
         return this;
     }
@@ -115,11 +114,11 @@ public class MaterialTypeStoreMapping {
      **/
     @ApiModelProperty(value = "")
 
-    public ChartofAccount getChartofAccount() {
+    public ChartOfAccount getChartofAccount() {
         return chartofAccount;
     }
 
-    public void setChartofAccount(ChartofAccount chartofAccount) {
+    public void setChartofAccount(ChartOfAccount chartofAccount) {
         this.chartofAccount = chartofAccount;
     }
 

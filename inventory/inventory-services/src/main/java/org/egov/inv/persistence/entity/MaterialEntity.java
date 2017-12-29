@@ -87,7 +87,7 @@ public class MaterialEntity {
                 .baseUom(material.getBaseUom().getCode())
                 .code(material.getCode())
                 .description(material.getDescription())
-                .expenseAccount(null != material.getExpenseAccount() ? material.getExpenseAccount().getGlCode() : null)
+                .expenseAccount(null != material.getExpenseAccount() ? material.getExpenseAccount().getGlcode() : null)
                 .inventoryType(null != material.getInventoryType() ? material.getInventoryType().toString() : null)
                 .lotcontrol(material.getLotControl())
                 .manufacturePartNo(material.getManufacturePartNo())
@@ -118,10 +118,11 @@ public class MaterialEntity {
                 .build();
     }
 
-    private ChartofAccount mapChartOfAccounts(String glCode) {
-        return ChartofAccount.builder()
-                .glCode(glCode)
-                .build();
+    private ChartOfAccount mapChartOfAccounts(String glCode) {
+        ChartOfAccount chartOfAccount = new ChartOfAccount();
+        return chartOfAccount.
+                glcode(glCode);
+
     }
 
     private MaterialType mapMaterialType(String code) {

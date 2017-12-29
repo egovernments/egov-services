@@ -4026,7 +4026,7 @@ definitions:
         purchaseUom:
           $ref: "#/definitions/Uom"
         expenseAccount:
-          $ref: "#/definitions/ChartofAccount"
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
           description: Expense account code is mandatory , if inventory type is consumable
         minQuantity:
           type: number
@@ -4127,7 +4127,7 @@ definitions:
         store:
           $ref: "#/definitions/Store"
         chartofAccount:
-          $ref: "#/definitions/ChartofAccount"
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
         active:
           type: boolean
           description: |
@@ -4162,7 +4162,7 @@ definitions:
         store:
           $ref: "#/definitions/Store"
         chartofAccount:
-          $ref: "#/definitions/ChartofAccount"
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
         active:
           type: boolean
           description: |
@@ -4191,7 +4191,7 @@ definitions:
         store:
           $ref: "#/definitions/Store"
         chartofAccount:
-          $ref: "#/definitions/ChartofAccount"
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
         active:
           type: boolean
           description: |
@@ -4236,31 +4236,6 @@ definitions:
           type: boolean
           description: |
            Boolean flag of the uom
-        auditDetails:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-
-    ChartofAccount:
-      type: object
-      description: |
-        This object hold the chart of account information.
-      properties:
-        id:
-          type: string
-          description: |
-            Unique Identifier of the Chart of Account
-        tenantId:
-          type: string
-          description: Tenant id of the Chart of Account
-          maxLength: 128
-          minLength: 4
-        name:
-          type: string
-          description: |
-            name of the ChartofAccount
-        glCode:
-          type: string
-          description: |
-            gl code of the ChartofAccount
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 
@@ -4881,7 +4856,7 @@ definitions:
         expiryDate:
           type: integer
           description: |
-            expiry date of material   
+            expiry date of material
         scrapReason:
           type: string
           enum:
@@ -4907,7 +4882,7 @@ definitions:
           type: number
           format: BigDecimal
           description: |
-            scrap value of the ScrapDetails    
+            scrap value of the ScrapDetails
       required:
       - material
       - lotNumber
@@ -4944,7 +4919,7 @@ definitions:
     Disposal:
       type: object
       description: |
-        This object holds the disposal information. The multiple scrap notes will be used to create disposal. 
+        This object holds the disposal information. The multiple scrap notes will be used to create disposal.
       properties:
         id:
           type: string

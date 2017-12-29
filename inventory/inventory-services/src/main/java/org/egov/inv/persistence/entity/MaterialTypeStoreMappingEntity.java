@@ -57,7 +57,7 @@ public class MaterialTypeStoreMappingEntity {
                 .materialType(null != materialTypeStoreMapping.getMaterialType() ? materialTypeStoreMapping.getMaterialType().getCode() : null)
                 .store(null != materialTypeStoreMapping.getStore() ? materialTypeStoreMapping.getStore().getCode() : null)
                 .active(materialTypeStoreMapping.getActive())
-                .chartOfAccount(null != materialTypeStoreMapping.getChartofAccount() ? materialTypeStoreMapping.getChartofAccount().getGlCode() : null)
+                .chartOfAccount(null != materialTypeStoreMapping.getChartofAccount() ? materialTypeStoreMapping.getChartofAccount().getGlcode() : null)
                 .tenantId(materialTypeStoreMapping.getTenantId())
                 .build();
     }
@@ -75,10 +75,11 @@ public class MaterialTypeStoreMappingEntity {
         return store;
     }
 
-    private ChartofAccount buildChartOfAccount() {
-        return ChartofAccount.builder()
-                .glCode(chartOfAccount)
-                .build();
+    private ChartOfAccount buildChartOfAccount() {
+        ChartOfAccount chartOfAccount = new ChartOfAccount();
+                return chartOfAccount.
+                        glcode(this.chartOfAccount);
+
     }
 
     private AuditDetails buildAuditDetails() {

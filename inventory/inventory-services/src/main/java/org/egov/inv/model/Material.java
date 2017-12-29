@@ -129,7 +129,7 @@ public class Material   {
     private Uom purchaseUom = null;
 
     @JsonProperty("expenseAccount")
-    private ChartofAccount expenseAccount = null;
+    private ChartOfAccount expenseAccount = null;
 
     @JsonProperty("minQuantity")
     private BigDecimal minQuantity = null;
@@ -456,7 +456,7 @@ public class Material   {
         this.purchaseUom = purchaseUom;
     }
 
-    public Material expenseAccount(ChartofAccount expenseAccount) {
+    public Material expenseAccount(ChartOfAccount expenseAccount) {
         this.expenseAccount = expenseAccount;
         return this;
     }
@@ -467,11 +467,11 @@ public class Material   {
      **/
     @ApiModelProperty(value = "Expense account code is mandatory , if inventory type is consumable")
 
-    public ChartofAccount getExpenseAccount() {
+    public ChartOfAccount getExpenseAccount() {
         return expenseAccount;
     }
 
-    public void setExpenseAccount(ChartofAccount expenseAccount) {
+    public void setExpenseAccount(ChartOfAccount expenseAccount) {
         this.expenseAccount = expenseAccount;
     }
 

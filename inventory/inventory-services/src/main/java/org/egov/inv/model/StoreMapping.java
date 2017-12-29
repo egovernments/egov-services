@@ -27,7 +27,7 @@ public class StoreMapping {
     private Store store = null;
 
     @JsonProperty("chartofAccount")
-    private ChartofAccount chartofAccount = null;
+    private ChartOfAccount chartofAccount = null;
 
     @JsonProperty("active")
     private Boolean active = null;
@@ -82,7 +82,7 @@ public class StoreMapping {
         this.store = store;
     }
 
-    public StoreMapping chartofAccount(ChartofAccount chartofAccount) {
+    public StoreMapping chartofAccount(ChartOfAccount chartofAccount) {
         this.chartofAccount = chartofAccount;
         return this;
     }
@@ -94,13 +94,11 @@ public class StoreMapping {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
-
-    public ChartofAccount getChartofAccount() {
+    public ChartOfAccount getChartofAccount() {
         return chartofAccount;
     }
 
-    public void setChartofAccount(ChartofAccount chartofAccount) {
+    public void setChartofAccount(ChartOfAccount chartofAccount) {
         this.chartofAccount = chartofAccount;
     }
 

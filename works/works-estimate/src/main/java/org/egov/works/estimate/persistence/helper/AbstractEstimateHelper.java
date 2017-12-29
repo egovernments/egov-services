@@ -232,7 +232,7 @@ public class AbstractEstimateHelper {
 		abstractEstimate.setSpillOverFlag(this.spillOverFlag);
 		abstractEstimate.setStateId(this.stateId);
         WorksStatus worksStatus = new WorksStatus();
-        worksStatus.setCode(this.abstractEstimateNumber);
+        worksStatus.setCode(this.status);
 		abstractEstimate.setStatus(worksStatus);
 		abstractEstimate.setSubject(this.subject);
 		abstractEstimate.setSubScheme(new SubScheme());

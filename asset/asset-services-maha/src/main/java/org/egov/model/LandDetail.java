@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LandDetail {
 	
-	@NotNull
+	
 	private Long id;
 
 	@NotNull

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.DomainService;
+import org.egov.inv.domain.util.InventoryUtilities;
 import org.egov.inv.model.Fifo;
 import org.egov.inv.model.FifoRequest;
 import org.egov.inv.model.FifoResponse;
@@ -37,7 +38,7 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 		Uom uom = null;
 		Fifo fifo = fifoRequest.getFifo();
 		List<FifoEntity> listOfEntities = new ArrayList<>();
-		if (StringUtils.isNotBlank(fifoRequest.getFifo().getUom().getCode()))
+		if (fifoRequest.getFifo().getUom() != null)
 			uom = getUom(fifo.getTenantId(), fifo.getUom().getCode(), new RequestInfo());
 		if (fifo.getMrnNumber() != null)
 			listOfEntities = implementFifoLogicForReturnMaterial(fifo.getStore(), fifo.getMaterial(),
@@ -48,12 +49,17 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 		BigDecimal availableQuantityInStock = BigDecimal.ZERO;
 		if (!listOfEntities.isEmpty())
 			for (FifoEntity fifoEntity : listOfEntities) {
-				if (uom.getConversionFactor() != null && fifoEntity.getBalance() != null)
+				if(uom != null)
 					availableQuantityInStock = availableQuantityInStock
-							.add(getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
+							.add(InventoryUtilities.getQuantityInSelectedUom(BigDecimal.valueOf(fifoEntity.getBalance()),
 									uom.getConversionFactor()));
+				else 
+					availableQuantityInStock = availableQuantityInStock
+					.add(BigDecimal.valueOf(fifoEntity.getBalance()));
+
 			}
 		FifoResponse fifoResponse = new FifoResponse();
+		if(fifoRequest.getRequestInfo() != null)
 		fifoResponse.setResponseInfo(getResponseInfo(fifoRequest.getRequestInfo()));
 		fifoResponse.setStock(availableQuantityInStock);
 		return fifoResponse;
@@ -66,8 +72,9 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 				new RequestInfo());
 		Fifo fifo = fifoRequest.getFifo();
 		BigDecimal quantityIssued = BigDecimal.ZERO;
-		if (fifo.getQuantityIssued() != null)
-			quantityIssued = fifo.getQuantityIssued();
+		if (fifo.getUserQuantityIssued() != null)
+			quantityIssued = fifo.getUserQuantityIssued();
+		BigDecimal convertedQuantityIssued = InventoryUtilities.getQuantityInBaseUom(quantityIssued,fifoRequest.getFifo().getUom().getConversionFactor());
 		if (fifo.getMrnNumber() != null)
 			listOfEntities = implementFifoLogicForReturnMaterial(fifo.getStore(), fifo.getMaterial(),
 					fifo.getIssueDate(), fifo.getTenantId(), fifo.getMrnNumber());
@@ -77,23 +84,18 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 		BigDecimal unitRate = BigDecimal.ZERO;
 		if (!listOfEntities.isEmpty())
 			for (FifoEntity fifoEntity : listOfEntities) {
-				BigDecimal balance = BigDecimal.ZERO;
-				if (uom.getConversionFactor() != null && fifoEntity.getBalance() != null)
-					balance = getSearchConvertedQuantity(new BigDecimal(fifoEntity.getBalance()),
-							uom.getConversionFactor());
 				if (uom.getConversionFactor() != null && fifoEntity.getUnitRate() != null)
-
-					if (balance.compareTo(quantityIssued) <= 0) {
+					if (BigDecimal.valueOf(fifoEntity.getBalance()).compareTo(convertedQuantityIssued) <= 0) {
 						if (fifoEntity.getUnitRate() != null)
-							unitRate = getSearchConvertedRate(new BigDecimal(fifoEntity.getUnitRate()),
-									uom.getConversionFactor())
-									.multiply(balance).add(unitRate);
-						quantityIssued = quantityIssued.subtract(balance);
+							unitRate = 
+									BigDecimal.valueOf(fifoEntity.getUnitRate())
+									.multiply(BigDecimal.valueOf(fifoEntity.getBalance())).add(unitRate);
+						quantityIssued = quantityIssued.subtract(BigDecimal.valueOf(fifoEntity.getBalance()));
 					} else {
 						if (fifoEntity.getUnitRate() != null)
 							unitRate = quantityIssued
-									.multiply(getSearchConvertedRate(new BigDecimal(fifoEntity.getUnitRate()),
-											uom.getConversionFactor()))
+									.multiply(BigDecimal.valueOf(fifoEntity.getUnitRate()))
+
 									.add(unitRate);
 						quantityIssued = quantityIssued.ZERO;
 					}
@@ -104,7 +106,6 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 		fifoResponse.setResponseInfo(getResponseInfo(fifoRequest.getRequestInfo()));
 		fifoResponse.setUnitRate(unitRate);
 		return fifoResponse;
-
 	}
 
 }

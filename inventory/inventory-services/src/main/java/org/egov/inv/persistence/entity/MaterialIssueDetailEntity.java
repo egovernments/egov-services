@@ -22,6 +22,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MaterialIssueDetailEntity {
 	
+	public static final String TABLE_NAME = "materialissuedetail";
+	public static final String SEQUENCE_NAME = "seq_materialissuedetail";
+	public static final String ALIAS = "materialissuedetail";
+	
 	private String id ;
 	
 	private String tenantId;

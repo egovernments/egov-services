@@ -23,7 +23,7 @@ public class Fifo {
 	@NotNull
 	private Uom uom;
 
-	private BigDecimal quantityIssued;
+	private BigDecimal userQuantityIssued;
 
 	@NotNull
 	private Long issueDate;

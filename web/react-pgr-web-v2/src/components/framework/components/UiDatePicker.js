@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import { translate } from '../../common/common';
 import $ from 'jquery';
+import _ from 'lodash';
 var DateTime = require('react-datetime');
 var moment = require('moment');
 
@@ -14,28 +15,34 @@ class UiDatePicker extends Component {
   }
 
   /*calcMinMaxDate = (dateStr) => {
-   		if(dateStr) {
-   			if(dateStr == "today") {
-   				return new Date();
-   			} else if(dateStr.indexOf("+") > -1) {
-   				var oneDay = 24 * 60 * 60 * 1000;
-   				dateStr = dateStr.split("+")[1];
-   				return new Date(new Date().getTime() + (Number(dateStr) * oneDay)).getTime();
-   			} else {
-   				var oneDay = 24 * 60 * 60 * 1000;
-   				dateStr = dateStr.split("-")[1];
-   				return new Date(new Date().getTime() - (Number(dateStr) * oneDay)).getTime();
-   			}
-   		} else {
-   			return "";
-   		}
-   	}*/
+      if(dateStr) {
+        if(dateStr == "today") {
+          return new Date();
+        } else if(dateStr.indexOf("+") > -1) {
+          var oneDay = 24 * 60 * 60 * 1000;
+          dateStr = dateStr.split("+")[1];
+          return new Date(new Date().getTime() + (Number(dateStr) * oneDay)).getTime();
+        } else {
+          var oneDay = 24 * 60 * 60 * 1000;
+          dateStr = dateStr.split("-")[1];
+          return new Date(new Date().getTime() - (Number(dateStr) * oneDay)).getTime();
+        }
+      } else {
+        return "";
+      }
+    }*/
 
   componentDidMount(){
+    var keyPressed = false;
     let {handler}=this.props;
+
+    $(".custom-form-control-for-datepicker input").on("keypress",e =>{      // For checking the garbage data on key press event
+      keyPressed = true;
+    });
+    
     $(".custom-form-control-for-datepicker input").on("focusout",e =>{
-      // console.log(e.target.value);
-      if (!e.target.value.match(/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)) {
+      // Adding an extra keypress check to ignore garbage value --> Fix for "selection from calender" bug
+      if (keyPressed && !e.target.value.match(/^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g)){
         handler(
           { target: { value: ""} },
           e.target.id.split("-").join("."),
@@ -49,6 +56,7 @@ class UiDatePicker extends Component {
         var autoComField = document.getElementById(e.target.id)
         // document.querySelectorAll("#"+e.target.id);
         autoComField.value = '';
+        keyPressed = false;
       }
     })
   }
@@ -84,62 +92,67 @@ class UiDatePicker extends Component {
 
   renderDatePicker = item => {
     /*<TextField
-											id={item.jsonPath.split(".").join("-")}
-											className="custom-form-control-for-textfield"
-											style={{"display": (item.hide ? 'none' : 'inline-block')}}
-											floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-											inputStyle={{"color": "#5F5C57"}}
-											floatingLabelFixed={true}
-											disabled={item.isDisabled}
-											hintText="DD/MM/YYYY"
-											maxLength={10}
-											floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
-											errorText={this.props.fieldErrors[item.jsonPath]}
-											value={this.getDateFormat(this.props.getVal(item.jsonPath))}
-											onChange={(e) => {
-												var val = e.target.value;
-												if(e.target.value.length == 2 && !e.target.value.match('/')){
-													val+='/';
-												} else if(e.target.value.length == 5) {
-													var a = e.target.value.split('/');
-													if(!a[1].match('/')){
-														val+='/';
-													}
-												}
-												if(e.target.value) {
-													e.target.value = e.target.value.trim();
-													if(datePat.test(e.target.value)){
-														var _date = e.target.value;
-														_date = _date.split("/");
-														var newDate = _date[1]+"-"+_date[0]+"-"+_date[2];
-														val = Number(new Date(newDate).getTime());
-														if(item.minDate && val< this.calcMinMaxDate(item.minDate)) {
-														return ;
-													} else if(item.maxDate && val > this.calcMinMaxDate(item.maxDate)) {
-															return ;
-														}
-													}
-												}
+                      id={item.jsonPath.split(".").join("-")}
+                      className="custom-form-control-for-textfield"
+                      style={{"display": (item.hide ? 'none' : 'inline-block')}}
+                      floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                      inputStyle={{"color": "#5F5C57"}}
+                      floatingLabelFixed={true}
+                      disabled={item.isDisabled}
+                      hintText="DD/MM/YYYY"
+                      maxLength={10}
+                      floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
+                      errorText={this.props.fieldErrors[item.jsonPath]}
+                      value={this.getDateFormat(this.props.getVal(item.jsonPath))}
+                      onChange={(e) => {
+                        var val = e.target.value;
+                        if(e.target.value.length == 2 && !e.target.value.match('/')){
+                          val+='/';
+                        } else if(e.target.value.length == 5) {
+                          var a = e.target.value.split('/');
+                          if(!a[1].match('/')){
+                            val+='/';
+                          }
+                        }
+                        if(e.target.value) {
+                          e.target.value = e.target.value.trim();
+                          if(datePat.test(e.target.value)){
+                            var _date = e.target.value;
+                            _date = _date.split("/");
+                            var newDate = _date[1]+"-"+_date[0]+"-"+_date[2];
+                            val = Number(new Date(newDate).getTime());
+                            if(item.minDate && val< this.calcMinMaxDate(item.minDate)) {
+                            return ;
+                          } else if(item.maxDate && val > this.calcMinMaxDate(item.maxDate)) {
+                              return ;
+                            }
+                          }
+                        }
 
-												//check hasOwnProperty of epresssion
-												//check isEnabled true
-												//if() put and expression
-												//if true overide item.isRequired=true and item.requiredErrMsg=""
-												//if false
-					                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, (item.patternErrMsg || translate("framework.date.error.message")), item.expression, item.expressionMsg, true)
-					                        }}/>*/
+                        //check hasOwnProperty of epresssion
+                        //check isEnabled true
+                        //if() put and expression
+                        //if true overide item.isRequired=true and item.requiredErrMsg=""
+                        //if false
+                                      this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, (item.patternErrMsg || translate("framework.date.error.message")), item.expression, item.expressionMsg, true)
+                                  }}/>*/
     // console.log(item);
     //       console.log(item.showCurrentDate);
 
     // if(item.showCurrentDate === true){
     //     var defaultdate = new Date();
-    // 	let day = defaultdate.getDate();
-    // 	let month = defaultdate.getMonth()+1;
-    // 	let year = defaultdate.getFullYear();
-    // 	defaultdate = day+'/'+month+'/'+year;
+    //  let day = defaultdate.getDate();
+    //  let month = defaultdate.getMonth()+1;
+    //  let year = defaultdate.getFullYear();
+    //  defaultdate = day+'/'+month+'/'+year;
     // }else{
-    // 	var defaultdate = '';
+    //  var defaultdate = '';
     // }
+    
+    let formData = _.cloneDeep(this.props.formData);
+    console.log(this.props.formData);
+    _.set(formData, this.props.item.jsonPath, formData[item.jsonPath]);
+   
 
     switch (this.props.ui) {
       case 'google':
@@ -210,8 +223,10 @@ class UiDatePicker extends Component {
   };
 
   minMaxvalidation = (e, item) => {
+   // Added new else block for string input
     //chosen date
-    if (typeof e === 'object'  || (typeof e === "string" && e.length === 0)) {
+    if (typeof e === 'object') {
+    
       if (item.minDate || item.maxDate) {
         if (moment().diff(moment(e.toDate()), 'days') < 0 && item.maxDate === 'today') {
           this.props.handler(
@@ -242,6 +257,7 @@ class UiDatePicker extends Component {
           );
         }
       } else {
+        
         this.props.handler(
           { target: { value: typeof e == 'string' ? e : e.valueOf() } },
           item.jsonPath,
@@ -254,6 +270,19 @@ class UiDatePicker extends Component {
           true
         );
       }
+    }
+    else{           // Else Block for the case of string --> Change the target value to string value
+      this.props.handler(
+        { target: { value: typeof e == 'string' ? e : e.valueOf() } },
+        item.jsonPath,
+        item.isRequired ? true : false,
+        /\d{12,13}/,
+        item.requiredErrMsg,
+        item.patternErrMsg || translate('framework.date.error.message'),
+        item.expression,
+        item.expressionMsg,
+        true
+      );
     }
   };
 
@@ -269,6 +298,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+
   toggleDailogAndSetText: (dailogState, msg) => {
     dispatch({ type: 'TOGGLE_DAILOG_AND_SET_TEXT', dailogState, msg });
   },

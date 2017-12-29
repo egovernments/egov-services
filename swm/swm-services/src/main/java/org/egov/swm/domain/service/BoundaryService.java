@@ -72,8 +72,13 @@ public class BoundaryService {
 
         masterDetails.add(MasterDetail.builder().name(masterName).build());
         if (filterFieldValue != null && !filterFieldValue.isEmpty())
-            masterDetails.get(0).setFilter("[?(('" + filterFieldValue + "' in @.boundary.children[*].code || @.boundary.code=='"
-                    + filterFieldValue + "') && @.hierarchyType.code=='" + hierarchyTypeCode + "' )]");
+
+            masterDetails.get(0).setFilter("[?((@.boundary.code=='"
+                    + filterFieldValue + "' || '" + filterFieldValue + "' in @.boundary.children[*].code || '" + filterFieldValue
+                    + "' in @.boundary.children[*].children[*].code || '" + filterFieldValue
+                    + "' in @.boundary.children[*].children[*].children[*].code ) && @.hierarchyType.code=='" + hierarchyTypeCode
+                    + "' )]");
+
         moduleDetails.add(ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build());
 
         request = MdmsCriteriaReq.builder()

@@ -781,7 +781,7 @@ class assetImmovableCreate extends Component {
       var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], { 'key': AutoCompleteData } );
 
       formData.Asset.landDetails[0].tenantId = localStorage.getItem('tenantId');
-      if(CheckAutoCompleteData.length){
+      if(CheckAutoCompleteData.length){ 
         flag = 1;
       } else{
         flag = 0;

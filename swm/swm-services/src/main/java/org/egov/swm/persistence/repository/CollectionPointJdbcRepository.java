@@ -16,7 +16,6 @@ import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
     @Autowired
     public BinDetailsJdbcRepository binIdDetailsJdbcRepository;
-
-    @Autowired
-    private BoundaryService boundaryService;
 
     @Autowired
     public CollectionPointDetailsJdbcRepository collectionPointDetailsJdbcRepository;

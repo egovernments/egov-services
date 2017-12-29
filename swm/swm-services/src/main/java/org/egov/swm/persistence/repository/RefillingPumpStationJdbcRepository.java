@@ -12,7 +12,6 @@ import org.egov.swm.domain.model.OilCompany;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
-import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.OilCompanyService;
 import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
@@ -30,9 +29,6 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
     @Autowired
     private FuelTypeService fuelTypeService;
-
-    @Autowired
-    private BoundaryService boundaryService;
 
     public Boolean checkForUniqueRecords(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,

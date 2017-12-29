@@ -11,16 +11,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Document;
 import org.egov.swm.domain.model.DocumentSearch;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.ServicedLocations;
 import org.egov.swm.domain.model.ServicesOffered;
 import org.egov.swm.domain.model.Supplier;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.SupplierRepository;
-import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.VendorEntity;
 import org.slf4j.Logger;
@@ -50,9 +51,6 @@ public class VendorJdbcRepository extends JdbcRepository {
 
     @Autowired
     private SwmProcessService swmProcessService;
-
-    @Autowired
-    private BoundaryService boundaryService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -169,6 +167,8 @@ public class VendorJdbcRepository extends JdbcRepository {
 
         if (vendorList != null && !vendorList.isEmpty()) {
 
+            populateServicedLocations(vendorList, vendorCodes.toString());
+
             populateSuppliers(vendorList);
 
             populateServicesOffered(vendorList, vendorCodes.toString());
@@ -265,6 +265,48 @@ public class VendorJdbcRepository extends JdbcRepository {
                 vendor.setSupplier(supplierMap.get(vendor.getSupplier().getSupplierNo()));
             }
 
+        }
+
+    }
+
+    private void populateServicedLocations(List<Vendor> vendorList, String vendorCodes) {
+        Map<String, List<Boundary>> boundaryListMap = new HashMap<>();
+        String tenantId = null;
+        ServicedLocations sls;
+        sls = new ServicedLocations();
+
+        if (vendorList != null && !vendorList.isEmpty())
+            tenantId = vendorList.get(0).getTenantId();
+
+        sls.setVendorNos(vendorCodes);
+        sls.setTenantId(tenantId);
+
+        List<ServicedLocations> servicedLocations = servicedLocationsJdbcRepository.search(sls);
+        if (servicedLocations != null && !servicedLocations.isEmpty()) {
+
+            for (ServicedLocations sl : servicedLocations) {
+
+                if (boundaryListMap.get(sl.getVendor()) == null) {
+
+                    boundaryListMap.put(sl.getVendor(),
+                            Collections.singletonList(Boundary.builder().code(sl.getLocation()).build()));
+
+                } else {
+
+                    List<Boundary> bList = new ArrayList<>(boundaryListMap.get(sl.getVendor()));
+
+                    bList.add(Boundary.builder().code(sl.getLocation()).build());
+
+                    boundaryListMap.put(sl.getVendor(), bList);
+
+                }
+            }
+
+            for (Vendor vendor : vendorList) {
+
+                vendor.setServicedLocations(boundaryListMap.get(vendor.getVendorNo()));
+
+            }
         }
 
     }

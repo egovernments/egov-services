@@ -64,10 +64,13 @@ class UiTable extends Component {
   }
 
   componentWillMount() {
+    let hidesearch = this.props.resultList.hidesearch;
     $('#searchTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       order: [],
-      buttons: [
+      searching: hidesearch,
+      lengthChange: hidesearch,
+      buttons: hidesearch ? [
         'excel',
         {
           extend: 'pdf',
@@ -100,7 +103,7 @@ class UiTable extends Component {
         //         //     .css( 'font-size', 'inherit' );
         //     }
         // }
-      ],
+      ] :[],
       bDestroy: true,
       language: {
         emptyTable: 'No Records',
@@ -125,10 +128,13 @@ class UiTable extends Component {
   }
 
   componentDidUpdate() {
+    let hidesearch = this.props.resultList.hidesearch;
     $('#searchTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       order: [],
-      buttons: [
+      searching: hidesearch,
+      lengthChange: hidesearch,
+      buttons:hidesearch ? [
         'excel',
         {
           extend: 'pdf',
@@ -162,7 +168,7 @@ class UiTable extends Component {
         //       //     .css( 'font-size', 'inherit' );
         //   }
         // }
-      ],
+      ] : [],
       ordering: false,
       bDestroy: true,
       language: {
@@ -172,6 +178,7 @@ class UiTable extends Component {
   }
 
   componentDidMount() {
+    let hidesearch = this.props.resultList.hidesearch;
     let self = this;
     if (this.props.resultList.resultHeader && this.props.resultList.resultHeader.length) {
       for (let m = 0; m < this.props.resultList.resultHeader.length; m++) {
@@ -216,7 +223,9 @@ class UiTable extends Component {
     $('#searchTable').DataTable({
       dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
       order: [],
-      buttons: [
+      searching: hidesearch,
+      lengthChange: hidesearch,
+      buttons: hidesearch ? [
         'excel',
         {
           extend: 'pdf',
@@ -235,7 +244,7 @@ class UiTable extends Component {
         'copy',
         'csv',
 
-      ],
+      ] : [],
       bDestroy: true,
       language: {
         emptyTable: 'No Records',

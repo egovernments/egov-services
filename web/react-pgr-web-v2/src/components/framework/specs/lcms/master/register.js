@@ -1,5 +1,6 @@
 var dat = {
   'lcms.search': {
+    hidesearch:true,
     numCols: 4,
     title: 'register.search.document.title',
     useTimestamp: true,

@@ -1,5 +1,6 @@
 var dat = {
   'lcms.search': {
+    hidesearch:true,
     numCols: 4,
     title: 'advocates.search.document.title.agency',
     useTimestamp: true,

@@ -137,6 +137,7 @@ class Search extends Component {
       resultHeader: [{ label: '#' }, ...result.header],
       resultValues: [],
       disableRowClick: result.disableRowClick || false,
+      hidesearch: currentSpecification.hidesearch ? false : true
     };
     var specsValuesList = currentSpecification.result.values;
     var values = _.get(res, currentSpecification.result.resultPath);

@@ -1,4 +1,4 @@
-class BaseRegister extends React.Component {
+class RenewalPending extends React.Component {
   constructor(props){
     super(props);
     this.state={
@@ -17,7 +17,7 @@ class BaseRegister extends React.Component {
   componentDidMount(){
     this.setState({
       assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
-      revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
+      // revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
     });
   }
   handleChange(value, property){
@@ -30,24 +30,14 @@ class BaseRegister extends React.Component {
     e.preventDefault();
     let {searchSet} = this.state;
     let _this=this;
-    if(!searchSet['revenueWard']){
-      this.setState({
-        ...this.error,
-        error:{
-          revenueWard:'Required'
-        }
-      })
-    }else{
-      Promise.all([
-        commonApiPost("lams-services/agreements","reports","_baseregisterreport",searchSet)
-      ]).then(function(responses){
-        _this.setState({
-          searchClicked:true,
-          error:{},
-          resultSet:responses[0].Agreements
-        });
-      })
-    }
+    Promise.all([
+      commonApiPost("lams-services/agreements","reports","_renewalpending",searchSet)
+    ]).then(function(responses){
+      _this.setState({
+        searchClicked:true,
+        resultSet:responses[0].Agreements
+      });
+    })
   }
   closeWindow ()
   {
@@ -70,6 +60,15 @@ class BaseRegister extends React.Component {
               <th>Locality</th>
               <th>Revenue Ward</th>
               <th>Election Ward</th>
+              <th>Security Deposit</th>
+              <th>Security Deposit Received Date</th>
+              <th>Date of Commencement</th>
+              <th>GoodWill Amount </th>
+              <th>Agreement Period (Years)</th>
+              <th>Agreement Expiry Date</th>
+              <th>Rent</th>
+              <th>Pending Rent</th>
+              <th>Payment Cycle</th>
             </tr>
           </thead>
           <tbody>
@@ -83,6 +82,15 @@ class BaseRegister extends React.Component {
                   <td>{list.locality}</td>
                   <td>{list.revenueward}</td>
                   <td>{list.electionward}</td>
+                  <td>{list.securityDeposit}</td>
+                  <td>{list.securityDepositDate}</td>
+                  <td>{list.commencementDate}</td>
+                  <td>{list.goodWillAmount}</td>
+                  <td>{list.timePeriod}</td>
+                  <td>{list.expiryDate}</td>
+                  <td>{list.rent}</td>
+                  <td>{list.balance}</td>
+                  <td>{list.paymentCycle}</td>
                 </tr>
               )
             })}
@@ -105,8 +113,11 @@ class BaseRegister extends React.Component {
                  'excel',
                  {
                     extend: 'pdf',
-                    filename: 'Base Register Report',
-                    title: `Report generated on ${moment(new Date()).format("DD/MM/YYYY")}`
+                    filename: 'Renewal Pending Report',
+                    orientation: 'landscape',
+                    pageSize: 'TABLOID',
+                    title: `Report generated on ${moment(new Date()).format("DD/MM/YYYY")}`,
+                    footer: true
                   },
                  'print'
          ],
@@ -114,10 +125,8 @@ class BaseRegister extends React.Component {
       });
     }
   }
-  componentWillUnmount(){
-
-  }
   render(){
+    console.log(this.state.searchSet);
     let {assetCategories, revenueWard, searchClicked} = this.state;
     let {handleChange, search, closeWindow, showTable} = this;
     const renderOptions = function(list)
@@ -144,7 +153,6 @@ class BaseRegister extends React.Component {
 
         }
     }
-
     return(
       <div>
         <div className="form-section">
@@ -162,11 +170,10 @@ class BaseRegister extends React.Component {
                               <div className="styled-select">
                                   <select id="revenueWard" onChange={(e) => { handleChange(e.target.value, "revenueWard") }}>
                                     <option value="">Select RevenueWard</option>
-                                    <option value="all">All</option>
+                                    <option value="">All</option>
                                     {renderOptions(revenueWard)}
                                   </select>
                               </div>
-                              <label className="error">{this.state.error.revenueWard}</label>
                           </div>
                       </div>
                   </div>
@@ -186,6 +193,40 @@ class BaseRegister extends React.Component {
                       </div>
                   </div>
               </div>
+              <div className="row">
+                <div className="col-sm-6">
+                    <div className="row">
+                        <div className="col-sm-6 label-text">
+                            <label for="">Agreements Expiring In</label>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="styled-select">
+                                <select id="expiryTime" onChange={(e) => { handleChange(e.target.value, "expiryTime") }}>
+                                  <option value="">Select Agreements Expiring In</option>
+                                  <option value="1Month">1 Months</option>
+                                  <option value="2Month">2 Months</option>
+                                  <option value="3Month">3 Months</option>
+                                  <option value="4Month">4 Months</option>
+                                  <option value="5Month">5 Months</option>
+                                  <option value="6Month">6 Months</option>
+                                  <option value="9Month">9 Months</option>
+                                  <option value="1Year">1 Year</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-sm-6">
+                    <div className="row">
+                        <div className="col-sm-6 label-text">
+                            <label for="">Agreements Expired</label>
+                        </div>
+                        <div className="col-sm-6">
+                          <input id="expired" type="checkbox" onChange={(e)=>{handleChange(e.target.checked, "expired")}}/>
+                        </div>
+                    </div>
+                </div>
+              </div>
               <div className="text-center">
                 <button type="submit" className="btn btn-submit">Search</button>  &nbsp;&nbsp;
                 <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
@@ -202,6 +243,6 @@ class BaseRegister extends React.Component {
 }
 
 ReactDOM.render(
-    <BaseRegister />,
+    <RenewalPending />,
     document.getElementById('root')
 );

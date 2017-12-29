@@ -1,21 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import RaisedButton from "material-ui/RaisedButton";
 import UploadDefinitionsContainer from "../containers/UploadDefinitions";
-import { Card, CardActions, CardText } from "material-ui/Card";
-import FlatButton from "material-ui/FlatButton";
 import CardUi from "../atomic-components/CardUi";
+import ButtonUi from "../atomic-components/ButtonUi";
 
 const styles = {
   fileInput: {
     padding: "20px"
   },
-  cardHeaderStyle: {
-    textAlign: "center",
-    padding: "5px",
-    textTransform: "uppercase"
-  },
   jobCreationAck: {
+    marginTop: "20px",
     padding: "10px",
     color: "red",
     textAlign: "center"
@@ -24,35 +18,38 @@ const styles = {
 
 const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
   return (
-    <CardUi>
-      <div style={styles.cardHeaderStyle} className="card-header">
-        <h3>Create Job</h3>
-      </div>
-      <CardText>
+    <div>
+      <CardUi cardTitle="Upload Definitions">
         <UploadDefinitionsContainer />
+      </CardUi>
+
+      <CardUi cardTitle="File Upload">
         <div className="file-input" style={styles.fileInput}>
           <input type="file" onChange={handleOnChange} />
         </div>
-        <RaisedButton
+      </CardUi>
+
+      <div style={{ textAlign: "center", width: "100%" }} className="col-lg-12">
+        <ButtonUi
+          style={{ marginRight: "15px" }}
+          icon={{ style: { color: "white" }, name: "add" }}
           onClick={handleSubmit}
           label="Create"
           primary={true}
-          fullWidth={true}
         />
-      </CardText>
-      <CardActions>
-        <FlatButton
+        <ButtonUi
           onClick={() => {
             history.push("/user-jobs");
             window.location.reload();
           }}
-          fullWidth={true}
-          primary={true}
           label="My Jobs"
         />
-      </CardActions>
-      {message.length ? <h3 style={styles.jobCreationAck}>{message}</h3> : ""}
-    </CardUi>
+      </div>
+
+      <span>
+        {message.length ? <h3 style={styles.jobCreationAck}>{message}</h3> : ""}
+      </span>
+    </div>
   );
 };
 

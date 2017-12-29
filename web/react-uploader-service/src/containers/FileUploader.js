@@ -62,7 +62,7 @@ class FileUploaderContainer extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-lg-4 col-md-4 col-lg-offset-4 col-md-offset-4">
+          <div className="col-lg-12 col-md-12">
             <Snackbar
               open={messageBarOpen}
               message={errorMessage}

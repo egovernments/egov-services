@@ -44,6 +44,7 @@ class UploadDefinitionsContainer extends Component {
     return (
       <div>
         <DropDown
+          style={{ marginRight: "15px" }}
           options={moduleItems}
           label="Module Name"
           selected={selectedModule}

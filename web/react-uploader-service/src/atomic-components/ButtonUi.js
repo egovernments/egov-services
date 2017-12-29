@@ -1,7 +1,13 @@
 import React from "react";
 import RaisedButton from "material-ui/RaisedButton";
 
-const ButtonUi = ({ label, icon, onClick, primary = false, style }) => {
+const ButtonUi = ({
+  label,
+  icon = {},
+  onClick,
+  primary = false,
+  style = {}
+}) => {
   return (
     <RaisedButton
       style={style}

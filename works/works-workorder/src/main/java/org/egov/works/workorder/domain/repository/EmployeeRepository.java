@@ -60,7 +60,7 @@ public class EmployeeRepository {
     @Autowired
     public EmployeeRepository(final RestTemplate restTemplate,
             @Value("${egov.services.hr_employee.hostname}") final String hrMasterServiceHostname,
-            @Value("${egov.services.hr_employee.employees.by.code}") final String employeeByCodeUrl) {
+            @Value("${egov.services.hr_employee.employeesbycode}") final String employeeByCodeUrl) {
 
         this.restTemplate = restTemplate;
         this.employeeByCodeUrl = hrMasterServiceHostname + employeeByCodeUrl;

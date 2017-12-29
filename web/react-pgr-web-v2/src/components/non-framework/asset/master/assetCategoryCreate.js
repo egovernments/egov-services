@@ -689,15 +689,15 @@ class assetCategoryCreate extends Component {
           translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
           true
         );
-        console.log(response.MdmsRes.ASSET.AssetCategory[0][0].id);
+        console.log(response.MdmsRes.ASSET);
         console.log(self.props.actionName);
         setTimeout(function() {
           if (self.props.actionName == 'update') {
             console.log('update');
-            var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
+            var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0].id;
           }else {
             console.log(formData);
-            var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
+            var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0].id;
           }
           if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
             if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
@@ -710,10 +710,10 @@ class assetCategoryCreate extends Component {
               console.log('check1');
               if (self.props.actionName == 'update') {
                 console.log('update');
-                var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
+                var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0].id;
               } else {
                 console.log(formData);
-                var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0][0].id;
+                var hash = '/non-framework/asset/master/assetCategoryView/' + response.MdmsRes.ASSET.AssetCategory[0].id;
               }
             }
 

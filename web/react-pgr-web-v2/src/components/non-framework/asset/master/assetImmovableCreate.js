@@ -775,13 +775,17 @@ class assetImmovableCreate extends Component {
     e.preventDefault();
     var flag = 0;
     var formData = JSON.parse(JSON.stringify(this.props.formData));
-
     if(formData.Asset && formData.Asset.landDetails && formData.Asset.landDetails[0].code){
       var AutoCompleteData = _.get(formData, 'Asset.landDetails[0].code');
       var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], { 'key': AutoCompleteData } );
 
-      formData.Asset.landDetails[0].tenantId = localStorage.getItem('tenantId');
-      if(CheckAutoCompleteData.length){ 
+      if(formData.Asset && formData.Asset.landDetails){
+        for(var x = 0; x < formData.Asset.landDetails.length; x++){
+          formData.Asset.landDetails[x].tenantId = localStorage.getItem('tenantId');
+        }
+      }
+      //formData.Asset.landDetails[0].tenantId = localStorage.getItem('tenantId');
+      if(CheckAutoCompleteData.length){
         flag = 1;
       } else{
         flag = 0;

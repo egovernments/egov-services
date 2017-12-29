@@ -167,7 +167,7 @@ var dat = {
       },
       {
         name: 'assignAdvocate',
-        label: 'legal.create.group.title.assignAdvocate',
+        label: 'legal.create.additionalAdvocate',
         fields: [
           {
             type: 'tableList',

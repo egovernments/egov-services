@@ -1,6 +1,9 @@
 package org.egov.inv.model;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;

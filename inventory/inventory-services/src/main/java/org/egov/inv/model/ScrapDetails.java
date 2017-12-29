@@ -24,11 +24,26 @@ public class ScrapDetails   {
   @JsonProperty("tenantId")
   private String tenantId = null;
 
+  @JsonProperty("scrapNumber")
+  private String scrapNumber = null;
+
   @JsonProperty("material")
   private Material material = null;
 
+  @JsonProperty("uom")
+  private Uom uom = null;
+
+  @JsonProperty("receiptDetail")
+  private MaterialReceiptDetail receiptDetail = null;
+
+  @JsonProperty("issueDetail")
+  private MaterialIssueDetail issueDetail = null;
+
   @JsonProperty("lotNumber")
   private String lotNumber = null;
+
+  @JsonProperty("expiryDate")
+  private Integer expiryDate = null;
 
   /**
    * scrap reason of the ScrapDetails 
@@ -72,8 +87,14 @@ public class ScrapDetails   {
   @JsonProperty("scrapReason")
   private ScrapReasonEnum scrapReason = null;
 
-  @JsonProperty("scrapQuantity")
-  private BigDecimal scrapQuantity = null;
+  @JsonProperty("quantity")
+  private BigDecimal quantity = null;
+
+  @JsonProperty("disposalQuantity")
+  private BigDecimal disposalQuantity = null;
+
+  @JsonProperty("scrapValue")
+  private BigDecimal scrapValue = null;
 
   public ScrapDetails id(String id) {
     this.id = id;
@@ -115,6 +136,26 @@ public class ScrapDetails   {
     this.tenantId = tenantId;
   }
 
+  public ScrapDetails scrapNumber(String scrapNumber) {
+    this.scrapNumber = scrapNumber;
+    return this;
+  }
+
+   /**
+   * scrapNumber reference in scrap details. 
+   * @return scrapNumber
+  **/
+  @ApiModelProperty(readOnly = true, value = "scrapNumber reference in scrap details. ")
+
+
+  public String getScrapNumber() {
+    return scrapNumber;
+  }
+
+  public void setScrapNumber(String scrapNumber) {
+    this.scrapNumber = scrapNumber;
+  }
+
   public ScrapDetails material(Material material) {
     this.material = material;
     return this;
@@ -135,6 +176,69 @@ public class ScrapDetails   {
 
   public void setMaterial(Material material) {
     this.material = material;
+  }
+
+  public ScrapDetails uom(Uom uom) {
+    this.uom = uom;
+    return this;
+  }
+
+   /**
+   * Auto populate unit of material from receipt or issue
+   * @return uom
+  **/
+  @ApiModelProperty(value = "Auto populate unit of material from receipt or issue")
+
+  @Valid
+
+  public Uom getUom() {
+    return uom;
+  }
+
+  public void setUom(Uom uom) {
+    this.uom = uom;
+  }
+
+  public ScrapDetails receiptDetail(MaterialReceiptDetail receiptDetail) {
+    this.receiptDetail = receiptDetail;
+    return this;
+  }
+
+   /**
+   * id reference from receipt detail.
+   * @return receiptDetail
+  **/
+  @ApiModelProperty(value = "id reference from receipt detail.")
+
+  @Valid
+
+  public MaterialReceiptDetail getReceiptDetail() {
+    return receiptDetail;
+  }
+
+  public void setReceiptDetail(MaterialReceiptDetail receiptDetail) {
+    this.receiptDetail = receiptDetail;
+  }
+
+  public ScrapDetails issueDetail(MaterialIssueDetail issueDetail) {
+    this.issueDetail = issueDetail;
+    return this;
+  }
+
+   /**
+   * id reference from material issue detail.
+   * @return issueDetail
+  **/
+  @ApiModelProperty(value = "id reference from material issue detail.")
+
+  @Valid
+
+  public MaterialIssueDetail getIssueDetail() {
+    return issueDetail;
+  }
+
+  public void setIssueDetail(MaterialIssueDetail issueDetail) {
+    this.issueDetail = issueDetail;
   }
 
   public ScrapDetails lotNumber(String lotNumber) {
@@ -158,6 +262,26 @@ public class ScrapDetails   {
     this.lotNumber = lotNumber;
   }
 
+  public ScrapDetails expiryDate(Integer expiryDate) {
+    this.expiryDate = expiryDate;
+    return this;
+  }
+
+   /**
+   * expiry date of material    
+   * @return expiryDate
+  **/
+  @ApiModelProperty(value = "expiry date of material    ")
+
+
+  public Integer getExpiryDate() {
+    return expiryDate;
+  }
+
+  public void setExpiryDate(Integer expiryDate) {
+    this.expiryDate = expiryDate;
+  }
+
   public ScrapDetails scrapReason(ScrapReasonEnum scrapReason) {
     this.scrapReason = scrapReason;
     return this;
@@ -179,8 +303,8 @@ public class ScrapDetails   {
     this.scrapReason = scrapReason;
   }
 
-  public ScrapDetails scrapQuantity(BigDecimal scrapQuantity) {
-    this.scrapQuantity = scrapQuantity;
+  public ScrapDetails quantity(BigDecimal quantity) {
+    this.quantity = quantity;
     return this;
   }
 
@@ -193,12 +317,54 @@ public class ScrapDetails   {
 
   @Valid
 
-  public BigDecimal getScrapQuantity() {
-    return scrapQuantity;
+  public BigDecimal getQuantity() {
+    return quantity;
   }
 
-  public void setScrapQuantity(BigDecimal scrapQuantity) {
-    this.scrapQuantity = scrapQuantity;
+  public void setQuantity(BigDecimal quantity) {
+    this.quantity = quantity;
+  }
+
+  public ScrapDetails disposalQuantity(BigDecimal disposalQuantity) {
+    this.disposalQuantity = disposalQuantity;
+    return this;
+  }
+
+   /**
+   * scrap quantity utilized in disposal of scrap materials 
+   * @return disposalQuantity
+  **/
+  @ApiModelProperty(value = "scrap quantity utilized in disposal of scrap materials ")
+
+  @Valid
+
+  public BigDecimal getDisposalQuantity() {
+    return disposalQuantity;
+  }
+
+  public void setDisposalQuantity(BigDecimal disposalQuantity) {
+    this.disposalQuantity = disposalQuantity;
+  }
+
+  public ScrapDetails scrapValue(BigDecimal scrapValue) {
+    this.scrapValue = scrapValue;
+    return this;
+  }
+
+   /**
+   * scrap value of the ScrapDetails     
+   * @return scrapValue
+  **/
+  @ApiModelProperty(value = "scrap value of the ScrapDetails     ")
+
+  @Valid
+
+  public BigDecimal getScrapValue() {
+    return scrapValue;
+  }
+
+  public void setScrapValue(BigDecimal scrapValue) {
+    this.scrapValue = scrapValue;
   }
 
 
@@ -213,15 +379,22 @@ public class ScrapDetails   {
     ScrapDetails scrapDetails = (ScrapDetails) o;
     return Objects.equals(this.id, scrapDetails.id) &&
         Objects.equals(this.tenantId, scrapDetails.tenantId) &&
+        Objects.equals(this.scrapNumber, scrapDetails.scrapNumber) &&
         Objects.equals(this.material, scrapDetails.material) &&
+        Objects.equals(this.uom, scrapDetails.uom) &&
+        Objects.equals(this.receiptDetail, scrapDetails.receiptDetail) &&
+        Objects.equals(this.issueDetail, scrapDetails.issueDetail) &&
         Objects.equals(this.lotNumber, scrapDetails.lotNumber) &&
+        Objects.equals(this.expiryDate, scrapDetails.expiryDate) &&
         Objects.equals(this.scrapReason, scrapDetails.scrapReason) &&
-        Objects.equals(this.scrapQuantity, scrapDetails.scrapQuantity);
+        Objects.equals(this.quantity, scrapDetails.quantity) &&
+        Objects.equals(this.disposalQuantity, scrapDetails.disposalQuantity) &&
+        Objects.equals(this.scrapValue, scrapDetails.scrapValue);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, material, lotNumber, scrapReason, scrapQuantity);
+    return Objects.hash(id, tenantId, scrapNumber, material, uom, receiptDetail, issueDetail, lotNumber, expiryDate, scrapReason, quantity, disposalQuantity, scrapValue);
   }
 
   @Override
@@ -231,10 +404,17 @@ public class ScrapDetails   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    scrapNumber: ").append(toIndentedString(scrapNumber)).append("\n");
     sb.append("    material: ").append(toIndentedString(material)).append("\n");
+    sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
+    sb.append("    receiptDetail: ").append(toIndentedString(receiptDetail)).append("\n");
+    sb.append("    issueDetail: ").append(toIndentedString(issueDetail)).append("\n");
     sb.append("    lotNumber: ").append(toIndentedString(lotNumber)).append("\n");
+    sb.append("    expiryDate: ").append(toIndentedString(expiryDate)).append("\n");
     sb.append("    scrapReason: ").append(toIndentedString(scrapReason)).append("\n");
-    sb.append("    scrapQuantity: ").append(toIndentedString(scrapQuantity)).append("\n");
+    sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
+    sb.append("    disposalQuantity: ").append(toIndentedString(disposalQuantity)).append("\n");
+    sb.append("    scrapValue: ").append(toIndentedString(scrapValue)).append("\n");
     sb.append("}");
     return sb.toString();
   }

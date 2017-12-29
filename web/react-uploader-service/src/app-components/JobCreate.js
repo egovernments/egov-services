@@ -4,6 +4,7 @@ import RaisedButton from "material-ui/RaisedButton";
 import UploadDefinitionsContainer from "../containers/UploadDefinitions";
 import { Card, CardActions, CardText } from "material-ui/Card";
 import FlatButton from "material-ui/FlatButton";
+import CardUi from "../atomic-components/CardUi";
 
 const styles = {
   fileInput: {
@@ -23,7 +24,7 @@ const styles = {
 
 const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
   return (
-    <Card>
+    <CardUi>
       <div style={styles.cardHeaderStyle} className="card-header">
         <h3>Create Job</h3>
       </div>
@@ -51,7 +52,7 @@ const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
         />
       </CardActions>
       {message.length ? <h3 style={styles.jobCreationAck}>{message}</h3> : ""}
-    </Card>
+    </CardUi>
   );
 };
 

@@ -302,6 +302,18 @@ var dat = {
             requiredErrMsg: '', //Remove required messages
             patternErrMsg: '',
           },
+          {
+            name: 'Remarks',
+            jsonPath: 'Revaluation.remarks',
+            label: 'Remarks',
+            pattern: '',
+            type: 'textarea',
+            url: '',
+            isRequired: false,
+            isDisabled: false,
+            requiredErrMsg: '',
+            patternErrMsg: '',
+          },
         ],
       },
     ],

@@ -102,11 +102,22 @@ const userJobs = (state = initialState, action) => {
       };
     case actionTypes.FETCH_USER_JOBS_FAILURE:
       return { ...state, error: true, isFetching: false };
-
-    case actionTypes.FILTER_USER_JOBS:
+    case actionTypes.APPLY_FILTERS:
       return {
         ...state,
-        items: filterUserJobs(action.filter, state.items),
+        items: filterUserJobs(state.filter, state.items)
+      };
+    case actionTypes.RESET_FILTERS:
+      return {
+        ...state,
+        items: state.items.map(item => {
+          return { ...item, softDelete: true };
+        }),
+        filter: {}
+      };
+    case actionTypes.UPDATE_FILTERS:
+      return {
+        ...state,
         filter: { ...state.filter, ...action.filter }
       };
     default:

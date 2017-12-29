@@ -110,10 +110,10 @@ class UserJobsContainer extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-lg-3">
+          <div className="col-lg-12">
             <UserJobFilters />
           </div>
-          <div className="col-lg-9">
+          <div className="col-lg-12">
             {isFetching ? (
               <LoadingIndicator />
             ) : (

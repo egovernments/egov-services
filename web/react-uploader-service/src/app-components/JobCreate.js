@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import RaisedButton from "material-ui/RaisedButton";
 import UploadDefinitionsContainer from "../containers/UploadDefinitions";
@@ -36,7 +35,7 @@ const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
         <RaisedButton
           onClick={handleSubmit}
           label="Create"
-          secondary={true}
+          primary={true}
           fullWidth={true}
         />
       </CardText>

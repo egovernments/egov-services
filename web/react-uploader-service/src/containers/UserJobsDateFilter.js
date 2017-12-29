@@ -2,31 +2,36 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import DatePicker from "material-ui/DatePicker";
-import { applyUserJobFilters } from "../actions/userJobs";
+import { updateUserJobFilters } from "../actions/userJobs";
 
 class UserJobsDateFilterContainer extends Component {
   static propTypes = {
-    applyUserJobFilters: PropTypes.func.isRequired
+    updateUserJobFilters: PropTypes.func.isRequired
   };
 
   maxDate = new Date();
   render() {
-    const { applyUserJobFilters } = this.props;
+    const { updateUserJobFilters, startDate, endDate } = this.props;
     const { maxDate } = this;
 
     return (
       <div>
-        <h5>By Date</h5>
+        <div className="col-lg-4">
+          <DatePicker
+            value={startDate}
+            className="custom-form-control-for-datepicker"
+            onChange={(event, date) => {
+              updateUserJobFilters({ startDate: date });
+            }}
+            floatingLabelText="From Date"
+            maxDate={maxDate}
+          />
+        </div>
         <DatePicker
+          value={endDate}
+          className="custom-form-control-for-datepicker"
           onChange={(event, date) => {
-            applyUserJobFilters({ startDate: date });
-          }}
-          floatingLabelText="From Date"
-          maxDate={maxDate}
-        />
-        <DatePicker
-          onChange={(event, date) => {
-            applyUserJobFilters({ endDate: date });
+            updateUserJobFilters({ endDate: date });
           }}
           floatingLabelText="To Date"
         />
@@ -35,8 +40,15 @@ class UserJobsDateFilterContainer extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  applyUserJobFilters: filter => dispatch(applyUserJobFilters(filter))
+const mapStateToProps = state => ({
+  startDate: state.userJobs.filter.startDate,
+  endDate: state.userJobs.filter.endDate
 });
 
-export default connect(null, mapDispatchToProps)(UserJobsDateFilterContainer);
+const mapDispatchToProps = dispatch => ({
+  updateUserJobFilters: filter => dispatch(updateUserJobFilters(filter))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  UserJobsDateFilterContainer
+);

@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import CheckboxUi from "../atomic-components/CheckboxUi";
-import { applyUserJobFilters } from "../actions/userJobs";
+import { updateUserJobFilters } from "../actions/userJobs";
 
 class UserJobsStatusFilterContainer extends Component {
   static propTypes = {
-    applyUserJobFilters: PropTypes.func.isRequired
+    updateUserJobFilters: PropTypes.func.isRequired
   };
   state = {
     checkedValues: []
@@ -15,19 +15,23 @@ class UserJobsStatusFilterContainer extends Component {
   options = [
     {
       value: "completed",
-      label: "Completed"
+      label: "Completed",
+      checked: false
     },
     {
       value: "in-progress",
-      label: "In Progress"
+      label: "In Progress",
+      checked: false
     },
     {
       value: "new",
-      label: "New"
+      label: "New",
+      checked: false
     },
     {
       value: "failed",
-      label: "Failed"
+      label: "Failed",
+      checked: false
     }
   ];
 
@@ -41,24 +45,47 @@ class UserJobsStatusFilterContainer extends Component {
     } else {
       jobStatuses = checkedValues.concat(value);
     }
-    this.props.applyUserJobFilters({ statuses: jobStatuses });
+    this.props.updateUserJobFilters({ statuses: jobStatuses });
     this.setState({ checkedValues: jobStatuses });
+  };
+
+  getOptions = options => {
+    const { statuses } = this.props;
+    return options.map(option => {
+      if (statuses.indexOf(option.value) !== -1) {
+        return { ...option, checked: true };
+      }
+      return { ...option, checked: false };
+    });
   };
 
   render() {
     const { options, onChecked } = this;
+    const updatedOptions = this.getOptions(options);
 
     return (
       <div>
-        <h5>By Status</h5>
-        <CheckboxUi options={options} onCheck={onChecked} />
+        <CheckboxUi
+          style={{
+            display: "inline-block",
+            width: "20%"
+          }}
+          options={updatedOptions}
+          onCheck={onChecked}
+        />
       </div>
     );
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  applyUserJobFilters: filter => dispatch(applyUserJobFilters(filter))
+const mapStateToProps = state => ({
+  statuses: state.userJobs.filter.statuses || []
 });
 
-export default connect(null, mapDispatchToProps)(UserJobsStatusFilterContainer);
+const mapDispatchToProps = dispatch => ({
+  updateUserJobFilters: filter => dispatch(updateUserJobFilters(filter))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  UserJobsStatusFilterContainer
+);

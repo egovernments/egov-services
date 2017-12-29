@@ -1,37 +1,40 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import TextField from "material-ui/TextField";
-import { applyUserJobFilters } from "../actions/userJobs";
+import TextFieldUi from "../atomic-components/TextFieldUi";
+import { updateUserJobFilters } from "../actions/userJobs";
 
 class UserJobsCodeFilterContainer extends Component {
   static propTypes = {
-    applyUserJobFilters: PropTypes.func.isRequired
+    updateUserJobFilters: PropTypes.func.isRequired
+  };
+
+  onChange = e => {
+    this.props.updateUserJobFilters({
+      codes: e.target.value
+        .trim()
+        .split(",")
+        .map(value => value.trim())
+    });
   };
 
   render() {
-    const { applyUserJobFilters } = this.props;
-
-    return (
-      <div>
-        <h5>By Job Code(Comma Seperated)</h5>
-        <TextField
-          onChange={e =>
-            applyUserJobFilters({
-              codes: e.target.value
-                .trim()
-                .split(",")
-                .map(value => value.trim())
-            })}
-          hintText="Job Codes"
-        />
-      </div>
-    );
+    const { onChange } = this;
+    const { codes } = this.props;
+    return <TextFieldUi value={codes} onChange={onChange} label="Job Codes" />;
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  applyUserJobFilters: filter => dispatch(applyUserJobFilters(filter))
+const mapStateToProps = state => ({
+  codes: state.userJobs.filter.codes
+    ? state.userJobs.filter.codes.join(",")
+    : ""
 });
 
-export default connect(null, mapDispatchToProps)(UserJobsCodeFilterContainer);
+const mapDispatchToProps = dispatch => ({
+  updateUserJobFilters: filter => dispatch(updateUserJobFilters(filter))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  UserJobsCodeFilterContainer
+);

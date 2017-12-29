@@ -10,6 +10,7 @@ const CheckboxUi = ({ options, defaultValue, onCheck, style = {} }) => {
           onCheck={e => onCheck(e, option.value)}
           label={option.label}
           key={index}
+          checked={option.checked}
           style={style}
         />
       );
@@ -20,11 +21,12 @@ const CheckboxUi = ({ options, defaultValue, onCheck, style = {} }) => {
 };
 
 CheckboxUi.propTypes = {
-  option: PropTypes.arrayOf(
+  options: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-        .isRequired
+        .isRequired,
+      checked: PropTypes.bool.isRequired
     }).isRequired
   ),
   defaultValue: PropTypes.string,

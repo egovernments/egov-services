@@ -1,38 +1,46 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import TextField from "material-ui/TextField";
-import { applyUserJobFilters } from "../actions/userJobs";
+import TextFieldUi from "../atomic-components/TextFieldUi";
+import { updateUserJobFilters } from "../actions/userJobs";
 
 class RequesterNamesFilterContainer extends Component {
   static propTypes = {
-    applyUserJobFilters: PropTypes.func.isRequired
+    updateUserJobFilters: PropTypes.func.isRequired
   };
 
-  // if the value has a comma, send it as an array by splitting it
-  render() {
-    const { applyUserJobFilters } = this.props;
+  onChange = e => {
+    this.props.updateUserJobFilters({
+      requesterNames: e.target.value
+        .trim()
+        .split(",")
+        .map(value => value.trim())
+    });
+  };
 
+  render() {
+    const { onChange } = this;
+    const { requesterNames } = this.props;
     return (
-      <div>
-        <h5>By Requester Names(Comma Seperated)</h5>
-        <TextField
-          onChange={e =>
-            applyUserJobFilters({
-              requesterNames: e.target.value
-                .trim()
-                .split(",")
-                .map(value => value.trim())
-            })}
-          hintText="Requester Names"
-        />
-      </div>
+      <TextFieldUi
+        value={requesterNames}
+        onChange={onChange}
+        label="Requester Names"
+      />
     );
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  applyUserJobFilters: filter => dispatch(applyUserJobFilters(filter))
+const mapStateToProps = state => ({
+  requesterNames: state.userJobs.filter.requesterNames
+    ? state.userJobs.filter.requesterNames.join(",")
+    : ""
 });
 
-export default connect(null, mapDispatchToProps)(RequesterNamesFilterContainer);
+const mapDispatchToProps = dispatch => ({
+  updateUserJobFilters: filter => dispatch(updateUserJobFilters(filter))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  RequesterNamesFilterContainer
+);

@@ -1,22 +1,19 @@
 {
 	"info": {
 		"name": "eGov_Inventory",
-		"_postman_id": "a0ddca45-73c5-dead-97b7-aed975348cfe",
+		"_postman_id": "03e1d859-a3a1-b215-4156-2ca7577d62c5",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Masters",
-			"description": "",
 			"item": [
 				{
 					"name": "Material Master",
-					"description": "",
 					"item": [
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -119,8 +116,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -398,7 +394,6 @@
 						},
 						{
 							"name": "Format",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -501,8 +496,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -719,11 +713,9 @@
 				},
 				{
 					"name": "Store Master",
-					"description": "",
 					"item": [
 						{
 							"name": "Format",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -826,8 +818,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -902,8 +893,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": null
+										}
 									},
 									"response": []
 								},
@@ -968,8 +958,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -1028,8 +1017,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": null
+										}
 									},
 									"response": []
 								},
@@ -1095,8 +1083,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								}
@@ -1105,7 +1092,6 @@
 						},
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -1208,8 +1194,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -1269,8 +1254,7 @@
 												"v1",
 												"_search"
 											]
-										},
-										"description": null
+										}
 									},
 									"response": []
 								},
@@ -1348,8 +1332,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": null
+										}
 									},
 									"response": []
 								},
@@ -1428,8 +1411,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": null
+										}
 									},
 									"response": []
 								}
@@ -1441,11 +1423,9 @@
 				},
 				{
 					"name": "Supplier Master",
-					"description": "",
 					"item": [
 						{
 							"name": "Format",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -1548,8 +1528,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -1584,8 +1563,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -1658,8 +1636,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -1724,8 +1701,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -1847,8 +1823,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								}
@@ -1857,7 +1832,6 @@
 						},
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -1960,8 +1934,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2004,8 +1977,7 @@
 												"v1",
 												"_search"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2078,8 +2050,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2148,8 +2119,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								}
@@ -2161,11 +2131,9 @@
 				},
 				{
 					"name": "Material Store Mapping Master",
-					"description": "",
 					"item": [
 						{
 							"name": "Format",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -2269,8 +2237,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2322,8 +2289,7 @@
 												"v1",
 												"_search"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2383,8 +2349,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2568,8 +2533,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2659,8 +2623,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								}
@@ -2669,7 +2632,6 @@
 						},
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -2773,8 +2735,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2826,8 +2787,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": null
+										}
 									},
 									"response": []
 								},
@@ -2882,8 +2842,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2940,8 +2899,7 @@
 												"v1",
 												"_search"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -2996,8 +2954,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3052,8 +3009,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3107,8 +3063,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								}
@@ -3120,11 +3075,9 @@
 				},
 				{
 					"name": "Material Type Store Mapping Master",
-					"description": "",
 					"item": [
 						{
 							"name": "Format",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -3228,8 +3181,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3286,8 +3238,7 @@
 												"v1",
 												"_search"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3342,8 +3293,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3518,7 +3468,6 @@
 						},
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -3622,8 +3571,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3678,8 +3626,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3791,8 +3738,7 @@
 												"v1",
 												"_search"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -3914,11 +3860,9 @@
 		},
 		{
 			"name": "Transactions",
-			"description": "",
 			"item": [
 				{
 					"name": "Indents",
-					"description": "",
 					"item": [
 						{
 							"name": "Login",
@@ -4021,8 +3965,7 @@
 										"oauth",
 										"token"
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4156,8 +4099,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4220,8 +4162,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4290,8 +4231,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						}
@@ -4300,7 +4240,6 @@
 				},
 				{
 					"name": "Purchase Order",
-					"description": "",
 					"item": [
 						{
 							"name": "Login",
@@ -4403,8 +4342,7 @@
 										"oauth",
 										"token"
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4462,8 +4400,7 @@
 										"v1",
 										"_search"
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4591,8 +4528,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4769,8 +4705,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4826,8 +4761,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4889,8 +4823,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4946,8 +4879,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -4997,8 +4929,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -5054,8 +4985,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						}
@@ -5064,7 +4994,6 @@
 				},
 				{
 					"name": "Material Receipt",
-					"description": "",
 					"item": [
 						{
 							"name": "Login",
@@ -5167,8 +5096,7 @@
 										"oauth",
 										"token"
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -5229,8 +5157,7 @@
 										"v1",
 										"_search"
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -5358,8 +5285,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -5536,8 +5462,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -5594,8 +5519,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -5672,8 +5596,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						},
@@ -5786,8 +5709,7 @@
 											"equals": true
 										}
 									]
-								},
-								"description": ""
+								}
 							},
 							"response": []
 						}
@@ -5796,11 +5718,9 @@
 				},
 				{
 					"name": "Opening Balance",
-					"description": "",
 					"item": [
 						{
 							"name": "Format",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -5903,8 +5823,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -5962,8 +5881,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -6041,8 +5959,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -6102,8 +6019,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": null
+										}
 									},
 									"response": []
 								},
@@ -6171,8 +6087,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								}
@@ -6181,7 +6096,6 @@
 						},
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -6284,8 +6198,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -6343,8 +6256,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -6422,8 +6334,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								}
@@ -6435,11 +6346,9 @@
 				},
 				{
 					"name": "Price Lists",
-					"description": "",
 					"item": [
 						{
 							"name": "Format",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -6542,8 +6451,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -6616,8 +6524,7 @@
 													"equals": true
 												}
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -6924,7 +6831,6 @@
 						},
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login",
@@ -7027,8 +6933,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},
@@ -7439,17 +7344,14 @@
 				},
 				{
 					"name": "Miscellaneous Material Receipt",
-					"description": "",
 					"item": [
 						{
 							"name": "Format",
-							"description": "",
 							"item": [],
 							"_postman_isSubFolder": true
 						},
 						{
 							"name": "Functional",
-							"description": "",
 							"item": [
 								{
 									"name": "Login copy",
@@ -7552,8 +7454,7 @@
 												"oauth",
 												"token"
 											]
-										},
-										"description": ""
+										}
 									},
 									"response": []
 								},

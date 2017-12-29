@@ -1,12 +1,18 @@
 package org.egov.works.workorder.persistence.helper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.egov.works.workorder.web.contract.*;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+
+import org.egov.works.workorder.web.contract.Contractor;
+import org.egov.works.workorder.web.contract.Employee;
+import org.egov.works.workorder.web.contract.LetterOfAcceptance;
+import org.egov.works.workorder.web.contract.WorksStatus;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -94,7 +100,9 @@ public class LetterOfAcceptanceHelper {
         letterOfAcceptance.setContractPeriod(this.contractPeriod);
         letterOfAcceptance.emdAmountDeposited(this.emdAmountDeposited);
         letterOfAcceptance.stampPaperAmount(this.stampPaperAmount);
-        letterOfAcceptance.engineerIncharge(this.engineerIncharge);
+        Employee employee = new Employee();
+        employee.setCode(this.engineerIncharge);
+        letterOfAcceptance.engineerIncharge(employee);
         letterOfAcceptance.defectLiabilityPeriod(this.defectLiabilityPeriod);
         letterOfAcceptance.setLoaAmount(this.loaAmount);
         WorksStatus worksStatus = new WorksStatus();
@@ -104,7 +112,7 @@ public class LetterOfAcceptanceHelper {
         letterOfAcceptance.setApprovedDate(this.approvedDate);
         letterOfAcceptance.setFileNumber(this.fileNumber);
         letterOfAcceptance.setFileDate(this.fileDate);
-        //letterOfAcceptance.parent(this.parent);
+        // letterOfAcceptance.parent(this.parent);
         letterOfAcceptance.setStateId(this.stateId);
         letterOfAcceptance.setCancellationReason(this.cancellationReason);
         letterOfAcceptance.setCancellationRemarks(this.cancellationRemarks);

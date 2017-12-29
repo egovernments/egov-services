@@ -1,6 +1,7 @@
 package org.egov.works.workorder.domain.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.egov.works.workorder.domain.repository.EstimateRepository;
@@ -17,7 +18,7 @@ public class EstimateService {
     public DetailedEstimateResponse getDetailedEstimate(final String estimateNumber, final String tenantId,
             final RequestInfo requestInfo) {
         DetailedEstimateSearchContract detailedEstimateSearchContract = new DetailedEstimateSearchContract();
-        detailedEstimateSearchContract.setDetailedEstimateNumberLike(estimateNumber);
+        detailedEstimateSearchContract.setDetailedEstimateNumbers(Arrays.asList(estimateNumber));
         List<String> statuses = new ArrayList<>();
         statuses.add(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString());
         detailedEstimateSearchContract.setStatuses(statuses);

@@ -22,6 +22,7 @@ import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
 import org.egov.model.Department;
 import org.egov.model.FundSource;
+import org.egov.model.LandDetail;
 import org.egov.model.ModeOfAcquisition;
 import org.egov.model.TransactionHistory;
 import org.egov.model.criteria.AssetCriteria;
@@ -75,6 +76,15 @@ public class AssetService {
 
 	public AssetResponse createAsync(final AssetRequest assetRequest) {
 		final Asset asset = assetRequest.getAsset();
+		final List<LandDetail> landDetails=asset.getLandDetails();
+		
+		for (LandDetail landDetail : landDetails) {
+			landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));
+			System.err.println(landDetail);
+		}
+		
+		System.err.println("assetservice landdetails id set"+asset);
+		
 
 		// FIXME put asset code seq per ulb Ghanshyam will update
 		asset.setCode(asset.getTenantId() + "/" + asset.getDepartment().getCode() + "/"
@@ -82,6 +92,8 @@ public class AssetService {
 		log.info("asset.getcode" + asset.getCode());
 
 		asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
+		
+
 		asset.setStatus(Status.CAPITALIZED.toString());
 
 		asset.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));

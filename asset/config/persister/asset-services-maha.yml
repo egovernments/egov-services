@@ -134,7 +134,7 @@ serviceMaps:
        
        - jsonPath: $.Asset.assetCategory.assetCategoryType
        
-    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, assetid, tenantid) VALUES (?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, assetid, tenantid ,id) VALUES (?, ?, ?, ?, ?,?);
       basePath: Asset.landDetails.*
       jsonMaps:
          
@@ -147,6 +147,8 @@ serviceMaps:
        - jsonPath: $.Asset.id
        
        - jsonPath: $.Asset.tenantId
+       
+       - jsonPath: $.Asset.landDetails.*.id
               
               
        
@@ -277,7 +279,7 @@ serviceMaps:
        - jsonPath: $.Asset.tenantId 
        
        
-    - query: UPDATE egasset_asset_landdetails SET surveynumber=?, area=? WHERE assetid=? AND code=? AND tenantid=?;
+    - query: UPDATE egasset_asset_landdetails SET surveynumber=?, area=?,code=? WHERE assetid=? AND id=? AND tenantid=?;
       basePath: Asset.landDetails.*
       jsonMaps:
          
@@ -285,9 +287,11 @@ serviceMaps:
          
        - jsonPath: $.Asset.landDetails.*.area
        
-       - jsonPath: $.Asset.id
-       
        - jsonPath: $.Asset.landDetails.*.code
+       
+       - jsonPath: $.Asset.id
+                                
+       - jsonPath: $.Asset.landDetails.*.id
        
        - jsonPath: $.Asset.tenantId
        
@@ -590,3 +594,4 @@ serviceMaps:
        - jsonPath: $.AssetCurrentValue.*.assetTranType
        
        - jsonPath: $.AssetCurrentValue.*.transactionDate
+

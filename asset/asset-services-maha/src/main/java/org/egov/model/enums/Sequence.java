@@ -9,8 +9,8 @@ public enum Sequence {
             "seq_egasset_assetcategory"), ASSETCODESEQUENCE("seq_egasset_assetcode"), ASSETSEQUENCE(
                     "seq_egasset_asset"), REVALUATIONSEQUENCE("seq_egasset_revaluation"), CURRENTVALUESEQUENCE(
                             "seq_egasset_current_value"), DISPOSALSEQUENCE(
-                                    "seq_egasset_disposal"), DEPRECIATIONSEQUENCE("seq_egasset_depreciation");
-
+                                    "seq_egasset_disposal"), DEPRECIATIONSEQUENCE("seq_egasset_depreciation"),
+    LANDDETAILSSEQUENCE("seq_egasset_asset_landetails");
     private String value;
 
     Sequence(final String value) {

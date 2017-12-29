@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LandDetail {
+	
+	@NotNull
+	private Long id;
 
 	@NotNull
 	private String code;
@@ -21,4 +24,7 @@ public class LandDetail {
 	
 	@NotNull
 	private String surveyNo;
+	
+	@NotNull
+	private String tenantId;
 }

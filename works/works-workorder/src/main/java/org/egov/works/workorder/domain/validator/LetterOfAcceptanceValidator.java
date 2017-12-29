@@ -322,7 +322,7 @@ public class LetterOfAcceptanceValidator {
         if (detailedEstimate == null)
             messages.put(Constants.KEY_DETAILEDESTIMATE_EXIST, Constants.MESSAGE_DETAILEDESTIMATE_EXIST);
 
-        if (detailedEstimate != null && detailedEstimate.getStatus() != null && !detailedEstimate.getStatus().toString()
+        if (detailedEstimate != null && detailedEstimate.getStatus() != null && !detailedEstimate.getStatus().getCode().toString()
                 .equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
             messages.put(Constants.KEY_DETAILEDESTIMATE_STATUS, Constants.MESSAGE_DETAILEDESTIMATE_STATUS);
         }

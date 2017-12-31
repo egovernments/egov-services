@@ -111,6 +111,8 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	private void sortKpiMapToList(KPIValueReportMapper reportMapper, List<ULBKpiValueList> list) { 
 		Map<String, Map<String, Map<String, KpiValue>>> firstMap = reportMapper.reportMap;
 		Map<String, KPI> kpiMap = reportMapper.kpiMap; 
+		Map<String, List<KpiValueDetail>> valueDetailMap = reportMapper.valueListMap; 
+				
 		Iterator<Entry<String, Map<String, Map<String, KpiValue>>>> firstItr = firstMap.entrySet().iterator();
 		while(firstItr.hasNext()) { 
 			ULBKpiValueList ulb = new ULBKpiValueList(); 
@@ -129,7 +131,19 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 				while(thirdItr.hasNext()) { 
 					Entry<String, KpiValue> thirdEntry = thirdItr.next();
 					KpiValue value = thirdEntry.getValue();
-					value.setValueDescription(value.getConsolidatedValue().toString());
+					
+					List<KpiValueDetail> valueDetailList = valueDetailMap.get(value.getId());
+					if(null != valueDetailList && valueDetailList.size() > 0){ 
+						value.setValueList(valueDetailList);
+						Long consolidatedValue = 0L; 
+						for(KpiValueDetail eachDetail : valueDetailList) { 
+							if(null != eachDetail.getValue()) consolidatedValue = consolidatedValue + Long.parseLong(eachDetail.getValue()) ;   
+						}
+						value.setConsolidatedValue(String.valueOf(consolidatedValue));
+						value.setValueDescription(String.valueOf(consolidatedValue));
+					}
+					
+					
 					KPI kpi = kpiMap.get(thirdEntry.getKey().concat("_"+valueList.getFinYear()));
 					if(null != kpi) value.setKpi(kpi);
 					kpiValues.add(value);
@@ -185,6 +199,7 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 					}
 					KPI kpi = kpiMap.get(thirdEntry.getKey());
 					if(null != kpi) value.setKpi(kpi);
+					value.setValueList(detailList);
 					kpiValues.add(value);
 				}
 				valueList.setKpiValueList(kpiValues);

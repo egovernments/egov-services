@@ -292,6 +292,7 @@ public class PerformanceAssessmentRowMapper {
 	public class KPIValueReportMapper implements RowMapper<KpiValueList> {
 		public Map<String, Map<String, Map<String, KpiValue>>> reportMap = new HashMap<>();
 		public Map<String, KPI> kpiMap = new HashMap<>();
+		public Map<String, List<KpiValueDetail>> valueListMap = new HashMap<>(); 
 		
 		@Override
 		public KpiValueList mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -301,6 +302,10 @@ public class PerformanceAssessmentRowMapper {
 					Map<String, KpiValue> thirdMap = secondMap.get(rs.getString("targetFinYear"));
 					if(!thirdMap.containsKey(rs.getString("code"))) { 
 						thirdMap.put(rs.getString("code"), addKpiValue(rs)); 
+					} else { 
+						KpiValue kpiValue = thirdMap.get(rs.getString("code")); 
+						KpiValueDetail detail = addKpiValueDetail(rs);
+						kpiValue.getValueList().add(detail);
 					}
 				} else { 
 					Map<String, KpiValue> thirdMap = new HashMap<>();
@@ -361,14 +366,55 @@ public class PerformanceAssessmentRowMapper {
 		private KpiValue addKpiValue(ResultSet rs) {
 			KpiValue value = new KpiValue(); 
 			try { 
-				value.setConsolidatedValue(String.valueOf(rs.getLong("consolidatedValue")));
+				value.setId(rs.getString("valueid"));
+				if(!valueListMap.containsKey(rs.getString("valueid"))) { 
+					List<KpiValueDetail> valueDetailList = new ArrayList<>(); 
+					KpiValueDetail detail = new KpiValueDetail(); 
+					detail.setKpiCode(rs.getString("valueKpiCode"));
+					detail.setValue(rs.getString("detailValue"));
+					detail.setPeriod(rs.getString("detailPeriod"));
+					valueDetailList.add(detail);
+					valueListMap.put(rs.getString("valueid"), valueDetailList); 
+				} else { 
+					List<KpiValueDetail> valueDetailList = valueListMap.get(rs.getString("valueid")); 
+					KpiValueDetail detail = new KpiValueDetail(); 
+					detail.setKpiCode(rs.getString("valueKpiCode"));
+					detail.setValue(rs.getString("detailValue"));
+					detail.setPeriod(rs.getString("detailPeriod"));
+					valueDetailList.add(detail);
+				}
 				value.setTenantId(rs.getString("valueTenantId"));
 				value.setKpiCode(rs.getString("valueKpiCode"));
 				value.setFinYear(rs.getString("targetFinYear"));
+				List<KpiValueDetail> valueDetailList = new ArrayList<>(); 
+				value.setValueList(valueDetailList);
 			} catch (Exception e) { 
 				log.error("Encountered an exception while creating KpiValue Object " + e);
 			}
 			return value;
+		}
+		
+		private KpiValueDetail addKpiValueDetail(ResultSet rs) {
+			KpiValueDetail detail = new KpiValueDetail(); 
+			try { 
+				if(!valueListMap.containsKey(rs.getString("valueid"))) { 
+					List<KpiValueDetail> valueDetailList = new ArrayList<>(); 
+					detail.setKpiCode(rs.getString("valueKpiCode"));
+					detail.setValue(rs.getString("detailValue"));
+					detail.setPeriod(rs.getString("detailPeriod"));
+					valueDetailList.add(detail);
+					valueListMap.put(rs.getString("valueid"), valueDetailList); 
+				} else { 
+					List<KpiValueDetail> valueDetailList = valueListMap.get(rs.getString("valueid")); 
+					detail.setKpiCode(rs.getString("valueKpiCode"));
+					detail.setValue(rs.getString("detailValue"));
+					detail.setPeriod(rs.getString("detailPeriod"));
+					valueDetailList.add(detail);
+				}
+			} catch(Exception e) { 
+				log.error("Encountered an exception while creating KpiValue Object " + e);
+			}
+			return detail;
 		}
 	}
 

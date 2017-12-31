@@ -77,7 +77,7 @@ public class PerformanceAssessmentQueryBuilder {
 	public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category,  "
     		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, target.finyear as targetFinYear, " 
     		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId,  "
-    		+ " SUM(NULLIF(detail.value, '')::int) as consolidatedValue FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
+    		+ " detail.value as detailValue, detail.period as detailPeriod FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
     		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode  AND target.finyear = value.finyear "
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid " 
     		+ " WHERE master.targettype = 'VALUE' " ; 
@@ -91,7 +91,7 @@ public class PerformanceAssessmentQueryBuilder {
     
     public static final String COMPARE_GROUP_BY = " GROUP BY master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, "
     		+ " target.id, target.kpicode, target.targetvalue, target.tenantid, "  
-    		+ " value.id, value.kpicode, value.tenantid, detail.valueid" ;
+    		+ " value.id, value.kpicode, value.tenantid, detail.valueid , detail.value, detail.period" ;
     
     public static String persistKpiQuery() { 
     	return "INSERT INTO egpa_kpi_master (id, name, code, finyear, createdby, createddate) " 

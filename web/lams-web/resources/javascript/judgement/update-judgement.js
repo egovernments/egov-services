@@ -300,7 +300,7 @@ class UpdateJudgement extends React.Component {
         }
 
         getDesignations(process.status, function (designations) {
-            console.log(designations);
+            //console.log(designations);
             _this.setState({
                 ..._this.state,
                 designationList: designations
@@ -347,7 +347,7 @@ class UpdateJudgement extends React.Component {
         doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
         doc.text(15, 57, 'Lease Name: ' + noticeData.allottee.name);
         doc.text(110, 57, 'Asset No: ' + noticeData.asset.code);
-        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress.replace(/(\r\n|\n|\r)/gm,"") + ", " : "") + tenantId.split(".")[1] + ".");
+        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress.replace(/(\r\n|\n|\r)/gm, "") + ", " : "") + tenantId.split(".")[1] + ".");
 
         doc.setFontType("normal");
         doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be '));
@@ -406,70 +406,70 @@ class UpdateJudgement extends React.Component {
         this.createFileStore(noticeData, blob).then(this.createNotice, this.errorHandler);
     }
 
-    createFileStore(noticeData, blob){
-      // console.log('upload to filestore');
-      var promiseObj = new Promise(function(resolve, reject){
-        let formData = new FormData();
-        formData.append("tenantId", tenantId);
-        formData.append("module", "LAMS");
-        formData.append("file", blob);
-        $.ajax({
-            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (res) {
-                let obj={
-                  noticeData : noticeData,
-                  fileStoreId : res.files[0].fileStoreId
+    createFileStore(noticeData, blob) {
+        // console.log('upload to filestore');
+        var promiseObj = new Promise(function (resolve, reject) {
+            let formData = new FormData();
+            formData.append("tenantId", tenantId);
+            formData.append("module", "LAMS");
+            formData.append("file", blob);
+            $.ajax({
+                url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (res) {
+                    let obj = {
+                        noticeData: noticeData,
+                        fileStoreId: res.files[0].fileStoreId
+                    }
+                    resolve(obj);
+                },
+                error: function (jqXHR, exception) {
+                    reject(jqXHR.status);
                 }
-                resolve(obj);
+            });
+        });
+        return promiseObj;
+    }
+
+    createNotice(obj) {
+        // console.log('notice create');
+        $.ajax({
+            url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                RequestInfo: requestInfo,
+                Notice: {
+                    tenantId,
+                    agreementNumber: obj.noticeData.agreementNumber,
+                    fileStore: obj.fileStoreId
+                }
+            }),
+            headers: {
+                'auth-token': authToken
+            },
+            contentType: 'application/json',
+            success: function (res) {
+                // console.log('notice created');
+                if (window.opener)
+                    window.opener.location.reload();
+                open(location, '_self').close();
             },
             error: function (jqXHR, exception) {
-                reject(jqXHR.status);
+                console.log('error');
+                showError('Error while creating notice');
             }
         });
-      });
-      return promiseObj;
-    }
-
-    createNotice(obj){
-      // console.log('notice create');
-      $.ajax({
-          url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
-          type: 'POST',
-          dataType: 'json',
-          data: JSON.stringify({
-              RequestInfo: requestInfo,
-              Notice: {
-                  tenantId,
-                  agreementNumber: obj.noticeData.agreementNumber,
-                  fileStore:obj.fileStoreId
-              }
-          }),
-          headers: {
-              'auth-token': authToken
-          },
-          contentType: 'application/json',
-          success:function(res){
-            // console.log('notice created');
-            if(window.opener)
-                window.opener.location.reload();
-            open(location, '_self').close();
-          },
-          error:function(jqXHR, exception){
-            console.log('error');
-            showError('Error while creating notice');
-          }
-      });
 
     }
 
-    errorHandler(statusCode){
-     console.log("failed with status", status);
-     showError('Error');
+    errorHandler(statusCode) {
+        console.log("failed with status", status);
+        showError('Error');
     }
 
     componentDidMount() {
@@ -585,70 +585,47 @@ class UpdateJudgement extends React.Component {
 
             }
 
-            console.log("Agreement", agreement);
+            //console.log("Agreement", agreement);
 
-            if (ID === "Print Notice") {
-              //lams update
-              var body = {
-                  "RequestInfo": requestInfo,
-                  "Agreement": agreement
-              };
 
-              $.ajax({
-                  url: baseUrl + "/lams-services/agreements/judgement/_update?tenantId=" + tenantId,
-                  type: 'POST',
-                  dataType: 'json',
-                  data: JSON.stringify(body),
-                  contentType: 'application/json',
-                  headers: {
-                      'auth-token': authToken
-                  },
-                  success: function (res) {
-                    _this.printNotice(agreement);
-                  },
-                  error:function(err){
-                    if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
-                        showError(err.responseJSON.Error.message);
-                    else
-                        showError("Something went wrong. Please contact Administrator");
-                  }
-                });
-            } else {
-                if (agreement.documents && agreement.documents.constructor == FileList) {
-                    let counter = agreement.documents.length,
-                        breakout = 0,
-                        docs = [];
-                    for (let i = 0, len = agreement.documents.length; i < len; i++) {
-                        this.makeAjaxUpload(agreement.documents[i], function (err, res) {
-                            if (breakout == 1) {
-                                console.log("breakout", breakout);
-                                return;
-                            } else if (err) {
-                                showError("Error uploding the files. Please contact Administrator");
-                                breakout = 1;
-                            } else {
-                                counter--;
-                                docs.push({ fileStore: res.files[0].fileStoreId });
-                                console.log("docs", docs);
-                                if (counter == 0 && breakout == 0) {
-                                    agreement.documents = docs;
+            if (agreement.documents && agreement.documents.constructor == FileList) {
+                let counter = agreement.documents.length,
+                    breakout = 0,
+                    docs = [];
+                for (let i = 0, len = agreement.documents.length; i < len; i++) {
+                    this.makeAjaxUpload(agreement.documents[i], function (err, res) {
+                        if (breakout == 1) {
+                            //console.log("breakout", breakout);
+                            return;
+                        } else if (err) {
+                            showError("Error uploding the files. Please contact Administrator");
+                            breakout = 1;
+                        } else {
+                            counter--;
+                            docs.push({ fileStore: res.files[0].fileStoreId });
+                            //console.log("docs", docs);
+                            if (counter == 0 && breakout == 0) {
+                                agreement.documents = docs;
 
-                                    var body = {
-                                        "RequestInfo": requestInfo,
-                                        "Agreement": agreement
-                                    };
+                                var body = {
+                                    "RequestInfo": requestInfo,
+                                    "Agreement": agreement
+                                };
 
-                                    $.ajax({
-                                        url: baseUrl + "/lams-services/agreements/judgement/_update?tenantId=" + tenantId,
-                                        type: 'POST',
-                                        dataType: 'json',
-                                        data: JSON.stringify(body),
-                                        contentType: 'application/json',
-                                        headers: {
-                                            'auth-token': authToken
-                                        },
-                                        success: function (res) {
+                                $.ajax({
+                                    url: baseUrl + "/lams-services/agreements/judgement/_update?tenantId=" + tenantId,
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    data: JSON.stringify(body),
+                                    contentType: 'application/json',
+                                    headers: {
+                                        'auth-token': authToken
+                                    },
+                                    success: function (res) {
 
+                                        if (ID === "Print Notice") {
+                                            _this.printNotice(agreement);
+                                        } else {
                                             $.ajax({
                                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                                 type: 'POST',
@@ -672,40 +649,44 @@ class UpdateJudgement extends React.Component {
                                                     window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                 }
                                             })
-                                        },
-                                        error: function (err) {
-                                            if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
-                                                showError(err.responseJSON.Error.message);
-                                            else
-                                                showError("Something went wrong. Please contact Administrator");
                                         }
+                                    },
+                                    error: function (err) {
+                                        if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
+                                            showError(err.responseJSON.Error.message);
+                                        else
+                                            showError("Something went wrong. Please contact Administrator");
+                                    }
 
-                                    })
+                                })
 
-                                }
                             }
-                        })
-                    }
-                    // if (breakout == 1)
-                    //     return;
-                } else {
+                        }
+                    })
+                }
+                // if (breakout == 1)
+                //     return;
+            } else {
 
-                    var body = {
-                        "RequestInfo": requestInfo,
-                        "Agreement": agreement
-                    };
+                var body = {
+                    "RequestInfo": requestInfo,
+                    "Agreement": agreement
+                };
 
-                    $.ajax({
-                        url: baseUrl + "/lams-services/agreements/judgement/_update?tenantId=" + tenantId,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: JSON.stringify(body),
-                        contentType: 'application/json',
-                        headers: {
-                            'auth-token': authToken
-                        },
-                        success: function (res) {
+                $.ajax({
+                    url: baseUrl + "/lams-services/agreements/judgement/_update?tenantId=" + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(body),
+                    contentType: 'application/json',
+                    headers: {
+                        'auth-token': authToken
+                    },
+                    success: function (res) {
 
+                        if (ID === "Print Notice") {
+                            _this.printNotice(agreement);
+                        } else {
                             $.ajax({
                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                 type: 'POST',
@@ -729,17 +710,17 @@ class UpdateJudgement extends React.Component {
                                     window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                 }
                             })
-                        },
-                        error: function (err) {
-                            if (err.responseJSON.Error && err.responseJSON.Error.message)
-                                showError(err.responseJSON.Error.message);
-                            else
-                                showError("Something went wrong. Please contact Administrator");
                         }
+                    },
+                    error: function (err) {
+                        if (err.responseJSON.Error && err.responseJSON.Error.message)
+                            showError(err.responseJSON.Error.message);
+                        else
+                            showError("Something went wrong. Please contact Administrator");
+                    }
 
-                    })
+                })
 
-                }
             }
 
         } else {

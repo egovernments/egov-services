@@ -306,7 +306,7 @@ class UpdateCancellation extends React.Component {
         }
 
         getDesignations(process.status, function (designations) {
-            console.log(designations);
+            //console.log(designations);
             _this.setState({
                 ..._this.state,
                 designationList: designations
@@ -600,7 +600,7 @@ class UpdateCancellation extends React.Component {
             // With file upload
             if (agreement.documents && agreement.documents.constructor == FileList) {
 
-              console.log('update cancellation with file upload');
+              //console.log('update cancellation with file upload');
 
                 let counter = agreement.documents.length,
                     breakout = 0,
@@ -608,7 +608,7 @@ class UpdateCancellation extends React.Component {
                 for (let i = 0, len = agreement.documents.length; i < len; i++) {
                     this.makeAjaxUpload(agreement.documents[i], function (err, res) {
                         if (breakout == 1) {
-                            console.log("breakout", breakout);
+                            //console.log("breakout", breakout);
                             return;
                         } else if (err) {
                             showError("Error uploding the files. Please contact Administrator");
@@ -616,7 +616,7 @@ class UpdateCancellation extends React.Component {
                         } else {
                             counter--;
                             docs.push({ fileStore: res.files[0].fileStoreId });
-                            console.log("docs", docs);
+                            //console.log("docs", docs);
                             if (counter == 0 && breakout == 0) {
                                 agreement.documents = docs;
 

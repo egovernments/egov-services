@@ -571,7 +571,7 @@ class UpdateEviction extends React.Component {
 
             }
 
-            console.log("Agreement", agreement);
+            //console.log("Agreement", agreement);
 
             if (ID === "Print Notice") {
               //lams update
@@ -607,7 +607,7 @@ class UpdateEviction extends React.Component {
                     for (let i = 0, len = agreement.documents.length; i < len; i++) {
                         this.makeAjaxUpload(agreement.documents[i], function (err, res) {
                             if (breakout == 1) {
-                                console.log("breakout", breakout);
+                                //console.log("breakout", breakout);
                                 return;
                             } else if (err) {
                                 showError("Error uploding the files. Please contact Administrator");
@@ -615,7 +615,7 @@ class UpdateEviction extends React.Component {
                             } else {
                                 counter--;
                                 docs.push({ fileStore: res.files[0].fileStoreId });
-                                console.log("docs", docs);
+                                //console.log("docs", docs);
                                 if (counter == 0 && breakout == 0) {
                                     agreement.documents = docs;
 

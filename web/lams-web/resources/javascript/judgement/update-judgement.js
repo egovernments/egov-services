@@ -941,7 +941,7 @@ class UpdateJudgement extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="panNo" name="panNo" >
-                                            {allottee.panNo ? allottee.panNo : "N/A"}   </label>
+                                            {allottee.pan ? allottee.pan : "N/A"}   </label>
                                     </div>
                                 </div>
                             </div>
@@ -966,7 +966,7 @@ class UpdateJudgement extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="address" name="address">
-                                            {allottee.address ? allottee.address : "N/A"}
+                                            {allottee.permanentAddress ? allottee.permanentAddress : "N/A"}
                                         </label>
                                     </div>
                                 </div>

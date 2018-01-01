@@ -309,7 +309,7 @@ class UpdateRenewal extends React.Component {
 
         }, process.businessKey);
 
-
+        agreement.remarks = "";
 
         if (!agreement.renewal) {
             agreement.renewal = {};

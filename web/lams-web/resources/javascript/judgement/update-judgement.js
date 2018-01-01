@@ -308,7 +308,7 @@ class UpdateJudgement extends React.Component {
 
         }, process.businessKey);
 
-
+        agreement.remarks = "";
 
         if (!agreement.judgement) {
             agreement.judgement = {};

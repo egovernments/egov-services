@@ -314,7 +314,7 @@ class UpdateCancellation extends React.Component {
 
         }, process.businessKey);
 
-
+        agreement.remarks = "";
 
         if (!agreement.cancellation) {
             agreement.cancellation = {};

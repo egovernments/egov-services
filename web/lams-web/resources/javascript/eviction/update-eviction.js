@@ -309,7 +309,7 @@ class UpdateEviction extends React.Component {
 
         }, process.businessKey);
 
-
+        agreement.remarks = "";
 
         if (!agreement.eviction) {
             agreement.eviction = {};

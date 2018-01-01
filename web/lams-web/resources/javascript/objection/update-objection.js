@@ -308,7 +308,7 @@ class UpdateObjection extends React.Component {
 
         }, process.businessKey);
 
-
+        agreement.remarks = "";
 
         if (!agreement.objection) {
             agreement.objection = {};

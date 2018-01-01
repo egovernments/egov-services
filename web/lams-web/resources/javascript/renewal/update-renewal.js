@@ -1116,7 +1116,7 @@ class UpdateRenewal extends React.Component {
                                         <div className="text-no-ui">
                                             <span>₹</span>
                                             <input type="number" min={agreement.rent} name="renewalRent" id="renewalRent" value={agreement.rent}
-                                                onChange={(e) => { handleChangeTwoLevel(e, "agreement", "rent") }} disabled />
+                                                onChange={(e) => { handleChange(e, "rent") }} />
                                         </div>
                                     </div>
                                 </div>
@@ -1129,7 +1129,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "timePeriod") }} disabled >
+                                        <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChange(e, "timePeriod") }} disabled >
                                             <option value="">Select </option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -1152,7 +1152,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "securityDeposit") }} disabled />
+                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} disabled />
                                     </div>
                                 </div>
                             </div>
@@ -1166,7 +1166,7 @@ class UpdateRenewal extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
-                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "securityDepositDate") }} disabled />
+                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChange(e, "securityDepositDate") }} disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1182,7 +1182,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "agreement", "rentIncrementMethod") }} disabled >
+                                        <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChange(e, "rentIncrementMethod") }} disabled >
                                             <option value="">Choose</option>
                                             <option value="10">10</option>
                                             <option value="20">20</option>

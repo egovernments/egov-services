@@ -1194,78 +1194,113 @@ class UpdateJudgement extends React.Component {
         }
 
         const renderWorkFlowDetails = function () {
-            return (
-                <div className="form-section">
-                    <div className="row">
-                        <div className="col-md-8 col-sm-8">
-                            <h3 className="categoryType">Workflow Details </h3>
+
+            var flg = 0;
+
+            buttons.forEach(function (btn, ind) {
+                if (btn.key.toLowerCase() === "approve" || btn.key.toLowerCase() === "print notice") {
+                    flg = 1;
+                }
+            });
+
+            if (flg === 0) {
+
+                return (
+                    <div className="form-section">
+                        <div className="row">
+                            <div className="col-md-8 col-sm-8">
+                                <h3 className="categoryType">Workflow Details </h3>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="">Department <span>*</span></label>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">Department <span>*</span></label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <div className="styled-select">
+                                            <select id="department" name="department" value={workflowDetails.department}
+                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "department") }} required >
+                                                <option value="">Select Department</option>
+                                                {renderOption(_this.state.departmentList)}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="col-sm-6">
-                                    <div className="styled-select">
-                                        <select id="department" name="department" value={workflowDetails.department}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "department") }} required >
-                                            <option value="">Select Department</option>
-                                            {renderOption(_this.state.departmentList)}
-                                        </select>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">Designation <span>*</span></label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <div className="styled-select">
+                                            <select id="designation" name="designation" value={workflowDetails.designation}
+                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "designation") }} required >
+                                                <option value="">Select Designation</option>
+                                                {renderOption(_this.state.designationList)}
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="">Designation <span>*</span></label>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="">User Name <span>*</span></label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <div className="styled-select">
+                                            <select id="assignee" name="assignee" value={workflowDetails.assignee}
+                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "assignee") }} required>
+                                                <option value="">Select User</option>
+                                                {renderOptionForUser(_this.state.userList)}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="col-sm-6">
-                                    <div className="styled-select">
-                                        <select id="designation" name="designation" value={workflowDetails.designation}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "designation") }} required >
-                                            <option value="">Select Designation</option>
-                                            {renderOption(_this.state.designationList)}
-                                        </select>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="comments">Comments </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <textarea rows="4" cols="50" id="comments" name="comments" value={workflowDetails.comments}
+                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "comments") }} ></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="">User Name <span>*</span></label>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="styled-select">
-                                        <select id="assignee" name="assignee" value={workflowDetails.assignee}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "assignee") }} required>
-                                            <option value="">Select User</option>
-                                            {renderOptionForUser(_this.state.userList)}
-                                        </select>
+                );
+            } else {
+                return (
+                    <div className="form-section">
+                        <div className="row">
+                            <div className="col-md-8 col-sm-8">
+                                <h3 className="categoryType">Workflow Details </h3>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="comments">Comments </label>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <textarea rows="4" cols="50" id="comments" name="comments" value={workflowDetails.comments}
+                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "comments") }} ></textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="comments">Comments </label>
-                                </div>
-                                <div className="col-sm-6">
-                                    <textarea rows="4" cols="50" id="comments" name="comments" value={workflowDetails.comments}
-                                        onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "comments") }} ></textarea>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-            );
+                );
+            }
 
         }
 

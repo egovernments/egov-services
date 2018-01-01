@@ -27,7 +27,6 @@ import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.RequestInfo;
-import org.egov.inv.model.Store;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
@@ -234,13 +233,13 @@ public class OpeningBalanceService extends DomainService {
 							if (isEmpty(detail.getUom().getCode())) {
 								errors.addDataError( ErrorCode.UOM_CODE_NOT_EXIST.getCode(),detail.getUom().getCode()+" at serial no."+ detailIndex);
 							}
-							if (isEmpty(detail.getReceivedQty())) {
-								errors.addDataError(ErrorCode.RCVED_QTY_NOT_EXIST.getCode(),detail.getReceivedQty()+" at serial no."+ detailIndex);	
+							if (isEmpty(detail.getUserReceivedQty())) {
+								errors.addDataError(ErrorCode.RCVED_QTY_NOT_EXIST.getCode(),detail.getUserReceivedQty()+" at serial no."+ detailIndex);	
 							}else
 								{
-									int res1 =detail.getReceivedQty().compareTo(BigDecimal.ZERO);
+									int res1 =detail.getUserReceivedQty().compareTo(BigDecimal.ZERO);
 								if (res1 != 1) {
-									errors.addDataError(ErrorCode.RCVED_QTY_GT_ZERO.getCode(),detail.getReceivedQty()+" at serial no."+ detailIndex);
+									errors.addDataError(ErrorCode.RCVED_QTY_GT_ZERO.getCode(),detail.getUserReceivedQty()+" at serial no."+ detailIndex);
 								}
 								}
 							if (isEmpty(detail.getUnitRate())) {
@@ -314,8 +313,8 @@ public class OpeningBalanceService extends DomainService {
 		Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", detail.getUom().getCode(), Uom.class);
 		detail.setUom(uom);
 
-		if (null != detail.getReceivedQty() && null != uom.getConversionFactor()) {
-			BigDecimal convertedReceivedQuantity = getSaveConvertedQuantity(detail.getReceivedQty(),
+		if (null != detail.getUserReceivedQty() && null != uom.getConversionFactor()) {
+			BigDecimal convertedReceivedQuantity = getSaveConvertedQuantity(detail.getUserReceivedQty(),
 					uom.getConversionFactor());
 			detail.setReceivedQty(convertedReceivedQuantity);
 		}

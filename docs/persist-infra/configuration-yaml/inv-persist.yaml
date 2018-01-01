@@ -322,7 +322,7 @@ serviceMaps:
               type: LONG
             - type: CURRENTDATE
               dbType: LONG
-        - query: INSERT INTO materialreceiptdetail(id, tenantId, material,mrnNumber,uomNo,receivedQty,acceptedQty,unitRate,remarks,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,? );
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material,mrnNumber,uomNo,receivedQty,acceptedQty,userReceivedQty,userAcceptedQty,unitRate,remarks,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,? );
           basePath: $.materialReceipt.*.receiptDetails.*
           jsonMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
@@ -332,6 +332,8 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.userReceivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.userReceivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
             - jsonPath: $.materialReceipt.*.receiptDetails.*.remarks
             - jsonPath: $.materialReceipt.*.auditDetails.createdBy
@@ -361,7 +363,7 @@ serviceMaps:
       description: update opening Balance
       fromTopic: inv-openbalance-update-topic
       queryMaps:
-        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, mrnNumber, uomNo,receivedQty, acceptedQty, unitRate, remarks, createdby,createdTime,lastmodifiedby,lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, mrnNumber, uomNo,receivedQty, acceptedQty,userReceivedQty,userAcceptedQty,unitRate, remarks, createdby,createdTime,lastmodifiedby,lastModifiedTime) VALUES ( ?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  receivedQty = EXCLUDED.receivedQty,acceptedQty = EXCLUDED.receivedQty, unitRate = EXCLUDED.unitRate,
                   lastmodifiedby = EXCLUDED.lastmodifiedby,lastModifiedTime = EXCLUDED.lastmodifiedtime ;
           basePath: $.materialReceipt.*.receiptDetails.*
@@ -373,6 +375,8 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.userReceivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.userReceivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
             - jsonPath: $.materialReceipt.*.receiptDetails.*.remarks
             - jsonPath: $.materialReceipt.*.auditDetails.createdBy

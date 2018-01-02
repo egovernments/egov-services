@@ -55,8 +55,11 @@ var dat = {
         {
           label: 'legal.search.result.agencyAddress',
         },
+        {
+          label: 'reports.lcms.status',
+        },
       ],
-      values: ['code', 'name', 'agencyAddress'],
+      values: ['code', 'name', 'agencyAddress','status'],
       resultPath: 'agencies',
       resultIdKey: 'code',
       rowClickUrlUpdate: '/update/lcms/updateagency/{code}',

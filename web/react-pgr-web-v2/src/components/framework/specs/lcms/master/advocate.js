@@ -53,6 +53,11 @@ var dat = {
         {
           label: 'legal.search.result.mobileNumber',
         },
+
+        {
+          label: 'reports.lcms.status',
+        },
+        
         // ,
         // {
         //   "label": "legal.search.result.agencyName"
@@ -62,6 +67,7 @@ var dat = {
         'name',
         'emailId',
         'mobileNumber',
+        'status',
         //,
         // "agencyName"
       ],

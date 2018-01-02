@@ -180,22 +180,27 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 					Entry<String, KpiValue> thirdEntry = thirdItr.next();
 					KpiValue value = thirdEntry.getValue();
 					List<KpiValueDetail> detailList = reportMapper.kpiValueDetailMap.get(value.getId());
-					for(KpiValueDetail detail : detailList) { 
-						if(StringUtils.isNotBlank(detail.getValue())) { 
-							value.setConsolidatedValue(detail.getValue());
-							if(detail.getValue().equals(TargetType.OBJECTIVE.toString())) { 
-								if(detail.getValue().equals("1")) 
-									value.setValueDescription("Yes");
-								else if(detail.getValue().equals("2"))
-									value.setValueDescription("No");
-								else if(detail.getValue().equals("3"))
-									value.setValueDescription("Work In Progress");
+					if(null != detailList && detailList.size() == 12) { 
+						for(KpiValueDetail detail : detailList) { 
+							if(StringUtils.isNotBlank(detail.getValue())) { 
+								value.setConsolidatedValue(detail.getValue());
+								if(detail.getValue().equals(TargetType.OBJECTIVE.toString())) { 
+									if(detail.getValue().equals("1")) 
+										value.setValueDescription("Yes");
+									else if(detail.getValue().equals("2"))
+										value.setValueDescription("No");
+									else if(detail.getValue().equals("3"))
+										value.setValueDescription("Work In Progress");
+								}
+								value.setPeriod(detail.getPeriod());
+								if(detail.getValue().equals("1")) value.setValueDescription("Yes");
+								else if (detail.getValue().equals("2")) value.setValueDescription("No");
+								else if (detail.getValue().equals("3")) value.setValueDescription("Work In Progress");
 							}
-							value.setPeriod(detail.getPeriod());
-							if(detail.getValue().equals("1")) value.setValueDescription("Yes");
-							else if (detail.getValue().equals("2")) value.setValueDescription("No");
-							else if (detail.getValue().equals("3")) value.setValueDescription("Work In Progress");
 						}
+					} else { 
+						List<KpiValueDetail> defaultValueDetailList = reportMapper.valueDetailMap.get(value.getKpiCode().concat("_"+value.getTenantId()+"_"+value.getFinYear()));
+						value.setValueList(defaultValueDetailList);
 					}
 					KPI kpi = kpiMap.get(thirdEntry.getKey());
 					if(null != kpi) value.setKpi(kpi);

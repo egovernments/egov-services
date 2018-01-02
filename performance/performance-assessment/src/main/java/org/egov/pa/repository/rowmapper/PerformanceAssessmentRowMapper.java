@@ -192,6 +192,7 @@ public class PerformanceAssessmentRowMapper {
 		public Map<String, KPI> kpiMap = new HashMap<>();
 		public Map<String, Map<String, Map<String, KpiValue>>> reportMap = new HashMap<>();
 		public Map<String, List<KpiValueDetail>> kpiValueDetailMap = new HashMap<>();
+		public Map<String, List<KpiValueDetail>> valueDetailMap = new HashMap<>();
 		
 		@Override
 		public KpiValueList mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -234,6 +235,18 @@ public class PerformanceAssessmentRowMapper {
 				detail.setId(rs.getString("detailId"));
 				detail.setPeriod(rs.getString("period"));
 				detailList.add(detail);
+			}
+			
+			if(StringUtils.isBlank(rs.getString("detailValueId"))) { 
+				List<KpiValueDetail> valueDetailList = new ArrayList<>();
+				KpiValueDetail detail =null ; 
+				for(int i=0 ; i<PerformanceAssessmentConstants.MONTHLIST.size();i++) {
+					detail = new KpiValueDetail();
+					detail.setPeriod(PerformanceAssessmentConstants.MONTHLIST.get(i));
+					detail.setValue("");
+					valueDetailList.add(detail);
+				}
+				valueDetailMap.put(rs.getString("valueKpiCode").concat("_" + rs.getString("valueTenantId")).concat("_"+ rs.getString("valueFinYear")), valueDetailList);
 			}
 			return null; 
 		}

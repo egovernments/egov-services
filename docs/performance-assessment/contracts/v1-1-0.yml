@@ -18,7 +18,7 @@ info:
 host: phoenix-qa.egovernments.org
 schemes:
   - https
-basePath: '/perfmanagement/v1'
+basePath: '/perfmanagement/'
 
 paths:
   # KPI Master Create, Update and Search APIs

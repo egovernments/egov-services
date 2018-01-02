@@ -20,6 +20,8 @@ schemes:
   - https
 basePath: '/perfmanagement/'
 
+x-module: "perfmanagement"
+
 paths:
   # KPI Master Create, Update and Search APIs
   /kpimaster/_create:

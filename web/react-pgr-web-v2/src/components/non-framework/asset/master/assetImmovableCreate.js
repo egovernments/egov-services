@@ -1496,7 +1496,7 @@ class assetImmovableCreate extends Component {
     if (property == 'Asset.assetAttributesCheck.Layer Type.Select') {
       console.log("yes");
       for (var i = 0; i < groups[0].fields.length; i++) {
-        if ('Asset.assetAttributesCheck.Layer description.image' == groups[0].fields[i].jsonPath) {
+        if ('Asset.assetAttributesCheck.Layer description(Graphical Representation Of Layers).image' == groups[0].fields[i].jsonPath) {
           groups[0].fields[i].imagePath = this.state.layerData[e.target.value].description;
 
           self.setState({

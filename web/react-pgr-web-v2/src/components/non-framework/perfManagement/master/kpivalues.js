@@ -111,7 +111,7 @@ class kpivalues extends Component {
     var url = 'egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department';
     var query = [];
     let self = this;
-    Api.commonApiPost(url, query, {}, false, false).then(
+    Api.commonApiPost(url,[], {}, false, true, false, null, null, true).then(
       function(res) {
         if (res.MdmsRes) {
           //res.MdmsRes.`common-masters
@@ -124,7 +124,7 @@ class kpivalues extends Component {
 
     url = 'egov-mdms-service/v1/_get?masterName=FinancialYear&moduleName=egf-master';
     query = [];
-    Api.commonApiPost(url, query, {}, false, false).then(
+    Api.commonApiPost(url, [], {}, false, true, false, null, null, true).then(
       function(res) {
         if (res) {
           let fnYear = parseFinancialYearResponse(res);
@@ -842,7 +842,7 @@ class kpivalues extends Component {
 
     let query = [];
 
-    Api.commonApiPost(url, query, data, false, true).then(
+    Api.commonApiPost(url, query, data, false, true ).then(
       function(res) {
         self.props.setLoadingStatus('hide');
         if (res) {

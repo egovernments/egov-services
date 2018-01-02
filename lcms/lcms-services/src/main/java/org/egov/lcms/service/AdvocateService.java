@@ -26,18 +26,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** 
-* 
-* Author		Date			eGov-JIRA ticket	Commit message
-* ---------------------------------------------------------------------------
-* Yosadhara		28th Oct 2017						Initial commit for Advocate service 
-* Prasad		08th Nov 2017						Added isSummon value for getUniqueCode method calling
-* Veswanth		14th Nov 2017						Added validation for agency and agency address
-* Veswanth 		15th Nov 2017						Added agencyCode for new advocate in agency update
-* Veswanth 		15th Nov 2017						Added agency and advocate differentiating string in corresponding codes
-* Narendra 		16th Nov 2017						Added default title
-* Narendra 		28th Nov 2017						Added agencyName for personDetails
-*/
+/**
+ * 
+ * Author Date eGov-JIRA ticket Commit message
+ * ---------------------------------------------------------------------------
+ * Yosadhara 28th Oct 2017 Initial commit for Advocate service Prasad 08th Nov
+ * 2017 Added isSummon value for getUniqueCode method calling Veswanth 14th Nov
+ * 2017 Added validation for agency and agency address Veswanth 15th Nov 2017
+ * Added agencyCode for new advocate in agency update Veswanth 15th Nov 2017
+ * Added agency and advocate differentiating string in corresponding codes
+ * Narendra 16th Nov 2017 Added default title Narendra 28th Nov 2017 Added
+ * agencyName for personDetails
+ */
 @Service
 public class AdvocateService {
 
@@ -199,7 +199,7 @@ public class AdvocateService {
 	@Transactional
 	public AgencyResponse updateAgency(AgencyRequest agencyRequest) throws Exception {
 		List<Agency> agenciesList = new ArrayList<Agency>();
-		
+
 		for (Agency agency : agencyRequest.getAgencies()) {
 			AgencyRequest createAgencyRequest = new AgencyRequest();
 			List<Agency> agencies = new ArrayList<>();
@@ -261,13 +261,16 @@ public class AdvocateService {
 
 				kafkaTemplate.send(propertiesManager.getUpdateAdvocateTopic(), agencyRequest);
 			}
-			Agency updatedAgency = getAgency(agency, createAgencyRequest.getAgencies());
-			agenciesList.add(updatedAgency);
+			if (agency.getIsIndividual()) {
+				agenciesList.add(agency);
+			} else {
+				Agency updatedAgency = getAgency(agency, createAgencyRequest.getAgencies());
+				agenciesList.add(updatedAgency);
+			}
 		}
 
 		return new AgencyResponse(
-				responseInfoFactory.getResponseInfo(agencyRequest.getRequestInfo(), HttpStatus.CREATED),
-				agenciesList);
+				responseInfoFactory.getResponseInfo(agencyRequest.getRequestInfo(), HttpStatus.CREATED), agenciesList);
 
 	}
 
@@ -465,7 +468,7 @@ public class AdvocateService {
 					List<Agency> agencyList = agencies.stream()
 							.filter(agency -> agency.getCode().equalsIgnoreCase(advocate.getAgencyCode()))
 							.collect(Collectors.toList());
-					if (agencyList.size()==0 ) {
+					if (agencyList.size() == 0) {
 						inactiveAdvocateList.add(advocate);
 					}
 				}
@@ -477,8 +480,7 @@ public class AdvocateService {
 
 		return new AdvocateResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), advocates);
 	}
-	
-	
+
 	private Agency getAgency(Agency agency, List<Agency> updatedagencies) {
 
 		agency.getPersonDetails().addAll(updatedagencies.get(0).getPersonDetails());
@@ -486,5 +488,5 @@ public class AdvocateService {
 
 		return agency;
 
-		}
+	}
 }

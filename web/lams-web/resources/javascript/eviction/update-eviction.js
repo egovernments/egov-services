@@ -571,6 +571,10 @@ class UpdateEviction extends React.Component {
 
             }
 
+            if (ID.toLowerCase() ==== "approve"){
+              agreement.workflowDetails.assignee = this.workflowDetails.initiatorPosition;
+            }
+
             //console.log("Agreement", agreement);
 
             if (ID === "Print Notice") {

@@ -76,11 +76,13 @@ public class AssetService {
 
 	public AssetResponse createAsync(final AssetRequest assetRequest) {
 		final Asset asset = assetRequest.getAsset();
-		final List<LandDetail> landDetails=asset.getLandDetails();
 		
+		final List<LandDetail> landDetails=asset.getLandDetails();
+		if(landDetails!=null) {
 		for (LandDetail landDetail : landDetails) {
 			landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));
 			System.err.println(landDetail);
+		}
 		}
 		
 		System.err.println("assetservice landdetails id set"+asset);

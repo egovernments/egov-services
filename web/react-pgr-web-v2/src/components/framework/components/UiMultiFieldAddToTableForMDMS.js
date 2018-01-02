@@ -74,6 +74,7 @@ class UiMultiFieldAddToTableForMDMS extends Component {
       isInlineEdit: false,
       indexes: [],
       isAddAgain: true,
+      values: []
     };
   }
 
@@ -245,6 +246,8 @@ class UiMultiFieldAddToTableForMDMS extends Component {
       this.setState({
        isAddAgain:true
       });
+
+      console.log(nextProps);
   
       this.updateValueList(nextProps);
     }
@@ -515,6 +518,13 @@ class UiMultiFieldAddToTableForMDMS extends Component {
       item.type = 'label';
     }
 
+    if(this.state.index != -1){
+      item.isDisabled = item.isUnique;
+    }
+    else{
+      item.isDisabled = false;
+    }
+
     item.label = translate(item.label);
     switch (item.type) {
       case 'text':
@@ -600,12 +610,12 @@ class UiMultiFieldAddToTableForMDMS extends Component {
 
   renderArrayField = item => {
     console.log(this.state);
-    if(this.state.index === 0){
-      this.props.item.values.map((property, index) => {
-        property.isDisabled = property.isUnique;
-      });
-    }
-    console.log(this.props.item);
+    // if(this.state.index === 0){
+    //   this.props.item.values.map((property, index) => {
+    //     property.isDisabled = property.isUnique;
+    //   });
+    // }
+    // console.log(this.props.item);
 
     switch (this.props.ui) {
       case 'google':

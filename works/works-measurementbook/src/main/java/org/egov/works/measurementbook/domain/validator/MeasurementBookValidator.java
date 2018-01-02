@@ -218,9 +218,9 @@ public class MeasurementBookValidator {
 							Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
                 if(letterOfAcceptance.getLetterOfAcceptanceEstimates() != null) {
                     for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
-                        if (letterOfAcceptanceEstimate != null) {
+                        if (letterOfAcceptanceEstimate != null && letterOfAcceptanceEstimate.getLoaActivities() != null) {
                             for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
-                                if (loaActivity.getLoaMeasurements() != null) {
+                                if (loaActivity != null && loaActivity.getLoaMeasurements() != null) {
                                     for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
                                         if (loaMeasurementSheet.getId().equals(sheet.getLoaMeasurementSheet().getId()))
                                             estimateSheetId = loaMeasurementSheet.getEstimateMeasurementSheet();

@@ -309,7 +309,6 @@ class UpdateRenewal extends React.Component {
 
         }, process.businessKey);
 
-        agreement.remarks = "";
 
         if (!agreement.renewal) {
             agreement.renewal = {};
@@ -1081,7 +1080,7 @@ class UpdateRenewal extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <input type="text" name="renewalOrderNumber" id="renewalOrderNumber" value={renewal.renewalOrderNumber}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} disabled />
+                                            onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} required disabled />
                                     </div>
                                 </div>
                             </div>
@@ -1096,7 +1095,7 @@ class UpdateRenewal extends React.Component {
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
                                             <input type="text" className="datepicker" name="renewalOrderDate" id="renewalOrderDate" value={renewal.renewalOrderDate}
-                                                onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }} disabled />
+                                                onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }} required disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1116,7 +1115,7 @@ class UpdateRenewal extends React.Component {
                                         <div className="text-no-ui">
                                             <span>₹</span>
                                             <input type="number" min={agreement.rent} name="renewalRent" id="renewalRent" value={agreement.rent}
-                                                onChange={(e) => { handleChange(e, "rent") }} />
+                                                onChange={(e) => { handleChange(e, "rent") }} required disabled/>
                                         </div>
                                     </div>
                                 </div>
@@ -1129,7 +1128,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChange(e, "timePeriod") }} disabled >
+                                        <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChange(e, "timePeriod") }} required disabled >
                                             <option value="">Select </option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -1152,7 +1151,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} disabled />
+                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} required disabled />
                                     </div>
                                 </div>
                             </div>
@@ -1166,7 +1165,7 @@ class UpdateRenewal extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
-                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChange(e, "securityDepositDate") }} disabled />
+                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChange(e, "securityDepositDate") }} required disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1182,7 +1181,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChange(e, "rentIncrementMethod") }} disabled >
+                                        <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChange(e, "rentIncrementMethod") }} required disabled >
                                             <option value="">Choose</option>
                                             <option value="10">10</option>
                                             <option value="20">20</option>
@@ -1201,7 +1200,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} disabled >
+                                        <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required disabled >
                                             <option>Select</option>
                                             {renderOption(renewalReasons)}
                                         </select>
@@ -1231,7 +1230,7 @@ class UpdateRenewal extends React.Component {
                                         <label for="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks" value={remarks}
+                                        <textarea name="remarks" id="remarks" 
                                             onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>

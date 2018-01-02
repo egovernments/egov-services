@@ -308,7 +308,7 @@ class UpdateJudgement extends React.Component {
 
         }, process.businessKey);
 
-        agreement.remarks = "";
+        
 
         if (!agreement.judgement) {
             agreement.judgement = {};
@@ -1162,7 +1162,7 @@ class UpdateJudgement extends React.Component {
                                         <label for="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks" value={remarks}
+                                        <textarea name="remarks" id="remarks" 
                                             onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>

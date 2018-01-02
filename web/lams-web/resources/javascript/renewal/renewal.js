@@ -476,7 +476,6 @@ class RenewalAgreement extends React.Component {
         agreementNumber: getUrlVars()["agreementNumber"],
         tenantId
       }).responseJSON["Agreements"][0] || {};
-    console.log(agreement);
 
     if (!agreement.renewal) {
       agreement.renewal = {};
@@ -879,7 +878,7 @@ class RenewalAgreement extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <input type="text" name="renewalOrderNumber" id="renewalOrderNumber" value={renewal.renewalOrderNumber}
-                      onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} />
+                      onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} required />
                   </div>
                 </div>
               </div>
@@ -894,7 +893,7 @@ class RenewalAgreement extends React.Component {
                     <div className="text-no-ui">
                       <span className="glyphicon glyphicon-calendar"></span>
                       <input type="text" className="datepicker" name="renewalOrderDate" id="renewalOrderDate" value={renewal.renewalOrderDate}
-                        onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }} />
+                        onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }} required />
                     </div>
                   </div>
                 </div>
@@ -914,7 +913,7 @@ class RenewalAgreement extends React.Component {
                     <div className="text-no-ui">
                       <span>₹</span>
                       <input type="number" min={agreement.rent} name="renewalRent" id="renewalRent" value={agreement.rent}
-                        onChange={(e) => { handleChange(e, "rent") }} />
+                        onChange={(e) => { handleChange(e, "rent") }} required />
                     </div>
                   </div>
                 </div>
@@ -927,7 +926,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChange(e, "timePeriod") }} >
+                    <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChange(e, "timePeriod") }} required >
                       <option value="">Select </option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -950,7 +949,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} />
+                    <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} required />
                   </div>
                 </div>
               </div>
@@ -965,7 +964,7 @@ class RenewalAgreement extends React.Component {
                     <div className="text-no-ui">
                       <span className="glyphicon glyphicon-calendar"></span>
                       <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChange(e, "securityDepositDate") }}
-                      />
+                        required />
                     </div>
                   </div>
                 </div>
@@ -981,7 +980,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChange(e, "rentIncrementMethod") }} >
+                    <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChange(e, "rentIncrementMethod") }} required >
                       <option value="">Choose</option>
                       <option value="10">10</option>
                       <option value="20">20</option>
@@ -1000,7 +999,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }}>
+                    <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required>
                       <option>Select</option>
                       {renderOption(renewalReasons)}
                     </select>

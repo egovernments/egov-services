@@ -9,12 +9,16 @@ export default class UiNumberField extends Component {
   renderNumberBox = item => {
     switch (this.props.ui) {
       case 'google':
+ 
+     let top = (item.checkCustom) ? "0px" : "38px";
+     let fitws = (item.checkCustom) ? "initial" : "nowrap";
         let labelProperty = !item.isHideLabel && {
           floatingLabelFixed: true,
           floatingLabelStyle: {
             color: item.isDisabled ? '#A9A9A9' : '#696969',
+            top:top,
             fontSize: '20px',
-            'white-space': 'nowrap',
+            'white-space': fitws,
           },
           floatingLabelText: (
             <span>

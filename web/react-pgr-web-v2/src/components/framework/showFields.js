@@ -177,6 +177,21 @@ export default class ShowFields extends Component {
     );
   };
 
+  fieldInsideField = (numCols,fields) => {
+    return (<div>
+      {fields.map((field, fieldIndex)=>{
+        return ( 
+          <Col
+          key={fieldIndex}
+          md={numCols} style={{padding:'0px'}}>
+         {this.renderField(field, this.props.screen, fieldIndex, field.screenView)}
+           </Col>
+         
+        ); 
+      })}
+      </div>);
+  }
+  
   renderGroups = (groups, noCols, uiFramework = 'google', jsonPath) => {
     let self = this;
     switch (uiFramework) {
@@ -251,6 +266,9 @@ export default class ShowFields extends Component {
       item.type = 'label';
     }
     switch (item.type) {
+      case 'custom':
+      return ( this.fieldInsideField(item.numCols,item.fields));
+
       case 'text':
         return (
           <UiTextField

@@ -244,6 +244,8 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   componentWillReceiveProps(nextProps) {
     if (!_.isEqual(nextProps, this.props)) {
       this.setState({
+        formData: {},
+        indexes: [],
        isAddAgain:true
       });
 

@@ -25,13 +25,13 @@ var dat = {
           patternErrorMsg: 'swm.create.field.message.name',
           url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
         },
-        {
-          name: 'targetNo',
-          jsonPath: 'targetNo',
-          label: 'swm.create.sanitationStaffTargets.targetNumber',
-          type: 'text',
-          isDisabled: false
-        }
+        // {
+        //   name: 'targetNo',
+        //   jsonPath: 'targetNo',
+        //   label: 'swm.create.sanitationStaffTargets.targetNumber',
+        //   type: 'text',
+        //   isDisabled: false
+        // }
       ],
     }, ],
     result: {
@@ -42,7 +42,7 @@ var dat = {
           label: 'swm.create.sanitationstaffschedules.shift',
         },
       ],
-      values: ['sanitationStaffTarget.targetNo', 'shift.code'],
+      values: ['sanitationStaffTarget.targetNo', 'shift.shiftType.name'],
       resultPath: 'sanitationStaffSchedules',
       rowClickUrlUpdate: '/update/swm/sanitationstaffschedules/{transactionNo}',
       rowClickUrlView: '/view/swm/sanitationstaffschedules/{transactionNo}',

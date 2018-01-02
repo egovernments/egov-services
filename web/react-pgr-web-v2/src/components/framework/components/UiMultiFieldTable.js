@@ -470,7 +470,7 @@ class UiMultiFieldTable extends Component {
         <table className="table table-striped table-bordered">
           <thead>
             <tr>
-              <th>#</th>
+            {!item.tableList.serialNoNotRequired ?   <th>#</th>  : ''}
               {item.tableList.header.map((v, i) => {
                 var style = {};
                 if (v.style) {
@@ -507,7 +507,7 @@ class UiMultiFieldTable extends Component {
               if (i >= startIndex)
                 return (
                   <tr key={i}>
-                    <td>{i - startIndex + 1}</td>
+                    {!item.tableList.serialNoNotRequired ? <td>{i - startIndex + 1}</td> : ''}
                     {v.map((v2, i2) => {
                       if (v2.isHidden) {
                         if (v2.checkjPath && _.get(formData, v2.checkjPath)) {

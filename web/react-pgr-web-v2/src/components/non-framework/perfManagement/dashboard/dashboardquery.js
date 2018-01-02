@@ -49,7 +49,7 @@ export default class KPIDashboardQuery extends Component {
 
       disableViewButton: false,
       kpiTypeIndex: 0,
-      kpiIndices: [0],
+      kpiIndices: 0,
       ulbIndices: [0],
       fyIndices: [0],
 
@@ -124,24 +124,15 @@ export default class KPIDashboardQuery extends Component {
     }
 
     if (label === this.kpiLabel) {
-      if (values.length > 1) {
-        if (this.state.ulbIndices.length > 1 || this.state.fyIndices.length > 1) {
-          this.toast('You have already selected multiple ULBs or Financial Years values');
-        } else {
-          this.setState({
-            kpiIndices: values,
-          });
-        }
-      } else {
-        this.setState({
-          kpiIndices: values,
-        });
-      }
+      this.setState({
+        kpiIndices: values,
+      });
     }
+
     if (label === this.ulbLabel) {
       if (values.length > 1) {
-        if (this.state.kpiIndices.length > 1 || this.state.fyIndices.length > 1) {
-          this.toast('You have already selected multiple KPIs or Financial Years values');
+        if (this.state.fyIndices.length > 1) {
+          this.toast('You have already selected multiple Financial Years values');
         } else {
           this.setState({
             ulbIndices: values,
@@ -155,8 +146,8 @@ export default class KPIDashboardQuery extends Component {
     }
     if (label === this.fyLabel) {
       if (values.length > 1) {
-        if (this.state.kpiIndices.length > 1 || this.state.ulbIndices.length > 1) {
-          this.toast('You have already selected multiple KPIs or ULBs values');
+        if (this.state.ulbIndices.length > 1) {
+          this.toast('You have already selected multiple ULBs values');
         } else {
           this.setState({
             fyIndices: values,
@@ -286,7 +277,7 @@ export default class KPIDashboardQuery extends Component {
                 <KPISelectField
                   label={this.kpiLabel}
                   mandatory={true}
-                  multiple={true}
+                  multiple={false}
                   disabled={false}
                   displayKey={'name'}
                   value={this.state.kpiIndices}

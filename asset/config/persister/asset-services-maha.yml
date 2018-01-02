@@ -134,7 +134,7 @@ serviceMaps:
        
        - jsonPath: $.Asset.assetCategory.assetCategoryType
        
-    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, assetid, tenantid ,id) VALUES (?, ?, ?, ?, ?,?);
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid, id)VALUES (?, ?, ?, ?, ?, ?)ON CONFLICT (id,tenantid,assetid) DO UPDATE  SET  code=?,surveynumber=?, area=?;
       basePath: Asset.landDetails.*
       jsonMaps:
          
@@ -144,11 +144,18 @@ serviceMaps:
          
        - jsonPath: $.Asset.landDetails.*.area
        
-       - jsonPath: $.Asset.id
-       
        - jsonPath: $.Asset.tenantId
        
+       - jsonPath: $.Asset.id
+       
        - jsonPath: $.Asset.landDetails.*.id
+       
+       - jsonPath: $.Asset.landDetails.*.code      
+       
+       - jsonPath: $.Asset.landDetails.*.surveyNo
+       
+       - jsonPath: $.Asset.landDetails.*.area      
+       
               
               
        
@@ -279,22 +286,29 @@ serviceMaps:
        - jsonPath: $.Asset.tenantId 
        
        
-    - query: UPDATE egasset_asset_landdetails SET surveynumber=?, area=?,code=? WHERE assetid=? AND id=? AND tenantid=?;
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid, id)VALUES (?, ?, ?, ?, ?, ?)ON CONFLICT (id,tenantid,assetid) DO UPDATE  SET  code=?,surveynumber=?, area=?;
       basePath: Asset.landDetails.*
       jsonMaps:
+         
+       - jsonPath: $.Asset.landDetails.*.code
          
        - jsonPath: $.Asset.landDetails.*.surveyNo
          
        - jsonPath: $.Asset.landDetails.*.area
        
-       - jsonPath: $.Asset.landDetails.*.code
-       
-       - jsonPath: $.Asset.id
-                                
-       - jsonPath: $.Asset.landDetails.*.id
-       
        - jsonPath: $.Asset.tenantId
        
+       - jsonPath: $.Asset.id
+       
+       - jsonPath: $.Asset.landDetails.*.id
+       
+       - jsonPath: $.Asset.landDetails.*.code      
+       
+       - jsonPath: $.Asset.landDetails.*.surveyNo
+       
+       - jsonPath: $.Asset.landDetails.*.area      
+       
+
        
        
  - version: 1.0

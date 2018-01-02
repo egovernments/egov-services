@@ -130,6 +130,16 @@ public class AssetService {
 		final Asset asset = assetRequest.getAsset();
 		Set<Long> assetIds=new HashSet<>();
 		assetIds.add(asset.getId());
+
+		final List<LandDetail> landDetails=asset.getLandDetails();
+		if(landDetails!=null) {
+			
+		for (LandDetail landDetail : landDetails) {
+			if(landDetail.getId()==null)
+			landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));
+			System.err.println(landDetail);
+		}
+		}
 		CurrentValue currentValue =null;
 	    List<CurrentValue> assetCurrentValueList = new ArrayList<>();
 		log.debug("assetRequest updateAsync::" + assetRequest);

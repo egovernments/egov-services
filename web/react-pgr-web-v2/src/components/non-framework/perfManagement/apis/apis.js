@@ -6,7 +6,7 @@ var jp = require('jsonpath');
  * PMS module
  */
 export const fetchDepartmentAPI = cb => {
-  Api.commonApiPost('egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department', [], {}, false, true).then(
+  Api.commonApiPost('egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department', [], {}, false, true, false, null, null, true).then(
     function(res) {
       if (
         res &&
@@ -27,7 +27,7 @@ export const fetchDepartmentAPI = cb => {
 };
 
 export const fetchDepartmentKPIsAPI = (departmentId, cb) => {
-  Api.commonApiPost(`perfmanagement/v1/kpimaster/_search?departmentId=${departmentId}`, [], {}, false, true).then(
+  Api.commonApiPost(`perfmanagement/v1/kpimaster/_search?departmentId=${departmentId}`, [], {}, false, true, false, null, null, true).then(
     function(res) {
       if (res && res.KPIs) {
         cb(null, res);
@@ -42,7 +42,7 @@ export const fetchDepartmentKPIsAPI = (departmentId, cb) => {
 };
 
 export const fetchULBsAPI = cb => {
-  Api.commonApiPost('egov-mdms-service/v1/_get?masterName=tenants&moduleName=tenant', [], {}, false, false).then(
+  Api.commonApiPost('egov-mdms-service/v1/_get?masterName=tenants&moduleName=tenant', [], {}, false, true, false, null, null, true).then(
     function(res) {
       if (res.MdmsRes && res.MdmsRes['tenant'] && res.MdmsRes['tenant'].tenants) {
         cb(null, res);
@@ -57,7 +57,7 @@ export const fetchULBsAPI = cb => {
 };
 
 export const fetchFinancialYearsAPI = cb => {
-  Api.commonApiPost('egov-mdms-service/v1/_get?masterName=FinancialYear&moduleName=egf-master', [], {}, false, false).then(
+  Api.commonApiPost('egov-mdms-service/v1/_get?masterName=FinancialYear&moduleName=egf-master', [], {}, false, true, false, null, null, true).then(
     function(res) {
       if (res.MdmsRes && res.MdmsRes['egf-master']) {
         cb(null, res);

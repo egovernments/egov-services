@@ -190,6 +190,8 @@ public class DemandService {
 						&& existingDetail.getTaxReason().equalsIgnoreCase(demandReason.getName())) {
 					isDemandDetailsExist = Boolean.TRUE;
 				}
+				existingDetail.setIsCollected(existingDetail.getCollectionAmount().compareTo(BigDecimal.ZERO) > 0
+						? Boolean.TRUE : Boolean.FALSE);
 			}
 
 			if (!isDemandDetailsExist
@@ -202,7 +204,7 @@ public class DemandService {
 				demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
 				demandDetail.setTenantId(agreement.getTenantId());
 				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
-
+				demandDetail.setIsCollected(Boolean.FALSE);
 				legacyDetails.add(demandDetail);
 			}
 

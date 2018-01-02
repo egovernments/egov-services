@@ -25,4 +25,5 @@ public class DemandDetails {
 	private Date periodStartDate;
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss", timezone = "IST")
 	private Date periodEndDate;
+	private Boolean isCollected;
 }

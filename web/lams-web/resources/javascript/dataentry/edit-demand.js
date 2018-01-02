@@ -319,7 +319,8 @@ validateOnSubmit(e){
 
       return Object.keys(demands).map((k, index)=>
       {
-        return (<tr key={demands[k].code}>
+         var disabled=demands[k].isCollected ? true : false;
+                return (<tr key={demands[k].code}>
                     <td>{demands[k]["taxPeriod"]+"["+demands[k]["taxReason"]+"]"}</td>
                     <td data-label="demand">
                       <input type="number" name={demands[k]["taxAmount"]} value={demands[k]["taxAmount"]} onChange={(e) => {
@@ -329,7 +330,7 @@ validateOnSubmit(e){
                     <td data-label="collection">
                       <input type="number" name={demands[k]["collectionAmount"]} value={demands[k]["collectionAmount"]} onChange={(e) => {
                         handleChange(e, "collectionAmount", k)
-                      }}/>
+                      }} disabled={disabled}/>
                     </td>
                 </tr>)
       })
@@ -359,18 +360,9 @@ validateOnSubmit(e){
                       {paymentCycle +"LY Period"}
                     </th>
                     <th className="text-center">Demand
-
-                    <input type="number" min="0"  style={{color:"black"}} name="commonDemand" value={commonDemand}  onChange={(e) => {
-                      handleChangeAll(e, "taxAmount")
-                    }}/>
-
                     </th>
                     <th>
                       Collection
-                      <input type="number" min="0" style={{color:"black"}} name="commonCollection" value={commonCollection}   onChange={(e) => {
-                        handleChangeAll(e, "collectionAmount")
-                      }}/>
-
                     </th>
                     </tr>
 
@@ -396,8 +388,7 @@ validateOnSubmit(e){
   }
 }
 
-ReactDOM.render(
-  <EditDemand/>, document.getElementById('root'));
+ReactDOM.render(<EditDemand/>, document.getElementById('root'));
 
 
   // {/*

@@ -114,7 +114,7 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.manufacturingDetails.model
 
-       - jsonPath: $.vehicles.*.driver.name
+       - jsonPath: $.vehicles.*.driver.code
 
        - jsonPath: $.vehicles.*.vendor.name
 
@@ -196,7 +196,7 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.manufacturingDetails.model
 
-       - jsonPath: $.vehicles.*.driver.name
+       - jsonPath: $.vehicles.*.driver.code
 
        - jsonPath: $.vehicles.*.vendor.name
 

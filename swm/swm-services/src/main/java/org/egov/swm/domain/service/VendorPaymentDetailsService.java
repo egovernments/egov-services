@@ -166,6 +166,17 @@ public class VendorPaymentDetailsService {
 
             Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
 
+            //For update scenario check after removing record being updated from request.
+            if(vendorPaymentDetail.getPaymentNo() != null && !vendorPaymentDetail.getPaymentNo().isEmpty()
+                && vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null
+                        && !vendorPaymentDetailsPage.getPagedData().isEmpty()){
+
+                for(VendorPaymentDetails searchRecord : vendorPaymentDetailsPage.getPagedData()){
+                    if(searchRecord.getPaymentNo().equalsIgnoreCase(vendorPaymentDetail.getPaymentNo()))
+                        vendorPaymentDetailsPage.getPagedData().remove(searchRecord);
+                }
+            }
+
             if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())
                 throw new CustomException("VendorContractNo",
                         "Invoice period is overlapping with earlier records: " + vendorPaymentDetail.getVendorContract().getContractNo());

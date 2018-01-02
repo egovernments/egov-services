@@ -199,7 +199,7 @@ var dat = {
         },
         {
           name: 'code',
-          jsonPath: 'sanitationStaffSchedules[0].shift.code',
+          jsonPath: 'sanitationStaffSchedules[0].shift.shiftType.name',
           label: 'swm.create.sanitationstaffschedules.shift',
           pattern: '',
           type: 'text',

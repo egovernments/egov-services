@@ -2215,7 +2215,7 @@ var localization_EN_Data = {
   'swm.create.group.title.CollectionTypeDetails': 'Collection Type Details',
   'swm.sanitationstaffschedules.search.title': 'Sanitation Staff Schedules Search',
   'swm.create.sanitationstaffschedules.shift': 'Shift',
-  'swm.create.sanitationstaffschedules.targetNo': 'Sanitation Staff TargetNo',
+  'swm.create.sanitationstaffschedules.targetNo': 'Sanitation Staff Target No',
   'swm.create.sanitationstaffschedules.targetfrom': 'Target From',
   'swm.create.sanitationstaffschedules.targetto': 'Target To',
   'swm.create.sanitationstaffschedules.route': 'Route',

@@ -5383,6 +5383,16 @@ definitions:
             pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
             description: Remarks for cancellation of the Bill, Required only while cancelling Bill
             maxLength: 512
+          supplierBillReceipts:
+            type: array
+            description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
+            items:
+              $ref: '#/definitions/SupplierBillReceipt'
+          supplierBillAdvanceAdjustments:
+            type: array
+            description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
+            items:
+              $ref: '#/definitions/SupplierBillAdvanceAdjustment'
           billId:
             type: string
             description: bill id reference

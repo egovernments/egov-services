@@ -321,7 +321,7 @@ class UpdateEviction extends React.Component {
         // console.log(_btns ? _btns : []);
         var wf = {};
         if(_btns.length > 0){
-          wf = _btns.find((obj)=> {return obj.key === 'Approve'});
+          wf = _btns.find((obj)=> {return (obj.key === 'Approve' || obj.key === 'Print Notice')});
         }
 
         this.setState({
@@ -330,7 +330,7 @@ class UpdateEviction extends React.Component {
             departmentList: departmentList,
             //owner:process.owner.id,
             wfStatus: process.status,
-            wfdisbale: Object.keys(wf).length !== 0 ? true : false,
+            wfdisable: Object.keys(wf).length !== 0 ? true : false,
             buttons: _btns ? _btns : []
         });
 
@@ -1188,7 +1188,7 @@ class UpdateEviction extends React.Component {
                             <h3 className="categoryType">Workflow Details </h3>
                         </div>
                     </div>
-                    {!obj.state.wfdisbale &&
+                    {!obj.state.wfdisable &&
                     <div className="row">
                         <div className="col-sm-6">
                             <div className="row">
@@ -1225,7 +1225,7 @@ class UpdateEviction extends React.Component {
                     </div>
                     }
                     <div className="row">
-                      {!obj.state.wfdisbale &&
+                      {!obj.state.wfdisable &&
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">

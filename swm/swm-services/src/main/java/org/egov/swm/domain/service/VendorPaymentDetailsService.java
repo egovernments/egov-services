@@ -1,5 +1,6 @@
 package org.egov.swm.domain.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -170,11 +171,9 @@ public class VendorPaymentDetailsService {
             if(vendorPaymentDetail.getPaymentNo() != null && !vendorPaymentDetail.getPaymentNo().isEmpty()
                 && vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null
                         && !vendorPaymentDetailsPage.getPagedData().isEmpty()){
-
-                for(VendorPaymentDetails searchRecord : vendorPaymentDetailsPage.getPagedData()){
-                    if(searchRecord.getPaymentNo().equalsIgnoreCase(vendorPaymentDetail.getPaymentNo()))
-                        vendorPaymentDetailsPage.getPagedData().remove(searchRecord);
-                }
+                
+                vendorPaymentDetailsPage.getPagedData().removeIf(record ->
+                        (record.getPaymentNo().equalsIgnoreCase(vendorPaymentDetail.getPaymentNo())));
             }
 
             if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())

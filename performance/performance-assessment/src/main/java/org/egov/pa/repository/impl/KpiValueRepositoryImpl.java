@@ -137,7 +137,7 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 						value.setValueList(valueDetailList);
 						Long consolidatedValue = 0L; 
 						for(KpiValueDetail eachDetail : valueDetailList) { 
-							if(null != eachDetail.getValue()) consolidatedValue = consolidatedValue + Long.parseLong(eachDetail.getValue()) ;   
+							if(StringUtils.isNotBlank(eachDetail.getValue())) consolidatedValue = consolidatedValue + Long.parseLong(eachDetail.getValue()) ;   
 						}
 						value.setConsolidatedValue(String.valueOf(consolidatedValue));
 						value.setValueDescription(String.valueOf(consolidatedValue));

@@ -775,16 +775,15 @@ class assetImmovableCreate extends Component {
     e.preventDefault();
     var flag = 0;
     var formData = JSON.parse(JSON.stringify(this.props.formData));
-    if(formData.Asset && formData.Asset.landDetails && formData.Asset.landDetails[0].code){
-      var AutoCompleteData = _.get(formData, 'Asset.landDetails[0].code');
-      var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], { 'key': AutoCompleteData } );
+    if(formData.Asset && formData.Asset.landDetails){
 
       if(formData.Asset && formData.Asset.landDetails){
         for(var x = 0; x < formData.Asset.landDetails.length; x++){
           formData.Asset.landDetails[x].tenantId = localStorage.getItem('tenantId');
+          var AutoCompleteData = _.get(formData, 'Asset.landDetails[' + x + '].code');
+          var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[' + x + '].code'], { 'key': AutoCompleteData } );
         }
       }
-      //formData.Asset.landDetails[0].tenantId = localStorage.getItem('tenantId');
       if(CheckAutoCompleteData.length){
         flag = 1;
       } else{
@@ -792,9 +791,8 @@ class assetImmovableCreate extends Component {
         formData.Asset.landDetails[0].code = null;
         formData.Asset.landDetails = null;
       }
-    } else if(formData.Asset.landDetails[0].code == "" || formData.Asset.landDetails[0].code == null){
+    } else if(formData.Asset && !formData.Asset.landDetails){
       flag = 1;
-      formData.Asset.landDetails[0].code = null;
       formData.Asset.landDetails = null;
     }
     console.log(flag);
@@ -1451,17 +1449,34 @@ class assetImmovableCreate extends Component {
     let hashLocation = window.location.hash;
     let obj = specifications[`asset.create`];
 
-     if(property == 'Asset.landDetails[0].code'){
-      var AutoCompleteData = _.get(formData, 'Asset.landDetails[0].code');
-      var x;
-      console.log(e.target.value);
-      console.log(self.props.dropDownData['Asset.landDetails[0].code']);
-      var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], { 'key': e.target.value });
-      //var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], {e.target.value});
-      console.log(CheckAutoCompleteData);
-      CheckAutoCompleteData.length ? x = 0 : x = 1;
-      console.log(x);
+    if(formData && formData.Asset && formData.Asset.landDetails){
+      for(var i = 0; i < formData.Asset.landDetails.length; i++){
+        if(property == 'Asset.landDetails['+ i +'].code'){
+          var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails['+ i +'].code'], { 'key': e.target.value });
+          if(e.target.value == null || e.target.value == "" || !CheckAutoCompleteData.length){
+            console.log(i);
+            self.handleChange({ target: { value: null } }, 'Asset.landDetails['+ i +'].surveyNo');
+            self.handleChange({ target: { value: null } }, 'Asset.landDetails['+ i +'].area');
+          }
+        }
+      }
     }
+
+    //  if(property == 'Asset.landDetails[0].code'){
+    //   var AutoCompleteData = _.get(formData, 'Asset.landDetails[0].code');
+    //   var x;
+    //   console.log(e.target.value);
+    //   console.log(self.props.dropDownData['Asset.landDetails[0].code']);
+    //   var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], { 'key': e.target.value });
+    //   //var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[0].code'], {e.target.value});
+    //   console.log(CheckAutoCompleteData);
+    //   CheckAutoCompleteData.length ? x = 0 : x = 1;
+    //   console.log(x);
+    //   if(e.target.value == null || e.target.value == "" || !CheckAutoCompleteData.length){
+    //     self.handleChange({ target: { value: null } }, 'Asset.landDetails[0].surveyNo');
+    //     self.handleChange({ target: { value: null } }, 'Asset.landDetails[0].area');
+    //   }
+    // }
 
     if (property == 'Asset.assetCategory.id') {
       if (self.state.depericiationValue[e.target.value]) {
@@ -1519,10 +1534,6 @@ class assetImmovableCreate extends Component {
       var _val = e.target.value;
         Api.commonApiPost('/asset-services-maha/assets/_search', { name: _val }, {}, false, false, false, '', '', false).then(
           function(response) {
-            if(_val == null || _val == "" || !response.Assets.length){
-              self.handleChange({ target: { value: null } }, 'Asset.landDetails[0].surveyNo');
-              self.handleChange({ target: { value: null } }, 'Asset.landDetails[0].area');
-            }
             if (response && response.Assets && response.Assets[0] && response.Assets[0].assetAttributes) {
               for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
                 if (response.Assets[0].assetAttributes[i].key == 'Survey Number') {

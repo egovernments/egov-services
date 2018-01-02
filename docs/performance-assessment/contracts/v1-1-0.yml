@@ -143,7 +143,7 @@ paths:
       summary: Fetch the KPI Category Record
       description: Search the KPI Category Record based on the different parameters such as code, name
       tags:
-        - KPI Master
+        - KPI Category
       parameters:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"

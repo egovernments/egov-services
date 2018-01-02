@@ -1,58 +1,24 @@
-var flag = 0;
 class DefaultersReport extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            "result": [],
             "searchSet": {
-                "recruitmentType": "",
-                "employeeType": "",
-                "employeeStatus": ""
+              tenantId
             },
-            "employeeTypes": [],
-            "recruitmentTypes": [],
-            "employeeStatusTypes": [],
-            "employeeGroups": [],
-            "motherTongueTypes": [],
-            "recruitmentModes": [],
-            "recruitmentQuota": [],
-            "bank": [],
-            "branch": [],
             "isSearchClicked": false
         };
         this.handleChange = this.handleChange.bind(this);
         this.search = this.search.bind(this);
-        this.setInitialState = this.setInitialState.bind(this);
         this.closeWindow = this.closeWindow.bind(this);
-        this.formatDob = this.formatDob.bind(this);
-
-
+        this.showTable=this.showTable.bind(this);
     }
 
-    setInitialState(initState) {
-        this.setState(initState);
-    }
-
-    componentWillMount() {
-
-
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (flag === 1) {
-            flag = 0;
-            $('#employeeTable').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel'
-                ],
-                ordering: false,
-                language: {
-                    "emptyTable": "No Records"
-                }
-            });
-        }
+    componentDidMount(){
+      this.setState({
+        assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
+        revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
+      });
     }
 
     handleChange(e, name) {
@@ -69,56 +35,122 @@ class DefaultersReport extends React.Component {
         open(location, '_self').close();
     }
 
-    formatDob(date) {
-        if (date) {
-            var dateParts1 = date.split("-");
-            var newDateStr = dateParts1[2] + "/" + dateParts1[1] + "/" + dateParts1[0];
-            return newDateStr;
-        }
+    search(e) {
+      let {searchSet} = this.state;
+      e.preventDefault();
+      console.log(searchSet);
+      this.setState({
+        searchClicked:true,
+        resultSet:[]
+      });
     }
 
-    search(e) {
-        e.preventDefault();
-        $('#employeeTable').DataTable().destroy();
-        var _this = this
-        var result;
-        try {
-            flag = 1;
-            result = commonApiPost("hr-employee", "employees", "_baseregisterreport", { ..._this.state.searchSet, tenantId, pageSize: 500 }, function (err, res) {
-                if (res && res.Employee) {
-                    _this.setState({
-                        ..._this.state,
-                        isSearchClicked: true,
-                        result: res.Employee
-                    })
-                } else {
-                    _this.setState({
-                        ..._this.state,
-                        isSearchClicked: true,
-                        result: []
-                    })
-                }
-            });
-        } catch (e) {
-            result = [];
-            console.log(e);
-        }
+    showTable(){
+      let {resultSet} = this.state;
+      return(
+        <div className="form-section" >
+          <h3 className="pull-left">Search Result</h3>
+          <div className="clearfix"></div>
+          <div className="view-table">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>S.no</th>
+                <th>Agreement No.</th>
+                <th>Name of the Allottee </th>
+                <th>Mobile No.</th>
+                <th>Locality</th>
+                <th>Address</th>
+                <th>Outstanding Total Rent</th>
+                <th>Current rent pending</th>
+                <th>Arrears Pending</th>
+                <th>Total pending</th>
+                <th>Agreement created date</th>
+                <th>Agreement expiry date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {resultSet && resultSet.map((list, index)=>{
+                return (
+                  <tr>
+                    <td>{index+1}</td>
+                    <td>{list.agreementNumber}</td>
+                    <td>{list.allotteeName}</td>
+                    <td>{list.mobileNumber}</td>
+                    <td>{list.locality}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+          </div>
+        </div>
+      )
+    }
+
+    componentWillUpdate(){
+      $('table').DataTable().destroy();
+    }
+
+    componentDidUpdate(prevProps, prevState)
+    {
+      let {searchClicked} = this.state;
+      if(searchClicked){
+        $('table').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+                   'excel',
+                   {
+                      extend: 'pdf',
+                      filename: 'Renewal Pending Report',
+                      orientation: 'landscape',
+                      pageSize: 'TABLOID',
+                      title: `Report generated on ${moment(new Date()).format("DD/MM/YYYY")}`,
+                      footer: true
+                    },
+                   'print'
+           ],
+           ordering: false
+        });
+      }
     }
 
     render() {
-        let { handleChange, search, formatDob, closeWindow } = this;
-        let { result, employeeTypes, employeeStatusTypes, recruitmentTypes, employeeGroups, motherTongueTypes, recruitmentModes, recruitmentQuota, bank, branch } = this.state;
-        let { recruitmentType, employeeStatus, employeeType } = this.state.searchSet;
+        let { handleChange, search, closeWindow, showTable } = this;
+        let {revenueWard, assetCategories, searchClicked} = this.state;
 
-        const renderOptions = function (list) {
-            if (list && list.constructor == Array) {
-                return list.map((item) => {
-                    return (<option key={item.id} value={item.id}>
-                        {item.name}
-                    </option>)
-                })
+        const renderOptions = function(list)
+        {
+            if(list)
+            {
+                if (list.length) {
+                  return list.map((item)=>
+                  {
+                      return (<option key={item.id} value={item.id}>
+                              {item.name}
+                        </option>)
+                  })
+
+                } else {
+                  return Object.keys(list).map((k, index)=>
+                  {
+                    return (<option key={index} value={k}>
+                            {list[k]}
+                      </option>)
+
+                   })
+                }
+
             }
         }
+
         const renderOptionsForDesc = function (list) {
             if (list && list.constructor == Array) {
                 return list.map((item) => {
@@ -126,61 +158,6 @@ class DefaultersReport extends React.Component {
                         {item.code}
                     </option>)
                 })
-            }
-        }
-
-        const renderTr = () => {
-            return result.map((item, ind) => {
-                return (
-                    <tr key={ind}>
-                        <td>{ind + 1}</td>
-                        <td>{item.code}</td>
-                        <td>{item.salutation ? item.salutation + " " + item.name : item.name}</td>
-                        <td>{getNameById(employeeTypes, item.employeeType)}</td>
-                        <td>{getNameById(employeeStatusTypes, item.employeeStatus, "code")}</td>
-                        <td>{getNameById(employeeGroups, item.group)}</td>
-                        <td>{formatDob(item.dob)}</td>
-                        <td>{item.gender}</td>
-                        <td>{item.maritalStatus}</td>
-                        <td>{item.userName}</td>
-                        <td>{item.active ? "Yes" : "No"}</td>
-                        <td>{item.mobileNumber}</td>
-                    </tr>
-                )
-            })
-        }
-
-        const showTable = () => {
-            if (this.state.isSearchClicked) {
-                return (
-                    <div className="form-section" >
-                        <h3 className="pull-left">Employee Details </h3>
-                        <div className="clearfix"></div>
-                        <div className="table-responsive">
-                            <table id="employeeTable" className="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>Allottee Number</th>
-                                        <th>Agreement Name</th>
-                                        <th>Mobile Number</th>
-                                        <th>Locality</th>
-                                        <th>Allotte address</th>
-                                        <th>Outstanding Total Rent</th>
-                                        <th>Current rent pending</th>
-                                        <th>Arrears Pending</th>
-                                        <th>Total pending</th>
-                                        <th>Agreement created date</th>
-                                        <th>Agreement expiry date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {renderTr()}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )
             }
         }
 
@@ -199,9 +176,9 @@ class DefaultersReport extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="styled-select">
-                                                <select id="revenueward" value={recruitmentType} onChange={(e) => { handleChange(e, "revenueward") }}>
+                                                <select id="revenueward" onChange={(e) => { handleChange(e, "revenueWard") }}>
                                                     <option value="">Select RevenueWard</option>
-                                                    {renderOptionsForDesc(employeeStatusTypes)}
+                                                    {renderOptions(revenueWard)}
                                                 </select>
                                             </div>
                                         </div>
@@ -214,9 +191,13 @@ class DefaultersReport extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="styled-select">
-                                                <select id="employeeType" value={employeeType} onChange={(e) => { handleChange(e, "employeeType") }}>
+                                                <select id="noOfYears" onChange={(e) => { handleChange(e, "noOfYears") }}>
                                                     <option value="">Select Number of years</option>
-                                                    {renderOptions(employeeTypes)}
+                                                    <option value="1Year">1 Year</option>
+                                                    <option value="2Year">2 Years</option>
+                                                    <option value="3Year">3 Years</option>
+                                                    <option value="4Year">4 Years</option>
+                                                    <option value="5Year">5 Years</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -227,10 +208,10 @@ class DefaultersReport extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label for="">From Rent </label>
+                                            <label for="fromRent">From Rent </label>
                                         </div>
                                         <div className="col-sm-6">
-                                            <input id="noOfDaysInMonth" type="number" value={employeeStatus} onChange={(e) => { handleChange(e, "noOfDaysInMonth") }} />
+                                            <input id="fromRent" type="text" onChange={(e) => { handleChange(e, "fromRent") }} />
                                         </div>
                                     </div>
                                 </div>
@@ -240,7 +221,7 @@ class DefaultersReport extends React.Component {
                                             <label for="">To Rent </label>
                                         </div>
                                         <div className="col-sm-6">
-                                            <input id="noOfDaysInMonth" type="number" value={employeeStatus} onChange={(e) => { handleChange(e, "noOfDaysInMonth") }} />
+                                            <input id="toRent" type="text" onChange={(e) => { handleChange(e, "toRent") }} />
                                         </div>
                                     </div>
                                 </div>
@@ -253,9 +234,13 @@ class DefaultersReport extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="styled-select">
-                                                <select id="recruitmentType" value={recruitmentType} onChange={(e) => { handleChange(e, "recruitmentType") }}>
+                                                <select id="topDefaulters" onChange={(e) => { handleChange(e, "topDefaulters") }}>
                                                     <option value="">Select Top Defaulters</option>
-                                                    {renderOptions(recruitmentTypes)}
+                                                    <option value="10">10</option>
+                                                    <option value="50">50</option>
+                                                    <option value="100">100</option>
+                                                    <option value="500">500</option>
+                                                    <option value="1000">1000</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -268,9 +253,9 @@ class DefaultersReport extends React.Component {
                                         </div>
                                         <div className="col-sm-6">
                                             <div className="styled-select">
-                                                <select id="recruitmentType" value={recruitmentType} onChange={(e) => { handleChange(e, "recruitmentType") }}>
+                                                <select id="assetCategory" onChange={(e) => { handleChange(e, "assetCategory") }}>
                                                     <option value="">Select Asset category</option>
-                                                    {renderOptions(recruitmentTypes)}
+                                                    {renderOptions(assetCategories)}
                                                 </select>
                                             </div>
                                         </div>
@@ -285,7 +270,7 @@ class DefaultersReport extends React.Component {
                     </form>
                 </div>
                 <br />
-                {showTable()}
+                {searchClicked && showTable()}
             </div>
         );
     }

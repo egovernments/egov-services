@@ -17,7 +17,7 @@ class RenewalPending extends React.Component {
   componentDidMount(){
     this.setState({
       assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
-      // revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
+      revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
     });
   }
   handleChange(value, property){
@@ -126,7 +126,6 @@ class RenewalPending extends React.Component {
     }
   }
   render(){
-    console.log(this.state.searchSet);
     let {assetCategories, revenueWard, searchClicked} = this.state;
     let {handleChange, search, closeWindow, showTable} = this;
     const renderOptions = function(list)

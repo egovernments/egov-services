@@ -343,7 +343,7 @@ var dat = {
             isDisabled: false,
             maxLength: 100,
             patternErrorMsg: 'inventory.create.field.message.name',
-            url: '/egf-masters/banks/_search?|$..code|$..name',
+            url: '/egf-master/banks/_search?|$..code|$..name',
           },
           {
             name: 'bankBranch',
@@ -623,7 +623,7 @@ var dat = {
             isDisabled: false,
             maxLength: 100,
             patternErrorMsg: 'inventory.create.field.message.name',
-            url: '/egf-masters/banks/_search?|$..code|$..name',
+            url: '/egf-master/banks/_search?|$..code|$..name',
           },
           {
             name: 'bankBranch',
@@ -915,7 +915,7 @@ var dat = {
             isDisabled: false,
             maxLength: 100,
             patternErrorMsg: 'inventory.create.field.message.name',
-            url: '/egf-masters/banks/_search?|$..code|$..name',
+            url: '/egf-master/banks/_search?|$..code|$..name',
           },
           {
             name: 'bankBranch',

@@ -85,7 +85,7 @@ public class WorkOrderValidator {
     private void validateStatus(WorkOrder workOrder, HashMap<String, String> messages, RequestInfo requestInfo) {
         if(workOrder.getStatus() != null && StringUtils.isNotBlank(workOrder.getStatus().getCode())) {
             List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
-            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(workOrder.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(workOrder.getStatus().getCode().toUpperCase(), CommonConstants.WORKORDER));
             JSONArray dBStatusArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
                     filetsValuesList, workOrder.getTenantId(), requestInfo,
                     CommonConstants.MODULENAME_WORKS);

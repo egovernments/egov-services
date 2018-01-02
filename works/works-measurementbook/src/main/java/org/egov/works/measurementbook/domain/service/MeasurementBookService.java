@@ -214,7 +214,9 @@ public class MeasurementBookService {
 		letterOfAcceptance.setParent(measurementBook.getLetterOfAcceptanceEstimate().getLetterOfAcceptance());
 		letterOfAcceptance.setLoaDate(new Date().getTime());
 		letterOfAcceptance.setLoaAmount(detailedEstimateResponse.getDetailedEstimates().get(0).getEstimateValue());
-		letterOfAcceptance.setStatus(LOAStatus.APPROVED);
+        WorksStatus status = new WorksStatus();
+        status.setCode(Constants.STATUS_APPROVED);
+		letterOfAcceptance.setStatus(status);
 		List<LetterOfAcceptanceEstimate> letterOfAcceptanceEstimates = new ArrayList<>();
 		LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = new LetterOfAcceptanceEstimate();
 		LetterOfAcceptanceResponse letterOfAcceptanceResponse = null;

@@ -1,110 +1,130 @@
-
 class DcbReport extends React.Component {
-
-  constructor(props) {
+  constructor(props){
     super(props);
-    this.state = {
-        "list": [],
-        "searchSet": {
-            "assetCategoryType": "",
-            "electionWard": "",
-            "locality": "",
-            tenantId
-        },
-        "assetCategories": [],
-        "electionwards": [],
-        "localityList":[],
+    this.state={
+      searchSet:{
+        tenantId
+      },
+      error:{
 
-        "isSearchClicked": false
+      }
     };
-    this.handleChange = this.handleChange.bind(this);
-    this.search = this.search.bind(this);
-    this.closeWindow = this.closeWindow.bind(this);
+    this.handleChange=this.handleChange.bind(this);
+    this.search=this.search.bind(this);
+    this.closeWindow=this.closeWindow.bind(this);
+    this.showTable=this.showTable.bind(this);
   }
-
-
-  componentDidMount() {
-     this.setState({
-         ...this.state,
-        assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
-        electionwards: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-            boundaryTypeName: "WARD",
-            hierarchyTypeName: "ADMINISTRATION",
-            tenantId
-        }).responseJSON["Boundary"] || [],
-        localityList: commonApiPost("v1/location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", {
-            boundaryTypeName: "LOCALITY",
-            hierarchyTypeName: "LOCATION",
-            tenantId
-        }).responseJSON["Boundary"] || []
-
-     });
+  componentDidMount(){
+    this.setState({
+      assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
+      revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
+    });
   }
-
-  componentDidUpdate(prevProps, prevState)
-  {
-      if (prevState.list.length!=this.state.list.length) {
-          // $('#agreementTable').DataTable().draw();
-          // alert(prevState.list.length);
-          // alert(this.state.list.length);
-          // alert('updated');
-          $('#agreementTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             ordering: false
-          });
-      }
-      else {
-        $('#agreementTable').DataTable({
-          dom: 'Bfrtip',
-          buttons: [
-                   'copy', 'csv', 'excel', 'pdf', 'print'
-           ],
-           ordering: false
-        });
-      }
+  handleChange(value, property){
+    this.setState({
+      searchClicked : false,
+      searchSet:Object.assign(this.state.searchSet || {},{[property]:value}),
+    })
   }
-
-
-  handleChange(e, name)
-  {
-      this.setState({
-          ...this.state,
-          searchSet:{
-              ...this.state.searchSet,
-              [name]:e.target.value
-          }
-      })
+  search(e){
+    e.preventDefault();
+    let {searchSet} = this.state;
+    this.setState({
+      searchClicked:true,
+      resultSet:[]
+    });
+    // let _this=this;
+    // Promise.all([
+    //   commonApiPost("lams-services/agreements","reports","_baseregisterreport",searchSet)
+    // ]).then(function(responses){
+    //   _this.setState({
+    //     searchClicked:true,
+    //     error:{},
+    //     resultSet:responses[0].Agreements
+    //   });
+    // })
   }
-
   closeWindow ()
   {
       open(location, '_self').close();
   }
-
-  search(e)
+  showTable(){
+    let {resultSet} = this.state;
+    return(
+      <div className="form-section" >
+        <h3 className="pull-left">Search Result</h3>
+        <div className="clearfix"></div>
+        <div className="view-table">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>S.no</th>
+              <th>Name of the Allottee </th>
+              <th>No. of Agreements</th>
+              <th>Arrears rent (Demand)</th>
+              <th>Current Rent(Demand)</th>
+              <th>Total Demand</th>
+              <th>Arrears rent (Collections)</th>
+              <th>Current Rent (Collections)</th>
+              <th>Total Collections</th>
+              <th>Arrears Rent (Balance)</th>
+              <th>Current Rent ( Balance)</th>
+              <th>Total Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {resultSet && resultSet.map((list, index)=>{
+              return (
+                <tr>
+                  <td>{index+1}</td>
+                  <td>{list.allotteeName}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    )
+  }
+  componentWillUpdate(){
+    $('table').DataTable().destroy();
+  }
+  componentDidUpdate(prevProps, prevState)
   {
-    e.preventDefault();
-    //call api call
-    var list=commonApiPost("asset-services","assets","_search",this.state.searchSet).responseJSON["Assets"];
-    this.setState({
-      isSearchClicked:true,
-      list
-    })
-
-    // $('#agreementTable').DataTable().draw();
-    // console.log($('#agreementTable').length);
+    let {searchClicked} = this.state;
+    if(searchClicked){
+      $('table').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+                 'excel',
+                 {
+                    extend: 'pdf',
+                    filename: 'Base Register Report',
+                    title: `Report generated on ${moment(new Date()).format("DD/MM/YYYY")}`
+                  },
+                 'print'
+         ],
+         ordering: false
+      });
+    }
+  }
+  componentWillUnmount(){
 
   }
-
-
-  render() {
-    let {handleChange, search, closeWindow} = this;
-    let {assetCategories, electionwards,list,localityList,isSearchClicked} = this.state;
-    let {assetCategoryType,electionWard,locality} = this.state.searchSet;
-
+  render(){
+    let {assetCategories, revenueWard, searchClicked} = this.state;
+    let {handleChange, search, closeWindow, showTable} = this;
     const renderOptions = function(list)
     {
         if(list)
@@ -130,159 +150,63 @@ class DcbReport extends React.Component {
         }
     }
 
-
-    const renderBody=function()
-    {
-      if(list)
-      {
-        return list.map((item,index)=>
-        {
-              return (<tr key={index}>
-                <td>{index+1}</td>
-                                  <td>{item.boundarys}</td>
-                                  <td>{item.name}</td>
-                                  <td>{item.code}</td>
-                                  <td>{item.locationDetails.electionWard}</td>
-                                  <td>
-                                      ok
-                                  </td>
-
-                  </tr>
-              );
-
-        })
-      }
-      else {
-          return (
-              <tr>
-                  <td colSpan="6">No records</td>
-              </tr>
-          )
-      }
-
-
-    }
-
-    const showTable = () => {
-        if(isSearchClicked) {
-            return (
-                <div className="form-section" >
-                    <h3 className="pull-left">Employee Details </h3>
-                    <div className="clearfix"></div>
-                    <div className="view-table">
-                    <table>
-                    <thead>
-                                             <tr>
-                                                 <th > Boundary</th>
-                                                 <th >No. Of Agreement</th>
-                                                 <th >Asset Type</th>
-                                                 <th colSpan="3">Demand</th>
-                                                 <th >Collection</th>
-                                                 <th > Balance</th>
-                                              </tr>
-
-                                             <tr>
-                                                 <th></th>
-                                                 <th></th>
-                                                 <th></th>
-
-                                                 <th>Arrears</th>
-                                                 <th>Current</th>
-                                                 <th>Total</th>
-
-                                                 <th></th>
-                                                 <th></th>
-
-                                            </tr>
-                                             </thead>
-
-                            <tbody id="agreementSearchResultTableBody">
-                                {
-                                    renderBody()
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )
-        }
-    }
-
-    return (
-        <div>
-            <div className="form-section">
-                <h3 className="pull-left">DCB Drill Down Reports </h3>
-                <div className="clearfix"></div>
-                <form onSubmit={(e)=>{search(e)}}>
-                    <fieldset>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="">Asset Category <span> * </span></label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <select id="assetCategoryType" value={assetCategoryType} name= "assetCategoryType" onChange={(e) => {handleChange(e, "assetCategoryType")}}>
-                                            <option value=""> Select Asset Category</option>
-                                            {renderOptions(assetCategories)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="">Election Ward No. <span> * </span> </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <select id="electionWard" value={electionWard} name="electionWard" onChange={(e) => {handleChange(e, "electionWard")}}>
-                                            <option value="">Select ElectionWard</option>
-                                            {renderOptions(electionwards)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label for="">Locality </label>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <select id="locality" value={locality} name= "assetCategoryType" onChange={(e) => {handleChange(e, "locality")}}>
-                                            <option value=""> Select Locality</option>
-                                            {renderOptions(localityList)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-
-                        <div className="text-center">
-                        <button type="submit" className="btn btn-submit">Search</button>  &nbsp;&nbsp;
-                            <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
-
-
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-            <div className="table-cont" id="table">
-                {showTable()}
-
-            </div>
-            </div>
-    );
+    return(
+      <div>
+        <div className="form-section">
+          <h3 className="pull-left">Search Criteria</h3>
+          <div className="clearfix"></div>
+          <form onSubmit={(e) => { search(e) }}>
+            <fieldset>
+              <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Revenue ward <span className="error"> *</span></label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                  <select id="revenueWard" onChange={(e) => { handleChange(e.target.value, "revenueWard") }}>
+                                    <option value="">Select RevenueWard</option>
+                                    <option value="all">All</option>
+                                    {renderOptions(revenueWard)}
+                                  </select>
+                              </div>
+                              <label className="error">{this.state.error.revenueWard}</label>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Asset Category</label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                  <select id="assetCategory" onChange={(e) => { handleChange(e.target.value, "assetCategory") }}>
+                                    <option value="">Select Asset Category</option>
+                                    {renderOptions(assetCategories)}
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div className="text-center">
+                <button type="submit" className="btn btn-submit">Search</button>  &nbsp;&nbsp;
+                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div className="table-cont" id="table">
+          {searchClicked && showTable()}
+        </div>
+      </div>
+    )
   }
 }
 
-
-
-
-
-
 ReactDOM.render(
-  <DcbReport />,
-  document.getElementById('root')
+    <DcbReport />,
+    document.getElementById('root')
 );

@@ -164,7 +164,7 @@ class DefaultersReport extends React.Component {
         return (
             <div>
                 <div className="form-section">
-                    <h3 className="pull-left">Employee Search </h3>
+                    <h3 className="pull-left">Search Criteria</h3>
                     <div className="clearfix"></div>
                     <form onSubmit={(e) => { search(e) }}>
                         <fieldset>

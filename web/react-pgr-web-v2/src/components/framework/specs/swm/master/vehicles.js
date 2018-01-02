@@ -180,7 +180,7 @@ var dat = {
         },
       ],
       values: [
-        'vehicleType.code',
+        'vehicleType.name',
         'regNumber',
         'driver.name',
         'manufacturingDetails.vehicleCapacity',
@@ -609,7 +609,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            defaultValue: false,
+            //defaultValue: false,
             showHideFields: [
               {
                 ifValue: true,
@@ -669,7 +669,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            defaultValue: true,
+           // defaultValue: true,
             valueBasedOn: [
               {
                 jsonPath: 'vehicles[0].vendor.name',

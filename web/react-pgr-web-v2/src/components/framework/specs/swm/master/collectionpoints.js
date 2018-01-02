@@ -337,7 +337,7 @@ var dat = {
         name: 'BinDetails',
         label: 'swm.collectionpoints.create.group.title.BinDetails',
         multiple: true,
-        jsonPath: 'collectionPoints[0].binDetails[0]',
+        jsonPath: 'collectionPoints[0].binDetails',
         fields: [
           {
             name: 'assetOrBinId',
@@ -358,7 +358,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            defaultValue: false,
+           // defaultValue: false,
             showHideFields: [
               {
                 ifValue: true,
@@ -550,7 +550,7 @@ var dat = {
       },
       {
         name: 'BinDetails',
-        jsonPath: 'collectionPoints[0].binDetails[0]',
+        jsonPath: 'collectionPoints[0].binDetails',
         label: 'swm.collectionpoints.create.group.title.BinDetails',
         multiple: true,
         fields: [

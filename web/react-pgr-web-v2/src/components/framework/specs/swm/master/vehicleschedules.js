@@ -318,7 +318,7 @@ var dat = {
                   "label":"swm.create.scheduledFrom",
                   "pattern":"",
                   "type":"datePicker",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -329,7 +329,7 @@ var dat = {
                   "label":"swm.create.scheduledTo",
                   "pattern":"",
                   "type":"datePicker",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
@@ -403,7 +403,7 @@ var dat = {
                   "label":"swm.create.targetedGarbage",
                   "pattern":"",
                   "type":"number",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""

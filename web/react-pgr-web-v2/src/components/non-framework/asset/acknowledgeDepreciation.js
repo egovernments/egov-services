@@ -384,7 +384,7 @@ class acknowldgeDepreciation extends Component {
                     <th>Depreciation Value</th>
                     <th>Value After Depreciation</th>
                     <th>Status</th>
-                    <th>Reason for Fialure</th>
+                    <th>Reason for Failure</th>
                   </tr>
                 </thead>
                 <tbody>

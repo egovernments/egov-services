@@ -144,7 +144,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg: 'Please enter valid No of Order (Alpha/Numeric)',
+            patternErrMsg: 'Please enter valid Order Number',
           },
           {
             name: 'DateOfOrder',
@@ -1376,7 +1376,7 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
             isStateLevel: true,
-          }, 
+          },
           {
             name: 'SecurityDepositRetained',
             jsonPath: 'Assets[0].securityDepositRetained',

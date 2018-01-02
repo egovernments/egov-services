@@ -548,6 +548,7 @@ class assetImmovableCreate extends Component {
               customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
               customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
               customTemp.isDisabled = !response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isActive;
+              console.log(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type , response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name);
               switch (customTemp.type) {
                 case 'Text':
                   customTemp.type = 'text';
@@ -573,6 +574,7 @@ class assetImmovableCreate extends Component {
                   customTemp.type = 'image';
                   break;
               }
+
 
               if (customTemp.type == 'singleValueList') {
                 if (
@@ -770,31 +772,37 @@ class assetImmovableCreate extends Component {
   };
 
   create = e => {
-    let self = this,
-      _url;
+    let self = this,_url;
     e.preventDefault();
     var flag = 0;
     var formData = JSON.parse(JSON.stringify(this.props.formData));
     if(formData.Asset && formData.Asset.landDetails){
-
-      if(formData.Asset && formData.Asset.landDetails){
-        for(var x = 0; x < formData.Asset.landDetails.length; x++){
-          formData.Asset.landDetails[x].tenantId = localStorage.getItem('tenantId');
+      for(var y = 0; y < formData.Asset.landDetails.length; y++){
+        formData.Asset.landDetails[y].tenantId = localStorage.getItem('tenantId');
+      }
+      for(var x = 0; x < formData.Asset.landDetails.length; x++){
           var AutoCompleteData = _.get(formData, 'Asset.landDetails[' + x + '].code');
           var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails[' + x + '].code'], { 'key': AutoCompleteData } );
+          console.log(CheckAutoCompleteData.length);
+          console.log(x);
+          if(CheckAutoCompleteData.length || formData.Asset.landDetails[x].code == "" || formData.Asset.landDetails[x].code == null){
+            if(formData.Asset.landDetails[x].code == ""){
+               formData.Asset.landDetails.splice(x, 1);
+            }
+            flag = 1;
+          } else if(!CheckAutoCompleteData.length){
+            flag = 0;
+            console.log("h");
+            formData.Asset.landDetails[x].code = null;
+            formData.Asset.landDetails[x] = null;
+            self.props.toggleSnackbarAndSetText(true, 'Please Enter Valid Land Details', false, true);
+            return;
+          }
         }
-      }
-      if(CheckAutoCompleteData.length){
+      } else if(formData.Asset && !formData.Asset.landDetails){
         flag = 1;
-      } else{
-        flag = 0;
-        formData.Asset.landDetails[0].code = null;
         formData.Asset.landDetails = null;
       }
-    } else if(formData.Asset && !formData.Asset.landDetails){
-      flag = 1;
-      formData.Asset.landDetails = null;
-    }
     console.log(flag);
     if(flag == 1){
       self.props.setLoadingStatus('loading');
@@ -1453,8 +1461,8 @@ class assetImmovableCreate extends Component {
       for(var i = 0; i < formData.Asset.landDetails.length; i++){
         if(property == 'Asset.landDetails['+ i +'].code'){
           var CheckAutoCompleteData = _.filter(self.props.dropDownData['Asset.landDetails['+ i +'].code'], { 'key': e.target.value });
+          console.log(e.target.value);
           if(e.target.value == null || e.target.value == "" || !CheckAutoCompleteData.length){
-            console.log(i);
             self.handleChange({ target: { value: null } }, 'Asset.landDetails['+ i +'].surveyNo');
             self.handleChange({ target: { value: null } }, 'Asset.landDetails['+ i +'].area');
           }
@@ -1487,6 +1495,7 @@ class assetImmovableCreate extends Component {
     }
 
     if (property == 'Asset.assetAttributesCheck.Layer Type.Select') {
+      console.log("yes");
       for (var i = 0; i < groups[0].fields.length; i++) {
         if ('Asset.assetAttributesCheck.Layer description.image' == groups[0].fields[i].jsonPath) {
           groups[0].fields[i].imagePath = this.state.layerData[e.target.value].description;

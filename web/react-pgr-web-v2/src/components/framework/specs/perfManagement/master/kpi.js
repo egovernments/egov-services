@@ -37,6 +37,7 @@ var dat = {
             url: 'egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'kpiDate',
@@ -54,6 +55,7 @@ var dat = {
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
         ],
       },
@@ -206,6 +208,7 @@ var dat = {
             isDisabled: false,
             isRequired: true,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'searchkpiCode',
@@ -260,6 +263,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'viewkpiDate',
@@ -270,6 +274,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
         ],
       },
@@ -442,12 +447,13 @@ var dat = {
           {
             name: 'updatekpiDepartment',
             jsonPath: 'KPIs[0].department.id',
-            url: '/egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department|$..id|$..name',
             label: 'perfManagement.update.KPIs.groups.updateKpiDepartmentBlock',
             pattern: '',
             type: 'singleValueList',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'updatekpiDate',
@@ -465,6 +471,7 @@ var dat = {
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
         ],
       },

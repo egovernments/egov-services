@@ -171,6 +171,7 @@ var dat = {
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'kpiTargetText',
@@ -206,6 +207,7 @@ var dat = {
             isDisabled: false,
             isRequired: true,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'kpiTarget',
@@ -242,6 +244,7 @@ var dat = {
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'kpiTargetRadio',
@@ -296,6 +299,7 @@ var dat = {
             isDisabled: false,
             isRequired: true,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'searchkpiCode',
@@ -342,6 +346,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'viewkpiDate',
@@ -352,6 +357,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
         ],
       },
@@ -599,6 +605,7 @@ var dat = {
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'updatekpiTarget',
@@ -635,6 +642,7 @@ var dat = {
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'updatekpiTargetText',
@@ -673,6 +681,7 @@ var dat = {
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
+            isStateLevel: true,
           },
           {
             name: 'updatekpiTargetRadio',

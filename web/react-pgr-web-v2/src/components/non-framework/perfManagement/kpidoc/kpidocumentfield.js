@@ -16,8 +16,8 @@ class KPIDocumentField extends Component {
       open: false,
       cell: '',
       fileAttrList: [],
-      currentFileName: '',
-      currentFileStoreID: '',
+      currentFileName: [],
+      currentFileStoreID: [],
     };
   }
 
@@ -29,13 +29,14 @@ class KPIDocumentField extends Component {
     this.state.documents[this.state.cell.valueid][this.state.cell.period].map((fileInfo, id) => {
       let valueid = this.state.cell.valueid;
       let period = this.state.cell.period;
+      let code = fileInfo.code;
 
       let result = new Promise(function(resolve, reject) {
         fileUpload(fileInfo.file, moduleName, function(err, res) {
           if (err) {
             console.log('unable to upload');
           } else {
-            resolve({ fileStoreId: res.files[0].fileStoreId, name: fileInfo.name, valueid: valueid, period: period });
+            resolve({ fileStoreId: res.files[0].fileStoreId, name: fileInfo.name, valueid: valueid, period: period, docCode: code });
           }
         });
       });
@@ -52,9 +53,8 @@ class KPIDocumentField extends Component {
     this.props.switchDialog(false);
   };
 
-  handleFile(event, valueid, period, doc, index, docList) {
+  handleFile(event, valueid, period, doc, index, docList, docCode) {
     let files = this.state.documents.slice();
-
     if (!files[valueid]) {
       files[valueid] = [];
     }
@@ -62,7 +62,7 @@ class KPIDocumentField extends Component {
       files[valueid][period] = [];
     }
 
-    files[valueid][period][index] = { file: event.target.files[0], name: doc };
+    files[valueid][period][index] = { file: event.target.files[0], name: doc, code: docCode };
     this.setState({ documents: files });
     this.setState({ cell: { valueid: valueid, period: period } });
 
@@ -73,45 +73,82 @@ class KPIDocumentField extends Component {
     //console.log(docList);
   }
 
-  getFileDetails(filestoreID, self) {
-    let url = '/filestore/v1/files/id?tenantId=' + localStorage.getItem('tenantId') + '&fileStoreId=' + filestoreID;
+  getFileDetails(filestoreID, self, valueid, period, code) {
+    let result = new Promise(function(resolve, reject) {
+      let url = '/filestore/v1/files/id?tenantId=' + localStorage.getItem('tenantId') + '&fileStoreId=' + filestoreID;
 
-    var oReq = new XMLHttpRequest();
-    oReq.open('GET', url, true);
-    oReq.responseType = 'arraybuffer';
-    oReq.onload = function(oEvent) {
-      var blob = new Blob([oReq.response], { type: oReq.getResponseHeader('content-type') });
-      var url = URL.createObjectURL(blob);
+      var oReq = new XMLHttpRequest();
+      oReq.open('GET', url, true);
+      oReq.responseType = 'arraybuffer';
+      oReq.onload = function(oEvent) {
+        var blob = new Blob([oReq.response], { type: oReq.getResponseHeader('content-type') });
+        var url = URL.createObjectURL(blob);
 
-      let disposition = oReq.getResponseHeader('content-disposition');
-      let filename = '';
-      if (disposition && disposition.indexOf('attachment') !== -1) {
-        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-        var matches = filenameRegex.exec(disposition);
-        if (matches != null && matches[1]) {
-          filename = matches[1].replace(/['"]/g, '');
+        let disposition = oReq.getResponseHeader('content-disposition');
+        let filename = '';
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '');
+            //self.setState({ currentFileName: filename, currentFileStoreID: filestoreID });
 
-          console.log('lalu chettan', filename);
-          self.setState({ currentFileName: filename, currentFileStoreID: filestoreID });
+            resolve({ currentFileName: filename, currentFileStoreID: filestoreID });
+          }
         }
+      };
+      oReq.send();
+    });
+
+    result.then(filename => {
+      let fileDetails = self.state.currentFileName.slice();
+
+      if (!fileDetails[valueid]) {
+        fileDetails[valueid] = [];
       }
-    };
-    oReq.send();
+      if (!fileDetails[valueid][period]) {
+        fileDetails[valueid][period] = [];
+      }
+      fileDetails[valueid][period][code] = filename.currentFileName;
+      console.log(fileDetails, 'setting values');
+      self.setState({ currentFileName: fileDetails, currentFileStoreID: filename.currentFileStoreID });
+    });
   }
 
-  renderFilePanel(self, item, i) {
+  renderFilePanel(self, item, i, code) {
     let displayFile = false;
-    let fileName;
+    let fileNameArr = [];
+    let storeID;
+    //console.log(item);
     self.props.kpiresult.map(kpi => {
       kpi.kpiValue.valueList.map(kpiValue => {
-        console.log('item :', kpiValue.documents);
+        //console.log(kpi.kpiValue.valueList,' Value list');
+
         kpiValue.documents.map(kpidoc => {
-          //console.log(kpidoc);
-          if (kpidoc.code == item.code) {
-            self.getFileDetails(kpidoc.fileStoreId, self);
+          console.log(kpidoc, 'elements :');
+
+          let valueid = kpiValue.valueid;
+          let period = kpiValue.period;
+
+          if (kpidoc.fileStoreId) {
+            if (!fileNameArr[valueid]) {
+              fileNameArr[valueid] = [];
+            }
+
+            if (!fileNameArr[valueid][period]) {
+              fileNameArr[valueid][period] = [];
+            }
+
+            if (kpidoc.code) {
+              fileNameArr[valueid][period][kpidoc.code] = kpidoc.fileStoreId;
+            }
           }
+
+          // console.log(fileNameArr,'file Name Arr');
+          // console.log(storeID,'store ID');
         });
 
+        //fileNameArr.currentFileName
         // let kpidoc = kpiValue.documents[0];
         // console.log(kpiValue.documents);
         // console.log(kpidoc);
@@ -122,28 +159,55 @@ class KPIDocumentField extends Component {
         // }
       });
     });
+    //console.log(code,'--code--',fileNameArr[self.props.cell.valueid][self.props.cell.period][code]['code']);
+    //console.log(fileNameArr[self.props.cell.valueid]);
+    if (
+      fileNameArr[self.props.cell.valueid] &&
+      fileNameArr[self.props.cell.valueid][self.props.cell.period] &&
+      fileNameArr[self.props.cell.valueid][self.props.cell.period][code] &&
+      this.state.currentFileStoreID !== fileNameArr[self.props.cell.valueid][self.props.cell.period][code]
+    ) {
+      self.getFileDetails(
+        fileNameArr[self.props.cell.valueid][self.props.cell.period][code],
+        self,
+        self.props.cell.valueid,
+        self.props.cell.period,
+        code
+      );
+    }
 
-
+    let display = '';
+    if (
+      self.state.currentFileName[self.props.cell.valueid] &&
+      self.state.currentFileName[self.props.cell.valueid][self.props.cell.period] &&
+      self.state.currentFileName[self.props.cell.valueid][self.props.cell.period][code]
+    ) {
+      display = self.state.currentFileName[self.props.cell.valueid][self.props.cell.period][code];
+    }
+    console.log(self.state.currentFileName, 'current file details ---');
+    console.log(self.props.cell.period, 'period ---');
+    console.log(code, 'code ---');
+    console.log(display, 'display');
     return (
       <div>
-        {self.state.currentFileName && (
+        {display && (
           <span>
             <a
               href={
-                window.location.origin + '/filestore/v1/files/id?tenantId=' + localStorage.tenantId + '&fileStoreId=' + self.state.currentFileStoreID
+                window.location.origin + '/filestore/v1/files/id?tenantId=' + localStorage.tenantId + '&fileStoreId=' + this.state.currentFileStoreID
               }
               target="_blank"
             >
-              {self.state.currentFileName}{' '}
+              {display}{' '}
             </a>
           </span>
         )}
-        {!self.state.currentFileName && (
+        {!display && (
           <input
             id={'file_' + self.props.cell.valueid + self.props.cell.period}
             type="file"
             accept=".xls,.xlsx,.txt,.json,.doc,.docx"
-            onChange={e => self.handleFile(e, self.props.cell.valueid, self.props.cell.period, item.name, i, self.props.data)}
+            onChange={e => self.handleFile(e, self.props.cell.valueid, self.props.cell.period, item.name, i, self.props.data, code)}
           />
         )}
       </div>
@@ -159,8 +223,7 @@ class KPIDocumentField extends Component {
     return (
       <Dialog title="KPIs Documents" actions={actions} modal={true} open={this.props.open}>
         {this.props.data.map((item, i) => {
-          console.log(item, 'here');
-          console.log(this.props.kpiresult, 'here');
+          console.log(item, 'render panel');
           return [
             <Row>
               <Col xs={6} md={6}>
@@ -176,7 +239,7 @@ class KPIDocumentField extends Component {
                 )}
               </Col>
               <Col xs={6} md={6}>
-                {this.renderFilePanel(this, item, i)}
+                {this.renderFilePanel(this, item, i, item.code)}
               </Col>
             </Row>,
             <br />,

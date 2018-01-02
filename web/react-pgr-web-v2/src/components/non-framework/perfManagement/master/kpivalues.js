@@ -192,7 +192,7 @@ class kpivalues extends Component {
         //var row   = self.prepareBodyobject(response);
 
         let showResult = false;
-        if (res.kpiValues.length) {
+        if (res.kpiValues && res.kpiValues.length) {
           showResult = true;
         }
 
@@ -621,25 +621,20 @@ class kpivalues extends Component {
             kpiValue.documents = [];
           }
 
-          console.log('kpi object', kpi);
-          console.log('doc filed', kpi.kpi.documentsReq);
-          docCode = kpi.kpi.documentsReq.map(fileField => {
-            console.log('file field', fileField);
-            console.log('file field', kpiValue.documents[0].kpiCode);
-            if (/*kpiValue.kpiCode*/ kpiValue.documents[0].kpiCode == fileField.kpiCode) {
-              console.log('lalu KD');
+          /*docCode = kpi.kpi.documentsReq.map(fileField => {
+            if (/*kpiValue.kpiCode*? kpiValue.documents[0].kpiCode == fileField.kpiCode) {
               return fileField.code;
             }
-          });
+          });*/
           let docUpdate = false;
           kpiValue.documents.map(doc => {
-            if (doc.code == docCode[0]) {
+            if (doc.code == filedetails.docCode) {
               doc.fileStoreId = filedetails.fileStoreId;
               docUpdate = true;
             }
           });
           if (!docUpdate) {
-            kpiValue.documents.push({ fileStoreId: filedetails.fileStoreId, name: filedetails.name, code: docCode[0] });
+            kpiValue.documents.push({ fileStoreId: filedetails.fileStoreId, name: filedetails.name, code: filedetails.docCode });
           }
         }
       });
@@ -653,11 +648,6 @@ class kpivalues extends Component {
     let { actionName, moduleName } = this.props;
     let fileList = this.state.documents;
     let self = this;
-
-    console.log(fileList, 'file list');
-    console.log(valueid, period, 'field values :');
-
-    console.log(fileList[valueid][period]);
 
     fileUpload(fileList[valueid][period], moduleName, function(err, res) {
       if (err) {
@@ -1100,7 +1090,6 @@ class kpivalues extends Component {
             </CardText>
           </Card>
         )}
-        
 
         <KPIDocumentField
           {...this.props}

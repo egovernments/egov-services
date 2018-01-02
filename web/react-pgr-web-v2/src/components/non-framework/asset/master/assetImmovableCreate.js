@@ -575,7 +575,6 @@ class assetImmovableCreate extends Component {
                   break;
               }
 
-
               if (customTemp.type == 'singleValueList') {
                 if (
                   response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values != null &&

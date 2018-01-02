@@ -216,12 +216,16 @@ public class MeasurementBookValidator {
 				if (sheet.getLoaMeasurementSheet() == null)
 					messages.put(Constants.KEY_MB_MEASUREMENTS_LOA_NOT_VALID,
 							Constants.MSG_MB_MEASUREMENTS_LOA_NOT_VALID);
-                for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
-                    for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
-                        if (loaActivity.getLoaMeasurements() != null) {
-                            for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
-                                if (loaMeasurementSheet.getId().equals(sheet.getLoaMeasurementSheet().getId()))
-                                    estimateSheetId = loaMeasurementSheet.getEstimateMeasurementSheet();
+                if(letterOfAcceptance.getLetterOfAcceptanceEstimates() != null) {
+                    for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance.getLetterOfAcceptanceEstimates()) {
+                        if (letterOfAcceptanceEstimate != null) {
+                            for (LOAActivity loaActivity : letterOfAcceptanceEstimate.getLoaActivities()) {
+                                if (loaActivity.getLoaMeasurements() != null) {
+                                    for (LOAMeasurementSheet loaMeasurementSheet : loaActivity.getLoaMeasurements()) {
+                                        if (loaMeasurementSheet.getId().equals(sheet.getLoaMeasurementSheet().getId()))
+                                            estimateSheetId = loaMeasurementSheet.getEstimateMeasurementSheet();
+                                    }
+                                }
                             }
                         }
                     }

@@ -354,7 +354,7 @@ const menuConvention = {
   'Legal Case Management.Legal Case Reports.Due Date Report': '/report/lcms/DueDateReport',
   //legal case master
 
-  'Legal Case Management.Legal Case Masters.Court.Court': '/mdms/lcms/court',
+  'Legal Case Management.Legal Case Masters.Court.Court': '/search/lcms/court/view',
   'Legal Case Management.Legal Case Masters.Case Type.Case Type': '/mdms/lcms/caseType',
   'Legal Case Management.Legal Case Masters.Case Category.Case Category': '/mdms/lcms/caseCategory',
   'Legal Case Management.Legal Case Masters.Bench.Bench': '/mdms/lcms/bench',

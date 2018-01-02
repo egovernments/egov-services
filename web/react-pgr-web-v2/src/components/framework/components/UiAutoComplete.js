@@ -17,9 +17,9 @@ class UiAutoComplete extends Component {
   }
 
   handleUpdateInput = searchText => {
-    this.setState({
-      searchText: searchText,
-    });
+    // this.setState({
+    //   searchText: searchText,
+    // });
   };
 
   initData() {
@@ -31,12 +31,14 @@ class UiAutoComplete extends Component {
       this.callAPI('');
     }
 
-    this.setState({
-      searchText: this.props.getVal(this.props.item.jsonPath),
-    });
+    // this.setState({
+    //   searchText: this.props.getVal(this.props.item.jsonPath),
+    // });
   }
 
   componentWillReceiveProps(nextProps, nextState) {
+    // console.log(nextProps);
+    // alert(nextProps)
     // 	console.log(nextProps.item.jsonPath, this.props.getVal(nextProps.item.jsonPath));
     //  this.setState({ searchText: this.props.getVal(nextProps.item.jsonPath) });
   }
@@ -137,7 +139,7 @@ class UiAutoComplete extends Component {
       text: 'value',
       value: 'key',
     };
-
+    // debugger;
     // console.log(dropDownData.hasOwnProperty(item.jsonpath) && dropDownData[item.jsonpath].replace(".", "\."));
     // console.log(dropDownData);
     // console.log(dropDownData.hasOwnProperty(item.jsonPath));
@@ -153,7 +155,7 @@ class UiAutoComplete extends Component {
               listStyle={{ maxHeight: 100, overflow: 'auto' }}
               onUpdateInput={this.handleUpdateInput}
               filter={(searchText, key) => {
-                return key.toLowerCase().includes(searchText && searchText.toLowerCase());
+                return key.toLowerCase().includes(getNameById(this.props.getVal(item.jsonPath),item.jsonPath) && getNameById(this.props.getVal(item.jsonPath),item.jsonPath).toLowerCase());
               }}
               floatingLabelStyle={{ color: item.isDisabled ? '#A9A9A9' : '#696969', fontSize: '20px', 'white-space': 'nowrap' }}
               inputStyle={{ color: '#5F5C57' }}
@@ -229,12 +231,15 @@ class UiAutoComplete extends Component {
   render() {
     // searchTextCom = this.props.getVal(this.props.item.jsonPath);
     // console.log(this.props.item.jsonPath, this.state.searchText);
+    // console.log(this.props);
+    // alert(this.props)
     return <div>{this.renderAutoComplete(this.props.item)}</div>;
   }
 }
 
 const mapStateToProps = state => ({
   dropDownData: state.framework.dropDownData,
+  form:state.frameworkForm.form
 });
 
 const mapDispatchToProps = dispatch => ({

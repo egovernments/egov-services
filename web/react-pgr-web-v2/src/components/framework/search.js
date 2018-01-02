@@ -251,7 +251,7 @@ class Search extends Component {
           moduleDetails: moduleDetails,
         },
       };
-  
+
       Api.commonApiPost('/egov-mdms-service/v1/_search', '', _body, {}, true, true)
         .then(res => {
           this.tableDataBuilder(res, currentSpecification, self);
@@ -275,7 +275,7 @@ class Search extends Component {
         }
       );
     }
-    
+
   };
 
   getVal = path => {
@@ -760,8 +760,8 @@ class Search extends Component {
       showResult: false,
     });
     //=======Autocomplete field reset===>
-    var autoComField = document.querySelectorAll('[autoComplete="off"]');
-    autoComField[0].value = '';
+    // var autoComField = document.querySelectorAll('[autoComplete="off"]');
+    // autoComField[0].value = '';
   };
 
   render() {

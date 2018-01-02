@@ -36,16 +36,16 @@ public class CollectionDetails {
     private String sourceSegregation;
 
     @NotNull
-    @Digits(fraction = 2, integer = 4, message = "wetWasteCollected shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "wetWasteCollected shall be between 1 and 1000 Tons")
-    @DecimalMax(value = "1000", message = "wetWasteCollected shall be between 1 and 1000 Tons")
+    @Digits(fraction = 2, integer = 4, message = "EnteredWet Waste Collected shall be with 2 decimal points")
+    @DecimalMin(value = "1", message = "Entered Wet Waste quantity shall be between 0 and 20000.")
+    @DecimalMax(value = "20000", message = "Entered Wet Waste quantity shall be between 0 and 20000.")
     @JsonProperty("wetWasteCollected")
     private Double wetWasteCollected = null;
 
     @NotNull
-    @Digits(fraction = 2, integer = 4, message = "dryWasteCollected shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "dryWasteCollected shall be between 1 and 1000 Tons")
-    @DecimalMax(value = "1000", message = "dryWasteCollected shall be between 1 and 1000 Tons")
+    @Digits(fraction = 2, integer = 4, message = "Entered Dry Waste Collected shall be with 2 decimal points")
+    @DecimalMin(value = "1", message = "Entered Dry Waste quantity shall be between 0 and 20000.")
+    @DecimalMax(value = "20000", message = "Entered Dry Waste quantity shall be between 0 and 20000.")
     @JsonProperty("dryWasteCollected")
     private Double dryWasteCollected = null;
 

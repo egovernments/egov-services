@@ -1,0 +1,134 @@
+services:
+ - name: Get Bank Details
+   description: Get Bank List
+   fromEndPont: /wf-service/_create
+   finalResponse:       
+     body: '{"ResponseInfo":null,"Banks":[{"id":null,"code":null,"name":null}]}'
+     basePath: $.Banks[*]
+   requests:       
+    - url: /MahaULBAPI/rest/common/bankmaster/bankmasterlist
+      basePath: $.EstateRegisters
+      queryParams:
+      pathParams:
+      headerParams:
+      body: '{"status":{0}}'
+      bodyParams:
+       - source: id
+         in: query
+      
+      response:
+       basePath: $.resultData[*]
+       responseParams:
+        - source: $.resultData[*].bankId
+          destination: $.Banks[*].id
+        - source: $.resultData[*].bank
+          destination: $.Banks[*].name
+
+ - name: Search Bank
+   description: Search bank for a tenant
+   fromEndPont: /egf-masters/banks/_search
+   finalResponse:       
+     body: '{"responseInfo":null,"banks":[{"createdDate":null,"lastModifiedDate":null,"tenantId":null,"id":null,"code":null,"name":null,"description":null,"active":null,"type":null}],"page":{"totalResults":null,"totalPages":null,"pageSize":null,"currentPage":null,"offSet":null}}'
+     basePath: $.banks[*]
+   requests:       
+    - url: /MahaULBAPI/rest/common/bankmaster/bankmasterlist
+      basePath: $.RequestInfo
+      queryParams:
+      pathParams:
+      headerParams:
+      body: '{"status": 1}'
+      bodyParams:
+      response:
+       basePath: $.resultData[*]
+       responseParams:
+        - source: $.resultData[*].bankId
+          destination: $.banks[*].id
+        - source: $.resultData[*].bank
+          destination: $.banks[*].name
+        - source: $.resultData[*].bankId
+          destination: $.banks[*].code
+          
+ - name: Search Branch
+   description: Search Branch for a bank
+   fromEndPont: /egf-masters/bankbranches/_search
+   finalResponse:       
+     body: '{"responseInfo":null,"bankBranches":[{"id":null,"code":null,"name":null,"bank":{"createdDate":null,"lastModifiedDate":null,"tenantId":null,"id":null,"code":null,"name":null,"description":null,"active":null,"type":null},"address":null,"address2":null,"city":null,"state":null,"pincode":null,"phone":null,"fax":null,"contactPerson":null,"active":null,"description":null,"micr":null,"createdDate":null,"lastModifiedDate":null,"tenantId":null}],"page":{"totalResults":null,"totalPages":null,"pageSize":null,"currentPage":null,"offSet":null}}'
+     basePath: $.bankBranches[*]
+   requests:       
+    - url: /MahaULBAPI/rest/common/bankbranch/bankbranchlist
+      basePath: $.RequestInfo
+      queryParams:
+      pathParams:
+      headerParams:
+      body: '{"bankId": {0}}'
+      bodyParams:
+       - source: bankId
+         in: query
+      response:
+       basePath: $.resultData[*]
+       responseParams:
+        - source: $.resultData[*].id
+          destination: $.bankBranches[*].id
+        - source: $.resultData[*].desc
+          destination: $.bankBranches[*].name
+        - source: $.resultData[*].id
+          destination: $.bankBranches[*].code
+          
+ - name: Get Department
+   description: Search Department
+   fromEndPont: /egov-common-masters/departments/_search
+   finalResponse:       
+     body: '{"responseInfo":null,"Department":[{"id":null,"name":null,"code":null,"active":null,"tenantId":null}]}'
+     basePath: $.Department[*]
+   requests:       
+       - url: /MahaULBAPI/rest/common/department/departmentlist
+         type: POST
+         basePath: 
+         queryParams:
+         pathParams:
+         headerParams:
+         body: 
+         bodyParams:
+         response:
+          basePath: $.resultData[*]
+          responseParams:
+           - source: $.resultData[*].depId
+             destination: $.id
+           - source: $.resultData[*].depCode
+             destination: $.code
+           - source: $.resultData[*].depNameEn
+             destination: $.name
+           - source: $.resultData[*].depStatus
+             destination: $.active
+             sourceType: INT
+             destType: BOOLEAN
+             valueMapping:
+              - 0=true
+              - 1=false
+             
+ 
+ - name: Get Tenant
+   description: Search Ulb
+   fromEndPont: /tenant/v1/tenant/_search
+   finalResponse:       
+     body: '{"responseInfo":null,"tenant":[{"code":null,"name":null,"description":null,"logoId":null,"imageId":null,"domainUrl":null,"type":null,"twitterUrl":null,"facebookUrl":null,"emailId":null,"city":{"name":null,"localName":null,"districtCode":null,"districtName":null,"regionName":null,"ulbGrade":null,"longitude":null,"latitude":null,"shapeFileLocation":null,"captcha":null,"code":null},"address":null,"contactNumber":null,"helpLineNumber":null}]}'
+     basePath: $.tenant[*]
+   requests:       
+       - url: /MahaULBAPI/rest/common/ulb/ulblist
+         type: POST
+         basePath: 
+         queryParams:
+         pathParams:
+         headerParams:
+         body: 
+         bodyParams:
+         response:
+          basePath: $.resultData[*]
+          responseParams:
+           - source: $.resultData[*].id
+             destination: $.code
+           - source: $.resultData[*].desc
+             destination: $.name
+             
+             
+             

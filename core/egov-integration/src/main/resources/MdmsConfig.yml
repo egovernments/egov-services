@@ -1,0 +1,49 @@
+mdms:
+ - moduleName: common-masters
+   masterDetails: 
+    - masterName: Department
+      finalResponse: 
+        body: '{"id":null,"name":null,"code":null,"active":null,"tenantId":null}'
+      requests:       
+       - url: /MahaULBAPI/rest/common/department/departmentlist
+         type: POST
+         basePath: 
+         queryParams:
+         pathParams:
+         headerParams:
+         body: 
+         bodyParams:
+         response:
+          basePath: $.resultData[*]
+          responseParams:
+           - source: $.resultData[*].depId
+             destination: $.id
+           - source: $.resultData[*].depCode
+             destination: $.code
+           - source: $.resultData[*].depNameEn
+             destination: $.name
+           - source: $.resultData[*].depStatus
+             destination: $.active
+             
+           
+    - masterName: UomCategory
+      finalResponse: 
+        body: '{"id":null,"name":null,"code":null,"active":null,"tenantId":null}'       
+        basePath: $.banks[*]
+      requests:       
+       - url: /MahaULBAPI/rest/common/bankmaster/bankmasterlist
+         basePath: $.EstateRegisters
+         queryParams:
+         pathParams:
+         headerParams:
+         body: '{"status":{0}}'
+         bodyParams:
+          - source: id
+            in: query
+    
+         response:
+          basePath: $.resultData[*]
+          responseParams:
+           - source: $.resultData[*].bankId
+             destination: $.id
+           - source: $.resultData[*]

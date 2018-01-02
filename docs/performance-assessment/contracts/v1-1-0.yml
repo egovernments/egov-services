@@ -92,6 +92,76 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
             
+  /kpicategory/_create:
+    post:
+      summary: Creates a KPI Category
+      description: As the each KPI belongs to a category and the category of the KPI is a master data. This is an API to make an entry to the KPI Category Master
+      tags:
+        - KPI Category
+      parameters:
+        - name: KPI Category
+          in: body
+          description: required parameters have to be populated
+          required: true
+          schema:
+            $ref: '#/definitions/KPICategoryRequest'
+      responses:
+        '201':
+          description: Acknowledgment on successful creation of new KPI
+          schema:
+            $ref: "#/definitions/KPICategoryResponse"
+        '400':
+          description: Creating a new KPI Request has failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  /kpicategory/_update:
+      post:
+        summary: API to update the values of the KPI Category
+        description: Updates the existing values of the KPI Category (Code cannot be updated)
+        tags:
+          - KPI Category
+        parameters:
+          - name: KPI Category
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/KPICategoryRequest'
+        responses:
+          '200':
+            description: KPI Category Record has been updated successfully 
+            schema:
+              $ref: "#/definitions/KPICategoryResponse"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+  
+  /kpicategory/_search:
+    post:
+      summary: Fetch the KPI Category Record
+      description: Search the KPI Category Record based on the different parameters such as code, name
+      tags:
+        - KPI Master
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/name"
+        - $ref: "#/parameters/code"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortResult"
+      responses:
+        200: 
+          description: Successful response
+          schema:
+            $ref: "#/definitions/KPICategoryResponse"
+        400:
+          description: Invalid input
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
   # KPI Target Setting, Updating and Search APIs
   /kpitarget/_create:
     post:
@@ -458,6 +528,20 @@ definitions:
         maximum: 500
         items:
           $ref: '#/definitions/KpiValue'
+          
+  KPICategory:
+    type: object
+    description: Object which holds the details of the KPI Category master record
+    properties:
+      name:
+        type: string
+        description: Name of the Category which defines the type of the category to which the KPI belongs
+      code:
+        type: string
+        description: Unique Code of the KPI Category
+    required:
+      - name
+      - code
       
   KpiTarget:
     type: object
@@ -590,6 +674,20 @@ definitions:
       - requestInfo
       - KPIs
       
+  KPICategoryRequest:
+    type: object
+    properties:
+      requestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      kpiCategory:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/KPICategory'
+    required:
+      - requestInfo
+      - kpiCategory
+      
   KPITargetRequest:
     type: object
     properties:
@@ -625,6 +723,17 @@ definitions:
         maximum: 500
         items:
           $ref: '#/definitions/KPI'
+          
+  KPICategoryResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      kpiCategory:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/KPICategory'
           
       
   KPIValueRequest:

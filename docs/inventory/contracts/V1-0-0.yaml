@@ -863,7 +863,7 @@ paths:
           Create a new Supplier Bill .
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: supplierBillReceipt
+          - name: supplierBillRequest
             in: body
             description: Details for the new Supplier Bill .
             required: true
@@ -888,7 +888,7 @@ paths:
         description: Existing supplier bill can be updated.
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: supplierBillReceipt
+          - name: supplierBillRequest
             in: body
             description: Details for the new material receipts.
             required: true
@@ -5267,6 +5267,18 @@ definitions:
             type: number
             format: BigDecimal
             description: Total Advance adjested amount in each supplier bill
+          advanceFullyAdjustedInBill:
+            type: boolean
+            description: Boolean value to identify whether the advance fully adjusted in supplier bill.
+            default: false
+          status:
+            type: string
+            description: status of supplier advance requisition
+          workFlowDetails:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
+          stateId:
+            type: string
+            description: State id of the workflow
         required:
           - tenantId
           - purchaseOrder
@@ -5320,10 +5332,6 @@ definitions:
           format: BigDecimal
           description: |
             advance adjested amount in each advance requisition object.
-        advanceFullyAdjustedInBill:
-          type: boolean
-          description: Boolean value to identify whether the advance fully adjusted in supplier bill.
-          default: false
       required:
         - tenantId
         - advanceAdjustedAmount
@@ -5375,16 +5383,12 @@ definitions:
             pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
             description: Remarks for cancellation of the Bill, Required only while cancelling Bill
             maxLength: 512
-          supplierBillReceipts:
-            type: array
-            description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
-            items:
-              $ref: '#/definitions/SupplierBillReceipt'
-          supplierBillAdvanceAdjustments:
-            type: array
-            description: Array of Material receipts used to create supplier bill. Only approved receipt will be used and there is no partial payment possible from each receipt.
-            items:
-              $ref: '#/definitions/SupplierBillAdvanceAdjustment'
+          billId:
+            type: string
+            description: bill id reference
+          status:
+            type: string
+            description: status of supplier bill
           workFlowDetails:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
           stateId:
@@ -5399,7 +5403,6 @@ definitions:
       required:
         - tenantId
         - store
-        - supplierBillReceipts
 
 parameters:
   pageSize:

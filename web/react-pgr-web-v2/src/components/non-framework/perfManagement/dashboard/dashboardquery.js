@@ -374,7 +374,7 @@ export default class KPIDashboardQuery extends Component {
 
     if (this.state.showTableView) {
       return (
-        <TableCard data={this.chartRes} finYears={finYears} ulbs={ulbs} kpis={kpis} toggleDataViewFormat={this.processOnClickKPIDataRepresentation} />
+        <TableCard data={this.chartRes} finYears={finYears} ulbs={ulbs} kpis={kpis} kpiType={kpiTypes[this.state.kpiTypeIndex].name} toggleDataViewFormat={this.processOnClickKPIDataRepresentation} />
       );
     }
 

@@ -78,6 +78,18 @@ parseCompareSearchResponse(res) {
       return jp.query(ulbs, '$.finYears[*]').map((finYears, index) => {
           return jp.query(finYears, '$.kpiValues[*]').map((kpis, index) => {
               return jp.query(kpis, '$.valueList[*]').map((values, index) => {
+                if (this.props.kpiType === 'TEXT') {
+                  return {
+                    ulbName: jp.query(ulbs, '$.ulbName').join(''),
+                    finYear:jp.query(finYears, '$.finYear').join(''),
+                    kpiName:jp.query(kpis, '$.kpi.name').join(''),
+                    target: jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join(''),
+                    value: jp.query(kpis, '$.consolidatedValue').join(''),
+                    period: jp.query(values, '$.period').join('') || 0,
+                    name: this.getMonth(jp.query(values, '$.period').join('') || '1'),
+                    monthlyValue: jp.query(values, '$.value').join(''),
+                  }
+                } else {
                   return {
                     ulbName: jp.query(ulbs, '$.ulbName').join(''),
                     finYear:jp.query(finYears, '$.finYear').join(''),
@@ -88,6 +100,7 @@ parseCompareSearchResponse(res) {
                     name: this.getMonth(jp.query(values, '$.period').join('') || '1'),
                     monthlyValue: parseInt(jp.query(values, '$.value').join('')) || 0,
                   }
+                }
               })
           })
       })

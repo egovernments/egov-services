@@ -116,7 +116,8 @@ class UpdateEviction extends React.Component {
             designationList: [],
             userList: [],
             buttons: [],
-            wfStatus: ""
+            wfStatus: "",
+            wfInitiator:""
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -329,6 +330,7 @@ class UpdateEviction extends React.Component {
             agreement: agreement,
             departmentList: departmentList,
             //owner:process.owner.id,
+            wfInitiator: process.initiatorPosition,
             wfStatus: process.status,
             wfdisable: Object.keys(wf).length !== 0 ? true : false,
             buttons: _btns ? _btns : []
@@ -572,7 +574,7 @@ class UpdateEviction extends React.Component {
             }
 
             if (ID.toLowerCase() === "approve"){
-              agreement.workflowDetails.assignee = this.workflowDetails.initiatorPosition;
+              agreement.workflowDetails.assignee = _this.state.wfInitiator;
             }
 
             //console.log("Agreement", agreement);

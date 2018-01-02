@@ -1,22 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
+import "./style.css";
 import UploadDefinitionsContainer from "../upload-definitions";
 import CardUi from "../components/CardUi";
 import ButtonUi from "../components/ButtonUi";
+import Snackbar from "material-ui/Snackbar";
+import LoadingIndicator from "../components/LoadingIndicator";
 
-const styles = {
-  fileInput: {
-    padding: "20px"
-  },
-  jobCreationAck: {
-    marginTop: "20px",
-    padding: "10px",
-    color: "red",
-    textAlign: "center"
-  }
-};
-
-const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
+const CreateJobView = ({ handleOnChange, handleSubmit, message, history }) => {
   return (
     <div>
       <CardUi cardTitle="Upload Definitions">
@@ -24,7 +15,7 @@ const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
       </CardUi>
 
       <CardUi cardTitle="File Upload">
-        <div className="file-input" style={styles.fileInput}>
+        <div className="file-input">
           <input type="file" onChange={handleOnChange} />
         </div>
       </CardUi>
@@ -47,16 +38,54 @@ const JobCreate = ({ handleOnChange, handleSubmit, message, history }) => {
       </div>
 
       <span>
-        {message.length ? <h3 style={styles.jobCreationAck}>{message}</h3> : ""}
+        {message.length ? <h3 className="job-creation-ack">{message}</h3> : ""}
       </span>
     </div>
   );
 };
 
-JobCreate.propTypes = {
-  handleOnChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  message: PropTypes.string
+const View = ({
+  handleOnChange,
+  handleSubmit,
+  message,
+  history,
+  isLoading,
+  messageBarOpen,
+  errorMessage
+}) => {
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-lg-12 col-md-12">
+          <Snackbar
+            open={messageBarOpen}
+            message={errorMessage}
+            autoHideDuration={2000}
+          />
+          {isLoading ? (
+            <LoadingIndicator />
+          ) : (
+            <CreateJobView
+              history={history}
+              handleOnChange={handleOnChange}
+              handleSubmit={handleSubmit}
+              message={message}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default JobCreate;
+View.propTypes = {
+  handleOnChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  message: PropTypes.string,
+  isLoading: PropTypes.bool.isRequired,
+  history: PropTypes.object,
+  messageBarOpen: PropTypes.bool.isRequired,
+  errorMessage: PropTypes.string
+};
+
+export default View;

@@ -11,7 +11,7 @@ import {
 import { getDateFromEpoch } from "../../utils";
 import FlatButton from "material-ui/FlatButton";
 
-const TableUi = ({ tableSchema, tableBody, styles }) => {
+const TableUi = ({ tableSchema, tableBody, styles = {} }) => {
   const renderTableCell = (fieldType, row, fieldKey) => {
     const field = row[fieldKey];
 

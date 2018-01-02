@@ -1,4 +1,10 @@
-export const requestInfo = authToken => {
+import { fetchFromLocalStorage } from "../utils";
+
+const authToken = fetchFromLocalStorage("token");
+const tenantId = fetchFromLocalStorage("tenantId");
+const userInfo = JSON.parse(fetchFromLocalStorage("userRequest"));
+
+export const requestInfo = () => {
   const RequestInfo = {
     apiId: "emp",
     ver: "1.0",
@@ -8,21 +14,19 @@ export const requestInfo = authToken => {
     key: "abcdkey",
     msgId: "20170310130900",
     requesterId: "rajesh",
-    userInfo: { id: "1", userName: "narasappa" },
+    userInfo,
     authToken
   };
   return RequestInfo;
 };
 
 export const jobCreateRequest = (
-  authToken,
-  tenantId,
   requestFilePath,
   requestFileName,
   moduleName,
   defName
 ) => {
-  const RequestInfo = requestInfo(authToken);
+  const RequestInfo = requestInfo();
   const UploadJobs = [
     {
       tenantId,
@@ -39,8 +43,6 @@ export const jobCreateRequest = (
 
 // convert the date to epoch here
 export const jobSearchRequest = (
-  authToken,
-  tenantId,
   codes = [],
   statuses = [],
   requesterNames = [],
@@ -48,7 +50,7 @@ export const jobSearchRequest = (
   startDate,
   endDate
 ) => {
-  const RequestInfo = requestInfo(authToken);
+  const RequestInfo = requestInfo();
   const JobSearchRequest = {
     RequestInfo,
     tenantId,
@@ -63,7 +65,7 @@ export const jobSearchRequest = (
   return JobSearchRequest;
 };
 
-export const uploadDefinitionsRequest = authToken => {
-  const RequestInfo = requestInfo(authToken);
+export const uploadDefinitionsRequest = () => {
+  const RequestInfo = requestInfo();
   return { RequestInfo };
 };

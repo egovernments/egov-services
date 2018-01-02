@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import Snackbar from "material-ui/Snackbar";
 import { createJob, setInputFile } from "./actions";
-import JobCreate from "./view";
-import LoadingIndicator from "../components/LoadingIndicator";
+import View from "./view";
 
-class FileUploaderContainer extends Component {
+class CreateJob extends Component {
   static propTypes = {
     file: PropTypes.object,
     moduleName: PropTypes.string,
@@ -60,27 +58,15 @@ class FileUploaderContainer extends Component {
     const { message, messageBarOpen, errorMessage } = this.state;
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-12 col-md-12">
-            <Snackbar
-              open={messageBarOpen}
-              message={errorMessage}
-              autoHideDuration={2000}
-            />
-            {isLoading ? (
-              <LoadingIndicator />
-            ) : (
-              <JobCreate
-                history={history}
-                handleOnChange={handleOnChange}
-                handleSubmit={handleSubmit}
-                message={message}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      <View
+        handleOnChange={handleOnChange}
+        handleSubmit={handleSubmit}
+        isLoading={isLoading}
+        history={history}
+        message={message}
+        messageBarOpen={messageBarOpen}
+        errorMessage={errorMessage}
+      />
     );
   }
 }
@@ -99,6 +85,4 @@ const mapStateToProps = (state, ownProps) => ({
   jobId: state.jobCreate.jobId
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  FileUploaderContainer
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateJob);

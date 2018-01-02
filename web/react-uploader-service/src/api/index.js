@@ -15,7 +15,6 @@ export const Api = () => {
     }
   });
 
-  const authToken = fetchFromLocalStorage("token");
   const tenantId = fetchFromLocalStorage("tenantId");
 
   const httpRequest = async (endPoint, requestBody, headers) => {
@@ -38,7 +37,7 @@ export const Api = () => {
   };
 
   const fetchUploadDefintions = async () => {
-    const requestBody = prepareRequestBody.uploadDefinitionsRequest(authToken);
+    const requestBody = prepareRequestBody.uploadDefinitionsRequest();
     const endPoint = apiEndpoints.UPLOAD_DEFINITIONS_ENDPOINT;
 
     try {
@@ -59,8 +58,6 @@ export const Api = () => {
     endDate
   ) => {
     const requestBody = prepareRequestBody.jobSearchRequest(
-      authToken,
-      tenantId,
       codes,
       statuses,
       requesterNames,
@@ -86,8 +83,6 @@ export const Api = () => {
     defName
   ) => {
     const requestBody = prepareRequestBody.jobCreateRequest(
-      authToken,
-      tenantId,
       requestFilePath,
       requestFileName,
       moduleName,

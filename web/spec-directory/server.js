@@ -13,6 +13,9 @@ app.use(express.static(__dirname + '/'))
 app.use(bodyParser.json());
 
 
+
+
+
 function getType(type) {
     switch (type) {
         case 'integer':
@@ -95,8 +98,8 @@ getHeaderStatus = (module, master, property) => {
 var getFieldsFromInnerObject = function(fields, header, properties, module, master, jPath, isArray, required) {
     // console.log("Iner object called with - " + jPath);
     for (let key in properties) {
-		var isUnique = getPropertyStatus(module, master, key, false);
-		var isSpecificHeader = getPropertyStatus(module, master, key, true);
+		var isUnique = getPropertyStatus(module, master, "$."+key);
+		var isSpecificHeader = getPropertyStatus(module, master, "$."+key);
 		// console.log(module, master, key, getPropertyStatus(module, master, key));
     	//Adding tenantId and id as per discussion on Friday (08-12-2017)
         if ([/*"id", "tenantId",*/ "auditDetails", "assigner"].indexOf(key) > -1) continue;
@@ -177,13 +180,11 @@ var specificHeaderObj = {};
 for(module in configData){
 	urls.push(configData[module].url);
 	modules.push(module);
+	
 	if(!specificHeaderObj[module.toLowerCase()]) specificHeaderObj[module.toLowerCase()] = {};
 	specificHeaderObj[module.toLowerCase()].isSpecificHeader = configData[module].isSpecificHeader;
 	if(!uniqueKeyObj[module.toLowerCase()]) uniqueKeyObj[module.toLowerCase()] = {};
 	for(var i = 0; i < configData[module].masters.length; i++){
-		if(!uniqueKeyObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()]) uniqueKeyObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = {};
-		
-		uniqueKeyObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = configData[module].masters[i].uniqueKeys;
 		if(configData[module].isSpecificHeader && configData[module].masters[i].hasOwnProperty("specificHeaders")){
 			if(!specificHeaderObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()]) specificHeaderObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = {};
 			specificHeaderObj[module.toLowerCase()][(configData[module].masters[i].masterName).toLowerCase()] = configData[module].masters[i].specificHeaders;
@@ -192,7 +193,33 @@ for(module in configData){
 }
 
 console.log(specificHeaderObj);
-console.log(getHeaderStatus("swm", "CollectionType", "code"));
+
+
+request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-mdms-create/src/main/resources/master-config.json', function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+        var allModuleData = JSON.parse(body);
+		// console.log(allModuleData);
+		console.log(modules);
+		for(allModule in allModuleData){
+			
+			if(modules.indexOf(allModule.toLowerCase()) > -1){
+				console.log(allModule);
+				
+				for(allMaster in allModuleData[allModule]){
+					if(!uniqueKeyObj[allModule.toLowerCase()][allMaster.toLowerCase()]) uniqueKeyObj[allModule.toLowerCase()][allMaster.toLowerCase()] = {};
+					uniqueKeyObj[allModule.toLowerCase()][allMaster.toLowerCase()] = allModuleData[allModule][allMaster].uniqueKeys;
+					
+					
+				}
+			}
+		}
+		console.log(uniqueKeyObj);
+    }
+});
+
+
+// console.log(specificHeaderObj);
+
 
 
 // for(module in modules){
@@ -219,7 +246,7 @@ console.log(getHeaderStatus("swm", "CollectionType", "code"));
 
         	if (completed_requests == urls.length) {
 	            // All downloads done, process responses array
-	            // console.log(mainObj);
+				// console.log(mainObj);
 
 	            for(moduleName in mainObj){
 
@@ -258,7 +285,7 @@ console.log(getHeaderStatus("swm", "CollectionType", "code"));
 	            	
 	            }
 
-	            // console.log(finalSpecs.swm.masters.vehicletype);
+	            // console.log(finalSpecs);
 	            // console.log(finalSpecsRaw.lcms);
 	        
 	        }
@@ -269,6 +296,7 @@ console.log(getHeaderStatus("swm", "CollectionType", "code"));
 	}
 	
 // }
+
 
 
 app.post('/spec-directory/:module/:master', function(req, res, next) {

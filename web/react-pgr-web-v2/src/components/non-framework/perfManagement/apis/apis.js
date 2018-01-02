@@ -124,7 +124,7 @@ export const parseFinancialYearResponse = res => {
   //     }
   // });
   return jp
-    .query(res, '$.MdmsRes["egf-master"].financialYears[*]')
+    .query(res, '$.MdmsRes["egf-master"].FinancialYear[*]')
     .filter(el => {
       if (new Date(el.startingDate) <= Date.now()) {
         return el;

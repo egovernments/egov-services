@@ -3054,6 +3054,7 @@ var localization_EN_Data = {
   'swm.create.group.title.staffScheduleDetails': 'Staff Schedule',
   'swm.dumpingground.search.title' : 'Dumping Ground Search',
   'swm.collectionpoints.create.complex': 'Location',
+  'lcms.create.group.title.courtDetails' : 'Master Data of Court',
 
 
 };
@@ -5013,6 +5014,7 @@ var localization_MR_Data = {
   'swm.shift.create.group.title.SiftDetails': 'SHIFT DETAILS',
   'swm.create.group.title.staffScheduleDetails': 'Staff Schedule',
   'swm.dumpingground.search.title' : 'Dumping Ground Search',
+  'lcms.create.group.title.courtDetails' : 'Master Data of Court',
 
 
   'referenceEvidence.update.document.title': 'Reference Evidences-marathi',

@@ -122,7 +122,7 @@ class kpivalues extends Component {
       function(err) {}
     );
 
-    url = 'egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master';
+    url = 'egov-mdms-service/v1/_get?masterName=FinancialYear&moduleName=egf-master';
     query = [];
     Api.commonApiPost(url, query, {}, false, false).then(
       function(res) {

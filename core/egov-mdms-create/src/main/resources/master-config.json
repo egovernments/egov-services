@@ -1,4 +1,30 @@
 {
+  "ACCESSCONTROL-ACTIONS-TEST": {
+    "actions-test": {
+      "masterName": "actions-test",
+      "uniqueKeys": [
+        "$.id"
+      ]
+    }
+  },
+  "ACCESSCONTROL-ROLES": {
+    "roles": {
+      "masterName": "roles",
+      "uniqueKeys": [
+        "$.code"
+      ]
+    }
+  },
+  "ACCESSCONTROL-ROLEACTIONS": {
+    "roleactions": {
+      "masterName": "roleactions",
+      "uniqueKeys": [
+        "$.rolecode",
+        "$.actionid",
+        "$.tenantid"
+      ]
+    }
+  },
   "ASSET": {
     "AssetCategory": {
       "masterName": "AssetCategory",
@@ -8,7 +34,7 @@
         "$.tenantId"
       ]
     },
-     "LayerType": {
+    "LayerType": {
       "masterName": "LayerType",
       "moduleDefinition": "null",
       "uniqueKeys": [

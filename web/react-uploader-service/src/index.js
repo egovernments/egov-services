@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./styles/bootstrap-grid.css";
-import "./styles/application.css";
-import App from "./containers/App";
-import store from "./store";
+import "./styles/app.css";
+import App from "./app";
+import store from "./redux/store";
 import { Provider } from "react-redux";
 import { HashRouter as Router } from "react-router-dom";
 import { grey300 } from "material-ui/styles/colors";

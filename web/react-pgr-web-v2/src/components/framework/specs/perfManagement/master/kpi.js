@@ -49,7 +49,7 @@ var dat = {
             url:
               'egov-mdms-service/v1/_get?tenantId=' +
               localStorage.tenantId.split('.')[0] +
-              '&masterName=financialYears&moduleName=egf-master&filter=' +
+              '&masterName=FinancialYear&moduleName=egf-master&filter=' +
               criteria +
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,
@@ -460,7 +460,7 @@ var dat = {
             url:
               'egov-mdms-service/v1/_get?tenantId=' +
               localStorage.tenantId.split('.')[0] +
-              '&masterName=financialYears&moduleName=egf-master&filter=' +
+              '&masterName=FinancialYear&moduleName=egf-master&filter=' +
               criteria +
               '|$..finYearRange|$..finYearRange',
             isDisabled: false,

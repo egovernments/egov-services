@@ -571,7 +571,7 @@ class UpdateEviction extends React.Component {
 
             }
 
-            if (ID.toLowerCase() ==== "approve"){
+            if (ID.toLowerCase() === "approve"){
               agreement.workflowDetails.assignee = this.workflowDetails.initiatorPosition;
             }
 

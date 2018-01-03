@@ -430,7 +430,8 @@ var dat = {
           {
             name: 'ProcessingSiteArea',
             label: 'swm.processingplant.create.ProcessingSiteArea',
-            type: 'text',
+            type: 'number',
+            pattern: '^\\b[0-9]\\b|\\b([1-4][0-9])\\b|\\b50\\b$',
             jsonPath: "processing.ProcessingSiteArea",
             isRequired: false,
             isDisabled: false,
@@ -440,8 +441,11 @@ var dat = {
           {
             name: 'ProcessingSiteCapacity',
             label: 'swm.processingplant.create.ProcessingSiteCapacity',
+            pattern: '^([1-9][0-9]{0,3}|10000|0|[1-4][0-9]{0,4}|50000)$',
             type: 'text',
             jsonPath: "processing.ProcessingSiteCapacity",
+            maxLength: '5',
+            minLength: '1',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',

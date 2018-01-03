@@ -15,6 +15,7 @@ import router from '../router';
 import Api from '../api/api';
 import CustomMenu from './common/CustomMenu';
 import classnames from 'classnames';
+import UiLogo from './framework/components/UiLogo';
 
 window.urlCheck = false;
 class App extends Component {
@@ -199,6 +200,11 @@ class App extends Component {
         <div className={classnames('app-content', { expanded: showMenu || false })}>
           <Header />
           {router}
+            <div className="row">
+              <div className="col-md-12 text-right">
+                  <UiLogo src={require("../images/logo.png")} alt="logo"/>
+              </div>
+            </div>
           <Footer />
         </div>
 

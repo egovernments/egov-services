@@ -20,7 +20,7 @@ import Divider from 'material-ui/Divider';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import Drawer from 'material-ui/Drawer';
 import MetisMenu from 'react-metismenu';
-import UiLogo from '../framework/components/UiLogo';
+// import UiLogo from '../framework/components/UiLogo';
 
 //api import
 import Api from '../../api/api';
@@ -1026,7 +1026,7 @@ class Dashboard extends Component {
             </CardText>
           </Card>
         )}
-        <UiLogo src={require("../../images/logo.png")} alt="logo"/>
+        {/*<UiLogo src={require("../../images/logo.png")} alt="logo"/>*/}
       </div>
     );
   }

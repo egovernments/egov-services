@@ -13,7 +13,7 @@ import { fileUpload, getInitiatorPosition } from './utility/utility';
 import $ from 'jquery';
 
 import UiBackButton from './components/UiBackButton';
-import UiLogo from './components/UiLogo';
+// import UiLogo from './components/UiLogo';
 
 
 var specifications = {};
@@ -2089,7 +2089,7 @@ class Report extends Component {
             }}
           >
             <i>( * ) {translate('framework.required.note')}</i><br/><br/>
-            <UiLogo src={require("../../images/logo.png")} alt="logo"/>
+            {/*<UiLogo src={require("../../images/logo.png")} alt="logo"/>*/}
           </div>
         </form>
       </div>

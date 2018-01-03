@@ -13,7 +13,7 @@ import { fileUpload } from './utility/utility';
 import UiTable from './components/UiTable';
 import UiBackButton from './components/UiBackButton';
 import UiEditButton from './components/UiEditButton';
-import UiLogo from './components/UiLogo';
+// import UiLogo from './components/UiLogo';
 
 
 var specifications = {};
@@ -493,7 +493,7 @@ class Report extends Component {
           {renderTable()}
           <br />
         </form>
-        <UiLogo src={require("../../images/logo.png")} alt="logo"/>
+        {/*<UiLogo src={require("../../images/logo.png")} alt="logo"/>*/}
       </div>
     );
   }

@@ -12,7 +12,7 @@ import UiAddButton from './components/UiAddButton';
 import UiDynamicTable from './components/UiDynamicTable';
 import { fileUpload } from './utility/utility';
 import UiTable from './components/UiTable';
-import UiLogo from './components/UiLogo';
+//import UiLogo from './components/UiLogo';
 import jp from 'jsonpath';
 
 var specifications = {};
@@ -882,8 +882,8 @@ class Search extends Component {
               ui="google"
               handler={this.resetForm}
             />&nbsp;&nbsp;
-            <UiLogo src={require("../../images/logo.png")} alt="logo"/>
-            <br />
+          {/*  <UiLogo src={require("../../images/logo.png")} alt="logo"/>
+            <br />*/}
             {showResult && (
               <UiTable
                 resultList={resultList}

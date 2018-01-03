@@ -178,11 +178,9 @@ export default class UiLabel extends Component {
   showObjectInTable = (field) => {
     var flag = false;
     var str = "";
-    console.log(field);
     if(Array.isArray(field)){
       field.forEach(function(item, index){
         if(typeof(item) == "object"){
-          console.log(item);
           str += ((item.name?item.name:item.code) + ",");
         }
         else{
@@ -198,7 +196,6 @@ export default class UiLabel extends Component {
 
   renderLabel = item => {
     let {showObjectInTable}=this;
-    // console.log(item.jsonPath, this.props.getVal(item.jsonPath,item.isDate));
     if(item.enableDownload){
       return (
         <div>

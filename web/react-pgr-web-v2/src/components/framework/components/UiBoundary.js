@@ -88,10 +88,8 @@ class UiBoundary extends Component {
       hierarchyTypeCode: item.hierarchyType
     };
     var cityBdry;
-    // console.log(item)
     Api.commonApiPost('/egov-location/location/v11/boundarys/_search?', queryObj, {}, false, true)
     .then((res) => {
-      // console.log(res)
       var jpath = "";
       cityBdry = jp.query(res, `$.TenantBoundary[?(@.hierarchyType.name=="${item.hierarchyType}")].boundary[?(@.label=='City')]`);
       var labelArr = this.fetchLabels(cityBdry[0]);
@@ -102,10 +100,8 @@ class UiBoundary extends Component {
       this.setFirstDropDownData(cityBdry);
       if(window.location.hash.split('/')[1] != 'create') {
         console.log(this.props.formData, this.props.item.jsonPath);
-        console.log(_.get(this.props.formData, this.props.item.jsonPath));
         if(!_.isEmpty(this.props.formData)) {
           if(typeof(_.get(this.props.formData, this.props.item.jsonPath)) != 'undefined') {
-            console.log(cityBdry, _.get(this.props.formData, this.props.item.jsonPath));
             this.initDropdownValues(cityBdry, _.get(this.props.formData, this.props.item.jsonPath));
           }
         }
@@ -130,7 +126,6 @@ class UiBoundary extends Component {
   }
 
   getLabelName = (obj) => {
-    // console.log(obj);
     var label;
       for(var i=0; i<obj.length-1; i++) {
         if(obj[i].code && obj[i].name && obj[i].label && obj[i].code != ''&& obj[i].name != '' && obj[i].label != '') {
@@ -142,7 +137,6 @@ class UiBoundary extends Component {
 
   fetchLabels = (cityBdry) => {
     var depth = this.getDepth(cityBdry);
-    // console.log(depth)
     var labelArr = [];  
     var str = '';
 
@@ -157,16 +151,12 @@ class UiBoundary extends Component {
     }
     
     labelArr = labelArr.filter( onlyUnique );
-    // console.log(labelArr);
     return labelArr;
   }
 
   handler = (key, property) => {
     let {dropDownDataVal, dropDownData}=this.state;
-    // var ddVal = {};
     console.log(key,property)
-    // ddVal[property] = key;
-    
     this.setState({
       dropDownDataVal:{
       ...dropDownDataVal,
@@ -178,7 +168,6 @@ class UiBoundary extends Component {
     console.log(this.state.labelArr);
 
     if(property == this.state.labelArr[this.state.labelArr.length-1]) {
-      // console.log(this.props.item.jsonPath, key);
       let formData = _.cloneDeep(this.props.formData);
 
       _.set(formData, this.props.item.jsonPath, key);
@@ -208,7 +197,6 @@ class UiBoundary extends Component {
   }
   
   populateNextDropDown = (key, property) => {
-    // console.log(key, property);
     var index = this.state.labelArr.indexOf(property);
     if(index> -1) {
       var objArr, ddData = [];
@@ -217,17 +205,13 @@ class UiBoundary extends Component {
         str = str+".*.children";
       }
       var jPath = "$.*.children" + str + `[?(@.code=='${key}')]`;
-      // console.log(jPath +`.children[?(@.label=='${this.props.item.levelNamesInOrder[index+1]}')]`);
       objArr = jp.query(this.state.boundaryData, jPath + `.children[?(@.label=='${this.state.labelArr[index+1]}')]`);
-        // console.log(objArr)
         if(objArr.length >0) {
           objArr.map((v) => {
-            // console.log(v.label, this.props.item.levelNamesInOrder[index+1])
             if(v.label == this.state.labelArr[index+1]) {
               var dd = {};
               dd.key= v.code;
               dd.value = v.name;
-              // console.log(dd);
               ddData.push(dd);
             }
           })
@@ -244,7 +228,6 @@ class UiBoundary extends Component {
   renderFields = (level, screen) => {
 
     let {dropDownDataVal, dropDownData} = this.state;
-    // console.log(dropDownData);
     let labelProperty = {
       floatingLabelFixed: true,
       floatingLabelText: (
@@ -312,7 +295,6 @@ class UiBoundary extends Component {
 
   render() {
     // console.log(this.props.item)
-    console.log("fjsdk")
     // alert("rendering")
     return <div>{(this.props.match.url.split('/')[1] == 'view' && typeof(_.get(this.props.formData, this.props.item.jsonPath)) != 'undefined') ? this.renderView(this.state.viewLabels) : this.renderBoundary(this.props.item)}
       {this.props.item.type == 'boundary' ? null : this.props.callbackFromCollectionRoute(this.state.dropDownDataVal)}

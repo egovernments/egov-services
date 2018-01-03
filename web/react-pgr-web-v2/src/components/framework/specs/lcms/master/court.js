@@ -212,7 +212,7 @@ var dat = {
       numCols: 4,
       useTimestamp: true,
       objectName: 'court',
-      searchUrl: '/egov-mdms-service/v1/_search?code={code}',
+      //searchUrl: '/egov-mdms-service/v1/_search?code={code}',
       groups: [
         {
           name:'courtDetails',

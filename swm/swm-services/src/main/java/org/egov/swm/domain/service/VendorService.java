@@ -160,13 +160,18 @@ public class VendorService {
 
                         boundary = boundaryService.getByCode(vendor.getTenantId(), location.getCode(), new RequestInfo());
 
-                        if (boundary != null && boundary.getBoundary() != null)
+                       /* if (boundary != null && boundary.getBoundary() != null)
                             location.builder().id(boundary.getBoundary().getId()).name(boundary.getBoundary().getName())
                                     .boundaryNum(String.valueOf(boundary.getBoundary().getBoundaryNum()))
                                     .code(boundary.getBoundary().getCode())
                                     .build();
                         else
-                            throw new CustomException("Location", "Given Location is Invalid: " + location.getCode());
+                            throw new CustomException("Location", "Given Location is Invalid: " + location.getCode());*/
+                        
+                        if (boundary == null || boundary.getBoundary() == null || boundary.getBoundary().getCode() == null
+                                || boundary.getBoundary().getCode().isEmpty())
+                            throw new CustomException("Location",
+                                    "Given Location is Invalid: " + location.getCode());
 
                     }
                 }

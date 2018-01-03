@@ -124,9 +124,14 @@ public class CollectionPointService {
                 final TenantBoundary boundary = boundaryService.getByCode(collectionPoint.getTenantId(),
                         collectionPoint.getLocation().getCode(), new RequestInfo());
 
-                if (boundary != null && boundary.getBoundary() != null)
-                    collectionPoint.setLocation(boundary.getBoundary());
-                else
+                /*
+                 * if (boundary != null && boundary.getBoundary() != null) collectionPoint.setLocation(boundary.getBoundary());
+                 * else throw new CustomException("Location", "Given Location is Invalid: " +
+                 * collectionPoint.getLocation().getCode());
+                 */
+
+                if (boundary == null || boundary.getBoundary() == null || boundary.getBoundary().getCode() == null
+                        || boundary.getBoundary().getCode().isEmpty())
                     throw new CustomException("Location",
                             "Given Location is Invalid: " + collectionPoint.getLocation().getCode());
             }

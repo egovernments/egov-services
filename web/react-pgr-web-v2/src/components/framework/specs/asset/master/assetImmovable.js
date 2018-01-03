@@ -285,7 +285,7 @@ var dat = {
             label: 'ac.create.Election.Ward',
             pattern: '',
             type: 'singleValueList',
-            url: '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
+            url: '/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=ADMINISTRATION|$.Boundary.*.id|$.Boundary.*.name',
             //"url": "",
             isRequired: false,
             isDisabled: false,

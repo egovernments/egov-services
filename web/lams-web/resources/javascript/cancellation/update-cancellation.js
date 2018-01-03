@@ -121,7 +121,8 @@ class UpdateCancellation extends React.Component {
             designationList: [],
             userList: [],
             buttons: [],
-            wfStatus: ""
+            wfStatus: "",
+            workflow:[]
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -291,6 +292,13 @@ class UpdateCancellation extends React.Component {
             id: stateId
         }).responseJSON["processInstance"] || {};
 
+
+        var workflow = commonApiPost("egov-common-workflows", "history", "", {
+            tenantId: tenantId,
+            workflowId: stateId
+        }).responseJSON["tasks"] || {};
+
+
         if (process) {
             if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
                 var _btns = [];
@@ -314,7 +322,7 @@ class UpdateCancellation extends React.Component {
 
         }, process.businessKey);
 
-        
+
 
         if (!agreement.cancellation) {
             agreement.cancellation = {};
@@ -330,6 +338,7 @@ class UpdateCancellation extends React.Component {
             departmentList: departmentList,
             initiatorPosition: process.initiatorPosition,
             wfStatus: process.status,
+            workflow: workflow,
             buttons: _btns ? _btns : []
         });
 
@@ -353,7 +362,7 @@ class UpdateCancellation extends React.Component {
         doc.text(110, 47, 'Agreement No: ' + noticeData.agreementNumber);
         doc.text(15, 57, 'Lease Name: ' + noticeData.allottee.name);
         doc.text(110, 57, 'Asset No: ' + noticeData.asset.code);
-        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress.replace(/(\r\n|\n|\r)/gm,"") + ", " : "") + tenantId.split(".")[1] + ".");
+        doc.text(15, 67, (noticeData.allottee.mobileNumber ? noticeData.allottee.mobileNumber + ", " : "") + (noticeData.doorNo ? noticeData.doorNo + ", " : "") + (noticeData.allottee.permanentAddress ? noticeData.allottee.permanentAddress.replace(/(\r\n|\n|\r)/gm, "") + ", " : "") + tenantId.split(".")[1] + ".");
 
         doc.setFontType("normal");
         doc.text(15, 77, doc.splitTextToSize('1.    The period of lease shall be '));
@@ -412,70 +421,70 @@ class UpdateCancellation extends React.Component {
         this.createFileStore(noticeData, blob).then(this.createNotice, this.errorHandler);
     }
 
-    createFileStore(noticeData, blob){
-      // console.log('upload to filestore');
-      var promiseObj = new Promise(function(resolve, reject){
-        let formData = new FormData();
-        formData.append("tenantId", tenantId);
-        formData.append("module", "LAMS");
-        formData.append("file", blob);
-        $.ajax({
-            url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (res) {
-                let obj={
-                  noticeData : noticeData,
-                  fileStoreId : res.files[0].fileStoreId
+    createFileStore(noticeData, blob) {
+        // console.log('upload to filestore');
+        var promiseObj = new Promise(function (resolve, reject) {
+            let formData = new FormData();
+            formData.append("tenantId", tenantId);
+            formData.append("module", "LAMS");
+            formData.append("file", blob);
+            $.ajax({
+                url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function (res) {
+                    let obj = {
+                        noticeData: noticeData,
+                        fileStoreId: res.files[0].fileStoreId
+                    }
+                    resolve(obj);
+                },
+                error: function (jqXHR, exception) {
+                    reject(jqXHR.status);
                 }
-                resolve(obj);
+            });
+        });
+        return promiseObj;
+    }
+
+    createNotice(obj) {
+        // console.log('notice create');
+        $.ajax({
+            url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify({
+                RequestInfo: requestInfo,
+                Notice: {
+                    tenantId,
+                    agreementNumber: obj.noticeData.agreementNumber,
+                    fileStore: obj.fileStoreId
+                }
+            }),
+            headers: {
+                'auth-token': authToken
+            },
+            contentType: 'application/json',
+            success: function (res) {
+                // console.log('notice created');
+                if (window.opener)
+                    window.opener.location.reload();
+                open(location, '_self').close();
             },
             error: function (jqXHR, exception) {
-                reject(jqXHR.status);
+                console.log('error');
+                showError('Error while creating notice');
             }
         });
-      });
-      return promiseObj;
-    }
-
-    createNotice(obj){
-      // console.log('notice create');
-      $.ajax({
-          url: baseUrl + `/lams-services/agreement/notice/_create?tenantId=` + tenantId,
-          type: 'POST',
-          dataType: 'json',
-          data: JSON.stringify({
-              RequestInfo: requestInfo,
-              Notice: {
-                  tenantId,
-                  agreementNumber: obj.noticeData.agreementNumber,
-                  fileStore:obj.fileStoreId
-              }
-          }),
-          headers: {
-              'auth-token': authToken
-          },
-          contentType: 'application/json',
-          success:function(res){
-            // console.log('notice created');
-            if(window.opener)
-                window.opener.location.reload();
-            open(location, '_self').close();
-          },
-          error:function(jqXHR, exception){
-            console.log('error');
-            showError('Error while creating notice');
-          }
-      });
 
     }
 
-    errorHandler(statusCode){
-     console.log("failed with status", status);
-     showError('Error');
+    errorHandler(statusCode) {
+        console.log("failed with status", status);
+        showError('Error');
     }
 
     componentDidMount() {
@@ -600,7 +609,7 @@ class UpdateCancellation extends React.Component {
             // With file upload
             if (agreement.documents && agreement.documents.constructor == FileList) {
 
-              //console.log('update cancellation with file upload');
+                //console.log('update cancellation with file upload');
 
                 let counter = agreement.documents.length,
                     breakout = 0,
@@ -637,7 +646,7 @@ class UpdateCancellation extends React.Component {
                                     success: function (res) {
 
                                         if (ID === "Print Notice") {
-                                          _this.printNotice(agreement);
+                                            _this.printNotice(agreement);
                                         } else {
                                             $.ajax({
                                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
@@ -703,7 +712,7 @@ class UpdateCancellation extends React.Component {
 
 
                         if (ID === "Print Notice") {
-                          _this.printNotice(agreement);
+                            _this.printNotice(agreement);
                         } else {
                             $.ajax({
                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
@@ -1170,7 +1179,7 @@ class UpdateCancellation extends React.Component {
                                         <label htmlFor="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea rows="4" cols="50" id="remarks" name="remarks" 
+                                        <textarea rows="4" cols="50" id="remarks" name="remarks"
                                             onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>
@@ -1181,6 +1190,49 @@ class UpdateCancellation extends React.Component {
             );
         }
 
+        const renederWorkflowHistory = function () {
+            return (
+                <div className="form-section hide-sec" id="agreementCancelDetails">
+                    <h3 className="categoryType">Workflow History </h3>
+                    <div className="form-section-inner">
+
+                        <div id="historyTable" className="land-table">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Updated By</th>
+                                        <th>Current Owner</th>
+                                        <th>Status</th>
+                                        <th>Comments </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {renderTr()}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            );
+        }
+
+        const renderTr = () => {
+            return this.state.workflow.map((item, ind) => {
+                return (
+                    <tr key={ind}>
+                        <td>{item.createdDate}</td>
+                        <td>{item.senderName}</td>
+                        <td>{item.owner.id}</td>
+                        <td>{item.status}</td>
+                        <td>{item.comments}</td>
+                    </tr>
+                )
+            })
+        }
+    
         const renderWorkFlowDetails = function () {
 
             var flg = 0;
@@ -1302,6 +1354,7 @@ class UpdateCancellation extends React.Component {
                         {renderAllottee()}
                         {renderAgreementDetails()}
                         {renederCancelDetails()}
+                        {renederWorkflowHistory()}
                         {renderWorkFlowDetails()}
 
                         <br />

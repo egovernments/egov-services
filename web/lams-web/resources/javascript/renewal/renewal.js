@@ -544,6 +544,7 @@ class RenewalAgreement extends React.Component {
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
+    let minRent = this.state.agreement.rent;
 
     const renderOption = function (data) {
       if (data) {
@@ -912,7 +913,7 @@ class RenewalAgreement extends React.Component {
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span>₹</span>
-                      <input type="number" min={agreement.rent} name="renewalRent" id="renewalRent" value={agreement.rent}
+                      <input type="number" min={minRent} name="renewalRent" id="renewalRent" value={agreement.rent}
                         onChange={(e) => { handleChange(e, "rent") }} required />
                     </div>
                   </div>

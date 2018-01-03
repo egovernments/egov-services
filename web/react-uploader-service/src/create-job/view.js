@@ -28,13 +28,6 @@ const CreateJobView = ({ handleOnChange, handleSubmit, message, history }) => {
           label="Create"
           primary={true}
         />
-        <ButtonUi
-          onClick={() => {
-            history.push("/user-jobs");
-            window.location.reload();
-          }}
-          label="My Jobs"
-        />
       </div>
 
       <div className="col-lg-12">

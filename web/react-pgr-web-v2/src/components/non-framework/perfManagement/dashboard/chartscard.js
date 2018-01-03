@@ -250,7 +250,17 @@ parseCompareSearchResponse(res) {
       );
     }
     let data = this.state.data[this.state.chartDataIndex - 1]
-    let title = `Performance for ${this.kpis} for ULB ${data.ulbName} in FinancialYear ${data.finYear}`;
+
+    let ulb = this.props.ulbs.filter((item) => {
+      if (item[0].code === data.ulbName) {
+        return item[0];
+      }
+    })
+    let ulbName = data.ulbName;
+    if (ulb && ulb[0] && ulb[0][0] && ulb[0][0]['name']) {
+      ulbName = ulb[0][0].name
+    }
+    let title = `Performance for ${this.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`;
 
     return (
       <div>

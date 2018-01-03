@@ -291,7 +291,7 @@ class Attendance extends React.Component {
     commonApiPost("hr-leave", "leaveapplications", "_search", {
         fromDate: currentDate.getDate()+"/"+currentDate.getMonth()+"/"+currentDate.getFullYear(),
         toDate: endDate.getDate()+"/"+endDate.getMonth()+"/"+endDate.getFullYear(),
-        status="APPROVED",
+        status:"APPROVED",
         tenantId,
         employee,
         pageSize:500

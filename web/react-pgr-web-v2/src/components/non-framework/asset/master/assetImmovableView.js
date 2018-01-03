@@ -518,12 +518,16 @@ class assetImmovableView extends Component {
         var disArray = [];
         _.forEach(createCustomObject, function(value, key) {
           var temp = {};
-
+          console.log(value);
+          if(value.type == "Image"){
+            temp.imagePath = value.value;
+          } else {
+            temp.value = value.value;
+          }
           temp.label = value.key;
-          temp.value = value.value;
           disArray.push(temp);
         });
-
+        console.log(disArray);
         return (
           <div>
             <Card className="uiCard">
@@ -541,7 +545,7 @@ class assetImmovableView extends Component {
                         <Col style={{ textAlign: 'left' }}>
                           <label>
                             <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                              {item.value ? (typeof item.value == 'object' ? item.value[Object.keys(item.value)[0]] : item.value) : 'NA'}
+                              {item.value ? (typeof item.value == 'object' ? item.value[Object.keys(item.value)[0]] : item.value) : (item.imagePath ? <img src={item.imagePath} width={item.width || '20%'} height={item.height || '60%'} /> : "NA") }
                             </span>
                           </label>
                         </Col>

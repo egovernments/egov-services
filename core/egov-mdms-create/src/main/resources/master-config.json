@@ -206,5 +206,14 @@
         "$.tenantId"
       ]
     }
+  },
+ "PM": {
+    "KpiCategory": {
+      "masterName": "KpiCategory",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    }
   }
 }

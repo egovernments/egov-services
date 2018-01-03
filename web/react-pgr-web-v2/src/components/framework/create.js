@@ -13,6 +13,8 @@ import { fileUpload, getInitiatorPosition } from './utility/utility';
 import $ from 'jquery';
 
 import UiBackButton from './components/UiBackButton';
+import UiLogo from './components/UiLogo';
+
 
 var specifications = {};
 let reqRequired = [];
@@ -46,9 +48,9 @@ class Report extends Component {
     else{
       str = "";
     }
-    
+
     console.log(field);
-    
+
     if(Array.isArray(field)){
       field.forEach(function(item, index){
         if(typeof(item) == "object"){
@@ -59,7 +61,7 @@ class Report extends Component {
           else{
             str += ((item[property]?item[property]:item["code"]) + ",");
           }
-          
+
         }
         else{
           str += (item + ",");
@@ -71,7 +73,7 @@ class Report extends Component {
       else{
         return str.slice(0,-1);
       }
-    
+
     }
     else{
       return field;
@@ -389,7 +391,7 @@ class Report extends Component {
         data.masterDetails[0] = _.cloneDeep(masterDetail);
         // console.log(data);
         moduleDetails.push(data);
-  
+
         _body = {
           MdmsCriteria: {
             tenantId: localStorage.getItem('tenantId'),
@@ -398,10 +400,10 @@ class Report extends Component {
         };
         query = '';
       }
-      
+
       Api.commonApiPost(url, query, _body, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
-          
+
           if(specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isMDMSScreen){
             var masterName = "";
             var moduleName = "";
@@ -420,7 +422,7 @@ class Report extends Component {
             console.log(mdmsReq);
             res = mdmsReq;
           }
-          // 
+          //
           self.props.setLoadingStatus('hide');
           if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
             var obj = {};
@@ -450,7 +452,7 @@ class Report extends Component {
               console.log(values);
               res=_.set(res, fields[i]["aATransformInfo"].to, self.showObjectInTable(values, true, "code"));
             }
-            
+
             console.log(res);
             self.props.setFormData(res);
           }
@@ -492,7 +494,7 @@ class Report extends Component {
                   hashLocation.split('/')[1],
                   specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName
                 );
-              } else { 
+              } else {
                 self.setInitialUpdateData(
                   res,
                   JSON.parse(JSON.stringify(specifications)),
@@ -521,7 +523,7 @@ class Report extends Component {
   }
 
   handleMasterData(specifications) {
-   
+
     let self = this;
     let moduleDetails = [];
     let { setDropDownData } = this.props;
@@ -599,7 +601,7 @@ class Report extends Component {
         console.log(err);
       });
     }
-    
+
   }
 
   checkifHasDependedantMdmsField(path, value) {
@@ -709,7 +711,7 @@ class Report extends Component {
   };
 
   makeAjaxCall = (formData, url) => {
-    
+
     let self = this;
     var hashLocation = window.location.hash;
     let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
@@ -730,7 +732,7 @@ class Report extends Component {
 
     Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
-       
+
         self.props.setLoadingStatus('hide');
         self.initData();
         console.log('Back response');
@@ -757,7 +759,7 @@ class Report extends Component {
         } else {
           let hashLocation = window.location.hash;
           if(hashLocation == "#/create/legal/advocatepayment"){
-            $('input[type=file]').val('');  
+            $('input[type=file]').val('');
           }
           self.props.toggleSnackbarAndSetText(
             true,
@@ -1966,7 +1968,7 @@ class Report extends Component {
         if(!_.isEmpty(mockData[`${moduleName}.${actionName}`]) && (mockData[`${moduleName}.${actionName}`].customDoc === "parawisecomments" || mockData[`${moduleName}.${actionName}`].customDoc === "hearingdetails")){
           customBtnLabel = 'Create';
         }
-    
+
     //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
      console.log({...this.props.formData})
     return (
@@ -2086,7 +2088,8 @@ class Report extends Component {
               paddingTop: '8px',
             }}
           >
-            <i>( * ) {translate('framework.required.note')}</i>
+            <i>( * ) {translate('framework.required.note')}</i><br/><br/>
+            <UiLogo src={require("../../images/logo.png")} alt="logo"/>
           </div>
         </form>
       </div>

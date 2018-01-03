@@ -187,7 +187,12 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   // }
 
   componentDidMount() {
-    let { item, valueList } = this.props;
+    this.initData(this.props)
+  }
+
+  initData(props)
+  {
+    let { item, valueList } = props;
     let requiredFields = [];
     let headers = [];
     for (let i = 0; i < item.values.length; i++) {
@@ -232,6 +237,16 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     this.setState({
       requiredFields,
       isInlineEdit: counter < 5,
+      open: false,
+      currentValue: '',
+      valueList: [],
+      formData: {},
+      disableAdd: true,
+      index: -1,
+      fieldErrors: {},
+      isBtnDisabled: false,
+      indexes: [],
+      isAddAgain: true,
     });
 
     if (valueList && valueList.length) {
@@ -242,26 +257,26 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // if (!_.isEqual(nextProps, this.props)) {
+    //   this.setState({
+    //    isAddAgain:true,
+    //    indexes:[]
+    //   });
+    //
+    //   this.updateValueList(nextProps);
+    // }
     if (!_.isEqual(nextProps, this.props)) {
-      this.setState({
-        formData: {},
-        indexes: [],
-       isAddAgain:true
-      });
-
-      console.log(nextProps);
-  
-      this.updateValueList(nextProps);
+        this.initData(nextProps)
     }
   }
 
-  updateValueList = nProps => {
-    if (nProps.valueList && nProps.valueList.length && !_.isEqual(nProps.valueList, this.state.valueList)) {
-      this.setState({
-        valueList: _.cloneDeep(nProps.valueList),
-      });
-    }
-  };
+  // updateValueList = nProps => {
+  //   if (nProps.valueList && nProps.valueList.length && !_.isEqual(nProps.valueList, this.state.valueList)) {
+  //     this.setState({
+  //       valueList: _.cloneDeep(nProps.valueList),
+  //     });
+  //   }
+  // };
 
   handler = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch', expression, expErr, isDate) => {
     let { formData } = this.state;

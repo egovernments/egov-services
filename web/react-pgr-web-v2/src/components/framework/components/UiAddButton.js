@@ -20,6 +20,7 @@ class UiAddButton extends Component {
       localStorage.setItem('returnUrl', 'search/' + params.moduleName + '/' + params.master + '/view');
       setRoute(customUrl);
     } else {
+      localStorage.setItem('returnUrl', 'search/' + params.moduleName + '/' + params.master + '/view');
       setRoute(`/create/${params.moduleName}` + (params.master && '/' + params.master));
     }
   };

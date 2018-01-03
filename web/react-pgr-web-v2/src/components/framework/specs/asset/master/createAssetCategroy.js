@@ -451,6 +451,15 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
           },
+	 {
+            name: 'allowAssetUI',
+            jsonPath: 'MdmsRes.ASSET.AssetCategory[0].isAssetAllowFromUi',
+            label: 'ac.create.allowAssetUI',
+            pattern: '',
+            type: 'text',
+            url: '',
+  
+          },
         ],
       },
       {

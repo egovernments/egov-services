@@ -39,24 +39,24 @@ public class NoticeQueryBuilder {
         }
 
         if (noticeCriteria.getAgreementNumber() != null) {
-            selectQuery.append(" notice.AgreementNumber = :agreementNumber");
+            selectQuery.append(" and notice.AgreementNumber = :agreementNumber");
             params.put("agreementNumber", noticeCriteria.getAgreementNumber());
         }
         if (noticeCriteria.getAckNumber() != null) {
-            selectQuery.append(" notice.AckNumber = :ackNumber");
+            selectQuery.append(" and notice.AckNumber = :ackNumber");
             params.put("ackNumber", noticeCriteria.getAckNumber());
         }
         if (noticeCriteria.getAssetCategory() != null) {
-            selectQuery.append(" notice.AssetCategory = :assetCategory");
+            selectQuery.append(" and notice.AssetCategory = :assetCategory");
             params.put("assetCategory", noticeCriteria.getAssetCategory());
         }
         if (noticeCriteria.getNoticeNo() != null) {
-            selectQuery.append(" notice.NoticeNo = :noticeNo");
+            selectQuery.append(" and notice.NoticeNo = :noticeNo");
             params.put("noticeNo", noticeCriteria.getNoticeNo());
         }
 
         if (noticeCriteria.getTenantId() != null) {
-            selectQuery.append(" notice.TenantId = :tenderId");
+            selectQuery.append(" and notice.TenantId = :tenderId");
             params.put("tenderId", noticeCriteria.getTenantId());
         }
 

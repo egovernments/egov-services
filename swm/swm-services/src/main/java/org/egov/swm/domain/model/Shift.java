@@ -24,6 +24,10 @@ public class Shift {
     @Size(min = 0, max = 256)
     @JsonProperty("code")
     private String code = null;
+    
+    @Size(min = 0, max = 256)
+    @JsonProperty("name")
+    private String name = null;
 
     @NotNull
     @Size(min = 1, max = 128)

@@ -2561,6 +2561,11 @@ definitions:
           description: Unique Identifier of the Shift
           maxLength: 256
           minLength: 1
+        name:
+          type: string
+          description: Unique Identifier of the Shift
+          maxLength: 256
+          minLength: 1
         tenantId:
           type: string
           description: tenant id of the Shift
@@ -2606,6 +2611,7 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
+      - name
       - shiftType
       - department
       - designation
@@ -3634,6 +3640,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

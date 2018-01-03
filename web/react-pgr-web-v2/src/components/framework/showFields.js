@@ -41,6 +41,8 @@ import UiMultiFieldAddToTable from './components/UiMultiFieldAddToTable';
 import UiNestedTablesInputs from './components/UiNestedTablesInputs';
 import UiWindowSelectField from './components/UiWindowSelectField';
 import UiCheckBoxGrp from './components/UiCheckBoxGrp';
+import UiBoundary from './components/UiBoundary';
+import UiCollectionRoute from './components/UiCollectionRoute';
 
 let styles = {
   reducePadding: {
@@ -106,7 +108,8 @@ export default class ShowFields extends Component {
                         (field.type === 'textarea' && field.fullWidth === true) ||
                         field.type === 'workflow' ||
                         field.type === 'multiFieldAddToTable'||
-                        field.type === "checkBoxGroup"
+                        field.type === "checkBoxGroup"||
+                        field.type === "boundary"
                           ? 12
                           : noCols
                       }
@@ -120,7 +123,8 @@ export default class ShowFields extends Component {
                         field.type === 'window' ||
                         field.type === 'workflow' ||
                         field.type === 'multiFieldAddToTable'||
-                        field.type === "checkBoxGroup"
+                        field.type === "checkBoxGroup"||
+                        field.type === "boundary"
                           ? 12
                           : noCols
                       }
@@ -263,7 +267,7 @@ export default class ShowFields extends Component {
       if (item.type == 'timePicker') {
         item.isTime = true;
       }
-      item.type = 'label';
+      item.type != 'boundary' && (item.type = 'label');
     }
     switch (item.type) {
       case 'custom':
@@ -702,6 +706,28 @@ export default class ShowFields extends Component {
       case 'checkBoxGroup':
         return (
           <UiCheckBoxGrp
+            tabIndex={index}
+            ui={this.props.ui}
+            getVal={this.props.getVal}
+            item={item}
+            fieldErrors={this.props.fieldErrors}
+            handler={this.props.handler}
+          />
+        );
+      case 'boundary':
+        return (
+          <UiBoundary
+            tabIndex={index}
+            ui={this.props.ui}
+            getVal={this.props.getVal}
+            item={item}
+            fieldErrors={this.props.fieldErrors}
+            handler={this.props.handler}
+          />
+        );
+      case 'collectionRoute':
+        return (
+          <UiCollectionRoute
             tabIndex={index}
             ui={this.props.ui}
             getVal={this.props.getVal}

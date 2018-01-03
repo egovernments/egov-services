@@ -210,6 +210,18 @@ public class DataUploadUtils {
 		return uri.toString();
 
 	}
+	
+	public List<List<Object>> filter(List<List<Object>> excelData, List<Integer> indexes, List<Object> row){
+		List<List<Object>> result = null;
+		for(Integer index: indexes){
+			result = excelData.parallelStream()
+					.filter(obj -> ((obj.get(index)).equals(row.get(index))))
+					.collect(Collectors.toList());
+			
+			excelData = result;
+		}
+		return result;
+	}
 }
 
 

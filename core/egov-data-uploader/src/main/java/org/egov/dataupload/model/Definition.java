@@ -1,6 +1,7 @@
 package org.egov.dataupload.model;
 
 
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,6 +38,12 @@ public class Definition {
 	
 	@JsonProperty("uri")
 	private String uri;	
+	
+	@JsonProperty("isParentChild")
+	private Boolean isParentChild;
+	
+	@JsonProperty("uniqueParentKeys")
+	private List<String> uniqueParentKeys;
 	
 	@JsonProperty("additionalResFields")
 	private Map<String, String> additionalResFields;

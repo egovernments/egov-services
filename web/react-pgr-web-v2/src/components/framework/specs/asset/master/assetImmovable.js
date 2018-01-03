@@ -1855,6 +1855,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
+            convertToString: true
           },
           {
             name: 'Location',

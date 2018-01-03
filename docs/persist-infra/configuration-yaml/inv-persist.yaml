@@ -1501,16 +1501,15 @@ serviceMaps:
             - jsonPath: $.supplierBills.*.supplierBillReceipts.*.materialReceipt.id
             - jsonPath: $.supplierBills.*.supplierBillReceipts.*.auditDetails.createdBy
             - jsonPath: $.supplierBills.*.supplierBillReceipts.*.auditDetails.lastModifiedBy
-            - jsonPath: $.supplierBills.*.supplierBillReceipts.*.auditDetails.createdTime
+            - type: CURRENTDATE
               dbType: LONG
-            - jsonPath: $.supplierBills.*.supplierBillReceipts.*.auditDetails.lastModifiedTime
+            - type: CURRENTDATE
               dbType: LONG
         - query: >-
                  INSERT INTO supplierbilladvanceadjustment(id,tenantid, supplierbill,
-                 supplieradvancerequisition, advanceadjustedamount,
-                 createdby, lastmodifiedby, createdtime, lastmodifiedtime )
-                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
-                 supplierbill = EXCLUDED.supplierbill, supplieradvancerequisition = EXCLUDED.supplieradvancerequisition,
+                 advanceadjustedamount, createdby, lastmodifiedby, createdtime, lastmodifiedtime )
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 supplierbill = EXCLUDED.supplierbill,
                  advanceadjustedamount=EXCLUDED.advanceadjustedamount,
                  lastmodifiedby=EXCLUDED.lastmodifiedby,
                  lastmodifiedtime=EXCLUDED.lastmodifiedtime;
@@ -1519,39 +1518,10 @@ serviceMaps:
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.id
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.tenantId
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierBill
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.id
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.advanceAdjustedAmount
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.auditDetails.createdBy
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.auditDetails.lastModifiedBy
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.auditDetails.createdTime
+            - type: CURRENTDATE
               dbType: LONG
-            - jsonPath: $.supplierBills.*.supplierBillReceipts.*.auditDetails.lastModifiedTime
-              dbType: LONG
-        - query: >-
-                 INSERT INTO supplieradvancerequisition(id,tenantid, supplier,
-                 purchaseorder, advanceadjustedamount, advancefullyadjustedinbill,
-                 stateid, status,
-                 createdby, lastmodifiedby, createdtime, lastmodifiedtime )
-                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
-                 supplier = EXCLUDED.supplier, purchaseorder = EXCLUDED.purchaseorder,
-                 advanceadjustedamount=EXCLUDED.advanceadjustedamount,
-                 advancefullyadjustedinbill=EXCLUDED.advancefullyadjustedinbill,
-                 stateid=EXCLUDED.stateid, status=EXCLUDED.status,
-                 lastmodifiedby=EXCLUDED.lastmodifiedby,
-                 lastmodifiedtime=EXCLUDED.lastmodifiedtime;
-          basePath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition
-          jsonMaps:
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.id
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.tenantId
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.supplier.code
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.purchaseOrder.id
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.advanceAdjustedAmount
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.advanceFullyAdjustedInBill
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.stateId
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.sarStatus
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.auditDetails.createdBy
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.auditDetails.lastModifiedBy
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.auditDetails.createdTime
-              dbType: LONG
-            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.auditDetails.lastModifiedTime
+            - type: CURRENTDATE
               dbType: LONG

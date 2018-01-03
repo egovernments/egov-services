@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
 import org.egov.inv.model.*;
@@ -36,7 +37,11 @@ public class SupplierBillService extends DomainService {
     private SupplierAdvanceRequisitionJdbcRepository supplierAdvanceRequisitionJdbcRepository;
 
     public SupplierBillResponse create(SupplierBillRequest supplierBillRequest, String tenantId) {
+
         List<SupplierBill> supplierBillList = supplierBillRequest.getSupplierBills();
+
+        AuditDetails auditDetails = getAuditDetails(supplierBillRequest.getRequestInfo(), Constants.ACTION_CREATE);
+
         for (SupplierBill supplierBill : supplierBillList) {
             //Set Supplier Bill Id
             supplierBill.setId(supplierBillJdbcRepository.getSequence("seq_supplierbill"));
@@ -45,6 +50,8 @@ public class SupplierBillService extends DomainService {
                 //Set Supplier Bill Receipt Id
                 supplierBillReceipt.setId(supplierBillJdbcRepository.getSequence("seq_supplierbillreceipt"));
                 supplierBillReceipt.setSupplierBill(supplierBill.getId());
+                supplierBillReceipt.setAuditDetails(auditDetails);
+
             }
 
             for (SupplierBillAdvanceAdjustment supplierBillAdvanceAdjustment : supplierBill.getSupplierBillAdvanceAdjustments()) {
@@ -52,6 +59,8 @@ public class SupplierBillService extends DomainService {
                 supplierBillAdvanceAdjustment.setId(supplierBillJdbcRepository.getSequence("seq_supplierbilladvanceadjustment"));
                 supplierBillAdvanceAdjustment.supplierBill(supplierBill.getId());
             }
+
+            supplierBill.setAuditDetails(auditDetails);
 
         }
 
@@ -65,6 +74,20 @@ public class SupplierBillService extends DomainService {
 
 
     public SupplierBillResponse update(SupplierBillRequest supplierBillRequest, String tenantId) {
+
+        List<SupplierBill> supplierBillList = supplierBillRequest.getSupplierBills();
+
+        AuditDetails auditDetails = getAuditDetails(supplierBillRequest.getRequestInfo(), Constants.ACTION_UPDATE);
+
+        for (SupplierBill supplierBill : supplierBillList) {
+
+            for (SupplierBillReceipt supplierBillReceipt : supplierBill.getSupplierBillReceipts()) {
+                supplierBillReceipt.setAuditDetails(auditDetails);
+            }
+
+            supplierBill.setAuditDetails(auditDetails);
+
+        }
 
         kafkaQue.send(saveTopic, savekey, supplierBillRequest);
 
@@ -119,7 +142,5 @@ public class SupplierBillService extends DomainService {
         } else return supplierBillResponse.
                 responseInfo(null)
                 .supplierBills(Collections.EMPTY_LIST);
-
-
     }
 }

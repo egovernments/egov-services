@@ -106,19 +106,19 @@ public class NoticeQueryBuilderTest {
             query.append("and notice.id IN (:noticeId)");
         }
         if (noticeCriteria.getAgreementNumber() != null) {
-            query.append(" notice.AgreementNumber = :agreementNumber");
+            query.append(" and notice.AgreementNumber = :agreementNumber");
         }
         if (noticeCriteria.getAckNumber() != null) {
-            query.append(" notice.AckNumber = :ackNumber");
+            query.append(" and notice.AckNumber = :ackNumber");
         }
         if (noticeCriteria.getAssetCategory() != null) {
-            query.append(" notice.AssetCategory = :assetCategory");
+            query.append(" and notice.AssetCategory = :assetCategory");
         }
         if (noticeCriteria.getNoticeNo() != null) {
-            query.append(" notice.NoticeNo = :noticeNo");
+            query.append(" and notice.NoticeNo = :noticeNo");
         }
         if (noticeCriteria.getTenantId() != null) {
-            query.append(" notice.TenantId = :tenderId");
+            query.append(" and notice.TenantId = :tenantId");
         }
         return query.append(ORDER_BY_QUERY).toString();
     }

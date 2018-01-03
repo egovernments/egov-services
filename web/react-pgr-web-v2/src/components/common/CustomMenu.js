@@ -376,6 +376,7 @@ const menuConvention = {
   'Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueSearch': '/non-framework/perfManagement/master/kpivalues',
 
   'Performance Assessment.KPI Targets.PerfAssmtKpiTargetSearch': '/search/perfManagement/kpiTarget/view',
+  'Performance Assessment.Category Masters.PerfAssmtKpiCategoryMasterSearch' : '/mdms/PM/KpiCategory',
 
   //Inventoy Service
 

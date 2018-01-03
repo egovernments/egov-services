@@ -2643,6 +2643,99 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /supplieradvancerequisitions/_search:
+      post:
+        summary: Get the list of common supplieradvancerequisitions information
+        description: SupplierAdvanceRequisition is parent object that holds the common information for both.
+        tags:
+          - SupplierAdvanceRequisition
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: supplier
+            type: string
+            in: query
+            description: |
+              reference no of the supplier
+          - name: purchaseOrder
+            type: string
+            in: query
+            description: |
+              reference no of the purchaseOrder placed with the supplier
+          - name: sarStatus
+            type: string
+            in: query
+            description: |
+              status of the SupplierAdvanceRequisition
+          - name: stateId
+            type: string
+            in: query
+            description: |
+              stateId of the SupplierAdvanceRequisition
+          - name: purchaseOrderDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              Date on which purchaseOrder raised with supplier
+
+        responses:
+          200:
+            description: SupplierAdvanceRequisition retrieved Successfully
+            schema:
+              $ref: '#/definitions/SupplierAdvanceRequisitionResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /supplieradvancerequisitions/_create:
+      post:
+        summary: Create new supplieradvancerequisition
+        description: Whenever a supplieradvancerequisition is created, this API will hold the common set of information. This API will be invoked intenrally during supplieradvancerequisition creation.
+        tags:
+          - SupplierAdvanceRequisition
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: supplierAdvanceRequisitionRequest
+            in: body
+            description: Create new supplieradvancerequisition
+            schema:
+              $ref: '#/definitions/SupplierAdvanceRequisitionRequest'
+        responses:
+          200:
+            description: supplieradvancerequisition created Successfully
+            schema:
+              $ref: '#/definitions/SupplierAdvanceRequisitionResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /supplieradvancerequisitions/_update:
+      post:
+        summary: Update any of the supplieradvancerequisition
+        description: The common set of information shared by supplieradvancerequisition will be updated upon invoking this API.
+        tags:
+          - SupplierAdvanceRequisition
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: supplierAdvanceRequisitionRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/SupplierAdvanceRequisitionRequest'
+        responses:
+          200:
+            description: supplieradvancerequisition updated Successfully
+            schema:
+              $ref: '#/definitions/SupplierAdvanceRequisitionResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
 definitions:
     RateTypes:
@@ -5281,6 +5374,33 @@ definitions:
         required:
           - tenantId
           - purchaseOrder
+          
+    SupplierAdvanceRequisitionRequest:
+      description: Contract class for web request. Array of SupplierAdvanceRequisition form requests for create, update.
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        supplierAdvanceRequisitions:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/SupplierAdvanceRequisition'
+      required:
+      - RequestInfo
+      - supplierAdvanceRequisitions
+
+    SupplierAdvanceRequisitionResponse:
+      description: Contract class for web response. Array of SupplierAdvanceRequisition forms responses which are used in create, update, search.
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        supplierAdvanceRequisitions:
+          description: Used for search result and create only
+          type:  array
+          items:
+            $ref: '#/definitions/SupplierAdvanceRequisition'
+        page:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Page'
 
     SupplierBillReceipt:
       type: object
@@ -5437,3 +5557,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+

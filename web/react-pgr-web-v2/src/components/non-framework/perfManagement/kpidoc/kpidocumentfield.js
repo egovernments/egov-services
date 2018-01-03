@@ -206,7 +206,7 @@ class KPIDocumentField extends Component {
           <input
             id={'file_' + self.props.cell.valueid + self.props.cell.period}
             type="file"
-            accept=".xls,.xlsx,.txt,.json,.doc,.docx"
+            accept=".xls,.xlsx,.txt,.doc,.docx"
             onChange={e => self.handleFile(e, self.props.cell.valueid, self.props.cell.period, item.name, i, self.props.data, code)}
           />
         )}

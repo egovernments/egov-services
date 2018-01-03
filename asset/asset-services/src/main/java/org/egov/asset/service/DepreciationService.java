@@ -1,8 +1,10 @@
 package org.egov.asset.service;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +24,18 @@ import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.domain.CalculationCurrentValue;
 import org.egov.asset.model.AssetCurrentValue;
-import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
+import org.egov.asset.model.DepreciationInputs;
 import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
+import org.egov.asset.model.enums.DepreciationStatus;
+import org.egov.asset.model.enums.ReasonForFailure;
 import org.egov.asset.model.enums.Sequence;
+import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.repository.DepreciationRepository;
 import org.egov.asset.web.wrapperfactory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
@@ -78,47 +83,61 @@ public class DepreciationService {
 
     @Autowired
     private VoucherService voucherService;
-
-    /*
-     * Pre-requisite to understanding the logic: https://issues.egovernments.org/browse/EGSVC-271
-     */
+   
     public DepreciationResponse depreciateAsset(final DepreciationRequest depreciationRequest,
             final HttpHeaders headers) {
 
         final RequestInfo requestInfo = depreciationRequest.getRequestInfo();
-        final DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
-        final String tenantId = depreciationCriteria.getTenantId();
-        setDefaultsInDepreciationCriteria(depreciationCriteria, requestInfo);
+        getFinancialYearData(depreciationRequest,requestInfo);
+        
+        Depreciation depreciation = depreciateAssets(depreciationRequest);
 
-        final Map<Long, DepreciationDetail> depreciationDetailsMap = new HashMap<>();
-        final List<AssetCurrentValue> assetCurrentValues = new ArrayList<>();
-        getDepreciationDetailsAndCurrentValues(depreciationRequest, depreciationDetailsMap, assetCurrentValues,
-                headers);
+        depreciation.setAuditDetails(assetCommonService.getAuditDetails(requestInfo));
 
-        final List<DepreciationDetail> depreciationListToBeSaved = depreciationDetailsMap.values().stream()
-                .filter(DepreciationDetail -> DepreciationDetail.getVoucherReference() != null)
-                .collect(Collectors.toList());
-        log.debug("Depreciation List TO be Saved :: " + depreciationListToBeSaved);
-        final List<AssetCurrentValue> currentValueListToBeSaved = new ArrayList<>();
-        for (final AssetCurrentValue assetCurrentValue : assetCurrentValues) {
+        kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation);
 
-            final DepreciationDetail depreciationDetail = depreciationDetailsMap.get(assetCurrentValue.getAssetId());
-            if (depreciationDetail != null) {
-                assetCurrentValue.setTenantId(tenantId);
-                currentValueListToBeSaved.add(assetCurrentValue);
-            }
-        }
+        return DepreciationResponse.builder().depreciation(depreciation).responseInfo(null).build();
+}
+    
+    /***
+     * Calculates the Depreciation and returns , Calculates the CurrentValue request
+     * and sends it to currentValue Service
+     * 
+     * @param depreciationCriteria
+     * @param requestInfo
+     * @return
+     */
+    public Depreciation depreciateAssets(DepreciationRequest depreciationRequest) {
 
-        final AuditDetails auditDetails = assetCommonService.getAuditDetails(requestInfo);
-        final Depreciation depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
-                .depreciationDetails(depreciationListToBeSaved).auditDetails(auditDetails).build();
-        final AssetCurrentValueRequest currentValueRequest = AssetCurrentValueRequest.builder()
-                .assetCurrentValues(assetCurrentValues).requestInfo(requestInfo).build();
-        depreciation.setTenantId(tenantId);
-        saveAsync(depreciation);
-        currentValueService.createCurrentValueAsync(currentValueRequest);
-        return new DepreciationResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
-                depreciation);
+        DepreciationCriteria depreciationCriteria = depreciationRequest.getDepreciationCriteria();
+        RequestInfo requestInfo = depreciationRequest.getRequestInfo();
+
+        List<DepreciationInputs> depreciationInputsList = depreciationRepository
+                .getDepreciationInputs(depreciationCriteria);
+
+        log.info("the list of assets fetched : " + depreciationInputsList);
+
+        List<DepreciationDetail> depreciationDetailsList = new ArrayList<>();
+        List<AssetCurrentValue> currentValues = new ArrayList<>();
+        Depreciation depreciation = null;
+
+        // calculating the depreciation and adding the currenVal and DepDetail to the
+        // lists
+        calculateDepreciationAndCurrentValue(depreciationInputsList, depreciationDetailsList, currentValues,
+                depreciationCriteria.getFromDate(), depreciationCriteria.getToDate());
+
+        // FIXME TODO voucher integration
+
+        getDepreciationdetailsId(depreciationDetailsList);
+        // sending dep/currval objects to respective create async methods
+        depreciation = Depreciation.builder().depreciationCriteria(depreciationCriteria)
+                .depreciationDetails(depreciationDetailsList).build();
+        depreciation.setTenantId(depreciationCriteria.getTenantId());
+
+        currentValueService.createCurrentValueAsync(
+                AssetCurrentValueRequest.builder().assetCurrentValues(currentValues).requestInfo(requestInfo).build());
+
+        return depreciation;
     }
 
     /**
@@ -244,49 +263,30 @@ public class DepreciationService {
 
     }
 
-    /**
-     * To set missing criteria feilds for depreciaition in case 1 throw exception if all of the expected feilds are null In case
-     * 2, financialYear is set to 2017-18 where "year of fromdate" = 2017 and "year of todate" =2018
-     * depreciationCriteria.setFinancialYear(getFinancialYear(fromDate, toDate)); In case 3 Here, get the financial year contract
-     * object from finance service for the financial year Now, we get fromDate and toDate from this contract.
-     *
-     * @param depreciationCriteria
-     * @param requestInfo
-     */
-    public void setDefaultsInDepreciationCriteria(final DepreciationCriteria depreciationCriteria,
-            final RequestInfo requestInfo) {
-        final String financialYear = depreciationCriteria.getFinancialYear();
-        log.debug("financial year value -- " + financialYear);
-        if (financialYear == null) {
-            final Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(depreciationCriteria.getFromDate());
-            final int from = calendar.get(Calendar.YEAR);
-            calendar.setTimeInMillis(depreciationCriteria.getToDate());
-            final int to = calendar.get(Calendar.YEAR);
-            log.debug("Financial Year From :: " + from);
-            log.debug("Financial Year To :: " + to);
-            if (from != to)
-                depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to).substring(2, 4));
-            else
-                depreciationCriteria.setFinancialYear(from + "-" + Integer.toString(to + 1).substring(2, 4));
-        } else if (depreciationCriteria.getFromDate() == null && depreciationCriteria.getToDate() == null) {
+    private void getFinancialYearData(DepreciationRequest depreciationRequest, final RequestInfo requestInfo) {
 
-            final String url = applicationProperties.getEgfMastersHost()
-                    + applicationProperties.getEgfFinancialYearSearchPath() + "?tenantId ="
-                    + depreciationCriteria.getTenantId() + "&finYearRange=" + financialYear;
+        DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
+        final Long todate = criteria.getToDate();
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date depreciationDate = new Date(todate);
 
-            log.debug("Financial Year Search URL :: " + url);
-            final List<FinancialYearContract> financialYearContracts = restTemplate
-                    .postForObject(url, new RequestInfoWrapper(requestInfo), FinancialYearContractResponse.class)
-                    .getFinancialYears();
-            log.debug("Financial Year Response :: " + financialYearContracts);
-            if (financialYearContracts != null && !financialYearContracts.isEmpty()) {
-                final FinancialYearContract financialYearContract = financialYearContracts.get(0);
-                depreciationCriteria.setToDate(financialYearContract.getEndingDate().getTime());
-                depreciationCriteria.setFromDate(financialYearContract.getStartingDate().getTime());
-            } else
-                throw new RuntimeException("There is no data present for financial year :: " + financialYear);
-        }
+        final String url = applicationProperties.getEgfMastersHost()
+                + applicationProperties.getEgfFinancialYearSearchPath() + "?tenantId ="
+                + criteria.getTenantId() + "&asOnDate=" + format.format(depreciationDate);
+
+        log.debug("Financial Year Search URL :: " + url);
+        final List<FinancialYearContract> financialYearContracts = restTemplate
+                .postForObject(url, new RequestInfoWrapper(requestInfo), FinancialYearContractResponse.class)
+                .getFinancialYears();
+        log.debug("Financial Year Response :: " + financialYearContracts);
+        log.debug("Financial Year Response :: " + financialYearContracts);
+        if (financialYearContracts != null && !financialYearContracts.isEmpty()) {
+            final FinancialYearContract financialYearContract = financialYearContracts.get(0);
+            criteria.setFromDate(financialYearContract.getStartingDate().getTime());
+            criteria.setFinancialYear(financialYearContract.getFinYearRange());
+        } else
+
+            throw new RuntimeException(" No Financial Found For The Given ToDate:: " + depreciationDate);
     }
 
     public void saveAsync(final Depreciation depreciation) {
@@ -312,4 +312,144 @@ public class DepreciationService {
         assetResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo));
         return assetResponse;
     }
+
+    /***
+     * Calculate the Depreciation value and the current and populate the respective
+     * lists for the values
+     * 
+     * @param depreciationInputsList
+     * @param depDetList
+     * @param currValList
+     * @param fromDate
+     * @param toDate
+     */
+
+    private void calculateDepreciationAndCurrentValue(List<DepreciationInputs> depreciationInputsList,
+            List<DepreciationDetail> depDetList, List<AssetCurrentValue> currValList, Long fromDate, Long toDate) {
+        log.info("depreciationInputsList.size()" + depreciationInputsList.size());
+
+        depreciationInputsList.forEach(depreciation -> {
+
+            log.info("the current depreciation input object : " + depreciation);
+            BigDecimal minValue = BigDecimal.ONE;
+            ReasonForFailure reason = null;
+            DepreciationStatus status = DepreciationStatus.FAIL;
+            BigDecimal amtToBeDepreciated = null;
+            BigDecimal valueAfterDep = null;
+
+            BigDecimal valueAfterDepRounded = null;
+            BigDecimal amtToBeDepreciatedRounded = null;
+            Double depreciationRate = null;
+
+            // getting the indvidual fromDate
+            Long invidualFromDate = getFromDateForIndvidualAsset(depreciation, fromDate);
+            // checking if its year wise depreciation
+            if (depreciation.getEnableYearwiseDepreciation()) {
+                depreciationRate = depreciation.getYearwiseDepreciationRate();
+            } else
+                depreciationRate = depreciation.getDepreciationRate();
+
+            if (depreciation.getCurrentValue() != null)
+                if (depreciation.getCurrentValue().compareTo(minValue) <= 0) {
+
+                    reason = ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_TO_MINIMUN_VALUE;
+                } else if (null == depreciationRate) {
+
+                    reason = ReasonForFailure.DEPRECIATION_RATE_NOT_FOUND;
+                }
+
+                else {
+
+                    status = DepreciationStatus.SUCCESS;
+
+                    // getting the amt to be depreciated
+                    amtToBeDepreciated = getAmountToBeDepreciated(depreciation, invidualFromDate, toDate);
+
+                    amtToBeDepreciatedRounded = new BigDecimal(
+                            amtToBeDepreciated.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                    System.err.println("amtToBeDepreciatedRounded------------" + amtToBeDepreciatedRounded);
+
+                    // calculating the valueAfterDepreciation
+                    valueAfterDep = depreciation.getCurrentValue().subtract(amtToBeDepreciated);
+
+                    valueAfterDepRounded = new BigDecimal(valueAfterDep.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                    System.err.println("valueAfterDepRounded------------" + valueAfterDepRounded);
+
+                    if (valueAfterDepRounded.doubleValue() < 1)
+                        valueAfterDepRounded = BigDecimal.ONE;
+
+                    // adding currval to the currval list
+                    currValList.add(AssetCurrentValue.builder().assetId(depreciation.getAssetId())
+                            .assetTranType(TransactionType.DEPRECIATION).currentAmount(valueAfterDepRounded)
+                            .tenantId(depreciation.getTenantId()).build());
+                }
+
+            // adding the depreciation detail object to list
+            depDetList.add(DepreciationDetail.builder().assetId(depreciation.getAssetId()).reasonForFailure(reason)
+                    .assetCode(depreciation.getAssetCode())
+                    .depreciationRate(depreciation.getDepreciationRate()).depreciationValue(amtToBeDepreciatedRounded)
+                    .fromDate(invidualFromDate)
+                    .valueAfterDepreciation(valueAfterDepRounded).valueBeforeDepreciation(depreciation.getCurrentValue())
+                    .status(status)
+                    .build());
+        });
+    }
+
+    private Long getFromDateForIndvidualAsset(DepreciationInputs depInputs, Long fromDate) {
+
+        // deciding the from date from the last depreciation date
+        if (depInputs.getLastDepreciationDate() != null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
+            fromDate = depInputs.getLastDepreciationDate();
+            fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
+        } else if (depInputs.getDateOfCreation() > fromDate) {
+            fromDate = depInputs.getDateOfCreation();
+            // fromDate += 86400000l;
+        }
+        return fromDate;
+    }
+    
+    /***
+     * to find the Amount to be depreciated for every Asset from the
+     * DepreciationInput Object
+     * 
+     * @param depInputs
+     * @param indvidualFromDate
+     * @param toDate
+     * @return
+     */
+    private BigDecimal getAmountToBeDepreciated(DepreciationInputs depInputs, Long indvidualFromDate, Long toDate) {
+
+        System.err.println("depInputs" + depInputs);
+
+        // getting the no of days betweeen the from and todate (including both from and
+        // to date)
+        Long noOfDays = ((toDate - indvidualFromDate) / 1000 / 60 / 60 / 24) + 1;
+        log.info("no of days between fromdate : " + indvidualFromDate + " and todate : " + toDate + " is : " + noOfDays);
+
+        // deprate for the no of days = no of days * calculated dep rate per day
+        Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate() / 365;
+        log.info("dep rate for given period is : " + depRateForGivenPeriod);
+
+        // returning the calculated amt to be depreciated using the grossvalue from
+        // dep inputs and depreciation rate for given period
+        if (depInputs.getDepreciationSum() != null)
+            return BigDecimal.valueOf((depInputs.getCurrentValue()).add(depInputs.getDepreciationSum()).doubleValue()
+                    * (depRateForGivenPeriod / 100));
+        else
+
+            return BigDecimal.valueOf((depInputs.getCurrentValue()).doubleValue() * (depRateForGivenPeriod / 100));
+
+    }
+    
+    private void getDepreciationdetailsId(List<DepreciationDetail> depreciationDetailsList) {
+
+        final List<Long> idList = sequenceGenService.getIds(depreciationDetailsList.size(),
+                        Sequence.DEPRECIATIONSEQUENCE.toString());
+        int i = 0;
+        for (DepreciationDetail depreciationDetail : depreciationDetailsList)
+                depreciationDetail.setId(idList.get(i++));
+}
+    
+
+
 }

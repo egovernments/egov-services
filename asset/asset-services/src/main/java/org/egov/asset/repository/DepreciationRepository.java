@@ -16,6 +16,7 @@ import org.egov.asset.model.AuditDetails;
 import org.egov.asset.model.Depreciation;
 import org.egov.asset.model.DepreciationCriteria;
 import org.egov.asset.model.DepreciationDetail;
+import org.egov.asset.model.DepreciationInputs;
 import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
 import org.egov.asset.repository.builder.DepreciationQueryBuilder;
@@ -23,6 +24,7 @@ import org.egov.asset.repository.builder.DepreciationReportQueryBuilder;
 import org.egov.asset.repository.rowmapper.CalculationAssetDetailsRowMapper;
 import org.egov.asset.repository.rowmapper.CalculationCurrentValueRowMapper;
 import org.egov.asset.repository.rowmapper.DepreciationDetailRowMapper;
+import org.egov.asset.repository.rowmapper.DepreciationInputRowMapper;
 import org.egov.asset.repository.rowmapper.DepreciationReportRowMapper;
 import org.egov.asset.repository.rowmapper.DepreciationSumRowMapper;
 import org.egov.asset.service.AssetConfigurationService;
@@ -63,6 +65,9 @@ public class DepreciationRepository {
 
     @Autowired
     private AssetConfigurationService assetConfigurationService;
+    
+    @Autowired
+    private DepreciationInputRowMapper depreciationInputRowMapper;
 
     public List<DepreciationDetail> getDepreciationdetails(final DepreciationCriteria depreciationCriteria) {
 
@@ -174,6 +179,17 @@ public class DepreciationRepository {
             log.debug("the exception from findforcriteria : " + ex);
         }
         return assets;
+    }
+    
+   
+    
+    public List<DepreciationInputs> getDepreciationInputs(DepreciationCriteria depreciationCriteria) {
+    
+            List<Object> preparedStatementValues = new ArrayList<>();
+            String sql = depreciationQueryBuilder.getDepreciationQuery(depreciationCriteria, preparedStatementValues);
+            log.info("the query for depreciation inputs : "+sql);
+            log.info("prepared stsmt values : "+preparedStatementValues);
+            return jdbcTemplate.query(sql, preparedStatementValues.toArray(), depreciationInputRowMapper);
     }
 
 }

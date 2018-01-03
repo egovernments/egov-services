@@ -41,7 +41,11 @@
 package org.egov.asset.exception;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.egov.common.contract.response.ErrorField;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -60,6 +64,7 @@ public class Error {
 	private Integer code;
 	private String message;
 	private String description;
+	private List<ErrorField> errorFields;
 
 	/**
 	 * FIXME : If we take List of Object, it will generate twice the actual result.

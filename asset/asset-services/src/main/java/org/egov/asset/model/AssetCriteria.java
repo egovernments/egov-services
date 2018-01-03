@@ -1,8 +1,12 @@
 package org.egov.asset.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
+
+import org.egov.asset.model.enums.AssetCategoryType;
+import org.egov.asset.model.enums.TransactionType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +24,8 @@ import lombok.ToString;
 public class AssetCriteria {
 
 	private List<Long> id;
+	private List<AssetCategoryType> assetCategoryType;
+        private Set<Long> assetSubCategory;
 	private String name;
 	private String code;
 	private Long assetCategory;
@@ -43,7 +49,10 @@ public class AssetCriteria {
 	private Double grossValue;
 	private Double fromCapitalizedValue;
 	private Double toCapitalizedValue;
+	private Long assetCreatedFrom;
+        private Long assetCreatedTo;
 	
-        private Long fromDate;
-        private Long toDate;
+       
+        private Long dateOfDepreciation;//
+        private TransactionType transaction;
 }

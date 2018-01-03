@@ -51,6 +51,8 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -85,7 +87,7 @@ public class Asset {
 	private String status;
 	private String description;
 
-	private Date dateOfCreation;
+	private Long dateOfCreation;
 
 	private Location locationDetails;
 
@@ -93,6 +95,7 @@ public class Asset {
 	private String length;
 	private String width;
 	private String totalArea;
+	
 	private BigDecimal grossValue;
 	private BigDecimal accumulatedDepreciation;
 	private Long assetReference = null;

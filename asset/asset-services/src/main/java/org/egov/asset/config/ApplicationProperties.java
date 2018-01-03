@@ -123,6 +123,13 @@ public class ApplicationProperties {
 
     @Value("${egov.services.egf_service.funds.searchpath}")
     private String egfServiceFundsSearchPath;
+    
+    @Value("${errcode.depreciation.financialyear}")
+    private String financialYear;
+    
+    @Value("${errcode.depreciation.depreciationdate}")
+    private String depreciationDate;
+    
 
     
     @Autowired

@@ -25,6 +25,12 @@ public class DepreciationDetail {
 
     @JsonProperty("assetId")
     private Long assetId = null;
+    
+    private String assetCode;
+    
+    @JsonProperty("fromDate")
+    private Long fromDate;
+
 
     @JsonProperty("status")
     private DepreciationStatus status = null;

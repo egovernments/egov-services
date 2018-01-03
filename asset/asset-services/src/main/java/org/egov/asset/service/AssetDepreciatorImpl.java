@@ -117,7 +117,7 @@ public class AssetDepreciatorImpl implements AssetDepreciator {
         
         else if (minValue != null && currVal.doubleValue() < minValue)
             return DepreciationDetail.builder().status(DepreciationStatus.FAIL).valueAfterDepreciation(currVal)
-                    .reasonForFailure(ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_IN_YEAR_OF_PURCHASE).build();
+                    .reasonForFailure(ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_TO_MINIMUN_VALUE).build();
         
         c = currVal.subtract(aPlusB);
         final double cFactor = Double.parseDouble(assetConfigurationService

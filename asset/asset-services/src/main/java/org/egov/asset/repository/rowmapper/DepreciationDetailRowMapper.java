@@ -19,7 +19,7 @@ public class DepreciationDetailRowMapper implements RowMapper<DepreciationDetail
                 .lastModifiedBy(rs.getString("lastmodifiedby")).lastModifiedDate(rs.getLong("lastmodifieddate"))
                 .build();
 
-        return DepreciationDetail.builder().assetId(rs.getLong("assetid"))
+        return DepreciationDetail.builder().assetId(rs.getLong("assetId"))
                 .depreciationRate(rs.getDouble("depreciationrate"))
                 .depreciationValue(rs.getBigDecimal("depreciationvalue")).id(rs.getLong("id"))
                 .status(DepreciationStatus.fromValue(rs.getString("status")))

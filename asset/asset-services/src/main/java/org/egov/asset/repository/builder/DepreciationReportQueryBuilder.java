@@ -19,8 +19,7 @@ public class DepreciationReportQueryBuilder {
             + " FROM egasset_depreciation depreciation,egasset_asset asset, egasset_assetcategory assetcategory "
             +  "WHERE asset.assetcategory = assetcategory.id and "
             + " depreciation.assetid = asset.id and depreciation.tenantId =asset.tenantId "
-            + " and assetcategory.id= asset.assetcategory and assetcategory.tenantId = asset.tenantId "
-           ;
+            + " and assetcategory.id= asset.assetcategory and assetcategory.tenantId = asset.tenantId ";
 
     public String getQuery(final DepreciationReportCriteria depreciationReportCriteria,
             final List<Object> preparedStatementValues) {

@@ -40,6 +40,7 @@
 
 package org.egov.asset.web.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -61,6 +62,7 @@ import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.DisposalCriteria;
 import org.egov.asset.model.RevaluationCriteria;
+import org.egov.asset.model.enums.TransactionType;
 import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
@@ -119,14 +121,22 @@ public class AssetController {
         if (bindingResult.hasErrors()) {
             final ErrorResponse errorResponse = assetCommonService.populateErrors(bindingResult);
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            
+        }
+        if (assetCriteria.getTransaction() != null) {
+            if (assetCriteria.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
+        final List<ErrorResponse> errorResponses = assetValidator.validateSearchAssetDepreciation(assetCriteria);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+            }
         }
 
         if (assetCriteria.getGrossValue() != null && assetCriteria.getFromCapitalizedValue() != null
                 && assetCriteria.getToCapitalizedValue() != null)
             throw new RuntimeException(
                     "Gross Value should not be present with from capitalized value and to capitalized value");
-
-        final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
+        
+       final AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
         return new ResponseEntity<>(assetResponse, HttpStatus.OK);
     }
 
@@ -277,7 +287,6 @@ public class AssetController {
         }
 
         log.debug("Request Headers :: " + headers);
-        assetValidator.validateDepreciation(depreciationRequest);
         final DepreciationResponse depreciationResponse = depreciationservice.depreciateAsset(depreciationRequest,
                 headers);
         return new ResponseEntity<>(depreciationResponse, HttpStatus.CREATED);

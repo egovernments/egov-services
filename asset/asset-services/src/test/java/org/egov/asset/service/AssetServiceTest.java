@@ -14,7 +14,6 @@ import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
-import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.ModeOfAcquisition;
@@ -54,6 +53,9 @@ public class AssetServiceTest {
 
 	@Mock
 	private AssetCommonService assetCommonService;
+	
+	@Mock
+	 private CurrentValueService currentValueService;
 
 	@Test
 	public void testSearch() {

@@ -41,11 +41,11 @@
 
 package org.egov.asset.repository.builder;
 
-import java.util.Date;
 import java.util.List;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.model.AssetCriteria;
+import org.egov.asset.model.enums.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,13 +58,27 @@ public class AssetQueryBuilder {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    private static final String BASE_QUERY = "SELECT *," + "asset.id AS assetId,assetcategory.id AS assetcategoryId,"
+    private static final String BASE_QUERY = "SELECT *, asset.id AS assetId,assetcategory.id AS assetcategoryId,"
             + "asset.name as assetname,asset.code as assetcode,"
             + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as "
             + "ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
             + " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
             + "ON asset.assetcategory = assetcategory.id " + "LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
-            + "ON asset.id = ywd.assetid";
+            + "ON asset.id = ywd.assetid "
+            + "left outer join (select current.assetid,current.tenantid,"
+            + " maxcurr.currentamount from egasset_current_value current inner join (select curr.currentamount,curr.assetid,curr.tenantid,curr.createdtime "
+            + " from egasset_current_value "
+            + "curr inner join (select max(createdtime) as createdtime,assetid,tenantid from egasset_current_value where tenantid=? "
+
+            + " GROUP BY assetid,tenantid)  maxtrans ON  curr.assetid=maxtrans.assetid and "
+
+            + " curr.tenantid=maxtrans.tenantid and curr.createdtime=maxtrans.createdtime order by createdtime desc) as maxcurr "
+
+            + "ON current.assetid=maxcurr.assetid AND current.tenantid=maxcurr.tenantid "
+
+            + " and current.createdtime=maxcurr.createdtime order by maxcurr.createdtime desc) as currentval "
+
+            + "ON asset.id=currentval.assetid AND asset.tenantid=currentval.tenantid ";
 
     @SuppressWarnings("rawtypes")
     public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
@@ -92,6 +106,7 @@ public class AssetQueryBuilder {
         if (searchAsset.getTenantId() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ASSET.tenantId = ?");
+            preparedStatementValues.add(searchAsset.getTenantId());
             preparedStatementValues.add(searchAsset.getTenantId());
         }
 
@@ -210,24 +225,31 @@ public class AssetQueryBuilder {
             preparedStatementValues.add(searchAsset.getToCapitalizedValue());
         }
 
-        if (searchAsset.getFromDate() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" ASSET.createddate >= ?");
-            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getFromDate() * 1000).getTime()));
+        if (searchAsset.getAssetCreatedFrom() != null && searchAsset.getAssetCreatedTo() != null) {
+            selectQuery.append(" AND (ASSET.dateofcreation BETWEEN ? AND ?)");
+            preparedStatementValues.add(searchAsset.getAssetCreatedFrom());
+            preparedStatementValues.add(searchAsset.getAssetCreatedTo());
+        } else if (searchAsset.getAssetCreatedFrom() != null) {
+            selectQuery.append(" AND ASSET.dateofcreation >= ?");
+            preparedStatementValues.add(searchAsset.getAssetCreatedFrom());
+        } else if (searchAsset.getAssetCreatedTo() != null) {
+            selectQuery.append(" AND ASSET.dateofcreation <= ?");
+            preparedStatementValues.add(searchAsset.getAssetCreatedTo());
         }
 
-        if (searchAsset.getToDate() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" ASSET.createddate < ?");
-            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getToDate() * 1000).getTime()));
+        if (searchAsset.getTransaction() != null)
+            if (searchAsset.getTransaction().toString().equals(TransactionType.DEPRECIATION.toString())) {
+                selectQuery.append(
+                        " AND ASSET.status!='DISPOSED' AND ASSET.status='CAPITALIZED' AND assetcategory.assetcategorytype!='LAND' AND ASSET.id NOT in "
+                                + "(select depr.assetid from egasset_depreciation depr where depr.todate >=? )");
+                preparedStatementValues.add(searchAsset.getDateOfDepreciation());
+            }
+
+        if (searchAsset.getDateOfDepreciation() != null) {
+            selectQuery.append(" AND asset.dateofcreation IS NOT NULL AND asset.dateofcreation<?");
+            preparedStatementValues.add(searchAsset.getDateOfDepreciation());
         }
 
-        if (searchAsset.getFromDate() != null && searchAsset.getToDate() != null) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" ASSET.createddate BETWEEN ? AND ?");
-            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getFromDate() * 1000).getTime()));
-            preparedStatementValues.add(new java.sql.Timestamp(new Date(searchAsset.getToDate() * 1000).getTime()));
-        }
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -253,8 +275,8 @@ public class AssetQueryBuilder {
     }
 
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString

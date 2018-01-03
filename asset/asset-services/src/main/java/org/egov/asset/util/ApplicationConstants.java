@@ -38,40 +38,30 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.asset.exception;
+package org.egov.asset.util;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 
-import org.egov.common.contract.response.ErrorField;
-import org.egov.common.contract.response.ResponseInfo;
+@Configuration
+@PropertySource(value = {"classpath:messages/messages.properties",
+        "classpath:messages/errors.properties"}, ignoreResourceNotFound = true)
+@Order(0)
+public class ApplicationConstants {
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+    
+    public static final String MSG_DEPRECIATION_DATE = "asset.search.depreciation.date";
+    public static final String MSG_DEPRECIATION_FUTURE_DATE = "asset.search.depreciation.future.date";
+ 
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class ErrorResponse {
+    @Autowired
+    private Environment environment;
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-
-	@JsonProperty("Error")
-	private Error error;
-	
-	 @JsonIgnore
-         public List<ErrorField> getErrorFields() {
-             return error.getErrorFields();
-         }
-
+    public String getErrorMessage(final String property) {
+        return environment.getProperty(property);
+    }
 }

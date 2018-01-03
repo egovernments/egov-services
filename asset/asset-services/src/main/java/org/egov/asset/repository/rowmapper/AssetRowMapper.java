@@ -96,14 +96,14 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setModeOfAcquisition(ModeOfAcquisition.fromValue(rs.getString("modeofacquisition")));
                 asset.setStatus(rs.getString("status"));
                 asset.setDescription(rs.getString("description"));
-                asset.setDateOfCreation(rs.getDate("dateOfCreation"));
+                asset.setDateOfCreation(rs.getLong("dateOfCreation"));
                 asset.setRemarks(rs.getString("remarks"));
                 asset.setLength(rs.getString("length"));
                 asset.setWidth(rs.getString("width"));
                 asset.setTotalArea(rs.getString("totalArea"));
                 asset.setEnableYearWiseDepreciation(rs.getBoolean("enableyearwisedepreciation"));
                 asset.setDepreciationRate(rs.getDouble("depreciationrate"));
-                asset.setSurveyNumber(rs.getString("tenantId"));
+                asset.setSurveyNumber(rs.getString("surveynumber"));
                
                 final BigDecimal marketValue = rs.getBigDecimal("marketValue");
                 if (marketValue == BigDecimal.ZERO)

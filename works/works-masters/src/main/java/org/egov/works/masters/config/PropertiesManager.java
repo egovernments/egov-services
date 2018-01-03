@@ -46,4 +46,7 @@ public class PropertiesManager {
     @Value("${egov.services.works.masters.milestonetemplate.saveorupdate.validated}")
     private String worksMasterMilestoneTemplateSaveOrUpdateValidatedTopic;
 
+    @Value("${egov.services.works.masters.remarks.createandupdate}")
+    private String worksMasterRemarksCreateAndUpdateTopic;
+
 }

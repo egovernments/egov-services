@@ -154,7 +154,7 @@ serviceMaps:
        - jsonPath: $.contractors.*.auditDetails.lastModifiedTime
        
        - jsonPath: $.contractors.*.deleted
-       
+
        - jsonPath: $.contractors.*.localName
 
  - version: 1.0
@@ -216,7 +216,7 @@ serviceMaps:
        - jsonPath: $.contractors.*.auditDetails.lastModifiedTime
        
        - jsonPath: $.contractors.*.deleted
-       
+
        - jsonPath: $.contractors.*.localName
 
        - jsonPath: $.contractors.*.id
@@ -361,5 +361,58 @@ serviceMaps:
        - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.deleted
+       
+       
+ - version: 1.0
+   name: Remarks Master Create and Update
+   description: Persists Remarks master in egw_remarks table
+   fromTopic: works-remarks-createandupdate
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_remarks(id, tenantid, typeOfDocument, remarksType,createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET typeOfDocument=EXCLUDED.typeOfDocument, remarksType=EXCLUDED.remarksType, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+      basePath: $.remarks.*
+      jsonMaps:
 
+       - jsonPath: $.remarks.*.id
+
+       - jsonPath: $.remarks.*.tenantId
+
+       - jsonPath: $.remarks.*.typeOfDocument
+
+       - jsonPath: $.remarks.*.remarksType
+
+       - jsonPath: $.remarks.*.auditDetails.createdBy
+
+       - jsonPath: $.remarks.*.auditDetails.createdTime
+
+       - jsonPath: $.remarks.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.remarks.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.remarks.*.deleted
+       
+    - query: INSERT INTO egw_remarks_detail(id, tenantid, remarks, remarksDescription, editable, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET typeOfDocument=EXCLUDED.typeOfDocument, remarksType=EXCLUDED.remarksType, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+      basePath: $.remarks.*
+      jsonMaps:
+
+       - jsonPath: $.remarks.*.remarksDetails.*.id
+
+       - jsonPath: $.remarks.*.remarksDetails.*.tenantId
+
+       - jsonPath: $.remarks.*.remarksDetails.*.remarks
+
+       - jsonPath: $.remarks.*.remarksDetails.*.remarksDescription
+       
+       - jsonPath: $.remarks.*.remarksDetails.*.editable
+
+       - jsonPath: $.remarks.*.remarksDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.remarks.*.remarksDetails.*.auditDetails.createdTime
+
+       - jsonPath: $.remarks.*.remarksDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.remarks.*.remarksDetails.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.remarks.*.remarksDetails.*.deleted
+    
 

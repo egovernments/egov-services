@@ -977,6 +977,12 @@ definitions:
         description: Array of Remarks Details
         items:
           $ref: '#/definitions/RemarksDetail'
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 
     required:
       - tenantId
@@ -997,7 +1003,8 @@ definitions:
         maxLength: 128
         minLength: 2
       remarks:
-        $ref: '#/definitions/Remarks'
+        type: string
+        description: Reference of remarks.
       remarksDescription:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
@@ -1006,6 +1013,10 @@ definitions:
       editable:
         type: boolean
         description: True By default
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
 
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"

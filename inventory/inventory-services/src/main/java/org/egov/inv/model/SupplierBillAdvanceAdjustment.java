@@ -14,7 +14,7 @@ import java.util.Objects;
  * Asset information for the Contractor Bill
  */
 @ApiModel(description = "Asset information for the Contractor Bill")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-28T09:20:06.607Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-02T08:20:46.403Z")
 
 public class SupplierBillAdvanceAdjustment {
     @JsonProperty("id")
@@ -31,9 +31,6 @@ public class SupplierBillAdvanceAdjustment {
 
     @JsonProperty("advanceAdjustedAmount")
     private BigDecimal advanceAdjustedAmount = null;
-
-    @JsonProperty("advanceFullyAdjustedInBill")
-    private Boolean advanceFullyAdjustedInBill = false;
 
     public SupplierBillAdvanceAdjustment id(String id) {
         this.id = id;
@@ -145,30 +142,9 @@ public class SupplierBillAdvanceAdjustment {
         this.advanceAdjustedAmount = advanceAdjustedAmount;
     }
 
-    public SupplierBillAdvanceAdjustment advanceFullyAdjustedInBill(Boolean advanceFullyAdjustedInBill) {
-        this.advanceFullyAdjustedInBill = advanceFullyAdjustedInBill;
-        return this;
-    }
-
-    /**
-     * Boolean value to identify whether the advance fully adjusted in supplier bill.
-     *
-     * @return advanceFullyAdjustedInBill
-     **/
-    @ApiModelProperty(value = "Boolean value to identify whether the advance fully adjusted in supplier bill.")
-
-
-    public Boolean getAdvanceFullyAdjustedInBill() {
-        return advanceFullyAdjustedInBill;
-    }
-
-    public void setAdvanceFullyAdjustedInBill(Boolean advanceFullyAdjustedInBill) {
-        this.advanceFullyAdjustedInBill = advanceFullyAdjustedInBill;
-    }
-
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -180,13 +156,12 @@ public class SupplierBillAdvanceAdjustment {
                 Objects.equals(this.tenantId, supplierBillAdvanceAdjustment.tenantId) &&
                 Objects.equals(this.supplierBill, supplierBillAdvanceAdjustment.supplierBill) &&
                 Objects.equals(this.supplierAdvanceRequisition, supplierBillAdvanceAdjustment.supplierAdvanceRequisition) &&
-                Objects.equals(this.advanceAdjustedAmount, supplierBillAdvanceAdjustment.advanceAdjustedAmount) &&
-                Objects.equals(this.advanceFullyAdjustedInBill, supplierBillAdvanceAdjustment.advanceFullyAdjustedInBill);
+                Objects.equals(this.advanceAdjustedAmount, supplierBillAdvanceAdjustment.advanceAdjustedAmount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, supplierBill, supplierAdvanceRequisition, advanceAdjustedAmount, advanceFullyAdjustedInBill);
+        return Objects.hash(id, tenantId, supplierBill, supplierAdvanceRequisition, advanceAdjustedAmount);
     }
 
     @Override
@@ -199,7 +174,6 @@ public class SupplierBillAdvanceAdjustment {
         sb.append("    supplierBill: ").append(toIndentedString(supplierBill)).append("\n");
         sb.append("    supplierAdvanceRequisition: ").append(toIndentedString(supplierAdvanceRequisition)).append("\n");
         sb.append("    advanceAdjustedAmount: ").append(toIndentedString(advanceAdjustedAmount)).append("\n");
-        sb.append("    advanceFullyAdjustedInBill: ").append(toIndentedString(advanceFullyAdjustedInBill)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -208,11 +182,10 @@ public class SupplierBillAdvanceAdjustment {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
 }
-

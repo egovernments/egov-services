@@ -5271,7 +5271,7 @@ definitions:
             type: boolean
             description: Boolean value to identify whether the advance fully adjusted in supplier bill.
             default: false
-          status:
+          sarStatus:
             type: string
             description: status of supplier advance requisition
           workFlowDetails:
@@ -5396,7 +5396,7 @@ definitions:
           billId:
             type: string
             description: bill id reference
-          status:
+          supplierBillStatus:
             type: string
             description: status of supplier bill
           workFlowDetails:

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -16,7 +15,7 @@ import java.util.Objects;
  * An Object that holds the basic data for a supplier Bill
  */
 @ApiModel(description = "An Object that holds the basic data for a supplier Bill")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-28T09:20:06.607Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-02T07:38:14.139Z")
 
 public class SupplierBill extends BillRegister {
     @JsonProperty("id")
@@ -51,6 +50,12 @@ public class SupplierBill extends BillRegister {
 
     @JsonProperty("supplierBillAdvanceAdjustments")
     private List<SupplierBillAdvanceAdjustment> supplierBillAdvanceAdjustments = null;
+
+    @JsonProperty("billId")
+    private String billId = null;
+
+    @JsonProperty("supplierBillStatus")
+    private String supplierBillStatus = null;
 
     @JsonProperty("workFlowDetails")
     private WorkFlowDetails workFlowDetails = null;
@@ -310,6 +315,48 @@ public class SupplierBill extends BillRegister {
         this.supplierBillAdvanceAdjustments = supplierBillAdvanceAdjustments;
     }
 
+    public SupplierBill billId(String billId) {
+        this.billId = billId;
+        return this;
+    }
+
+    /**
+     * bill id reference
+     *
+     * @return billId
+     **/
+    @ApiModelProperty(value = "bill id reference")
+
+
+    public String getBillId() {
+        return billId;
+    }
+
+    public void setBillId(String billId) {
+        this.billId = billId;
+    }
+
+    public SupplierBill supplierBillStatus(String supplierBillStatus) {
+        this.supplierBillStatus = supplierBillStatus;
+        return this;
+    }
+
+    /**
+     * status of supplier bill
+     *
+     * @return supplierBillStatus
+     **/
+    @ApiModelProperty(value = "status of supplier bill")
+
+
+    public String getSupplierBillStatus() {
+        return supplierBillStatus;
+    }
+
+    public void setSupplierBillStatus(String supplierBillStatus) {
+        this.supplierBillStatus = supplierBillStatus;
+    }
+
     public SupplierBill workFlowDetails(WorkFlowDetails workFlowDetails) {
         this.workFlowDetails = workFlowDetails;
         return this;
@@ -383,6 +430,7 @@ public class SupplierBill extends BillRegister {
      **/
     @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
 
+
     public Boolean getDeleted() {
         return deleted;
     }
@@ -412,6 +460,8 @@ public class SupplierBill extends BillRegister {
                 Objects.equals(this.cancellationRemarks, supplierBill.cancellationRemarks) &&
                 Objects.equals(this.supplierBillReceipts, supplierBill.supplierBillReceipts) &&
                 Objects.equals(this.supplierBillAdvanceAdjustments, supplierBill.supplierBillAdvanceAdjustments) &&
+                Objects.equals(this.billId, supplierBill.billId) &&
+                Objects.equals(this.supplierBillStatus, supplierBill.supplierBillStatus) &&
                 Objects.equals(this.workFlowDetails, supplierBill.workFlowDetails) &&
                 Objects.equals(this.stateId, supplierBill.stateId) &&
                 Objects.equals(this.auditDetails, supplierBill.auditDetails) &&
@@ -421,7 +471,7 @@ public class SupplierBill extends BillRegister {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, store, invoiceNumber, invoiceDate, approvedDate, approvedBy, cancellationReason, cancellationRemarks, supplierBillReceipts, supplierBillAdvanceAdjustments, workFlowDetails, stateId, auditDetails, deleted, super.hashCode());
+        return Objects.hash(id, tenantId, store, invoiceNumber, invoiceDate, approvedDate, approvedBy, cancellationReason, cancellationRemarks, supplierBillReceipts, supplierBillAdvanceAdjustments, billId, supplierBillStatus, workFlowDetails, stateId, auditDetails, deleted, super.hashCode());
     }
 
     @Override
@@ -440,6 +490,8 @@ public class SupplierBill extends BillRegister {
         sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
         sb.append("    supplierBillReceipts: ").append(toIndentedString(supplierBillReceipts)).append("\n");
         sb.append("    supplierBillAdvanceAdjustments: ").append(toIndentedString(supplierBillAdvanceAdjustments)).append("\n");
+        sb.append("    billId: ").append(toIndentedString(billId)).append("\n");
+        sb.append("    supplierBillStatus: ").append(toIndentedString(supplierBillStatus)).append("\n");
         sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
         sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
@@ -459,4 +511,3 @@ public class SupplierBill extends BillRegister {
         return o.toString().replace("\n", "\n    ");
     }
 }
-

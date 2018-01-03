@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object gives information about advance issued againest purchase order. There are multiple times advance requisition possible for selected purchase order. But it should not cross alloted advance amount or advance percentage defined in purchase order.
  */
 @ApiModel(description = "An Object gives information about advance issued againest purchase order. There are multiple times advance requisition possible for selected purchase order. But it should not cross alloted advance amount or advance percentage defined in purchase order. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-28T10:46:24.811Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-02T08:20:46.403Z")
 
 public class SupplierAdvanceRequisition extends AdvanceRequisition {
     @JsonProperty("id")
@@ -35,6 +35,18 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
     @JsonProperty("advanceAdjustedAmount")
     private BigDecimal advanceAdjustedAmount = null;
 
+    @JsonProperty("advanceFullyAdjustedInBill")
+    private Boolean advanceFullyAdjustedInBill = false;
+
+    @JsonProperty("sarStatus")
+    private String sarStatus = null;
+
+    @JsonProperty("workFlowDetails")
+    private WorkFlowDetails workFlowDetails = null;
+
+    @JsonProperty("stateId")
+    private String stateId = null;
+
     public SupplierAdvanceRequisition id(String id) {
         this.id = id;
         return this;
@@ -42,7 +54,6 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
 
     /**
      * Unique Identifier of the Supplier Bill
-     *
      * @return id
      **/
     @ApiModelProperty(value = "Unique Identifier of the Supplier Bill")
@@ -63,13 +74,12 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
 
     /**
      * tenant id of the Contractor Advance Requisition Form
-     *
      * @return tenantId
      **/
     @ApiModelProperty(required = true, value = "tenant id of the Contractor Advance Requisition Form")
     @NotNull
 
-    @Size(min = 2, max = 128)
+    @Size(min=2,max=128)
     public String getTenantId() {
         return tenantId;
     }
@@ -85,7 +95,6 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
 
     /**
      * Supplier reference
-     *
      * @return supplier
      **/
     @ApiModelProperty(value = "Supplier reference")
@@ -105,7 +114,6 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
 
     /**
      * Purchase order reference
-     *
      * @return purchaseOrder
      **/
     @ApiModelProperty(required = true, value = "Purchase order reference")
@@ -126,7 +134,6 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
 
     /**
      * Get auditDetails
-     *
      * @return auditDetails
      **/
     @ApiModelProperty(value = "")
@@ -146,10 +153,11 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
 
     /**
      * Total Advance adjested amount in each supplier bill
-     *
      * @return advanceAdjustedAmount
      **/
     @ApiModelProperty(value = "Total Advance adjested amount in each supplier bill")
+
+    @Valid
 
     public BigDecimal getAdvanceAdjustedAmount() {
         return advanceAdjustedAmount;
@@ -157,6 +165,87 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
 
     public void setAdvanceAdjustedAmount(BigDecimal advanceAdjustedAmount) {
         this.advanceAdjustedAmount = advanceAdjustedAmount;
+    }
+
+    public SupplierAdvanceRequisition advanceFullyAdjustedInBill(Boolean advanceFullyAdjustedInBill) {
+        this.advanceFullyAdjustedInBill = advanceFullyAdjustedInBill;
+        return this;
+    }
+
+    /**
+     * Boolean value to identify whether the advance fully adjusted in supplier bill.
+     * @return advanceFullyAdjustedInBill
+     **/
+    @ApiModelProperty(value = "Boolean value to identify whether the advance fully adjusted in supplier bill.")
+
+
+    public Boolean getAdvanceFullyAdjustedInBill() {
+        return advanceFullyAdjustedInBill;
+    }
+
+    public void setAdvanceFullyAdjustedInBill(Boolean advanceFullyAdjustedInBill) {
+        this.advanceFullyAdjustedInBill = advanceFullyAdjustedInBill;
+    }
+
+    public SupplierAdvanceRequisition sarStatus(String sarStatus) {
+        this.sarStatus = sarStatus;
+        return this;
+    }
+
+    /**
+     * status of supplier advance requisition
+     * @return sarStatus
+     **/
+    @ApiModelProperty(value = "status of supplier advance requisition")
+
+
+    public String getSarStatus() {
+        return sarStatus;
+    }
+
+    public void setSarStatus(String sarStatus) {
+        this.sarStatus = sarStatus;
+    }
+
+    public SupplierAdvanceRequisition workFlowDetails(WorkFlowDetails workFlowDetails) {
+        this.workFlowDetails = workFlowDetails;
+        return this;
+    }
+
+    /**
+     * Get workFlowDetails
+     * @return workFlowDetails
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public WorkFlowDetails getWorkFlowDetails() {
+        return workFlowDetails;
+    }
+
+    public void setWorkFlowDetails(WorkFlowDetails workFlowDetails) {
+        this.workFlowDetails = workFlowDetails;
+    }
+
+    public SupplierAdvanceRequisition stateId(String stateId) {
+        this.stateId = stateId;
+        return this;
+    }
+
+    /**
+     * State id of the workflow
+     * @return stateId
+     **/
+    @ApiModelProperty(value = "State id of the workflow")
+
+
+    public String getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(String stateId) {
+        this.stateId = stateId;
     }
 
 
@@ -175,12 +264,16 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
                 Objects.equals(this.purchaseOrder, supplierAdvanceRequisition.purchaseOrder) &&
                 Objects.equals(this.auditDetails, supplierAdvanceRequisition.auditDetails) &&
                 Objects.equals(this.advanceAdjustedAmount, supplierAdvanceRequisition.advanceAdjustedAmount) &&
+                Objects.equals(this.advanceFullyAdjustedInBill, supplierAdvanceRequisition.advanceFullyAdjustedInBill) &&
+                Objects.equals(this.sarStatus, supplierAdvanceRequisition.sarStatus) &&
+                Objects.equals(this.workFlowDetails, supplierAdvanceRequisition.workFlowDetails) &&
+                Objects.equals(this.stateId, supplierAdvanceRequisition.stateId) &&
                 super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, supplier, purchaseOrder, auditDetails, advanceAdjustedAmount, super.hashCode());
+        return Objects.hash(id, tenantId, supplier, purchaseOrder, auditDetails, advanceAdjustedAmount, advanceFullyAdjustedInBill, sarStatus, workFlowDetails, stateId, super.hashCode());
     }
 
     @Override
@@ -194,6 +287,10 @@ public class SupplierAdvanceRequisition extends AdvanceRequisition {
         sb.append("    purchaseOrder: ").append(toIndentedString(purchaseOrder)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("    advanceAdjustedAmount: ").append(toIndentedString(advanceAdjustedAmount)).append("\n");
+        sb.append("    advanceFullyAdjustedInBill: ").append(toIndentedString(advanceFullyAdjustedInBill)).append("\n");
+        sb.append("    sarStatus: ").append(toIndentedString(sarStatus)).append("\n");
+        sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
+        sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
         sb.append("}");
         return sb.toString();
     }

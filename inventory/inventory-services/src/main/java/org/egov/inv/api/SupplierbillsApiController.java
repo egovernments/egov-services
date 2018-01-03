@@ -2,8 +2,10 @@ package org.egov.inv.api;
 
 import io.swagger.annotations.ApiParam;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.domain.service.SupplierBillService;
 import org.egov.inv.model.SupplierBillRequest;
 import org.egov.inv.model.SupplierBillResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,10 +25,16 @@ import java.util.List;
 public class SupplierbillsApiController implements SupplierbillsApi {
 
 
+    private SupplierBillService supplierBillService;
+
+    @Autowired
+    public SupplierbillsApiController(SupplierBillService supplierBillService) {
+        this.supplierBillService = supplierBillService;
+    }
+
     public ResponseEntity<SupplierBillResponse> supplierbillsCreatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-                                                                        @ApiParam(value = "Details for the new Supplier Bill .", required = true) @Valid @RequestBody SupplierBillRequest supplierBillReceipt) {
-        // do some magic!
-        return new ResponseEntity<SupplierBillResponse>(HttpStatus.OK);
+                                                                        @ApiParam(value = "Details for the new Supplier Bill .", required = true) @Valid @RequestBody SupplierBillRequest supplierBillRequest) {
+        return new ResponseEntity<SupplierBillResponse>(supplierBillService.create(supplierBillRequest, tenantId), HttpStatus.OK);
     }
 
     public ResponseEntity<SupplierBillResponse> supplierbillsSearchPost(@ApiParam(value = "Request header for the service request details.", required = true) @Valid @RequestBody RequestInfo requestInfo,
@@ -44,9 +52,8 @@ public class SupplierbillsApiController implements SupplierbillsApi {
     }
 
     public ResponseEntity<SupplierBillResponse> supplierbillsUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-                                                                        @ApiParam(value = "Details for the new material receipts.", required = true) @Valid @RequestBody SupplierBillRequest supplierBillReceipt) {
-        // do some magic!
-        return new ResponseEntity<SupplierBillResponse>(HttpStatus.OK);
+                                                                        @ApiParam(value = "Details for the new material receipts.", required = true) @Valid @RequestBody SupplierBillRequest supplierBillRequest) {
+        return new ResponseEntity<SupplierBillResponse>(supplierBillService.update(supplierBillRequest, tenantId), HttpStatus.OK);
     }
 
 }

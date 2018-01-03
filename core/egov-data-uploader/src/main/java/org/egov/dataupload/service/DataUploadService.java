@@ -127,18 +127,16 @@ public class DataUploadService {
 	    	logger.error("Couldn't parse excel sheet", e);
 	    }
         try{
-		    /*if(uploadDefinition.getIsBulkApi()){
-		    	String request = prepareDataForBulkApi(excelData, coloumnHeaders, 
-		    			uploadDefinition, uploaderRequest.getRequestInfo(), success, failure);
-		        hitApi(request, uploadDefinition.getUri());
-				ResponseMetaData responseMetaData= new ResponseMetaData();
-				responseMetaData.setRowData(excelData);
-	        	success.add(responseMetaData);
-		    }else*/{
-		    	uploadData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
+        	if(uploadDefinition.getIsParentChild()){
+        		uploadParentChildData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
 				dataUploadUtils.clearExceFile(writeFilePath);
 				dataUploadUtils.clearExceFile(resultFilePath);
-		    }
+        	}else{
+        		uploadData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
+				dataUploadUtils.clearExceFile(writeFilePath);
+				dataUploadUtils.clearExceFile(resultFilePath);
+        	}
+
         }catch(Exception e){
         	logger.info("Exception whil proccessing data: ",e);
         }
@@ -250,7 +248,7 @@ public class DataUploadService {
 	}
 	
 	
-	private void uploadParentChildData(List<List<Object>> excelData, List<String> columnHeaders,
+	private void uploadParentChildData(List<List<Object>> excelData,
 		     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest){
 		ObjectMapper mapper = new ObjectMapper();
 		if(null == uploadDefinition.getUniqueParentKeys()){
@@ -263,7 +261,14 @@ public class DataUploadService {
 		uploadJob.setEndTime(0L);uploadJob.setFailedRows(0);uploadJob.setStartTime(new Date().getTime());uploadJob.setSuccessfulRows(0);
 		uploadJob.setStatus(StatusEnum.fromValue("InProgress"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size() - 1);
 		uploadRegistryRepository.updateJob(uploaderRequest);
-    	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
+		DocumentContext documentContext = null;
+		DocumentContext bulkApiRequest = null;
+		if(uploadDefinition.getIsBulkApi()){
+	    	documentContext = JsonPath.parse(JsonPath.read(uploadDefinition.getApiRequest(), 
+	    			uploadDefinition.getArrayPath()).toString());
+	    	bulkApiRequest = JsonPath.parse(uploadDefinition.getApiRequest());
+		}
+    	documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
     	List<Object> resJsonPathList = null;
     	if(null != uploadDefinition.getAdditionalResFields()){
     		resJsonPathList = dataUploadUtils.getResJsonPathList(uploadDefinition.getAdditionalResFields(), coloumnHeaders);
@@ -282,7 +287,7 @@ public class DataUploadService {
 		
 		//Getting indexes of parentKeys from header list to filter data based on those keys.
 		for(String key: uploadDefinition.getUniqueParentKeys()){
-			indexes.add(columnHeaders.indexOf(key));
+			indexes.add(coloumnHeaders.indexOf(key));
 		}
 		
 		for(int i = 0; i < excelData.size(); i++){
@@ -292,12 +297,12 @@ public class DataUploadService {
 			This map will be used to construct any arrays present in the request.*/
 			
 			Map<String, List<Object>> allRowsOfAColumnMap = new HashMap<>();
-			for(int j = 0; j <  columnHeaders.size(); j++){
+			for(int j = 0; j <  coloumnHeaders.size(); j++){
 				List<Object> rowsList = new ArrayList<>();
 				for(List<Object> list: filteredList){
 					rowsList.add(list.get(i));
 				}
-				allRowsOfAColumnMap.put(columnHeaders.get(i), rowsList);
+				allRowsOfAColumnMap.put(coloumnHeaders.get(i).toString(), rowsList);
 			}
 			logger.info("allRowsOfAColumnMap: "+allRowsOfAColumnMap);
 			List<Map<String, Object>> filteredListObjects = new ArrayList<>();
@@ -310,6 +315,7 @@ public class DataUploadService {
 						logger.info("no jsonpath in config for: "+coloumnHeaders.get(j));
 	            		continue;
 	            	}
+	            	jsonPath = jsonPath.replace(uploadDefinition.getArrayPath(), "$");
 	            	if(jsonPath.contains("*")){
 	            		String[] splitJsonPath = jsonPath.split("[.]");
 	            		List<String> list = Arrays.asList(splitJsonPath);
@@ -337,21 +343,34 @@ public class DataUploadService {
 				}
 			}
 			
-			String finalRequest = null;
+			String requestContentBody = null;
 			try{
-				finalRequest = mapper.writeValueAsString(requestMap);
+				requestContentBody = mapper.writeValueAsString(requestMap);
 			}catch(Exception e){
 				logger.error("Exception while parsing requestMap to String", e);
 			}
-			DocumentContext docContext = JsonPath.parse(finalRequest);
-		    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
-		    try{
-		    	docContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
-			    request = docContext.jsonString().toString();
-		    }catch(Exception e){
-		    	docContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
-			    request = docContext.jsonString().toString();
-		    }  
+			if(uploadDefinition.getIsBulkApi()){
+			    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
+			    try{
+			    	bulkApiRequest.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
+			    }catch(Exception e){
+			    	bulkApiRequest.put("$", "requestInfo", uploaderRequest.getRequestInfo());
+			    } 
+			    StringBuilder expression = new StringBuilder();
+            	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath(), expression);
+            	bulkApiRequest.put(expression.toString(), key, requestContentBody);
+            	request = bulkApiRequest.jsonString().toString();
+			}else{
+				DocumentContext docContext = JsonPath.parse(requestContentBody);
+			    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
+			    try{
+			    	docContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
+				    request = docContext.jsonString().toString();
+			    }catch(Exception e){
+			    	docContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
+				    request = docContext.jsonString().toString();
+			    }  
+			}
 			
 			logger.info("FINAL REQUEST to EXTERNAL MODULE: "+request);
 		}

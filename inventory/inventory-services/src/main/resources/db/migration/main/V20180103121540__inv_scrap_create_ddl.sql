@@ -37,4 +37,4 @@ CREATE TABLE scrapDetail(
        );
 
 alter table scrapDetail add constraint pk_scrapDetail primary key (id,tenantId);
-create sequence seq_scrapDetails;
+create sequence seq_scrapDetail;

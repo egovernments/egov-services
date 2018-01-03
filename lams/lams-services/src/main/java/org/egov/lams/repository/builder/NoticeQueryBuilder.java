@@ -56,8 +56,8 @@ public class NoticeQueryBuilder {
         }
 
         if (noticeCriteria.getTenantId() != null) {
-            selectQuery.append(" and notice.TenantId = :tenderId");
-            params.put("tenderId", noticeCriteria.getTenantId());
+            selectQuery.append(" and notice.TenantId = :tenantId");
+            params.put("tenantId", noticeCriteria.getTenantId());
         }
 
         selectQuery.append(" ORDER BY notice.ID");

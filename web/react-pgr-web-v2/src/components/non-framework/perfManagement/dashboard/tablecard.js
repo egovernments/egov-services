@@ -304,7 +304,7 @@ parseCompareSearchResponse(res) {
 
             <TableBody displayRowCheckbox={false}>
               {data.data.map((item, index) => (
-                <TableRow key={index}> {headers.map((el, index) => <TableRowColumn key={index}>{item[el]} </TableRowColumn>)} </TableRow>
+                  <TableRow key={index}> {headers.map((el, index) => <TableRowColumn style={{whiteSpace: 'normal', wordWrap: 'break-word'}} key={index}>{item[el]} </TableRowColumn>)} </TableRow>
               ))}
             </TableBody>
           </Table>

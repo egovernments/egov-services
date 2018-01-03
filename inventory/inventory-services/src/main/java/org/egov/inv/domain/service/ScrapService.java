@@ -51,7 +51,7 @@ public class ScrapService extends DomainService{
 			}
 			
 			scrapData.getScrapDetails().forEach(scrapDetails -> {
-				scrapDetails.setId(scrapJdbcRepository.getSequence("seq_scrapDetails"));
+				scrapDetails.setId(scrapJdbcRepository.getSequence("seq_scrapDetail"));
 				scrapDetails.setTenantId(tenantId);
 			});
 		});

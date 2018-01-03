@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.ScrapDetails;
+import org.egov.inv.model.ScrapDetail;
 import java.math.BigDecimal;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -21,7 +21,7 @@ public class DisposalDetails   {
   private String id = null;
 
   @JsonProperty("scrapDetails")
-  private ScrapDetails scrapDetails = null;
+  private ScrapDetail scrapDetails = null;
 
   @JsonProperty("disposalQuantity")
   private BigDecimal disposalQuantity = null;
@@ -49,7 +49,7 @@ public class DisposalDetails   {
     this.id = id;
   }
 
-  public DisposalDetails scrapDetails(ScrapDetails scrapDetails) {
+  public DisposalDetails scrapDetails(ScrapDetail scrapDetails) {
     this.scrapDetails = scrapDetails;
     return this;
   }
@@ -63,11 +63,11 @@ public class DisposalDetails   {
 
   @Valid
 
-  public ScrapDetails getScrapDetails() {
+  public ScrapDetail getScrapDetails() {
     return scrapDetails;
   }
 
-  public void setScrapDetails(ScrapDetails scrapDetails) {
+  public void setScrapDetails(ScrapDetail scrapDetails) {
     this.scrapDetails = scrapDetails;
   }
 

@@ -21,7 +21,7 @@ public class ScrapEntity {
     
     private String id;
     
-    private String ScrapNumber;
+    private String scrapNumber;
     
     private String store;
     
@@ -45,7 +45,7 @@ public class ScrapEntity {
     	Scrap scrap = new Scrap();
 
         return scrap.id(id)
-                .scrapNumber(ScrapNumber)
+                .scrapNumber(scrapNumber)
                 .scrapDate(scrapDate)
                 .scrapStatus(Scrap.ScrapStatusEnum.fromValue(scrapStatus))
                 .tenantId(tenantId)

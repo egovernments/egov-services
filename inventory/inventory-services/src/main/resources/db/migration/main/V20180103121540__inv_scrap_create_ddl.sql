@@ -18,7 +18,7 @@ CREATE TABLE scrap(
 alter table scrap add constraint pk_scrap primary key (id,tenantId);
 create sequence seq_scrap;
 
-CREATE TABLE scrapDetails(
+CREATE TABLE scrapDetail(
 	id character varying(50) NOT NULL,
 	tenantid varchar(256) NOT NULL,
 	scrapNumber character varying(50),
@@ -36,5 +36,5 @@ CREATE TABLE scrapDetails(
         lastmodifiedtime bigint
        );
 
-alter table scrapDetails add constraint pk_scrapDetails primary key (id,tenantId);
+alter table scrapDetail add constraint pk_scrapDetail primary key (id,tenantId);
 create sequence seq_scrapDetails;

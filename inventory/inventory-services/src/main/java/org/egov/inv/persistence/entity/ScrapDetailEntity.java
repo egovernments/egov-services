@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.egov.inv.model.AuditDetails;
 import org.egov.inv.model.Scrap;
-import org.egov.inv.model.ScrapDetails;
+import org.egov.inv.model.ScrapDetail;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +18,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class ScrapDetailEntity {
-	public static final String TABLE_NAME = "scrapDetails";
-    public static final String SEQUENCE_NAME = "seq_scrapDetails";
-    public static final String ALIAS = "scrapDetails";
+	public static final String TABLE_NAME = "scrapDetail";
+    public static final String SEQUENCE_NAME = "seq_scrapDetail";
+    public static final String ALIAS = "scrapDetail";
     
     private String id;
     
-    private String ScrapNumber;
+    private String scrapNumber;
     
     private String material;
     
@@ -52,13 +52,13 @@ public class ScrapDetailEntity {
 
     private String tenantId;
 
-    public ScrapDetails toDomain() {
-    	ScrapDetails scrapDetail = new ScrapDetails();
+    public ScrapDetail toDomain() {
+    	ScrapDetail scrapDetail = new ScrapDetail();
 
         return scrapDetail.id(id)
-                .scrapNumber(ScrapNumber)
+                .scrapNumber(scrapNumber)
                 .expiryDate(expiryDate)
-                .scrapReason(ScrapDetails.ScrapReasonEnum.fromValue(scrapReason))
+                .scrapReason(ScrapDetail.ScrapReasonEnum.fromValue(scrapReason))
                 .quantity(quantity)
                 .disposalQuantity(disposalQuantity)
                 .scrapValue(scrapValue)

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.ScrapDetails;
+import org.egov.inv.model.ScrapDetail;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.WorkFlowDetails;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class Scrap   {
   private String description = null;
 
   @JsonProperty("scrapDetails")
-  private List<ScrapDetails> scrapDetails = new ArrayList<ScrapDetails>();
+  private List<ScrapDetail> scrapDetails = new ArrayList<ScrapDetail>();
 
   /**
    * scrap status of the Scrap 
@@ -217,12 +217,12 @@ public class Scrap   {
     this.description = description;
   }
 
-  public Scrap scrapDetails(List<ScrapDetails> scrapDetails) {
+  public Scrap scrapDetails(List<ScrapDetail> scrapDetails) {
     this.scrapDetails = scrapDetails;
     return this;
   }
 
-  public Scrap addScrapDetailsItem(ScrapDetails scrapDetailsItem) {
+  public Scrap addScrapDetailsItem(ScrapDetail scrapDetailsItem) {
     this.scrapDetails.add(scrapDetailsItem);
     return this;
   }
@@ -236,11 +236,11 @@ public class Scrap   {
 
   @Valid
  @Size(min=1,max=50)
-  public List<ScrapDetails> getScrapDetails() {
+  public List<ScrapDetail> getScrapDetails() {
     return scrapDetails;
   }
 
-  public void setScrapDetails(List<ScrapDetails> scrapDetails) {
+  public void setScrapDetails(List<ScrapDetail> scrapDetails) {
     this.scrapDetails = scrapDetails;
   }
 

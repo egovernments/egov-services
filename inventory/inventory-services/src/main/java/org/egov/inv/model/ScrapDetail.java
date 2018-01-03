@@ -17,7 +17,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object holds the scrap details information.   ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
-public class ScrapDetails   {
+public class ScrapDetail   {
   @JsonProperty("id")
   private String id = null;
 
@@ -96,7 +96,7 @@ public class ScrapDetails   {
   @JsonProperty("scrapValue")
   private BigDecimal scrapValue = null;
 
-  public ScrapDetails id(String id) {
+  public ScrapDetail id(String id) {
     this.id = id;
     return this;
   }
@@ -116,7 +116,7 @@ public class ScrapDetails   {
     this.id = id;
   }
 
-  public ScrapDetails tenantId(String tenantId) {
+  public ScrapDetail tenantId(String tenantId) {
     this.tenantId = tenantId;
     return this;
   }
@@ -136,7 +136,7 @@ public class ScrapDetails   {
     this.tenantId = tenantId;
   }
 
-  public ScrapDetails scrapNumber(String scrapNumber) {
+  public ScrapDetail scrapNumber(String scrapNumber) {
     this.scrapNumber = scrapNumber;
     return this;
   }
@@ -156,7 +156,7 @@ public class ScrapDetails   {
     this.scrapNumber = scrapNumber;
   }
 
-  public ScrapDetails material(Material material) {
+  public ScrapDetail material(Material material) {
     this.material = material;
     return this;
   }
@@ -178,7 +178,7 @@ public class ScrapDetails   {
     this.material = material;
   }
 
-  public ScrapDetails uom(Uom uom) {
+  public ScrapDetail uom(Uom uom) {
     this.uom = uom;
     return this;
   }
@@ -199,7 +199,7 @@ public class ScrapDetails   {
     this.uom = uom;
   }
 
-  public ScrapDetails receiptDetail(MaterialReceiptDetail receiptDetail) {
+  public ScrapDetail receiptDetail(MaterialReceiptDetail receiptDetail) {
     this.receiptDetail = receiptDetail;
     return this;
   }
@@ -220,7 +220,7 @@ public class ScrapDetails   {
     this.receiptDetail = receiptDetail;
   }
 
-  public ScrapDetails issueDetail(MaterialIssueDetail issueDetail) {
+  public ScrapDetail issueDetail(MaterialIssueDetail issueDetail) {
     this.issueDetail = issueDetail;
     return this;
   }
@@ -241,7 +241,7 @@ public class ScrapDetails   {
     this.issueDetail = issueDetail;
   }
 
-  public ScrapDetails lotNumber(String lotNumber) {
+  public ScrapDetail lotNumber(String lotNumber) {
     this.lotNumber = lotNumber;
     return this;
   }
@@ -262,7 +262,7 @@ public class ScrapDetails   {
     this.lotNumber = lotNumber;
   }
 
-  public ScrapDetails expiryDate(Integer expiryDate) {
+  public ScrapDetail expiryDate(Integer expiryDate) {
     this.expiryDate = expiryDate;
     return this;
   }
@@ -282,7 +282,7 @@ public class ScrapDetails   {
     this.expiryDate = expiryDate;
   }
 
-  public ScrapDetails scrapReason(ScrapReasonEnum scrapReason) {
+  public ScrapDetail scrapReason(ScrapReasonEnum scrapReason) {
     this.scrapReason = scrapReason;
     return this;
   }
@@ -303,7 +303,7 @@ public class ScrapDetails   {
     this.scrapReason = scrapReason;
   }
 
-  public ScrapDetails quantity(BigDecimal quantity) {
+  public ScrapDetail quantity(BigDecimal quantity) {
     this.quantity = quantity;
     return this;
   }
@@ -325,7 +325,7 @@ public class ScrapDetails   {
     this.quantity = quantity;
   }
 
-  public ScrapDetails disposalQuantity(BigDecimal disposalQuantity) {
+  public ScrapDetail disposalQuantity(BigDecimal disposalQuantity) {
     this.disposalQuantity = disposalQuantity;
     return this;
   }
@@ -346,7 +346,7 @@ public class ScrapDetails   {
     this.disposalQuantity = disposalQuantity;
   }
 
-  public ScrapDetails scrapValue(BigDecimal scrapValue) {
+  public ScrapDetail scrapValue(BigDecimal scrapValue) {
     this.scrapValue = scrapValue;
     return this;
   }
@@ -376,7 +376,7 @@ public class ScrapDetails   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ScrapDetails scrapDetails = (ScrapDetails) o;
+    ScrapDetail scrapDetails = (ScrapDetail) o;
     return Objects.equals(this.id, scrapDetails.id) &&
         Objects.equals(this.tenantId, scrapDetails.tenantId) &&
         Objects.equals(this.scrapNumber, scrapDetails.scrapNumber) &&

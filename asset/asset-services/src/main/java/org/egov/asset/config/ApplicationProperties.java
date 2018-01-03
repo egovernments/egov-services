@@ -56,6 +56,9 @@ import lombok.Getter;
 @Getter
 public class ApplicationProperties {
 
+    @Autowired
+    private Environment environment;
+
     private final String searchPageSizeDefault = "search.pagesize.default";
     private final String searchPagenoMax = "search.pageno.max";
     private final String searchPageSizeMax = "search.pagesize.max";
@@ -71,7 +74,7 @@ public class ApplicationProperties {
     public String getSearchPageSizeMax() {
         return environment.getProperty(searchPageSizeMax);
     }
-    
+
     public String getBootstrapServer() {
         return environment.getProperty("spring.kafka.bootstrap.servers");
     }
@@ -99,7 +102,7 @@ public class ApplicationProperties {
 
     @Value("${egov.services.egf_masters.host}")
     private String egfMastersHost;
-    
+
     @Value("${egov.services.egf_service.chartofaccounts.searchpath}")
     private String egfServiceChartOfAccountsSearchPath;
 
@@ -117,22 +120,11 @@ public class ApplicationProperties {
 
     @Value("${kafka.topics.save.currentvalue}")
     private String saveCurrentvalueTopic;
-    
+
     @Value("${egov.services.egf_service.functions.searchpath}")
     private String egfServiceFunctionsSearchPath;
 
     @Value("${egov.services.egf_service.funds.searchpath}")
     private String egfServiceFundsSearchPath;
-    
-    @Value("${errcode.depreciation.financialyear}")
-    private String financialYear;
-    
-    @Value("${errcode.depreciation.depreciationdate}")
-    private String depreciationDate;
-    
-
-    
-    @Autowired
-    private Environment environment;
 
 }

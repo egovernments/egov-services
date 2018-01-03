@@ -28,9 +28,11 @@ class UiBoundary extends Component {
     this.fetchLocations(this.props.item);
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
-    
+  componentWillReceiveProps(nextProps){
+    if(_.get(nextProps.formData,nextProps.item.jsonPath))
+    this.fetchLocations(nextProps.item);
   }
+
   shouldComponentUpdate(nextProps, nextState) {
     return true;
   }
@@ -88,29 +90,27 @@ class UiBoundary extends Component {
       hierarchyTypeCode: item.hierarchyType
     };
     var cityBdry;
+    var self = this;
     Api.commonApiPost('/egov-location/location/v11/boundarys/_search?', queryObj, {}, false, true)
     .then((res) => {
       var jpath = "";
       cityBdry = jp.query(res, `$.TenantBoundary[?(@.hierarchyType.name=="${item.hierarchyType}")].boundary[?(@.label=='City')]`);
-      var labelArr = this.fetchLabels(cityBdry[0]);
-      this.setState({
+      var labelArr = self.fetchLabels(cityBdry[0]);
+      self.setState({
         boundaryData: cityBdry,
         labelArr: labelArr
       });
-      this.setFirstDropDownData(cityBdry);
+      self.setFirstDropDownData(cityBdry);
       if(window.location.hash.split('/')[1] != 'create') {
-        console.log(this.props.formData, this.props.item.jsonPath);
-        if(!_.isEmpty(this.props.formData)) {
-          if(typeof(_.get(this.props.formData, this.props.item.jsonPath)) != 'undefined') {
-            this.initDropdownValues(cityBdry, _.get(this.props.formData, this.props.item.jsonPath));
+        console.log(self.props.formData, self.props.item.jsonPath);
+        if(!_.isEmpty(self.props.formData)) {
+          if(typeof(_.get(self.props.formData, self.props.item.jsonPath)) != 'undefined') {
+            self.initDropdownValues(cityBdry, _.get(self.props.formData, self.props.item.jsonPath));
           }
         }
       }
     });
   } 
-
-
-  
 
   getDepth = (obj) => {
     var depth = 0;
@@ -169,7 +169,6 @@ class UiBoundary extends Component {
 
     if(property == this.state.labelArr[this.state.labelArr.length-1]) {
       let formData = _.cloneDeep(this.props.formData);
-
       _.set(formData, this.props.item.jsonPath, key);
       this.props.setFormData(formData);
       
@@ -240,7 +239,7 @@ class UiBoundary extends Component {
     return (
       <SelectField
         className="custom-form-control-for-select"
-        id="hbjfs"
+        id= {this.props.item.jsonPath.split('.').join('-')+'-'+ level}
         floatingLabelStyle={{
           color: '#696969',
           fontSize: '20px',
@@ -294,8 +293,6 @@ class UiBoundary extends Component {
 
 
   render() {
-    // console.log(this.props.item)
-    // alert("rendering")
     return <div>{(this.props.match.url.split('/')[1] == 'view' && typeof(_.get(this.props.formData, this.props.item.jsonPath)) != 'undefined') ? this.renderView(this.state.viewLabels) : this.renderBoundary(this.props.item)}
       {this.props.item.type == 'boundary' ? null : this.props.callbackFromCollectionRoute(this.state.dropDownDataVal)}
     </div>

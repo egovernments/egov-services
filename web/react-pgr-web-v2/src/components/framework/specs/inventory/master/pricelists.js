@@ -109,18 +109,22 @@ var dat = {
         },
         {
           label: 'inventory.rateContractDate',
+          isDate: true,
         },
         {
           label: 'inventory.agreementNumber',
         },
         {
           label: 'inventory.agreementDate',
+          isDate: true,
         },
         {
           label: 'inventory.agreementStartDate',
+          isDate: true,
         },
         {
           label: 'inventory.agreementEndDate',
+          isDate: true,
         },
         {
           label: 'inventory.active',

@@ -1,6 +1,5 @@
 package org.egov.swm.domain.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -104,8 +103,10 @@ public class VendorPaymentDetailsService {
                     .filter(record -> record.getFileStoreId() != null).collect(Collectors.toList());
 
             vendorPaymentDetail.setDocuments(documentList);
+
+            vendorPaymentDetail.getDocuments().forEach(document -> setDocumentDetails(document, vendorPaymentDetail));
         }
-        vendorPaymentDetail.getDocuments().forEach(document -> setDocumentDetails(document, vendorPaymentDetail));
+
     }
 
     private void setDocumentDetails(final Document document, final VendorPaymentDetails vendorPaymentDetails) {
@@ -158,27 +159,30 @@ public class VendorPaymentDetailsService {
                     vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
             }
 
-            //validation for duplicate service periods
+            // validation for duplicate service periods
             VendorPaymentDetailsSearch vendorPaymentDetailsSearch = new VendorPaymentDetailsSearch();
             vendorPaymentDetailsSearch.setTenantId(vendorPaymentDetail.getTenantId());
             vendorPaymentDetailsSearch.setFromDate(vendorPaymentDetail.getFromDate());
             vendorPaymentDetailsSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
             vendorPaymentDetailsSearch.setToDate(vendorPaymentDetail.getToDate());
 
-            Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
+            Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository
+                    .search(vendorPaymentDetailsSearch);
 
-            //For update scenario check after removing record being updated from request.
-            if(vendorPaymentDetail.getPaymentNo() != null && !vendorPaymentDetail.getPaymentNo().isEmpty()
-                && vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null
-                        && !vendorPaymentDetailsPage.getPagedData().isEmpty()){
-                
-                vendorPaymentDetailsPage.getPagedData().removeIf(record ->
-                        (record.getPaymentNo().equalsIgnoreCase(vendorPaymentDetail.getPaymentNo())));
+            // For update scenario check after removing record being updated from request.
+            if (vendorPaymentDetail.getPaymentNo() != null && !vendorPaymentDetail.getPaymentNo().isEmpty()
+                    && vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null
+                    && !vendorPaymentDetailsPage.getPagedData().isEmpty()) {
+
+                vendorPaymentDetailsPage.getPagedData()
+                        .removeIf(record -> (record.getPaymentNo().equalsIgnoreCase(vendorPaymentDetail.getPaymentNo())));
             }
 
-            if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())
+            if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null
+                    && !vendorPaymentDetailsPage.getPagedData().isEmpty())
                 throw new CustomException("VendorContractNo",
-                        "Invoice period is overlapping with earlier records: " + vendorPaymentDetail.getVendorContract().getContractNo());
+                        "Invoice period is overlapping with earlier records: "
+                                + vendorPaymentDetail.getVendorContract().getContractNo());
         }
 
     }

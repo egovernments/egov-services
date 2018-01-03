@@ -146,9 +146,9 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
         if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty()) {
 
-            //populateVendorContracts(vendorPaymentDetailsList);
+            populateVendorContracts(vendorPaymentDetailsList);
 
-            //populateEmployees(vendorPaymentDetailsList);
+            populateEmployees(vendorPaymentDetailsList);
         }
         page.setTotalResults(vendorPaymentDetailsList.size());
 

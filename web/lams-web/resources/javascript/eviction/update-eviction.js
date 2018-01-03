@@ -117,7 +117,8 @@ class UpdateEviction extends React.Component {
             userList: [],
             buttons: [],
             wfStatus: "",
-            wfInitiator:""
+            wfInitiator:"",
+            workflow:[]
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -287,6 +288,12 @@ class UpdateEviction extends React.Component {
             id: stateId
         }).responseJSON["processInstance"] || {};
 
+        var workflow = commonApiPost("egov-common-workflows", "history", "", {
+            tenantId: tenantId,
+            workflowId: stateId
+        }).responseJSON["tasks"] || {};
+
+
         if (process) {
             if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
                 var _btns = [];
@@ -319,12 +326,6 @@ class UpdateEviction extends React.Component {
             agreement.workflowDetails = {};
         }
 
-        // console.log(_btns ? _btns : []);
-        var wf = {};
-        if(_btns.length > 0){
-          wf = _btns.find((obj)=> {return (obj.key === 'Approve' || obj.key === 'Print Notice')});
-        }
-
         this.setState({
             ...this.state,
             agreement: agreement,
@@ -332,7 +333,7 @@ class UpdateEviction extends React.Component {
             //owner:process.owner.id,
             wfInitiator: process.initiatorPosition,
             wfStatus: process.status,
-            wfdisable: Object.keys(wf).length !== 0 ? true : false,
+            workflow: workflow,
             buttons: _btns ? _btns : []
         });
 
@@ -1182,84 +1183,83 @@ class UpdateEviction extends React.Component {
             );
         }
 
-        const renderWorkFlowDetails = function (obj) {
+        const renederWorkflowHistory = function () {
             return (
-                <div className="form-section">
-                    <div className="row">
-                        <div className="col-md-8 col-sm-8">
-                            <h3 className="categoryType">Workflow Details </h3>
+                <div className="form-section hide-sec" id="agreementCancelDetails">
+                    <h3 className="categoryType">Workflow History </h3>
+                    <div className="form-section-inner">
+
+                        <div id="historyTable" className="land-table">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Updated By</th>
+                                        <th>Current Owner</th>
+                                        <th>Status</th>
+                                        <th>Comments </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {renderTr()}
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    {!obj.state.wfdisable &&
-                    <div className="row">
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="">Department <span>*</span></label>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="styled-select">
-                                        <select id="department" name="department" value={workflowDetails.department}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "department") }} required >
-                                            <option value="">Select Department</option>
-                                            {renderOption(_this.state.departmentList)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="">Designation <span>*</span></label>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="styled-select">
-                                        <select id="designation" name="designation" value={workflowDetails.designation}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "designation") }} required >
-                                            <option value="">Select Designation</option>
-                                            {renderOption(_this.state.designationList)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    }
-                    <div className="row">
-                      {!obj.state.wfdisable &&
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="">User Name <span>*</span></label>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="styled-select">
-                                        <select id="assignee" name="assignee" value={workflowDetails.assignee}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "assignee") }} required>
-                                            <option value="">Select User</option>
-                                            {renderOptionForUser(_this.state.userList)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                      }
-                        <div className="col-sm-6">
-                            <div className="row">
-                                <div className="col-sm-6 label-text">
-                                    <label htmlFor="comments">Comments </label>
-                                </div>
-                                <div className="col-sm-6">
-                                    <textarea rows="4" cols="50" id="comments" name="comments" value={workflowDetails.comments}
-                                        onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "comments") }} ></textarea>
-                                </div>
-                            </div>
-                        </div>
+
+
                     </div>
                 </div>
             );
+        }
 
+        const renderTr = () => {
+            return this.state.workflow.map((item, ind) => {
+
+                var employeeName = commonApiPost("hr-employee", "employees", "_search", {
+                    tenantId: tenantId,
+                    id: item.owner.id
+                }).responseJSON["Employee"] || {};
+        
+
+                return (
+                    <tr key={ind}>
+                        <td>{item.createdDate}</td>
+                        <td>{item.senderName}</td>
+                        <td>{employeeName[0].code+" :: "+ employeeName[0].name}</td>
+                        <td>{item.status}</td>
+                        <td>{item.comments}</td>
+                    </tr>
+                )
+            })
+        }
+
+        const renederWorkflowHistory = function () {
+            return (
+                <div className="form-section hide-sec" id="agreementCancelDetails">
+                    <h3 className="categoryType">Workflow History </h3>
+                    <div className="form-section-inner">
+
+                        <div id="historyTable" className="land-table">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Updated By</th>
+                                        <th>Current Owner</th>
+                                        <th>Status</th>
+                                        <th>Comments </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {renderTr()}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            );
         }
 
 
@@ -1272,7 +1272,8 @@ class UpdateEviction extends React.Component {
                         {renderAllottee()}
                         {renderAgreementDetails()}
                         {renederEvictionDetails()}
-                        {renderWorkFlowDetails(this)}
+                        {renederWorkflowHistory()}
+                        {renderWorkFlowDetails()}
 
                         <br />
                         <div className="text-center">

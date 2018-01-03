@@ -518,25 +518,19 @@ class assetMovableView extends Component {
       }
     };
     const renderBody = function() {
-      console.log(formData);
-
-      // console.log(formData.feeMatrices);
-      if (
-        formData &&
-        formData.hasOwnProperty('Assets') &&
-        formData.Assets[0].hasOwnProperty('assetAttributes') &&
-        formData.Assets[0].assetAttributes != ''
-      ) {
-        console.log(formData.Assets[0].assetAttributes);
+      if (formData && formData.hasOwnProperty('Assets') && formData.Assets[0].hasOwnProperty('assetAttributes')) {
+        // console.log(formData.Assets[0].assetAttributes);
         var createCustomObject = formData.Assets[0].assetAttributes;
         var disArray = [];
         _.forEach(createCustomObject, function(value, key) {
           var temp = {};
-          console.log(value.key);
-          console.log(value.value);
-
+          console.log(value);
+          if(value.type == "Image"){
+            temp.imagePath = value.value;
+          } else {
+            temp.value = value.value;
+          }
           temp.label = value.key;
-          temp.value = value.value;
           disArray.push(temp);
         });
         console.log(disArray);
@@ -546,30 +540,24 @@ class assetMovableView extends Component {
               <CardHeader title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('as.assetAttributes')}</div>} />
               <CardText>
                 <Row>
-                  {disArray &&
-                    disArray.map(function(item, index) {
-                      console.log(item.label);
-                      console.log(item.value);
-                      _.forEach(disArray, function(value, key) {
-                        console.log(value);
-                        return (
-                          <Col xs={12} md={3}>
-                            <Col style={{ textAlign: 'left' }}>
-                              <label>
-                                <span style={{ fontWeight: 600, fontSize: '13px' }}>{item.label}</span>
-                              </label>
-                            </Col>
-                            <Col style={{ textAlign: 'left' }}>
-                              <label>
-                                <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                                  {item.value ? (typeof item.value == 'object' ? item.value[Object.keys(item.value)[0]] : item.value) : 'NA'}
-                                </span>
-                              </label>
-                            </Col>
-                          </Col>
-                        );
-                      });
-                    })}
+                  {disArray.map(function(item, index) {
+                    return (
+                      <Col xs={12} md={3}>
+                        <Col style={{ textAlign: 'left' }}>
+                          <label>
+                            <span style={{ fontWeight: 600, fontSize: '13px' }}>{item.label}</span>
+                          </label>
+                        </Col>
+                        <Col style={{ textAlign: 'left' }}>
+                          <label>
+                            <span style={{ fontWeight: 500, fontSize: '13px' }}>
+                              {item.value ? (typeof item.value == 'object' ? item.value[Object.keys(item.value)[0]] : item.value) : (item.imagePath ? <img src={item.imagePath} width={item.width || '20%'} height={item.height || '60%'} /> : "NA") }
+                            </span>
+                          </label>
+                        </Col>
+                      </Col>
+                    );
+                  })}
                 </Row>
               </CardText>
             </Card>
@@ -638,7 +626,7 @@ class assetMovableView extends Component {
               />
             )}
           <div />
-
+          <div>{renderBody()}</div>
           <Card className="uiCard">
             <CardHeader title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }} />} />
             <CardText>

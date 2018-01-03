@@ -1,21 +1,50 @@
 package org.egov.works.services.domain.validator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.WorksServicesApplication;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.DetailedEstimateOfflineStatus;
+import org.egov.works.commons.web.contract.DetailedEstimateStatus;
 import org.egov.works.commons.web.contract.LOAOfflineStatuses;
+import org.egov.works.commons.web.contract.LOAStatus;
 import org.egov.works.commons.web.contract.WorkOrderOfflineStatus;
+import org.egov.works.commons.web.contract.WorkOrderStatus;
 import org.egov.works.services.config.Constants;
+import org.egov.works.services.domain.repository.EstimateRepository;
 import org.egov.works.services.domain.repository.FileStoreRepository;
+import org.egov.works.services.domain.repository.LetterOfAcceptanceRepository;
+import org.egov.works.services.domain.repository.WorkOrderRepository;
 import org.egov.works.services.domain.service.OfflineStatusService;
 import org.egov.works.services.utils.ServiceUtils;
-import org.egov.works.services.web.contract.*;
+import org.egov.works.services.web.contract.DetailedEstimate;
+import org.egov.works.services.web.contract.DetailedEstimateResponse;
+import org.egov.works.services.web.contract.DetailedEstimateSearchContract;
+import org.egov.works.services.web.contract.DocumentDetail;
+import org.egov.works.services.web.contract.DocumentDetailRequest;
+import org.egov.works.services.web.contract.DocumentDetailSearchCriteria;
+import org.egov.works.services.web.contract.EstimateAppropriationSearchContract;
+import org.egov.works.services.web.contract.LetterOfAcceptance;
+import org.egov.works.services.web.contract.LetterOfAcceptanceResponse;
+import org.egov.works.services.web.contract.LetterOfAcceptanceSearchContract;
+import org.egov.works.services.web.contract.OfflineStatus;
+import org.egov.works.services.web.contract.OfflineStatusRequest;
+import org.egov.works.services.web.contract.OfflineStatusResponse;
+import org.egov.works.services.web.contract.OfflineStatusSearchContract;
+import org.egov.works.services.web.contract.RequestInfo;
+import org.egov.works.services.web.contract.WorkOrder;
+import org.egov.works.services.web.contract.WorkOrderResponse;
+import org.egov.works.services.web.contract.WorkOrderSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class RequestValidator {
@@ -28,6 +57,15 @@ public class RequestValidator {
 
     @Autowired
     private ServiceUtils serviceUtils;
+
+    @Autowired
+    private EstimateRepository estimateRepository;
+
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+
+    @Autowired
+    private WorkOrderRepository workOrderRepository;
 
     public void validateAppropriationSearchContract(EstimateAppropriationSearchContract estimateAppropriationSearchContract) {
         Map<String, String> messages = new HashMap<>();
@@ -44,11 +82,11 @@ public class RequestValidator {
     public void validateOfflineStatus(OfflineStatusRequest offlineStatusRequest, Boolean isUpdate) {
 
         Map<String, String> messages = new HashMap<>();
-        
+
         validateObjectDateAndStatusDate(offlineStatusRequest, messages);
-        if(isUpdate)
+        if (isUpdate)
             validateObjectTypeAndObjectNumber(offlineStatusRequest, messages);
-        
+
         List<String> OffStatuses;
         final String ObjectType = offlineStatusRequest.getOfflineStatuses().get(0).getObjectType();
         OffStatuses = getListOfStatusForObjectType(ObjectType);
@@ -62,12 +100,14 @@ public class RequestValidator {
 
     }
 
-    private void validateStatus(OfflineStatusRequest offlineStatusRequest, Map<String, String> messages, RequestInfo requestInfo) {
+    private void validateStatus(OfflineStatusRequest offlineStatusRequest, Map<String, String> messages,
+            RequestInfo requestInfo) {
 
-        for(OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
+        for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
             if (offlineStatus.getStatus() != null && StringUtils.isNotBlank(offlineStatus.getStatus().getCode())) {
                 List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE, CommonConstants.MODULE_TYPE));
-                List<String> filetsValuesList = new ArrayList<>(Arrays.asList(offlineStatus.getStatus().getCode().toUpperCase(), offlineStatus.getObjectType()));
+                List<String> filetsValuesList = new ArrayList<>(
+                        Arrays.asList(offlineStatus.getStatus().getCode().toUpperCase(), offlineStatus.getObjectType()));
                 JSONArray dBStatusArray = serviceUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
                         filetsValuesList, offlineStatus.getStatus().getTenantId(), requestInfo,
                         CommonConstants.MODULENAME_WORKS);
@@ -83,17 +123,84 @@ public class RequestValidator {
         for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
             if (offlineStatus.getObjectType().equalsIgnoreCase(Constants.WORKORDER)
                     && offlineStatus.getObjectDate() > offlineStatus.getStatusDate()) {
-                messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_DE_INVALID,
-                        Constants.MESSAGE_OBJECTDATE_STATUSDATE_DE_INVALID);
+                messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_WO_INVALID,
+                        Constants.MESSAGE_OBJECTDATE_STATUSDATE_WO_INVALID);
             } else if (offlineStatus.getObjectType().equalsIgnoreCase(Constants.LETTEROFACCEPTANCE)
                     && offlineStatus.getObjectDate() > offlineStatus.getStatusDate()) {
                 messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_LOA_INVALID,
                         Constants.MESSAGE_OBJECTDATE_STATUSDATE_LOA_INVALID);
             } else if (offlineStatus.getObjectType().equalsIgnoreCase(Constants.DETAILEDESTIMATE)
                     && offlineStatus.getObjectDate() > offlineStatus.getStatusDate()) {
-                messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_WO_INVALID,
-                        Constants.MESSAGE_OBJECTDATE_STATUSDATE_WO_INVALID);
+                messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_DE_INVALID,
+                        Constants.MESSAGE_OBJECTDATE_STATUSDATE_DE_INVALID);
             }
+
+            if (offlineStatus.getObjectType().equalsIgnoreCase(CommonConstants.DETAILEDESTIMATE)) {
+                DetailedEstimateSearchContract detailedEstimateSearchContract = new DetailedEstimateSearchContract();
+                detailedEstimateSearchContract.setDetailedEstimateNumbers(Arrays.asList(offlineStatus.getObjectNumber()));
+                detailedEstimateSearchContract.setStatuses(Arrays.asList(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()));
+                DetailedEstimateResponse detailedEstimateResponse = estimateRepository.getDetailedEstimateByEstimateNumber(
+                        detailedEstimateSearchContract, offlineStatus.getTenantId(), offlineStatusRequest.getRequestInfo());
+
+                if (detailedEstimateResponse.getDetailedEstimates().isEmpty()) {
+                    messages.put(Constants.KEY_OFFLINESTATUS_DE_NOT_EXIST, Constants.MESSAGE_OFFLINESTATUS_DE_NOT_EXIST);
+
+                } else if (detailedEstimateResponse != null && detailedEstimateResponse.getDetailedEstimates() != null
+                        && !detailedEstimateResponse.getDetailedEstimates().isEmpty()) {
+
+                    DetailedEstimate detailedEstimate = detailedEstimateResponse.getDetailedEstimates().get(0);
+
+                    if (detailedEstimate.getApprovedDate() > offlineStatus.getStatusDate()) {
+                        messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_DE_INVALID,
+                                Constants.MESSAGE_OBJECTDATE_STATUSDATE_DE_INVALID);
+                    }
+                }
+            }
+
+            if (offlineStatus.getObjectType().equalsIgnoreCase(CommonConstants.LETTEROFACCEPTANCE)) {
+                LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
+                letterOfAcceptanceSearchContract.setLoaNumbers(Arrays.asList(offlineStatus.getObjectNumber()));
+                letterOfAcceptanceSearchContract.setStatuses(Arrays.asList(LOAStatus.APPROVED.toString()));
+                LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAByLOANumber(
+                        letterOfAcceptanceSearchContract, offlineStatus.getTenantId(), offlineStatusRequest.getRequestInfo());
+
+                if (letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty()) {
+                    messages.put(Constants.KEY_OFFLINESTATUS_LOA_NOT_EXIST, Constants.MESSAGE_OFFLINESTATUS_LOA_NOT_EXIST);
+                } else if (letterOfAcceptanceResponse != null && letterOfAcceptanceResponse.getLetterOfAcceptances() != null
+                        && !letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty()) {
+
+                    LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceResponse.getLetterOfAcceptances().get(0);
+
+                    if (letterOfAcceptance.getApprovedDate() > offlineStatus.getStatusDate()) {
+                        messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_LOA_INVALID,
+                                Constants.MESSAGE_OBJECTDATE_STATUSDATE_LOA_INVALID);
+                    }
+                }
+            }
+
+            if (offlineStatus.getObjectType().equalsIgnoreCase(CommonConstants.WORKORDER)) {
+
+                WorkOrderSearchContract workOrderSearchContract = new WorkOrderSearchContract();
+                workOrderSearchContract.setWorkOrderNumbers(Arrays.asList(offlineStatus.getObjectNumber()));
+                workOrderSearchContract.setStatuses(Arrays.asList(WorkOrderStatus.APPROVED.toString()));
+
+                WorkOrderResponse workOrderResponse = workOrderRepository.searchWorkOrder(workOrderSearchContract,
+                        offlineStatus.getTenantId(), offlineStatusRequest.getRequestInfo());
+
+                if (workOrderResponse.getWorkOrders().isEmpty()) {
+                    messages.put(Constants.KEY_OFFLINESTATUS_WO_NOT_EXIST, Constants.MESSAGE_OFFLINESTATUS_WO_NOT_EXIST);
+                } else if (workOrderResponse != null && workOrderResponse.getWorkOrders() != null
+                        && !workOrderResponse.getWorkOrders().isEmpty()) {
+
+                    WorkOrder workOrder = workOrderResponse.getWorkOrders().get(0);
+
+                    if (workOrder.getWorkOrderDate() > offlineStatus.getStatusDate()) {
+                        messages.put(Constants.KEY_OBJECTDATE_STATUSDATE_WO_INVALID,
+                                Constants.MESSAGE_OBJECTDATE_STATUSDATE_WO_INVALID);
+                    }
+                }
+            }
+
         }
     }
 
@@ -140,7 +247,7 @@ public class RequestValidator {
         for (int i = 0; i < offlineStatusRequest.getOfflineStatuses().size(); i++) {
             selectedStatusArr[i] = offlineStatusRequest.getOfflineStatuses().get(i).getStatus().getCode();
         }
-        
+
         for (final String statName : offlineStatusService.getStatusNameDetails(selectedStatusArr)) {
             if (!OffStatuses.isEmpty() && !statName.equals(OffStatuses.get(b))) {
 

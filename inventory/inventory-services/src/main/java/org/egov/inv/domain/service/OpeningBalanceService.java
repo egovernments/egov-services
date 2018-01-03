@@ -202,7 +202,7 @@ public class OpeningBalanceService extends DomainService {
 							rcpt.setFinancialYear(fin.getFinYearRange());
 						}
 						else
-							errors.addDataError( ErrorCode.FIN_CUR_YEAR.getCode(),rcpt.getFinancialYear());
+							errors.addDataError( ErrorCode.FIN_CUR_YEAR.getCode(),"Financial Year ("+rcpt.getFinancialYear()+")");
 						}
 					}
 					else

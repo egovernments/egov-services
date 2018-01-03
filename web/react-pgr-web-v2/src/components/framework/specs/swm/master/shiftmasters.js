@@ -443,9 +443,8 @@ var dat = {
     'swm.update': {
       numCols: 3,
       useTimestamp: true,
-      objectName: 'MasterMetaData',
-      searchUrl: '/egov-mdms-update/v1/_update',
-      idJsonPath: 'MdmsRes.swm.Shift[*].code',
+      objectName: 'Shift',
+      idJsonPath: 'MasterMetaData.masterData[0].code',
       groups: [
         {
           name:'ShiftSelection',
@@ -614,8 +613,9 @@ var dat = {
           ],
         },
       ],
-      url: '/egov-mdms-update/shiftmasters/_update',
+      url: '/egov-mdms-create/v1/_update',
       tenantIdRequired: true,
+      isMDMSScreen: true,
       searchUrl: '/egov-mdms-service/v1/_search?code={code}',
     },
   };

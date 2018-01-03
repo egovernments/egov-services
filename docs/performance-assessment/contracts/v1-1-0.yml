@@ -531,7 +531,7 @@ definitions:
         items:
           $ref: '#/definitions/KpiValue'
           
-  KPICategory:
+  KpiCategory:
     type: object
     description: Object which holds the details of the KPI Category master record
     properties:
@@ -685,7 +685,7 @@ definitions:
         type: array
         maximum: 500
         items:
-          $ref: '#/definitions/KPICategory'
+          $ref: '#/definitions/KpiCategory'
     required:
       - requestInfo
       - KpiCategory
@@ -735,7 +735,7 @@ definitions:
         type: array
         maximum: 500
         items:
-          $ref: '#/definitions/KPICategory'
+          $ref: '#/definitions/KpiCategory'
           
       
   KPIValueRequest:

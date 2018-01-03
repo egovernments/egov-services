@@ -24,6 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.minidev.json.JSONArray;
 
+/**
+ * @author manoj
+ *
+ */
 @Service
 @Transactional(readOnly = true)
 public class MeasurementBookService {
@@ -166,6 +170,14 @@ public class MeasurementBookService {
 		}
 	}
 */
+    
+	/**
+	 * @param measurementBook
+	 * @param requestInfo
+	 * @param isUpdate
+	 * 
+	 * Create Revision DE and LOA if lumpsum activities present
+	 */
 	private void createUpdateRevisionEstimate(MeasurementBook measurementBook, RequestInfo requestInfo,
 			Boolean isUpdate) {
 		DetailedEstimateRequest detailedEstimateRequest = new DetailedEstimateRequest();
@@ -250,6 +262,15 @@ public class MeasurementBookService {
 				requestInfo);
 	}
 
+	
+	/**
+	 * @param measurementBook
+	 * @param letterOfAcceptance
+	 * @param isUpdate
+	 * @param requestInfo
+	 * 
+	 * populate mb details with references after creating revision DE and LOA
+	 */
 	private void updateLumpsumActivities(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,
 			Boolean isUpdate, RequestInfo requestInfo) {
 		if (isUpdate)
@@ -291,6 +312,14 @@ public class MeasurementBookService {
 		}
 	}
 
+	
+	/**
+	 * @param letterOfAcceptanceEstimate
+	 * @param detailedEstimate
+	 * @param auditDetails
+	 * 
+	 * populate LOA activities after creating revision DE
+	 */
 	private void populateLOAActivities(LetterOfAcceptanceEstimate letterOfAcceptanceEstimate,
 			DetailedEstimate detailedEstimate, AuditDetails auditDetails) {
 		List<LOAActivity> loaActivities = new ArrayList<>();

@@ -23,8 +23,7 @@ var dat = {
           type: 'singleValueList',
           isDisabled: false,
           patternErrorMsg: 'swm.create.field.message.name',
-          url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..Shift.*.code|$..Shift.*.name'
-
+          url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
         },
         // {
         //   name: 'targetNo',
@@ -94,7 +93,7 @@ var dat = {
           maxLength: 256,
           minLength: 1,
           patternErrorMsg: '',
-          url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..Shift.*.code|$..Shift.*.name'
+          url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
         },
         {
           name: 'targetFrom',
@@ -200,7 +199,7 @@ var dat = {
         },
         {
           name: 'code',
-          jsonPath: 'sanitationStaffSchedules[0].shift.name',
+          jsonPath: 'sanitationStaffSchedules[0].shift.shiftType.name',
           label: 'swm.create.sanitationstaffschedules.shift',
           pattern: '',
           type: 'text',
@@ -338,7 +337,7 @@ var dat = {
           maxLength: 256,
           minLength: 1,
           patternErrorMsg: '',
-          url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..Shift.*.code|$..Shift.*.name'
+          url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
         },
         {
           name: 'targetFrom',

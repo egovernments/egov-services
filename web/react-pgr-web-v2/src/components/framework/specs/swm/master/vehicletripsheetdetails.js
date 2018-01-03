@@ -2,8 +2,8 @@ var dat = {
   'swm.search' : {
      numCols: 4,
       useTimestamp: true,
-      objectName: 'vehiclestripsheet',
-      url: '/egov-mdms-service/v1/_search',
+      objectName: 'vehicleTripSheetDetails',
+      url: '/swm-services/vehicletripsheetdetails/_search',
       groups: [
         {
           name:'vehicleTripEntrySearch',
@@ -11,18 +11,18 @@ var dat = {
           fields: [
             {
               name: ' tripStartdate',
-              jsonPath: 'vehiclestripsheet.tripStartdate',
+              jsonPath: 'tripStartDate',
               label: 'swm.vehiclestripsheet.search.tripStartDate',
               pattern: '',
               type: 'datePicker',
               isRequired: false,
               isDisabled: false,
               defaultValue: '',
-              url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=ShiftType|$..ShiftType.*.code|$..ShiftType.*.name',
+              url: '',
             },
             {
               name: 'tripEndDate',
-              jsonPath: 'vehiclestripsheet.tripEndDate',
+              jsonPath: 'tripEndDate',
               label: 'swm.vehiclestripsheet.search.tripEndDate',
               pattern: '',
               type: 'datePicker',
@@ -30,31 +30,31 @@ var dat = {
               isDisabled: false,
               defaultValue: '',
               patternErrorMsg: '',
-              url: '/hr-masters/designations/_search?tenantId=default|$..id|$..name',
+              url: '',
             },
             {
               name: 'regNumber',
-              jsonPath: 'vehiclestripsheet.regNumber',
+              jsonPath: 'regNumber',
               label: 'swm.vehiclestripsheet.create.regNumber',
               pattern: '',
-              type: 'text',
+              type: 'autoCompelete',
               isRequired: false,
               isDisabled: false,
               defaultValue: '',
               patternErrorMsg: '',
-              url: '/hr-masters/designations/_search?tenantId=default|$..id|$..name',
+              url: 'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
             },
             {
               name: 'routeName',
-              jsonPath: 'vehiclestripsheet.routeName',
+              jsonPath: 'routeCode',
               label: 'swm.vehiclestripsheet.search.routeName',
               pattern: '',
-              type: 'text',
+              type: 'singleValueList',
               isRequired: false,
               isDisabled: false,
               defaultValue: '',
               patternErrorMsg: '',
-              url: '/hr-masters/designations/_search?tenantId=default|$..id|$..name',
+              url:'/swm-services/routes/_search?|$.routes.*.code|$.routes.*.name',
             },
           ]
         },
@@ -77,21 +77,21 @@ var dat = {
           },
         ],
         values: [
-          // 'shiftType.name',
-          // 'designation.name',
-          // 'shiftStartTime',
-          // 'shiftEndTime',
+           'vehicle.regNumber',
+           'route.name',
+           'tripStartDate',
+           'tripEndDate',
         ],
-        resultPath: 'MdmsRes.swm.Shift',
-        rowClickUrlUpdate: '/update/swm/shiftmasters/{code}',
-        rowClickUrlView: '/view/swm/shiftmasters/{code}',
-        isMasterScreen: true
+        resultPath: 'vehicleTripSheetDetails',
+        rowClickUrlUpdate: '/update/swm/vehicletripsheetdetails/{tripNo}',
+        rowClickUrlView: '/view/swm/vehicletripsheetdetails/{tripNo}',
+        //isMasterScreen: true
       },
     },
   'swm.create': {
     numCols: 4,
     useTimestamp: true,
-    objectName: 'vehiclestripsheet',
+    objectName: 'vehicleTripSheetDetails',
     title: 'swm.vehiclestripsheet.create.title',
     groups: [
       {
@@ -100,16 +100,27 @@ var dat = {
         fields: [
           {
             name: 'regNumber',
-            jsonPath: 'vehiclestripsheet[0].regNumber',
+            jsonPath: 'vehicleTripSheetDetails[0].vehicle.regNumber',
             label: 'swm.vehiclestripsheet.create.regNumber',
-            type: 'text',
+            type: 'autoCompelete',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
+            url: 'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
+            depedants: [
+              {
+                jsonPath: 'vehicleTripSheetDetails[0].vendorName',
+                type: 'autoFill',
+                pattern: '/swm-services/vehicles/_search?regNumber={vehicleTripSheetDetails[0].vehicle.regNumber}',
+                autoFillFields: {
+                  'vehicleTripSheetDetails[0].vendorName': 'vehicles[0].vendor.name',
+                },
+              }
+            ],
           },
           {
             name: 'ulbOwnedVehicle',
-            jsonPath: 'vehiclestripsheet[0].ulbOwnedVehicle',
+            jsonPath: 'vehicleTripSheetDetails[0].ulbOwnedVehicle',
             label: 'swm.vehiclestripsheet.create.ulbOwnedVehicle',
             type: 'checkbox',
             isRequired: false,
@@ -118,7 +129,7 @@ var dat = {
           },
           {
             name: 'vendorName',
-            jsonPath: 'vehiclestripsheet[0].vendorName',
+            jsonPath: 'vehicleTripSheetDetails[0].vendorName',
             label: 'swm.vehiclestripsheet.create.vendorName',
             type: 'text',
             isRequired: false,
@@ -127,17 +138,27 @@ var dat = {
           },
           {
             name: 'route',
-            jsonPath: 'vehiclestripsheet[0].route',
+            jsonPath: 'vehicleTripSheetDetails[0].route.code',
             label: 'swm.vehiclestripsheet.create.route',
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:'',
+            url:'/swm-services/routes/_search?|$.routes.*.code|$.routes.*.name',
+            depedants: [
+              {
+                jsonPath: 'routes[0].startingCollectionPoint.name',
+                type: 'autoFill',
+                pattern: '/swm-services/routes/_search?code={vehicleTripSheetDetails[0].route.code}',
+                autoFillFields: {
+                  'vehicleTripSheetDetails[0].dumpingGroundName': 'routes[0].endingDumpingGroundPoint.name',
+                },
+              }
+            ],
           },
           {
             name: 'scheduledDateFrom',
-            jsonPath: 'vehiclestripsheet[0].scheduledDateFrom',
+            jsonPath: 'vehicleTripSheetDetails[0].tripStartDate',
             label: 'swm.vehiclestripsheet.create.scheduledDateFrom',
             type: 'datePicker',
             isRequired: false,
@@ -146,7 +167,7 @@ var dat = {
           },
           {
             name: 'scheduledDateTo',
-            jsonPath: 'vehiclestripsheet[0].scheduledDateTo',
+            jsonPath: 'vehicleTripSheetDetails[0].tripEndDate',
             label: 'swm.vehiclestripsheet.create.scheduledDateTo',
             type: 'datePicker',
             isRequired: false,
@@ -155,7 +176,7 @@ var dat = {
           },
           {
             name: 'dumpingGroundName',
-            jsonPath: 'vehiclestripsheet[0].dumpingGroundName',
+            jsonPath: 'vehicleTripSheetDetails[0].dumpingGroundName',
             label: 'swm.vehiclestripsheet.create.dumpingGroundName',
             type: 'text',
             isRequired: false,
@@ -194,44 +215,43 @@ var dat = {
             ],
             values: [
               {
-                name: 'advocateName',
-                isKeyOtherPair: 'agencyName',
+                name: 'ward',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocate.code',
-                isRequired: true,
+                jsonPath: '',
+                isRequired: false,
                 isDisabled: false,
-                url: '/lcms-services/legalcase/advocate/_search?&status=active|$..code|$..name',
+                url: '',
               },
               {
-                name: 'advocateAssignDate',
+                name: 'zone',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].assignedDate',
-                isRequired: true,
+                jsonPath: '',
+                isRequired: false,
                 isDisabled: false,
               },
               {
-                name: 'advocatestaus',
+                name: 'block',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
               {
-                name: 'advocatestaus',
+                name: 'colony',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
               {
-                name: 'advocatestaus',
+                name: 'routestop',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
@@ -246,7 +266,7 @@ var dat = {
         fields: [
           {
             name: 'inTime',
-            jsonPath: 'vehiclestripsheet[0].inTime',
+            jsonPath: 'vehicleTripSheetDetails[0].inTime',
             label: 'swm.vehiclestripsheet.create.inTime',
             type: 'timePicker',
             isRequired: false,
@@ -256,7 +276,7 @@ var dat = {
           },
           {
             name: 'outTime',
-            jsonPath: 'vehiclestripsheet[0].outTime',
+            jsonPath: 'vehicleTripSheetDetails[0].outTime',
             label: 'swm.vehiclestripsheet.create.outTime',
             type: 'timePicker',
             isRequired: false,
@@ -266,7 +286,7 @@ var dat = {
           },
           {
             name: 'collectionType',
-            jsonPath: 'vehiclestripsheet[0].collectionType',
+            jsonPath: 'vehicleTripSheetDetails[0].collectionType',
             label: 'swm.vehiclestripsheet.create.collectionType',
             type: 'text',
             isRequired: false,
@@ -276,7 +296,7 @@ var dat = {
           },
           {
             name: 'totalDistanceCovered',
-            jsonPath: 'vehiclestripsheet[0].totalDistanceCovered',
+            jsonPath: 'vehicleTripSheetDetails[0].totalDistanceCovered',
             label: 'swm.vehiclestripsheet.create.totalDistanceCovered',
             type: 'text',
             isRequired: false,
@@ -286,7 +306,7 @@ var dat = {
           },
           {
             name: 'entryWeight',
-            jsonPath: 'vehiclestripsheet[0].entryWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].entryWeight',
             label: 'swm.vehiclestripsheet.create.entryWeight',
             type: 'text',
             isRequired: false,
@@ -296,7 +316,7 @@ var dat = {
           },
            {
             name: 'exitWeight',
-            jsonPath: 'vehiclestripsheet[0].exitWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].exitWeight',
             label: 'swm.vehiclestripsheet.create.exitWeight',
             type: 'text',
             isRequired: false,
@@ -306,7 +326,7 @@ var dat = {
           },
            {
             name: 'garbageWeight',
-            jsonPath: 'vehiclestripsheet[0].garbageWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].garbageWeight',
             label: 'swm.vehiclestripsheet.create.garbageWeight',
             type: 'text',
             isRequired: false,
@@ -314,17 +334,16 @@ var dat = {
             patternErrorMsg: '',
             defaultValue: '',
           },
-
         ],
       },
     ],
-    url: '/swm-services/vehicles/_create',
+    url: '/swm-services/vehicletripsheetdetails/_create',
     tenantIdRequired: true,
   },
   'swm.update': {
     numCols: 4,
     useTimestamp: true,
-    objectName: 'vehiclestripsheet',
+    objectName: 'vehicleTripSheetDetails',
     title: 'swm.vehiclestripsheet.create.title',
     groups: [
       {
@@ -333,16 +352,27 @@ var dat = {
         fields: [
           {
             name: 'regNumber',
-            jsonPath: 'vehiclestripsheet[0].regNumber',
+            jsonPath: 'vehicleTripSheetDetails[0].vehicle.regNumber',
             label: 'swm.vehiclestripsheet.create.regNumber',
-            type: 'text',
+            type: 'autoCompelete',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
+            url: 'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
+            depedants: [
+              {
+                jsonPath: 'vehicleTripSheetDetails[0].vendorName',
+                type: 'autoFill',
+                pattern: '/swm-services/vehicles/_search?regNumber={vehicleTripSheetDetails[0].vehicle.regNumber}',
+                autoFillFields: {
+                  'vehicleTripSheetDetails[0].vendorName': 'vehicles[0].vendor.name',
+                },
+              }
+            ],
           },
           {
             name: 'ulbOwnedVehicle',
-            jsonPath: 'vehiclestripsheet[0].ulbOwnedVehicle',
+            jsonPath: 'vehicleTripSheetDetails[0].ulbOwnedVehicle',
             label: 'swm.vehiclestripsheet.create.ulbOwnedVehicle',
             type: 'checkbox',
             isRequired: false,
@@ -351,7 +381,7 @@ var dat = {
           },
           {
             name: 'vendorName',
-            jsonPath: 'vehiclestripsheet[0].vendorName',
+            jsonPath: 'vehicleTripSheetDetails[0].vendorName',
             label: 'swm.vehiclestripsheet.create.vendorName',
             type: 'text',
             isRequired: false,
@@ -360,17 +390,27 @@ var dat = {
           },
           {
             name: 'route',
-            jsonPath: 'vehiclestripsheet[0].route',
+            jsonPath: 'vehicleTripSheetDetails[0].route.code',
             label: 'swm.vehiclestripsheet.create.route',
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:'',
+            url:'/swm-services/routes/_search?|$.routes.*.code|$.routes.*.name',
+            depedants: [
+              {
+                jsonPath: 'routes[0].startingCollectionPoint.name',
+                type: 'autoFill',
+                pattern: '/swm-services/routes/_search?code={vehicleTripSheetDetails[0].route.code}',
+                autoFillFields: {
+                  'vehicleTripSheetDetails[0].dumpingGroundName': 'routes[0].endingDumpingGroundPoint.name',
+                },
+              }
+            ],
           },
           {
             name: 'scheduledDateFrom',
-            jsonPath: 'vehiclestripsheet[0].scheduledDateFrom',
+            jsonPath: 'vehicleTripSheetDetails[0].tripStartDate',
             label: 'swm.vehiclestripsheet.create.scheduledDateFrom',
             type: 'datePicker',
             isRequired: false,
@@ -379,7 +419,7 @@ var dat = {
           },
           {
             name: 'scheduledDateTo',
-            jsonPath: 'vehiclestripsheet[0].scheduledDateTo',
+            jsonPath: 'vehicleTripSheetDetails[0].tripEndDate',
             label: 'swm.vehiclestripsheet.create.scheduledDateTo',
             type: 'datePicker',
             isRequired: false,
@@ -388,7 +428,7 @@ var dat = {
           },
           {
             name: 'dumpingGroundName',
-            jsonPath: 'vehiclestripsheet[0].dumpingGroundName',
+            jsonPath: 'vehicleTripSheetDetails[0].route.endingDumpingGroundPoint.name',
             label: 'swm.vehiclestripsheet.create.dumpingGroundName',
             type: 'text',
             isRequired: false,
@@ -427,44 +467,43 @@ var dat = {
             ],
             values: [
               {
-                name: 'advocateName',
-                isKeyOtherPair: 'agencyName',
+                name: 'ward',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocate.code',
-                isRequired: true,
+                jsonPath: '',
+                isRequired: false,
                 isDisabled: false,
-                url: '/lcms-services/legalcase/advocate/_search?&status=active|$..code|$..name',
+                url: '',
               },
               {
-                name: 'advocateAssignDate',
+                name: 'zone',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].assignedDate',
-                isRequired: true,
+                jsonPath: '',
+                isRequired: false,
                 isDisabled: false,
               },
               {
-                name: 'advocatestaus',
+                name: 'block',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
               {
-                name: 'advocatestaus',
+                name: 'colony',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
               {
-                name: 'advocatestaus',
+                name: 'routestop',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
@@ -479,7 +518,7 @@ var dat = {
         fields: [
           {
             name: 'inTime',
-            jsonPath: 'vehiclestripsheet[0].inTime',
+            jsonPath: 'vehicleTripSheetDetails[0].inTime',
             label: 'swm.vehiclestripsheet.create.inTime',
             type: 'timePicker',
             isRequired: false,
@@ -489,7 +528,7 @@ var dat = {
           },
           {
             name: 'outTime',
-            jsonPath: 'vehiclestripsheet[0].outTime',
+            jsonPath: 'vehicleTripSheetDetails[0].outTime',
             label: 'swm.vehiclestripsheet.create.outTime',
             type: 'timePicker',
             isRequired: false,
@@ -499,7 +538,7 @@ var dat = {
           },
           {
             name: 'collectionType',
-            jsonPath: 'vehiclestripsheet[0].collectionType',
+            jsonPath: 'vehicleTripSheetDetails[0].route.collectionType.name',
             label: 'swm.vehiclestripsheet.create.collectionType',
             type: 'text',
             isRequired: false,
@@ -509,7 +548,7 @@ var dat = {
           },
           {
             name: 'totalDistanceCovered',
-            jsonPath: 'vehiclestripsheet[0].totalDistanceCovered',
+            jsonPath: 'vehicleTripSheetDetails[0].route.distance',
             label: 'swm.vehiclestripsheet.create.totalDistanceCovered',
             type: 'text',
             isRequired: false,
@@ -519,7 +558,7 @@ var dat = {
           },
           {
             name: 'entryWeight',
-            jsonPath: 'vehiclestripsheet[0].entryWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].entryWeight',
             label: 'swm.vehiclestripsheet.create.entryWeight',
             type: 'text',
             isRequired: false,
@@ -529,7 +568,7 @@ var dat = {
           },
            {
             name: 'exitWeight',
-            jsonPath: 'vehiclestripsheet[0].exitWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].exitWeight',
             label: 'swm.vehiclestripsheet.create.exitWeight',
             type: 'text',
             isRequired: false,
@@ -539,7 +578,7 @@ var dat = {
           },
            {
             name: 'garbageWeight',
-            jsonPath: 'vehiclestripsheet[0].garbageWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].route.garbageEstimate',
             label: 'swm.vehiclestripsheet.create.garbageWeight',
             type: 'text',
             isRequired: false,
@@ -551,14 +590,16 @@ var dat = {
         ],
       },
     ],
-    url: '/swm-services/vehicles/_update',
+    url: '/swm-services/vehicletripsheetdetails/_update',
     tenantIdRequired: true,
+    searchUrl: '/swm-services/vehicletripsheetdetails/_search?tripNo={tripNo}',
   },
  'swm.view': {
     numCols: 4,
     useTimestamp: true,
-    objectName: 'vehiclestripsheet',
+    objectName: 'vehicleTripSheetDetails',
     title: 'swm.vehiclestripsheet.create.title',
+    searchUrl: '/swm-services/vehicletripsheetdetails/_search?tripNo={tripNo}',
     groups: [
       {
         name: 'VehicleDetails',
@@ -566,7 +607,7 @@ var dat = {
         fields: [
           {
             name: 'regNumber',
-            jsonPath: 'vehiclestripsheet[0].regNumber',
+            jsonPath: 'vehicleTripSheetDetails[0].vehicle.regNumber',
             label: 'swm.vehiclestripsheet.create.regNumber',
             type: 'text',
             isRequired: false,
@@ -575,7 +616,7 @@ var dat = {
           },
           {
             name: 'ulbOwnedVehicle',
-            jsonPath: 'vehiclestripsheet[0].ulbOwnedVehicle',
+            jsonPath: 'vehicleTripSheetDetails[0].ulbOwnedVehicle',
             label: 'swm.vehiclestripsheet.create.ulbOwnedVehicle',
             type: 'checkbox',
             isRequired: false,
@@ -584,7 +625,7 @@ var dat = {
           },
           {
             name: 'vendorName',
-            jsonPath: 'vehiclestripsheet[0].vendorName',
+            jsonPath: 'vehicleTripSheetDetails[0].vendorName',
             label: 'swm.vehiclestripsheet.create.vendorName',
             type: 'text',
             isRequired: false,
@@ -593,7 +634,7 @@ var dat = {
           },
           {
             name: 'route',
-            jsonPath: 'vehiclestripsheet[0].route',
+            jsonPath: 'vehicleTripSheetDetails[0].route.name',
             label: 'swm.vehiclestripsheet.create.route',
             type: 'singleValueList',
             isRequired: false,
@@ -603,7 +644,7 @@ var dat = {
           },
           {
             name: 'scheduledDateFrom',
-            jsonPath: 'vehiclestripsheet[0].scheduledDateFrom',
+            jsonPath: 'vehicleTripSheetDetails[0].tripStartDate',
             label: 'swm.vehiclestripsheet.create.scheduledDateFrom',
             type: 'datePicker',
             isRequired: false,
@@ -612,7 +653,7 @@ var dat = {
           },
           {
             name: 'scheduledDateTo',
-            jsonPath: 'vehiclestripsheet[0].scheduledDateTo',
+            jsonPath: 'vehicleTripSheetDetails[0].tripEndDate',
             label: 'swm.vehiclestripsheet.create.scheduledDateTo',
             type: 'datePicker',
             isRequired: false,
@@ -621,7 +662,7 @@ var dat = {
           },
           {
             name: 'dumpingGroundName',
-            jsonPath: 'vehiclestripsheet[0].dumpingGroundName',
+            jsonPath: 'vehicleTripSheetDetails[0].route.endingDumpingGroundPoint.name',
             label: 'swm.vehiclestripsheet.create.dumpingGroundName',
             type: 'text',
             isRequired: false,
@@ -637,7 +678,7 @@ var dat = {
         {
           type: 'tableList',
           actionsNotRequired: true,
-          jsonPath: 'vehiclestripsheet[0].locationdetails',
+          jsonPath: 'vehicleTripSheetDetails[0].locationdetails',
           tableList: {
           actionsNotRequired: true,
           serialNoNotRequired:true,
@@ -660,44 +701,43 @@ var dat = {
             ],
             values: [
               {
-                name: 'advocateName',
-                isKeyOtherPair: 'agencyName',
+                name: 'ward',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocate.code',
-                isRequired: true,
+                jsonPath: '',
+                isRequired: false,
                 isDisabled: false,
-                url: '/lcms-services/legalcase/advocate/_search?&status=active|$..code|$..name',
+                url: '',
               },
               {
-                name: 'advocateAssignDate',
+                name: 'zone',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].assignedDate',
-                isRequired: true,
+                jsonPath: '',
+                isRequired: false,
                 isDisabled: false,
               },
               {
-                name: 'advocatestaus',
+                name: 'block',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
               {
-                name: 'advocatestaus',
+                name: 'colony',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
               {
-                name: 'advocatestaus',
+                name: 'routestop',
                 pattern: '',
                 type: 'label',
-                jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
+                jsonPath: '',
                 isRequired: false,
                 isDisabled: true,
               },
@@ -712,7 +752,7 @@ var dat = {
         fields: [
           {
             name: 'inTime',
-            jsonPath: 'vehiclestripsheet[0].inTime',
+            jsonPath: 'vehicleTripSheetDetails[0].inTime',
             label: 'swm.vehiclestripsheet.create.inTime',
             type: 'timePicker',
             isRequired: false,
@@ -722,7 +762,7 @@ var dat = {
           },
           {
             name: 'outTime',
-            jsonPath: 'vehiclestripsheet[0].outTime',
+            jsonPath: 'vehicleTripSheetDetails[0].outTime',
             label: 'swm.vehiclestripsheet.create.outTime',
             type: 'timePicker',
             isRequired: false,
@@ -732,7 +772,7 @@ var dat = {
           },
           {
             name: 'collectionType',
-            jsonPath: 'vehiclestripsheet[0].collectionType',
+            jsonPath: 'vehicleTripSheetDetails[0].route.collectionType.name',
             label: 'swm.vehiclestripsheet.create.collectionType',
             type: 'text',
             isRequired: false,
@@ -742,7 +782,7 @@ var dat = {
           },
           {
             name: 'totalDistanceCovered',
-            jsonPath: 'vehiclestripsheet[0].totalDistanceCovered',
+            jsonPath: 'vehicleTripSheetDetails[0].route.distance',
             label: 'swm.vehiclestripsheet.create.totalDistanceCovered',
             type: 'text',
             isRequired: false,
@@ -752,7 +792,7 @@ var dat = {
           },
           {
             name: 'entryWeight',
-            jsonPath: 'vehiclestripsheet[0].entryWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].entryWeight',
             label: 'swm.vehiclestripsheet.create.entryWeight',
             type: 'text',
             isRequired: false,
@@ -762,7 +802,7 @@ var dat = {
           },
            {
             name: 'exitWeight',
-            jsonPath: 'vehiclestripsheet[0].exitWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].exitWeight',
             label: 'swm.vehiclestripsheet.create.exitWeight',
             type: 'text',
             isRequired: false,
@@ -772,7 +812,7 @@ var dat = {
           },
            {
             name: 'garbageWeight',
-            jsonPath: 'vehiclestripsheet[0].garbageWeight',
+            jsonPath: 'vehicleTripSheetDetails[0].route.garbageEstimate',
             label: 'swm.vehiclestripsheet.create.garbageWeight',
             type: 'text',
             isRequired: false,
@@ -784,8 +824,8 @@ var dat = {
         ],
       },
     ],
-    url: '/swm-services/vehicles/_view',
     tenantIdRequired: true,
+    url: '/swm-services/vehicletripsheetdetails/_search?tripNo={tripNo}',
   },
 
 };

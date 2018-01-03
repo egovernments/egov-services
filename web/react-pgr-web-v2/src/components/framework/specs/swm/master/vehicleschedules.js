@@ -210,7 +210,7 @@ var dat = {
       "groups":[
          {
             "name":"viewVehicleSchedulesView",
-            "label":"swm.create.page.title.VehicleSchedules",
+            "label":"swm.create.page.title.VehicleViewSchedules",
             "fields":[
                {
                   "name":"scheduledFrom",

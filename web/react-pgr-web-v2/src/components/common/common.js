@@ -2116,7 +2116,15 @@ var localization_EN_Data = {
  'swm.vendorpayment.create.InstrumentDate': 'Instrument Date',
  'swm.vendorpayment.create.AmountPaid': 'Amount Paid',
 
-
+ 'swm.vehicles.create.vendorName': 'Vendor Name',
+ 'swm.vehicles.create.ulbowned':'ULB Owned',
+ 'swm.vehiclefuellingdetails.create.Vehicletypes':'Vehicle Type',
+ 'swm.vehiclefuellingdetails.create.VehicleRegs' :'Vehicle Registration No.',
+ 'swm.vehiclefuellingdetails.create.transactionfromDate' : 'Transaction from Date',
+ 'swm.vehiclefuellingdetails.create.transactionToDate':'Transaction To Date',
+ 'swm.vehiclefuellingdetails.search.searchtype' :'Vehicle Details',
+ 'swm.vehiclefuellingdetails.create.transactionNo':'Transaction Number',
+ 'swm.vehiclefuellingdetails.search.title': ' Search Vehicle Fuelling Details ',
 
   'swm.vehicles.create.driver': 'Driver',
   'swm.vehicles.create.fuelType': 'Type of Fuel',
@@ -3194,6 +3202,7 @@ var localization_EN_Data = {
   "swm.create.targetedGarbage": "Targeted Garbage(in Tons)",
   "swm.create.collectionType": "Collection Type",
   "swm.create.page.title.VehicleSchedules": "Set Vehicle Schedule",
+  "swm.create.page.title.VehicleViewSchedules": "Vehicle Schedule Details",
   'swm.Shift.create.shiftType': 'Shift Type',
   'swm.Shift.create.department': 'Department',
   'swm.Shift.create.designation': 'Designation',

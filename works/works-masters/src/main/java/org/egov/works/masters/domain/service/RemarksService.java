@@ -1,5 +1,6 @@
 package org.egov.works.masters.domain.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
@@ -50,11 +51,11 @@ public class RemarksService {
         AuditDetails auditDetails = masterUtils.getAuditDetails(remarksRequest.getRequestInfo(),false);
         CommonUtils commonUtils = new CommonUtils();
         for (Remarks remarks : remarksRequest.getRemarks()) {
-            if(remarks.getId() != null)
+            if(StringUtils.isBlank(remarks.getId()))
               remarks.setId(commonUtils.getUUID());
             remarks.setAuditDetails(auditDetails);
             for (RemarksDetail remarksDetail : remarks.getRemarksDetails()) {
-                if(remarksDetail.getId() != null)
+                if(StringUtils.isBlank(remarksDetail.getId()))
                   remarksDetail.setId(commonUtils.getUUID());
                 remarksDetail.setAuditDetails(auditDetails);
                 remarksDetail.setRemarks(remarks.getId());

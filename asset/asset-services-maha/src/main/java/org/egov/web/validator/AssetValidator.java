@@ -300,7 +300,7 @@ public class AssetValidator implements Validator {
 	private void validateLandDetails(AssetRequest assetRequest, Map<String, String> errorMap) {
 		List<LandDetail> landDetails = assetRequest.getAsset().getLandDetails();
 		List<String> landDetailCode = new ArrayList<>();
-		if(landDetails!=null) {
+		if(landDetails!=null && !landDetails.isEmpty() ) {
 		landDetailCode.add(landDetails.get(0).getCode());
 		for (int i=1;i<landDetails.size();i++) {
 			if((!landDetailCode.isEmpty())&&(!landDetailCode.contains(landDetails.get(i).getCode())))

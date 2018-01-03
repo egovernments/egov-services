@@ -626,7 +626,7 @@ class assetMovableView extends Component {
               />
             )}
           <div />
-          <div>{renderBody()}</div>
+          <div>{renderBody()}</div> 
           <Card className="uiCard">
             <CardHeader title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }} />} />
             <CardText>

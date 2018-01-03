@@ -428,6 +428,8 @@ const menuConvention = {
   'Works Management.Abstract Estimate.Spillover Abstract Estimate':'/non-framework/works/transaction/create/spilloverAE',
 
   'Works Management.Works Masters.Create SOR': '/search/works/scheduleofrate/view',
+  //upload
+  'Upload.Upload': '/iframeLoader?url=/app/v2/uploader',
 };
 
 const style = {

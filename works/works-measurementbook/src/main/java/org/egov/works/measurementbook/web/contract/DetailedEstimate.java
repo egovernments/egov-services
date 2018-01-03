@@ -17,7 +17,7 @@ import java.util.Objects;
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-03T07:49:40.682Z")
 
 public class DetailedEstimate   {
   @JsonProperty("id")
@@ -51,7 +51,7 @@ public class DetailedEstimate   {
   private User adminSanctionBy = null;
 
   @JsonProperty("status")
-  private DetailedEstimateStatus status = null;
+  private WorksStatus status = null;
 
   @JsonProperty("workValue")
   private BigDecimal workValue = null;
@@ -185,11 +185,11 @@ public class DetailedEstimate   {
   @JsonProperty("budgetGroup")
   private BudgetGroup budgetGroup = null;
 
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
+
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
-  
-  @JsonProperty("deleted")
-  private Boolean deleted = null;
 
   public DetailedEstimate id(String id) {
     this.id = id;
@@ -282,8 +282,7 @@ public class DetailedEstimate   {
    * name of the work of Detailed Estimate Details
    * @return nameOfWork
   **/
-  @ApiModelProperty(required = true, value = "name of the work of Detailed Estimate Details")
-  @NotNull
+  @ApiModelProperty(value = "name of the work of Detailed Estimate Details")
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(min=1,max=1024)
   public String getNameOfWork() {
@@ -324,8 +323,7 @@ public class DetailedEstimate   {
    * Department for which Detailed Estimate belongs to
    * @return department
   **/
-  @ApiModelProperty(required = true, value = "Department for which Detailed Estimate belongs to")
-  @NotNull
+  @ApiModelProperty(value = "Department for which Detailed Estimate belongs to")
 
   @Valid
 
@@ -348,7 +346,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Unique number after admin sanction for the Detailed Estimate")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=50)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=50)
   public String getAdminSanctionNumber() {
     return adminSanctionNumber;
   }
@@ -398,7 +396,7 @@ public class DetailedEstimate   {
     this.adminSanctionBy = adminSanctionBy;
   }
 
-  public DetailedEstimate status(DetailedEstimateStatus status) {
+  public DetailedEstimate status(WorksStatus status) {
     this.status = status;
     return this;
   }
@@ -412,11 +410,11 @@ public class DetailedEstimate   {
 
   @Valid
 
-  public DetailedEstimateStatus getStatus() {
+  public WorksStatus getStatus() {
     return status;
   }
 
-  public void setStatus(DetailedEstimateStatus status) {
+  public void setStatus(WorksStatus status) {
     this.status = status;
   }
 
@@ -635,8 +633,7 @@ public class DetailedEstimate   {
    * The Type of work for which this Detailed Estimate belongs to
    * @return worksType
   **/
-  @ApiModelProperty(required = true, value = "The Type of work for which this Detailed Estimate belongs to")
-  @NotNull
+  @ApiModelProperty(value = "The Type of work for which this Detailed Estimate belongs to")
 
   @Valid
 
@@ -678,8 +675,7 @@ public class DetailedEstimate   {
    * The Nature of work for which this Detailed Estimate belongs to
    * @return natureOfWork
   **/
-  @ApiModelProperty(required = true, value = "The Nature of work for which this Detailed Estimate belongs to")
-  @NotNull
+  @ApiModelProperty(value = "The Nature of work for which this Detailed Estimate belongs to")
 
   @Valid
 
@@ -700,8 +696,7 @@ public class DetailedEstimate   {
    * Ward of the Detailed Estimate
    * @return ward
   **/
-  @ApiModelProperty(required = true, value = "Ward of the Detailed Estimate")
-  @NotNull
+  @ApiModelProperty(value = "Ward of the Detailed Estimate")
 
   @Valid
 
@@ -719,10 +714,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Location of the Detailed Estimate where the work is executed
+   * Location of the Detailed Estimate where the work is executed.Non mandatory for spillover even if configuration is 'Yes'.
    * @return location
   **/
-  @ApiModelProperty(value = "Location of the Detailed Estimate where the work is executed")
+  @ApiModelProperty(value = "Location of the Detailed Estimate where the work is executed.Non mandatory for spillover even if configuration is 'Yes'.")
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(max=512)
   public String getLocation() {
@@ -826,7 +821,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Council resolution number of the Detailed Estimate")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=50)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=50)
   public String getCouncilResolutionNumber() {
     return councilResolutionNumber;
   }
@@ -1388,6 +1383,26 @@ public class DetailedEstimate   {
     this.budgetGroup = budgetGroup;
   }
 
+  public DetailedEstimate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public DetailedEstimate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -1410,15 +1425,7 @@ public class DetailedEstimate   {
   }
 
 
-  public Boolean getDeleted() {
-	return deleted;
-}
-
-public void setDeleted(Boolean deleted) {
-	this.deleted = deleted;
-}
-
-@Override
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -1482,12 +1489,13 @@ public void setDeleted(Boolean deleted) {
         Objects.equals(this.scheme, detailedEstimate.scheme) &&
         Objects.equals(this.subScheme, detailedEstimate.subScheme) &&
         Objects.equals(this.budgetGroup, detailedEstimate.budgetGroup) &&
+        Objects.equals(this.deleted, detailedEstimate.deleted) &&
         Objects.equals(this.auditDetails, detailedEstimate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, auditDetails);
+    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, auditDetails);
   }
 
   @Override
@@ -1550,6 +1558,7 @@ public void setDeleted(Boolean deleted) {
     sb.append("    scheme: ").append(toIndentedString(scheme)).append("\n");
     sb.append("    subScheme: ").append(toIndentedString(subScheme)).append("\n");
     sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

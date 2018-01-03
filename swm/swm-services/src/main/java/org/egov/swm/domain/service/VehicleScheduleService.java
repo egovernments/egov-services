@@ -144,11 +144,11 @@ public class VehicleScheduleService {
                         "The field Route is Mandatory . It cannot be not be null or empty.Please provide correct value ");
             }
 
-            if (vehicleSchedule.getScheduledFrom() != null && vehicleSchedule.getScheduledTo() != null)
-                if (new Date(vehicleSchedule.getScheduledTo()).before(new Date(vehicleSchedule.getScheduledFrom())))
+            if (vehicleSchedule.getScheduledFrom() != null)
+                if (new Date(vehicleSchedule.getScheduledFrom()).after(new Date()))
                     throw new CustomException("ScheduledToDate ",
                             "Schedule can not be created for past dates. Please select Today's or Future date: " +
-                                    dateFormat.format(new Date(vehicleSchedule.getScheduledTo())));
+                                    dateFormat.format(new Date(vehicleSchedule.getScheduledFrom())));
         }
     }
 

@@ -938,8 +938,7 @@ paths:
             in: query
             description: invoice number of the supplier bill.
             required: false
-            type: integer
-            format: int64
+            type: string
           - name: invoiceDate
             in: query
             description: invoice date of the supplier bill.

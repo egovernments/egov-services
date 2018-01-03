@@ -15,23 +15,19 @@ class UserJobsStatusFilterContainer extends Component {
   options = [
     {
       value: "completed",
-      label: "Completed",
-      checked: false
+      label: "Completed"
     },
     {
       value: "in-progress",
-      label: "In Progress",
-      checked: false
+      label: "In Progress"
     },
     {
       value: "new",
-      label: "New",
-      checked: false
+      label: "New"
     },
     {
       value: "failed",
-      label: "Failed",
-      checked: false
+      label: "Failed"
     }
   ];
 
@@ -49,19 +45,10 @@ class UserJobsStatusFilterContainer extends Component {
     this.setState({ checkedValues: jobStatuses });
   };
 
-  getOptions = options => {
-    const { statuses } = this.props;
-    return options.map(option => {
-      if (statuses.indexOf(option.value) !== -1) {
-        return { ...option, checked: true };
-      }
-      return { ...option, checked: false };
-    });
-  };
-
+  // the view can be passed as a parameter
   render() {
     const { options, onChecked } = this;
-    const updatedOptions = this.getOptions(options);
+    const { checkedValues } = this.state;
 
     return (
       <div>
@@ -70,7 +57,8 @@ class UserJobsStatusFilterContainer extends Component {
             display: "inline-block",
             width: "20%"
           }}
-          options={updatedOptions}
+          checkedValues={checkedValues}
+          options={options}
           onCheck={onChecked}
         />
       </div>
@@ -78,6 +66,7 @@ class UserJobsStatusFilterContainer extends Component {
   }
 }
 
+// these things are common across components
 const mapStateToProps = state => ({
   statuses: state.userJobs.filter.statuses || []
 });

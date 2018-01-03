@@ -35,7 +35,7 @@ export const prepareFormData = params => {
 export const getDateFromEpoch = epoch => {
   const dateObj = new Date(epoch);
   const year = dateObj.getFullYear();
-  const month = dateObj.getMonth();
+  const month = dateObj.getMonth() + 1;
   const day = dateObj.getDay();
   return day + "-" + month + "-" + year;
 };

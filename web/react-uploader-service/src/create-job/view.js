@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./style.css";
 import UploadDefinitionsContainer from "../upload-definitions";
 import CardUi from "../components/CardUi";
 import ButtonUi from "../components/ButtonUi";
 import Snackbar from "material-ui/Snackbar";
 import LoadingIndicator from "../components/LoadingIndicator";
+import "./style.css";
 
 const CreateJobView = ({ handleOnChange, handleSubmit, message, history }) => {
   return (
@@ -37,9 +37,9 @@ const CreateJobView = ({ handleOnChange, handleSubmit, message, history }) => {
         />
       </div>
 
-      <span>
+      <div className="col-lg-12">
         {message.length ? <h3 className="job-creation-ack">{message}</h3> : ""}
-      </span>
+      </div>
     </div>
   );
 };

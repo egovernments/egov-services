@@ -11,8 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import net.minidev.json.JSONArray;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
@@ -54,6 +52,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class NonIndentMaterialIssueService extends DomainService {

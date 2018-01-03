@@ -1,16 +1,19 @@
 package org.egov.inv.api;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import org.egov.inv.domain.service.MaterialIssueService;
-import org.egov.inv.model.MaterialIssue;
 import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
 import org.egov.inv.model.MaterialIssueRequest;
 import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
-import org.egov.inv.model.MaterialResponse;
-import org.egov.inv.model.RequestInfo;
-
-import io.swagger.annotations.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.validation.constraints.*;
-import javax.validation.Valid;
+import io.swagger.annotations.ApiParam;
 
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
@@ -50,12 +49,13 @@ public class MaterialIssueApiController implements MaterialIssueApi {
 			@ApiParam(value = "issue date of the MaterialIssue ") @RequestParam(value = "issueDate", required = false) Long issueDate,
 			@ApiParam(value = "material issue status of the MaterialIssue ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED") @RequestParam(value = "materialIssueStatus", required = false) String materialIssueStatus,
 			@ApiParam(value = "description of the MaterialIssue ") @RequestParam(value = "description", required = false) String description,
+			@ApiParam(value = "issue purpose status of the materialissue ") @RequestParam(value = "issuePurpose", required = false) String issuePurpose,
 			@ApiParam(value = "total issue value of the MaterialIssue ") @RequestParam(value = "totalIssueValue", required = false) BigDecimal totalIssueValue,
 			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.") @RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@ApiParam(value = "Page number") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
-				issueNoteNumber, issueDate, null, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
+				issueNoteNumber, issuePurpose,issueDate, null, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
 				pageSize);
 		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract,IssueTypeEnum.INDENTISSUE.toString());
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);

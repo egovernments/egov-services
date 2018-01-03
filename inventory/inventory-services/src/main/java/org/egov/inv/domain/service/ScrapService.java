@@ -10,6 +10,9 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.MaterialIssue;
+import org.egov.inv.model.MaterialIssueResponse;
+import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Scrap;
 import org.egov.inv.model.ScrapRequest;
@@ -27,6 +30,9 @@ public class ScrapService extends DomainService{
 	
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Autowired
+	private NonIndentMaterialIssueService nonIndentMaterialIssueService;
 	
 	@Autowired
 	private ScrapJdbcRepository scrapJdbcRepository;
@@ -119,8 +125,24 @@ public class ScrapService extends DomainService{
 	
 	private void fetchRelated(ScrapRequest request, String tenantId) {
 		InvalidDataException errors = new InvalidDataException();
+		for (Scrap scrap : request.getScraps()) {
+		MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
+													.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())
+													.tenantId(tenantId)
+													.build();
+													
+		MaterialIssueResponse response = nonIndentMaterialIssueService.search(searchContract);
+		for(MaterialIssue issue : response.getMaterialIssues()){
+		if (issue == null )
+			errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(), "issueNumber", null);
+		
+		else
+			scrap.setTenantId(tenantId); 
+		}
+
 		if (errors.getValidationErrors().size() > 0)
 			throw errors;
+	}
 	}
 }
 

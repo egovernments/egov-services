@@ -145,7 +145,7 @@ public class Scrap   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
+  
 
   public Store getStore() {
     return store;
@@ -234,7 +234,7 @@ public class Scrap   {
   @ApiModelProperty(required = true, value = "scrap details of the Scrap ")
   @NotNull
 
-  @Valid
+  
  @Size(min=1,max=50)
   public List<ScrapDetail> getScrapDetails() {
     return scrapDetails;

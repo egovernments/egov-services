@@ -1,5 +1,10 @@
 package org.egov.inv.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.MaterialIssue;
@@ -9,11 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class MaterialIssueJdbcRepository extends JdbcRepository {
@@ -121,6 +121,13 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
                 params.append(" and ");
             params.append("materialissuestatus = :materialissuestatus");
             paramValues.put("materialissuestatus", searchContract.getMaterialIssueStatus());
+        }
+        
+        if (searchContract.getIssuePurpose() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("issuepurpose = :issuepurpose");
+            paramValues.put("issuepurpose", searchContract.getIssuePurpose());
         }
         if (searchContract.getDescription() != null) {
             if (params.length() > 0)

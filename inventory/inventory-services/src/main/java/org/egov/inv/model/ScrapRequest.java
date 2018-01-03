@@ -36,7 +36,7 @@ public class ScrapRequest   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
+  
 
   public RequestInfo getRequestInfo() {
     return requestInfo;

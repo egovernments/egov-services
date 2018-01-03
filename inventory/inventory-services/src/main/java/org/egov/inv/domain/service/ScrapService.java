@@ -20,6 +20,7 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class ScrapService extends DomainService{
@@ -38,7 +39,23 @@ public class ScrapService extends DomainService{
 	
 	public List<Scrap> create(ScrapRequest scrapReq, String tenantId) {
 	try{
+		fetchRelated(scrapReq,tenantId);
+		List<Scrap> scrap = scrapReq.getScraps();
 		validate(scrapReq.getScraps(), Constants.ACTION_CREATE,tenantId,scrapReq.getRequestInfo());
+		
+		scrap.forEach(scrapData -> {
+			scrapData.setId(scrapJdbcRepository.getSequence("seq_scrap"));
+			scrapData.setScrapNumber(appendString(scrapData));
+			if (StringUtils.isEmpty(scrapData.getTenantId())) {
+				scrapData.setTenantId(tenantId);
+			}
+			
+			scrapData.getScrapDetails().forEach(scrapDetails -> {
+				scrapDetails.setId(scrapJdbcRepository.getSequence("seq_scrapDetails"));
+				scrapDetails.setTenantId(tenantId);
+			});
+		});
+		
 		kafkaTemplate.send(createTopic, scrapReq);
 		return scrapReq.getScraps();
 	}catch(CustomBindException e){
@@ -98,6 +115,12 @@ public class ScrapService extends DomainService{
 		String idgen = String.format("%05d", id);
 		String scrapNumber = code + idgen + "/" + year;
 		return scrapNumber;
+	}
+	
+	private void fetchRelated(ScrapRequest request, String tenantId) {
+		InvalidDataException errors = new InvalidDataException();
+		if (errors.getValidationErrors().size() > 0)
+			throw errors;
 	}
 }
 

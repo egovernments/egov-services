@@ -1221,11 +1221,18 @@ class UpdateCancellation extends React.Component {
 
         const renderTr = () => {
             return this.state.workflow.map((item, ind) => {
+
+                var employeeName = commonApiPost("hr-employee", "employees", "_search", {
+                    tenantId: tenantId,
+                    id: item.owner.id
+                }).responseJSON["Employee"] || {};
+        
+
                 return (
                     <tr key={ind}>
                         <td>{item.createdDate}</td>
                         <td>{item.senderName}</td>
-                        <td>{item.owner.id}</td>
+                        <td>{employeeName[0].code+" :: "+ employeeName[0].name}</td>
                         <td>{item.status}</td>
                         <td>{item.comments}</td>
                     </tr>

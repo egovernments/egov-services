@@ -58,7 +58,7 @@ const data =
 		]
 	},
 
-	"perfmanagement":
+	"pm":
 	{
 		"isSpecificHeader": false,
 		"url": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/performance-assessment/contracts/v1-1-0.yml",

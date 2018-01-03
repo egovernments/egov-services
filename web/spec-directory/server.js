@@ -192,7 +192,7 @@ for(module in configData){
 	}
 }
 
-console.log(specificHeaderObj);
+// console.log(specificHeaderObj);
 
 
 request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/core/egov-mdms-create/src/main/resources/master-config.json', function (error, response, body) {
@@ -213,7 +213,7 @@ request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/
 				}
 			}
 		}
-		console.log(uniqueKeyObj);
+		// console.log(uniqueKeyObj);
     }
 });
 
@@ -226,7 +226,7 @@ request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/
 	for(var i = 0; i < urls.length; i++){
 		SwaggerParser.dereference(urls[i])
         .then(function(yamlJSON) {
-        	// console.log(yamlJSON.definitions.WasteSubType.properties)
+        	// console.log(yamlJSON)
         	let module = yamlJSON["x-module"];
         	if(module){
         		mainObj[module] = yamlJSON.definitions;	
@@ -247,7 +247,7 @@ request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/
         	if (completed_requests == urls.length) {
 	            // All downloads done, process responses array
 				// console.log(mainObj);
-
+				// console.log(mainObj);
 	            for(moduleName in mainObj){
 
 					// 1. get unique keys from config for each master
@@ -259,7 +259,7 @@ request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/
 	            	console.log("module name is - " + moduleName);
 	            	finalSpecs[moduleName.toLowerCase()] = {};
 	            	finalSpecsRaw[moduleName.toLowerCase()] = {};
-	            	for(master in mainObj[moduleName.toLowerCase()]){
+	            	for(master in mainObj[moduleName]){
 	            		
 	            		finalSpecsRaw[moduleName.toLowerCase()][master.toLowerCase()] = mainObj[moduleName][master];
 	            		if(!finalSpecs[moduleName.toLowerCase()].masters) finalSpecs[moduleName.toLowerCase()].masters = {};
@@ -286,7 +286,7 @@ request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/
 	            }
 
 	            // console.log(finalSpecs);
-	            // console.log(finalSpecsRaw.lcms);
+	            // console.log(finalSpecsRaw.pm);
 	        
 	        }
 		})

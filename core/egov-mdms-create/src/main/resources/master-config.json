@@ -215,5 +215,14 @@
         "$.code"
       ]
     }
-  }
+  },
+   "tenant": {
+    "tenants": {
+      "masterName": "tenants",
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code"
+      ]
+    }
+}
 }

@@ -35,6 +35,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.stores.*.auditDetails.lastModifiedTime
               dbType: LONG
+    
     - version: 1
       name: Stores update
       description: update stores in ulb
@@ -112,7 +113,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.auditDetails.lastModifiedTime
               dbType: LONG
-
+    
     - version: 1.0
       name: materials update
       description: update materials in inventory
@@ -156,6 +157,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.code
             - jsonPath: $.materials.*.tenantId
+    
     - version: 1
       name: Supplier create
       description: create suppliers in ulb
@@ -202,6 +204,7 @@ serviceMaps:
             - jsonPath: $.suppliers.*.auditDetails.lastModifiedTime
               dbType: LONG
             - jsonPath: $.suppliers.*.tenantId
+
     - version: 1
       name: Supplier update
       description: update suppliers in ulb
@@ -244,6 +247,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.suppliers.*.code
             - jsonPath: $.suppliers.*.tenantId
+
     - version: 1.0
       name: material store mapping create
       description: create material store mapping in inventory
@@ -283,7 +287,6 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.id
             - jsonPath: $.materialStoreMappings.*.tenantId
 
-
     - version: 1.0
       name: material store mapping delete
       description: delete material store mapping  in inventory
@@ -295,7 +298,6 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.material.code
             - jsonPath: $.materialStoreMappings.*.store.code
             - jsonPath: $.materialStoreMappings.*.tenantId
-
 
     - version: 1.0
       name: Opening Balance
@@ -404,7 +406,6 @@ serviceMaps:
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
               type: LONG
-
 
     - version: 1.0
       name: priceLists create
@@ -875,6 +876,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.*.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.*.tenantId
+
     - version: 1.0
       name: Update Purchase Order with indent
       description: Update Purchase Order with indent
@@ -936,6 +938,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
+
     - version: 1.0
       name: Purchase Order for non indent
       description: Create Purchase order for non indent
@@ -1042,6 +1045,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.description
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.tenderquantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.usedquantity
+
     - version: 1
       name: Indents create
       description: create Indents in ulb
@@ -1525,3 +1529,52 @@ serviceMaps:
               dbType: LONG
             - type: CURRENTDATE
               dbType: LONG
+
+    - version: 1.0
+      name: Scrap
+      description: Create Scrap
+      fromTopic: inv-scrap-save-topic
+      queryMaps:
+        - query: INSERT INTO scrap(id, tenantId, storeCode,scrapNumber,scrapdate,description,status,workflowdetailid,stateid,designation,createdby,createdTime,lastmodifiedby,lastModifiedTime)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.scraps.*
+          jsonMaps:
+            - jsonPath: $.scraps.*.id
+            - jsonPath: $.scraps.*.tenantId
+            - jsonPath: $.scraps.*.store.code
+            - jsonPath: $.scraps.*.scrapNumber
+            - jsonPath: $.scraps.*.scrapdate
+            - jsonPath: $.scraps.*.description
+            - jsonPath: $.scraps.*.scrapStatus
+            - jsonPath: $.scraps.*.workFlowDetails.id
+            - jsonPath: $.scraps.*.stateid
+            - jsonPath: $.scraps.*.designation
+            - jsonPath: $.scraps.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.scraps.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+        - query: INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,disposalQuantity,scrapValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.scraps.*.scrapDetails.*
+          jsonMaps:
+            - jsonPath: $.scraps.*.scrapDetails.*.id
+            - jsonPath: $.scraps.*.scrapDetails.*.tenantId
+            - jsonPath: $.scraps[?({id} in @.scrapDetails[*].id)].scrapNumber
+            - jsonPath: $.scraps.*.scrapDetails.*.material.code
+            - jsonPath: $.scraps.*.scrapDetails.*.uom.code
+            - jsonPath: $.scraps.*.scrapDetails.*.lotNumber
+            - jsonPath: $.scraps.*.scrapDetails.*.expiryDate
+            - jsonPath: $.scraps.*.scrapDetails.*.scrapReason
+            - jsonPath: $.scraps.*.scrapDetails.*.quantity
+            - jsonPath: $.scraps.*.scrapDetails.*.disposalQuantity
+            - jsonPath: $.scraps.*.scrapDetails.*.scrapValue
+            - jsonPath: $.scraps.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.scraps.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG          

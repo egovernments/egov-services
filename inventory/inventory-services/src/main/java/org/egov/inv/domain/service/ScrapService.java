@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -11,10 +12,12 @@ import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.MaterialIssue;
+import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Scrap;
+import org.egov.inv.model.ScrapDetail;
 import org.egov.inv.model.ScrapRequest;
 import org.egov.inv.model.ScrapResponse;
 import org.egov.inv.model.ScrapSearch;
@@ -125,7 +128,10 @@ public class ScrapService extends DomainService{
 	
 	private void fetchRelated(ScrapRequest request, String tenantId) {
 		InvalidDataException errors = new InvalidDataException();
+		List<ScrapDetail> scrapDetailList = new ArrayList<>();
 		for (Scrap scrap : request.getScraps()) {
+			/*for(ScrapDetail scrapDetail : scrap.getScrapDetails())
+				{*/
 		MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
 													.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())
 													.tenantId(tenantId)
@@ -133,17 +139,26 @@ public class ScrapService extends DomainService{
 													
 		MaterialIssueResponse response = nonIndentMaterialIssueService.search(searchContract);
 		for(MaterialIssue issue : response.getMaterialIssues()){
+			for(MaterialIssueDetail detail : issue.getMaterialIssueDetails())
+			{
+				ScrapDetail scrapDetail= new ScrapDetail();
 		if (issue == null )
-			errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(), "issueNumber", null);
+			errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(), "issuePurpose", null);
 		
 		else
-			scrap.setTenantId(tenantId); 
+			detail.setTenantId(tenantId); 
+			scrapDetail.setUom(detail.getUom());
+			scrapDetail.setMaterial(detail.getMaterial());
+			scrapDetail.setScrapValue(detail.getScrapValue());
+			scrapDetailList.add(scrapDetail);
+			}
 		}
-
+		scrap.setScrapDetails(scrapDetailList);
 		if (errors.getValidationErrors().size() > 0)
 			throw errors;
-	}
-	}
+				}
+		}
+	/*}*/
 }
 
 

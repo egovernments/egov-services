@@ -20,7 +20,7 @@ schemes:
   - https
 basePath: '/perfmanagement/'
 
-x-module: "perfmanagement"
+x-module: "PM"
 
 paths:
   # KPI Master Create, Update and Search APIs
@@ -681,7 +681,7 @@ definitions:
     properties:
       requestInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-      kpiCategory:
+      KpiCategory:
         type: array
         maximum: 500
         items:
@@ -731,7 +731,7 @@ definitions:
     properties:
       responseInfo:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      kpiCategory:
+      KpiCategory:
         type: array
         maximum: 500
         items:

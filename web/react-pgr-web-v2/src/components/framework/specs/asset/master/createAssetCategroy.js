@@ -694,6 +694,19 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
           },
+ 	  {
+            name: 'allowAssetUI',
+            jsonPath: 'MasterMetaData.masterData[0].isAssetAllowFromUi',
+            label: 'ac.create.allowAssetUI',
+            pattern: '',
+            type: 'checkbox',
+            url: '',
+            isRequired: false,
+            isDisabled: false,
+            requiredErrMsg: '',
+            patternErrMsg: '',
+						
+          },
 					// {
           //   name: 'id',
           //   jsonPath: 'MasterMetaData.masterData[0].id',

@@ -191,43 +191,30 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 		
 		LOGGER.info("searchParams:" + searchParams);
 		
-		StringBuffer baseQuery = new StringBuffer();
+		StringBuffer query = new StringBuffer();
 		
 		if(inlineQuery != null){
 		
-		baseQuery = new StringBuffer(inlineQuery);
+			query = new StringBuffer(inlineQuery);
 		} else {
-			baseQuery = new StringBuffer(reportDefinition.getQuery());
+			query = new StringBuffer(reportDefinition.getQuery());
 		}
 		String orderByQuery = reportDefinition.getOrderByQuery();
 		String groupByQuery = reportDefinition.getGroupByQuery();
 		
-		for(SearchParam searchParam : searchParams){
-			
-			Object name = searchParam.getName();
-			
-		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
-		    {
-		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
-		            	if(sc.getSearchClause() != null) {
-		            	baseQuery.append(" " +sc.getSearchClause());
-		            	}
-		            }
-		    }
-			
-		
-	}
+		query = addSearchClause(searchParams, reportDefinition, query);
+	
 	if(groupByQuery != null){
-    baseQuery.append(" "+ groupByQuery);
+		query.append(" "+ groupByQuery);
 	}
 
 	if(orderByQuery != null) {
 		
-		baseQuery.append(" "+ orderByQuery);
+		query.append(" "+ orderByQuery);
 		
 	}
-    LOGGER.info("generate baseQuery :"+baseQuery);
-    return baseQuery.toString();
+    LOGGER.info("generate baseQuery :"+query);
+    return query.toString();
 }
 
 public String generateUnionQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
@@ -245,22 +232,9 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 	for(int i=0; i<unionQueries.length; i++) {
 		
 		query = new StringBuffer(unionQueries[i]);
-		
-		for(SearchParam searchParam : searchParams){
-			
-			Object name = searchParam.getName();
-			
-		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
-		    {
-		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
-		            	if(sc.getSearchClause() != null) {
-		            	query.append(" " +sc.getSearchClause());
-		            	}
-		            }
-		    }
-			
-		
-	}
+	   
+		query = addSearchClause(searchParams, reportDefinition, query);
+	
 		String groupByQuery = reportDefinition.getGroupByQuery(); 
 		if(groupByQuery != null){
 			query.append(" "+ groupByQuery);
@@ -327,21 +301,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 			
 			query = new StringBuffer(joinQueries[i]);
 			
-			for(SearchParam searchParam : searchParams){
-				
-				Object name = searchParam.getName();
-				
-			    for (SearchColumn sc : reportDefinition.getSearchParams()) 
-			    {
-			            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
-			            	if(sc.getSearchClause() != null) {
-			            	query.append(" " +sc.getSearchClause());
-			            	}
-			            }
-			    }
-				
-			
-		}
+			query = addSearchClause(searchParams, reportDefinition, query);
 			String groupByQuery = reportDefinition.getGroupByQuery(); 
 			if(groupByQuery != null){
 				if (i==0){
@@ -366,6 +326,40 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 		finalQuery.toString();
 	LOGGER.info("generate baseJoinQuery :"+finalQuery);
 	return finalQuery.toString();
+	}
+
+	private StringBuffer addSearchClause(List<SearchParam> searchParams, ReportDefinition reportDefinition,
+			StringBuffer query) {
+		for(SearchParam searchParam : searchParams){
+			
+			Object name = searchParam.getName();
+			
+		    for (SearchColumn sc : reportDefinition.getSearchParams()) 
+		    {
+		            if(name.equals(sc.getName()) && !sc.getIsMandatory()){
+		            	if(sc.getSearchClause() != null) {
+		            		if(searchParam.getInput() instanceof ArrayList<?>){
+		            			LOGGER.info("Coming in to the instance of ArrayList ");
+			            		ArrayList<?> list = new ArrayList<>();
+			            		list = (ArrayList)(searchParam.getInput());
+			            		LOGGER.info("Check the list is empty "+list.size());
+			            		if(list.size() > 0) {
+			            			
+			            			query.append(" " +sc.getSearchClause());
+			            			
+			            		}
+			            		
+			            	} else {
+		            	query.append(" " +sc.getSearchClause());
+			            	}
+		            	
+		            	}
+		            }
+		    }
+			
+		
+}
+		return query;
 	}
 	
 	

@@ -261,7 +261,7 @@ var dat = {
                },
                {
                   "name": "vehicleType",
-                  "jsonPath": "vehicleSchedules[0].vehicle.vehicleType.code",
+                  "jsonPath": "vehicleSchedules[0].vehicle.vehicleType.name",
                   "label": "swm.vehicles.create.vehicleType",
                   "pattern": "",
                   "type": "text",
@@ -275,7 +275,7 @@ var dat = {
                },
                {
                   "name": "collectionType",
-                  "jsonPath": "vehicleSchedules[0].route.collectionType.code",
+                  "jsonPath": "vehicleSchedules[0].route.collectionType.name",
                   "label": "swm.create.collectionType",
                   "type": "text",
                   "isRequired": false,

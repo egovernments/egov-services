@@ -551,6 +551,8 @@ var localization_EN_Data = {
   'MdmsMetadata.masterData.lcms.Advocate.tenantId': 'Advocate TenantId',
   'MdmsMetadata.masterData.lcms.Advocate.agencyCode': 'Advocate AgencyCode',
   'MdmsMetadata.masterData.lcms.Advocate.status': 'Advocate Status',
+  'MdmsMetadata.masterData.perfmanagement.KPICategory.name' : "Category Name", 
+  'MdmsMetadata.masterData.perfmanagement.KPICategory.code' : "Category Code",
   'reports.wcms.fromdate': 'From Date',
   'reports.wcms.todate': 'To Date',
   'reports.wcms.ward': 'Ward',

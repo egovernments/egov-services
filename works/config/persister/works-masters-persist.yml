@@ -93,7 +93,7 @@ serviceMaps:
    fromTopic: works-contractor-create-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, pmc, status, createdby, createdtime, lastmodifiedby, lastmodifiedtime,deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
+    - query: INSERT INTO egw_contractor(id, tenantid, name, code, correspondenceaddress, paymentaddress, contactperson, email, narration, mobilenumber, pannumber, tinnumber, bank, bankaccountnumber, pwdapprovalcode, exemptedfrom, pwdapprovalvalidtill, epfregistrationnumber, accountcode, ifsccode, contractorclass, pmc, status, createdby, createdtime, lastmodifiedby, lastmodifiedtime,deleted, localname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?);
       basePath: $.contractors.*
       jsonMaps:
 
@@ -154,6 +154,8 @@ serviceMaps:
        - jsonPath: $.contractors.*.auditDetails.lastModifiedTime
        
        - jsonPath: $.contractors.*.deleted
+       
+       - jsonPath: $.contractors.*.localName
 
  - version: 1.0
    name: Contractor Update
@@ -161,7 +163,7 @@ serviceMaps:
    fromTopic: works-contractor-update-validated
    isTransaction: true
    queryMaps:
-    - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, pmc=?, status=?, lastmodifiedby=?, lastmodifiedtime=?, deleted=? WHERE id=? AND tenantid=?;
+    - query: UPDATE egw_contractor SET name=?, code=?, correspondenceaddress=?, paymentaddress=?, contactperson=?, email=?, narration=?, mobilenumber=?, pannumber=?, tinnumber=?, bank=?, bankaccountnumber=?, pwdapprovalcode=?, exemptedfrom=?, pwdapprovalvalidtill=?, epfregistrationnumber=?, accountcode=?, ifsccode=?, contractorclass=?, pmc=?, status=?, lastmodifiedby=?, lastmodifiedtime=?, deleted=?, localname=? WHERE id=? AND tenantid=?;
       basePath: $.contractors.*
       jsonMaps:
 
@@ -214,6 +216,8 @@ serviceMaps:
        - jsonPath: $.contractors.*.auditDetails.lastModifiedTime
        
        - jsonPath: $.contractors.*.deleted
+       
+       - jsonPath: $.contractors.*.localName
 
        - jsonPath: $.contractors.*.id
 
@@ -357,4 +361,5 @@ serviceMaps:
        - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.milestoneTemplates.*.milestoneTemplateActivities.*.deleted
+
 

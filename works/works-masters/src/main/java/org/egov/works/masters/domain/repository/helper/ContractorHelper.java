@@ -105,6 +105,9 @@ public class ContractorHelper {
 
     @JsonProperty("lastModifiedTime")
     private Long lastModifiedTime = null;
+    
+    @JsonProperty("localName")
+    private String localName = null;
 
     public Contractor toDomain() {
         Contractor contractor = new Contractor();
@@ -140,6 +143,7 @@ public class ContractorHelper {
         contractor.getAuditDetails().setCreatedTime(this.createdTime);
         contractor.getAuditDetails().setLastModifiedBy(this.lastModifiedBy);
         contractor.getAuditDetails().setLastModifiedTime(this.lastModifiedTime);
+        contractor.setLocalName(this.localName);
         return contractor;
 
     }

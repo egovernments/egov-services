@@ -131,8 +131,8 @@ public class BillRegisterESRepository extends ESRepository {
 
         elasticSearchUtils.add(billRegisterSearchContract.getModuleName(), "moduleName", boolQueryBuilder);
 
-        if (billRegisterSearchContract.getStatus() != null && billRegisterSearchContract.getStatus().getId() != null)
-            elasticSearchUtils.add(billRegisterSearchContract.getStatus().getId(), "status.id", boolQueryBuilder);
+        if (billRegisterSearchContract.getStatus() != null && billRegisterSearchContract.getStatus().getCode() != null)
+            elasticSearchUtils.add(billRegisterSearchContract.getStatus().getCode(), "status.code", boolQueryBuilder);
 
         if (billRegisterSearchContract.getFund() != null && billRegisterSearchContract.getFund().getId() != null)
             elasticSearchUtils.add(billRegisterSearchContract.getFund().getId(), "fund.id", boolQueryBuilder);

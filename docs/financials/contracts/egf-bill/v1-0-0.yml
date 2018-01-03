@@ -402,7 +402,7 @@ definitions:
           description: |
             moduleName is the name of the module who is posting the bill in financials
         status:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/FinancialStatus"
+          $ref: "#/definitions/BillStatus"
           description: |
                 status refers to the status of the bill like ,created,approved etc
         fund:
@@ -635,6 +635,51 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - tenantId
+      
+    BillStatus:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          maxLength: 256
+          minLength: 0
+          description: |
+            tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc.
+            represents the client for which the transaction is created.
+        code:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            code is the unique identifier
+        name:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            name of the bill status
+        moduleType:
+          type: string
+          maxLength: 50
+          minLength: 1
+          description: |
+            moduleType of bill status
+        orderNumber:
+          type: integer
+          format: int64
+          description: |
+            order Number of bill status
+        description:
+          type: string
+          maxLength: 250
+          minLength: 0
+          description: |
+            description of bill status
+      required:
+      - tenantId
+      - code
+      - name
+      - moduleType
           
     ChecklistRequest:
       description: Contract class for web request. Array of Checklist items  are used in case of create or update
@@ -697,5 +742,6 @@ parameters:
     in: query
     description: pageSize          
           
+
 
 

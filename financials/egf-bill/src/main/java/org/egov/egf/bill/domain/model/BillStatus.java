@@ -58,7 +58,7 @@ import lombok.ToString;
 @Builder
 public class BillStatus {
 
-    private String id;
+    private String tenantId;
 
     @NotNull
     @Size(min = 3, max = 50)

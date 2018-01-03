@@ -318,12 +318,12 @@ parseCompareSearchResponse(res) {
    */
   renderBarChart = () => {
     let data = this.state.data[this.state.chartDataIndex - 1]
-    console.log(`rendering bar chart for ${data}`)
+    console.log(`rendering bar chart for ${data.data}`)
 
     return (
-      <div style={{ marginLeft: '35%', marginTop: '10px' }}>
-        <BarChart width={600} height={500} data={data.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
-          <XAxis dataKey={this.state.dataKey} />
+      <div style={{ marginLeft: '15%', marginTop: '10px' }}>
+        <BarChart width={1200} height={500} data={data.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
+          <XAxis dataKey="name"/>
           <YAxis />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />

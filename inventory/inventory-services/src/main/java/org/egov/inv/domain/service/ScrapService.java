@@ -170,10 +170,10 @@ public class ScrapService extends DomainService{
 			errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(), "issuePurpose", null);
 		
 		else
-			detail.setTenantId(tenantId); 
+			scrapDetail.setTenantId(tenantId); 
 			scrapDetail.setUom(detail.getUom());
 			scrapDetail.setMaterial(detail.getMaterial());
-			scrapDetail.setScrapValue(detail.getScrapValue());
+			scrapDetail.setExistingValue(detail.getValue());
 			scrapDetailList.add(scrapDetail);
 			}
 		}

@@ -4965,11 +4965,20 @@ definitions:
           format: BigDecimal
           description: |
             scrap quantity of the ScrapDetail
+        userQuantity:
+          type: number
+          format: BigDecimal
+          description: The quantity of the material received for this particular scrap.
         disposalQuantity:
           type: number
           format: BigDecimal
           description: |
             scrap quantity utilized in disposal of scrap materials
+        existingValue:
+          type: number
+          format: BigDecimal
+          description: |
+            existing value present in the system
         scrapValue:
           type: number
           format: BigDecimal

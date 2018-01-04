@@ -1563,7 +1563,7 @@ serviceMaps:
               type: LONG
             - type: CURRENTDATE
               dbType: LONG
-        - query: INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,disposalQuantity,scrapValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,userQuantity,disposalQuantity,scrapValue,existingValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.scraps.*.scrapDetails.*
           jsonMaps:
             - jsonPath: $.scraps.*.scrapDetails.*.id
@@ -1575,8 +1575,10 @@ serviceMaps:
             - jsonPath: $.scraps.*.scrapDetails.*.expiryDate
             - jsonPath: $.scraps.*.scrapDetails.*.scrapReason
             - jsonPath: $.scraps.*.scrapDetails.*.quantity
+            - jsonPath: $.scraps.*.scrapDetails.*.userQuantity
             - jsonPath: $.scraps.*.scrapDetails.*.disposalQuantity
             - jsonPath: $.scraps.*.scrapDetails.*.scrapValue
+            - jsonPath: $.scraps.*.scrapDetails.*.existingValue
             - jsonPath: $.scraps.*.auditDetails.createdBy
               type: LONG
             - type: CURRENTDATE
@@ -1608,8 +1610,8 @@ serviceMaps:
             - jsonPath: $.scraps.*.scrapNumber
             - jsonPath: $.scraps.*.tenantId
         - query: >-
-                 INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,disposalQuantity,scrapValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
-                 expiryDate = EXCLUDED.expiryDate, quantity = EXCLUDED.quantity, scrapValue = EXCLUDED.scrapValue,
+                 INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,userQuantity,disposalQuantity,scrapValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 expiryDate = EXCLUDED.expiryDate, quantity = EXCLUDED.quantity,userQuantity = EXCLUDED.userQuantity, scrapValue = EXCLUDED.scrapValue,existingValue = EXCLUDED.existingValue,
                  lotNumber = EXCLUDED.lotNumber, disposalQuantity = EXCLUDED.disposalQuantity;
           basePath: $.scraps.*.scrapDetails.*
           jsonMaps:
@@ -1622,8 +1624,10 @@ serviceMaps:
             - jsonPath: $.scraps.*.scrapDetails.*.expiryDate
             - jsonPath: $.scraps.*.scrapDetails.*.scrapReason
             - jsonPath: $.scraps.*.scrapDetails.*.quantity
+            - jsonPath: $.scraps.*.scrapDetails.*.userQuantity
             - jsonPath: $.scraps.*.scrapDetails.*.disposalQuantity
             - jsonPath: $.scraps.*.scrapDetails.*.scrapValue
+            - jsonPath: $.scraps.*.scrapDetails.*.existingValue
             - jsonPath: $.scraps.*.auditDetails.createdBy
               type: LONG
             - type: CURRENTDATE

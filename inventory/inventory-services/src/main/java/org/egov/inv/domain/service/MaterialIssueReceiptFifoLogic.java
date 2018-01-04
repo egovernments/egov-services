@@ -15,12 +15,16 @@ import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.FifoEntity;
+import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueReceiptFifoLogicRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MaterialIssueReceiptFifoLogic extends DomainService {
+	private static final Logger LOG = LoggerFactory.getLogger(MaterialIssueReceiptFifoLogic.class);
 	@Autowired
 	private MaterialIssueReceiptFifoLogicRepository materialIssueReceiptFifoLogicRepository;
 
@@ -54,6 +58,7 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 							.add(InventoryUtilities.getQuantityInSelectedUom(BigDecimal.valueOf(fifoEntity.getBalance()),
 									uom.getConversionFactor()));
 				else 
+					LOG.info("balance :" + fifoEntity.getBalance());
 					availableQuantityInStock = availableQuantityInStock
 					.add(BigDecimal.valueOf(fifoEntity.getBalance()));
 

@@ -94,7 +94,7 @@ public class VehicleScheduleService {
             if (vehicleSchedule.getVehicle() != null && (vehicleSchedule.getVehicle().getRegNumber() == null
                     || vehicleSchedule.getVehicle().getRegNumber().isEmpty()))
                 throw new CustomException("Vehicle",
-                        "The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+                        "The field Vehicle registration number is Mandatory. It cannot be not be null or empty.Please provide correct value ");
 
             // Validate Vehicle
 
@@ -114,7 +114,7 @@ public class VehicleScheduleService {
 
             } else {
                 throw new CustomException("Vehicle",
-                        "The field Vehicle is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+                        "The field Vehicle is Mandatory. It cannot be not be null or empty.Please provide correct value ");
             }
 
             if (vehicleSchedule.getRoute() != null && (vehicleSchedule.getRoute().getCode() == null
@@ -145,7 +145,8 @@ public class VehicleScheduleService {
             }
 
             if (vehicleSchedule.getScheduledFrom() != null)
-                if (new Date(vehicleSchedule.getScheduledFrom()).before(new Date()))
+                if (!new Date(vehicleSchedule.getScheduledFrom()).equals(new Date()) &&
+                        new Date(vehicleSchedule.getScheduledFrom()).before(new Date()))
                     throw new CustomException("ScheduledToDate ",
                             "Schedule can not be created for past dates. Please select Today's or Future date: " +
                                     dateFormat.format(new Date(vehicleSchedule.getScheduledFrom())));

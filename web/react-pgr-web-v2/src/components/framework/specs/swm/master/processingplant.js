@@ -435,7 +435,7 @@ var dat = {
             jsonPath: "processing.ProcessingSiteArea",
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: '',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
           {
@@ -448,7 +448,7 @@ var dat = {
             minLength: '1',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg: '',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
           {

@@ -74,7 +74,20 @@ public class ScrapService extends DomainService{
 	
 	public List<Scrap> update(ScrapRequest scrapReq, String tenantId) {
 		try{
+			List<Scrap> scrap = scrapReq.getScraps();
 			validate(scrapReq.getScraps(), Constants.ACTION_UPDATE,tenantId,scrapReq.getRequestInfo());
+			
+			scrap.forEach(scrapData -> {
+				if (StringUtils.isEmpty(scrapData.getTenantId())) {
+					scrapData.setTenantId(tenantId);
+				}
+				
+				scrapData.getScrapDetails().forEach(scrapDetails -> {
+					if (StringUtils.isEmpty(scrapDetails.getTenantId())) {
+						scrapDetails.setTenantId(tenantId);
+					}
+				});
+			});
 			kafkaTemplate.send(updateTopic, scrapReq);
 			return scrapReq.getScraps();
 		}catch(CustomBindException e){

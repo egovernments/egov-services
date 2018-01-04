@@ -27,7 +27,7 @@ public class ScrapJdbcRepository extends JdbcRepository{
 	            validateEntityFieldName(scrapSearch.getSortBy(), ScrapSearch.class);
 	        }
 
-	        String orderBy = "order by mrnnumber";
+	        String orderBy = "order by scrapNumber";
 
 	        if (scrapSearch.getSortBy() != null && !scrapSearch.getSortBy().isEmpty()) {
 	            orderBy = "order by " + scrapSearch.getSortBy();
@@ -37,7 +37,7 @@ public class ScrapJdbcRepository extends JdbcRepository{
 	            if (params.length() > 0)
 	                params.append(" and ");
 	            params.append("id in (:ids)");
-	            paramValues.put("ids", scrapSearch.getIds());
+	            paramValues.put("id", scrapSearch.getIds());
 	        }
 
 	        if (scrapSearch.getScrapNumber() != null) {
@@ -51,10 +51,8 @@ public class ScrapJdbcRepository extends JdbcRepository{
 	            if (params.length() > 0)
 	                params.append(" and ");
 	            params.append("scrapStatus = :scrapStatus");
-	            paramValues.put("receiptType", scrapSearch.getScrapStatus());
+	            paramValues.put("scrapStatus", scrapSearch.getScrapStatus());
 	        }
-
-	       
 	        
 	        if (scrapSearch.getTenantId() != null) {
 	            if (params.length() > 0)

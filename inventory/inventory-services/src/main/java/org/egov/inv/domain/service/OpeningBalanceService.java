@@ -195,7 +195,7 @@ public class OpeningBalanceService extends DomainService {
 					ObjectMapper mapper = new ObjectMapper();
 					
 					if (!isEmpty(rcpt.getFinancialYear())) {
-					JSONArray finYears = mdmsRepository.getByCriteria("default", "egf-master", "FinancialYear", "finYearRange",rcpt.getFinancialYear() , info);
+					JSONArray finYears = mdmsRepository.getByCriteria(tenantId, "egf-master", "FinancialYear", "finYearRange",rcpt.getFinancialYear() , info);
 					if(finYears != null && finYears.size() > 0)
 					{
 					for (int i = 0; i < finYears.size(); i++) {

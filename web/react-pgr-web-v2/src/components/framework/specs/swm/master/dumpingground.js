@@ -151,7 +151,7 @@ var dat = {
         fields: [
           {
             name: 'ulbs',
-            label: 'swm.create.servicesOffered',
+            label: 'swm.create.ulbNames',
             jsonPath: 'MasterMetaData.masterData[0].ulbs',
             type: 'multiValueList',
             pattern: '',
@@ -177,7 +177,6 @@ var dat = {
 
         ]
       },
-
       {
         name: 'BankGuaranteeDetails',
         label: 'swm.create.page.title.bankGuaranteeDetails',
@@ -195,6 +194,21 @@ var dat = {
             minLength: '',
             patternErrorMsg: '',
             defaultValue: false,
+            url: '',
+          },
+
+          {
+            name: 'bankGuarantee',
+            jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankGuarantee',
+            label: 'swm.dumpingGround.create.bankGuarantee',
+            pattern: '',
+            type: 'checkbox',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: '',
+            maxLength: '',
+            minLength: '',
+            patternErrorMsg: '',
             url: '',
             showHideFields: [
               {
@@ -220,22 +234,6 @@ var dat = {
               },
             ],
           },
-
-          {
-            name: 'bankGuarantee',
-            jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankGuarantee',
-            label: 'swm.dumpingGround.create.bankGuarantee',
-            pattern: '',
-            type: 'checkbox',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: '',
-            minLength: '',
-            patternErrorMsg: '',
-            url: '',
-          },
-
           {
             name: 'dummy',
             jsonPath: '',
@@ -325,7 +323,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundName',
             pattern: '',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: '',
@@ -340,7 +338,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundArea',
             pattern: '^\\b[0-9]\\b|\\b([1-4][0-9])\\b|\\b50\\b$',
             type: 'number',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: 'Value should be less than or equal to 50',
@@ -353,7 +351,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundCapacity',
             pattern: '^([1-9][0-9]{0,3}|10000|0|[1-4][0-9]{0,4}|50000)$',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: '5',
@@ -368,11 +366,11 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundAddress',
             pattern: '',
             type: 'textarea',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: 500,
-            minLength: 10,
+            minLength: 15,
             fullWidth: true,
             patternErrorMsg: '',
             url: '',
@@ -424,8 +422,8 @@ var dat = {
             showHideFields: [
               {
                 ifValue: true,
-                hide: [],
-                show: [
+                show: [],
+                hide: [
                   {
                     name: 'dumpingGroundProcessingPlant',
                     isGroup: false,
@@ -440,23 +438,6 @@ var dat = {
               },
             ],
           },
-
-          {
-            name: 'dumpingGroundAddress',
-            jsonPath: '',
-            label: 'swm.dumpingGround.create.dumpingGroundAddress',
-            pattern: '',
-            type: 'textArea',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: 500,
-            minLength: 10,
-            fullWidth: true,
-            patternErrorMsg: '',
-            url: '',
-          },
-
           {
             name: 'dumpingGroundProcessingPlant',
             jsonPath: 'MasterMetaData.masterData[0].processingSite.code',
@@ -465,7 +446,6 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: false,
-            hide: true,
             defaultValue: '',
             maxLength: '',
             minLength: '',
@@ -481,7 +461,6 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: false,
-            hide: true,
             defaultValue: '',
             maxLength: '',
             minLength: '',
@@ -501,7 +480,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.wasteTypes',
             type: 'multiValueList',
             pattern: '^null|$',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             maxLength: 128,
             url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',
@@ -627,7 +606,7 @@ var dat = {
         fields: [
           {
             name: 'ulbs',
-            label: 'swm.create.servicesOffered',
+            label: 'swm.create.ulbNames',
             jsonPath: 'MdmsRes.swm.DumpingGround[0].ulbs',
             type: 'multiValueList',
             pattern: '',
@@ -671,6 +650,20 @@ var dat = {
             patternErrorMsg: '',
             defaultValue: false,
             url: '',
+          },
+          {
+            name: 'bankGuarantee',
+            jsonPath: 'MdmsRes.swm.DumpingGround[0].siteDetails.bankGuarantee',
+            label: 'swm.dumpingGround.create.bankGuarantee',
+            pattern: '',
+            type: 'checkbox',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: '',
+            maxLength: '',
+            minLength: '',
+            patternErrorMsg: '',
+            url: '',
             showHideFields: [
               {
                 ifValue: true,
@@ -694,21 +687,6 @@ var dat = {
                 ],
               },
             ],
-          },
-
-          {
-            name: 'bankGuarantee',
-            jsonPath: 'MdmsRes.swm.DumpingGround[0].siteDetails.bankGuarantee',
-            label: 'swm.dumpingGround.create.bankGuarantee',
-            pattern: '',
-            type: 'checkbox',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: '',
-            minLength: '',
-            patternErrorMsg: '',
-            url: '',
           },
 
           // {
@@ -800,7 +778,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundName',
             pattern: '',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: '',
@@ -815,7 +793,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundArea',
             pattern: '^\\b[0-9]\\b|\\b([1-4][0-9])\\b|\\b50\\b$',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',            
             patternErrorMsg: '',
@@ -828,7 +806,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundCapacity',
             pattern: '^([1-9][0-9]{0,3}|10000|0|[1-4][0-9]{0,4}|50000)$',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             maxLength: '5',
             minLength: '1',
@@ -843,11 +821,11 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundAddress',
             pattern: '',
             type: 'textarea',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: 500,
-            minLength: 10,
+            minLength: 15,
             fullWidth: true,
             patternErrorMsg: '',
             url: '',
@@ -896,11 +874,29 @@ var dat = {
             minLength: '',
             patternErrorMsg: '',
             url: '',
+            /*showHideFields: [
+              {
+                ifValue: false,
+                hide: [],
+                show: [
+                  {
+                    name: 'dumpingGroundProcessingPlant',
+                    isGroup: false,
+                    isField: true,
+                  },
+                  {
+                    name: 'dumpingGroundDistance',
+                    isGroup: false,
+                    isField: true,
+                  },
+                ],
+              },
+            ],*/
             showHideFields: [
               {
                 ifValue: true,
-                hide: [],
-                show: [
+                show: [],
+                hide: [
                   {
                     name: 'dumpingGroundProcessingPlant',
                     isGroup: false,
@@ -923,8 +919,8 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: false,
-            hide: true,
             defaultValue: '',
+            //hide: true,
             maxLength: '',
             minLength: '',
             patternErrorMsg: '',
@@ -938,7 +934,7 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: false,
-            hide: true,
+            //hide: true,
             defaultValue: '',
             maxLength: '',
             minLength: '',
@@ -957,7 +953,7 @@ var dat = {
             jsonPath: 'MdmsRes.swm.DumpingGround[0].siteDetails.wasteTypes',
             type: 'multiValueList',
             pattern: '^null|$',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             maxLength: 128,
             url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',
@@ -1108,7 +1104,7 @@ var dat = {
         fields: [
           {
             name: 'ulbs',
-            label: 'swm.create.servicesOffered',
+            label: 'swm.create.ulbNames',
             jsonPath: 'MasterMetaData.masterData[0].ulbs',
             type: 'multiValueList',
             pattern: '',
@@ -1152,6 +1148,21 @@ var dat = {
             patternErrorMsg: '',
             defaultValue: false,
             url: '',
+          },
+
+          {
+            name: 'bankGuarantee',
+            jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankGuarantee',
+            label: 'swm.dumpingGround.create.bankGuarantee',
+            pattern: '',
+            type: 'checkbox',
+            isRequired: false,
+            isDisabled: false,
+            defaultValue: '',
+            maxLength: '',
+            minLength: '',
+            patternErrorMsg: '',
+            url: '',
             showHideFields: [
               {
                 ifValue: true,
@@ -1175,21 +1186,6 @@ var dat = {
                 ],
               },
             ],
-          },
-
-          {
-            name: 'bankGuarantee',
-            jsonPath: 'MasterMetaData.masterData[0].siteDetails.bankGuarantee',
-            label: 'swm.dumpingGround.create.bankGuarantee',
-            pattern: '',
-            type: 'checkbox',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: '',
-            minLength: '',
-            patternErrorMsg: '',
-            url: '',
           },
 
           {
@@ -1281,7 +1277,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundName',
             pattern: '',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: '',
@@ -1296,7 +1292,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundArea',
             pattern: '^\\b[0-9]\\b|\\b([1-4][0-9])\\b|\\b50\\b$',
             type: 'number',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: '',
@@ -1311,7 +1307,7 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundCapacity',
             pattern: '^([1-9][0-9]{0,3}|10000|0|[1-4][0-9]{0,4}|50000)$',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             maxLength: '5',
             minLength: '1',
@@ -1326,11 +1322,11 @@ var dat = {
             label: 'swm.dumpingGround.create.dumpingGroundAddress',
             pattern: '',
             type: 'textarea',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: 500,
-            minLength: 10,
+            minLength: 15,
             fullWidth: true,
             patternErrorMsg: '',
             url: '',
@@ -1382,8 +1378,8 @@ var dat = {
             showHideFields: [
               {
                 ifValue: true,
-                hide: [],
-                show: [
+                show: [],
+                hide: [
                   {
                     name: 'dumpingGroundProcessingPlant',
                     isGroup: false,
@@ -1398,23 +1394,6 @@ var dat = {
               },
             ],
           },
-
-          {
-            name: 'dumpingGroundAddress',
-            jsonPath: '',
-            label: 'swm.dumpingGround.create.dumpingGroundAddress',
-            pattern: '',
-            type: 'textArea',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: 500,
-            minLength: 10,
-            fullWidth: true,
-            patternErrorMsg: '',
-            url: '',
-          },
-
           {
             name: 'dumpingGroundProcessingPlant',
             jsonPath: 'MasterMetaData.masterData[0].processingSite.code',
@@ -1423,7 +1402,6 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: false,
-            hide: true,
             defaultValue: '',
             maxLength: '',
             minLength: '',
@@ -1439,7 +1417,6 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: false,
-            hide: true,
             defaultValue: '',
             maxLength: '',
             minLength: '',
@@ -1459,7 +1436,7 @@ var dat = {
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.wasteTypes',
             type: 'multiValueList',
             pattern: '^null|$',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             maxLength: 128,
             url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',

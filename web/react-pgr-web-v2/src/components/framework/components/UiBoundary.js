@@ -66,7 +66,6 @@ class UiBoundary extends Component {
     var viewLabels = {};
     // console.log(bdryCode)
     var pathArr = jp.paths(boundaryData, `$..[?(@.code=='${bdryCode}')]`);
-    console.log(pathArr)
     pathArr = pathArr[0];
     for(var i=0; i<(pathArr.length);) {
       ddArr.push(pathArr[i]+'[' + pathArr[i+1] + ']');
@@ -160,7 +159,6 @@ class UiBoundary extends Component {
 
   handler = (key, property) => {
     let {dropDownDataVal, dropDownData}=this.state;
-    console.log(key,property)
     this.setState({
       dropDownDataVal:{
       ...dropDownDataVal,
@@ -298,7 +296,7 @@ class UiBoundary extends Component {
 
   render() {
     return <div>{(this.props.match.url.split('/')[1] == 'view' && typeof(_.get(this.props.formData, this.props.item.jsonPath)) != 'undefined') ? this.renderView(this.state.viewLabels) : this.renderBoundary(this.props.item)}
-      {this.props.item.type == 'boundary' ? null : this.props.callbackFromCollectionRoute(this.state.dropDownDataVal)}
+      {this.props.item.type == 'boundary' ? null : this.props.callbackFromCollectionRoute(this.state.dropDownDataVal, this.state.labelArr)}
     </div>
   }
 }

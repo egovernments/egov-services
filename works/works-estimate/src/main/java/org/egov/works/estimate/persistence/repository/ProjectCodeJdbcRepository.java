@@ -26,9 +26,9 @@ public class ProjectCodeJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(projectCodeSearchContract.getSortBy(), ProjectCode.class);
 		}
 
-		String orderBy = "order by code";
+		StringBuilder orderBy = new StringBuilder("order by code");
 		if (projectCodeSearchContract.getSortBy() != null && !projectCodeSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + projectCodeSearchContract.getSortBy();
+		    orderBy.append("order by ").append(projectCodeSearchContract.getSortBy());
 		}
 
 		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

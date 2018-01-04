@@ -30,10 +30,10 @@ public class MultiYearEstimateJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(multiYearEstimateSearchContract.getSortBy(), MultiYearEstimateHelper.class);
 		}
 
-		String orderBy = "order by id";
+		StringBuilder orderBy = new StringBuilder("order by createdtime");
 		if (multiYearEstimateSearchContract.getSortBy() != null
 				&& !multiYearEstimateSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + multiYearEstimateSearchContract.getSortBy();
+		    orderBy.append("order by ").append(multiYearEstimateSearchContract.getSortBy());
 		}
 
 		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

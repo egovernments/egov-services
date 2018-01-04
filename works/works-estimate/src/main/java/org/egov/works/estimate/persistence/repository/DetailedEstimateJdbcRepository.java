@@ -64,10 +64,10 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
             validateEntityFieldName(detailedEstimateSearchContract.getSortBy(), DetailedEstimate.class);
         }
 
-        String orderBy = "order by de.id";
+        StringBuilder orderBy = new StringBuilder("order by de.createdtime");
         if (detailedEstimateSearchContract.getSortBy() != null
                 && !detailedEstimateSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by de." + detailedEstimateSearchContract.getSortBy();
+            orderBy.append("order by de.").append(detailedEstimateSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

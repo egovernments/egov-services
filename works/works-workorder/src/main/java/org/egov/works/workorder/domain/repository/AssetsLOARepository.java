@@ -32,10 +32,10 @@ public class AssetsLOARepository extends JdbcRepository {
             validateEntityFieldName(assetsForLoaSearchCriteria.getSortBy(), AssetsForLOA.class);
         }
 
-        String orderBy = "order by loaassets.id";
+        StringBuilder orderBy = new StringBuilder("order by loaassets.createdtime");
         if (assetsForLoaSearchCriteria.getSortBy() != null
                 && !assetsForLoaSearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by loaassets." + assetsForLoaSearchCriteria.getSortBy();
+            orderBy.append("order by loaassets.").append(assetsForLoaSearchCriteria.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

@@ -30,10 +30,10 @@ public class EstimateMeasurementSheetJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(estimateMeasurementSheetSearchContract.getSortBy(), EstimateMeasurementSheetHelper.class);
 		}
 
-		String orderBy = "order by id";
+		StringBuilder orderBy = new StringBuilder("order by createdtime");
 		if (estimateMeasurementSheetSearchContract.getSortBy() != null
 				&& !estimateMeasurementSheetSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + estimateMeasurementSheetSearchContract.getSortBy();
+		    orderBy.append("order by ").append(estimateMeasurementSheetSearchContract.getSortBy());
 		}
 
 		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

@@ -31,10 +31,10 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
             validateEntityFieldName(abstractEstimateAssetDetailSearchContract.getSortBy(), AbstractEstimateAssetDetailHelper.class);
         }
 
-        String orderBy = "order by id";
+        StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (abstractEstimateAssetDetailSearchContract.getSortBy() != null
                 && !abstractEstimateAssetDetailSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by " + abstractEstimateAssetDetailSearchContract.getSortBy();
+            orderBy.append("order by ").append(abstractEstimateAssetDetailSearchContract.getSortBy());
         }
         
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
@@ -68,7 +68,7 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
 
 			searchQuery = searchQuery.replace(":condition", "");
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+		searchQuery = searchQuery.replace(":orderby", orderBy.toString());
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateAssetDetailHelper.class);
 

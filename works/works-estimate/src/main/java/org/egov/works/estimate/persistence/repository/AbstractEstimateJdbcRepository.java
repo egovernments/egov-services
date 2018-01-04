@@ -50,9 +50,9 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
             validateEntityFieldName(abstractEstimateSearchContract.getSortBy(), AbstractEstimateHelper.class);
         }
 
-        String orderBy = "order by estimate.id";
+        StringBuilder orderBy = new StringBuilder("order by estimate.createdtime");
         if (abstractEstimateSearchContract.getSortBy() != null && !abstractEstimateSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by estimate." + abstractEstimateSearchContract.getSortBy();
+            orderBy.append("order by estimate.").append(abstractEstimateSearchContract.getSortBy());
         }
 
         if (abstractEstimateSearchContract.getTenantId() != null) {
@@ -190,10 +190,6 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
         List<AbstractEstimateHelper> abstractEstimateEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
-
-        System.out.print("Search Query" + searchQuery.toString());
-        System.out.print("paramValues" + paramValues.get("tenantId"));
-        System.out.print("paramValues" + paramValues.get("abstractEstimateNumbers"));
 
         List<AbstractEstimate> abstractEstimates = new ArrayList<>();
 

@@ -31,10 +31,10 @@ public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepositor
             validateEntityFieldName(abstractEstimateSanctionSearchContract.getSortBy(), AbstractEstimateSanctionDetail.class);
         }
 
-        String orderBy = "order by id";
+        StringBuilder orderBy = new StringBuilder("order by id");
         if (abstractEstimateSanctionSearchContract.getSortBy() != null
                 && !abstractEstimateSanctionSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by " + abstractEstimateSanctionSearchContract.getSortBy();
+            orderBy.append("order by ").append(abstractEstimateSanctionSearchContract.getSortBy());
         }
         
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

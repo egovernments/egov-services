@@ -15,71 +15,71 @@ import org.springframework.stereotype.Service;
 @Service
 public class EstimateAssetJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egw_estimate_assets";
+    public static final String TABLE_NAME = "egw_estimate_assets";
 
-	public List<AssetsForEstimate> search(
-			EstimateAssetSearchContract assetSearchContract) {
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+    public List<AssetsForEstimate> search(
+            EstimateAssetSearchContract assetSearchContract) {
+        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
 
-		if (assetSearchContract.getSortBy() != null
-				&& !assetSearchContract.getSortBy().isEmpty()) {
-			validateSortByOrder(assetSearchContract.getSortBy());
-			validateEntityFieldName(assetSearchContract.getSortBy(), AssetsForEstimateHelper.class);
-		}
+        if (assetSearchContract.getSortBy() != null
+                && !assetSearchContract.getSortBy().isEmpty()) {
+            validateSortByOrder(assetSearchContract.getSortBy());
+            validateEntityFieldName(assetSearchContract.getSortBy(), AssetsForEstimateHelper.class);
+        }
 
-		String orderBy = "order by id";
-		if (assetSearchContract.getSortBy() != null
-				&& !assetSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + assetSearchContract.getSortBy();
-		}
+        StringBuilder orderBy = new StringBuilder("order by createdtime");
+        if (assetSearchContract.getSortBy() != null
+                && !assetSearchContract.getSortBy().isEmpty()) {
+            orderBy.append("order by ").append(assetSearchContract.getSortBy());
+        }
 
-		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
+        searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
 
-		searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		if (assetSearchContract.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", assetSearchContract.getTenantId());
-		}
-		if (assetSearchContract.getIds() != null) {
-			addAnd(params);
-			params.append("id in(:ids) ");
-			paramValues.put("ids", assetSearchContract.getIds());
-		}
+        if (assetSearchContract.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", assetSearchContract.getTenantId());
+        }
+        if (assetSearchContract.getIds() != null) {
+            addAnd(params);
+            params.append("id in(:ids) ");
+            paramValues.put("ids", assetSearchContract.getIds());
+        }
 
-		if (assetSearchContract.getDetailedEstimateIds() != null) {
-			addAnd(params);
-			params.append("detailedEstimate in(:detailedEstimateIds) ");
-			paramValues.put("detailedEstimateIds", assetSearchContract.getDetailedEstimateIds());
-		}
+        if (assetSearchContract.getDetailedEstimateIds() != null) {
+            addAnd(params);
+            params.append("detailedEstimate in(:detailedEstimateIds) ");
+            paramValues.put("detailedEstimateIds", assetSearchContract.getDetailedEstimateIds());
+        }
 
         params.append(" and deleted = false");
-		if (params.length() > 0) {
+        if (params.length() > 0) {
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
 
-		} else
+        } else
 
-			searchQuery = searchQuery.replace(":condition", "");
+            searchQuery = searchQuery.replace(":condition", "");
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AssetsForEstimateHelper.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(AssetsForEstimateHelper.class);
 
-		List<AssetsForEstimateHelper> assetsForEstimateEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+        List<AssetsForEstimateHelper> assetsForEstimateEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
 
-		List<AssetsForEstimate> assetsForEstimates = new ArrayList<>();
+        List<AssetsForEstimate> assetsForEstimates = new ArrayList<>();
 
-		for (AssetsForEstimateHelper assetsForEstimateEntity : assetsForEstimateEntities) {
-			assetsForEstimates.add(assetsForEstimateEntity.toDomain());
-		}
+        for (AssetsForEstimateHelper assetsForEstimateEntity : assetsForEstimateEntities) {
+            assetsForEstimates.add(assetsForEstimateEntity.toDomain());
+        }
 
-		return assetsForEstimates;
-	}
+        return assetsForEstimates;
+    }
 
 }

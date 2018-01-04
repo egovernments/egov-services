@@ -34,10 +34,10 @@ public class EstimateTechnicalSanctionRepository  extends JdbcRepository
             validateEntityFieldName(technicalSanctionSearchContract.getSortBy(), EstimateTechnicalSanctionHelper.class);
         }
 
-        String orderBy = "order by id";
+        StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (technicalSanctionSearchContract.getSortBy() != null
                 && !technicalSanctionSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by " + technicalSanctionSearchContract.getSortBy();
+            orderBy.append("order by ").append(technicalSanctionSearchContract.getSortBy());
         }
 
 

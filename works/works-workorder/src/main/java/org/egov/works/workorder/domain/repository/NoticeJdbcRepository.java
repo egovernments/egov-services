@@ -12,158 +12,158 @@ import java.util.*;
 @Repository
 public class NoticeJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egw_notice notice";
-	public static final String LOA_ESTIMATESEARCH_EXTENTION = "egw_letterofacceptanceestimate loaestimate";
-	@Autowired
-	private WorksMastersRepository worksMastersRepository;
+    public static final String TABLE_NAME = "egw_notice notice";
+    public static final String LOA_ESTIMATESEARCH_EXTENTION = "egw_letterofacceptanceestimate loaestimate";
+    @Autowired
+    private WorksMastersRepository worksMastersRepository;
 
-	@Autowired
-	private EstimateRepository estimateRepository;
+    @Autowired
+    private EstimateRepository estimateRepository;
 
-	@Autowired
-	private NoticeDetailRepository noticeDetailRepository;
+    @Autowired
+    private NoticeDetailRepository noticeDetailRepository;
 
-	@Autowired
-	private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
 
-	public List<Notice> searchNotices(final NoticeSearchContract noticeSearchContract, final RequestInfo requestInfo) {
+    public List<Notice> searchNotices(final NoticeSearchContract noticeSearchContract, final RequestInfo requestInfo) {
 
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
-		String tableName = TABLE_NAME;
+        String tableName = TABLE_NAME;
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuilder params = new StringBuilder();
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuilder params = new StringBuilder();
 
-		if (noticeSearchContract.getSortBy() != null && !noticeSearchContract.getSortBy().isEmpty()) {
-			validateSortByOrder(noticeSearchContract.getSortBy());
-			validateEntityFieldName(noticeSearchContract.getSortBy(), Notice.class);
-		}
+        if (noticeSearchContract.getSortBy() != null && !noticeSearchContract.getSortBy().isEmpty()) {
+            validateSortByOrder(noticeSearchContract.getSortBy());
+            validateEntityFieldName(noticeSearchContract.getSortBy(), Notice.class);
+        }
 
-		if ((noticeSearchContract.getDetailedEstimateNumbers() != null
-				&& !noticeSearchContract.getDetailedEstimateNumbers().isEmpty()))
-			tableName += LOA_ESTIMATESEARCH_EXTENTION;
+        if ((noticeSearchContract.getDetailedEstimateNumbers() != null
+                && !noticeSearchContract.getDetailedEstimateNumbers().isEmpty()))
+            tableName += LOA_ESTIMATESEARCH_EXTENTION;
 
-		String orderBy = "order by notice.id";
-		if (noticeSearchContract.getSortBy() != null && !noticeSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by notice." + noticeSearchContract.getSortBy();
-		}
+        StringBuilder orderBy = new StringBuilder("order by notice.createdtime");
+        if (noticeSearchContract.getSortBy() != null && !noticeSearchContract.getSortBy().isEmpty()) {
+            orderBy.append("order by notice.").append(noticeSearchContract.getSortBy());
+        }
 
-		searchQuery = searchQuery.replace(":tablename", tableName);
+        searchQuery = searchQuery.replace(":tablename", tableName);
 
-		searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		if (noticeSearchContract.getTenantId() != null) {
-			addAnd(params);
-			params.append("notice.tenantId =:tenantId");
-			paramValues.put("tenantId", noticeSearchContract.getTenantId());
-		}
-		if (noticeSearchContract.getIds() != null) {
-			addAnd(params);
-			params.append("notice.id in(:ids) ");
-			paramValues.put("ids", noticeSearchContract.getIds());
-		}
+        if (noticeSearchContract.getTenantId() != null) {
+            addAnd(params);
+            params.append("notice.tenantId =:tenantId");
+            paramValues.put("tenantId", noticeSearchContract.getTenantId());
+        }
+        if (noticeSearchContract.getIds() != null) {
+            addAnd(params);
+            params.append("notice.id in(:ids) ");
+            paramValues.put("ids", noticeSearchContract.getIds());
+        }
 
-		if (noticeSearchContract.getWorkOrderNumbers() != null) {
-			addAnd(params);
-			params.append(
-					"notice.letterofacceptance in (select wo.letterofacceptance from egw_workorder wo where wo.workordernumber in (:workordernumbers) and wo.tenantId=:tenantId and wo.deleted = false)");
-			paramValues.put("workordernumbers", noticeSearchContract.getWorkOrderNumbers());
-		}
+        if (noticeSearchContract.getWorkOrderNumbers() != null) {
+            addAnd(params);
+            params.append(
+                    "notice.letterofacceptance in (select wo.letterofacceptance from egw_workorder wo where wo.workordernumber in (:workordernumbers) and wo.tenantId=:tenantId and wo.deleted = false)");
+            paramValues.put("workordernumbers", noticeSearchContract.getWorkOrderNumbers());
+        }
 
-		if (noticeSearchContract.getLoaNumbers() != null) {
-			addAnd(params);
-			params.append(
-					"notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers) and loa.tenantId=:tenantId)");
-			paramValues.put("loaNumbers", noticeSearchContract.getLoaNumbers());
-		}
+        if (noticeSearchContract.getLoaNumbers() != null) {
+            addAnd(params);
+            params.append(
+                    "notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers) and loa.tenantId=:tenantId)");
+            paramValues.put("loaNumbers", noticeSearchContract.getLoaNumbers());
+        }
 
-		if (noticeSearchContract.getContractorCodes() != null) {
-			addAnd(params);
-			params.append(
-					"notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
-			paramValues.put("contractorcodes", noticeSearchContract.getContractorCodes());
-		}
+        if (noticeSearchContract.getContractorCodes() != null) {
+            addAnd(params);
+            params.append(
+                    "notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
+            paramValues.put("contractorcodes", noticeSearchContract.getContractorCodes());
+        }
 
-		List<String> contractorCodes = new ArrayList<>();
-		if (noticeSearchContract.getContractorNames() != null && !noticeSearchContract.getContractorNames().isEmpty()) {
-			List<Contractor> contractors = worksMastersRepository.searchContractors(noticeSearchContract.getTenantId(),
-					noticeSearchContract.getContractorNames(), requestInfo);
-			for (Contractor contractor : contractors)
-				contractorCodes.add(contractor.getCode());
-			if (!contractorCodes.isEmpty()) {
-				if (contractorCodes != null) {
-					addAnd(params);
-					params.append(
-							"notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
-					paramValues.put("contractorcodes", contractorCodes);
-				}
-			}
-		}
+        List<String> contractorCodes = new ArrayList<>();
+        if (noticeSearchContract.getContractorNames() != null && !noticeSearchContract.getContractorNames().isEmpty()) {
+            List<Contractor> contractors = worksMastersRepository.searchContractors(noticeSearchContract.getTenantId(),
+                    noticeSearchContract.getContractorNames(), requestInfo);
+            for (Contractor contractor : contractors)
+                contractorCodes.add(contractor.getCode());
+            if (!contractorCodes.isEmpty()) {
+                if (contractorCodes != null) {
+                    addAnd(params);
+                    params.append(
+                            "notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
+                    paramValues.put("contractorcodes", contractorCodes);
+                }
+            }
+        }
 
-		if (noticeSearchContract.getDetailedEstimateNumbers() != null) {
-			addAnd(params);
-			params.append(
-					"loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid ");
-			paramValues.put("detailedestimatenumber", noticeSearchContract.getDetailedEstimateNumbers());
-			paramValues.put("tenantid", noticeSearchContract.getTenantId());
-		}
+        if (noticeSearchContract.getDetailedEstimateNumbers() != null) {
+            addAnd(params);
+            params.append(
+                    "loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid ");
+            paramValues.put("detailedestimatenumber", noticeSearchContract.getDetailedEstimateNumbers());
+            paramValues.put("tenantid", noticeSearchContract.getTenantId());
+        }
 
-		List<String> winEstimateNumbers = new ArrayList<>();
-		if (noticeSearchContract.getWorkIdentificationNumbers() != null
-				&& !noticeSearchContract.getWorkIdentificationNumbers().isEmpty()) {
-			List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByProjectCode(
-					noticeSearchContract.getWorkIdentificationNumbers(), noticeSearchContract.getTenantId(),
-					requestInfo);
-			for (DetailedEstimate detailedEstimate : detailedEstimates)
-				winEstimateNumbers.add(detailedEstimate.getEstimateNumber());
+        List<String> winEstimateNumbers = new ArrayList<>();
+        if (noticeSearchContract.getWorkIdentificationNumbers() != null
+                && !noticeSearchContract.getWorkIdentificationNumbers().isEmpty()) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByProjectCode(
+                    noticeSearchContract.getWorkIdentificationNumbers(), noticeSearchContract.getTenantId(),
+                    requestInfo);
+            for (DetailedEstimate detailedEstimate : detailedEstimates)
+                winEstimateNumbers.add(detailedEstimate.getEstimateNumber());
 
-			addAnd(params);
-			params.append(
-					"loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid");
-			paramValues.put("detailedestimatenumber", winEstimateNumbers);
-			paramValues.put("tenantid", noticeSearchContract.getTenantId());
-		}
+            addAnd(params);
+            params.append(
+                    "loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid");
+            paramValues.put("detailedestimatenumber", winEstimateNumbers);
+            paramValues.put("tenantid", noticeSearchContract.getTenantId());
+        }
 
-		params.append(" and notice.deleted = false");
+        params.append(" and notice.deleted = false");
 
-		if (params.length() > 0) {
+        if (params.length() > 0) {
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
 
-		} else
+        } else
 
-			searchQuery = searchQuery.replace(":condition", "");
+            searchQuery = searchQuery.replace(":condition", "");
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(NoticeHelper.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(NoticeHelper.class);
 
-		List<NoticeHelper> noticeHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        List<NoticeHelper> noticeHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
-		List<Notice> notices = new ArrayList<>();
-		NoticeDetailSearchContract noticeDetailSearchContract = new NoticeDetailSearchContract();
-		for (NoticeHelper noticeHelper : noticeHelpers) {
+        List<Notice> notices = new ArrayList<>();
+        NoticeDetailSearchContract noticeDetailSearchContract = new NoticeDetailSearchContract();
+        for (NoticeHelper noticeHelper : noticeHelpers) {
 
-			Notice notice = noticeHelper.toDomain();
-			noticeDetailSearchContract.setTenantId(noticeSearchContract.getTenantId());
-			noticeDetailSearchContract.setNotices(Arrays.asList(noticeHelper.getId()));
-			notice.setNoticeDetails(noticeDetailRepository.searchNoticeDetails(noticeDetailSearchContract));
+            Notice notice = noticeHelper.toDomain();
+            noticeDetailSearchContract.setTenantId(noticeSearchContract.getTenantId());
+            noticeDetailSearchContract.setNotices(Arrays.asList(noticeHelper.getId()));
+            notice.setNoticeDetails(noticeDetailRepository.searchNoticeDetails(noticeDetailSearchContract));
 
-			LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
-			letterOfAcceptanceSearchContract.setTenantId(noticeSearchContract.getTenantId());
-			letterOfAcceptanceSearchContract.setIds(Arrays.asList(noticeHelper.getLetterOfAcceptance()));
+            LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
+            letterOfAcceptanceSearchContract.setTenantId(noticeSearchContract.getTenantId());
+            letterOfAcceptanceSearchContract.setIds(Arrays.asList(noticeHelper.getLetterOfAcceptance()));
 
-			List<LetterOfAcceptance> letterOfAcceptanceList = letterOfAcceptanceRepository
-					.searchLOAs(letterOfAcceptanceSearchContract, requestInfo);
-			LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
-			if (letterOfAcceptanceList != null && !letterOfAcceptanceList.isEmpty())
-				letterOfAcceptance = letterOfAcceptanceList.get(0);
-			notice.setLetterOfAcceptance(letterOfAcceptance);
-			notices.add(notice);
-		}
+            List<LetterOfAcceptance> letterOfAcceptanceList = letterOfAcceptanceRepository
+                    .searchLOAs(letterOfAcceptanceSearchContract, requestInfo);
+            LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
+            if (letterOfAcceptanceList != null && !letterOfAcceptanceList.isEmpty())
+                letterOfAcceptance = letterOfAcceptanceList.get(0);
+            notice.setLetterOfAcceptance(letterOfAcceptance);
+            notices.add(notice);
+        }
 
-		return notices;
-	}
+        return notices;
+    }
 
 }

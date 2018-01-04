@@ -69,10 +69,10 @@ public class TrackMilestoneJdbcRepository extends JdbcRepository {
             params.append(" loaestimate.id = milestone.letterofacceptanceestimate");
         }
 
-        String orderBy = "order by milestone.id";
+        StringBuilder orderBy = new StringBuilder("order by milestone.createdtime");
         if (trackMilestoneSearchContract.getSortBy() != null
                 && !trackMilestoneSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by milestone." + trackMilestoneSearchContract.getSortBy();
+            orderBy.append("order by milestone.").append(trackMilestoneSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

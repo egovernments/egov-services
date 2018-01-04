@@ -50,10 +50,10 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
                         && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty()) || StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike()))
             tableName += LOA_ESTIMATESEARCH_EXTENTION;
 
-        String orderBy = "order by loa.id";
+        StringBuilder orderBy = new StringBuilder("order by loa.createdtime");
         if (letterOfAcceptanceSearchCriteria.getSortBy() != null
                 && !letterOfAcceptanceSearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by loa." + letterOfAcceptanceSearchCriteria.getSortBy();
+            orderBy.append("order by loa.").append(letterOfAcceptanceSearchCriteria.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

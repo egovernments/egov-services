@@ -30,10 +30,10 @@ public class AbstractEstimateDetailsJdbcRepository extends JdbcRepository {
             validateEntityFieldName(abstractEstimateDetailsSearchContract.getSortBy(), AbstractEstimateDetails.class);
         }
 
-        String orderBy = "order by id";
+        StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (abstractEstimateDetailsSearchContract.getSortBy() != null
                 && !abstractEstimateDetailsSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by " + abstractEstimateDetailsSearchContract.getSortBy();
+            orderBy.append("order by ").append(abstractEstimateDetailsSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
@@ -66,7 +66,7 @@ public class AbstractEstimateDetailsJdbcRepository extends JdbcRepository {
 
             searchQuery = searchQuery.replace(":condition", "");
 
-        searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":orderby", orderBy.toString());
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateDetailsHelper.class);
 

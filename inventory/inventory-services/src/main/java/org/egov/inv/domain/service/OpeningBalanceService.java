@@ -193,6 +193,8 @@ public class OpeningBalanceService extends DomainService {
 				{
 					int index = receipt.indexOf(rcpt) + 1;
 					ObjectMapper mapper = new ObjectMapper();
+					
+					if (!isEmpty(rcpt.getFinancialYear())) {
 					JSONArray finYears = mdmsRepository.getByCriteria("default", "egf-master", "FinancialYear", "finYearRange",rcpt.getFinancialYear() , info);
 					if(finYears != null && finYears.size() > 0)
 					{
@@ -204,11 +206,9 @@ public class OpeningBalanceService extends DomainService {
 						else
 							errors.addDataError( ErrorCode.FIN_CUR_YEAR.getCode(),"Financial Year ("+rcpt.getFinancialYear()+")");
 						}
-					}
-					else
+					}else
 						errors.addDataError( ErrorCode.FIN_YEAR_NOT_EXIST.getCode(),rcpt.getFinancialYear());
-					
-					if (isEmpty(rcpt.getFinancialYear())) {
+					}else{
 						errors.addDataError( ErrorCode.FIN_YEAR_NOT_EXIST.getCode(),rcpt.getFinancialYear());
 					}
 					if (isEmpty(rcpt.getReceivingStore().getCode())) {

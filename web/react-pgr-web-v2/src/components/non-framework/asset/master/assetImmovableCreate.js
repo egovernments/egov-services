@@ -399,7 +399,7 @@ class assetImmovableCreate extends Component {
           dropDownData.sort(function(s1, s2) {
             return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
           });
-          dropDownData.unshift({ key: null, value: '-- Please Select --' });
+          //dropDownData.unshift({ key: null, value: '-- Please Select --' });
           self.props.setDropDownData('Asset.assetAccount', dropDownData);
         }
       },
@@ -424,7 +424,7 @@ class assetImmovableCreate extends Component {
           dropDownData.sort(function(s1, s2) {
             return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
           });
-          dropDownData.unshift({ key: null, value: '-- Please Select --' });
+          //dropDownData.unshift({ key: null, value: '-- Please Select --' });
           self.props.setDropDownData('Asset.accumulatedDepreciationAccount', dropDownData);
         }
       },
@@ -459,7 +459,7 @@ class assetImmovableCreate extends Component {
           dropDownData.sort(function(s1, s2) {
             return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
           });
-          dropDownData.unshift({ key: null, value: '-- Please Select --' });
+          //dropDownData.unshift({ key: null, value: '-- Please Select --' });
           self.props.setDropDownData('Asset.revaluationReserveAccount', dropDownData);
         }
       },
@@ -494,7 +494,7 @@ class assetImmovableCreate extends Component {
           dropDownData.sort(function(s1, s2) {
             return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
           });
-          dropDownData.unshift({ key: null, value: '-- Please Select --' });
+          //dropDownData.unshift({ key: null, value: '-- Please Select --' });
           self.props.setDropDownData('Asset.depreciationExpenseAccount', dropDownData);
         }
       },

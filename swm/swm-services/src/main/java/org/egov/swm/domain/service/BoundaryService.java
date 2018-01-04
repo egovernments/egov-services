@@ -104,9 +104,10 @@ public class BoundaryService {
         Set<Boundary> result = new HashSet<>();
 
         result.add(boundary);
-        for (Boundary child : boundary.getChildren()) {
-            result.addAll(findAll(child));
-        }
+        if (boundary.getChildren() != null)
+            for (Boundary child : boundary.getChildren()) {
+                result.addAll(findAll(child));
+            }
 
         return new ArrayList(result);
 

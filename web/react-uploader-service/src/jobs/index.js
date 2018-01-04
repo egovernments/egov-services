@@ -28,16 +28,6 @@ class UserJobsContainer extends Component {
   // ordering of row in a schema is important to preserve the ordering in the table
   tableSchema = [
     {
-      key: "download",
-      label: "Download",
-      fieldType: "hyperlink",
-      style: {
-        paddingLeft: "0px",
-        paddingRight: "0px",
-        textAlign: "center"
-      }
-    },
-    {
       key: "id",
       label: "Job ID",
       fieldType: "label",
@@ -82,6 +72,16 @@ class UserJobsContainer extends Component {
       key: "status",
       label: "Status",
       fieldType: "label",
+      style: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        textAlign: "center"
+      }
+    },
+    {
+      key: "download",
+      label: "Download",
+      fieldType: "hyperlink",
       style: {
         paddingLeft: "0px",
         paddingRight: "0px",

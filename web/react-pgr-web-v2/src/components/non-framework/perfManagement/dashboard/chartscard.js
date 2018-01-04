@@ -88,7 +88,41 @@ export default class BarChartCard extends Component {
     return ulbName[0]['name']
   }
 
+  getObjectiveValue(value) {
+    switch (value) {
+      case 1:
+        return 'YES';
+      case 2:
+        return 'NO';
+      case 3:
+        return 'IN PROGRESS';
+    
+      default:
+        return 'NO';
+    }
+  }
+
   getModifiedChartData = (data) => {
+    if (this.props.kpiType === 'OBJECTIVE') {
+      if (this.props.isReportConsolidated) {
+        return data.map((item, index) => {
+          return {
+            ...item,
+            ulbName: this.getULBName(item.ulbName),
+            target: this.getObjectiveValue(item.target),
+            value: this.getObjectiveValue(item.value)
+          }
+        })
+      }
+      return data.map((item, index) => {
+        return {
+          ...item,
+          ulbName: this.getULBName(item.ulbName),
+          target: this.getObjectiveValue(item.target),
+          monthlyValue: this.getObjectiveValue(item.monthlyValue)
+        }
+      })
+    }
     return data.map((item, index) => {
       return {
         ...item,
@@ -245,7 +279,6 @@ export default class BarChartCard extends Component {
    */
   renderBarChart = () => {
     let data = this.getModifiedChartData(this.getChartData())
-    console.log(`rendering bar chart for ${data}`)
 
     return (
       <div style={{ marginLeft: '15%', marginTop: '10px' }}>
@@ -270,20 +303,22 @@ export default class BarChartCard extends Component {
   renderPieChart = () => {
     
     let cdata    = this.getModifiedChartData(this.getChartData())
+
     let data = [
       {
         name: 'YES',
-        value: cdata.filter(el => el.monthlyValue === 1).length,
+        value: cdata.filter(el => el.monthlyValue === 'YES').length,
       },
       {
         name: 'NO',
-        value: cdata.filter(el => el.monthlyValue === 2).length,
+        value: cdata.filter(el => el.monthlyValue === 'NO').length,
       },
       {
         name: 'IN PROGRESS',
-        value: cdata.filter(el => el.monthlyValue === 3).length,
+        value: cdata.filter(el => el.monthlyValue === 'IN PROGRESS').length,
       },
     ];
+
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
     return (
@@ -305,7 +340,6 @@ export default class BarChartCard extends Component {
    */
   renderConsolidatedBarChart = () => {
     let data = this.getModifiedChartData(this.getChartData())
-    console.log(`rendering bar chart for ${data}`)
 
     return (
       <div>
@@ -327,20 +361,22 @@ export default class BarChartCard extends Component {
    * renders PieChart for OBJECTIVE type KPI
    */
   renderConsolidatedPieChart = () => {
+    let cdata    = this.getModifiedChartData(this.getChartData())
     let data = [
       {
         name: 'YES',
-        value: this.state.data.filter(el => el.value === 1).length,
+        value: cdata.filter(el => el.value === 'YES').length,
       },
       {
         name: 'NO',
-        value: this.state.data.filter(el => el.value === 2).length,
+        value: cdata.filter(el => el.value === 'NO').length,
       },
       {
         name: 'IN PROGRESS',
-        value: this.state.data.filter(el => el.value === 3).length,
+        value: cdata.filter(el => el.value === 'IN PROGRESS').length,
       },
     ];
+
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
     return (

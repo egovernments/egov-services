@@ -27,7 +27,8 @@ export default class TableCard extends Component {
 
   componentDidMount() {
     if (this.props.isReportConsolidated) {
-      formatConsolidatedChartData(parseCompareSearchConsolidatedResponse(this.props.data, this.props.kpiType), (data, dataKey) => {
+
+      formatConsolidatedChartData(parseCompareSearchConsolidatedResponse(this.props.data, this.props.kpiType === 'TEXT' ? true : false), (data, dataKey) => {
         if (!data || !dataKey) {
         } else {
           this.setState({
@@ -37,7 +38,7 @@ export default class TableCard extends Component {
         }
       });
     } else {
-      formatChartData(parseCompareSearchResponse(this.props.data, this.props.kpiType), (data, dataKey) => {
+      formatChartData(parseCompareSearchResponse(this.props.data, this.props.kpiType === 'TEXT' ? true : false), (data, dataKey) => {
         if (!data || !dataKey) {
         } else {
           this.setState({
@@ -104,7 +105,41 @@ export default class TableCard extends Component {
     return ulbName[0]['name']
   }
 
+  getObjectiveValue(value) {
+    switch (value) {
+      case 1:
+        return 'YES';
+      case 2:
+        return 'NO';
+      case 3:
+        return 'IN PROGRESS';
+    
+      default:
+        return 'NO';
+    }
+  }
+
   getModifiedChartData = (data) => {
+    if (this.props.kpiType === 'OBJECTIVE') {
+      if (this.props.isReportConsolidated) {
+        return data.map((item, index) => {
+          return {
+            ...item,
+            ulbName: this.getULBName(item.ulbName),
+            target: this.getObjectiveValue(item.target),
+            value: this.getObjectiveValue(item.value)
+          }
+        })
+      }
+      return data.map((item, index) => {
+        return {
+          ...item,
+          ulbName: this.getULBName(item.ulbName),
+          target: this.getObjectiveValue(item.target),
+          monthlyValue: this.getObjectiveValue(item.monthlyValue)
+        }
+      })
+    }
     return data.map((item, index) => {
       return {
         ...item,
@@ -195,7 +230,6 @@ export default class TableCard extends Component {
   renderTable = () => {
     let headers = this.getTableHeaders();
     let data    = this.getModifiedChartData(this.getChartData())
-
     return (
       <Table style={{ color: 'black', fontWeight: 'normal', marginTop: '10px' }} bordered responsive className="table-striped">
             <TableHeader adjustForCheckbox={false} displaySelectAll={false}>

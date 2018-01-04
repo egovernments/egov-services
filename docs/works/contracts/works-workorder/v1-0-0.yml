@@ -2112,8 +2112,7 @@ definitions:
       description: Contractor Advance extends AdvanceRequisition object
     properties:
       id:
-        type: integer
-        format: int64
+        type: string
         description: Unique Identifier of the Contractor Advance Requisition Form
       tenantId:
         type: string
@@ -2148,4 +2147,5 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 

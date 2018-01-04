@@ -29,8 +29,11 @@ class UiBoundary extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if(_.get(nextProps.formData,nextProps.item.jsonPath))
-    this.fetchLocations(nextProps.item);
+    if(window.location.hash.split('/')[1] != 'create') {
+      if(_.get(this.props.formData,this.props.item.jsonPath) != _.get(nextProps.formData,nextProps.item.jsonPath)) {
+        this.fetchLocations(nextProps.item);
+      }
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -61,6 +64,7 @@ class UiBoundary extends Component {
     var ddArr = [];
     var jPath = '';
     var viewLabels = {};
+    // console.log(bdryCode)
     var pathArr = jp.paths(boundaryData, `$..[?(@.code=='${bdryCode}')]`);
     console.log(pathArr)
     pathArr = pathArr[0];
@@ -161,11 +165,11 @@ class UiBoundary extends Component {
       dropDownDataVal:{
       ...dropDownDataVal,
       [property]:key}      
-    }, console.log(this.state.dropDownDataVal))
+    })
     //below runs for create & update only
     this.populateNextDropDown(key,property);
-    console.log(key, property)
-    console.log(this.state.labelArr);
+    // console.log(key, property)
+    // console.log(this.state.labelArr);
 
     if(property == this.state.labelArr[this.state.labelArr.length-1]) {
       let formData = _.cloneDeep(this.props.formData);

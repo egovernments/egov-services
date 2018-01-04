@@ -18,7 +18,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             defaultValue: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: ''
           },
           {
@@ -29,7 +29,7 @@ var dat = {
             type: 'text',
             isDisabled: false,
             defaultValue: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: ''
           }
         ],
@@ -84,7 +84,7 @@ var dat = {
             url:
               'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name',
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             depedants: [
               {
                 jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
@@ -103,7 +103,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             depedants: [
               {
                 jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
@@ -122,7 +122,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             depedants: [
               {
                 jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
@@ -141,7 +141,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
           },
         ],
       },
@@ -160,7 +160,7 @@ var dat = {
             maxLength: '',
             url: '/egov-mdms-service/v1/_get?&moduleName=tenant&masterName=tenants|$..code|$..name',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             // mdms: {
             //   "moduleName": "swm",
             //   "masterName": "DumpingGround",
@@ -192,7 +192,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             defaultValue: false,
             url: '',
           },
@@ -208,7 +208,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
             showHideFields: [
               {
@@ -245,7 +245,7 @@ var dat = {
             defaultValue: '',
             maxLength: 500,
             minLength: 10,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -260,7 +260,7 @@ var dat = {
             defaultValue: '',
             maxLength: 500,
             minLength: 10,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -276,7 +276,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -292,7 +292,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -308,7 +308,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
         ]
@@ -328,7 +328,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -341,7 +341,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             defaultValue: '',
-            patternErrorMsg: 'Value should be less than or equal to 50',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
 
@@ -356,7 +356,7 @@ var dat = {
             defaultValue: '',
             maxLength: '5',
             minLength: '1',
-            patternErrorMsg: '',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
 
@@ -372,7 +372,7 @@ var dat = {
             maxLength: 500,
             minLength: 15,
             fullWidth: true,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -387,7 +387,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -402,7 +402,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -417,7 +417,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
             showHideFields: [
               {
@@ -449,7 +449,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -464,7 +464,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -485,7 +485,7 @@ var dat = {
             maxLength: 128,
             url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',
             minLength: 1,
-            patternErrorMsg: 'may not be null',
+            patternErrMsg: 'may not be null',
             hasATOAATransform: true,
             aATransformInfo: {
               to: 'MasterMetaData.masterData[0].siteDetails.wasteTypes',
@@ -556,7 +556,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
           },
           {
             name: 'Ward',
@@ -569,7 +569,7 @@ var dat = {
             url:
               'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name',
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             isHidden: true
 
           },
@@ -582,7 +582,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             isHidden: true
           },
           {
@@ -594,7 +594,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             isHidden: true
           },
           
@@ -615,7 +615,7 @@ var dat = {
             maxLength: '',
             url: '/egov-mdms-service/v1/_get?&moduleName=tenant&masterName=tenants|$..code|$..name',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             // mdms: {
             //   "moduleName": "swm",
             //   "masterName": "DumpingGround",
@@ -647,7 +647,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             defaultValue: false,
             url: '',
           },
@@ -662,7 +662,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
             showHideFields: [
               {
@@ -700,7 +700,7 @@ var dat = {
           //   defaultValue: '',
           //   maxLength: 500,
           //   minLength: 10,
-          //   patternErrorMsg: '',
+          //   patternErrMsg: '',
           //   url: '',
           // },
 
@@ -715,7 +715,7 @@ var dat = {
           //   defaultValue: '',
           //   maxLength: 500,
           //   minLength: 10,
-          //   patternErrorMsg: '',
+          //   patternErrMsg: '',
           //   url: '',
           // },
 
@@ -731,7 +731,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -747,7 +747,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -763,7 +763,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
         ]
@@ -783,7 +783,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -796,7 +796,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             defaultValue: '',            
-            patternErrorMsg: '',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
 
@@ -811,7 +811,7 @@ var dat = {
             maxLength: '5',
             minLength: '1',
             defaultValue: '',
-            patternErrorMsg: '',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
 
@@ -827,7 +827,7 @@ var dat = {
             maxLength: 500,
             minLength: 15,
             fullWidth: true,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -842,7 +842,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -857,7 +857,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -872,7 +872,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
             /*showHideFields: [
               {
@@ -923,7 +923,7 @@ var dat = {
             //hide: true,
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
           {
@@ -938,7 +938,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
         ]
@@ -958,7 +958,7 @@ var dat = {
             maxLength: 128,
             url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',
             minLength: 1,
-            patternErrorMsg: 'may not be null',
+            patternErrMsg: 'may not be null',
             hasATOAATransform: true,
             aATransformInfo: {
               to: 'MdmsRes.swm.DumpingGround[0].siteDetails.wasteTypes',
@@ -967,45 +967,6 @@ var dat = {
           },
         ]
       },
-
-      /*{
-        name: 'HideGroup',
-        hide: true,
-        fields: [
-            {
-              name: 'tenantId',
-              jsonPath: 'MasterMetaData.masterData[0].tenantId',
-              defaultValue: localStorage.getItem("tenantId"),
-              isRequired : true,
-              type: 'text',
-              hide: true
-            },
-            {
-              name: 'moduleName',
-              jsonPath: 'MasterMetaData.moduleName',
-              defaultValue: 'swm',
-              isRequired : true,
-              type: 'text',
-              hide: true
-            },
-            {
-              name: 'masterName',
-              jsonPath: 'MasterMetaData.masterName',
-              defaultValue: 'DumpingGround',
-              isRequired : true,
-              type: 'text',
-              hide: true
-            },
-            {
-              name: 'code',
-              jsonPath: 'MasterMetaData.masterData[0].code',
-              defaultValue: 'DumpingGround-' + new Date().getTime(),
-              isRequired : true,
-              type: 'text',
-              hide: true
-            },
-        ]
-      }*/
     ],
     tenantIdRequired: true,
     url: '/egov-mdms-service/v1/_search?code={code}',
@@ -1037,7 +998,7 @@ var dat = {
             url:
               'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE|$.Boundary.*.id|$.Boundary.*.name',
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             depedants: [
               {
                 jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.zone',
@@ -1056,7 +1017,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             depedants: [
               {
                 jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.block',
@@ -1075,7 +1036,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             depedants: [
               {
                 jsonPath: 'MasterMetaData.masterData[0].siteDetails.location.code',
@@ -1094,7 +1055,7 @@ var dat = {
             isDisabled: false,
             maxLength: 128,
             minLength: 1,
-            patternErrorMsg: '',
+            patternErrMsg: '',
           },
         ],
       },
@@ -1113,7 +1074,7 @@ var dat = {
             maxLength: '',
             url: '/egov-mdms-service/v1/_get?&moduleName=tenant&masterName=tenants|$..code|$..name',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             // mdms: {
             //   "moduleName": "swm",
             //   "masterName": "DumpingGround",
@@ -1145,7 +1106,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             defaultValue: false,
             url: '',
           },
@@ -1161,7 +1122,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
             showHideFields: [
               {
@@ -1199,7 +1160,7 @@ var dat = {
             defaultValue: '',
             maxLength: 500,
             minLength: 10,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -1214,7 +1175,7 @@ var dat = {
             defaultValue: '',
             maxLength: 500,
             minLength: 10,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -1230,7 +1191,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -1246,7 +1207,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -1262,7 +1223,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
         ]
@@ -1282,10 +1243,9 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
-
           {
             name: 'dumpingGroundArea',
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.area',
@@ -1297,10 +1257,9 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
-
           {
             name: 'dumpingGroundCapacity',
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.capacity',
@@ -1312,10 +1271,9 @@ var dat = {
             maxLength: '5',
             minLength: '1',
             defaultValue: '',
-            patternErrorMsg: '',
+            patternErrMsg: 'Invalid Value',
             url: '',
           },
-
           {
             name: 'dumpingGroundAddress',
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.address',
@@ -1328,10 +1286,9 @@ var dat = {
             maxLength: 500,
             minLength: 15,
             fullWidth: true,
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
-
           {
             name: 'dumpingGroundLatitude',
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.latitude',
@@ -1343,10 +1300,9 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
-
           {
             name: 'dumpingGroundLongitude',
             jsonPath: 'MasterMetaData.masterData[0].siteDetails.longitude',
@@ -1358,10 +1314,9 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
-
           {
             name: 'dumpingGroundisProcessingSite',
             jsonPath: 'MasterMetaData.masterData[0].isProcessingSite',
@@ -1373,7 +1328,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
             showHideFields: [
               {
@@ -1405,7 +1360,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -1420,7 +1375,7 @@ var dat = {
             defaultValue: '',
             maxLength: '',
             minLength: '',
-            patternErrorMsg: '',
+            patternErrMsg: '',
             url: '',
           },
 
@@ -1441,7 +1396,7 @@ var dat = {
             maxLength: 128,
             url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$..code|$..name',
             minLength: 1,
-            patternErrorMsg: 'may not be null',
+            patternErrMsg: 'may not be null',
             hasATOAATransform: true,
             aATransformInfo: {
               to: 'MasterMetaData.masterData[0].siteDetails.wasteTypes',

@@ -13,10 +13,10 @@ const FiltersView = ({ handleApplyFilter, handleResetFilter }) => {
     <div>
       <div className="row">
         <CardUi>
-          <div className="col-lg-4">
+          <div className="col-lg-4 col-md-4">
             <UserJobsCodeFilter />
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-4 col-md-4">
             <RequesterFileNamesFilter />
           </div>
           <div>

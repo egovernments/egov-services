@@ -16,7 +16,7 @@ class UserJobsDateFilterContainer extends Component {
 
     return (
       <div>
-        <div className="col-lg-4">
+        <div className="col-lg-4 col-md-4">
           <DatePickerUi
             value={startDate}
             onChange={(event, date) => {

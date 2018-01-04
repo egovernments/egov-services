@@ -6,6 +6,19 @@ import { translate } from '../../common/common';
 import Api from '../../../api/api';
 import _ from 'lodash';
 
+let dependencyDropdown =[
+{
+master : "caseType",
+dependencyMaster : "side",
+propertyName : "sideCode",
+filterKey: "code",
+dependencykey: "name"
+}
+];
+
+let isDependency=false;
+let dropdownData=null;
+
 class MdmsComponent extends Component {
   constructor(props) {
     super(props);
@@ -14,19 +27,21 @@ class MdmsComponent extends Component {
       isBtnDisabled: false,
       valueList: [],
       pathname: '',
+      dependencyDropdownData:null,
     };
     this.initData = this.initData.bind(this);
   }
 
+
   // checkColumnName(headers,column)
   // {
-  // 	for (var i = 0; i < headers.length; i++) {
-  // 		if(headers[i].label.split(".")[3]==column)
-  // 		{
-  // 			return true
-  // 		}
-  // 	}
-  // 	return false
+  //  for (var i = 0; i < headers.length; i++) {
+  //    if(headers[i].label.split(".")[3]==column)
+  //    {
+  //      return true
+  //    }
+  //  }
+  //  return false
   // }
 
   componentDidMount() {
@@ -37,13 +52,13 @@ class MdmsComponent extends Component {
     //After successful edit/create, make call to mdms _create/_update
 
     // Api.commonApiPost("/specs/yaml/_search", {
-    // 	module,
-    // 	master
+    //  module,
+    //  master
     // }).then(function(res) {
     //
     // }).catch(function(err) {
-    // 	self.props.setLoadingStatus('hide');
-    // 	self.props.toggleSnackbarAndSetText(true, err.message);
+    //  self.props.setLoadingStatus('hide');
+    //  self.props.toggleSnackbarAndSetText(true, err.message);
     // })
     this.initData(this.props);
   }
@@ -154,35 +169,47 @@ class MdmsComponent extends Component {
         Api.commonApiPost('/egov-mdms-service/v1/_search', {}, data, false, true)
           .then(function(res2) {
             let arr = _.get(res2, 'MdmsRes.' + module + '.' + master) || [];
-            let temp = [];
+
+            var depndencyobject = findObjectByKey(dependencyDropdown,"master",master);
+
+            
             if (arr && arr.length) {
-              // let temp=[];
+               let temp=[];
 
               // self.props.setFormData(formData);
               for (let i = 0; i < arr.length; i++) {
-                // arr[i].modify = true;
                 temp.push(_.pick(arr[i], headers));
               }
-
-              // self.setState({
-              // 	valueList: temp
-              // })
-
+             
+            const successCallback = (_valueList)=>{
               self.setState({
-                valueList: temp,
+                valueList: _valueList,
               });
-            }
+                res.jsonPath = 'MdmsMetadata.masterData';
+                self.setState({
+                  item: res,
+                  pathname: props.history.location.pathname,
+                });
 
-            res.jsonPath = 'MdmsMetadata.masterData';
-            self.setState({
-              item: res,
-              pathname: props.history.location.pathname,
-            });
-
-            formData.MasterMetaData.masterData = arr;
+              formData.MasterMetaData.masterData = _valueList;
             console.log(formData);
             props.setFormData(formData);
             props.setLoadingStatus('hide');
+            };
+
+
+             if(!_.isEmpty(depndencyobject)){
+            self.getDependencyData(data,temp,depndencyobject,successCallback).then((data)=>{
+            successCallback(data);
+         });
+          
+             }
+              
+              else{
+                successCallback(temp);
+            }
+            }
+
           })
           .catch(function(err) {
             props.setLoadingStatus('hide');
@@ -229,12 +256,42 @@ class MdmsComponent extends Component {
         self.props.toggleSnackbarAndSetText(true, err.message);
       });
   };
+  
+  getDependencyData=(data,temp,depndencyobject)=>{
+  
+  let dependentData=data;
+  var _self = this;
+              dependentData.MdmsCriteria.moduleDetails[0].masterDetails[0].name= depndencyobject.dependencyMaster;
+        return Api.commonApiPost('/egov-mdms-service/v1/_search', {}, dependentData, false, true)
+          .then(function(res3) {
+             isDependency=true;
+            let dropdownData=_.get(res3, 'MdmsRes.' + dependentData.MdmsCriteria.moduleDetails[0].moduleName + '.' + dependentData.MdmsCriteria.moduleDetails[0].masterDetails[0].name) || [];
+           for (let i = 0; i < temp.length; i++) {
+                if(isDependency){
+                  let value=temp[i][`${depndencyobject.propertyName}`];
+                  console.log('value  is'+value);
+                let filterdData =_.find(dropdownData, function (obj) { return obj[`${depndencyobject.filterKey}`]===value });
+                 console.log('filterdData  is'+filterdData);
+                temp[i][`${depndencyobject.propertyName}`]=filterdData[`${depndencyobject.dependencykey}`];
+                }
+              
+              }
+              _self.setState({
+                dependencyDropdownData: dropdownData
+              })
+              return temp;
+// successCallback();
+             // _self.setState({
+             //    valueList: temp,
+             //  });
+            });
+}
 
   render() {
-    let { item, isBtnDisabled, valueList } = this.state;
+    let { item, isBtnDisabled, valueList,dependencyDropdownData} = this.state;
     let { handleChange, setDisabled, addOrUpdate } = this;
     // console.log(item);
-    // console.log(valueList);
+     console.log("test",valueList);
     return (
       <div style={{ margin: '20px' }}>
         {item && (Object.keys(item).length && item.values && item.values.length) ? (
@@ -245,19 +302,34 @@ class MdmsComponent extends Component {
             item={item}
             valueList={valueList}
             setDisabled={setDisabled}
+            dependencyDropdownData={dependencyDropdownData}
+            dependencyDropdown={dependencyDropdown}
+
           />
         ) : (
           <div />
         )}
         <br />
         {/*<RaisedButton
-					label={translate("ui.framework.submit")}
-					onClick={addOrUpdate}
-					primary={true}
-					disabled={isBtnDisabled}/>*/}
+          label={translate("ui.framework.submit")}
+          onClick={addOrUpdate}
+          primary={true}
+          disabled={isBtnDisabled}/>*/}
       </div>
     );
   }
+}
+
+
+
+
+function findObjectByKey(array, key, value) {
+    for (var i = 0; i < array.length; i++) {
+        if (array[i][key]===value) {
+            return array[i];
+        }
+    }
+    return null;
 }
 
 const mapStateToProps = state => ({

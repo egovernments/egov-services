@@ -285,7 +285,7 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     _.set(formData, property, e.target.value);
 
     //Check if required
-    if (isRequired && e.target.value == '') {
+    if (isRequired && e.target.value === '') {
       fieldErrors[property] = requiredErrMsg;
     } else {
       delete fieldErrors[property];
@@ -299,7 +299,7 @@ class UiMultiFieldAddToTableForMDMS extends Component {
 
     //Check if any other field is required
     for (let i = 0; i < this.state.requiredFields.length; i++) {
-      if (typeof _.get(formData, this.state.requiredFields[i]) == 'undefined' || _.get(formData, this.state.requiredFields[i]) == '') {
+      if (typeof _.get(formData, this.state.requiredFields[i]) == 'undefined' || _.get(formData, this.state.requiredFields[i]) === '') {
         isFormValid = false;
         break;
       }
@@ -358,7 +358,9 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     if (this.state.index == -1) {
       Api.commonApiPost('/egov-mdms-create/v1/_create', {}, { MasterMetaData: MasterMetaData }, false, true)
         .then(function(res) {
-          // console.log(res);
+          if(!_.isEmpty(self.props.dependencyDropdownData)){
+         temp[0]=  self.updateDependecyDropdownData(temp[0]);
+          }
           if (!myTableInParent) {
             temp[0].id = 1;
             self.props.handler({ target: { value: temp } }, self.props.item.jsonPath);
@@ -403,7 +405,9 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     } else {
       Api.commonApiPost('/egov-mdms-create/v1/_update', {}, { MasterMetaData: MasterMetaData }, false, true)
         .then(function(res) {
-
+          if(!_.isEmpty(self.props.dependencyDropdownData)){
+            temp[0]=  self.updateDependecyDropdownData(temp[0]);
+          }
           myTableInParent[self.state.index] = temp[0];
           self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
           self.props.setLoadingStatus('hide');
@@ -894,6 +898,16 @@ class UiMultiFieldAddToTableForMDMS extends Component {
       }
     );
   };
+
+  updateDependecyDropdownData=(data)=>{
+    let dependecyDropdownData=this.props.dependencyDropdownData;
+    let propertyName=this.props.dependencyDropdown[0].propertyName;
+    let  filterKey=this.props.dependencyDropdown[0].filterKey;
+    let dependencyKey =this.props.dependencyDropdown[0].dependencykey;
+    let filterdData =_.find(dependecyDropdownData, function (obj) { return obj[`${filterKey}`]==(data[`${propertyName}`]) });
+    data[`${propertyName}`]=filterdData[`${dependencyKey}`];
+    return data;
+  }
 
   render() {
     return <div>{this.renderArrayField(this.props.item)}</div>;

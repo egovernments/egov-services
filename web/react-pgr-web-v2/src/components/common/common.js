@@ -2277,8 +2277,6 @@ var localization_EN_Data = {
   'swm.create.collectionType.name': 'Collection Type',
   'swm.search.vendor.title': 'Vendor Search',
 
-  'swm.dumpingGround.create.dumpingGroundArea': 'Dumping Ground Area (Sq.km)',
-  'swm.dumpingGround.create.dumpingGroundCapacity': 'Dumping Ground Capacity (Tons)',
   'swm.dumpingGround.create.dumpingGroundAddress': 'Dumping Ground Address',
   'swm.processingplant.create.title.Geo' : 'GEO-COORDINATES',
   'swm.processingplant.create.Latitude': 'Latitude',
@@ -2312,8 +2310,8 @@ var localization_EN_Data = {
   'swm.dumpingGround.create.bankValidityFrom': 'Bank Guarantee From',
   'swm.dumpingGround.create.bankValidityTo': 'Bank Guarantee To',
   'swm.dumpingGround.create.dumpingGroundName': 'Dumping Ground Name',
-  'swm.dumpingGround.create.dumpingGroundArea': 'Dumping Ground Area',
-  'swm.dumpingGround.create.dumpingGroundCapacity': 'Dumping Ground Capacity',
+  'swm.dumpingGround.create.dumpingGroundArea': 'Dumping Ground Area (Sq.km)',
+  'swm.dumpingGround.create.dumpingGroundCapacity': 'Dumping Ground Capacity (Tons)',
   'swm.dumpingGround.create.dumpingGroundAddress': 'Dumping Ground Address',
   'swm.dumpingGround.create.dumpingGroundLatitude': 'Latitude',
   'swm.dumpingGround.create.dumpingGroundLongitude': 'Latitude',
@@ -3224,6 +3222,7 @@ var localization_EN_Data = {
   'swm.dumpingground.search.title' : 'Dumping Ground Search',
   'swm.collectionpoints.create.complex': 'Location',
   'lcms.create.group.title.courtDetails' : 'Master Data of Court',
+  'swm.create.ulbNames' : 'ULB Names',
 
 
 };
@@ -5088,9 +5087,9 @@ var localization_MR_Data = {
   'swm.dumpingGround.create.bankValidityFrom': 'Bank Guarantee From',
   'swm.dumpingGround.create.bankValidityTo': 'Bank Guarantee To',
   'swm.dumpingGround.create.bankGuarantee': 'Bank Guarantee?',
-  'swm.dumpingGround.create.dumpingGroundName': 'Dumping Ground Name',
-  'swm.dumpingGround.create.dumpingGroundArea': 'Dumping Ground Area',
-  'swm.dumpingGround.create.dumpingGroundCapacity': 'Dumping Ground Capacity',
+  'swm.dumpingGround.create.dumpingGroundName': 'Dumping Ground Name',  
+  'swm.dumpingGround.create.dumpingGroundArea': 'Dumping Ground Area (Sq.km)',
+  'swm.dumpingGround.create.dumpingGroundCapacity': 'Dumping Ground Capacity (Tons)',
   'swm.dumpingGround.create.dumpingGroundAddress': 'Dumping Ground Address',
   'swm.dumpingGround.create.dumpingGroundLatitude': 'Latitude',
   'swm.dumpingGround.create.dumpingGroundLongitude': 'Latitude',
@@ -5184,6 +5183,7 @@ var localization_MR_Data = {
   'swm.create.group.title.staffScheduleDetails': 'Staff Schedule',
   'swm.dumpingground.search.title' : 'Dumping Ground Search',
   'lcms.create.group.title.courtDetails' : 'Master Data of Court',
+  'swm.create.ulbNames' : 'ULB Names',
 
 
   'referenceEvidence.update.document.title': 'Reference Evidences-marathi',

@@ -242,7 +242,7 @@ public class EstimateValidator {
 
         if (isNew && !oldEstimates.isEmpty())
             for (AbstractEstimate abstractEstimate : oldEstimates) {
-                if (!abstractEstimate.getStatus().toString().equals(AbstractEstimateStatus.CANCELLED.toString()))
+                if (!abstractEstimate.getStatus().getCode().toString().equals(AbstractEstimateStatus.CANCELLED.toString()))
                     messages.put(Constants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER, Constants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
             }
     }
@@ -314,7 +314,7 @@ public class EstimateValidator {
         }
         // TODO:
         if (abstractEstimate.getSpillOverFlag()
-                || (!isNew && AbstractEstimateStatus.CHECKED.equals(abstractEstimate.getStatus())
+                || (!isNew && AbstractEstimateStatus.CHECKED.equals(abstractEstimate.getStatus().getCode())
                         && Constants.FORWARD.equalsIgnoreCase(abstractEstimate.getWorkFlowDetails().getAction())))
             validateFinancialDetails(abstractEstimate, isFinIntReq, requestInfo, messages);
         validateTypeOfWork(abstractEstimate.getTypeOfWork(), abstractEstimate.getTenantId(), requestInfo, messages);

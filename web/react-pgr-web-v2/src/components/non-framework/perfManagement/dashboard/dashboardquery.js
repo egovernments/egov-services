@@ -323,7 +323,7 @@ export default class KPIDashboardQuery extends Component {
         <div style={{ textAlign: 'center' }}>
           <br />
           <RaisedButton
-            label="View"
+            label="View Monthly"
             style={style}
             primary={true}
             type="button"

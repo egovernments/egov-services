@@ -82,7 +82,7 @@ export default class TableCard extends Component {
     if (this.props.isReportConsolidated) {
       return Object.keys(this.state.data[0]);
     }
-    return Object.keys(this.state.data.data[0])
+    return Object.keys(this.state.data[this.state.chartDataIndex - 1].data[0])
           .filter((elem) => {return elem.toUpperCase() !== 'ULBNAME'})
           .filter((elem) => {return elem.toUpperCase() !== 'PERIOD'})
           .filter((elem) => {return elem.toUpperCase() !== 'VALUE'});

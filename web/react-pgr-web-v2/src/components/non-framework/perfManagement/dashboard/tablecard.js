@@ -134,7 +134,7 @@ export default class TableCard extends Component {
           />
           <RaisedButton
             style={{ marginLeft: '40%' }}
-            label={'Tabular'}
+            label={'Charts'}
             primary={true}
             type="button"
             disabled={false}

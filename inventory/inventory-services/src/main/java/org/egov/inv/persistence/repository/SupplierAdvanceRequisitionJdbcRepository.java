@@ -1,22 +1,19 @@
 package org.egov.inv.persistence.repository;
 
-import org.egov.common.JdbcRepository;
-import org.egov.common.Pagination;
-import org.egov.inv.model.SupplierAdvanceRequisition;
-import org.egov.inv.model.SupplierAdvanceRequisitionSearch;
-import org.egov.inv.model.SupplierBillAdvanceAdjustment;
-import org.egov.inv.model.SupplierBillAdvanceAdjustmentSearch;
-import org.egov.inv.persistence.entity.SupplierAdvanceRequisitionEntity;
-import org.egov.inv.persistence.entity.SupplierBillAdvanceAdjustmentEntity;
-import org.egov.inv.persistence.entity.SupplierBillReceiptEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.egov.common.JdbcRepository;
+import org.egov.common.Pagination;
+import org.egov.inv.model.SupplierAdvanceRequisition;
+import org.egov.inv.model.SupplierAdvanceRequisitionSearch;
+import org.egov.inv.model.SupplierBillAdvanceAdjustmentSearch;
+import org.egov.inv.persistence.entity.SupplierAdvanceRequisitionEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Service;
 
 @Service
 public class SupplierAdvanceRequisitionJdbcRepository extends JdbcRepository {
@@ -74,11 +71,11 @@ public class SupplierAdvanceRequisitionJdbcRepository extends JdbcRepository {
             paramValues.put("stateId", supplierAdvanceRequisitionSearch.getStateId());
         }
 
-        if (supplierAdvanceRequisitionSearch.getStatus() != null) {
+        if (supplierAdvanceRequisitionSearch.getSarStatus() != null) {
             if (params.length() > 0)
                 params.append(" and ");
             params.append("status = :status");
-            paramValues.put("status", supplierAdvanceRequisitionSearch.getStatus());
+            paramValues.put("status", supplierAdvanceRequisitionSearch.getSarStatus());
         }
 
         if (supplierAdvanceRequisitionSearch.getTenantId() != null) {

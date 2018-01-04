@@ -101,6 +101,9 @@ class ApplyLeave extends React.Component {
           var _from = $('#fromDate').val();
           var _to = $('#toDate').val();
           var _triggerId = e.target.id;
+
+          if(_this.state.leaveSet.leaveType.id){
+
           if(_from && _to) {
             var dateParts1 = _from.split("/");
             var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
@@ -195,6 +198,10 @@ class ApplyLeave extends React.Component {
               }
             });
           }
+        } else{ 
+          showError("Please select Leave Type before entering from date and to date.");
+              $('#' + _triggerId).val("");
+        }
         });
 
         if(!id) {

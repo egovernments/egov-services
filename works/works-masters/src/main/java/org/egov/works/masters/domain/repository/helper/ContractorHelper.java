@@ -127,7 +127,8 @@ public class ContractorHelper {
         contractor.getBank().setCode(this.bank);
         contractor.setBankAccountNumber(this.bankAccountNumber);
         contractor.setPwdApprovalCode(this.pwdApprovalCode);
-        contractor.setExemptedFrom(ContractorExemption.valueOf(this.exemptedFrom));
+        if (this.exemptedFrom != null)
+            contractor.setExemptedFrom(ContractorExemption.valueOf(this.exemptedFrom));
         contractor.setPwdApprovalValidTill(this.pwdApprovalValidTill);
         contractor.setEpfRegistrationNumber(this.epfRegistrationNumber);
         contractor.setAccountCode(new ChartOfAccount());

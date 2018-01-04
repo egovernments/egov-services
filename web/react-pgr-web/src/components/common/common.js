@@ -3013,7 +3013,7 @@ var localization_EN_Data = {
     "inventory.balanceDue": "Balance Due",
     "inventory.agreementNumber":"Agreement Number",
     "inventory.rateContractNumber":"Rate Contract / Tender / Quotation No.",
-    "inventory.rateContractDate":"Rate Contract Date",
+    "inventory.rateContractDate":"Rate Contract / Tender / Quotation Date",
     "inventory.agreementDate":"Agreement Date",
     "inventory.agreementStartDate":"Agreement Start Date",
     "inventory.agreementEndDate":"Agreement End Date",

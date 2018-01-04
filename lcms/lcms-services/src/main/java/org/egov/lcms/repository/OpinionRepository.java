@@ -85,9 +85,8 @@ public class OpinionRepository {
 			throw new CustomException(propertiesManager.getOpinionSearchErrorCode(), ex.getMessage());
 		}
 
-		searchDepartments(opinions, opinions.get(0).getTenantId(), requestInfoWrapper);
-
 		if (opinions != null && opinions.size() > 0) {
+			searchDepartments(opinions, opinions.get(0).getTenantId(), requestInfoWrapper);
 			setAdvocates(opinions, requestInfoWrapper);
 		}
 		return opinions;

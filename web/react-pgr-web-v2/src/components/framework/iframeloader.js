@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 const styles = {
   container: {
@@ -16,38 +17,70 @@ const styles = {
   },
 };
 
-export default class IframeLoader extends Component {
+class IframeLoader extends Component {
+  state = {
+    url: '',
+  };
   componentDidMount() {
     const token = window.localStorage.token;
     const tenantId = window.localStorage.tenantId;
     this.ifr.onload = () => {
       this.ifr.contentWindow.postMessage({ token, tenantId }, '*');
     };
+    const url = this.getIframeUrl(this.props);
+    this.setState({ url });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.hash !== this.props.location.hash) {
+      const url = this.getIframeUrl(nextProps);
+      this.ifr.setAttribute('src', url);
+      this.setState({ url });
+    }
   }
 
   // very hacky method
-  getIframeUrl = () => {
-    const paramsString = this.props.location.search;
-    const hash = this.props.location.hash;
+  getIframeUrl = props => {
+    const paramsString = props.location.search;
+    const hash = props.location.hash;
     const params = new URLSearchParams(paramsString);
     const url = params.get('url');
     return url + hash;
   };
 
   render() {
-    const source = this.getIframeUrl();
+    const { url } = this.state;
+
     return (
       <div style={styles.container} className="col-lg-12">
-        <iframe
-          style={styles.iframe}
-          ref={f => {
-            this.ifr = f;
-          }}
-          frameBorder="0"
-          src={source}
-          allowfullscreen
-        />
+        {url.indexOf('user-jobs') !== -1 ? (
+          <iframe
+            style={styles.iframe}
+            ref={f => {
+              this.ifr = f;
+            }}
+            frameBorder="0"
+            src="http://egov-micro-dev.egovernments.org/app/v2/uploader#user-jobs"
+            allowFullScreen
+          />
+        ) : (
+          <iframe
+            style={styles.iframe}
+            ref={f => {
+              this.ifr = f;
+            }}
+            frameBorder="0"
+            src="http://egov-micro-dev.egovernments.org/app/v2/uploader"
+            allowFullScreen
+          />
+        )}
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  route: state.common.route,
+});
+
+export default connect(mapStateToProps, null)(IframeLoader);

@@ -273,6 +273,12 @@ class assetImmovableCreate extends Component {
           'update',
           specifications['asset.update'].objectName
         );
+        console.log(self.props.formData);
+        // if(self.props.formData && self.props.formData.Asset && self.props.formData.Asset.assetAttributes){
+        //   for (var i = 0; i < self.props.formData.Asset.assetAttributes.length; i++) {
+        //     if(self.props.formData.Asset.assetAttributes[i].)
+        //   }
+        // }
         self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
         self.warrantyFunction(response.Assets[0].warrantyAvailable);
       },
@@ -607,7 +613,7 @@ class assetImmovableCreate extends Component {
                   let cId = catId;
                   Api.commonApiPost(_value[0], query, {}, false, false, false, '', '', true).then(function(resp) {
                     if (resp) {
-                      let keys = jp.query(resp, '$.MdmsRes.ASSET.LayerType.*.id');
+                      let keys = jp.query(resp, '$.MdmsRes.ASSET.LayerType.*.name');
                       let values = jp.query(resp, '$.MdmsRes.ASSET.LayerType.*.name');
                       let others = jp.query(resp, '$.MdmsRes.ASSET.LayerType.*');
                       var valueHolder = [];
@@ -617,7 +623,10 @@ class assetImmovableCreate extends Component {
                         holder.key = keys[l];
                         holder.value = values[l];
                         valueHolder.push(holder);
+                        console.log(holder.key);
+                        console.log(holder.value);
                         layerData[keys[l]] = others[l];
+                        console.log(layerData[keys[l]] = others[l]);
                       }
 
                       for (var m = 0; m < customSpecs[cId].length; m++) {
@@ -1496,8 +1505,9 @@ class assetImmovableCreate extends Component {
     if (property == 'Asset.assetAttributesCheck.Layer Type.Select') {
       for (var i = 0; i < groups[0].fields.length; i++) {
         if ('Asset.assetAttributesCheck.Layer description(Graphical Representation Of Layers).image' == groups[0].fields[i].jsonPath) {
+          console.log(e.target.value);
           groups[0].fields[i].imagePath = this.state.layerData[e.target.value].description;
-
+          console.log(groups[0].fields[i].imagePath);
           self.setState({
             hide: false,
           });
@@ -1506,7 +1516,7 @@ class assetImmovableCreate extends Component {
 
       self.props.handleChange(
         { target: { value: this.state.layerData[e.target.value].description } },
-        'Asset.assetAttributesCheck.Layer description.Image',
+        'Asset.assetAttributesCheck.Layer description(Graphical Representation Of Layers).image',
         false,
         '',
         '',

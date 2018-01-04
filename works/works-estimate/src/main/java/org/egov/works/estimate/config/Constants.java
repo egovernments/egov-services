@@ -428,4 +428,7 @@ public class Constants {
     
     public static final String KEY_PMC_CONTRACTOR_INVALID = "works.ae.pmc.notexist";
     public static final String MESSAGE_PMC_CONTRACTOR_INVALID = "The given PMC Does not exist in the system";
+    
+    public static final String KEY_AE_INVALID_GROSSBILLEDAMOUNT = "works.ae.billscreated.mandatory";
+    public static final String MESSAGE_AE_INVALID_GROSSBILLEDAMOUNT = "Bills created should be checked if Gross billed amount entered";
 }

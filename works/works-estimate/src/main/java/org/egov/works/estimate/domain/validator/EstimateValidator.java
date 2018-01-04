@@ -68,7 +68,7 @@ public class EstimateValidator {
             validateDuplicateAbstractEstimateNumber(messages, abstractEstimateRequest);
         }
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
-//            validateEstimateDetails(estimate, messages);
+            validateEstimateDetails(estimate, messages);
             validatePMCData(messages, estimate, abstractEstimateRequest.getRequestInfo());
             if (!messages.isEmpty())
                 throw new CustomException(messages);
@@ -281,6 +281,9 @@ public class EstimateValidator {
             if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null
                     && aed.getGrossAmountBilled().compareTo(BigDecimal.ZERO.doubleValue()) == -1)
                 messages.put(Constants.KEY_INVALID_GROSSBILLEDAMOUNT, Constants.MESSAGE_INVALID_GROSSBILLEDAMOUNT);
+            
+            if (!estimate.getBillsCreated() && aed.getGrossAmountBilled() != null && aed.getGrossAmountBilled() != 0)
+                messages.put(Constants.KEY_AE_INVALID_GROSSBILLEDAMOUNT, Constants.MESSAGE_AE_INVALID_GROSSBILLEDAMOUNT);
 
         }
 

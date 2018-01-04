@@ -16,4 +16,5 @@ public class VendorPaymentDetailsSearch extends VendorPaymentDetails {
     private String sortBy;
     private Integer pageSize;
     private Integer offset;
+    private Boolean validate;
 }

@@ -99,15 +99,29 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("invoiceNo", searchRequest.getInvoiceNo());
         }
 
-        if (searchRequest.getFromDate() != null) {
+        if (searchRequest.getFromDate() != null && searchRequest.getValidate() != null &&
+                !searchRequest.getValidate()) {
             addAnd(params);
             params.append("fromDate =:fromDate");
             paramValues.put("fromDate", searchRequest.getFromDate());
         }
 
-        if (searchRequest.getToDate() != null) {
+        if (searchRequest.getToDate() != null && searchRequest.getValidate() != null &&
+                !searchRequest.getValidate()) {
             addAnd(params);
             params.append("toDate =:toDate");
+            paramValues.put("toDate", searchRequest.getToDate());
+        }
+
+        //Used for validation of overlapping time periods
+        if(searchRequest.getFromDate() != null && searchRequest.getToDate() != null &&
+                 searchRequest.getValidate() != null && searchRequest.getValidate()){
+            addAnd(params);
+            params.append("((to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')" +
+                    " or (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')) ");
+            paramValues.put("fromDate", searchRequest.getFromDate());
             paramValues.put("toDate", searchRequest.getToDate());
         }
 

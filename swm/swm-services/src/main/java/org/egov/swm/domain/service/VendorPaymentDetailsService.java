@@ -126,7 +126,7 @@ public class VendorPaymentDetailsService {
             if (vendorPaymentDetail.getVendorContract() != null
                     && (vendorPaymentDetail.getVendorContract().getContractNo() == null
                             || vendorPaymentDetail.getVendorContract().getContractNo().isEmpty()))
-                throw new CustomException("Vehicle Contract", "Vehicle Contract Number required ");
+                throw new CustomException("Vendor Contract", "Vendor Contract Number required ");
 
             if (vendorPaymentDetail.getVendorContract() != null
                     && vendorPaymentDetail.getVendorContract().getContractNo() != null) {
@@ -135,7 +135,7 @@ public class VendorPaymentDetailsService {
 
                 if (vendorContractPage == null || vendorContractPage.getPagedData() == null
                         || vendorContractPage.getPagedData().isEmpty())
-                    throw new CustomException("Vehicle Contract", "Vehicle Contract Number required "
+                    throw new CustomException("Vendor Contract", "Vendor Contract Number required "
                             + vendorPaymentDetail.getVendorContract().getContractNo());
                 else
                     vendorPaymentDetail.setVendorContract(vendorContractPage.getPagedData().get(0));
@@ -165,6 +165,7 @@ public class VendorPaymentDetailsService {
             vendorPaymentDetailsSearch.setFromDate(vendorPaymentDetail.getFromDate());
             vendorPaymentDetailsSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
             vendorPaymentDetailsSearch.setToDate(vendorPaymentDetail.getToDate());
+            vendorPaymentDetailsSearch.setValidate(true);
 
             Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository
                     .search(vendorPaymentDetailsSearch);

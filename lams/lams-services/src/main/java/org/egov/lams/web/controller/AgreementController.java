@@ -132,6 +132,31 @@ public class AgreementController {
 		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
+	@PostMapping("/_modify")
+	@ResponseBody
+	public ResponseEntity<?> modify(@RequestBody @Valid AgreementRequest agreementRequest, BindingResult errors) {
+
+		if (errors.hasFieldErrors()) {
+			ErrorResponse errRes = populateErrors(errors);
+			return new ResponseEntity<>(errRes, HttpStatus.BAD_REQUEST);
+		}
+
+		LOGGER.info("agreementRequest::" + agreementRequest);
+		agreementValidator.validateModify(agreementRequest, errors);
+
+		if (errors.hasErrors()) {
+			ErrorResponse errorResponse = populateValidationErrors(errors);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+
+		Agreement agreement = agreementService.modifyAgreement(agreementRequest);
+		List<Agreement> agreements = new ArrayList<>();
+		agreements.add(agreement);
+		AgreementResponse agreementResponse = getAgreementResponse(agreements, agreementRequest.getRequestInfo());
+		LOGGER.info(agreementResponse.toString());
+		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
+	}
+	
 
 	@PostMapping("/_renew")
 	@ResponseBody

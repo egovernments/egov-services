@@ -42,7 +42,7 @@ import UiNestedTablesInputs from './components/UiNestedTablesInputs';
 import UiWindowSelectField from './components/UiWindowSelectField';
 import UiCheckBoxGrp from './components/UiCheckBoxGrp';
 import UiBoundary from './components/UiBoundary';
-// import UiCollectionRoute from './components/UiCollectionRoute';
+import UiCollectionRoute from './components/UiCollectionRoute';
 
 let styles = {
   reducePadding: {
@@ -109,7 +109,8 @@ export default class ShowFields extends Component {
                         field.type === 'workflow' ||
                         field.type === 'multiFieldAddToTable'||
                         field.type === "checkBoxGroup"||
-                        field.type === "boundary"
+                        field.type === "boundary"||
+                        field.type === "collectionRoute"
                           ? 12
                           : noCols
                       }
@@ -124,7 +125,8 @@ export default class ShowFields extends Component {
                         field.type === 'workflow' ||
                         field.type === 'multiFieldAddToTable'||
                         field.type === "checkBoxGroup"||
-                        field.type === "boundary"
+                        field.type === "boundary"||
+                        field.type === "collectionRoute"
                           ? 12
                           : noCols
                       }
@@ -725,17 +727,17 @@ export default class ShowFields extends Component {
             handler={this.props.handler}
           />
         );
-      // case 'collectionRoute':
-      //   return (
-      //     <UiCollectionRoute
-      //       tabIndex={index}
-      //       ui={this.props.ui}
-      //       getVal={this.props.getVal}
-      //       item={item}
-      //       fieldErrors={this.props.fieldErrors}
-      //       handler={this.props.handler}
-      //     />
-      //   );
+      case 'collectionRoute':
+        return (
+          <UiCollectionRoute
+            tabIndex={index}
+            ui={this.props.ui}
+            getVal={this.props.getVal}
+            item={item}
+            fieldErrors={this.props.fieldErrors}
+            handler={this.props.handler}
+          />
+        );
     }
     // return <div></div>
   };

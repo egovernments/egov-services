@@ -245,11 +245,11 @@ var dat = {
     numCols: 4,
     useTimestamp: true,
     objectName: 'materialReceipt',
-    title: 'inventory.update.openingbalance.title',
+    title: 'inventory.openingbalance.title',
     groups: [
       {
         name: 'openingBalance',
-        label: 'inventory.openingbalance.fin.year',
+        label: 'inventory.update.openingbalance.title',
         fields: [
           {
             name: 'financialYear',

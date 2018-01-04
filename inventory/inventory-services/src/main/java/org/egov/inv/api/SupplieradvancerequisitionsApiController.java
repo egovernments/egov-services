@@ -5,9 +5,12 @@ import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.egov.inv.domain.service.SupplierAdvanceRequisitionService;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.SupplierAdvanceRequisitionRequest;
 import org.egov.inv.model.SupplierAdvanceRequisitionResponse;
+import org.egov.inv.model.SupplierAdvanceRequisitionSearch;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,12 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SupplieradvancerequisitionsApiController implements SupplieradvancerequisitionsApi {
 
-
+	@Autowired
+	SupplierAdvanceRequisitionService supplierAdvanceRequisitionService;
 
     public ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-        @ApiParam(value = "Create new supplieradvancerequisition"  )  @Valid @RequestBody SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest) {
-        // do some magic!
-        return new ResponseEntity<SupplierAdvanceRequisitionResponse>(HttpStatus.OK);
+        @ApiParam(value = "Create new supplieradvancerequisition")  @Valid @RequestBody SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest) {
+    	SupplierAdvanceRequisitionResponse response = supplierAdvanceRequisitionService.create(supplierAdvanceRequisitionRequest);
+    	return new ResponseEntity(response, HttpStatus.OK);
     }
 
     public ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
@@ -33,14 +37,15 @@ public class SupplieradvancerequisitionsApiController implements Supplieradvance
         @ApiParam(value = "status of the SupplierAdvanceRequisition ") @RequestParam(value = "sarStatus", required = false) String sarStatus,
         @ApiParam(value = "stateId of the SupplierAdvanceRequisition ") @RequestParam(value = "stateId", required = false) String stateId,
         @ApiParam(value = "Date on which purchaseOrder raised with supplier ") @RequestParam(value = "purchaseOrderDate", required = false) Long purchaseOrderDate) {
-        // do some magic!
-        return new ResponseEntity<SupplierAdvanceRequisitionResponse>(HttpStatus.OK);
+    	SupplierAdvanceRequisitionSearch sars = SupplierAdvanceRequisitionSearch.builder().supplier(supplier).purchaseOrder(purchaseOrder).sarStatus(sarStatus).stateId(stateId).build();
+    	SupplierAdvanceRequisitionResponse response = supplierAdvanceRequisitionService.search(sars, new RequestInfo());
+    	return new ResponseEntity(response, HttpStatus.OK);
     }
 
     public ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "common Request info"  )  @Valid @RequestBody SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest) {
-        // do some magic!
-        return new ResponseEntity<SupplierAdvanceRequisitionResponse>(HttpStatus.OK);
+    	SupplierAdvanceRequisitionResponse response = supplierAdvanceRequisitionService.update(supplierAdvanceRequisitionRequest);
+    	return new ResponseEntity(response, HttpStatus.OK);
     }
 
 }

@@ -1,13 +1,15 @@
 package org.egov.inv.model;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -28,7 +30,7 @@ public class SupplierAdvanceRequisitionSearch {
 
     private String stateId;
 
-    private String status;
+    private String sarStatus;
 
     private String sortBy;
 

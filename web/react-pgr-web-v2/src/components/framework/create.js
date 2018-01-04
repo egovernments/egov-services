@@ -417,7 +417,7 @@ class Report extends Component {
             mdmsReq.MasterMetaData.masterData = [];
             mdmsReq.MasterMetaData.moduleName = moduleName;
             mdmsReq.MasterMetaData.masterName = masterName
-            mdmsReq.MasterMetaData.tenantId = "default";
+            mdmsReq.MasterMetaData.tenantId = localStorage.getItem('tenantId');
             mdmsReq.MasterMetaData.masterData[0] = res.MdmsRes[moduleName][masterName][0];
             console.log(mdmsReq);
             res = mdmsReq;

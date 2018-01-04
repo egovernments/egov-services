@@ -40,6 +40,8 @@
 package org.egov.inv.domain.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.minidev.json.JSONArray;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.MdmsRepository;
@@ -55,8 +57,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -166,9 +167,21 @@ public class StoreService extends DomainService {
 
         StoreResponse storeResponse = new StoreResponse();
         Pagination<Store> search = storeJdbcRepository.search(storeGetRequest);
-        storeResponse.setResponseInfo(null);
-        storeResponse.setStores(search.getPagedData());
-        return storeResponse;
+        Map<String, Department> departmentMap = getDepartment(storeGetRequest.getTenantId());
+        if (search.getPagedData().size() > 0) {
+            for (Store store : search.getPagedData()) {
+                store.setDepartment(departmentMap.get(store.getDepartment().getCode()));
+            }
+
+            storeResponse.setResponseInfo(null);
+            storeResponse.setStores(search.getPagedData());
+            return storeResponse;
+        } else {
+
+            storeResponse.setResponseInfo(null);
+            storeResponse.setStores(Collections.EMPTY_LIST);
+            return storeResponse;
+        }
     }
 
     private void validate(List<Store> stores, String method, String tenantId) {
@@ -315,6 +328,20 @@ public class StoreService extends DomainService {
         }
 
         return false;
+    }
+
+    private Map<String, Department> getDepartment(String tenantId) {
+        JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "common-masters", "Department", null, null,
+                new RequestInfo());
+        Map<String, Department> departmentMap = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        if (responseJSONArray != null && responseJSONArray.size() > 0) {
+            for (int i = 0; i < responseJSONArray.size(); i++) {
+                Department department = mapper.convertValue(responseJSONArray.get(i), Department.class);
+                departmentMap.put(department.getCode(), department);
+            }
+        }
+        return departmentMap;
     }
 
 }

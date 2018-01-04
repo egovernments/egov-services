@@ -79,6 +79,17 @@ export default class BarChartCard extends Component {
     }
   }
 
+  getChartData = () => {
+    if (this.props.isReportConsolidated) {
+      return this.state.data;
+    }
+    return this.state.data[this.state.chartDataIndex - 1];
+  }
+
+  getReportTitle = () => {
+
+  }
+
   render() {
     return <div>{this.renderKPIData()}</div>;
   }
@@ -89,17 +100,17 @@ export default class BarChartCard extends Component {
    */
   renderKPIData = () => {
     if (this.state.showChartView) {
-      return this.renderChart();
+      return this.renderReportChart();
     }
   };
 
   /**
    * render
-   * presents chart
+   * render insufficient data to draw the chart
    */
-  renderChart = () => {
-    if (this.state.data.length < 1) {
-      return (
+  renderInsufficientDataForChart = () => {
+    console.log('insufficient data for chart')
+    return (
         <div style={{ textAlign: 'center' }}>
           <br />
           <br />
@@ -107,10 +118,22 @@ export default class BarChartCard extends Component {
             <CardHeader title={<div style={{ fontSize: '16px' }}> insufficient data to draw the chart </div>} />
           </Card>
         </div>
-      );
-    }
-    let data = this.state.data[this.state.chartDataIndex - 1]
+    );
+  }
 
+  /**
+   * render
+   * presents chart
+   */
+  renderReportChart = () => {
+    
+    if (this.state.data.length < 1) {
+      return (
+        this.renderInsufficientDataForChart()
+      )
+    }
+    
+    let data = this.getChartData()
     let ulb = this.props.ulbs.filter((item) => {
       if (item[0].code === data.ulbName) {
         return item[0];
@@ -269,9 +292,6 @@ export default class BarChartCard extends Component {
    * renders BarChart for VALUE type KPI
    */
   renderConsolidatedBarChart = () => {
-    console.log(this.state.data)
-    console.log(this.state.dataKey)
-
     return (
       <div>
         <BarChart padding={'50%'} width={600} height={500} data={this.state.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>

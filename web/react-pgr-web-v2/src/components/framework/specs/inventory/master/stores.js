@@ -121,6 +121,7 @@ var dat = {
             defaultValue: '',
             patternErrorMsg: '',
             url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+      
           },
           {
             name: 'description',
@@ -200,7 +201,7 @@ var dat = {
             label: 'inventory.store.contactNo1',
             pattern: '^[0-9]*$',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: 10,
@@ -223,7 +224,7 @@ var dat = {
             label: 'inventory.store.email',
             pattern: '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
             type: 'text',
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             defaultValue: '',
             maxLength: 100,

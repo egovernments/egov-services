@@ -93,6 +93,7 @@ var dat = {
         },
         {
           label: 'inventory.indent.date',
+          isDate:true
         },
         {
           label: 'inventory.indenting.store',

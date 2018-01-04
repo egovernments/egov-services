@@ -718,7 +718,9 @@ class Report extends Component {
     let fields = jp.query(obj, `$.groups..fields[?(@.hasATOAATransform==true)]`);
     for (var i = 0; i < fields.length; i++) {
       let values=_.get(formData, fields[i].jsonPath);
-      formData=_.set(formData, fields[i]["aATransformInfo"].to,values.map(item=>{return {[fields[i]["aATransformInfo"].key]:item}}));
+      if (values && values.length>0) {
+        formData=_.set(formData, fields[i]["aATransformInfo"].to,values.map(item=>{return {[fields[i]["aATransformInfo"].key]:item}}));
+      }
     }
     // console.log(formData);
     delete formData.ResponseInfo;

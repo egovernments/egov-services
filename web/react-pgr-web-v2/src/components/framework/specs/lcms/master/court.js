@@ -349,7 +349,7 @@ var dat = {
               pattern: '',
               type: 'text',
               isRequired: true,
-              isDisabled: false,
+              isDisabled: true,
               defaultValue: '',
               maxLength: 128,
               minLength: 1,

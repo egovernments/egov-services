@@ -108,7 +108,7 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
             //Alert !!!! Hardcoding....
 
             //Adding custom specs for Address Block as per discussion on Friday (08-12-2017)
-            if(key == "address"){
+            if(key == "address" || key == "wasteType"){
             	// console.log(properties[key].properties);
             	getFieldsFromInnerObject(fields, header, properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []));
             }
@@ -286,7 +286,7 @@ request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/
 	            }
 
 	            // console.log(finalSpecs);
-	            // console.log(finalSpecsRaw.lcms.casetype);
+	            console.log(finalSpecsRaw.swm.wastesubtype.properties.wasteType.properties);
 	        
 	        }
 		})

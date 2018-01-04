@@ -431,6 +431,8 @@ const menuConvention = {
   'Works Management.Works Masters.Create SOR': '/search/works/scheduleofrate/view',
   //upload
   'Upload.Upload': '/iframeLoader?url=/app/v2/uploader',
+  'Upload.User Jobs':'/iframeLoader?url=/app/v2/uploader/#user-jobs'
+
 };
 
 const style = {

@@ -145,7 +145,8 @@ public class VehicleScheduleService {
             }
 
             if (vehicleSchedule.getScheduledFrom() != null)
-                if (!new Date(vehicleSchedule.getScheduledFrom()).equals(new Date()) &&
+                if (!new Date(vehicleSchedule.getScheduledFrom()).equals(new Date().getTime() -
+                        (new Date().getTime() % (24 * 60 * 60 * 1000))) &&
                         new Date(vehicleSchedule.getScheduledFrom()).before(new Date()))
                     throw new CustomException("ScheduledToDate ",
                             "Schedule can not be created for past dates. Please select Today's or Future date: " +

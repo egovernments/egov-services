@@ -83,7 +83,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
         while (rs.next()) {
             final Long assetId = (Long) rs.getObject("id");
 
-            log.debug("agreementid in row mapper" + assetId);
+            log.debug("assetid in row mapper" + assetId);
 
             Asset asset = map.get(assetId);
             if (asset == null) {

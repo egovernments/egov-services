@@ -42,25 +42,15 @@ package org.egov.asset.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.AssetResponse;
-import org.egov.asset.contract.DepreciationRequest;
-import org.egov.asset.contract.FinancialYearContract;
-import org.egov.asset.contract.FinancialYearContractResponse;
-import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
-import org.egov.asset.model.DepreciationCriteria;
-import org.egov.asset.model.FinancialYear;
 import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Sequence;
@@ -92,7 +82,7 @@ public class AssetService {
 
     @Autowired
     private AssetCommonService assetCommonService;
-    
+
     @Autowired
     private CurrentValueService currentValueService;
 
@@ -134,10 +124,12 @@ public class AssetService {
         else if (grossValue != null)
             currentValue.setCurrentAmount(grossValue);
 
-        final List<AssetCurrentValue> assetCurrentValueList = new ArrayList<>();
-        assetCurrentValueList.add(currentValue);
-        currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
-                .assetCurrentValues(assetCurrentValueList).requestInfo(assetRequest.getRequestInfo()).build());
+        if (grossValue != null || accumulatedDepreciation != null) {
+            final List<AssetCurrentValue> assetCurrentValueList = new ArrayList<>();
+            assetCurrentValueList.add(currentValue);
+            currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder()
+                    .assetCurrentValues(assetCurrentValueList).requestInfo(assetRequest.getRequestInfo()).build());
+        }
 
         final List<Asset> assets = new ArrayList<>();
         assets.add(asset);
@@ -207,6 +199,5 @@ public class AssetService {
             throw new RuntimeException(
                     "There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
     }
-    
-    
+
 }

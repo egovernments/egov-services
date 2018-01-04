@@ -276,8 +276,8 @@ class CreateAsset extends React.Component {
       };
       body.Asset.assetReference = "";
       if(body.Asset.dateOfCreation) {
-        var _date = body.Asset.dateOfCreation.split("-");
-        body.Asset.dateOfCreation = new Date(date[0], date[1]-1, date[2]).getTime();
+        var _date = body.Asset.dateOfCreation.split("/");
+        body.Asset.dateOfCreation = new Date(date[2], date[1]-1, date[0]).getTime();
       }
 
       $.ajax({
@@ -356,8 +356,8 @@ class CreateAsset extends React.Component {
       var newAsset = Object.assign({}, asset);
       newAsset.assetReference = this.state.assetSet.id;
       if(newAsset.dateOfCreation) {
-        var _date = newAsset.dateOfCreation.split("-");
-        newAsset.dateOfCreation = new Date(date[0], date[1]-1, date[2]).getTime();
+        var _date = newAsset.dateOfCreation.split("/");
+        newAsset.dateOfCreation = new Date(date[2], date[1]-1, date[0]).getTime();
       }
 
       var body = {
@@ -893,7 +893,6 @@ class CreateAsset extends React.Component {
 
       $('#dateOfCreation').datepicker({
           format: 'dd/mm/yyyy',
-          endDate: new Date(),
           autoclose: true
       });
 
@@ -901,7 +900,7 @@ class CreateAsset extends React.Component {
          _this.setState({
             assetSet: {
                 ..._this.state.assetSet,
-                "dateOfCreation":$("#dateOfCreation").val()
+                  "dateOfCreation": e.target.value
             }
          })
       });
@@ -910,7 +909,7 @@ class CreateAsset extends React.Component {
           getCommonMasterById("asset-services", "assets", id, function(err, res) {
             if(res) {
               let asset = res["Assets"][0];
-              var _date = asset.dateOfCreation ? asset.dateOfCreation.split("-") : "";
+              var _date = asset.dateOfCreation ? asset.dateOfCreation : "";
               var _files = [];
               if(asset.assetAttributes && asset.assetAttributes.length) {
                 for(var i=0; i<asset.assetAttributes.length; i++) {
@@ -2016,9 +2015,10 @@ class CreateAsset extends React.Component {
                               <label for="description">Date Of Creation</label>
                           </div>
                           <div className="col-sm-6">
-                              <input type="text" id="dateOfCreation" name="dateOfCreation" value= {dateOfCreation}
-                                onChange={(e)=>{handleChange(e,"dateOfCreation")}} max={getTodaysDate()} disabled={readonly || getUrlVars()["type"] == "update"}/>
+                              <input type="text" id="dateOfCreation" className="datepicker" name="dateOfCreation" value= {dateOfCreation}
+                                onChange={(e)=>{handleChange(e,"dateOfCreation")}}  disabled={readonly || getUrlVars()["type"] == "update"}/>
                           </div>
+                
                         </div>
                     </div>
                     <div className="col-sm-6">

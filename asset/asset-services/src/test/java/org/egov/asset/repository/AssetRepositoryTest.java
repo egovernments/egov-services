@@ -116,7 +116,7 @@ public class AssetRepositoryTest {
         when(jdbcTemplate.query(any(String.class), any(Object[].class), any(AssetRowMapper.class))).thenReturn(assets);
         when(assetQueryBuilder.getQuery(any(AssetCriteria.class), any(ArrayList.class))).thenReturn(StringUtils.EMPTY);
         when(assetRepository.findForCriteria(assetCriteria)).thenReturn(assets);
-        when(assetRepository.findAssetByCode("000002")).thenReturn(assets);
+        when(assetRepository.findAssetByCode("000002","ap.kurnool")).thenReturn(assets);
         when(jdbcTemplate.update(any(String.class), any(Object[].class))).thenReturn(1);
 
         assertTrue(asset.equals(assetRepository.update(assetRequest)));

@@ -2,6 +2,7 @@ package org.egov.common;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -103,11 +104,11 @@ public class DomainService {
     }
 
     public BigDecimal getSearchConvertedQuantity(BigDecimal quantity, BigDecimal conversionFactor) {
-        return quantity.divide(conversionFactor);
+        return quantity.divide(conversionFactor,10, RoundingMode.HALF_UP);
     }
     
     public BigDecimal getSaveConvertedRate(BigDecimal rate, BigDecimal conversionFactor) {
-        return rate.divide(conversionFactor);
+        return rate.divide(conversionFactor,10, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getSearchConvertedRate(BigDecimal rate, BigDecimal conversionFactor) {

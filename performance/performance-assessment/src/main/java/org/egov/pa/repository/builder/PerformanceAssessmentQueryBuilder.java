@@ -56,9 +56,9 @@ public class PerformanceAssessmentQueryBuilder {
 
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "
     		+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
-    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "
+    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.category as categoryId,  "
     		+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear "
-    		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ; 
+    		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL AND master.active IS TRUE" ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.id, value.finyear as valueFinYear, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
     		+ " detail.id as valueDetailId, detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value , docs.filestoreid as fileStoreId, docs.kpicode as docKpiCode, docs.documentcode as docDocumentCode , docs.documentname as docDocumentName , "  
@@ -74,7 +74,7 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode " 
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE master.id IS NOT NULL " ;*/
     
-	public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category,  "
+	public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, master.category as categoryId,  "
     		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, target.finyear as targetFinYear, " 
     		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId,  "
     		+ " detail.value as detailValue, detail.period as detailPeriod FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
@@ -82,7 +82,7 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid " 
     		+ " WHERE master.targettype = 'VALUE' " ; 
     
-    public static final String COMPARE_SEARCH_OBJECTIVE_BASE_QUERY = "SELECT master.id, master.name, master.code, master.targettype as targetType, master.instructions, master.finyear as finYear, master.department as departmentId, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, master.periodicity,  "  
+    public static final String COMPARE_SEARCH_OBJECTIVE_BASE_QUERY = "SELECT master.id, master.name, master.code, master.targettype as targetType, master.instructions, master.finyear as finYear, master.department as departmentId, master.category as categoryId, master.periodicity,  "  
     		+ " target.id as targetId, target.kpicode as targetKpiCode, target.finyear as targetFinYear, target.targetvalue as targetValue, target.tenantid as targetTenantId, " 
     		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId, value.finyear as valueFinYear, detail.id as detailId, detail.valueid as detailValueId, detail.value as value, detail.period as period " 
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode AND value.finyear = target.finyear "  
@@ -199,7 +199,7 @@ public class PerformanceAssessmentQueryBuilder {
     	return "select targettype as targetType from egpa_kpi_master master where master.code = :kpiCode AND exists (select 1 from egpa_kpi_master_target where kpicode = master.code) " ;
     }
     
-    private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "  
+    private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, master.category as categoryId, "  
 			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
 			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  
 			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ;
@@ -245,10 +245,10 @@ public class PerformanceAssessmentQueryBuilder {
     
     public String getTargetSearchQuery(KPITargetGetRequest getReq, final List preparedStatementValues) { 
     	
-    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, " 
+    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, master.category as categoryId,  " 
     			+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear " 
     			+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
-    			+ " WHERE master.id IS NOT NULL"); 
+    			+ " WHERE master.id IS NOT NULL AND master.active IS TRUE "); 
     	getTargetSearchWhereClause(selectQuery, preparedStatementValues, getReq);
 		LOGGER.info("Query : " + selectQuery);
 		return selectQuery.toString();

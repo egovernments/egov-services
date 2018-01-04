@@ -97,13 +97,6 @@ public class PriceListJdbcRepository extends JdbcRepository {
         Map<String, Object> paramValues = new HashMap<>();
         StringBuffer params = new StringBuffer();
 
-   		/*
-            * select * from pricelist where id in ( select pricelist from
-   		 * pricelistdetails where material='MAT1' and 1509474600000 between
-   		 * fromdate and todate ) and supplier='supp1' and
-   		 * ratetype='DGSC Rate Contract' and active=true
-   		 */
-
         String searchQuery = "select * from pricelist   :condition  :orderby ";
         String orderBy = " order by supplier asc, rateType asc, rateContractDate desc";
 

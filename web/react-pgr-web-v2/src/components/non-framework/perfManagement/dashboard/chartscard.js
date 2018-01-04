@@ -4,7 +4,8 @@ import { Card, CardText, CardMedia, CardHeader, CardTitle } from 'material-ui/Ca
 import RaisedButton from 'material-ui/RaisedButton';
 import {
   parseCompareSearchResponse,
-  parseCompareSearchConsolidatedResponse
+  parseCompareSearchConsolidatedResponse,
+  parseTenantName
 } from '../apis/apis';
 import {
   formatChartData,
@@ -86,8 +87,15 @@ export default class BarChartCard extends Component {
     return this.state.data[this.state.chartDataIndex - 1];
   }
 
-  getReportTitle = () => {
-
+  getReportTitle = (data) => {
+    if (this.props.isReportConsolidated) {
+      return `Consolidated performance of KPI  ${this.props.kpis}`
+    }
+    let ulbName = parseTenantName(this.props.ulbs);
+    if (ulbName.length == 0) {
+      return `Monthly performance of KPI ${this.props.kpis} in FinancialYear ${data.finYear}`
+    } 
+    return `Monthly performance of KPI ${this.props.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`
   }
 
   render() {
@@ -109,7 +117,6 @@ export default class BarChartCard extends Component {
    * render insufficient data to draw the chart
    */
   renderInsufficientDataForChart = () => {
-    console.log('insufficient data for chart')
     return (
         <div style={{ textAlign: 'center' }}>
           <br />
@@ -134,23 +141,13 @@ export default class BarChartCard extends Component {
     }
     
     let data = this.getChartData()
-    let ulb = this.props.ulbs.filter((item) => {
-      if (item[0].code === data.ulbName) {
-        return item[0];
-      }
-    })
-    let ulbName = data.ulbName;
-    if (ulb && ulb[0] && ulb[0][0] && ulb[0][0]['name']) {
-      ulbName = ulb[0][0].name
-    }
-    let title = `Performance for ${this.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`;
 
     return (
       <div>
         <br />
         <br />
         <Card className="uiCard" style={{ textAlign: 'center' }}>
-          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {title} </div>} />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {this.getReportTitle(data)} </div>} />
           {this.renderReportNavigationButton('Tabular')}
           {this.renderChartType()}
         </Card>

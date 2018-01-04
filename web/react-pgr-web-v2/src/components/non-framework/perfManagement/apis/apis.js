@@ -144,6 +144,10 @@ export const parseFinancialYearResponse = res => {
     });
 };
 
+export const parseTenantName = (res, code) => {
+  return jp.query(res, `$.MdmsRes.tenant.tenants[*]`).filter((item) => item.code === code)
+}
+
 export const parseDepartmentKPIsAsPerKPIType = (res, type) => {
   return jp.query(res, `$.KPIs[?(@.targetType==\"${type}\")]`).map((kpi, index) => {
     return {

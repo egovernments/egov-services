@@ -4,7 +4,8 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import RaisedButton from 'material-ui/RaisedButton';
 import {
   parseCompareSearchResponse,
-  parseCompareSearchConsolidatedResponse
+  parseCompareSearchConsolidatedResponse,
+  parseTenantName
 } from '../apis/apis';
 import {
   formatChartData,
@@ -95,8 +96,15 @@ export default class TableCard extends Component {
     return this.state.data[this.state.chartDataIndex - 1];
   }
 
-  getReportTitle = () => {
-
+  getReportTitle = (data) => {
+    if (this.props.isReportConsolidated) {
+      return `Consolidated performance of KPI  ${this.props.kpis}`
+    }
+    let ulbName = parseTenantName(this.props.ulbs);
+    if (ulbName.length == 0) {
+      return `Monthly performance of KPI ${this.props.kpis} in FinancialYear ${data.finYear}`
+    } 
+    return `Monthly performance of KPI ${this.props.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`
   }
 
   render() {
@@ -143,21 +151,12 @@ export default class TableCard extends Component {
 
     let data    = this.getTableData();
     let headers = this.getTableHeaders();
-
-    let ulb = this.props.ulbs.filter((item) => {
-      if (item[0].code === data.ulbName) {
-        return item[0];
-      }
-    })
-    let ulbName = data.ulbName;
-    if (ulb && ulb[0] && ulb[0][0] && ulb[0][0]['name']) {
-      ulbName = ulb[0][0].name
-    }
-    let title = `Performance for ${this.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`;
+    let title   = this.getReportTitle(data);
     
     
     console.log(data)
     console.log(headers)
+    console.log(title)
 
     return (
       <div>

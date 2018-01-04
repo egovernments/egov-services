@@ -89,7 +89,7 @@ public class RemarksService {
             if(remarks.getTypeOfDocument().equalsIgnoreCase(CommonConstants.WORKORDER) && !(remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_APPROVAL) || remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_REJECTION)))
                  messages.put(Constants.KEY_REMARKS_TYPE_INVALID,  Constants.MESSAGE_REMARKS_TYPE_INVALID);
 
-            if(remarks.getTypeOfDocument().equalsIgnoreCase(CommonConstants.NOTICE) && !remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_SHOWCASE))
+            if(remarks.getTypeOfDocument().equalsIgnoreCase(CommonConstants.NOTICE) && !remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_SHOWCAUSE))
                 messages.put(Constants.KEY_REMARKS_TYPE_INVALID,  Constants.MESSAGE_REMARKS_TYPE_INVALID);
 
         }

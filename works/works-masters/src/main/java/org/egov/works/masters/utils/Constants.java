@@ -7,7 +7,7 @@ public class Constants {
 
     public static final String REMARKS_TYPE_APPROVAL="Approval";
     public static final String REMARKS_TYPE_REJECTION="Rejection";
-    public static final String REMARKS_TYPE_SHOWCASE="Showcase";
+    public static final String REMARKS_TYPE_SHOWCAUSE="Showcause";
 
     //Messages
     public static final String KEY_SCHEDULERCATEGORY_CODE_MANDATORY="WMS.SCHEDULECATEGORY.CODE.MANDATORY";

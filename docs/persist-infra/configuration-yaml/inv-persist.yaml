@@ -1624,4 +1624,50 @@ serviceMaps:
             - jsonPath: $.scraps.*.auditDetails.lastModifiedBy
               type: LONG
             - type: CURRENTDATE
-              dbType: LONG  
+              dbType: LONG
+
+    - version: 1.0
+      name: SupplierAdvanceRequisitions
+      description: Create SupplierAdvanceRequisition
+      fromTopic: inv-supplieradvancerequisition-save-topic  
+      queryMaps:
+        - query: INSERT INTO supplieradvancerequisition(id, tenantid, supplier, purchaseorder, advanceadjustedamount, advancefullyadjustedinbill, stateid, status, createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.supplierAdvanceRequisitions.*
+          jsonMaps:
+            - jsonPath: $.supplierAdvanceRequisitions.*.id
+            - jsonPath: $.supplierAdvanceRequisitions.*.tenantId
+            - jsonPath: $.supplierAdvanceRequisitions.*.supplier.code
+            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseorder.purchaseOrderNumber
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceadjustedamount
+            - jsonPath: $.supplierAdvanceRequisitions.*.advancefullyadjustedinbill
+              dbType: BOOLEAN
+            - jsonPath: $.supplierAdvanceRequisitions.*.stateid
+            - jsonPath: $.supplierAdvanceRequisitions.*.status
+            - jsonPath: $.supplierAdvanceRequisitions.*.auditDetails.createdBy
+              type: LONG
+            - jsonPath: $.supplierAdvanceRequisitions.*.auditDetails.createdTime
+              type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.supplierAdvanceRequisitions.*.auditDetails.lastModifiedBy
+              type: LONG
+            - jsonPath: $.supplierAdvanceRequisitions.*.auditDetails.lastModifiedTime
+              type: CURRENTDATE
+              dbType: LONG
+
+    - version: 1.0
+      name: SupplierAdvanceRequisitions
+      description: Update SupplierAdvanceRequisition
+      fromTopic: inv-supplieradvancerequisition-update-topic  
+      queryMaps: 
+        - query: Update supplieradvancerequisition set supplier=?, purchaseorder=?, advanceadjustedamount=?, advancefullyadjustedinbill=?, stateid=?, status=? where id=? and tenantId=?;
+          basePath: $.supplierAdvanceRequisitions.*
+          jsonMaps:
+            - jsonPath: $.supplierAdvanceRequisitions.*.supplier.code
+            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseorder.purchaseOrderNumber
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceadjustedamount
+            - jsonPath: $.supplierAdvanceRequisitions.*.advancefullyadjustedinbill
+              dbType: BOOLEAN
+            - jsonPath: $.supplierAdvanceRequisitions.*.stateid
+            - jsonPath: $.supplierAdvanceRequisitions.*.status
+            - jsonPath: $.supplierAdvanceRequisitions.*.id
+            - jsonPath: $.supplierAdvanceRequisitions.*.tenantId

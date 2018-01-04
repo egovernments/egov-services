@@ -1644,12 +1644,12 @@ serviceMaps:
             - jsonPath: $.supplierAdvanceRequisitions.*.id
             - jsonPath: $.supplierAdvanceRequisitions.*.tenantId
             - jsonPath: $.supplierAdvanceRequisitions.*.supplier.code
-            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseorder.purchaseOrderNumber
-            - jsonPath: $.supplierAdvanceRequisitions.*.advanceadjustedamount
-            - jsonPath: $.supplierAdvanceRequisitions.*.advancefullyadjustedinbill
+            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseOrder.purchaseOrderNumber
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceAdjustedAmount
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceFullyAdjustedInBill
               dbType: BOOLEAN
-            - jsonPath: $.supplierAdvanceRequisitions.*.stateid
-            - jsonPath: $.supplierAdvanceRequisitions.*.status
+            - jsonPath: $.supplierAdvanceRequisitions.*.stateId
+            - jsonPath: $.supplierAdvanceRequisitions.*.sarStatus
             - jsonPath: $.supplierAdvanceRequisitions.*.auditDetails.createdBy
               type: LONG
             - jsonPath: $.supplierAdvanceRequisitions.*.auditDetails.createdTime
@@ -1670,11 +1670,11 @@ serviceMaps:
           basePath: $.supplierAdvanceRequisitions.*
           jsonMaps:
             - jsonPath: $.supplierAdvanceRequisitions.*.supplier.code
-            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseorder.purchaseOrderNumber
-            - jsonPath: $.supplierAdvanceRequisitions.*.advanceadjustedamount
-            - jsonPath: $.supplierAdvanceRequisitions.*.advancefullyadjustedinbill
+            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseOrder.purchaseOrderNumber
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceAdjustedAmount
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceFullyAdjustedInBill
               dbType: BOOLEAN
-            - jsonPath: $.supplierAdvanceRequisitions.*.stateid
-            - jsonPath: $.supplierAdvanceRequisitions.*.status
+            - jsonPath: $.supplierAdvanceRequisitions.*.stateId
+            - jsonPath: $.supplierAdvanceRequisitions.*.sarStatus
             - jsonPath: $.supplierAdvanceRequisitions.*.id
             - jsonPath: $.supplierAdvanceRequisitions.*.tenantId

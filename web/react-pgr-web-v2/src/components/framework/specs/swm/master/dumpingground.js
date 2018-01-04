@@ -3,7 +3,8 @@ var dat = {
     numCols: 4,
     useTimestamp: true,
     objectName: 'DumpingGround',
-    url: '/swm-services/dumpingground/_search',
+    //url: '/swm-services/dumpingground/_search',
+    url: '/egov-mdms-service/v1/_search',
     groups: [
       {
         name: 'DumpingGround',
@@ -57,7 +58,8 @@ var dat = {
     numCols: 3,
     useTimestamp: true,
     objectName: 'MasterMetaData',
-    idJsonPath: 'MasterMetaData.masterData[0].code',
+    //idJsonPath: 'MasterMetaData.masterData[0].code',
+    idJsonPath: 'MdmsRes.swm.DumpingGround[0].code',
     title: 'swm.create.page.title.dumpingGround',
     omittableFields: [
       "delete formData['MasterMetaData']['masterData'][0]['siteDetails']['location']['ward']",
@@ -913,23 +915,6 @@ var dat = {
               },
             ],
           },
-
-          {
-            name: 'dumpingGroundAddress',
-            jsonPath: '',
-            label: 'swm.dumpingGround.create.dumpingGroundAddress',
-            pattern: '',
-            type: 'textArea',
-            isRequired: false,
-            isDisabled: false,
-            defaultValue: '',
-            maxLength: 500,
-            minLength: 10,
-            fullWidth: true,
-            patternErrorMsg: '',
-            url: '',
-          },
-
           {
             name: 'dumpingGroundProcessingPlant',
             jsonPath: 'MdmsRes.swm.DumpingGround[0].processingSite.code',
@@ -945,7 +930,6 @@ var dat = {
             patternErrorMsg: '',
             url: '',
           },
-
           {
             name: 'dumpingGroundDistance',
             jsonPath: 'MdmsRes.swm.DumpingGround[0].distanceFromProcessingSite',
@@ -961,7 +945,6 @@ var dat = {
             patternErrorMsg: '',
             url: '',
           },
-
         ]
       },
       {

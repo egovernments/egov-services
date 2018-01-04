@@ -130,7 +130,6 @@ class UiWindowForm extends Component {
 
 
   enField = (_mockData, enableStr, reset) => {
-    debugger;
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
     for (let i = 0; i < _mockData[moduleName + '.create'].groups.length; i++) {
@@ -150,7 +149,6 @@ class UiWindowForm extends Component {
   };
 
   disField = (_mockData, disableStr, reset) => {
-    debugger;
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
     for (let i = 0; i < _mockData[moduleName + '.create'].groups.length; i++) {
@@ -171,7 +169,6 @@ class UiWindowForm extends Component {
   };
 
   checkIfHasEnDisFields = (jsonPath, val) => {
-debugger;
   //  let _mockData = { ...this.props.mockData };
   let { mockData } = this.state;
     let { moduleName, actionName, setMockData } = this.props;

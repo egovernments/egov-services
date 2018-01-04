@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 
-class Iframe extends React.Component {
-  shouldComponentUpdate() {
-    return false;
-  }
-  render() {
-    const { source, height, width } = this.props;
-    return (
-      <div>
-        <iframe frameBorder="0" src={source} height={height} width={width} />
-      </div>
-    );
-  }
-}
+const styles = {
+  container: {
+    position: 'relative',
+    height: 0,
+    overflow: 'hidden',
+    paddingBottom: '75%',
+  },
+  iframe: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+};
 
 export default class IframeLoader extends Component {
   componentDidMount() {
@@ -35,16 +37,15 @@ export default class IframeLoader extends Component {
   render() {
     const source = this.getIframeUrl();
     return (
-      <div className="col-lg-12">
-        {/*<Iframe source={source} width="1300" height="1300" />*/}
+      <div style={styles.container} className="col-lg-12">
         <iframe
+          style={styles.iframe}
           ref={f => {
             this.ifr = f;
           }}
           frameBorder="0"
           src={source}
-          height="1300"
-          width="1300"
+          allowfullscreen
         />
       </div>
     );

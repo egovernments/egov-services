@@ -59,7 +59,7 @@ var dat = {
           label: 'inventory.store.active',
         },
       ],
-      values: ['code', 'name', 'department.code', 'isCentralStore', 'active'],
+      values: ['code', 'name', 'department.name', 'isCentralStore', 'active'],
       resultPath: 'stores',
       resultIdKey: 'code',
       rowClickUrlAdd: '/create/inventory/stores',

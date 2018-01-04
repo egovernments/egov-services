@@ -64,7 +64,8 @@ public class DataUploadUtils {
 	            	dataList.add(cell.getBooleanCellValue());
 	            }
             }
-            excelData.add(dataList);
+            if(!dataList.isEmpty())
+            	excelData.add(dataList);
         }
 	    logger.info("coloumnHeaders: "+coloumnHeaders);
 	    logger.info("excelData: "+excelData);

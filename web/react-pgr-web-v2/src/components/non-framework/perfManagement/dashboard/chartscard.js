@@ -80,21 +80,36 @@ export default class BarChartCard extends Component {
     }
   }
 
+  getULBName = (code) => {
+    let ulbName = parseTenantName(this.props.ulbs, code);
+    if (ulbName.length == 0) {
+      return code
+    }
+    return ulbName[0]['name']
+  }
+
+  getModifiedChartData = (data) => {
+    return data.map((item, index) => {
+      return {
+        ...item,
+        ulbName: this.getULBName(item.ulbName)
+      }
+    })
+  }
+
   getChartData = () => {
     if (this.props.isReportConsolidated) {
       return this.state.data;
     }
-    return this.state.data[this.state.chartDataIndex - 1];
+    return this.state.data[this.state.chartDataIndex - 1].data;
   }
 
-  getReportTitle = (data) => {
+  getReportTitle = () => {
     if (this.props.isReportConsolidated) {
       return `Consolidated performance of KPI  ${this.props.kpis}`
     }
-    let ulbName = parseTenantName(this.props.ulbs);
-    if (ulbName.length == 0) {
-      return `Monthly performance of KPI ${this.props.kpis} in FinancialYear ${data.finYear}`
-    } 
+    let data = this.state.data[this.state.chartDataIndex - 1]
+    let ulbName = this.getULBName(data['ulbName']); 
     return `Monthly performance of KPI ${this.props.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`
   }
 
@@ -140,14 +155,12 @@ export default class BarChartCard extends Component {
       )
     }
     
-    let data = this.getChartData()
-
     return (
       <div>
         <br />
         <br />
         <Card className="uiCard" style={{ textAlign: 'center' }}>
-          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {this.getReportTitle(data)} </div>} />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {this.getReportTitle()} </div>} />
           {this.renderReportNavigationButton('Tabular')}
           {this.renderChartType()}
         </Card>
@@ -228,12 +241,12 @@ export default class BarChartCard extends Component {
    * renders BarChart for VALUE type KPI
    */
   renderBarChart = () => {
-    let data = this.state.data[this.state.chartDataIndex - 1]
-    console.log(`rendering bar chart for ${data.data}`)
+    let data = this.getModifiedChartData(this.getChartData())
+    console.log(`rendering bar chart for ${data}`)
 
     return (
       <div style={{ marginLeft: '15%', marginTop: '10px' }}>
-        <BarChart width={1200} height={500} data={data.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
+        <BarChart width={1200} height={500} data={data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
           <XAxis dataKey="name"/>
           <YAxis />
           <CartesianGrid strokeDasharray="3 3" />
@@ -253,7 +266,7 @@ export default class BarChartCard extends Component {
    */
   renderPieChart = () => {
     
-    let cdata    = this.state.data[this.state.chartDataIndex - 1]
+    let cdata    = this.getModifiedChartData(this.getChartData())
     let data = [
       {
         name: 'YES',
@@ -269,7 +282,6 @@ export default class BarChartCard extends Component {
       },
     ];
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
-    console.log(data)
 
     return (
       <div style={{ marginLeft: '35%', marginTop: '10px' }}>
@@ -289,9 +301,12 @@ export default class BarChartCard extends Component {
    * renders BarChart for VALUE type KPI
    */
   renderConsolidatedBarChart = () => {
+    let data = this.getModifiedChartData(this.getChartData())
+    console.log(`rendering bar chart for ${data}`)
+
     return (
       <div>
-        <BarChart padding={'50%'} width={600} height={500} data={this.state.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
+        <BarChart padding={'50%'} width={600} height={500} data={data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
           <XAxis dataKey={this.state.dataKey} />
           <YAxis />
           <CartesianGrid strokeDasharray="3 3" />

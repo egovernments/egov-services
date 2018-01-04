@@ -96,14 +96,36 @@ export default class TableCard extends Component {
     return this.state.data[this.state.chartDataIndex - 1];
   }
 
-  getReportTitle = (data) => {
+  getULBName = (code) => {
+    let ulbName = parseTenantName(this.props.ulbs, code);
+    if (ulbName.length == 0) {
+      return code
+    }
+    return ulbName[0]['name']
+  }
+
+  getModifiedChartData = (data) => {
+    return data.map((item, index) => {
+      return {
+        ...item,
+        ulbName: this.getULBName(item.ulbName)
+      }
+    })
+  }
+
+  getChartData = () => {
+    if (this.props.isReportConsolidated) {
+      return this.state.data;
+    }
+    return this.state.data[this.state.chartDataIndex - 1].data;
+  }
+
+  getReportTitle = () => {
     if (this.props.isReportConsolidated) {
       return `Consolidated performance of KPI  ${this.props.kpis}`
     }
-    let ulbName = parseTenantName(this.props.ulbs);
-    if (ulbName.length == 0) {
-      return `Monthly performance of KPI ${this.props.kpis} in FinancialYear ${data.finYear}`
-    } 
+    let data = this.state.data[this.state.chartDataIndex - 1]
+    let ulbName = this.getULBName(data['ulbName']); 
     return `Monthly performance of KPI ${this.props.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`
   }
 
@@ -149,15 +171,8 @@ export default class TableCard extends Component {
       )
     }
 
-    let data    = this.getTableData();
-    let headers = this.getTableHeaders();
-    let title   = this.getReportTitle(data);
+    let title   = this.getReportTitle();
     
-    
-    console.log(data)
-    console.log(headers)
-    console.log(title)
-
     return (
       <div>
         <br />
@@ -165,7 +180,7 @@ export default class TableCard extends Component {
         <Card className="uiCard" style={{ textAlign: 'center' }}>
           <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {title} </div>} />
           {this.renderReportNavigationButton('Charts')}
-          {this.renderTable(headers, data)}
+          {this.renderTable()}
         </Card>
       </div>
     );
@@ -175,22 +190,9 @@ export default class TableCard extends Component {
    * render
    * render table as per provided headers
    */
-  renderTable = (headers, data) => {
-    if (this.props.isReportConsolidated) {
-      return (
-        <Table style={{ color: 'black', fontWeight: 'normal', marginTop: '10px' }} bordered responsive className="table-striped">
-            <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
-              <TableRow>{headers.map((item, index) => <TableHeaderColumn key={index}>{item.toUpperCase()}</TableHeaderColumn>)}</TableRow>
-            </TableHeader>
-
-            <TableBody displayRowCheckbox={false}>
-              {data.map((item, index) => (
-                <TableRow key={index}> {headers.map((el, index) => <TableRowColumn key={index}>{item[el]} </TableRowColumn>)} </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-      )
-    }
+  renderTable = () => {
+    let headers = this.getTableHeaders();
+    let data    = this.getModifiedChartData(this.getChartData())
 
     return (
       <Table style={{ color: 'black', fontWeight: 'normal', marginTop: '10px' }} bordered responsive className="table-striped">
@@ -199,7 +201,7 @@ export default class TableCard extends Component {
             </TableHeader>
 
             <TableBody displayRowCheckbox={false}>
-              {data.data.map((item, index) => (
+              {data.map((item, index) => (
                   <TableRow key={index}> {headers.map((el, index) => <TableRowColumn style={{whiteSpace: 'normal', wordWrap: 'break-word'}} key={index}>{item[el]} </TableRowColumn>)} </TableRow>
               ))}
             </TableBody>

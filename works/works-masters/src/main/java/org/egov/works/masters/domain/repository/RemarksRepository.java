@@ -46,7 +46,7 @@ public class RemarksRepository extends JdbcRepository {
 
         searchQuery = searchQuery.replace(":tablename", tableName);
 
-        searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":selectfields", " remarks.* ");
 
 
         if (StringUtils.isNotBlank(remarksSearchContract.getTenantId())) {
@@ -75,7 +75,7 @@ public class RemarksRepository extends JdbcRepository {
 
         if(StringUtils.isNotBlank(remarksSearchContract.getRemarksDescription())) {
             addAnd(params);
-            params.append("remarks.id = details.details and details.deleted=false and details.remarksDescription=:remarksDescription ");
+            params.append("remarks.id = details.remarks and details.deleted=false and details.tenantId=:tenantId and details.remarksDescription=:remarksDescription ");
             paramValues.put("remarksDescription", remarksSearchContract.getRemarksDescription());
 
         }

@@ -190,4 +190,10 @@ public class Constants {
     public static final String KEY_LOA_ENGINEERINCHARGE_NULL= "works.loa.engineerincharge.null";
     public static final String MESSAGE_LOA_ENGINEERINCHARGE_NULL = "Please pass data for Engineer incharge";
 
+    public static final String KEY_WORKORDER_REMARKS_INVALID= "WORKORDER_REMARKS_INVALID";
+    public static final String MESSAGE_WORKORDER_REMARKS_INVALID = "Invalid data for workorder remarks";
+
+    public static final String KEY_NOTICE_REMARKS_INVALID= "NOTICE_REMARKS_INVALID";
+    public static final String MESSAGE_NOTICE_REMARKS_INVALID = "Invalid data for notice remarks";
+
 }

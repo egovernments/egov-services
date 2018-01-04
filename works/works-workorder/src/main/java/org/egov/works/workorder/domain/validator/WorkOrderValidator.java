@@ -8,24 +8,13 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
-import org.egov.works.commons.web.contract.Remarks;
-import org.egov.works.commons.web.contract.RemarksDetail;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.WorkOrderRepository;
+import org.egov.works.workorder.domain.repository.WorksMastersRepository;
 import org.egov.works.workorder.domain.service.LetterOfAcceptanceService;
 import org.egov.works.workorder.domain.service.OfflineStatusService;
 import org.egov.works.workorder.utils.WorkOrderUtils;
-import org.egov.works.workorder.web.contract.LOAStatus;
-import org.egov.works.workorder.web.contract.LetterOfAcceptance;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
-import org.egov.works.workorder.web.contract.OfflineStatus;
-import org.egov.works.workorder.web.contract.RequestInfo;
-import org.egov.works.workorder.web.contract.WorkOrder;
-import org.egov.works.workorder.web.contract.WorkOrderDetail;
-import org.egov.works.workorder.web.contract.WorkOrderRequest;
-import org.egov.works.workorder.web.contract.WorkOrderSearchContract;
-import org.egov.works.workorder.web.contract.WorkOrderStatus;
+import org.egov.works.workorder.web.contract.*;
 import org.egov.works.workorder.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +44,9 @@ public class WorkOrderValidator {
     @Autowired
     private WorkOrderUtils workOrderUtils;
 
+    @Autowired
+    private WorksMastersRepository worksMastersRepository;
+
     public void validateWorkOrder(final WorkOrderRequest workOrderRequest, Boolean isUpdate) {
         HashMap<String, String> messages = new HashMap<>();
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
@@ -76,9 +68,23 @@ public class WorkOrderValidator {
                 validateOfflineStatus(workOrderRequest, messages, workOrder);
             validateWorkOrder(messages, workOrder, letterOfAcceptanceResponse);
             validateStatus(workOrder, messages, workOrderRequest.getRequestInfo());
+            //TODO : FIX remarks master topic
+           // validateRemarks(workOrder, messages, workOrderRequest.getRequestInfo());
             if (!messages.isEmpty())
                 throw new CustomException(messages);
 
+        }
+    }
+
+    private void validateRemarks(WorkOrder workOrder, HashMap<String, String> messages, RequestInfo requestInfo) {
+        for(WorkOrderDetail workOrderDetail : workOrder.getWorkOrderDetails()) {
+            if(StringUtils.isNotBlank(workOrderDetail.getRemarks())) {
+                List<Remarks> remarks = worksMastersRepository.SearchRemarks(workOrder.getTenantId(),workOrderDetail.getRemarks(), requestInfo);
+                if(remarks != null && remarks.isEmpty())
+                    messages.put(Constants.KEY_WORKORDER_REMARKS_INVALID,
+                            Constants.MESSAGE_WORKORDER_REMARKS_INVALID);
+
+            }
         }
     }
 

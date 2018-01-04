@@ -3,14 +3,19 @@ package org.egov.works.masters.domain.service;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.*;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.masters.config.PropertiesManager;
 import org.egov.works.masters.domain.repository.RemarksRepository;
+import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.utils.MasterUtils;
 import org.egov.works.masters.web.contract.*;
 import org.egov.works.masters.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 @Service
 public class RemarksService {
@@ -28,6 +33,7 @@ public class RemarksService {
     private RemarksRepository remarksRepository;
 
     public RemarksResponse create(RemarksRequest remarksRequest) {
+        validateRemarks(remarksRequest);
         AuditDetails auditDetails = masterUtils.getAuditDetails(remarksRequest.getRequestInfo(),false);
         CommonUtils commonUtils = new CommonUtils();
         for (Remarks remarks : remarksRequest.getRemarks()) {
@@ -75,4 +81,21 @@ public class RemarksService {
         remarksResponse.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(requestInfo, true));
         return remarksResponse;
     }
+
+    private void validateRemarks(RemarksRequest remarksRequest) {
+        HashMap<String, String> messages = new HashMap<>();
+
+        for(Remarks remarks : remarksRequest.getRemarks()) {
+            if(remarks.getTypeOfDocument().equalsIgnoreCase(CommonConstants.WORKORDER) && !(remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_APPROVAL) || remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_REJECTION)))
+                 messages.put(Constants.KEY_REMARKS_TYPE_INVALID,  Constants.MESSAGE_REMARKS_TYPE_INVALID);
+
+            if(remarks.getTypeOfDocument().equalsIgnoreCase(CommonConstants.NOTICE) && !remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_SHOWCASE))
+                messages.put(Constants.KEY_REMARKS_TYPE_INVALID,  Constants.MESSAGE_REMARKS_TYPE_INVALID);
+
+        }
+
+        if(!messages.isEmpty())
+            throw new CustomException(messages);
+    }
+
 }

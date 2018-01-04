@@ -4,6 +4,11 @@ package org.egov.works.masters.utils;
  * Created by ramki on 3/11/17.
  */
 public class Constants {
+
+    public static final String REMARKS_TYPE_APPROVAL="Approval";
+    public static final String REMARKS_TYPE_REJECTION="Rejection";
+    public static final String REMARKS_TYPE_SHOWCASE="Showcase";
+
     //Messages
     public static final String KEY_SCHEDULERCATEGORY_CODE_MANDATORY="WMS.SCHEDULECATEGORY.CODE.MANDATORY";
     public static final String MESSAGE_SCHEDULERCATEGORY_CODE_MANDATORY="ScheduleCategory code is mandatory: ";
@@ -124,4 +129,7 @@ public class Constants {
 
     public static final String KEY_MILESTONETEMPLATE_CODE_EXISTS="WMS.MILESTONETEMPLATE.CODE.EXISTS";
     public static final String MESSAGE_MILESTONETEMPLATE_CODE_EXISTS="Given Estimate Template already exists: ";
+
+    public static final String KEY_REMARKS_TYPE_INVALID="REMARKS_TYPE_INVALID";
+    public static final String MESSAGE_REMARKS_TYPE_INVALID="Invalid data for Remarks type";
 }

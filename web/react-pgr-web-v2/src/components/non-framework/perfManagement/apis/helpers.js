@@ -38,7 +38,7 @@ export const getMonth = (month) => {
     }
 }
 
-export const formatParsedChartData = (data, cb) => {
+export const formatConsolidatedChartData = (data, cb) => {
     let parsed = {
       data: data,
     };

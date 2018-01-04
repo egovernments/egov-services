@@ -44,6 +44,7 @@ public class AgreementValidator {
 	public static final String WF_ACTION_PRINT_NOTICE = "Print Notice";
 	public static final String ERROR_FIELD_AGREEMENT_NO = "Agreement.agreementNumber" ;
 	public static final String ERROR_MSG_UNDER_WORKFLOW = "Agreement is already under going in some workflow.";
+	public static final String ACTION_MODIFY ="Modify";
 	@Autowired
 	private AssetRepository assetService;
 
@@ -234,6 +235,20 @@ public class AgreementValidator {
 		}
 
 	}
+	
+	public void validateModify(AgreementRequest agreementRequest, Errors errors) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		if (!Source.DATA_ENTRY.equals(agreement.getSource())) {
+			errors.reject("Agreement not valid", "Only data entry agreements allowed to modify.");
+		}
+		if (!Action.CREATE.equals(agreement.getAction())) {
+			errors.reject("Agreement not valid", "Can't allowed to modify as transactions already made for this agreement!");
+		}
+		if (agreement.getIsUnderWorkflow()) {
+			errors.reject("Agreement underworkflow", "Agreement is already in other workflow");
+		}
+	}
 
 	public void validateAsset(AgreementRequest agreementRequest, Errors errors) {
 
@@ -242,7 +257,7 @@ public class AgreementValidator {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
 		AssetResponse assetResponse = assetService.getAssets(queryString, requestInfoWrapper);
-		if (assetResponse.getAssets() == null || assetResponse.getAssets().size() == 0)
+		if (assetResponse.getAssets() == null || assetResponse.getAssets().isEmpty())
 			errors.rejectValue("Agreement.securityDeposit", "", "the asset given does not exist");
 
 		if (!assetService.isAssetAvailable(assetId))
@@ -366,6 +381,9 @@ public class AgreementValidator {
 			validateJudgement(agreementRequest, errors);
 		} else if (Action.REMISSION.toString().equals(action)) {
 			validateRemission(agreementRequest, errors);
+		} else if (ACTION_MODIFY.equals(action)){
+			validateModify(agreementRequest, errors);
+			
 		}
 	}
 

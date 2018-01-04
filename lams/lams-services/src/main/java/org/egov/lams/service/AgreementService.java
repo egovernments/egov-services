@@ -135,6 +135,42 @@ public class AgreementService {
 		return agreement;
 	}
 
+	public Agreement modifyAgreement(AgreementRequest agreementRequest) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
+		agreement.setExpiryDate(getExpiryDate(agreement));
+		agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
+		Agreement oldAgreement = agreementRepository.findByAgreementId(agreement.getId()).get(0);
+		if (isDemandChangeRequired(agreement, oldAgreement)) {
+			agreement.setDemands(null);
+			List<Demand> demands = demandService.prepareDemands(agreementRequest);
+
+			DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
+			List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
+					.collect(Collectors.toList());
+			agreement.setDemands(demandList);
+		}
+
+		agreement.setStatus(Status.ACTIVE);
+		agreement.setIsUnderWorkflow(Boolean.FALSE);
+		agreement.setAgreementDate(agreement.getCommencementDate());
+		agreementRepository.modifyAgreement(agreementRequest);
+		return agreement;
+	}
+	
+	private Boolean isDemandChangeRequired(Agreement newAgreement, Agreement oldAgreement) {
+
+		if ((newAgreement.getCommencementDate().compareTo(oldAgreement.getCommencementDate()) != 0)
+				|| !newAgreement.getPaymentCycle().equals(oldAgreement.getPaymentCycle())) {
+
+			return Boolean.TRUE;
+		} else
+			return Boolean.FALSE;
+
+	}
+	
+	
 	public Agreement createEviction(AgreementRequest agreementRequest) {
 		logger.info("create Eviction of agreement::" + agreementRequest.getAgreement());
 		Agreement agreement = enrichAgreement(agreementRequest);

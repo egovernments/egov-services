@@ -266,15 +266,15 @@ public class DataUploadService {
 		if(uploadDefinition.getIsBulkApi()){
 			String value = JsonPath.read(uploadDefinition.getApiRequest(), 
 	    			uploadDefinition.getArrayPath()).toString();
-			logger.info("value size: "+value.length());
 			logger.info("value: "+value);
 	    	documentContext = JsonPath.parse(value.substring(1, value.length() - 1));
 			logger.info("documentContext: "+documentContext.jsonString().toString());
 	    	bulkApiRequest = JsonPath.parse(uploadDefinition.getApiRequest());
 			logger.info("bulkApiRequest: "+bulkApiRequest.jsonString().toString());
 
+		}else{
+			documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
 		}
-    	documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
     	List<Object> resJsonPathList = null;
     	if(null != uploadDefinition.getAdditionalResFields()){
     		resJsonPathList = dataUploadUtils.getResJsonPathList(uploadDefinition.getAdditionalResFields(), coloumnHeaders);

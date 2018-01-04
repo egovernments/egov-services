@@ -1,19 +1,22 @@
 package org.egov.works.workorder.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.Valid;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
- * Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update
+ * Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single
+ * ContractorAdvanceRequisition item is used for create and update
  */
 @ApiModel(description = "Contract class to send response. Array of ContractorAdvanceRequisition items are used in case of search results, whereas single ContractorAdvanceRequisition item is used for create and update")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-04T12:59:21.353Z")
 
 public class ContractorAdvanceRequisitionRequest {
     @JsonProperty("RequestInfo")
@@ -29,7 +32,6 @@ public class ContractorAdvanceRequisitionRequest {
 
     /**
      * Get requestInfo
-     *
      * @return requestInfo
      **/
     @ApiModelProperty(value = "")
@@ -44,12 +46,14 @@ public class ContractorAdvanceRequisitionRequest {
         this.requestInfo = requestInfo;
     }
 
-    public ContractorAdvanceRequisitionRequest contractorAdvanceRequisitions(List<ContractorAdvanceRequisition> contractorAdvanceRequisitions) {
+    public ContractorAdvanceRequisitionRequest contractorAdvanceRequisitions(
+            List<ContractorAdvanceRequisition> contractorAdvanceRequisitions) {
         this.contractorAdvanceRequisitions = contractorAdvanceRequisitions;
         return this;
     }
 
-    public ContractorAdvanceRequisitionRequest addContractorAdvanceRequisitionsItem(ContractorAdvanceRequisition contractorAdvanceRequisitionsItem) {
+    public ContractorAdvanceRequisitionRequest addContractorAdvanceRequisitionsItem(
+            ContractorAdvanceRequisition contractorAdvanceRequisitionsItem) {
         if (this.contractorAdvanceRequisitions == null) {
             this.contractorAdvanceRequisitions = new ArrayList<ContractorAdvanceRequisition>();
         }
@@ -59,7 +63,6 @@ public class ContractorAdvanceRequisitionRequest {
 
     /**
      * Used for create and update only
-     *
      * @return contractorAdvanceRequisitions
      **/
     @ApiModelProperty(value = "Used for create and update only")
@@ -74,9 +77,8 @@ public class ContractorAdvanceRequisitionRequest {
         this.contractorAdvanceRequisitions = contractorAdvanceRequisitions;
     }
 
-
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -85,7 +87,8 @@ public class ContractorAdvanceRequisitionRequest {
         }
         ContractorAdvanceRequisitionRequest contractorAdvanceRequisitionRequest = (ContractorAdvanceRequisitionRequest) o;
         return Objects.equals(this.requestInfo, contractorAdvanceRequisitionRequest.requestInfo) &&
-                Objects.equals(this.contractorAdvanceRequisitions, contractorAdvanceRequisitionRequest.contractorAdvanceRequisitions);
+                Objects.equals(this.contractorAdvanceRequisitions,
+                        contractorAdvanceRequisitionRequest.contractorAdvanceRequisitions);
     }
 
     @Override
@@ -105,14 +108,12 @@ public class ContractorAdvanceRequisitionRequest {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
 }
-

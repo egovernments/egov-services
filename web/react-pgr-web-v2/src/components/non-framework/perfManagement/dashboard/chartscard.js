@@ -3,11 +3,13 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, 
 import { Card, CardText, CardMedia, CardHeader, CardTitle } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
-  parseCompareSearchResponse
+  parseCompareSearchResponse,
+  parseCompareSearchConsolidatedResponse,
+  parseTenantName
 } from '../apis/apis';
 import {
   formatChartData,
-  formatParsedChartData,
+  formatConsolidatedChartData,
 } from '../apis/helpers';
 
 
@@ -25,17 +27,29 @@ export default class BarChartCard extends Component {
   }
 
   componentDidMount() {
-    formatChartData(parseCompareSearchResponse(this.props.data), (data, dataKey) => {
-      if (!data || !dataKey) {
-      } else {
-        this.setState({
-          data: data,
-          dataKey: dataKey,
-          chartDataIndex: 1,
-          maxChartData: data.length,
-        });
-      }
-    });
+    if (this.props.isReportConsolidated) {
+      formatConsolidatedChartData(parseCompareSearchConsolidatedResponse(this.props.data), (data, dataKey) => {
+        if (!data || !dataKey) {
+        } else {
+          this.setState({
+            data: data,
+            dataKey: dataKey,
+          });
+        }
+      });
+    } else {
+      formatChartData(parseCompareSearchResponse(this.props.data), (data, dataKey) => {
+        if (!data || !dataKey) {
+        } else {
+          this.setState({
+            data: data,
+            dataKey: dataKey,
+            chartDataIndex: 1,
+            maxChartData: data.length,
+          });
+        }
+      });
+    }
   }
 
   processOnClickKPIDataRepresentation = () => {
@@ -66,6 +80,77 @@ export default class BarChartCard extends Component {
     }
   }
 
+  getULBName = (code) => {
+    let ulbName = parseTenantName(this.props.ulbs, code);
+    if (ulbName.length == 0) {
+      return code
+    }
+    return ulbName[0]['name']
+  }
+
+  getObjectiveValue(value) {
+    switch (value) {
+      case 1:
+        return 'YES';
+      case 2:
+        return 'NO';
+      case 3:
+        return 'IN PROGRESS';
+    
+      default:
+        return 'NO';
+    }
+  }
+
+  getModifiedChartData = (data) => {
+    if (this.props.kpiType === 'OBJECTIVE') {
+      if (this.props.isReportConsolidated) {
+        return data.map((item, index) => {
+          return {
+            ...item,
+            ulbName: this.getULBName(item.ulbName),
+            target: this.getObjectiveValue(item.target),
+            value: this.getObjectiveValue(item.value)
+          }
+        })
+      }
+      return data.map((item, index) => {
+        return {
+          ...item,
+          ulbName: this.getULBName(item.ulbName),
+          target: this.getObjectiveValue(item.target),
+          monthlyValue: this.getObjectiveValue(item.monthlyValue)
+        }
+      })
+    }
+    return data.map((item, index) => {
+      return {
+        ...item,
+        ulbName: this.getULBName(item.ulbName)
+      }
+    })
+  }
+
+  getChartData = () => {
+    if (this.state.data.length === 0) {
+      return []
+    }
+
+    if (this.props.isReportConsolidated) {
+      return this.state.data;
+    }
+    return this.state.data[this.state.chartDataIndex - 1].data;
+  }
+
+  getReportTitle = () => {
+    if (this.props.isReportConsolidated) {
+      return `Consolidated performance of KPI  ${this.props.kpis}`
+    }
+    let data = this.state.data[this.state.chartDataIndex - 1]
+    let ulbName = this.getULBName(data['ulbName']); 
+    return `Monthly performance of KPI ${this.props.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`
+  }
+
   render() {
     return <div>{this.renderKPIData()}</div>;
   }
@@ -76,17 +161,16 @@ export default class BarChartCard extends Component {
    */
   renderKPIData = () => {
     if (this.state.showChartView) {
-      return this.renderChart();
+      return this.renderReportChart();
     }
   };
 
   /**
    * render
-   * presents chart
+   * render insufficient data to draw the chart
    */
-  renderChart = () => {
-    if (this.state.data.length < 1) {
-      return (
+  renderInsufficientDataForChart = () => {
+    return (
         <div style={{ textAlign: 'center' }}>
           <br />
           <br />
@@ -94,53 +178,27 @@ export default class BarChartCard extends Component {
             <CardHeader title={<div style={{ fontSize: '16px' }}> insufficient data to draw the chart </div>} />
           </Card>
         </div>
-      );
-    }
-    let data = this.state.data[this.state.chartDataIndex - 1]
+    );
+  }
 
-    let ulb = this.props.ulbs.filter((item) => {
-      if (item[0].code === data.ulbName) {
-        return item[0];
-      }
-    })
-    let ulbName = data.ulbName;
-    if (ulb && ulb[0] && ulb[0][0] && ulb[0][0]['name']) {
-      ulbName = ulb[0][0].name
+  /**
+   * render
+   * presents chart
+   */
+  renderReportChart = () => {
+    if (this.getChartData().length < 1) {
+      return (
+        this.renderInsufficientDataForChart()
+      )
     }
-    let title = `Performance for ${this.kpis} for ULB ${ulbName} in FinancialYear ${data.finYear}`;
-
+    
     return (
       <div>
         <br />
         <br />
         <Card className="uiCard" style={{ textAlign: 'center' }}>
-          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {title} </div>} />
-          <RaisedButton
-            style={{ marginLeft: '40%' }}
-            label={'Previous'}
-            primary={true}
-            type="button"
-            disabled={false}
-            onClick={this.processOnClickPreviousKPIData}
-          />
-
-          <RaisedButton
-            style={{ marginLeft: '10px' }}
-            label={'Next'}
-            primary={true}
-            type="button"
-            disabled={false}
-            onClick={this.processOnClickNextKPIData}
-          />
-          <RaisedButton
-            style={{ marginLeft: '40%' }}
-            label={'Tabular'}
-            primary={true}
-            type="button"
-            disabled={false}
-            onClick={this.processOnClickKPIDataRepresentation}
-          />
-          
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {this.getReportTitle()} </div>} />
+          {this.renderReportNavigationButton('Tabular')}
           {this.renderChartType()}
         </Card>
       </div>
@@ -149,14 +207,70 @@ export default class BarChartCard extends Component {
 
   /**
    * render
+   * render next/prev button to navigate when report is not consolidated
+   */
+  renderReportNavigationButton = (label) => {
+    if (this.props.isReportConsolidated) {
+      return (
+        <RaisedButton
+          style={{ marginLeft: '90%' }}
+          label={label}
+          primary={true}
+          type="button"
+          disabled={false}
+          onClick={this.processOnClickKPIDataRepresentation}
+        />
+      )
+    }
+
+    return (
+      <div>
+        <RaisedButton
+          style={{ marginLeft: '40%' }}
+          label={'Previous'}
+          primary={true}
+          type="button"
+          disabled={false}
+          onClick={this.processOnClickPreviousKPIData}
+        />
+
+        <RaisedButton
+          style={{ marginLeft: '10px' }}
+          label={'Next'}
+          primary={true}
+          type="button"
+          disabled={false}
+          onClick={this.processOnClickNextKPIData}
+        />
+
+        <RaisedButton
+          style={{ marginLeft: '40%' }}
+          label={label}
+          primary={true}
+          type="button"
+          disabled={false}
+          onClick={this.processOnClickKPIDataRepresentation}
+        />
+      </div>
+    )
+  }
+
+  /**
+   * render
    * render BarChart or PieChart base upon the KPITypes selected
    */
   renderChartType = () => {
-    if (this.props.kpiType === 'VALUE') {
-      return this.renderBarChart();
+    if (this.props.isReportConsolidated) {
+      if (this.props.kpiType === 'VALUE') {
+        return this.renderConsolidatedBarChart();
+      }
+      return this.renderConsolidatedPieChart();
+    } else {
+      if (this.props.kpiType === 'VALUE') {
+        return this.renderBarChart();
+      }
+      return this.renderPieChart();
     }
-
-    return this.renderPieChart();
   };
 
   /**
@@ -164,12 +278,11 @@ export default class BarChartCard extends Component {
    * renders BarChart for VALUE type KPI
    */
   renderBarChart = () => {
-    let data = this.state.data[this.state.chartDataIndex - 1]
-    console.log(`rendering bar chart for ${data.data}`)
+    let data = this.getModifiedChartData(this.getChartData())
 
     return (
       <div style={{ marginLeft: '15%', marginTop: '10px' }}>
-        <BarChart width={1200} height={500} data={data.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
+        <BarChart width={1200} height={500} data={data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
           <XAxis dataKey="name"/>
           <YAxis />
           <CartesianGrid strokeDasharray="3 3" />
@@ -189,27 +302,86 @@ export default class BarChartCard extends Component {
    */
   renderPieChart = () => {
     
-    let cdata    = this.state.data[this.state.chartDataIndex - 1]
+    let cdata    = this.getModifiedChartData(this.getChartData())
+
     let data = [
       {
         name: 'YES',
-        value: cdata.data.filter(el => el.monthlyValue === 1).length,
+        value: cdata.filter(el => el.monthlyValue === 'YES').length,
       },
       {
         name: 'NO',
-        value: cdata.data.filter(el => el.monthlyValue === 2).length,
+        value: cdata.filter(el => el.monthlyValue === 'NO').length,
       },
       {
         name: 'IN PROGRESS',
-        value: cdata.data.filter(el => el.monthlyValue === 3).length,
+        value: cdata.filter(el => el.monthlyValue === 'IN PROGRESS').length,
       },
     ];
+
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
-    console.log(data)
 
     return (
       <div style={{ marginLeft: '35%', marginTop: '10px' }}>
         <PieChart width={600} height={500} data={data} margin={{ top: 20, right: 30, left: 40, bottom: 5 }}>
+          <Pie dataKey={'value'} isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={220} fill="#8884d8" labelLine={false}>
+            {data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      </div>
+    );
+  };
+
+  /**
+   * render
+   * renders BarChart for VALUE type KPI
+   */
+  renderConsolidatedBarChart = () => {
+    let data = this.getModifiedChartData(this.getChartData())
+
+    return (
+      <div>
+        <BarChart padding={'50%'} width={600} height={500} data={data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
+          <XAxis dataKey={this.state.dataKey} />
+          <YAxis />
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <Legend />
+          <Bar name="KPI Target" dataKey="target" fill="#0088FE" />
+          <Bar name="Actual Value" dataKey="value" fill="#00C49F" />
+        </BarChart>
+      </div>
+    );
+  };
+
+  /**
+   * render
+   * renders PieChart for OBJECTIVE type KPI
+   */
+  renderConsolidatedPieChart = () => {
+    let cdata    = this.getModifiedChartData(this.getChartData())
+    let data = [
+      {
+        name: 'YES',
+        value: cdata.filter(el => el.value === 'YES').length,
+      },
+      {
+        name: 'NO',
+        value: cdata.filter(el => el.value === 'NO').length,
+      },
+      {
+        name: 'IN PROGRESS',
+        value: cdata.filter(el => el.value === 'IN PROGRESS').length,
+      },
+    ];
+
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+
+    return (
+      <div style={{ marginLeft: '35%' }}>
+        <PieChart width={600} height={500} data={this.state.data} margin={{ top: 20, right: 30, left: 40, bottom: 5 }}>
           <Pie dataKey={'value'} isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={220} fill="#8884d8" labelLine={false}>
             {data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
           </Pie>

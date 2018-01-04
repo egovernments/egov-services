@@ -52,8 +52,8 @@ export default class KPIDashboardQuery extends Component {
       kpiIndices: 0,
       ulbIndices: [0],
       fyIndices: [0],
-
       toastMsg: '',
+      isReportConsolidated: false
     };
     this.kpiTypeLabel = 'KPI Type';
     this.kpiLabel = 'KPIs';
@@ -171,7 +171,14 @@ export default class KPIDashboardQuery extends Component {
     }
   };
 
+  processOnClickViewConsolidateButton = () => {
+    this.processViewReport(true)
+  }
   processOnClickViewButton = () => {
+    this.processViewReport(false)
+  }
+
+  processViewReport = (isConsolidated) => {
     let finYears = this.state.fyIndices.map((item, index) => parseFinancialYearResponse(this.fyRes)[item]['finYearRange']).join(',');
     let ulbs = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',');
     let kpis = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)[this.state.kpiIndices]['code'];
@@ -193,16 +200,18 @@ export default class KPIDashboardQuery extends Component {
           this.setState({
             showChartView: false,
             showTableView: true,
+            isReportConsolidated: isConsolidated
           });
         } else {
           this.setState({
             showChartView: true,
             showTableView: false,
+            isReportConsolidated: isConsolidated
           });
         }
       }
     });
-  };
+  }
 
   /**
    * render
@@ -314,11 +323,19 @@ export default class KPIDashboardQuery extends Component {
         <div style={{ textAlign: 'center' }}>
           <br />
           <RaisedButton
-            label="View"
+            label="View Monthly"
             style={style}
             primary={true}
             type="button"
             onClick={this.processOnClickViewButton}
+            disabled={this.state.disableViewButton}
+          />
+          <RaisedButton
+            label="View Consolidated"
+            style={style}
+            primary={true}
+            type="button"
+            onClick={this.processOnClickViewConsolidateButton}
             disabled={this.state.disableViewButton}
           />
         </div>
@@ -357,7 +374,6 @@ export default class KPIDashboardQuery extends Component {
       return <div />;
     }
     let finYears = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.MdmsRes["egf-master"].FinancialYear[${item}].finYearRange`)).join(',');
-    let ulbs = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}]`));
     let kpis = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)[this.state.kpiIndices]['name'];
 
     if (this.state.showChartView) {
@@ -365,17 +381,26 @@ export default class KPIDashboardQuery extends Component {
         <ChartCard
           data={this.chartRes}
           finYears={finYears}
-          ulbs={ulbs}
+          ulbs={this.ulbRes}
           kpis={kpis}
           kpiType={kpiTypes[this.state.kpiTypeIndex].name}
           toggleDataViewFormat={this.processOnClickKPIDataRepresentation}
+          isReportConsolidated={this.state.isReportConsolidated}
         />
       );
     }
 
     if (this.state.showTableView) {
       return (
-        <TableCard data={this.chartRes} finYears={finYears} ulbs={ulbs} kpis={kpis} kpiType={kpiTypes[this.state.kpiTypeIndex].name} toggleDataViewFormat={this.processOnClickKPIDataRepresentation} />
+        <TableCard 
+          data={this.chartRes} 
+          finYears={finYears} 
+          ulbs={this.ulbRes}
+          kpis={kpis} 
+          kpiType={kpiTypes[this.state.kpiTypeIndex].name} 
+          toggleDataViewFormat={this.processOnClickKPIDataRepresentation} 
+          isReportConsolidated={this.state.isReportConsolidated}
+        />
       );
     }
 

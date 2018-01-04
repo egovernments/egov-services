@@ -159,7 +159,11 @@ class Transaction extends Component {
   }
 
   componentDidMount() {
+    let self = this;
     this.initData();
+    var d = new Date();
+    var n = d.getTime();
+    self.props.handleChange({ target: { value: n } }, 'toDate');
   }
   makeAjaxCall = (formData, url) => {
     let self = this;

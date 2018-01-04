@@ -484,7 +484,16 @@ public class AdvocateService {
 	private Agency getAgency(Agency agency, List<Agency> updatedagencies) {
 
 		agency.getPersonDetails().addAll(updatedagencies.get(0).getPersonDetails());
-		agency.getAdvocates().addAll(updatedagencies.get(0).getAdvocates());
+		if (agency.getAdvocates() == null ) {
+			if( updatedagencies != null && updatedagencies.size() > 0){
+			List<Advocate> advocateList = new ArrayList<Advocate>();
+			agency.setAdvocates(advocateList);
+			agency.getAdvocates().addAll(updatedagencies.get(0).getAdvocates());
+			}
+			else{
+				agency.getAdvocates().addAll(updatedagencies.get(0).getAdvocates());
+			}
+		}
 
 		return agency;
 

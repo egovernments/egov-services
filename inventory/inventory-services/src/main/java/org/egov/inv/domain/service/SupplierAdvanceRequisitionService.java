@@ -71,12 +71,12 @@ public class SupplierAdvanceRequisitionService extends DomainService {
 	public SupplierAdvanceRequisitionResponse update(SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest) {
 
 		try {
-			validate(supplierAdvanceRequisitionRequest.getSupplierAdvanceRequisitions(), Constants.ACTION_CREATE);
+			validate(supplierAdvanceRequisitionRequest.getSupplierAdvanceRequisitions(), Constants.ACTION_UPDATE);
 			for (SupplierAdvanceRequisition b : supplierAdvanceRequisitionRequest.getSupplierAdvanceRequisitions()) {
 				b.setAuditDetails(getAuditDetails(supplierAdvanceRequisitionRequest.getRequestInfo(), Constants.ACTION_UPDATE));
 			}
 
-			kafkaQue.send(saveTopic, saveKey, supplierAdvanceRequisitionRequest);
+			kafkaQue.send(updateTopic, updateKey, supplierAdvanceRequisitionRequest);
 			SupplierAdvanceRequisitionResponse response = new SupplierAdvanceRequisitionResponse();
 			response.setSupplierAdvanceRequisitions(supplierAdvanceRequisitionRequest.getSupplierAdvanceRequisitions());
 			response.setResponseInfo(getResponseInfo(supplierAdvanceRequisitionRequest.getRequestInfo()));

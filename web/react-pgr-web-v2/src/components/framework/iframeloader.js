@@ -34,7 +34,6 @@ class IframeLoader extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.location.hash !== this.props.location.hash) {
       const url = this.getIframeUrl(nextProps);
-      this.ifr.setAttribute('src', url);
       this.setState({ url });
     }
   }
@@ -60,7 +59,7 @@ class IframeLoader extends Component {
               this.ifr = f;
             }}
             frameBorder="0"
-            src="http://egov-micro-dev.egovernments.org/app/v2/uploader#user-jobs"
+            src="/app/v2/uploader#user-jobs"
             allowFullScreen
           />
         ) : (
@@ -70,7 +69,7 @@ class IframeLoader extends Component {
               this.ifr = f;
             }}
             frameBorder="0"
-            src="http://egov-micro-dev.egovernments.org/app/v2/uploader"
+            src="/app/v2/uploader"
             allowFullScreen
           />
         )}

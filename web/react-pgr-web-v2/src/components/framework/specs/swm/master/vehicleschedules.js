@@ -32,8 +32,8 @@ var dat = {
                   "patternErrorMsg":""
                },
                {
-                 "name": "route",
-                 "jsonPath": "name",
+                 "name": "routeCode",
+                 "jsonPath": "routeCode",
                   "label": "swm.create.route",
                   "type": "autoCompelete",
                   "isRequired": true,

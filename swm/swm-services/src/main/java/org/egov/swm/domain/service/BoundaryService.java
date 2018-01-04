@@ -81,7 +81,7 @@ public class BoundaryService {
         JSONArray responseJSONArray;
         TenantBoundary tenantBoundary = null;
         StringBuilder filter = new StringBuilder();
-        filter.append("[?(( @.hierarchyType.code=='");
+        filter.append("[?(@.hierarchyType.code=='");
         filter.append(hierarchyTypeCode);
         filter.append("' )]");
 

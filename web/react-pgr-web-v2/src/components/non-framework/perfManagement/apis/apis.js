@@ -81,13 +81,13 @@ export const fetchCompareSearchAPI = (finYears, kpis, ulbs, cb) => {
   // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2016-17,2017-18&kpiCodes=FFL&ulbs=default,mh.rohatest,mh.aliba&tenantId=default`, [], {}, false, true).then(function(res) {
   
   // VALUE TYPE TEST
-  Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2016-17&kpiCodes=PCSOW&ulbs=default,mh.rohatest,mh.aliba&tenantId=default`, [], {}, false, true).then(function(res) {
+  // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2016-17&kpiCodes=PCSOW&ulbs=default,mh.rohatest,mh.aliba&tenantId=default`, [], {}, false, true).then(function(res) {
 
   // TEXT TYPE TEST
   // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18&kpiCodes=EWOF&ulbs=default&tenantId=default`, [], {}, false, true).then(function(res) {
 
   // ACTUAL API CALLING
-  // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
+  Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
       if (res && res.ulbs) {
         cb(null, res);
       } else {

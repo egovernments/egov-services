@@ -98,6 +98,10 @@ export default class BarChartCard extends Component {
   }
 
   getChartData = () => {
+    if (this.state.data.length === 0) {
+      return []
+    }
+
     if (this.props.isReportConsolidated) {
       return this.state.data;
     }
@@ -148,8 +152,7 @@ export default class BarChartCard extends Component {
    * presents chart
    */
   renderReportChart = () => {
-    
-    if (this.state.data.length < 1) {
+    if (this.getChartData().length < 1) {
       return (
         this.renderInsufficientDataForChart()
       )
@@ -270,15 +273,15 @@ export default class BarChartCard extends Component {
     let data = [
       {
         name: 'YES',
-        value: cdata.data.filter(el => el.monthlyValue === 1).length,
+        value: cdata.filter(el => el.monthlyValue === 1).length,
       },
       {
         name: 'NO',
-        value: cdata.data.filter(el => el.monthlyValue === 2).length,
+        value: cdata.filter(el => el.monthlyValue === 2).length,
       },
       {
         name: 'IN PROGRESS',
-        value: cdata.data.filter(el => el.monthlyValue === 3).length,
+        value: cdata.filter(el => el.monthlyValue === 3).length,
       },
     ];
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];

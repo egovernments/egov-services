@@ -27,7 +27,7 @@ export default class TableCard extends Component {
 
   componentDidMount() {
     if (this.props.isReportConsolidated) {
-      formatConsolidatedChartData(parseCompareSearchConsolidatedResponse(this.props.data), (data, dataKey) => {
+      formatConsolidatedChartData(parseCompareSearchConsolidatedResponse(this.props.data, this.props.kpiType), (data, dataKey) => {
         if (!data || !dataKey) {
         } else {
           this.setState({
@@ -37,7 +37,7 @@ export default class TableCard extends Component {
         }
       });
     } else {
-      formatChartData(parseCompareSearchResponse(this.props.data), (data, dataKey) => {
+      formatChartData(parseCompareSearchResponse(this.props.data, this.props.kpiType), (data, dataKey) => {
         if (!data || !dataKey) {
         } else {
           this.setState({
@@ -114,6 +114,10 @@ export default class TableCard extends Component {
   }
 
   getChartData = () => {
+    if (this.state.data.length === 0) {
+      return []
+    }
+
     if (this.props.isReportConsolidated) {
       return this.state.data;
     }
@@ -148,7 +152,6 @@ export default class TableCard extends Component {
    * render insufficient data to draw the chart
    */
   renderInsufficientDataForChart = () => {
-    console.log('insufficient data for chart')
     return (
         <div style={{ textAlign: 'center' }}>
           <br />
@@ -165,20 +168,19 @@ export default class TableCard extends Component {
    * presents same data in tabular format
    */
   renderReportTable = () => {
-    if (this.state.data.length < 1) {
+    
+    if (this.getChartData().length < 1) {
       return (
         this.renderInsufficientDataForChart()
       )
     }
 
-    let title   = this.getReportTitle();
-    
     return (
       <div>
         <br />
         <br />
         <Card className="uiCard" style={{ textAlign: 'center' }}>
-          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {title} </div>} />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '25px' }}> {this.getReportTitle()} </div>} />
           {this.renderReportNavigationButton('Charts')}
           {this.renderTable()}
         </Card>

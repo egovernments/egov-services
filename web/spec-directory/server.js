@@ -123,9 +123,9 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
 	                "defaultValue": properties[key].default || "",
 	                "url": "/egov-mdms-service/v1/_get?&moduleName=" +  module + "&masterName=" 
 	                	+ master + "|$.MdmsRes." + module + "." + key + ".*.id|$.MdmsRes." + module + "." + key + ".*.name",
-	                "isStateLevel":true,
+	                "isStateLevel":false,
 					"apiKey": jPath + "." + key,
-					"isUnique": isUnique							
+					"isUnique": isUnique
 				});
 				if(getHeaderStatus(module, master, key)){
 					header.push({
@@ -286,7 +286,7 @@ request.get('http://raw.githubusercontent.com/egovernments/egov-services/master/
 	            }
 
 	            // console.log(finalSpecs);
-	            // console.log(finalSpecsRaw.pm);
+	            // console.log(finalSpecsRaw.lcms.casetype);
 	        
 	        }
 		})

@@ -3,10 +3,13 @@ package org.egov.pa.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
+import org.egov.pa.model.KpiCategory;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
@@ -83,7 +86,14 @@ public class KpiMasterServiceImpl implements KpiMasterService {
 	@Override
 	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
 		log.info("KPI Get Request Received at Service Level : " + kpiGetRequest); 
-    	return kpiMasterRepository.searchKpi(kpiGetRequest);
+		Map<String, KpiCategory> kpiCategoryMap = restCallService.getCategory(kpiGetRequest.getTenantId());
+		List<KPI> kpiList = kpiMasterRepository.searchKpi(kpiGetRequest);
+		for(KPI kpi : kpiList) { 
+			if(null != kpiCategoryMap.get(kpi.getCategoryId()) && StringUtils.isNotBlank(kpiCategoryMap.get(kpi.getCategoryId()).getName())) { 
+				kpi.setCategory(kpiCategoryMap.get(kpi.getCategoryId()).getName());
+			}
+		}
+    	return kpiList;
 	}
 	
 	

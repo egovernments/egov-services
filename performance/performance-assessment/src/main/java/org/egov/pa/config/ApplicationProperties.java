@@ -72,6 +72,9 @@ public class ApplicationProperties {
     @Value("${egov.services.mdms_service.department_search}")
     private String mdmsServiceSearchGetDepartmentUrl; 
     
+    @Value("${egov.services.mdms_service.category_search}")
+    private String mdmsServiceSearchGetCategoryUrl; 
+    
     @Value("${egov.services.mdms_service.tenant_search}")
     private String mdmsServiceSearchTenantUrl;
     
@@ -84,6 +87,14 @@ public class ApplicationProperties {
     
     
     
+
+	public String getMdmsServiceSearchGetCategoryUrl() {
+		return mdmsServiceSearchGetCategoryUrl;
+	}
+
+	public void setMdmsServiceSearchGetCategoryUrl(String mdmsServiceSearchGetCategoryUrl) {
+		this.mdmsServiceSearchGetCategoryUrl = mdmsServiceSearchGetCategoryUrl;
+	}
 
 	public String getKpiValueDetailCreateTopic() {
 		return kpiValueDetailCreateTopic;

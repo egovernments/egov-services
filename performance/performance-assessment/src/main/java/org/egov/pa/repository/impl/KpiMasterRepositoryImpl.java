@@ -14,6 +14,7 @@ import org.egov.pa.model.Department;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
+import org.egov.pa.model.KpiCategory;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
@@ -167,6 +168,10 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	
 	@Override
 	public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, KPIValueSearchRequest kpiValueSearchReq) {
+		Map<String, KpiCategory> categoryMap = new HashMap<>(); 
+		for(String tenant : kpiValueSearchReq.getTenantId()) { 
+			categoryMap = restCallService.getCategory(tenant);
+		}
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		List<String> finYearList = kpiValueSearchReq.getFinYear(); 
 		Long departmentId = kpiValueSearchReq.getDepartmentId();
@@ -188,6 +193,8 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 			List<Document> docList = new ArrayList<>();
 			docList = getDocumentListForKpi(availableKpiCodeList);
 			for(KPI kpi : kpiList) {
+				if(null != categoryMap.get(kpi.getCategoryId()) && StringUtils.isNotBlank(categoryMap.get(kpi.getCategoryId()).getName()))
+					kpi.setCategory(categoryMap.get(kpi.getCategoryId()).getName());
 				List<Document> kpiDocList = new ArrayList<>(); 
 				kpi.setDocuments(kpiDocList);
 				for(Document doc : docList) { 

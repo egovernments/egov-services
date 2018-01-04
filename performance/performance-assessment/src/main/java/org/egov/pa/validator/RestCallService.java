@@ -47,6 +47,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pa.config.ApplicationProperties;
 import org.egov.pa.model.Department;
+import org.egov.pa.model.KpiCategory;
 import org.egov.pa.model.Tenant;
 import org.egov.pa.web.contract.MDMSResponse;
 import org.egov.pa.web.contract.RequestInfoBody;
@@ -109,6 +110,31 @@ public class RestCallService {
 		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getCommonMasters()
 				&& null != dr.getMdmsRes().getCommonMasters().getDepartments()) {
 			return dr.getMdmsRes().getCommonMasters().getDepartments();
+		}
+		return null;
+	}
+	
+	public Map<String, KpiCategory> getCategory(final String tenantId) {
+		Map<String, KpiCategory> kpiCategoryMap = new HashMap<>();
+		final StringBuilder url = new StringBuilder(
+				applicationProperties.getMdmsServiceHostName() + applicationProperties.getMdmsServiceSearchPath()
+						+ applicationProperties.getMdmsServiceSearchGetCategoryUrl());
+		if(StringUtils.isNotBlank(tenantId))
+			url.append("&tenantId=" + tenantId.split("\\.")[0]);
+		final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+		final RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo);
+		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+		log.info("URL to invoke MDMS Service : " + url.toString());
+		log.info("Request Info to invoke the URL : " + request);
+		MDMSResponse dr = new RestTemplate().postForObject(url.toString(), request, MDMSResponse.class);
+		log.info("Response from MDMS : " + dr);
+		
+		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getKpiCategoryList()
+				&& null != dr.getMdmsRes().getKpiCategoryList().getCategoryList()) {
+			for(KpiCategory category : dr.getMdmsRes().getKpiCategoryList().getCategoryList()) { 
+				kpiCategoryMap.put(category.getCode(), category); 
+			}
+			return kpiCategoryMap;
 		}
 		return null;
 	}

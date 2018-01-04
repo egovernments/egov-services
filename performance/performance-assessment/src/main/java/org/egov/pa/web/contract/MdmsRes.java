@@ -10,7 +10,10 @@ public class MdmsRes {
 	private CommonMasters commonMasters;
 	
 	@JsonProperty("tenant")
-	private TenantList tenantList; 
+	private TenantList tenantList;
+	
+	@JsonProperty("PM")
+	private KpiCategoryList kpiCategoryList; 
 
 	public CommonMasters getCommonMasters() {
 		return commonMasters;
@@ -27,6 +30,16 @@ public class MdmsRes {
 	public void setTenantList(TenantList tenantList) {
 		this.tenantList = tenantList;
 	}
+
+	public KpiCategoryList getKpiCategoryList() {
+		return kpiCategoryList;
+	}
+
+	public void setKpiCategoryList(KpiCategoryList kpiCategoryList) {
+		this.kpiCategoryList = kpiCategoryList;
+	}
+	
+	
 	
 	
 	

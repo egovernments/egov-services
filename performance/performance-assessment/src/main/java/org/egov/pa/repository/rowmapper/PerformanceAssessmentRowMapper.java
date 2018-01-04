@@ -83,8 +83,7 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setPeriodicity(rs.getString("periodicity"));
 				kpi.setTargetType(rs.getString("targetType"));
 				kpi.setAuditDetails(addAuditDetails(rs));
-				kpi.setCategoryId(rs.getLong("categoryId"));
-				kpi.setCategory(rs.getString("category"));
+				kpi.setCategoryId(rs.getString("categoryId"));
 				kpiMap.put(rs.getString("code"), kpi); 
 			}
 			
@@ -160,8 +159,7 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setInstructions(rs.getString("instructions"));
 				kpi.setPeriodicity(rs.getString("periodicity"));
 				kpi.setTargetType(rs.getString("targetType"));
-				kpi.setCategoryId(rs.getLong("categoryId"));
-				kpi.setCategory(rs.getString("category"));
+				kpi.setCategoryId(rs.getString("categoryId"));
 				kpiMap.put(rs.getString("code"), kpi); 
 			}
 			
@@ -274,8 +272,7 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setPeriodicity(rs.getString("periodicity"));
 				kpi.setTargetType(rs.getString("targettype"));
 				kpi.setFinancialYear(rs.getString("finyear"));
-				kpi.setCategoryId(rs.getLong("categoryId"));
-				kpi.setCategory(rs.getString("category"));
+				kpi.setCategoryId(rs.getString("categoryId"));
 				KpiTarget target = new KpiTarget(); 
 				target.setId(rs.getString("targetId"));
 				target.setKpiCode(rs.getString("targetKpiCode"));
@@ -347,8 +344,7 @@ public class PerformanceAssessmentRowMapper {
 					kpi.setPeriodicity(rs.getString("periodicity"));
 					kpi.setTargetType(rs.getString("targettype"));
 					kpi.setFinancialYear(rs.getString("finyear"));
-					kpi.setCategoryId(rs.getLong("categoryId"));
-					kpi.setCategory(rs.getString("category"));
+					kpi.setCategoryId(rs.getString("categoryId"));
 					KpiTarget target = new KpiTarget();
 					target.setId(rs.getString("targetId"));
 					target.setKpiCode(rs.getString("targetKpiCode"));

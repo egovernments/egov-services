@@ -2,10 +2,12 @@ package org.egov.pa.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
+import org.egov.pa.model.KpiCategory;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.TargetType;
@@ -149,6 +151,15 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 	@Override
 	public List<KpiTarget> searchKpiTarget(KPITargetGetRequest getReq) {
 		List<KpiTarget> targetList = kpiTargetRepository.searchKpiTargets(getReq);
+		Map<String, KpiCategory> categoryMap = restCallService.getCategory(getReq.getTenantId());
+		for (KpiTarget target : targetList) {
+			if (null != target.getKpi() && StringUtils.isNotBlank(target.getKpi().getCategoryId())) {
+				if (null != categoryMap && null != categoryMap.get(target.getKpi().getCategoryId())
+						&& StringUtils.isNotBlank(categoryMap.get(target.getKpi().getCategoryId()).getName())) {
+					target.getKpi().setCategory(categoryMap.get(target.getKpi().getCategoryId()).getName());
+				}
+			}
+		}
 		return targetList;
 	}
 }

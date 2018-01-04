@@ -10,12 +10,14 @@ import java.util.Map;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.BinDetailsSearch;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
     @Autowired
     private CollectionTypeService collectionTypeService;
+
+    @Autowired
+    private BoundaryService boundaryService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -133,6 +138,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
                 collectionPointCodes.append(collectionPoint.getCode());
 
             }
+            populateBoundarys(collectionPointList);
 
             populateBinDetails(collectionPointList, collectionPointCodes.toString());
 
@@ -143,6 +149,34 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         page.setPagedData(collectionPointList);
 
         return page;
+    }
+
+    private void populateBoundarys(List<CollectionPoint> collectionPointList) {
+
+        String tenantId = null;
+        Map<String, Boundary> boundaryMap = new HashMap<>();
+
+        if (collectionPointList != null && !collectionPointList.isEmpty())
+            tenantId = collectionPointList.get(0).getTenantId();
+
+        List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+
+        for (Boundary bd : boundarys) {
+
+            boundaryMap.put(bd.getCode(), bd);
+
+        }
+
+        for (CollectionPoint collectionPoint : collectionPointList) {
+
+            if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
+                    && !collectionPoint.getLocation().getCode().isEmpty()) {
+
+                collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
+            }
+
+        }
+
     }
 
     private void populateBinDetails(List<CollectionPoint> collectionPointList, String collectionPointCodes) {

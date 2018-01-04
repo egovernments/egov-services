@@ -22,6 +22,7 @@ import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.SupplierRepository;
+import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.VendorEntity;
 import org.slf4j.Logger;
@@ -51,6 +52,9 @@ public class VendorJdbcRepository extends JdbcRepository {
 
     @Autowired
     private SwmProcessService swmProcessService;
+
+    @Autowired
+    private BoundaryService boundaryService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -270,7 +274,9 @@ public class VendorJdbcRepository extends JdbcRepository {
     }
 
     private void populateServicedLocations(List<Vendor> vendorList, String vendorCodes) {
+        Map<String, List<ServicedLocations>> servicedLocationsMap = new HashMap<>();
         Map<String, List<Boundary>> boundaryListMap = new HashMap<>();
+        Map<String, Boundary> boundaryMap = new HashMap<>();
         String tenantId = null;
         ServicedLocations sls;
         sls = new ServicedLocations();
@@ -284,20 +290,33 @@ public class VendorJdbcRepository extends JdbcRepository {
         List<ServicedLocations> servicedLocations = servicedLocationsJdbcRepository.search(sls);
         if (servicedLocations != null && !servicedLocations.isEmpty()) {
 
+            List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+
+            for (Boundary b : boundarys) {
+                boundaryMap.put(b.getCode(), b);
+            }
+
             for (ServicedLocations sl : servicedLocations) {
 
-                if (boundaryListMap.get(sl.getVendor()) == null) {
+                if (servicedLocationsMap.get(sl.getVendor()) == null) {
 
-                    boundaryListMap.put(sl.getVendor(),
-                            Collections.singletonList(Boundary.builder().code(sl.getLocation()).build()));
+                    boundaryListMap.put(sl.getVendor(), Collections.singletonList(boundaryMap.get(sl.getLocation())));
+
+                    servicedLocationsMap.put(sl.getVendor(), Collections.singletonList(sl));
 
                 } else {
 
                     List<Boundary> bList = new ArrayList<>(boundaryListMap.get(sl.getVendor()));
 
-                    bList.add(Boundary.builder().code(sl.getLocation()).build());
+                    bList.add(boundaryMap.get(sl.getLocation()));
 
                     boundaryListMap.put(sl.getVendor(), bList);
+
+                    List<ServicedLocations> cpdList = new ArrayList<>(servicedLocationsMap.get(sl.getVendor()));
+
+                    cpdList.add(sl);
+
+                    servicedLocationsMap.put(sl.getVendor(), cpdList);
 
                 }
             }

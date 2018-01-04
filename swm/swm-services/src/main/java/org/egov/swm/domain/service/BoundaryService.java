@@ -1,7 +1,9 @@
 package org.egov.swm.domain.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
@@ -10,6 +12,7 @@ import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.swm.constants.Constants;
+import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,19 +52,68 @@ public class BoundaryService {
     public TenantBoundary getByCode(final String tenantId, final String code, final RequestInfo requestInfo) {
 
         JSONArray responseJSONArray;
-
+        StringBuilder filter = new StringBuilder();
+        filter.append("[?((@.boundary.code=='");
+        filter.append(code);
+        filter.append("' || '");
+        filter.append(code);
+        filter.append("' in @.boundary.children[*].code || '");
+        filter.append(code);
+        filter.append("' in @.boundary.children[*].children[*].code || '");
+        filter.append(code);
+        filter.append("' in @.boundary.children[*].children[*].children[*].code || '");
+        filter.append(code);
+        filter.append("' in @.boundary.children[*].children[*].children[*].children[*].code ) && @.hierarchyType.code=='");
+        filter.append(hierarchyTypeCode);
+        filter.append("' )]");
         responseJSONArray = getByCriteria(tenantId, Constants.EGOV_LOCATION_MODULE_CODE,
-                Constants.TENANTBOUNDARY_MASTER_NAME, code, requestInfo);
+                Constants.TENANTBOUNDARY_MASTER_NAME, requestInfo, filter.toString());
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
             return mapper.convertValue(responseJSONArray.get(0), TenantBoundary.class);
         else
-            throw new CustomException("TenantBoundary", "Given TenantBoundary is invalid: " + code);
+            throw new CustomException("Boundary", "Given location is invalid: " + code);
+
+    }
+
+    public List<Boundary> getAll(final String tenantId, final RequestInfo requestInfo) {
+
+        JSONArray responseJSONArray;
+        TenantBoundary tenantBoundary = null;
+        StringBuilder filter = new StringBuilder();
+        filter.append("[?(( @.hierarchyType.code=='");
+        filter.append(hierarchyTypeCode);
+        filter.append("' )]");
+
+        responseJSONArray = getByCriteria(tenantId, Constants.EGOV_LOCATION_MODULE_CODE,
+                Constants.TENANTBOUNDARY_MASTER_NAME, new RequestInfo(), filter.toString());
+
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            tenantBoundary = mapper.convertValue(responseJSONArray.get(0), TenantBoundary.class);
+
+        if (tenantBoundary != null && tenantBoundary.getBoundary() != null) {
+
+            return findAll(tenantBoundary.getBoundary());
+        }
+        return null;
+
+    }
+
+    private List<Boundary> findAll(Boundary boundary) {
+
+        Set<Boundary> result = new HashSet<>();
+
+        result.add(boundary);
+        for (Boundary child : boundary.getChildren()) {
+            result.addAll(findAll(child));
+        }
+
+        return new ArrayList(result);
 
     }
 
     public JSONArray getByCriteria(final String tenantId, final String moduleName, final String masterName,
-            final String filterFieldValue, final RequestInfo requestInfo) {
+            final RequestInfo requestInfo, String filter) {
 
         List<MasterDetail> masterDetails;
         List<ModuleDetail> moduleDetails;
@@ -71,16 +123,8 @@ public class BoundaryService {
         moduleDetails = new ArrayList<>();
 
         masterDetails.add(MasterDetail.builder().name(masterName).build());
-        if (filterFieldValue != null && !filterFieldValue.isEmpty())
 
-            masterDetails.get(0).setFilter("[?((@.boundary.code=='"
-                    + filterFieldValue + "' || '" + filterFieldValue
-                    + "' in @.boundary.children[*].code || '" + filterFieldValue
-                    + "' in @.boundary.children[*].children[*].code || '" + filterFieldValue
-                    + "' in @.boundary.children[*].children[*].children[*].code || '" + filterFieldValue
-                    + "' in @.boundary.children[*].children[*].children[*].children[*].code ) && @.hierarchyType.code=='"
-                    + hierarchyTypeCode
-                    + "' )]");
+        masterDetails.get(0).setFilter(filter);
 
         moduleDetails.add(ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build());
 

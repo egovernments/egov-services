@@ -5,7 +5,6 @@ import java.util.Date;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
@@ -108,7 +107,6 @@ public class SanitationStaffTargetService {
         EmployeeResponse employeeResponse = null;
         final RouteSearch routeSearch = new RouteSearch();
         Pagination<Route> routes;
-        Boundary boundary;
         CollectionPointSearch search;
         Pagination<CollectionPoint> collectionPoints;
 

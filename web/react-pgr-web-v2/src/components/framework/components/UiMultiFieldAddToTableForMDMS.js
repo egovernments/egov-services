@@ -477,6 +477,12 @@ class UiMultiFieldAddToTableForMDMS extends Component {
   };
 
   resetRow = index => {
+    let dependecyDropdownData=this.props.dependencyDropdownData;
+    let propertyName=this.props.dependencyDropdown[0].propertyName;
+    let  filterKey=this.props.dependencyDropdown[0].filterKey;
+    let dependencyKey =this.props.dependencyDropdown[0].dependencykey;
+    
+   
     this.handler(
       {
         target: {
@@ -503,6 +509,10 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     // }
     let formData ={};
      _.set(formData, this.props.item.jsonPath + '[0]', list[index]);
+      if(dependecyDropdownData){
+      let filterdData =_.find(dependecyDropdownData, function (obj) { return obj[`${dependencyKey}`]==( formData.MdmsMetadata.masterData[0][`${propertyName}`]) });
+      formData.MdmsMetadata.masterData[0][`${propertyName}`]=filterdData[`${filterKey}`];
+   }
     this.setState(
       {
         // valueList: list,
@@ -522,7 +532,15 @@ class UiMultiFieldAddToTableForMDMS extends Component {
     let list = _.cloneDeep(this.state.valueList);
     indexes.push(index);
     let formData = {};
+    let dependecyDropdownData=this.props.dependencyDropdownData;
+    let propertyName=this.props.dependencyDropdown[0].propertyName;
+    let  filterKey=this.props.dependencyDropdown[0].filterKey;
+    let dependencyKey =this.props.dependencyDropdown[0].dependencykey;
     _.set(formData, this.props.item.jsonPath + '[0]', list[index]);
+    if(dependecyDropdownData){
+      let filterdData =_.find(dependecyDropdownData, function (obj) { return obj[`${dependencyKey}`]==( formData.MdmsMetadata.masterData[0][`${propertyName}`]) });
+      formData.MdmsMetadata.masterData[0][`${propertyName}`]=filterdData[`${filterKey}`];
+   }
     this.setState({
       formData,
       index,

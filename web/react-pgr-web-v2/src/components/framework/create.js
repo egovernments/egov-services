@@ -760,7 +760,7 @@ class Report extends Component {
           }
         } else {
           let hashLocation = window.location.hash;
-          if(hashLocation == "#/create/legal/advocatepayment"){
+          if(hashLocation == "#/create/lcms/advocatepayment"){
             $('input[type=file]').val('');
           }
           self.props.toggleSnackbarAndSetText(

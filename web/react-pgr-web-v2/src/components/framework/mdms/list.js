@@ -271,8 +271,9 @@ class MdmsComponent extends Component {
                   let value=temp[i][`${depndencyobject.propertyName}`];
                   console.log('value  is'+value);
                 let filterdData =_.find(dropdownData, function (obj) { return obj[`${depndencyobject.filterKey}`]===value });
-                 console.log('filterdData  is'+filterdData);
+                if(filterdData){
                 temp[i][`${depndencyobject.propertyName}`]=filterdData[`${depndencyobject.dependencykey}`];
+                }
                 }
               
               }

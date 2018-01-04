@@ -22,18 +22,33 @@ class UiCheckBox extends Component {
     let { formData } = this.props;
     let { getVal } = this;
     let tempDisabled = eval(item.isDisabled);
+     let checkedValue =false;
+     if(getVal){
+       if(item.jsonPath){
+        checkedValue= getVal(item.jsonPath);
+       }else if(item.dependentJsonPath){
+         var dependentValue= getVal(item.dependentJsonPath);
+         if(_.isEmpty(dependentValue)){
+           checkedValue=true;
+         }else{
+           checkedValue =false;
+         }
+       }else{
+         checkedValue = isSelected;
+       }
+     }
     switch (this.props.ui) {
       case 'google':
         return (
           <Checkbox
-            id={item.jsonPath.split('.').join('-')}
+            id={(item.jsonPath)?item.jsonPath.split('.').join('-'): ( item.dependentJsonPath && item.dependentJsonPath.split('.').join('-') ) }
             style={{
               display: item.hide ? 'none' : 'inline-block',
               marginTop: '25px', //For DumpingGround Changed from 43px
               marginLeft: '-5px',
             }}
             label={item.label?item.label:"" + (item.isRequired ? ' *' : '')}
-            checked={this.props.getVal ? this.props.getVal(item.jsonPath): isSelected}
+            checked={checkedValue}
             disabled={tempDisabled}
             errorText={this.props.fieldErrors ? this.props.fieldErrors[item.jsonPath] : 'Empty'}
             onCheck={e =>

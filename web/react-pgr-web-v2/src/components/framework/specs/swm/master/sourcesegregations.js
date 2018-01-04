@@ -56,6 +56,7 @@ var dat = {
     groups: [
       {
         name: 'SourceSegregationDetails',
+        multiple:false,
         label: 'swm.create.group.title.SourceSegregationDetails',
         fields: [
           {
@@ -119,7 +120,7 @@ var dat = {
       {
         name: 'CollectionTypeDetails',
         label: 'swm.create.group.title.CollectionTypeDetails',
-        jsonPath: 'sourceSegregations[0].collectionDetails[0]',
+        jsonPath: 'sourceSegregations[0].collectionDetails',
         multiple: true,
         fields: [
           {
@@ -130,7 +131,6 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            defaultValue: '',
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
@@ -151,7 +151,6 @@ var dat = {
             type: 'number',
             isRequired: true,
             isDisabled: false,
-            defaultValue: '',
             patternErrorMsg: '',
           },
           {
@@ -162,7 +161,6 @@ var dat = {
             type: 'number',
             isRequired: true,
             isDisabled: false,
-            defaultValue: '',
             patternErrorMsg: '',
           },
         ],

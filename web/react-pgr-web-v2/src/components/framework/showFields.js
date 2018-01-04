@@ -261,7 +261,7 @@ export default class ShowFields extends Component {
     // console.log(item.type, item.jsonPath);
     if (
       screen == 'view' &&
-      ['viewDocuments', 'documentList', 'fileTable', 'arrayText', 'arrayNumber', 'tableList', 'workflow'].indexOf(item.type) == -1
+      ['viewDocuments', 'documentList', 'fileTable', 'arrayText', 'arrayNumber', 'tableList', 'workflow','singleFileUpload'].indexOf(item.type) == -1
     ) {
       if (item.type == 'datePicker') {
         item.isDate = true;

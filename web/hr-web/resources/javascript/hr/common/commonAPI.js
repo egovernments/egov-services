@@ -707,7 +707,7 @@ function getDropdown(name, cb, params) {
                 getCommonMaster('hr-employee-movement', 'promotionbasis', function (err, res) {
                   if (res) {
                     localStorage.setItem('promotionBasis', JSON.stringify(res['PromotionBasis']));
-                    cb(res['promotionBasis']);
+                    cb(res['PromotionBasis']);
                   } else {
                     cb([]);
                   }

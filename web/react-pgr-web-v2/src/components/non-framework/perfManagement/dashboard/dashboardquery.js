@@ -359,7 +359,6 @@ export default class KPIDashboardQuery extends Component {
     let finYears = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.MdmsRes["egf-master"].FinancialYear[${item}].finYearRange`)).join(',');
     let ulbs = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}]`));
     let kpis = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)[this.state.kpiIndices]['name'];
-    console.log(ulbs)
 
     if (this.state.showChartView) {
       return (

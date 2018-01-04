@@ -1,4 +1,9 @@
 import Api from '../../../../api/api';
+import {
+  flattenArray,
+  getMonth
+} from './helpers';
+
 var jp = require('jsonpath');
 
 /**
@@ -76,13 +81,13 @@ export const fetchCompareSearchAPI = (finYears, kpis, ulbs, cb) => {
   // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2016-17,2017-18&kpiCodes=FFL&ulbs=default,mh.rohatest,mh.aliba&tenantId=default`, [], {}, false, true).then(function(res) {
   
   // VALUE TYPE TEST
-  // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2016-17,2017-18&kpiCodes=PCSOW&ulbs=default,mh.rohatest,mh.aliba&tenantId=default`, [], {}, false, true).then(function(res) {
+  Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2016-17,2017-18&kpiCodes=PCSOW&ulbs=default,mh.rohatest,mh.aliba&tenantId=default`, [], {}, false, true).then(function(res) {
 
   // TEXT TYPE TEST
   // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18&kpiCodes=EWOF&ulbs=default&tenantId=default`, [], {}, false, true).then(function(res) {
 
   // ACTUAL API CALLING
-  Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
+  // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
       if (res && res.ulbs) {
         cb(null, res);
       } else {
@@ -148,3 +153,39 @@ export const parseDepartmentKPIsAsPerKPIType = (res, type) => {
     };
   });
 };
+
+export const parseCompareSearchResponse = (res, isText = false) => {
+  return flattenArray(
+    jp.query(res, '$.ulbs[*]').map((ulbs, index) => {
+      return jp.query(ulbs, '$.finYears[*]').map((finYears, index) => {
+          return jp.query(finYears, '$.kpiValues[*]').map((kpis, index) => {
+              return jp.query(kpis, '$.valueList[*]').map((values, index) => {
+                if (isText) {
+                  return {
+                    ulbName: jp.query(ulbs, '$.ulbName').join(''),
+                    finYear:jp.query(finYears, '$.finYear').join(''),
+                    kpiName:jp.query(kpis, '$.kpi.name').join(''),
+                    target: jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join(''),
+                    value: jp.query(kpis, '$.consolidatedValue').join(''),
+                    period: jp.query(values, '$.period').join('') || 0,
+                    name: getMonth(jp.query(values, '$.period').join('') || '1'),
+                    monthlyValue: jp.query(values, '$.value').join(''),
+                  }
+                } else {
+                  return {
+                    ulbName: jp.query(ulbs, '$.ulbName').join(''),
+                    finYear:jp.query(finYears, '$.finYear').join(''),
+                    kpiName:jp.query(kpis, '$.kpi.name').join(''),
+                    target: parseInt(jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join('')) || 0,
+                    value: parseInt(jp.query(kpis, '$.consolidatedValue').join('')) || 0,
+                    period: jp.query(values, '$.period').join('') || 0,
+                    name: getMonth(jp.query(values, '$.period').join('') || '1'),
+                    monthlyValue: parseInt(jp.query(values, '$.value').join('')) || 0,
+                  }
+                }
+              })
+          })
+      })
+    })
+  );
+}

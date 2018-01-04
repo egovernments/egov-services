@@ -1,6 +1,7 @@
 package org.egov.swm.domain.service;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -88,6 +89,8 @@ public class VehicleScheduleService {
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        DateFormat validationDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleSchedule vehicleSchedule : vehicleScheduleRequest.getVehicleSchedules()) {
 
@@ -144,13 +147,16 @@ public class VehicleScheduleService {
                         "The field Route is Mandatory . It cannot be not be null or empty.Please provide correct value ");
             }
 
-            if (vehicleSchedule.getScheduledFrom() != null)
-                if (!new Date(vehicleSchedule.getScheduledFrom()).equals(new Date().getTime() -
-                        (new Date().getTime() % (24 * 60 * 60 * 1000))) &&
-                        new Date(vehicleSchedule.getScheduledFrom()).before(new Date()))
+            try {
+                if (!validationDateFormat.parse(validationDateFormat.format(vehicleSchedule.getScheduledFrom())).equals(
+                        validationDateFormat.parse(validationDateFormat.format(new Date())))
+                        && new Date(vehicleSchedule.getScheduledFrom()).before(new Date()))
                     throw new CustomException("ScheduledToDate ",
                             "Schedule can not be created for past dates. Please select Today's or Future date: " +
                                     dateFormat.format(new Date(vehicleSchedule.getScheduledFrom())));
+            } catch (ParseException e) {
+                throw new CustomException("ScheduleFrom","Invalid From Date");
+            }
         }
     }
 

@@ -1225,7 +1225,7 @@ class UpdateEviction extends React.Component {
                     <tr key={ind}>
                         <td>{item.createdDate}</td>
                         <td>{item.senderName}</td>
-                        <td>{employeeName[0].code+" :: "+ employeeName[0].name}</td>
+                        <td>{employeeName[0]?employeeName[0].code+" :: "+ employeeName[0].name:""}</td>
                         <td>{item.status}</td>
                         <td>{item.comments}</td>
                     </tr>

@@ -286,6 +286,11 @@ class UpdateRenewal extends React.Component {
             id: stateId
         }).responseJSON["processInstance"] || {};
 
+        var workflow = commonApiPost("egov-common-workflows", "history", "", {
+            tenantId: tenantId,
+            workflowId: stateId
+        }).responseJSON["tasks"] || {};
+
         if (process) {
             if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
                 var _btns = [];
@@ -324,6 +329,7 @@ class UpdateRenewal extends React.Component {
             departmentList: departmentList,
             //owner:process.owner.id,
             wfStatus: process.status,
+            workflow: workflow,
             buttons: _btns ? _btns : []
         });
 
@@ -1242,6 +1248,56 @@ class UpdateRenewal extends React.Component {
             );
         }
 
+        const renederWorkflowHistory = function () {
+            return (
+                <div className="form-section hide-sec" id="agreementCancelDetails">
+                    <h3 className="categoryType">Workflow History </h3>
+                    <div className="form-section-inner">
+
+                        <div id="historyTable" className="land-table">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Updated By</th>
+                                        <th>Current Owner</th>
+                                        <th>Status</th>
+                                        <th>Comments </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {renderTr()}
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </div>
+            );
+        }
+
+        const renderTr = () => {
+            return this.state.workflow.map((item, ind) => {
+
+                var employeeName = commonApiPost("hr-employee", "employees", "_search", {
+                    tenantId: tenantId,
+                    id: item.owner.id
+                }).responseJSON["Employee"] || {};
+        
+
+                return (
+                    <tr key={ind}>
+                        <td>{item.createdDate}</td>
+                        <td>{item.senderName}</td>
+                        <td>{employeeName[0]?employeeName[0].code+" :: "+ employeeName[0].name:""}</td>
+                        <td>{item.status}</td>
+                        <td>{item.comments}</td>
+                    </tr>
+                )
+            })
+        }
+
         const renderWorkFlowDetails = function () {
 
             var flg = 0;
@@ -1363,6 +1419,7 @@ class UpdateRenewal extends React.Component {
                         {renderAllottee()}
                         {renderAgreementDetails()}
                         {renederRenewalDetails()}
+                        {renederWorkflowHistory()}
                         {renderWorkFlowDetails()}
 
                         <br />

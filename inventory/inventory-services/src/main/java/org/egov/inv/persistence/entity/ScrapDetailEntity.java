@@ -3,8 +3,10 @@ package org.egov.inv.persistence.entity;
 import java.math.BigDecimal;
 
 import org.egov.inv.model.AuditDetails;
+import org.egov.inv.model.Material;
 import org.egov.inv.model.Scrap;
 import org.egov.inv.model.ScrapDetail;
+import org.egov.inv.model.Uom;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +32,7 @@ public class ScrapDetailEntity {
     
     private String uom;
     
-    private String lotnumber;
+    private String lotNumber;
     
     private Integer expiryDate;
     
@@ -58,6 +60,9 @@ public class ScrapDetailEntity {
         return scrapDetail.id(id)
                 .scrapNumber(scrapNumber)
                 .expiryDate(expiryDate)
+                .material(buildMaterial())
+                .uom(new Uom().code(uom))
+                .lotNumber(lotNumber)
                 .scrapReason(ScrapDetail.ScrapReasonEnum.fromValue(scrapReason))
                 .quantity(quantity)
                 .disposalQuantity(disposalQuantity)
@@ -65,5 +70,11 @@ public class ScrapDetailEntity {
                 .tenantId(tenantId);
 
     }
+    
+    private Material buildMaterial() {
+        Material material = new Material();
+        return material.code(this.material);
+    }
+
     
 }

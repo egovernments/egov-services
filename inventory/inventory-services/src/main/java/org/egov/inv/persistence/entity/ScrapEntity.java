@@ -1,7 +1,10 @@
 package org.egov.inv.persistence.entity;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import org.egov.inv.model.AuditDetails;
 import org.egov.inv.model.Scrap;
+import org.egov.inv.model.Store;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +26,7 @@ public class ScrapEntity {
     
     private String scrapNumber;
     
-    private String store;
+    private String storeCode;
     
     private Long scrapDate;
     
@@ -47,10 +50,15 @@ public class ScrapEntity {
         return scrap.id(id)
                 .scrapNumber(scrapNumber)
                 .scrapDate(scrapDate)
+                .store(!isEmpty(storeCode)? buildStore(storeCode) : null)
                 .scrapStatus(Scrap.ScrapStatusEnum.fromValue(scrapStatus))
                 .tenantId(tenantId)
                 .auditDetails(buildAuditDetails());
 
+    }
+    private Store buildStore(String storeCode) {
+        Store store = new Store();
+        return store.code(storeCode);
     }
     
     private AuditDetails buildAuditDetails() {

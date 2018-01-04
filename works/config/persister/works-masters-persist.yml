@@ -366,7 +366,7 @@ serviceMaps:
  - version: 1.0
    name: Remarks Master Create and Update
    description: Persists Remarks master in egw_remarks table
-   fromTopic: works-remarks-createandupdate
+   fromTopic: works-masters-remarks-createandupdate
    isTransaction: true
    queryMaps:
     - query: INSERT INTO egw_remarks(id, tenantid, typeOfDocument, remarksType,createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET typeOfDocument=EXCLUDED.typeOfDocument, remarksType=EXCLUDED.remarksType, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;

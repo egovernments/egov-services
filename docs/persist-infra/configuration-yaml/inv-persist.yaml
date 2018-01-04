@@ -1578,3 +1578,50 @@ serviceMaps:
               type: LONG
             - type: CURRENTDATE
               dbType: LONG          
+
+    - version: 1.0
+      name: Scrap
+      description: Update Scrap
+      fromTopic: inv-scrap-update-topic
+      queryMaps:
+        - query: >-
+               update scrap set scrapdate = ?,status = ?,  createdby = ?, createdTime = ?, lastmodifiedby = ?, lastModifiedTime = ? where scrapNumber = ? and tenantid = ?;
+          basePath: $.scraps.*
+          jsonMaps:
+            - jsonPath: $.scraps.*.scrapdate
+            - jsonPath: $.scraps.*.scrapStatus
+            - jsonPath: $.scraps.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.scraps.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.scraps.*.scrapNumber
+            - jsonPath: $.scraps.*.tenantId
+        - query: >-
+                 INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,disposalQuantity,scrapValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 expiryDate = EXCLUDED.expiryDate, quantity = EXCLUDED.quantity, scrapValue = EXCLUDED.scrapValue,
+                 lotNumber = EXCLUDED.lotNumber, disposalQuantity = EXCLUDED.disposalQuantity;
+          basePath: $.scraps.*.scrapDetails.*
+          jsonMaps:
+            - jsonPath: $.scraps.*.scrapDetails.*.id
+            - jsonPath: $.scraps.*.scrapDetails.*.tenantId
+            - jsonPath: $.scraps[?({id} in @.scrapDetails[*].id)].scrapNumber
+            - jsonPath: $.scraps.*.scrapDetails.*.material.code
+            - jsonPath: $.scraps.*.scrapDetails.*.uom.code
+            - jsonPath: $.scraps.*.scrapDetails.*.lotNumber
+            - jsonPath: $.scraps.*.scrapDetails.*.expiryDate
+            - jsonPath: $.scraps.*.scrapDetails.*.scrapReason
+            - jsonPath: $.scraps.*.scrapDetails.*.quantity
+            - jsonPath: $.scraps.*.scrapDetails.*.disposalQuantity
+            - jsonPath: $.scraps.*.scrapDetails.*.scrapValue
+            - jsonPath: $.scraps.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.scraps.*.auditDetails.lastModifiedBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG  

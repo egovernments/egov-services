@@ -49,7 +49,7 @@ public interface ScrapsApi {
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) 
 			@RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid 
-			@RequestBody RequestInfo requestInfo,
+			@RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") 
 			@RequestParam(value = "ids", required = false) List<String> ids,
 			@ApiParam(value = "store of the Scrap ") @RequestParam(value = "store", required = false) String store,

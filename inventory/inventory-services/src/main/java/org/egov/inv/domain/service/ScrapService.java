@@ -18,9 +18,11 @@ import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Scrap;
 import org.egov.inv.model.ScrapDetail;
+import org.egov.inv.model.ScrapDetailSearch;
 import org.egov.inv.model.ScrapRequest;
 import org.egov.inv.model.ScrapResponse;
 import org.egov.inv.model.ScrapSearch;
+import org.egov.inv.persistence.repository.ScrapDetailJdbcRepository;
 import org.egov.inv.persistence.repository.ScrapJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class ScrapService extends DomainService{
 	
 	@Autowired
 	private ScrapJdbcRepository scrapJdbcRepository;
+	
+	@Autowired
+	private ScrapDetailJdbcRepository scrapDetailJdbcRepository;
 	
 	@Value("${inv.scrap.save.topic}")
 	private String createTopic;
@@ -97,6 +102,14 @@ public class ScrapService extends DomainService{
 	
 	public ScrapResponse search(ScrapSearch scrapSearch) {
 		Pagination<Scrap> scrapPagination = scrapJdbcRepository.search(scrapSearch);
+		if (scrapPagination.getPagedData().size() > 0) {
+			
+	            for (Scrap scrap : scrapPagination.getPagedData()) {
+	                List<ScrapDetail> scrapDetail = getScrapDetail(scrap.getScrapNumber(), scrapSearch.getTenantId());
+	                scrap.setScrapDetails(scrapDetail);
+	            }
+	        
+		}
 		ScrapResponse response = new ScrapResponse();
 		return response.responseInfo(null).scraps(scrapPagination.getPagedData().size() > 0
 				? scrapPagination.getPagedData() : Collections.EMPTY_LIST);
@@ -143,8 +156,6 @@ public class ScrapService extends DomainService{
 		InvalidDataException errors = new InvalidDataException();
 		List<ScrapDetail> scrapDetailList = new ArrayList<>();
 		for (Scrap scrap : request.getScraps()) {
-			/*for(ScrapDetail scrapDetail : scrap.getScrapDetails())
-				{*/
 		MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
 													.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())
 													.tenantId(tenantId)
@@ -171,7 +182,15 @@ public class ScrapService extends DomainService{
 			throw errors;
 				}
 		}
-	/*}*/
+	
+	 private List<ScrapDetail> getScrapDetail(String scrapNumber, String tenantId) {
+	        ScrapDetailSearch scrapDetailSearch = ScrapDetailSearch.builder()
+	                .ScrapNumber(scrapNumber)
+	                .tenantId(tenantId)
+	                .build();
+	        Pagination<ScrapDetail> scrapDetails = scrapDetailJdbcRepository.search(scrapDetailSearch);
+	        return scrapDetails.getPagedData().size() > 0 ? scrapDetails.getPagedData() : Collections.EMPTY_LIST;
+	    }
 }
 
 

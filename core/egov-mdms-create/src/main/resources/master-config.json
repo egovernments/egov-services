@@ -207,7 +207,7 @@
       ]
     }
   },
- "PM": {
+  "PM": {
     "KpiCategory": {
       "masterName": "KpiCategory",
       "moduleDefinition": null,
@@ -216,32 +216,27 @@
       ]
     }
   },
-  
   "inventory": {
     "Material": {
       "masterName": "Material",
-       "isStateLevel" : true,
+      "isStateLevel": true,
       "moduleDefinition": null,
       "uniqueKeys": [
         "$.code",
-         "$.tenantId",
+        "$.tenantId"
       ]
     },
-   "MaterialType": {
+    "MaterialType": {
       "masterName": "MaterialType",
-       "isStateLevel" : true,
+      "isStateLevel": true,
       "moduleDefinition": null,
       "uniqueKeys": [
         "$.code",
-         "$.tenantId",
+        "$.tenantId"
       ]
     }
-    
   },
-  
-  
-  
-   "tenant": {
+  "tenant": {
     "tenants": {
       "masterName": "tenants",
       "moduleDefinition": null,
@@ -249,5 +244,5 @@
         "$.code"
       ]
     }
-}
+  }
 }

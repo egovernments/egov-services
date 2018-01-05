@@ -40,6 +40,9 @@ public class MaterialIssueDetail {
 
 	@JsonProperty("quantityIssued")
 	private BigDecimal quantityIssued = null;
+	
+	@JsonProperty("balanceQuantity")
+	private BigDecimal balanceQuantity = null;
 
 	@JsonProperty("value")
 	private BigDecimal value = null;
@@ -198,6 +201,27 @@ public class MaterialIssueDetail {
 
 	public MaterialIssueDetail quantityIssued(BigDecimal quantityIssued) {
 		this.quantityIssued = quantityIssued;
+		return this;
+	}
+
+	/**
+	 * Quantity issued of the Material Issue Detail in Base UOM
+	 * 
+	 * @return quantityIssued
+	 **/
+	@ApiModelProperty(required = true, value = "Quantity issued of the Material Issue Detail in Base UOM ")
+
+
+	public BigDecimal getBalanceQuantity() {
+		return balanceQuantity;
+	}
+
+	public void setBalanceQuantity(BigDecimal balanceQuantity) {
+		this.balanceQuantity = balanceQuantity;
+	}
+	
+	public MaterialIssueDetail balanceQuantity(BigDecimal balanceQuantity) {
+		this.balanceQuantity = balanceQuantity;
 		return this;
 	}
 

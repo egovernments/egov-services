@@ -391,7 +391,7 @@ serviceMaps:
 
        - jsonPath: $.remarks.*.deleted
        
-    - query: INSERT INTO egw_remarks_detail(id, tenantid, remarks, remarksDescription, editable, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET typeOfDocument=EXCLUDED.typeOfDocument, remarksType=EXCLUDED.remarksType, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
+    - query: INSERT INTO egw_remarks_detail(id, tenantid, remarks, remarksDescription, editable, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, remarksDescription=EXCLUDED.remarksDescription,editable=EXCLUDED.editable, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted= EXCLUDED.deleted;
       basePath: $.remarks.*
       jsonMaps:
 

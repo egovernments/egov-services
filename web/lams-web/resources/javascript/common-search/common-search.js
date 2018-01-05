@@ -57,7 +57,7 @@ class CommonSearch extends React.Component {
           }else if(action.toLowerCase()==='remission'){
             window.location.href = "app/remission/create-remission.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }else if(action.toLowerCase()==='modify'){
-            window.location.href = "lams-web/app/dataentry/data-entry.html?type="+assetType+"&assetId="+assetId+"&agreementNumber="+agreementNumber+"&tenantId="+tenantId;
+            window.location.href = "/app/dataentry/data-entry.html?type="+assetType+"&assetId="+assetId+"&agreementNumber="+agreementNumber+"&tenantId="+tenantId;
           }
            }
         }

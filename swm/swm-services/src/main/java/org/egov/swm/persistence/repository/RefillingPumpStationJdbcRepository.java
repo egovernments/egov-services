@@ -162,13 +162,15 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
         List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+        
+        if (boundarys != null) {
 
-        for (Boundary bd : boundarys) {
+            for (Boundary bd : boundarys) {
 
-            boundaryMap.put(bd.getCode(), bd);
+                boundaryMap.put(bd.getCode(), bd);
 
+            }
         }
-
         for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
 
             if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null

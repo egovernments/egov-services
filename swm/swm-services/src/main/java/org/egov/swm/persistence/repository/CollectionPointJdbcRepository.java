@@ -160,20 +160,21 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             tenantId = collectionPointList.get(0).getTenantId();
 
         List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+        
         if (boundarys != null) {
-            System.out.println("boundarys size: " + boundarys.size());
+
             for (Boundary bd : boundarys) {
-                System.out.println("bd.getCode(): " + bd.getCode());
+
                 boundaryMap.put(bd.getCode(), bd);
 
             }
         }
 
         for (CollectionPoint collectionPoint : collectionPointList) {
-            System.out.println("collectionPoint.getLocation(): " + collectionPoint.getLocation());
+
             if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
                     && !collectionPoint.getLocation().getCode().isEmpty()) {
-                System.out.println("collectionPoint.getLocation().getCode(): " + collectionPoint.getLocation().getCode());
+
                 collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
             }
 

@@ -291,9 +291,11 @@ public class VendorJdbcRepository extends JdbcRepository {
         if (servicedLocations != null && !servicedLocations.isEmpty()) {
 
             List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+            if (boundarys != null) {
 
-            for (Boundary b : boundarys) {
-                boundaryMap.put(b.getCode(), b);
+                for (Boundary b : boundarys) {
+                    boundaryMap.put(b.getCode(), b);
+                }
             }
 
             for (ServicedLocations sl : servicedLocations) {

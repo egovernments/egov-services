@@ -381,7 +381,7 @@ public class AgreementValidator {
 			validateJudgement(agreementRequest, errors);
 		} else if (Action.REMISSION.toString().equals(action)) {
 			validateRemission(agreementRequest, errors);
-		} else if (ACTION_MODIFY.equals(action)){
+		} else if (ACTION_MODIFY.equalsIgnoreCase(action)){
 			validateModify(agreementRequest, errors);
 			
 		}

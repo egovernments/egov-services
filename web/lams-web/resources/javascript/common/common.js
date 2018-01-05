@@ -12,42 +12,24 @@ var requestInfo = {
     "key": "xyz",
     "msgId": "654654",
     "requesterId": "61",
-    "authToken": authToken,
-    "userInfo":{
-      "roles":[
-        {"name":"Property Verifier"},
-        {"name":"EMPLOYEE"},
-        {"name":"Property Approver"},
-        {"name":"ULB Operator"},
-        {"name":"Grievance Officer"},
-        {"name":"Redressal Officer"}
-      ],
-      "id":235065,
-      "userName":"926637",
-      "name":"P.V.Ramalingeswar",
-      "emailId":null,
-      "mobileNumber":"0000908469",
-      "type":"EMPLOYEE",
-      "tenantId":"ap.kurnool"
-    }
+    "authToken": authToken
    };
+   var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
 
-   var tenantId = 'ap.kurnool';
+   if (tenantId) {
+     tenantId=tenantId.tenantId;
+   } else {
+     if(window.location.origin.split("-").length>1)
+     {
+       tenantId+=window.location.origin.split("-")[0].split("//")[1]
+     }
+     else {
+       tenantId+=window.location.origin.split(".")[0].split("//")[1]
+     }
 
-  //  if (tenantId) {
-  //    tenantId=tenantId.tenantId;
-  //  } else {
-  //    if(window.location.origin.split("-").length>1)
-  //    {
-  //      tenantId+=window.location.origin.split("-")[0].split("//")[1]
-  //    }
-  //    else {
-  //      tenantId+=window.location.origin.split(".")[0].split("//")[1]
-  //    }
-   //
-  //    tenantId = tenantIds[tenantId] || "ap." + tenantId;
-   //
-  //  }
+     tenantId = tenantIds[tenantId] || "ap." + tenantId;
+
+   }
 function titleCase(field) {
     if (field) {
         var newField = field[0].toUpperCase();

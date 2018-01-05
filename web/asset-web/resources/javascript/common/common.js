@@ -1,6 +1,6 @@
+var authToken = localStorage.getItem("auth-token");
 var baseUrl = window.location.origin;
 
-var authToken = localStorage.getItem("auth-token");
 
 //request info from cookies
 var requestInfo = {
@@ -15,24 +15,22 @@ var requestInfo = {
     "authToken": authToken
 };
 
-// var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
-//
-// if (tenantId) {
-//   tenantId=tenantId.tenantId;
-// } else {
-//   if(window.location.origin.split("-").length>1)
-//   {
-//     tenantId+=window.location.origin.split("-")[0].split("//")[1]
-//   }
-//   else {
-//     tenantId+=window.location.origin.split(".")[0].split("//")[1]
-//   }
-//
-//   tenantId = tenantIds[tenantId] || "ap." + tenantId;
-//
-// }
+var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
 
-tenantId = 'ap.kurnool';
+if (tenantId) {
+  tenantId=tenantId.tenantId;
+} else {
+  if(window.location.origin.split("-").length>1)
+  {
+    tenantId+=window.location.origin.split("-")[0].split("//")[1]
+  }
+  else {
+    tenantId+=window.location.origin.split(".")[0].split("//")[1]
+  }
+
+  tenantId = tenantIds[tenantId] || "ap." + tenantId;
+
+}
 
 function titleCase(field) {
     if (field) {

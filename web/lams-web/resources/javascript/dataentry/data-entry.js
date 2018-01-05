@@ -65,6 +65,7 @@ $(document).on("keyup","input", function() {
 });
 
 var index=1;
+var create = true;
 
 $(document).ready(function() {
 
@@ -84,6 +85,8 @@ $(document).ready(function() {
     //modify - autopopulate the fields
     commonApiPost('lams-services/agreements/_search', '','',{tenantId:tenantId,agreementNumber:getUrlVars()["agreementNumber"]}).then(function(response){
       if(response.Agreements[0].source === 'DATA_ENTRY' ){
+        $('#pageTitle').html('Modify Agreement-- Data Entry');
+        create=false;
         let modifyAgreements = response.Agreements[0];
         // console.log(modifyAgreements);
         // #createAgreementForm select, #createAgreementForm textarea
@@ -98,7 +101,11 @@ $(document).ready(function() {
               $('#governmentOrder').show();
             }
           }
-          $(this).val(value[0] && value[0].toString())
+          if($(this).attr('name') && value[0]){
+            // console.log($(this).attr('name'), value[0]);
+            fillValueToObject({id:$(this).attr('name'),name:$(this).attr('name'),value:value[0]});
+            $(this).val(value[0] && value[0].toString())
+          }
         });
       }else{
         alert('This agreement number is not data entry screen.')
@@ -789,9 +796,16 @@ $("#createAgreementForm").validate({
                 //     // window.open("../../../../app/search-assets/create-agreement-ack.html?&agreement_id=aeiou", "", "width=1200,height=800")
                 //     // console.log(response);
                 // })
+                let actionURL;
+
+                if(create){
+                  actionURL = "/lams-services/agreements/_create?tenantId=";
+                }else{
+                  actionURL="/lams-services/agreements/_modify?tenantId=";
+                }
 
                 var response = $.ajax({
-                    url: baseUrl + "/lams-services/agreements/_create?tenantId=" + tenantId,
+                    url: baseUrl + actionURL + tenantId,
                     type: 'POST',
                     dataType: 'json',
                     data: JSON.stringify({

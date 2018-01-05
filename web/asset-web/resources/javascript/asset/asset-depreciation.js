@@ -2,32 +2,30 @@ var flag = 0;
 class AssetDepreciation extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],searchSet:{
-      "tenantId": tenantId,
-      "name": "",
-      "department": "",
-      "assetCategory": "",
-      "status": "",
-      "code": ""
-   },
-   isSearchClicked:false,
-   assetCategories:[],
-   departments:[],
-   statusList:{},
-   modify: false
- }
+    this.state={
+      searchSet:{
+        tenantId,
+      },
+      error:{
+
+      },
+      isSearchClicked:false,
+    }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.addRemoveAsset=this.addRemoveAsset.bind(this);
+    this.createDepreciation=this.createDepreciation.bind(this);
+    this.getName=this.getName.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.closeWindow = this.closeWindow.bind(this);
   }
 
-  handleChange(e, name) {
+  handleChange(value, property) {
       this.setState({
+          isSearchClicked:false,
           searchSet:{
               ...this.state.searchSet,
-              [name]:e.target.value
+              [property]:value
           }
       })
   }
@@ -38,58 +36,55 @@ class AssetDepreciation extends React.Component {
 
   search(e) {
     e.preventDefault();
-    try {
-      //call api call
-      var _this = this;
-      commonApiPost("asset-services","assets","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
-        if(res) {
-          var list = res["Assets"];
-          list.sort(function(item1, item2) {
-            return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
-          })
-          flag = 1;
-          _this.setState({
-            isSearchClicked: true,
-            list,
-            modify: true
-          });
+    let self = this;
+    let searchSet = {...this.state.searchSet};
 
-          setTimeout(function(){
-            _this.setState({
-              modify: false
-            });
-          }, 1200);
+    if(!searchSet['dateOfDepreciation']){
+       this.setState({
+         ...this.error,
+        error:{
+          dateOfDepreciation:'Required'
         }
-      })
-    } catch(e) {
-      console.log(e);
+      });
+    }else{
+      searchSet['dateOfDepreciation'] = searchSet['dateOfDepreciation'] ? moment(searchSet['dateOfDepreciation'], "DD/MM/YYYY").valueOf() : '';
+      searchSet['dateOfDepreciation'] = searchSet['assetCreatedFrom'] ? moment(searchSet['assetCreatedFrom'], "DD/MM/YYYY").valueOf() : '';
+      searchSet['dateOfDepreciation'] = searchSet['assetCreatedTo'] ? moment(searchSet['assetCreatedTo'], "DD/MM/YYYY").valueOf() : '';
+
+      commonApiPost("asset-services","assets","_search", searchSet, function(err, res) {
+        console.log(res['Assets']);
+        self.setState({
+          resultSet:res['Assets'],
+          error:{},
+          isSearchClicked:true
+        })
+      });
     }
   }
 
   componentWillUpdate() {
-    if(flag == 1) {
-      flag = 0;
       $('#agreementTable').dataTable().fnDestroy();
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (this.state.modify) {
-          $('#agreementTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             "ordering": false,
-             "bDestroy": true,
-             language: {
-                "emptyTable": "No Records"
-             }
-          });
-      }
+    $('#agreementTable').DataTable({
+      dom: 'Bfrtip',
+      buttons: [
+               'excel', 'pdf', 'print'
+       ],
+       "ordering": false,
+       "bDestroy": true,
+       language: {
+          "emptyTable": "No Records"
+       }
+    });
   }
 
   componentDidMount() {
+
+    let {handleChange} = this;
+    let self = this;
+
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
       if(logo_ele && logo_ele[0]) {
@@ -97,36 +92,60 @@ class AssetDepreciation extends React.Component {
       }
     }
 
+   $('.datePicker').datepicker({
+    format: 'dd/mm/yyyy',
+    endDate: '+0d',
+    autoclose:true,
+    defaultDate: ""
+  }).on('changeDate', function (e) {
+     handleChange(e.target.value, e.target.id)
+  });
 
-    $('#fromDate').datepicker({
-     format: 'dd/mm/yyyy',
-     autoclose:true,
-     defaultDate: ""
- });
+   let assetCode = [];
+   let assetName = [];
+   let uniqueNames = [];
 
- $('#fromDate').on('changeDate', function(e) {
-       _this.setState({
-             movement: {
-                 ..._this.state.movement,
-                 "fromDate":$("#fromDate").val(),
-             }
-       });
- });
+   commonApiPost("asset-services", "assetCategories", "_search", { tenantId, assetCategoryType:'IMMOVABLE'}, function(err, res) {
+     self.setState({assetCategory:res.AssetCategory})
+   });
 
- $('#toDate').datepicker({
-  format: 'dd/mm/yyyy',
-  autoclose:true,
-  defaultDate: ""
- });
+   getDropdown("assignments_department", function(res) {
+      self.setState({department:res})
+   });
 
- $('#toDate').on('changeDate', function(e) {
-    _this.setState({
-          movement: {
-              ..._this.state.movement,
-              "toDate":$("#toDate").val(),
-          }
+   commonApiPost("asset-services", "assets", "_search", { tenantId}, function(err, res) {
+     let assets = res.Assets;
+
+     assets.map(asset=>{
+       let obj={};
+       obj['label']=`${asset.code} - ${asset.name}`;
+       obj['value']=`${asset.code}`;
+       assetName.push(asset.name);
+       assetCode.push(obj);
+     });
+
+     $.each(assetName, function(i, el){
+         if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+     });
+
+   });
+
+    //autocomplete for asset
+    $( "#code" ).autocomplete({
+      source: assetCode,
+      change: function( event, ui ) {
+        handleChange(ui.item.value, event.target.id)
+      }
     });
- });
+
+    $( "#name" ).autocomplete({
+      source: uniqueNames,
+      change: function( event, ui ) {
+        if(ui.item){
+          handleChange(ui.item.value, event.target.id);
+        }
+      }
+    });
 
   }
 
@@ -134,41 +153,38 @@ class AssetDepreciation extends React.Component {
     open(location, '_self  ').close();
   }
 
-  handleClick(type, id, status) {
-    if(type == "sale" && status != "CAPITALIZED")
-      return showError("Asset sale/disposal is only possible for assets with status as 'Capitalized'");
-    if(type == "revaluate")
-      window.open(`app/asset/create-asset-revaluation.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
-    else if(type == "sale")
-      window.open(`app/asset/create-asset-sale.html?id=${id}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
-    else
-      window.open(`app/asset/create-asset.html?id=${id}&type=${type}`, '_blank', 'height=760, width=800, scrollbars=yes, status=yes');
+  getName(list, val){
+     if(val){
+      let filteredObj = list.find(obj=>{return obj.id == val});
+      return filteredObj.name || '';
+    }
+  }
+
+  addRemoveAsset(boolean, assetId){
+    console.log(boolean, assetId);
+    if(boolean){
+      //add it to the array
+    }else{
+      //remove it from the array
+    }
+  }
+
+  createDepreciation(){
+
   }
 
   render() {
-      let {handleChange, search, closeWindow, handleClick}=this;
-      let {assetCategory,name,code,department,status}=this.state.searchSet;
-      let {isSearchClicked,list, departments}=this.state;
+      let {handleChange, search, closeWindow, getName, handleClick, addRemoveAsset}=this;
+      let {isSearchClicked, assetCategory, department, resultSet}=this.state;
+      console.log(this.state);
 
-      const renderOption = function(list, statusBool) {
-          if(list) {
+      const renderOptions = function(list)
+      {
+          if(list)
+          {
               if (list.length) {
-                if(statusBool) {
-                  return list.map((item, ind) => {
-                    return (<option key={ind} value={item.code}>
-                            {item.code}
-                      </option>)
-                  })
-                };
-
-                list.sort(function(item1, item2) {
-                  if(item1.name && item2.name)
-                    return item1.name.toLowerCase() > item2.name.toLowerCase() ? 1 : item1.name.toLowerCase() < item2.name.toLowerCase() ? -1 : 0;
-                  else
-                    return 0;
-                });
-
-                return list.map((item)=> {
+                return list.map((item)=>
+                {
                     return (<option key={item.id} value={item.id}>
                             {item.name}
                       </option>)
@@ -188,18 +204,19 @@ class AssetDepreciation extends React.Component {
       }
 
       const showTable = function() {
-        if(isSearchClicked)
-        {
             return (
+              <div>
               <table id="agreementTable" className="table table-bordered">
                   <thead>
                   <tr>
+                      <th><input type="checkbox" className="checkAll"/></th>
                       <th>Sr. No.</th>
-                      <th>Code</th>
-                      <th>Name</th>
-                      <th>Asset Category Type</th>
+                      <th>Asset Category Name</th>
                       <th>Department</th>
-                      <th>Status</th>
+                      <th>Asset Code</th>
+                      <th>Asset Name</th>
+                      <th>Current Gross Value(Rs.)</th>
+                      <th>Depreciation Rate(%)</th>
                   </tr>
                   </thead>
                   <tbody id="agreementSearchResultTableBody">
@@ -209,22 +226,26 @@ class AssetDepreciation extends React.Component {
                       </tbody>
 
              </table>
+             <button type="button" className="btn btn-submit">Create</button>
+             </div>
             )
-        }
     }
 
     const renderBody = function() {
-      if (list.length>0) {
-        return list.map((item,index)=>
+      if (resultSet.length>0) {
+        return resultSet.map((item,index)=>
         {
-              return (<tr key={index} onClick={() => {handleClick(getUrlVars()["type"], item.id, item.status)}}>
+              return(
+                <tr key={index}>
+                        <td><input type="checkbox" className="depreciationCheck" onClick={(e)=>{addRemoveAsset(e.target.checked, item.id)}} /></td>
                         <td>{index+1}</td>
+                        <td>{item.assetCategory.name}</td>
+                        <td>{getName(department,item.department.id)}</td>
                         <td>{item.code}</td>
                         <td>{item.name}</td>
-                        <td>{item.assetCategory.name}</td>
-                        <td>{getNameById(departments,item.department.id)}</td>
-                        <td>{item.status}</td>
-                  </tr>  );
+                        <td>{item.grossValue}</td>
+                        <td>{item.assetCategory.depreciationRate}</td>
+                </tr>);
         })
       }
     }
@@ -234,42 +255,73 @@ class AssetDepreciation extends React.Component {
 
       <div className="form-section-inner">
         <form onSubmit={(e)=>{search(e)}}>
-
-        <div className="row">
-          <label className="col-sm-3 control-label text-right"> Financial Year</label>
-          <div className="col-sm-3 add-margin">
-            <select className="form-control" onChange={(e)=>{handleChange(e.target.value,"financialYear")}}>
-              <option value="null">Select</option>
-              <option value="2016-17">2016-17</option>
-              <option value="2017-18">2017-18</option>
-            </select>
+          <div className="row">
+            <label className="col-sm-3 control-label text-right">Date of Depreciation <span className="error"> *</span></label>
+            <div className="col-sm-3 add-margin">
+              <input type="text" className="datePicker" name="dateOfDepreciation" id="dateOfDepreciation"
+              onChange={(e)=>{handleChange(e.target.value,"dateOfDepreciation")}} />
+              <label className="error">{this.state.error.dateOfDepreciation}</label>
+            </div>
+            <label className="col-sm-2 control-label text-right">Asset Category Type</label>
+            <div className="col-sm-3 add-margin">
+              <select className="form-control" id="assetCategoryType" onChange={(e)=>{handleChange(e.target.value,"assetCategoryType")}}>
+                <option value="">Select</option>
+                {renderOptions(assetCategory)}
+              </select>
+            </div>
           </div>
-          <label className="col-sm-2 control-label text-right"> From Date</label>
-          <div className="col-sm-3 add-margin">
-            <input type="text" className="fromDate" name="fromDate" id="fromDate"
-            onChange={(e)=>{handleChange(e.target.value,"fromDate")}} />
+          <div className="row">
+            <label className="col-sm-3 control-label text-right">Asset Category Name</label>
+            <div className="col-sm-3 add-margin">
+              <select className="form-control" id="assetCategory" name="" onChange={(e)=>{handleChange(e.target.value,"assetCategory")}}>
+                <option value="">Select</option>
+              </select>
+            </div>
+            <label className="col-sm-2 control-label text-right">Department</label>
+            <div className="col-sm-3 add-margin">
+              <select className="form-control" id="department" onChange={(e)=>{handleChange(e.target.value,"department")}}>
+                <option value="">Select</option>
+                {renderOptions(department)}
+              </select>
+            </div>
           </div>
-        </div>
-        <div className="row">
-          <label className="col-sm-3 control-label text-right"> To Date</label>
-          <div className="col-sm-3 add-margin">
-            <input type="text" className="toDate" name="toDate  " id="toDate"
-            onChange={(e)=>{handleChange(e.target.value,"toDate")}}/>
+          <div className="row">
+            <label className="col-sm-3 control-label text-right"> From Date</label>
+            <div className="col-sm-3 add-margin">
+              <input type="text" className="datePicker" name="assetCreatedFrom" id="assetCreatedFrom"
+              onChange={(e)=>{handleChange(e.target.value,"assetCreatedFrom")}} />
+            </div>
+            <label className="col-sm-2 control-label text-right"> To Date</label>
+            <div className="col-sm-3 add-margin">
+              <input type="text" className="datePicker" name="assetCreatedTo" id="assetCreatedTo"
+              onChange={(e)=>{handleChange(e.target.value,"assetCreatedTo")}}/>
+            </div>
           </div>
-        </div>
+          <div className="row">
+            <label className="col-sm-3 control-label text-right">Asset Code</label>
+            <div className="col-sm-3 add-margin">
+              <input type="text" className="" name="code" id="code"
+              onChange={(e)=>{handleChange(e.target.value,"code")}} />
+            </div>
+            <label className="col-sm-2 control-label text-right">Asset Name</label>
+            <div className="col-sm-3 add-margin">
+              <input type="text" className="" name="name" id="name"
+              onChange={(e)=>{handleChange(e.target.value,"name")}} />
+            </div>
+          </div>
           <br/>
-
               <div className="text-center">
                   <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
                   <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
               </div>
           </form>
-    </div>
-          <div className="table-cont" id="table">
-              {showTable()}
-
           </div>
-</div>
+          <div className="table-cont" id="table">
+              {isSearchClicked ?
+                showTable(): ''
+              }
+          </div>
+          </div>
 
     );
   }

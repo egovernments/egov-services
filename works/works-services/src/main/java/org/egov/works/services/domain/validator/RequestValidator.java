@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
-import org.egov.works.WorksServicesApplication;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.DetailedEstimateOfflineStatus;
 import org.egov.works.commons.web.contract.DetailedEstimateStatus;
@@ -49,6 +48,11 @@ import net.minidev.json.JSONArray;
 @Service
 public class RequestValidator {
 
+    private static final String SHOULD_BE_GREATER_THEN = " should be greater then";
+    private static final String STATUS_DATE_FOR = "Status Date for ";
+    private static final String SHOULD_BE_SET_AFTER_STATUS = " should be set After status ";
+    public static final String KEY_OFFLINESTATUS_STATUS_ORDER_INCORRECT = "works.offlinestatus.order.incorrect";
+    public static final String KEY_OFFLINESTATUS_DATE_ORDER_INCORRECT = "works.offlinestatus.order.incorrect";
     @Autowired
     private OfflineStatusService offlineStatusService;
 
@@ -232,10 +236,12 @@ public class RequestValidator {
 
     private void validateStatusDate(OfflineStatusRequest offlineStatusRequest, Map<String, String> messages) {
         final List<OfflineStatus> newOfflineStatus = offlineStatusRequest.getOfflineStatuses();
+        StringBuilder s = new StringBuilder();
         for (int a = 0; a < newOfflineStatus.size() - 1; a++)
             if (newOfflineStatus.get(a).getStatusDate() > newOfflineStatus.get(a + 1).getStatusDate()) {
-                messages.put("Incorrect Date for Order", "Status Date for " + newOfflineStatus.get(a + 1).getStatus()
-                        + " should be greater then" + newOfflineStatus.get(a).getStatus());
+                messages.put(KEY_OFFLINESTATUS_DATE_ORDER_INCORRECT,
+                        s.append(STATUS_DATE_FOR).append(newOfflineStatus.get(a + 1).getStatus())
+                                .append(SHOULD_BE_GREATER_THEN).append(newOfflineStatus.get(a).getStatus()).toString());
                 break;
             }
     }
@@ -251,9 +257,9 @@ public class RequestValidator {
         for (final String statName : offlineStatusService.getStatusNameDetails(selectedStatusArr)) {
             if (!OffStatuses.isEmpty() && !statName.equals(OffStatuses.get(b))) {
 
-                String s = statName + " should be set After status " + OffStatuses.get(OffStatuses.indexOf(statName) - 1);
-
-                messages.put("Please Send Proper order", s);
+                StringBuilder s = new StringBuilder();
+                s.append(statName).append(SHOULD_BE_SET_AFTER_STATUS).append(OffStatuses.get(OffStatuses.indexOf(statName) - 1));
+                messages.put(KEY_OFFLINESTATUS_STATUS_ORDER_INCORRECT, s.toString());
                 break;
             }
             b++;

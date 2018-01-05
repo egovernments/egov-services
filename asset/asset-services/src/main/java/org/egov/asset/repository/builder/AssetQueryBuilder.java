@@ -60,7 +60,7 @@ public class AssetQueryBuilder {
 
     private static final String BASE_QUERY = "SELECT *, asset.id AS assetId,assetcategory.id AS assetcategoryId,"
             + "asset.name as assetname,asset.code as assetcode,"
-            + "assetcategory.name AS assetcategoryname,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as "
+            + "assetcategory.name AS assetcategoryname,assetcategory.assetcategorytype as assetcategorytype,assetcategory.code AS assetcategorycode,ywd.id as ywd_id,ywd.depreciationrate as "
             + "ywd_depreciationrate,assetcategory.depreciationrate as assetcategory_depreciationrate"
             + " FROM egasset_asset asset " + "INNER JOIN egasset_assetcategory assetcategory "
             + "ON asset.assetcategory = assetcategory.id " + "LEFT OUTER JOIN egasset_yearwisedepreciation ywd "
@@ -137,6 +137,12 @@ public class AssetQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" ASSET.assetCategory = ?");
             preparedStatementValues.add(searchAsset.getAssetCategory());
+        }
+        
+        if (searchAsset.getAssetCategoryType() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" assetCategory.assetcategorytype = ?");
+            preparedStatementValues.add(searchAsset.getAssetCategoryType());
         }
 
         if (searchAsset.getStatus() != null) {

@@ -893,6 +893,7 @@ class CreateAsset extends React.Component {
 
       $('#dateOfCreation').datepicker({
           format: 'dd/mm/yyyy',
+          endDate: new Date(),
           autoclose: true
       });
 
@@ -2018,7 +2019,7 @@ class CreateAsset extends React.Component {
                               <input type="text" id="dateOfCreation" className="datepicker" name="dateOfCreation" value= {dateOfCreation}
                                 onChange={(e)=>{handleChange(e,"dateOfCreation")}}  disabled={readonly || getUrlVars()["type"] == "update"}/>
                           </div>
-                
+
                         </div>
                     </div>
                     <div className="col-sm-6">

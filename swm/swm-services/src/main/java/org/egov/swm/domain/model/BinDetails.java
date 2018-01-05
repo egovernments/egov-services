@@ -26,19 +26,19 @@ public class BinDetails {
     @JsonProperty("collectionPoint")
     private String collectionPoint = null;
 
-    @Length(min = 1, max = 128)
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
     @NotNull
-    @Length(min = 1, max = 256)
+    @Length(min = 1, max = 256, message = "Value of assetOrBinId shall be between 1 and 256")
     @JsonProperty("assetOrBinId")
     private String assetOrBinId = null;
 
     @JsonProperty("rfidAssigned")
     private Boolean rfidAssigned = null;
 
-    @Size(min = 0, max = 256)
+    @Size(min = 0, max = 256, message = "Value of rfid shall be between 0 and 256")
     @JsonProperty("rfid")
     private String rfid = null;
 

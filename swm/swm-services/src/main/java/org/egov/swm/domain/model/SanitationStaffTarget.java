@@ -24,11 +24,11 @@ import lombok.Setter;
 public class SanitationStaffTarget {
 
     @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
-    @Size(min = 0, max = 256)
+    @Size(min = 0, max = 256, message = "Value of targetNo shall be between 1 and 256")
     @JsonProperty("targetNo")
     private String targetNo = null;
 

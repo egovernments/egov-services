@@ -21,7 +21,7 @@ import lombok.Setter;
 public class RouteCollectionPointMap {
 
     @NotNull
-    @Length(min = 1, max = 128)
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 

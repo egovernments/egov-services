@@ -19,12 +19,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RefillingPumpStation {
 
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = 256, message = "Value of code shall be between 1 and 128")
     @JsonProperty("code")
     private String code = null;
 
     @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -33,7 +33,7 @@ public class RefillingPumpStation {
     private Boundary location = null;
 
     @NotNull
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = 256, message = "Value of name shall be between 1 and 256")
     @JsonProperty("name")
     private String name = null;
 
@@ -41,7 +41,7 @@ public class RefillingPumpStation {
     @JsonProperty("typeOfPump")
     private OilCompany typeOfPump = null;
 
-    @Size(min = 0, max = 300)
+    @Size(min = 0, max = 300, message = "Value of remarks shall be between 1 and 128")
     @JsonProperty("remarks")
     private String remarks = null;
 
@@ -50,7 +50,7 @@ public class RefillingPumpStation {
     private FuelType typeOfFuel = null;
 
     @JsonProperty("quantity")
-    @Max(value = 10000, message = "Quantity shall be between 0 and 10000 litres")
+    @Max(value = 10000, message = "Value of Quantity shall be between 0 and 10000 litres")
     private Double quantity = null;
 
     @JsonProperty("auditDetails")

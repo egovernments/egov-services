@@ -22,12 +22,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SourceSegregation {
 
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = 256, message = "Value of code shall be between 1 and 256")
     @JsonProperty("code")
     private String code = null;
 
     @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 

@@ -21,18 +21,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ManufacturingDetails {
 
-    @Length(min = 1, max = 256)
+    @Length(min = 1, max = 256, message = "Value of engineSrNumber shall be between 1 and 256")
     @JsonProperty("engineSrNumber")
     private String engineSrNumber = null;
 
     @NotNull
-    @Length(min = 1, max = 256)
+    @Length(min = 1, max = 256, message = "Value of chassisSrNumber shall be between 1 and 128")
     @JsonProperty("chassisSrNumber")
     private String chassisSrNumber = null;
 
     @NotNull
-    @Min(value = 0)
-    @Max(value = 100)
+    @Min(value = 0, message = "Value of vehicleCapacity shall be grater minimum 0")
+    @Max(value = 100, message = "Value of vehicleCapacity shall be less than 101")
     @JsonProperty("vehicleCapacity")
     private Double vehicleCapacity = null;
 

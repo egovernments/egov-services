@@ -52,7 +52,7 @@ public class Tenant {
     private String code = null;
 
     @NotNull
-    @Length(max = 256)
+    @Length(max = 256, message = "Value of name shall less than 257")
     @JsonProperty("name")
     private String name = null;
 
@@ -74,27 +74,27 @@ public class Tenant {
     @JsonProperty("type")
     private TypeEnum type = null;
 
-    @Length(max = 300)
+    @Length(max = 300, message = "Value of address shall less than 301")
     @JsonProperty("address")
     private String address = null;
 
-    @Length(max = 16)
+    @Length(max = 16, message = "Please Enter 16 digit contact number")
     @JsonProperty("contactNumber")
     private String contactNumber = null;
 
-    @Length(max = 16)
+    @Length(max = 16, message = "Please Enter 16 digit help line number")
     @JsonProperty("helpLineNumber")
     private String helpLineNumber = null;
 
-    @Length(max = 100)
+    @Length(max = 100, message = "Value of twitterUrl shall less than 101")
     @JsonProperty("twitterUrl")
     private String twitterUrl = null;
 
-    @Length(max = 100)
+    @Length(max = 100, message = "Value of facebookUrl shall less than 101")
     @JsonProperty("facebookUrl")
     private String facebookUrl = null;
 
-    @Length(max = 100)
+    @Length(max = 100, message = "Value of emailId shall less than 101")
     @JsonProperty("emailId")
     private String emailId = null;
 

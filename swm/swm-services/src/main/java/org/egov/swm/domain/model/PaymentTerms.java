@@ -22,7 +22,7 @@ public class PaymentTerms {
     private Long noOfDays = null;
 
     @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = 20, message = "Value of label shall be between 1 and 20")
     @JsonProperty("label")
     private String label = null;
 

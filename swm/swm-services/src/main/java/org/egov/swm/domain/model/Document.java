@@ -20,17 +20,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Document {
 
-    @Length(min = 1, max = 256)
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("id")
     private String id = null;
 
     @NotNull
-    @Length(min = 1, max = 128)
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
     @NotNull
-    @Length(min = 1, max = 256)
+    @Length(min = 1, max = 256, message = "Value of refCode shall be between 1 and 256")
     @JsonProperty("refCode")
     private String refCode = null;
 

@@ -46,11 +46,11 @@ public class City {
     @JsonProperty("latitude")
     private BigDecimal latitude = null;
 
-    @Length(max = 100)
+    @Length(max = 100, message = "Value of shapeFileLocation shall be less than 101")
     @JsonProperty("shapeFileLocation")
     private String shapeFileLocation = null;
 
-    @Length(max = 100)
+    @Length(max = 100, message = "Value of captcha shall be less than 101")
     @JsonProperty("captcha")
     private String captcha = null;
 

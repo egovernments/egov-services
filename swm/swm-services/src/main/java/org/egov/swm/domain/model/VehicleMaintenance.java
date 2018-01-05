@@ -21,12 +21,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleMaintenance {
 
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = 256, message = "Value of code shall be between 1 and 128")
     @JsonProperty("code")
     private String code = null;
 
     @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -35,7 +35,7 @@ public class VehicleMaintenance {
     private Vehicle vehicle = null;
 
     @NotNull
-    @Size(min = 2, max = 5)
+    @Size(min = 2, max = 5, message = "Value of maintenance uom shall be between 2 and 5")
     @JsonProperty("maintenanceUom")
     private String maintenanceUom = null;
 
@@ -44,7 +44,7 @@ public class VehicleMaintenance {
     private Long maintenanceAfter = null;
 
     @NotNull
-    @Size(min = 3, max = 5)
+    @Size(min = 3, max = 5, message = "Value of downtimeforMaintenanceUom shall be between 3 and 5")
     @JsonProperty("downtimeforMaintenanceUom")
     private String downtimeforMaintenanceUom = null;
 

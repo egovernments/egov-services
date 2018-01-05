@@ -25,11 +25,11 @@ import lombok.Setter;
 public class VendorPaymentDetails {
 
     @NotNull
-    @Size(min = 1, max = 128)
+    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId;
 
-    @Length(min = 1, max = 128)
+    @Length(min = 1, max = 128, message = "Value of paymentNo shall be between 1 and 128")
     @JsonProperty("paymentNo")
     private String paymentNo;
 
@@ -45,7 +45,7 @@ public class VendorPaymentDetails {
     private List<Document> documents;
 
     @NotNull
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = 256, message = "Value of invoiceNo shall be between 1 and 256")
     @JsonProperty("invoiceNo")
     private String invoiceNo;
 

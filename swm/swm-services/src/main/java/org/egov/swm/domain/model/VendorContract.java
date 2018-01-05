@@ -22,7 +22,7 @@ import lombok.Setter;
 public class VendorContract {
 
     @NotNull
-    @Length(min = 1, max = 128)
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -30,7 +30,7 @@ public class VendorContract {
     @JsonProperty("vendor")
     private Vendor vendor = null;
 
-    @Size(min = 6, max = 128)
+    @Size(min = 6, max = 128, message = "Value of contractNo shall be between 6 and 128")
     @JsonProperty("contractNo")
     private String contractNo = null;
 
@@ -58,7 +58,7 @@ public class VendorContract {
     @JsonProperty("paymentTerms")
     private PaymentTerms paymentTerms = null;
 
-    @Length(min = 0, max = 500)
+    @Length(min = 0, max = 500, message = "Value of remarks shall be between 0 and 500")
     @JsonProperty("remarks")
     private String remarks = null;
 

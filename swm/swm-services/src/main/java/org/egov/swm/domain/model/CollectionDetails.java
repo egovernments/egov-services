@@ -21,11 +21,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionDetails {
 
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = 256, message = "Value of id shall be between 1 and 256")
     @JsonProperty("id")
     private String id = null;
 
-    @Size(min = 1, max = 256)
+    @Size(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 

@@ -20,7 +20,7 @@ import lombok.Setter;
 public class InsuranceDetails {
 
     @NotNull
-    @Length(min = 1, max = 256)
+    @Length(min = 1, max = 256, message = "Value of insuranceNumber shall be between 1 and 256")
     @JsonProperty("insuranceNumber")
     private String insuranceNumber = null;
 

@@ -37,7 +37,7 @@ public class SiteDetails {
     private Double capacity;
 
     @JsonProperty("address")
-    @Length(min = 15, max = 500)
+    @Length(min = 15, max = 500, message = "Value of address shall be between 15 and 500")
     @NotNull
     private String address;
 
@@ -58,7 +58,7 @@ public class SiteDetails {
     private Boolean bankGuarantee;
 
     @JsonProperty("bankName")
-    @Length(min = 0, max = 256)
+    @Length(min = 0, max = 256, message = "Value of bankName shall be between 1 and 256")
     private String bankName;
 
     @JsonProperty("bankValidityFrom")

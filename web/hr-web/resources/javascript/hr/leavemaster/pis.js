@@ -215,6 +215,7 @@ class PersonalInform extends React.Component {
             tenantId,
             asOnDate: today,
             active: true,
+            isPrimary: true,
             departmentId: department || null,
             designationId: designation || null,
             code: employee || null,

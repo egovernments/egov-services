@@ -30,9 +30,6 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
 
     @Autowired
-    private FuelTypeService fuelTypeService;
-
-    @Autowired
     private RefillingPumpStationService refillingPumpStationService;
 
     @Autowired
@@ -75,6 +72,16 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("transactionDate =:transactionDate");
             paramValues.put("transactionDate", searchRequest.getTransactionDate());
+        }
+        if(searchRequest.getTransactionFromDate() != null){
+            addAnd(params);
+            params.append("transactionDate >= :transactionFromDate");
+            paramValues.put("transactionFromDate", searchRequest.getTransactionFromDate());
+        }
+        if(searchRequest.getTransactionToDate() != null){
+            addAnd(params);
+            params.append("transactionDate <= :transactionToDate");
+            paramValues.put("transactionToDate", searchRequest.getTransactionToDate());
         }
         if (searchRequest.getFuelTypeCode() != null) {
             addAnd(params);

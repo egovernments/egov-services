@@ -14,6 +14,8 @@ public class VehicleFuellingDetailsSearch extends VehicleFuellingDetails {
     private String regNumber;
     private String fuelTypeCode;
     private String refuellingStationName;
+    private Long transactionFromDate;
+    private Long transactionToDate;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

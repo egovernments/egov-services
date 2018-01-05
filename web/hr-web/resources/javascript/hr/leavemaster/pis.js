@@ -215,6 +215,8 @@ class PersonalInform extends React.Component {
             tenantId,
             leaveType:leaveType||null,
             year:calendarYear||null,
+            departmentId: department || null,
+            code: employee || null,
             pageSize: 500
     }, function(err, res) {
       if(res) {

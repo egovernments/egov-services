@@ -204,8 +204,6 @@ public class PurchaseOrderService extends DomainService {
                 List<String> detailSequenceNos = purchaseOrderRepository.getSequence(PurchaseOrderDetail.class.getSimpleName(), purchaseOrder.getPurchaseOrderDetails().size());
 
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
-                
-                	 
                 	
                 	totalAmount = totalAmount.add(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUnitPrice()).add(totalAmount));
                 	

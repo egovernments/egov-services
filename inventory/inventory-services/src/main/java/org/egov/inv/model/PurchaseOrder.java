@@ -116,6 +116,9 @@ public class PurchaseOrder   {
   @JsonProperty("advanceAmount")
   private BigDecimal advanceAmount = null;
 
+  @JsonProperty("totalAdvancePaidAmount")
+  private BigDecimal totalAdvancePaidAmount=null;
+  
   @JsonProperty("advancePercentage")
   private BigDecimal advancePercentage = null;
 
@@ -377,6 +380,25 @@ public class PurchaseOrder   {
 
   public void setAdvanceAmount(BigDecimal advanceAmount) {
     this.advanceAmount = advanceAmount;
+  }
+  
+  public PurchaseOrder totalAdvancePaidAmount(BigDecimal totalAdvancePaidAmount) {
+	    this.totalAdvancePaidAmount = totalAdvancePaidAmount;
+	    return this;
+	  }
+
+ /**
+   * totalAdvancePaidAmount of the PurchaseOrder 
+   * @return totalAdvancePaidAmount
+  **/
+  @ApiModelProperty(value = "totalAdvancePaidAmount of the PurchaseOrder ")
+
+  public BigDecimal getTotalAdvancePaidAmount() {
+    return totalAdvancePaidAmount;
+  }
+
+  public void setTotalAdvancePaidAmount(BigDecimal totalAdvancePaidAmount) {
+    this.totalAdvancePaidAmount = totalAdvancePaidAmount;
   }
   
   public PurchaseOrder totalAmount(BigDecimal totalAmount) {
@@ -693,6 +715,7 @@ public class PurchaseOrder   {
         Objects.equals(this.rateType, purchaseOrder.rateType) &&
         Objects.equals(this.supplier, purchaseOrder.supplier) &&
         Objects.equals(this.advanceAmount, purchaseOrder.advanceAmount) &&
+        Objects.equals(this.totalAdvancePaidAmount, purchaseOrder.totalAdvancePaidAmount) &&
         Objects.equals(this.advancePercentage, purchaseOrder.advancePercentage) &&
         Objects.equals(this.expectedDeliveryDate, purchaseOrder.expectedDeliveryDate) &&
         Objects.equals(this.deliveryTerms, purchaseOrder.deliveryTerms) &&
@@ -710,7 +733,7 @@ public class PurchaseOrder   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, workFlowDetails, stateId, purchaseOrderDetails, fileStoreId, designation, auditDetails, indentNumbers);
+    return Objects.hash(id, tenantId, store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, totalAdvancePaidAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, workFlowDetails, stateId, purchaseOrderDetails, fileStoreId, designation, auditDetails, indentNumbers);
   }
 
   @Override
@@ -727,6 +750,7 @@ public class PurchaseOrder   {
     sb.append("    rateType: ").append(toIndentedString(rateType)).append("\n");
     sb.append("    supplier: ").append(toIndentedString(supplier)).append("\n");
     sb.append("    advanceAmount: ").append(toIndentedString(advanceAmount)).append("\n");
+    sb.append("    totalAdvancePaidAmount: ").append(toIndentedString(totalAdvancePaidAmount)).append("\n");
     sb.append("    advancePercentage: ").append(toIndentedString(advancePercentage)).append("\n");
     sb.append("    expectedDeliveryDate: ").append(toIndentedString(expectedDeliveryDate)).append("\n");
     sb.append("    deliveryTerms: ").append(toIndentedString(deliveryTerms)).append("\n");

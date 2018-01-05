@@ -115,26 +115,53 @@ public class ScrapService extends DomainService{
 				? scrapPagination.getPagedData() : Collections.EMPTY_LIST);
 	}
 	
-	private void validate(List<Scrap> receipt, String method, String tenantId,RequestInfo info) {
+	private void validate(List<Scrap> scrap, String method, String tenantId,RequestInfo info) {
 		InvalidDataException errors = new InvalidDataException();
 
 		try {
 			switch (method) {
 				case Constants.ACTION_CREATE: {
-					if (receipt == null) {
+					if (scrap == null) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"scrap", null);
 					} 
 				}
 					break;
 	
 				case Constants.ACTION_UPDATE: {
-					if (receipt == null) {
+					if (scrap == null) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"scrap", null);
 					}
 				}
 					break;
 	
 				}
+			for(Scrap scrapData : scrap )
+			{
+				if(null == scrapData.getScrapDate())
+				{
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"scrap Date", null);
+
+				}
+				
+				if(null == scrapData.getStore().getName() || scrapData.getStore().getName().isEmpty())
+				{
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Store Name", null);
+
+				}
+				if(null == scrapData.getDescription() ||  scrapData.getDescription().isEmpty())
+				{
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Description", null);
+				}
+				for(ScrapDetail scrapdetail : scrapData.getScrapDetails())
+				{
+					
+					if(null == scrapdetail.getScrapQuantity())
+					{
+						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Scrap Quantity", null);
+					}
+					
+				}
+			}
 		}catch(IllegalArgumentException e){
 			throw e;
 		}
@@ -178,7 +205,7 @@ public class ScrapService extends DomainService{
 			scrapDetail.setExistingValue(detail.getValue());
 			scrapDetail.setQuantity(detail.getQuantityIssued());
 			scrapDetail.setScrapQuantity(scrapDetails.getScrapQuantity());
-			scrapDetail.setScrapReason(scrapDetails.getScrapReason());
+			scrapDetail.setUserQuantity(detail.getUserQuantityIssued());
 			scrapDetail.setScrapValue(scrapDetails.getScrapValue());
 			scrapDetailList.add(scrapDetail);
 			}

@@ -116,7 +116,7 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.driver.code
 
-       - jsonPath: $.vehicles.*.vendor.name
+       - jsonPath: $.vehicles.*.vendor.vendorNo
 
        - jsonPath: $.vehicles.*.purchaseInfo.purchaseDate
          dbType: LONG
@@ -198,7 +198,7 @@ serviceMaps:
 
        - jsonPath: $.vehicles.*.driver.code
 
-       - jsonPath: $.vehicles.*.vendor.name
+       - jsonPath: $.vehicles.*.vendor.vendorNo
 
        - jsonPath: $.vehicles.*.purchaseInfo.purchaseDate
          dbType: LONG

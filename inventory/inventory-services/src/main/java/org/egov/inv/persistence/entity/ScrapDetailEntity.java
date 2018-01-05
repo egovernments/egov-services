@@ -40,6 +40,8 @@ public class ScrapDetailEntity {
     
     private BigDecimal quantity;
     
+    private BigDecimal scrapQuantity;
+    
     private BigDecimal userQuantity;
     
     private BigDecimal disposalQuantity;
@@ -69,6 +71,7 @@ public class ScrapDetailEntity {
                 .lotNumber(lotNumber)
                 .scrapReason(ScrapDetail.ScrapReasonEnum.fromValue(scrapReason))
                 .quantity(quantity)
+                .scrapQuantity(scrapQuantity)
                 .userQuantity(userQuantity)
                 .disposalQuantity(disposalQuantity)
                 .existingValue(existingValue)

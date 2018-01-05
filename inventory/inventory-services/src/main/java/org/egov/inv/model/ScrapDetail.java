@@ -93,6 +93,9 @@ public class ScrapDetail   {
   @JsonProperty("quantity")
   private BigDecimal quantity = null;
 
+  @JsonProperty("scrapQuantity")
+  private BigDecimal scrapQuantity = null;
+
   @JsonProperty("userQuantity")
   private BigDecimal userQuantity = null;
 
@@ -334,6 +337,27 @@ public class ScrapDetail   {
     this.quantity = quantity;
   }
 
+  public ScrapDetail scrapQuantity(BigDecimal scrapQuantity) {
+    this.scrapQuantity = scrapQuantity;
+    return this;
+  }
+
+   /**
+   * scrap quantity of the ScrapDetail 
+   * @return scrapQuantity
+  **/
+  @ApiModelProperty(value = "scrap quantity of the ScrapDetail ")
+
+  @Valid
+
+  public BigDecimal getScrapQuantity() {
+    return scrapQuantity;
+  }
+
+  public void setScrapQuantity(BigDecimal scrapQuantity) {
+    this.scrapQuantity = scrapQuantity;
+  }
+
   public ScrapDetail userQuantity(BigDecimal userQuantity) {
     this.userQuantity = userQuantity;
     return this;
@@ -439,6 +463,7 @@ public class ScrapDetail   {
         Objects.equals(this.expiryDate, scrapDetail.expiryDate) &&
         Objects.equals(this.scrapReason, scrapDetail.scrapReason) &&
         Objects.equals(this.quantity, scrapDetail.quantity) &&
+        Objects.equals(this.scrapQuantity, scrapDetail.scrapQuantity) &&
         Objects.equals(this.userQuantity, scrapDetail.userQuantity) &&
         Objects.equals(this.disposalQuantity, scrapDetail.disposalQuantity) &&
         Objects.equals(this.existingValue, scrapDetail.existingValue) &&
@@ -447,7 +472,7 @@ public class ScrapDetail   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, scrapNumber, material, uom, receiptDetail, issueDetail, lotNumber, expiryDate, scrapReason, quantity, userQuantity, disposalQuantity, existingValue, scrapValue);
+    return Objects.hash(id, tenantId, scrapNumber, material, uom, receiptDetail, issueDetail, lotNumber, expiryDate, scrapReason, quantity, scrapQuantity, userQuantity, disposalQuantity, existingValue, scrapValue);
   }
 
   @Override
@@ -466,6 +491,7 @@ public class ScrapDetail   {
     sb.append("    expiryDate: ").append(toIndentedString(expiryDate)).append("\n");
     sb.append("    scrapReason: ").append(toIndentedString(scrapReason)).append("\n");
     sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
+    sb.append("    scrapQuantity: ").append(toIndentedString(scrapQuantity)).append("\n");
     sb.append("    userQuantity: ").append(toIndentedString(userQuantity)).append("\n");
     sb.append("    disposalQuantity: ").append(toIndentedString(disposalQuantity)).append("\n");
     sb.append("    existingValue: ").append(toIndentedString(existingValue)).append("\n");

@@ -174,6 +174,7 @@ public class ScrapService extends DomainService{
 			scrapDetail.setUom(detail.getUom());
 			scrapDetail.setMaterial(detail.getMaterial());
 			scrapDetail.setExistingValue(detail.getValue());
+			scrapDetail.setQuantity(detail.getQuantityIssued());
 			scrapDetailList.add(scrapDetail);
 			}
 		}

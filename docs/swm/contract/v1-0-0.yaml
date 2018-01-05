@@ -1801,37 +1801,60 @@ definitions:
           minLength: 1
         collectionType:  
           $ref: "#/definitions/CollectionType"
-        startingCollectionPoint:
-          description: Starting point will be shown based on what collection type  and what location has been selected.
-          $ref: "#/definitions/CollectionPoint"
-        endingDumpingGroundPoint:
-          description: This dropdown will show the list of dumping grounds and processing plants. Either endPoint or Dumping ground can be selected. At least one has to be selected
-          $ref: "#/definitions/DumpingGround"
-          format: singleValueList
-        endingCollectionPoint:  
-          $ref: "#/definitions/CollectionPoint"
-          format: singleValueList
-          description: this field shall allow the user to select a collection point as ending point. Either endPoint or Dumping ground can be selected. At least one has to be selected
-        collectionPoints:
+        routeCollectionPointMaps:
           type: array
           items:
-            $ref: '#/definitions/CollectionPoint'
-          description: List of CollectionPoint on the Route. This will have all the selected collection points based on Ward / zone / street.
-        distance:
-          type: number
-          format: double
-          description: it captures distance (in KMs) of the route, starting from First point to ending point. e.g. 10.75
-        garbageEstimate:
-          type: number
-          format: double
-          description: it captures expected garbage collection (in tonnes) for a route. e.g. 4.26
+            $ref: '#/definitions/RouteCollectionPointMap'
+          description: List of RouteCollectionPointMap on the Route. This will have all the selected collection points based on Ward / zone / street.
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
       - name
-      - startingCollectionPoint
-      - collectionPoints
+      - routeCollectionPointMaps
+      
+    RouteCollectionPointMap:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique Identifier of the RouteCollectionPointMap
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the RouteCollectionPointMap
+          maxLength: 128
+          minLength: 1
+        route:
+          type: string
+          description: route id of the RouteCollectionPointMap
+          maxLength: 128
+          minLength: 1
+        isStartingCollectionPoint:
+          type: boolean
+          description: is Starting Collection Point id of the RouteCollectionPointMap
+        isEndingCollectionPoint:
+          type: boolean
+          description: is Starting Collection Point id of the RouteCollectionPointMap
+        collectionPoint:
+          description: collectio point will be shown based on what collection type  and what location has been selected.
+          $ref: "#/definitions/CollectionPoint"
+        endingDumpingGroundPoint:
+          description: This dropdown will show the list of dumping grounds and processing plants. Either endPoint or Dumping ground can be selected. At least one has to be selected
+          $ref: "#/definitions/DumpingGround"
+          format: singleValueList
+        distance:
+          type: number
+          format: double
+          description: it captures distance (in KMs) of the CollectionPoint, starting from First point to ending point. e.g. 10.75
+        garbageEstimate:
+          type: number
+          format: double
+          description: it captures expected garbage collection (in tonnes) for a CollectionPoint. e.g. 4.26
+      required:
+      - tenantId
+      - route
       - distance
       - garbageEstimate
       
@@ -3640,6 +3663,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

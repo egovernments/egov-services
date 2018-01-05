@@ -303,5 +303,38 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 
 		return page;
 	}
+	
+    public List<PurchaseOrder> searchPOForAdvanceRequisition(PurchaseOrderSearch purchaseOrderSearchRequest) {
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
+
+        String searchQuery = "select * from purchaseorder :condition  :orderby ";
+
+        if (purchaseOrderSearchRequest.getTenantId() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("tenantid =:tenantId");
+            paramValues.put("tenantId", purchaseOrderSearchRequest.getTenantId());
+        }
+
+        searchQuery = searchQuery.replace(":condition", " where totalAdvancePaidAmount>0 and isdeleted is not true and lower(status)='approved' and " + params.toString());
+
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(PurchaseOrderEntity.class);
+
+        List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+                row);
+
+        List<PurchaseOrder> purchaseOrderList = new ArrayList<>();
+
+        PurchaseOrder pl;
+
+        for (PurchaseOrderEntity purchaseOrderEntity : purchaseOrderEntities) {
+            pl = purchaseOrderEntity.toDomain();
+            purchaseOrderList.add(pl);
+        }
+
+        return purchaseOrderList;
+    }
 
 }

@@ -157,7 +157,7 @@ public class PurchaseOrderService extends DomainService {
             int i = 0;
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
 
-            	BigDecimal totalAmount = new BigDecimal(0);
+            	BigDecimal totalAmount = BigDecimal.ZERO;
             	
                 if (purchaseOrder.getAdvanceAmount() != null) {
                     if (purchaseOrder.getAdvanceAmount().compareTo(purchaseOrder.getTotalAmount()) > 0) {
@@ -234,7 +234,7 @@ public class PurchaseOrderService extends DomainService {
 
                     //Logic to split PODetail order quantity across multiple indentdetails starts
                     //TODO:below validation wroing fix
-                    BigDecimal totalIndentQuantity = new BigDecimal(0);
+                    BigDecimal totalIndentQuantity = BigDecimal.ZERO;
                     if (purchaseOrderDetail.getPurchaseIndentDetails() != null) {
                         for (PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
                             totalIndentQuantity = totalIndentQuantity.add(purchaseIndentDetail.getIndentDetail().getIndentQuantity());
@@ -320,8 +320,8 @@ public class PurchaseOrderService extends DomainService {
                 if (eachPurchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Rejected"))) {
                     for (PurchaseOrderDetail eachPurchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                         for (PurchaseIndentDetail purchaseIndentDetail : eachPurchaseOrderDetail.getPurchaseIndentDetails()) {
-                            purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(new BigDecimal(0));
-                            purchaseIndentDetail.getIndentDetail().setIndentQuantity(new BigDecimal(0));
+                            purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(BigDecimal.ZERO);
+                            purchaseIndentDetail.getIndentDetail().setIndentQuantity(BigDecimal.ZERO);
                         }
                     }
                 } else {
@@ -336,13 +336,13 @@ public class PurchaseOrderService extends DomainService {
                         }
                     }
 
-                    BigDecimal totalAmount = new BigDecimal(0);
+                    BigDecimal totalAmount = BigDecimal.ZERO;
                     eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
 
                     for (PurchaseOrderDetail eachPurchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
 
                         //Logic to split PODetail order quantity across multiple indentdetails starts
-                        BigDecimal totalIndentQuantity = new BigDecimal(0);
+                        BigDecimal totalIndentQuantity = BigDecimal.ZERO;
 
                         if (eachPurchaseOrderDetail.getPurchaseIndentDetails() != null)
                             for (PurchaseIndentDetail purchaseIndentDetail : eachPurchaseOrderDetail.getPurchaseIndentDetails()) {
@@ -451,7 +451,7 @@ public class PurchaseOrderService extends DomainService {
 
             if (!method.equals(Constants.ACTION_SEARCH_INDENT_FOR_PO))
                 for (PurchaseOrder eachPurchaseOrder : pos) {
-                    BigDecimal totalAmount = new BigDecimal(0);
+                    BigDecimal totalAmount = BigDecimal.ZERO;
                     int index = pos.indexOf(eachPurchaseOrder) + 1;
                     if (eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis) {
                         String date = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
@@ -607,7 +607,7 @@ public class PurchaseOrderService extends DomainService {
                                 errors.addDataError(ErrorCode.MAT_DETAIL.getCode(), " at serial no." + detailIndex);
                             }
                             
-                            if(poDetail == null || null == poDetail.getReceivedQuantity() || poDetail.getReceivedQuantity().compareTo(new BigDecimal(0)) <= 0) {
+                            if(poDetail == null || null == poDetail.getReceivedQuantity() || poDetail.getReceivedQuantity().compareTo(BigDecimal.ZERO) <= 0) {
                             	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "receivedQuantity", "null");
                             }
 
@@ -616,11 +616,11 @@ public class PurchaseOrderService extends DomainService {
                                 errors.addDataError(ErrorCode.RATE_CONTRACT.getCode(), " at serial no." + detailIndex);
                             }
 
-                            if (priceListConfig && (poDetail == null || null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(new BigDecimal(0)) <= 0)) {
+                            if (priceListConfig && (poDetail == null || null == poDetail.getOrderQuantity() || poDetail.getOrderQuantity().compareTo(BigDecimal.ZERO) <= 0)) {
                                 errors.addDataError(ErrorCode.NOT_NULL.getCode(), "orderQuantity", "null");
                             }
 
-                            if (priceListConfig && (poDetail == null || null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(new BigDecimal(0)) <= 0)) {
+                            if (priceListConfig && (poDetail == null || null == poDetail.getUnitPrice() || poDetail.getUnitPrice().compareTo(BigDecimal.ZERO) <= 0)) {
                                 errors.addDataError(ErrorCode.NOT_NULL.getCode(), "unitPrice", "null");
                             }
 

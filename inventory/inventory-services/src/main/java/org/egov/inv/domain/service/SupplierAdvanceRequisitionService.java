@@ -1,7 +1,9 @@
 package org.egov.inv.domain.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
@@ -108,24 +110,29 @@ public class SupplierAdvanceRequisitionService extends DomainService {
 		try {
 
 			switch (method) {
-			case Constants.ACTION_UPDATE: {
-				if (supplierAdvanceRequisitions == null) {
-					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "supplierAdvanceRequisitions", "null");
+				case Constants.ACTION_UPDATE: {
+					if (supplierAdvanceRequisitions == null) {
+						errors.addDataError(ErrorCode.NOT_NULL.getCode(), "supplierAdvanceRequisitions", "null");
+					}
+					if(errors.getValidationErrors().size()>0)
+						break;
 				}
-
-				if(errors.getValidationErrors().size()>0)
-					break;
-
-			}
-
-			case Constants.ACTION_CREATE: {
-				if (supplierAdvanceRequisitions == null) {
-					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "supplierAdvanceRequisitions", "null");
+	
+				case Constants.ACTION_CREATE: {
+					if (supplierAdvanceRequisitions == null) {
+						errors.addDataError(ErrorCode.NOT_NULL.getCode(), "supplierAdvanceRequisitions", "null");
+					}
+					if(errors.getValidationErrors().size()>0)
+						break;
 				}
 			}
-				break;
-
+			
+			for(SupplierAdvanceRequisition supplierAdvanceRequisition : supplierAdvanceRequisitions) {
+				if(!supplierAdvanceRequisitionRepository.checkPOValidity(supplierAdvanceRequisition.getPurchaseOrder().getPurchaseOrderNumber())) {
+					errors.addDataError(ErrorCode.INVALID_PONUMBER_FOR_ADVREQ.getCode(), "purchaseOrderNumber", supplierAdvanceRequisition.getPurchaseOrder().getPurchaseOrderNumber());
+				}
 			}
+			
 		} catch (IllegalArgumentException e) {
 
 		}
@@ -133,5 +140,5 @@ public class SupplierAdvanceRequisitionService extends DomainService {
 			throw errors;
 
 	}
-
+	
 }

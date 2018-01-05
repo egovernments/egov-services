@@ -1,5 +1,6 @@
 package org.egov.inv.persistence.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,5 +122,16 @@ public class SupplierAdvanceRequisitionJdbcRepository extends JdbcRepository {
 
         return page;
     }
+    
+	public boolean checkPOValidity(String purchaseordernumber) {
+		String poValidityQuery = "select totalAdvancePaidAmount from purchaseorder where purchaseordernumber = :purchaseordernumber and isdeleted is not true and lower(status) = 'approved' ";
+	    Map params=new HashMap<String,Object>();
+		params.put("purchaseordernumber",purchaseordernumber);
+	    BigDecimal advAmount=namedParameterJdbcTemplate.queryForObject(poValidityQuery, params, BigDecimal.class);
+	    if(advAmount.compareTo(BigDecimal.ZERO) <=0 )
+	    	return false;
+	    else
+	    	return true;
+	}
 
 }

@@ -127,7 +127,7 @@ public class DataUploadService {
 	    	logger.error("Couldn't parse excel sheet", e);
 	    }
         try{
-        	if(uploadDefinition.getIsParentChild()){
+        	if(null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()){
         		uploadParentChildData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
 				dataUploadUtils.clearExceFile(writeFilePath);
 				dataUploadUtils.clearExceFile(resultFilePath);
@@ -266,12 +266,8 @@ public class DataUploadService {
 		if(uploadDefinition.getIsBulkApi()){
 			String value = JsonPath.read(uploadDefinition.getApiRequest(), 
 	    			uploadDefinition.getArrayPath()).toString();
-			logger.info("value: "+value);
 	    	documentContext = JsonPath.parse(value.substring(1, value.length() - 1));
-			logger.info("documentContext: "+documentContext.jsonString().toString());
 	    	bulkApiRequest = JsonPath.parse(uploadDefinition.getApiRequest());
-			logger.info("bulkApiRequest: "+bulkApiRequest.jsonString().toString());
-
 		}else{
 			documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
 		}
@@ -294,25 +290,20 @@ public class DataUploadService {
 		//Getting indexes of parentKeys from header list to filter data based on those keys.
 		for(String key: uploadDefinition.getUniqueParentKeys()){
 			indexes.add(coloumnHeaders.indexOf(key));
-			logger.info("key: "+key);
-			logger.info("index: "+coloumnHeaders.indexOf(key));
 		}
 		
 		for(int i = 0; i < excelData.size(); i++){
 			List<List<Object>> filteredList = dataUploadUtils.filter(excelData, indexes, excelData.get(i));
 			logger.info("filteredList: "+filteredList);
+			
 			/* Building a map that contains all row values of a given column. 
 			This map will be used to construct any arrays present in the request.*/
 			
 			Map<String, List<Object>> allRowsOfAColumnMap = new HashMap<>();
-			logger.info("coloumnHeaders: "+coloumnHeaders.size());
 			for(int j = 0; j <  (coloumnHeaders.size() - additionFieldsCount); j++){
-				logger.info("j: "+j);
 				List<Object> rowsList = new ArrayList<>();
 				for(List<Object> list: filteredList){
-					logger.info("list: "+list);
 					rowsList.add(list.get(j));
-					logger.info("rowList: "+rowsList);
 				}
 				allRowsOfAColumnMap.put(coloumnHeaders.get(j).toString(), rowsList);
 			}
@@ -333,54 +324,49 @@ public class DataUploadService {
 	            		List<String> list = Arrays.asList(splitJsonPath);
 	            		if(!(arrayKeys.contains(list.get((list.indexOf("*") - 1)))))
 	            			arrayKeys.add(list.get((list.indexOf("*") - 1)));
-	            		
-	            		logger.info("arrayKeys: "+arrayKeys);
 	            	}
 	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-	            	logger.info("DocumentContext: "+documentContext.jsonString());
-	            	logger.info("key: "+key);
-	            	logger.info("expression: "+expression.toString());
 	            	if(key.contains("tenantId")){
 		            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
 	            	}else{
 	            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
 	            	}	            	
 				}
-            	Map<String, Object> objectMap = mapper.convertValue(documentContext.jsonString().toString(), Map.class);
-            	logger.info("objectMap: "+objectMap);
+				Type type = new TypeToken<Map<String, Object>>() {}.getType();
+				Gson gson = new Gson();
+				Map<String, Object> objectMap = gson.fromJson(documentContext.jsonString(), type);
             	filteredListObjects.add(objectMap);
 			}
-			logger.info("Keys of arrays in the request: "+arrayKeys);
 			Map<String, Object> requestMap = new HashMap<>();
 			requestMap = filteredListObjects.get(0);
 			for(Map<String, Object> map: filteredListObjects){
-				for(String key: arrayKeys){
-					List<Object> entry = (List<Object>) requestMap.get(key);
-					entry.addAll((List<Object>) map.get(key));
-					requestMap.merge(key, entry, null);
+				if(0 != filteredListObjects.indexOf(map)) {
+					for(String key: arrayKeys){
+						List<Object> entry = (List<Object>) requestMap.get(key);
+						entry.addAll((List<Object>) map.get(key));
+						requestMap.put(key, entry);
+					}
 				}
 			}
-			
-			String requestContentBody = null;
+			logger.info("requestMap: "+requestMap);
+			Object requestContentBody = null;
 			try{
 				requestContentBody = mapper.writeValueAsString(requestMap);
 			}catch(Exception e){
 				logger.error("Exception while parsing requestMap to String", e);
 			}
 			if(uploadDefinition.getIsBulkApi()){
-			    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
 			    try{
 			    	bulkApiRequest.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
 			    }catch(Exception e){
 			    	bulkApiRequest.put("$", "requestInfo", uploaderRequest.getRequestInfo());
 			    } 
 			    StringBuilder expression = new StringBuilder();
-            	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath(), expression);
-            	bulkApiRequest.put(expression.toString(), key, requestContentBody);
+            	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath().substring(0, uploadDefinition.getArrayPath().length() - 1), expression);
+            	bulkApiRequest.put(expression.toString(), key, requestMap);
             	request = bulkApiRequest.jsonString().toString();
 			}else{
 				DocumentContext docContext = JsonPath.parse(requestContentBody);
-			    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
 			    try{
 			    	docContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
 				    request = docContext.jsonString().toString();
@@ -391,6 +377,7 @@ public class DataUploadService {
 			}
 			
 			logger.info("FINAL REQUEST to EXTERNAL MODULE: "+request);
+			i+=(filteredList.size() - 1);
 		}
 	}
 		

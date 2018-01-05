@@ -65,7 +65,7 @@ import net.minidev.json.JSONArray;
 
 @Service
 public class MaterialIssueService extends DomainService {
-
+	
 	private static final Logger LOG = LoggerFactory.getLogger(MaterialIssueService.class);
 
 	@Autowired
@@ -438,8 +438,8 @@ public class MaterialIssueService extends DomainService {
 							if (materialIssueDetail.getMaterial().getScrapable())
 								errors.addDataError(ErrorCode.DONT_ALLOW_SCRAP_MATERIALS.getCode(), String.valueOf(i));
 
-							BigDecimal balanceQuantity = BigDecimal.ZERO;
-
+							BigDecimal balanceQuantity;
+                            LOG.info("calculating balance quantity");
 							balanceQuantity = getBalanceQuantityByStoreByMaterialAndIssueDate(materialIssue.getFromStore(),materialIssueDetail.getMaterial(),
 									materialIssue.getIssueDate(), materialIssue.getTenantId());
 							if (StringUtils.isNotBlank(balanceQuantity.toString())) {
@@ -561,7 +561,7 @@ public class MaterialIssueService extends DomainService {
 						MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract();
 						searchContract.setIssueNoteNumber(materialIssue.getIssueNumber());
 						searchContract.setTenantId(materialIssue.getTenantId());
-						Pagination<MaterialIssueDetail> listOfPagedMaterialIssueDetails =	 materialIssueDetailsJdbcRepository.search(materialIssue.getIssueNumber(), materialIssue.getTenantId(), null);
+						Pagination<MaterialIssueDetail> listOfPagedMaterialIssueDetails = materialIssueDetailsJdbcRepository.search(materialIssue.getIssueNumber(), materialIssue.getTenantId(), null);
 						List<MaterialIssueDetail> listOfMaterialIssueDetails = new ArrayList<>();
 						BigDecimal quantityIssued = BigDecimal.ZERO;
 						if(listOfPagedMaterialIssueDetails != null)
@@ -626,7 +626,7 @@ public class MaterialIssueService extends DomainService {
 	private BigDecimal getBalanceQuantityByStoreByMaterialAndIssueDate(Store store,Material material,
 			 Long issueDate, String tenantId) {
 		BigDecimal balanceQuantity = BigDecimal.ZERO;
-
+        LOG.info("store :" + store + "material :" + material + "issueDate :" + issueDate + "tenantId :" + tenantId);
 		FifoRequest fifoRequest = new FifoRequest();
 		Fifo fifo = new Fifo();
 		fifo.setStore(store);
@@ -971,3 +971,6 @@ public MaterialIssueResponse search(final MaterialIssueSearchContract searchCont
 		return s2;
 	}
 }
+
+
+

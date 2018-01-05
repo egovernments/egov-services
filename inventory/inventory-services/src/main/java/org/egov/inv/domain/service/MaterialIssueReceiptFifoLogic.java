@@ -53,6 +53,7 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 		BigDecimal availableQuantityInStock = BigDecimal.ZERO;
 		if (!listOfEntities.isEmpty())
 			for (FifoEntity fifoEntity : listOfEntities) {
+				LOG.info("fifoEntity :" + fifoEntity);
 				if(uom != null)
 					availableQuantityInStock = availableQuantityInStock
 							.add(InventoryUtilities.getQuantityInSelectedUom(BigDecimal.valueOf(fifoEntity.getBalance()),

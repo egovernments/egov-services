@@ -61,6 +61,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @RestController
 @RequestMapping("/designations")
 public class DesignationController {
@@ -96,7 +98,12 @@ public class DesignationController {
 		// Call service
 		List<Designation> designationsList = null;
 		try {
-			designationsList = designationService.getDesignations(designationGetRequest);
+			//TODO Replace service call inside if condition to point to innovawe api
+			if(!isEmpty(designationGetRequest.getDepartmentCode()))
+				designationsList = designationService.getDesignations(designationGetRequest);
+			else
+				designationsList = designationService.getDesignations(designationGetRequest);
+
 		} catch (Exception exception) {
 			logger.error("Error while processing request " + designationGetRequest, exception);
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);

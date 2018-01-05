@@ -74,6 +74,8 @@ public class DesignationGetRequest {
 	@NotNull
 	private String tenantId;
 
+	private String departmentCode;
+
 	@Min(1)
 	@Max(500)
 	private Short pageSize;

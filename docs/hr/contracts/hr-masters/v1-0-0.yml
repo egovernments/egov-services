@@ -53,6 +53,15 @@ paths:
           maxLength: 20
           exclusiveMinimum: true
           exclusiveMaximum: false 
+        - name: departmentCode
+          in: query
+          description: Unique code of the department.
+          required: false
+          type: string
+          minLength: 0
+          maxLength: 20
+          exclusiveMinimum: true
+          exclusiveMaximum: false           
         - name: id
           in: query
           description: Unique Id of designation

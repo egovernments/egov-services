@@ -44,7 +44,7 @@ public class DisposalsApiController implements DisposalsApi {
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
-			@ApiParam(value = "store of the Disposal ") @RequestParam(value = "store", required = false) Long store,
+			@ApiParam(value = "store of the Disposal ") @RequestParam(value = "store", required = false) String store,
 			@ApiParam(value = "disposal number of the Disposal ") @RequestParam(value = "disposalNumber", required = false) String disposalNumber,
 			@ApiParam(value = "disposal date of the Disposal ") @RequestParam(value = "disposalDate", required = false) Long disposalDate,
 			@ApiParam(value = "hand over to of the Disposal ") @RequestParam(value = "handOverTo", required = false) String handOverTo,

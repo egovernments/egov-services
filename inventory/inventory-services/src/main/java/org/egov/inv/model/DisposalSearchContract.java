@@ -35,7 +35,7 @@ public class DisposalSearchContract {
 	
 	private Integer pageNumber;
 	
-	private Integer sortBy;
+	private String sortBy;
 	
 	
 	

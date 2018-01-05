@@ -146,6 +146,7 @@ public class RouteJdbcRepository extends JdbcRepository {
         for (final RouteEntity routeEntity : routeEntities) {
 
             routeList.add(routeEntity.toDomain());
+
             if (routeCodes.length() >= 1)
                 routeCodes.append(",");
 
@@ -251,39 +252,40 @@ public class RouteJdbcRepository extends JdbcRepository {
         }
 
         List<DumpingGround> dumpingGrounds = dumpingGroundService.getAll(tenantId, new RequestInfo());
-
-        for (DumpingGround dg : dumpingGrounds) {
-            dumpingGroundMap.put(dg.getCode(), dg);
-        }
-
-        for (RouteCollectionPointMap rcp : routeCollectionPoints) {
-
-            if (rcp.getEndingDumpingGroundPoint() != null && rcp.getEndingDumpingGroundPoint().getCode() != null
-                    && !rcp.getEndingDumpingGroundPoint().getCode().isEmpty()) {
-
-                rcp.setEndingDumpingGroundPoint(dumpingGroundMap.get(rcp.getEndingDumpingGroundPoint().getCode()));
+        if (dumpingGrounds != null)
+            for (DumpingGround dg : dumpingGrounds) {
+                dumpingGroundMap.put(dg.getCode(), dg);
             }
 
-            if (rcp.getCollectionPoint() != null && rcp.getCollectionPoint().getCode() != null
-                    && !rcp.getCollectionPoint().getCode().isEmpty()) {
+        if (routeCollectionPoints != null)
+            for (RouteCollectionPointMap rcp : routeCollectionPoints) {
 
-                rcp.setCollectionPoint(collectionPointMap.get(rcp.getCollectionPoint().getCode()));
+                if (rcp.getEndingDumpingGroundPoint() != null && rcp.getEndingDumpingGroundPoint().getCode() != null
+                        && !rcp.getEndingDumpingGroundPoint().getCode().isEmpty()) {
+
+                    rcp.setEndingDumpingGroundPoint(dumpingGroundMap.get(rcp.getEndingDumpingGroundPoint().getCode()));
+                }
+
+                if (rcp.getCollectionPoint() != null && rcp.getCollectionPoint().getCode() != null
+                        && !rcp.getCollectionPoint().getCode().isEmpty()) {
+
+                    rcp.setCollectionPoint(collectionPointMap.get(rcp.getCollectionPoint().getCode()));
+                }
+
+                if (routeCollectionPointMap.get(rcp.getRoute()) == null) {
+
+                    routeCollectionPointMap.put(rcp.getRoute(), Collections.singletonList(rcp));
+
+                } else {
+
+                    List<RouteCollectionPointMap> rcpmList = new ArrayList<>(routeCollectionPointMap.get(rcp.getRoute()));
+
+                    rcpmList.add(rcp);
+
+                    routeCollectionPointMap.put(rcp.getRoute(), rcpmList);
+
+                }
             }
-
-            if (routeCollectionPointMap.get(rcp.getRoute()) == null) {
-
-                routeCollectionPointMap.put(rcp.getRoute(), Collections.singletonList(rcp));
-
-            } else {
-
-                List<RouteCollectionPointMap> rcpmList = new ArrayList<>(routeCollectionPointMap.get(rcp.getRoute()));
-
-                rcpmList.add(rcp);
-
-                routeCollectionPointMap.put(rcp.getRoute(), rcpmList);
-
-            }
-        }
 
         for (Route route : routeList) {
 

@@ -40,6 +40,7 @@ public class RouteCollectionPointMapEntity {
         final RouteCollectionPointMap routeCollectionPointMap = new RouteCollectionPointMap();
         routeCollectionPointMap.setId(id);
         routeCollectionPointMap.setTenantId(tenantId);
+        routeCollectionPointMap.setRoute(route);
         routeCollectionPointMap.setCollectionPoint(CollectionPoint.builder().code(collectionPoint).build());
         routeCollectionPointMap.setDistance(distance);
         routeCollectionPointMap.setGarbageEstimate(garbageEstimate);

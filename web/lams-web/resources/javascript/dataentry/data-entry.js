@@ -88,10 +88,13 @@ $(document).ready(function() {
         $('#pageTitle').html('Modify Agreement-- Data Entry');
         create=false;
         let modifyAgreements = response.Agreements[0];
+        fillValueToObject({id:'id',name:'id',value:modifyAgreements['id']});
+        fillValueToObject({id:'agreementNumber',name:'agreementNumber',value:modifyAgreements['agreementNumber']});
         // console.log(modifyAgreements);
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){
           let value = JSONPath({json: modifyAgreements, path: `$.${$(this).attr('name')}`});
+          console.log($(this).attr('name'), value[0]);
           if($(this).attr('name') === 'timePeriod' && value){
             if(value <= 3){
               $('#governmentOrder').hide();

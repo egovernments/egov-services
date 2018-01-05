@@ -1004,7 +1004,7 @@ class UpdateMovement extends React.Component {
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
-                            <label htmlFor="documents">Attachments docs<span>*</span></label>
+                            <label htmlFor="documents">Attachments docs </label>
                         </div>
                         <div className="col-sm-6">
                             <div className="styled-file">

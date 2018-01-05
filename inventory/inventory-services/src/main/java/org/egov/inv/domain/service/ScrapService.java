@@ -156,6 +156,8 @@ public class ScrapService extends DomainService{
 		InvalidDataException errors = new InvalidDataException();
 		List<ScrapDetail> scrapDetailList = new ArrayList<>();
 		for (Scrap scrap : request.getScraps()) {
+			for (ScrapDetail scrapDetails : scrap.getScrapDetails())
+			{
 		MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
 													.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())
 													.tenantId(tenantId)
@@ -175,6 +177,9 @@ public class ScrapService extends DomainService{
 			scrapDetail.setMaterial(detail.getMaterial());
 			scrapDetail.setExistingValue(detail.getValue());
 			scrapDetail.setQuantity(detail.getQuantityIssued());
+			scrapDetail.setScrapQuantity(scrapDetails.getScrapQuantity());
+			scrapDetail.setScrapReason(scrapDetails.getScrapReason());
+			scrapDetail.setScrapValue(scrapDetails.getScrapValue());
 			scrapDetailList.add(scrapDetail);
 			}
 		}
@@ -183,6 +188,7 @@ public class ScrapService extends DomainService{
 			throw errors;
 				}
 		}
+	}
 	
 	 private List<ScrapDetail> getScrapDetail(String scrapNumber, String tenantId) {
 	        ScrapDetailSearch scrapDetailSearch = ScrapDetailSearch.builder()

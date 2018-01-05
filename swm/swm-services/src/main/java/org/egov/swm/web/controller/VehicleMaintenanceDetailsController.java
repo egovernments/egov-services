@@ -80,7 +80,7 @@ public class VehicleMaintenanceDetailsController {
         final Long scheduledDate = vehicleMaintenanceDetailsService.calaculateNextSceduledMaintenanceDate(tenantId,
                 vehicleRegNumber);
 
-        return ScheduledMaintenanceDateResponse.builder().responseInfo(new ResponseInfo()).sceduledDate(scheduledDate)
+        return ScheduledMaintenanceDateResponse.builder().responseInfo(new ResponseInfo()).scheduledDate(scheduledDate)
                 .build();
     }
 

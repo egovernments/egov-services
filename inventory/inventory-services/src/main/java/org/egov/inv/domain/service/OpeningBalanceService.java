@@ -215,7 +215,7 @@ public class OpeningBalanceService extends DomainService {
 						errors.addDataError(ErrorCode.RECEIVING_STORE_NOT_EXIST.getCode(),rcpt.getReceivingStore().getCode());
 					}else{
 						if(validateStore(tenantId,rcpt)){
-							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(),rcpt.getReceivingStore().getCode());
+							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(),"Receiving Store "+ rcpt.getReceivingStore().getCode());
 						}
 					}
 
@@ -223,16 +223,19 @@ public class OpeningBalanceService extends DomainService {
 						for (MaterialReceiptDetail detail : rcpt.getReceiptDetails()) {
 							int detailIndex = rcpt.getReceiptDetails().indexOf(detail) + 1;
 							
+							if (isEmpty(detail.getUom().getCode())) {
+								errors.addDataError( ErrorCode.UOM_CODE_NOT_EXIST.getCode(),detail.getUom().getCode()+" at serial no."+ detailIndex);
+							}
+							
+							if (isEmpty(detail.getMaterial().getCode())) {
+								errors.addDataError(ErrorCode.MATERIAL_NAME_NOT_EXIST.getCode(),detail.getMaterial().getCode()+" at serial no."+ detailIndex);
+							}
+							
 							if(!validateUom(tenantId,detail))
 							{
 								errors.addDataError(ErrorCode.CATGRY_MATCH.getCode(),detail.getMaterial().getCode(),detail.getUom().getCode(),"At Row "+detailIndex);
 							}
-							if (isEmpty(detail.getMaterial().getCode())) {
-								errors.addDataError(ErrorCode.MATERIAL_NAME_NOT_EXIST.getCode(),detail.getMaterial().getCode()+" at serial no."+ detailIndex);
-							}
-							if (isEmpty(detail.getUom().getCode())) {
-								errors.addDataError( ErrorCode.UOM_CODE_NOT_EXIST.getCode(),detail.getUom().getCode()+" at serial no."+ detailIndex);
-							}
+							
 							if (isEmpty(detail.getUserReceivedQty())) {
 								errors.addDataError(ErrorCode.RCVED_QTY_NOT_EXIST.getCode(),detail.getUserReceivedQty()+" at serial no."+ detailIndex);	
 							}else

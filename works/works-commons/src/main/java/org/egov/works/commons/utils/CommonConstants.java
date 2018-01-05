@@ -63,5 +63,6 @@ public class CommonConstants {
     public static  final String TENANT_OBJECTNAME = "tenants";
     public static  final String REMARKS_OBJECTNAME = "Remarks";
     public static  final String CONTRACTOR_STATUS = "ACTIVE";
+    public static final String CONTRACTORBILL_SPILLOVER_WORKFLOW_REQUIRED = "Contractorbill_Spillover_WF_Required";
 
 }

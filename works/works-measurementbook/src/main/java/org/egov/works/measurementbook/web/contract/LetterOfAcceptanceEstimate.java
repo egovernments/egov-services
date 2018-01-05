@@ -1,22 +1,24 @@
 package org.egov.works.measurementbook.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * An Object that holds the basic data of Letter Of Acceptance Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Letter Of Acceptance Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
 
 public class LetterOfAcceptanceEstimate   {
   @JsonProperty("id")
@@ -45,9 +47,9 @@ public class LetterOfAcceptanceEstimate   {
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
-  
+
   @JsonProperty("deleted")
-  private Boolean deleted = null;
+  private Boolean deleted = false;
 
   public LetterOfAcceptanceEstimate id(String id) {
     this.id = id;
@@ -252,17 +254,29 @@ public class LetterOfAcceptanceEstimate   {
     this.auditDetails = auditDetails;
   }
 
+  public LetterOfAcceptanceEstimate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
 
   public Boolean getDeleted() {
-	return deleted;
-}
+    return deleted;
+  }
 
-public void setDeleted(Boolean deleted) {
-	this.deleted = deleted;
-}
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
 
-@Override
-  public boolean equals(Object o) {
+
+  @Override
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -278,12 +292,13 @@ public void setDeleted(Boolean deleted) {
         Objects.equals(this.estimateLOAAmount, letterOfAcceptanceEstimate.estimateLOAAmount) &&
         Objects.equals(this.assetForLOAs, letterOfAcceptanceEstimate.assetForLOAs) &&
         Objects.equals(this.loaActivities, letterOfAcceptanceEstimate.loaActivities) &&
-        Objects.equals(this.auditDetails, letterOfAcceptanceEstimate.auditDetails);
+        Objects.equals(this.auditDetails, letterOfAcceptanceEstimate.auditDetails) &&
+        Objects.equals(this.deleted, letterOfAcceptanceEstimate.deleted);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, letterOfAcceptance, detailedEstimate, workCompletionDate, estimateLOAAmount, assetForLOAs, loaActivities, auditDetails);
+    return Objects.hash(id, tenantId, letterOfAcceptance, detailedEstimate, workCompletionDate, estimateLOAAmount, assetForLOAs, loaActivities, auditDetails, deleted);
   }
 
   @Override
@@ -300,6 +315,7 @@ public void setDeleted(Boolean deleted) {
     sb.append("    assetForLOAs: ").append(toIndentedString(assetForLOAs)).append("\n");
     sb.append("    loaActivities: ").append(toIndentedString(loaActivities)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -308,7 +324,7 @@ public void setDeleted(Boolean deleted) {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

@@ -1,20 +1,22 @@
 package org.egov.works.measurementbook.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object holds the basic data for Assets or Land assets for Estimate
  */
 @ApiModel(description = "An Object holds the basic data for Assets or Land assets for Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
 
 public class AssetsForEstimate   {
   @JsonProperty("id")
@@ -31,6 +33,9 @@ public class AssetsForEstimate   {
 
   @JsonProperty("detailedEstimate")
   private String detailedEstimate = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -138,6 +143,26 @@ public class AssetsForEstimate   {
     this.detailedEstimate = detailedEstimate;
   }
 
+  public AssetsForEstimate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public AssetsForEstimate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -161,7 +186,7 @@ public class AssetsForEstimate   {
 
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -174,12 +199,13 @@ public class AssetsForEstimate   {
         Objects.equals(this.asset, assetsForEstimate.asset) &&
         Objects.equals(this.landAsset, assetsForEstimate.landAsset) &&
         Objects.equals(this.detailedEstimate, assetsForEstimate.detailedEstimate) &&
+        Objects.equals(this.deleted, assetsForEstimate.deleted) &&
         Objects.equals(this.auditDetails, assetsForEstimate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, asset, landAsset, detailedEstimate, auditDetails);
+    return Objects.hash(id, tenantId, asset, landAsset, detailedEstimate, deleted, auditDetails);
   }
 
   @Override
@@ -192,6 +218,7 @@ public class AssetsForEstimate   {
     sb.append("    asset: ").append(toIndentedString(asset)).append("\n");
     sb.append("    landAsset: ").append(toIndentedString(landAsset)).append("\n");
     sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -201,7 +228,7 @@ public class AssetsForEstimate   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

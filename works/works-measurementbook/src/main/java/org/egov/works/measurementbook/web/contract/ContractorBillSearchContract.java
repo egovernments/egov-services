@@ -48,4 +48,12 @@ public class ContractorBillSearchContract {
 	private List<String> statuses;
 	
 	private Boolean spillOverFlag;
+	
+	private String letterOfAcceptanceNumberLike;
+	
+	private String billNumberLike;
+	
+	private String workIdentificationNumberLike;
+	
+	private String contractorNameLike;
 }

@@ -26,4 +26,13 @@ public class PropertiesManager {
     @Value("${egov.services.works.measurementbook.create.update.topic}")
     private String worksMBCreateUpdateTopic;
     
+    @Value("${egov.services.works.contractorbill.create.update.topic}")
+    private String contractorBillCreateUpdateTopic;
+    
+    @Value("${works.billnumber.format}")
+    private String billNumberFormat;
+    
+    @Value("${works.billnumber}")
+    private String billNumber;
+    
 }

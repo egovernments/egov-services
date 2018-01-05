@@ -1,21 +1,23 @@
 package org.egov.works.measurementbook.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Asset information for the Contractor Bill
  */
 @ApiModel(description = "Asset information for the Contractor Bill")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
 
 public class AssetForBill   {
   @JsonProperty("id")
@@ -37,10 +39,13 @@ public class AssetForBill   {
   private BigDecimal amount = null;
 
   @JsonProperty("contractorBill")
-  private ContractorBill contractorBill = null;
+  private String contractorBill = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   public AssetForBill id(String id) {
     this.id = id;
@@ -155,7 +160,8 @@ public class AssetForBill   {
    * Asset wise Amount for the Bill
    * @return amount
   **/
-  @ApiModelProperty(value = "Asset wise Amount for the Bill")
+  @ApiModelProperty(required = true, value = "Asset wise Amount for the Bill")
+  @NotNull
 
   @Valid
 
@@ -167,7 +173,7 @@ public class AssetForBill   {
     this.amount = amount;
   }
 
-  public AssetForBill contractorBill(ContractorBill contractorBill) {
+  public AssetForBill contractorBill(String contractorBill) {
     this.contractorBill = contractorBill;
     return this;
   }
@@ -179,13 +185,12 @@ public class AssetForBill   {
   @ApiModelProperty(required = true, value = "Bill reference in the Asset")
   @NotNull
 
-  @Valid
 
-  public ContractorBill getContractorBill() {
+  public String getContractorBill() {
     return contractorBill;
   }
 
-  public void setContractorBill(ContractorBill contractorBill) {
+  public void setContractorBill(String contractorBill) {
     this.contractorBill = contractorBill;
   }
 
@@ -210,9 +215,29 @@ public class AssetForBill   {
     this.auditDetails = auditDetails;
   }
 
+  public AssetForBill deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -227,12 +252,13 @@ public class AssetForBill   {
         Objects.equals(this.description, assetForBill.description) &&
         Objects.equals(this.amount, assetForBill.amount) &&
         Objects.equals(this.contractorBill, assetForBill.contractorBill) &&
-        Objects.equals(this.auditDetails, assetForBill.auditDetails);
+        Objects.equals(this.auditDetails, assetForBill.auditDetails) &&
+        Objects.equals(this.deleted, assetForBill.deleted);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, asset, chartOfAccounts, description, amount, contractorBill, auditDetails);
+    return Objects.hash(id, tenantId, asset, chartOfAccounts, description, amount, contractorBill, auditDetails, deleted);
   }
 
   @Override
@@ -248,6 +274,7 @@ public class AssetForBill   {
     sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
     sb.append("    contractorBill: ").append(toIndentedString(contractorBill)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -256,7 +283,7 @@ public class AssetForBill   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

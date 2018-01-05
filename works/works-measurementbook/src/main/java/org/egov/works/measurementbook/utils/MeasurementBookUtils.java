@@ -2,8 +2,10 @@ package org.egov.works.measurementbook.utils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.MasterDetails;
 import org.egov.works.commons.web.contract.MdmsCriteria;
 import org.egov.works.commons.web.contract.ModuleDetails;
@@ -134,4 +136,19 @@ public class MeasurementBookUtils {
 
         return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
     }
+	
+	 @SuppressWarnings("rawtypes")
+	    public String getCityCode(final String tenantId, final RequestInfo requestInfo) {
+	        String cityCode = "";
+	        JSONArray responseJSONArray = getMDMSData(CommonConstants.TENANT_OBJECTNAME,
+	                CommonConstants.CODE,
+	                tenantId, tenantId, requestInfo,
+	                CommonConstants.TENANT_MODULENAME);
+	        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+	            @SuppressWarnings("unchecked")
+	            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+	            cityCode = ((Map) jsonMap.get("city")).get("code").toString();
+	        }
+	        return cityCode;
+	    }
 }

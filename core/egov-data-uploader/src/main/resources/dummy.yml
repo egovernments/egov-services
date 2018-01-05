@@ -6,7 +6,7 @@ UploadDefinitions:
  - defName: dummycreation
    apiRequest: {"RequestInfo": {},"Dummy": [{"name": "Vishal", "code": "VISH", "address": [{"house": 1, "street": "Koramangala"}]}]}
 
-   headerJsonPathMap: {"Name": "$.Dummy.*.name", "Code": "$.Dummy.*.code", "HouseNo": "$.Dummy.*.address.*.house", "Street": "$.Dummy.*.address.*.house"}
+   headerJsonPathMap: {"Name": "$.Dummy.*.name", "Code": "$.Dummy.*.code", "HouseNo": "$.Dummy.*.address.*.house", "Street": "$.Dummy.*.address.*.street"}
    isBulkApi: true
    arrayPath: $.Dummy.*
    isParentChild: true

@@ -23,7 +23,6 @@ public class RouteCollectionPointMap {
     @JsonProperty("tenantId")
     private String tenantId = null;
 
-    @NotNull
     @JsonProperty("route")
     private String route = null;
 

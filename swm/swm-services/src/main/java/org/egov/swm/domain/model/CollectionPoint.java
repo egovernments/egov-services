@@ -36,6 +36,7 @@ public class CollectionPoint {
     @JsonProperty("name")
     private String name = null;
 
+    @NotNull
     @JsonProperty("location")
     private Boundary location = null;
 

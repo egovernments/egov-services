@@ -10,6 +10,7 @@ import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
+import org.egov.swm.domain.model.RouteCollectionPointMap;
 import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.repository.RouteRepository;
 import org.egov.swm.web.requests.RouteRequest;
@@ -101,86 +102,52 @@ public class RouteService {
             else
                 throw new CustomException("CollectionType", "CollectionType is required");
 
-            // Validate Starting Collection Point
-
-            if (route.getStartingCollectionPoint() != null && (route.getStartingCollectionPoint().getCode() == null
-                    || route.getStartingCollectionPoint().getCode().isEmpty()))
-                throw new CustomException("StartingCollectionPoint",
-                        "The field StartingCollectionPoint Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-            if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null) {
-
-                search = new CollectionPointSearch();
-                search.setTenantId(route.getTenantId());
-                search.setCode(route.getStartingCollectionPoint().getCode());
-
-                collectionPoints = collectionPointService.search(search);
-
-                if (collectionPoints == null || collectionPoints.getPagedData() == null
-                        || collectionPoints.getPagedData().isEmpty())
-                    throw new CustomException("StartingCollectionPoint", "Given StartingCollectionPoint is invalid: "
-                            + route.getStartingCollectionPoint().getCode());
-                else
-                    route.setStartingCollectionPoint(collectionPoints.getPagedData().get(0));
-            }
-
-            if (route.getEndingCollectionPoint() != null && (route.getEndingCollectionPoint().getCode() == null
-                    || route.getEndingCollectionPoint().getCode().isEmpty()))
-                throw new CustomException("EndingCollectionPoint",
-                        "The field EndingCollectionPoint Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-            // Validate Ending Collection Point
-
-            if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null) {
-
-                search = new CollectionPointSearch();
-                search.setTenantId(route.getTenantId());
-                search.setCode(route.getEndingCollectionPoint().getCode());
-
-                collectionPoints = collectionPointService.search(search);
-
-                if (collectionPoints == null || collectionPoints.getPagedData() == null
-                        || collectionPoints.getPagedData().isEmpty())
-                    throw new CustomException("EndingCollectionPoint",
-                            "Given EndingCollectionPoint is invalid: " + route.getEndingCollectionPoint().getCode());
-                else
-                    route.setEndingCollectionPoint(collectionPoints.getPagedData().get(0));
-            }
-
-            if (route.getEndingDumpingGroundPoint() != null && (route.getEndingDumpingGroundPoint().getCode() == null
-                    || route.getEndingDumpingGroundPoint().getCode().isEmpty()))
-                throw new CustomException("DumpingGround",
-                        "The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-            // Validate Ending Dumping ground
-            if (route.getEndingDumpingGroundPoint() != null && route.getEndingDumpingGroundPoint().getCode() != null)
-                route.setEndingDumpingGroundPoint(dumpingGroundService.getDumpingGround(route.getTenantId(),
-                        route.getEndingDumpingGroundPoint().getCode(), routeRequest.getRequestInfo()));
-
             // Validate CollectionPoints
-            if (route.getCollectionPoints() != null)
-                for (CollectionPoint cp : route.getCollectionPoints()) {
+            if (route.getRouteCollectionPointMaps() != null) {
+                for (RouteCollectionPointMap rcpm : route.getRouteCollectionPointMaps()) {
+                    rcpm.setId(UUID.randomUUID().toString().replace("-", ""));
+                    rcpm.setTenantId(route.getTenantId());
 
-                    if (cp != null && (cp.getCode() == null || cp.getCode().isEmpty()))
+                    if (rcpm != null && rcpm.getEndingDumpingGroundPoint() != null
+                            && rcpm.getEndingDumpingGroundPoint().getCode() != null
+                            && !rcpm.getEndingDumpingGroundPoint().getCode().isEmpty() && rcpm.getCollectionPoint() != null
+                            || rcpm.getCollectionPoint().getCode() == null && !rcpm.getCollectionPoint().getCode().isEmpty())
                         throw new CustomException("CollectionPoint",
-                                "The field CollectionPoint Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+                                "Both Collection point and  Ending DumpingGround cannot be  Mandatory .");
 
-                    if (cp != null && cp.getCode() != null) {
+                    if (rcpm != null
+                            && (rcpm.getCollectionPoint() == null
+                                    || (rcpm.getCollectionPoint().getCode() == null
+                                            || rcpm.getCollectionPoint().getCode().isEmpty()))
+                            && (rcpm.getEndingDumpingGroundPoint() == null || rcpm.getEndingDumpingGroundPoint().getCode() == null
+                                    || rcpm.getEndingDumpingGroundPoint().getCode().isEmpty()))
+                        throw new CustomException("CollectionPoint",
+                                "The field CollectionPoint Code or Ending DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                    if (rcpm != null && rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null
+                            && !rcpm.getCollectionPoint().getCode().isEmpty()) {
                         search = new CollectionPointSearch();
                         search.setTenantId(route.getTenantId());
-                        search.setCode(cp.getCode());
+                        search.setCode(rcpm.getCollectionPoint().getCode());
 
                         collectionPoints = collectionPointService.search(search);
 
                         if (collectionPoints == null || collectionPoints.getPagedData() == null
                                 || collectionPoints.getPagedData().isEmpty())
                             throw new CustomException("CollectionPoint",
-                                    "Given CollectionPoint is invalid: " + cp.getName());
+                                    "Given CollectionPoint is invalid: " + rcpm.getCollectionPoint());
                         else
-                            cp = collectionPoints.getPagedData().get(0);
+                            rcpm.setCollectionPoint(collectionPoints.getPagedData().get(0));
                     }
 
+                    // Validate Ending Dumping ground
+                    if (rcpm.getEndingDumpingGroundPoint() != null && rcpm.getEndingDumpingGroundPoint().getCode() != null
+                            && !rcpm.getEndingDumpingGroundPoint().getCode().isEmpty())
+                        rcpm.setEndingDumpingGroundPoint(dumpingGroundService.getDumpingGround(route.getTenantId(),
+                                rcpm.getEndingDumpingGroundPoint().getCode(), routeRequest.getRequestInfo()));
+
                 }
+            }
 
             validateUniqueFields(route);
 

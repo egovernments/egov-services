@@ -120,24 +120,19 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
         final List<CollectionPointEntity> collectionPointEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
+        StringBuffer collectionPointCodes = new StringBuffer();
 
         for (final CollectionPointEntity collectionPointEntity : collectionPointEntities) {
-
             collectionPointList.add(collectionPointEntity.toDomain());
+
+            if (collectionPointCodes.length() >= 1)
+                collectionPointCodes.append(",");
+
+            collectionPointCodes.append(collectionPointEntity.getCode());
         }
 
         if (collectionPointList != null && !collectionPointList.isEmpty()) {
 
-            StringBuffer collectionPointCodes = new StringBuffer();
-
-            for (CollectionPoint collectionPoint : collectionPointList) {
-
-                if (collectionPointCodes.length() >= 1)
-                    collectionPointCodes.append(",");
-
-                collectionPointCodes.append(collectionPoint.getCode());
-
-            }
             populateBoundarys(collectionPointList);
 
             populateBinDetails(collectionPointList, collectionPointCodes.toString());
@@ -160,7 +155,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             tenantId = collectionPointList.get(0).getTenantId();
 
         List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
-        
+
         if (boundarys != null) {
 
             for (Boundary bd : boundarys) {

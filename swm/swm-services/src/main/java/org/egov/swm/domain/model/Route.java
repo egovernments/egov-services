@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -40,26 +41,10 @@ public class Route {
     private CollectionType collectionType = null;
 
     @NotNull
-    @JsonProperty("startingCollectionPoint")
-    private CollectionPoint startingCollectionPoint = null;
-
-    @JsonProperty("endingCollectionPoint")
-    private CollectionPoint endingCollectionPoint = null;
-
-    @JsonProperty("endingDumpingGroundPoint")
-    private DumpingGround endingDumpingGroundPoint = null;
-
-    @NotNull
-    @JsonProperty("collectionPoints")
-    private List<CollectionPoint> collectionPoints = null;
-
-    @NotNull
-    @JsonProperty("distance")
-    private Double distance = null;
-
-    @NotNull
-    @JsonProperty("garbageEstimate")
-    private Double garbageEstimate = null;
+    @Valid
+    @Size(min = 1)
+    @JsonProperty("routeCollectionPointMaps")
+    private List<RouteCollectionPointMap> routeCollectionPointMaps = null;
 
     @Valid
     @JsonProperty("auditDetails")

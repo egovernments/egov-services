@@ -194,8 +194,8 @@ public class VehicleMaintenanceDetailsService {
             if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("days"))
                 return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter());
             else if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("kms"))
-                return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(
-                        vehicleMaintenanceDetail, vehicleMaintenance.getMaintenanceAfter()));
+                return 0; /* Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(
+                        vehicleMaintenanceDetail, vehicleMaintenance.getMaintenanceAfter()));*/
         } else
             throw new CustomException("VehicleMaintenance",
                     "Next scheduled date not applicable since Vehicle Maintenance not defined for vehicle :"
@@ -212,8 +212,8 @@ public class VehicleMaintenanceDetailsService {
 
         return vehicleMaintenanceService.search(vehicleMaintenanceSearch);
     }
-
-    private int fetchkilometersFromRoutes(final VehicleMaintenanceDetails vehicleMaintenanceDetail,
+        //To-Do Need to fix
+    /*private int fetchkilometersFromRoutes(final VehicleMaintenanceDetails vehicleMaintenanceDetail,
             final Long vehicleMaintenanceAfter) {
         final VehicleScheduleSearch vehicleScheduleSearch = new VehicleScheduleSearch();
         vehicleScheduleSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
@@ -265,7 +265,7 @@ public class VehicleMaintenanceDetailsService {
                     "Next scheduled date not applicable since Vehicle Schedule not defined for vehicle :" +
                             vehicleMaintenanceDetail.getVehicle().getRegNumber());
         return totalDays.intValue();
-    }
+    }*/
 
     private void setAuditDetails(final VehicleMaintenanceDetails contract, final Long userId) {
 

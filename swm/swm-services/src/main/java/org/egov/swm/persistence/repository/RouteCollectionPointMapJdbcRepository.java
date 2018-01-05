@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.RouteCollectionPointMap;
+import org.egov.swm.domain.model.RouteCollectionPointMapSearch;
+import org.egov.swm.persistence.entity.RouteCollectionPointMapEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,7 @@ public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
         delete(TABLE_NAME, tenantId, "route", route);
     }
 
-    public List<RouteCollectionPointMap> search(final RouteCollectionPointMap searchRequest) {
+    public List<RouteCollectionPointMap> search(final RouteCollectionPointMapSearch searchRequest) {
 
         String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
@@ -46,10 +48,10 @@ public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
             paramValues.put("routes", new ArrayList<>(Arrays.asList(searchRequest.getRoutes().split(","))));
         }
 
-        if (searchRequest.getCollectionPoint() != null && searchRequest.getCollectionPoint() != null) {
+        if (searchRequest.getCollectionPointCode() != null && !searchRequest.getCollectionPointCode().isEmpty()) {
             addAnd(params);
             params.append("collectionPoint =:collectionPoint");
-            paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
+            paramValues.put("collectionPoint", searchRequest.getCollectionPointCode());
         }
 
         if (params.length() > 0)
@@ -58,9 +60,20 @@ public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
 
             searchQuery = searchQuery.replace(":condition", "");
 
-        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(RouteCollectionPointMap.class);
+        final List<RouteCollectionPointMap> routeCollectionPointMapList = new ArrayList<>();
 
-        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(RouteCollectionPointMapEntity.class);
+
+        final List<RouteCollectionPointMapEntity> routeCollectionPointMapEntities = namedParameterJdbcTemplate.query(
+                searchQuery.toString(),
+                paramValues, row);
+
+        for (final RouteCollectionPointMapEntity routeCollectionPointMapEntity : routeCollectionPointMapEntities) {
+
+            routeCollectionPointMapList.add(routeCollectionPointMapEntity.toDomain());
+        }
+
+        return routeCollectionPointMapList;
 
     }
 

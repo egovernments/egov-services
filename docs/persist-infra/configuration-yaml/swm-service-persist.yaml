@@ -385,7 +385,7 @@ serviceMaps:
    description: create route in egswm_route
    fromTopic: swm-route-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_route(code, tenantid, name, collectionType, startingCollectionPoint, endingCollectionPoint, endingDumpingGroundPoint, distance, garbageEstimate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_route(code, tenantid, name, collectionType, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.routes.*
       jsonMaps:
        
@@ -397,18 +397,6 @@ serviceMaps:
 
        - jsonPath: $.routes.*.collectionType.code
          
-       - jsonPath: $.routes.*.startingCollectionPoint.code
-
-       - jsonPath: $.routes.*.endingCollectionPoint.code
-
-       - jsonPath: $.routes.*.endingDumpingGroundPoint.code
-
-       - jsonPath: $.routes.*.distance
-         dbType: DOUBLE
-         
-       - jsonPath: $.routes.*.garbageEstimate
-         dbType: DOUBLE
-
        - jsonPath: $.routes.*.auditDetails.createdBy
 
        - jsonPath: $.routes.*.auditDetails.lastModifiedBy
@@ -419,15 +407,31 @@ serviceMaps:
        - jsonPath: $.routes.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_routecollectionpointmap(tenantid, route, collectionPoint) VALUES (?, ?, ?);
-      basePath: $.routes.*.collectionPoints.*
+    - query: INSERT INTO egswm_routecollectionpointmap(id, tenantid, route, collectionPoint, distance, garbageEstimate, isStartingCollectionPoint, isEndingCollectionPoint, endingDumpingGroundPoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.routes.*.routeCollectionPointMaps.*
       jsonMaps:
-       
-       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].tenantId
 
-       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].code
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.id
+       
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.tenantId
          
-       - jsonPath: $.routes.*.collectionPoints.*.code
+       - jsonPath: $.routes[?({id} in @.routeCollectionPointMaps[*].id)].code
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.collectionPoint.code
+         
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.distance
+         dbType: DOUBLE
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.garbageEstimate
+         dbType: DOUBLE
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isStartingCollectionPoint
+         dbType: BOOLEAN
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isEndingCollectionPoint
+         dbType: BOOLEAN
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.endingDumpingGroundPoint.code
 
  - version: 1.0
    name: route update
@@ -464,15 +468,31 @@ serviceMaps:
 
        - jsonPath: $.routes.*.tenantId
 
-    - query: INSERT INTO egswm_routecollectionpointmap(tenantid, route, collectionPoint) VALUES (?, ?, ?);
-      basePath: $.routes.*.collectionPoints.*
+    - query: INSERT INTO egswm_routecollectionpointmap(id, tenantid, route, collectionPoint, distance, garbageEstimate, isStartingCollectionPoint, isEndingCollectionPoint, endingDumpingGroundPoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.routes.*.routeCollectionPointMaps.*
       jsonMaps:
-       
-       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].tenantId
 
-       - jsonPath: $.routes[?({code} in @.collectionPoints[*].code)].code
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.id
+       
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.tenantId
          
-       - jsonPath: $.routes.*.collectionPoints.*.code
+       - jsonPath: $.routes[?({id} in @.routeCollectionPointMaps[*].id)].code
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.collectionPoint.code
+         
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.distance
+         dbType: DOUBLE
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.garbageEstimate
+         dbType: DOUBLE
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isStartingCollectionPoint
+         dbType: BOOLEAN
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isEndingCollectionPoint
+         dbType: BOOLEAN
+
+       - jsonPath: $.routes.*.routeCollectionPointMaps.*.endingDumpingGroundPoint.code
 
  - version: 1.0
    name: vendor create

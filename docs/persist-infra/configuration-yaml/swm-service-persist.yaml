@@ -439,7 +439,7 @@ serviceMaps:
    fromTopic: swm-route-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_route SET name=?, collectionType=?, startingCollectionPoint=?, endingCollectionPoint=?, endingDumpingGroundPoint=?, distance=?, garbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
+    - query: UPDATE egswm_route SET name=?, collectionType=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
       basePath: $.routes.*
       jsonMaps:
 
@@ -447,18 +447,6 @@ serviceMaps:
 
        - jsonPath: $.routes.*.collectionType.code
 
-       - jsonPath: $.routes.*.startingCollectionPoint.code
-
-       - jsonPath: $.routes.*.endingCollectionPoint.code
-
-       - jsonPath: $.routes.*.endingDumpingGroundPoint.code
-
-       - jsonPath: $.routes.*.distance
-         dbType: DOUBLE
-         
-       - jsonPath: $.routes.*.garbageEstimate
-         dbType: DOUBLE
-         
        - jsonPath: $.routes.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.routes.*.auditDetails.lastModifiedTime

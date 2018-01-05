@@ -262,7 +262,9 @@ public enum ErrorCode {
             "All materials are supplied for the purchase order {0}"),
     FIN_CUR_YEAR("fin.cur.year",
     		"The Field {0} Must Be Equal To Current Financial Year",
-            "The Field {0} Must Be Equal To Current Financial Year");
+            "The Field {0} Must Be Equal To Current Financial Year"),
+    INSERTION_NOT_ALLOWED("insertion.not.allowed","Insertion is not allowed during updation of {0}",
+    		"Insertion is not allowed during updation of {0}");
 
 
     private final String code;

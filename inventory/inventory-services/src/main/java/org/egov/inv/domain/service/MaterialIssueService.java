@@ -686,9 +686,6 @@ public class MaterialIssueService extends DomainService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			Map<String, Uom> uoms = getUoms(tenantId, objectMapper, new RequestInfo());
 			for (MaterialIssueDetail materialIssueDetail : materialIssueDetails) {
-				BigDecimal quantityIssued = InventoryUtilities.getQuantityInBaseUom(materialIssueDetail.getQuantityIssued(),
-						uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor());
-				materialIssueDetail.setQuantityIssued(quantityIssued);
 				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
 					BigDecimal quantity = InventoryUtilities.getQuantityInBaseUom(mifr.getQuantity(),
 							uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor());
@@ -819,11 +816,6 @@ public MaterialIssueResponse search(final MaterialIssueSearchContract searchCont
 						if (materialIssueDetail.getUom() != null
 								&& materialIssueDetail.getUom().getCode() != null)
 						{
-						BigDecimal quantityIssued = getSearchConvertedQuantity(
-								materialIssueDetail.getQuantityIssued(),
-								uoms.get(materialIssueDetail.getUom().getCode())
-								.getConversionFactor());
-						materialIssueDetail.setQuantityIssued(quantityIssued);
 						for(MaterialIssuedFromReceipt mifr : materialIssuedFromReceipts.getPagedData()){
 						BigDecimal quantity =	getSearchConvertedQuantity(mifr.getQuantity(), uoms.get(materialIssueDetail.getUom().getCode())
 								.getConversionFactor());

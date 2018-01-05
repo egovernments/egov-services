@@ -6,9 +6,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.DisposalDetails;
+import org.egov.inv.model.DisposalDetail;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.WorkFlowDetails;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -23,6 +25,9 @@ import javax.validation.constraints.*;
 public class Disposal   {
   @JsonProperty("id")
   private String id = null;
+  
+  @JsonProperty("tenantId")
+  private String tenantId = null;
 
   @JsonProperty("store")
   private Store store = null;
@@ -43,7 +48,7 @@ public class Disposal   {
   private String description = null;
 
   @JsonProperty("disposalDetails")
-  private List<DisposalDetails> disposalDetails = null;
+  private List<DisposalDetail> disposalDetails = null;
 
   /**
    * disposal status of the Disposal 
@@ -90,7 +95,10 @@ public class Disposal   {
   private Long stateId = null;
 
   @JsonProperty("totalDisposalValue")
-  private Double totalDisposalValue = null;
+  private BigDecimal totalDisposalValue = null;
+  
+  @JsonProperty("auditDetails")
+  private AuditDetails auditDetails = null;
 
   public Disposal id(String id) {
     this.id = id;
@@ -112,6 +120,28 @@ public class Disposal   {
     this.id = id;
   }
 
+  public Disposal tenantId(String tenantId) {
+	    this.tenantId = tenantId;
+	    return this;
+	  }
+
+	/**
+	 * Tenant id of the Material Issue
+	 * 
+	 * @return tenantId
+	 **/
+	@ApiModelProperty(required = true, value = "Tenant id of the Disposal")
+	  @NotNull
+
+	 @Size(min=4,max=128)
+	  public String getTenantId() {
+	    return tenantId;
+	  }
+
+	  public void setTenantId(String tenantId) {
+	    this.tenantId = tenantId;
+	  }
+	  
   public Disposal store(Store store) {
     this.store = store;
     return this;
@@ -236,14 +266,14 @@ public class Disposal   {
     this.description = description;
   }
 
-  public Disposal disposalDetails(List<DisposalDetails> disposalDetails) {
+  public Disposal disposalDetails(List<DisposalDetail> disposalDetails) {
     this.disposalDetails = disposalDetails;
     return this;
   }
 
-  public Disposal addDisposalDetailsItem(DisposalDetails disposalDetailsItem) {
+  public Disposal addDisposalDetailsItem(DisposalDetail disposalDetailsItem) {
     if (this.disposalDetails == null) {
-      this.disposalDetails = new ArrayList<DisposalDetails>();
+      this.disposalDetails = new ArrayList<DisposalDetail>();
     }
     this.disposalDetails.add(disposalDetailsItem);
     return this;
@@ -257,11 +287,11 @@ public class Disposal   {
 
   @Valid
 
-  public List<DisposalDetails> getDisposalDetails() {
+  public List<DisposalDetail> getDisposalDetails() {
     return disposalDetails;
   }
 
-  public void setDisposalDetails(List<DisposalDetails> disposalDetails) {
+  public void setDisposalDetails(List<DisposalDetail> disposalDetails) {
     this.disposalDetails = disposalDetails;
   }
 
@@ -327,7 +357,7 @@ public class Disposal   {
     this.stateId = stateId;
   }
 
-  public Disposal totalDisposalValue(Double totalDisposalValue) {
+  public Disposal totalDisposalValue(BigDecimal totalDisposalValue) {
     this.totalDisposalValue = totalDisposalValue;
     return this;
   }
@@ -339,13 +369,35 @@ public class Disposal   {
   @ApiModelProperty(value = "totalDisposalValue  denormalized value from Disposal Details ")
 
 
-  public Double getTotalDisposalValue() {
+  public BigDecimal getTotalDisposalValue() {
     return totalDisposalValue;
   }
 
-  public void setTotalDisposalValue(Double totalDisposalValue) {
+  public void setTotalDisposalValue(BigDecimal totalDisposalValue) {
     this.totalDisposalValue = totalDisposalValue;
   }
+  
+  public Disposal auditDetails(AuditDetails auditDetails) {
+	    this.auditDetails = auditDetails;
+	    return this;
+	  }
+
+	   /**
+	   * Get auditDetails
+	   * @return auditDetails
+	  **/
+	  @ApiModelProperty(value = "")
+
+	  @Valid
+
+	  public AuditDetails getAuditDetails() {
+	    return auditDetails;
+	  }
+
+	  public void setAuditDetails(AuditDetails auditDetails) {
+	    this.auditDetails = auditDetails;
+	  }
+
 
 
   @Override

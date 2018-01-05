@@ -41,9 +41,6 @@ public class MaterialIssueDetail {
 	@JsonProperty("quantityIssued")
 	private BigDecimal quantityIssued = null;
 
-	@JsonProperty("balanceQuantity")
-	private BigDecimal balanceQuantity = null;
-
 	@JsonProperty("value")
 	private BigDecimal value = null;
 
@@ -220,25 +217,6 @@ public class MaterialIssueDetail {
 		this.quantityIssued = quantityIssued;
 	}
 
-	public MaterialIssueDetail balanceQuantity(BigDecimal balanceQuantity) {
-		this.balanceQuantity = balanceQuantity;
-		return this;
-	}
-
-	/**
-	 * balance Quantity of the Material Issue Detail in Base UOM
-	 * 
-	 * @return balanceQuantity
-	 **/
-	@ApiModelProperty(value = "Quantity issued of the Material Issue Detail in Base UOM ")
-
-	public BigDecimal getBalanceQuantity() {
-		return balanceQuantity;
-	}
-
-	public void setBalanceQuantity(BigDecimal balanceQuantity) {
-		this.balanceQuantity = balanceQuantity;
-	}
 
 	public MaterialIssueDetail value(BigDecimal value) {
 		this.value = value;
@@ -449,7 +427,6 @@ public class MaterialIssueDetail {
 				&& Objects.equals(this.orderNumber, materialIssueDetail.orderNumber)
 				&& Objects.equals(this.userQuantityIssued, materialIssueDetail.userQuantityIssued)
 				&& Objects.equals(this.quantityIssued, materialIssueDetail.quantityIssued)
-				&& Objects.equals(this.balanceQuantity, materialIssueDetail.balanceQuantity)
 				&& Objects.equals(this.value, materialIssueDetail.value)
 				&& Objects.equals(this.uom, materialIssueDetail.uom)
 				&& Objects.equals(this.voucherHeader, materialIssueDetail.voucherHeader)
@@ -463,7 +440,7 @@ public class MaterialIssueDetail {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, material, orderNumber, userQuantityIssued, quantityIssued, balanceQuantity,
+		return Objects.hash(id, tenantId, material, orderNumber, userQuantityIssued, quantityIssued,
 				value, uom, voucherHeader, indentDetail, quantityToBeIssued, scrapValue, mrnNumber, description,
 				materialIssuedFromReceipts);
 	}
@@ -479,7 +456,6 @@ public class MaterialIssueDetail {
 		sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
 		sb.append("    userQuantityIssued: ").append(toIndentedString(userQuantityIssued)).append("\n");
 		sb.append("    quantityIssued: ").append(toIndentedString(quantityIssued)).append("\n");
-		sb.append("    balanceQuantity: ").append(toIndentedString(balanceQuantity)).append("\n");
 		sb.append("    value: ").append(toIndentedString(value)).append("\n");
 		sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
 		sb.append("    voucherHeader: ").append(toIndentedString(voucherHeader)).append("\n");

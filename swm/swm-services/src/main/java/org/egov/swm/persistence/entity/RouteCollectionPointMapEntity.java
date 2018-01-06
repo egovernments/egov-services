@@ -33,7 +33,7 @@ public class RouteCollectionPointMapEntity {
 
     private Boolean isEndingCollectionPoint = null;
 
-    private String endingDumpingGroundPoint = null;
+    private String dumpingGround = null;
 
     public RouteCollectionPointMap toDomain() {
 
@@ -46,7 +46,7 @@ public class RouteCollectionPointMapEntity {
         routeCollectionPointMap.setGarbageEstimate(garbageEstimate);
         routeCollectionPointMap.setIsEndingCollectionPoint(isEndingCollectionPoint);
         routeCollectionPointMap.setIsStartingCollectionPoint(isStartingCollectionPoint);
-        routeCollectionPointMap.setEndingDumpingGroundPoint(DumpingGround.builder().code(endingDumpingGroundPoint).build());
+        routeCollectionPointMap.setDumpingGround(DumpingGround.builder().code(dumpingGround).build());
 
         return routeCollectionPointMap;
 

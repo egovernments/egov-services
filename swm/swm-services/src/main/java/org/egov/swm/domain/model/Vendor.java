@@ -59,7 +59,7 @@ public class Vendor {
     @JsonProperty("servicesOffered")
     private List<SwmProcess> servicesOffered = null;
 
-    @Length(min = 10, max = 500, message = "Value of details shall be between 10 and 500")
+    @Length(min = 0, max = 500, message = "Value of details shall be between 10 and 500")
     @JsonProperty("details")
     private String details = null;
 

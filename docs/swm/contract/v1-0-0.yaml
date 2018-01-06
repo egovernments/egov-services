@@ -1801,7 +1801,13 @@ definitions:
           minLength: 1
         collectionType:  
           $ref: "#/definitions/CollectionType"
-        routeCollectionPointMaps:
+        startingCollectionPoint:  
+          $ref: "#/definitions/RouteCollectionPointMap"
+        endingCollectionPoint:  
+          $ref: "#/definitions/RouteCollectionPointMap"
+        endingDumpingGround:  
+          $ref: "#/definitions/RouteCollectionPointMap"
+        collectionPoints:
           type: array
           items:
             $ref: '#/definitions/RouteCollectionPointMap'
@@ -1811,7 +1817,9 @@ definitions:
       required:
       - tenantId
       - name
-      - routeCollectionPointMaps
+      - collectionType
+      - startingCollectionPoint
+      - collectionPoints
       
     RouteCollectionPointMap:
       type: object
@@ -1840,7 +1848,7 @@ definitions:
         collectionPoint:
           description: collectio point will be shown based on what collection type  and what location has been selected.
           $ref: "#/definitions/CollectionPoint"
-        endingDumpingGroundPoint:
+        dumpingGround:
           description: This dropdown will show the list of dumping grounds and processing plants. Either endPoint or Dumping ground can be selected. At least one has to be selected
           $ref: "#/definitions/DumpingGround"
           format: singleValueList
@@ -3663,6 +3671,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

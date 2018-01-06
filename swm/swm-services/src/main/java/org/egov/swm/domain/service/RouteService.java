@@ -52,6 +52,7 @@ public class RouteService {
             r.setCode(UUID.randomUUID().toString().replace("-", ""));
 
         }
+
         return routeRepository.save(routeRequest);
 
     }
@@ -102,32 +103,42 @@ public class RouteService {
             else
                 throw new CustomException("CollectionType", "CollectionType is required");
 
+            if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCollectionPoint() != null
+                    && route.getEndingCollectionPoint().getCollectionPoint().getCode() != null
+                    && !route.getEndingCollectionPoint().getCollectionPoint().getCode().isEmpty()
+                    && route.getEndingDumpingGround() != null && route.getEndingDumpingGround().getDumpingGround() != null
+                    && route.getEndingDumpingGround().getDumpingGround().getCode() != null
+                    && !route.getEndingDumpingGround().getDumpingGround().getCode().isEmpty())
+                throw new CustomException("CollectionPoint",
+                        "Both Ending Collection point and  Ending Dumping Ground cannot pass .");
+
             // Validate CollectionPoints
-            if (route.getRouteCollectionPointMaps() != null) {
-                for (RouteCollectionPointMap rcpm : route.getRouteCollectionPointMaps()) {
+            if (route.getCollectionPoints() != null) {
+
+                route.getStartingCollectionPoint().setIsStartingCollectionPoint(true);
+
+                route.getCollectionPoints().add(route.getStartingCollectionPoint());
+
+                if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCollectionPoint() != null
+                        && route.getEndingCollectionPoint().getCollectionPoint().getCode() != null
+                        && !route.getEndingCollectionPoint().getCollectionPoint().getCode().isEmpty()) {
+
+                    route.getEndingCollectionPoint().setIsEndingCollectionPoint(true);
+                    route.getCollectionPoints().add(route.getEndingCollectionPoint());
+
+                }
+
+                if (route.getEndingDumpingGround() != null && route.getEndingDumpingGround().getDumpingGround() != null
+                        && route.getEndingDumpingGround().getDumpingGround().getCode() != null
+                        && !route.getEndingDumpingGround().getDumpingGround().getCode().isEmpty()) {
+
+                    route.getCollectionPoints().add(route.getEndingDumpingGround());
+
+                }
+
+                for (RouteCollectionPointMap rcpm : route.getCollectionPoints()) {
                     rcpm.setId(UUID.randomUUID().toString().replace("-", ""));
                     rcpm.setTenantId(route.getTenantId());
-
-                    if (rcpm != null && rcpm.getIsStartingCollectionPoint() != null && rcpm.getIsEndingCollectionPoint() != null
-                            && rcpm.getIsStartingCollectionPoint() && rcpm.getIsEndingCollectionPoint())
-                        throw new CustomException("CollectionPoint",
-                                "Both IsStartingCollectionPoint and IsEndingCollectionPoint cannot be true");
-
-                    if (rcpm != null && rcpm.getEndingDumpingGroundPoint() != null
-                            && rcpm.getEndingDumpingGroundPoint().getCode() != null
-                            && !rcpm.getEndingDumpingGroundPoint().getCode().isEmpty() && rcpm.getCollectionPoint() != null
-                            && rcpm.getCollectionPoint().getCode() != null && !rcpm.getCollectionPoint().getCode().isEmpty())
-                        throw new CustomException("CollectionPoint",
-                                "Both Collection point and  Ending DumpingGround cannot be  Mandatory .");
-
-                    if (rcpm != null
-                            && (rcpm.getCollectionPoint() == null
-                                    || (rcpm.getCollectionPoint().getCode() == null
-                                            || rcpm.getCollectionPoint().getCode().isEmpty()))
-                            && (rcpm.getEndingDumpingGroundPoint() == null || rcpm.getEndingDumpingGroundPoint().getCode() == null
-                                    || rcpm.getEndingDumpingGroundPoint().getCode().isEmpty()))
-                        throw new CustomException("CollectionPoint",
-                                "The field CollectionPoint Code or Ending DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
                     if (rcpm != null && rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null
                             && !rcpm.getCollectionPoint().getCode().isEmpty()) {
@@ -146,10 +157,10 @@ public class RouteService {
                     }
 
                     // Validate Ending Dumping ground
-                    if (rcpm.getEndingDumpingGroundPoint() != null && rcpm.getEndingDumpingGroundPoint().getCode() != null
-                            && !rcpm.getEndingDumpingGroundPoint().getCode().isEmpty())
-                        rcpm.setEndingDumpingGroundPoint(dumpingGroundService.getDumpingGround(route.getTenantId(),
-                                rcpm.getEndingDumpingGroundPoint().getCode(), routeRequest.getRequestInfo()));
+                    if (rcpm.getDumpingGround() != null && rcpm.getDumpingGround().getCode() != null
+                            && !rcpm.getDumpingGround().getCode().isEmpty())
+                        rcpm.setDumpingGround(dumpingGroundService.getDumpingGround(route.getTenantId(),
+                                rcpm.getDumpingGround().getCode(), routeRequest.getRequestInfo()));
 
                 }
             }

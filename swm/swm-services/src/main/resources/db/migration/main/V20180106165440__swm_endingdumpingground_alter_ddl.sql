@@ -1,0 +1,1 @@
+ALTER TABLE egswm_routecollectionpointmap RENAME COLUMN endingDumpingGroundPoint TO dumpingGround;

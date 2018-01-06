@@ -43,7 +43,7 @@ public class RouteCollectionPointMap {
     @JsonProperty("isEndingCollectionPoint")
     private Boolean isEndingCollectionPoint = null;
 
-    @JsonProperty("endingDumpingGroundPoint")
-    private DumpingGround endingDumpingGroundPoint = null;
+    @JsonProperty("dumpingGround")
+    private DumpingGround dumpingGround = null;
 
 }

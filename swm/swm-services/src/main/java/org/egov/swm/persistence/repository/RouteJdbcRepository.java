@@ -159,6 +159,8 @@ public class RouteJdbcRepository extends JdbcRepository {
 
             populateRouteCollectionPointMaps(routeList, routeCodes.toString());
 
+            populateStartingAndEndingCollectionPoints(routeList);
+
         }
 
         page.setTotalResults(routeList.size());
@@ -166,6 +168,47 @@ public class RouteJdbcRepository extends JdbcRepository {
         page.setPagedData(routeList);
 
         return page;
+    }
+
+    private void populateStartingAndEndingCollectionPoints(List<Route> routeList) {
+
+        RouteCollectionPointMap startingCollectionPoint;
+
+        RouteCollectionPointMap endingCollectionPoint;
+
+        RouteCollectionPointMap endingDumpingGround;
+
+        List<RouteCollectionPointMap> collectionPoints;
+
+        for (Route route : routeList) {
+
+            startingCollectionPoint = null;
+            endingCollectionPoint = null;
+            endingDumpingGround = null;
+
+            collectionPoints = new ArrayList<>();
+
+            for (RouteCollectionPointMap map : route.getCollectionPoints()) {
+
+                if (map != null && map.getIsStartingCollectionPoint() != null && map.getIsStartingCollectionPoint()) {
+                    startingCollectionPoint = map;
+                } else if (map != null && map.getIsEndingCollectionPoint() != null && map.getIsEndingCollectionPoint()) {
+                    endingCollectionPoint = map;
+                } else if (map != null && map.getDumpingGround() != null && map.getDumpingGround().getCode() != null
+                        && !map.getDumpingGround().getCode().isEmpty()) {
+                    endingDumpingGround = map;
+                } else {
+
+                    collectionPoints.add(map);
+                }
+            }
+
+            route.setStartingCollectionPoint(startingCollectionPoint);
+            route.setEndingCollectionPoint(endingCollectionPoint);
+            route.setEndingDumpingGround(endingDumpingGround);
+            route.setCollectionPoints(collectionPoints);
+
+        }
     }
 
     private void populateCollectionTypes(List<Route> routeList) {
@@ -260,10 +303,10 @@ public class RouteJdbcRepository extends JdbcRepository {
         if (routeCollectionPoints != null)
             for (RouteCollectionPointMap rcp : routeCollectionPoints) {
 
-                if (rcp.getEndingDumpingGroundPoint() != null && rcp.getEndingDumpingGroundPoint().getCode() != null
-                        && !rcp.getEndingDumpingGroundPoint().getCode().isEmpty()) {
+                if (rcp.getDumpingGround() != null && rcp.getDumpingGround().getCode() != null
+                        && !rcp.getDumpingGround().getCode().isEmpty()) {
 
-                    rcp.setEndingDumpingGroundPoint(dumpingGroundMap.get(rcp.getEndingDumpingGroundPoint().getCode()));
+                    rcp.setDumpingGround(dumpingGroundMap.get(rcp.getDumpingGround().getCode()));
                 }
 
                 if (rcp.getCollectionPoint() != null && rcp.getCollectionPoint().getCode() != null
@@ -289,7 +332,7 @@ public class RouteJdbcRepository extends JdbcRepository {
 
         for (Route route : routeList) {
 
-            route.setRouteCollectionPointMaps(routeCollectionPointMap.get(route.getCode()));
+            route.setCollectionPoints(routeCollectionPointMap.get(route.getCode()));
 
         }
 

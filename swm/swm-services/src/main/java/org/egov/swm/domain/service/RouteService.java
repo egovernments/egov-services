@@ -115,9 +115,13 @@ public class RouteService {
             // Validate CollectionPoints
             if (route.getCollectionPoints() != null) {
 
-                route.getStartingCollectionPoint().setIsStartingCollectionPoint(true);
+                if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCollectionPoint() != null
+                        && route.getStartingCollectionPoint().getCollectionPoint().getCode() != null
+                        && !route.getStartingCollectionPoint().getCollectionPoint().getCode().isEmpty()) {
 
-                route.getCollectionPoints().add(route.getStartingCollectionPoint());
+                    route.getStartingCollectionPoint().setIsStartingCollectionPoint(true);
+                    route.getCollectionPoints().add(route.getStartingCollectionPoint());
+                }
 
                 if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCollectionPoint() != null
                         && route.getEndingCollectionPoint().getCollectionPoint().getCode() != null

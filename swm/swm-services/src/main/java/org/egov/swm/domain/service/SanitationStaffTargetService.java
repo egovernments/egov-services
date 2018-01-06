@@ -126,14 +126,10 @@ public class SanitationStaffTargetService {
                         sanitationStaffTarget.getSwmProcess().getCode(),
                         sanitationStaffTargetRequest.getRequestInfo()));
 
-            if (sanitationStaffTarget.getRoute() != null && (sanitationStaffTarget.getRoute().getCode() == null
-                    || sanitationStaffTarget.getRoute().getCode().isEmpty()))
-                throw new CustomException("Route",
-                        "The field Route Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
             // Validate Route
 
-            if (sanitationStaffTarget.getRoute() != null && sanitationStaffTarget.getRoute().getCode() != null) {
+            if (sanitationStaffTarget.getRoute() != null && sanitationStaffTarget.getRoute().getCode() != null
+                    && !sanitationStaffTarget.getRoute().getCode().isEmpty()) {
 
                 routeSearch.setTenantId(sanitationStaffTarget.getTenantId());
                 routeSearch.setCode(sanitationStaffTarget.getRoute().getCode());

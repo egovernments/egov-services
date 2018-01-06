@@ -23,7 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Vendor {
 
-    @Length(min = 1, max = 256, message = "Value of vendorNo shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of vendorNo shall be between 1 and 256")
     @JsonProperty("vendorNo")
     private String vendorNo = null;
 
@@ -43,6 +43,7 @@ public class Vendor {
     private List<Boundary> servicedLocations = null;
 
     @NotNull
+    @Length(min = 1, max = 256, message = "Value of registrationNo shall be between 1 and 256")
     @JsonProperty("registrationNo")
     private String registrationNo = null;
 

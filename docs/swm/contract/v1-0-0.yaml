@@ -2402,7 +2402,7 @@ definitions:
           type: string
           description: email ID of the supplier. If entered, must contain @ and .
           maxLength: 256
-          minLength: 6
+          minLength: 7
         address:
           type: string
           description: address of the supplier
@@ -2421,7 +2421,7 @@ definitions:
         aadharNo:
           type: string
           description: aadharNo of the vendor. Combination of supplier name and Aadhar should be unique. 
-          minimum: 100000000000
+          minimum: 0
           maximum: 999999999999
       required:
       - tenantId
@@ -3663,6 +3663,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

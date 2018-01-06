@@ -108,10 +108,15 @@ public class RouteService {
                     rcpm.setId(UUID.randomUUID().toString().replace("-", ""));
                     rcpm.setTenantId(route.getTenantId());
 
+                    if (rcpm != null && rcpm.getIsStartingCollectionPoint() != null && rcpm.getIsEndingCollectionPoint() != null
+                            && rcpm.getIsStartingCollectionPoint() && rcpm.getIsEndingCollectionPoint())
+                        throw new CustomException("CollectionPoint",
+                                "Both IsStartingCollectionPoint and IsEndingCollectionPoint cannot be true");
+
                     if (rcpm != null && rcpm.getEndingDumpingGroundPoint() != null
                             && rcpm.getEndingDumpingGroundPoint().getCode() != null
                             && !rcpm.getEndingDumpingGroundPoint().getCode().isEmpty() && rcpm.getCollectionPoint() != null
-                            || rcpm.getCollectionPoint().getCode() == null && !rcpm.getCollectionPoint().getCode().isEmpty())
+                            && rcpm.getCollectionPoint().getCode() != null && !rcpm.getCollectionPoint().getCode().isEmpty())
                         throw new CustomException("CollectionPoint",
                                 "Both Collection point and  Ending DumpingGround cannot be  Mandatory .");
 

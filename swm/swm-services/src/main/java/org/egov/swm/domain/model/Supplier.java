@@ -26,7 +26,7 @@ public class Supplier {
     @Length(min = 0, max = 128, message = "Value of supplierNo shall be between 1 and 128")
     @JsonProperty("supplierNo")
     private String supplierNo = null;
-    
+
     private String supplierNos = null;
 
     @Length(min = 0, max = 100, message = "Value of name shall be between 1 and 100")
@@ -38,12 +38,11 @@ public class Supplier {
     private String agencyName = null;
 
     @NotNull
-    @Length(min = 7, max = 256, message = "Value of email shall be between 1 and 256")
+    @Length(min = 7, max = 256, message = "Value of email shall be between 7 and 256")
     @JsonProperty("email")
     private String email = null;
 
-    @NotNull
-    @Length(min = 1, max = 256, message = "Value of tinNumber shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of tinNumber shall be between 1 and 256")
     @JsonProperty("tinNumber")
     private String tinNumber = null;
 
@@ -52,7 +51,7 @@ public class Supplier {
     @JsonProperty("gst")
     private String gst = null;
 
-    @Length(min = 10, max = 10, message = "Please enter a ten digit mobile number")
+    @Length(min = 0, max = 10, message = "Please enter a ten digit mobile number")
     @JsonProperty("mobileNo")
     private String mobileNo = null;
 

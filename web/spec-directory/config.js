@@ -70,7 +70,7 @@ const data =
 
 	"inventory" :
 	{
-		"isSpecificHeader": false,
+		"isSpecificHeader": true,
 		"url": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/inventory/contracts/V1-0-0.yaml",
 		"masters":
 		[

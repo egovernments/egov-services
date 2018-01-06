@@ -66,7 +66,18 @@ const data =
 		[
 
 		]
+	},
+
+	"inventory" :
+	{
+		"isSpecificHeader": false,
+		"url": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/inventory/contracts/V1-0-0.yaml",
+		"masters":
+		[
+			
+		]
 	}
+
 
 
 }

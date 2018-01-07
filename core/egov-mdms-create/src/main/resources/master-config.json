@@ -29,6 +29,7 @@
     "AssetCategory": {
       "masterName": "AssetCategory",
       "moduleDefinition": null,
+       "isStateLevel" : true,
       "uniqueKeys": [
         "$.id",
         "$.tenantId"

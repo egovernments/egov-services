@@ -115,6 +115,27 @@ public class AgreementValidator {
 		}
 	}
 
+	public void validateModifiedData(AgreementRequest agreementRequest, Errors errors) {
+
+		Agreement agreement = agreementRequest.getAgreement();
+		Date expiryDate = agreementService.getExpiryDate(agreement);
+		Date currentDate = new Date();
+		if (agreement.getCollectedSecurityDeposit() != null
+				&& (agreement.getSecurityDeposit().compareTo(agreement.getCollectedSecurityDeposit()) < 0))
+			errors.rejectValue("Agreement.CollectedSecurotyDeposit", "",
+					"collectedSecurityDeposit should not be greater than security deposit");
+
+		if (agreement.getCollectedGoodWillAmount() != null
+				&& (agreement.getGoodWillAmount().compareTo(agreement.getCollectedGoodWillAmount()) < 0))
+			errors.rejectValue("Agreement.CollectedGoodWillAmount", "",
+					"CollectedGoodWillAmount should not be greater than GoodWillAmount");
+		if (currentDate.after(expiryDate)) {
+			errors.rejectValue("Agreement.TimePeriod", "",
+					"Can not create history agreement,please change Timeperiod/CommencementDate");
+		}
+		
+
+	}
 	public void validateEviction(AgreementRequest agreementRequest, Errors errors) {
 
 		Agreement agreement = agreementRequest.getAgreement();

@@ -83,13 +83,14 @@ $(document).ready(function() {
   // console.log(getUrlVars()["agreementNumber"]);
   if(getUrlVars()["agreementNumber"]){
     //modify - autopopulate the fields
-    commonApiPost('lams-services/agreements/_search', '','',{tenantId:tenantId,agreementNumber:getUrlVars()["agreementNumber"]}).then(function(response){
+    commonApiPost('lams-services/agreements/_search', '','',{tenantId:tenantId,action:"Modify",agreementNumber:getUrlVars()["agreementNumber"]}).then(function(response){
       if(response.Agreements[0].source === 'DATA_ENTRY' ){
         $('#pageTitle').html('Modify Agreement-- Data Entry');
         create=false;
         let modifyAgreements = response.Agreements[0];
         fillValueToObject({id:'id',name:'id',value:modifyAgreements['id']});
         fillValueToObject({id:'agreementNumber',name:'agreementNumber',value:modifyAgreements['agreementNumber']});
+        fillValueToObject({id:'isUnderWorkflow',name:'isUnderWorkflow',value:modifyAgreements['isUnderWorkflow']});
         // console.log(modifyAgreements);
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){

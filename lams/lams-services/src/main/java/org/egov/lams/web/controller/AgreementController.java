@@ -143,6 +143,7 @@ public class AgreementController {
 
 		LOGGER.info("agreementRequest::" + agreementRequest);
 		agreementValidator.validateModify(agreementRequest, errors);
+		agreementValidator.validateCreate(agreementRequest, errors);
 
 		if (errors.hasErrors()) {
 			ErrorResponse errorResponse = populateValidationErrors(errors);

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
+import org.egov.lams.model.SubSeqRenewal;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,21 +35,30 @@ public class AgreementHelper {
 		for (Asset asset : assets) {
 			assetMap.put(asset.getId(), asset);
 		}
-		int totalMatch=1;
 		for (Agreement agreement : agreements) {
 			Long allotteeId = agreement.getAllottee().getId();
 			Long assetId = agreement.getAsset().getId();
 			if (allotteeMap.containsKey(allotteeId) && 
 					assetMap.containsKey(assetId)) 
 			{
-				System.err.println("inside matching " +totalMatch++);
 				agreement.setAllottee(allotteeMap.get(allotteeId));
 				agreement.setAsset(assetMap.get(assetId));
 				newAgreements.add(agreement);
 			}
 		}
-		System.err.println("total matches between agreement seet and allottee :"+totalMatch);
-		System.err.println("inside filter and enrich agreements"+newAgreements);
+		return newAgreements;
+	}
+	
+	public List<Agreement> enrichAgreementsWithSubSeqRenewals(List<Agreement> agreements,
+			Map<Long, List<SubSeqRenewal>> subSeqRenewalMap) {
+		List<Agreement> newAgreements = new ArrayList<>();
+
+		for (Agreement agreement : agreements) {
+			if (subSeqRenewalMap.containsKey(agreement.getId())) {
+				agreement.setSubSeqRenewals(subSeqRenewalMap.get(agreement.getId()));
+			}
+			newAgreements.add(agreement);
+		}
 		return newAgreements;
 	}
 

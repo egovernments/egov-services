@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
@@ -26,6 +27,7 @@ import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
 import org.egov.lams.repository.helper.AssetHelper;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
+import org.egov.lams.repository.rowmapper.SubSeqRenewalRowMapper;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AllotteeResponse;
 import org.egov.lams.web.contract.AssetResponse;
@@ -55,6 +57,8 @@ public class AgreementRepository {
 	public static final String SOURCE_DATAENTRY = "DATA_ENTRY";
 	
 	public static final String SOURCE_SYSTEM = "SYSTEM";
+	
+	public static final String ACTION_MODIFY ="MODIFY";
 
 	@Autowired
     private AssetHelper assetHelper;
@@ -178,8 +182,11 @@ public class AgreementRepository {
         List<Asset> assets = getAssets(agreementCriteria, requestInfo);
         List<Allottee> allottees = getAllottees(agreementCriteria, requestInfo);
         agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
+		if (ACTION_MODIFY.equalsIgnoreCase(agreementCriteria.getAction())) {
+			agreements = agreementHelper.enrichAgreementsWithSubSeqRenewals(agreements, getSubSeqRenewals(agreements));
+		}
 
-        return agreements;
+		return agreements;
     }
 
     public List<Agreement> findByAgreementAndAllotee(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
@@ -456,26 +463,29 @@ public class AgreementRepository {
 				throw new RuntimeException(ex.getMessage());
 			}
 		}
-		List<Object[]> renewHistorytBatchArgs = new ArrayList<>();
+		List<Object[]> updateBatchArgs;
+		List<Object[]> insertBatchArgs;
+		Map<String, List<Object[]>> paramsMap = null;
 		List<SubSeqRenewal> renewalDetails = agreement.getSubSeqRenewals();
 		if (!renewalDetails.isEmpty()) {
+			String insertQuery = "INSERT INTO eglams_history (id,agreementid,fromdate,todate,years,rent,tenantid) values "
+					+ "(nextval('seq_eglams_history'),?,?,?,?,?,?);";
 			String updateQuery = "update eglams_history set fromdate=?,todate=?,years=?,rent=?,tenantid=? where agreementid=? ";
-			for (SubSeqRenewal renewalHistory : renewalDetails) {
-
-				Object[] historyDetailList = { renewalHistory.getHistoryFromDate(), renewalHistory.getHistoryToDate(),
-						renewalHistory.getYears(), renewalHistory.getHistoryRent(), agreement.getTenantId(),
-						agreement.getId() };
-				renewHistorytBatchArgs.add(historyDetailList);
-			}
+			paramsMap = getUpdateBatchParamsList(agreement.getId(), renewalDetails, agreement.getTenantId());
+			updateBatchArgs = paramsMap.get("UPDATEARGS");
+			insertBatchArgs = paramsMap.get("INSERTARGS");
 			try {
-				jdbcTemplate.batchUpdate(updateQuery, renewHistorytBatchArgs);
+				jdbcTemplate.batchUpdate(updateQuery, updateBatchArgs);
+				if (!insertBatchArgs.isEmpty()) {
+					jdbcTemplate.batchUpdate(insertQuery, insertBatchArgs);
+				}
 
 			} catch (DataAccessException ex) {
 				logger.error("the exception in updating subseqrenewal in modify agreement" + ex);
 				throw new RuntimeException(ex.getMessage());
 			}
-		}
 
+		}
 		try {
 			namedParameterJdbcTemplate.update(agreementUpdate, agreementParameters);
 		} catch (DataAccessException ex) {
@@ -699,4 +709,55 @@ public class AgreementRepository {
         }
         return status;
     }
+    
+	private Map<String, List<Object[]>> getUpdateBatchParamsList(Long agreementId, List<SubSeqRenewal> renewalDetails,
+			String tenantId) {
+		Map<String, List<Object[]>> paramsMap = new HashMap<>();
+		List<Object[]> updateBatchArgs = new ArrayList<>();
+		List<Object[]> insertBatchArgs = new ArrayList<>();
+		for (SubSeqRenewal renewalHistory : renewalDetails) {
+			if (renewalHistory.getAgreementid() != null) {
+				Object[] historyDetailUpdateList = { renewalHistory.getHistoryFromDate(),
+						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
+						tenantId, agreementId };
+				updateBatchArgs.add(historyDetailUpdateList);
+			} else {
+				Object[] historyDetailInsertList = { agreementId, renewalHistory.getHistoryFromDate(),
+						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
+						tenantId };
+				insertBatchArgs.add(historyDetailInsertList);
+			}
+		}
+		paramsMap.put("UPDATEARGS", updateBatchArgs);
+		paramsMap.put("INSERTARGS", insertBatchArgs);
+
+		return paramsMap;
+	}
+    
+	private Map<Long, List<SubSeqRenewal>> getSubSeqRenewals(List<Agreement> agreements) {
+		List<Long> agreementIds = new ArrayList<>();
+		String query = "select * from eglams_history where agreementid in ( ";
+		String agreementIdQuery = null;
+		List<SubSeqRenewal> subSeqRenewals = null;
+		Map<Long, List<SubSeqRenewal>> map = new HashMap<>();
+		for (Agreement agreement : agreements) {
+			agreementIds.add(agreement.getId());
+
+		}
+		agreementIdQuery = AgreementQueryBuilder.getAgreementIdQuery(agreementIds);
+		query = query + agreementIdQuery;
+		try {
+			subSeqRenewals = namedParameterJdbcTemplate.query(query, new SubSeqRenewalRowMapper());
+		} catch (DataAccessException e) {
+			logger.info("exception in getting subseqrenewal to enrich agreement :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		if (!subSeqRenewals.isEmpty()) {
+
+			map = subSeqRenewals.stream().collect(Collectors.groupingBy(SubSeqRenewal::getAgreementid));
+
+		}
+		return map;
+	}
+	
 }

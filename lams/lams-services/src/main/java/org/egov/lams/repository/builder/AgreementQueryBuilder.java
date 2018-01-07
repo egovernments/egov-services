@@ -4,6 +4,7 @@ import org.egov.lams.model.AgreementCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 public class AgreementQueryBuilder {
@@ -133,6 +134,16 @@ public class AgreementQueryBuilder {
         logger.info("the complete select query for agreement search : " + selectQuery.toString());
 
         return selectQuery;
+    }
+    
+    public static String getAgreementIdQuery(final List<Long> idList) {
+        StringBuilder query = null;
+        if (!idList.isEmpty()) {
+            query = new StringBuilder(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++)
+                query.append("," + idList.get(i));
+        }
+        return query.append(")").toString();
     }
 
 }

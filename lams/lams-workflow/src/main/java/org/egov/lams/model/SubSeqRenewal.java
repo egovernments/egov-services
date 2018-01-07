@@ -26,5 +26,7 @@ public class SubSeqRenewal {
 
 	@JsonProperty("rent")
 	private Double historyRent;
+	
+	private Long agreementid;
 
 }

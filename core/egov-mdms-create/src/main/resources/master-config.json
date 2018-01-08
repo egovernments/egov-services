@@ -273,8 +273,8 @@
   "tenant": {
     "tenants": {
       "masterName": "tenants",
-      "moduleDefinition": null,
       "isStateLevel": true,
+      "moduleDefinition": null,
       "uniqueKeys": [
         "$.code"
       ]

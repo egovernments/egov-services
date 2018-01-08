@@ -143,7 +143,44 @@ class RemissionAgreement extends React.Component {
         var agreement = Object.assign({}, _this.state.agreement);
         agreement.action = "Remission";
 
-        console.log("Documents", agreement);
+        if(_this.state.agreement.remission.remissionFromDate && _this.state.agreement.remission.remissionDate){
+
+            var  _to= _this.state.agreement.remission.remissionFromDate;
+            var _from = _this.state.agreement.remission.remissionDate;
+            var _triggerId = e.target.id;
+            if (_from && _to) {
+                var dateParts1 = _from.split("/");
+                var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                var date1 = new Date(newDateStr);
+                var dateParts2 = _to.split("/");
+                var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                var date2 = new Date(newDateStr);
+                if(date2<date1){
+                  return  (showError("Remission Order Date should be before Remission From Date"));
+                  $('#' + _triggerId).val("");
+                }
+            }
+          }
+
+
+          if(_this.state.agreement.remission.remissionFromDate && _this.state.agreement.remission.remissionToDate){
+
+            var  _to= _this.state.agreement.remission.remissionToDate;
+            var _from = _this.state.agreement.remission.remissionFromDate;
+            var _triggerId = e.target.id;
+            if (_from && _to) {
+                var dateParts1 = _from.split("/");
+                var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                var date1 = new Date(newDateStr);
+                var dateParts2 = _to.split("/");
+                var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                var date2 = new Date(newDateStr);
+                if(date2<date1){
+                  return  (showError("Remission From Date should be before Remission To Date"));
+                  $('#' + _triggerId).val("");
+                }
+            }
+          }
 
         if (agreement.documents && agreement.documents.constructor == FileList) {
             let counter = agreement.documents.length,
@@ -424,49 +461,6 @@ class RemissionAgreement extends React.Component {
                     }
                 }
             });
-        });
-
-
-        $('#remissionToDate, #remissionFromDate, #remissionDate').on('change', function (e) {
-
-        if(_this.state.agreement.remission.remissionFromDate && _this.state.agreement.remission.remissionDate){
-
-            var  _to= _this.state.agreement.remission.remissionFromDate;
-            var _from = _this.state.agreement.remission.remissionDate;
-            var _triggerId = e.target.id;
-            if (_from && _to) {
-                var dateParts1 = _from.split("/");
-                var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-                var date1 = new Date(newDateStr);
-                var dateParts2 = _to.split("/");
-                var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-                var date2 = new Date(newDateStr);
-                if(date2<date1){
-                  return  (showError("Remission Order Date should be before Remission From Date"));
-                  $('#' + _triggerId).val("");
-                }
-            }
-          }
-
-
-          if(_this.state.agreement.remission.remissionFromDate && _this.state.agreement.remission.remissionToDate){
-
-            var  _to= _this.state.agreement.remission.remissionToDate;
-            var _from = _this.state.agreement.remission.remissionFromDate;
-            var _triggerId = e.target.id;
-            if (_from && _to) {
-                var dateParts1 = _from.split("/");
-                var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-                var date1 = new Date(newDateStr);
-                var dateParts2 = _to.split("/");
-                var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-                var date2 = new Date(newDateStr);
-                if(date2<date1){
-                  return  (showError("Remission From Date should be before Remission To Date"));
-                  $('#' + _triggerId).val("");
-                }
-            }
-          }
         });
 
     }

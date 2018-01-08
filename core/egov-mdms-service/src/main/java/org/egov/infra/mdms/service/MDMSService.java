@@ -46,8 +46,8 @@ public class MDMSService {
 			String array[] = tenantId.split("\\.");
 			stateLevel = tenantIdMap.get(array[0]);
 			ulbLevel = tenantIdMap.get(tenantId);
-			if (ulbLevel == null)
-				throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");
+			/*if (ulbLevel == null)
+				throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");*/
 		} else {
 			stateLevel = tenantIdMap.get(tenantId);
 			if (stateLevel == null)
@@ -122,12 +122,8 @@ public class MDMSService {
 		}
 		log.info("MasterName... " +  masterName + "isStateLevelConfiguration.."+isStateLevel);
 
-		if (ulbLevel == null || isStateLevel) {
-			if (stateLevel.get(moduleName) != null) {
+		if (isStateLevel && stateLevel.get(moduleName) != null) {
 				return stateLevel.get(moduleName).get(masterName);
-			} else {
-				return null;
-			}
 		} else if (ulbLevel != null && ulbLevel.get(moduleName) != null) {
 			return ulbLevel.get(moduleName).get(masterName);
 		} else {

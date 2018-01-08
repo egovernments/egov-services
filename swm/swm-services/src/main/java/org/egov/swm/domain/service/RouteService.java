@@ -116,7 +116,8 @@ public class RouteService {
                     if (rcpm != null && rcpm.getDumpingGround() != null
                             && rcpm.getDumpingGround().getCode() != null
                             && !rcpm.getDumpingGround().getCode().isEmpty() && rcpm.getCollectionPoint() != null
-                            && rcpm.getCollectionPoint().getCode() != null && !rcpm.getCollectionPoint().getCode().isEmpty())
+                            && rcpm.getCollectionPoint().getCode() != null && !rcpm.getCollectionPoint().getCode().isEmpty()
+                            && rcpm.getIsEndingCollectionPoint())
                         throw new CustomException("CollectionPoint",
                                 "Both Collection point and  Ending DumpingGround cannot be  Mandatory .");
 

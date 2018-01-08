@@ -63,8 +63,17 @@
         "$.code",
         "$.tenantId"
       ]
+    },
+    "NewMaster": {
+      "masterName": "NewMaster",
+      "moduleDefinition": "null",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.id"
+      ]
     }
   },
+  
   "common-masters": {
     "Department": {
       "masterName": "Department",

@@ -81,7 +81,7 @@ public class MDMSService {
 				JSONArray masterData = null;
 				try {
 					masterData = getMasterData(stateLevel, ulbLevel, moduleDetail.getModuleName(),
-							masterDetail.getName());
+							masterDetail.getName(),tenantId);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -100,7 +100,7 @@ public class MDMSService {
 	}
 
 	private JSONArray getMasterData(Map<String, Map<String, JSONArray>> stateLevel,
-			Map<String, Map<String, JSONArray>> ulbLevel, String moduleName, String masterName) throws Exception {
+			Map<String, Map<String, JSONArray>> ulbLevel, String moduleName, String masterName,String tenantId) throws Exception {
 		
 		Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
 
@@ -122,9 +122,16 @@ public class MDMSService {
 		}
 		log.info("MasterName... " +  masterName + "isStateLevelConfiguration.."+isStateLevel);
 
-		if (isStateLevel && stateLevel.get(moduleName) != null) {
+		if (ulbLevel == null || isStateLevel) {
+			if (stateLevel.get(moduleName) != null) {
 				return stateLevel.get(moduleName).get(masterName);
-		} else if (ulbLevel != null && ulbLevel.get(moduleName) != null) {
+			}else {
+				return null;
+			}
+		}
+		/*if (isStateLevel && stateLevel.get(moduleName) != null) {
+				return stateLevel.get(moduleName).get(masterName);
+		}*/ else if (ulbLevel != null && ulbLevel.get(moduleName) != null) {
 			return ulbLevel.get(moduleName).get(masterName);
 		} else {
 			return null;

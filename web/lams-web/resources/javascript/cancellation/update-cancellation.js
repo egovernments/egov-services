@@ -304,6 +304,29 @@ class UpdateCancellation extends React.Component {
         }).responseJSON["tasks"] || {};
 
 
+        if(workflow){
+ 
+
+            for(var i = 0 ; i < workflow.length; i++){
+
+                var employeeName = commonApiPost("hr-employee", "employees", "_search", {
+                    tenantId: tenantId,
+                    id: workflow[i].owner.id
+                }).responseJSON["Employee"] || {};
+
+                workflow[i].employeeName = employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : ""
+
+                if(i === workflow.length-1){
+                    this.setState({
+                        ...this.state,
+                        workflow: workflow
+                    });
+                }
+
+            }
+
+        }
+
         if (process) {
             if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
                 var _btns = [];
@@ -336,14 +359,13 @@ class UpdateCancellation extends React.Component {
             agreement.workflowDetails = {};
         }
 
-
+    
         this.setState({
             ...this.state,
             agreement: agreement,
             departmentList: departmentList,
             initiatorPosition: process.initiatorPosition,
             wfStatus: process.status,
-            workflow: workflow,
             buttons: _btns ? _btns : []
         });
 
@@ -599,8 +621,8 @@ class UpdateCancellation extends React.Component {
 
 
             if (ID === "Reject") {
-
-                if (agreement.workflowDetails.comments || agreement.workflowDetails.comments === "")
+                
+                if (!agreement.workflowDetails.comments)
                     return showError("Please enter the Comments, If you are rejecting");
 
             }
@@ -1228,17 +1250,11 @@ class UpdateCancellation extends React.Component {
         const renderTr = () => {
             return this.state.workflow.map((item, ind) => {
 
-                var employeeName = commonApiPost("hr-employee", "employees", "_search", {
-                    tenantId: tenantId,
-                    id: item.owner.id
-                }).responseJSON["Employee"] || {};
-
-
                 return (
                     <tr key={ind}>
                         <td>{item.createdDate}</td>
                         <td>{item.senderName}</td>
-                        <td>{employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : ""}</td>
+                        <td>{item.employeeName}</td>
                         <td>{item.status}</td>
                         <td>{item.comments}</td>
                     </tr>

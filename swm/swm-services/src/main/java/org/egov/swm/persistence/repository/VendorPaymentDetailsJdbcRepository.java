@@ -120,7 +120,11 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             params.append("((to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
                     " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')" +
                     " or (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
-                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')) ");
+                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')"+
+                    " or (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN"+ 
+                    " (to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata')"+ 
+                    " or (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN"+
+                    " (to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata'))");
             paramValues.put("fromDate", searchRequest.getFromDate());
             paramValues.put("toDate", searchRequest.getToDate());
         }

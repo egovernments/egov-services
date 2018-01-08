@@ -88,14 +88,18 @@ $(document).ready(function() {
         $('#pageTitle').html('Modify Agreement-- Data Entry');
         create=false;
         let modifyAgreements = response.Agreements[0];
-        fillValueToObject({id:'id',name:'id',value:modifyAgreements['id']});
-        fillValueToObject({id:'agreementNumber',name:'agreementNumber',value:modifyAgreements['agreementNumber']});
-        fillValueToObject({id:'isUnderWorkflow',name:'isUnderWorkflow',value:modifyAgreements['isUnderWorkflow']});
         // console.log(modifyAgreements);
+        agreement = {...modifyAgreements};
+        if(agreement['subSeqRenewals'].length > 1){
+          for(let i=1;i<agreement['subSeqRenewals'].length;i++){
+            cloneRow();
+          }
+        }
+        //Load subSeqRenewals based on response agreement['subSeqRenewals']
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){
           let value = JSONPath({json: modifyAgreements, path: `$.${$(this).attr('name')}`});
-          console.log($(this).attr('name'), value[0]);
+          // console.log($(this).attr('name'), value[0]);
           if($(this).attr('name') === 'timePeriod' && value){
             if(value <= 3){
               $('#governmentOrder').hide();
@@ -107,10 +111,11 @@ $(document).ready(function() {
           }
           if($(this).attr('name') && value[0]){
             // console.log($(this).attr('name'), value[0]);
-            fillValueToObject({id:$(this).attr('name'),name:$(this).attr('name'),value:value[0]});
+            // fillValueToObject({id:$(this).attr('name'),name:$(this).attr('name'),value:value[0]});
             $(this).val(value[0] && value[0].toString())
           }
         });
+        calcFooterYearSum();
       }else{
         alert('This agreement number is not data entry screen.')
       }
@@ -136,17 +141,7 @@ $(document).ready(function() {
 
     if(valid){
       //Add only after validation succeeds
-      $("#subesquentrenewalsTable tbody tr:first").clone().find("input").each(function() {
-        $(this).attr({
-          'id': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
-          'name': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
-          'value': ''
-        });
-        $(this).val('');
-      }).end().appendTo("#subesquentrenewalsTable tbody");
-      $("#subesquentrenewalsTable tbody tr:last").find('td:last .subsequentRenewalsDelete').show();
-      initDatepicker();
-      index++;
+      cloneRow();
     }else{
       alert('Please fill the mandatory fields')
     }
@@ -240,7 +235,6 @@ $(".onlyNumber").on("keydown", function(e) {
 
 //it will split object string where it has .
 function fillValueToObject(currentState) {
-    // console.log(currentState.id, currentState.value);
     if(currentState.id.includes("[")){
       let keys = currentState.name.split('[');
       let mainKey = keys[0];
@@ -248,8 +242,13 @@ function fillValueToObject(currentState) {
       let key = currentState.name.split('.')[1];
       let obj = {};
       obj[key]=currentState.value;
+      // console.log(currentState.id, currentState.value, mainKey, idx);
+      // console.log(agreement);
       if(agreement.hasOwnProperty(mainKey)){
         //add to the existing data
+        if(agreement[mainKey] === null){
+          agreement[mainKey]=[];
+        }
         agreement[mainKey][idx]=Object.assign(agreement[mainKey][idx] || {}, obj)
       }else{
         //add new obj
@@ -268,6 +267,7 @@ function fillValueToObject(currentState) {
     }else {
         agreement[currentState.id] = currentState.value;
     }
+    console.log(agreement);
 }
 
 
@@ -829,7 +829,10 @@ $("#createAgreementForm").validate({
                     } else {
                         if(window.opener)
                             window.opener.location.reload();
-                        window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"] +"&from=dataEntry";
+                        if(create)
+                          window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"] +"&from=dataEntry";
+                        else
+                          window.location.href = "app/search-assets/create-agreement-ack.html?name=" + getNameById(employees, agreement["approverName"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["agreementNumber"] +"&from=dataEntry&action=modify";
                     }
 
                 } else if(response["responseJSON"] && response["responseJSON"].Error) {
@@ -948,7 +951,7 @@ function calcFooterYearSum(){
   let totalYear=0, totalMonth=0;
   $("#subesquentrenewalsTable tbody tr").find('td:eq(2) input').each(function(index){
     let yearndmonth = $(this).val().split('.');
-    totalMonth+=(Number(yearndmonth[1])%12);
+    totalMonth= isNaN(Number(yearndmonth[1])%12) ? totalMonth+0 : totalMonth+Number(yearndmonth[1])%12;
     if(totalMonth > 12){
       totalYear+=Number(yearndmonth[0])+Math.floor(totalMonth/12);
     }else{
@@ -1486,3 +1489,17 @@ function basedOnType(){
 $(document).on('keyup','.srRent',function(){
   $(this).val($(this).val().replace(/[^0-9]/g,''));
 })
+
+function cloneRow(){
+  $("#subesquentrenewalsTable tbody tr:first").clone().find("input").each(function() {
+    $(this).attr({
+      'id': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
+      'name': function(_, str) { return str.replace(/\[(.+?)\]/g, "["+index+"]") },
+      'value': ''
+    });
+    $(this).val('');
+  }).end().appendTo("#subesquentrenewalsTable tbody");
+  $("#subesquentrenewalsTable tbody tr:last").find('td:last .subsequentRenewalsDelete').show();
+  initDatepicker();
+  index++;
+}

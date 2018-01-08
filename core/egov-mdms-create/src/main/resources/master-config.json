@@ -40,7 +40,36 @@
       "moduleDefinition": "null",
       "isStateLevel": true,
       "uniqueKeys": [
-        "$.id",
+        "$.name",
+        "$.tenantId"
+      ]
+    },
+    "Assetconfiguration": {
+      "masterName": "Assetconfiguration",
+      "moduleDefinition": "null",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.keyname",
+        "$.tenantId"
+      ]
+    },
+    "ModeOfAcquisition": {
+      "masterName": "ModeOfAcquisition",
+      "moduleDefinition": "null",
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    }
+  },
+  "common-masters": {
+    "Department": {
+      "masterName": "Department",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code",
         "$.tenantId"
       ]
     }

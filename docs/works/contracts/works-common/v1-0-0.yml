@@ -13,6 +13,7 @@ info:
 schemes:
   - https
 basePath: '/'
+x-module: "works"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths: {}

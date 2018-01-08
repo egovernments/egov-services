@@ -1801,12 +1801,6 @@ definitions:
           minLength: 1
         collectionType:  
           $ref: "#/definitions/CollectionType"
-        startingCollectionPoint:  
-          $ref: "#/definitions/RouteCollectionPointMap"
-        endingCollectionPoint:  
-          $ref: "#/definitions/RouteCollectionPointMap"
-        endingDumpingGround:  
-          $ref: "#/definitions/RouteCollectionPointMap"
         collectionPoints:
           type: array
           items:
@@ -1818,7 +1812,6 @@ definitions:
       - tenantId
       - name
       - collectionType
-      - startingCollectionPoint
       - collectionPoints
       
     RouteCollectionPointMap:

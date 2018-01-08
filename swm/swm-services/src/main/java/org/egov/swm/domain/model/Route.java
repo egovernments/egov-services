@@ -41,16 +41,6 @@ public class Route {
     private CollectionType collectionType = null;
 
     @NotNull
-    @JsonProperty("startingCollectionPoint")
-    private RouteCollectionPointMap startingCollectionPoint = null;
-
-    @JsonProperty("endingCollectionPoint")
-    private RouteCollectionPointMap endingCollectionPoint = null;
-
-    @JsonProperty("endingDumpingGround")
-    private RouteCollectionPointMap endingDumpingGround = null;
-
-    @NotNull
     @Valid
     @Size(min = 1)
     @JsonProperty("collectionPoints")

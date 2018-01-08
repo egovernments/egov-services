@@ -105,6 +105,7 @@ public class MDMSService {
 			Map<String, Map<String, JSONArray>> ulbLevel, String moduleName, String masterName) throws Exception {
 
 		Map<String, Object> moduleData = masterConfigMap.get(moduleName);
+		log.info(" The Master Config map : {}",masterConfigMap);
 		Boolean isStateLevel = false;
 		Object masterData = null;
 		ObjectMapper mapper = new ObjectMapper();

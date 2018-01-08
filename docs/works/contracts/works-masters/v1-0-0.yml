@@ -27,6 +27,7 @@ schemes:
   - https
 basePath: '/works-masters/v1'
 x-api-id: 'org.egov.works.masters'
+x-module: "Works"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 x-ui-info:
   $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-masters/works-master-ui-info.yml

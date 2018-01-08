@@ -196,7 +196,20 @@ public class EmployeeService {
     public List<EmployeeInfo> getEmployees(EmployeeCriteria empCriteria, RequestInfo requestInfo) throws CloneNotSupportedException {
         List<User> usersList = null;
         List<Long> ids = null;
+        Set<Long> departments=new HashSet<>();
         List<Long> idSearchCriteria = isEmpty(empCriteria.getId()) ? null : empCriteria.getId();
+        List<String> departmentCodeList=empCriteria.getDepartmentCode();
+        if(departmentCodeList!=null && !departmentCodeList.isEmpty()) {
+        for (String code : departmentCodeList) {
+        	Department department = departmentService.getDepartment(code, empCriteria.getTenantId(), new RequestInfoWrapper());
+        	if(department.getId()!=null)
+        		departments.add(department.getId());
+		}
+        }
+        System.err.println("set of departmentids"+departments);
+        
+        empCriteria.setDepartments(departments);
+        
 
         // If roleCodes or userName is present, get users first, as there will be very limited results
         if (!isEmpty(empCriteria.getRoleCodes()) || !isEmpty(empCriteria.getUserName())) {
@@ -357,7 +370,9 @@ public class EmployeeService {
         // FIXME : Setting ts as null in RequestInfo as hr is following common-contracts with ts as Date
         // & ID Generation Service is following ts as epoch
         requestInfo.setTs(null);
-        RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
+      RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper(requestInfo);
+      System.err.println("createAsync  requestInfoWrapper"+requestInfoWrapper);
+      //  RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 
         Map<String, List<String>> hrConfigurations = hrMastersService.getHRConfigurations(employee.getTenantId(), requestInfoWrapper);
 

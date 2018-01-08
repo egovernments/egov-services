@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.web.contract.BaseRegisterReportRequest;
@@ -110,7 +111,7 @@ public class EmployeeQueryBuilder {
 		addOrderByClause(selectQuery, employeeCriteria);
 		addPagingClause(selectQuery, namedParameters, employeeCriteria);
 
-		log.debug("Get List Of Employee Ids Query : " + selectQuery);
+		log.info("Get List Of Employee Ids Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
@@ -122,7 +123,7 @@ public class EmployeeQueryBuilder {
 		addPagingClauseForReports(selectQuery, namedParameters, baseRegisterReportRequest.getPageSize(),
 				baseRegisterReportRequest.getPageNumber());
 
-		log.debug("Get Employee Report Query : " + selectQuery);
+		log.info("Get Employee Report Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
@@ -136,7 +137,7 @@ public class EmployeeQueryBuilder {
 		addPagingClauseForReports(selectQuery, namedParameters, employeeCriteria.getPageSize(),
 				employeeCriteria.getPageNumber());
 
-		log.debug("Get Employee without assignment Report Query : " + selectQuery);
+		log.info("Get Employee without assignment Report Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
@@ -164,9 +165,11 @@ public class EmployeeQueryBuilder {
 
 	public String getQuery(EmployeeCriteria employeeCriteria, Map<String, Object> namedParameters, List<Long> empIds) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		System.err.println("getQuery selectQuery"+selectQuery);
 		addWhereClause(selectQuery, namedParameters, employeeCriteria, empIds);
+		System.err.println("addWhereClause"+selectQuery);
 		addOrderByClause(selectQuery, employeeCriteria);
-		log.debug("Get Employees Query : " + selectQuery);
+		log.info("Get Employees Query : " + selectQuery);
 		return selectQuery.toString();
 	}
 
@@ -176,7 +179,8 @@ public class EmployeeQueryBuilder {
 		namedParameters.put("tenantId", employeeCriteria.getTenantId());
 
 		if (isEmpty(empIds) && isEmpty(employeeCriteria.getId()) && isEmpty(employeeCriteria.getCode())
-				&& isEmpty(employeeCriteria.getDepartmentId()) && isEmpty(employeeCriteria.getIsPrimary())
+				&& isEmpty(employeeCriteria.getDepartmentId()) 
+				&& isEmpty(employeeCriteria.getIsPrimary())
 				&& isEmpty(employeeCriteria.getDesignationId()) && isEmpty(employeeCriteria.getPositionId())
 				&& isEmpty(employeeCriteria.getAsOnDate()) && isEmpty(employeeCriteria.getEmployeeStatus())
 				&& isEmpty(employeeCriteria.getEmployeeType())
@@ -206,8 +210,14 @@ public class EmployeeQueryBuilder {
 			selectQuery.append(" AND a.departmentId = :departmentId");
 			namedParameters.put("departmentId", employeeCriteria.getDepartmentId());
 		}
-
-		if (!isEmpty(employeeCriteria.getDesignationId())) {
+		/*
+		 * added to search by departmentid
+		 */
+		if (!isEmpty(employeeCriteria.getDepartments())) {
+			selectQuery.append(" AND a.departmentId IN ("+ getDepartmentId(employeeCriteria.getDepartments())+")");
+			
+		}
+       if (!isEmpty(employeeCriteria.getDesignationId())) {
 			selectQuery.append(" AND a.designationId = :designationId");
 			namedParameters.put("designationId", employeeCriteria.getDesignationId());
 		}
@@ -297,5 +307,19 @@ public class EmployeeQueryBuilder {
 																			// pageNo
 																			// *
 																			// pageSize
+	}
+
+	/*
+	 * method to split the list of departmentid inorder to append to the query
+	 */
+	private String getDepartmentId(Set<Long> DepartmentIddset) {
+		StringBuilder query = null;
+		Long[] arr = new Long[DepartmentIddset.size()];
+		arr = DepartmentIddset.toArray(arr);
+		query = new StringBuilder(arr[0].toString());
+		for (int i = 1; i < arr.length; i++)
+			query.append("," + arr[i]);
+		return query.toString();
+		
 	}
 }

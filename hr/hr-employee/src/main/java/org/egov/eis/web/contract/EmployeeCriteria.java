@@ -43,6 +43,7 @@ package org.egov.eis.web.contract;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -81,9 +82,13 @@ public class EmployeeCriteria implements Cloneable {
 	private Boolean isPrimary;
 
 	private Long designationId;
-
+	
 	private Long departmentId;
 
+	private Set<Long> departments;
+	
+	private List<String> departmentCode;
+	
 	private Long positionId;
 
 	private List<Long> employeeStatus;

@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -7,6 +8,7 @@ import java.util.List;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
@@ -22,6 +24,7 @@ import org.egov.inv.model.ScrapDetailSearch;
 import org.egov.inv.model.ScrapRequest;
 import org.egov.inv.model.ScrapResponse;
 import org.egov.inv.model.ScrapSearch;
+import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.ScrapDetailJdbcRepository;
 import org.egov.inv.persistence.repository.ScrapJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -41,6 +44,9 @@ public class ScrapService extends DomainService{
 	
 	@Autowired
 	private ScrapJdbcRepository scrapJdbcRepository;
+	
+	@Autowired
+	private MdmsRepository mdmsRepository;
 	
 	@Autowired
 	private ScrapDetailJdbcRepository scrapDetailJdbcRepository;
@@ -155,7 +161,7 @@ public class ScrapService extends DomainService{
 				for(ScrapDetail scrapdetail : scrapData.getScrapDetails())
 				{
 					
-					if(null == scrapdetail.getScrapQuantity())
+					if(null == scrapdetail.getUserQuantity())
 					{
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Scrap Quantity", null);
 					}
@@ -204,8 +210,18 @@ public class ScrapService extends DomainService{
 			scrapDetail.setMaterial(detail.getMaterial());
 			scrapDetail.setExistingValue(detail.getValue());
 			scrapDetail.setQuantity(detail.getQuantityIssued());
+			if(scrapDetails.getUserQuantity() != null)
+			{
+				setConvertedScrapQuantity(tenantId, scrapDetails,detail);
+			}
+			
+			if(scrapDetails.getScrapValue() != null)
+			{
+				setConvertedScrapRate(tenantId, scrapDetails,detail);
+			}
 			scrapDetail.setScrapQuantity(scrapDetails.getScrapQuantity());
-			scrapDetail.setUserQuantity(detail.getUserQuantityIssued());
+			scrapDetail.setUserQuantity(scrapDetails.getUserQuantity());
+			scrapDetail.setScrapReason(scrapDetail.getScrapReason());
 			scrapDetail.setScrapValue(scrapDetails.getScrapValue());
 			scrapDetailList.add(scrapDetail);
 			}
@@ -225,6 +241,30 @@ public class ScrapService extends DomainService{
 	        Pagination<ScrapDetail> scrapDetails = scrapDetailJdbcRepository.search(scrapDetailSearch);
 	        return scrapDetails.getPagedData().size() > 0 ? scrapDetails.getPagedData() : Collections.EMPTY_LIST;
 	    }
+	 
+	 private void setConvertedScrapRate(String tenantId, ScrapDetail detail,MaterialIssueDetail issueDetail) {
+			Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom",  "code", issueDetail.getUom().getCode(), Uom.class);
+			issueDetail.setUom(uom);
+
+			if (null != detail.getScrapValue() && null != uom.getConversionFactor()) {
+				BigDecimal convertedRate = getSaveConvertedRate(detail.getScrapValue(),
+						uom.getConversionFactor());
+				detail.setScrapValue(convertedRate);
+			}
+
+		}
+	 
+	 private void setConvertedScrapQuantity(String tenantId, ScrapDetail detail,MaterialIssueDetail issueDetail) {
+			Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", issueDetail.getUom().getCode(), Uom.class);
+			issueDetail.setUom(uom);
+
+			if (null != detail.getUserQuantity() && null != uom.getConversionFactor()) {
+				BigDecimal convertedUserQuantity = getSaveConvertedQuantity(detail.getUserQuantity(),
+						uom.getConversionFactor());
+				detail.setScrapQuantity(convertedUserQuantity);
+			}
+
+		}
 }
 
 

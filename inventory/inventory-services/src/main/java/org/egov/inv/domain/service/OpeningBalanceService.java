@@ -139,6 +139,10 @@ public class OpeningBalanceService extends DomainService {
 							materialReceiptDetailAddlnInfoIds.add(addinfo.getId());
 						}
 					});
+					jdbcRepository.markDeleted(materialReceiptDetailAddlnInfoIds, tenantId, "materialreceiptdetailaddnlinfo", "receiptdetailid", detail.getId());
+
+					jdbcRepository.markDeleted(materialReceiptDetailIds, tenantId, "materialreceiptdetail", "mrnNumber", materialReceipt.getMrnNumber());
+
 				});
 			});
 

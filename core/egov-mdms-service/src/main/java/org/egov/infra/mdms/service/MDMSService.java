@@ -105,16 +105,21 @@ public class MDMSService {
 		Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
 
 		Map<String, Object> moduleData = masterConfigMap.get(moduleName);
-		log.info(" The Master Config map : {}",masterConfigMap);
+		log.info(" The Module Config map : {}",moduleData);
 		Boolean isStateLevel = false;
 		Object masterData = null;
 		ObjectMapper mapper = new ObjectMapper();
 		if (moduleData != null)
 			masterData = moduleData.get(masterName);
-		if (null != masterData)
+		
+		if (null != masterData) {
+			try {
 			isStateLevel = (Boolean) JsonPath.read(mapper.writeValueAsString(masterData),
 					MDMSConstants.STATE_LEVEL_JSONPATH);
-		
+			}catch(Exception e) {
+				isStateLevel = false;
+			}
+		}
 		log.info("MasterName... " +  masterName + "isStateLevelConfiguration.."+isStateLevel);
 
 		if (ulbLevel == null || isStateLevel) {

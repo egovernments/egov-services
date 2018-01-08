@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -62,7 +63,13 @@ public class DataUploadUtils {
 	            else{
 		            if(cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-		            		dataList.add(cell.getNumericCellValue());
+		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+			            		logger.info("Adding Date val: "+cell.getDateCellValue());
+			            		logger.info("Epoch of it: "+cell.getDateCellValue().getTime());
+			            		dataList.add(cell.getDateCellValue().getTime());
+		            	    }else {
+		            	    	dataList.add(cell.getNumericCellValue());
+		            	    }
 		            	}
 		            	else if(cell.CELL_TYPE_STRING == cell.getCellType()) {
 		            		if(null != cell.getStringCellValue() || !cell.getStringCellValue().isEmpty()) {
@@ -75,7 +82,7 @@ public class DataUploadUtils {
 		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
 		            		dataList.add(cell.getBooleanCellValue());
 
-		            	}		             
+		            	}
 		            }else {
 		            	dataList.add(null);
 		            }

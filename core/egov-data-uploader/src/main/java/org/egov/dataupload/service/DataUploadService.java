@@ -167,11 +167,7 @@ public class DataUploadService {
     	logger.info("Writing column headers to excel file....: "+coloumnHeaders);
 		dataUploadUtils.writeToexcelSheet(coloumnHeaders);
 		int successCount = 0; int failureCount = 0;
-		logger.info("Size of columnHeaders: "+coloumnHeaders.size());
-		logger.info("Size of additionalFields: "+additionFieldsCount);
-
 		for(List<Object> row: excelData){
-			logger.info("Size of the row: "+row.size());
 			logger.info("row: "+row.toString());
 			try{
 				if(!row.isEmpty()){
@@ -190,7 +186,6 @@ public class DataUploadService {
 		            		documentContext.put(expression.toString(), key, row.get(i));
 		            	}
 					} 	
-				    logger.info("RequestInfo: "+uploaderRequest.getRequestInfo());
 				    try{
 				    	documentContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
 					    request = documentContext.jsonString().toString();

@@ -429,10 +429,10 @@ class RemissionAgreement extends React.Component {
 
         $('#remissionToDate, #remissionFromDate, #remissionDate').on('change', function (e) {
 
-        if(this.state.agreement.remission.remissionFromDate && this.state.agreement.remission.remissionDate){
+        if(_this.state.agreement.remission.remissionFromDate && _this.state.agreement.remission.remissionDate){
 
-            var  _to= this.state.agreement.remission.remissionFromDate;
-            var _from = this.state.agreement.remission.remissionDate;
+            var  _to= _this.state.agreement.remission.remissionFromDate;
+            var _from = _this.state.agreement.remission.remissionDate;
             var _triggerId = e.target.id;
             if (_from && _to) {
                 var dateParts1 = _from.split("/");
@@ -449,10 +449,10 @@ class RemissionAgreement extends React.Component {
           }
 
 
-          if(this.state.agreement.remission.remissionFromDate && this.state.agreement.remission.remissionToDate){
+          if(_this.state.agreement.remission.remissionFromDate && _this.state.agreement.remission.remissionToDate){
 
-            var  _to= this.state.agreement.remission.remissionToDate;
-            var _from = this.state.agreement.remission.remissionFromDate;
+            var  _to= _this.state.agreement.remission.remissionToDate;
+            var _from = _this.state.agreement.remission.remissionFromDate;
             var _triggerId = e.target.id;
             if (_from && _to) {
                 var dateParts1 = _from.split("/");

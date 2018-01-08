@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.MDMSApplicationRunnerImpl;
+import org.egov.infra.mdms.utils.MDMSConstants;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
@@ -32,7 +33,7 @@ public class MDMSService {
 	@Value("${egov.kafka.topics.reload}")
 	private String reloadTopic;
 
-	private final Map<String, List<String>> stateLevelMastermap = MDMSApplicationRunnerImpl.getStateWideMastersMap();
+	Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
 
 	public Map<String, Map<String, JSONArray>> searchMaster(MdmsCriteriaReq mdmsCriteriaReq) {
 
@@ -79,8 +80,14 @@ public class MDMSService {
 
 			for (MasterDetail masterDetail : masterDetails) {
 				// JSONArray masterData = masters.get(masterDetail.getName());
-				JSONArray masterData = getMasterData(stateLevel, ulbLevel, moduleDetail.getModuleName(),
-						masterDetail.getName());
+				JSONArray masterData = null;
+				try {
+					masterData = getMasterData(stateLevel, ulbLevel, moduleDetail.getModuleName(),
+							masterDetail.getName());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				if (masterData == null)
 					continue;
 
@@ -95,16 +102,25 @@ public class MDMSService {
 	}
 
 	private JSONArray getMasterData(Map<String, Map<String, JSONArray>> stateLevel,
-			Map<String, Map<String, JSONArray>> ulbLevel, String moduleName, String masterName) {
+			Map<String, Map<String, JSONArray>> ulbLevel, String moduleName, String masterName) throws Exception {
 
-		if (ulbLevel == null || (stateLevelMastermap.get(moduleName) != null
-				&& stateLevelMastermap.get(moduleName).contains(masterName))) {
+		Map<String, Object> moduleData = masterConfigMap.get(moduleName);
+		Boolean isStateLevel = false;
+		Object masterData = null;
+		ObjectMapper mapper = new ObjectMapper();
+		if (moduleData != null)
+			masterData = moduleData.get(masterName);
+		if (null != masterData)
+			isStateLevel = (Boolean) JsonPath.read(mapper.writeValueAsString(masterData),
+					MDMSConstants.STATE_LEVEL_JSONPATH);
+
+		if (ulbLevel == null || isStateLevel) {
 			if (stateLevel.get(moduleName) != null) {
 				return stateLevel.get(moduleName).get(masterName);
 			} else {
 				return null;
 			}
-		} else if (ulbLevel.get(moduleName) != null) {
+		} else if (ulbLevel != null && ulbLevel.get(moduleName) != null) {
 			return ulbLevel.get(moduleName).get(masterName);
 		} else {
 			return null;
@@ -135,4 +151,3 @@ public class MDMSService {
 		kafkaTemplate.send(reloadTopic, map);
 	}
 }
-

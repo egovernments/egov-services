@@ -2,6 +2,9 @@ package org.egov;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +15,6 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -37,12 +39,12 @@ public class MDMSApplicationRunnerImpl {
 	@Value("${egov.mdms.conf.path}")
 	public String mdmsFileDirectory;
 
-	@Value("${state.level.masters}")
-	public String stateLevelMasters;
+	@Value("${masters.config.url}")
+	public String masterConfigUrl;
 
 	private static Map<String, Map<String, Map<String, JSONArray>>> tenantMap = new HashMap<>();
 
-	private static Map<String, List<String>> stateLevelMastermap = new HashMap<>();
+	private static Map<String, Map<String, Object>> masterConfigMap = new HashMap<>();
 
 	ObjectMapper objectMapper = new ObjectMapper();
 
@@ -51,7 +53,7 @@ public class MDMSApplicationRunnerImpl {
 		try {
 			log.info("Reading yaml files from: " + mdmsFileDirectory);
 			readFiles(mdmsFileDirectory);
-			getStateLevelMap(stateLevelMasters);
+			readMdmsConfigFiles(masterConfigUrl);
 			log.info("tenantMap1:" + tenantMap);
 
 		} catch (Exception e) {
@@ -153,45 +155,35 @@ public class MDMSApplicationRunnerImpl {
 
 	}
 
-	/**
-	 * Preparing StateLevel Map By configured (state.level.masters) in
-	 * application properties.
-	 * 
-	 * @param stateLevelMasters
-	 */
-	public void getStateLevelMap(String stateLevelMasters) {
-		if (!StringUtils.isEmpty(stateLevelMasters)) {
-			if (stateLevelMasters.contains(",")) {
-				List<String> list = Arrays.asList(stateLevelMasters.split("\\,"));
-				for (String key : list) {
-					String[] array = key.split("\\.");
-					if (!stateLevelMastermap.containsKey(array[0])) {
-						List<String> values = new ArrayList<String>();
-						values.add(array[1]);
-						stateLevelMastermap.put(array[0], values);
-					} else {
-						List<String> values = stateLevelMastermap.get(array[0]);
-						values.add(array[1]);
-						stateLevelMastermap.put(array[0], values);
-					}
-				}
-			} else {
-				// Assuming Data Always Given like ModuleName.MasterName
-				String[] array = stateLevelMasters.split("\\.");
-				List<String> values = new ArrayList<String>();
-				values.add(array[1]);
-				stateLevelMastermap.put(array[0], values);
-			}
+	public void readMdmsConfigFiles(String masterConfigUrl) {
+		ObjectMapper jsonReader = new ObjectMapper();
+
+		log.info("GitHub Url TO Fetch MasterConfigs: " + masterConfigUrl);
+		Map file = null;
+		URL yamlFile = null;
+		try {
+			yamlFile = new URL(masterConfigUrl);
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			log.error("Exception while fetching service map for: " + e1.getMessage());
 		}
+		try {
+			file = jsonReader.readValue(new InputStreamReader(yamlFile.openStream()), Map.class);
+		} catch (Exception e) {
+			log.error("Exception while fetching service map for: " + e.getMessage());
+		}
+
+		masterConfigMap = file;
+		log.debug("the Master config Map : " + masterConfigMap);
+
 	}
 
 	public static Map<String, Map<String, Map<String, JSONArray>>> getTenantMap() {
 		return tenantMap;
 	}
-
-	public static Map<String, List<String>> getStateWideMastersMap() {
-		return stateLevelMastermap;
+	
+	public static Map<String, Map<String, Object>> getMasterConfigMap() {
+		return masterConfigMap;
 	}
 
 }
-

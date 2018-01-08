@@ -19,10 +19,13 @@ public class MDMSConstants {
 	public static final String GIT_BLOB_MODE = "100644";
 	public static final String CONFIG_ARRAY_KEY= "mdms-config";
 	public static final String UNIQUE_KEY= "uniqueKeys";
+	public static final String tenantId_KEY= "tenantId";
+	public static final String tenantId_KEY_IMPROPER= "tenantid";
 
 
 
-
+	public static final String STATE_LEVEL_JSONPATH= "$.isStateLevel";
+	public static final String STATE_LEVEL_KEY= "isStateLevel";
 
 	
 	

@@ -43,13 +43,15 @@ public class MDMSController {
 
 	@Autowired
 	private MDMSRequestValidator mDMSRequestValidator;
+	
 
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		List<String> keys = new ArrayList<>();
-		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, true);
+		List<String> isRequestPayload = new ArrayList<>();
+		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, true,isRequestPayload);
 		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
 		}.getType();
 		Gson gson = new Gson();
@@ -58,17 +60,20 @@ public class MDMSController {
 			MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
 			mDMSCreateErrorResponse.setResponseInfo(
 					responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+			if(!isRequestPayload.isEmpty())
+			mDMSCreateErrorResponse.setMessage("There Are duplicate Records Are Exist In Request. The keys for this records are: " + keys);
+			else 
 			mDMSCreateErrorResponse.setMessage("This record already exists. The keys for this record are: " + keys);
 			mDMSCreateErrorResponse.setData(errorData);
 			return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 		}
-		Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, true);
+		Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, true); 
 		MdmsResponse mdmsResponse = new MdmsResponse();
 		mdmsResponse.setMdmsRes(response);
 		mdmsResponse.setResponseInfo(
-				responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
+				responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true)); 
 
-		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 	@PostMapping("_update")
@@ -76,7 +81,8 @@ public class MDMSController {
 	private ResponseEntity<?> update(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		List<String> keys = new ArrayList<>();
-		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, false);
+		List<String> isRequestPayload = new ArrayList<>();
+		ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, keys, false,isRequestPayload);
 		Type type = new TypeToken<ArrayList<Map<String, Object>>>() {
 		}.getType();
 		Gson gson = new Gson();
@@ -104,7 +110,7 @@ public class MDMSController {
 	@PostMapping("config/_search")
 	@ResponseBody
 	private ResponseEntity<?> configSearch(@RequestBody RequestInfo requestInfo,
-			@RequestParam("tenantId") String tenantId, @RequestParam("module") String module,
+			@RequestParam("tenantId") String tenantId, @RequestParam(value = "module" ,required = true) String module,
 			@RequestParam(value = "master", required = false) String master) throws Exception {
 		log.info("Search criteria: " + tenantId + "," + module + "," + master);
 		try {

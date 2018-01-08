@@ -1542,14 +1542,14 @@ serviceMaps:
       description: Create Scrap
       fromTopic: inv-scrap-save-topic
       queryMaps:
-        - query: INSERT INTO scrap(id, tenantId, storeCode,scrapNumber,scrapdate,description,status,workflowdetailid,stateid,designation,createdby,createdTime,lastmodifiedby,lastModifiedTime)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO scrap(id, tenantId, storeCode,scrapNumber,scrapDate,description,status,workflowdetailid,stateid,designation,createdby,createdTime,lastmodifiedby,lastModifiedTime)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.scraps.*
           jsonMaps:
             - jsonPath: $.scraps.*.id
             - jsonPath: $.scraps.*.tenantId
             - jsonPath: $.scraps.*.store.code
             - jsonPath: $.scraps.*.scrapNumber
-            - jsonPath: $.scraps.*.scrapdate
+            - jsonPath: $.scraps.*.scrapDate
             - jsonPath: $.scraps.*.description
             - jsonPath: $.scraps.*.scrapStatus
             - jsonPath: $.scraps.*.workFlowDetails.id
@@ -1595,10 +1595,10 @@ serviceMaps:
       fromTopic: inv-scrap-update-topic
       queryMaps:
         - query: >-
-               update scrap set scrapdate = ?,status = ?,  createdby = ?, createdTime = ?, lastmodifiedby = ?, lastModifiedTime = ? where scrapNumber = ? and tenantid = ?;
+               update scrap set scrapDate = ?,status = ?,  createdby = ?, createdTime = ?, lastmodifiedby = ?, lastModifiedTime = ? where scrapNumber = ? and tenantid = ?;
           basePath: $.scraps.*
           jsonMaps:
-            - jsonPath: $.scraps.*.scrapdate
+            - jsonPath: $.scraps.*.scrapDate
             - jsonPath: $.scraps.*.scrapStatus
             - jsonPath: $.scraps.*.auditDetails.createdBy
               type: LONG

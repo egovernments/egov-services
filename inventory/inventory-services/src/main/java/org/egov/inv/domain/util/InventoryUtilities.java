@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 public class InventoryUtilities {
 	
 	public static BigDecimal getQuantityInSelectedUom(BigDecimal quantity, BigDecimal conversionFactor) {
-		return quantity.divide(conversionFactor).setScale(10, RoundingMode.HALF_UP);
+		return quantity.divide(conversionFactor,10, RoundingMode.HALF_UP);
 	}
 	
 	public static BigDecimal getQuantityInBaseUom(BigDecimal quantity, BigDecimal conversionFactor) {

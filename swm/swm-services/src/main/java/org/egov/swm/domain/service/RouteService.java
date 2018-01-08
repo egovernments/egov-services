@@ -163,14 +163,68 @@ public class RouteService {
     private void findDuplicatesInUniqueFields(final RouteRequest routeRequest) {
 
         final Map<String, String> nameMap = new HashMap<>();
+        final Map<String, String> collectionPointMap = new HashMap<>();
+        Boolean startingCollectionPoint, endingCollectionPoint, dumpingGround;
 
-        for (final Route route : routeRequest.getRoutes())
+        for (final Route route : routeRequest.getRoutes()) {
+
+            startingCollectionPoint = endingCollectionPoint = dumpingGround = false;
+
             if (route.getName() != null) {
                 if (nameMap.get(route.getName()) != null)
                     throw new CustomException("name", "Duplicate names in given routes : " + route.getName());
 
                 nameMap.put(route.getName(), route.getName());
             }
+            if (route.getCollectionPoints() != null) {
+                for (RouteCollectionPointMap rcpm : route.getCollectionPoints()) {
+
+                    if (dumpingGround && rcpm.getDumpingGround() != null && rcpm.getDumpingGround().getCode() != null
+                            && !rcpm.getDumpingGround().getCode().isEmpty()) {
+                        throw new CustomException("dumpingGround",
+                                "Duplicate ending dumpingGrounds in given routes : "
+                                        + rcpm.getDumpingGround().getCode());
+                    }
+
+                    if (endingCollectionPoint && dumpingGround) {
+                        throw new CustomException("collectionPoint",
+                                "Both ending collection point and  ending dumping ground cannot be send");
+                    }
+
+                    if (rcpm.getDumpingGround() != null && rcpm.getDumpingGround().getCode() != null
+                            && !rcpm.getDumpingGround().getCode().isEmpty()) {
+                        dumpingGround = true;
+                    }
+
+                    if (rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null
+                            && !rcpm.getCollectionPoint().getCode().isEmpty()) {
+
+                        if (startingCollectionPoint && rcpm.getIsStartingCollectionPoint())
+                            throw new CustomException("collectionPoint",
+                                    "Duplicate starting collectionPoints in given routes : "
+                                            + rcpm.getCollectionPoint().getCode());
+
+                        if (rcpm.getIsStartingCollectionPoint())
+                            startingCollectionPoint = true;
+
+                        if (endingCollectionPoint && rcpm.getIsEndingCollectionPoint())
+                            throw new CustomException("collectionPoint",
+                                    "Duplicate ending collectionPoints in given routes : "
+                                            + rcpm.getCollectionPoint().getCode());
+
+                        if (rcpm.getIsEndingCollectionPoint())
+                            endingCollectionPoint = true;
+
+                        if (collectionPointMap.get(rcpm.getCollectionPoint().getCode()) != null)
+                            throw new CustomException("collectionPoint",
+                                    "Duplicate collectionPoints in given routes : " + rcpm.getCollectionPoint().getCode());
+
+                        collectionPointMap.put(rcpm.getCollectionPoint().getCode(), rcpm.getCollectionPoint().getCode());
+                    }
+                }
+            }
+
+        }
 
     }
 

@@ -736,3 +736,38 @@ serviceMaps:
 
        - jsonPath: $.trackMilestones.*.trackMilestoneActivities.*.auditDetails.lastModifiedTime
          dbType: LONG
+
+ - version: 1.0
+   name: Contractor Advance
+   description: Persists Contractor Advance in egw_contractoradvance table
+   fromTopic: works-contractoradvance-saveorupdate-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_contractoradvance(id, tenantid, letterofacceptanceestimate, stateid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, stateid= EXCLUDED.stateid, status= EXCLUDED.status,deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.contractorAdvanceRequisitions.*
+      jsonMaps:
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.id
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.tenantId
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.id
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.stateid
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.auditDetails.createdBy
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.deleted
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.status
+
+

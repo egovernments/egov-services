@@ -267,7 +267,10 @@ public enum ErrorCode {
     		"The Field {0} Must Be Equal To Current Financial Year",
             "The Field {0} Must Be Equal To Current Financial Year"),
     INSERTION_NOT_ALLOWED("insertion.not.allowed","Insertion is not allowed during updation of {0}",
-    		"Insertion is not allowed during updation of {0}");
+    		"Insertion is not allowed during updation of {0}"),
+    INVALID_ACTIVE_VALUE("invalid.active.value",
+            "the field {0} is-inactive  or does not exist ",
+            "the field {0} is-inactive  or does not exist ");
 
 
     private final String code;

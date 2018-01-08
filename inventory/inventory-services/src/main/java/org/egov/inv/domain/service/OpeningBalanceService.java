@@ -27,8 +27,9 @@ import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Store;
+import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
-import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -215,7 +216,7 @@ public class OpeningBalanceService extends DomainService {
 						errors.addDataError(ErrorCode.RECEIVING_STORE_NOT_EXIST.getCode(),rcpt.getReceivingStore().getCode());
 					}else{
 						if(validateStore(tenantId,rcpt)){
-							errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(),"Receiving Store "+ rcpt.getReceivingStore().getCode());
+							errors.addDataError(ErrorCode.INVALID_ACTIVE_VALUE.getCode(),"Receiving Store "+ rcpt.getReceivingStore().getCode());
 						}
 					}
 
@@ -337,16 +338,17 @@ public class OpeningBalanceService extends DomainService {
 	}
 	
 	private boolean validateStore(String tenantId, MaterialReceipt rcpt) {
-		StoreEntity storeEntity = StoreEntity.builder()
-											 .code(rcpt.getReceivingStore().getCode())
+		StoreGetRequest storeEntity = StoreGetRequest.builder()
+											 .code(Collections.singletonList(rcpt.getReceivingStore().getCode()))
 										     .tenantId(tenantId)
+										     .active(true)
 											 .build();
-		Object store =storeJdbcRepository.findByCode(storeEntity, "store");
-		if(isEmpty(store))
+		Pagination<Store> store =storeJdbcRepository.search(storeEntity);
+		if(store.getPagedData().size() > 0)
 		{
-			return true;
+			return false;
 		}
-		return  false;
+		return  true;
 	}
 	
 	private void convertRate(String tenantId, MaterialReceiptDetail detail) {

@@ -31,7 +31,7 @@ public class CustomExceptionAdviceController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(NoRenewalRecordsFoundException.class)
 	public ErrorResponse handleNoRenewalRecordsFound() {
-		final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value()).message(NO_RENEWAL_RECORDS_EXCEPTION)
+		final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value()).description(NO_RENEWAL_RECORDS_EXCEPTION).message(NO_RENEWAL_RECORDS_EXCEPTION)
 				.build();
 		return new ErrorResponse(null, error);
 	}
@@ -39,7 +39,7 @@ public class CustomExceptionAdviceController {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(NoObjectionRecordsFoundException.class)
 	public ErrorResponse handleNoObjectionRecordsFound() {
-		final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value()).message(NO_OBJECTION_RECORDS_EXCEPTION)
+		final Error error = Error.builder().code(HttpStatus.BAD_REQUEST.value()).description(NO_OBJECTION_RECORDS_EXCEPTION).message(NO_OBJECTION_RECORDS_EXCEPTION)
 				.build();
 		return new ErrorResponse(null, error);
 	}

@@ -124,7 +124,7 @@ class RemissionAgreement extends React.Component {
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
         this.update = this.update.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
-          }
+    }
 
     setInitialState(initState) {
         this.setState(initState);
@@ -289,17 +289,17 @@ class RemissionAgreement extends React.Component {
     handleChangeTwoLevel(e, pName, name) {
 
         var _this = this;
-        if(pName==="remission")
-        _this.setState({
-            ..._this.state,
-            agreement: {
-                ..._this.state.agreement,
-                remission: {
-                    ..._this.state.agreement.remission,
-                    [name]: e.target.value
+        if (pName === "remission")
+            _this.setState({
+                ..._this.state,
+                agreement: {
+                    ..._this.state.agreement,
+                    remission: {
+                        ..._this.state.agreement.remission,
+                        [name]: e.target.value
+                    }
                 }
-            }
-        })
+            })
 
     }
 
@@ -358,7 +358,7 @@ class RemissionAgreement extends React.Component {
         this.setState({
             ...this.state,
             agreement: agreement
-              });
+        });
     }
 
 
@@ -366,8 +366,12 @@ class RemissionAgreement extends React.Component {
 
         var _this = this;
 
+        var ad = this.state.agreement.agreementDate;
+        var startDate =  new Date(ad.split("/")[2], ad.split("/")[1] - 1, ad.split("/")[0]);
+
         $('#remissionDate').datepicker({
             format: 'dd/mm/yyyy',
+            startDate: startDate,
             autoclose: true,
             defaultDate: ""
         });
@@ -384,26 +388,85 @@ class RemissionAgreement extends React.Component {
             });
         });
 
-
-        $('.datepicker').datepicker({
+        $('#remissionFromDate').datepicker({
             format: 'dd/mm/yyyy',
-            endDate: new Date(),
+            startDate: startDate,
             autoclose: true,
             defaultDate: ""
         });
 
-        $('.datepicker').on('changeDate', function (e) {
-            console.log(e.target.id);
-
+        $('#remissionFromDate').on('changeDate', function (e) {
             _this.setState({
                 agreement: {
                     ..._this.state.agreement,
                     remission: {
                         ..._this.state.agreement.remission,
-                        [e.target.id]: e.target.value
+                        "remissionFromDate": $("#remissionFromDate").val()
                     }
                 }
             });
+        });
+
+        $('#remissionToDate').datepicker({
+            format: 'dd/mm/yyyy',
+            startDate: startDate,
+            autoclose: true,
+            defaultDate: ""
+        });
+
+        $('#remissionToDate').on('changeDate', function (e) {
+            _this.setState({
+                agreement: {
+                    ..._this.state.agreement,
+                    remission: {
+                        ..._this.state.agreement.remission,
+                        "remissionToDate": $("#remissionToDate").val()
+                    }
+                }
+            });
+        });
+
+
+        $('#remissionToDate, #remissionFromDate, #remissionDate').on('change', function (e) {
+
+        if(this.state.agreement.remission.remissionFromDate && this.state.agreement.remission.remissionDate){
+
+            var  _to= this.state.agreement.remission.remissionFromDate;
+            var _from = this.state.agreement.remission.remissionDate;
+            var _triggerId = e.target.id;
+            if (_from && _to) {
+                var dateParts1 = _from.split("/");
+                var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                var date1 = new Date(newDateStr);
+                var dateParts2 = _to.split("/");
+                var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                var date2 = new Date(newDateStr);
+                if(date2<date1){
+                  return  (showError("Remission Order Date should be before Remission From Date"));
+                  $('#' + _triggerId).val("");
+                }
+            }
+          }
+
+
+          if(this.state.agreement.remission.remissionFromDate && this.state.agreement.remission.remissionToDate){
+
+            var  _to= this.state.agreement.remission.remissionToDate;
+            var _from = this.state.agreement.remission.remissionFromDate;
+            var _triggerId = e.target.id;
+            if (_from && _to) {
+                var dateParts1 = _from.split("/");
+                var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+                var date1 = new Date(newDateStr);
+                var dateParts2 = _to.split("/");
+                var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+                var date2 = new Date(newDateStr);
+                if(date2<date1){
+                  return  (showError("Remission From Date should be before Remission To Date"));
+                  $('#' + _triggerId).val("");
+                }
+            }
+          }
         });
 
     }
@@ -674,7 +737,7 @@ class RemissionAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="securityDeposit">Advace Collection:</label>
+                                        <label htmlFor="securityDeposit">Advance Collection:</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="securityDeposit" name="securityDeposit">
@@ -782,16 +845,13 @@ class RemissionAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-
-                                        <label for="remissionRent" className="categoryType">Rent
-                               <span>*</span>
-                                        </label>
+                                        <label for="remissionRent" className="categoryType">Rent<span>*</span></label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span>₹</span>
                                             <input type="number" name="remissionRent" id="remissionRent"
-                                                onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionRent") }} />
+                                                onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionRent") }} required />
                                         </div>
                                     </div>
                                 </div>
@@ -799,9 +859,7 @@ class RemissionAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="remissionReason">Remission Reason
-                                    <span>*</span>
-                                        </label>
+                                        <label htmlFor="remissionReason">Remission Reason<span>*</span></label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">
@@ -858,7 +916,7 @@ class RemissionAgreement extends React.Component {
                         <br />
                         <div className="text-center">
                             <button id="sub" type="submit" className="btn btn-submit">Update </button>&nbsp;&nbsp;
-                    <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>
+                            <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>
                         </div>
 
                     </fieldset>

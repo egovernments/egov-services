@@ -53,6 +53,7 @@ public class DataUploadRepository {
 		}catch(Exception e){
 			LOGGER.error("Exception while hitting url: "+url, e);
 		}
+		LOGGER.info("response: "+response);
 		return response;
 	}
 	

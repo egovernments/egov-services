@@ -51,17 +51,35 @@ public class DataUploadUtils {
             Row nextRow = iterator.next();
             Iterator<Cell> cellIterator = nextRow.cellIterator();
             List<Object> dataList = new ArrayList<>();
+            int i = 0;
+            int j = 0;
             while(cellIterator.hasNext()){
 	            Cell cell = cellIterator.next();
-	            if(0 == cell.getRowIndex())
+	            if(0 == cell.getRowIndex()) {
 	            	coloumnHeaders.add(cell.getStringCellValue());
+	            	j++;
+	            }
 	            else{
-	            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType())
-	            	dataList.add(cell.getNumericCellValue());
-	            	if(cell.CELL_TYPE_STRING == cell.getCellType())
-	            	dataList.add(cell.getStringCellValue());
-	            	if(cell.CELL_TYPE_BOOLEAN == cell.getCellType())
-	            	dataList.add(cell.getBooleanCellValue());
+		            if(cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
+		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+		            		dataList.add(cell.getNumericCellValue());
+		            	}
+		            	else if(cell.CELL_TYPE_STRING == cell.getCellType()) {
+		            		if(null != cell.getStringCellValue() || !cell.getStringCellValue().isEmpty()) {
+		            			dataList.add(cell.getStringCellValue());
+		            		}
+		            		else {
+			            		dataList.add(null);
+		            		}
+		            	}
+		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
+		            		dataList.add(cell.getBooleanCellValue());
+
+		            	}		             
+		            }else {
+		            	dataList.add(null);
+		            }
+	            	
 	            }
             }
             if(!dataList.isEmpty())

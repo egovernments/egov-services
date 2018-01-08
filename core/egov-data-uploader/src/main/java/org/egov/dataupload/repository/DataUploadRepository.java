@@ -48,6 +48,7 @@ public class DataUploadRepository {
 	public Object doApiCall(Object request, String url) {
 		Object response = null;
 		try{
+			LOGGER.info("Making restTemplate call.....");
 			response = restTemplate.postForObject(url, request, Map.class);
 		}catch(Exception e){
 			LOGGER.error("Exception while hitting url: "+url, e);

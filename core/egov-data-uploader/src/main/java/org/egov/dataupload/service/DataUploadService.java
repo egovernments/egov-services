@@ -164,13 +164,19 @@ public class DataUploadService {
     	}
     	coloumnHeaders.add("status"); coloumnHeaders.add("message");
     	additionFieldsCount+=2;
+    	logger.info("Writing column headers to excel file....: "+coloumnHeaders);
 		dataUploadUtils.writeToexcelSheet(coloumnHeaders);
 		int successCount = 0; int failureCount = 0;
+		logger.info("Size of columnHeaders: "+coloumnHeaders.size());
+		logger.info("Size of additionalFields: "+additionFieldsCount);
 
 		for(List<Object> row: excelData){
+			logger.info("Size of the row: "+row.size());
+			logger.info("row: "+row.toString());
 			try{
 				if(!row.isEmpty()){
 					for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
+						logger.info("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));
 		            	StringBuilder expression = new StringBuilder();
 		            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
 		            	if(null == jsonPath){
@@ -211,6 +217,7 @@ public class DataUploadService {
 				    }
 		    		row.add("SUCCESS");
 		    		successCount++;
+			    	logger.info("Writing SUCCESS ROW to excel....: "+row);
 					dataUploadUtils.writeToexcelSheet(row);
 				}
 			}catch(Exception e){
@@ -233,6 +240,7 @@ public class DataUploadService {
 		    			row.add("Please verify config");
 			    	failureCount++;	
 		    	}
+		    	logger.info("Writing FAILED ROW to excel....: "+row);
 				dataUploadUtils.writeToexcelSheet(row);
 
 		    	continue;

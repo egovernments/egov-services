@@ -113,6 +113,8 @@ public class MDMSService {
 		if (null != masterData)
 			isStateLevel = (Boolean) JsonPath.read(mapper.writeValueAsString(masterData),
 					MDMSConstants.STATE_LEVEL_JSONPATH);
+		
+		log.info("MasterName... " +  masterName + "isStateLevelConfiguration.."+isStateLevel);
 
 		if (ulbLevel == null || isStateLevel) {
 			if (stateLevel.get(moduleName) != null) {

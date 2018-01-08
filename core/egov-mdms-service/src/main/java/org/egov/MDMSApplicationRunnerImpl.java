@@ -174,7 +174,7 @@ public class MDMSApplicationRunnerImpl {
 		}
 
 		masterConfigMap = file;
-		log.debug("the Master config Map : " + masterConfigMap);
+		log.info("the Master config Map : " + masterConfigMap);
 
 	}
 

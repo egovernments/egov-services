@@ -106,6 +106,12 @@ public class Constants {
     public static final String KEY_CONTRACTOR_CODE_INVALID="WMS.CONTRACTOR.CODE.INVALID";
     public static final String MESSAGE_CONTRACTOR_CODE_INVALID="Given Code already exist: ";
     
+    public static final String KEY_CONTRACTOR_MOBILE_INVALID="WMS.CONTRACTOR.MOBILE.INVALID";
+    public static final String MESSAGE_CONTRACTOR_MOBILE_INVALID="Given Mobile Number already exist: ";
+    
+    public static final String KEY_CONTRACTOR_EMAIL_INVALID="WMS.CONTRACTOR.EMAIL.INVALID";
+    public static final String MESSAGE_CONTRACTOR_EMAIL_INVALID="Given Email already exist: ";
+    
     public static final String KEY_CONTRACTOR_CODE_MODIFY="WMS.CONTRACTOR.CODE.MODIFY";
     public static final String MESSAGE_CONTRACTOR_CODE_MODIFY="Cannot Modify Code: ";
     

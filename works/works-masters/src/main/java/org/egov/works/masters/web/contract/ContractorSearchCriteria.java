@@ -24,6 +24,8 @@ public class ContractorSearchCriteria {
     private Integer pageSize;
     private Integer pageNumber;
     private Boolean pmc;
-
+    private String correspondenceAddress;
+    private String mobileNumber;
+    private String emailId;
     private String statusLike;
 }

@@ -60,6 +60,21 @@ public class ContractorQueryBuilder {
             selectQuery.append(" and ec.pmc = :pmc");
             params.put("pmc", contractorSearchCriteria.getPmc());
         }
+        
+        if (contractorSearchCriteria.getCorrespondenceAddress() != null && !contractorSearchCriteria.getCorrespondenceAddress().isEmpty()) {
+            selectQuery.append(" and ec.correspondenceaddress = :address");
+            params.put("address", contractorSearchCriteria.getCorrespondenceAddress());
+        }
+        
+        if (contractorSearchCriteria.getMobileNumber() != null && !contractorSearchCriteria.getMobileNumber().isEmpty()) {
+            selectQuery.append(" and ec.mobilenumber = :mobileNumber");
+            params.put("mobileNumber", contractorSearchCriteria.getMobileNumber());
+        }
+        
+        if (contractorSearchCriteria.getEmailId() != null && !contractorSearchCriteria.getEmailId().isEmpty()) {
+            selectQuery.append(" and ec.email = :emailId");
+            params.put("emailId", contractorSearchCriteria.getEmailId());
+        }
     }
 
     private StringBuilder appendLimitAndOffset(ContractorSearchCriteria contractorSearchCriteria,

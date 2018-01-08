@@ -27,7 +27,6 @@ schemes:
   - https
 basePath: '/works-masters/v1'
 x-api-id: 'org.egov.works.masters'
-x-module: "works"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 x-ui-info:
   $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-masters/works-master-ui-info.yml
@@ -514,6 +513,11 @@ paths:
           allowEmptyValue: true
           format: mobileNumber
           description: The Mobile number of the Contractor Agency/Firm
+        - name: email
+          in: query
+          type: string
+          required: false
+          description: Email of the Contractor Agency/Firm.  
         - name: pmc
           in: query
           type: boolean

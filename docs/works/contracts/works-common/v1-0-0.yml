@@ -13,7 +13,6 @@ info:
 schemes:
   - https
 basePath: '/'
-x-module: "Works"
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml'
 
 paths: {}
@@ -475,7 +474,7 @@ definitions:
         maxLength: 100
       code:
         type: string
-        description: Code of the Contractor Agency/Firm.
+        description: Unique Code of the Contractor Agency/Firm.
         pattern: '[a-zA-Z0-9-\\]+'
         maxLength: 100
         minLength: 1
@@ -497,7 +496,7 @@ definitions:
       email:
         type: string
         format: email
-        description: Email of the Contractor Agency/Firm.
+        description: Unique Email of the Contractor Agency/Firm.
         pattern: '^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$'
         maxLength: 100
       narration:
@@ -508,7 +507,7 @@ definitions:
       mobileNumber:
         type: number
         format: mobileNumber
-        description: Mobile Number of the Contractor Agency/Firm
+        description: Unique Mobile Number of the Contractor Agency/Firm
         pattern: "[0-9]+"
         minLength: 10
         maxLength: 10
@@ -1364,5 +1363,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
 

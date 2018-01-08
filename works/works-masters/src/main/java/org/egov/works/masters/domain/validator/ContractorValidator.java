@@ -12,12 +12,14 @@ import org.egov.works.masters.domain.repository.ContractorRepository;
 import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.Contractor;
 import org.egov.works.masters.web.contract.ContractorRequest;
+import org.egov.works.masters.web.contract.ContractorSearchCriteria;
 import org.egov.works.masters.web.contract.WorksStatus;
 import org.egov.works.masters.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import net.minidev.json.JSONArray;
 
 @Service
@@ -35,6 +37,9 @@ public class ContractorValidator {
         Boolean isDataValid = Boolean.FALSE;
         Boolean financialIntegrationReq = Boolean.FALSE;
         Contractor dbContractorObj = null;
+        List<Contractor> dbContractorObjByMobileNo = null;
+        List<Contractor> dbContractorObjByEmail = null;
+        ContractorSearchCriteria contractorSearchCriteria = null;
 
         for (final Contractor contractor : contractorRequest.getContractors()) {
 
@@ -47,14 +52,38 @@ public class ContractorValidator {
                     financialIntegrationReq = Boolean.TRUE;
             }
 
+            contractorSearchCriteria = new ContractorSearchCriteria();
+            contractorSearchCriteria.setMobileNumber(contractor.getMobileNumber());
+            contractorSearchCriteria.setTenantId(contractor.getTenantId());
+            dbContractorObjByMobileNo = contractorRepository.getContractorByCriteria(contractorSearchCriteria);
+
+            contractorSearchCriteria = new ContractorSearchCriteria();
+            contractorSearchCriteria.setTenantId(contractor.getTenantId());
+            contractorSearchCriteria.setEmailId(contractor.getEmail());
+            dbContractorObjByEmail = contractorRepository.getContractorByCriteria(contractorSearchCriteria);
+
             if (!StringUtils.isBlank(contractor.getCode())) {
-                // In case of create, Validate for code uniqueness.
+                // In case of create, Validate for code / mobilenumber / email
+                // uniqueness.
                 if (isNew) {
                     dbContractorObj = contractorRepository.getByCode(contractor.getCode(), contractor.getTenantId());
                     if (dbContractorObj != null) {
                         messages.put(Constants.KEY_CONTRACTOR_CODE_INVALID, Constants.MESSAGE_CONTRACTOR_CODE_INVALID);
                         isDataValid = Boolean.TRUE;
                     }
+
+                    if (dbContractorObjByMobileNo != null && !dbContractorObjByMobileNo.isEmpty()) {
+                        messages.put(Constants.KEY_CONTRACTOR_MOBILE_INVALID,
+                                Constants.MESSAGE_CONTRACTOR_MOBILE_INVALID);
+                        isDataValid = Boolean.TRUE;
+                    }
+
+                    if (dbContractorObjByEmail != null && !dbContractorObjByEmail.isEmpty()) {
+                        messages.put(Constants.KEY_CONTRACTOR_EMAIL_INVALID,
+                                Constants.MESSAGE_CONTRACTOR_EMAIL_INVALID);
+                        isDataValid = Boolean.TRUE;
+                    }
+
                 }
                 // In case of update, do not allow to modify code
                 if (!isNew) {
@@ -63,6 +92,24 @@ public class ContractorValidator {
                         if (!dbContractorObj.getCode().equalsIgnoreCase(contractor.getCode())) {
                             messages.put(Constants.KEY_CONTRACTOR_CODE_MODIFY,
                                     Constants.MESSAGE_CONTRACTOR_CODE_MODIFY);
+                            isDataValid = Boolean.TRUE;
+                        }
+                    }
+
+                    if (dbContractorObjByMobileNo != null && !dbContractorObjByMobileNo.isEmpty()) {
+                        if (!dbContractorObjByMobileNo.get(0).getMobileNumber()
+                                .equalsIgnoreCase(contractor.getMobileNumber())) {
+                            messages.put(Constants.KEY_CONTRACTOR_MOBILE_INVALID,
+                                    Constants.MESSAGE_CONTRACTOR_MOBILE_INVALID);
+                            isDataValid = Boolean.TRUE;
+                        }
+                    }
+
+                    if (dbContractorObjByEmail != null && !dbContractorObjByEmail.isEmpty()) {
+                        if (!dbContractorObjByEmail.get(0).getEmail()
+                                .equalsIgnoreCase(contractor.getEmail())) {
+                            messages.put(Constants.KEY_CONTRACTOR_EMAIL_INVALID,
+                                    Constants.MESSAGE_CONTRACTOR_EMAIL_INVALID);
                             isDataValid = Boolean.TRUE;
                         }
                     }

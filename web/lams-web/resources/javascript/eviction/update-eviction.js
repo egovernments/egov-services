@@ -275,18 +275,25 @@ class UpdateEviction extends React.Component {
 
 
         var stateId = getUrlVars()["state"];
+        var process = commonApiPost("egov-common-workflows", "process", "_search", {
+            tenantId: tenantId,
+            id: stateId
+        }).responseJSON["processInstance"] || {};
+        var currStatus = null;
+        if(process.status ==='Commissioner Approved'){
+          currStatus='EVICTED';
+        }
+
         var agreement = commonApiPost("lams-services",
             "agreements",
             "_search",
             {
                 stateId: stateId,
+                status: currStatus,
                 tenantId
             }).responseJSON["Agreements"][0] || {};
 
-        var process = commonApiPost("egov-common-workflows", "process", "_search", {
-            tenantId: tenantId,
-            id: stateId
-        }).responseJSON["processInstance"] || {};
+
 
         var workflow = commonApiPost("egov-common-workflows", "history", "", {
             tenantId: tenantId,
@@ -317,7 +324,7 @@ class UpdateEviction extends React.Component {
 
         }, process.businessKey);
 
-        
+
 
         if (!agreement.eviction) {
             agreement.eviction = {};
@@ -1170,7 +1177,7 @@ class UpdateEviction extends React.Component {
                                         <label for="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks" 
+                                        <textarea name="remarks" id="remarks"
                                             onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>
@@ -1219,7 +1226,7 @@ class UpdateEviction extends React.Component {
                     tenantId: tenantId,
                     id: item.owner.id
                 }).responseJSON["Employee"] || {};
-        
+
 
                 return (
                     <tr key={ind}>

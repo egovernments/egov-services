@@ -279,19 +279,24 @@ class UpdateCancellation extends React.Component {
 
 
         var stateId = getUrlVars()["state"];
-        var agreement = commonApiPost("lams-services",
-            "agreements",
-            "_search",
-            {
-                stateId: stateId,
-                tenantId
-            }).responseJSON["Agreements"][0] || {};
-
         var process = commonApiPost("egov-common-workflows", "process", "_search", {
             tenantId: tenantId,
             id: stateId
         }).responseJSON["processInstance"] || {};
 
+        var currStatus = null;
+        if(process.status ==='Commissioner Approved'){
+          currStatus='INACTIVE';
+        }
+
+        var agreement = commonApiPost("lams-services",
+            "agreements",
+            "_search",
+            {
+                stateId: stateId,
+                status: currStatus,
+                tenantId
+            }).responseJSON["Agreements"][0] || {};
 
         var workflow = commonApiPost("egov-common-workflows", "history", "", {
             tenantId: tenantId,

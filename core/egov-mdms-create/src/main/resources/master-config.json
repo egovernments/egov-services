@@ -29,7 +29,7 @@
     "AssetCategory": {
       "masterName": "AssetCategory",
       "moduleDefinition": null,
-       "isStateLevel" : true,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.id",
         "$.tenantId"
@@ -38,6 +38,7 @@
     "LayerType": {
       "masterName": "LayerType",
       "moduleDefinition": "null",
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.id",
         "$.tenantId"
@@ -212,6 +213,7 @@
     "KpiCategory": {
       "masterName": "KpiCategory",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]

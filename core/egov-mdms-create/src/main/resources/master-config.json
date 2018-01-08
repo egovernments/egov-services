@@ -2,6 +2,7 @@
   "ACCESSCONTROL-ACTIONS-TEST": {
     "actions-test": {
       "masterName": "actions-test",
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.id"
       ]
@@ -10,6 +11,7 @@
   "ACCESSCONTROL-ROLES": {
     "roles": {
       "masterName": "roles",
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]
@@ -272,6 +274,7 @@
     "tenants": {
       "masterName": "tenants",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code"
       ]

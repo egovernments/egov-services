@@ -67,7 +67,7 @@
     "NewMaster": {
       "masterName": "NewMaster",
       "moduleDefinition": "null",
-      "isStateLevel": true,
+      "isStateLevel": false,
       "uniqueKeys": [
         "$.id"
       ]

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.egov.lams.exceptions.NoObjectionRecordsFoundException;
+import org.egov.lams.exceptions.NoRenewalRecordsFoundException;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Allottee;
@@ -688,27 +690,27 @@ public class AgreementRepository {
         try {
 
             status = jdbcTemplate.queryForObject(sql, String.class);
-        } catch (DataAccessException ex) {
+        }catch (DataAccessException ex) {
             logger.info("exception while fetching renewal status of agreementNo :" + agreementnumber);
-            throw new RuntimeException(ex.getMessage());
-        }
+            throw new NoRenewalRecordsFoundException();
+        } 
         return status;
     }
 
-    public String getObjectionStatus(String agreementnumber, String tenantId) {
-        String sql = "select status from  eglams_agreement where agreement_no ='" + agreementnumber
-                + "' and tenant_id = '" + tenantId + "' and action='OBJECTION'";
-        logger.info("objection status query :", sql);
-        String status = null;
-        try {
+	public String getObjectionStatus(String agreementnumber, String tenantId) {
+		String sql = "select status from  eglams_agreement where agreement_no ='" + agreementnumber
+				+ "' and tenant_id = '" + tenantId + "' and action='OBJECTION'";
+		logger.info("objection status query :", sql);
+		String status = null;
+		try {
 
-            status = jdbcTemplate.queryForObject(sql, String.class);
-        } catch (DataAccessException ex) {
-            logger.info("exception while fetching objection status of agreementNo :" + agreementnumber);
-            throw new RuntimeException(ex.getMessage());
-        }
-        return status;
-    }
+			status = jdbcTemplate.queryForObject(sql, String.class);
+		} catch (DataAccessException ex) {
+			logger.info("exception while fetching objection status of agreementNo :" + agreementnumber);
+			throw new NoObjectionRecordsFoundException();
+		}
+		return status;
+	}
     
 	private Map<String, List<Object[]>> getUpdateBatchParamsList(Long agreementId, List<SubSeqRenewal> renewalDetails,
 			String tenantId) {

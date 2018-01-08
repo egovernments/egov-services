@@ -99,7 +99,7 @@ public class VehicleMaintenanceDetailsService {
         final VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch = new VehicleMaintenanceDetailsSearch();
         vehicleMaintenanceDetailsSearch.setTenantId(tenantId);
         vehicleMaintenanceDetailsSearch.setRegNumber(vehicleRegNumber);
-        vehicleMaintenanceDetailsSearch.setSortBy("createdTime");
+        vehicleMaintenanceDetailsSearch.setSortBy("lastmodifiedtime desc");
 
         final Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsPage = vehicleMaintenanceDetailsRepository
                 .search(vehicleMaintenanceDetailsSearch);

@@ -19,6 +19,7 @@ import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Scrap;
+import org.egov.inv.model.Scrap.ScrapStatusEnum;
 import org.egov.inv.model.ScrapDetail;
 import org.egov.inv.model.ScrapDetailSearch;
 import org.egov.inv.model.ScrapRequest;
@@ -66,6 +67,7 @@ public class ScrapService extends DomainService{
 		scrap.forEach(scrapData -> {
 			scrapData.setId(scrapJdbcRepository.getSequence("seq_scrap"));
 			scrapData.setScrapNumber(appendString(scrapData));
+			scrapData.setScrapStatus(ScrapStatusEnum.APPROVED);
 			if (StringUtils.isEmpty(scrapData.getTenantId())) {
 				scrapData.setTenantId(tenantId);
 			}

@@ -33,8 +33,6 @@ public class MDMSService {
 	@Value("${egov.kafka.topics.reload}")
 	private String reloadTopic;
 
-	Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
-
 	public Map<String, Map<String, JSONArray>> searchMaster(MdmsCriteriaReq mdmsCriteriaReq) {
 
 		Map<String, Map<String, Map<String, JSONArray>>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
@@ -103,6 +101,8 @@ public class MDMSService {
 
 	private JSONArray getMasterData(Map<String, Map<String, JSONArray>> stateLevel,
 			Map<String, Map<String, JSONArray>> ulbLevel, String moduleName, String masterName) throws Exception {
+		
+		Map<String, Map<String, Object>> masterConfigMap = MDMSApplicationRunnerImpl.getMasterConfigMap();
 
 		Map<String, Object> moduleData = masterConfigMap.get(moduleName);
 		log.info(" The Master Config map : {}",masterConfigMap);

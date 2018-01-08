@@ -12,6 +12,7 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
+import org.hamcrest.text.IsEmptyString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -34,7 +35,7 @@ public class MDMSService {
 	private String reloadTopic;
 
 	public Map<String, Map<String, JSONArray>> searchMaster(MdmsCriteriaReq mdmsCriteriaReq) {
-
+		
 		Map<String, Map<String, Map<String, JSONArray>>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
 
 		String tenantId = mdmsCriteriaReq.getMdmsCriteria().getTenantId();
@@ -46,8 +47,8 @@ public class MDMSService {
 			String array[] = tenantId.split("\\.");
 			stateLevel = tenantIdMap.get(array[0]);
 			ulbLevel = tenantIdMap.get(tenantId);
-			/*if (ulbLevel == null)
-				throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");*/
+			if (ulbLevel == null)
+				throw new CustomException("Invalid_tenantId.MdmsCriteria.tenantId", "Invalid Tenant Id");
 		} else {
 			stateLevel = tenantIdMap.get(tenantId);
 			if (stateLevel == null)

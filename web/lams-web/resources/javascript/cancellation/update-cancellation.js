@@ -316,7 +316,9 @@ class UpdateCancellation extends React.Component {
 
                 workflow[i].employeeName = employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : ""
 
-                if(i === workflow.length-1){
+                console.log("workflow", i, workflow.length-1);
+
+                if(i == workflow.length-1){
                     this.setState({
                         ...this.state,
                         workflow: workflow

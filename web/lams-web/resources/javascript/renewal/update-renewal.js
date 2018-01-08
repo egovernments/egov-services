@@ -116,7 +116,8 @@ class UpdateRenewal extends React.Component {
             designationList: [],
             userList: [],
             buttons: [],
-            wfStatus: ""
+            wfStatus: "",
+            rentInc: []
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -322,6 +323,9 @@ class UpdateRenewal extends React.Component {
             agreement.workflowDetails = {};
         }
 
+        var rentInc = commonApiPost("lams-services", "getrentincrements", "", {
+            tenantId
+        }).responseJSON;
 
         this.setState({
             ...this.state,
@@ -330,7 +334,8 @@ class UpdateRenewal extends React.Component {
             //owner:process.owner.id,
             wfStatus: process.status,
             workflow: workflow,
-            buttons: _btns ? _btns : []
+            buttons: _btns ? _btns : [],
+            rentInc: rentInc
         });
 
     }
@@ -738,7 +743,7 @@ class UpdateRenewal extends React.Component {
     render() {
         var _this = this;
         let { handleChange, handleChangeTwoLevel, addOrUpdate, printNotice, handleProcess } = this;
-        let { agreement, renewalReasons, buttons } = this.state;
+        let { agreement, renewalReasons, buttons, rentInc } = this.state;
         let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
             renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
         let { assetCategory, locationDetails } = this.state.agreement.asset;
@@ -748,6 +753,16 @@ class UpdateRenewal extends React.Component {
                 return data.map((item, ind) => {
                     return (<option key={ind} value={typeof item == "object" ? item.id : item}>
                         {typeof item == "object" ? item.name : item}
+                    </option>)
+                })
+            }
+        }
+
+        const renderOptionForRentInc = function (data) {
+            if (data) {
+                return data.map((item, ind) => {
+                    return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+                        {typeof item == "object" ? item.percentage : item}
                     </option>)
                 })
             }
@@ -1121,7 +1136,7 @@ class UpdateRenewal extends React.Component {
                                         <div className="text-no-ui">
                                             <span>₹</span>
                                             <input type="number" min={agreement.rent} name="renewalRent" id="renewalRent" value={agreement.rent}
-                                                onChange={(e) => { handleChange(e, "rent") }} required disabled/>
+                                                onChange={(e) => { handleChange(e, "rent") }} required disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1187,13 +1202,9 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChange(e, "rentIncrementMethod") }} required disabled >
-                                            <option value="">Choose</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="30">30</option>
-                                            <option value="40">40</option>
-                                            <option value="50">50</option>
+                                        <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod", "id") }} required disabled >
+                                            <option value="">Choose Percentage</option>
+                                            {renderOptionForRentInc(rentInc)}
                                         </select>
                                     </div>
                                 </div>
@@ -1207,7 +1218,7 @@ class UpdateRenewal extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required disabled >
-                                            <option>Select</option>
+                                            <option value="" >Select</option>
                                             {renderOption(renewalReasons)}
                                         </select>
                                     </div>
@@ -1236,7 +1247,7 @@ class UpdateRenewal extends React.Component {
                                         <label for="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks" 
+                                        <textarea name="remarks" id="remarks"
                                             onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>
@@ -1284,13 +1295,13 @@ class UpdateRenewal extends React.Component {
                     tenantId: tenantId,
                     id: item.owner.id
                 }).responseJSON["Employee"] || {};
-        
+
 
                 return (
                     <tr key={ind}>
                         <td>{item.createdDate}</td>
                         <td>{item.senderName}</td>
-                        <td>{employeeName[0]?employeeName[0].code+" :: "+ employeeName[0].name:""}</td>
+                        <td>{employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : ""}</td>
                         <td>{item.status}</td>
                         <td>{item.comments}</td>
                     </tr>

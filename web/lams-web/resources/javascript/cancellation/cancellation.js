@@ -146,8 +146,6 @@ class CancellationAgreement extends React.Component {
     var agreement = Object.assign({}, _this.state.agreement);
     agreement.action = "Cancellation";
 
-    console.log("Documents", agreement);
-
     if (agreement.documents && agreement.documents.constructor == FileList) {
       let counter = agreement.documents.length,
         breakout = 0,

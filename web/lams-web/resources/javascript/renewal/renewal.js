@@ -118,7 +118,8 @@ class RenewalAgreement extends React.Component {
       positionList: [],
       departmentList: [],
       designationList: [],
-      userList: []
+      userList: [],
+      rentInc: []
 
     }
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -484,11 +485,16 @@ class RenewalAgreement extends React.Component {
       agreement.workflowDetails = {};
     }
 
+    var rentInc = commonApiPost("lams-services", "getrentincrements", "", {
+      tenantId
+    }).responseJSON;
+
 
     this.setState({
       ...this.state,
       agreement: agreement,
-      departmentList: departmentList
+      departmentList: departmentList,
+      rentInc: rentInc
     });
 
 
@@ -540,7 +546,7 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate } = this;
-    let { agreement, renewalReasons } = _this.state;
+    let { agreement, renewalReasons, rentInc } = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
@@ -551,6 +557,16 @@ class RenewalAgreement extends React.Component {
         return data.map((item, ind) => {
           return (<option key={ind} value={typeof item == "object" ? item.id : item}>
             {typeof item == "object" ? item.name : item}
+          </option>)
+        })
+      }
+    }
+
+    const renderOptionForRentInc = function (data) {
+      if (data) {
+        return data.map((item, ind) => {
+          return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+            {typeof item == "object" ? item.percentage : item}
           </option>)
         })
       }
@@ -981,13 +997,9 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChange(e, "rentIncrementMethod") }} required >
-                      <option value="">Choose</option>
-                      <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="30">30</option>
-                      <option value="40">40</option>
-                      <option value="50">50</option>
+                    <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod","id") }} required >
+                      <option value="">Choose Percentage</option>
+                      {renderOptionForRentInc(rentInc)}
                     </select>
                   </div>
                 </div>

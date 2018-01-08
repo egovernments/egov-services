@@ -76,6 +76,15 @@ const data =
 		[
 			
 		]
+	},
+	"works":
+	{
+		"isSpecificHeader": false,
+		"url": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-masters/v1-0-0.yml",
+		"masters": 
+		[
+
+		]
 	}
 
 

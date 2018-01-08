@@ -3,8 +3,16 @@ class AssetDepreciation extends React.Component {
   constructor(props) {
     super(props);
     this.state={
+      isAssetDeprecated:false,
       searchSet:{
         tenantId,
+      },
+      createDepreciation:{
+        Depreciation:{
+          tenantId,
+          toDate: '',
+          assetIds:[]
+        }
       },
       error:{
 
@@ -15,9 +23,12 @@ class AssetDepreciation extends React.Component {
     this.search = this.search.bind(this);
     this.addRemoveAsset=this.addRemoveAsset.bind(this);
     this.createDepreciation=this.createDepreciation.bind(this);
+    this.bulkAddRemoveAsset=this.bulkAddRemoveAsset.bind(this);
     this.getName=this.getName.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.closeWindow = this.closeWindow.bind(this);
+    this.showAssetDeprecatedTable=this.showAssetDeprecatedTable.bind(this);
+    this.renderAssetDepBody=this.renderAssetDepBody.bind(this);
   }
 
   handleChange(value, property) {
@@ -52,7 +63,7 @@ class AssetDepreciation extends React.Component {
       searchSet['dateOfDepreciation'] = searchSet['assetCreatedTo'] ? moment(searchSet['assetCreatedTo'], "DD/MM/YYYY").valueOf() : '';
 
       commonApiPost("asset-services","assets","_search", searchSet, function(err, res) {
-        console.log(res['Assets']);
+        // console.log(res['Assets']);
         self.setState({
           resultSet:res['Assets'],
           error:{},
@@ -63,21 +74,53 @@ class AssetDepreciation extends React.Component {
   }
 
   componentWillUpdate() {
-      $('#agreementTable').dataTable().fnDestroy();
+      // $('#agreementTable').dataTable().fnDestroy();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    $('#agreementTable').DataTable({
-      dom: 'Bfrtip',
-      buttons: [
-               'excel', 'pdf', 'print'
-       ],
-       "ordering": false,
-       "bDestroy": true,
-       language: {
-          "emptyTable": "No Records"
-       }
-    });
+    let {isSearchClicked, isAssetDeprecated}=this.state;
+    if(isSearchClicked && flag == 0){
+      flag = 1;
+      $('#agreementTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+                 'excel',
+                 {
+                    extend: 'pdf',
+                    filename : 'Asset Depreciation',
+                    orientation: 'landscape',
+                    pageSize: 'TABLOID',
+                    footer : true
+                  },
+                 'print'
+         ],
+         "ordering": false,
+         "bDestroy": true,
+         language: {
+            "emptyTable": "No Records"
+         }
+      });
+    }
+    if(isAssetDeprecated){
+      $('#assetDepTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+          {
+             extend: 'pdf',
+             filename : 'Asset Depreciation',
+             orientation: 'landscape',
+             pageSize: 'TABLOID',
+             footer : true
+           },
+           'print'
+         ],
+         "ordering": false,
+         "bDestroy": true,
+         language: {
+            "emptyTable": "No Records"
+         }
+      });
+    }
   }
 
   componentDidMount() {
@@ -105,8 +148,12 @@ class AssetDepreciation extends React.Component {
    let assetName = [];
    let uniqueNames = [];
 
-   commonApiPost("asset-services", "assetCategories", "_search", { tenantId, assetCategoryType:'IMMOVABLE'}, function(err, res) {
-     self.setState({assetCategory:res.AssetCategory})
+   commonApiPost("asset-services", "GET_ASSET_CATEGORY_TYPE", "", { tenantId}, function(err, res) {
+     self.setState({assetCategory:res.AssetCategoryType})
+   });
+
+   commonApiPost("asset-services", "assetCategories", "_search", { tenantId}, function(err, res) {
+     self.setState({assetCategoryName:res.AssetCategory})
    });
 
    getDropdown("assignments_department", function(res) {
@@ -160,23 +207,122 @@ class AssetDepreciation extends React.Component {
     }
   }
 
+  bulkAddRemoveAsset(boolean){
+    let {resultSet} = this.state;
+    let ids = [];
+    if(boolean){
+      resultSet.map(item=>{
+        ids.push(item.id)
+      })
+    }else{
+      ids = [];
+    }
+    this.setState({
+      createDepreciation:{
+        Depreciation:{
+          ...this.state.createDepreciation.Depreciation,
+          toDate:moment(this.state.searchSet['dateOfDepreciation'], "DD/MM/YYYY").valueOf(),
+          assetIds:ids
+        }
+      }
+    })
+  }
+
   addRemoveAsset(boolean, assetId){
-    console.log(boolean, assetId);
+    let ids = [...this.state.createDepreciation.Depreciation.assetIds];
     if(boolean){
       //add it to the array
+      ids.push(assetId);
     }else{
-      //remove it from the array
+      //remove from the array
+        ids.splice(ids.indexOf(assetId),1);
     }
+    this.setState({
+      createDepreciation:{
+        Depreciation:{
+          ...this.state.createDepreciation.Depreciation,
+          toDate:moment(this.state.searchSet['dateOfDepreciation'], "DD/MM/YYYY").valueOf(),
+          assetIds:ids
+        }
+      }
+    })
   }
 
   createDepreciation(){
+    // console.log('came to createDepreciation');
+    //check atleast on assetIds exists
+    let obj = {...this.state.createDepreciation};
+    let self = this;
+    obj.RequestInfo=requestInfo;
+    $.ajax({
+        url: baseUrl+'/asset-services/assets/depreciations/_create',
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify(obj),
+        contentType: 'application/json',
+        success: function(res) {
+            console.log(res);
+            self.setState({
+              isAssetDeprecated:true,
+              assetDeprecated:res.Depreciation.DepreciationDetail
+            });
+        },
+        error: function(err) {
+          console.log('Error:',err);
+        }
+    });
+  }
 
+  showAssetDeprecatedTable(){
+    return (
+      <table id="assetDepTable" className="table table-bordered">
+        <thead>
+        <tr>
+            <th>Sr. No.</th>
+            <th>Asset Category Name</th>
+            <th>Department</th>
+            <th>Asset Code</th>
+            <th>Asset Name</th>
+            <th>Depreciation Rate(%)</th>
+            <th>Current Depreciation(Rs.)</th>
+            <th>Value after Depreciation(Rs.)</th>
+            <th>Success / Failure</th>
+            <th>Reason for Failure</th>
+        </tr>
+        </thead>
+        <tbody>
+          {this.renderAssetDepBody()}
+        </tbody>
+      </table>
+    )
+  }
+
+  renderAssetDepBody(){
+    let {assetDeprecated} = this.state;
+    return assetDeprecated && assetDeprecated.map((asset,idx)=>{
+      console.log(asset);
+      return(
+        <tr key={idx}>
+          <td>{idx+1}</td>
+          <td></td>
+          <td></td>
+          <td>{asset.assetCode}</td>
+          <td></td>
+          <td>{asset.depreciationRate}</td>
+          <td>{asset.depreciationValue}</td>
+          <td>{asset.valueAfterDepreciation}</td>
+          <td>{asset.status}</td>
+          <td>{asset.reasonForFailure || 'N/A'}</td>
+        </tr>
+      )
+    })
   }
 
   render() {
-      let {handleChange, search, closeWindow, getName, handleClick, addRemoveAsset}=this;
-      let {isSearchClicked, assetCategory, department, resultSet}=this.state;
-      console.log(this.state);
+      let {handleChange, search, closeWindow, getName, handleClick, addRemoveAsset, createDepreciation, bulkAddRemoveAsset, showAssetDeprecatedTable}=this;
+      let {isSearchClicked, assetCategory, assetCategoryName, department, resultSet, isAssetDeprecated}=this.state;
+      let {assetIds} = this.state.createDepreciation.Depreciation;
+      // console.log(this.state.searchSet);
 
       const renderOptions = function(list)
       {
@@ -209,7 +355,7 @@ class AssetDepreciation extends React.Component {
               <table id="agreementTable" className="table table-bordered">
                   <thead>
                   <tr>
-                      <th><input type="checkbox" className="checkAll"/></th>
+                      <th><input type="checkbox" className="checkAll" onClick={(e)=>{bulkAddRemoveAsset(e.target.checked)}} /></th>
                       <th>Sr. No.</th>
                       <th>Asset Category Name</th>
                       <th>Department</th>
@@ -226,7 +372,7 @@ class AssetDepreciation extends React.Component {
                       </tbody>
 
              </table>
-             <button type="button" className="btn btn-submit">Create</button>
+             <button type="button" className="btn btn-submit" onClick={e=>{createDepreciation()}}>Create</button>
              </div>
             )
     }
@@ -235,9 +381,11 @@ class AssetDepreciation extends React.Component {
       if (resultSet.length>0) {
         return resultSet.map((item,index)=>
         {
+          let ids = [...assetIds];
+          let bool = ids.indexOf(item.id) >=0 ? true : false;
               return(
                 <tr key={index}>
-                        <td><input type="checkbox" className="depreciationCheck" onClick={(e)=>{addRemoveAsset(e.target.checked, item.id)}} /></td>
+                        <td><input type="checkbox" checked={bool} className="depreciationCheck" onClick={(e)=>{addRemoveAsset(e.target.checked, item.id)}} /></td>
                         <td>{index+1}</td>
                         <td>{item.assetCategory.name}</td>
                         <td>{getName(department,item.department.id)}</td>
@@ -248,6 +396,14 @@ class AssetDepreciation extends React.Component {
                 </tr>);
         })
       }
+    }
+
+    if(isAssetDeprecated){
+      return(
+        <div>
+          {showAssetDeprecatedTable()}
+        </div>
+      )
     }
 
     return (
@@ -275,6 +431,7 @@ class AssetDepreciation extends React.Component {
             <div className="col-sm-3 add-margin">
               <select className="form-control" id="assetCategory" name="" onChange={(e)=>{handleChange(e.target.value,"assetCategory")}}>
                 <option value="">Select</option>
+                {renderOptions(assetCategoryName)}
               </select>
             </div>
             <label className="col-sm-2 control-label text-right">Department</label>

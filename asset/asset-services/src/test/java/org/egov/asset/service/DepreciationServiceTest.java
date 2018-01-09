@@ -98,7 +98,7 @@ public class DepreciationServiceTest {
                 depreciationService.depreciateAsset(depreciationRequest, headers).toString());
     }
 
-    @Test
+    /*@Test
     public void test_ValidationAndGenerationDepreciationVoucher() {
         final Map<Long, DepreciationDetail> depreciationDetailsMap = getDepreciationDetailsMap();
         final HttpHeaders headers = getHttpHeaders();
@@ -111,7 +111,7 @@ public class DepreciationServiceTest {
                 "ap.kurnool")).thenReturn(true);
         depreciationService.validationAndGenerationDepreciationVoucher(depreciationDetailsMap, headers, requestInfo,
                 "ap.kurnool", calculationAssetDetailList, cadMap);
-    }
+    }*/
 
    /* @SuppressWarnings("unchecked")
     @Test

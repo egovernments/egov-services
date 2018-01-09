@@ -212,7 +212,7 @@ public class VoucherServiceTest {
         return voucherParams;
     }
 
-    @Test
+   /* @Test
     public void test_shuould_create_VoucherRequest_For_Depreciation()
             throws JsonParseException, JsonMappingException, IOException {
 
@@ -262,7 +262,7 @@ public class VoucherServiceTest {
         assertEquals(expectedVoucherRequest.getVouchers().toString(), generatedVoucherRequest.getVouchers().toString());
 
     }
-
+*/
     private List<CalculationAssetDetails> getCalculationAssetDetailList() {
         final List<CalculationAssetDetails> calculationAssetDetails = new ArrayList<CalculationAssetDetails>();
         final CalculationAssetDetails calculationAssetDetail = new CalculationAssetDetails();

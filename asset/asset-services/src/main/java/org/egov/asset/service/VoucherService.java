@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.VoucherRequest;
 import org.egov.asset.contract.VoucherResponse;
-import org.egov.asset.domain.CalculationAssetDetails;
 import org.egov.asset.model.ChartOfAccountContract;
 import org.egov.asset.model.ChartOfAccountContractResponse;
 import org.egov.asset.model.ChartOfAccountDetailContract;
 import org.egov.asset.model.ChartOfAccountDetailContractResponse;
+import org.egov.asset.model.DepreciationInputs;
 import org.egov.asset.model.Disposal;
 import org.egov.asset.model.FiscalPeriod;
 import org.egov.asset.model.Function;
@@ -267,7 +267,7 @@ public class VoucherService {
     }
 
     public VoucherRequest createDepreciationVoucherRequest(
-            final List<CalculationAssetDetails> calculationAssetDetailList, final Long departmentId,
+            final List<DepreciationInputs> depreciationInputsList, final Long departmentId,
             final List<VoucherAccountCodeDetails> accountCodeDetails, final String tenantId, final HttpHeaders header) {
 
         final VoucherRequest voucherRequest = new VoucherRequest();

@@ -43,15 +43,12 @@ package org.egov.asset.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -68,45 +65,45 @@ import lombok.ToString;
 @ToString
 public class Asset {
 
-	@NotNull
-	private String tenantId;
-	private Long id;
+    @NotNull
+    private String tenantId;
+    private Long id;
 
-	@NotNull
-	private String name;
-	private String code;
+    @NotNull
+    private String name;
+    private String code;
 
-	private Department department;
+    private Department department;
 
-	@Valid
-	private AssetCategory assetCategory;
-	private String assetDetails;
-	private ModeOfAcquisition modeOfAcquisition;
+    @Valid
+    private AssetCategory assetCategory;
+    private String assetDetails;
+    private ModeOfAcquisition modeOfAcquisition;
 
-	@NotNull
-	private String status;
-	private String description;
+    @NotNull
+    private String status;
+    private String description;
 
-	private Long dateOfCreation;
+    private Long dateOfCreation;
 
-	private Location locationDetails;
+    private Location locationDetails;
 
-	private String remarks;
-	private String length;
-	private String width;
-	private String totalArea;
-	
-	private BigDecimal grossValue;
-	private BigDecimal accumulatedDepreciation;
-	private Long assetReference = null;
-	private String version;
-	private List<Attributes> assetAttributes = new ArrayList<>();
+    private String remarks;
+    private String length;
+    private String width;
+    private String totalArea;
 
-	private Boolean enableYearWiseDepreciation;
-	private Double depreciationRate;
-	
-	@Valid
-	private List<YearWiseDepreciation> yearWiseDepreciation = new ArrayList<>();
-	private String surveyNumber;
-	private BigDecimal marketValue;
+    private BigDecimal grossValue;
+    private BigDecimal accumulatedDepreciation;
+    private Long assetReference = null;
+    private String version;
+    private List<Attributes> assetAttributes = new ArrayList<>();
+
+    private Boolean enableYearWiseDepreciation;
+    private Double depreciationRate;
+
+    @Valid
+    private List<YearWiseDepreciation> yearWiseDepreciation = new ArrayList<>();
+    private String surveyNumber;
+    private BigDecimal marketValue;
 }

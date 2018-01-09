@@ -1,6 +1,7 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.Digits;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -29,11 +30,12 @@ public class RouteCollectionPointMap {
     @JsonProperty("collectionPoint")
     private CollectionPoint collectionPoint = null;
 
-    @NotNull
+    @Digits(fraction = 2, integer = 3, message = "distance shall be with 2 decimal points")
+    @DecimalMax(value = "500", message = "distance shall be between 0 and 500 Kms")
     @JsonProperty("distance")
     private Double distance = null;
 
-    @NotNull
+    @Digits(fraction = 2, integer = 10, message = "garbageEstimate shall be with 2 decimal points")
     @JsonProperty("garbageEstimate")
     private Double garbageEstimate = null;
 

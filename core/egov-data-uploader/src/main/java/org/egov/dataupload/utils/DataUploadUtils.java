@@ -17,7 +17,9 @@ import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.UploadDefinition;
@@ -183,6 +185,18 @@ public class DataUploadUtils {
             }else if(exisitingFields.get(i) instanceof Double){
             	cell.setCellType(CellType.NUMERIC);
             	cell.setCellValue(Double.parseDouble(exisitingFields.get(i).toString()));
+            }else if(exisitingFields.get(i) instanceof Long){
+            	if(13 == exisitingFields.get(i).toString().length()) {
+            		CellStyle cellStyle = workbook.createCellStyle();
+            		CreationHelper createHelper = workbook.getCreationHelper();
+            		cellStyle.setDataFormat(
+            		    createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
+            		cell.setCellValue(new Date(Long.parseLong(exisitingFields.get(i).toString())));
+            		cell.setCellStyle(cellStyle);
+            	}else {
+	            	cell.setCellType(CellType.NUMERIC);
+	            	cell.setCellValue(Long.parseLong(exisitingFields.get(i).toString()));
+            	}
             }
             
         }

@@ -126,7 +126,7 @@ public class DataUploadService {
 				dataUploadUtils.clearInternalDirectory();
         	}else{
         		uploadData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
-				//dataUploadUtils.clearInternalDirectory();
+				dataUploadUtils.clearInternalDirectory();
         	}
 
         }catch(Exception e){

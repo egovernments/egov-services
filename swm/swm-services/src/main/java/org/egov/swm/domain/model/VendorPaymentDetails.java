@@ -3,6 +3,7 @@ package org.egov.swm.domain.model;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -38,7 +39,7 @@ public class VendorPaymentDetails {
     private VendorContract vendorContract;
 
     @NotNull
-    @Size(min = 1, message = "Value of invoice amount shall be greater than 0")
+    @DecimalMin(value = "1.0", message = "Value of invoice amount shall be greater than 0")
     @JsonProperty("vendorInvoiceAmount")
     private Double vendorInvoiceAmount;
 

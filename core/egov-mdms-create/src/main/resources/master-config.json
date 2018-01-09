@@ -64,10 +64,10 @@
         "$.tenantId"
       ]
     },
-    "NewMaster": {
+    "NewTestMaster": {
       "masterName": "NewMaster",
       "moduleDefinition": "null",
-      "isStateLevel": false,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.id"
       ]

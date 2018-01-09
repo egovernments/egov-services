@@ -59,8 +59,9 @@ class AssetDepreciation extends React.Component {
       });
     }else{
       searchSet['dateOfDepreciation'] = searchSet['dateOfDepreciation'] ? moment(searchSet['dateOfDepreciation'], "DD/MM/YYYY").valueOf() : '';
-      searchSet['dateOfDepreciation'] = searchSet['assetCreatedFrom'] ? moment(searchSet['assetCreatedFrom'], "DD/MM/YYYY").valueOf() : '';
-      searchSet['dateOfDepreciation'] = searchSet['assetCreatedTo'] ? moment(searchSet['assetCreatedTo'], "DD/MM/YYYY").valueOf() : '';
+      searchSet['assetCreatedFrom'] = searchSet['assetCreatedFrom'] ? moment(searchSet['assetCreatedFrom'], "DD/MM/YYYY").valueOf() : '';
+      searchSet['assetCreatedTo'] = searchSet['assetCreatedTo'] ? moment(searchSet['assetCreatedTo'], "DD/MM/YYYY").valueOf() : '';
+      searchSet['transaction']='DEPRECIATION';
 
       commonApiPost("asset-services","assets","_search", searchSet, function(err, res) {
         // console.log(res['Assets']);
@@ -298,19 +299,19 @@ class AssetDepreciation extends React.Component {
   }
 
   renderAssetDepBody(){
-    let {assetDeprecated} = this.state;
+    let {assetDeprecated, department} = this.state;
+    let {getName} = this;
     return assetDeprecated && assetDeprecated.map((asset,idx)=>{
-      console.log(asset);
       return(
         <tr key={idx}>
           <td>{idx+1}</td>
-          <td></td>
-          <td></td>
+          <td>{asset.assetCategoryName}</td>
+          <td>{getName(department,asset.department)}</td>
           <td>{asset.assetCode}</td>
-          <td></td>
-          <td>{asset.depreciationRate}</td>
-          <td>{asset.depreciationValue}</td>
-          <td>{asset.valueAfterDepreciation}</td>
+          <td>{asset.assetName}</td>
+          <td>{asset.depreciationRate || 0}</td>
+          <td>{asset.depreciationValue || 0}</td>
+          <td>{asset.valueAfterDepreciation || 0}</td>
           <td>{asset.status}</td>
           <td>{asset.reasonForFailure || 'N/A'}</td>
         </tr>

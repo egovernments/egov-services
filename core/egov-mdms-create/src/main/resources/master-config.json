@@ -37,15 +37,7 @@
         "$.tenantId"
       ]
     },
-    "LayerType": {
-      "masterName": "LayerType",
-      "moduleDefinition": "null",
-      "isStateLevel": true,
-      "uniqueKeys": [
-        "$.name",
-        "$.tenantId"
-      ]
-    },
+    
     "Assetconfiguration": {
       "masterName": "Assetconfiguration",
       "moduleDefinition": "null",

@@ -71,40 +71,23 @@ serviceMaps:
       description: create materials in inventory
       fromTopic: inv-materials-save-topic
       queryMaps:
-        - query: INSERT INTO material(id, code, name, materialclass, description, oldcode, materialtype, baseuom, inventorytype, status, purchaseuom, expenseaccount, minquantity, maxquantity, stockinguom, lotcontrol, shelflifecontrol, serialnumber, scrapable, assetcategory, reorderlevel, reorderquantity, model, manufacturepartno, techincalspecs, termsofdelivery, inactivedate, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: >-
+            INSERT INTO material(id, code, minquantity, maxquantity, reorderlevel, reorderquantity, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (code,tenantid) DO UPDATE SET
+            minquantity=EXCLUDED.minquantity,  maxquantity=EXCLUDED.maxquantity, reorderlevel=EXCLUDED.reorderlevel,
+            reorderquantity=EXCLUDED.reorderquantity, lastmodifiedby=EXCLUDED.reorderquantity,
+            lastmodifiedtime=EXCLUDED.reorderquantity;
           basePath: $.materials.*
           jsonMaps:
             - jsonPath: $.materials.*.id
             - jsonPath: $.materials.*.code
-            - jsonPath: $.materials.*.name
-            - jsonPath: $.materials.*.materialClass
-            - jsonPath: $.materials.*.description
-            - jsonPath: $.materials.*.oldCode
-            - jsonPath: $.materials.*.materialType.code
-            - jsonPath: $.materials.*.baseUom.code
-            - jsonPath: $.materials.*.inventoryType
-            - jsonPath: $.materials.*.status
-            - jsonPath: $.materials.*.purchaseUom.code
-            - jsonPath: $.materials.*.expenseAccount.glCode
             - jsonPath: $.materials.*.minQuantity
               dbType: LONG
             - jsonPath: $.materials.*.maxQuantity
               dbType: LONG
-            - jsonPath: $.materials.*.stockingUom.code
-            - jsonPath: $.materials.*.lotControl
-            - jsonPath: $.materials.*.shelfLifeControl
-            - jsonPath: $.materials.*.serialNumber
-            - jsonPath: $.materials.*.scrapable
-            - jsonPath: $.materials.*.assetCategory.code
             - jsonPath: $.materials.*.reorderLevel
               dbType: LONG
             - jsonPath: $.materials.*.reorderQuantity
-              dbType: LONG
-            - jsonPath: $.materials.*.model
-            - jsonPath: $.materials.*.manufacturePartNo
-            - jsonPath: $.materials.*.techincalSpecs
-            - jsonPath: $.materials.*.termsOfDelivery
-            - jsonPath: $.materials.*.inActiveDate
               dbType: LONG
             - jsonPath: $.materials.*.tenantId
             - jsonPath: $.materials.*.auditDetails.createdBy
@@ -113,7 +96,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materials.*.auditDetails.lastModifiedTime
               dbType: LONG
-    
+
     - version: 1.0
       name: materials update
       description: update materials in inventory
@@ -268,31 +251,6 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedTime
               dbType: LONG
-        - query: >-
-            INSERT INTO material(id, code, minquantity, maxquantity, reorderlevel, reorderquantity, tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (code,tenantid) DO UPDATE SET
-            minquantity=EXCLUDED.minquantity,  maxquantity=EXCLUDED.maxquantity, reorderlevel=EXCLUDED.reorderlevel,
-            reorderquantity=EXCLUDED.reorderquantity, lastmodifiedby=EXCLUDED.reorderquantity,
-            lastmodifiedtime=EXCLUDED.reorderquantity;
-          basePath: $.materialStoreMappings.*.material
-          jsonMaps:
-            - jsonPath: $.materialStoreMappings.*.material.id
-            - jsonPath: $.materialStoreMappings.*.material.code
-            - jsonPath: $.materialStoreMappings.*.material.minQuantity
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.maxQuantity
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.reorderLevel
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.reorderQuantity
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.tenantId
-            - jsonPath: $.materialStoreMappings.*.material.auditDetails.createdBy
-            - jsonPath: $.materialStoreMappings.*.material.auditDetails.lastModifiedBy
-            - jsonPath: $.materialStoreMappings.*.material.auditDetails.createdTime
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.auditDetails.lastModifiedTime
-              dbType: LONG
 
     - version: 1.0
       name: material store mapping update
@@ -311,24 +269,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.materialStoreMappings.*.id
             - jsonPath: $.materialStoreMappings.*.tenantId
-        - query: >-
-           UPDATE material SET minquantity=?,  maxquantity=?, reorderlevel=?,  reorderquantity=?,
-           lastmodifiedby=?,  lastmodifiedtime=? WHERE code=? AND tenantid=?;
-          basePath: $.materialStoreMappings.*.material
-          jsonMaps:
-            - jsonPath: $.materialStoreMappings.*.material.minQuantity
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.maxQuantity
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.reorderLevel
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.reorderQuantity
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.auditDetails.lastModifiedBy
-            - jsonPath: $.materialStoreMappings.*.material.auditDetails.lastModifiedTime
-              dbType: LONG
-            - jsonPath: $.materialStoreMappings.*.material.code
-            - jsonPath: $.materialStoreMappings.*.material.tenantId
+
 
     - version: 1.0
       name: material store mapping delete

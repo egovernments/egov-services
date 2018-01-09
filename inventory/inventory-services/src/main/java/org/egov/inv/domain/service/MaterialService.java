@@ -59,15 +59,11 @@ public class MaterialService extends DomainService {
             for (int i = 0; i <= materialIdList.size() - 1; i++) {
                 materialRequest.getMaterials().get(i)
                         .setId(materialIdList.get(i).toString());
-                materialRequest.getMaterials().get(i)
-                        .setCode(materialRequest.getMaterials().get(i).getMaterialType().getCode() + "/" + materialJdbcRepository.getSequence(SEQ_SERIAL_NO));
                 if (isEmpty(materialRequest.getMaterials().get(i).getTenantId())) {
                     materialRequest.getMaterials().get(i).setTenantId(tenantId);
                 }
                 materialRequest.getMaterials().get(i).setAuditDetails(mapAuditDetails(materialRequest.getRequestInfo()));
                 materialStoreMappings = buildMaterialStoreMapping(materialRequest.getMaterials().get(i).getCode(), materialRequest.getMaterials().get(i).getStoreMapping());
-                uniqueCheck(materialRequest.getMaterials().get(i));
-                validateAsset(materialRequest.getMaterials().get(i));
             }
 
             kafkaQue.send(saveTopic, saveKey, materialRequest);
@@ -98,7 +94,7 @@ public class MaterialService extends DomainService {
                 materialStoreMappings = buildMaterialStoreMapping(material.getCode(), material.getStoreMapping());
             }
 
-            kafkaQue.send(updateTopic, updateKey, materialRequest);
+            kafkaQue.send(saveTopic, saveKey, materialRequest);
 
             materialStoreMappingService.update(buildMaterialStoreRequest(materialRequest.getRequestInfo(), materialStoreMappings), tenantId);
 
@@ -180,9 +176,8 @@ public class MaterialService extends DomainService {
                         throw new InvalidDataException("materialstore", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         materials.forEach(material -> {
-                            uniqueCheck(material);
-                            validateAsset(material);
                             minmaxvalidate(material);
+//                            validateMaterial(material.getCode(),material.getTenantId());
                         });
                     }
                 }
@@ -194,8 +189,6 @@ public class MaterialService extends DomainService {
                         throw new InvalidDataException("materialstore", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         materials.forEach(material -> {
-                            uniqueCheck(material);
-                            validateAsset(material);
                             minmaxvalidate(material);
                         });
                     }
@@ -245,30 +238,6 @@ public class MaterialService extends DomainService {
                 .build();
     }
 
-    private void validateAsset(Material material) {
-        if (!isEmpty(material.getInventoryType()) &&
-                material.getInventoryType().toString().equalsIgnoreCase("Asset")
-                && (null == material.getAssetCategory() ||
-                (null != material.getAssetCategory() && isEmpty(material.getAssetCategory().getCode())))) {
-            throw new CustomException("inv.0012", "Asset Category is mandatory when Inventory type  is Asset");
-        }
-    }
-
-    private void uniqueCheck(Material material) {
-
-       /* if (!materialJdbcRepository.uniqueCheck("name", new MaterialEntity().toEntity(material))) {
-            throw new CustomException("inv.010", "Material name already exists " + material.getName());
-        }*/
-
-        if (!isEmpty(material.getOldCode()) && !materialJdbcRepository.uniqueCheck("oldCode", new MaterialEntity().toEntity(material))) {
-            throw new CustomException("inv.014", "Old code already exists " + material.getOldCode());
-        }
-
-        if (!materialJdbcRepository.uniqueCheck("name", "code", new MaterialEntity().toEntity(material))) {
-            throw new CustomException("inv.0011", "Material Name and Material Code combination already exists " + material.getName()
-                    + ", " + material.getCode());
-        }
-    }
 
     private void minmaxvalidate(Material material) {
         if (material.getMaxQuantity().compareTo(material.getMinQuantity()) < 0) {
@@ -316,5 +285,13 @@ public class MaterialService extends DomainService {
                 .tenantId(mdmsMaterial.getTenantId());
     }
 
+ /*   private void validateMaterial(String code, String tenantId) {
+        Material material = (Material) mdmsRepository.fetchObject(tenantId, "inventory", "Material", "code", code, Material.class);
+        if (null == material) {
+            throw new CustomException("inv.0014", "Material not found with Code" + code);
+
+        }
+    }
+*/
 
 }

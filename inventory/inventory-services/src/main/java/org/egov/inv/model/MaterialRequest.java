@@ -64,8 +64,6 @@ public class MaterialRequest {
      **/
     @ApiModelProperty(value = "Used for search result and create only")
 
-    @Valid
-
     public List<Material> getMaterials() {
         return materials;
     }

@@ -160,6 +160,14 @@ public class VehicleTripSheetDetailsService {
 
             }
 
+            //Entry weight and Exit weight validations
+            if(vehicleTripSheetDetails.getEntryWeight() != null &&
+                    vehicleTripSheetDetails.getExitWeight() != null &&
+                    vehicleTripSheetDetails.getExitWeight() >= vehicleTripSheetDetails.getEntryWeight()){
+                throw new CustomException("Invalid Weights",
+                        " Entry weight shall be more than exit weight. ");
+            }
+
         }
 
     }

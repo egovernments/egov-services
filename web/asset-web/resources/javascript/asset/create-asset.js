@@ -276,8 +276,7 @@ class CreateAsset extends React.Component {
       };
       body.Asset.assetReference = "";
       if(body.Asset.dateOfCreation) {
-        var _date = body.Asset.dateOfCreation.split("/");
-        body.Asset.dateOfCreation = new Date(date[2], date[1]-1, date[0]).getTime();
+        body.Asset.dateOfCreation = moment(body.Asset.dateOfCreation, "DD/MM/YYYY").valueOf();;
       }
 
       $.ajax({
@@ -356,8 +355,7 @@ class CreateAsset extends React.Component {
       var newAsset = Object.assign({}, asset);
       newAsset.assetReference = this.state.assetSet.id;
       if(newAsset.dateOfCreation) {
-        var _date = newAsset.dateOfCreation.split("/");
-        newAsset.dateOfCreation = new Date(date[2], date[1]-1, date[0]).getTime();
+        newAsset.dateOfCreation = moment(newAsset.dateOfCreation, "DD/MM/YYYY").valueOf();;
       }
 
       var body = {
@@ -530,8 +528,7 @@ class CreateAsset extends React.Component {
       }
 
       if(tempInfo.dateOfCreation) {
-        var date = tempInfo.dateOfCreation.split("/");
-        tempInfo.dateOfCreation = new Date(date[2], date[1]-1, date[0]).getTime();
+        tempInfo.dateOfCreation = moment(tempInfo.dateOfCreation, "DD/MM/YYYY").valueOf();
       }
 
       if(!tempInfo.enableYearWiseDepreciation) {
@@ -547,7 +544,9 @@ class CreateAsset extends React.Component {
         if(hasDuplicates)
           return showError("Duplicate financial years not allowed.");
       }
-      //return console.log(JSON.stringify(tempInfo));
+
+      // console.log(JSON.stringify(tempInfo));
+
       var body = {
           "RequestInfo": requestInfo,
           "Asset": tempInfo
@@ -926,7 +925,7 @@ class CreateAsset extends React.Component {
                 _this.setState({
                     assetSet: {
                       ...asset,
-                      dateOfCreation: _date ? (_date[2] + "/" + _date[1] + "/" + _date[0]) : ""
+                      dateOfCreation: _date ? moment(new Date(_date)).format("DD/MM/YYYY") : ""
                     },
                     allFiles: JSON.parse(JSON.stringify(_files))
                 });

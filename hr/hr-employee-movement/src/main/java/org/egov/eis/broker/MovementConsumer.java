@@ -40,9 +40,8 @@
 
 package org.egov.eis.broker;
 
-import java.io.IOException;
+import java.util.Map;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.egov.eis.service.MovementService;
 import org.egov.eis.web.contract.MovementRequest;
 import org.slf4j.Logger;
@@ -50,9 +49,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Service
 public class MovementConsumer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MovementConsumer.class);
@@ -69,19 +74,15 @@ public class MovementConsumer {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory", topics = {
-            "${kafka.topics.movement.create.name}",
-            "${kafka.topics.movement.update.name}" })
-
-    public void listen(final ConsumerRecord<String, String> record) {
-        LOGGER.info("key:" + record.key() + ":" + "value:" + record.value());
-        try {
-            if (record.topic().equalsIgnoreCase(movementCreateTopic))
-                movementService.create(objectMapper.readValue(record.value(), MovementRequest.class));
-            else if (record.topic().equalsIgnoreCase(movementUpdateTopic))
-                movementService.update(objectMapper.readValue(record.value(), MovementRequest.class));
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+    @KafkaListener( topics = {
+            "${kafka.topics.movement.create.name}", "${kafka.topics.movement.update.name}" })
+    public void listen(Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
+        log.info("topic :: " + topic);
+        log.info("record :: " + record);                  
+        if (topic.equalsIgnoreCase(movementCreateTopic))
+                movementService.create(objectMapper.convertValue(record, MovementRequest.class));
+            else if (topic.equalsIgnoreCase(movementUpdateTopic))
+                movementService.update(objectMapper.convertValue(record, MovementRequest.class));
+        
     }
 }

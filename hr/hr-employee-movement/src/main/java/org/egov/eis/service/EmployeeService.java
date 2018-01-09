@@ -56,6 +56,8 @@ import org.egov.eis.web.contract.CommunityResponse;
 import org.egov.eis.web.contract.Designation;
 import org.egov.eis.web.contract.DesignationResponse;
 import org.egov.eis.web.contract.Employee;
+import org.egov.eis.web.contract.EmployeeInfo;
+import org.egov.eis.web.contract.EmployeeInfoResponse;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.egov.eis.web.contract.EmployeeResponse;
 import org.egov.eis.web.contract.EmployeeType;
@@ -93,7 +95,7 @@ public class EmployeeService {
     @Autowired
     private HRStatusSearchURLHelper hrStatusSearchURLHelper;
 
-    public Employee getEmployee(final MovementRequest movementRequest) {
+    public EmployeeInfo getEmployee(final MovementRequest movementRequest) {
         final String url = employeeSearchURLHelper.searchURL(movementRequest.getMovement().get(0).getEmployeeId(),
                 movementRequest.getMovement().get(0).getTenantId());
 
@@ -104,13 +106,13 @@ public class EmployeeService {
 
         final HttpEntity<RequestInfoWrapper> request = new HttpEntity<>(wrapper);
 
-        final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
-                EmployeeResponse.class);
+        final EmployeeInfoResponse employeeResponse = restTemplate.postForObject(url, request,
+                EmployeeInfoResponse.class);
 
-        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
-            return employeeResponse.getEmployee().get(0);
+        if(employeeResponse.getEmployees() != null && !employeeResponse.getEmployees().isEmpty())
+            return employeeResponse.getEmployees().get(0);
         else
-            return new Employee();
+            return new EmployeeInfo();
     }
 
     public Employee updateEmployee(final Employee employee, final String tenantId, final RequestInfo requestInfo) {
@@ -127,8 +129,8 @@ public class EmployeeService {
         final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
                 EmployeeResponse.class);
 
-        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
-            return employeeResponse.getEmployee().get(0);
+        if(employeeResponse.getEmployee() != null)
+            return employeeResponse.getEmployee();
         else
             return new Employee();
     }
@@ -147,8 +149,8 @@ public class EmployeeService {
         final EmployeeResponse employeeResponse = restTemplate.postForObject(url, request,
                 EmployeeResponse.class);
 
-        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
-            return employeeResponse.getEmployee().get(0);
+        if(employeeResponse.getEmployee() != null)
+            return employeeResponse.getEmployee();
         else
             return new Employee();
     }
@@ -359,7 +361,7 @@ public class EmployeeService {
         return bankBranchContractResponse.getBankBranches();
     }
 
-    public Employee getEmployee(final Movement movement,final RequestInfo requestInfo) {
+    public EmployeeInfo getEmployee(final Movement movement,final RequestInfo requestInfo) {
         final String url = employeeSearchURLHelper.searchURL(movement.getEmployeeId(),
                 movement.getTenantId());
 
@@ -368,12 +370,12 @@ public class EmployeeService {
         wrapper.setRequestInfo(requestInfo);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        final EmployeeResponse employeeResponse = restTemplate.postForObject(url, wrapper,
-                EmployeeResponse.class);
+        final EmployeeInfoResponse employeeResponse = restTemplate.postForObject(url, wrapper,
+                EmployeeInfoResponse.class);
 
-        if(!employeeResponse.getEmployee().isEmpty() && employeeResponse.getEmployee() != null)
-            return employeeResponse.getEmployee().get(0);
+        if(employeeResponse.getEmployees() != null && !employeeResponse.getEmployees().isEmpty())
+            return employeeResponse.getEmployees().get(0);
         else
-            return new Employee();
+            return new EmployeeInfo();
     }
 }

@@ -38,34 +38,31 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.broker;
+package org.egov.eis.web.contract;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Service
-public class MovementProducer {
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+import java.util.List;
 
-    public void sendMessage(final String topic, final String key, final Object message) {
+@AllArgsConstructor
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class EmployeeInfoResponse {
 
-        final ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, message);
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-        // Handle success or failure of sending
-        future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-            @Override
-            public void onSuccess(final SendResult<String, Object> stringTSendResult) {
-            }
+    @JsonProperty("Employee")
+    private List<EmployeeInfo> employees;
 
-            @Override
-            public void onFailure(final Throwable throwable) {
-            }
-        });
-    }
 }

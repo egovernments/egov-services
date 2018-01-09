@@ -310,7 +310,7 @@ public class EmployeeHelper {
 		education.setLastModifiedDate((new Date()));
 	}
 
-	private void populateDefaultDataForNewAssignment(Assignment assignment, Long requesterId, String tenantId) {
+	public void populateDefaultDataForNewAssignment(Assignment assignment, Long requesterId, String tenantId) {
 		assignment.setId(employeeRepository.generateSequence(Sequences.ASSIGNMENT.toString()));
 		assignment.setTenantId(tenantId);
 		assignment.setCreatedBy(requesterId);
@@ -325,7 +325,7 @@ public class EmployeeHelper {
 		}
 	}
 
-	private void populateDefaultDataForUpdateAssignment(Assignment assignment, Long requesterId, String tenantId) {
+	public void populateDefaultDataForUpdateAssignment(Assignment assignment, Long requesterId, String tenantId) {
 		assignment.setLastModifiedBy(requesterId);
 		assignment.setLastModifiedDate((new Date()));
 		// trimTimePartFromDateFields(assignment);

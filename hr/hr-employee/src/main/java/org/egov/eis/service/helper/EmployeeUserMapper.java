@@ -64,6 +64,7 @@ public class EmployeeUserMapper {
                     employeeInfo.setSalutation(userInfo.getSalutation());
                     employeeInfo.setName(userInfo.getName());
                     employeeInfo.setUserName(userInfo.getUserName());
+                    employeeInfo.setDob(userInfo.getDob());
                     employeeInfo.setGender(userInfo.getGender());
                     employeeInfo.setMobileNumber(userInfo.getMobileNumber());
                     employeeInfo.setEmailId(userInfo.getEmailId());

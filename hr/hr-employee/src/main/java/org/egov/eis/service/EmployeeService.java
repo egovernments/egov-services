@@ -487,6 +487,27 @@ public class EmployeeService {
         return employee;
     }
 
+    public Employee updateEmployee(EmployeeRequest employeeRequest) throws UserException, JsonProcessingException {
+    	Employee employee = getEmployee(employeeRequest.getEmployee().getId(),employeeRequest.getEmployee().getTenantId(), employeeRequest.getRequestInfo());
+    	Employee employeeReq = employeeRequest.getEmployee();
+		RequestInfo requestInfo = employeeRequest.getRequestInfo();
+		Long requesterId = requestInfo.getUserInfo().getId();
+		String tenantId = employeeRequest.getEmployee().getTenantId();
+    	employeeRequest.getEmployee().getAssignments().forEach((assignment) -> {
+			if (isEmpty(assignment.getId()))
+				employeeHelper.populateDefaultDataForNewAssignment(assignment, requesterId, tenantId);
+			else
+				employeeHelper.populateDefaultDataForUpdateAssignment(assignment, requesterId, tenantId);
+		});
+    	employee.getAssignments().clear();
+    	employee.getAssignments().addAll(employeeReq.getAssignments());
+        EmployeeRequest employeeRequestForUpdate = new EmployeeRequest();
+        employeeRequestForUpdate.setEmployee(employee);
+        employeeRequestForUpdate.setRequestInfo(requestInfo);
+        kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequestForUpdate);
+        return employee;
+    }
+    
     @Transactional
     public void update(EmployeeRequest employeeRequest) {
         Employee employee = employeeRequest.getEmployee();

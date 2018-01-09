@@ -405,6 +405,28 @@ public class EmployeeController {
         }
         return getSuccessResponseForUpdate(employee, employeeRequest.getRequestInfo());
     }
+    
+    @PostMapping(value = "/_updateemployee")
+    @ResponseBody
+    public ResponseEntity<?> updateEmployee(@RequestBody @Valid EmployeeRequest employeeRequest, BindingResult bindingResult) {
+        log.debug("employeeRequest::" + employeeRequest);
+
+        Employee employee = null;
+        try {
+            ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
+            if (errorResponseEntity != null)
+                return errorResponseEntity;
+
+            employee = employeeService.updateEmployee(employeeRequest);
+        } catch (UserException ue) {
+            log.error("Error while processing request ", ue);
+            return errorHandler.getResponseEntityForUserErrors(ue);
+        } catch (Exception exception) {
+            log.error("Error while processing request ", exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(employeeRequest.getRequestInfo());
+        }
+        return getSuccessResponseForUpdate(employee, employeeRequest.getRequestInfo());
+    }
 
     /**
      * Validate EmployeeRequest object & returns ErrorResponseEntity if there

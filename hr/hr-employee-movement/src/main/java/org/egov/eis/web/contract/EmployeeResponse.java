@@ -63,6 +63,6 @@ public class EmployeeResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("Employee")
-    private List<Employee> employee;
+    private Employee employee;
 
 }

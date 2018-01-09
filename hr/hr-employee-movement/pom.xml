@@ -26,7 +26,7 @@
 		<dependency>
             <groupId>org.egov.services</groupId>
             <artifactId>tracer</artifactId>
-            <version>0.14.0</version>
+            <version>0.18.1</version>
         </dependency>
         <dependency>
             <groupId>org.egov.services</groupId>
@@ -127,23 +127,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.7</version>
-				<configuration>
-					<linkXRef>false</linkXRef>
-					<skipEmptyReport>false</skipEmptyReport>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -46,9 +46,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.eis.web.contract.enums.Gender;
 import org.egov.eis.web.contract.enums.MaritalStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -62,22 +62,104 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-@Builder
-public class Employee {
+public class EmployeeInfo {
 
     private Long id;
 
-    @NotNull
     @Size(min = 1, max = 256)
     private String code;
 
-    @NotNull
+    @Size(max = 5)
+    private String salutation;
+
+    @Size(min = 3, max = 100)
+    private String name;
+
+    @Size(min = 1, max = 64)
+    private String userName;
+
+    private Gender gender;
+
+    private MaritalStatus maritalStatus;
+
+    private String bloodGroup;
+
+    private String permanentAddress;
+
+    private String permanentCity;
+
+    private String permanentPinCode;
+
+    private String correspondenceAddress;
+
+    private String correspondenceCity;
+
+    private String correspondencePinCode;
+
+    private String guardian;
+
+    @Size(max = 10)
+    private String mobileNumber;
+
+    @Size(max = 10)
+    private String altContactNumber;
+
+    @Size(min = 5, max = 128)
+    private String emailId;
+
+    @Size(max = 10)
+    private String pan;
+
+    @Size(max = 12)
+    private String aadhaarNumber;
+
+    @Size(max = 200)
+    private String placeOfBirth;
+
+    private Boolean active;
+
+    private List<Long> languagesKnown = new ArrayList<>();
+
+    private Long employeeStatus;
+
+    private Long employeeType;
+
+    private Long group;
+
+    private Long motherTongue;
+
+    private String identificationMark;
+
+    private String passportNo;
+
+    private String gpfNo;
+
+    private Long recruitmentMode;
+
+    private Long recruitmentType;
+
+    private Long recruitmentQuota;
+
+    @Valid
+    private List<Assignment> assignments = new ArrayList<Assignment>();
+
+    private List<Long> jurisdictions = new ArrayList<Long>();
+
+    private Long bank;
+
+    private Long bankBranch;
+
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private Date dateOfRetirement;
+
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfAppointment;
@@ -86,18 +168,7 @@ public class Employee {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfJoining;
 
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dateOfRetirement;
-
-    @NotNull
-    private Long employeeStatus;
-
-    private Long recruitmentMode;
-
-    private Long recruitmentType;
-
-    private Long recruitmentQuota;
+    private String dob;
 
     @Max(100)
     private Short retirementAge;
@@ -110,90 +181,14 @@ public class Employee {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfTermination;
 
-    @NotNull
-    private Long employeeType;
-
-    @Valid
-    @NotNull
-    @Size(min = 1)
-    private List<Assignment> assignments = new ArrayList<Assignment>();
-
-    @NotNull
-    @Size(min = 1)
-    private List<Long> jurisdictions = new ArrayList<Long>();
-
-    private Long motherTongue;
-
-    private Long religion;
-
-    private Long community;
-
-    private Long category;
-
-    private Boolean physicallyDisabled;
-
-    private Boolean medicalReportProduced;
-
-    private List<Long> languagesKnown = new ArrayList<Long>();
-
-    @Valid
-    @NotNull
-    private MaritalStatus maritalStatus;
-
-    private String passportNo;
-
-    private String gpfNo;
-
-    private Long bank;
-
-    private Long bankBranch;
-
     @Size(max = 20)
     private String bankAccount;
 
-    private Long group;
-
-    @Size(max = 200)
-    private String placeOfBirth;
-
-    @Valid
-    private List<ServiceHistory> serviceHistory = new ArrayList<ServiceHistory>();
-
-    @Valid
-    private List<Probation> probation = new ArrayList<Probation>();
-
-    @Valid
-    private List<Regularisation> regularisation = new ArrayList<Regularisation>();
-
-    @Valid
-    private List<TechnicalQualification> technical = new ArrayList<TechnicalQualification>();
-
-    @Valid
-    private List<EducationalQualification> education = new ArrayList<EducationalQualification>();
-
-    @Valid
-    private List<DepartmentalTest> test = new ArrayList<DepartmentalTest>();
+    @Size(max = 20)
+    private String ifscCode;
 
     private List<String> documents = new ArrayList<String>();
 
-    private Long createdBy;
-    
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Valid
-    @NotNull
-    private User user;
-
-    @NotNull
-    @Size(max = 256)
     private String tenantId;
 
 }

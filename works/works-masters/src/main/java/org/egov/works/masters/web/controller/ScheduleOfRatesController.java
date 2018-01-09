@@ -39,7 +39,7 @@ public class ScheduleOfRatesController {
     }
 
     @PostMapping("/_update")
-    public ResponseEntity<?> update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
+    public ResponseEntity<?> update(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
         return scheduleOfRatesService.update(scheduleOfRateRequest);
     }
 }

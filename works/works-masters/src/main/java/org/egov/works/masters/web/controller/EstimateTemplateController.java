@@ -39,7 +39,7 @@ public class EstimateTemplateController {
 	}
 
 	@PostMapping("/_update")
-	public ResponseEntity<?> update(@RequestBody EstimateTemplateRequest estimateTemplateRequest) {
+	public ResponseEntity<?> update(@Valid @RequestBody EstimateTemplateRequest estimateTemplateRequest) {
 		return estimateTemplateService.update(estimateTemplateRequest);
 	}
 }

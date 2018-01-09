@@ -39,7 +39,7 @@ public class MilestoneTemplateController {
     }
 
     @PostMapping("/_update")
-    public ResponseEntity<?> update(@RequestBody MilestoneTemplateRequest milestoneTemplateRequest) {
+    public ResponseEntity<?> update(@Valid @RequestBody MilestoneTemplateRequest milestoneTemplateRequest) {
         return milestoneTemplateService.update(milestoneTemplateRequest);
     }
 }

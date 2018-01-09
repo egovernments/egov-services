@@ -135,6 +135,9 @@ public class Constants {
 
     public static final String KEY_MILESTONETEMPLATE_CODE_EXISTS="WMS.MILESTONETEMPLATE.CODE.EXISTS";
     public static final String MESSAGE_MILESTONETEMPLATE_CODE_EXISTS="Given Estimate Template already exists: ";
+    
+    public static final String KEY_MILESTONETEMPLATE_TOTAL_PERCENTAGE_SHOULDBE_100="WMS.MILESTONETEMPLATE.TOTAL.PERCENTAGE.SHOULDBE.100";
+    public static final String MESSAGE_MILESTONETEMPLATE_TOTAL_PERCENTAGE_SHOULDBE_100="Total percentage for the milestone stages should add up to 100";
 
     public static final String KEY_REMARKS_TYPE_INVALID="REMARKS_TYPE_INVALID";
     public static final String MESSAGE_REMARKS_TYPE_INVALID="Invalid data for Remarks type";

@@ -1,17 +1,25 @@
 package org.egov.works.masters.domain.validator;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import net.minidev.json.JSONArray;
+
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.masters.domain.service.MilestoneTemplateService;
 import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.web.contract.MilestoneTemplate;
+import org.egov.works.masters.web.contract.MilestoneTemplateActivities;
 import org.egov.works.masters.web.contract.MilestoneTemplateRequest;
 import org.egov.works.masters.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * Created by ramki on 15/12/17.
@@ -29,7 +37,9 @@ public class MilestoneTemplateValidator {
         Map<String, String> validationMessages = new HashMap<>();
         Boolean isDataValid = Boolean.FALSE;
         List<String> codeList = new ArrayList<>();
-
+        BigDecimal totalPercentage = BigDecimal.ZERO;
+        BigDecimal hundred = new BigDecimal(100);
+        
         for (final MilestoneTemplate milestoneTemplate : milestoneTemplateRequest.getMilestoneTemplates()) {
 
             if (milestoneTemplate.getTypeOfWork() != null && milestoneTemplate.getTypeOfWork().getCode()!=null && !milestoneTemplate.getTypeOfWork().getCode().isEmpty()) {
@@ -55,7 +65,16 @@ public class MilestoneTemplateValidator {
             if (milestoneTemplate.getMilestoneTemplateActivities() == null && milestoneTemplate.getMilestoneTemplateActivities().size() == 0) {
                 validationMessages.put(Constants.KEY_MILESTONETEMPLATE_MIN_ONE_ETA_REQUIRED, Constants.MESSAGE_MILESTONETEMPLATE_MIN_ONE_ETA_REQUIRED);
                 isDataValid = Boolean.TRUE;
+            } else {
+            	for(MilestoneTemplateActivities milestoneTemplateActivity : milestoneTemplate.getMilestoneTemplateActivities()){
+            		totalPercentage = totalPercentage.add(BigDecimal.valueOf(milestoneTemplateActivity.getPercentage()));
+            	}
+                if(totalPercentage.compareTo(hundred)!=0){
+                    validationMessages.put(Constants.KEY_MILESTONETEMPLATE_TOTAL_PERCENTAGE_SHOULDBE_100, Constants.MESSAGE_MILESTONETEMPLATE_TOTAL_PERCENTAGE_SHOULDBE_100);
+                    isDataValid = Boolean.TRUE;
+                }
             }
+
             codeList.add(milestoneTemplate.getCode());
         }
         Set<String> filteredCode = new HashSet<String>(codeList);

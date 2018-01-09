@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.MdmsRepository;
@@ -25,9 +24,12 @@ import org.egov.inv.model.ScrapDetailSearch;
 import org.egov.inv.model.ScrapRequest;
 import org.egov.inv.model.ScrapResponse;
 import org.egov.inv.model.ScrapSearch;
+import org.egov.inv.model.Store;
+import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.ScrapDetailJdbcRepository;
 import org.egov.inv.persistence.repository.ScrapJdbcRepository;
+import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +52,9 @@ public class ScrapService extends DomainService{
 	private MdmsRepository mdmsRepository;
 	
 	@Autowired
+	private StoreJdbcRepository storeJdbcRepository;
+	
+	@Autowired
 	private ScrapDetailJdbcRepository scrapDetailJdbcRepository;
 	
 	@Value("${inv.scrap.save.topic}")
@@ -65,24 +70,23 @@ public class ScrapService extends DomainService{
 		validate(scrapReq.getScraps(), Constants.ACTION_CREATE,tenantId,scrapReq.getRequestInfo());
 		
 		scrap.forEach(scrapData -> {
-			scrapData.setId(scrapJdbcRepository.getSequence("seq_scrap"));
-			scrapData.setScrapNumber(appendString(scrapData));
-			scrapData.setScrapStatus(ScrapStatusEnum.APPROVED);
+				scrapData.setId(scrapJdbcRepository.getSequence("seq_scrap"));
+				scrapData.setScrapNumber(appendString(scrapData));
+				scrapData.setScrapStatus(ScrapStatusEnum.APPROVED);
 			if (StringUtils.isEmpty(scrapData.getTenantId())) {
 				scrapData.setTenantId(tenantId);
 			}
-			
 			scrapData.getScrapDetails().forEach(scrapDetails -> {
 				scrapDetails.setId(scrapJdbcRepository.getSequence("seq_scrapDetail"));
 				scrapDetails.setTenantId(tenantId);
 			});
 		});
 		
-		kafkaTemplate.send(createTopic, scrapReq);
+				kafkaTemplate.send(createTopic, scrapReq);
 		return scrapReq.getScraps();
-	}catch(CustomBindException e){
-		throw e;
-	}
+		}catch(CustomBindException e) {
+			throw e;
+		}
 	}
 	
 	public List<Scrap> update(ScrapRequest scrapReq, String tenantId) {
@@ -92,32 +96,30 @@ public class ScrapService extends DomainService{
 			
 			scrap.forEach(scrapData -> {
 				if (StringUtils.isEmpty(scrapData.getTenantId())) {
-					scrapData.setTenantId(tenantId);
+						scrapData.setTenantId(tenantId);
 				}
-				
 				scrapData.getScrapDetails().forEach(scrapDetails -> {
 					if (StringUtils.isEmpty(scrapDetails.getTenantId())) {
 						scrapDetails.setTenantId(tenantId);
 					}
 				});
 			});
-			kafkaTemplate.send(updateTopic, scrapReq);
+						kafkaTemplate.send(updateTopic, scrapReq);
 			return scrapReq.getScraps();
-		}catch(CustomBindException e){
-			throw e;
-		}
+			}catch(CustomBindException e) {
+				throw e;
+			}
 		}
 	
 	public ScrapResponse search(ScrapSearch scrapSearch) {
 		Pagination<Scrap> scrapPagination = scrapJdbcRepository.search(scrapSearch);
 		if (scrapPagination.getPagedData().size() > 0) {
-			
 	            for (Scrap scrap : scrapPagination.getPagedData()) {
 	                List<ScrapDetail> scrapDetail = getScrapDetail(scrap.getScrapNumber(), scrapSearch.getTenantId());
 	                scrap.setScrapDetails(scrapDetail);
 	            }
-	        
 		}
+		
 		ScrapResponse response = new ScrapResponse();
 		return response.responseInfo(null).scraps(scrapPagination.getPagedData().size() > 0
 				? scrapPagination.getPagedData() : Collections.EMPTY_LIST);
@@ -131,46 +133,46 @@ public class ScrapService extends DomainService{
 				case Constants.ACTION_CREATE: {
 					if (scrap == null) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"scrap", null);
-					} 
-				}
+						} 
+					}
 					break;
 	
 				case Constants.ACTION_UPDATE: {
 					if (scrap == null) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"scrap", null);
+						}
 					}
-				}
 					break;
-	
 				}
 			for(Scrap scrapData : scrap )
 			{
-				if(null == scrapData.getScrapDate())
-				{
+				if(null == scrapData.getScrapDate()) {
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"scrap Date", null);
-
 				}
 				
-				if(null == scrapData.getStore().getName() || scrapData.getStore().getName().isEmpty())
-				{
+				if(null == scrapData.getStore().getName() || scrapData.getStore().getName().isEmpty()){
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Store Name", null);
-
 				}
-				if(null == scrapData.getDescription() ||  scrapData.getDescription().isEmpty())
-				{
+				
+				if(null == scrapData.getStore().getCode() || scrapData.getStore().getName().isEmpty()){
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Store Code", null);
+				}else{
+					if(validateStore(tenantId,scrapData)) {
+						errors.addDataError(ErrorCode.INVALID_ACTIVE_VALUE.getCode(),"Store "+ scrapData.getStore().getCode());
+					}
+				}
+				
+				if(null == scrapData.getDescription() ||  scrapData.getDescription().isEmpty()) {
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Description", null);
 				}
-				for(ScrapDetail scrapdetail : scrapData.getScrapDetails())
-				{
-					
-					if(null == scrapdetail.getUserQuantity())
-					{
+				
+				for(ScrapDetail scrapdetail : scrapData.getScrapDetails()){
+					if(null == scrapdetail.getUserQuantity()) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Scrap Quantity", null);
 					}
-					
 				}
 			}
-		}catch(IllegalArgumentException e){
+		}catch(IllegalArgumentException e) {
 			throw e;
 		}
 		if (errors.getValidationErrors().size() > 0)
@@ -200,8 +202,7 @@ public class ScrapService extends DomainService{
 													
 		MaterialIssueResponse response = nonIndentMaterialIssueService.search(searchContract);
 		for(MaterialIssue issue : response.getMaterialIssues()){
-			for(MaterialIssueDetail detail : issue.getMaterialIssueDetails())
-			{
+			for(MaterialIssueDetail detail : issue.getMaterialIssueDetails()) {
 				ScrapDetail scrapDetail= new ScrapDetail();
 		if (issue == null )
 			errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(), "issuePurpose", null);
@@ -212,14 +213,12 @@ public class ScrapService extends DomainService{
 			scrapDetail.setMaterial(detail.getMaterial());
 			scrapDetail.setExistingValue(detail.getValue());
 			scrapDetail.setQuantity(detail.getQuantityIssued());
-			if(scrapDetails.getUserQuantity() != null)
-			{
+			
+			if(scrapDetails.getUserQuantity() != null) {
 				setConvertedScrapQuantity(tenantId, scrapDetails,detail);
-				
 			}
 			
-			if(scrapDetails.getScrapValue() != null)
-			{
+			if(scrapDetails.getScrapValue() != null) {
 				setConvertedScrapRate(tenantId, scrapDetails,detail);
 			}
 			scrapDetail.setScrapQuantity(scrapDetails.getScrapQuantity());
@@ -230,10 +229,10 @@ public class ScrapService extends DomainService{
 			}
 		}
 		scrap.setScrapDetails(scrapDetailList);
-		if (errors.getValidationErrors().size() > 0)
-			throw errors;
 				}
 		}
+		if (errors.getValidationErrors().size() > 0)
+			throw errors;
 	}
 	
 	 private List<ScrapDetail> getScrapDetail(String scrapNumber, String tenantId) {
@@ -267,8 +266,7 @@ public class ScrapService extends DomainService{
 						uom.getConversionFactor());
 				detail.setScrapQuantity(convertedUserQuantity);
 				int res =convertedUserQuantity.compareTo(issueDetail.getQuantityIssued());				
-				if(res == 1)
-				{
+				if(res == 1) {
 					errors.addDataError(ErrorCode.QTY1_LE_QTY2.getCode(), "Scrap Quantity ", "Issued Quantity ",null);
 
 				}
@@ -277,8 +275,20 @@ public class ScrapService extends DomainService{
 			if (errors.getValidationErrors().size() > 0)
 				throw errors;
 					
-
 		}
-}
+	 
+	 private boolean validateStore(String tenantId, Scrap scrap) {
+			StoreGetRequest storeEntity = StoreGetRequest.builder()
+												 .code(Collections.singletonList(scrap.getStore().getCode()))
+											     .tenantId(tenantId)
+											     .active(true)
+												 .build();
+			Pagination<Store> store =storeJdbcRepository.search(storeEntity);
+			if(store.getPagedData().size() > 0) {
+				return false;
+			}
+			return  true;
+		}
+	}
 
 

@@ -73,7 +73,7 @@ public class MDMSController {
 		mdmsResponse.setResponseInfo(
 				responseInfoFactory.createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true)); 
 
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
 	}
 
 	@PostMapping("_update")

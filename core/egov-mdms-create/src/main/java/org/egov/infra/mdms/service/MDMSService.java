@@ -3,6 +3,7 @@ package org.egov.infra.mdms.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -22,7 +23,6 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -125,12 +129,12 @@ public class MDMSService {
 		startTime = new Date().getTime();
 		String content = "";
 		if (masterDataFromCache.toString().equals("{}")) {
-			JSONObject obj = new JSONObject();
-			obj.put("tenantId", mDMSCreateRequest.getMasterMetaData().getTenantId());
-			obj.put("moduleName", mDMSCreateRequest.getMasterMetaData().getModuleName());
-			obj.put(mDMSCreateRequest.getMasterMetaData().getMasterName(),
-					mDMSCreateRequest.getMasterMetaData().getMasterData());
-			content = obj.toString();
+			Map<String,Object> myLinkedHashMap = new LinkedHashMap<String, Object>();
+			myLinkedHashMap.put("tenantId", mDMSCreateRequest.getMasterMetaData().getTenantId());
+			myLinkedHashMap.put("moduleName", mDMSCreateRequest.getMasterMetaData().getModuleName());
+			myLinkedHashMap.put(mDMSCreateRequest.getMasterMetaData().getMasterName(), mDMSCreateRequest.getMasterMetaData().getMasterData());
+			Gson gson = new Gson();
+			content = gson.toJson(myLinkedHashMap, LinkedHashMap.class);
 		} else {
 			content = getContentForPush(fileContents, mDMSCreateRequest, isCreate);
 		}
@@ -512,17 +516,34 @@ public class MDMSService {
 		documentContext.put("$", "base_tree", baseTreeSHA);
 		documentContext.put("$.tree.*", "path", filePath);
 		documentContext.put("$.tree.*", "mode", MDMSConstants.GIT_BLOB_MODE);
-		documentContext.put("$.tree.*", "content", contents);
+
+		String prettyFormatString =toPrettyFormat(contents);
+		documentContext.put("$.tree.*", "content", prettyFormatString);
+		
 		String body = documentContext.jsonString().toString();
-
 		Object createTreeResponse = mDMSCreateRepository.post(getCreateTreeUri.toString(), body, userName, password);
-
 		String newTreeSHA = JsonPath.read(createTreeResponse.toString(), MDMSConstants.CREATETREESHA_JSONPATH);
 		logger.debug("newTreeSHA: " + newTreeSHA);
 
 		return newTreeSHA;
 
 	}
+	
+	/**
+	   * Convert a JSON string to pretty print version
+	   * @param jsonString
+	   * @return
+	   */
+	  public static String toPrettyFormat(String jsonString) 
+	  {
+	      JsonParser parser = new JsonParser();
+	      JsonObject json = parser.parse(jsonString).getAsJsonObject();
+
+	      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	      String prettyJson = gson.toJson(json);
+
+	      return prettyJson;
+	  }
 
 	public String createCommit(String branchHeadSHA, String newTreeSHA, String message) throws JsonProcessingException {
 		StringBuilder getCreateTreeUri = new StringBuilder();

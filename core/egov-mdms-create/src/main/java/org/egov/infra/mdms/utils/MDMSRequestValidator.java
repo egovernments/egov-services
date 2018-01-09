@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 
 @Service
 public class MDMSRequestValidator {
@@ -231,8 +232,13 @@ public class MDMSRequestValidator {
 				for (int i = 0; i < masterDataArray.length(); i++) {
 					String key = null;
 					for (String uniqueQue : uniqueKeys) {
-						Object value;
+						Object value =null;
+						try{ 
 						value = JsonPath.read(masterDataArray.get(i).toString(), uniqueQue.toString());
+						}catch(PathNotFoundException e){
+							throw new CustomException("400",
+									"Required Fields doesn't exist In Request : " + e.getMessage().split("\\$")[1]);
+						}
 						if (null == key)
 							key = value.toString();
 						else

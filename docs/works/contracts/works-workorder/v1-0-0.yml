@@ -632,6 +632,16 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of codes of the contractor to whom Notice is issued
+        - name: statuses
+          in: query
+          type: array
+          items:
+            type: string
+          format: multiValueList
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of the Notice Status
       responses:
         200:
           description: Notice(s) Retrieved Successfully
@@ -1103,6 +1113,27 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of codes of the contractor to which Advance Requisition belongs to
+        - name: contractorNameLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
+        - name: loaNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
+        - name: contractorCodeLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
       responses:
         200:
           description: Advance Requisition(s) Retrieved Successfully
@@ -2110,25 +2141,25 @@ definitions:
     allOf:
     - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-advancerequisition/v1-0-0.yaml#/definitions/AdvanceRequisition'
       description: Contractor Advance extends AdvanceRequisition object
-    properties:
-      id:
-        type: string
-        description: Unique Identifier of the Contractor Advance Requisition Form
-      tenantId:
-        type: string
-        description: tenant id of the Contractor Advance Requisition Form
-        maxLength: 128
-        minLength: 2
-      letterOfAcceptanceEstimate:
-        $ref: '#/definitions/LetterOfAcceptanceEstimate'
-        description: Letter of acceptance reference
-      workFlowDetails:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
-      stateId:
-        type: string
-        description: State id of the workflow
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    - properties:
+        id:
+          type: string
+          description: Unique Identifier of the Contractor Advance Requisition Form
+        tenantId:
+          type: string
+          description: tenant id of the Contractor Advance Requisition Form
+          maxLength: 128
+          minLength: 2
+        letterOfAcceptanceEstimate:
+          $ref: '#/definitions/LetterOfAcceptanceEstimate'
+          description: Letter of acceptance reference
+        workFlowDetails:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
+        stateId:
+          type: string
+          description: State id of the workflow
+        auditDetails:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
       - letterOfAcceptanceEstimate

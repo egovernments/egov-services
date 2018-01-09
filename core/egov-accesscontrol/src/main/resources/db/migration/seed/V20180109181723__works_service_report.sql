@@ -1,0 +1,1 @@
+insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'WORKS_REPORTS', 'Works Reports', true, 'Reports', 0, (select id from service where code = 'WMS' and tenantId='default'), 'default');

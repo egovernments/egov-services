@@ -168,9 +168,6 @@ public class PurchaseOrderDetailJdbcRepository extends org.egov.common.JdbcRepos
         }
 		for (PurchaseOrderDetail eachPoDetail : purchaseOrderDetails) {
 			eachPoDetail.setUom(uomService.getUom(purchaseOrderDetailSearch.getTenantId(), eachPoDetail.getUom().getCode(),new RequestInfo()));
-			if (eachPoDetail.getOrderQuantity() != null) {
-				eachPoDetail.setOrderQuantity(eachPoDetail.getOrderQuantity().divide(eachPoDetail.getUom().getConversionFactor()));
-			}
 			if (eachPoDetail.getIndentQuantity() != null) {
 				eachPoDetail.setIndentQuantity(eachPoDetail.getIndentQuantity().divide(eachPoDetail.getUom().getConversionFactor()));
 			}

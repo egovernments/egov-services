@@ -743,7 +743,7 @@ serviceMaps:
    fromTopic: works-contractoradvance-saveorupdate-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_contractoradvance(id, tenantid, letterofacceptanceestimate, stateid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, stateid= EXCLUDED.stateid, status= EXCLUDED.status,deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+    - query: INSERT INTO egw_contractoradvance(id, tenantid, letterofacceptanceestimate, stateid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, stateid= EXCLUDED.stateid, deleted= EXCLUDED.deleted, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
 
       basePath: $.contractorAdvanceRequisitions.*
       jsonMaps:
@@ -767,7 +767,4 @@ serviceMaps:
          dbType: LONG
 
        - jsonPath: $.contractorAdvanceRequisitions.*.deleted
-
-       - jsonPath: $.contractorAdvanceRequisitions.*.status
-
 

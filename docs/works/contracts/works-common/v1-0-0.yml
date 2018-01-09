@@ -1014,6 +1014,7 @@ definitions:
       editable:
         type: boolean
         description: True By default
+        default: true
       deleted:
         type: boolean
         description: Boolean value to identify whether the object is deleted or not from UI.
@@ -1364,4 +1365,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 

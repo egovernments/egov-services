@@ -30,7 +30,7 @@ public class RemarksDetail   {
   private String remarksDescription = null;
 
   @JsonProperty("editable")
-  private Boolean editable = null;
+  private Boolean editable = true;
 
   @JsonProperty("deleted")
   private Boolean deleted = false;

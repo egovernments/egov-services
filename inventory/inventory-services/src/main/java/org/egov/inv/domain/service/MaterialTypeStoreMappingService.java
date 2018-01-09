@@ -129,7 +129,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
                 }
 
                 if (!isEmpty(materialTypeStoreMapping.getMaterialType().getCode())) {
-                    validateMaterial(tenantId, errors, materialTypeStoreMapping);
+                    validateMaterialType(tenantId, errors, materialTypeStoreMapping);
                 } else {
                     errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSING.getCode(), "Material", materialTypeStoreMapping.getMaterialType().getCode());
                 }
@@ -158,7 +158,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
         }
     }
 
-    private void validateMaterial(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
+    private void validateMaterialType(String tenantId, InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
         if (null != materialTypeStoreMapping && null != materialTypeStoreMapping.getMaterialType().getCode()) {
             MaterialType materialType = (MaterialType) mdmsRepository.fetchObject(tenantId, "inventory", "MaterialType", "code", materialTypeStoreMapping.getMaterialType().getCode(), MaterialType.class);
             if (null == materialType) {
@@ -176,7 +176,9 @@ public class MaterialTypeStoreMappingService extends DomainService {
     }
 
     private void validateChartOfAccount(InvalidDataException errors, MaterialTypeStoreMapping materialTypeStoreMapping) {
-        if (isFinancialEnabled && isEmpty(materialTypeStoreMapping.getChartofAccount().getGlcode())) {
+        if (isFinancialEnabled && (null == materialTypeStoreMapping.getChartofAccount() ||
+                (null != materialTypeStoreMapping.getChartofAccount()
+                        && isEmpty(materialTypeStoreMapping.getChartofAccount().getGlcode())))) {
             errors.addDataError(ErrorCode.NULL_VALUE.getCode(), "Account Code");
         }
     }

@@ -3,6 +3,8 @@ package org.egov.inv.persistence.entity;
 import lombok.*;
 import org.egov.inv.model.*;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,7 +44,7 @@ public class MaterialStoreMappingEntity {
                 .material(buildMaterial())
                 .store(buildStore())
                 .active(active)
-                .chartofAccount(buildChartOfAccount())
+                .chartofAccount(!isEmpty(chartOfAccount) ? buildChartOfAccount() : null)
                 .auditDetails(buildAuditDetails())
                 .build();
     }

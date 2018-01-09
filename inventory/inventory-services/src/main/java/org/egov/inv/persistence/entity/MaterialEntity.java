@@ -1,7 +1,8 @@
 package org.egov.inv.persistence.entity;
 
 import lombok.*;
-import org.egov.inv.model.*;
+import org.egov.inv.model.AuditDetails;
+import org.egov.inv.model.Material;
 
 import java.math.BigDecimal;
 
@@ -52,31 +53,11 @@ public class MaterialEntity {
         return Material.builder()
                 .id(id)
                 .code(code)
-                .name(name)
-                .description(description)
-                .oldCode(oldCode)
-                .materialType(mapMaterialType(materialType))
-                .baseUom(mapUom(baseUom))
-                .inventoryType(null != inventoryType ? Material.InventoryTypeEnum.valueOf(inventoryType.toUpperCase()) : null)
-                .status(null != status ? Material.StatusEnum.valueOf(status.toUpperCase()) : null)
-                .purchaseUom(mapUom(purchaseUom))
-                .expenseAccount(mapChartOfAccounts(expenseAccount))
                 .minQuantity(BigDecimal.valueOf(minQuantity))
                 .maxQuantity(BigDecimal.valueOf(maxQuantity))
-                .stockingUom(mapUom(stockingUom))
-                .materialClass(null != materialClass ? Material.MaterialClassEnum.valueOf((materialClass.toUpperCase())) : null)
                 .reorderLevel(BigDecimal.valueOf(reorderLevel))
                 .reorderQuantity(BigDecimal.valueOf(reorderQuantity))
-                .lotControl(lotcontrol)
-                .shelfLifeControl(shelfLifeControl)
-                .serialNumber(serialNumber)
-                .scrapable(scrapable)
-                .assetCategory(buildAssetCategory())
-                .model(model)
-                .manufacturePartNo(manufacturePartNo)
-                .techincalSpecs(techincalSpecs)
-                .termsOfDelivery(termsOfDelivery)
-                .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
+                .auditDetails(mapAuditDetails())
                 .build();
     }
 
@@ -112,37 +93,12 @@ public class MaterialEntity {
                 .build();
     }
 
-    private Uom mapUom(String code) {
-        return Uom.builder()
-                .code(code)
-                .build();
-    }
-
-    private ChartOfAccount mapChartOfAccounts(String glCode) {
-        ChartOfAccount chartOfAccount = new ChartOfAccount();
-        return chartOfAccount.
-                glcode(glCode);
-
-    }
-
-    private MaterialType mapMaterialType(String code) {
-        return MaterialType.builder()
-                .code(code)
-                .build();
-    }
-
-    private AuditDetails mapAuditDetails(String tenantId, String createdBy, Long createdTime, String lastModifiedBy, Long lastModifiedTime) {
+    private AuditDetails mapAuditDetails() {
         return AuditDetails.builder()
                 .createdBy(createdBy)
                 .createdTime(createdTime)
                 .lastModifiedBy(lastModifiedBy)
                 .lastModifiedTime(lastModifiedTime)
-                .build();
-    }
-
-    private AssetCategory buildAssetCategory() {
-        return AssetCategory.builder()
-                .code(assetcategory)
                 .build();
     }
 }

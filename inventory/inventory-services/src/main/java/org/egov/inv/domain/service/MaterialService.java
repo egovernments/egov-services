@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -116,9 +114,16 @@ public class MaterialService extends DomainService {
 
     public MaterialResponse search(MaterialSearchRequest materialSearchRequest, org.egov.common.contract.request.RequestInfo requestInfo) {
 
-        Pagination<Material> searchMaterial = materialJdbcRepository.search(materialSearchRequest);
+        Map<String, Material> materialFromMdms = getMaterialFromMdms(materialSearchRequest.getTenantId());
 
-        for (Material material : searchMaterial.getPagedData()) {
+        Pagination<Material> materialFromDb = materialJdbcRepository.search(materialSearchRequest);
+
+        for (Material material : materialFromDb.getPagedData()) {
+
+            Material mdmsMaterial = materialFromMdms.get(material.getCode());
+
+            prepareMaterial(material, mdmsMaterial);
+
             List<StoreMapping> storeMappings = new ArrayList<>();
 
             MaterialStoreMappingSearch materialStoreMappingSearch = MaterialStoreMappingSearch.builder()
@@ -143,7 +148,7 @@ public class MaterialService extends DomainService {
         }
 
         MaterialResponse response = new MaterialResponse();
-        response.setMaterials(searchMaterial.getPagedData().size() > 0 ? searchMaterial.getPagedData() : Collections.emptyList());
+        response.setMaterials(materialFromDb.getPagedData().size() > 0 ? materialFromDb.getPagedData() : Collections.emptyList());
         return response;
     }
 
@@ -268,4 +273,46 @@ public class MaterialService extends DomainService {
             throw new CustomException("inv.0013", "maximum quantity should be greater than minimum quantity");
         }
     }
+
+
+    private Map<String, Material> getMaterialFromMdms(String tenantId) {
+
+        List<Object> objectList = mdmsRepository.fetchObjectList(tenantId, "inventory", "Material", null, null, Material.class);
+        Map<String, Material> materialHashMap = new HashMap<>();
+        ObjectMapper mapper = new ObjectMapper();
+        if (objectList != null && objectList.size() > 0) {
+            for (Object object : objectList) {
+                Material material = mapper.convertValue(object, Material.class);
+                materialHashMap.put(material.getCode(), material);
+            }
+        }
+        return materialHashMap;
+    }
+
+    private void prepareMaterial(Material material, Material mdmsMaterial) {
+        material.baseUom(mdmsMaterial.getBaseUom())
+                .purchaseUom(mdmsMaterial.getPurchaseUom())
+                .stockingUom(mdmsMaterial.getStockingUom())
+                .name(mdmsMaterial.getName())
+                .oldCode(mdmsMaterial.getOldCode())
+                .assetCategory(mdmsMaterial.getAssetCategory())
+                .description(mdmsMaterial.getDescription())
+                .expenseAccount(mdmsMaterial.getExpenseAccount())
+                .inActiveDate(mdmsMaterial.getInActiveDate())
+                .inventoryType(mdmsMaterial.getInventoryType())
+                .lotControl(mdmsMaterial.getLotControl())
+                .manufacturePartNo(mdmsMaterial.getManufacturePartNo())
+                .materialClass(mdmsMaterial.getMaterialClass())
+                .materialType(mdmsMaterial.getMaterialType())
+                .scrapable(mdmsMaterial.getScrapable())
+                .serialNumber(mdmsMaterial.getSerialNumber())
+                .shelfLifeControl(mdmsMaterial.getShelfLifeControl())
+                .model(mdmsMaterial.getModel())
+                .status(mdmsMaterial.getStatus())
+                .techincalSpecs(mdmsMaterial.getTechincalSpecs())
+                .termsOfDelivery(mdmsMaterial.getTermsOfDelivery())
+                .tenantId(mdmsMaterial.getTenantId());
+    }
+
+
 }

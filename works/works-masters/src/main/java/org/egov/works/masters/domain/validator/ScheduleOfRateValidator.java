@@ -181,6 +181,14 @@ public class ScheduleOfRateValidator {
                     messages.put(Constants.KEY_SOR_CODE_UPDATE_NOTALLOWED, Constants.MESSAGE_SOR_CODE_UPDATE_NOTALLOWED);
                     isDataValid = Boolean.TRUE;
                 }
+                if (!dbSor.getScheduleCategory().getCode().equals(scheduleOfRate.getScheduleCategory().getCode())) {
+                    messages.put(Constants.KEY_SOR_SCHEDULECATEGORY_UPDATE_NOTALLOWED, Constants.MESSAGE_SOR_SCHEDULECATEGORY_UPDATE_NOTALLOWED);
+                    isDataValid = Boolean.TRUE;
+                }
+                if (!dbSor.getUom().getCode().equals(scheduleOfRate.getUom().getCode())) {
+                    messages.put(Constants.KEY_SOR_UOM_UPDATE_NOTALLOWED, Constants.MESSAGE_SOR_UOM_UPDATE_NOTALLOWED);
+                    isDataValid = Boolean.TRUE;
+                }
             } else {
                 messages.put(Constants.KEY_SOR_KEY_INVALID, Constants.MESSAGE_SOR_KEY_INVALID + scheduleOfRate.getId());
                 isDataValid = Boolean.TRUE;

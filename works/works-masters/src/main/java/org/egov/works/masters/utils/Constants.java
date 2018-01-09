@@ -40,6 +40,12 @@ public class Constants {
     public static final String KEY_SOR_CODE_UPDATE_NOTALLOWED="WMS.SOR.CODE.UPDATE.NOTALLOWED";
     public static final String MESSAGE_SOR_CODE_UPDATE_NOTALLOWED="You are trying to update code, not allowed";
 
+    public static final String KEY_SOR_UOM_UPDATE_NOTALLOWED="WMS.SOR.UOM.UPDATE.NOTALLOWED";
+    public static final String MESSAGE_SOR_UOM_UPDATE_NOTALLOWED="You are trying to update UOM, not allowed";
+
+    public static final String KEY_SOR_SCHEDULECATEGORY_UPDATE_NOTALLOWED="WMS.SOR.SCHEDULECATEGORY.UPDATE.NOTALLOWED";
+    public static final String MESSAGE_SOR_SCHEDULECATEGORY_UPDATE_NOTALLOWED="You are trying to update schedule category, not allowed";
+
     public static final String KEY_SOR_KEY_INVALID="WMS.SOR.KEY.INVALID";
     public static final String MESSAGE_SOR_KEY_INVALID="Given SOR key is not valid: ";
 

@@ -30,6 +30,7 @@ public class OpeningBalanceEntity {
     private Long receiptDate;
     private String uom;
     private BigDecimal receivedQty;
+    private BigDecimal userQty;
     private BigDecimal acceptedQty;
     private String mrnNumber;
     private BigDecimal qty;
@@ -70,6 +71,7 @@ public class OpeningBalanceEntity {
         return OpeningBalanceEntity.builder()
         		.id(materialReceiptDetail.getId())
         		.receivedQty(materialReceiptDetail.getAcceptedQty())
+        		.userQty(materialReceiptDetail.getUserReceivedQty())
         		.receivedQty(materialReceiptDetail.getReceivedQty())
                 .unitRate(materialReceiptDetail.getUnitRate())
         		.build();
@@ -81,6 +83,7 @@ public class OpeningBalanceEntity {
                 receivedQty(qty)
                 .material(mapmaterial())
                 .uom(mapUom())
+                .userReceivedQty(userQty)
                 .acceptedQty(receivedQty)
                 .unitRate(unitRate);
     }

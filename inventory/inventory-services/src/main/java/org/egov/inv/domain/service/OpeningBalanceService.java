@@ -136,8 +136,9 @@ public class OpeningBalanceService extends DomainService {
 					detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
 						if (isEmpty(addinfo.getTenantId())) {
 							addinfo.setTenantId(tenantId);
-							materialReceiptDetailAddlnInfoIds.add(addinfo.getId());
 						}
+						materialReceiptDetailAddlnInfoIds.add(addinfo.getId());
+
 					});
 					jdbcRepository.markDeleted(materialReceiptDetailAddlnInfoIds, tenantId, "materialreceiptdetailaddnlinfo", "receiptdetailid", detail.getId());
 

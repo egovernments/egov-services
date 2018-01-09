@@ -256,9 +256,9 @@ public class MaterialService extends DomainService {
 
     private void uniqueCheck(Material material) {
 
-        if (!materialJdbcRepository.uniqueCheck("name", new MaterialEntity().toEntity(material))) {
+       /* if (!materialJdbcRepository.uniqueCheck("name", new MaterialEntity().toEntity(material))) {
             throw new CustomException("inv.010", "Material name already exists " + material.getName());
-        }
+        }*/
 
         if (!isEmpty(material.getOldCode()) && !materialJdbcRepository.uniqueCheck("oldCode", new MaterialEntity().toEntity(material))) {
             throw new CustomException("inv.014", "Old code already exists " + material.getOldCode());

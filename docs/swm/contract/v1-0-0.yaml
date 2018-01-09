@@ -2949,7 +2949,9 @@ definitions:
         targetedGarbage:
           type: number
           format: double
-          description: Expected Garbage (in tonnes) to be collected by vehicle. 
+          description: Expected Garbage (in tonnes) to be collected by vehicle.
+          minimum: 1
+          maximum: 75
       required:
       - tenantId
       - scheduledFrom

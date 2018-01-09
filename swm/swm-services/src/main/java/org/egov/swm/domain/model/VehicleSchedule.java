@@ -1,6 +1,9 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -45,6 +48,9 @@ public class VehicleSchedule {
     private Vehicle vehicle = null;
 
     @NotNull
+    @Digits(fraction = 2, integer = 3, message = "targeted Garbage shall be with 2 decimal points")
+    @DecimalMin(value = "1", message = "targeted Garbage shall be between 1 and 75 Tons")
+    @DecimalMax(value = "75", message = "targeted Garbage shall be between 1 and 75 Tons")
     @JsonProperty("targetedGarbage")
     private Double targetedGarbage = null;
 

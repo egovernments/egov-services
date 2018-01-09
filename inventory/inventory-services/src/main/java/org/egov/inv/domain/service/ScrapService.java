@@ -13,6 +13,7 @@ import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.MaterialIssue;
+import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
 import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
@@ -169,6 +170,17 @@ public class ScrapService extends DomainService{
 				for(ScrapDetail scrapdetail : scrapData.getScrapDetails()){
 					if(null == scrapdetail.getUserQuantity()) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Scrap Quantity", null);
+					}else
+					{
+						int scrapQty =scrapdetail.getUserQuantity().compareTo(BigDecimal.ZERO);
+					if (scrapQty != 1) {
+						errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(),"Scrap Quantity "+scrapdetail.getUserQuantity());
+					}
+					}
+					int scrapValue =scrapdetail.getScrapValue().compareTo(BigDecimal.ZERO);
+					if(scrapValue!=1){
+						errors.addDataError(ErrorCode.UNIT_PRICE_GT_ZERO.getCode());
+
 					}
 				}
 			}
@@ -197,6 +209,7 @@ public class ScrapService extends DomainService{
 			{
 		MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
 													.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())
+													.materialIssueStatus(MaterialIssueStatusEnum.APPROVED.toString())
 													.tenantId(tenantId)
 													.build();
 													

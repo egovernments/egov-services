@@ -3,15 +3,11 @@ package org.egov.swm.domain.service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.InsuranceDetails;
-import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.Vehicle;
-import org.egov.swm.domain.model.VehicleSearch;
-import org.egov.swm.domain.model.Vendor;
-import org.egov.swm.domain.model.VendorSearch;
+import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.utils.Utils;
 import org.egov.swm.web.contract.DesignationResponse;
@@ -48,6 +44,9 @@ public class VehicleService {
 
     @Autowired
     private Utils utils;
+
+    @Autowired
+    private VehicleMaintenanceService vehicleMaintenanceService;
 
     @Transactional
     public VehicleRequest create(final VehicleRequest vehicleRequest) {
@@ -109,7 +108,24 @@ public class VehicleService {
 
     public Pagination<Vehicle> search(final VehicleSearch vehicleSearch) {
 
+        if(vehicleSearch.getIsScheduled() != null && vehicleSearch.getIsScheduled())
+            setVehicleCodesFromVehicleMaintenance(vehicleSearch);
+
         return vehicleRepository.search(vehicleSearch);
+    }
+
+    private void setVehicleCodesFromVehicleMaintenance(VehicleSearch vehicleSearch){
+        VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
+        vehicleMaintenanceSearch.setTenantId(vehicleSearch.getTenantId());
+
+        Pagination<VehicleMaintenance> vehicleMaintenances = vehicleMaintenanceService.search(vehicleMaintenanceSearch);
+
+        if(!vehicleMaintenances.getPagedData().isEmpty()){
+            vehicleSearch.setRegNumbers(vehicleMaintenances.getPagedData().stream()
+                            .map(v -> {return (v.getVehicle() != null) ? v.getVehicle().getRegNumber() : StringUtils.EMPTY;})
+                            .distinct()
+                            .collect(Collectors.joining(",")));
+        }
     }
 
     private void validate(final String action, final VehicleRequest vehicleRequest) {

@@ -24,6 +24,7 @@ public class VehicleSearch extends Vehicle {
     private Long insuranceValidityDate;
     private Long purchaseDate;
     private Boolean isUlbOwned;
+    private Boolean isScheduled;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

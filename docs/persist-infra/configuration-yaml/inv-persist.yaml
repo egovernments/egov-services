@@ -925,7 +925,7 @@ serviceMaps:
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
-            - jsonPath: $.purchaseOrders.*.tenantId
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.tenantId
 
     - version: 1.0
       name: Update Purchase Order with indent

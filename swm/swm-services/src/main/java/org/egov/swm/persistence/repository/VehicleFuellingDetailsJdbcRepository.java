@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
@@ -16,7 +14,6 @@ import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
 import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
 import org.egov.swm.domain.model.VehicleSearch;
-import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.RefillingPumpStationService;
 import org.egov.swm.domain.service.VehicleService;
 import org.egov.swm.persistence.entity.VehicleFuellingDetailsEntity;

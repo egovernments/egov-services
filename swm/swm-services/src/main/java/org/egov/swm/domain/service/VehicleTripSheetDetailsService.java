@@ -1,6 +1,9 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -11,8 +14,6 @@ import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.model.VehicleTripSheetDetails;
 import org.egov.swm.domain.model.VehicleTripSheetDetailsSearch;
-import org.egov.swm.domain.model.Vendor;
-import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleTripSheetDetailsRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.VehicleTripSheetDetailsRequest;
@@ -95,11 +96,24 @@ public class VehicleTripSheetDetailsService {
         Pagination<Route> routes;
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicleList;
-        VendorSearch vendorSearch;
-        Pagination<Vendor> vendors;
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsRequest
                 .getVehicleTripSheetDetails()) {
+
+            // Validation for toDate to be greater than fromDate
+            if (vehicleTripSheetDetails.getTripStartDate() != null && vehicleTripSheetDetails.getTripEndDate() != null)
+                if (new Date(vehicleTripSheetDetails.getTripEndDate())
+                        .before(new Date(vehicleTripSheetDetails.getTripStartDate())))
+                    throw new CustomException("TripEndDate",
+                            "Vehicle Trip end date shall be greater than Vehicle Trip start date: "
+                                    + dateFormat.format(new Date(vehicleTripSheetDetails.getTripEndDate())));
+
+            if (vehicleTripSheetDetails.getOutTime() != null && vehicleTripSheetDetails.getInTime() != null
+                    && vehicleTripSheetDetails.getOutTime() < vehicleTripSheetDetails.getInTime())
+                throw new CustomException("OutTime",
+                        "Out time should be greater than or equal to In time");
 
             if (vehicleTripSheetDetails.getRoute() != null && (vehicleTripSheetDetails.getRoute().getCode() == null
                     || vehicleTripSheetDetails.getRoute().getCode().isEmpty()))

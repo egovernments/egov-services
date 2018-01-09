@@ -582,7 +582,7 @@ class UpdateObjection extends React.Component {
 
             if (ID === "Reject") {
 
-                if (agreement.workflowDetails.comments || agreement.workflowDetails.comments === "")
+                if (!agreement.workflowDetails.comments)
                     return showError("Please enter the Comments, If you are rejecting");
 
             }

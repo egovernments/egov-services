@@ -285,8 +285,8 @@ class UpdateCancellation extends React.Component {
         }).responseJSON["processInstance"] || {};
 
         var currStatus = null;
-        if(process.status ==='Commissioner Approved'){
-          currStatus='INACTIVE';
+        if (process.status === 'Commissioner Approved') {
+            currStatus = 'INACTIVE';
         }
 
         var agreement = commonApiPost("lams-services",
@@ -304,28 +304,17 @@ class UpdateCancellation extends React.Component {
         }).responseJSON["tasks"] || {};
 
 
-        if(workflow){
- 
+        if (workflow) {
 
-            for(var i = 0 ; i < workflow.length; i++){
+            workflow.forEach(function (item, index, theArray) {
 
                 var employeeName = commonApiPost("hr-employee", "employees", "_search", {
                     tenantId: tenantId,
-                    id: workflow[i].owner.id
+                    id: item.owner.id
                 }).responseJSON["Employee"] || {};
 
-                workflow[i].employeeName = employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : ""
-
-                console.log("workflow", i, workflow.length-1);
-
-                if(i == workflow.length-1){
-                    this.setState({
-                        ...this.state,
-                        workflow: workflow
-                    });
-                }
-
-            }
+                theArray[index].employeeName = employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : "";
+            });
 
         }
 
@@ -361,13 +350,14 @@ class UpdateCancellation extends React.Component {
             agreement.workflowDetails = {};
         }
 
-    
+
         this.setState({
             ...this.state,
             agreement: agreement,
             departmentList: departmentList,
             initiatorPosition: process.initiatorPosition,
             wfStatus: process.status,
+            workflow: workflow,
             buttons: _btns ? _btns : []
         });
 
@@ -623,7 +613,7 @@ class UpdateCancellation extends React.Component {
 
 
             if (ID === "Reject") {
-                
+
                 if (!agreement.workflowDetails.comments)
                     return showError("Please enter the Comments, If you are rejecting");
 
@@ -688,6 +678,7 @@ class UpdateCancellation extends React.Component {
                                                 success: function (res1) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
+                                                    console.log(res1);
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
                                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     else

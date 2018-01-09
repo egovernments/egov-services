@@ -41,6 +41,8 @@ import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Store;
+import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Supplier;
 import org.egov.inv.model.SupplierGetRequest;
 import org.egov.inv.model.Uom;
@@ -50,6 +52,7 @@ import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
+import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +85,9 @@ public class PurchaseOrderService extends DomainService {
 
     @Autowired
     private MaterialService materialService;
+    
+	@Autowired
+	private StoreJdbcRepository storeJdbcRepository;
 
     @Autowired
     private UomService uomService;
@@ -453,6 +459,9 @@ public class PurchaseOrderService extends DomainService {
                 for (PurchaseOrder eachPurchaseOrder : pos) {
                     BigDecimal totalAmount = BigDecimal.ZERO;
                     int index = pos.indexOf(eachPurchaseOrder) + 1;
+                    if(!isValidStore(tenantId, eachPurchaseOrder.getStore().getCode())) {
+                    	errors.addDataError(ErrorCode.INVALID_ACTIVE_VALUE.getCode(),"Store "+ eachPurchaseOrder.getStore().getCode());
+                    }
                     if (eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis) {
                         String date = convertEpochtoDate(eachPurchaseOrder.getPurchaseOrderDate());
                         errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), date + " at serial no." + index);
@@ -546,16 +555,10 @@ public class PurchaseOrderService extends DomainService {
                         }
 
                     //Supplier reference validation
-                    if (null != eachPurchaseOrder.getSupplier() && !isEmpty(eachPurchaseOrder.getSupplier().getCode())) {
-                        SupplierGetRequest supplierGetRequest = new SupplierGetRequest();
-                        supplierGetRequest.setCode(Collections.singletonList(eachPurchaseOrder.getSupplier().getCode()));
-                        supplierGetRequest.setTenantId(eachPurchaseOrder.getTenantId());
-                        Pagination<Supplier> supplierPagination = supplierJdbcRepository.search(supplierGetRequest);
-                        if (!(supplierPagination.getPagedData().size() > 0)) {
-                            errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "Supplier", eachPurchaseOrder.getSupplier().getCode());
-                        }
-                    }
-
+                    if(null != eachPurchaseOrder.getSupplier() && !isEmpty(eachPurchaseOrder.getSupplier().getCode()))
+                    if(!isValidSupplier(tenantId, eachPurchaseOrder.getSupplier().getCode()))
+                    	errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "Supplier", eachPurchaseOrder.getSupplier().getCode());
+                    
                     //RateType reference validation
                     if(eachPurchaseOrder.getRateType() != null)
                     if (!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(eachPurchaseOrder.getRateType().toString())))) {
@@ -900,6 +903,32 @@ public class PurchaseOrderService extends DomainService {
             }
         return true;
     }
+    
+	private boolean isValidStore(String tenantId, String storeCode) {
+		StoreGetRequest storeEntity = StoreGetRequest.builder()
+											 .code(Collections.singletonList(storeCode))
+										     .tenantId(tenantId)
+										     .active(true)
+											 .build();
+		Pagination<Store> stores = storeJdbcRepository.search(storeEntity);
+		if(stores.getPagedData().size() > 0)
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isValidSupplier(String tenantId, String supplierCode) {
+		 SupplierGetRequest supplierGetRequest = SupplierGetRequest.builder()
+				 									.code(Collections.singletonList(supplierCode))
+				 									.tenantId(tenantId)
+				 									.active(true)
+				 									.build();
+         Pagination<Supplier> suppliers = supplierJdbcRepository.search(supplierGetRequest);
+         if(suppliers.getPagedData().size() > 0)
+        	 return true;
+         return false;
+	}
 
     private void buildPurchaseOrderIndentDetail(PurchaseOrderRequest purchaseOrderRequest,
                                                 IndentDetail indentDetail, PurchaseOrderDetail purchaseOrderDetail, BigDecimal pendingQty, String tenantId) {

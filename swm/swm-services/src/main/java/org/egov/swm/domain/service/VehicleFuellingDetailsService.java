@@ -41,9 +41,6 @@ public class VehicleFuellingDetailsService {
     private IdgenRepository idgenRepository;
 
     @Autowired
-    private FuelTypeService fuelTypeService;
-
-    @Autowired
     private RefillingPumpStationRepository refillingPumpStationRepository;
 
     @Value("${egov.swm.vehiclefuellingdetails.transaction.num.idgen.name}")
@@ -67,8 +64,6 @@ public class VehicleFuellingDetailsService {
 
             vfd.setTransactionNo(
                     generateTransactionNumber(vfd.getTenantId(), vehicleFuellingDetailsRequest.getRequestInfo()));
-
-            // prepareReceiptCopy(vfd);
 
         }
 

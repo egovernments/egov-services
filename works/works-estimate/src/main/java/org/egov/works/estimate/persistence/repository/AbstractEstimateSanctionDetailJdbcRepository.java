@@ -34,7 +34,7 @@ public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepositor
         StringBuilder orderBy = new StringBuilder("order by id");
         if (abstractEstimateSanctionSearchContract.getSortBy() != null
                 && !abstractEstimateSanctionSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by ").append(abstractEstimateSanctionSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by ").append(abstractEstimateSanctionSearchContract.getSortBy());
         }
         
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

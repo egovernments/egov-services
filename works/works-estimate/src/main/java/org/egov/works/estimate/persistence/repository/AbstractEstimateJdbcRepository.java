@@ -52,7 +52,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
         StringBuilder orderBy = new StringBuilder("order by estimate.createdtime");
         if (abstractEstimateSearchContract.getSortBy() != null && !abstractEstimateSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by estimate.").append(abstractEstimateSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by estimate.").append(abstractEstimateSearchContract.getSortBy());
         }
 
         if (abstractEstimateSearchContract.getTenantId() != null) {

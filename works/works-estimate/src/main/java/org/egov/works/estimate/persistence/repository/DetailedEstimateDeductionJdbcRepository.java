@@ -33,7 +33,7 @@ public class DetailedEstimateDeductionJdbcRepository extends JdbcRepository {
 		StringBuilder orderBy = new StringBuilder("order by createdtime");
 		if (detailedEstimateDeductionSearchContract.getSortBy() != null
 				&& !detailedEstimateDeductionSearchContract.getSortBy().isEmpty()) {
-		    orderBy.append("order by ").append(detailedEstimateDeductionSearchContract.getSortBy());
+		    orderBy.delete(0,orderBy.length()).append("order by ").append(detailedEstimateDeductionSearchContract.getSortBy());
 		}
 
 		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

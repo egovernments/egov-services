@@ -195,5 +195,15 @@ public class Constants {
 
     public static final String KEY_NOTICE_REMARKS_INVALID= "NOTICE_REMARKS_INVALID";
     public static final String MESSAGE_NOTICE_REMARKS_INVALID = "Invalid data for notice remarks";
+    
+    public static final String KEY_CONTRACTORADVANCE_LOA_NULL = "works.contractoradvance.loa.null";
+    public static final String MESSAGE_CONTRACTORADVANCE_LOA_NULL = "Please pass the Letter Of Acceptance";
+    
+    public static final String KEY_CONTRACTORADVANCE_LOA_NOTEXISTS = "works.contractoradvance.loa.notexists";
+    public static final String MESSAGE_CONTRACTORADVANCE_LOA_NOTEXISTS = "LOA not exists for given LOA Number";
 
+    public static final String KEY_CONTRACTORADVANCE_EXISTS = "works.contractoradvance.exists";
+    public static final String MESSAGE_CONTRACTORADVANCE_EXISTS = "Contractor Advance already exists for given LOA";
+
+    
 }

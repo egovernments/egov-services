@@ -37,7 +37,7 @@ public class EstimateTechnicalSanctionRepository  extends JdbcRepository
         StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (technicalSanctionSearchContract.getSortBy() != null
                 && !technicalSanctionSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by ").append(technicalSanctionSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by ").append(technicalSanctionSearchContract.getSortBy());
         }
 
 

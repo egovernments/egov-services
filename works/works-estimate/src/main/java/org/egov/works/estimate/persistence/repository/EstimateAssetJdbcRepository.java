@@ -33,7 +33,7 @@ public class EstimateAssetJdbcRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (assetSearchContract.getSortBy() != null
                 && !assetSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by ").append(assetSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by ").append(assetSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

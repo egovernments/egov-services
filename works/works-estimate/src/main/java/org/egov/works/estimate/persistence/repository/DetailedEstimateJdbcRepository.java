@@ -67,7 +67,7 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by de.createdtime");
         if (detailedEstimateSearchContract.getSortBy() != null
                 && !detailedEstimateSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by de.").append(detailedEstimateSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by de.").append(detailedEstimateSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

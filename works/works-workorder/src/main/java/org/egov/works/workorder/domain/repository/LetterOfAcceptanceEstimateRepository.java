@@ -42,7 +42,7 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by loaestimate.createdtime");
         if (letterOfAcceptanceEstimateSearchCriteria.getSortBy() != null
                 && !letterOfAcceptanceEstimateSearchCriteria.getSortBy().isEmpty()) {
-            orderBy.append("order by loaestimate.").append(letterOfAcceptanceEstimateSearchCriteria.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by loaestimate.").append(letterOfAcceptanceEstimateSearchCriteria.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

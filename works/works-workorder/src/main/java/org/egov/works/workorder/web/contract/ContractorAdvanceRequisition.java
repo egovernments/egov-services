@@ -3,7 +3,6 @@ package org.egov.works.workorder.web.contract;
 import java.util.Objects;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data for Contractor Advance Requisition
  */
 @ApiModel(description = "An Object that holds the basic data for Contractor Advance Requisition")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-04T12:59:21.353Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-09T05:23:36.544Z")
 
 public class ContractorAdvanceRequisition extends AdvanceRequisition {
     @JsonProperty("id")
@@ -64,8 +63,7 @@ public class ContractorAdvanceRequisition extends AdvanceRequisition {
      * tenant id of the Contractor Advance Requisition Form
      * @return tenantId
      **/
-    @ApiModelProperty(required = true, value = "tenant id of the Contractor Advance Requisition Form")
-    @NotNull
+    @ApiModelProperty(value = "tenant id of the Contractor Advance Requisition Form")
 
     @Size(min = 2, max = 128)
     public String getTenantId() {
@@ -85,10 +83,9 @@ public class ContractorAdvanceRequisition extends AdvanceRequisition {
      * Letter of acceptance reference
      * @return letterOfAcceptanceEstimate
      **/
-    @ApiModelProperty(required = true, value = "Letter of acceptance reference")
-    @NotNull
+    @ApiModelProperty(value = "Letter of acceptance reference")
 
-    @Valid
+//    @Valid
 
     public LetterOfAcceptanceEstimate getLetterOfAcceptanceEstimate() {
         return letterOfAcceptanceEstimate;
@@ -109,7 +106,7 @@ public class ContractorAdvanceRequisition extends AdvanceRequisition {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
+    // @Valid
 
     public WorkFlowDetails getWorkFlowDetails() {
         return workFlowDetails;
@@ -149,7 +146,7 @@ public class ContractorAdvanceRequisition extends AdvanceRequisition {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
+    // @Valid
 
     public AuditDetails getAuditDetails() {
         return auditDetails;
@@ -173,19 +170,20 @@ public class ContractorAdvanceRequisition extends AdvanceRequisition {
                 Objects.equals(this.letterOfAcceptanceEstimate, contractorAdvanceRequisition.letterOfAcceptanceEstimate) &&
                 Objects.equals(this.workFlowDetails, contractorAdvanceRequisition.workFlowDetails) &&
                 Objects.equals(this.stateId, contractorAdvanceRequisition.stateId) &&
-                Objects.equals(this.auditDetails, contractorAdvanceRequisition.auditDetails);
+                Objects.equals(this.auditDetails, contractorAdvanceRequisition.auditDetails) &&
+                super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, letterOfAcceptanceEstimate, workFlowDetails, stateId, auditDetails);
+        return Objects.hash(id, tenantId, letterOfAcceptanceEstimate, workFlowDetails, stateId, auditDetails, super.hashCode());
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class ContractorAdvanceRequisition {\n");
-
+        sb.append("    ").append(toIndentedString(super.toString())).append("\n");
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
         sb.append("    letterOfAcceptanceEstimate: ").append(toIndentedString(letterOfAcceptanceEstimate)).append("\n");

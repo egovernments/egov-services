@@ -30,7 +30,7 @@ public class NoticeJdbcRepository extends JdbcRepository {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
-        String tableName = TABLE_NAME;
+        StringBuilder tableName = new StringBuilder(TABLE_NAME);
 
         Map<String, Object> paramValues = new HashMap<>();
         StringBuilder params = new StringBuilder();
@@ -42,7 +42,7 @@ public class NoticeJdbcRepository extends JdbcRepository {
 
         if ((noticeSearchContract.getDetailedEstimateNumbers() != null
                 && !noticeSearchContract.getDetailedEstimateNumbers().isEmpty()))
-            tableName += LOA_ESTIMATESEARCH_EXTENTION;
+            tableName.append(LOA_ESTIMATESEARCH_EXTENTION);
 
         StringBuilder orderBy = new StringBuilder("order by notice.createdtime");
         if (noticeSearchContract.getSortBy() != null && !noticeSearchContract.getSortBy().isEmpty()) {
@@ -62,6 +62,12 @@ public class NoticeJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("notice.id in(:ids) ");
             paramValues.put("ids", noticeSearchContract.getIds());
+        }
+        
+        if (noticeSearchContract.getStatuses() != null) {
+            addAnd(params);
+            params.append("notice.status in(:statuses) ");
+            paramValues.put("statuses", noticeSearchContract.getStatuses());
         }
 
         if (noticeSearchContract.getWorkOrderNumbers() != null) {

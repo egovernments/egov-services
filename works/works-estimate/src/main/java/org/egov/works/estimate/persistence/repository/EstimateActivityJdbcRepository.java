@@ -33,7 +33,7 @@ public class EstimateActivityJdbcRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (estimateActivitySearchContract.getSortBy() != null
                 && !estimateActivitySearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by ").append(estimateActivitySearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by ").append(estimateActivitySearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

@@ -33,7 +33,7 @@ public class EstimateMeasurementSheetJdbcRepository extends JdbcRepository {
 		StringBuilder orderBy = new StringBuilder("order by createdtime");
 		if (estimateMeasurementSheetSearchContract.getSortBy() != null
 				&& !estimateMeasurementSheetSearchContract.getSortBy().isEmpty()) {
-		    orderBy.append("order by ").append(estimateMeasurementSheetSearchContract.getSortBy());
+		    orderBy.delete(0,orderBy.length()).append("order by ").append(estimateMeasurementSheetSearchContract.getSortBy());
 		}
 
 		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

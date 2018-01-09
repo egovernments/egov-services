@@ -33,7 +33,7 @@ public class MultiYearEstimateJdbcRepository extends JdbcRepository {
 		StringBuilder orderBy = new StringBuilder("order by createdtime");
 		if (multiYearEstimateSearchContract.getSortBy() != null
 				&& !multiYearEstimateSearchContract.getSortBy().isEmpty()) {
-		    orderBy.append("order by ").append(multiYearEstimateSearchContract.getSortBy());
+		    orderBy.delete(0,orderBy.length()).append("order by ").append(multiYearEstimateSearchContract.getSortBy());
 		}
 
 		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

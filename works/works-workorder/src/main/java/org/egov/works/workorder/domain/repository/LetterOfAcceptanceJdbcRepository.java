@@ -53,7 +53,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by loa.createdtime");
         if (letterOfAcceptanceSearchCriteria.getSortBy() != null
                 && !letterOfAcceptanceSearchCriteria.getSortBy().isEmpty()) {
-            orderBy.append("order by loa.").append(letterOfAcceptanceSearchCriteria.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by loa.").append(letterOfAcceptanceSearchCriteria.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

@@ -74,7 +74,7 @@ public class MilestoneJdbcRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by milestone.createdtime");
         if (milestoneSearchContract.getSortBy() != null
                 && !milestoneSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by milestone.").append(milestoneSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by milestone.").append(milestoneSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

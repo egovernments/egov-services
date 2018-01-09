@@ -1,17 +1,20 @@
 package org.egov.works.workorder.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * An Object holds the basic data for a Advance Requisition
@@ -295,7 +298,7 @@ public class AdvanceRequisition {
      **/
     @ApiModelProperty(value = "Field(boundary) of the Advance Requisition")
 
-    @Valid
+//    @Valid
 
     public Boundary getField() {
         return field;
@@ -317,7 +320,7 @@ public class AdvanceRequisition {
      **/
     @ApiModelProperty(value = "Sub Field(boundary) of the Advance Requisition")
 
-    @Valid
+//    @Valid
 
     public Boundary getSubField() {
         return subField;
@@ -405,7 +408,7 @@ public class AdvanceRequisition {
      **/
     @ApiModelProperty(value = "Fund of the Advance Requisition")
 
-    @Valid
+//    @Valid
 
     public Fund getFund() {
         return fund;
@@ -427,7 +430,7 @@ public class AdvanceRequisition {
      **/
     @ApiModelProperty(value = "Fund Source of the Advance Requisition")
 
-    @Valid
+//    @Valid
 
     public Fundsource getFundSource() {
         return fundSource;
@@ -449,7 +452,7 @@ public class AdvanceRequisition {
      **/
     @ApiModelProperty(value = "Functionary of the Advance Requisition")
 
-    @Valid
+//    @Valid
 
     public Functionary getFunctionary() {
         return functionary;
@@ -492,7 +495,7 @@ public class AdvanceRequisition {
      **/
     @ApiModelProperty(value = "Payee Name of the Advance Requisition")
 
-    @Valid
+//    @Valid
 
     public User getPayTo() {
         return payTo;
@@ -620,7 +623,7 @@ public class AdvanceRequisition {
      **/
     @ApiModelProperty(value = "Function of the Advance Requisition")
 
-    @Valid
+//    @Valid
 
     public Function getFunction() {
         return function;

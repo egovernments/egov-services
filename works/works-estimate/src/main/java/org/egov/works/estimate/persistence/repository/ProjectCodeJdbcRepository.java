@@ -28,7 +28,7 @@ public class ProjectCodeJdbcRepository extends JdbcRepository {
 
 		StringBuilder orderBy = new StringBuilder("order by code");
 		if (projectCodeSearchContract.getSortBy() != null && !projectCodeSearchContract.getSortBy().isEmpty()) {
-		    orderBy.append("order by ").append(projectCodeSearchContract.getSortBy());
+		    orderBy.delete(0,orderBy.length()).append("order by ").append(projectCodeSearchContract.getSortBy());
 		}
 
 		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

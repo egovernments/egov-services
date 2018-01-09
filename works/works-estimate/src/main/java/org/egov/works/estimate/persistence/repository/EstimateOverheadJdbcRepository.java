@@ -33,7 +33,7 @@ public class EstimateOverheadJdbcRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (estimateOverheadSearchContract.getSortBy() != null
                 && !estimateOverheadSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by ").append(estimateOverheadSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by ").append(estimateOverheadSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

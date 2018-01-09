@@ -16,26 +16,28 @@ import lombok.NoArgsConstructor;
 @Data
 public class NoticeSearchContract {
 
-	private List<String> ids;
+    private List<String> ids;
 
-	private List<String> workOrderNumbers;
+    private List<String> workOrderNumbers;
 
-	private List<String> loaNumbers;
+    private List<String> loaNumbers;
 
-	private List<String> contractorNames;
+    private List<String> contractorNames;
 
-	private List<String> contractorCodes;
+    private List<String> contractorCodes;
 
-	private List<String> detailedEstimateNumbers;
+    private List<String> detailedEstimateNumbers;
 
-	private List<String> workIdentificationNumbers;
+    private List<String> workIdentificationNumbers;
 
-	private String tenantId;
+    private String tenantId;
 
-	private Integer pageSize;
+    private Integer pageSize;
 
-	private Integer pageNumber;
+    private Integer pageNumber;
 
-	private String sortBy;
+    private String sortBy;
+
+    private List<String> statuses;
 
 }

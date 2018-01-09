@@ -72,4 +72,7 @@ public class PropertiesManager {
 
     @Value("${egov.services.works.trackmilestone.saveorupdate.validated}")
     private String worksTrackMilestoneSaveOrUpdateValidatedTopic;
+    
+    @Value("${egov.services.works.advance.saveorupdate.validated}")
+    private String worksAdvanceSaveOrUpdateValidatedTopic;
 }

@@ -34,7 +34,7 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
         StringBuilder orderBy = new StringBuilder("order by createdtime");
         if (abstractEstimateAssetDetailSearchContract.getSortBy() != null
                 && !abstractEstimateAssetDetailSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by ").append(abstractEstimateAssetDetailSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by ").append(abstractEstimateAssetDetailSearchContract.getSortBy());
         }
         
         searchQuery = searchQuery.replace(":tablename", TABLE_NAME);

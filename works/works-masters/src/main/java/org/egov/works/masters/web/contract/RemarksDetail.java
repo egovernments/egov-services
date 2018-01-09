@@ -30,7 +30,7 @@ public class RemarksDetail   {
   private String remarksDescription = null;
 
   @JsonProperty("editable")
-  private Boolean editable = true;
+  private Boolean editable = null;
 
   @JsonProperty("deleted")
   private Boolean deleted = false;
@@ -131,7 +131,7 @@ public class RemarksDetail   {
    * @return editable
   **/
   @ApiModelProperty(required = true, value = "True By default")
- // @NotNull
+  @NotNull
 
 
   public Boolean getEditable() {

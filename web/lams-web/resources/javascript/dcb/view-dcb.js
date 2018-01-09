@@ -169,7 +169,7 @@ class ViewDCB extends React.Component {
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="assetName" name="assetName">
-                              {agreement.id ? agreement.id : "N/A"}
+                              {agreement.asset.name ? agreement.asset.name : "N/A"}
                             </label>
                           </div>
                         </div>
@@ -181,7 +181,7 @@ class ViewDCB extends React.Component {
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="assetType" name="assetType">
-                              {agreement.id ? agreement.id : "N/A"}
+                              {agreement.asset.assetCategory.name ? agreement.asset.assetCategory.name : "N/A"}
                             </label>
                           </div>
                         </div>
@@ -195,7 +195,7 @@ class ViewDCB extends React.Component {
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="allotteeName" name="allotteeName">
-                              {agreement.id ? agreement.id : "N/A"}
+                              {agreement.allottee.name ? agreement.allottee.name : "N/A"}
                             </label>
                           </div>
                         </div>
@@ -207,7 +207,7 @@ class ViewDCB extends React.Component {
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="mobileNumber" name="mobileNumber">
-                              {agreement.id ? agreement.id : "N/A"}
+                              {agreement.allottee.mobileNumber ? agreement.allottee.mobileNumber : "N/A"}
                             </label>
                           </div>
                         </div>

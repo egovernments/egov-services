@@ -270,7 +270,10 @@ public enum ErrorCode {
     		"Insertion is not allowed during updation of {0}"),
     INVALID_ACTIVE_VALUE("invalid.active.value",
             "the field {0} is-inactive  or does not exist ",
-            "the field {0} is-inactive  or does not exist ");
+            "the field {0} is-inactive  or does not exist "),
+    QTY1_LE_QTY2("qty1.le.qty2",
+ 			"The field {0}  should be less than or equal to {1} ",
+     		"The field {0}  should be less than or equal to {1}");
 
 
     private final String code;

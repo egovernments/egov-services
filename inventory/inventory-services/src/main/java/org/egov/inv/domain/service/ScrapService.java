@@ -215,6 +215,7 @@ public class ScrapService extends DomainService{
 			if(scrapDetails.getUserQuantity() != null)
 			{
 				setConvertedScrapQuantity(tenantId, scrapDetails,detail);
+				
 			}
 			
 			if(scrapDetails.getScrapValue() != null)
@@ -257,6 +258,7 @@ public class ScrapService extends DomainService{
 		}
 	 
 	 private void setConvertedScrapQuantity(String tenantId, ScrapDetail detail,MaterialIssueDetail issueDetail) {
+			InvalidDataException errors = new InvalidDataException();
 			Uom uom = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", issueDetail.getUom().getCode(), Uom.class);
 			issueDetail.setUom(uom);
 
@@ -264,7 +266,17 @@ public class ScrapService extends DomainService{
 				BigDecimal convertedUserQuantity = getSaveConvertedQuantity(detail.getUserQuantity(),
 						uom.getConversionFactor());
 				detail.setScrapQuantity(convertedUserQuantity);
+				int res =convertedUserQuantity.compareTo(issueDetail.getQuantityIssued());				
+				if(res == 1)
+				{
+					errors.addDataError(ErrorCode.QTY1_LE_QTY2.getCode(), "Scrap Quantity ", "Issued Quantity ",null);
+
+				}
 			}
+			
+			if (errors.getValidationErrors().size() > 0)
+				throw errors;
+					
 
 		}
 }

@@ -1,6 +1,7 @@
 package org.egov.dataupload.repository;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.egov.dataupload.utils.DataUploadUtils;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,15 +37,15 @@ public class DataUploadRepository {
 	
 	@Autowired
 	private RestTemplate restTemplate;
-	
-	@Value("${write.file.path}")
-	private String writeFilePath;
-	
+		
 	@Value("${filestore.post.endpoint}")
 	private String postFilePath;
 	
 	@Value("${filestore.host}")
 	private String fileStoreHost;
+	
+	@Autowired
+	private DataUploadUtils dataUploadUtils;
 			
 	public static final Logger LOGGER = LoggerFactory.getLogger(DataUploadRepository.class);
 		
@@ -57,10 +61,11 @@ public class DataUploadRepository {
 		return response;
 	}
 	
-	public String getFileContents(String filePath) throws Exception{
+	public String getFileContents(String filePath, String fileName) throws Exception{
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 		messageConverters.add(new ByteArrayHttpMessageConverter());
 		RestTemplate restTemplate = new RestTemplate(messageConverters);
+		String fullFilePath = null;
 		
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
@@ -71,14 +76,15 @@ public class DataUploadRepository {
 		    		filePath, HttpMethod.GET, entity, byte[].class, "1");
 	
 		    if (response.getStatusCode() == HttpStatus.OK) {
-		        Files.write(Paths.get(writeFilePath), response.getBody());
+		    	fullFilePath = dataUploadUtils.createANewFile(fileName);
+		        Files.write(Paths.get(fullFilePath), response.getBody());
 		    }
 	    }catch(Exception e){
 			LOGGER.error("Exception while fetching file from: "+filePath, e);
 			throw new CustomException("400", "Exception while fetching file");
 	    }
 	    
-	    return writeFilePath;
+	    return fullFilePath;
 	}
 	
 	public Map<String, Object> postFileContents(String tenantId, String moduleName, String filePath) throws Exception{

@@ -1,6 +1,5 @@
 package org.egov.dataupload.service;
 
-import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,13 +64,7 @@ public class DataUploadService {
 	
 	@Value("${filestore.get.endpoint}")
 	private String getFileEndpoint;
-	
-	@Value("${result.file.path}")
-	private String resultFilePath;
-	
-	@Value("${write.file.path}")
-	private String writeFilePath;
-	
+		
 	@Value("${response.file.name.prefix}")
 	private String resFilePrefix;
 	
@@ -92,8 +85,9 @@ public class DataUploadService {
 		   .append("&tenantId="+uploadJob.getTenantId());
 		String filePath = null;
 		try{
-			filePath = dataUploadRepository.getFileContents(uri.toString());
+			filePath = dataUploadRepository.getFileContents(uri.toString(), uploaderRequest.getUploadJobs().get(0).getRequestFileName());
 		}catch(Exception e){
+			logger.info("FIle write exception: ",e);
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"No .xls file found for: fileStoreId = "+uploadJob.getRequestFilePath()
 					+" AND tenantId = "+uploadJob.getTenantId());		
@@ -129,12 +123,10 @@ public class DataUploadService {
         try{
         	if(null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()){
         		uploadParentChildData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
-				dataUploadUtils.clearExceFile(writeFilePath);
-				dataUploadUtils.clearExceFile(resultFilePath);
+				dataUploadUtils.clearInternalDirectory();
         	}else{
         		uploadData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
-				dataUploadUtils.clearExceFile(writeFilePath);
-				dataUploadUtils.clearExceFile(resultFilePath);
+				//dataUploadUtils.clearInternalDirectory();
         	}
 
         }catch(Exception e){
@@ -165,27 +157,36 @@ public class DataUploadService {
     	coloumnHeaders.add("status"); coloumnHeaders.add("message");
     	additionFieldsCount+=2;
     	logger.info("Writing column headers to excel file....: "+coloumnHeaders);
-		dataUploadUtils.writeToexcelSheet(coloumnHeaders);
+    	String resultFilePath = dataUploadUtils.createANewFile(resFilePrefix + uploaderRequest.getUploadJobs().get(0).getRequestFileName());
+		dataUploadUtils.writeToexcelSheet(coloumnHeaders, resultFilePath);
 		int successCount = 0; int failureCount = 0;
 		for(List<Object> row: excelData){
 			logger.info("row: "+row.toString());
 			try{
 				if(!row.isEmpty()){
 					for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
-						logger.info("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));
-		            	StringBuilder expression = new StringBuilder();
-		            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
-		            	if(null == jsonPath){
+						logger.debug("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));
+		            	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
+		            	if(null == jsonPathList){
 							logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
 		            		continue;
 		            	}
-		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-		            	if(key.contains("tenantId")){
-			            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
-		            	}else{
-		            		documentContext.put(expression.toString(), key, row.get(i));
+		            	if(jsonPathList.isEmpty()) {
+							logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+		            		continue;
+		            	}
+		            	for(String jsonPath: jsonPathList) {
+			            	StringBuilder expression = new StringBuilder();
+			            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
+			            	documentContext.put(expression.toString(), key, row.get(i));
 		            	}
 					} 	
+					logger.info("Adding tenantId...");
+					for(String path: uploadDefinition.getTenantIdPaths()) {
+		            	StringBuilder expression = new StringBuilder();
+		            	String key = dataUploadUtils.getJsonPathKey(path, expression);
+		            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());
+					}
 				    try{
 				    	documentContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
 					    request = documentContext.jsonString().toString();
@@ -213,7 +214,7 @@ public class DataUploadService {
 		    		row.add("SUCCESS");
 		    		successCount++;
 			    	logger.info("Writing SUCCESS ROW to excel....: "+row);
-					dataUploadUtils.writeToexcelSheet(row);
+					dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 				}
 			}catch(Exception e){
 				logger.error("Error while processing row: "+(excelData.indexOf(row) + 2), e);
@@ -236,12 +237,12 @@ public class DataUploadService {
 			    	failureCount++;	
 		    	}
 		    	logger.info("Writing FAILED ROW to excel....: "+row);
-				dataUploadUtils.writeToexcelSheet(row);
+				dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 
 		    	continue;
 		    }			
 		}
-		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), uploadJob.getRequestFileName());
+		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
 		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
 		uploadRegistryRepository.updateJob(uploaderRequest);
@@ -281,8 +282,9 @@ public class DataUploadService {
     	}
     	coloumnHeaders.add("status"); coloumnHeaders.add("message");
     	additionFieldsCount+=2;
+    	String resultFfilePath = dataUploadUtils.createANewFile(resFilePrefix + uploaderRequest.getUploadJobs().get(0).getRequestFileName());
     	try{
-    		dataUploadUtils.writeToexcelSheet(coloumnHeaders);
+    		dataUploadUtils.writeToexcelSheet(coloumnHeaders, resultFfilePath);
     	}catch(Exception e){
     		logger.error("Couldn't create job in db: ",e);
     	}
@@ -294,7 +296,6 @@ public class DataUploadService {
 		for(String key: uploadDefinition.getUniqueParentKeys()){
 			indexes.add(coloumnHeaders.indexOf(key));
 		}
-		
 		for(int i = 0; i < excelData.size(); i++){
 			List<List<Object>> filteredList = dataUploadUtils.filter(excelData, indexes, excelData.get(i));
 			logger.info("filteredList: "+filteredList);
@@ -316,24 +317,32 @@ public class DataUploadService {
 			for(int k = 0; k < filteredList.size(); k++){
 				for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
 	            	StringBuilder expression = new StringBuilder();
-	            	String jsonPath = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(j).toString());
-	            	if(null == jsonPath){
-						logger.info("no jsonpath in config for: "+coloumnHeaders.get(j));
+	            	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
+	            	if(null == jsonPathList){
+						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
 	            		continue;
 	            	}
-	            	jsonPath = jsonPath.replace(uploadDefinition.getArrayPath(), "$");
-	            	if(jsonPath.contains("*")){
-	            		String[] splitJsonPath = jsonPath.split("[.]");
-	            		List<String> list = Arrays.asList(splitJsonPath);
-	            		if(!(arrayKeys.contains(list.get((list.indexOf("*") - 1)))))
-	            			arrayKeys.add(list.get((list.indexOf("*") - 1)));
+	            	if(jsonPathList.isEmpty()) {
+						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+	            		continue;
 	            	}
-	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-	            	if(key.contains("tenantId")){
-		            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
-	            	}else{
-	            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
-	            	}	            	
+	            	for(String jsonPath: jsonPathList) {
+	            		if(uploadDefinition.getIsBulkApi())
+	            			jsonPath = jsonPath.replace(uploadDefinition.getArrayPath(), "$");
+	            		
+		            	if(jsonPath.contains("*")){
+		            		String[] splitJsonPath = jsonPath.split("[.]");
+		            		List<String> list = Arrays.asList(splitJsonPath);
+		            		if(!(arrayKeys.contains(list.get((list.indexOf("*") - 1)))))
+		            			arrayKeys.add(list.get((list.indexOf("*") - 1)));
+		            	}
+		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
+		            	if(key.contains("tenantId")){
+			            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
+		            	}else{
+		            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
+		            	}
+	            	}
 				}
 				Type type = new TypeToken<Map<String, Object>>() {}.getType();
 				Gson gson = new Gson();
@@ -403,19 +412,9 @@ public class DataUploadService {
 		
 	}
 	
-	private String getFileStoreId(String tenantId, String module, String requestFileName) throws Exception{
+	private String getFileStoreId(String tenantId, String module, String filePath) throws Exception{
 		logger.info("Uploading result excel to filestore....");
 		ObjectMapper mapper = new ObjectMapper();
-		File from = new File(resultFilePath);
-		File to = new File(resultFilePath.replace("result.xls", resFilePrefix+requestFileName+".xls"));
-		boolean isRenameSuccess = from.renameTo(to);
-		String filePath = null;
-		if(isRenameSuccess){
-			filePath = resultFilePath.replace("result.xls", resFilePrefix+requestFileName+".xls");
-		}else{
-			filePath = resultFilePath;
-		}
-		logger.info("result.xls renamed to: "+filePath);
 		Map<String, Object> result = dataUploadRepository.postFileContents(tenantId, module, filePath);
 		List<Object> objects = (List<Object>) result.get("files");
 		String id = null;
@@ -425,15 +424,7 @@ public class DataUploadService {
 			logger.error("Couldn't fetch fileStore id from post file response: ",e);
 		}
 		logger.info("responsefile fileStoreId: "+id);
-		try{
-			File fromFile = new File(resultFilePath.replace("result.xls", resFilePrefix+requestFileName+".xls"));
-			File toFile = new File(resultFilePath);
-			boolean isSuccess = fromFile.renameTo(toFile);
-			if(isSuccess)
-				logger.info("result file renamed back to: "+resultFilePath);
-		}catch(Exception e){
-			logger.error("Renaming the file back to result.xls failed: ", e);
-		}
+		
 		return id;
 	}
 	
@@ -474,9 +465,6 @@ public class DataUploadService {
 		return uploadJobs;
 
 	}
-	
-	
-	
 	
 	
 	private String prepareDataForBulkApi(List<List<Object>> excelData,

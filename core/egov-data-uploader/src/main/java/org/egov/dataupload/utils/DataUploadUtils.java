@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -38,8 +39,8 @@ public class DataUploadUtils {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadUtils.class);
 	
-	@Value("${result.file.path}")
-	private String resultFilePath;
+	@Value("${internal.file.folder.path}")
+	private String internalFolderPath;
 	
 	@Value("${business.module.host}")
 	private String businessModuleHost;
@@ -144,15 +145,35 @@ public class DataUploadUtils {
 	    return multipartFile;
 	}
 	
+	public String createANewFile(String fileName) {
+		String folder = internalFolderPath;
+		logger.info("Creating a new file: "+fileName);
+		logger.info("In the internal folder: "+folder);
+		try {
+	        HSSFWorkbook workbook = new HSSFWorkbook();
+	        HSSFSheet sheet = workbook.createSheet("Sheet 1"); 
+	        folder = folder + "/"+ fileName;
+	        FileOutputStream fileOut = new FileOutputStream(folder);
+	        workbook.write(fileOut);
+	        fileOut.close();
+	        workbook.close();
+		}catch(Exception e) {
+			logger.error("New file creation for processing failed",e);
+		}
+        
+        return folder;
+		
+	}
 	
-	public void writeToexcelSheet(List<Object> exisitingFields) throws Exception{
-		logger.info("Writing to file: "+resultFilePath);
-	    MultipartFile file = getExcelFile(resultFilePath);
+	
+	public void writeToexcelSheet(List<Object> exisitingFields, String fileName) throws Exception{
+		logger.info("Writing to file: "+fileName);
+	    MultipartFile file = getExcelFile(fileName);
 		HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
-		workbook.createSheet();
         HSSFSheet sheet = workbook.getSheetAt(0);
         int rowCount = sheet.getLastRowNum();
-        Row row = sheet.createRow(++rowCount);
+        Row row = null;
+        row = sheet.createRow(++rowCount);
         for(int i = 0; i < exisitingFields.size(); i++)
         {
             Cell cell = row.createCell(i);
@@ -165,31 +186,19 @@ public class DataUploadUtils {
             }
             
         }
-
-        try (FileOutputStream outputStream = new FileOutputStream(resultFilePath)) {
+        try (FileOutputStream outputStream = new FileOutputStream(fileName)) {
             workbook.write(outputStream);
         }
-        
+          
         workbook.close();
 	}
-	
-	public void clearExceFile(String filePath){
-		logger.info("Clearing the file....: "+filePath);
+
+	public void clearInternalDirectory(){
+		logger.info("Clearing the internal folder....: "+internalFolderPath);
 		try{
-		    MultipartFile file = getExcelFile(filePath);
-			HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
-	        HSSFSheet sheet = workbook.getSheetAt(0);
-	        int index = 0;
-	        if(sheet != null)   {
-	            index = workbook.getSheetIndex(sheet);
-	            workbook.removeSheetAt(index);
-	        }
-	        FileOutputStream output = new FileOutputStream(filePath);
-	        workbook.write(output);
-	        output.close();
-	        workbook.close();
+			FileUtils.cleanDirectory(new File(internalFolderPath)); 
 		}catch(Exception e){
-			logger.error("Couldn't delete all the contents of file: "+filePath, e);
+			logger.error("Couldn't clean the folder: "+internalFolderPath, e);
 		}
         
 	}

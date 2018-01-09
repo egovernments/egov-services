@@ -28,13 +28,16 @@ public class Definition {
 	private Object apiRequest;
 	
 	@JsonProperty("headerJsonPathMap")
-	private Map<String, String> headerJsonPathMap;
+	private Map<String, List<String>> headerJsonPathMap;
 	
 	@JsonProperty("isBulkApi")
 	private Boolean isBulkApi;
 	
 	@JsonProperty("arrayPath")
 	private String arrayPath;
+		
+	@JsonProperty("tenantIdPaths")
+	private List<String> tenantIdPaths;
 	
 	@JsonProperty("uri")
 	private String uri;	

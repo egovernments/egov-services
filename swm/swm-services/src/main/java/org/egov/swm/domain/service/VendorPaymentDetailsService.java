@@ -1,7 +1,10 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -120,6 +123,8 @@ public class VendorPaymentDetailsService {
 
         EmployeeResponse employeeResponse;
         Pagination<VendorContract> vendorContractPage;
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (final VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsRequest.getVendorPaymentDetails()) {
 
             // Validate for vendor contract
@@ -158,6 +163,13 @@ public class VendorPaymentDetailsService {
                 else
                     vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
             }
+
+            //Validation for toDate to be greater than fromDate
+            if (vendorPaymentDetail.getFromDate() != null && vendorPaymentDetail.getToDate() != null)
+                if (new Date(vendorPaymentDetail.getToDate())
+                        .before(new Date(vendorPaymentDetail.getFromDate())))
+                    throw new CustomException("ToDate ", "Vendor Payment To date shall be greater than Vendor Payment From date: "
+                            + dateFormat.format(new Date(vendorPaymentDetail.getToDate())));
 
             // validation for duplicate service periods
             VendorPaymentDetailsSearch vendorPaymentDetailsSearch = new VendorPaymentDetailsSearch();

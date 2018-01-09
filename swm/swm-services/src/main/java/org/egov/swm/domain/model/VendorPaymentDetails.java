@@ -38,6 +38,7 @@ public class VendorPaymentDetails {
     private VendorContract vendorContract;
 
     @NotNull
+    @Size(min = 1, message = "Value of invoice amount shall be greater than 0")
     @JsonProperty("vendorInvoiceAmount")
     private Double vendorInvoiceAmount;
 

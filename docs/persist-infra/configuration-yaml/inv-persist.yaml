@@ -910,8 +910,8 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.unitPrice
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.description
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.tenderquantity
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.usedquantity
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.tenderQuantity
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.usedQuantity
         - query: INSERT INTO PurchaseIndentDetail(id, purchaseOrderDetail, tenantId, indentDetail, quantity )VALUES ( ?, ?, ?, ?, ?);
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*
           jsonMaps:
@@ -920,8 +920,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
-        - query: >-
-            update indentdetail set poOrderedQuantity = indentdetail.indentQuantity where id = ? and tenantid = ? and deleted is not true;
+        - query: update indentdetail set poorderedquantity = indentquantity where id = ? and tenantid = ? and (deleted is not true or deleted is null or deleted is false);
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id

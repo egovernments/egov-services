@@ -1,21 +1,103 @@
 {
-	"variables": [],
 	"info": {
 		"name": "Material Store Mapping",
 		"_postman_id": "a078f0dd-2174-b2f1-ef7e-3249a53889a6",
 		"description": "",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Create Material Store",
+			"name": "Search Store Random ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "53aea175-cb25-459f-a9b0-ed5730643b21",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseBody=JSON.parse(responseBody);",
+							"",
+							"pm.environment.set(\"storeCode\",responseBody.stores[ Math.floor(Math.random() * responseBody.stores.length) ]['code']);",
+							""
+						]
+					}
+				}
+			],
 			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"search\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"{{access_token}}\",\n      \"userInfo\":{\n        \"id\":2\n      }\n }\n}"
+				},
 				"url": {
-					"raw": "{{host}}:8080/inventory-services/materialstoremapping/_create?tenantId=default",
+					"raw": "{{host}}/inventory-services/stores/_search?tenantId=default",
 					"host": [
 						"{{host}}"
 					],
-					"port": "8080",
+					"path": [
+						"inventory-services",
+						"stores",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Material Store",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "801ada12-ff38-4f4e-b0ad-ab89f055d5ec",
+						"type": "text/javascript",
+						"exec": [
+							"var responseBody=JSON.parse(responseBody);",
+							"",
+							"",
+							"pm.environment.set(\"materialStoreMappingId\",responseBody.materialStoreMappings[0].id);",
+							"",
+							"pm.environment.set(\"materialCode\",responseBody.materialStoreMappings[0].material.code);",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"materialStoreMappings\": [\n    {\n      \"material\": {\n        \"code\": \"MAT11\",\n        \"reorderLevel\": 1,\n        \"reorderQuantity\": 1,\n        \"minQuantity\": 1,\n        \"maxQuantity\": 1\n      },\n      \"store\": {\n        \"code\": \"{{storeCode}}\"\n      },\n      \"chartofAccount\":{\n      \t\"glcode\": \"899658\"\n      },\n      \"active\": true,\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": 1234567890,\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"d53f2c04-6c48-410c-9b2e-6b5103182faa\",\n    \"userInfo\": {\n      \"id\": 73\n    },\n    \"correlationId\": \"3b124120-214a-4c79-9a67-5ef950b4f40b\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/inventory-services/materialstoremapping/_create?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
 					"path": [
 						"inventory-services",
 						"materialstoremapping",
@@ -25,23 +107,9 @@
 						{
 							"key": "tenantId",
 							"value": "default",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{  \n   \"requestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"69330e9d-14e1-496b-b123-1f864d3959dd\",\n      \"userInfo\":{  \n         \"id\":1\n      }\n   },\n   \"materialStoreMappings\":[  \n      {  \n         \"material\":{  \n            \"code\":\"mat01\"\n         },\n         \"store\":{  \n            \"code\":\"str01\"\n         },\n         \"active\":true,\n         \"chartofAccount\":{  \n            \"glCode\":\"glcode\"\n         }\n      }\n   ]\n}"
+					]
 				},
 				"description": ""
 			},
@@ -50,12 +118,22 @@
 		{
 			"name": "Update Material Store",
 			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": 1234567890,\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"69330e9d-14e1-496b-b123-1f864d3959dd\",\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"materialStoreMappings\": [\n    {\n      \"id\": \"{{materialStoreMappingId}}\",\n      \"material\": {\n        \"code\": \"{{materialCode}}\",\n        \"reorderLevel\": 2,\n        \"reorderQuantity\": 2,\n        \"minQuantity\": 2,\n        \"maxQuantity\": 2\n      },\n      \"store\": {\n        \"code\": \"{{storeCode}}\"\n      },\n      \"active\": false,\n      \"chartofAccount\": {\n        \"glcode\": \"7895666\"\n      }\n    }\n  ]\n}"
+				},
 				"url": {
-					"raw": "{{host}}:8080/inventory-services/materialstoremapping/_update?tenantId=default",
+					"raw": "{{host}}/inventory-services/materialstoremapping/_update?tenantId=default",
 					"host": [
 						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"inventory-services",
 						"materialstoremapping",
@@ -65,23 +143,9 @@
 						{
 							"key": "tenantId",
 							"value": "default",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{  \n   \"requestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"69330e9d-14e1-496b-b123-1f864d3959dd\",\n      \"userInfo\":{  \n         \"id\":1\n      }\n   },\n   \"materialStoreMappings\":[  \n      {  \n         \"id\":14,\n         \"material\":{  \n            \"code\":\"mat01\"\n         },\n         \"store\":{  \n            \"code\":\"str01\"\n         },\n         \"active\":true,\n         \"chartofAccount\":{  \n            \"glCode\":\"glcode1\"\n         }\n      }\n   ]\n}"
+					]
 				},
 				"description": ""
 			},
@@ -90,12 +154,22 @@
 		{
 			"name": "Search Material Store",
 			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"3cc512e5-434c-451a-928f-9821e14aa632\",\n      \"userInfo\":{\n        \"id\":2\n      }\n }\n}"
+				},
 				"url": {
-					"raw": "{{host}}:8080/inventory-services/materialstoremapping/_search?tenantId=default",
+					"raw": "{{host}}/inventory-services/materialstoremapping/_search?tenantId=default&ids={{materialStoreMappingId}}",
 					"host": [
 						"{{host}}"
 					],
-					"port": "8080",
 					"path": [
 						"inventory-services",
 						"materialstoremapping",
@@ -105,23 +179,14 @@
 						{
 							"key": "tenantId",
 							"value": "default",
-							"equals": true,
-							"description": ""
+							"equals": true
+						},
+						{
+							"key": "ids",
+							"value": "{{materialStoreMappingId}}",
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t \"requestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"69330e9d-14e1-496b-b123-1f864d3959dd\",\n      \"userInfo\":{\n      \t\"id\":2\n      }\n }\n}"
+					]
 				},
 				"description": ""
 			},

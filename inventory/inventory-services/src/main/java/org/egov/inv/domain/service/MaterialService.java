@@ -122,29 +122,31 @@ public class MaterialService extends DomainService {
 
             Material mdmsMaterial = materialFromMdms.get(material.getCode());
 
-            prepareMaterial(material, mdmsMaterial);
+            if (null != mdmsMaterial) {
+                prepareMaterial(material, mdmsMaterial);
 
-            List<StoreMapping> storeMappings = new ArrayList<>();
+                List<StoreMapping> storeMappings = new ArrayList<>();
 
-            MaterialStoreMappingSearch materialStoreMappingSearch = MaterialStoreMappingSearch.builder()
-                    .material(material.getCode())
-                    .tenantId(material.getTenantId())
-                    .build();
+                MaterialStoreMappingSearch materialStoreMappingSearch = MaterialStoreMappingSearch.builder()
+                        .material(material.getCode())
+                        .tenantId(material.getTenantId())
+                        .build();
 
-            List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.search(materialStoreMappingSearch, requestInfo).getMaterialStoreMappings();
+                List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.search(materialStoreMappingSearch, requestInfo).getMaterialStoreMappings();
 
-            materialStoreMappings.forEach(materialStoreMapping -> {
-                        StoreMapping storeMapping = StoreMapping.builder()
-                                .id(materialStoreMapping.getId())
-                                .chartofAccount(materialStoreMapping.getChartofAccount())
-                                .active(materialStoreMapping.getActive())
-                                .store(materialStoreMapping.getStore())
-                                .auditDetails(materialStoreMapping.getAuditDetails())
-                                .build();
-                        storeMappings.add(storeMapping);
-                    }
-            );
-            material.setStoreMapping(storeMappings);
+                materialStoreMappings.forEach(materialStoreMapping -> {
+                            StoreMapping storeMapping = StoreMapping.builder()
+                                    .id(materialStoreMapping.getId())
+                                    .chartofAccount(materialStoreMapping.getChartofAccount())
+                                    .active(materialStoreMapping.getActive())
+                                    .store(materialStoreMapping.getStore())
+                                    .auditDetails(materialStoreMapping.getAuditDetails())
+                                    .build();
+                            storeMappings.add(storeMapping);
+                        }
+                );
+                material.setStoreMapping(storeMappings);
+            }
         }
 
         MaterialResponse response = new MaterialResponse();

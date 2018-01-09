@@ -1,7 +1,6 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import org.egov.swm.domain.enums.MaintenanceType;
 
@@ -57,6 +56,8 @@ public class VehicleMaintenanceDetails {
 
     @NotNull
     @JsonProperty("vehicleReadingDuringMaintenance")
+    @DecimalMin(value = "0", message = "Vehicle reading shall be between 0 and 300000")
+    @DecimalMax(value = "300000", message = "Vehicle reading shall be between 0 and 300000")
     private Double vehicleReadingDuringMaintenance = null;
 
     @JsonProperty("remarks")
@@ -65,6 +66,8 @@ public class VehicleMaintenanceDetails {
 
     @NotNull
     @JsonProperty("costIncurred")
+    @DecimalMin(value = "1", message = "cost incurred shall be between 1 and 1000000")
+    @DecimalMax(value = "1000000", message = "cost incurred shall be between 1 and 1000000")
     private Double costIncurred = null;
 
     @JsonProperty("auditDetails")

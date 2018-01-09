@@ -18,6 +18,8 @@ import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.stereotype.Service;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 @Service
 public class VehicleMaintenanceDetailsService {
 
@@ -146,6 +148,25 @@ public class VehicleMaintenanceDetailsService {
                 else
                     vehicleMaintenanceDetails.setVehicle(vehicleList.getPagedData().get(0));
 
+            }
+
+            //vehicle downtime actual validation
+            if(!isEmpty(vehicleMaintenanceDetails.getVehicleDownTimeActualUom()) &&
+                    vehicleMaintenanceDetails.getVehicleDowntimeActual() != null){
+                if(vehicleMaintenanceDetails.getVehicleDownTimeActualUom().equalsIgnoreCase("days")){
+                    if(vehicleMaintenanceDetails.getVehicleDowntimeActual() < 1.0 ||
+                            vehicleMaintenanceDetails.getVehicleDowntimeActual() > 30.0)
+                        throw new CustomException("VehicleDownTime",
+                                "Vehicle DownTime shall be between 1 and 30 days: "
+                                        + vehicleMaintenanceDetails.getVehicleDowntimeActual());
+                }
+                else{
+                    if(vehicleMaintenanceDetails.getVehicleDowntimeActual() < 0.0 ||
+                            vehicleMaintenanceDetails.getVehicleDowntimeActual() > 720.0)
+                        throw new CustomException("VehicleDownTime",
+                                "Vehicle DownTime shall be between 0 and 720 hours: "
+                                        + vehicleMaintenanceDetails.getVehicleDowntimeActual());
+                }
             }
 
             // validation for actual maintenance date

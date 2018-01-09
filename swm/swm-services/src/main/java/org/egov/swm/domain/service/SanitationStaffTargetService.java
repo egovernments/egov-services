@@ -1,7 +1,11 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -110,7 +114,32 @@ public class SanitationStaffTargetService {
         CollectionPointSearch search;
         Pagination<CollectionPoint> collectionPoints;
 
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        DateFormat validationDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
         for (final SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
+
+            try {
+
+                if (!validationDateFormat.parse(validationDateFormat.format(sanitationStaffTarget.getTargetFrom())).equals(
+                        validationDateFormat.parse(validationDateFormat.format(new Date())))
+                        && new Date(sanitationStaffTarget.getTargetFrom()).before(new Date()))
+                    throw new CustomException("TargetFrom ", "Please select Target From date as Today's or Future date: "
+                            + dateFormat.format(new Date(sanitationStaffTarget.getTargetFrom())));
+
+                // Validation for toDate to be greater than fromDate
+                if (sanitationStaffTarget.getTargetFrom() != null && sanitationStaffTarget.getTargetTo() != null)
+                    if (new Date(sanitationStaffTarget.getTargetTo())
+                            .before(new Date(sanitationStaffTarget.getTargetFrom())))
+                        throw new CustomException("TargetTo",
+                                "Sanitation Staff Target To date shall be greater than Sanitation Staff Target From date: "
+                                        + dateFormat.format(new Date(sanitationStaffTarget.getTargetTo())));
+
+            } catch (ParseException e) {
+                throw new CustomException("ScheduleFrom", "Invalid From Date");
+            }
 
             if (sanitationStaffTarget.getSwmProcess() != null
                     && (sanitationStaffTarget.getSwmProcess().getCode() == null

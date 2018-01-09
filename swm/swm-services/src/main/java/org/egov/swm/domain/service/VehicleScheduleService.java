@@ -151,11 +151,11 @@ public class VehicleScheduleService {
                 if (!validationDateFormat.parse(validationDateFormat.format(vehicleSchedule.getScheduledFrom())).equals(
                         validationDateFormat.parse(validationDateFormat.format(new Date())))
                         && new Date(vehicleSchedule.getScheduledFrom()).before(new Date()))
-                    throw new CustomException("ScheduledToDate ",
+                    throw new CustomException("ScheduledFromDate",
                             "Schedule can not be created for past dates. Please select Today's or Future date: " +
                                     dateFormat.format(new Date(vehicleSchedule.getScheduledFrom())));
             } catch (ParseException e) {
-                throw new CustomException("ScheduleFrom","Invalid From Date");
+                throw new CustomException("ScheduleFrom", "Invalid From Date");
             }
         }
     }

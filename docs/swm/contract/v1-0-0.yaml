@@ -3022,6 +3022,8 @@ definitions:
           type: number
           format: double
           description: targeted Garbage (in tonnes) to be assigned to Sanitatary Staff. If process selected is segregation, this filed will be autofilled (Wet waste + Dry waste)
+          minimum: 1
+          maximum: 500000
         wetWaste: 
           type: number
           format: double

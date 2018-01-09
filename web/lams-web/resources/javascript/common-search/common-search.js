@@ -63,11 +63,11 @@ class CommonSearch extends React.Component {
         }
 
     } else if(response["responseJSON"] && response["responseJSON"].Error) {
-        var err = response["responseJSON"].Error.message || "";
         showError(response["responseJSON"].Error.description);
 
     } else {
-        showError(err);
+      var err = response["responseJSON"].error.message;
+      showError(err);
     }
 
   }

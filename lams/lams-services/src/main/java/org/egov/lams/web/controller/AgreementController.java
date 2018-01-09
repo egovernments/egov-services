@@ -39,8 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AgreementController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(AgreementController.class);
 	
-	public static final String VIEW_DCB = "DCB";
-
 	@Autowired
 	private AgreementService agreementService;
 
@@ -85,7 +83,7 @@ public class AgreementController {
 		AgreementRequest agreementRequest = new AgreementRequest();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (agreementCriteria.getAgreementNumber() != null && agreementCriteria.getTenantId() != null) {
-			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,null, requestInfo);
+			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,requestInfo);
 		}
 		if (agreements != null && !agreements.isEmpty()) {
 			agreements.sort((agreement1, agreement2) -> agreement2.getId().compareTo(agreement1.getId()));
@@ -527,8 +525,8 @@ public class AgreementController {
 		List<Agreement> agreements = null;
 		AgreementRequest agreementRequest = new AgreementRequest();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		if (agreementCriteria.getAgreementNumber() != null && agreementCriteria.getTenantId() != null) {
-			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,VIEW_DCB, requestInfo);
+		if ((agreementCriteria.getAgreementNumber() != null || agreementCriteria.getAcknowledgementNumber()!=null ) && agreementCriteria.getTenantId() != null) {
+			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,requestInfo);
 		}
 		if (agreements != null && !agreements.isEmpty()) {
 			Agreement agreement = agreements.get(0); 

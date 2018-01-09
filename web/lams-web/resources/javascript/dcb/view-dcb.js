@@ -58,15 +58,16 @@ class ViewDCB extends React.Component {
         }
       }
       var _this = this;
+      var agreementNumber=getUrlVars()["agreementNumber"];
+      var acknowledgementNumber = getUrlVars()["acknowledgementNumber"];
+      var status = getUrlVars()["status"];
       var agreement = commonApiPost("lams-services",
         "agreements/dcb",
         "_view", {
-          agreementNumber: getUrlVars()["agreementNumber"],
+          agreementNumber,acknowledgementNumber,status,
           tenantId
         }).responseJSON["Agreements"][0] || {};
-      console.log(agreement);
       var demandDetails = agreement.legacyDemands[0].demandDetails;
-      console.log(demandDetails);
       this.setState({
         ...this.state,
         agreement: agreement,
@@ -77,7 +78,7 @@ class ViewDCB extends React.Component {
     render() {
         var _this = this;
         let {agreement,demandDetails} = this.state;
-            const renderAgreementDetails = function () {
+        const renderAgreementDetails = function () {
               return (
                 <div className="form-section" id="agreementDetailsBlock">
                   <h3>Agreement Details </h3>
@@ -98,7 +99,33 @@ class ViewDCB extends React.Component {
                       <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">
-                            <label htmlFor="expiryDate">Expiry Date:</label>
+                            <label htmlFor="acknowledgementNumber">Acknowledgement Number:</label>
+                          </div>
+                          <div className="col-sm-6 label-view-text">
+                            <label id="acknowledgementNumber" name="acknowledgementNumber">
+                              {agreement.acknowledgementNumber ? agreement.acknowledgementNumber : "N/A"}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label htmlFor="commencementDate"> Allotment Date :</label>
+                          </div>
+                          <div className="col-sm-6 label-view-text">
+                            <label id="commencementDate" name="commencementDate">
+                              {agreement.commencementDate ? agreement.commencementDate : "N/A"}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label htmlFor="expiryDate">Expiry Date :</label>
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="expiryDate" name="expiryDate">
@@ -108,15 +135,41 @@ class ViewDCB extends React.Component {
                         </div>
                       </div>
                     </div>
-                    <div>
+                    <div className="row">
                       <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">
-                            <label htmlFor="assetName"> Asset Name :</label>
+                            <label htmlFor="commencementDate"> Agreement Type :</label>
+                          </div>
+                          <div className="col-sm-6 label-view-text">
+                            <label id="action" name="action">
+                              {agreement.action ? agreement.action : "N/A"}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label htmlFor="status">Current Status :</label>
+                          </div>
+                          <div className="col-sm-6 label-view-text">
+                            <label id="expiryDate" name="expiryDate">
+                              {agreement.status ? agreement.status : "N/A"}
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6 label-text">
+                            <label htmlFor="assetName">Asset Name :</label>
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="assetName" name="assetName">
-                              {agreement.asset.name ? agreement.asset.name : "N/A"}
+                              {agreement.id ? agreement.id : "N/A"}
                             </label>
                           </div>
                         </div>
@@ -128,7 +181,7 @@ class ViewDCB extends React.Component {
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="assetType" name="assetType">
-                              {agreement.asset.assetCategory.name ? agreement.asset.assetCategory.name : "N/A"}
+                              {agreement.id ? agreement.id : "N/A"}
                             </label>
                           </div>
                         </div>
@@ -142,7 +195,7 @@ class ViewDCB extends React.Component {
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="allotteeName" name="allotteeName">
-                              {agreement.allottee.name ? agreement.allottee.name : "N/A"}
+                              {agreement.id ? agreement.id : "N/A"}
                             </label>
                           </div>
                         </div>
@@ -154,7 +207,7 @@ class ViewDCB extends React.Component {
                           </div>
                           <div className="col-sm-6 label-view-text">
                             <label id="mobileNumber" name="mobileNumber">
-                              {agreement.allottee.mobileNumber ? agreement.allottee.mobileNumber : "N/A"}
+                              {agreement.id ? agreement.id : "N/A"}
                             </label>
                           </div>
                         </div>

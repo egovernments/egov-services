@@ -286,7 +286,7 @@ class AgreementSearch extends React.Component {
     })
   }
 
-  handleSelectChange(type, id, number, assetCategory, acknowledgementNumber) {
+  handleSelectChange(type, id, number, assetCategory, acknowledgementNumber,status) {
     switch (type) {
       case "renew":
         window.open("app/search-agreement/view-renew-agreement.html?view=renew&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes")
@@ -318,7 +318,7 @@ class AgreementSearch extends React.Component {
         });
         break;
       case "view":
-        window.open("app/search-agreement/view-renew-agreement.html?view=new&type="+assetCategory+ (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) +"&assetId="+id, "fs", "fullscreen=yes");
+        window.open("app/search-agreement/view-agreement-details.html?&"+ (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) +(status ? "&status="+status :"")+"&assetId="+id, "fs", "fullscreen=yes");
         break;
       case "cancel":
         window.open("app/search-agreement/view-renew-agreement.html?view=cancel&type=" + assetCategory + (number ? "&agreementNumber=" + number : "&acknowledgementNumber=" + acknowledgementNumber) + "&assetId=" + id, "fs", "fullscreen=yes");
@@ -470,7 +470,7 @@ class AgreementSearch extends React.Component {
         if (isShopOrLand) {
           return(
             <select id="myOptions" onChange={(e)=>{
-              handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber)
+              handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber,item.status)
             }}>
                 <option value="">Select Action</option>
                 <option value="view">View</option>
@@ -482,7 +482,7 @@ class AgreementSearch extends React.Component {
         } else {
           return(
             <select id="myOptions" onChange={(e)=>{
-              handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber)
+              handleSelectChange(e.target.value, item.asset.id, item.agreementNumber, getValueByName("name",item.asset.assetCategory.id), item.acknowledgementNumber,item.status)
             }}>
                 <option value="">Select Action</option>
                 <option value="view">View</option>

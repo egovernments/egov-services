@@ -2,6 +2,8 @@ package org.egov.asset.model;
 
 import java.math.BigDecimal;
 
+import org.egov.asset.model.enums.DepreciationMethod;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,40 +14,50 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DepreciationInputs {
-	
-	private String assetCode;
 
-	private Long assetId;
-	
-	private Long lastDepreciationDate;
+    private String assetCode;
+    
+    private String assetName;
 
-	private String tenantId;
+    private Long assetId;
 
-	private BigDecimal grossValue;
-	
-	private BigDecimal originalValue;
+    private Long lastDepreciationDate;
 
-	private BigDecimal accumulatedDepreciation;
+    private String tenantId;
 
-	private Long assetCategory;
+    private BigDecimal grossValue;
 
-	private Double depreciationRate;
+    private BigDecimal originalValue;
 
-	private BigDecimal currentValue;
+    private BigDecimal accumulatedDepreciation;
 
-	private BigDecimal depreciationSum;
-	
-	private Long dateOfCreation;
-	
-	private String assetaccount;
-	
-	private String accumulateddepreciationaccount;
-	
-	private String revaluationreserveaccount;
-	
-	private String depreciationexpenseaccount;
-	
-	private Boolean enableYearwiseDepreciation ;
-	
-	private Double yearwiseDepreciationRate;
+    private Long assetCategory;
+    
+    private String assetCategoryName;
+
+    private Double depreciationRate;
+
+    private BigDecimal currentValue;
+
+    private BigDecimal depreciationSum;
+
+    private Long dateOfCreation;
+
+    private String assetaccount;
+
+    private Long accumulatedDepreciationAccount;
+
+    private Long depreciationExpenseAccount;
+
+    private String revaluationreserveaccount;
+
+    private Boolean enableYearwiseDepreciation;
+
+    private Double yearwiseDepreciationRate;
+
+    private DepreciationMethod depreciationMethod;
+    
+    private String financialyear;
+    
+    private Long department;
 }

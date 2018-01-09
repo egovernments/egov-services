@@ -32,6 +32,7 @@ import org.egov.asset.model.DepreciationInputs;
 import org.egov.asset.model.DepreciationReportCriteria;
 import org.egov.asset.model.VoucherAccountCodeDetails;
 import org.egov.asset.model.enums.AssetConfigurationKeys;
+import org.egov.asset.model.enums.DepreciationMethod;
 import org.egov.asset.model.enums.DepreciationStatus;
 import org.egov.asset.model.enums.ReasonForFailure;
 import org.egov.asset.model.enums.Sequence;
@@ -386,8 +387,9 @@ public class DepreciationService {
 
             // adding the depreciation detail object to list
             depDetList.add(DepreciationDetail.builder().assetId(depreciation.getAssetId()).reasonForFailure(reason)
-                    .assetCode(depreciation.getAssetCode())
-                    .depreciationRate(depreciation.getDepreciationRate()).depreciationValue(amtToBeDepreciatedRounded)
+                    .assetCode(depreciation.getAssetCode()).assetName(depreciation.getAssetName())
+                    .assetCategoryName(depreciation.getAssetCategoryName()).department(depreciation.getDepartment())
+                    .depreciationRate(depreciationRate).depreciationValue(amtToBeDepreciatedRounded)
                     .fromDate(invidualFromDate)
                     .valueAfterDepreciation(valueAfterDepRounded).valueBeforeDepreciation(depreciation.getCurrentValue())
                     .status(status)
@@ -431,12 +433,12 @@ public class DepreciationService {
         log.info("dep rate for given period is : " + depRateForGivenPeriod);
 
         // returning the calculated amt to be depreciated using the grossvalue from
-        // dep inputs and depreciation rate for given period
-        if (depInputs.getDepreciationSum() != null)
+        // dep inputs and depreciation rate for given period ,straight line method 
+        if (depInputs.getDepreciationSum() != null && depInputs.getDepreciationMethod().equals(DepreciationMethod.STRAIGHT_LINE_METHOD))
             return BigDecimal.valueOf((depInputs.getCurrentValue()).add(depInputs.getDepreciationSum()).doubleValue()
                     * (depRateForGivenPeriod / 100));
         else
-
+            //written down value method
             return BigDecimal.valueOf((depInputs.getCurrentValue()).doubleValue() * (depRateForGivenPeriod / 100));
 
     }

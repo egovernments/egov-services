@@ -28,9 +28,12 @@ public class DepreciationDetail {
     
     private String assetCode;
     
+    private String assetName;
+    
     @JsonProperty("fromDate")
     private Long fromDate;
 
+    private String assetCategoryName;
 
     @JsonProperty("status")
     private DepreciationStatus status = null;
@@ -50,4 +53,6 @@ public class DepreciationDetail {
     private String voucherReference;
 
     private ReasonForFailure reasonForFailure;
+    
+    private Long department;
 }

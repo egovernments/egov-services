@@ -2599,6 +2599,35 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /pricelists/_gettenderusedquantity:
+      post:
+        summary: Get the value of usedQuantity of a material of priceList whose ratetype is One Time Tender.
+        description: Tells how much quantity from the pricelist is used by purchaseOrders.
+        tags:
+          - PriceList
+        parameters:
+          - name: material
+            type: string
+            items:
+             type: string
+            in: query
+            description: |
+              Name of the material whose usedQuantity we want to find.
+          - name: priceListId
+            type: string
+            in: query
+            description: |
+              reference no of the priceList in which we want to find the usedQuantity
+        responses:
+          200:
+            description: PriceList retrieved Successfully
+            schema:
+              $ref: '#/definitions/PriceListResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
     /pricelists/_create:
       post:
         summary: Create new pricelist
@@ -5226,12 +5255,15 @@ definitions:
         quantity:
           type: number
           format: double
+        tenderUsedQuantity:
+          type: number
+          format: BigDecimal
         uom:
           $ref: "#/definitions/Uom"
         active:
           type: boolean
           description: Active or inactive flag of the material in the system
-        isDeleted:
+        deleted:
           type: boolean
           description: Delete flag of the material in the system
         auditDetails:

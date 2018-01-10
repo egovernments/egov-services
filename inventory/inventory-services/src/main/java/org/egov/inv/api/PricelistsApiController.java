@@ -1,5 +1,7 @@
 package org.egov.inv.api;
 
+import io.swagger.annotations.ApiParam;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -9,6 +11,7 @@ import org.egov.inv.domain.service.PriceListService;
 import org.egov.inv.model.PriceListRequest;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.swagger.annotations.ApiParam;
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
 @Controller
@@ -29,10 +30,13 @@ public class PricelistsApiController implements PricelistsApi {
 
     private PriceListService priceListService;
     
+    private PurchaseOrderJdbcRepository purchaseOrderJdbcRepository;
+    
     @Autowired
-    public PricelistsApiController(ObjectMapper objectMapper, PriceListService priceListService) {
+    public PricelistsApiController(ObjectMapper objectMapper, PriceListService priceListService, PurchaseOrderJdbcRepository purchaseOrderJdbcRepository) {
 		this.objectMapper = objectMapper;
 		this.priceListService = priceListService;
+		this.purchaseOrderJdbcRepository = purchaseOrderJdbcRepository;
     }
     
     public ResponseEntity<PriceListResponse> pricelistsCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
@@ -74,11 +78,16 @@ public class PricelistsApiController implements PricelistsApi {
 
             return new ResponseEntity<PriceListResponse>(priceListService.search(priceListSearchRequest, requestInfo), HttpStatus.OK);
         }
-    
+
     public ResponseEntity<PriceListResponse> pricelistsUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
             @ApiParam(value = "common Request info"  )  @Valid @RequestBody PriceListRequest pricelistRequest,
             @RequestHeader(value = "Accept", required = false) String accept) throws Exception {
     	return new ResponseEntity<PriceListResponse>(priceListService.update(pricelistRequest, tenantId), HttpStatus.OK);
     }
+
+    public ResponseEntity<PriceListResponse> pricelistsGettenderusedquantityPost(@ApiParam(value = "Name of the material whose usedQuantity we want to find. ") @RequestParam(value = "material", required = false) String material,
+            @ApiParam(value = "reference no of the priceList in which we want to find the usedQuantity ") @RequestParam(value = "priceListId", required = false) String priceListId) {
+    		return new ResponseEntity<PriceListResponse>(priceListService.getTenderUsedQty(material, priceListId), HttpStatus.OK);
+        }
 
 }

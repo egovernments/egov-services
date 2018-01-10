@@ -31,6 +31,7 @@ import org.egov.inv.persistence.repository.MaterialJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListDetailJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListRepository;
+import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierJdbcRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,9 @@ public class PriceListService extends DomainService {
 
     @Autowired
     private PriceListDetailJdbcRepository priceListDetailsJdbcRepository;
+    
+    @Autowired
+    private PurchaseOrderJdbcRepository purchaseOrderJdbcRepository;
 
     @Autowired
     private MaterialJdbcRepository materialJdbcRepository;
@@ -419,4 +423,10 @@ public class PriceListService extends DomainService {
 		 return s2;
 	 }
 
+	public PriceListResponse getTenderUsedQty(String material, String priceListId){
+		PriceListResponse plr = new PriceListResponse();
+		plr.setPriceLists(Arrays.asList(PriceList.builder().priceListDetails(Arrays.asList(PriceListDetails.builder().tenderUsedQuantity(purchaseOrderJdbcRepository.getTenderUsedQty(material, priceListId)).build())).build()));
+		return plr;
+	}
+    
 }

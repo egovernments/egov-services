@@ -1,5 +1,6 @@
 package org.egov.inv.persistence.repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -122,6 +123,21 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	    if(usedQty == null)
 	    	return 0l;
 	    return usedQty;
+	}
+	
+	//TODO : expose this api to web layer
+	// Consider status not in rejected,cancelled
+
+	public BigDecimal getTenderUsedQty(String material, String priceListId){
+
+	String usedQtyQuery = "select sum(orderquantity) from purchaseorderdetail pod, purchaseorder po where po.purchaseordernumber = pod.purchaseorder and po.status != 'rejected' and pod.pricelist = :pricelistid and pod.material=:material";
+	Map params=new HashMap<String,Object>();
+	params.put("material",material);
+	params.put("pricelistid",priceListId);
+	BigDecimal usedQty=namedParameterJdbcTemplate.queryForObject(usedQtyQuery, params, BigDecimal.class);
+	if(usedQty == null)
+	return BigDecimal.ZERO;
+	return usedQty;
 	}
 	
 	public boolean getIsIndentValidForPOCreate(String indentNumber) {

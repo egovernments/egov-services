@@ -42,6 +42,17 @@ public interface PricelistsApi {
     ResponseEntity<PriceListResponse> pricelistsCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create new pricelist"  )  @Valid @RequestBody PriceListRequest priceListRequest,  @RequestHeader(value = "Accept", required = false) String accept) throws Exception;
 
 
+    @ApiOperation(value = "Get the value of usedQuantity of a material of priceList whose ratetype is One Time Tender.", notes = "Tells how much quantity from the pricelist is used by purchaseOrders.", response = PriceListResponse.class, tags={ "PriceList", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "PriceList retrieved Successfully", response = PriceListResponse.class),
+        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
+    
+    @RequestMapping(value = "/pricelists/_gettenderusedquantity",
+            produces = { "application/json" }, 
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+        ResponseEntity<PriceListResponse> pricelistsGettenderusedquantityPost(@ApiParam(value = "Name of the material whose usedQuantity we want to find. ") @RequestParam(value = "material", required = false) String material,@ApiParam(value = "reference no of the priceList in which we want to find the usedQuantity ") @RequestParam(value = "priceListId", required = false) String priceListId);
+
     @ApiOperation(value = "Get the list of common pricelist information", notes = "PriceList is parent object that holds the common information for both.", response = PriceListResponse.class, tags={ "PriceList", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "PriceList retrieved Successfully", response = PriceListResponse.class),

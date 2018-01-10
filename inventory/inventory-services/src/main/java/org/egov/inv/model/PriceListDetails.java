@@ -3,6 +3,7 @@ package org.egov.inv.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This object holds information about materials from different suppliers. 
+ * This object holds information about materials from different suppliers.
  */
 @ApiModel(description = "This object holds information about materials from different suppliers. ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
@@ -46,6 +47,9 @@ public class PriceListDetails   {
 
   @JsonProperty("quantity")
   private Double quantity = null;
+  
+  @JsonProperty("tenderUsedQuantity")
+  private BigDecimal tenderUsedQuantity = null;
 
   @JsonProperty("uom")
   private Uom uom = null;
@@ -218,6 +222,27 @@ public class PriceListDetails   {
     this.quantity = quantity;
   }
 
+
+  public PriceListDetails tenderUsedQuantity(BigDecimal tenderUsedQuantity) {
+    this.tenderUsedQuantity = tenderUsedQuantity;
+    return this;
+  }
+
+  /**
+   * Get tenderUsedQuantity
+   * @return tenderUsedQuantity
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public BigDecimal getTenderUsedQuantity() {
+    return tenderUsedQuantity;
+  }
+
+  public void setTenderUsedQuantity(BigDecimal tenderUsedQuantity) {
+    this.tenderUsedQuantity = tenderUsedQuantity;
+  }
+  
   public PriceListDetails uom(Uom uom) {
     this.uom = uom;
     return this;
@@ -317,6 +342,7 @@ public class PriceListDetails   {
         Objects.equals(this.toDate, priceListDetails.toDate) &&
         Objects.equals(this.ratePerUnit, priceListDetails.ratePerUnit) &&
         Objects.equals(this.quantity, priceListDetails.quantity) &&
+        Objects.equals(this.tenderUsedQuantity, priceListDetails.tenderUsedQuantity) &&
         Objects.equals(this.uom, priceListDetails.uom) &&
         Objects.equals(this.active, priceListDetails.active) &&
         Objects.equals(this.auditDetails, priceListDetails.auditDetails);
@@ -324,7 +350,7 @@ public class PriceListDetails   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, material, fromDate, toDate, ratePerUnit, quantity, uom, active, auditDetails);
+    return Objects.hash(id, tenantId, material, fromDate, toDate, ratePerUnit, quantity, tenderUsedQuantity, uom, active, auditDetails);
   }
 
   @Override
@@ -339,6 +365,7 @@ public class PriceListDetails   {
     sb.append("    toDate: ").append(toIndentedString(toDate)).append("\n");
     sb.append("    ratePerUnit: ").append(toIndentedString(ratePerUnit)).append("\n");
     sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
+    sb.append("    tenderUsedQuantity: ").append(toIndentedString(tenderUsedQuantity)).append("\n");
     sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");

@@ -242,7 +242,8 @@ public class DataUploadService {
 				    	logger.info("Writing SUCCESS ROW to excel....: "+row);
 						dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 				    }
-				}			
+				}
+
 		}
 		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());

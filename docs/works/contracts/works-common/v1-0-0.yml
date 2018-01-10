@@ -963,15 +963,11 @@ definitions:
         maxLength: 128
         minLength: 2
       typeOfDocument:
-        type: string
+        $ref: '#/definitions/TypeOfDocument'
         description: Type Of Document of the Remarks Master
-        maxLength: 100
-        minLength: 1
       remarksType:
-        type: string
+        $ref: '#/definitions/RemarksType'
         description: Remarks Type of the Remarks Master
-        maxLength: 100
-        minLength: 1
       remarksDetails:
         type: array
         minItems: 1
@@ -1316,7 +1312,7 @@ definitions:
       code:
         type: string
         description: Status Code
-        pattern: '[a-zA-Z0-9-_\\]+'
+        pattern: '[a-zA-Z-_]+'
         maxLength: 100
         minLength: 1  
       description:
@@ -1326,7 +1322,7 @@ definitions:
       moduleType:
         type: string
         description: Type of Module
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z-_]+'
         maxLength: 100
         minLength: 1   
       orderNumber:
@@ -1336,6 +1332,52 @@ definitions:
     required:
       - code
       - moduleType
+      - tenantId
+      
+  RemarksType:
+    type: object
+    description: An Object that holds objrct of Remarks Type
+    properties:
+      tenantId:
+        type: string
+        description: Tenant id of the Remarks Type
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: Code of Remarks Type
+        pattern: '[a-zA-Z-_]+'
+        maxLength: 100
+        minLength: 1  
+      name:
+          type: string
+          maxLength: 256
+          description: name of Remarks Type
+    required:
+      - code
+      - tenantId
+      
+  TypeOfDocument:
+    type: object
+    description: An Object that holds object of TypeOfDocument
+    properties:
+      tenantId:
+        type: string
+        description: Tenant id of the Type Of Document
+        maxLength: 128
+        minLength: 2
+      code:
+        type: string
+        description: Code of Type Of Document
+        pattern: '[a-zA-Z-_]+'
+        maxLength: 100
+        minLength: 1  
+      name:
+          type: string
+          maxLength: 256
+          description: name of Type Of Document
+    required:
+      - code
       - tenantId
 
 parameters:
@@ -1365,5 +1407,6 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 
 

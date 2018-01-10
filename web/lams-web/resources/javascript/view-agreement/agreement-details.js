@@ -192,7 +192,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="code" name="code">
-                                            { "N/A"}
+                                            { asset.name ? asset.name :"N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -204,7 +204,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="code" name="code">
-                                            { "N/A"}
+                                            { asset.code ? asset.code :"N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -218,7 +218,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="assetCategoryType" name="assetCategoryType">
-                                            { "N/A"}
+                                            { assetCategory.name ? assetCategory.name : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="locationDetails.locality" name="locationDetails.locality">
-                                            { "N/A"}
+                                            {locationDetails.locality ? locationDetails.locality:"N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -252,11 +252,11 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="locationDetails.revenueWard">Revenue Ward :</label>
+                                        <label htmlFor="revenueWard">Revenue Ward :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <label id="locationDetails.revenueWard" name="locationDetails.revenueWard">
-                                            {"N/A"}
+                                        <label id="revenueWard" name="revenueWard">
+                                            {locationDetails.revenueWard? locationDetails.revenueWard :"N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="Block" name="Block">
-                                            {"N/A"}
+                                          {locationDetails.block? locationDetails.block :"N/A"}
                                         </label>
                                     </div>
 
@@ -279,11 +279,11 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="locationDetails.zone">Revenue Zone :</label>
+                                        <label htmlFor="zone">Revenue Zone :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <label id="locationDetails.zone" name="locationDetails.zone">
-                                            {"N/A"}
+                                        <label id="zone" name="zone">
+                                            {locationDetails.zone?locationDetails.zone :"N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -306,7 +306,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="allotteeName" name="allotteeName">
-                                            {allottee.id ? allottee.id : "N/A"}
+                                            {allottee.name ? allottee.name : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -318,7 +318,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="mobileNumber" name="mobileNumber">
-                                            {allottee.id ? allottee.id : "N/A"}
+                                            {allottee.mobileNumber ? allottee.mobileNumber : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -332,7 +332,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="aadhaarNumber" name="aadhaarNumber">
-                                            {allottee.id ? allottee.id : "N/A"}
+                                            {allottee.aadhaarNumber ? allottee.aadhaarNumber : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -344,7 +344,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="panNo" name="panNo" >
-                                            {allottee.id ? allottee.id : "N/A"}   </label>
+                                            {allottee.pan ? allottee.pan : "N/A"}   </label>
                                     </div>
                                 </div>
                             </div>
@@ -357,7 +357,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="emailId" name="emailId">
-                                            {allottee.id ? allottee.id : "N/A"}
+                                            {allottee.emailId ? allottee.emailId : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -369,7 +369,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="address" name="address">
-                                            {allottee.id ? allottee.id : "N/A"}
+                                            {allottee.permanentAddress ? allottee.permanentAddress : "N/A"}
                                         </label>
                                     </div>
                                 </div>

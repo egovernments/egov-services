@@ -150,13 +150,8 @@ public class MovementService {
 			e.printStackTrace();
 		}
 		try {
-
-			// movementProducer.sendMessage(movementCreateTopic,
-			// movementCreateKey,
-			// movementRequestJson);
-
-			kafkaTemplate.send(movementCreateTopic, movementRequest);
-
+			if (movementsList.size() > 0 && movementsList.get(0).getEmployeeAcceptance())
+				create(movementRequest);
 		} catch (final Exception ex) {
 			ex.printStackTrace();
 		}

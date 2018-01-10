@@ -3,6 +3,7 @@ package org.egov.filter.utils;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,9 @@ import org.egov.filter.model.Response;
 import org.egov.filter.model.ResponseParam;
 import org.egov.filter.model.Service;
 import org.egov.filter.model.SourceInEnum;
+import org.egov.filter.model.TypeEnum;
+import org.egov.filter.pre.AuthFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -46,10 +50,13 @@ public class ReqResConstructor {
 	private Map<String, List<String>> queryParamMap;
 
 	private String authToken;
+	
+	@Autowired
+	private ResponseFieldDataConverterUtil responseFieldDataConverterUtil;
 
 	public void constructRequest(Service service, RequestContext ctx) {
 
-		authToken = (String) ctx.get(FilterConstant.REQ_TOKEN_KEY);
+		authToken = AuthFilter.getAuthToken();
 
 		parseRequest(ctx);
 		parseQueryString(ctx);
@@ -60,16 +67,17 @@ public class ReqResConstructor {
 			String basePath = request.getBasePath();
 
 			if (basePath == null || !basePath.contains("*")) {
-				/*basePath = basePath.replace("*", "length()");
-				int objLength = reqBodyDc.read(basePath);
-				for (int i = 0; i < objLength; i++) {*/
+				/*
+				 * basePath = basePath.replace("*", "length()"); int objLength =
+				 * reqBodyDc.read(basePath); for (int i = 0; i < objLength; i++) {
+				 */
 				String url = constructReqUrl(request, ctx, null);
 				String body = constructReqBody(request, null);
 				String response = doServiceCall(url, body);
 				String jsonResponse = parseResponse(request, service.getFinalResponse(), response);
 				ctx.set(FilterConstant.RESPONSE_BODY, jsonResponse);
-				System.out.println("final Response:"+service.getFinalResponse());
-				//}
+				System.out.println("final Response:" + service.getFinalResponse());
+				// }
 
 			} else {
 				basePath = basePath.replace("*", "length()");
@@ -79,7 +87,7 @@ public class ReqResConstructor {
 					String body = constructReqBody(request, String.valueOf(i));
 					String response = doServiceCall(url, body);
 					parseResponse(request, service.getFinalResponse(), response);
-					System.out.println("final Response:"+service.getFinalResponse());
+					System.out.println("final Response:" + service.getFinalResponse());
 				}
 			}
 		}
@@ -202,12 +210,12 @@ public class ReqResConstructor {
 	}
 
 	public String doServiceCall(String url, String body) {
-		
-		log.info("ulr:"+url+"  ,  "+"body:"+ body);
+
+		log.info("ulr:" + url + "  ,  " + "body:" + body);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + authToken);
 		HttpEntity<String> entity = null;
-		if(body != null) {
+		if (body != null) {
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			entity = new HttpEntity<String>(body, headers);
 		} else {
@@ -235,7 +243,7 @@ public class ReqResConstructor {
 
 	private String parseResponse(Request request, FinalResponse finalResponse, String response) {
 
-		log.info("parseResponse.."+response);
+		log.info("parseResponse.." + response);
 		DocumentContext finalResDc = JsonPath.parse(finalResponse.getBody());
 		JSONArray finalResArray = finalResDc.read(finalResponse.getBasePath());
 		// String finalResJson = (String) finalResArray.get(0);
@@ -244,50 +252,50 @@ public class ReqResConstructor {
 		DocumentContext responseDc = JsonPath.parse(response);
 		Response responsePath = request.getResponse();
 		String resBasePath = responsePath.getBasePath();
-		log.info("parseResponse resBasePath:"+resBasePath);
+		log.info("parseResponse resBasePath:" + resBasePath);
 		if (resBasePath.contains("*")) {
 			// resBasePath = resBasePath.replace("[*]", "length()");
 
-			log.info("parseResponse resBasePath.replaceFirst.length():"+resBasePath.replaceFirst("\\[\\*\\]", ".length()"));
+			log.info("parseResponse resBasePath.replaceFirst.length():"
+					+ resBasePath.replaceFirst("\\[\\*\\]", ".length()"));
 			int objLength = responseDc.read(resBasePath.replaceFirst("\\[\\*\\]", ".length()"));
 			List<Object> list = new ArrayList<>();
-			
-			//finalResArray.clear();
+
+			// finalResArray.clear();
 			for (int i = 0; i < objLength; i++) {
 				for (ResponseParam responseParam : request.getResponse().getResponseParams()) {
-					log.info("Destination:"+responseParam.getDestination().replace(finalResponse.getBasePath(), "$"));
-					log.info("responseParam.getSource().replace(\"*\", String.valueOf(i))):"+responseParam.getSource().replace("*", String.valueOf(i)));
-					log.info("Source::"+responseDc.read(responseParam.getSource().replace("*", String.valueOf(i))));
-					finalResObjDc.set(responseParam.getDestination().replace(finalResponse.getBasePath(), "$"), 
-							responseDc.read(responseParam.getSource().replace("*", String.valueOf(i))));
-					log.info("parseResponse finalResObjDc:"+finalResObjDc.jsonString());
-					
+					log.info("Destination:" + responseParam.getDestination().replace(finalResponse.getBasePath(), "$"));
+					log.info("responseParam.getSource().replace(\"*\", String.valueOf(i))):"
+							+ responseParam.getSource().replace("*", String.valueOf(i)));
+					log.info("Source::" + responseDc.read(responseParam.getSource().replace("*", String.valueOf(i))));
+					responseFieldDataConverterUtil.setResponse(finalResObjDc, responseParam, finalResponse, responseDc, i);
+
 				}
-				//finalResArray.add(finalResObjDc.json());
+				// finalResArray.add(finalResObjDc.json());
 				list.add(finalResObjDc.json());
 				try {
-					finalResObjDc = JsonPath.parse(new String(new ObjectMapper().writeValueAsString(finalResArray.get(0))));
+					finalResObjDc = JsonPath
+							.parse(new String(new ObjectMapper().writeValueAsString(finalResArray.get(0))));
 				} catch (JsonProcessingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				System.out.println("i:"+i+","+"list:"+list);
-				
+
+				System.out.println("i:" + i + "," + "list:" + list);
+
 			}
-			//finalResArray.add(list);
-			
-			log.info("list:"+list);
-			log.info("finalResArray:"+finalResArray);
-			log.info("finalResObjDc::"+finalResObjDc.jsonString());
+			// finalResArray.add(list);
+
+			log.info("list:" + list);
+			log.info("finalResArray:" + finalResArray);
+			log.info("finalResObjDc::" + finalResObjDc.jsonString());
 			String key = finalResponse.getBasePath().replace("$.", "");
 			key = key.replaceFirst("\\[\\*\\]", "");
-			log.info("key::"+key);
+			log.info("key::" + key);
 			finalResDc.put("$", key, list);
-			
-			log.info("finalResDc: "+finalResDc.jsonString());
-			
-			
+
+			log.info("finalResDc: " + finalResDc.jsonString());
+
 		}
 
 		/*
@@ -297,4 +305,5 @@ public class ReqResConstructor {
 		 */
 		return finalResDc.jsonString();
 	}
+
 }

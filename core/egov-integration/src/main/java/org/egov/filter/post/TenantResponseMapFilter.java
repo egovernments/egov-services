@@ -39,7 +39,13 @@ public class TenantResponseMapFilter extends ZuulFilter {
 		System.out.println("TenantResponseMapFilter");
 		DocumentContext resDc = JsonPath.parse((String)ctx.get(FilterConstant.RESPONSE_BODY));
 		
-		JSONArray jsonArray = resDc.read("$.tenant");
+		JSONArray jsonArray = null;
+		boolean isTenantMdms = ctx.getBoolean(FilterConstant.TENANT_MODULE_MASTER);
+		if(isTenantMdms) {
+			jsonArray = resDc.read("$.MdmsRes.tenant.tenants");
+		} else {
+			jsonArray = resDc.read("$.tenant");
+		}
 		
 		Map<String, Map<String,String>> tenantMap = null;
 		ObjectMapper mapper = new ObjectMapper();
@@ -60,7 +66,14 @@ public class TenantResponseMapFilter extends ZuulFilter {
 			jsonArray.set(i, linkedHashMap);
 		}
 		
-		resDc.put("$", "tenant", jsonArray);
+		
+		if(isTenantMdms) {
+			//resDc.read(".tenants");
+			resDc.put("$.MdmsRes.tenant", "tenants", jsonArray);
+		} else {
+			resDc.put("$", "tenant", jsonArray);
+		}
+		
 		ctx.set(FilterConstant.RESPONSE_BODY, resDc.jsonString());
 		return null;
 	}
@@ -70,6 +83,8 @@ public class TenantResponseMapFilter extends ZuulFilter {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		String reqUri = ctx.getRequest().getRequestURI();
 		if(reqUri.equals(shouldFilter))
+			return true;
+		else if(ctx.getBoolean(FilterConstant.TENANT_MODULE_MASTER))
 			return true;
 		
 		return false;

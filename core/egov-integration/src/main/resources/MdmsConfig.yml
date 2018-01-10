@@ -18,32 +18,39 @@ mdms:
           responseParams:
            - source: $.resultData[*].depId
              destination: $.id
+             sourceType: INT
+             destType: STRING
            - source: $.resultData[*].depCode
              destination: $.code
            - source: $.resultData[*].depNameEn
              destination: $.name
            - source: $.resultData[*].depStatus
              destination: $.active
+             sourceType: INT
+             destType: BOOLEAN
+             valueMapping:
+              - 0=false
+              - 1=true
              
-           
-    - masterName: UomCategory
+ - moduleName: tenant
+   masterDetails: 
+    - masterName: tenants
       finalResponse: 
-        body: '{"id":null,"name":null,"code":null,"active":null,"tenantId":null}'       
-        basePath: $.banks[*]
+        body: '{"code":null,"name":null,"description":null,"logoId":null,"imageId":null,"domainUrl":null,"type":null,"twitterUrl":null,"facebookUrl":null,"emailId":null,"city":{"name":null,"localName":null,"districtCode":null,"districtName":null,"regionName":null,"ulbGrade":null,"longitude":null,"latitude":null,"shapeFileLocation":null,"captcha":null,"code":null},"address":null,"contactNumber":null,"helpLineNumber":null}'
       requests:       
-       - url: /MahaULBAPI/rest/common/bankmaster/bankmasterlist
-         basePath: $.EstateRegisters
+       - url: /MahaULBAPI/rest/common/ulb/ulblist
+         type: POST
+         basePath: 
          queryParams:
          pathParams:
          headerParams:
-         body: '{"status":{0}}'
+         body: 
          bodyParams:
-          - source: id
-            in: query
-    
          response:
           basePath: $.resultData[*]
           responseParams:
-           - source: $.resultData[*].bankId
-             destination: $.id
-           - source: $.resultData[*]
+           - source: $.resultData[*].id
+             destination: $.code
+           - source: $.resultData[*].desc
+             destination: $.name
+            

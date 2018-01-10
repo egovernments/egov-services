@@ -17,6 +17,9 @@ import org.egov.filter.model.Request;
 import org.egov.filter.model.Response;
 import org.egov.filter.model.ResponseParam;
 import org.egov.filter.model.SourceInEnum;
+import org.egov.filter.model.TypeEnum;
+import org.egov.filter.pre.AuthFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -60,6 +63,9 @@ public class MdmsReqResConstructor {
 
 	@Value("${egov.innowave.host}")
 	private String innowaveHost;
+	
+	@Autowired
+	private ResponseFieldDataConverterUtil responseFieldDataConverterUtil;
 
 	public void constructRequest(RequestContext ctx, String resBody) {
 		resToDc(resBody);
@@ -129,7 +135,7 @@ public class MdmsReqResConstructor {
 
 	private void findConfigForMaster(Map<String, List<RequestMaster>> integrationModuleMasterMap, RequestContext ctx) {
 
-		authToken = (String) ctx.get(FilterConstant.REQ_TOKEN_KEY);
+		authToken = AuthFilter.getAuthToken();;
 
 		Map<String, Map<String, MasterDetail>> mdmsConfigModuleMap = ReadConfiguration.getMdmsConfigMap();
 
@@ -140,6 +146,13 @@ public class MdmsReqResConstructor {
 			for (RequestMaster requestMaster : reqstedMasters) {
 				MasterDetail masterDetail = mdmsConfigMasterMap.get(requestMaster.getMasterName());
 				constructRequest(moduleName, masterDetail, ctx);
+				String moduleMasterKey = moduleName +"-"+ masterDetail.getMasterName();
+				if(moduleMasterKey.equals(FilterConstant.TENANT_MODULE_MASTER)) {
+					ctx.set(FilterConstant.TENANT_MODULE_MASTER, true);
+				} else {
+					ctx.set(FilterConstant.TENANT_MODULE_MASTER, false);
+				}
+				
 			}
 		}
 	}
@@ -346,8 +359,7 @@ public class MdmsReqResConstructor {
 				log.info("Destination:"+responseParam.getDestination());
 			//	log.info("responseParam.getSource().replace(\"*\", String.valueOf(i))):"+responseParam.getSource().replace("*", String.valueOf(i)));
 			//	log.info("Source::"+responseDc.read(responseParam.getSource().replace("*", String.valueOf(i))));
-				finalResponseDc.set(responseParam.getDestination(), 
-						responseDc.read(responseParam.getSource().replace("*", String.valueOf(i))));
+				responseFieldDataConverterUtil.setResponse(finalResponseDc, responseParam, finalResponse, responseDc, i);
 				log.info("parseResponse finalResObjDc:"+finalResponseDc.jsonString());
 				
 			}
@@ -372,5 +384,4 @@ public class MdmsReqResConstructor {
 	}
 	
 	
-
 }

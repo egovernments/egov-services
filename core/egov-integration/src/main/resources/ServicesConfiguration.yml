@@ -93,18 +93,21 @@ services:
           basePath: $.resultData[*]
           responseParams:
            - source: $.resultData[*].depId
-             destination: $.id
+             destination: $.Department[*].id
+             sourceType: INT
+             destType: STRING
            - source: $.resultData[*].depCode
-             destination: $.code
+             destination: $.Department[*].code
            - source: $.resultData[*].depNameEn
-             destination: $.name
+             destination: $.Department[*].name
            - source: $.resultData[*].depStatus
-             destination: $.active
+             destination: $.Department[*].active
              sourceType: INT
              destType: BOOLEAN
              valueMapping:
-              - 0=true
-              - 1=false
+              - 0=false
+              - 1=true
+             
              
  
  - name: Get Tenant

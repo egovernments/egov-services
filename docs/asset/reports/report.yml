@@ -913,6 +913,11 @@ ReportDefinitions:
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
     stateData: true
+  - entity: $.MdmsRes.ASSET.AssetCategory
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid
+    keyOrder: id,name,tenantId,depreciationRate,parent
+    tableName: tbl_assetcategories
+    stateData: true
   sourceColumns:
   - name: assetparentcategoryname
     label: reports.asset.assetparentcategoryname
@@ -1078,9 +1083,7 @@ ReportDefinitions:
     currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid
     left outer join ( select assetSubcategory.name as assetsubcategoryname,CASE WHEN assetSubcategory.depreciationrate='null' THEN 'NA' WHEN assetSubcategory.depreciationrate='' THEN 'NA' ELSE assetSubcategory.depreciationrate END,
     assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
-    ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId)
-    inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as
-    assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid
+    ac.name as assetparentcategoryname from (VALUES tbl_assetcategories) as assetSubcategory (id,name,depreciationRate,parent,tenantId)
     WHERE asset.tenantid=$tenantid
 
 - reportName: LandRegister

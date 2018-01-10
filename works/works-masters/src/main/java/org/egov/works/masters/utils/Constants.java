@@ -147,4 +147,8 @@ public class Constants {
 
     public static final String KEY_REMARKS_TYPE_INVALID="REMARKS_TYPE_INVALID";
     public static final String MESSAGE_REMARKS_TYPE_INVALID="Invalid data for Remarks type";
+    
+    public static final String KEY_REMARKS_TYPEOFDOCUMENT_INVALID="works.remarks.typeofdocument.invalid";
+    public static final String MESSAGE_REMARKS_TYPEOFDOCUMENT_INVALID="Invalid data for Type Of Document";
+    
 }

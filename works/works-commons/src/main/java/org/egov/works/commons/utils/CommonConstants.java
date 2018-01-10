@@ -57,6 +57,8 @@ public class CommonConstants {
     public static final String WORKFLOW_REQUIRED_APPCONFIG = "Workflow_Required";
     public static final String WORKS_STATUS_APPCONFIG = "WorksStatus";
     public static final String FINANCIALYEAR_OBJECT = "FinancialYear";
+    public static final String TYPE_OF_DOCUMENT = "TypeOfDocument";
+    public static final String REMARKS_TYPE = "RemarksType";
 
     
     public static  final String TENANT_MODULENAME = "tenant";

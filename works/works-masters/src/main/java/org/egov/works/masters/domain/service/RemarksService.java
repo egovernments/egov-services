@@ -12,8 +12,11 @@ import org.egov.works.masters.utils.Constants;
 import org.egov.works.masters.utils.MasterUtils;
 import org.egov.works.masters.web.contract.*;
 import org.egov.works.masters.web.contract.RequestInfo;
+import org.egov.works.masters.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import net.minidev.json.JSONArray;
 
 import java.util.HashMap;
 
@@ -32,9 +35,12 @@ public class RemarksService {
     @Autowired
     private RemarksRepository remarksRepository;
 
+    @Autowired
+    private MdmsRepository mdmsRepository;
+
     public RemarksResponse create(RemarksRequest remarksRequest) {
         validateRemarks(remarksRequest);
-        AuditDetails auditDetails = masterUtils.getAuditDetails(remarksRequest.getRequestInfo(),false);
+        AuditDetails auditDetails = masterUtils.getAuditDetails(remarksRequest.getRequestInfo(), false);
         CommonUtils commonUtils = new CommonUtils();
         for (Remarks remarks : remarksRequest.getRemarks()) {
             remarks.setId(commonUtils.getUUID());
@@ -54,15 +60,15 @@ public class RemarksService {
     }
 
     public RemarksResponse update(RemarksRequest remarksRequest) {
-        AuditDetails auditDetails = masterUtils.getAuditDetails(remarksRequest.getRequestInfo(),false);
+        AuditDetails auditDetails = masterUtils.getAuditDetails(remarksRequest.getRequestInfo(), false);
         CommonUtils commonUtils = new CommonUtils();
         for (Remarks remarks : remarksRequest.getRemarks()) {
-            if(StringUtils.isBlank(remarks.getId()))
-              remarks.setId(commonUtils.getUUID());
+            if (StringUtils.isBlank(remarks.getId()))
+                remarks.setId(commonUtils.getUUID());
             remarks.setAuditDetails(auditDetails);
             for (RemarksDetail remarksDetail : remarks.getRemarksDetails()) {
-                if(StringUtils.isBlank(remarksDetail.getId()))
-                  remarksDetail.setId(commonUtils.getUUID());
+                if (StringUtils.isBlank(remarksDetail.getId()))
+                    remarksDetail.setId(commonUtils.getUUID());
                 remarksDetail.setAuditDetails(auditDetails);
                 remarksDetail.setRemarks(remarks.getId());
             }
@@ -75,7 +81,7 @@ public class RemarksService {
         return response;
     }
 
-    public RemarksResponse search(RemarksSearchContract remarksSearchContract, final RequestInfo requestInfo ) {
+    public RemarksResponse search(RemarksSearchContract remarksSearchContract, final RequestInfo requestInfo) {
         RemarksResponse remarksResponse = new RemarksResponse();
         remarksResponse.setRemarks(remarksRepository.search(remarksSearchContract));
         remarksResponse.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(requestInfo, true));
@@ -86,12 +92,19 @@ public class RemarksService {
         HashMap<String, String> messages = new HashMap<>();
 
         for(Remarks remarks : remarksRequest.getRemarks()) {
-            if(remarks.getTypeOfDocument().equalsIgnoreCase(CommonConstants.WORKORDER) && !(remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_APPROVAL) || remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_REJECTION)))
-                 messages.put(Constants.KEY_REMARKS_TYPE_INVALID,  Constants.MESSAGE_REMARKS_TYPE_INVALID);
-
-            if(remarks.getTypeOfDocument().equalsIgnoreCase(CommonConstants.NOTICE) && !remarks.getRemarksType().equalsIgnoreCase(Constants.REMARKS_TYPE_SHOWCAUSE))
+            JSONArray responseJSONArray = mdmsRepository.getByCriteria(remarks.getTenantId(), CommonConstants.MODULENAME_WORKS, CommonConstants.TYPE_OF_DOCUMENT, CommonConstants.CODE,
+                    remarks.getTypeOfDocument().getCode(), remarksRequest.getRequestInfo());
+            if (responseJSONArray.isEmpty()) {
+                messages.put(Constants.KEY_REMARKS_TYPEOFDOCUMENT_INVALID,  Constants.MESSAGE_REMARKS_TYPEOFDOCUMENT_INVALID);
+            }
+            
+            
+            JSONArray responseJSONArray1 = mdmsRepository.getByCriteria(remarks.getTenantId(), CommonConstants.MODULENAME_WORKS, CommonConstants.REMARKS_TYPE, CommonConstants.CODE,
+                    remarks.getRemarksType().getCode(), remarksRequest.getRequestInfo());
+            
+            if (responseJSONArray1.isEmpty()) {
                 messages.put(Constants.KEY_REMARKS_TYPE_INVALID,  Constants.MESSAGE_REMARKS_TYPE_INVALID);
-
+            }
         }
 
         if(!messages.isEmpty())

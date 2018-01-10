@@ -34,8 +34,12 @@ public class RemarksHelper {
         Remarks remarks = new Remarks();
         remarks.setId(this.id);
         remarks.setTenantId(this.tenantId);
-        remarks.setTypeOfDocument(this.typeOfDocument);
-        remarks.remarksType(this.remarksType);
+        TypeOfDocument typeOfDocument = new TypeOfDocument();
+        typeOfDocument.setCode(this.typeOfDocument);
+        remarks.setTypeOfDocument(typeOfDocument);
+        RemarksType remarksType = new RemarksType();
+        remarksType.setCode(this.remarksType);
+        remarks.remarksType(remarksType);
         remarks.setDeleted(this.deleted);
         return remarks;
     }

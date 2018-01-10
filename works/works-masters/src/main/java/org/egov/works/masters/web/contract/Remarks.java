@@ -1,21 +1,23 @@
 package org.egov.works.masters.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object that holds Remarks Master data
  */
 @ApiModel(description = "An Object that holds Remarks Master data")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-02T14:41:12.111Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-10T10:10:27.771Z")
 
 public class Remarks   {
   @JsonProperty("id")
@@ -25,10 +27,10 @@ public class Remarks   {
   private String tenantId = null;
 
   @JsonProperty("typeOfDocument")
-  private String typeOfDocument = null;
+  private TypeOfDocument typeOfDocument = null;
 
   @JsonProperty("remarksType")
-  private String remarksType = null;
+  private RemarksType remarksType = null;
 
   @JsonProperty("remarksDetails")
   private List<RemarksDetail> remarksDetails = new ArrayList<RemarksDetail>();
@@ -80,7 +82,7 @@ public class Remarks   {
     this.tenantId = tenantId;
   }
 
-  public Remarks typeOfDocument(String typeOfDocument) {
+  public Remarks typeOfDocument(TypeOfDocument typeOfDocument) {
     this.typeOfDocument = typeOfDocument;
     return this;
   }
@@ -92,16 +94,17 @@ public class Remarks   {
   @ApiModelProperty(required = true, value = "Type Of Document of the Remarks Master")
   @NotNull
 
- @Size(min=1,max=100)
-  public String getTypeOfDocument() {
+  @Valid
+
+  public TypeOfDocument getTypeOfDocument() {
     return typeOfDocument;
   }
 
-  public void setTypeOfDocument(String typeOfDocument) {
+  public void setTypeOfDocument(TypeOfDocument typeOfDocument) {
     this.typeOfDocument = typeOfDocument;
   }
 
-  public Remarks remarksType(String remarksType) {
+  public Remarks remarksType(RemarksType remarksType) {
     this.remarksType = remarksType;
     return this;
   }
@@ -113,12 +116,13 @@ public class Remarks   {
   @ApiModelProperty(required = true, value = "Remarks Type of the Remarks Master")
   @NotNull
 
- @Size(min=1,max=100)
-  public String getRemarksType() {
+  @Valid
+
+  public RemarksType getRemarksType() {
     return remarksType;
   }
 
-  public void setRemarksType(String remarksType) {
+  public void setRemarksType(RemarksType remarksType) {
     this.remarksType = remarksType;
   }
 
@@ -192,7 +196,7 @@ public class Remarks   {
 
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -234,7 +238,7 @@ public class Remarks   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

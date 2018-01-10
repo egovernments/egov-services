@@ -39,13 +39,18 @@
  */
 package org.egov.works.masters.web.repository;
 
-import net.minidev.json.JSONArray;
 import org.egov.tracer.http.LogAwareRestTemplate;
-import org.egov.works.masters.web.contract.*;
+import org.egov.works.masters.web.contract.MasterDetails;
+import org.egov.works.masters.web.contract.MdmsCriteria;
+import org.egov.works.masters.web.contract.MdmsRequest;
+import org.egov.works.masters.web.contract.MdmsResponse;
+import org.egov.works.masters.web.contract.ModuleDetails;
+import org.egov.works.masters.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class MdmsRepository {
@@ -92,4 +97,6 @@ public class MdmsRepository {
 
 		}
 	}
+	
+	
 }

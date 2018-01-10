@@ -1274,7 +1274,7 @@ serviceMaps:
             - jsonPath: $.materialTypeStores.*.id
             - jsonPath: $.materialTypeStores.*.materialType.code
             - jsonPath: $.materialTypeStores.*.store.code
-            - jsonPath: $.materialTypeStores.*.chartofAccount.glCode
+            - jsonPath: $.materialTypeStores.*.chartofAccount.glcode
             - jsonPath: $.materialTypeStores.*.active
             - jsonPath: $.materialTypeStores.*.tenantId
             - jsonPath: $.materialTypeStores.*.auditDetails.createdBy

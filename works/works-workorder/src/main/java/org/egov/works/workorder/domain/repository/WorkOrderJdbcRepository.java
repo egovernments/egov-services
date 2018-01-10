@@ -65,7 +65,7 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
         StringBuilder orderBy = new StringBuilder("order by wo.createdtime");
         if (workOrderSearchContract.getSortBy() != null
                 && !workOrderSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by wo.").append(workOrderSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by wo.").append(workOrderSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

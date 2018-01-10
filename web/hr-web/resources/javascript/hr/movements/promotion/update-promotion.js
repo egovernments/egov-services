@@ -125,7 +125,7 @@ class UpdateMovement extends React.Component {
 
     $('#enquiryPassedDate, #effectiveFrom').datepicker({
       format: 'dd/mm/yyyy',
-      minDate: 0,
+      startDate: new Date(),
       autoclose: true,
       defaultDate: ""
     });
@@ -1014,12 +1014,12 @@ class UpdateMovement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="">Promotion Accepted by Employee Y/N</label>
+                    <label htmlFor="">Promotion Accepted by Employee Y/N <span>*</span></label>
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-select">
                       <select id="employeeAcceptance" name="employeeAcceptance" value={employeeAcceptance}
-                        onChange={(e) => { handleChange(e, "employeeAcceptance") }}>
+                        onChange={(e) => { handleChange(e, "employeeAcceptance") }} required >
                         <option value="">Select Promotion</option>
                         <option value="true">Yes</option>
                         <option value="false">No</option>

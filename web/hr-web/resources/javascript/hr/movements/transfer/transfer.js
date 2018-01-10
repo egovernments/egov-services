@@ -286,7 +286,7 @@ class EmployeeTransfer extends React.Component {
       // $('#code,#name,#departmentId,#designationId').prop("disabled", true);
       $('#effectiveFrom').datepicker({
         format: 'dd/mm/yyyy',
-        minDate: 0,
+        startDate: new Date(),
         autoclose: true,
         defaultDate: ""
       });
@@ -950,12 +950,12 @@ class EmployeeTransfer extends React.Component {
                 <div className="col-sm-6">
                     <div className="row">
                         <div className="col-sm-6 label-text">
-                          <label htmlFor="">Transfer Accepted by Employee Y/N</label>
+                          <label htmlFor="">Transfer Accepted by Employee Y/N  <span>*</span></label>
                         </div>
                         <div className="col-sm-6">
                           <div className="styled-select">
                               <select id="employeeAcceptance" name="employeeAcceptance" value={employeeAcceptance}
-                                onChange={(e)=>{  handleChange(e,"employeeAcceptance") }}>
+                                onChange={(e)=>{  handleChange(e,"employeeAcceptance") }} required >
                               <option value="">Select Employee Acceptance</option>
                               <option value="true">Yes</option>
                               <option value="false">No</option>

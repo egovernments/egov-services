@@ -286,6 +286,7 @@ class EmployeeTransfer extends React.Component {
       // $('#code,#name,#departmentId,#designationId').prop("disabled", true);
       $('#effectiveFrom').datepicker({
         format: 'dd/mm/yyyy',
+        minDate: new Date(),
         autoclose: true,
         defaultDate: ""
       });

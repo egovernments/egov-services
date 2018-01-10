@@ -236,11 +236,19 @@ class EmployeePromotion extends React.Component {
       });
 
 
-      $('#enquiryPassedDate, #effectiveFrom').datepicker({
+      $('#enquiryPassedDate').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true,
         defaultDate: ""
       });
+      
+      $('#effectiveFrom').datepicker({
+        format: 'dd/mm/yyyy',
+        minDate: new Date(),
+        autoclose: true,
+        defaultDate: ""
+      });
+
       $('#enquiryPassedDate').val("");
       $('#effectiveFrom').val("");
       $('#enquiryPassedDate,#effectiveFrom ').on('changeDate', function(e) {

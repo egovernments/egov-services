@@ -290,6 +290,20 @@ class UpdateObjection extends React.Component {
             workflowId: stateId
         }).responseJSON["tasks"] || {};
 
+        if (workflow) {
+
+            workflow.forEach(function (item, index, theArray) {
+
+                var employeeName = commonApiPost("hr-employee", "employees", "_search", {
+                    tenantId: tenantId,
+                    id: item.owner.id
+                }).responseJSON["Employee"] || {};
+
+                theArray[index].employeeName = employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : "";
+            });
+
+        }
+
         if (process) {
             if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
                 var _btns = [];
@@ -1156,6 +1170,7 @@ class UpdateObjection extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="styled-file">
                                             <input id="documents" name="documents" type="file" onChange={(e) => { handleChange(e, "documents") }} multiple disabled />
+                                            {renderFile()}
                                         </div>
                                     </div>
                                 </div>
@@ -1210,17 +1225,11 @@ class UpdateObjection extends React.Component {
         const renderTr = () => {
             return this.state.workflow.map((item, ind) => {
 
-                var employeeName = commonApiPost("hr-employee", "employees", "_search", {
-                    tenantId: tenantId,
-                    id: item.owner.id
-                }).responseJSON["Employee"] || {};
-        
-
                 return (
                     <tr key={ind}>
                         <td>{item.createdDate}</td>
                         <td>{item.senderName}</td>
-                        <td>{employeeName[0]?employeeName[0].code+" :: "+ employeeName[0].name:""}</td>
+                        <td>{item.employeeName}</td>
                         <td>{item.status}</td>
                         <td>{item.comments}</td>
                     </tr>
@@ -1339,6 +1348,41 @@ class UpdateObjection extends React.Component {
 
         }
 
+        const renderFileTr = function (status) {
+            var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+
+            for (var i = 0; i < _this.state.movement.documents.length; i++) {
+                return (<tr>
+                    <td>${i + 1}</td>
+                    <td>Document</td>
+                    <td>
+                        <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
+                            Download
+                        </a>
+                    </td>
+                </tr>);
+            }
+
+        }
+
+        const renderFile = function (status) {
+            if (_this.state.movement && _this.state.movement.documents) {
+                return (
+                    <table className="table table-bordered" id="fileTable" style={{ "display": "none" }}>
+                        <thead>
+                            <tr>
+                                <th>Sr. No.</th>
+                                <th>Name</th>
+                                <th>File</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {renderFileTr()}
+                        </tbody>
+                    </table>
+                );
+            }
+        }
 
         return (
             <div>

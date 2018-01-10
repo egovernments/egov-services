@@ -539,7 +539,7 @@ public class MDMSService {
 	      JsonParser parser = new JsonParser();
 	      JsonObject json = parser.parse(jsonString).getAsJsonObject();
 
-	      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	      Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 	      String prettyJson = gson.toJson(json);
 
 	      return prettyJson;

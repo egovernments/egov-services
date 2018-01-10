@@ -965,7 +965,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
-    type: string
+    type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     source: materialReceipt
     isMandatory: false
@@ -983,7 +983,104 @@ ReportDefinitions:
         AND mat.suppliercode =sup.code
         AND mat.receivingstore=store.code
         AND mat.mrnnumber=detail.mrnnumber
+        
+# Need to add query 
+# Stock Aging Report
+- reportName: stockAgingReport
+  summary: Stock Aging Report
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+  - name: materialCode
+    label: inventory.materialcode
+    type: string
+    source: inventory
 
+  - name: materialName
+    label: inventory.materialName
+    type: string
+    source: inventory
+
+  - name: materialTypeName
+    label: inventory.materialTypeName
+    type: string
+    source: material
+
+  - name: lotNo
+    label: inventory.lotNo
+    type: string
+    source: inventory
+
+  - name: qtyFrom0to90Days
+    label: inventory.qtyFrom0to90Days
+    type: string
+    source: inventory
+
+  - name: stockValueFrom0to90Days
+    label: inventory.stockValueFrom0to90Days
+    type: string
+    source: inventory
+
+  - name: qtyFrom91to180Days
+    label: inventory.qtyFrom91to180Days
+    type: string
+    source: inventory
+
+  - name: stockValueFrom91to180Days
+    label: inventory.stockValueFrom91to180Days
+    type: string
+    source: inventory
+
+  - name: qtyFrom181DaysAndAbove
+    label: inventory.qtyFrom181DaysAndAbove
+    type: string
+    source: inventory
+
+  - name: stockValueFrom181DaysAndAbove
+    label: inventory.stockValueFrom181DaysAndAbove
+    type: string
+    source: inventory
+
+  - name: totalQty
+    label: inventory.totalQty
+    type: string
+    source: inventory
+
+  - name: totalStockValue
+    label: inventory.totalStockValue
+    type: string
+    source: inventory
+
+  searchParams:
+  - name: storeName
+    label: inventory.store.name
+    type: singlevaluelist
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    source: store
+    searchClause: AND store.code = $storeName
+    isMandatory: true
+    wrapper: true
+
+  - name: materialTypeName
+    label: inventory.materialTypeName
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=MaterialType&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
+    source: materialReceipt
+    isMandatory: false
+
+  - name: materialName
+    label: inventory.materialName
+    type: singlevaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
+    source: materialReceipt
+    isMandatory: false
+
+  - name: asOnDate
+    label: inventory.asOnDate
+    type: epoch
+    source: inventory
+    isMandatory: true
+  query: 
 
 
 

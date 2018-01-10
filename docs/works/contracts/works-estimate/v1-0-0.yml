@@ -1445,7 +1445,7 @@ definitions:
         description:  Parent Detailed Estimate Reference. This represents the Parent Estimate reference for the Revision Estimate.
       copiedFrom:
         type: string
-        description: Reference of the Detailed Estimate for teh Copy Estimate
+        description: Reference of the Detailed Estimate for the Copy Estimate
       approvedDate:
         type: integer
         format: int64

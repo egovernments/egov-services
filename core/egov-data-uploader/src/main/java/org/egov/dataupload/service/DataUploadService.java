@@ -105,9 +105,6 @@ public class DataUploadService {
 	public SuccessFailure parseExcel(UploaderRequest uploaderRequest) throws Exception {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
-	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
-	    		uploadJob.getModuleName(), uploadJob.getDefName());
-	    logger.info("HeaderMap: "+uploadDefinition.getHeaderJsonPathMap());
 	    List<ResponseMetaData> success = new ArrayList<>();
 	    List<ResponseMetaData> failure = new ArrayList<>();
 	    List<List<Object>> excelData = new ArrayList<>();
@@ -121,6 +118,9 @@ public class DataUploadService {
 	    	logger.error("Couldn't parse excel sheet", e);
 	    }
         try{
+    	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
+    	    		uploadJob.getModuleName(), uploadJob.getDefName());
+    	    logger.info("HeaderMap: "+uploadDefinition.getHeaderJsonPathMap());
         	if(null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()){
         		uploadParentChildData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
 				dataUploadUtils.clearInternalDirectory();
@@ -130,7 +130,11 @@ public class DataUploadService {
         	}
 
         }catch(Exception e){
-        	logger.info("Exception whil proccessing data: ",e);
+        	logger.info("Exception while proccessing data: ",e);
+    		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
+    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
+    		uploadRegistryRepository.updateJob(uploaderRequest);
+			dataUploadUtils.clearInternalDirectory();
         }
         
         SuccessFailure uploaderResponse = new SuccessFailure();
@@ -253,8 +257,7 @@ public class DataUploadService {
 		
 	    return request;
 	}
-	
-	
+		
 	private void uploadParentChildData(List<List<Object>> excelData,
 		     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest){
 		ObjectMapper mapper = new ObjectMapper();
@@ -469,59 +472,4 @@ public class DataUploadService {
 		return uploadJobs;
 
 	}
-	
-	
-	private String prepareDataForBulkApi(List<List<Object>> excelData,
-        List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo, List<ResponseMetaData> success,
-	       List<ResponseMetaData> failure) throws JsonProcessingException{
-					ObjectMapper mapper = new ObjectMapper();
-					DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
-					List<String> dataList = new ArrayList<>();
-					try{
-						for(List<Object> list: excelData){
-							if(!list.isEmpty()){
-					   		try{
-							    	StringBuilder object = new StringBuilder(); 
-							    	object.append(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()).toString());
-							    	object.deleteCharAt(0).deleteCharAt(object.toString().length() - 1);
-							    	String json = mapper.writeValueAsString(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()));
-							    	json = json.substring(1, json.length() - 1);
-							    	logger.info("json: "+json);
-							    	DocumentContext docContext = JsonPath.parse(json);
-							    	for(int i = 0; i < jsonPathList.size(); i++){
-						            	StringBuilder expression = new StringBuilder();
-						            	String key = dataUploadUtils.getJsonPathKey(jsonPathList.get(i), expression);
-						            	documentContext.put("$", key, list.get(i));	            	
-							    	}	    	
-							    	dataList.add(docContext.jsonString().toString());
-					   		}catch(Exception e){
-					   			logger.error("error while parsing row (here row 1 is the first data row after headers): "+(excelData.indexOf(list) + 2), e);
-					   			ResponseMetaData responseMetaData= new ResponseMetaData();
-					   			responseMetaData.setRownum(excelData.indexOf(list) + 2);
-					   			responseMetaData.setRowData(list);
-					   			failure.add(responseMetaData);
-					   			continue;
-					   		}
-					   	}	
-						}
-						StringBuilder expression = new StringBuilder();
-						String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath(), expression);
-					   Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
-						Gson gson = new Gson();
-						List<Map<String, Object>> array = gson.fromJson(dataList.toString(), type);
-						documentContext.put(expression.toString(), key, array);	 
-						try{
-					   	documentContext.put("$", "RequestInfo", requestInfo);
-						}catch(Exception e){
-					   	documentContext.put("$", "requestInfo", requestInfo);
-						}    	
-						}catch(Exception e){
-						logger.error("Exception caused while processing the excel data", e);
-						throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
-								"Exception caused while processing the excel data");
-					}
-					
-					return documentContext.jsonString().toString();
-		
-		}
 }

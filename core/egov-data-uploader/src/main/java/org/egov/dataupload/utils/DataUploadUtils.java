@@ -172,8 +172,7 @@ public class DataUploadUtils {
 		HSSFWorkbook workbook = new HSSFWorkbook(file.getInputStream());
         HSSFSheet sheet = workbook.getSheetAt(0);
         int rowCount = sheet.getLastRowNum();
-        Row row = null;
-        row = sheet.createRow(++rowCount);
+        Row row = sheet.createRow(++rowCount);
         for(int i = 0; i < exisitingFields.size(); i++)
         {
             Cell cell = row.createCell(i);
@@ -198,6 +197,7 @@ public class DataUploadUtils {
             }
             
         }
+        sheet.shiftRows(row.getRowNum(), rowCount, -1);
         try (FileOutputStream outputStream = new FileOutputStream(fileName)) {
             workbook.write(outputStream);
         }

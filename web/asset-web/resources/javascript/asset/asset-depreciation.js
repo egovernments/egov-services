@@ -269,13 +269,14 @@ class AssetDepreciation extends React.Component {
             });
         },
         error: function(err) {
-          console.log('Error:',err);
+          showError(err.responseJSON.Error.message);
         }
     });
   }
 
   showAssetDeprecatedTable(){
     return (
+      <div>
       <table id="assetDepTable" className="table table-bordered">
         <thead>
         <tr>
@@ -295,6 +296,10 @@ class AssetDepreciation extends React.Component {
           {this.renderAssetDepBody()}
         </tbody>
       </table>
+      <div className="text-center">
+          <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
+      </div>
+      </div>
     )
   }
 

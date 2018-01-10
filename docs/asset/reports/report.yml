@@ -1054,7 +1054,7 @@ ReportDefinitions:
     source: asset
     searchClause : AND asset.code in ($code)
   
-  query: select asset.code,asset.assetcategory,asset.name,asset.originalvalue,asset.revaluationreserveaccount,
+  query:  select asset.code,asset.assetcategory,asset.name,asset.originalvalue,asset.revaluationreserveaccount,
     asset.accumulateddepreciationaccount,asset.assetaccount,asset.accumulateddepreciation,previousfynetblock,endcurrentamount,
     plusrevalsum,minusrevalsum,coalesce(prevdepsum,0)+coalesce(asset.accumulateddepreciation,0) as startdepval,
     coalesce(previousfynetblock,0.0)+coalesce(plusrevalsum,0.0)-coalesce(minusRevalsum,0.0) as revaltotal,prevdepsum, currdepsum,
@@ -1083,7 +1083,9 @@ ReportDefinitions:
     currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid
     left outer join ( select assetSubcategory.name as assetsubcategoryname,CASE WHEN assetSubcategory.depreciationrate='null' THEN 'NA' WHEN assetSubcategory.depreciationrate='' THEN 'NA' ELSE assetSubcategory.depreciationrate END,
     assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
-    ac.name as assetparentcategoryname from (VALUES tbl_assetcategories) as assetSubcategory (id,name,depreciationRate,parent,tenantId)
+    ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId)
+    inner join (VALUES tbl_assetcategories) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as
+    assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid
     WHERE asset.tenantid=$tenantid
 
 - reportName: LandRegister

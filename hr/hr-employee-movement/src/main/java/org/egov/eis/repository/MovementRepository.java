@@ -88,12 +88,16 @@ import org.egov.eis.web.contract.Task;
 import org.egov.eis.web.contract.TechnicalQualification;
 import org.egov.eis.web.contract.User;
 import org.egov.eis.web.contract.UserResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MovementRepository {
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(MovementRepository.class);
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -207,6 +211,8 @@ public class MovementRepository {
 		final EmployeeInfo employeeInfo = employeeService.getEmployee(movementRequest);
 		final Movement movement = movementRequest.getMovement().get(0);
 		final Date effectiveFromDate = movement.getEffectiveFrom();
+		LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
+
 		Date effectiveToDate = new Date();
 		final Calendar calendar = Calendar.getInstance();
 		final SimpleDateFormat inputDOB = new SimpleDateFormat("yyyy-MM-dd");
@@ -253,6 +259,9 @@ public class MovementRepository {
 			assignment.setDesignation(movement.getDesignationAssigned());
 			assignment.setIsPrimary(true);
 			assignment.setFromDate(effectiveFromDate);
+			LOGGER.debug("effectiveFromDate:" + effectiveFromDate);
+			LOGGER.debug("effectiveToDate:" + effectiveToDate);
+
 			assignment.setToDate(effectiveToDate);
 			assignment.setTenantId(movement.getTenantId());
 			employee.getAssignments().add(assignment);
@@ -268,6 +277,7 @@ public class MovementRepository {
 		user.setGender(employeeInfo.getGender());
 		user.setTenantId(employeeInfo.getTenantId());
 		employee.setUser(user);
+		LOGGER.debug("Employee List:" + employee);
 		employeeService.updateEmployee(employee, movement.getTenantId(), movementRequest.getRequestInfo());
 	}
 

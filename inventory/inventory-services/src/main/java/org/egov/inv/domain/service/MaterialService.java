@@ -109,8 +109,7 @@ public class MaterialService extends DomainService {
         }
     }
 
-    /*Provides only the mapped materials if we are searching by tenantid, 
-    on passing the code we get the material objects from mdms and database*/
+
     public MaterialResponse search(MaterialSearchRequest materialSearchRequest, org.egov.common.contract.request.RequestInfo requestInfo) {
 
         MaterialResponse response = new MaterialResponse();

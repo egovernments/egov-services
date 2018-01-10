@@ -150,7 +150,7 @@ public class DepreciationService {
 
                 log.debug("Asset Department ID :: " + departmentId);
                 for (final DepreciationDetail depreciationDetail : depreciationDetails)
-                    if (depreciationDetail != null && depreciationDetail.getStatus().equals(DepreciationStatus.SUCCESS)) {
+                    if (depreciationDetail.getStatus().equals(DepreciationStatus.SUCCESS)) {
 
                         final BigDecimal amount = depreciationDetail.getDepreciationValue();
                         log.debug("Depreciation Amount :: " + amount);
@@ -305,13 +305,13 @@ public class DepreciationService {
             else
                 depreciationRate = depreciation.getDepreciationRate();
 
-            if (depreciation.getCurrentValue() != null)
-                if (depreciation.getCurrentValue().compareTo(minValue) <= 0)
+            if (depreciation.getCurrentValue().compareTo(BigDecimal.ZERO) != 0)
+                if (depreciationRate==0.0)
+                    reason = ReasonForFailure.DEPRECIATION_RATE_NOT_FOUND;
+                else if (depreciation.getCurrentValue().compareTo(minValue) <= 0)
                     reason = ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_TO_MINIMUN_VALUE;
                 else if (depreciation.getCurrentValue().compareTo(new BigDecimal(5000)) < 0)
                     reason = ReasonForFailure.ASSET_IS_FULLY_DEPRECIATED_TO_MINIMUN_VALUE;
-                else if (null == depreciationRate)
-                    reason = ReasonForFailure.DEPRECIATION_RATE_NOT_FOUND;
                 else {
 
                     status = DepreciationStatus.SUCCESS;
@@ -321,13 +321,13 @@ public class DepreciationService {
 
                     amtToBeDepreciatedRounded = new BigDecimal(
                             amtToBeDepreciated.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                    System.err.println("amtToBeDepreciatedRounded------------" + amtToBeDepreciatedRounded);
+                    log.info("amtToBeDepreciatedRounded------------" + amtToBeDepreciatedRounded);
 
                     // calculating the valueAfterDepreciation
                     valueAfterDep = depreciation.getCurrentValue().subtract(amtToBeDepreciated);
 
                     valueAfterDepRounded = new BigDecimal(valueAfterDep.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                    System.err.println("valueAfterDepRounded------------" + valueAfterDepRounded);
+                    log.info("valueAfterDepRounded------------" + valueAfterDepRounded);
 
                     if (valueAfterDepRounded.doubleValue() < 1)
                         valueAfterDepRounded = BigDecimal.ONE;
@@ -373,7 +373,7 @@ public class DepreciationService {
     private BigDecimal getAmountToBeDepreciated(final DepreciationInputs depInputs, final Long indvidualFromDate,
             final Long toDate) {
 
-        System.err.println("depInputs" + depInputs);
+        log.info("depInputs" + depInputs);
 
         // getting the no of days betweeen the from and todate (including both from and
         // to date)

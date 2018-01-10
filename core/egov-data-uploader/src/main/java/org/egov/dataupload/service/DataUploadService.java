@@ -161,8 +161,8 @@ public class DataUploadService {
 		dataUploadUtils.writeToexcelSheet(coloumnHeaders, resultFilePath);
 		int successCount = 0; int failureCount = 0;
 		for(List<Object> row: excelData){
+			String failureMessage = null;
 			logger.info("row: "+row.toString());
-			try{
 				if(!row.isEmpty()){
 					for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
 						logger.debug("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));
@@ -193,54 +193,56 @@ public class DataUploadService {
 				    }catch(Exception e){
 				    	documentContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
 					    request = documentContext.jsonString().toString();
-				    }         	
+				    } 
+				    
 				    Object apiResponse = hitApi(request, dataUploadUtils.getURI(uploadDefinition.getUri()));	
 				    if(null == apiResponse){
-				    	throw new CustomException("500", "Module API failed");
+				    	failureMessage = "Module API failed with empty body in response";
+				    }else {
+				    	if(apiResponse instanceof String) {
+				    		failureMessage = apiResponse.toString(); 
+				    	}
+				    	
 				    }
-				    if(null != resJsonPathList){
-				    	try{
-				    		dataUploadUtils.addAdditionalFields(apiResponse, row, resJsonPathList);
-				    		row.add("SUCCESS");
-				    	}catch(Exception e){
+				    
+				    if(null != failureMessage && !failureMessage.isEmpty()) {
+						logger.error("Error while processing row: "+(excelData.indexOf(row) + 2));
+				    	if(null != resJsonPathList){
 				    		for(Object obj: resJsonPathList){
 				    			row.add(null);
 				    		}
-				    		row.add("SUCCESS");
-				    		row.add("Failed to obtain additional fields from API response");
-				    		successCount++;
+				    		row.add("FAILED");
+				    		row.add(failureMessage);			    	
+				    		failureCount++;	
+				    	}else{
+				    		row.add("FAILED");
+				    		row.add(failureMessage);			    	
+					    	failureCount++;	
 				    	}
+				    	logger.info("Writing FAILED ROW to excel....: "+row);
+						dataUploadUtils.writeToexcelSheet(row, resultFilePath);
+				    	
+				    }else {
+					    if(null != resJsonPathList){
+					    	try{
+					    		dataUploadUtils.addAdditionalFields(apiResponse, row, resJsonPathList);
+					    		row.add("SUCCESS");
+					    	}catch(Exception e){
+					    		for(Object obj: resJsonPathList){
+					    			row.add(null);
+					    		}
+					    		row.add("SUCCESS");
+					    		row.add("Failed to obtain additional fields from API response");
+					    		successCount++;
+					    	}
+					    }else {
+				    		row.add("SUCCESS");
+				    		successCount++;
+					    }
+				    	logger.info("Writing SUCCESS ROW to excel....: "+row);
+						dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 				    }
-		    		row.add("SUCCESS");
-		    		successCount++;
-			    	logger.info("Writing SUCCESS ROW to excel....: "+row);
-					dataUploadUtils.writeToexcelSheet(row, resultFilePath);
-				}
-			}catch(Exception e){
-				logger.error("Error while processing row: "+(excelData.indexOf(row) + 2), e);
-		    	if(null != resJsonPathList){
-		    		for(Object obj: resJsonPathList){
-		    			row.add(null);
-		    		}
-		    		row.add("FAILED");
-		    		if(!e.getMessage().isEmpty())
-		    			row.add(e.getMessage());
-		    		else
-		    			row.add("Please verify config");			    	
-		    		failureCount++;	
-		    	}else{
-		    		row.add("FAILED");
-		    		if(!e.getMessage().isEmpty())
-		    			row.add(e.getMessage());
-		    		else
-		    			row.add("Please verify config");
-			    	failureCount++;	
-		    	}
-		    	logger.info("Writing FAILED ROW to excel....: "+row);
-				dataUploadUtils.writeToexcelSheet(row, resultFilePath);
-
-		    	continue;
-		    }			
+				}			
 		}
 		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
@@ -398,16 +400,17 @@ public class DataUploadService {
 		logger.info("Making inter-service call to the module API...");
 		Object response = null;
 		logger.info("Request: "+request);
-    	logger.info("uri: "+uri);
+    	logger.info("URI: "+uri);
     	
 	    Type type = new TypeToken<Map<String, Object>>() {}.getType();
 		Gson gson = new Gson();
 		Map<String, Object> data = gson.fromJson(request, type);
-		
-    	response = dataUploadRepository.doApiCall(data, uri);
-    	
-    	logger.info("Module API Response: "+response);
-    	
+		try {
+			response = dataUploadRepository.doApiCall(data, uri);
+		}catch(Exception e) {
+			logger.error("Failed to parse error object",e);
+		}
+    	    	
     	return response;
 		
 	}

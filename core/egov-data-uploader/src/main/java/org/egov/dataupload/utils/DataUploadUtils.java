@@ -67,8 +67,6 @@ public class DataUploadUtils {
 		            if(cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-			            		logger.info("Adding Date val: "+cell.getDateCellValue());
-			            		logger.info("Epoch of it: "+cell.getDateCellValue().getTime());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
 		            	    	dataList.add(cell.getNumericCellValue());

@@ -1,7 +1,5 @@
 package org.egov.dataupload.repository;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -10,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.egov.dataupload.utils.DataUploadUtils;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -29,7 +25,11 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 
 @Repository
@@ -49,13 +49,22 @@ public class DataUploadRepository {
 			
 	public static final Logger LOGGER = LoggerFactory.getLogger(DataUploadRepository.class);
 		
-	public Object doApiCall(Object request, String url) {
+	public Object doApiCall(Object request, String url) throws Exception {
 		Object response = null;
 		try{
 			LOGGER.info("Making restTemplate call.....");
 			response = restTemplate.postForObject(url, request, Map.class);
-		}catch(Exception e){
-			LOGGER.error("Exception while hitting url: "+url, e);
+		}catch(HttpClientErrorException e){
+			StringBuilder message = new StringBuilder();
+			ObjectMapper mapper = new ObjectMapper();
+			LOGGER.error("Exception while hitting url: "+url);
+			List<Object> errors = (List<Object>) JsonPath.read(e.getResponseBodyAsString(),"$.Errors");
+			for(Object error: errors) {
+				String errorObject = mapper.writeValueAsString(error);
+				message.append(JsonPath.read(errorObject, "$.message").toString());
+				message.append(", ");
+			}
+			response = message.deleteCharAt(message.toString().length() - 2).toString(); //removing last comma
 		}
 		LOGGER.info("response: "+response);
 		return response;

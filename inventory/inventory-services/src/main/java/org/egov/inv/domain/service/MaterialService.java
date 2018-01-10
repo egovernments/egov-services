@@ -108,6 +108,8 @@ public class MaterialService extends DomainService {
         }
     }
 
+    /*Provides only the mapped materials if we are searching by tenantid, 
+    on passing the code we get the material objects from mdms and database*/
     public MaterialResponse search(MaterialSearchRequest materialSearchRequest, org.egov.common.contract.request.RequestInfo requestInfo) {
 
         Map<String, Material> materialFromMdms = getMaterialFromMdms(materialSearchRequest.getTenantId());
@@ -154,8 +156,13 @@ public class MaterialService extends DomainService {
         {
         	List<Material> list = new ArrayList<>();
             Material mdmsMaterial = materialFromMdms.get(materialSearchRequest.getCode());
+            if(null != mdmsMaterial){
             mdmsMaterial.setStoreMapping(Collections.EMPTY_LIST);
             list.add(mdmsMaterial);
+            }else
+            {
+            	throw new CustomException("Material" , "Material Not Found with code " + materialSearchRequest.getCode());
+            }
         	 MaterialResponse response = new MaterialResponse();
              response.setMaterials(list);
              return response;

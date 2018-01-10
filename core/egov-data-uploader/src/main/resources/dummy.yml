@@ -6,10 +6,11 @@ UploadDefinitions:
  - defName: dummycreation
    apiRequest: {"RequestInfo": {},"Dummy": [{"name": "Vishal", "code": "VISH", "address": [{"house": 1, "street": "Koramangala"}]}]}
 
-   headerJsonPathMap: {"Name": "$.Dummy.*.name", "Code": "$.Dummy.*.code", "HouseNo": "$.Dummy.*.address.*.house", "Street": "$.Dummy.*.address.*.street"}
+   headerJsonPathMap: {"Name": ["$.Dummy.*.name"], "Code": ["$.Dummy.*.code"], "HouseNo": ["$.Dummy.*.address.*.house"], "Street": ["$.Dummy.*.address.*.street"]}
    isBulkApi: true
    arrayPath: $.Dummy.*
    isParentChild: true
    uniqueParentKeys: ["Name", "Code"]
+   tenantIdPaths: []
    uri: /asset-services-maha/assets/_create
    additionalResFields:

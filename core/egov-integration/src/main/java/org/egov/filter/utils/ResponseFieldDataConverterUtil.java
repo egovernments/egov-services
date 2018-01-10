@@ -56,7 +56,7 @@ public class ResponseFieldDataConverterUtil {
 					else if (value instanceof Double)
 						value = String.valueOf(((Double) value).intValue());
 					
-					value = Boolean.getBoolean(String.valueOf(map.get(value.toString())));
+					value = Boolean.parseBoolean(String.valueOf(map.get(value.toString())));
 				}
 
 			}

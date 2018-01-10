@@ -1,6 +1,7 @@
 package org.egov;
 
-import java.io.File;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,8 @@ import org.egov.filter.model.Mdms;
 import org.egov.filter.model.MdmsMap;
 import org.egov.filter.model.ServiceMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -31,16 +32,24 @@ public class ReadConfiguration {
 	
 	private static Map<String, Map<String, MasterDetail>> moduleMap;
 	
+	@Value("${egov.service.config.path}")
+	private String serviceConfigPath;
+	
+	@Value("${egov.mdms.config.path}")
+	private String mdmsConfigPath;
+	
 	@PostConstruct
 	@Bean
 	public ServiceMap loadServiceConfigurationYaml() {
 		System.out.println(" Translator Service ReadConfiguration");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		ServiceMap serviceMap = null;
+		
 		try {
-			  Resource resource = resourceLoader.getResource("classpath:ServicesConfiguration.yml"); 
-			  File file = resource.getFile(); 
-			  serviceMap = mapper.readValue(file, ServiceMap.class);
+			  URL serviceConfigUrl = new URL(serviceConfigPath);
+			  /*Resource resource = resourceLoader.getResource("classpath:ServicesConfiguration.yml"); 
+			  File file = resource.getFile(); */
+			  serviceMap = mapper.readValue(new InputStreamReader(serviceConfigUrl.openStream()), ServiceMap.class);
 			  log.info("loadYaml service: " + serviceMap.toString());
 
 		} catch (Exception e) {
@@ -52,12 +61,14 @@ public class ReadConfiguration {
 	@PostConstruct
 	public void loadMdmsConfig() {
 		System.out.println("loading Mdms configuration");
+		
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		MdmsMap mdmsMap = null;
 		try {
-			  Resource resource = resourceLoader.getResource("classpath:MdmsConfig.yml"); 
-			  File file = resource.getFile(); 
-			  mdmsMap = mapper.readValue(file, MdmsMap.class);
+			URL mdmsConfigUrl = new URL(mdmsConfigPath);
+			  /*Resource resource = resourceLoader.getResource("classpath:MdmsConfig.yml"); 
+			  File file = resource.getFile(); */
+			  mdmsMap = mapper.readValue(new InputStreamReader(mdmsConfigUrl.openStream()), MdmsMap.class);
 			  log.info("loadYaml mdms: " + mdmsMap);
 
 		} catch (Exception e) {

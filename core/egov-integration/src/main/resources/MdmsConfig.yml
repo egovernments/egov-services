@@ -53,4 +53,31 @@ mdms:
              destination: $.code
            - source: $.resultData[*].desc
              destination: $.name
+             
+ - moduleName: egf-master
+   masterDetails: 
+    - masterName: FinancialYear
+      finalResponse: 
+        body: '{"id":null,"tenantId":null,"finYearRange":null,"startingDate":null,"endingDate":null,"active":null,"isActiveForPosting":null,"isClosed":null,"transferClosingBalance":null}'
+      requests:       
+       - url: /MahaULBAPI/rest/common/financialmas/financialmaslist
+         type: POST
+         basePath: 
+         queryParams:
+         pathParams:
+         headerParams:
+         body: 
+         bodyParams:
+         response:
+          basePath: $.resultData[*]
+          responseParams:
+           - source: $.resultData[*].finId
+             destination: $.id
+           - source: $.resultData[*].assessmentYear
+             destination: $.finYearRange
+           - source: $.resultData[*].fromDate
+             destination: $.startingDate
+           - source: $.resultData[*].toDate
+             destination: $.endingDate
+           
             

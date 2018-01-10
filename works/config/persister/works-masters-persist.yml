@@ -377,9 +377,9 @@ serviceMaps:
 
        - jsonPath: $.remarks.*.tenantId
 
-       - jsonPath: $.remarks.*.typeOfDocument
+       - jsonPath: $.remarks.*.typeOfDocument.code
 
-       - jsonPath: $.remarks.*.remarksType
+       - jsonPath: $.remarks.*.remarksType.code
 
        - jsonPath: $.remarks.*.auditDetails.createdBy
 

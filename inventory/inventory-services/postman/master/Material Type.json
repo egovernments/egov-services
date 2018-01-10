@@ -1,0 +1,123 @@
+{
+	"info": {
+		"name": "Material Type Master",
+		"_postman_id": "ae00092c-9250-3c66-c67b-35d70c48a6bf",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Material Type",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"materialTypes\": [\n    {\n      \"id\": 1,\n      \"tenantId\": \"default\",\n      \"code\": \"MT1\",\n      \"name\": \"Fake Material Type Name 1\",\n      \"parent\": null,\n      \"isParent\": false,\n      \"storeMapping\": [\n        {\n          \"store\": {\n            \"code\": \"STR01\"\n          },\n          \"chartofAccount\": {\n            \"glcode\": \"46130\"\n          },\n          \"active\": true\n        },\n        {\n          \"store\": {\n            \"code\": \"STR\"\n          },\n          \"chartofAccount\": {\n            \"glcode\": \"42190\"\n          },\n          \"active\": true\n        }\n      ]\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510568486856,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"d1bfe2dd-e57d-4f9a-8b20-b4a1be9befed\",\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"ramesh\",\n      \"tenantId\": \" default\"\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/inventory-services/materialtypes/_create?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"inventory-services",
+						"materialtypes",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Material Type",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"2eeef104-e5c5-40f0-a99a-4c2305a65457\",\n      \"userInfo\":{\n        \"id\":2\n      }\n }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/inventory-services/materialtypes/_search?tenantId=default&code=MT2",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"inventory-services",
+						"materialtypes",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "code",
+							"value": "MT2",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Material Type",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"materialTypes\": [\n    {\n      \"id\": 1,\n      \"tenantId\": \"default\",\n      \"code\": \"MT1\",\n      \"name\": \"Fake Material Type Name 1\",\n      \"parent\": null,\n      \"isParent\": false,\n      \"storeMapping\": [\n        {\n          \"id\": 22,\n          \"store\": {\n            \"code\": \"STR01\"\n          },\n          \"chartofAccount\": {\n            \"glcode\": \"46130\"\n          },\n          \"active\": true\n        },\n        {\n          \"id\": 23,\n          \"store\": {\n            \"code\": \"STR\"\n          },\n          \"chartofAccount\": {\n            \"glcode\": \"42\"\n          },\n          \"active\": true\n        }\n      ]\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510568486856,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"d1bfe2dd-e57d-4f9a-8b20-b4a1be9befed\",\n    \"userInfo\": {\n      \"id\": 1,\n      \"userName\": \"ramesh\",\n      \"tenantId\": \" default\"\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{host}}/inventory-services/materialtypes/_update?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"inventory-services",
+						"materialtypes",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

@@ -120,7 +120,7 @@ public class Notice {
     @ApiModelProperty(required = true, value = "Reference of LOA")
     @NotNull
 
-    @Valid
+//    @Valid
 
     public LetterOfAcceptance getLetterOfAcceptance() {
         return letterOfAcceptance;

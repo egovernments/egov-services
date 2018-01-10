@@ -1343,18 +1343,13 @@ definitions:
         description: Tenant id of the Remarks Type
         maxLength: 128
         minLength: 2
-      code:
-        type: string
-        description: Code of Remarks Type
-        pattern: '[a-zA-Z-_]+'
-        maxLength: 100
-        minLength: 1  
       name:
           type: string
-          maxLength: 256
           description: name of Remarks Type
+          maxLength: 100
+          minLength: 1
     required:
-      - code
+      - name
       - tenantId
       
   TypeOfDocument:
@@ -1366,18 +1361,13 @@ definitions:
         description: Tenant id of the Type Of Document
         maxLength: 128
         minLength: 2
-      code:
-        type: string
-        description: Code of Type Of Document
-        pattern: '[a-zA-Z-_]+'
-        maxLength: 100
-        minLength: 1  
       name:
-          type: string
-          maxLength: 256
-          description: name of Type Of Document
+        type: string
+        description: name of Type Of Document
+        maxLength: 100
+        minLength: 1
     required:
-      - code
+      - name
       - tenantId
 
 parameters:
@@ -1407,6 +1397,7 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+
 
 
 

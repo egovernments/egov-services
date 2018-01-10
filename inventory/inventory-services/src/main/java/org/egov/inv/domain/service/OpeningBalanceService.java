@@ -5,11 +5,9 @@ import static org.springframework.util.StringUtils.isEmpty;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.MdmsRepository;
@@ -29,6 +27,7 @@ import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
+import org.egov.inv.model.Tenant;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
@@ -53,6 +52,9 @@ public class OpeningBalanceService extends DomainService {
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+	
+	@Autowired
+	private NumberGenerator numberGenerator;
 
 	@Value("${inv.openbalance.update.topic}")
 	private String updateTopic;
@@ -82,8 +84,7 @@ public class OpeningBalanceService extends DomainService {
 					materialReceipt.setTenantId(tenantId);
 				}
 				materialReceipt.setReceiptType(ReceiptTypeEnum.valueOf("OPENING_BALANCE"));
-				String mrnNumber = appendString(materialReceipt);
-				materialReceipt.setMrnNumber(mrnNumber);
+				materialReceipt.setMrnNumber(getOpbNumber(materialReceipt, openBalReq.getRequestInfo()));
 				if (null != materialReceipt.getReceiptDetails()) {
 					materialReceipt.getReceiptDetails().stream().forEach(detail -> {
 						detail.setId(jdbcRepository.getSequence("seq_materialreceiptdetail"));
@@ -164,14 +165,36 @@ public class OpeningBalanceService extends DomainService {
 				? materialReceiptPagination.getPagedData() : Collections.EMPTY_LIST);
 	}
 
-	private String appendString(MaterialReceipt headerRequest) {
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		String code = "OPB/";
-		int id = Integer.valueOf(jdbcRepository.getSequence(headerRequest));
-		String idgen = String.format("%05d", id);
-		String mrnNumber = code + idgen + "/" + year;
-		return mrnNumber;
+	
+	private String getOpbNumber(MaterialReceipt receipt, RequestInfo info) {
+		InvalidDataException errors = new InvalidDataException();
+		ObjectMapper mapper = new ObjectMapper();
+		JSONArray tenantStr = mdmsRepository.getByCriteria(receipt.getTenantId(), "tenant", "tenants", "code",
+				receipt.getTenantId(), info);
+
+		Tenant tenant = mapper.convertValue(tenantStr.get(0), Tenant.class);
+		if (tenant == null) {
+			errors.addDataError(ErrorCode.CITY_CODE_NOT_AVAILABLE.getCode(), receipt.getTenantId());
+		}
+		String finYearRange = "";
+		JSONArray finYears = mdmsRepository.getByCriteria(receipt.getTenantId(), "egf-master", "FinancialYear", null, null, info);
+		outer: for (int i = 0; i < finYears.size(); i++) {
+			FinancialYear fin = mapper.convertValue(finYears.get(i), FinancialYear.class);
+			if (getCurrentDate() >= fin.getStartingDate().getTime()  && getCurrentDate() <= fin.getEndingDate().getTime()) {
+				finYearRange = fin.getFinYearRange();
+				break outer;
+			}
+		}
+
+		if (finYearRange.isEmpty()) {
+			errors.addDataError(ErrorCode.FIN_YEAR_NOT_EXIST.getCode(), receipt.getFinancialYear().toString());
+		}
+		if (errors.getValidationErrors().size() > 0) {
+			throw errors;
+		}
+
+		String seq = "OPB/" + tenant.getCity().getCode() + "/" + finYearRange;
+		return seq + "/" + numberGenerator.getNextNumber(seq, 5);
 	}
 
 	private void validate(List<MaterialReceipt> receipt, String method, String tenantId,RequestInfo info) {

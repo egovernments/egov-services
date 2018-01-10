@@ -41,8 +41,10 @@
 package org.egov.eis.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.enums.MovementStatus;
@@ -125,7 +127,7 @@ public class MovementService {
 		final List<Movement> successMovementsList = new ArrayList<>();
 		final List<Movement> errorMovementsList = new ArrayList<>();
 		for (final Movement movement : movementsList)
-			if (movement.getErrorMsg().isEmpty())
+			if (StringUtils.isEmpty(movement.getErrorMsg()))
 				successMovementsList.add(movement);
 			else
 				errorMovementsList.add(movement);
@@ -180,10 +182,11 @@ public class MovementService {
 					}
 
 				}
-				if((employee.getDateOfRetirement()==null || (employee.getDateOfRetirement()!=null && employee.getDateOfRetirement().equals(""))) && (employee.getDob()==null || (employee.getDob()!=null && employee.getDob().equals(""))))
-					message = message
-					+ applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_DOB_VALIDATE)
-					+ ", ";
+				if ((employee.getDateOfRetirement() == null
+						|| (employee.getDateOfRetirement() != null && employee.getDateOfRetirement().equals("")))
+						&& (employee.getDob() == null || (employee.getDob() != null && employee.getDob().equals(""))))
+					message = message + applicationConstants
+							.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_DOB_VALIDATE) + ", ";
 			} else {
 				message = message
 						+ applicationConstants.getErrorMessage(applicationConstants.ERR_MOVEMENT_EMPLOYEE_VALIDATE)
@@ -270,7 +273,7 @@ public class MovementService {
 			final RequestInfo requestInfo) {
 		final MovementResponse movementRes = new MovementResponse();
 		HttpStatus httpStatus = HttpStatus.OK;
-		if (movementsList.get(0).getErrorMsg() != null)
+		if (!StringUtils.isEmpty(movementsList.get(0).getErrorMsg()))
 			httpStatus = HttpStatus.BAD_REQUEST;
 		movementRes.setMovement(movementsList);
 		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
@@ -299,7 +302,7 @@ public class MovementService {
 		List<Movement> movements = new ArrayList<>();
 		movements.add(movementRequest.getMovement().get(0));
 		movements = validateUpdate(movementRequest);
-		if (movements.get(0).getErrorMsg().isEmpty()) {
+		if (StringUtils.isEmpty(movements.get(0).getErrorMsg())) {
 			final MovementSearchRequest movementSearchRequest = new MovementSearchRequest();
 			final List<Long> ids = new ArrayList<>();
 			ids.add(movements.get(0).getId());
@@ -359,7 +362,11 @@ public class MovementService {
 					&& "Approve".equalsIgnoreCase(movement.getWorkflowDetails().getAction())) {
 				final EmployeeInfo employee = employeeService.getEmployee(movement, movementRequest.getRequestInfo());
 				String message = "";
-
+				if (movement.getEffectiveFrom().before(new Date())) {
+					message = applicationConstants
+							.getErrorMessage(ApplicationConstants.ERR_MOVEMENT_EFFECTIVEFROM_VALIDATE) + ", ";
+					setErrorMessage(movement, message);
+				}
 				// validateEmployeeForPromotion
 				final List<Long> positions = positionService.getPositions(movement, movementRequest.getRequestInfo());
 				if (positions.contains(movement.getPositionAssigned()))

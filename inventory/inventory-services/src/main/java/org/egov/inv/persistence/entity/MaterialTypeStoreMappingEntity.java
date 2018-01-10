@@ -63,9 +63,8 @@ public class MaterialTypeStoreMappingEntity {
     }
 
     private MaterialType buildMaterialType() {
-        return MaterialType.builder()
-                .code(materialType)
-                .build();
+    	MaterialType materialType = new MaterialType();
+        return materialType.code(this.materialType);
     }
 
     private Store buildStore() {

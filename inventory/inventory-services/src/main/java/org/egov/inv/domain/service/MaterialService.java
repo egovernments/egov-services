@@ -16,6 +16,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -112,18 +113,23 @@ public class MaterialService extends DomainService {
     on passing the code we get the material objects from mdms and database*/
     public MaterialResponse search(MaterialSearchRequest materialSearchRequest, org.egov.common.contract.request.RequestInfo requestInfo) {
 
-        Map<String, Material> materialFromMdms = getMaterialFromMdms(materialSearchRequest.getTenantId());
+        MaterialResponse response = new MaterialResponse();
+        
+        List<Material> materials = new ArrayList<Material>();
+        
+        List<Material> materialFromMdms = getMaterialFromMdms(materialSearchRequest.getTenantId(),materialSearchRequest.getCode());
 
-        Pagination<Material> materialFromDb = materialJdbcRepository.search(materialSearchRequest);
+        if(materialFromMdms.size()>0){
+        for(Material material : materialFromMdms){
+        MaterialSearchRequest request = MaterialSearchRequest.builder().code(material.getCode()).tenantId(material.getTenantId()).build();
+        
+        Pagination<Material> materialFromDb = materialJdbcRepository.search(request);
 
         if (materialFromDb.getPagedData().size() > 0){
         
-        for (Material material : materialFromDb.getPagedData()) {
+        for (Material materialDb : materialFromDb.getPagedData()) {
 
-            Material mdmsMaterial = materialFromMdms.get(material.getCode());
-
-            if (null != mdmsMaterial) {
-                prepareMaterial(material, mdmsMaterial);
+                prepareMaterial(material, material);
 
                 List<StoreMapping> storeMappings = new ArrayList<>();
 
@@ -133,7 +139,7 @@ public class MaterialService extends DomainService {
                         .build();
 
                 List<MaterialStoreMapping> materialStoreMappings = materialStoreMappingService.search(materialStoreMappingSearch, requestInfo).getMaterialStoreMappings();
-
+                
                 materialStoreMappings.forEach(materialStoreMapping -> {
                             StoreMapping storeMapping = StoreMapping.builder()
                                     .id(materialStoreMapping.getId())
@@ -148,26 +154,14 @@ public class MaterialService extends DomainService {
                 material.setStoreMapping(storeMappings);
             }
         }
-        MaterialResponse response = new MaterialResponse();
-        response.setMaterials(materialFromDb.getPagedData().size() > 0 ? materialFromDb.getPagedData() : Collections.emptyList());
+        else{
+            material.setStoreMapping(Collections.EMPTY_LIST);
+        }
+        materials.add(material);
+        }
+        }      
+        response.setMaterials(materials);
         return response;
-        }
-        else
-        {
-        	List<Material> list = new ArrayList<>();
-            Material mdmsMaterial = materialFromMdms.get(materialSearchRequest.getCode());
-            if(null != mdmsMaterial){
-            mdmsMaterial.setStoreMapping(Collections.EMPTY_LIST);
-            list.add(mdmsMaterial);
-            }else
-            {
-            	throw new CustomException("Material" , "Material Not Found with code " + materialSearchRequest.getCode());
-            }
-        	 MaterialResponse response = new MaterialResponse();
-             response.setMaterials(list);
-             return response;
-        }
-       
     }
 
     public Material fetchMaterial(final String tenantId, final String code,
@@ -266,20 +260,27 @@ public class MaterialService extends DomainService {
     }
 
 
-    private Map<String, Material> getMaterialFromMdms(String tenantId) {
+    private List<Material> getMaterialFromMdms(String tenantId, String code) {
 
-        List<Object> objectList = mdmsRepository.fetchObjectList(tenantId, "inventory", "Material", null, null, Material.class);
-        Map<String, Material> materialHashMap = new HashMap<>();
+    	List<Object> objectList = new ArrayList<>();
+    	
+    	if(!StringUtils.isEmpty(code)){
+          objectList = mdmsRepository.fetchObjectList(tenantId, "inventory", "Material", "code", code, Material.class);
+    	}else{
+          objectList = mdmsRepository.fetchObjectList(tenantId, "inventory", "Material", null, null, Material.class);
+    	}
+        
+    	List<Material> hashMap = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         if (objectList != null && objectList.size() > 0) {
             for (Object object : objectList) {
-                Material material = mapper.convertValue(object, Material.class);
-                materialHashMap.put(material.getCode(), material);
+            	Material materialType = mapper.convertValue(object, Material.class);
+                hashMap.add(materialType);
             }
         }
-        return materialHashMap;
+        return hashMap;
     }
-
+    
     private void prepareMaterial(Material material, Material mdmsMaterial) {
         material.baseUom(mdmsMaterial.getBaseUom())
                 .purchaseUom(mdmsMaterial.getPurchaseUom())

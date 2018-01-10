@@ -23,6 +23,8 @@ import org.egov.inv.model.PriceListRequest;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Supplier;
+import org.egov.inv.model.SupplierGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.inv.persistence.repository.MaterialJdbcRepository;
@@ -336,15 +338,12 @@ public class PriceListService extends DomainService {
 					}
 					
 				}
+
+                //Supplier reference validation
+                if(null != pl.getSupplier() && !isEmpty(pl.getSupplier().getCode()))
+                if(!isValidSupplier(tenantId, pl.getSupplier().getCode()))
+                	errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "Supplier", pl.getSupplier().getCode());
 				
-				if (null != pl.getSupplier() && !isEmpty(pl.getSupplier().getCode())) {
-
-					if ((supplierJdbcRepository.findByCode(pl.getSupplier(), "Supplier")) == null)
-						errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "Supplier",
-								pl.getSupplier().getCode());
-
-				}
-			
 				// Negative epoch time is for years below 1970
 				if (Long.valueOf(pl.getAgreementDate()) < 0) {
 					throw new CustomException("agreementDate", "Enter a valid Agreement Date");
@@ -399,6 +398,19 @@ public class PriceListService extends DomainService {
 			throw errors;
 
     }
+    
+	private boolean isValidSupplier(String tenantId, String supplierCode) {
+		 SupplierGetRequest supplierGetRequest = SupplierGetRequest.builder()
+				 									.code(Collections.singletonList(supplierCode))
+				 									.tenantId(tenantId)
+				 									.active(true)
+				 									.build();
+        Pagination<Supplier> suppliers = supplierJdbcRepository.search(supplierGetRequest);
+        if(suppliers.getPagedData().size() > 0)
+       	 return true;
+        return false;
+	}
+    
     private String convertEpochtoDate(Long date)
 	 {
 		 Date epoch = new Date(date);

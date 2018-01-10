@@ -215,7 +215,7 @@ class UpdateMovement extends React.Component {
 
     $('#effectiveFrom').datepicker({
       format: 'dd/mm/yyyy',
-      minDate: new Date(),
+      minDate: 0,
       autoclose: true,
       defaultDate: ""
     });

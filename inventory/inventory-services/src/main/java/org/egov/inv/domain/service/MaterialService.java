@@ -114,6 +114,8 @@ public class MaterialService extends DomainService {
 
         Pagination<Material> materialFromDb = materialJdbcRepository.search(materialSearchRequest);
 
+        if (materialFromDb.getPagedData().size() > 0){
+        
         for (Material material : materialFromDb.getPagedData()) {
 
             Material mdmsMaterial = materialFromMdms.get(material.getCode());
@@ -144,10 +146,21 @@ public class MaterialService extends DomainService {
                 material.setStoreMapping(storeMappings);
             }
         }
-
         MaterialResponse response = new MaterialResponse();
         response.setMaterials(materialFromDb.getPagedData().size() > 0 ? materialFromDb.getPagedData() : Collections.emptyList());
         return response;
+        }
+        else
+        {
+        	List<Material> list = new ArrayList<>();
+            Material mdmsMaterial = materialFromMdms.get(materialSearchRequest.getCode());
+            mdmsMaterial.setStoreMapping(Collections.EMPTY_LIST);
+            list.add(mdmsMaterial);
+        	 MaterialResponse response = new MaterialResponse();
+             response.setMaterials(list);
+             return response;
+        }
+       
     }
 
     public Material fetchMaterial(final String tenantId, final String code,

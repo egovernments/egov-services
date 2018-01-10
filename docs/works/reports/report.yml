@@ -34,40 +34,40 @@ ReportDefinitions:
     label: reports.works.workordernumber
     type: number
     source: works
-  - name: filenumber
-    label: reports.works.filenumber
+  - name: referencenoofwip
+    label: reports.works.referencenoofwip
     type: string
     source: works
   - name: estimatevalue
     label: reports.works.estimatevalue
     type: number
     source: works
-  - name: estimateloaamount
-    label: reports.works.estimateloaamount
+  - name: tenderamount
+    label: reports.works.tenderamount
     type: number
     source: works
   - name: contractorname
     label: reports.works.contractor
     type: string
     source: works
-  - name: sanctionedby
-    label: reports.works.sanctionedby
-    type: string
+  - name: approvedattherateof
+    label: reports.works.approvedattherateof
+    type: number
     source: works
-  - name: tenderfinalizedpercentage
-    label: reports.works.tenderfinalizedpercentage
+  - name: totalvalueofthework
+    label: reports.works.totalvalueofthework
+    type: number
+    source: works
+  - name: emdamount
+    label: reports.works.emdamount
     type: number
     source: works
   - name: sanctionedfinyear
     label: reports.works.sanctionedfinyear
     type: string
     source: works
-  - name: emdamountdeposited
-    label: reports.works.emdamountdeposited
-    type: number
-    source: works
-  - name: securitydeposit
-    label: reports.works.securitydeposit
+  - name: securitydepositamount
+    label: reports.works.securitydepositamount
     type: number
     source: works
   searchParams:
@@ -102,7 +102,7 @@ ReportDefinitions:
     searchClause : AND loae.estimateloaamount<=$amountUpto
     isMandatory: false
 
-  query: select wo.workorderdate, de.nameofwork, wo.workordernumber, loa.filenumber, de.estimatevalue, loae.estimateloaamount, contractor.name as contractorname, wo.createdby as sanctionedby, loa.tenderfinalizedpercentage, (select finyear.finYearRange from (values tbl_financialyear) as finyear where wo.createdtime between startingDate and endingDate) as sanctionedfinyear, loa.emdamountdeposited, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydeposit from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor
+  query: select wo.workorderdate, de.nameofwork, wo.workordernumber, de.projectcode as referencenoofwip, de.estimatevalue, de.workvalue as tenderamount, contractor.name as contractorname, loa.tenderfinalizedpercentage as approvedattherateof, loa.loaamount as totalvalueofthework, loa.emdamountdeposited as emdamount, (select finyear.finYearRange from (values tbl_financialyear) as finyear where wo.createdtime between startingDate and endingDate) as sanctionedfinyear, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor
 
 
 

@@ -1200,7 +1200,7 @@ class UpdateCancellation extends React.Component {
                                         <label htmlFor="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea rows="4" cols="50" id="remarks" name="remarks"
+                                        <textarea rows="4" cols="50" id="remarks" name="remarks" value={remarks}
                                             onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>

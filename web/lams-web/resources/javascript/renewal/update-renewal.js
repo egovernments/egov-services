@@ -1262,7 +1262,7 @@ class UpdateRenewal extends React.Component {
                                         <label for="remarks">Remarks </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <textarea name="remarks" id="remarks"
+                                        <textarea name="remarks" id="remarks" value={remarks}
                                             onChange={(e) => { handleChange(e, "remarks") }} disabled ></textarea>
                                     </div>
                                 </div>

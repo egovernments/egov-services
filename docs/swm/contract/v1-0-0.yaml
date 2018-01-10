@@ -2758,6 +2758,8 @@ definitions:
           minLength: 1
         location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        ulb:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1.0.1.yml#/definitions/Tenant'
         censusYear:
           type: integer
           format: int64

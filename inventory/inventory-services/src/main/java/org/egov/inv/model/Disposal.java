@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import org.egov.inv.model.DisposalDetail;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.WorkFlowDetails;
@@ -21,7 +24,8 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This object holds the disposal information.   ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class Disposal   {
   @JsonProperty("id")
   private String id = null;
@@ -153,9 +157,6 @@ public class Disposal   {
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
-  @Valid
-
   public Store getStore() {
     return store;
   }
@@ -174,8 +175,6 @@ public class Disposal   {
    * @return disposalNumber
   **/
   @ApiModelProperty(required = true, readOnly = true, value = "Auto generated number, read only ")
-  @NotNull
-
  @Size(max=100)
   public String getDisposalNumber() {
     return disposalNumber;

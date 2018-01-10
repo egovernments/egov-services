@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import org.egov.inv.model.Disposal;
 import org.egov.inv.model.RequestInfo;
 import java.util.ArrayList;
@@ -17,7 +20,8 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Contract class for web request. Array of Disposal items  are used in case of create or update")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@AllArgsConstructor
+@NoArgsConstructor
 public class DisposalRequest   {
   @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;

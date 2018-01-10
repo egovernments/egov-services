@@ -97,8 +97,6 @@ public class DisposalDetail {
 	 * @return material
 	 **/
 	@ApiModelProperty(required = true, value = "")
-	@NotNull
-
 	@Valid
 
 	public Material getMaterial() {
@@ -144,8 +142,6 @@ public class DisposalDetail {
 	@ApiModelProperty(required = true, value = "")
 	@NotNull
 
-	@Valid
-
 	public ScrapDetail getScrapDetails() {
 		return scrapDetails;
 	}
@@ -165,7 +161,6 @@ public class DisposalDetail {
 	 * @return disposalQuantity
 	 **/
 	@ApiModelProperty(required = true, value = "disposal quantity of the DisposalDetails ")
-	@NotNull
 
 	@Valid
 

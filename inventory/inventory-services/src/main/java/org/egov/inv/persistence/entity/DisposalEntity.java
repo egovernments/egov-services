@@ -71,6 +71,7 @@ public class DisposalEntity {
 		disposal.setDescription(description);
 		disposal.setDisposalStatus(DisposalStatusEnum.valueOf(disposalStatus));
 		disposal.setStateId(stateId);
+		if(totalDisposalValue != null)
 		disposal.setTotalDisposalValue(BigDecimal.valueOf(totalDisposalValue));
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(createdBy);

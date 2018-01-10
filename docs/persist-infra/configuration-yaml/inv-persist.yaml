@@ -1667,3 +1667,92 @@ serviceMaps:
             - jsonPath: $.supplierAdvanceRequisitions.*.sarStatus
             - jsonPath: $.supplierAdvanceRequisitions.*.id
             - jsonPath: $.supplierAdvanceRequisitions.*.tenantId
+    - version: 1.0
+      name: Disposal
+      description: Create Disposal
+      fromTopic: inv-disposal-create-topic
+      queryMaps:
+        - query: INSERT INTO disposal(id, tenantId, store, disposalnumber, disposaldate, handoverto, auctionnumber, description,disposalstatus, stateid, totaldisposalvalue, createdby,createdtime,lastmodifiedby,lastModifiedtime)VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.disposals.*
+          jsonMaps:
+            - jsonPath: $.disposals.*.id
+            - jsonPath: $.disposals.*.tenantId
+            - jsonPath: $.disposals.*.store.code
+            - jsonPath: $.disposals.*.disposalNumber
+            - jsonPath: $.disposals.*.disposalDate
+            - jsonPath: $.disposals.*.handOverTo
+            - jsonPath: $.disposals.*.auctionNumber
+            - jsonPath: $.disposals.*.description
+            - jsonPath: $.disposals.*.disposalStatus
+            - jsonPath: $.disposals.*.stateId
+            - jsonPath: $.disposals.*.totalDisposalValue
+              dbType: DOUBLE
+            - jsonPath: $.disposals.*.auditDetails.createdBy
+            - jsonPath: $.disposals.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.disposals.*.auditDetails.lastModifiedBy
+            - jsonPath: $.disposals.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            
+        - query: INSERT INTO disposaldetail(id,tenantId,userdisposalquantity,disposalquantity,material,uom,disposalvalue,disposalnumber,scrapdetailid )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.disposals.*.disposalDetails.*
+          jsonMaps:
+            - jsonPath: $.disposals.*.disposalDetails.*.id
+            - jsonPath: $.disposals.*.disposalDetails.*.tenantId
+            - jsonPath: $.disposals.*.disposalDetails.*.userDisposalQuantity
+              dbType: DOUBLE
+            - jsonPath: $.disposals.*.disposalDetails.*.disposalQuantity
+              dbType: DOUBLE
+            - jsonPath: $.disposals.*.disposalDetails.*.material.code
+            - jsonPath: $.disposals.*.disposalDetails.*.uom.code
+            - jsonPath: $.disposals.*.disposalDetails.*.disposalValue
+              dbType: DOUBLE
+            - jsonPath: $.disposals[?({id} in @.disposalDetails[*].id)].disposalNumber
+            - jsonPath: $.disposals.*.disposalDetails.*.scrapDetails.id
+    - version: 1.0
+      name: Disposal  update
+      description: Update Disposal 
+      fromTopic: inv-disposal-update-topic
+      isTransaction: true
+      queryMaps:
+        - query: >-
+               update disposal set store = ?,disposaldate = ?, handoverto  = ?, auctionnumber = ?, description = ?, disposalstatus = ?, stateid = ?,
+               totaldisposalvalue = ?, lastmodifiedby = ?, lastModifiedTime = ? where disposalnumber = ? and tenantid = ?;
+          basePath: $.disposals.*
+          jsonMaps:
+            - jsonPath: $.disposals.*.store.code
+            - jsonPath: $.disposals.*.disposalDate
+            - jsonPath: $.disposals.*.handOverTo
+            - jsonPath: $.disposals.*.auctionNumber
+            - jsonPath: $.disposals.*.description
+            - jsonPath: $.disposals.*.disposalStatus
+            - jsonPath: $.disposals.*.stateId
+            - jsonPath: $.disposals.*.totalDisposalValue
+              dbType: DOUBLE
+            - jsonPath: $.disposals.*.auditDetails.lastModifiedBy
+            - jsonPath: $.disposals.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.disposals.*.disposalNumber
+            - jsonPath: $.disposals.*.tenantId
+        - query: >-
+                 INSERT INTO disposaldetail(id,tenantId,userdisposalquantity,disposalquantity,material,uom,disposalvalue,disposalnumber,scrapdetailid )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 userdisposalquantity = EXCLUDED.userdisposalquantity, disposalquantity  = EXCLUDED.disposalquantity, material = EXCLUDED.material,
+                 uom = EXCLUDED.uom, disposalvalue = EXCLUDED.disposalvalue, disposalnumber = EXCLUDED.disposalnumber,
+                 scrapdetailid = EXCLUDED.scrapdetailid;
+          basePath: $.disposals.*.disposalDetails.*
+          jsonMaps:
+            - jsonPath: $.disposals.*.disposalDetails.*.id
+            - jsonPath: $.disposals.*.disposalDetails.*.tenantId
+            - jsonPath: $.disposals.*.disposalDetails.*.userDisposalQuantity
+              dbType: DOUBLE
+            - jsonPath: $.disposals.*.disposalDetails.*.disposalQuantity
+              dbType: DOUBLE
+            - jsonPath: $.disposals.*.disposalDetails.*.material.code
+            - jsonPath: $.disposals.*.disposalDetails.*.uom.code
+            - jsonPath: $.disposals.*.disposalDetails.*.disposalValue
+              dbType: DOUBLE
+            - jsonPath: $.disposals[?({id} in @.disposalDetails[*].id)].disposalNumber
+            - jsonPath: $.disposals.*.disposalDetails.*.scrapDetails.id
+
+
+

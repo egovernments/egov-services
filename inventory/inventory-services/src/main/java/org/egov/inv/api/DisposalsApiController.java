@@ -42,7 +42,7 @@ public class DisposalsApiController implements DisposalsApi {
 
 	public ResponseEntity<DisposalResponse> disposalsSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
+			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
 			@ApiParam(value = "store of the Disposal ") @RequestParam(value = "store", required = false) String store,
 			@ApiParam(value = "disposal number of the Disposal ") @RequestParam(value = "disposalNumber", required = false) String disposalNumber,
@@ -52,12 +52,13 @@ public class DisposalsApiController implements DisposalsApi {
 			@ApiParam(value = "disposal status of the Disposal ", allowableValues = "CREATED, APPROVED, REJECTED, CANCELED") @RequestParam(value = "disposalStatus", required = false) String disposalStatus,
 			@ApiParam(value = "state id of the Disposal ") @RequestParam(value = "stateId", required = false) String stateId,
 			@ApiParam(value = "totalDisposalValue  denormalized value from Disposal Details ") @RequestParam(value = "totalDisposalValue", required = false) Double totalDisposalValue,
-			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
-			@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
-			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
+			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.") @RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@ApiParam(value = "Page number") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy) {
 		DisposalSearchContract disposalSearchContract = new DisposalSearchContract(ids,tenantId,store,disposalNumber,disposalDate,handOverTo,
 				auctionNumber,disposalStatus,stateId,totalDisposalValue,pageSize,pageNumber,sortBy);
-		return new ResponseEntity<DisposalResponse>(HttpStatus.OK);
+		DisposalResponse disposalResponse = disposalService.search(disposalSearchContract);
+		return new ResponseEntity(disposalResponse,HttpStatus.OK);
 	}
 
 	public ResponseEntity<DisposalResponse> disposalsUpdatePost(

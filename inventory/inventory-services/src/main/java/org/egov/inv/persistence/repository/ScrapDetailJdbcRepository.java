@@ -10,11 +10,17 @@ import org.egov.common.Pagination;
 import org.egov.inv.model.ScrapDetail;
 import org.egov.inv.model.ScrapDetailSearch;
 import org.egov.inv.model.ScrapSearch;
+import org.egov.inv.persistence.entity.DisposalDetailEntity;
+import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.entity.ScrapDetailEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 @Repository
 public class ScrapDetailJdbcRepository extends JdbcRepository{
+	
+	  static {
+	        init(ScrapDetailEntity.class);
+	    }
 	
 	
 	 public Pagination<ScrapDetail> search(ScrapDetailSearch scrapDetailSearch) {
@@ -89,5 +95,26 @@ public class ScrapDetailJdbcRepository extends JdbcRepository{
 
 	        return page;
 	    }
+	 
+	 
+		public ScrapDetailEntity findById(ScrapDetailEntity entity) {
+			List<String> list = allIdentitiferFields.get(entity.getClass().getSimpleName());
+
+			Map<String, Object> paramValues = new HashMap<>();
+
+			for (String s : list) {
+				paramValues.put(s, getValue(getField(entity, s), entity));
+			}
+
+			List<ScrapDetailEntity> scrapDetails = namedParameterJdbcTemplate.query(
+					getByIdQuery.get(entity.getClass().getSimpleName()).toString(), paramValues,
+					new BeanPropertyRowMapper(ScrapDetailEntity.class));
+			if (scrapDetails.isEmpty()) {
+				return null;
+			} else {
+				return scrapDetails.get(0);
+			}
+
+		}
 
 }

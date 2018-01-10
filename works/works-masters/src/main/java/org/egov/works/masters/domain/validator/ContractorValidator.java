@@ -97,8 +97,7 @@ public class ContractorValidator {
                     }
 
                     if (dbContractorObjByMobileNo != null && !dbContractorObjByMobileNo.isEmpty()) {
-                        if (!dbContractorObjByMobileNo.get(0).getMobileNumber()
-                                .equalsIgnoreCase(contractor.getMobileNumber())) {
+                        if (!dbContractorObjByMobileNo.get(0).getId().equals(contractor.getId())){
                             messages.put(Constants.KEY_CONTRACTOR_MOBILE_INVALID,
                                     Constants.MESSAGE_CONTRACTOR_MOBILE_INVALID);
                             isDataValid = Boolean.TRUE;
@@ -106,8 +105,7 @@ public class ContractorValidator {
                     }
 
                     if (dbContractorObjByEmail != null && !dbContractorObjByEmail.isEmpty()) {
-                        if (!dbContractorObjByEmail.get(0).getEmail()
-                                .equalsIgnoreCase(contractor.getEmail())) {
+                        if (!dbContractorObjByEmail.get(0).getId().equals(contractor.getId())) {
                             messages.put(Constants.KEY_CONTRACTOR_EMAIL_INVALID,
                                     Constants.MESSAGE_CONTRACTOR_EMAIL_INVALID);
                             isDataValid = Boolean.TRUE;

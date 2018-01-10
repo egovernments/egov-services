@@ -2,9 +2,9 @@ package org.egov.inv.domain.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.MdmsRepository;
@@ -12,6 +12,7 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.FinancialYear;
 import org.egov.inv.model.MaterialIssue;
 import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
 import org.egov.inv.model.MaterialIssueDetail;
@@ -27,6 +28,7 @@ import org.egov.inv.model.ScrapResponse;
 import org.egov.inv.model.ScrapSearch;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
+import org.egov.inv.model.Tenant;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.ScrapDetailJdbcRepository;
 import org.egov.inv.persistence.repository.ScrapJdbcRepository;
@@ -36,6 +38,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class ScrapService extends DomainService{
@@ -56,6 +62,9 @@ public class ScrapService extends DomainService{
 	private StoreJdbcRepository storeJdbcRepository;
 	
 	@Autowired
+	private NumberGenerator numberGenerator;
+	
+	@Autowired
 	private ScrapDetailJdbcRepository scrapDetailJdbcRepository;
 	
 	@Value("${inv.scrap.save.topic}")
@@ -72,7 +81,7 @@ public class ScrapService extends DomainService{
 		
 		scrap.forEach(scrapData -> {
 				scrapData.setId(scrapJdbcRepository.getSequence("seq_scrap"));
-				scrapData.setScrapNumber(appendString(scrapData));
+				scrapData.setScrapNumber(getScrapNumber(scrapData, scrapReq.getRequestInfo(), tenantId));
 				scrapData.setScrapStatus(ScrapStatusEnum.APPROVED);
 			if (StringUtils.isEmpty(scrapData.getTenantId())) {
 				scrapData.setTenantId(tenantId);
@@ -191,14 +200,35 @@ public class ScrapService extends DomainService{
 			throw errors;
 	}
 	
-	private String appendString(Scrap scrapReq) {
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		String code = "SCRP/";
-		int id = Integer.valueOf(scrapJdbcRepository.getSequence(scrapReq));
-		String idgen = String.format("%05d", id);
-		String scrapNumber = code + idgen + "/" + year;
-		return scrapNumber;
+	private String getScrapNumber(Scrap scrap, RequestInfo info,String tenantId) {
+		InvalidDataException errors = new InvalidDataException();
+		ObjectMapper mapper = new ObjectMapper();
+		JSONArray tenantStr = mdmsRepository.getByCriteria(tenantId, "tenant", "tenants", "code",
+				scrap.getTenantId(), info);
+
+		Tenant tenant = mapper.convertValue(tenantStr.get(0), Tenant.class);
+		if (tenant == null) {
+			errors.addDataError(ErrorCode.CITY_CODE_NOT_AVAILABLE.getCode(), tenantId);
+		}
+		String finYearRange = "";
+		JSONArray finYears = mdmsRepository.getByCriteria(tenantId, "egf-master", "FinancialYear", null, null, info);
+		outer: for (int i = 0; i < finYears.size(); i++) {
+			FinancialYear fin = mapper.convertValue(finYears.get(i), FinancialYear.class);
+			if (getCurrentDate() >= fin.getStartingDate().getTime()  && getCurrentDate() <= fin.getEndingDate().getTime()) {
+				finYearRange = fin.getFinYearRange();
+				break outer;
+			}
+		}
+
+		if (finYearRange.isEmpty()) {
+			errors.addDataError(ErrorCode.NULL_VALUE.getCode(), "Scrap date " + scrap.getScrapDate().toString());
+		}
+		if (errors.getValidationErrors().size() > 0) {
+			throw errors;
+		}
+
+		String seq = "SCRP/" + tenant.getCity().getCode() + "/" + finYearRange;
+		return seq + "/" + numberGenerator.getNextNumber(seq, 5);
 	}
 	
 	private void fetchRelated(ScrapRequest request, String tenantId) {
@@ -302,6 +332,10 @@ public class ScrapService extends DomainService{
 			}
 			return  true;
 		}
+	 
+	 private Long getCurrentDate() {
+	        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
+	    }
 	}
 
 

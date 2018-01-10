@@ -11,10 +11,12 @@ import java.util.List;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.FinancialYear;
 import org.egov.inv.model.MaterialIssue;
 import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueSearchContract;
@@ -25,6 +27,8 @@ import org.egov.inv.model.MaterialReceiptAddInfoSearch;
 import org.egov.inv.model.MaterialReceiptDetail;
 import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.MaterialReceiptSearch;
+import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Tenant;
 import org.egov.inv.model.TransferInwardRequest;
 import org.egov.inv.model.TransferInwardResponse;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
@@ -35,6 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class TransferinwardsService extends DomainService {
@@ -50,10 +58,15 @@ public class TransferinwardsService extends DomainService {
 
 	@Autowired
 	private MaterialReceiptService materialReceiptService;
+	
+	@Autowired
+	private NumberGenerator numberGenerator;
 
 	@Autowired
 	private MaterialIssueJdbcRepository materialIssueJdbcRepository;
 
+	@Autowired
+	private MdmsRepository mdmsRepository;
 	@Autowired
 	private MaterialReceiptDetailAddInfoJdbcRepository materialReceiptDetailAddInfoJdbcRepository;
 
@@ -78,7 +91,7 @@ public class TransferinwardsService extends DomainService {
 			inwards.forEach(materialReceipt -> {
 				materialReceipt.setId(transferInwardRepository.getSequence("seq_materialreceipt"));
 				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
-				materialReceipt.setMrnNumber(appendString(materialReceipt));
+				materialReceipt.setMrnNumber(getInwardNumber(materialReceipt, inwardRequest.getRequestInfo(),tenantId));
 				materialReceipt.setReceiptType(ReceiptTypeEnum.INWARD_RECEIPT);
 				materialReceipt.setAuditDetails(getAuditDetails(inwardRequest.getRequestInfo(), tenantId));
 				if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
@@ -185,14 +198,32 @@ public class TransferinwardsService extends DomainService {
 
 	}
 
-	private String appendString(MaterialReceipt materialReceipt) {
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		String code = "MRN/";
-		int id = Integer.valueOf(transferInwardRepository.getSequence(materialReceipt));
-		String idgen = String.format("%05d", id);
-		String mrnNumber = code + idgen + "/" + year;
-		return mrnNumber;
+	private String getInwardNumber(MaterialReceipt receipt, RequestInfo info,String tenantId) {
+		InvalidDataException errors = new InvalidDataException();
+		ObjectMapper mapper = new ObjectMapper();
+		JSONArray tenantStr = mdmsRepository.getByCriteria(tenantId, "tenant", "tenants", "code",
+				tenantId, info);
+
+		Tenant tenant = mapper.convertValue(tenantStr.get(0), Tenant.class);
+		if (tenant == null) {
+			errors.addDataError(ErrorCode.CITY_CODE_NOT_AVAILABLE.getCode(), tenantId);
+		}
+		String finYearRange = "";
+		JSONArray finYears = mdmsRepository.getByCriteria(tenantId, "egf-master", "FinancialYear", null, null, info);
+		outer: for (int i = 0; i < finYears.size(); i++) {
+			FinancialYear fin = mapper.convertValue(finYears.get(i), FinancialYear.class);
+			if (getCurrentDate() >= fin.getStartingDate().getTime()  && getCurrentDate() <= fin.getEndingDate().getTime()) {
+				finYearRange = fin.getFinYearRange();
+				break outer;
+			}
+		}
+
+		if (errors.getValidationErrors().size() > 0) {
+			throw errors;
+		}
+
+		String seq = "MRN/" + tenant.getCity().getCode() + "/" + finYearRange;
+		return seq + "/" + numberGenerator.getNextNumber(seq, 5);
 	}
 
 	// fetching material issue and building with receipt data
@@ -270,5 +301,10 @@ public class TransferinwardsService extends DomainService {
 	private void updateStatusAsReceipted(String issueNumber, String tenantId) {
 		materialIssueJdbcRepository.updateStatus(issueNumber, "RECEIPTED", tenantId);
 	}
+	
+	private Long getCurrentDate() {
+        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
+    }
+ 
 
 }

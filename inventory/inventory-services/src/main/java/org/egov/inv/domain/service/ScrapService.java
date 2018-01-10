@@ -220,9 +220,6 @@ public class ScrapService extends DomainService{
 			}
 		}
 
-		if (finYearRange.isEmpty()) {
-			errors.addDataError(ErrorCode.NULL_VALUE.getCode(), "Scrap date " + scrap.getScrapDate().toString());
-		}
 		if (errors.getValidationErrors().size() > 0) {
 			throw errors;
 		}

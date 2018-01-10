@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds Remarks Master data
  */
 @ApiModel(description = "An Object that holds Remarks Master data")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-10T10:10:27.771Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-10T13:23:45.489Z")
 
 public class Remarks   {
   @JsonProperty("id")

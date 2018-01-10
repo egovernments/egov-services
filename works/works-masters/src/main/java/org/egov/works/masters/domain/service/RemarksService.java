@@ -92,15 +92,15 @@ public class RemarksService {
         HashMap<String, String> messages = new HashMap<>();
 
         for(Remarks remarks : remarksRequest.getRemarks()) {
-            JSONArray responseJSONArray = mdmsRepository.getByCriteria(remarks.getTenantId(), CommonConstants.MODULENAME_WORKS, CommonConstants.TYPE_OF_DOCUMENT, CommonConstants.CODE,
-                    remarks.getTypeOfDocument().getCode(), remarksRequest.getRequestInfo());
+            JSONArray responseJSONArray = mdmsRepository.getByCriteria(remarks.getTenantId(), CommonConstants.MODULENAME_WORKS, CommonConstants.TYPE_OF_DOCUMENT, CommonConstants.NAME,
+                    remarks.getTypeOfDocument().getName(), remarksRequest.getRequestInfo());
             if (responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_REMARKS_TYPEOFDOCUMENT_INVALID,  Constants.MESSAGE_REMARKS_TYPEOFDOCUMENT_INVALID);
             }
             
             
-            JSONArray responseJSONArray1 = mdmsRepository.getByCriteria(remarks.getTenantId(), CommonConstants.MODULENAME_WORKS, CommonConstants.REMARKS_TYPE, CommonConstants.CODE,
-                    remarks.getRemarksType().getCode(), remarksRequest.getRequestInfo());
+            JSONArray responseJSONArray1 = mdmsRepository.getByCriteria(remarks.getTenantId(), CommonConstants.MODULENAME_WORKS, CommonConstants.REMARKS_TYPE, CommonConstants.NAME,
+                    remarks.getRemarksType().getName(), remarksRequest.getRequestInfo());
             
             if (responseJSONArray1.isEmpty()) {
                 messages.put(Constants.KEY_REMARKS_TYPE_INVALID,  Constants.MESSAGE_REMARKS_TYPE_INVALID);

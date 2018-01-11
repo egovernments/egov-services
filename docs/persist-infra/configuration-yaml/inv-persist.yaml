@@ -236,7 +236,12 @@ serviceMaps:
       description: create material store mapping in inventory
       fromTopic: inv-materialstore-save-topic
       queryMaps:
-        - query: INSERT INTO materialstoremapping(id, material, store, chartofaccount, active,tenantid , createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: >- 
+                    INSERT INTO materialstoremapping(id, material, store, chartofaccount, active,tenantid , createdby, 
+                    lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+                    ON CONFLICT (id,tenantid) DO UPDATE 
+                    SET material= EXCLUDED.material,  store=EXCLUDED.store, chartofaccount=EXCLUDED.chartofaccount,
+                    active=EXCLUDED.active, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
           basePath: $.materialStoreMappings.*
           jsonMaps:
             - jsonPath: $.materialStoreMappings.*.id
@@ -250,7 +255,7 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.auditDetails.createdTime
               dbType: LONG
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedTime
-              dbType: LONG
+              dbType: LONG  
 
     - version: 1.0
       name: material store mapping update

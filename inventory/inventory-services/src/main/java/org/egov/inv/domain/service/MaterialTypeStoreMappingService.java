@@ -12,6 +12,7 @@ import org.egov.inv.persistence.repository.MaterialTypeStoreJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -64,11 +65,15 @@ public class MaterialTypeStoreMappingService extends DomainService {
 
     public MaterialTypeStoreResponse update(MaterialTypeStoreRequest materialTypeStoreRequest, String tenantId) {
         List<MaterialTypeStoreMapping> materialTypeStores = materialTypeStoreRequest.getMaterialTypeStores();
-        validate(materialTypeStores, tenantId, Constants.ACTION_UPDATE);
 
         for (MaterialTypeStoreMapping materialTypeStoreMapping : materialTypeStores) {
+        	if(StringUtils.isEmpty(materialTypeStoreMapping.getId())){
+                materialTypeStoreMapping.setId(typeStoreMappingJdbcRepository.getSequence("seq_materialtypestoremapping"));
+        	}
             setTenant(tenantId, materialTypeStoreMapping);
         }
+        validate(materialTypeStores, tenantId, Constants.ACTION_UPDATE);
+
         kafkaQue.send(saveTopic, saveTopicKey, materialTypeStoreRequest);
         MaterialTypeStoreResponse materialTypeStoreResponse = new MaterialTypeStoreResponse();
         materialTypeStoreResponse.setResponseInfo(null);
@@ -133,6 +138,7 @@ public class MaterialTypeStoreMappingService extends DomainService {
                 } else {
                     errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSING.getCode(), "Material", materialTypeStoreMapping.getMaterialType().getCode());
                 }
+                
                 i++;
             }
 

@@ -165,6 +165,12 @@ public class PurchaseOrderService extends DomainService {
 
             	BigDecimal totalAmount = BigDecimal.ZERO;
             	
+            	for(PurchaseOrderDetail poDetail : purchaseOrder.getPurchaseOrderDetails()) {
+            		totalAmount = totalAmount.add(poDetail.getOrderQuantity().multiply(poDetail.getUnitPrice()).add(totalAmount));
+            	}
+            	
+            	purchaseOrder.setTotalAmount(totalAmount);
+            	
                 if (purchaseOrder.getAdvanceAmount() != null) {
                     if (purchaseOrder.getAdvanceAmount().compareTo(purchaseOrder.getTotalAmount()) > 0) {
                         errors.addDataError(ErrorCode.ADVAMT_GE_TOTAMT.getCode(), purchaseOrder.getAdvanceAmount() + " at serial no." + (purchaseOrders.indexOf(purchaseOrder) + 1));

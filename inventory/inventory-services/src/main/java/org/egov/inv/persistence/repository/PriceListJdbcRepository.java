@@ -108,22 +108,24 @@ public class PriceListJdbcRepository extends JdbcRepository {
             params.append("tenantid =:tenantId");
             paramValues.put("tenantId", priceListSearchRequest.getTenantId());
         }
-        if (priceListSearchRequest.getMaterialCode() != null || priceListSearchRequest.getRateContractDate() != null) {
+        if (priceListSearchRequest.getMaterialCode() != null || priceListSearchRequest.getAsOnDate() != null) {
             // TODO: APPEND IS ACTIVE AT DETAIL LEVEL ALSO.
             if (priceListSearchRequest.getMaterialCode() != null
-                    && priceListSearchRequest.getRateContractDate() != null) {
+                    && priceListSearchRequest.getAsOnDate() != null) {
                 params.append(" and  id in ( select pricelist from pricelistdetails "
-                        + "where material=:materialCode  and :rateContractDate between fromdate and todate and todate >= (extract(epoch from now())::bigint * 1000) )  ");
+                        + " where material=:materialCode  and :asOnDate between fromdate and todate )    ");
+                //todate >= (extract(epoch from now())::bigint * 1000) 
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
-                paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
+                paramValues.put("asOnDate", priceListSearchRequest.getAsOnDate());
             } else if (priceListSearchRequest.getMaterialCode() != null) {
                 params.append(
                         "  and id in ( select pricelist from pricelistdetails " + "where material=:materialCode )  ");
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
-            } else if (priceListSearchRequest.getRateContractDate() != null) {
+            } else if (priceListSearchRequest.getAsOnDate() != null) {
                 params.append(" and id in ( select pricelist from pricelistdetails "
-                        + "where  :rateContractDate between fromdate and todate and todate >= (extract(epoch from now())::bigint * 1000)  )  ");
-                paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
+                        + "where  :asOnDate between fromdate and todate   )  ");
+                //and todate >= (extract(epoch from now())::bigint * 1000)
+                paramValues.put("asOnDate", priceListSearchRequest.getAsOnDate());
 
             }
 
@@ -141,7 +143,15 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 params.append(" and ");
             }
             params.append("id in(:ids) ");
-            paramValues.put("ids", new ArrayList<String>(Arrays.asList(priceListSearchRequest.getIds().split(","))));
+            paramValues.put("ids", priceListSearchRequest.getIds());
+        }
+        
+        if (priceListSearchRequest.getSuppliers() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("supplier in (:suppliers)");
+            paramValues.put("suppliers", priceListSearchRequest.getSuppliers());
         }
 
         if (priceListSearchRequest.getSupplierName() != null) {
@@ -235,6 +245,9 @@ public class PriceListJdbcRepository extends JdbcRepository {
         if (!isEmpty(priceListSearchRequest.getSortBy())) {
             orderBy = "order by " + priceListSearchRequest.getSortBy();
         }
+        
+        
+        
 
         if (priceListSearchRequest.getTenantId() != null) {
             if (params.length() > 0) {
@@ -242,6 +255,30 @@ public class PriceListJdbcRepository extends JdbcRepository {
             }
             params.append("tenantid =:tenantId");
             paramValues.put("tenantId", priceListSearchRequest.getTenantId());
+        }
+        
+        
+        if (priceListSearchRequest.getMaterialCode() != null || priceListSearchRequest.getAsOnDate() != null) {
+            // TODO: APPEND IS ACTIVE AT DETAIL LEVEL ALSO.
+          /*  if (priceListSearchRequest.getMaterialCode() != null
+                    && priceListSearchRequest.getAsOnDate() != null) {
+                params.append(" and  id in ( select pricelist from pricelistdetails "
+                        + " where material=:materialCode  and :asOnDate between fromdate and todate )    ");
+                //todate >= (extract(epoch from now())::bigint * 1000) 
+                paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
+                paramValues.put("asOnDate", priceListSearchRequest.getAsOnDate());
+            } else*/ if (priceListSearchRequest.getMaterialCode() != null) {
+                params.append(
+                        "  and id in ( select pricelist from pricelistdetails " + "where material=:materialCode )  ");
+                paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
+            }/* else if (priceListSearchRequest.getAsOnDate() != null) {
+                params.append(" and id in ( select pricelist from pricelistdetails "
+                        + "where  :asOnDate between fromdate and todate   )  ");
+                //and todate >= (extract(epoch from now())::bigint * 1000)
+                paramValues.put("asOnDate", priceListSearchRequest.getAsOnDate());
+
+            }*/
+
         }
 
         if (priceListSearchRequest.getId() != null) {
@@ -257,16 +294,15 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 params.append(" and ");
             }
             params.append("id in(:ids) ");
-            paramValues.put("ids",
-                    new ArrayList<String>(Arrays.asList(priceListSearchRequest.getIds().split(","))));
+            paramValues.put("ids",priceListSearchRequest.getIds());
         }
 
-        if (priceListSearchRequest.getSupplierName() != null) {
+        if (priceListSearchRequest.getSuppliers() != null) {
             if (params.length() > 0) {
                 params.append(" and ");
             }
-            params.append("supplier =:supplierName");
-            paramValues.put("supplierName", priceListSearchRequest.getSupplierName());
+            params.append("supplier in (:suppliers)");
+            paramValues.put("suppliers", priceListSearchRequest.getSuppliers());
         }
 
         if (priceListSearchRequest.getRateType() != null) {
@@ -307,8 +343,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 params.append(" and ");
             }
             params.append("agreementNumber in(:agreementNumbers) ");
-            paramValues.put("agreementNumbers",
-                    new ArrayList<String>(Arrays.asList(priceListSearchRequest.getAgreementNumbers().split(","))));
+            paramValues.put("agreementNumbers",priceListSearchRequest.getAgreementNumbers());
         }
 
         if (priceListSearchRequest.getAgreementDate() != null) {
@@ -318,6 +353,15 @@ public class PriceListJdbcRepository extends JdbcRepository {
             params.append("agreementDate =:agreementDate");
             paramValues.put("agreementDate", priceListSearchRequest.getAgreementDate());
         }
+        
+        if (priceListSearchRequest.getAsOnDate() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("agreementStartDate  <=:asOnDate and  agreementEndDate >=:asOnDate");
+            paramValues.put("asOnDate", priceListSearchRequest.getAsOnDate());
+        }
+
 
         if (priceListSearchRequest.getRateContractDate() != null) {
             if (params.length() > 0) {

@@ -2546,13 +2546,18 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: supplierName
+          - name: suppliers
             type: array
             items:
              type: string
             in: query
             description: |
               Name of the vendor supplying materials required
+          - name: ids
+            type: string
+            in: query
+            description: |
+              search on basis of ids
           - name: rateContractNumber
             type: string
             in: query
@@ -2565,6 +2570,11 @@ paths:
             in: query
             description: |
               Agreement no with the supplier of materials
+          - name: materialCode
+            type: string
+            in: query
+            description: |
+              select only given materil codes
           - name: rateContractDate
             type: integer
             format: int64
@@ -2593,6 +2603,13 @@ paths:
             in: query
             description: |
               Date on which the agreement expires with the supplier
+          - name: asOnDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              Date on which valid pricelist exists. This will be used to fetch valid pricelist for the given date. this date should be 								greater than agreementStartDate and less than agreementEndDate
           - name: rateType
             type: string
             in: query

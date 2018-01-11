@@ -1,5 +1,7 @@
 package org.egov.inv.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,13 +17,13 @@ public class PriceListSearchRequest {
 
     private String tenantId;
 
-    private String ids;
+    private List<String> ids;
 
     private String id;
 
     private String supplierName;
     
-    private String suppliers;
+    private List<String> suppliers;
     
     private String rateType;
 
@@ -31,7 +33,7 @@ public class PriceListSearchRequest {
 
     private String agreementNumber;
     
-    private String agreementNumbers;
+    private List<String> agreementNumbers;
 
     private Long rateContractDate;
     
@@ -50,5 +52,8 @@ public class PriceListSearchRequest {
     private String sortBy;
     
     private String materialCode;
+    
+    private Long asOnDate;
+    
 
 }

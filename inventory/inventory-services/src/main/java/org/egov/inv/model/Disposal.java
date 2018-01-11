@@ -20,114 +20,117 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This object holds the disposal information.   
+ * This object holds the disposal information.
  */
 @ApiModel(description = "This object holds the disposal information.   ")
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Disposal   {
-  @JsonProperty("id")
-  private String id = null;
-  
-  @JsonProperty("tenantId")
-  private String tenantId = null;
+public class Disposal {
+	@JsonProperty("id")
+	private String id = null;
 
-  @JsonProperty("store")
-  private Store store = null;
+	@JsonProperty("tenantId")
+	private String tenantId = null;
 
-  @JsonProperty("disposalNumber")
-  private String disposalNumber = null;
+	@JsonProperty("store")
+	private Store store = null;
 
-  @JsonProperty("disposalDate")
-  private Long disposalDate = null;
+	@JsonProperty("scrapNumbers")
+	private List<String> scrapNumbers = null;
 
-  @JsonProperty("handOverTo")
-  private String handOverTo = null;
+	@JsonProperty("disposalNumber")
+	private String disposalNumber = null;
 
-  @JsonProperty("auctionNumber")
-  private String auctionNumber = null;
+	@JsonProperty("disposalDate")
+	private Long disposalDate = null;
 
-  @JsonProperty("description")
-  private String description = null;
+	@JsonProperty("handOverTo")
+	private String handOverTo = null;
 
-  @JsonProperty("disposalDetails")
-  private List<DisposalDetail> disposalDetails = null;
+	@JsonProperty("auctionNumber")
+	private String auctionNumber = null;
 
-  /**
-   * disposal status of the Disposal 
-   */
-  public enum DisposalStatusEnum {
-    CREATED("CREATED"),
-    
-    APPROVED("APPROVED"),
-    
-    REJECTED("REJECTED"),
-    
-    CANCELED("CANCELED");
+	@JsonProperty("description")
+	private String description = null;
 
-    private String value;
+	@JsonProperty("disposalDetails")
+	private List<DisposalDetail> disposalDetails = null;
 
-    DisposalStatusEnum(String value) {
-      this.value = value;
-    }
+	/**
+	 * disposal status of the Disposal
+	 */
+	public enum DisposalStatusEnum {
+		CREATED("CREATED"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		APPROVED("APPROVED"),
 
-    @JsonCreator
-    public static DisposalStatusEnum fromValue(String text) {
-      for (DisposalStatusEnum b : DisposalStatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+		REJECTED("REJECTED"),
 
-  @JsonProperty("disposalStatus")
-  private DisposalStatusEnum disposalStatus = null;
+		CANCELED("CANCELED");
 
-  @JsonProperty("workFlowDetails")
-  private WorkFlowDetails workFlowDetails = null;
+		private String value;
 
-  @JsonProperty("stateId")
-  private Long stateId = null;
+		DisposalStatusEnum(String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("totalDisposalValue")
-  private BigDecimal totalDisposalValue = null;
-  
-  @JsonProperty("auditDetails")
-  private AuditDetails auditDetails = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  public Disposal id(String id) {
-    this.id = id;
-    return this;
-  }
+		@JsonCreator
+		public static DisposalStatusEnum fromValue(String text) {
+			for (DisposalStatusEnum b : DisposalStatusEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-   /**
-   * Unique Identifier of the Disposal 
-   * @return id
-  **/
-  @ApiModelProperty(value = "Unique Identifier of the Disposal ")
+	@JsonProperty("disposalStatus")
+	private DisposalStatusEnum disposalStatus = null;
 
+	@JsonProperty("workFlowDetails")
+	private WorkFlowDetails workFlowDetails = null;
 
-  public String getId() {
-    return id;
-  }
+	@JsonProperty("stateId")
+	private Long stateId = null;
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	@JsonProperty("totalDisposalValue")
+	private BigDecimal totalDisposalValue = null;
 
-  public Disposal tenantId(String tenantId) {
-	    this.tenantId = tenantId;
-	    return this;
-	  }
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
+
+	public Disposal id(String id) {
+		this.id = id;
+		return this;
+	}
+
+	/**
+	 * Unique Identifier of the Disposal
+	 * 
+	 * @return id
+	 **/
+	@ApiModelProperty(value = "Unique Identifier of the Disposal ")
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Disposal tenantId(String tenantId) {
+		this.tenantId = tenantId;
+		return this;
+	}
 
 	/**
 	 * Tenant id of the Material Issue
@@ -135,328 +138,354 @@ public class Disposal   {
 	 * @return tenantId
 	 **/
 	@ApiModelProperty(required = true, value = "Tenant id of the Disposal")
-	  @NotNull
+	@NotNull
 
-	 @Size(min=4,max=128)
-	  public String getTenantId() {
-	    return tenantId;
-	  }
+	@Size(min = 4, max = 128)
+	public String getTenantId() {
+		return tenantId;
+	}
 
-	  public void setTenantId(String tenantId) {
-	    this.tenantId = tenantId;
-	  }
-	  
-  public Disposal store(Store store) {
-    this.store = store;
-    return this;
-  }
+	public void setTenantId(String tenantId) {
+		this.tenantId = tenantId;
+	}
 
-   /**
-   * Get store
-   * @return store
-  **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-  public Store getStore() {
-    return store;
-  }
+	public Disposal store(Store store) {
+		this.store = store;
+		return this;
+	}
 
-  public void setStore(Store store) {
-    this.store = store;
-  }
+	/**
+	 * Get store
+	 * 
+	 * @return store
+	 **/
+	@ApiModelProperty(required = true, value = "")
+	@NotNull
+	public Store getStore() {
+		return store;
+	}
 
-  public Disposal disposalNumber(String disposalNumber) {
-    this.disposalNumber = disposalNumber;
-    return this;
-  }
+	public void setStore(Store store) {
+		this.store = store;
+	}
 
-   /**
-   * Auto generated number, read only 
-   * @return disposalNumber
-  **/
-  @ApiModelProperty(required = true, readOnly = true, value = "Auto generated number, read only ")
- @Size(max=100)
-  public String getDisposalNumber() {
-    return disposalNumber;
-  }
+	public Disposal disposalNumber(String disposalNumber) {
+		this.disposalNumber = disposalNumber;
+		return this;
+	}
 
-  public void setDisposalNumber(String disposalNumber) {
-    this.disposalNumber = disposalNumber;
-  }
+	/**
+	 * Auto generated number, read only
+	 * 
+	 * @return disposalNumber
+	 **/
+	@ApiModelProperty(required = true, readOnly = true, value = "Auto generated number, read only ")
+	@Size(max = 100)
+	public String getDisposalNumber() {
+		return disposalNumber;
+	}
 
-  public Disposal disposalDate(Long disposalDate) {
-    this.disposalDate = disposalDate;
-    return this;
-  }
+	public void setDisposalNumber(String disposalNumber) {
+		this.disposalNumber = disposalNumber;
+	}
 
-   /**
-   * disposal date of the Disposal 
-   * @return disposalDate
-  **/
-  @ApiModelProperty(required = true, value = "disposal date of the Disposal ")
-  @NotNull
+	public Disposal scrapNumbers(List<String> scrapNumbers) {
+		this.scrapNumbers = scrapNumbers;
+		return this;
+	}
 
+	/**
+	 * Array of scrap numbers
+	 * 
+	 * @return scrapNumbers
+	 **/
+	@ApiModelProperty(required = true, readOnly = true, value = "Array of scrap numbers ")
+	@Size(max = 100)
+	public List<String> getScrapNumbers() {
+		return scrapNumbers;
+	}
 
-  public Long getDisposalDate() {
-    return disposalDate;
-  }
+	public void setScrapNumber(List<String> scrapNumbers) {
+		this.scrapNumbers = scrapNumbers;
+	}
 
-  public void setDisposalDate(Long disposalDate) {
-    this.disposalDate = disposalDate;
-  }
+	public Disposal disposalDate(Long disposalDate) {
+		this.disposalDate = disposalDate;
+		return this;
+	}
 
-  public Disposal handOverTo(String handOverTo) {
-    this.handOverTo = handOverTo;
-    return this;
-  }
+	/**
+	 * disposal date of the Disposal
+	 * 
+	 * @return disposalDate
+	 **/
+	@ApiModelProperty(required = true, value = "disposal date of the Disposal ")
+	@NotNull
 
-   /**
-   * hand over to of the Disposal 
-   * @return handOverTo
-  **/
-  @ApiModelProperty(value = "hand over to of the Disposal ")
+	public Long getDisposalDate() {
+		return disposalDate;
+	}
 
- @Size(max=250)
-  public String getHandOverTo() {
-    return handOverTo;
-  }
+	public void setDisposalDate(Long disposalDate) {
+		this.disposalDate = disposalDate;
+	}
 
-  public void setHandOverTo(String handOverTo) {
-    this.handOverTo = handOverTo;
-  }
+	public Disposal handOverTo(String handOverTo) {
+		this.handOverTo = handOverTo;
+		return this;
+	}
 
-  public Disposal auctionNumber(String auctionNumber) {
-    this.auctionNumber = auctionNumber;
-    return this;
-  }
+	/**
+	 * hand over to of the Disposal
+	 * 
+	 * @return handOverTo
+	 **/
+	@ApiModelProperty(value = "hand over to of the Disposal ")
 
-   /**
-   * auction number of the Disposal 
-   * @return auctionNumber
-  **/
-  @ApiModelProperty(value = "auction number of the Disposal ")
+	@Size(max = 250)
+	public String getHandOverTo() {
+		return handOverTo;
+	}
 
- @Size(max=100)
-  public String getAuctionNumber() {
-    return auctionNumber;
-  }
+	public void setHandOverTo(String handOverTo) {
+		this.handOverTo = handOverTo;
+	}
 
-  public void setAuctionNumber(String auctionNumber) {
-    this.auctionNumber = auctionNumber;
-  }
+	public Disposal auctionNumber(String auctionNumber) {
+		this.auctionNumber = auctionNumber;
+		return this;
+	}
 
-  public Disposal description(String description) {
-    this.description = description;
-    return this;
-  }
+	/**
+	 * auction number of the Disposal
+	 * 
+	 * @return auctionNumber
+	 **/
+	@ApiModelProperty(value = "auction number of the Disposal ")
 
-   /**
-   * description of the Disposal 
-   * @return description
-  **/
-  @ApiModelProperty(value = "description of the Disposal ")
+	@Size(max = 100)
+	public String getAuctionNumber() {
+		return auctionNumber;
+	}
 
- @Size(max=1000)
-  public String getDescription() {
-    return description;
-  }
+	public void setAuctionNumber(String auctionNumber) {
+		this.auctionNumber = auctionNumber;
+	}
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+	public Disposal description(String description) {
+		this.description = description;
+		return this;
+	}
 
-  public Disposal disposalDetails(List<DisposalDetail> disposalDetails) {
-    this.disposalDetails = disposalDetails;
-    return this;
-  }
+	/**
+	 * description of the Disposal
+	 * 
+	 * @return description
+	 **/
+	@ApiModelProperty(value = "description of the Disposal ")
 
-  public Disposal addDisposalDetailsItem(DisposalDetail disposalDetailsItem) {
-    if (this.disposalDetails == null) {
-      this.disposalDetails = new ArrayList<DisposalDetail>();
-    }
-    this.disposalDetails.add(disposalDetailsItem);
-    return this;
-  }
+	@Size(max = 1000)
+	public String getDescription() {
+		return description;
+	}
 
-   /**
-   * This object contains the list of materials marked as scraped in the selected store and are to be disposed. 
-   * @return disposalDetails
-  **/
-  @ApiModelProperty(value = "This object contains the list of materials marked as scraped in the selected store and are to be disposed. ")
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-  @Valid
+	public Disposal disposalDetails(List<DisposalDetail> disposalDetails) {
+		this.disposalDetails = disposalDetails;
+		return this;
+	}
 
-  public List<DisposalDetail> getDisposalDetails() {
-    return disposalDetails;
-  }
+	public Disposal addDisposalDetailsItem(DisposalDetail disposalDetailsItem) {
+		if (this.disposalDetails == null) {
+			this.disposalDetails = new ArrayList<DisposalDetail>();
+		}
+		this.disposalDetails.add(disposalDetailsItem);
+		return this;
+	}
 
-  public void setDisposalDetails(List<DisposalDetail> disposalDetails) {
-    this.disposalDetails = disposalDetails;
-  }
+	/**
+	 * This object contains the list of materials marked as scraped in the
+	 * selected store and are to be disposed.
+	 * 
+	 * @return disposalDetails
+	 **/
+	@ApiModelProperty(value = "This object contains the list of materials marked as scraped in the selected store and are to be disposed. ")
 
-  public Disposal disposalStatus(DisposalStatusEnum disposalStatus) {
-    this.disposalStatus = disposalStatus;
-    return this;
-  }
+	@Valid
 
-   /**
-   * disposal status of the Disposal 
-   * @return disposalStatus
-  **/
-  @ApiModelProperty(required = true, value = "disposal status of the Disposal ")
-  @NotNull
+	public List<DisposalDetail> getDisposalDetails() {
+		return disposalDetails;
+	}
 
+	public void setDisposalDetails(List<DisposalDetail> disposalDetails) {
+		this.disposalDetails = disposalDetails;
+	}
 
-  public DisposalStatusEnum getDisposalStatus() {
-    return disposalStatus;
-  }
+	public Disposal disposalStatus(DisposalStatusEnum disposalStatus) {
+		this.disposalStatus = disposalStatus;
+		return this;
+	}
 
-  public void setDisposalStatus(DisposalStatusEnum disposalStatus) {
-    this.disposalStatus = disposalStatus;
-  }
+	/**
+	 * disposal status of the Disposal
+	 * 
+	 * @return disposalStatus
+	 **/
+	@ApiModelProperty(required = true, value = "disposal status of the Disposal ")
+	@NotNull
 
-  public Disposal workFlowDetails(WorkFlowDetails workFlowDetails) {
-    this.workFlowDetails = workFlowDetails;
-    return this;
-  }
+	public DisposalStatusEnum getDisposalStatus() {
+		return disposalStatus;
+	}
 
-   /**
-   * Get workFlowDetails
-   * @return workFlowDetails
-  **/
-  @ApiModelProperty(value = "")
+	public void setDisposalStatus(DisposalStatusEnum disposalStatus) {
+		this.disposalStatus = disposalStatus;
+	}
 
-  @Valid
+	public Disposal workFlowDetails(WorkFlowDetails workFlowDetails) {
+		this.workFlowDetails = workFlowDetails;
+		return this;
+	}
 
-  public WorkFlowDetails getWorkFlowDetails() {
-    return workFlowDetails;
-  }
+	/**
+	 * Get workFlowDetails
+	 * 
+	 * @return workFlowDetails
+	 **/
+	@ApiModelProperty(value = "")
 
-  public void setWorkFlowDetails(WorkFlowDetails workFlowDetails) {
-    this.workFlowDetails = workFlowDetails;
-  }
+	@Valid
 
-  public Disposal stateId(Long stateId) {
-    this.stateId = stateId;
-    return this;
-  }
+	public WorkFlowDetails getWorkFlowDetails() {
+		return workFlowDetails;
+	}
 
-   /**
-   * state id of the Disposal 
-   * @return stateId
-  **/
-  @ApiModelProperty(value = "state id of the Disposal ")
+	public void setWorkFlowDetails(WorkFlowDetails workFlowDetails) {
+		this.workFlowDetails = workFlowDetails;
+	}
 
+	public Disposal stateId(Long stateId) {
+		this.stateId = stateId;
+		return this;
+	}
 
-  public Long getStateId() {
-    return stateId;
-  }
+	/**
+	 * state id of the Disposal
+	 * 
+	 * @return stateId
+	 **/
+	@ApiModelProperty(value = "state id of the Disposal ")
 
-  public void setStateId(Long stateId) {
-    this.stateId = stateId;
-  }
+	public Long getStateId() {
+		return stateId;
+	}
 
-  public Disposal totalDisposalValue(BigDecimal totalDisposalValue) {
-    this.totalDisposalValue = totalDisposalValue;
-    return this;
-  }
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
 
-   /**
-   * totalDisposalValue  denormalized value from Disposal Details 
-   * @return totalDisposalValue
-  **/
-  @ApiModelProperty(value = "totalDisposalValue  denormalized value from Disposal Details ")
+	public Disposal totalDisposalValue(BigDecimal totalDisposalValue) {
+		this.totalDisposalValue = totalDisposalValue;
+		return this;
+	}
 
+	/**
+	 * totalDisposalValue denormalized value from Disposal Details
+	 * 
+	 * @return totalDisposalValue
+	 **/
+	@ApiModelProperty(value = "totalDisposalValue  denormalized value from Disposal Details ")
 
-  public BigDecimal getTotalDisposalValue() {
-    return totalDisposalValue;
-  }
+	public BigDecimal getTotalDisposalValue() {
+		return totalDisposalValue;
+	}
 
-  public void setTotalDisposalValue(BigDecimal totalDisposalValue) {
-    this.totalDisposalValue = totalDisposalValue;
-  }
-  
-  public Disposal auditDetails(AuditDetails auditDetails) {
-	    this.auditDetails = auditDetails;
-	    return this;
-	  }
+	public void setTotalDisposalValue(BigDecimal totalDisposalValue) {
+		this.totalDisposalValue = totalDisposalValue;
+	}
 
-	   /**
-	   * Get auditDetails
-	   * @return auditDetails
-	  **/
-	  @ApiModelProperty(value = "")
+	public Disposal auditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
+		return this;
+	}
 
-	  @Valid
+	/**
+	 * Get auditDetails
+	 * 
+	 * @return auditDetails
+	 **/
+	@ApiModelProperty(value = "")
 
-	  public AuditDetails getAuditDetails() {
-	    return auditDetails;
-	  }
+	@Valid
 
-	  public void setAuditDetails(AuditDetails auditDetails) {
-	    this.auditDetails = auditDetails;
-	  }
+	public AuditDetails getAuditDetails() {
+		return auditDetails;
+	}
 
+	public void setAuditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Disposal disposal = (Disposal) o;
+		return Objects.equals(this.id, disposal.id) && Objects.equals(this.store, disposal.store)
+				&& Objects.equals(this.disposalNumber, disposal.disposalNumber)
+				&& Objects.equals(this.disposalDate, disposal.disposalDate)
+				&& Objects.equals(this.handOverTo, disposal.handOverTo)
+				&& Objects.equals(this.auctionNumber, disposal.auctionNumber)
+				&& Objects.equals(this.description, disposal.description)
+				&& Objects.equals(this.disposalDetails, disposal.disposalDetails)
+				&& Objects.equals(this.disposalStatus, disposal.disposalStatus)
+				&& Objects.equals(this.workFlowDetails, disposal.workFlowDetails)
+				&& Objects.equals(this.stateId, disposal.stateId)
+				&& Objects.equals(this.totalDisposalValue, disposal.totalDisposalValue);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Disposal disposal = (Disposal) o;
-    return Objects.equals(this.id, disposal.id) &&
-        Objects.equals(this.store, disposal.store) &&
-        Objects.equals(this.disposalNumber, disposal.disposalNumber) &&
-        Objects.equals(this.disposalDate, disposal.disposalDate) &&
-        Objects.equals(this.handOverTo, disposal.handOverTo) &&
-        Objects.equals(this.auctionNumber, disposal.auctionNumber) &&
-        Objects.equals(this.description, disposal.description) &&
-        Objects.equals(this.disposalDetails, disposal.disposalDetails) &&
-        Objects.equals(this.disposalStatus, disposal.disposalStatus) &&
-        Objects.equals(this.workFlowDetails, disposal.workFlowDetails) &&
-        Objects.equals(this.stateId, disposal.stateId) &&
-        Objects.equals(this.totalDisposalValue, disposal.totalDisposalValue);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, store, disposalNumber, disposalDate, handOverTo, auctionNumber, description,
+				disposalDetails, disposalStatus, workFlowDetails, stateId, totalDisposalValue);
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, store, disposalNumber, disposalDate, handOverTo, auctionNumber, description, disposalDetails, disposalStatus, workFlowDetails, stateId, totalDisposalValue);
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class Disposal {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Disposal {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    store: ").append(toIndentedString(store)).append("\n");
-    sb.append("    disposalNumber: ").append(toIndentedString(disposalNumber)).append("\n");
-    sb.append("    disposalDate: ").append(toIndentedString(disposalDate)).append("\n");
-    sb.append("    handOverTo: ").append(toIndentedString(handOverTo)).append("\n");
-    sb.append("    auctionNumber: ").append(toIndentedString(auctionNumber)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    disposalDetails: ").append(toIndentedString(disposalDetails)).append("\n");
-    sb.append("    disposalStatus: ").append(toIndentedString(disposalStatus)).append("\n");
-    sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
-    sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
-    sb.append("    totalDisposalValue: ").append(toIndentedString(totalDisposalValue)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    store: ").append(toIndentedString(store)).append("\n");
+		sb.append("    disposalNumber: ").append(toIndentedString(disposalNumber)).append("\n");
+		sb.append("    disposalDate: ").append(toIndentedString(disposalDate)).append("\n");
+		sb.append("    handOverTo: ").append(toIndentedString(handOverTo)).append("\n");
+		sb.append("    auctionNumber: ").append(toIndentedString(auctionNumber)).append("\n");
+		sb.append("    description: ").append(toIndentedString(description)).append("\n");
+		sb.append("    disposalDetails: ").append(toIndentedString(disposalDetails)).append("\n");
+		sb.append("    disposalStatus: ").append(toIndentedString(disposalStatus)).append("\n");
+		sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
+		sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
+		sb.append("    totalDisposalValue: ").append(toIndentedString(totalDisposalValue)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

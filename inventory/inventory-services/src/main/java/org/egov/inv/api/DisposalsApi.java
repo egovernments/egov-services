@@ -41,6 +41,17 @@ public interface DisposalsApi {
     ResponseEntity<DisposalResponse> disposalsCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody DisposalRequest disposalRequest);
 
 
+    @ApiOperation(value = "Prepare disposals from scrap.", notes = "This API is used to prepare disposal from scrap.", response = DisposalResponse.class, tags={ "Disposal", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Disposal prepared Successfully", response = DisposalResponse.class),
+        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
+    
+    @RequestMapping(value = "/disposals/_preparedisposalfromscraps",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<DisposalResponse> prepareDisposalFromScrap( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody DisposalRequest disposalRequest);
+
     @ApiOperation(value = "Get the list of disposals.", notes = "This API is used to search the disposal details created in the system.", response = DisposalResponse.class, tags={ "Disposal", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Disposal retrieved Successfully", response = DisposalResponse.class),

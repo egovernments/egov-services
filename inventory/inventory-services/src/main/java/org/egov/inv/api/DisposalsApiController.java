@@ -5,6 +5,8 @@ import org.egov.inv.model.DisposalRequest;
 import org.egov.inv.model.DisposalResponse;
 import org.egov.inv.model.DisposalSearchContract;
 import org.egov.inv.model.ErrorRes;
+import org.egov.inv.model.MaterialIssueRequest;
+import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.RequestInfo;
 
 import io.swagger.annotations.*;
@@ -65,6 +67,13 @@ public class DisposalsApiController implements DisposalsApi {
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody DisposalRequest disposalRequest) {
 		DisposalResponse disposalResponse = disposalService.update(disposalRequest, tenantId);
+		return new ResponseEntity(disposalResponse, HttpStatus.OK);
+	}
+	
+	public ResponseEntity<DisposalResponse> prepareDisposalFromScrap(
+			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+			@ApiParam(value = "Create  new")  @RequestBody DisposalRequest disposalRequest) {
+		DisposalResponse disposalResponse = disposalService.prepareDisposalFromScrap(disposalRequest, tenantId);
 		return new ResponseEntity(disposalResponse, HttpStatus.OK);
 	}
 

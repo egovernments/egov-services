@@ -25,12 +25,15 @@ import org.egov.inv.model.DisposalResponse;
 import org.egov.inv.model.DisposalSearchContract;
 import org.egov.inv.model.Material;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Scrap;
+import org.egov.inv.model.ScrapDetail;
+import org.egov.inv.model.ScrapResponse;
+import org.egov.inv.model.ScrapSearch;
 import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
+import org.egov.inv.model.StoreResponse;
 import org.egov.inv.model.Uom;
-import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
 import org.egov.inv.persistence.entity.DisposalDetailEntity;
-import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.entity.ScrapDetailEntity;
 import org.egov.inv.persistence.repository.DisposalDetailJdbcRepository;
 import org.egov.inv.persistence.repository.DisposalJdbcRepository;
@@ -62,6 +65,9 @@ public class DisposalService extends DomainService {
 	private ScrapDetailJdbcRepository scrapDetailJdbcRepository;
 
 	@Autowired
+	private ScrapService scrapService;
+
+	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
@@ -78,6 +84,9 @@ public class DisposalService extends DomainService {
 
 	@Value("${inv.disposal.update.topic}")
 	private String updateTopic;
+
+	@Autowired
+	private StoreService storeService;
 
 	public DisposalResponse create(DisposalRequest disposalRequest, String tenantId) {
 		try {
@@ -126,7 +135,6 @@ public class DisposalService extends DomainService {
 		disposalDetail.getScrapDetails().setTenantId(tenantId);
 		disposalJdbcRepository.updateColumn(new ScrapDetailEntity().toEntity(disposalDetail.getScrapDetails()),
 				"scrapdetail", hashMap, null);
-
 	}
 
 	private void setDisposalData(String action, Disposal disposal) {
@@ -298,7 +306,6 @@ public class DisposalService extends DomainService {
 
 						disposalDetail.setScrapDetails(scrapDetailJdbcRepository.findById(entity) != null
 								? scrapDetailJdbcRepository.findById(entity).toDomain() : null);
-
 					}
 				}
 			}
@@ -338,7 +345,7 @@ public class DisposalService extends DomainService {
 						totalDisposalValue = totalDisposalValue.add(disposalDetail.getDisposalValue());
 					}
 					disposal.setTotalDisposalValue(totalDisposalValue);
-					backUpdateScrapForDeletionCase(disposalResponse,listOfDisposalDetails,tenantId);
+					backUpdateScrapForDeletionCase(disposalResponse, listOfDisposalDetails, tenantId);
 					disposalDetailJdbcRepository.markDeleted(listOfDisposalDetails, tenantId, "disposaldetail",
 							"disposalnumber", disposal.getDisposalNumber());
 					i++;
@@ -357,26 +364,25 @@ public class DisposalService extends DomainService {
 	private void backUpdateScrapForDeletionCase(DisposalResponse disposalResponse, List<String> listOfDisposalDetails,
 			String tenantId) {
 		Disposal disposal = new Disposal();
-       if (disposalResponse != null) {
+		if (disposalResponse != null) {
 			disposal = disposalResponse.getDisposals().get(0);
 			List<DisposalDetail> disDetails = new ArrayList<>();
-			for(DisposalDetail disposalDet : disposal.getDisposalDetails()){
-				int flag =0;
-				for(String dd:listOfDisposalDetails){
-					if(disposalDet.getId().equals(dd))
+			for (DisposalDetail disposalDet : disposal.getDisposalDetails()) {
+				int flag = 0;
+				for (String dd : listOfDisposalDetails) {
+					if (disposalDet.getId().equals(dd))
 						flag = 1;
-					if(flag == 1)
+					if (flag == 1)
 						break;
 				}
-				if(flag == 0)
+				if (flag == 0)
 					disDetails.add(disposalDet);
-					
+
 			}
-			for(DisposalDetail disDet : disDetails)
-			{
+			for (DisposalDetail disDet : disDetails) {
 				backUpdateScrapSub(disDet, tenantId);
 			}
-        }
+		}
 	}
 
 	private void backUpdateScrapForUpdationCase(DisposalResponse disposalResponse, DisposalDetail disposalDetail,
@@ -384,12 +390,12 @@ public class DisposalService extends DomainService {
 		Disposal disposal = new Disposal();
 		if (disposalResponse != null) {
 			disposal = disposalResponse.getDisposals().get(0);
-			for(DisposalDetail disposalDet : disposal.getDisposalDetails()){
-				if(disposalDet.getId().equals(disposalDetail.getId()))
-				backUpdateScrapSub(disposalDet, tenantId);
+			for (DisposalDetail disposalDet : disposal.getDisposalDetails()) {
+				if (disposalDet.getId().equals(disposalDetail.getId()))
+					backUpdateScrapSub(disposalDet, tenantId);
 			}
 		}
-         backUpdateScrap(disposalDetail, tenantId);
+		backUpdateScrap(disposalDetail, tenantId);
 	}
 
 	private void backUpdateScrapSub(DisposalDetail disposalDet, String tenantId) {
@@ -397,7 +403,7 @@ public class DisposalService extends DomainService {
 		hashMap.put("disposalquantity", "disposalquantity -" + disposalDet.getDisposalQuantity().toString());
 		disposalDet.getScrapDetails().setTenantId(tenantId);
 		disposalJdbcRepository.updateColumn(new ScrapDetailEntity().toEntity(disposalDet.getScrapDetails()),
-				"scrapdetail", hashMap, null);	
+				"scrapdetail", hashMap, null);
 	}
 
 	private void backUpdateScrapMinus(DisposalResponse disposalResponse, String tenantId) {
@@ -423,7 +429,6 @@ public class DisposalService extends DomainService {
 				Uom uom = mapper.convertValue(responseJSONArray.get(i), Uom.class);
 				uomMap.put(uom.getCode(), uom);
 			}
-
 		}
 		return uomMap;
 	}
@@ -438,7 +443,6 @@ public class DisposalService extends DomainService {
 				Material material = mapper.convertValue(responseJSONArray.get(i), Material.class);
 				materialMap.put(material.getCode(), material);
 			}
-
 		}
 		return materialMap;
 	}
@@ -461,4 +465,62 @@ public class DisposalService extends DomainService {
 		disposalResponse.setDisposals(listOfDisposals);
 		return disposalResponse;
 	}
+
+	public DisposalResponse prepareDisposalFromScrap(final DisposalRequest disposalRequest, String tenantId) {
+		if (!disposalRequest.getDisposals().isEmpty()) {
+			for (Disposal disposal : disposalRequest.getDisposals()) {
+				ObjectMapper objectMapper = new ObjectMapper();
+				Map<String, Material> materialMap = getMaterials(tenantId, objectMapper, new RequestInfo());
+				Map<String, Uom> uomMap = getUoms(tenantId, objectMapper, new RequestInfo());
+				if (disposal.getScrapNumbers() != null) {
+					List<String> scrapNumbers = disposal.getScrapNumbers();
+					ScrapSearch scrapSearch = new ScrapSearch();
+					scrapSearch.setScrapNumber(scrapNumbers);
+					scrapSearch.setTenantId(tenantId);
+					ScrapResponse scrapResponse = scrapService.search(scrapSearch);
+					List<Scrap> scraps = new ArrayList<>();
+					if (scrapResponse != null) {
+						if (!scrapResponse.getScraps().isEmpty()) {
+							scraps = scrapResponse.getScraps();
+							Store store = scraps.get(0).getStore();
+							StoreGetRequest storeGetRequest = new StoreGetRequest();
+							storeGetRequest.setCode(Arrays.asList(store.getCode()));
+							storeGetRequest.setTenantId(tenantId);
+							StoreResponse storeResponse = storeService.search(storeGetRequest);
+							if (storeResponse != null)
+								disposal.setStore(storeResponse.getStores().get(0));
+							for (Scrap scrap : scrapResponse.getScraps()) {
+								for (ScrapDetail scrapDetail : scrap.getScrapDetails()) {
+									for (DisposalDetail disposalDetail : disposal.getDisposalDetails()) {
+										if (scrapDetail.getScrapNumber()
+												.equals(disposalDetail.getScrapDetails().getScrapNumber())) {
+											if (scrapDetail.getMaterial().getCode() != null)
+												disposalDetail.setMaterial(
+														materialMap.get(scrapDetail.getMaterial().getCode()));
+											if (disposalDetail.getScrapDetails() != null)
+												disposalDetail.getScrapDetails().setMaterial(
+														materialMap.get(scrapDetail.getMaterial().getCode()));
+											if (scrapDetail.getUom().getCode() != null)
+												disposalDetail.setUom(uomMap.get(scrapDetail.getUom().getCode()));
+											if (disposalDetail.getScrapDetails() != null)
+												disposalDetail.getScrapDetails()
+														.setUom(uomMap.get(scrapDetail.getUom().getCode()));
+											disposalDetail.setPendingScrapQuantity(InventoryUtilities
+													.getQuantityInSelectedUom(scrapDetail.getQuantity()
+												    .subtract(scrapDetail.getDisposalQuantity()),
+													uomMap.get(scrapDetail.getUom().getCode()).getConversionFactor()));
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		DisposalResponse disposalResponse = new DisposalResponse();
+		disposalResponse.setDisposals(disposalRequest.getDisposals());
+		return disposalResponse;
+	}
+
 }

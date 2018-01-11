@@ -93,12 +93,12 @@ public class MDMSRequestValidator {
 				&& !masterDataFromCache.toString().equals("{}")) {
 			fileContents = mapper.writeValueAsString(fileContents);
 			Object masterFromCache = mapper.writeValueAsString(masterContentFromCache);
-			logger.info("masterContentsFromCache: " + masterContentFromCache);
+			logger.debug("masterContentsFromCache: " + masterContentFromCache);
 			masterFromCache = JsonPath.read(masterFromCache.toString(),
 					"$.MdmsRes." + mDMSCreateRequest.getMasterMetaData().getModuleName() + "."
 							+ mDMSCreateRequest.getMasterMetaData().getMasterName());
 
-			logger.info("masterData fetched from cache: " + masterFromCache);
+			logger.debug("masterData fetched from cache: " + masterFromCache);
 
 			DocumentContext documentContext = JsonPath.parse(fileContents.toString());
 			documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(), masterFromCache);

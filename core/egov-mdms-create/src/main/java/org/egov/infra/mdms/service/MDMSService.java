@@ -116,11 +116,11 @@ public class MDMSService {
 			throw new CustomException("400", "Invalid Tenant Id");
 		if (null != masterContentFromCache && !masterDataFromCache.toString().equals("{}")) {
 			Object masterFromCache = mapper.writeValueAsString(masterContentFromCache);
-			logger.info("masterContentsFromCache: " + masterContentFromCache);
+			logger.debug("masterContentsFromCache: " + masterContentFromCache);
 			masterFromCache = JsonPath.read(masterFromCache.toString(),
 					"$.MdmsRes." + mDMSCreateRequest.getMasterMetaData().getModuleName() + "."
 							+ mDMSCreateRequest.getMasterMetaData().getMasterName());
-			logger.info("masterData fetched from cache: " + masterFromCache);
+			logger.debug("masterData fetched from cache: " + masterFromCache);
 			fileContents = mapper.writeValueAsString(fileContents);
 			DocumentContext documentContext = JsonPath.parse(fileContents.toString());
 			documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(), masterFromCache);
@@ -316,7 +316,7 @@ public class MDMSService {
 
 	public void updateCache(String reloadReq) {
 		logger.info("Updating cache......");
-		logger.info("ReloadReq: " + reloadReq);
+		logger.debug("ReloadReq: " + reloadReq);
 		mDMSCreateRepository.updateCache(reloadReq);
 	}
 
@@ -366,7 +366,7 @@ public class MDMSService {
 				logger.info("Skipping Validation.....");
 				masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
 			} else {
-				logger.debug("keys: " + keys.toString());
+				logger.info("keys: " + keys.toString());
 				if (null != keys) {
 					Map<String, Integer> inputDataMap = new WeakHashMap<>();
 					for (int i = 0; i < mDMSCreateRequest.getMasterMetaData().getMasterData().size(); i++) {
@@ -378,7 +378,7 @@ public class MDMSService {
 						}
 						inputDataMap.put(mapKey.toString(), i);
 					}
-					logger.debug("inputDataMap: " + inputDataMap);
+					logger.info("inputDataMap: " + inputDataMap);
 					ListIterator<Object> iterator = masterData.listIterator();
 					while (iterator.hasNext()) {
 						Object master = iterator.next();
@@ -392,7 +392,7 @@ public class MDMSService {
 							continue;
 						} else {
 							iterator.remove();
-							logger.debug("adding master to file: " + mapper.writeValueAsString(
+							logger.info("adding master to file: " + mapper.writeValueAsString(
 									mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
 							iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index));
 						}
@@ -409,7 +409,7 @@ public class MDMSService {
 
 	public String buildPushContent(String moduleContentJson, MDMSCreateRequest mDMSCreateRequest,
 			List<Object> masterData) {
-		logger.info("moduleContentJson: " + moduleContentJson);
+		logger.debug("moduleContentJson: " + moduleContentJson);
 		DocumentContext documentContext = JsonPath.parse(moduleContentJson);
 		try {
 			documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(), masterData);

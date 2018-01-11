@@ -368,7 +368,7 @@ public class MDMSService {
 			} else {
 				logger.info("keys: " + keys.toString());
 				if (null != keys) {
-					Map<String, Integer> inputDataMap = new WeakHashMap<>();
+					Map<String, Integer> inputDataMap = new HashMap<>();
 					for (int i = 0; i < mDMSCreateRequest.getMasterMetaData().getMasterData().size(); i++) {
 						StringBuilder mapKey = new StringBuilder();
 						for (String key : keys) {

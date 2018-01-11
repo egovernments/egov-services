@@ -384,12 +384,16 @@ public class MDMSService {
 					ListIterator<Object> iterator = masterData.listIterator();
 					while (iterator.hasNext()) {
 						Object master = iterator.next();
+						Map<String,Object> mapMaster = (Map<String,Object>)master;
 						StringBuilder mapKey = new StringBuilder();
 						for (String key : keys) {
 							String element = mapper.writeValueAsString(master);
 							mapKey.append(JsonPath.read(element, key).toString());
 						}
 						Integer index = inputDataMap.get(mapKey.toString());
+						logger.info(" the id of the current object {}",mapMaster.get("id"));
+						logger.info(" the map key of the current object  {}",mapKey);
+						logger.info(" the index of the current object in request  {}",index);
 						if (null == index) {
 							continue;
 						} else {

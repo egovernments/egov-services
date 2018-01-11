@@ -5,7 +5,7 @@ package org.egov.works.commons.utils;
  */
 public class CommonConstants {
     //Module names
-    public  static final String MODULENAME_WORKS="Works";
+    public  static final String MODULENAME_WORKS="works";
     public  static final String MODULENAME_COMMON="common-masters";
 
     //Works master names

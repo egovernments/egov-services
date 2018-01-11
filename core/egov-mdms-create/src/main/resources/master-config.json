@@ -73,7 +73,6 @@
       ]
     }
   },
-  
   "common-masters": {
     "Department": {
       "masterName": "Department",
@@ -286,6 +285,44 @@
       "moduleDefinition": null,
       "uniqueKeys": [
         "$.code"
+      ]
+    }
+  },
+  "works": {
+    "ScheduleCategory": {
+      "masterName": "ScheduleCategory",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "TypeOfWork": {
+      "masterName": "TypeOfWork",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "Overhead": {
+      "masterName": "Overhead",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    "ContractorClass": {
+      "masterName": "ContractorClass",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
       ]
     }
   }

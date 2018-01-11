@@ -65,7 +65,6 @@ public class PurchaseordersApiController implements PurchaseordersApi {
 
     public ResponseEntity<PurchaseOrderResponse> purchaseordersUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "common Request info"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
-        // do some magic!
     	PurchaseOrderResponse response = purchaseOrderService.update(purchaseOrderRequest,tenantId);
         return   new ResponseEntity(response,HttpStatus.OK);
     }
@@ -74,6 +73,10 @@ public class PurchaseordersApiController implements PurchaseordersApi {
             @ApiParam(value = "Create  new"  )  @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
     	PurchaseOrderResponse response = purchaseOrderService.preparePoFromIndents(purchaseOrderRequest,tenantId);
         return   new ResponseEntity(response,HttpStatus.OK);
-        }
+    }
 
+    public ResponseEntity<PurchaseOrderResponse> purchaseordersSearchpoforadvancerequisitionPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId) {
+    	PurchaseOrderResponse response = purchaseOrderService.getPOsForAdvanceRequisition(tenantId);
+    	return new ResponseEntity<PurchaseOrderResponse>(HttpStatus.OK);
+    }
 }

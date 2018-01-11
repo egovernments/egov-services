@@ -550,6 +550,24 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /purchaseorders/_searchpoforadvancerequisition:
+      post:
+        summary: Search for Purchase Orders eligible for creating advance requisition
+        description: Whenever a purchaseOrder is approved with advance amount present in it, we will create a AdvanceRequisitionNote for that purchaseOrder. So inorder to create ARN, we need to search for eligible PO's first.
+        tags:
+          - Purchase Order
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        responses:
+          200:
+            description: PurchaseOrders retrieved Successfully
+            schema:
+              $ref: '#/definitions/PurchaseOrderResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
     /purchaseorders/_create:
       post:
         summary: Create  new  purchaseorders

@@ -866,6 +866,14 @@ public class PurchaseOrderService extends DomainService {
         return response;
     }
 
+    public PurchaseOrderResponse getPOsForAdvanceRequisition(String tenantId) {
+        PurchaseOrderResponse response = new PurchaseOrderResponse();
+        Pagination<PurchaseOrder> search = purchaseOrderRepository.searchPOsForAdvanceRequisition(tenantId);
+        response.setPurchaseOrders(search.getPagedData());
+        response.setPage(getPage(search));
+        return response;
+    }
+    
     public Boolean checkAllItemsSuppliedForPo(PurchaseOrderSearch purchaseOrderSearch) {
 
         Boolean flag = true;

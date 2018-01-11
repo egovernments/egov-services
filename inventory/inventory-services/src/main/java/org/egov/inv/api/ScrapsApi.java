@@ -54,7 +54,7 @@ public interface ScrapsApi {
 			@RequestParam(value = "ids", required = false) List<String> ids,
 			@ApiParam(value = "store of the Scrap ") @RequestParam(value = "store", required = false) String store,
 			@ApiParam(value = "scrapNumber  Auto generated number, read only ") 
-			@RequestParam(value = "scrapNumber", required = false) String scrapNumber,
+			@RequestParam(value = "scrapNumber", required = false) List<String> scrapNumber,
 			@ApiParam(value = "scrap date of the Scrap ") 
 			@RequestParam(value = "scrapDate", required = false) Long scrapDate,
 			@ApiParam(value = "description of the Scrap ") 

@@ -38,8 +38,10 @@ public class MaterialIssueSearchContract {
 	
 	private BigDecimal totalIssueValue;
 	
+	private Boolean scrapCreated;
+
 	private Integer pageNumber;
-	
+		
 	private String sortBy;
 	
 	private Integer pageSize;

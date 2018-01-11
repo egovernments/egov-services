@@ -62,6 +62,8 @@ public class MaterialIssueEntity {
 	private String issuePurpose;
 
 	private String supplier;
+	
+	private Boolean scrapCreated;
 
 	private Long stateId;
 
@@ -146,6 +148,7 @@ public class MaterialIssueEntity {
 		materialIssue.setDesignation(designation);
 		materialIssue.setIssuedToEmployee(issuedToEmployee);
 		materialIssue.setIssuedToDesignation(issuedToDesignation);
+		materialIssue.setScrapCreated(scrapCreated);
 		if (StringUtils.isNotBlank(issuePurpose))
 			materialIssue.setIssuePurpose(IssuePurposeEnum.valueOf(issuePurpose));
 		Supplier materialSupplier = new Supplier();

@@ -153,6 +153,12 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
             params.append("issuetype = :issuetype");
             paramValues.put("issuetype", issueType);
         }
+        if (searchContract.getScrapCreated() != null) {
+            if (params.length() > 0)
+                params.append(" and ");
+            params.append("scrapCreated = :scrapCreated");
+            paramValues.put("scrapCreated", searchContract.getScrapCreated());
+        }
         Pagination<MaterialIssue> page = new Pagination<>();
         if (searchContract.getPageSize() != null)
             page.setPageSize(searchContract.getPageSize());

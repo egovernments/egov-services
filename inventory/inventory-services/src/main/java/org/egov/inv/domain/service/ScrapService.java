@@ -125,7 +125,7 @@ public class ScrapService extends DomainService{
 		Pagination<Scrap> scrapPagination = scrapJdbcRepository.search(scrapSearch);
 		if (scrapPagination.getPagedData().size() > 0) {
 	            for (Scrap scrap : scrapPagination.getPagedData()) {
-	                List<ScrapDetail> scrapDetail = getScrapDetail(scrap.getScrapNumber(), scrapSearch.getTenantId());
+	                List<ScrapDetail> scrapDetail = getScrapDetails(scrap.getScrapNumber(), scrapSearch.getTenantId());
 	                scrap.setScrapDetails(scrapDetail);
 	            }
 		}
@@ -237,6 +237,7 @@ public class ScrapService extends DomainService{
 		MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
 													.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())
 													.materialIssueStatus(MaterialIssueStatusEnum.APPROVED.toString())
+													.scrapCreated(true)
 													.tenantId(tenantId)
 													.build();
 													
@@ -275,7 +276,7 @@ public class ScrapService extends DomainService{
 			throw errors;
 	}
 	
-	 private List<ScrapDetail> getScrapDetail(String scrapNumber, String tenantId) {
+	 private List<ScrapDetail> getScrapDetails(String scrapNumber, String tenantId) {
 	        ScrapDetailSearch scrapDetailSearch = ScrapDetailSearch.builder()
 	                .ScrapNumber(scrapNumber)
 	                .tenantId(tenantId)
@@ -333,6 +334,7 @@ public class ScrapService extends DomainService{
 	 private Long getCurrentDate() {
 	        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
 	    }
+	 
 	}
 
 

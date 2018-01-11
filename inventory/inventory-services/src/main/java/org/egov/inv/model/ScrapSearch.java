@@ -14,7 +14,7 @@ public class ScrapSearch {
 	
 	    private List<String> ids;
 	    
-	    private String ScrapNumber;
+	    private List<String> scrapNumber;
 	    
 	    private String store;
 	    

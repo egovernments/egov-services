@@ -394,6 +394,7 @@ public class MDMSService {
 						logger.info(" the id of the current object {}",mapMaster.get("id"));
 						logger.info(" the map key of the current object  {}",mapKey);
 						logger.info(" the index of the current object in request  {}",index);
+						logger.info(" the input data map  {}",inputDataMap);
 						if (null == index) {
 							continue;
 						} else {

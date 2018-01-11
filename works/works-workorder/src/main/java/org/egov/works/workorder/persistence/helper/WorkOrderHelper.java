@@ -1,11 +1,12 @@
 package org.egov.works.workorder.persistence.helper;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.WorkOrder;
-import org.egov.works.workorder.web.contract.WorkOrderStatus;
 import org.egov.works.workorder.web.contract.WorksStatus;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 @Data
 public class WorkOrderHelper {
@@ -30,6 +31,8 @@ public class WorkOrderHelper {
 
     @JsonProperty("stateId")
     private String stateId = null;
+    
+    private String remarks = null;
 
 
     public WorkOrder toDomain() {
@@ -45,6 +48,7 @@ public class WorkOrderHelper {
         WorksStatus worksStatus = new WorksStatus();
         worksStatus.setCode(this.status);
         workOrder.setStatus(worksStatus);
+        workOrder.setRemarks(this.remarks);
         return workOrder;
     }
 }

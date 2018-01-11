@@ -65,6 +65,8 @@ public class MilestoneValidator {
             if (milestoneActivity.getScheduleStartDate() < workOrder.getWorkOrderDate())
                 validationMessages.put(Constants.KEY_MILESTONE_ACTIVITY_SSD_CANNOT_BEFORE_WOD, Constants.MESSAGE_MILESTONE_ACTIVITY_SSD_CANNOT_BEFORE_WOD);
         }
+        if (totalPercentage.compareTo(new BigDecimal(100)) < 0)
+            validationMessages.put(Constants.KEY_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDBE_100, Constants.MESSAGE_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDBE_100);
         if (totalPercentage.compareTo(new BigDecimal(100)) == 1)
             validationMessages.put(Constants.KEY_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100, Constants.MESSAGE_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100);
     }

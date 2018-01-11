@@ -269,7 +269,7 @@ serviceMaps:
    fromTopic: works-workorder-createupdate-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_workorder(id, tenantid, letterofacceptance, workorderdate, workordernumber, status, stateid, createdby, createdtime,lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET workorderdate=EXCLUDED.workorderdate, status= EXCLUDED.status, stateid=EXCLUDED.stateid, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
+    - query: INSERT INTO egw_workorder(id, tenantid, letterofacceptance, workorderdate, workordernumber, status, stateid, createdby, createdtime,lastmodifiedby, lastmodifiedtime, deleted,remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) on CONFLICT (id,tenantid) DO UPDATE SET workorderdate=EXCLUDED.workorderdate, status= EXCLUDED.status, stateid=EXCLUDED.stateid, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted, remarks=EXCLUDED.remarks;
 
       basePath: $.workOrders.*
       jsonMaps:
@@ -300,6 +300,8 @@ serviceMaps:
          dbType: LONG
 
        - jsonPath: $.workOrders.*.deleted
+
+       - jsonPath: $.workOrders.*.remarks
 
     - query: INSERT INTO egw_workorder_details(id, tenantid, workorder, remarks, editable, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, editable=EXCLUDED.editable, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
 

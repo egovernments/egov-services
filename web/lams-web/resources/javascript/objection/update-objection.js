@@ -601,6 +601,17 @@ class UpdateObjection extends React.Component {
 
             }
 
+            if (ID != "Reject") {
+
+                if (!agreement.workflowDetails.department)
+                    return showError("Please Select the Department");
+                else if (!agreement.workflowDetails.designation)
+                    return showError("Please Select the Designation");
+                else if (!agreement.workflowDetails.assignee)
+                    return showError("Please Select the Employee Name");
+
+            }
+
             //console.log("Agreement", agreement);
 
             if (agreement.documents && agreement.documents.constructor == FileList) {
@@ -1265,7 +1276,7 @@ class UpdateObjection extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="department" name="department" value={workflowDetails.department}
-                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "department") }} required >
+                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "department") }}  >
                                                 <option value="">Select Department</option>
                                                 {renderOption(_this.state.departmentList)}
                                             </select>
@@ -1281,7 +1292,7 @@ class UpdateObjection extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="designation" name="designation" value={workflowDetails.designation}
-                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "designation") }} required >
+                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "designation") }}  >
                                                 <option value="">Select Designation</option>
                                                 {renderOption(_this.state.designationList)}
                                             </select>
@@ -1294,12 +1305,12 @@ class UpdateObjection extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="">User Name <span>*</span></label>
+                                        <label htmlFor="">Employee Name <span>*</span></label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="assignee" name="assignee" value={workflowDetails.assignee}
-                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "assignee") }} required>
+                                                onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "assignee") }} >
                                                 <option value="">Select User</option>
                                                 {renderOptionForUser(_this.state.userList)}
                                             </select>

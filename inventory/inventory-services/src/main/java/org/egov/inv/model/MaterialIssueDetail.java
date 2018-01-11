@@ -1,19 +1,18 @@
 package org.egov.inv.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.IndentDetail;
-import org.egov.inv.model.Material;
-import org.egov.inv.model.MaterialIssuedFromReceipt;
-import org.egov.inv.model.Uom;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * This object holds the materail issue detail information for both indent and
@@ -70,6 +69,9 @@ public class MaterialIssueDetail {
 
 	@JsonProperty("description")
 	private String description = null;
+
+	@JsonProperty("scrapedQuantity")
+	private BigDecimal scrapedQuantity = null;
 
 	@JsonProperty("materialIssuedFromReceipts")
 	private List<MaterialIssuedFromReceipt> materialIssuedFromReceipts = null;
@@ -161,22 +163,6 @@ public class MaterialIssueDetail {
 		this.userQuantityIssued = userQuantityIssued;
 		return this;
 	}
-	
-	/**
-	 * userQuantity issued of the Material Issue Detail in Base UOM
-	 * 
-	 * @return userQuantityIssued
-	 **/
-	@ApiModelProperty(required = true, value = "Quantity issued of the Material Issue Detail in Base UOM ")
-	@NotNull
-
-	public BigDecimal getUserQuantityIssued() {
-		return userQuantityIssued;
-	}
-
-	public void setUserQuantityIssued(BigDecimal userQuantityIssued) {
-		this.userQuantityIssued = userQuantityIssued;
-	}
 
 	public MaterialIssueDetail pendingIndentQuantity(BigDecimal pendingIndentQuantity) {
 		this.pendingIndentQuantity = pendingIndentQuantity;
@@ -199,29 +185,25 @@ public class MaterialIssueDetail {
 		this.pendingIndentQuantity = pendingIndentQuantity;
 	}
 
+	/**
+	 * Quantity issued of the Material Issue Detail.
+	 * 
+	 * @return userQuantityIssued
+	 **/
+	@ApiModelProperty(value = "Quantity issued of the Material Issue Detail. ")
+
+	@Valid
+
+	public BigDecimal getUserQuantityIssued() {
+		return userQuantityIssued;
+	}
+
+	public void setUserQuantityIssued(BigDecimal userQuantityIssued) {
+		this.userQuantityIssued = userQuantityIssued;
+	}
+
 	public MaterialIssueDetail quantityIssued(BigDecimal quantityIssued) {
 		this.quantityIssued = quantityIssued;
-		return this;
-	}
-
-	/**
-	 * Quantity issued of the Material Issue Detail in Base UOM
-	 * 
-	 * @return quantityIssued
-	 **/
-	@ApiModelProperty(required = true, value = "Quantity issued of the Material Issue Detail in Base UOM ")
-
-
-	public BigDecimal getBalanceQuantity() {
-		return balanceQuantity;
-	}
-
-	public void setBalanceQuantity(BigDecimal balanceQuantity) {
-		this.balanceQuantity = balanceQuantity;
-	}
-	
-	public MaterialIssueDetail balanceQuantity(BigDecimal balanceQuantity) {
-		this.balanceQuantity = balanceQuantity;
 		return this;
 	}
 
@@ -239,6 +221,27 @@ public class MaterialIssueDetail {
 
 	public void setQuantityIssued(BigDecimal quantityIssued) {
 		this.quantityIssued = quantityIssued;
+	}
+	
+	public MaterialIssueDetail balanceQuantity(BigDecimal balanceQuantity) {
+		this.balanceQuantity = balanceQuantity;
+		return this;
+	}
+
+	/**
+	 * Quantity issued of the Material Issue Detail in Base UOM
+	 * 
+	 * @return balanceQuantity
+	 **/
+	@ApiModelProperty(required = true, value = "Quantity issued of the Material Issue Detail in Base UOM ")
+
+
+	public BigDecimal getBalanceQuantity() {
+		return balanceQuantity;
+	}
+
+	public void setBalanceQuantity(BigDecimal balanceQuantity) {
+		this.balanceQuantity = balanceQuantity;
 	}
 
 
@@ -343,6 +346,28 @@ public class MaterialIssueDetail {
 
 	public void setQuantityToBeIssued(BigDecimal quantityToBeIssued) {
 		this.quantityToBeIssued = quantityToBeIssued;
+	}
+
+	public MaterialIssueDetail scrapedQuantity(BigDecimal scrapedQuantity) {
+		this.scrapedQuantity = scrapedQuantity;
+		return this;
+	}
+
+	/**
+	 * Quantity utilized in scrap creation
+	 * 
+	 * @return scrapedQuantity
+	 **/
+	@ApiModelProperty(value = "Quantity utilized in scrap creation ")
+
+	@Valid
+
+	public BigDecimal getScrapedQuantity() {
+		return scrapedQuantity;
+	}
+
+	public void setScrapedQuantity(BigDecimal scrapedQuantity) {
+		this.scrapedQuantity = scrapedQuantity;
 	}
 
 	public MaterialIssueDetail scrapValue(BigDecimal scrapValue) {
@@ -451,11 +476,13 @@ public class MaterialIssueDetail {
 				&& Objects.equals(this.orderNumber, materialIssueDetail.orderNumber)
 				&& Objects.equals(this.userQuantityIssued, materialIssueDetail.userQuantityIssued)
 				&& Objects.equals(this.quantityIssued, materialIssueDetail.quantityIssued)
+				&& Objects.equals(this.balanceQuantity, materialIssueDetail.balanceQuantity)
 				&& Objects.equals(this.value, materialIssueDetail.value)
 				&& Objects.equals(this.uom, materialIssueDetail.uom)
 				&& Objects.equals(this.voucherHeader, materialIssueDetail.voucherHeader)
 				&& Objects.equals(this.indentDetail, materialIssueDetail.indentDetail)
 				&& Objects.equals(this.quantityToBeIssued, materialIssueDetail.quantityToBeIssued)
+				&& Objects.equals(this.scrapedQuantity, materialIssueDetail.scrapedQuantity)
 				&& Objects.equals(this.scrapValue, materialIssueDetail.scrapValue)
 				&& Objects.equals(this.mrnNumber, materialIssueDetail.mrnNumber)
 				&& Objects.equals(this.description, materialIssueDetail.description)
@@ -464,9 +491,9 @@ public class MaterialIssueDetail {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, material, orderNumber, userQuantityIssued, quantityIssued,
-				value, uom, voucherHeader, indentDetail, quantityToBeIssued, scrapValue, mrnNumber, description,
-				materialIssuedFromReceipts);
+		return Objects.hash(id, tenantId, material, orderNumber, userQuantityIssued, quantityIssued, balanceQuantity,
+				value, uom, voucherHeader, indentDetail, quantityToBeIssued, scrapedQuantity, scrapValue, mrnNumber,
+				description, materialIssuedFromReceipts);
 	}
 
 	@Override
@@ -480,11 +507,13 @@ public class MaterialIssueDetail {
 		sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
 		sb.append("    userQuantityIssued: ").append(toIndentedString(userQuantityIssued)).append("\n");
 		sb.append("    quantityIssued: ").append(toIndentedString(quantityIssued)).append("\n");
+		sb.append("    balanceQuantity: ").append(toIndentedString(balanceQuantity)).append("\n");
 		sb.append("    value: ").append(toIndentedString(value)).append("\n");
 		sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
 		sb.append("    voucherHeader: ").append(toIndentedString(voucherHeader)).append("\n");
 		sb.append("    indentDetail: ").append(toIndentedString(indentDetail)).append("\n");
 		sb.append("    quantityToBeIssued: ").append(toIndentedString(quantityToBeIssued)).append("\n");
+		sb.append("    scrapedQuantity: ").append(toIndentedString(scrapedQuantity)).append("\n");
 		sb.append("    scrapValue: ").append(toIndentedString(scrapValue)).append("\n");
 		sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
 		sb.append("    description: ").append(toIndentedString(description)).append("\n");

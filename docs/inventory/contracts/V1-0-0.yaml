@@ -3638,9 +3638,9 @@ definitions:
         issueType:
           type: string
           enum:
-            - IndentIssue
-            - NonIndentIssue
-            - Material Outward
+            - INDENTISSUE
+            - NONINDENTISSUE
+            - MATERIALOUTWARD
         fromStore:
           $ref: "#/definitions/Store"
           description: |
@@ -3655,6 +3655,11 @@ definitions:
           readOnly: true
           description: |
             issue note number/outward note number.Auto generated number, read only.
+        scrapCreated:
+          type: boolean
+          description: |
+            If material issue used in srap process then enable this flag. This will help in recreation of scrap notes using issue details. By default value is false.
+          default: false
         issueDate:
           type: integer
           format: int64
@@ -3700,8 +3705,8 @@ definitions:
         issuePurpose:
           type: string
           enum:
-            - WriteOff OR Scrap
-            - Return To Supplier
+            - WRITEOFFORSCRAP
+            - RETURNTOSUPPLIER
           description: Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
         supplier:
           $ref: "#/definitions/Supplier"
@@ -3820,11 +3825,6 @@ definitions:
           format: BigDecimal
           description: |
             Quantity utilized in scrap creation
-        scrapCreated:
-          type: boolean
-          description: |
-            If material issue used in srap process then enable this flag. This will help in recreation of scrap notes using issue details. By default value is false.
-          default: false
         scrapValue:
           type: number
           format: BigDecimal

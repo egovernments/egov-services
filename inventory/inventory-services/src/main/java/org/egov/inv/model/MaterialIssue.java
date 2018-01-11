@@ -1,23 +1,25 @@
 package org.egov.inv.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * This object holds information for Indent Issue, Non Indent Issue and Transfer Outward Note. 
  */
 @ApiModel(description = "This object holds information for Indent Issue, Non Indent Issue and Transfer Outward Note. ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T08:36:20.118Z")
-
+	
 public class MaterialIssue   {
   @JsonProperty("id")
   private String id = null;
@@ -69,6 +71,9 @@ public class MaterialIssue   {
 
   @JsonProperty("issueNumber")
   private String issueNumber = null;
+
+  @JsonProperty("scrapCreated")
+  private Boolean scrapCreated = false;
 
   @JsonProperty("issueDate")
   private Long issueDate = null;
@@ -302,6 +307,26 @@ public class MaterialIssue   {
 
   public void setIssueNumber(String issueNumber) {
     this.issueNumber = issueNumber;
+  }
+
+  public MaterialIssue scrapCreated(Boolean scrapCreated) {
+    this.scrapCreated = scrapCreated;
+    return this;
+  }
+
+   /**
+   * If material issue used in srap process then enable this flag. This will help in recreation of scrap notes using issue details. By default value is false. 
+   * @return scrapCreated
+  **/
+  @ApiModelProperty(value = "If material issue used in srap process then enable this flag. This will help in recreation of scrap notes using issue details. By default value is false. ")
+
+
+  public Boolean getScrapCreated() {
+    return scrapCreated;
+  }
+
+  public void setScrapCreated(Boolean scrapCreated) {
+    this.scrapCreated = scrapCreated;
   }
 
   public MaterialIssue issueDate(Long issueDate) {
@@ -636,6 +661,7 @@ public class MaterialIssue   {
         Objects.equals(this.fromStore, materialIssue.fromStore) &&
         Objects.equals(this.toStore, materialIssue.toStore) &&
         Objects.equals(this.issueNumber, materialIssue.issueNumber) &&
+        Objects.equals(this.scrapCreated, materialIssue.scrapCreated) &&
         Objects.equals(this.issueDate, materialIssue.issueDate) &&
         Objects.equals(this.materialIssueStatus, materialIssue.materialIssueStatus) &&
         Objects.equals(this.description, materialIssue.description) &&
@@ -655,7 +681,7 @@ public class MaterialIssue   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, issueType, fromStore, toStore, issueNumber, issueDate, materialIssueStatus, description, totalIssueValue, fileStoreId, designation, indent, issuedToEmployee, issuedToDesignation, issuePurpose, supplier, materialIssueDetails, workFlowDetails, stateId, auditDetails);
+    return Objects.hash(id, tenantId, issueType, fromStore, toStore, issueNumber, scrapCreated, issueDate, materialIssueStatus, description, totalIssueValue, fileStoreId, designation, indent, issuedToEmployee, issuedToDesignation, issuePurpose, supplier, materialIssueDetails, workFlowDetails, stateId, auditDetails);
   }
 
   @Override
@@ -669,6 +695,7 @@ public class MaterialIssue   {
     sb.append("    fromStore: ").append(toIndentedString(fromStore)).append("\n");
     sb.append("    toStore: ").append(toIndentedString(toStore)).append("\n");
     sb.append("    issueNumber: ").append(toIndentedString(issueNumber)).append("\n");
+    sb.append("    scrapCreated: ").append(toIndentedString(scrapCreated)).append("\n");
     sb.append("    issueDate: ").append(toIndentedString(issueDate)).append("\n");
     sb.append("    materialIssueStatus: ").append(toIndentedString(materialIssueStatus)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");

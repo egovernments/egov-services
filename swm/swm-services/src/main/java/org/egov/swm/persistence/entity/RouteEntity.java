@@ -25,6 +25,10 @@ public class RouteEntity {
 
     private String collectionType = null;
 
+    private Double totalDistance = null;
+
+    private Double totalGarbageEstimate = null;
+
     private String createdBy = null;
 
     private String lastModifiedBy = null;
@@ -40,6 +44,8 @@ public class RouteEntity {
         route.setTenantId(tenantId);
         route.setName(name);
         route.setCollectionType(CollectionType.builder().code(collectionType).build());
+        route.setTotalDistance(totalDistance);
+        route.setTotalGarbageEstimate(totalGarbageEstimate);
         route.setAuditDetails(new AuditDetails());
         route.getAuditDetails().setCreatedBy(createdBy);
         route.getAuditDetails().setCreatedTime(createdTime);

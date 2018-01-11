@@ -3,8 +3,7 @@ package org.egov.swm.domain.model;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -39,6 +38,18 @@ public class Route {
     @NotNull
     @JsonProperty("collectionType")
     private CollectionType collectionType = null;
+
+    @NotNull
+    @Digits(fraction = 2, integer = 10, message = "totalDistance shall be with 2 decimal points")
+    @DecimalMin(value = "1", message = "totalDistance shall be minimum 1 Kms")
+    @JsonProperty("totalDistance")
+    private Double totalDistance = null;
+
+    @NotNull
+    @Digits(fraction = 2, integer = 10, message = "totalGarbageEstimate shall be with 2 decimal points")
+    @DecimalMin(value = "1", message = "totalGarbageEstimate shall be minimum 1 Kms")
+    @JsonProperty("totalGarbageEstimate")
+    private Double totalGarbageEstimate = null;
 
     @NotNull
     @Valid

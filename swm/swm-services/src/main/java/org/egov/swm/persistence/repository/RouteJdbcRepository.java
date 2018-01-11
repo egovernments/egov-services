@@ -91,6 +91,18 @@ public class RouteJdbcRepository extends JdbcRepository {
             paramValues.put("name", searchRequest.getName());
         }
 
+        if(searchRequest.getTotalDistance() != null){
+            addAnd(params);
+            params.append("totalDistance = :totalDistance");
+            paramValues.put("totalDistance", searchRequest.getTotalDistance());
+        }
+
+        if(searchRequest.getTotalGarbageEstimate() != null){
+            addAnd(params);
+            params.append("totalGarbageEstimate = :totalGarbageEstimate");
+            paramValues.put("totalGarbageEstimate", searchRequest.getTotalGarbageEstimate());
+        }
+
         if (searchRequest.getCollectionTypeCode() != null) {
             addAnd(params);
             params.append("collectionType =:collectionType");

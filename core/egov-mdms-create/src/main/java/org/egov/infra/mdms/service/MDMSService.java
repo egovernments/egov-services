@@ -379,22 +379,16 @@ public class MDMSService {
 						inputDataMap.put(mapKey.toString(), i);
 					}
 					logger.info("inputDataMap: " + inputDataMap);
-					logger.info(" the size of the master : {}",masterData.size()-1);
-					logger.info("the master data fo the object to be updated : {}"+ masterData.get(masterData.size()-1));
+
 					ListIterator<Object> iterator = masterData.listIterator();
 					while (iterator.hasNext()) {
 						Object master = iterator.next();
-						Map<String,Object> mapMaster = (Map<String,Object>)master;
 						StringBuilder mapKey = new StringBuilder();
 						for (String key : keys) {
 							String element = mapper.writeValueAsString(master);
 							mapKey.append(JsonPath.read(element, key).toString());
 						}
 						Integer index = inputDataMap.get(mapKey.toString());
-						logger.info(" the id of the current object {}",mapMaster.get("id"));
-						logger.info(" the map key of the current object  {}",mapKey);
-						logger.info(" the index of the current object in request  {}",index);
-						logger.info(" the input data map  {}",inputDataMap);
 						if (null == index) {
 							continue;
 						} else {

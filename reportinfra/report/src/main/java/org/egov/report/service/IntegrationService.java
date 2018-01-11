@@ -48,9 +48,9 @@ public class IntegrationService {
 		List<ColumnDetail> columnDetails = metadataResponse.getReportDetails().getSearchParams();
 		Map<String, ColumnDetail> colNameMap = columnDetails.stream().collect(Collectors.toMap(ColumnDetail::getName, Function.identity()));
 		
-		LOGGER.info("colNameMap:"+colNameMap);
+		
 		for(SearchColumn searchColumn : searchColumns){
-			LOGGER.info("searchColumn:"+searchColumn);
+			
 			if(searchColumn.getType().equals(TypeEnum.SINGLEVALUELIST) || searchColumn.getType().equals(TypeEnum.MULTIVALUELIST)){
 				LOGGER.info("if searchColumn:"+searchColumn);
 				LOGGER.info("Pattern is:"+searchColumn.getColName());
@@ -70,7 +70,7 @@ public class IntegrationService {
 					for(String str: pairs){
 						String[] keyValue = str.split(":");
 						map.put(keyValue[0].replace('_', ','), keyValue[1]);
-						//map.put(keyValue[0],keyValue[1]);
+						
 					}
 					columnDetail.setDefaultValue(map);
 				}else{
@@ -103,16 +103,16 @@ public class IntegrationService {
 					
 					
 					Object document = Configuration.defaultConfiguration().jsonProvider().parse(res);
-					LOGGER.info("document:"+document);
+					
 					List<Object> keys = JsonPath.read(document, patterns[1]);
-					LOGGER.info("keys:"+keys);
+					
 					List<Object> values = JsonPath.read(document, patterns[2]);
-					LOGGER.info("values:"+values);
+					
 					Map<Object, Object> map = new HashMap<>();
 					for(int i=0;i<keys.size();i++){
 						map.put(keys.get(i), values.get(i));
 					}
-					LOGGER.info("value map-->"+map);
+					
 					columnDetail.setDefaultValue(map);
 					} catch(Exception e) {
 						e.printStackTrace();

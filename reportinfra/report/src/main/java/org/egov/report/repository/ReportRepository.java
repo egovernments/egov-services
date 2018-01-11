@@ -38,7 +38,7 @@ public class ReportRepository {
 		if(endTime-startTime>maxExecutionTime)
 			LOGGER.error("Sql query is taking time query:"+query);
 			
-		LOGGER.info("maps : "+maps);
+		
 		return maps;
 	}
 

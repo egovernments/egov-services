@@ -238,7 +238,7 @@ public class ReportService {
 					defaultValue="";
 					if (sc.getLinkedReport() != null)
 					{
-						LOGGER.info("Linked Report Pattern is: "+sc.getLinkedReport());
+						
 						pattern = sc.getLinkedReport().getLinkedColumn();
 						defaultValue = pattern.replace("{reportName}", sc.getLinkedReport().getReportName());
 						sc.setDefaultValue(defaultValue.replace("{currentColumnName}", sc.getName()));

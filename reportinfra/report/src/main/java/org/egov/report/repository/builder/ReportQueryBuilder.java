@@ -42,7 +42,7 @@ public class ReportQueryBuilder {
 		
 		
 		StringBuffer csinput = new StringBuffer();
-		LOGGER.info("searchParams:" + searchParams);
+		
 		if(reportDefinition.getQuery().contains("UNION")){
 			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
 		}else if(reportDefinition.getQuery().contains("FULLJOIN")){
@@ -120,7 +120,7 @@ public class ReportQueryBuilder {
 			url = url.replaceAll("\\$tenantid",tenantid);
 			}
 			
-			System.out.println("The URL is: "+url);
+			
 			
 			
 			
@@ -163,7 +163,7 @@ public class ReportQueryBuilder {
 					}
 
 					finalString.append(sb);
-					LOGGER.info("Inline Table Values "+finalString.toString());
+				
 				}
 			 
 			 if(mdmsArray.length() == 0) {
@@ -189,7 +189,7 @@ public class ReportQueryBuilder {
 	}
 public String generateQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition,String inlineQuery){
 		
-		LOGGER.info("searchParams:" + searchParams);
+		
 		
 		StringBuffer query = new StringBuffer();
 		
@@ -219,7 +219,7 @@ public String generateQuery(List<SearchParam> searchParams, String tenantId, Rep
 
 public String generateUnionQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 	
-	LOGGER.info("searchParams:" + searchParams);
+	
 	
 	String baseQuery = reportDefinition.getQuery();
 	
@@ -250,13 +250,13 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 	
 
      String orderByQuery = reportDefinition.getOrderByQuery(); 
-     System.out.println("The Final Query before union all " +finalQuery.toString());
+     
      String alteredOrderByQuery = "";
       if(finalQuery.toString().trim().contains("  UNION  ALL ")){
       String[] unionall = finalQuery.toString().split("  UNION  ALL ");
       for(int j=0; j<unionall.length; j++) {
     	  
-    	  System.out.println("The Value of J is: "+j);
+    	  
     	  if(j < unionall.length-1) {
     		  finalUnionQuery.append(unionall[j] );
     		  if(orderByQuery != null){
@@ -282,13 +282,13 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
   		finalUnionQuery.append(" "+ orderByQuery);
       }
       }
-      LOGGER.info("generate baseUnionQuery with union all:"+finalQuery);
+      
       
       return finalQuery.toString();
     }
 	public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
-		LOGGER.info("searchParams:" + searchParams);
+		
 		
 		String baseQuery = reportDefinition.getQuery();
 		
@@ -324,7 +324,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 	    }
 		
 		finalQuery.toString();
-	LOGGER.info("generate baseJoinQuery :"+finalQuery);
+	
 	return finalQuery.toString();
 	}
 
@@ -393,7 +393,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 				LOGGER.info("tables: "+table.toString());
 				
 				values.replace(values.length() - 1, values.length(), ")");
-				LOGGER.info("values: "+values.toString());
+				
 				
 				inlineQuery.append(values.toString())
 				.append(" AS ")
@@ -402,7 +402,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 				LOGGER.error("Exception while building inline query, Valid Data format: [{},{}]. Please verify: ",e);
 			}
 			
-			LOGGER.info("from statment for inlineQuery: "+inlineQuery.toString());
+			
 			
 		}else{
 			LOGGER.info("Building inline query for a JSON Object.....");
@@ -430,7 +430,7 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 				LOGGER.error("Exception while building inline query: ",e);
 			}
 			
-			LOGGER.info("from statment for inlineQuery: "+inlineQuery.toString());
+			
 		}
 		
 		return inlineQuery.toString();

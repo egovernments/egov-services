@@ -605,7 +605,7 @@ class UpdateJudgement extends React.Component {
 
             }
 
-            if (ID != "Reject") {
+            if (ID != "Reject" || ID!="Approve") {
 
                 if (!agreement.workflowDetails.department)
                     return showError("Please Select the Department");

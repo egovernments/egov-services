@@ -7554,7 +7554,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"name\":\"{{routeName}}\",\n      \"collectionType\":\n      {\n        \"code\":\"{{CollectionType}}\"\n      },\n            \"startingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints1code}}\"\n            },\n            \"endingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints2code}}\"\n            },\n            \"endingDumpingGroundPoint\" :{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :10,\n            \"collectionPoints\":[\n              \n              {\n                \"code\" :\"{{collectionPoints3code}}\"\n              },\n                {\n                \"code\" :\"{{collectionPoints4code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"{{routeName}}\",\n      \"collectionType\": {\n        \"code\": \"{{CollectionType}}\"\n      },\n      \"collectionPoints\": [\n      \t{\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints1code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints2code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints3code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints4code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":true\n        }\n      ]\n    }\n  ]\n}"
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/routes/_create",
@@ -7644,6 +7644,8 @@
 										{
 											"listen": "test",
 											"script": {
+												"id": "a7f2118f-c327-4ba3-8d54-c6a1284f8c7c",
+												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
 													"    pm.response.to.have.status(201);",
@@ -7652,10 +7654,10 @@
 													"var reqBody = JSON.parse(request.data);",
 													"var jsonData = JSON.parse(responseBody);",
 													"",
-													"var reqDistance = reqBody.routes[0].distance;",
+													"var reqDistance = reqBody.routes[0].collectionPoints[0].distance;",
 													"pm.environment.set(\"reqDistance\", reqDistance);",
 													"",
-													"var resDistance = jsonData.routes[0].distance;",
+													"var resDistance = jsonData.routes[0].collectionPoints[0].distance;",
 													"pm.environment.set(\"resDistance\", resDistance);",
 													"",
 													"",
@@ -7664,8 +7666,7 @@
 													"});",
 													"",
 													"postman.setNextRequest(\"Route Search for updated record\");"
-												],
-												"type": "text/javascript"
+												]
 											}
 										}
 									],
@@ -7679,7 +7680,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"routes\":[\n      {\n            \"code\":\"{{routeCode}}\",\n      \"tenantId\":\"{{tenantId}}\",\n      \"name\":\"{{routeName}}\",\n      \"collectionType\":\n      {\n        \"code\":\"{{CollectionType}}\"\n      },\n            \"startingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints1code}}\"\n            },\n            \"endingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints2code}}\"\n            },\n            \"endingDumpingGroundPoint\" :{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"distance\":120,\n            \"garbageEstimate\" :10,\n            \"collectionPoints\":[\n              {\n                \"code\" :\"{{collectionPoints1code}}\"\n              },\n                {\n                \"code\" :\"{{collectionPoints2code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"code\":\"{{routeCode}}\",\t\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"{{routeName}}\",\n      \"collectionType\": {\n        \"code\": \"{{CollectionType}}\"\n      },\n      \"collectionPoints\": [\n      \t{\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints1code}}\"\n          },\n          \"distance\": 120,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints2code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints3code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints4code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":true\n        }\n      ]\n    }\n  ]\n}"
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/routes/_update",
@@ -7697,64 +7698,13 @@
 									"response": []
 								},
 								{
-									"name": "Emp Search",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"type": "text/javascript",
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200);",
-													"});",
-													"",
-													"",
-													"",
-													"postman.setNextRequest(\"Route Create \");"
-												]
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":{\n      \"action\": \"search\",\n      \"did\": \"\",\n      \"msgId\": null,\n      \"authToken\": \"{{access_token}}\",\n      \"apiId\": null,\n      \"ver\": null,\n      \"ts\": \"\",\n      \"key\": null\n   \n  }\n}"
-										},
-										"url": {
-											"raw": "{{url}}/hr-employee/employees/_search?tenantId=default",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"hr-employee",
-												"employees",
-												"_search"
-											],
-											"query": [
-												{
-													"key": "tenantId",
-													"value": "default",
-													"equals": true
-												}
-											]
-										},
-										"description": null
-									},
-									"response": []
-								},
-								{
 									"name": "Route Search for updated record",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
+												"id": "03f23edb-b80b-4b8c-8b2a-c0b7b61a4b41",
+												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 200\", function () {",
 													"    pm.response.to.have.status(200);",
@@ -7763,7 +7713,7 @@
 													"",
 													"var jsonData = JSON.parse(responseBody);",
 													"",
-													"var resDistance = jsonData.routes[0].distance;",
+													"var resDistance = jsonData.routes[0].collectionPoints[0].distance;",
 													"pm.environment.set(\"resDistance\", resDistance);",
 													"",
 													"",
@@ -7773,8 +7723,7 @@
 													"});",
 													"",
 													""
-												],
-												"type": "text/javascript"
+												]
 											}
 										}
 									],
@@ -7802,14 +7751,14 @@
 											],
 											"query": [
 												{
-													"equals": true,
 													"key": "tenantId",
-													"value": "{{tenantId}}"
+													"value": "{{tenantId}}",
+													"equals": true
 												},
 												{
-													"equals": true,
 													"key": "code",
-													"value": "{{routeCode}}"
+													"value": "{{routeCode}}",
+													"equals": true
 												}
 											]
 										},
@@ -8887,6 +8836,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
+												"id": "dd558a3e-c582-4079-bf10-a1b95e690cb8",
 												"type": "text/javascript",
 												"exec": [
 													"var name1 = Math.floor(Math.random() * 10000);",
@@ -8898,6 +8848,7 @@
 										{
 											"listen": "test",
 											"script": {
+												"id": "042ead6c-1cac-452c-a5c6-0492ea724082",
 												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
@@ -8924,7 +8875,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"name\":\"{{routeName}}\",\n      \"collectionType\":\n      {\n        \"code\":\"{{CollectionType}}\"\n      },\n            \"startingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints1code}}\"\n            },\n            \"endingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints2code}}\"\n            },\n            \"endingDumpingGroundPoint\" :{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :10,\n            \"collectionPoints\":[\n              \n              {\n                \"code\" :\"{{collectionPoints3code}}\"\n              },\n                {\n                \"code\" :\"{{collectionPoints4code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"{{routeName}}\",\n      \"collectionType\": {\n        \"code\": \"{{CollectionType}}\"\n      },\n      \"collectionPoints\": [\n      \t{\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints1code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints2code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints3code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints4code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":true\n        }\n      ]\n    }\n  ]\n}"
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/routes/_create",
@@ -8937,7 +8888,7 @@
 												"_create"
 											]
 										},
-										"description": null
+										"description": ""
 									},
 									"response": []
 								},
@@ -8947,6 +8898,8 @@
 										{
 											"listen": "test",
 											"script": {
+												"id": "70b1166e-ffe9-4225-b629-a2362c5b4b92",
+												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
 													"    pm.response.to.have.status(201);",
@@ -8959,8 +8912,19 @@
 													"",
 													"",
 													"postman.setNextRequest(\"Sanitation Staff Target Search\");"
-												],
-												"type": "text/javascript"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "f6c47400-825e-4c22-8c27-d2605969af61",
+												"type": "text/javascript",
+												"exec": [
+													"var todayDate = new Date().getTime();",
+													"",
+													"pm.environment.set(\"todayDate\",todayDate);"
+												]
 											}
 										}
 									],
@@ -8974,7 +8938,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"swmProcess\" :{\n              \"code\":\"{{serviceOffered1}}\"\n            },\n            \"location\" :{\n              \"code\":\"{{locationCode}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"employee\" :{\n              \"code\":\"Driver1\"\n            },\n            \"targetFrom\":\"1234567890\",\n            \"targetTo\":1234567890,\n            \"targetedGarbage\":100,\n            \"wetWaste\":10,\n            \"dryWaste\":10,\n            \"dumpingGround\":{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"collectionPoints\": [\n              {\n                \"code\":\"{{collectionPoints1code}}\"\n              },\n              {\n                \"code\":\"{{collectionPoints2code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"swmProcess\" :{\n              \"code\":\"{{serviceOffered1}}\"\n            },\n            \"location\" :{\n              \"code\":\"{{locationCode}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"employee\" :{\n              \"code\":\"Driver3\"\n            },\n            \"targetFrom\":\"{{todayDate}}\",\n            \"targetTo\":1578723633000,\n            \"targetedGarbage\":100,\n            \"wetWaste\":10,\n            \"dryWaste\":10,\n            \"dumpingGround\":{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"collectionPoints\": [\n              {\n                \"code\":\"{{collectionPoints1code}}\"\n              },\n              {\n                \"code\":\"{{collectionPoints2code}}\"\n              }\n            ]\n      }\n   ]\n } "
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/sanitationstafftargets/_create",
@@ -9099,7 +9063,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n            \"targetNo\": \"{{targetNo}}\",\n      \"tenantId\":\"{{tenantId}}\",\n      \"swmProcess\" :{\n              \"code\":\"{{serviceOffered1}}\"\n            },\n            \"location\" :{\n              \"code\":\"{{locationCode}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"employee\" :{\n              \"code\":\"Driver1\"\n            },\n            \"targetFrom\":\"1234567890\",\n            \"targetTo\":1234567890,\n            \"targetedGarbage\":80,\n            \"wetWaste\":100,\n            \"dryWaste\":100,\n            \"dumpingGround\":{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"collectionPoints\": [\n              {\n                \"code\":\"{{collectionPoints1code}}\"\n              },\n              {\n                \"code\":\"{{collectionPoints2code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n      \"targetNo\": \"{{targetNo}}\",\t\n      \"tenantId\":\"{{tenantId}}\",\n      \"swmProcess\" :{\n              \"code\":\"{{serviceOffered1}}\"\n            },\n            \"location\" :{\n              \"code\":\"{{locationCode}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"employee\" :{\n              \"code\":\"Driver1\"\n            },\n            \"targetFrom\":\"{{todayDate}}\",\n            \"targetTo\":1578723633000,\n            \"targetedGarbage\":80,\n            \"wetWaste\":10,\n            \"dryWaste\":10,\n            \"dumpingGround\":{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"collectionPoints\": [\n              {\n                \"code\":\"{{collectionPoints1code}}\"\n              },\n              {\n                \"code\":\"{{collectionPoints2code}}\"\n              }\n            ]\n      }\n   ]\n } "
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/sanitationstafftargets/_update",
@@ -9174,235 +9138,6 @@
 													"equals": true,
 													"key": "targetNo",
 													"value": "{{targetNo}}"
-												}
-											]
-										},
-										"description": null
-									},
-									"response": []
-								},
-								{
-									"name": "Get Master Data",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200);",
-													"});",
-													"var jsonData = JSON.parse(responseBody);",
-													"  if('swm' in jsonData.MdmsRes){",
-													"     if('VehicleType' in jsonData.MdmsRes.swm){",
-													"         var max = jsonData.MdmsRes.swm.VehicleType.length - 1;",
-													"         var rand = 0;",
-													"         var vehicleType = null;",
-													"         if(max > -1){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             vehicleType = jsonData.MdmsRes.swm.VehicleType[rand].code;",
-													"             pm.environment.set(\"vehicleType\",vehicleType);",
-													"                    }",
-													"     else{",
-													"          tests[\"Vehicle Type is null\"] = false;",
-													"        }",
-													"    }",
-													"    else{",
-													"          tests[\"No vehicleType Master is available\"] = false;",
-													"        }",
-													"    ",
-													"    if('FuelType' in jsonData.MdmsRes.swm){",
-													"         var max = jsonData.MdmsRes.swm.FuelType.length - 1;",
-													"         var rand = 0;",
-													"         var FuelType = null;",
-													"         if(max > -1){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             FuelType = jsonData.MdmsRes.swm.FuelType[rand].code;",
-													"             pm.environment.set(\"FuelType\",FuelType);",
-													"                    }",
-													"     else{",
-													"          tests[\"Fuel Type is null\"] = false;",
-													"        }",
-													"    }",
-													"    else{",
-													"          tests[\"No fuelType Master is available\"] = false;",
-													"        }",
-													"        ",
-													"   if('OilCompany' in jsonData.MdmsRes.swm){",
-													"         var max = jsonData.MdmsRes.swm.OilCompany.length - 1;",
-													"         var rand = 0;",
-													"         var Vendor = null;",
-													"         if(max > -1){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             OilCompany = jsonData.MdmsRes.swm.OilCompany[rand].code;",
-													"             pm.environment.set(\"OilCompany\",OilCompany);",
-													"                    }",
-													"     else{",
-													"          tests[\"OilCompany is null\"] = false;",
-													"        }",
-													"    }",
-													"    else{",
-													"          tests[\"No OilCompany Master is available\"] = false;",
-													"        }",
-													"        ",
-													"        ",
-													"    if('CollectionType' in jsonData.MdmsRes.swm){",
-													"         var max = jsonData.MdmsRes.swm.CollectionType.length - 1;",
-													"         var rand = 0;",
-													"         var CollectionType = null;",
-													"         if(max > -1){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             CollectionType = jsonData.MdmsRes.swm.CollectionType[rand].code;",
-													"             pm.environment.set(\"CollectionType\",CollectionType);",
-													"                    }",
-													"     else{",
-													"          tests[\"CollectionType is null\"] = false;",
-													"        }",
-													"    }",
-													"    else{",
-													"          tests[\"No CollectionType Master is available\"] = false;",
-													"        }",
-													"        ",
-													"        ",
-													"    if('DumpingGround' in jsonData.MdmsRes.swm){",
-													"         var max = jsonData.MdmsRes.swm.DumpingGround.length - 1;",
-													"         var rand = 0;",
-													"         var DumpingGround = null;",
-													"         if(max > -1){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             DumpingGround = jsonData.MdmsRes.swm.DumpingGround[rand].code;",
-													"             pm.environment.set(\"DumpingGround\",DumpingGround);",
-													"                    }",
-													"     else{",
-													"          tests[\"DumpingGroundcode is null\"] = false;",
-													"        }",
-													"    }",
-													"    else{",
-													"          tests[\"No DumpingGround Master is available\"] = false;",
-													"        }    ",
-													"        ",
-													"        ",
-													"    if('SwmProcess' in jsonData.MdmsRes.swm){",
-													"         var max = jsonData.MdmsRes.swm.SwmProcess.length - 1;",
-													"         var rand = 0;",
-													"         var SwmProcess = null;",
-													"         if(max > -1){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             SwmProcess = jsonData.MdmsRes.swm.SwmProcess[rand].code;",
-													"             pm.environment.set(\"SwmProcess\",SwmProcess);",
-													"                    }",
-													"     else{",
-													"          tests[\"SwmProcess is null\"] = false;",
-													"        }",
-													"    }",
-													"    else{",
-													"          tests[\"No SwmProcess Master is available\"] = false;",
-													"        }     ",
-													"        ",
-													"        ",
-													"        ",
-													"    }",
-													"    ",
-													"  else{",
-													"      tests[\"No Swm Master is available\"] = false; ",
-													"   }",
-													"   ",
-													"   ",
-													"   ",
-													"   ",
-													"   postman.setNextRequest(\"Get Boundary Details\");",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{  \n   \"RequestInfo\":{  \n      \"apiId\":\"swm-services\",\n      \"ver\":null,\n      \"ts\":null,\n      \"action\":null,\n      \"did\":null,\n      \"key\":null,\n      \"msgId\":\"search with from and to values\",\n      \"authToken\":\"{{access_token}}\"\n   },\n   \"MdmsCriteria\":{  \n      \"tenantId\":\"{{tenantId}}\",\n      \"moduleDetails\":[  \n         {  \n            \"moduleName\":\"swm\",\n            \"masterDetails\":[  \n               {  \n                  \"name\":\"CollectionPoint\"\n               },\n               {  \n                  \"name\":\"Route\"\n               },\n               {  \n                  \"name\":\"VehicleType\"\n               },\n               {  \n                  \"name\":\"Vendor\"\n               },\n               {\n                   \"name\":\"RefillingPumpStation\"\n               },\n               {\n                   \"name\":\"FuelType\"\n               },\n               {\n                   \"name\":\"CollectionType\"\n               },\n               {\n                    \"name\":\"DumpingGround\"\n               },\n               {\n                    \"name\":\"OilCompany\"\n               },\n               {\n                    \"name\":\"SwmProcess\"\n               }\n            ]\n         }\n      ]\n   }\n}"
-										},
-										"url": {
-											"raw": "{{url}}/egov-mdms-service/v1/_search",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"egov-mdms-service",
-												"v1",
-												"_search"
-											]
-										},
-										"description": ""
-									},
-									"response": []
-								},
-								{
-									"name": "Get Boundary Details",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200);",
-													"});",
-													"",
-													"",
-													"var jsonData = JSON.parse(responseBody);",
-													"",
-													"",
-													"if(jsonData.Boundary.length > 0){",
-													"         var max = jsonData.Boundary.length - 1;",
-													"         var rand = 0;",
-													"         var locationCode = null;",
-													"         if(max > 0){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode\",locationCode);",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode1 = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode1\",locationCode1);",
-													"         }",
-													"}",
-													"    ",
-													"postman.setNextRequest(\"Collection point Create\");",
-													"",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {},
-										"url": {
-											"raw": "{{url}}/egov-location/boundarys?Boundary.tenantId={{tenantId}}&authToken={{access_token}}",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"egov-location",
-												"boundarys"
-											],
-											"query": [
-												{
-													"equals": true,
-													"key": "Boundary.tenantId",
-													"value": "{{tenantId}}"
-												},
-												{
-													"equals": true,
-													"key": "authToken",
-													"value": "{{access_token}}"
 												}
 											]
 										},
@@ -10735,67 +10470,6 @@
 										"description": null
 									},
 									"response": []
-								},
-								{
-									"name": "Get Boundary Details",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"var jsonData = JSON.parse(responseBody);",
-													"",
-													"",
-													"if(jsonData.Boundary.length > 0){",
-													"         var max = jsonData.Boundary.length - 1;",
-													"         var rand = 0;",
-													"         var locationCode = null;",
-													"         if(max > 0){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode\",locationCode);",
-													"             ",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode1 = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode1\",locationCode1);",
-													"         }",
-													"}",
-													"",
-													"postman.setNextRequest(\"Vendor Create\");"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {},
-										"url": {
-											"raw": "{{url}}/egov-location/boundarys?Boundary.tenantId={{tenantId}}&authToken={{access_token}}",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"egov-location",
-												"boundarys"
-											],
-											"query": [
-												{
-													"equals": true,
-													"key": "Boundary.tenantId",
-													"value": "{{tenantId}}"
-												},
-												{
-													"equals": true,
-													"key": "authToken",
-													"value": "{{access_token}}"
-												}
-											]
-										},
-										"description": null
-									},
-									"response": []
 								}
 							],
 							"_postman_isSubFolder": true
@@ -11907,17 +11581,20 @@
 										{
 											"listen": "prerequest",
 											"script": {
+												"id": "dd558a3e-c582-4079-bf10-a1b95e690cb8",
+												"type": "text/javascript",
 												"exec": [
 													"var name1 = Math.floor(Math.random() * 10000);",
 													"",
 													"postman.setEnvironmentVariable(\"routeName\",\"RouteName \"+name1);"
-												],
-												"type": "text/javascript"
+												]
 											}
 										},
 										{
 											"listen": "test",
 											"script": {
+												"id": "be3bfb1b-aad0-45b4-a0d8-20c465dae0fb",
+												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
 													"    pm.response.to.have.status(201);",
@@ -11929,8 +11606,7 @@
 													"pm.environment.set(\"routeCode\",routeCode);",
 													"",
 													"postman.setNextRequest(\"Vendor Create\");"
-												],
-												"type": "text/javascript"
+												]
 											}
 										}
 									],
@@ -11944,7 +11620,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"name\":\"{{routeName}}\",\n      \"collectionType\":\n      {\n        \"code\":\"{{CollectionType}}\"\n      },\n            \"startingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints1code}}\"\n            },\n            \"endingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints2code}}\"\n            },\n            \"endingDumpingGroundPoint\" :{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :10,\n            \"collectionPoints\":[\n              \n              {\n                \"code\" :\"{{collectionPoints3code}}\"\n              },\n                {\n                \"code\" :\"{{collectionPoints4code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"{{routeName}}\",\n      \"collectionType\": {\n        \"code\": \"{{CollectionType}}\"\n      },\n      \"collectionPoints\": [\n      \t{\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints1code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints2code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints3code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints4code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":true\n        }\n      ]\n    }\n  ]\n}"
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/routes/_create",
@@ -11957,7 +11633,7 @@
 												"_create"
 											]
 										},
-										"description": null
+										"description": ""
 									},
 									"response": []
 								},
@@ -12096,6 +11772,8 @@
 										{
 											"listen": "test",
 											"script": {
+												"id": "16f5ce82-4e7f-42d7-aee3-b3de0ffcd431",
+												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
 													"    pm.response.to.have.status(201);",
@@ -12108,8 +11786,18 @@
 													"pm.environment.set(\"vehicleScheduleTransactionNo\",vehicleScheduleTransactionNo);",
 													"",
 													"postman.setNextRequest(\"Vehicle Schedule search\");"
-												],
-												"type": "text/javascript"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "143ea71d-8d01-4364-a262-fd59a6bf0838",
+												"type": "text/javascript",
+												"exec": [
+													"var today = new Date().getTime();",
+													"pm.environment.set(\"today\",today);"
+												]
 											}
 										}
 									],
@@ -12123,7 +11811,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }  \n  },\n  \"vehicleSchedules\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"scheduledFrom\" : 1506859666,\n            \"scheduledTo\" : 1512043666,\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"vehicle\" :{\n              \"tenantId\": \"{{tenantId}}\",\n              \"regNumber\":\"{{regNumber}}\",\n              \"operatorsReq\": 10\n            },\n            \"targetedGarbage\": 100\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }  \n  },\n  \"vehicleSchedules\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"scheduledFrom\" : {{today}},\n            \"scheduledTo\" : {{today}},\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"vehicle\" :{\n              \"tenantId\": \"{{tenantId}}\",\n              \"regNumber\":\"{{regNumber}}\",\n              \"operatorsReq\": 10\n            },\n            \"targetedGarbage\": 10\n      }\n   ]\n } "
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/vehicleschedules/_create",
@@ -12214,6 +11902,7 @@
 										{
 											"listen": "test",
 											"script": {
+												"id": "5addab8c-a67b-4701-85ae-cfee944916aa",
 												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
@@ -12234,6 +11923,17 @@
 													"});"
 												]
 											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "90c73d29-447b-42f9-85ef-cac58fde74f0",
+												"type": "text/javascript",
+												"exec": [
+													"var today = new Date().getTime();",
+													"pm.environment.set(\"today\",today);"
+												]
+											}
 										}
 									],
 									"request": {
@@ -12246,7 +11946,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }  \n  },\n  \"vehicleSchedules\":[\n      {\n            \"transactionNo\": \"{{vehicleScheduleTransactionNo}}\",\n      \"tenantId\":\"{{tenantId}}\",\n      \"scheduledFrom\" : 1479028412,\n            \"scheduledTo\" : 1479201212,\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"vehicle\" :{\n              \"tenantId\": \"{{tenantId}}\",\n              \"regNumber\":\"{{regNumber}}\",\n              \"operatorsReq\": 10\n            },\n            \"targetedGarbage\": 10\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }  \n  },\n  \"vehicleSchedules\":[\n      {\n            \"transactionNo\": \"{{vehicleScheduleTransactionNo}}\",\n      \"tenantId\":\"{{tenantId}}\",\n      \"scheduledFrom\" : {{today}},\n            \"scheduledTo\" : {{today}},\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"vehicle\" :{\n              \"tenantId\": \"{{tenantId}}\",\n              \"regNumber\":\"{{regNumber}}\",\n              \"operatorsReq\": 10\n            },\n            \"targetedGarbage\": 20\n      }\n   ]\n } "
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/vehicleschedules/_update",
@@ -12263,6 +11963,59 @@
 									},
 									"response": []
 								},
+								{
+									"name": "Logout",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"type": "text/javascript",
+												"exec": [
+													"tests[\"Status code is 200\"] = responseCode.code === 200;"
+												]
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": " {\n   \"RequestInfo\":{\n    \"apiId\":\"org.egov.pgr\",\n    \"ver\":\"1.0\",\n    \"ts\":\"13-04-2017 12:13:30\",\n    \"action\":\"POST\",\n    \"did\":\"4354648646\",\n    \"key\":\"xyz\",\n    \"msgId\":\"654654\",\n    \"requesterId\":\"61\",\n    \"authToken\": \"{{access_token}}\"\n }}"
+										},
+										"url": {
+											"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"user",
+												"_logout"
+											],
+											"query": [
+												{
+													"key": "access_token",
+													"value": "{{access_token}}",
+													"equals": true
+												}
+											]
+										},
+										"description": null
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Format",
+							"description": "",
+							"item": [
 								{
 									"name": "Vehicle Schedule Create without tenantId",
 									"event": [
@@ -12315,126 +12068,6 @@
 									},
 									"response": []
 								},
-								{
-									"name": "Logout",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"type": "text/javascript",
-												"exec": [
-													"tests[\"Status code is 200\"] = responseCode.code === 200;"
-												]
-											}
-										}
-									],
-									"request": {
-										"method": "POST",
-										"header": [
-											{
-												"key": "Content-Type",
-												"value": "application/json"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": " {\n   \"RequestInfo\":{\n    \"apiId\":\"org.egov.pgr\",\n    \"ver\":\"1.0\",\n    \"ts\":\"13-04-2017 12:13:30\",\n    \"action\":\"POST\",\n    \"did\":\"4354648646\",\n    \"key\":\"xyz\",\n    \"msgId\":\"654654\",\n    \"requesterId\":\"61\",\n    \"authToken\": \"{{access_token}}\"\n }}"
-										},
-										"url": {
-											"raw": "{{url}}/user/_logout?access_token={{access_token}}",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"user",
-												"_logout"
-											],
-											"query": [
-												{
-													"key": "access_token",
-													"value": "{{access_token}}",
-													"equals": true
-												}
-											]
-										},
-										"description": null
-									},
-									"response": []
-								},
-								{
-									"name": "Get Boundary Details",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200);",
-													"});",
-													"",
-													"",
-													"var jsonData = JSON.parse(responseBody);",
-													"",
-													"",
-													"if(jsonData.Boundary.length > 0){",
-													"         var max = jsonData.Boundary.length - 1;",
-													"         var rand = 0;",
-													"         var locationCode = null;",
-													"         if(max > 0){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode\",locationCode);",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode1 = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode1\",locationCode1);",
-													"         }",
-													"}",
-													"    ",
-													"postman.setNextRequest(\"Collection point Create\");",
-													"",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {},
-										"url": {
-											"raw": "{{url}}/egov-location/boundarys?Boundary.tenantId={{tenantId}}&authToken={{access_token}}",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"egov-location",
-												"boundarys"
-											],
-											"query": [
-												{
-													"equals": true,
-													"key": "Boundary.tenantId",
-													"value": "{{tenantId}}"
-												},
-												{
-													"equals": true,
-													"key": "authToken",
-													"value": "{{access_token}}"
-												}
-											]
-										},
-										"description": null
-									},
-									"response": []
-								}
-							],
-							"_postman_isSubFolder": true
-						},
-						{
-							"name": "Format",
-							"description": "",
-							"item": [
 								{
 									"name": "Vehicle Schedule Create without scheduledFrom",
 									"event": [
@@ -13361,67 +12994,6 @@
 											]
 										},
 										"description": null
-									},
-									"response": []
-								},
-								{
-									"name": "Get Boundary Details",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"var jsonData = JSON.parse(responseBody);",
-													"",
-													"",
-													"if(jsonData.Boundary.length > 0){",
-													"         var max = jsonData.Boundary.length - 1;",
-													"         var rand = 0;",
-													"         var locationCode = null;",
-													"         if(max > 0){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode\",locationCode);",
-													"             ",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode1 = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode1\",locationCode1);",
-													"         }",
-													"}",
-													"",
-													"postman.setNextRequest(\"Vendor Create\");"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {},
-										"url": {
-											"raw": "{{url}}/egov-location/boundarys?Boundary.tenantId={{tenantId}}&authToken={{access_token}}",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"egov-location",
-												"boundarys"
-											],
-											"query": [
-												{
-													"equals": true,
-													"key": "Boundary.tenantId",
-													"value": "{{tenantId}}"
-												},
-												{
-													"equals": true,
-													"key": "authToken",
-													"value": "{{access_token}}"
-												}
-											]
-										},
-										"description": ""
 									},
 									"response": []
 								}
@@ -14364,17 +13936,20 @@
 										{
 											"listen": "prerequest",
 											"script": {
+												"id": "dd558a3e-c582-4079-bf10-a1b95e690cb8",
+												"type": "text/javascript",
 												"exec": [
 													"var name1 = Math.floor(Math.random() * 10000);",
 													"",
 													"postman.setEnvironmentVariable(\"routeName\",\"RouteName \"+name1);"
-												],
-												"type": "text/javascript"
+												]
 											}
 										},
 										{
 											"listen": "test",
 											"script": {
+												"id": "be3bfb1b-aad0-45b4-a0d8-20c465dae0fb",
+												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
 													"    pm.response.to.have.status(201);",
@@ -14386,8 +13961,7 @@
 													"pm.environment.set(\"routeCode\",routeCode);",
 													"",
 													"postman.setNextRequest(\"Vendor Create\");"
-												],
-												"type": "text/javascript"
+												]
 											}
 										}
 									],
@@ -14401,7 +13975,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"name\":\"{{routeName}}\",\n      \"collectionType\":\n      {\n        \"code\":\"{{CollectionType}}\"\n      },\n            \"startingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints1code}}\"\n            },\n            \"endingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints2code}}\"\n            },\n            \"endingDumpingGroundPoint\" :{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :10,\n            \"collectionPoints\":[\n              \n              {\n                \"code\" :\"{{collectionPoints3code}}\"\n              },\n                {\n                \"code\" :\"{{collectionPoints4code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"{{routeName}}\",\n      \"collectionType\": {\n        \"code\": \"{{CollectionType}}\"\n      },\n      \"collectionPoints\": [\n      \t{\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints1code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints2code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints3code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints4code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":true\n        }\n      ]\n    }\n  ]\n}"
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/routes/_create",
@@ -14414,7 +13988,7 @@
 												"_create"
 											]
 										},
-										"description": null
+										"description": ""
 									},
 									"response": []
 								},
@@ -14581,7 +14155,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n        \n      \"tenantId\":\"{{tenantId}}\",\n      \"vehicle\" :{\n              \"regNumber\":\"{{regNumber}}\"\n            },\n            \"vendor\" :{\n              \"vendorNo\":\"{{vendorNo}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":100,\n            \"exitWeight\":200\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n        \n      \"tenantId\":\"{{tenantId}}\",\n      \"vehicle\" :{\n              \"regNumber\":\"{{regNumber}}\"\n            },\n            \"vendor\" :{\n              \"vendorNo\":\"{{vendorNo}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":20,\n            \"exitWeight\":10\n      }\n   ]\n } "
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/vehicletripsheetdetails/_create",
@@ -14759,73 +14333,6 @@
 												{
 													"equals": true,
 													"key": "access_token",
-													"value": "{{access_token}}"
-												}
-											]
-										},
-										"description": null
-									},
-									"response": []
-								},
-								{
-									"name": "Get Boundary Details",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.test(\"Status code is 200\", function () {",
-													"    pm.response.to.have.status(200);",
-													"});",
-													"",
-													"",
-													"var jsonData = JSON.parse(responseBody);",
-													"",
-													"",
-													"if(jsonData.Boundary.length > 0){",
-													"         var max = jsonData.Boundary.length - 1;",
-													"         var rand = 0;",
-													"         var locationCode = null;",
-													"         if(max > 0){",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode\",locationCode);",
-													"             rand = Math.min( max, Math.floor(Math.random() * (max - 0 + 1) + 0) );",
-													"             locationCode1 = jsonData.Boundary[rand].code;",
-													"             pm.environment.set(\"locationCode1\",locationCode1);",
-													"         }",
-													"}",
-													"    ",
-													"postman.setNextRequest(\"Collection point Create\");",
-													"",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {},
-										"url": {
-											"raw": "{{url}}/egov-location/boundarys?Boundary.tenantId={{tenantId}}&authToken={{access_token}}",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"egov-location",
-												"boundarys"
-											],
-											"query": [
-												{
-													"equals": true,
-													"key": "Boundary.tenantId",
-													"value": "{{tenantId}}"
-												},
-												{
-													"equals": true,
-													"key": "authToken",
 													"value": "{{access_token}}"
 												}
 											]
@@ -16263,7 +15770,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"vendorPaymentDetails\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"vendorContract\":{\n        \"contractNo\": \"{{contractNo}}\"\n      },\n      \"invoiceNo\": \"AAA-VNDR-111\",\n      \"fromDate\": 1510371526000,\n      \"toDate\": 161039526000,\n      \"vendorInvoiceAmount\": 20000,\n      \"employee\":{\n        \"code\": \"658039\"\n      },\n      \"documents\":[\n        {\n          \"fileStoreId\":\"sfsdfsdfsdf\"\n        }\n      ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"vendorPaymentDetails\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"vendorContract\":{\n        \"contractNo\": \"{{contractNo}}\"\n      },\n      \"invoiceNo\": \"AAA-VNDR-111\",\n      \"fromDate\": 1510464834000,\n      \"toDate\": 1515476034000,\n      \"vendorInvoiceAmount\": 20000,\n      \"employee\":{\n        \"code\": \"658039\"\n      },\n      \"documents\":[\n        {\n          \"fileStoreId\":\"sfsdfsdfsdf\"\n        }\n      ]\n      }\n   ]\n } "
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/vendorpaymentdetails/_create",
@@ -17323,6 +16830,7 @@
 										{
 											"listen": "prerequest",
 											"script": {
+												"id": "dd558a3e-c582-4079-bf10-a1b95e690cb8",
 												"type": "text/javascript",
 												"exec": [
 													"var name1 = Math.floor(Math.random() * 10000);",
@@ -17334,6 +16842,7 @@
 										{
 											"listen": "test",
 											"script": {
+												"id": "042ead6c-1cac-452c-a5c6-0492ea724082",
 												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
@@ -17360,7 +16869,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"routes\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"name\":\"{{routeName}}\",\n      \"collectionType\":\n      {\n        \"code\":\"{{CollectionType}}\"\n      },\n            \"startingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints1code}}\"\n            },\n            \"endingCollectionPoint\" :{\n              \"code\":\"{{collectionPoints2code}}\"\n            },\n            \"endingDumpingGroundPoint\" :{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"distance\":100,\n            \"garbageEstimate\" :10,\n            \"collectionPoints\":[\n              \n              {\n                \"code\" :\"{{collectionPoints3code}}\"\n              },\n                {\n                \"code\" :\"{{collectionPoints4code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"{{routeName}}\",\n      \"collectionType\": {\n        \"code\": \"{{CollectionType}}\"\n      },\n      \"collectionPoints\": [\n      \t{\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints1code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints2code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints3code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"{{collectionPoints4code}}\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 10,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":true\n        }\n      ]\n    }\n  ]\n}"
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/routes/_create",
@@ -17373,7 +16882,7 @@
 												"_create"
 											]
 										},
-										"description": null
+										"description": ""
 									},
 									"response": []
 								},
@@ -17383,6 +16892,8 @@
 										{
 											"listen": "test",
 											"script": {
+												"id": "a4f5a28a-8ff4-4e7d-810e-459f144393b6",
+												"type": "text/javascript",
 												"exec": [
 													"pm.test(\"Status code is 201\", function () {",
 													"    pm.response.to.have.status(201);",
@@ -17395,8 +16906,19 @@
 													"",
 													"",
 													"postman.setNextRequest(\"Sanitation Staff Schedule Create\");"
-												],
-												"type": "text/javascript"
+												]
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "1ded9db0-2376-4029-b03f-68c5e122425d",
+												"type": "text/javascript",
+												"exec": [
+													"var todayDate = new Date().getTime();",
+													"",
+													"pm.environment.set(\"todayDate\",todayDate);"
+												]
 											}
 										}
 									],
@@ -17410,7 +16932,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"swmProcess\" :{\n              \"code\":\"{{SwmProcess}}\"\n            },\n            \"location\" :{\n              \"code\":\"{{locationCode}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"employee\" :{\n              \"code\":\"Driver1\"\n            },\n            \"targetFrom\":\"1234567890\",\n            \"targetTo\":1234567890,\n            \"targetedGarbage\":100,\n            \"wetWaste\":10,\n            \"dryWaste\":10,\n            \"dumpingGround\":{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"collectionPoints\": [\n              {\n                \"code\":\"{{collectionPoints1code}}\"\n              },\n              {\n                \"code\":\"{{collectionPoints2code}}\"\n              }\n            ]\n      }\n   ]\n } "
+											"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n      \"id\":1\n    }\n  },\n  \"sanitationStaffTargets\":[\n      {\n      \"tenantId\":\"{{tenantId}}\",\n      \"swmProcess\" :{\n              \"code\":\"{{SwmProcess}}\"\n            },\n            \"location\" :{\n              \"code\":\"{{locationCode}}\"\n            },\n            \"route\" :{\n              \"code\":\"{{routeCode}}\"\n            },\n            \"employee\" :{\n              \"code\":\"Driver3\"\n            },\n            \"targetFrom\":\"{{todayDate}}\",\n            \"targetTo\":1578723633000,\n            \"targetedGarbage\":10,\n            \"wetWaste\":10,\n            \"dryWaste\":10,\n            \"dumpingGround\":{\n              \"code\":\"{{DumpingGround}}\"\n            },\n            \"collectionPoints\": [\n              {\n                \"code\":\"{{collectionPoints1code}}\"\n              },\n              {\n                \"code\":\"{{collectionPoints2code}}\"\n              }\n            ]\n      }\n   ]\n } "
 										},
 										"url": {
 											"raw": "{{url}}/swm-services/sanitationstafftargets/_create",
@@ -18518,7 +18040,7 @@
 											"raw": "{\n  \"requestInfo\":{\n      \"action\": \"search\",\n      \"did\": \"\",\n      \"msgId\": null,\n      \"authToken\": \"{{access_token}}\",\n      \"apiId\": null,\n      \"ver\": null,\n      \"ts\": \"\",\n      \"key\": null\n   \n  }\n}"
 										},
 										"url": {
-											"raw": "{{url}}/swm-services/paymentdetails/_search?tenantId={{tenantId}}&code={{paymentCode}}",
+											"raw": "{{url}}/swm-services/paymentdetails/_search?tenantId={{tenantId}}&codes={{paymentCode}}",
 											"host": [
 												"{{url}}"
 											],
@@ -18529,14 +18051,14 @@
 											],
 											"query": [
 												{
-													"equals": true,
 													"key": "tenantId",
-													"value": "{{tenantId}}"
+													"value": "{{tenantId}}",
+													"equals": true
 												},
 												{
-													"equals": true,
-													"key": "code",
-													"value": "{{paymentCode}}"
+													"key": "codes",
+													"value": "{{paymentCode}}",
+													"equals": true
 												}
 											]
 										},

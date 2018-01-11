@@ -28,8 +28,8 @@ ReportDefinitions:
     label: reports.works.referencenoofwip
     type: string
     source: works
-  - name: estimatevalue
-    label: reports.works.estimatevalue
+  - name: estimateamount
+    label: reports.works.estimateamount
     type: number
     source: works
   - name: tenderamount
@@ -37,7 +37,7 @@ ReportDefinitions:
     type: number
     source: works
   - name: contractorname
-    label: reports.works.contractor
+    label: reports.works.contractorname
     type: string
     source: works
   - name: approvedattherateof
@@ -62,13 +62,13 @@ ReportDefinitions:
     source: works
   searchParams:
   - name: fromDate
-    label: reports.works.fromDate
+    label: reports.works.wofromDate
     type: date
     source: works
     searchClause : AND wo.workorderdate>=$fromDate
     isMandatory: false
   - name: toDate
-    label: reports.works.toDate
+    label: reports.works.wotoDate
     type: date
     source: works
     searchClause : AND wo.workorderdate<=$toDate
@@ -80,20 +80,16 @@ ReportDefinitions:
     searchClause : AND loa.contractor=$contractorName
     isMandatory: false
   - name: amountFrom
-    label: reports.works.amountfrom
+    label: reports.works.woamountfrom
     type: number
     source: works
     searchClause : AND loae.estimateloaamount>=$amountFrom
     isMandatory: false
   - name: amountUpto
-    label: reports.works.amountupto
+    label: reports.works.woamountupto
     type: number
     source: works
     searchClause : AND loae.estimateloaamount<=$amountUpto
     isMandatory: false
 
   query: select wo.workorderdate, de.nameofwork, wo.workordernumber, de.projectcode as referencenoofwip, de.estimatevalue, de.workvalue as tenderamount, contractor.name as contractorname, loa.tenderfinalizedpercentage as approvedattherateof, loa.loaamount as totalvalueofthework, loa.emdamountdeposited as emdamount, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount, (select finyear.finYearRange from (values tbl_financialyear) as finyear (finYearRange,startingDate,endingDate,tenantId) where wo.createdtime between startingDate::bigint and endingDate::bigint) as sanctionedfinyear from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor
-
-
-
-

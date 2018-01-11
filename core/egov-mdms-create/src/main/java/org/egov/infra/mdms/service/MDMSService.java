@@ -379,7 +379,8 @@ public class MDMSService {
 						inputDataMap.put(mapKey.toString(), i);
 					}
 					logger.info("inputDataMap: " + inputDataMap);
-					logger.info(" the size of the master : {}",masterData.size()-1,"the master data fo the object to be updated : {}"+ masterData.get(masterData.size()-1));
+					logger.info(" the size of the master : {}",masterData.size()-1);
+					logger.info("the master data fo the object to be updated : {}"+ masterData.get(masterData.size()-1));
 					ListIterator<Object> iterator = masterData.listIterator();
 					while (iterator.hasNext()) {
 						Object master = iterator.next();

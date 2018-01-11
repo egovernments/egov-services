@@ -20,7 +20,7 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.vehicle.regNumber
        
        - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
-         dbType: LONG
+         dbType: DOUBLE
 
        - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.code
 
@@ -61,7 +61,7 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.vehicle.regNumber
        
        - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
-         dbType: LONG
+         dbType: DOUBLE
 
        - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.code
 

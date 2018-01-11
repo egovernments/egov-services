@@ -2812,8 +2812,11 @@ definitions:
           description: ULB Admin can enter remarks, if any
           maxLength: 300
           minLength: 15
-        typeOfFuel:
-          $ref: '#/definitions/FuelType'
+        fuelTypes:
+          type: array
+          items: 
+            $ref: '#/definitions/FuelType'
+          minItems: 1
           format: multiValueList
           description: type of the fuel. e.g Petrol, Diesel etc. At least one option has to be selected
         quantity:
@@ -2827,7 +2830,7 @@ definitions:
       - location
       - name
       - typeOfPump
-      - typeOfFuel
+      - fuelTypes
       
     RefillingPumpStationRequest:
       description: Contract class to receive request. Array of RefillingPumpStation items are used in case of create, whereas single RefillingPumpStation item is used for update
@@ -3142,8 +3145,8 @@ definitions:
         vehicle:
           $ref: "#/definitions/Vehicle"
         vehicleReadingDuringFuelling:
-          type: integer
-          format: int64
+          type: number 
+          format: double
           description: vehicle Reading During Fueling
           minimum: 1
           maximum: 300000
@@ -3674,6 +3677,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

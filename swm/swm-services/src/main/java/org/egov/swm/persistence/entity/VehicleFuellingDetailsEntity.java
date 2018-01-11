@@ -1,7 +1,6 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
@@ -31,7 +30,7 @@ public class VehicleFuellingDetailsEntity {
 
     private String vehicle = null;
 
-    private Long vehicleReadingDuringFuelling = null;
+    private Double vehicleReadingDuringFuelling = null;
 
     private String refuellingStation = null;
 

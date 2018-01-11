@@ -42,10 +42,10 @@ public class VehicleFuellingDetails {
     private Vehicle vehicle = null;
 
     @NotNull
-    @Min(value = 1,message = "Value of fuelFilled shall be between 1 and 100")
-    @Max(value = 300000,message = "Value of fuelFilled shall be between 1 and 100")
+    @Min(value = 1, message = "Value of fuelFilled shall be between 1 and 100")
+    @Max(value = 300000, message = "Value of fuelFilled shall be between 1 and 100")
     @JsonProperty("vehicleReadingDuringFuelling")
-    private Long vehicleReadingDuringFuelling = null;
+    private Double vehicleReadingDuringFuelling = null;
 
     @NotNull
     @JsonProperty("refuellingStation")

@@ -126,7 +126,7 @@ public class SupplierAdvanceRequisitionService extends DomainService {
 			}
 			
 			for(SupplierAdvanceRequisition supplierAdvanceRequisition : supplierAdvanceRequisitions) {
-				if(!supplierAdvanceRequisitionRepository.checkPOValidity(supplierAdvanceRequisition.getPurchaseOrder().getPurchaseOrderNumber())) {
+				if(!supplierAdvanceRequisitionRepository.checkPOValidity(supplierAdvanceRequisition.getPurchaseOrder().getPurchaseOrderNumber(), supplierAdvanceRequisition.getTenantId())) {
 					errors.addDataError(ErrorCode.INVALID_PONUMBER_FOR_ADVREQ.getCode(), "purchaseOrderNumber", supplierAdvanceRequisition.getPurchaseOrder().getPurchaseOrderNumber());
 				}
 			}

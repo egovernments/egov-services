@@ -1655,6 +1655,13 @@ serviceMaps:
               type: CURRENTDATE
               dbType: LONG
 
+        - query: update purchaseorder set totaladvancepaidamount = ? where purchaseordernumber = ? and tenantid = ?;
+          basePath: $.supplierAdvanceRequisitions.*
+          jsonMaps:
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceAdjustedAmount
+            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseOrder.purchaseOrderNumber
+            - jsonPath: $.supplierAdvanceRequisitions.*.tenantId
+
     - version: 1.0
       name: SupplierAdvanceRequisitions
       description: Update SupplierAdvanceRequisition
@@ -1672,6 +1679,14 @@ serviceMaps:
             - jsonPath: $.supplierAdvanceRequisitions.*.sarStatus
             - jsonPath: $.supplierAdvanceRequisitions.*.id
             - jsonPath: $.supplierAdvanceRequisitions.*.tenantId
+
+        - query: update purchaseorder set totaladvancepaidamount = ? where purchaseordernumber = ? and tenantid = ?;
+          basePath: $.supplierAdvanceRequisitions.*
+          jsonMaps:
+            - jsonPath: $.supplierAdvanceRequisitions.*.advanceAdjustedAmount
+            - jsonPath: $.supplierAdvanceRequisitions.*.purchaseOrder.purchaseOrderNumber
+            - jsonPath: $.supplierAdvanceRequisitions.*.tenantId
+            
     - version: 1.0
       name: Disposal
       description: Create Disposal

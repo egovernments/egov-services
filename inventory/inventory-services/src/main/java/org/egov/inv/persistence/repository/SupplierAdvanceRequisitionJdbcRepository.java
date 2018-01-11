@@ -123,15 +123,16 @@ public class SupplierAdvanceRequisitionJdbcRepository extends JdbcRepository {
         return page;
     }
     
-	public boolean checkPOValidity(String purchaseordernumber) {
-		String poValidityQuery = "select totalAdvancePaidAmount from purchaseorder where purchaseordernumber = :purchaseordernumber and isdeleted is not true and lower(status) = 'approved' ";
+	public boolean checkPOValidity(String purchaseordernumber, String tenantId) {
+		String poValidityQuery = "select * from purchaseorder where purchaseordernumber = :purchaseordernumber and lower(status) != 'rejected' and  advanceamount > 0 and totalamount > 0 and (totaladvancepaidamount is null or totaladvancepaidamount != totalamount) and advanceamount < totalamount and isdeleted is not true and tenantId = :tenantId";
 	    Map params=new HashMap<String,Object>();
+	    params.put("tenantId",tenantId);
 		params.put("purchaseordernumber",purchaseordernumber);
-	    BigDecimal advAmount=namedParameterJdbcTemplate.queryForObject(poValidityQuery, params, BigDecimal.class);
-	    if(advAmount.compareTo(BigDecimal.ZERO) <=0 )
-	    	return false;
-	    else
+	    BigDecimal count = namedParameterJdbcTemplate.queryForObject(poValidityQuery, params, BigDecimal.class);
+	    if(count.compareTo(BigDecimal.ZERO) > 0 )
 	    	return true;
+	    else
+	    	return false;
 	}
-
+	
 }

@@ -29,10 +29,10 @@ public class PropertiesManager {
     @Value("${egov.services.works.contractorbill.create.update.topic}")
     private String contractorBillCreateUpdateTopic;
     
-    @Value("${works.billnumber.format}")
+    /*@Value("${works.billnumber.format}")
     private String billNumberFormat;
     
     @Value("${works.billnumber}")
-    private String billNumber;
+    private String billNumber;*/
     
 }

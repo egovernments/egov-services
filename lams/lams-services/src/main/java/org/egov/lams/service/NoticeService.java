@@ -12,7 +12,6 @@ import org.egov.lams.repository.WorkFlowRepository;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.NoticeResponse;
 import org.egov.lams.web.contract.RequestInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -51,7 +50,7 @@ public class NoticeService {
 	
 	public List<Agreement> getAgreementByAuckNumOrAgreementNum(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 		
-		List<Agreement> agreements = agreementService.searchAgreement(agreementCriteria,requestInfo);
+		List<Agreement> agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,requestInfo);
 		if(agreements.isEmpty()){
 			throw new RuntimeException("No agreement found for given criteria");
 		}
@@ -73,6 +72,7 @@ public class NoticeService {
 				.tenantId(notice.getTenantId())
 				.acknowledgementNumber(notice.getAcknowledgementNumber())
 				.agreementNumber(notice.getAgreementNumber())
+				.status(notice.getStatus())
 				.build();
 	}
 }

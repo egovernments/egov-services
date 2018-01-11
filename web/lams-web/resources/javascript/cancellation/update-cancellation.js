@@ -482,6 +482,7 @@ class UpdateCancellation extends React.Component {
                     agreementNumber: obj.noticeData.agreementNumber,
                     fileStore: obj.fileStoreId,
                     acknowledgementNumber:obj.noticeData.acknowledgementNumber
+                    status :"INACTIVE"
                 }
             }),
             headers: {

@@ -1,6 +1,7 @@
 package org.egov.lams.service;
 
 import org.egov.lams.model.*;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.NoticeRepository;
 import org.egov.lams.repository.WorkFlowRepository;
 import org.egov.lams.web.contract.NoticeRequest;
@@ -46,7 +47,7 @@ public class NoticeServiceTest {
     public void test_should_generate_notice(){
         when(workFlowRepository.getCommissionerName(any(),any(),any())).thenReturn("Narasimha Rao");
         when(noticeRepository.createNotice(any())).thenReturn(getNotice());
-        when(agreementService.searchAgreement(any(),any())).thenReturn(getAgreementsList());
+        when(agreementService.getAgreementsByAgreementNumber(any(),any())).thenReturn(getAgreementsList());
 
         NoticeResponse notices = noticeService.generateNotice(getNoticeRequest());
 
@@ -64,7 +65,7 @@ public class NoticeServiceTest {
     @Test
     public void test_to_get_agreements(){
         Agreement agreement = getAgreement();
-        when(agreementService.searchAgreement(any(), any())).thenReturn(Collections.singletonList(agreement));
+        when(agreementService.getAgreementsByAgreementNumber(any(), any())).thenReturn(Collections.singletonList(agreement));
 
         List<Agreement> agreementsList = noticeService.getAgreementByAuckNumOrAgreementNum(getAgreementSearchCriteria(), getRequestInfo());
 
@@ -139,6 +140,7 @@ public class NoticeServiceTest {
                 .agreementNumber("LKGHRTF8585SW")
                 .acknowledgementNumber("121524")
                 .tenantId("kurnool")
+                .status(Status.ACTIVE)
                 .build();
     }
 

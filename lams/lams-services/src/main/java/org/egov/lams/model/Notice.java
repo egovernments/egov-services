@@ -3,6 +3,8 @@ package org.egov.lams.model;
 import java.util.Date;
 
 import lombok.*;
+
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.util.AmountInWordUtil;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -108,6 +110,12 @@ public class Notice   {
   
   @JsonProperty("doorNo")
   private String doorNo = null;
+
+	@JsonProperty("status")
+	private Status status;
+
+	@JsonProperty("noticeType")
+	private String noticeType;
 
   @NotNull
   private String fileStore;

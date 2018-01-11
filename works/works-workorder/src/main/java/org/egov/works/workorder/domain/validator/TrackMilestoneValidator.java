@@ -29,13 +29,13 @@ public class TrackMilestoneValidator {
             } else {
                 validationMessages.put(Constants.KEY_TRACKMILESTONE_MILESTONEID_IS_MANDATORY, Constants.MESSAGE_TRACKMILESTONE_MILESTONEID_IS_MANDATORY);
             }
-            if (trackMilestone.getStatus().equals(Constants.STATUS_TRACKMILESTONE_COMPLETED)) {
+            if (trackMilestone.getStatus().getCode().equals(Constants.STATUS_TRACKMILESTONE_COMPLETED)) {
                 if (trackMilestone.getTotalPercentage().compareTo(new BigDecimal(100)) == -1)
                     validationMessages.put(Constants.KEY_TRACKMILESTONE_COMPLETED, Constants.MESSAGE_TRACKMILESTONE_COMPLETED);
-            } else if (trackMilestone.getStatus().equals(Constants.STATUS_TRACKMILESTONE_NOT_YET_STARTED)) {
+            } else if (trackMilestone.getStatus().getCode().equals(Constants.STATUS_TRACKMILESTONE_NOT_YET_STARTED)) {
                 if (trackMilestone.getTotalPercentage().compareTo(BigDecimal.ZERO) == 1)
                     validationMessages.put(Constants.KEY_TRACKMILESTONE_NOT_STARTED, Constants.MESSAGE_TRACKMILESTONE_NOT_STARTED);
-            } else if (trackMilestone.getStatus().equals(Constants.STATUS_TRACKMILESTONE_IN_PROGRESS)) {
+            } else if (trackMilestone.getStatus().getCode().equals(Constants.STATUS_TRACKMILESTONE_IN_PROGRESS)) {
                 if (!(trackMilestone.getTotalPercentage().compareTo(BigDecimal.ZERO) == 1 && trackMilestone.getTotalPercentage().compareTo(new BigDecimal(100)) == -1))
                     validationMessages.put(Constants.KEY_TRACKMILESTONE_IN_PROGRESS, Constants.MESSAGE_TRACKMILESTONE_IN_PROGRESS);
             }

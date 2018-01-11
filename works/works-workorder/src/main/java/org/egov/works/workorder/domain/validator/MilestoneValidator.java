@@ -41,7 +41,7 @@ public class MilestoneValidator {
                 if (loaes != null && loaes.size() > 0) {
                     LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceRepository.searchLOAs(LetterOfAcceptanceSearchContract.builder().tenantId(milestone.getTenantId()).ids(Arrays.asList(loaes.get(0).getLetterOfAcceptance())).build(), milestoneRequest.getRequestInfo()).get(0);
                     workOrder = workOrderRepository.search(WorkOrderSearchContract.builder().tenantId(milestone.getTenantId()).letterOfAcceptances(Arrays.asList(letterOfAcceptance.getId())).build(), milestoneRequest.getRequestInfo()).get(0);
-                    if (!workOrder.getStatus().equals(WorkOrderStatus.APPROVED))
+                    if (!workOrder.getStatus().getCode().equals(WorkOrderStatus.APPROVED))
                         validationMessages.put(Constants.KEY_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE, Constants.MESSAGE_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE);
                 } else {
                     validationMessages.put(Constants.KEY_MILESTONE_LOA_ESTIMATE_ID_INVALID, Constants.MESSAGE_MILESTONE_LOA_ESTIMATE_ID_INVALID + milestone.getLetterOfAcceptanceEstimate().getId());

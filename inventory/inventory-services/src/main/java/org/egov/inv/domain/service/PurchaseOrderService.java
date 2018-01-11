@@ -455,6 +455,15 @@ public class PurchaseOrderService extends DomainService {
 
             Long currentMilllis = System.currentTimeMillis();
 
+            //Second check for validating if Indent is valid for PO Creation
+            if(method.equals(Constants.ACTION_CREATE))
+            	for(PurchaseOrder purchaseOrder : pos)
+                for (String indentNo : purchaseOrder.getIndentNumbers()) {
+                    if (!purchaseOrderRepository.getIsIndentValidForPOCreate(indentNo)) {
+                        errors.addDataError(ErrorCode.INVALID_INDENT_VALUE.getCode(), "indentNumber", indentNo);
+                    }
+                }
+            
             if (!method.equals(Constants.ACTION_SEARCH_INDENT_FOR_PO))
                 for (PurchaseOrder eachPurchaseOrder : pos) {
                     BigDecimal totalAmount = BigDecimal.ZERO;
@@ -839,6 +848,9 @@ public class PurchaseOrderService extends DomainService {
                 }
 
             }
+            
+            if (errors.getValidationErrors().size() > 0)
+                throw errors;
 
             finalPurchaseOrders.add(purchaseOrder);
         }

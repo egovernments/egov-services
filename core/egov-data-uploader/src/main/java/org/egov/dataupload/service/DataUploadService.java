@@ -37,7 +37,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -125,7 +124,7 @@ public class DataUploadService {
         		uploadParentChildData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
 				dataUploadUtils.clearInternalDirectory();
         	}else{
-        		uploadData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
+        		uploadFlatData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
 				dataUploadUtils.clearInternalDirectory();
         	}
 
@@ -144,7 +143,7 @@ public class DataUploadService {
         return uploaderResponse;
 	}
 	
-	private String uploadData(List<List<Object>> excelData,
+	private String uploadFlatData(List<List<Object>> excelData,
 			     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest) throws Exception{
 		String request = null;
 	    int additionFieldsCount = 0;
@@ -168,37 +167,7 @@ public class DataUploadService {
 			String failureMessage = null;
 			logger.info("row: "+row.toString());
 				if(!row.isEmpty()){
-					for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
-						logger.debug("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));
-		            	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
-		            	if(null == jsonPathList){
-							logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
-		            		continue;
-		            	}
-		            	if(jsonPathList.isEmpty()) {
-							logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
-		            		continue;
-		            	}
-		            	for(String jsonPath: jsonPathList) {
-			            	StringBuilder expression = new StringBuilder();
-			            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-			            	documentContext.put(expression.toString(), key, row.get(i));
-		            	}
-					} 	
-					logger.info("Adding tenantId...");
-					for(String path: uploadDefinition.getTenantIdPaths()) {
-		            	StringBuilder expression = new StringBuilder();
-		            	String key = dataUploadUtils.getJsonPathKey(path, expression);
-		            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());
-					}
-				    try{
-				    	documentContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
-					    request = documentContext.jsonString().toString();
-				    }catch(Exception e){
-				    	documentContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
-					    request = documentContext.jsonString().toString();
-				    } 
-				    
+					request = buildRequest(coloumnHeaders, additionFieldsCount, uploadDefinition, documentContext, uploaderRequest, row);
 				    Object apiResponse = hitApi(request, dataUploadUtils.getURI(uploadDefinition.getUri()));	
 				    if(null == apiResponse){
 				    	failureMessage = "Module API failed with empty body in response";
@@ -208,54 +177,94 @@ public class DataUploadService {
 				    	}
 				    	
 				    }
-				    
-				    if(null != failureMessage && !failureMessage.isEmpty()) {
-						logger.error("Error while processing row: "+(excelData.indexOf(row) + 2));
-				    	if(null != resJsonPathList){
-				    		for(Object obj: resJsonPathList){
-				    			row.add(null);
-				    		}
-				    		row.add("FAILED");
-				    		row.add(failureMessage);			    	
-				    		failureCount++;	
-				    	}else{
-				    		row.add("FAILED");
-				    		row.add(failureMessage);			    	
-					    	failureCount++;	
-				    	}
-				    	logger.info("Writing FAILED ROW to excel....: "+row);
-						dataUploadUtils.writeToexcelSheet(row, resultFilePath);
-				    	
-				    }else {
-					    if(null != resJsonPathList){
-					    	try{
-					    		dataUploadUtils.addAdditionalFields(apiResponse, row, resJsonPathList);
-					    		row.add("SUCCESS");
-					    	}catch(Exception e){
-					    		for(Object obj: resJsonPathList){
-					    			row.add(null);
-					    		}
-					    		row.add("SUCCESS");
-					    		row.add("Failed to obtain additional fields from API response");
-					    		successCount++;
-					    	}
-					    }else {
-				    		row.add("SUCCESS");
-				    		successCount++;
-					    }
-				    	logger.info("Writing SUCCESS ROW to excel....: "+row);
-						dataUploadUtils.writeToexcelSheet(row, resultFilePath);
-				    }
-				}
-
-		}
-		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
-		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
-		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
-		uploadRegistryRepository.updateJob(uploaderRequest);
-
+				    writeToResultExcel(failureMessage, row, apiResponse, failureCount, successCount, resultFilePath, resJsonPathList);
+			}
+			String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
+			uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
+			uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
+			uploadRegistryRepository.updateJob(uploaderRequest);
 		
+		}
+
 	    return request;
+	}
+	
+	public String buildRequest(List<Object> coloumnHeaders, int additionFieldsCount, 
+			Definition uploadDefinition, DocumentContext documentContext, UploaderRequest uploaderRequest, List<Object>row) {
+		String request = null;
+		for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
+			logger.debug("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));
+        	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
+        	if(null == jsonPathList){
+				logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+        		continue;
+        	}
+        	if(jsonPathList.isEmpty()) {
+				logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+        		continue;
+        	}
+        	for(String jsonPath: jsonPathList) {
+            	StringBuilder expression = new StringBuilder();
+            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
+            	documentContext.put(expression.toString(), key, row.get(i));
+        	}
+		} 	
+		logger.info("Adding tenantId...");
+		for(String path: uploadDefinition.getTenantIdPaths()) {
+        	StringBuilder expression = new StringBuilder();
+        	String key = dataUploadUtils.getJsonPathKey(path, expression);
+        	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());
+		}
+	    try{
+	    	documentContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
+		    request = documentContext.jsonString().toString();
+	    }catch(Exception e){
+	    	documentContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
+		    request = documentContext.jsonString().toString();
+	    } 
+	    
+	    
+	    return request;
+	}
+	
+	public void writeToResultExcel(String failureMessage, List<Object> row, Object apiResponse, int failureCount,
+			int successCount, String resultFilePath, List<Object> resJsonPathList) throws Exception {
+	    if(null != failureMessage && !failureMessage.isEmpty()) {
+	    	if(null != resJsonPathList){
+	    		for(Object obj: resJsonPathList){
+	    			row.add(null);
+	    		}
+	    		row.add("FAILED");
+	    		row.add(failureMessage);			    	
+	    		failureCount++;	
+	    	}else{
+	    		row.add("FAILED");
+	    		row.add(failureMessage);			    	
+		    	failureCount++;	
+	    	}
+	    	logger.info("Writing FAILED ROW to excel....: "+row);
+			dataUploadUtils.writeToexcelSheet(row, resultFilePath);
+	    	
+	    }else {
+		    if(null != resJsonPathList){
+		    	try{
+		    		dataUploadUtils.addAdditionalFields(apiResponse, row, resJsonPathList);
+		    		row.add("SUCCESS");
+		    	}catch(Exception e){
+		    		for(Object obj: resJsonPathList){
+		    			row.add(null);
+		    		}
+		    		row.add("SUCCESS");
+		    		row.add("Failed to obtain additional fields from API response");
+		    		successCount++;
+		    	}
+		    }else {
+	    		row.add("SUCCESS");
+	    		successCount++;
+		    }
+	    	logger.info("Writing SUCCESS ROW to excel....: "+row);
+			dataUploadUtils.writeToexcelSheet(row, resultFilePath);
+	    }
 	}
 		
 	private void uploadParentChildData(List<List<Object>> excelData,
@@ -274,15 +283,12 @@ public class DataUploadService {
     		uploadRegistryRepository.updateJob(uploaderRequest);
 			dataUploadUtils.clearInternalDirectory();
 		}
-		
-		DocumentContext documentContext = null;
-		DocumentContext bulkApiRequest = null;
+		DocumentContext documentContext = null;DocumentContext bulkApiRequest = null;
 		if(uploadDefinition.getIsBulkApi()){
 			String value = JsonPath.read(uploadDefinition.getApiRequest(), 
 	    			uploadDefinition.getArrayPath()).toString();
 			//Module specific content of the request body
 	    	documentContext = JsonPath.parse(value.substring(1, value.length() - 1));
-	    	
 	    	//Actual request with RequestInfo and module specific content
 	    	bulkApiRequest = JsonPath.parse(uploadDefinition.getApiRequest());
 		}else{
@@ -296,8 +302,8 @@ public class DataUploadService {
     	}
     	coloumnHeaders.add("status"); coloumnHeaders.add("message");
     	additionFieldsCount+=2;
-    	String resultFfilePath = dataUploadUtils.createANewFile(resFilePrefix + uploaderRequest.getUploadJobs().get(0).getRequestFileName());
-		dataUploadUtils.writeToexcelSheet(coloumnHeaders, resultFfilePath);
+    	String resultFilePath = dataUploadUtils.createANewFile(resFilePrefix + uploaderRequest.getUploadJobs().get(0).getRequestFileName());
+		dataUploadUtils.writeToexcelSheet(coloumnHeaders, resultFilePath);
 		//Till now the coloumnheaders have been written to result xls. Content processing begins now.
 		
 		int successCount = 0; int failureCount = 0;
@@ -308,13 +314,12 @@ public class DataUploadService {
 			indexes.add(coloumnHeaders.indexOf(key));
 		}
 		for(int i = 0; i < excelData.size(); i++){
+			String failureMessage = null;
 			//fetching list of all the rows that will be combined to form ONE request.
 			List<List<Object>> filteredList = dataUploadUtils.filter(excelData, indexes, excelData.get(i));
-			logger.info("filteredList: "+filteredList);
 			
 			/* Building a map that contains all row values of a given column. 
 			This map will be used to construct any arrays present in the request.*/
-			
 			Map<String, List<Object>> allRowsOfAColumnMap = new HashMap<>();
 			for(int j = 0; j <  (coloumnHeaders.size() - additionFieldsCount); j++){
 				List<Object> rowsList = new ArrayList<>();
@@ -323,92 +328,33 @@ public class DataUploadService {
 				}
 				allRowsOfAColumnMap.put(coloumnHeaders.get(j).toString(), rowsList);
 			}
-			logger.info("allRowsOfAColumnMap: "+allRowsOfAColumnMap);
-			List<Map<String, Object>> filteredListObjects = new ArrayList<>();
-			List<String> arrayKeys = new ArrayList<>();
-			for(int k = 0; k < filteredList.size(); k++){
-				for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
-	            	StringBuilder expression = new StringBuilder();
-	            	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(j).toString());
-	            	if(null == jsonPathList){
-						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
-	            		continue;
-	            	}
-	            	if(jsonPathList.isEmpty()) {
-						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
-	            		continue;
-	            	}
-	            	for(String jsonPath: jsonPathList) {
-	            		if(uploadDefinition.getIsBulkApi()) {
-	            			jsonPath = jsonPath.replace(uploadDefinition.getArrayPath(), "$");
-	            			//Because for bulk API, multiple such objects might have to be created, all of them will be appended at once in the end.
-	            		}
-		            	if(jsonPath.contains("*")){
-		            		String[] splitJsonPath = jsonPath.split("[.]");
-		            		List<String> list = Arrays.asList(splitJsonPath);
-		            		if(!(arrayKeys.contains(list.get((list.indexOf("*") - 1)))))
-		            			arrayKeys.add(list.get((list.indexOf("*") - 1)));
-		            		
-		            		//arrayKeys is the list of all keys which are arrays in the module api request.
-		            	}
-		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-		            	if(key.contains("tenantId")){
-			            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
-		            	}else{
-		            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
-		            	}
-	            	}	            	
-				}
-				Type type = new TypeToken<Map<String, Object>>() {}.getType();
-				Gson gson = new Gson();
-				Map<String, Object> objectMap = gson.fromJson(documentContext.jsonString(), type);
-            	filteredListObjects.add(objectMap);
-			}
-			Map<String, Object> requestMap = new HashMap<>();
-			requestMap = filteredListObjects.get(0);
-			for(Map<String, Object> map: filteredListObjects){
-				if(0 != filteredListObjects.indexOf(map)) {
-					for(String key: arrayKeys){
-						List<Object> entry = (List<Object>) requestMap.get(key);
-						entry.addAll((List<Object>) map.get(key));
-						requestMap.put(key, entry);
-					}
-				}
-			}
-			logger.info("requestMap: "+requestMap);
-			Object requestContentBody = null;
-			try{
-				requestContentBody = mapper.writeValueAsString(requestMap);
-			}catch(Exception e){
-				logger.error("Exception while parsing requestMap to String", e);
-			}
-			if(uploadDefinition.getIsBulkApi()){
-			    try{
-			    	bulkApiRequest.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
-			    }catch(Exception e){
-			    	bulkApiRequest.put("$", "requestInfo", uploaderRequest.getRequestInfo());
-			    } 
-			    StringBuilder expression = new StringBuilder();
-            	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath().substring(0, uploadDefinition.getArrayPath().length() - 1), expression);
-            	bulkApiRequest.put(expression.toString(), key, requestMap);
-            	request = bulkApiRequest.jsonString().toString();
-			}else{
-				DocumentContext docContext = JsonPath.parse(requestContentBody);
-			    try{
-			    	docContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
-				    request = docContext.jsonString().toString();
-			    }catch(Exception e){
-			    	docContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
-				    request = docContext.jsonString().toString();
-			    }  
-			}
+			
+			request = buildRequestForParentChild(i, filteredList, allRowsOfAColumnMap, coloumnHeaders, additionFieldsCount, uploadDefinition, 
+					documentContext, uploaderRequest, bulkApiRequest);
 			
 			logger.info("FINAL REQUEST to EXTERNAL MODULE: "+request);
 			
-			//counter is incremented based on no of rows processed in this iteration.
+		    Object apiResponse = hitApi(request, dataUploadUtils.getURI(uploadDefinition.getUri()));	
+		    if(null == apiResponse){
+		    	failureMessage = "Module API failed with empty body in response";
+		    }else {
+		    	if(apiResponse instanceof String) {
+		    		failureMessage = apiResponse.toString(); 
+		    	}
+		    	
+		    }
+		    
+		    writeToExcelForParentChild(failureMessage, apiResponse, failureCount, successCount, 
+		    		resultFilePath, resJsonPathList, filteredList);
+		    
+	    	//counter is incremented based on no of rows processed in this iteration.
 			i+=(filteredList.size() - 1);
-		}
-	}
+	    }
+		String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
+		uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
+		uploadJob.setResponseFilePath(responseFilePath);uploadJob.setStatus(StatusEnum.fromValue("completed"));
+		uploadRegistryRepository.updateJob(uploaderRequest);
+}
 		
 		
 	private Object hitApi(String request, String uri){
@@ -482,5 +428,139 @@ public class DataUploadService {
 
 		return uploadJobs;
 
+	}
+	
+	private String buildRequestForParentChild(int i, List<List<Object>> filteredList, Map<String, List<Object>> allRowsOfAColumnMap,
+			List<Object> coloumnHeaders, int additionFieldsCount, Definition uploadDefinition, DocumentContext documentContext, 
+			UploaderRequest uploaderRequest, DocumentContext bulkApiRequest) throws Exception {
+		String request = null;
+		ObjectMapper mapper = new ObjectMapper();
+		logger.info("filteredList: "+filteredList);
+		logger.info("allRowsOfAColumnMap: "+allRowsOfAColumnMap);
+		List<Map<String, Object>> filteredListObjects = new ArrayList<>();
+		List<String> arrayKeys = new ArrayList<>();
+		for(int k = 0; k < filteredList.size(); k++){
+			for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
+            	StringBuilder expression = new StringBuilder();
+            	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(j).toString());
+            	if(null == jsonPathList){
+					logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+            		continue;
+            	}
+            	if(jsonPathList.isEmpty()) {
+					logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+            		continue;
+            	}
+            	for(String jsonPath: jsonPathList) {
+            		if(uploadDefinition.getIsBulkApi()) {
+            			jsonPath = jsonPath.replace(uploadDefinition.getArrayPath(), "$");
+            			//Because for bulk API, multiple such objects might have to be created, all of them will be appended at once in the end.
+            		}
+	            	if(jsonPath.contains("*")){
+	            		String[] splitJsonPath = jsonPath.split("[.]");
+	            		List<String> list = Arrays.asList(splitJsonPath);
+	            		if(!(arrayKeys.contains(list.get((list.indexOf("*") - 1)))))
+	            			arrayKeys.add(list.get((list.indexOf("*") - 1)));
+	            		
+	            		//arrayKeys is the list of all keys which are arrays in the module api request.
+	            	}
+	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
+	            	if(key.contains("tenantId")){
+		            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
+	            	}else{
+	            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
+	            	}
+            	}	            	
+			}
+			Type type = new TypeToken<Map<String, Object>>() {}.getType();
+			Gson gson = new Gson();
+			Map<String, Object> objectMap = gson.fromJson(documentContext.jsonString(), type);
+        	filteredListObjects.add(objectMap);
+		}
+		Map<String, Object> requestMap = new HashMap<>();
+		requestMap = filteredListObjects.get(0);
+		for(Map<String, Object> map: filteredListObjects){
+			if(0 != filteredListObjects.indexOf(map)) {
+				for(String key: arrayKeys){
+					List<Object> entry = (List<Object>) requestMap.get(key);
+					entry.addAll((List<Object>) map.get(key));
+					requestMap.put(key, entry);
+				}
+			}
+		}
+		logger.info("requestMap: "+requestMap);
+		Object requestContentBody = null;
+		try{
+			requestContentBody = mapper.writeValueAsString(requestMap);
+		}catch(Exception e){
+			logger.error("Exception while parsing requestMap to String", e);
+		}
+		if(uploadDefinition.getIsBulkApi()){
+		    try{
+		    	bulkApiRequest.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
+		    }catch(Exception e){
+		    	bulkApiRequest.put("$", "requestInfo", uploaderRequest.getRequestInfo());
+		    } 
+		    StringBuilder expression = new StringBuilder();
+        	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath().substring(0, uploadDefinition.getArrayPath().length() - 1), expression);
+        	bulkApiRequest.put(expression.toString(), key, requestMap);
+        	request = bulkApiRequest.jsonString().toString();
+		}else{
+			DocumentContext docContext = JsonPath.parse(requestContentBody);
+		    try{
+		    	docContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
+			    request = docContext.jsonString().toString();
+		    }catch(Exception e){
+		    	docContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
+			    request = docContext.jsonString().toString();
+		    }  
+		}
+		
+		return request;
+	}
+	
+	
+	public void writeToExcelForParentChild(String failureMessage, Object apiResponse, int failureCount, int successCount, 
+			String resultFilePath, List<Object> resJsonPathList, List<List<Object>> filteredList) throws Exception {
+	    if(null != failureMessage && !failureMessage.isEmpty()) {
+	    	for(List<Object> row: filteredList) {
+		    	if(null != resJsonPathList){
+		    		for(Object obj: resJsonPathList){
+		    			row.add(null);
+		    		}
+		    		row.add("FAILED");
+		    		row.add(failureMessage);			    	
+		    		failureCount++;	
+		    	}else{
+		    		row.add("FAILED");
+		    		row.add(failureMessage);			    	
+			    	failureCount++;	
+		    	}
+		    	logger.info("Writing FAILED ROW to excel....: "+row);
+				dataUploadUtils.writeToexcelSheet(row, resultFilePath);
+	    	}
+	    	
+	    }else {
+	    	for(List<Object> row: filteredList) {
+			    if(null != resJsonPathList){
+			    	try{
+			    		dataUploadUtils.addAdditionalFields(apiResponse, row, resJsonPathList);
+			    		row.add("SUCCESS");
+			    	}catch(Exception e){
+			    		for(Object obj: resJsonPathList){
+			    			row.add(null);
+			    		}
+			    		row.add("SUCCESS");
+			    		row.add("Failed to obtain additional fields from API response");
+			    		successCount++;
+			    	}
+			    }else {
+		    		row.add("SUCCESS");
+		    		successCount++;
+			    }
+		    	logger.info("Writing SUCCESS ROW to excel....: "+row);
+				dataUploadUtils.writeToexcelSheet(row, resultFilePath);
+	    	}
+	    }
 	}
 }

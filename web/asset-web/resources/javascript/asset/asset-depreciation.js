@@ -397,7 +397,7 @@ class AssetDepreciation extends React.Component {
                         <td>{getName(department,item.department.id)}</td>
                         <td>{item.code}</td>
                         <td>{item.name}</td>
-                        <td>{item.grossValue}</td>
+                        <td>{item.grossValue || 0}</td>
                         <td>{item.assetCategory.depreciationRate}</td>
                 </tr>);
         })

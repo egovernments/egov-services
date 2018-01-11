@@ -1700,7 +1700,7 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids
-          - name: code
+          - name: codes
             type: string
             in: query
             description: |

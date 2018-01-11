@@ -982,7 +982,7 @@ class EvictionAgreement extends React.Component {
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label htmlFor="">User Name <span>*</span></label>
+                                    <label htmlFor="">Employee Name <span>*</span></label>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="styled-select">

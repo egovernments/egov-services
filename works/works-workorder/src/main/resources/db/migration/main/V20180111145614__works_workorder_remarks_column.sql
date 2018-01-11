@@ -1,0 +1,1 @@
+ALTER TABLE egw_workorder ADD COLUMN remarks character varying(1024);

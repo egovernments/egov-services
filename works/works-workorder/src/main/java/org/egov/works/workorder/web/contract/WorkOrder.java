@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object that holds the basic data for a Work Order
  */
 @ApiModel(description = "An Object that holds the basic data for a Work Order")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:14:22.308Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-11T09:15:34.262Z")
 
 public class WorkOrder   {
   @JsonProperty("id")
@@ -55,6 +55,9 @@ public class WorkOrder   {
   @JsonProperty("deleted")
   private Boolean deleted = false;
 
+  @JsonProperty("remarks")
+  private String remarks = null;
+
   public WorkOrder id(String id) {
     this.id = id;
     return this;
@@ -65,6 +68,7 @@ public class WorkOrder   {
    * @return id
   **/
   @ApiModelProperty(value = "Unique Identifier of the Work Order")
+
 
   public String getId() {
     return id;
@@ -157,6 +161,7 @@ public class WorkOrder   {
   **/
   @ApiModelProperty(required = true, value = "Epoch time of Work Order Date. If the Work order is spillover then the Work Order Date is user entered. Otherwise it is default to current date. This field is allowed to edit during rejected status or drafts for Spillover Work Order.")
   @NotNull
+
 
   public Long getWorkOrderDate() {
     return workOrderDate;
@@ -289,6 +294,7 @@ public class WorkOrder   {
   **/
   @ApiModelProperty(value = "State id of the workflow")
 
+
   public String getStateId() {
     return stateId;
   }
@@ -308,6 +314,7 @@ public class WorkOrder   {
   **/
   @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
 
+
   public Boolean getDeleted() {
     return deleted;
   }
@@ -316,8 +323,29 @@ public class WorkOrder   {
     this.deleted = deleted;
   }
 
+  public WorkOrder remarks(String remarks) {
+    this.remarks = remarks;
+    return this;
+  }
+
+   /**
+   * Remarks for the Work Order
+   * @return remarks
+  **/
+  @ApiModelProperty(value = "Remarks for the Work Order")
+
+ @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(max=1024)
+  public String getRemarks() {
+    return remarks;
+  }
+
+  public void setRemarks(String remarks) {
+    this.remarks = remarks;
+  }
+
+
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -336,12 +364,13 @@ public class WorkOrder   {
         Objects.equals(this.auditDetails, workOrder.auditDetails) &&
         Objects.equals(this.status, workOrder.status) &&
         Objects.equals(this.stateId, workOrder.stateId) &&
-        Objects.equals(this.deleted, workOrder.deleted);
+        Objects.equals(this.deleted, workOrder.deleted) &&
+        Objects.equals(this.remarks, workOrder.remarks);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails, workFlowDetails, auditDetails, status, stateId, deleted);
+    return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails, workFlowDetails, auditDetails, status, stateId, deleted, remarks);
   }
 
   @Override
@@ -361,6 +390,7 @@ public class WorkOrder   {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
     sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+    sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -369,11 +399,10 @@ public class WorkOrder   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
   }
 }
-

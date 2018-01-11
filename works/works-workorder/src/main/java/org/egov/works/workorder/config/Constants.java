@@ -133,6 +133,9 @@ public class Constants {
     public static final String KEY_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE = "WORKS.MILESTONE.WORKORDER.SHOULD.BE.APPROVED.STATE";
     public static final String MESSAGE_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE = "Work order should be in approved state to create a milestone";
 
+    public static final String KEY_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDBE_100 = "WORKS.MILESTONE.ACTIVITY.TOTALPERCENTAGE.SHOULDBE.100.CROSS100";
+    public static final String MESSAGE_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDBE_100 = "Milestone Activity total percentage should be 100";
+
     public static final String KEY_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100 = "WORKS.MILESTONE.ACTIVITY.TOTALPERCENTAGE.SHOULDNOT.CROSS100";
     public static final String MESSAGE_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100 = "Milestone Activity total percentage should not cross 100";
 

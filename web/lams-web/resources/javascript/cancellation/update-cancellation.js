@@ -480,7 +480,8 @@ class UpdateCancellation extends React.Component {
                 Notice: {
                     tenantId,
                     agreementNumber: obj.noticeData.agreementNumber,
-                    fileStore: obj.fileStoreId
+                    fileStore: obj.fileStoreId,
+                    acknowledgementNumber:obj.noticeData.acknowledgementNumber
                 }
             }),
             headers: {
@@ -664,6 +665,8 @@ class UpdateCancellation extends React.Component {
                                     },
                                     success: function (res) {
 
+                                        agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
+
                                         if (ID === "Print Notice") {
                                             _this.printNotice(agreement);
                                         } else {
@@ -676,9 +679,9 @@ class UpdateCancellation extends React.Component {
                                                     'auth-token': authToken
                                                 },
                                                 success: function (res1) {
+                                                    console.log("res1",res1);
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    console.log(res1);
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
                                                         window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     else
@@ -730,6 +733,7 @@ class UpdateCancellation extends React.Component {
                     },
                     success: function (res) {
 
+                        agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
 
                         if (ID === "Print Notice") {
                             _this.printNotice(agreement);
@@ -743,6 +747,7 @@ class UpdateCancellation extends React.Component {
                                     'auth-token': authToken
                                 },
                                 success: function (res1) {
+                                    console.log("res1",res1);
                                     if (window.opener)
                                         window.opener.location.reload();
                                     if (res1 && res1.Employee && res1.Employee[0].name)

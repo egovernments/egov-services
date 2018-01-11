@@ -618,6 +618,8 @@ class UpdateEviction extends React.Component {
                       'auth-token': authToken
                   },
                   success: function (res) {
+                    agreement.acknowledgementNumber = res.Agreements[0].acknowledgementNumber;
+
                     _this.printNotice(agreement);
                   },
                   error:function(err){

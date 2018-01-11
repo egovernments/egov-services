@@ -74,7 +74,7 @@ public class NoticeService {
 					documentDetail
 							.setAuditDetails(workOrderUtils.setAuditDetails(noticeRequest.getRequestInfo(), false));
 				}
-			updateStatus(notice, true);
+//			updateStatus(notice, true);
 
 		}
 		kafkaTemplate.send(propertiesManager.getWorksNoticeCreateTopic(), noticeRequest);
@@ -104,7 +104,7 @@ public class NoticeService {
 					documentDetail
 							.setAuditDetails(workOrderUtils.setAuditDetails(noticeRequest.getRequestInfo(), false));
 				}
-			updateStatus(notice, false);
+//			updateStatus(notice, false);
 		}
 		kafkaTemplate.send(propertiesManager.getWorksNoticeCreateTopic(), noticeRequest);
 		NoticeResponse noticeResponse = new NoticeResponse();

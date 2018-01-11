@@ -89,7 +89,7 @@ public class NoticeDetail {
      * @return notice
      **/
     @ApiModelProperty(required = true, value = "Reference of Notice")
-    @NotNull
+//    @NotNull
 
 
     public String getNotice() {

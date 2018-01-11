@@ -57,7 +57,7 @@ public class MilestoneValidator {
         BigDecimal totalPercentage = BigDecimal.ZERO;
         Long currentDateInMillis = System.currentTimeMillis();
         for (MilestoneActivity milestoneActivity : milestoneActivities) {
-            totalPercentage.add(milestoneActivity.getPercentage());
+            totalPercentage = totalPercentage.add(milestoneActivity.getPercentage());
             if (milestoneActivity.getScheduleStartDate() > currentDateInMillis || (milestoneActivity.getScheduleEndDate() != null && milestoneActivity.getScheduleEndDate() > currentDateInMillis))
                 validationMessages.put(Constants.KEY_MILESTONE_ACTIVITY_SSD_SED_CANNOTBE_FUTURE, Constants.MESSAGE_MILESTONE_ACTIVITY_SSD_SED_CANNOTBE_FUTURE);
             if (milestoneActivity.getScheduleEndDate() != null && milestoneActivity.getScheduleStartDate() > milestoneActivity.getScheduleEndDate())
@@ -65,9 +65,7 @@ public class MilestoneValidator {
             if (milestoneActivity.getScheduleStartDate() < workOrder.getWorkOrderDate())
                 validationMessages.put(Constants.KEY_MILESTONE_ACTIVITY_SSD_CANNOT_BEFORE_WOD, Constants.MESSAGE_MILESTONE_ACTIVITY_SSD_CANNOT_BEFORE_WOD);
         }
-        if (totalPercentage.compareTo(new BigDecimal(100)) < 0)
+        if (totalPercentage.compareTo(new BigDecimal(100)) != 0)
             validationMessages.put(Constants.KEY_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDBE_100, Constants.MESSAGE_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDBE_100);
-        if (totalPercentage.compareTo(new BigDecimal(100)) == 1)
-            validationMessages.put(Constants.KEY_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100, Constants.MESSAGE_MILESTONE_ACTIVITY_TOTALPERCENTAGE_SHOULDNOT_CROSS100);
     }
 }

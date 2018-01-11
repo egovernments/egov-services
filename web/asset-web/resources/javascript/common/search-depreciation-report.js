@@ -2,20 +2,16 @@ var flag = 0;
 class SearchDepreciationReport extends React.Component {
   constructor(props) {
     super(props);
-    this.state={list:[],searchSet:{
-      "tenantId": tenantId,
-      "assetName": "",
-      "assetCode":"",
-      "assetCategory": "",
-      "assetCategoryType": "",
-      "parent":"",
-      "financialYear":""
-   },isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],result:[],modify: false}
+    this.state={
+      list:[],
+      searchSet:{
+        tenantId
+      },
+      isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],result:[],modify: false}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
   }
-
 
   handleChange(e, name) {
     var self = this;
@@ -28,7 +24,7 @@ class SearchDepreciationReport extends React.Component {
         })
       }else if(name === 'parent'){
         commonApiPost("asset-services", "assetCategories", "_search", {parent:e.target.value,tenantId}, function(err, res) {
-            console.log(res["AssetCategory"]);
+            // console.log(res["AssetCategory"]);
             let assetCategory = res["AssetCategory"].filter((obj)=>{
               return obj.parent;//false
             })
@@ -36,29 +32,29 @@ class SearchDepreciationReport extends React.Component {
         })
       }
 
-      if(name == "assetName") {
-        return this.setState({
-          searchSet: {
-              ...this.state.searchSet,
-              [name]: e.target.value,
-              asset: ""
-          }
-      })
-      }
-
-      if(name == "assetCode") {
-        return this.setState({
-          searchSet: {
-              ...this.state.searchSet,
-              [name]: e.target.value,
-              asset: ""
-          }
-      })
-      }
+      // if(name == "assetName") {
+      //   return this.setState({
+      //     searchSet: {
+      //         ...this.state.searchSet,
+      //         [name]: e.target.value,
+      //         asset: ""
+      //     }
+      // })
+      // }
+      //
+      // if(name == "assetCode") {
+      //   return this.setState({
+      //     searchSet: {
+      //         ...this.state.searchSet,
+      //         [name]: e.target.value,
+      //         asset: ""
+      //     }
+      // })
+      // }
       this.setState({
           searchSet:{
               ...this.state.searchSet,
-              [name]:e.target.value
+              [name]:e && e.target && e.target.value || e
           }
       })
   }
@@ -76,15 +72,15 @@ class SearchDepreciationReport extends React.Component {
       commonApiPost("asset-services","assets/depreciations","_search", {...this.state.searchSet, tenantId, pageSize:500}, function(err, res) {
         if(res) {
           var list = res["DepreciationReportCriteria"];
-          list.sort(function(item1, item2) {
-            console.log(item1 , item2);
-            return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
-          })
+          // list.sort(function(item1, item2) {
+          //   console.log(item1 , item2);
+          //   return item1.code.toLowerCase() > item2.code.toLowerCase() ? 1 : item1.code.toLowerCase() < item2.code.toLowerCase() ? -1 : 0;
+          // })
           flag = 1;
           _this.setState({
             isSearchClicked: true,
             list,
-              modify: true
+            modify: true
           })
         }
       })
@@ -133,6 +129,13 @@ class SearchDepreciationReport extends React.Component {
     }
 
   componentDidMount() {
+
+    let {handleChange} = this;
+
+    let assetCode = [];
+    let assetName = [];
+    let uniqueNames = [];
+
     if(window.opener && window.opener.document) {
       var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
       if(logo_ele && logo_ele[0]) {
@@ -143,7 +146,7 @@ class SearchDepreciationReport extends React.Component {
     var count =0 , _this = this, _state = {};
     var checkCountNCall = function(key, res) {
       _state[key] = res;
-      console.log(res);
+      // console.log(res);
       if(count == 0)
         _this.setInitialState(_state);
     }
@@ -158,103 +161,139 @@ class SearchDepreciationReport extends React.Component {
 
      var location;
 
-     $( "#assetName" ).autocomplete({
-       source: function( request, response ) {
-         $.ajax({
-           url: baseUrl + "/asset-services/assets/_search?tenantId=" + tenantId,
-           type: 'POST',
-           dataType: "json",
-           data: JSON.stringify({
-               RequestInfo: requestInfo,
-               name: request.term,
-               fuzzyLogic: true,
-               tenantId: tenantId
-           }),
-           contentType: 'application/json',
-           success: function( data ) {
-             if(data && data.Assets && data.Assets.length) {
-                 let users = [];
-                 for(let i=0;i<data.Assets.length;i++)
-                     users.push(data.Assets[i].name);
-                 response(users);
-                 _this.setState({
-                   users: data.Assets
-                 })
-             }
-           }
-         });
-       },
-       minLength: 3,
-       change: function( event, ui ) {
-         if(ui.item && ui.item.value) {
-             var id;
-             if(_this.state.users && _this.state.users.constructor == Array) {
-               for(var i=0; i<_this.state.users.length; i++) {
-                 if(_this.state.users[i].name == ui.item.value) {
-                   id = _this.state.users[i].id;
-                 }
-               }
-             }
+     commonApiPost("asset-services", "assets", "_search", { tenantId}, function(err, res) {
+       let assets = res.Assets;
 
-             _this.setState({
-                 searchSet:{
-                     ..._this.state.searchSet,
-                     assetName: ui.item.value,
-                     asset: id || ""
-                 }
-             })
-         }
-       }
+       assets.map(asset=>{
+         let obj={};
+         obj['label']=`${asset.code} - ${asset.name}`;
+         obj['value']=`${asset.code}`;
+         assetName.push(asset.name);
+         assetCode.push(obj);
+       });
+
+       $.each(assetName, function(i, el){
+           if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+       });
+
      });
 
-     $( "#assetCode" ).autocomplete({
-       source: function( request, response ) {
-         $.ajax({
-           url: baseUrl + "/asset-services/assets/_search?tenantId=" + tenantId,
-           type: 'POST',
-           dataType: "json",
-           data: JSON.stringify({
-               RequestInfo: requestInfo,
-               name: request.term,
-               fuzzyLogic: true,
-               tenantId: tenantId
-           }),
-           contentType: 'application/json',
-           success: function( data ) {
-             if(data && data.Assets && data.Assets.length) {
-                 let users = [];
-                 for(let i=0;i<data.Assets.length;i++)
-                     users.push(data.Assets[i].code);
-                 response(users);
-                 _this.setState({
-                   users: data.Assets
-                 })
-             }
-           }
-         });
-       },
-       minLength: 3,
-       change: function( event, ui ) {
-         if(ui.item && ui.item.value) {
-             var id;
-             if(_this.state.users && _this.state.users.constructor == Array) {
-               for(var i=0; i<_this.state.users.length; i++) {
-                 if(_this.state.users[i].code == ui.item.value) {
-                   id = _this.state.users[i].id;
-                 }
-               }
-             }
+      //autocomplete for asset
+      $( "#assetCode" ).autocomplete({
+        source: assetCode,
+        change: function( event, ui ) {
+          handleChange(ui.item.value, event.target.id)
+        }
+      });
 
-             _this.setState({
-                 searchSet:{
-                     ..._this.state.searchSet,
-                     assetCode: ui.item.value,
-                     asset: id || ""
-                 }
-             })
-         }
-       }
-     });
+      $( "#assetName" ).autocomplete({
+        source: uniqueNames,
+        change: function( event, ui ) {
+          if(ui.item){
+            handleChange(ui.item.value, event.target.id);
+          }
+        }
+      });
+
+
+    //  $( "#assetName" ).autocomplete({
+    //    source: function( request, response ) {
+    //      $.ajax({
+    //        url: baseUrl + "/asset-services/assets/_search?tenantId=" + tenantId,
+    //        type: 'POST',
+    //        dataType: "json",
+    //        data: JSON.stringify({
+    //            RequestInfo: requestInfo,
+    //            name: request.term,
+    //            fuzzyLogic: true,
+    //            tenantId: tenantId
+    //        }),
+    //        contentType: 'application/json',
+    //        success: function( data ) {
+    //          if(data && data.Assets && data.Assets.length) {
+    //              let users = [];
+    //              for(let i=0;i<data.Assets.length;i++)
+    //                  users.push(data.Assets[i].name);
+    //              response(users);
+    //              _this.setState({
+    //                users: data.Assets
+    //              })
+    //          }
+    //        }
+    //      });
+    //    },
+    //    minLength: 3,
+    //    change: function( event, ui ) {
+    //      if(ui.item && ui.item.value) {
+    //          var id;
+    //          if(_this.state.users && _this.state.users.constructor == Array) {
+    //            for(var i=0; i<_this.state.users.length; i++) {
+    //              if(_this.state.users[i].name == ui.item.value) {
+    //                id = _this.state.users[i].id;
+    //              }
+    //            }
+    //          }
+     //
+    //          _this.setState({
+    //              searchSet:{
+    //                  ..._this.state.searchSet,
+    //                  assetName: ui.item.value,
+    //                  asset: id || ""
+    //              }
+    //          })
+    //      }
+    //    }
+    //  });
+     //
+    //  $( "#assetCode" ).autocomplete({
+    //    source: function( request, response ) {
+    //      $.ajax({
+    //        url: baseUrl + "/asset-services/assets/_search?tenantId=" + tenantId,
+    //        type: 'POST',
+    //        dataType: "json",
+    //        data: JSON.stringify({
+    //            RequestInfo: requestInfo,
+    //            name: request.term,
+    //            fuzzyLogic: true,
+    //            tenantId: tenantId
+    //        }),
+    //        contentType: 'application/json',
+    //        success: function( data ) {
+    //          if(data && data.Assets && data.Assets.length) {
+    //            console.log(data.Assets);
+    //             //  let users = [];
+    //             //  for(let i=0;i<data.Assets.length;i++)
+    //             //      users.push(data.Assets[i].code);
+    //             //  response(users);
+    //             //  _this.setState({
+    //             //    users: data.Assets
+    //             //  })
+    //          }
+    //        }
+    //      });
+    //    },
+    //    minLength: 3,
+    //    change: function( event, ui ) {
+    //      if(ui.item && ui.item.value) {
+    //          var id;
+    //          if(_this.state.users && _this.state.users.constructor == Array) {
+    //            for(var i=0; i<_this.state.users.length; i++) {
+    //              if(_this.state.users[i].code == ui.item.value) {
+    //                id = _this.state.users[i].id;
+    //              }
+    //            }
+    //          }
+     //
+    //          _this.setState({
+    //              searchSet:{
+    //                  ..._this.state.searchSet,
+    //                  assetCode: ui.item.value,
+    //                  asset: id || ""
+    //              }
+    //          })
+    //      }
+    //    }
+    //  });
 }
 
 close() {
@@ -265,6 +304,7 @@ close() {
     let {handleChange, search, handleClick}=this;
     let {assetCategoryType,assetCategory,financialYear,department,parent,assetName,assetCode}=this.state.searchSet;
     let {isSearchClicked,list,departments,assetCategories,assetId}=this.state;
+    console.log(this.state.searchSet);
       const renderOption = function(list) {
           if(list) {
 

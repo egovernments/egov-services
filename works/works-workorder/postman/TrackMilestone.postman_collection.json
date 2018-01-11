@@ -1,0 +1,121 @@
+{
+	"info": {
+		"name": "WMS-WO-TrackMilestone",
+		"_postman_id": "4cbe506b-9375-f072-52bb-63ed161d8ea3",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Track Milestone",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"trackMilestones\":[{\n      \"tenantId\":\"default\",\n      \"milestone\":{\n      \t\"id\":\"8263ed83d7c14152ab904a05a7e3e953\"\n      },\n      \"status\":{\n      \t\"code\":\"IN_PROGRESS\"\n      },\n      \"totalPercentage\":\"50\",\n      \"projectCompleted\":false,\n      \"trackMilestoneActivities\":[{\n      \t\"tenantId\":\"default\",\n      \t\"milestoneActivity\":{\n      \t\"id\":\"5478ce1146e74a4f9e2be53dcb245025\"\t\n      \t},\n      \t\"actualStartDate\":1513814400000,\n      \t\"actualEndDate\":  1513922933000,\n      \t\"percentage\":23.6,\n      \t\"status\":{\n      \t\"code\":\"IN_PROGRESS\"\n    \t},\n      \t\"deleted\":false\n      \t\n      }],\n      \"deleted\":false\n        \n    }]\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8280//works-workorder/v1/trackmilestones/_create",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"",
+						"works-workorder",
+						"v1",
+						"trackmilestones",
+						"_create"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Search Track Milestone",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"create\",\n    \"authToken\":\"{{access_token}}\",\n    \"userInfo\":{\n     \"tenantId\" : \"default\",\n     \"userName\" : \"ritesh\",\n     \"id\":1,\n       \"roles\" : []\n   }\n    }\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8280//works-workorder/v1/trackmilestones/_search?tenantId=default&ids=798cfd2901724a88b647eb38a94da61b",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"",
+						"works-workorder",
+						"v1",
+						"trackmilestones",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true
+						},
+						{
+							"key": "ids",
+							"value": "798cfd2901724a88b647eb38a94da61b",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "update Track Milestone",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"{{access_token}}\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n  \"trackMilestones\": [\n        {\n            \"id\": \"798cfd2901724a88b647eb38a94da61b\",\n            \"tenantId\": \"default\",\n            \"milestone\": {\n                \"id\": \"8263ed83d7c14152ab904a05a7e3e953\",\n                \"tenantId\": null,\n                \"letterOfAcceptanceEstimate\": null,\n                \"status\": null,\n                \"milestoneActivities\": [],\n                \"trackMilestones\": null,\n                \"cancellationReason\": null,\n                \"cancellationRemarks\": null,\n                \"deleted\": false,\n                \"auditDetails\": null\n            },\n            \"status\": {\n                \"tenantId\": null,\n                \"code\": \"IN_PROGRESS\",\n                \"description\": null,\n                \"moduleType\": null,\n                \"orderNumber\": null\n            },\n            \"totalPercentage\": 50,\n            \"projectCompleted\": false,\n            \"trackMilestoneActivities\": [\n                {\n                    \"id\": \"eccce192f6ac4e099af5522064d5880a\",\n                    \"tenantId\": \"default\",\n                    \"trackMilestone\": \"798cfd2901724a88b647eb38a94da61b\",\n                    \"milestoneActivity\": {\n                        \"id\": \"5478ce1146e74a4f9e2be53dcb245025\",\n                        \"tenantId\": null,\n                        \"milestone\": null,\n                        \"scheduleStartDate\": null,\n                        \"scheduleEndDate\": null,\n                        \"percentage\": null,\n                        \"description\": null,\n                        \"stageOrderNumber\": null,\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"remarks\": null,\n                    \"percentage\": 23.6,\n                    \"actualStartDate\": 1513814400000,\n                    \"actualEndDate\": 1513922933000,\n                    \"status\": {\n                        \"tenantId\": null,\n                        \"code\": \"IN_PROGRESS\",\n                        \"description\": null,\n                        \"moduleType\": null,\n                        \"orderNumber\": null\n                    },\n                    \"auditDetails\": null,\n                    \"deleted\": false\n                }\n            ],\n            \"deleted\": false,\n            \"auditDetails\": null\n        }\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://localhost:8280//works-workorder/v1/trackmilestones/_update",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8280",
+					"path": [
+						"",
+						"works-workorder",
+						"v1",
+						"trackmilestones",
+						"_update"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		}
+	]
+}

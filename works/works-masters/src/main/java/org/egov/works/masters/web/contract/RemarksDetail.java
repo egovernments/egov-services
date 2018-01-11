@@ -90,7 +90,7 @@ public class RemarksDetail {
      * @return remarks
      **/
     @ApiModelProperty(required = true, value = "Reference of remarks.")
-    @NotNull
+//    @NotNull
 
     public String getRemarks() {
         return remarks;

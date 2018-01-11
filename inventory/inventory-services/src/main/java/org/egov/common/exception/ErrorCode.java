@@ -273,7 +273,10 @@ public enum ErrorCode {
             "the field {0} is-inactive  or does not exist "),
     QTY1_LE_QTY2("qty1.le.qty2",
  			"The field {0}  should be less than or equal to {1} ",
-     		"The field {0}  should be less than or equal to {1}");
+     		"The field {0}  should be less than or equal to {1}"),
+    NO_DATA_FOUND("no.data.found",
+ 			"No Data Found for {0} ",
+     		"No Data Found for {0} ");
 
 
     private final String code;

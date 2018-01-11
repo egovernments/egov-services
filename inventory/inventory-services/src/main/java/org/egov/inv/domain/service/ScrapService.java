@@ -3,6 +3,7 @@ package org.egov.inv.domain.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -30,6 +31,8 @@ import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Tenant;
 import org.egov.inv.model.Uom;
+import org.egov.inv.persistence.entity.MaterialIssueDetailEntity;
+import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.egov.inv.persistence.repository.ScrapDetailJdbcRepository;
 import org.egov.inv.persistence.repository.ScrapJdbcRepository;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
@@ -86,12 +89,12 @@ public class ScrapService extends DomainService{
 			if (StringUtils.isEmpty(scrapData.getTenantId())) {
 				scrapData.setTenantId(tenantId);
 			}
-			scrapData.getScrapDetails().forEach(scrapDetails -> {
+				scrapData.getScrapDetails().forEach(scrapDetails -> {
 				scrapDetails.setId(scrapJdbcRepository.getSequence("seq_scrapDetail"));
 				scrapDetails.setTenantId(tenantId);
 			});
 		});
-		
+		materialIssueBackUpdate(scrapReq,tenantId);
 				kafkaTemplate.send(createTopic, scrapReq);
 		return scrapReq.getScraps();
 		}catch(CustomBindException e) {
@@ -99,7 +102,7 @@ public class ScrapService extends DomainService{
 		}
 	}
 	
-	public List<Scrap> update(ScrapRequest scrapReq, String tenantId) {
+	 public List<Scrap> update(ScrapRequest scrapReq, String tenantId) {
 		try{
 			List<Scrap> scrap = scrapReq.getScraps();
 			validate(scrapReq.getScraps(), Constants.ACTION_UPDATE,tenantId,scrapReq.getRequestInfo());
@@ -121,7 +124,7 @@ public class ScrapService extends DomainService{
 			}
 		}
 	
-	public ScrapResponse search(ScrapSearch scrapSearch) {
+	 public ScrapResponse search(ScrapSearch scrapSearch) {
 		Pagination<Scrap> scrapPagination = scrapJdbcRepository.search(scrapSearch);
 		if (scrapPagination.getPagedData().size() > 0) {
 	            for (Scrap scrap : scrapPagination.getPagedData()) {
@@ -135,7 +138,7 @@ public class ScrapService extends DomainService{
 				? scrapPagination.getPagedData() : Collections.EMPTY_LIST);
 	}
 	
-	private void validate(List<Scrap> scrap, String method, String tenantId,RequestInfo info) {
+	 private void validate(List<Scrap> scrap, String method, String tenantId,RequestInfo info) {
 		InvalidDataException errors = new InvalidDataException();
 
 		try {
@@ -159,36 +162,38 @@ public class ScrapService extends DomainService{
 				if(null == scrapData.getScrapDate()) {
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"scrap Date", null);
 				}
-				
-				if(null == scrapData.getStore().getName() || scrapData.getStore().getName().isEmpty()){
-					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Store Name", null);
-				}
-				
-				if(null == scrapData.getStore().getCode() || scrapData.getStore().getName().isEmpty()){
-					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Store Code", null);
-				}else{
-					if(validateStore(tenantId,scrapData)) {
-						errors.addDataError(ErrorCode.INVALID_ACTIVE_VALUE.getCode(),"Store "+ scrapData.getStore().getCode());
+					if(null == scrapData.getStore().getName() || scrapData.getStore().getName().isEmpty()){
+						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Store Name", null);
 					}
-				}
+						if(null == scrapData.getStore().getCode() || scrapData.getStore().getName().isEmpty()){
+							errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Store Code", null);
+						}else{
+							if(validateStore(tenantId,scrapData)) {
+								errors.addDataError(ErrorCode.INVALID_ACTIVE_VALUE.getCode(),"Store "+ scrapData.getStore().getCode());
+							}
+						}
+							if(null == scrapData.getDescription() ||  scrapData.getDescription().isEmpty()) {
+								errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Description", null);
+							}
 				
-				if(null == scrapData.getDescription() ||  scrapData.getDescription().isEmpty()) {
-					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Description", null);
-				}
-				
-				for(ScrapDetail scrapdetail : scrapData.getScrapDetails()){
-					if(null == scrapdetail.getUserQuantity()) {
+				for(ScrapDetail scrapDetail : scrapData.getScrapDetails()){
+					if(null == scrapDetail.getUserQuantity()) {
 						errors.addDataError(ErrorCode.NOT_NULL.getCode(),"Scrap Quantity", null);
 					}else
 					{
-						int scrapQty =scrapdetail.getUserQuantity().compareTo(BigDecimal.ZERO);
+						int scrapQty =scrapDetail.getUserQuantity().compareTo(BigDecimal.ZERO);
 					if (scrapQty != 1) {
-						errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(),"Scrap Quantity "+scrapdetail.getUserQuantity());
+						errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(),"Scrap Quantity "+scrapDetail.getUserQuantity());
 					}
 					}
-					int scrapValue =scrapdetail.getScrapValue().compareTo(BigDecimal.ZERO);
+					int scrapValue =scrapDetail.getScrapValue().compareTo(BigDecimal.ZERO);
 					if(scrapValue!=1){
 						errors.addDataError(ErrorCode.UNIT_PRICE_GT_ZERO.getCode());
+
+					}
+					BigDecimal remainQuantity= scrapDetail.getQuantity().subtract(scrapDetail.getIssueDetail().getScrapedQuantity());
+					if((scrapDetail.getScrapQuantity().compareTo(remainQuantity)) == 1){
+						errors.addDataError(ErrorCode.QTY1_LE_QTY2.getCode(),"Scrap Quantity  "+scrapDetail.getScrapQuantity(),"Available Issue Quantity " +remainQuantity);
 
 					}
 				}
@@ -200,7 +205,7 @@ public class ScrapService extends DomainService{
 			throw errors;
 	}
 	
-	private String getScrapNumber(Scrap scrap, RequestInfo info,String tenantId) {
+	 private String getScrapNumber(Scrap scrap, RequestInfo info,String tenantId) {
 		InvalidDataException errors = new InvalidDataException();
 		ObjectMapper mapper = new ObjectMapper();
 		JSONArray tenantStr = mdmsRepository.getByCriteria(tenantId, "tenant", "tenants", "code",
@@ -228,7 +233,7 @@ public class ScrapService extends DomainService{
 		return seq + "/" + numberGenerator.getNextNumber(seq, 5);
 	}
 	
-	private void fetchRelated(ScrapRequest request, String tenantId) {
+	 private void fetchRelated(ScrapRequest request, String tenantId) {
 		InvalidDataException errors = new InvalidDataException();
 		List<ScrapDetail> scrapDetailList = new ArrayList<>();
 		for (Scrap scrap : request.getScraps()) {
@@ -237,18 +242,27 @@ public class ScrapService extends DomainService{
 		MaterialIssueSearchContract searchContract = MaterialIssueSearchContract.builder()
 													.issuePurpose(MaterialIssue.IssuePurposeEnum.WRITEOFFORSCRAP.toString())
 													.materialIssueStatus(MaterialIssueStatusEnum.APPROVED.toString())
-													.scrapCreated(true)
+													.scrapCreated(false)
 													.tenantId(tenantId)
 													.build();
 													
 		MaterialIssueResponse response = nonIndentMaterialIssueService.search(searchContract);
+		if(response.getMaterialIssues().size() <= 0 )
+		{
+			errors.addDataError(ErrorCode.NO_DATA_FOUND.getCode(), "Scrap Process");
+
+		}
 		for(MaterialIssue issue : response.getMaterialIssues()){
 			for(MaterialIssueDetail detail : issue.getMaterialIssueDetails()) {
 				ScrapDetail scrapDetail= new ScrapDetail();
+				MaterialIssueDetail matIssueDetail =  new MaterialIssueDetail();
+				matIssueDetail.setId(detail.getId());
+				matIssueDetail.setScrapedQuantity(detail.getScrapedQuantity());
 		if (issue == null )
-			errors.addDataError(ErrorCode.DOESNT_MATCH.getCode(), "issuePurpose", null);
+			errors.addDataError(ErrorCode.NO_DATA_FOUND.getCode(), "Scrap Process", null);
 		
 		else
+			scrapDetail.setIssueDetail(matIssueDetail);
 			scrapDetail.setTenantId(tenantId); 
 			scrapDetail.setUom(detail.getUom());
 			scrapDetail.setMaterial(detail.getMaterial());
@@ -267,6 +281,7 @@ public class ScrapService extends DomainService{
 			scrapDetail.setScrapReason(scrapDetail.getScrapReason());
 			scrapDetail.setScrapValue(scrapDetails.getScrapValue());
 			scrapDetailList.add(scrapDetail);
+			
 			}
 		}
 		scrap.setScrapDetails(scrapDetailList);
@@ -335,6 +350,28 @@ public class ScrapService extends DomainService{
 	        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
 	    }
 	 
+	 private void materialIssueBackUpdate(ScrapRequest request,String tenantId ){
+		 
+		 for(Scrap scrap : request.getScraps())
+		 {
+			 for(ScrapDetail detail: scrap.getScrapDetails()){
+					HashMap<String, String> hashMaps = new HashMap<>();
+					hashMaps.put("scrapedquantity", "scrapedquantity + " + detail.getScrapQuantity());
+					
+					scrapJdbcRepository.updateColumn(new MaterialIssueDetailEntity(),
+							"materialissuedetail", hashMaps, " WHERE id = '"+ detail.getIssueDetail().getId() +"'  AND tenantid = '"+tenantId +"'");
+					BigDecimal totalScrapedQuantity =detail.getIssueDetail().getScrapedQuantity().add(detail.getScrapQuantity());
+					int res = detail.getQuantity().compareTo(totalScrapedQuantity);
+					if( res == 0)
+					{
+						HashMap<String, String> hashMap = new HashMap<>();
+						hashMap.put("scrapcreated", "true");
+						scrapJdbcRepository.updateColumn(new MaterialIssueEntity(),
+								"materialissue", hashMap, " WHERE issuenumber = (select materialissuenumber from materialissuedetail where id = '"+detail.getIssueDetail().getId() +"' AND tenantId = '"+ tenantId +"') "+" AND issuepurpose = 'WRITEOFFORSCRAP' AND tenantid = '" +tenantId +"'");
+					}
+			 	}
+		 	}
+	 	}
 	}
 
 

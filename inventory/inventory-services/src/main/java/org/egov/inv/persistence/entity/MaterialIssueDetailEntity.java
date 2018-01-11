@@ -1,14 +1,11 @@
 package org.egov.inv.persistence.entity;
 
 import java.math.BigDecimal;
-
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.Material;
+import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
 import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.Uom;
-import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
-import org.egov.inv.persistence.entity.MaterialIssueEntity.MaterialIssueEntityBuilder;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,6 +43,8 @@ public class MaterialIssueDetailEntity {
 	
 	private String materialCode;
 	
+	private  BigDecimal scrapedQuantity;
+	
 	private Double quantityIssued;
 	
 	private String description;
@@ -58,6 +57,7 @@ public class MaterialIssueDetailEntity {
 		detail.setTenantId(tenantId);
 		detail.setOrderNumber(BigDecimal.valueOf(orderNumber));
 		detail.setValue(BigDecimal.valueOf(value));
+		detail.scrapedQuantity(scrapedQuantity);
 		Uom unit = new Uom();
 		unit.setCode(uom);
 		Material material = new Material();

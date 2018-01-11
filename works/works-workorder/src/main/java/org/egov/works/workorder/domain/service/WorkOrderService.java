@@ -45,7 +45,7 @@ public class WorkOrderService {
 
     public WorkOrderResponse create(final WorkOrderRequest workOrderRequest) {
 
-//        workOrderValidator.validateWorkOrder(workOrderRequest, Boolean.FALSE);
+        workOrderValidator.validateWorkOrder(workOrderRequest, Boolean.FALSE);
         String departmentCode;
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
             workOrder.setId(commonUtils.getUUID());
@@ -56,21 +56,20 @@ public class WorkOrderService {
                 workOrderDetail.setAuditDetails(workOrderUtils.setAuditDetails(workOrderRequest.getRequestInfo(), false));
             }
 
-//            if (!workOrder.getLetterOfAcceptance().getSpillOverFlag()) {
-//                departmentCode = workOrderValidator.getLetterOfAcceptanceResponse(workOrderRequest, workOrder)
-//                        .getLetterOfAcceptances().get(0).getLetterOfAcceptanceEstimates().get(0).getDetailedEstimate()
-//                        .getDepartment().getCode();
-//                String workOrderNumber = idGenerationRepository.generateWorkOrderNumber(workOrder.getTenantId(),
-//                        workOrderRequest.getRequestInfo());
-//
-//                // TODO: check idgen to accept values to generate
-//                workOrder
-//                        .setWorkOrderNumber(workOrderUtils.getCityCode(workOrder.getTenantId(), workOrderRequest.getRequestInfo())
-//                                + "/" + propertiesManager.getWorkOrderNumberPrefix() + "/"
-//                                + departmentCode + workOrderNumber);
-//
-//            }
-            workOrder.setWorkOrderNumber("Test");
+            if (!workOrder.getLetterOfAcceptance().getSpillOverFlag()) {
+                departmentCode = workOrderValidator.getLetterOfAcceptanceResponse(workOrderRequest, workOrder)
+                        .getLetterOfAcceptances().get(0).getLetterOfAcceptanceEstimates().get(0).getDetailedEstimate()
+                        .getDepartment().getCode();
+                String workOrderNumber = idGenerationRepository.generateWorkOrderNumber(workOrder.getTenantId(),
+                        workOrderRequest.getRequestInfo());
+
+                // TODO: check idgen to accept values to generate
+                workOrder
+                        .setWorkOrderNumber(workOrderUtils.getCityCode(workOrder.getTenantId(), workOrderRequest.getRequestInfo())
+                                + "/" + propertiesManager.getWorkOrderNumberPrefix() + "/"
+                                + departmentCode + workOrderNumber);
+
+            }
 
         }
         kafkaTemplate.send(propertiesManager.getWorksWorkOrderCreateTopic(), workOrderRequest);

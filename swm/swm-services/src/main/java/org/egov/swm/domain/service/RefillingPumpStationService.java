@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
@@ -85,14 +86,18 @@ public class RefillingPumpStationService {
 
         for (final RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 
-            // Validate Fuel Type
-            if (refillingPumpStation.getTypeOfFuel() != null && (refillingPumpStation.getTypeOfFuel().getCode() == null
-                    || refillingPumpStation.getTypeOfFuel().getCode().isEmpty()))
-                throw new CustomException("FuelType", "typeOfFuel code is mandatory: ");
+            if (refillingPumpStation.getFuelTypes() != null && !refillingPumpStation.getFuelTypes().isEmpty()) {
+                for (FuelType fuelType : refillingPumpStation.getFuelTypes()) {
+                    // Validate Fuel Type
+                    if (fuelType != null && (fuelType.getCode() == null
+                            || fuelType.getCode().isEmpty()))
+                        throw new CustomException("FuelType", "typeOfFuel code is mandatory: ");
 
-            if (refillingPumpStation.getTypeOfFuel() != null)
-                refillingPumpStation.setTypeOfFuel(fuelTypeService.getFuelType(refillingPumpStation.getTenantId(),
-                        refillingPumpStation.getTypeOfFuel().getCode(), refillingPumpStationRequest.getRequestInfo()));
+                    if (fuelType != null)
+                        fuelType = fuelTypeService.getFuelType(refillingPumpStation.getTenantId(), fuelType.getCode(),
+                                refillingPumpStationRequest.getRequestInfo());
+                }
+            }
 
             // validate Oil Company
             if (refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null
@@ -103,7 +108,7 @@ public class RefillingPumpStationService {
                 refillingPumpStation.setTypeOfPump(oilCompanyService.getOilCompany(refillingPumpStation.getTenantId(),
                         refillingPumpStation.getTypeOfPump().getCode(), refillingPumpStationRequest.getRequestInfo()));
 
-            // Validate Boundary
+           /* // Validate Boundary
             if (refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null
                     || refillingPumpStation.getLocation().getCode().isEmpty()))
                 throw new CustomException("Boundary", "Boundary code is Mandatory");
@@ -113,17 +118,17 @@ public class RefillingPumpStationService {
                 final TenantBoundary boundary = boundaryService.getByCode(refillingPumpStation.getTenantId(),
                         refillingPumpStation.getLocation().getCode(), new RequestInfo());
 
-                /*
+                
                  * if (boundary != null && boundary.getBoundary() != null)
                  * refillingPumpStation.setLocation(boundary.getBoundary()); else throw new CustomException("Boundary",
                  * "Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());
-                 */
+                 
 
                 if (boundary == null || boundary.getBoundary() == null || boundary.getBoundary().getCode() == null
                         || boundary.getBoundary().getCode().isEmpty())
                     throw new CustomException("Location",
                             "Given Location is Invalid: " + refillingPumpStation.getLocation().getCode());
-            }
+            }*/
 
         }
 

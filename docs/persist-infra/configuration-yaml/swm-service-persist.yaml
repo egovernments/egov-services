@@ -950,7 +950,6 @@ serviceMaps:
 
        - jsonPath: $.sanitationStaffTargets.*.tenantId
 
-
     - query: INSERT INTO egswm_sst_collectionpoints(tenantid, sanitationstafftarget, collectionpoint) VALUES (?, ?, ?);
       basePath: $.sanitationStaffTargets.*.collectionPoints.*
       jsonMaps:
@@ -961,12 +960,13 @@ serviceMaps:
          
        - jsonPath: $.sanitationStaffTargets.*.collectionPoints.*.code
 
+
  - version: 1.0
    name: refillingpumpstation create
    description: create refillingpumpstation in egswm_refillingpumpstation
    fromTopic: swm-refillingpumpstation-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_refillingpumpstation(code, tenantid, location, name, typeofpump, remarks, typeoffuel, quantity, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_refillingpumpstation(code, tenantid, location, name, typeofpump, remarks, quantity, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.refillingPumpStations.*
       jsonMaps:
        
@@ -982,8 +982,6 @@ serviceMaps:
 
        - jsonPath: $.refillingPumpStations.*.remarks
 
-       - jsonPath: $.refillingPumpStations.*.typeOfFuel.code
-         
        - jsonPath: $.refillingPumpStations.*.quantity
 
        - jsonPath: $.refillingPumpStations.*.auditDetails.createdBy
@@ -996,12 +994,22 @@ serviceMaps:
        - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+    - query: INSERT INTO egswm_pumpstationfueltypes(tenantid, pumpStation, fuelType) VALUES (?, ?, ?);
+      basePath: $.refillingPumpStations.*.fuelTypes.*
+      jsonMaps:
+       
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].tenantId
+         
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].code
+
+       - jsonPath: $.refillingPumpStations.*.fuelTypes.*.code
+         
  - version: 1.0
    name: refillingpumpstation update
    description: update refillingpumpstation in egswm_refillingpumpstation
    fromTopic: swm-refillingpumpstation-update-topic
    queryMaps:
-    - query: UPDATE egswm_refillingpumpstation SET code = ?, tenantid = ?, location = ?, name = ?, typeofpump = ?, remarks = ?, typeoffuel = ?, quantity = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
+    - query: UPDATE egswm_refillingpumpstation SET code = ?, tenantid = ?, location = ?, name = ?, typeofpump = ?, remarks = ?, quantity = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
       basePath: $.refillingPumpStations.*
       jsonMaps:
  
@@ -1017,8 +1025,6 @@ serviceMaps:
  
        - jsonPath: $.refillingPumpStations.*.remarks
  
-       - jsonPath: $.refillingPumpStations.*.typeOfFuel.code
- 
        - jsonPath: $.refillingPumpStations.*.quantity
          dbType: LONG
  
@@ -1031,6 +1037,18 @@ serviceMaps:
        - jsonPath: $.refillingPumpStations.*.tenantId
  
        - jsonPath: $.refillingPumpStations.*.code
+
+
+    - query: INSERT INTO egswm_pumpstationfueltypes(tenantid, pumpStation, fuelType) VALUES (?, ?, ?);
+      basePath: $.refillingPumpStations.*.fuelTypes.*
+      jsonMaps:
+       
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].tenantId
+         
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].code
+
+       - jsonPath: $.refillingPumpStations.*.fuelTypes.*.code
+
 
  - version: 1.0
    name: vehicleschedule create

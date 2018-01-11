@@ -8,13 +8,12 @@ import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Boundary;
-import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.OilCompany;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PumpStationFuelTypes;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
 import org.egov.swm.domain.service.BoundaryService;
-import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.OilCompanyService;
 import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
     private OilCompanyService oilCompanyService;
 
     @Autowired
-    private FuelTypeService fuelTypeService;
+    private PumpStationFuelTypesJdbcRepository pumpStationFuelTypesJdbcRepository;
 
     @Autowired
     private BoundaryService boundaryService;
@@ -162,7 +161,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
         List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
-        
+
         if (boundarys != null) {
 
             for (Boundary bd : boundarys) {
@@ -184,25 +183,27 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
     }
 
     private void populateFuelTypes(List<RefillingPumpStation> refillingPumpStationList) {
-        Map<String, FuelType> fuelTypeMap = new HashMap<>();
+
+        StringBuffer pumpStationCodes = new StringBuffer();
+
+        PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
+
         String tenantId = null;
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
-        List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
-
-        for (FuelType ft : fuelTypes) {
-            fuelTypeMap.put(ft.getCode(), ft);
-        }
-
         for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
 
-            if (refillingPumpStation.getTypeOfFuel() != null && refillingPumpStation.getTypeOfFuel().getCode() != null
-                    && !refillingPumpStation.getTypeOfFuel().getCode().isEmpty()) {
+            if (pumpStationCodes.length() >= 1)
+                pumpStationCodes.append(",");
 
-                refillingPumpStation.setTypeOfFuel(fuelTypeMap.get(refillingPumpStation.getTypeOfFuel().getCode()));
-            }
+            pumpStationCodes.append(refillingPumpStation.getCode());
+
+            pumpStation.setTenantId(tenantId);
+            pumpStation.setPumpStations(pumpStationCodes.toString());
+
+            refillingPumpStation.setFuelTypes(pumpStationFuelTypesJdbcRepository.search(pumpStation));
 
         }
     }

@@ -20,7 +20,7 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.vehicle.regNumber
        
        - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
-         dbType: LONG
+         dbType: DOUBLE
 
        - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.code
 
@@ -61,7 +61,7 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.vehicle.regNumber
        
        - jsonPath: $.vehicleFuellingDetails.*.vehicleReadingDuringFuelling
-         dbType: LONG
+         dbType: DOUBLE
 
        - jsonPath: $.vehicleFuellingDetails.*.refuellingStation.code
 
@@ -407,31 +407,31 @@ serviceMaps:
        - jsonPath: $.routes.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_routecollectionpointmap(id, tenantid, route, collectionPoint, distance, garbageEstimate, isStartingCollectionPoint, isEndingCollectionPoint, endingDumpingGroundPoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.routes.*.routeCollectionPointMaps.*
+    - query: INSERT INTO egswm_routecollectionpointmap(id, tenantid, route, collectionPoint, distance, garbageEstimate, isStartingCollectionPoint, isEndingCollectionPoint, dumpingGround) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.routes.*.collectionPoints.*
       jsonMaps:
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.id
+       - jsonPath: $.routes.*.collectionPoints.*.id
        
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.tenantId
+       - jsonPath: $.routes.*.collectionPoints.*.tenantId
          
-       - jsonPath: $.routes[?({id} in @.routeCollectionPointMaps[*].id)].code
+       - jsonPath: $.routes[?({id} in @.collectionPoints[*].id)].code
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.collectionPoint.code
+       - jsonPath: $.routes.*.collectionPoints.*.collectionPoint.code
          
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.distance
+       - jsonPath: $.routes.*.collectionPoints.*.distance
          dbType: DOUBLE
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.garbageEstimate
+       - jsonPath: $.routes.*.collectionPoints.*.garbageEstimate
          dbType: DOUBLE
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isStartingCollectionPoint
+       - jsonPath: $.routes.*.collectionPoints.*.isStartingCollectionPoint
          dbType: BOOLEAN
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isEndingCollectionPoint
+       - jsonPath: $.routes.*.collectionPoints.*.isEndingCollectionPoint
          dbType: BOOLEAN
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.endingDumpingGroundPoint.code
+       - jsonPath: $.routes.*.collectionPoints.*.dumpingGround.code
 
  - version: 1.0
    name: route update
@@ -439,7 +439,7 @@ serviceMaps:
    fromTopic: swm-route-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_route SET name=?, collectionType=?, startingCollectionPoint=?, endingCollectionPoint=?, endingDumpingGroundPoint=?, distance=?, garbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
+    - query: UPDATE egswm_route SET name=?, collectionType=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
       basePath: $.routes.*
       jsonMaps:
 
@@ -447,18 +447,6 @@ serviceMaps:
 
        - jsonPath: $.routes.*.collectionType.code
 
-       - jsonPath: $.routes.*.startingCollectionPoint.code
-
-       - jsonPath: $.routes.*.endingCollectionPoint.code
-
-       - jsonPath: $.routes.*.endingDumpingGroundPoint.code
-
-       - jsonPath: $.routes.*.distance
-         dbType: DOUBLE
-         
-       - jsonPath: $.routes.*.garbageEstimate
-         dbType: DOUBLE
-         
        - jsonPath: $.routes.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.routes.*.auditDetails.lastModifiedTime
@@ -468,31 +456,31 @@ serviceMaps:
 
        - jsonPath: $.routes.*.tenantId
 
-    - query: INSERT INTO egswm_routecollectionpointmap(id, tenantid, route, collectionPoint, distance, garbageEstimate, isStartingCollectionPoint, isEndingCollectionPoint, endingDumpingGroundPoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.routes.*.routeCollectionPointMaps.*
+    - query: INSERT INTO egswm_routecollectionpointmap(id, tenantid, route, collectionPoint, distance, garbageEstimate, isStartingCollectionPoint, isEndingCollectionPoint, dumpingGround) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.routes.*.collectionPoints.*
       jsonMaps:
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.id
+       - jsonPath: $.routes.*.collectionPoints.*.id
        
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.tenantId
+       - jsonPath: $.routes.*.collectionPoints.*.tenantId
          
-       - jsonPath: $.routes[?({id} in @.routeCollectionPointMaps[*].id)].code
+       - jsonPath: $.routes[?({id} in @.collectionPoints[*].id)].code
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.collectionPoint.code
+       - jsonPath: $.routes.*.collectionPoints.*.collectionPoint.code
          
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.distance
+       - jsonPath: $.routes.*.collectionPoints.*.distance
          dbType: DOUBLE
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.garbageEstimate
+       - jsonPath: $.routes.*.collectionPoints.*.garbageEstimate
          dbType: DOUBLE
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isStartingCollectionPoint
+       - jsonPath: $.routes.*.collectionPoints.*.isStartingCollectionPoint
          dbType: BOOLEAN
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.isEndingCollectionPoint
+       - jsonPath: $.routes.*.collectionPoints.*.isEndingCollectionPoint
          dbType: BOOLEAN
 
-       - jsonPath: $.routes.*.routeCollectionPointMaps.*.endingDumpingGroundPoint.code
+       - jsonPath: $.routes.*.collectionPoints.*.dumpingGround.code
 
  - version: 1.0
    name: vendor create
@@ -950,7 +938,6 @@ serviceMaps:
 
        - jsonPath: $.sanitationStaffTargets.*.tenantId
 
-
     - query: INSERT INTO egswm_sst_collectionpoints(tenantid, sanitationstafftarget, collectionpoint) VALUES (?, ?, ?);
       basePath: $.sanitationStaffTargets.*.collectionPoints.*
       jsonMaps:
@@ -961,12 +948,13 @@ serviceMaps:
          
        - jsonPath: $.sanitationStaffTargets.*.collectionPoints.*.code
 
+
  - version: 1.0
    name: refillingpumpstation create
    description: create refillingpumpstation in egswm_refillingpumpstation
    fromTopic: swm-refillingpumpstation-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_refillingpumpstation(code, tenantid, location, name, typeofpump, remarks, typeoffuel, quantity, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_refillingpumpstation(code, tenantid, location, name, typeofpump, remarks, quantity, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.refillingPumpStations.*
       jsonMaps:
        
@@ -982,8 +970,6 @@ serviceMaps:
 
        - jsonPath: $.refillingPumpStations.*.remarks
 
-       - jsonPath: $.refillingPumpStations.*.typeOfFuel.code
-         
        - jsonPath: $.refillingPumpStations.*.quantity
 
        - jsonPath: $.refillingPumpStations.*.auditDetails.createdBy
@@ -996,12 +982,22 @@ serviceMaps:
        - jsonPath: $.refillingPumpStations.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+    - query: INSERT INTO egswm_pumpstationfueltypes(tenantid, pumpStation, fuelType) VALUES (?, ?, ?);
+      basePath: $.refillingPumpStations.*.fuelTypes.*
+      jsonMaps:
+       
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].tenantId
+         
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].code
+
+       - jsonPath: $.refillingPumpStations.*.fuelTypes.*.code
+         
  - version: 1.0
    name: refillingpumpstation update
    description: update refillingpumpstation in egswm_refillingpumpstation
    fromTopic: swm-refillingpumpstation-update-topic
    queryMaps:
-    - query: UPDATE egswm_refillingpumpstation SET code = ?, tenantid = ?, location = ?, name = ?, typeofpump = ?, remarks = ?, typeoffuel = ?, quantity = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
+    - query: UPDATE egswm_refillingpumpstation SET code = ?, tenantid = ?, location = ?, name = ?, typeofpump = ?, remarks = ?, quantity = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
       basePath: $.refillingPumpStations.*
       jsonMaps:
  
@@ -1017,8 +1013,6 @@ serviceMaps:
  
        - jsonPath: $.refillingPumpStations.*.remarks
  
-       - jsonPath: $.refillingPumpStations.*.typeOfFuel.code
- 
        - jsonPath: $.refillingPumpStations.*.quantity
          dbType: LONG
  
@@ -1031,6 +1025,18 @@ serviceMaps:
        - jsonPath: $.refillingPumpStations.*.tenantId
  
        - jsonPath: $.refillingPumpStations.*.code
+
+
+    - query: INSERT INTO egswm_pumpstationfueltypes(tenantid, pumpStation, fuelType) VALUES (?, ?, ?);
+      basePath: $.refillingPumpStations.*.fuelTypes.*
+      jsonMaps:
+       
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].tenantId
+         
+       - jsonPath: $.refillingPumpStations[?({code} in @.fuelTypes[*].code)].code
+
+       - jsonPath: $.refillingPumpStations.*.fuelTypes.*.code
+
 
  - version: 1.0
    name: vehicleschedule create

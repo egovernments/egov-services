@@ -1,5 +1,7 @@
 package org.egov.swm.domain.model;
 
+import java.util.List;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -46,8 +48,9 @@ public class RefillingPumpStation {
     private String remarks = null;
 
     @NotNull
-    @JsonProperty("typeOfFuel")
-    private FuelType typeOfFuel = null;
+    @Size(min = 1)
+    @JsonProperty("fuelTypes")
+    private List<FuelType> fuelTypes = null;
 
     @JsonProperty("quantity")
     @Max(value = 10000, message = "Value of Quantity shall be between 0 and 10000 litres")

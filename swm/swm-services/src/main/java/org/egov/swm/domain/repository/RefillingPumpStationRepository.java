@@ -4,22 +4,23 @@ import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
 import org.egov.swm.persistence.queue.repository.RefillingPumpStationQueueRepository;
+import org.egov.swm.persistence.repository.PumpStationFuelTypesJdbcRepository;
 import org.egov.swm.persistence.repository.RefillingPumpStationJdbcRepository;
 import org.egov.swm.web.requests.RefillingPumpStationRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RefillingPumpStationRepository {
 
-    private final RefillingPumpStationQueueRepository refillingPumpStationQueueRepository;
+    @Autowired
+    private RefillingPumpStationQueueRepository refillingPumpStationQueueRepository;
 
-    private final RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository;
+    @Autowired
+    private RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository;
 
-    public RefillingPumpStationRepository(final RefillingPumpStationQueueRepository refillingPumpStationQueueRepository,
-            final RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository) {
-        this.refillingPumpStationQueueRepository = refillingPumpStationQueueRepository;
-        this.refillingPumpStationJdbcRepository = refillingPumpStationJdbcRepository;
-    }
+    @Autowired
+    private PumpStationFuelTypesJdbcRepository pumpStationFuelTypesJdbcRepository;
 
     public RefillingPumpStationRequest save(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
@@ -27,6 +28,11 @@ public class RefillingPumpStationRepository {
     }
 
     public RefillingPumpStationRequest update(final RefillingPumpStationRequest refillingPumpStationRequest) {
+
+        for (RefillingPumpStation pumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
+
+            pumpStationFuelTypesJdbcRepository.delete(pumpStation.getTenantId(), pumpStation.getCode());
+        }
 
         return refillingPumpStationQueueRepository.update(refillingPumpStationRequest);
     }

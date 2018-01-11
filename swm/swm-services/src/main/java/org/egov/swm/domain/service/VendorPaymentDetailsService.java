@@ -196,8 +196,31 @@ public class VendorPaymentDetailsService {
                 throw new CustomException("VendorContractNo",
                         "Invoice period is overlapping with earlier records: "
                                 + vendorPaymentDetail.getVendorContract().getContractNo());
-        }
 
+            //validation for invoice period outside contract period
+            if(vendorPaymentDetail.getFromDate() != null && vendorPaymentDetail.getToDate() != null &&
+               vendorPaymentDetail.getVendorContract() != null){
+
+                VendorContractSearch vendorContractSearch = new VendorContractSearch();
+                vendorContractSearch.setTenantId(vendorPaymentDetail.getTenantId());
+                vendorContractSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
+
+                Pagination<VendorContract> vendorContracts = vendorContractService.search(vendorContractSearch);
+                if(vendorContracts != null && !vendorContracts.getPagedData().isEmpty()){
+                    VendorContract vendorContract = vendorContracts.getPagedData().get(0);
+                    if(new Date(vendorPaymentDetail.getFromDate())
+                            .before(new Date(vendorContract.getContractPeriodFrom())) ||
+                            new Date(vendorPaymentDetail.getToDate())
+                                    .after(new Date(vendorContract.getContractPeriodTo())))
+                        throw new CustomException("Out Of Contract Period",
+                                " Invalid invoice. Submitted invoice period (" +
+                                        dateFormat.format(vendorPaymentDetail.getFromDate()) + " - " +
+                                        dateFormat.format(vendorPaymentDetail.getToDate()) + ") is outside the contract period (" +
+                                        dateFormat.format(vendorContract.getContractPeriodFrom()) + " - " +
+                                        dateFormat.format(vendorContract.getContractPeriodTo()) + ").");
+                }
+            }
+        }
     }
 
     private Pagination<VendorContract> getVendorContracts(final VendorPaymentDetails vendorPaymentDetail) {

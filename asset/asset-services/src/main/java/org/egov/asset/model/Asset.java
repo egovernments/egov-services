@@ -50,6 +50,8 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.asset.model.enums.ModeOfAcquisition;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -106,4 +108,7 @@ public class Asset {
     private List<YearWiseDepreciation> yearWiseDepreciation = new ArrayList<>();
     private String surveyNumber;
     private BigDecimal marketValue;
+
+    @JsonProperty("transactionHistory")
+    private List<TransactionHistory> transactionHistory;
 }

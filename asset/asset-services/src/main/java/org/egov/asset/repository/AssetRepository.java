@@ -48,17 +48,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetStatus;
 import org.egov.asset.model.Location;
+import org.egov.asset.model.TransactionHistory;
 import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.AssetCategoryType;
 import org.egov.asset.model.enums.AssetStatusObjectName;
 import org.egov.asset.model.enums.Status;
 import org.egov.asset.repository.builder.AssetQueryBuilder;
+import org.egov.asset.repository.rowmapper.AssetHistoryRowMapper;
 import org.egov.asset.repository.rowmapper.AssetRowMapper;
 import org.egov.asset.repository.rowmapper.YearWiseDepreciationRowMapper;
 import org.egov.asset.service.AssetCommonService;
@@ -101,6 +104,9 @@ public class AssetRepository {
     @Autowired
     private AssetCommonService assetCommonService;
 
+    @Autowired
+    private AssetHistoryRowMapper assetHistoryRowMapper;
+
     public List<Asset> findForCriteria(final AssetCriteria assetCriteria) {
 
         final List<Object> preparedStatementValues = new ArrayList<>();
@@ -114,6 +120,12 @@ public class AssetRepository {
             log.debug("the exception from findforcriteria : " + ex);
         }
         return assets;
+    }
+
+    public Map<Long, List<TransactionHistory>> getTransactionHistory(final List<Long> assetids, final String tenantId) {
+
+        final String queryStr = assetQueryBuilder.getHistoryQuery(assetids, tenantId);
+        return jdbcTemplate.query(queryStr, assetHistoryRowMapper);
     }
 
     public List<Asset> findAssetByCode(final String code, final String tenantId) {

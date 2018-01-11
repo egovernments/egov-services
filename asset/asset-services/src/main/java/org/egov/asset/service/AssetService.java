@@ -43,6 +43,8 @@ package org.egov.asset.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetCurrentValueRequest;
@@ -51,6 +53,7 @@ import org.egov.asset.contract.AssetResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetCurrentValue;
+import org.egov.asset.model.TransactionHistory;
 import org.egov.asset.model.YearWiseDepreciation;
 import org.egov.asset.model.enums.KafkaTopicName;
 import org.egov.asset.model.enums.Sequence;
@@ -89,6 +92,10 @@ public class AssetService {
     public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
         log.info("AssetService getAssets");
         final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+        if (searchAsset.getIsTransactionHistoryRequired() == null)
+            searchAsset.setIsTransactionHistoryRequired(false);
+        else if (searchAsset.getIsTransactionHistoryRequired().equals(true) && !assets.isEmpty())
+            getAssetTransactionHistory(assets);
         return getAssetResponse(assets, requestInfo);
     }
 
@@ -198,6 +205,13 @@ public class AssetService {
         else
             throw new RuntimeException(
                     "There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
+    }
+
+    private void getAssetTransactionHistory(final List<Asset> assets) {
+        final List<Long> assetIds = assets.stream().map(assetsList -> assetsList.getId()).collect(Collectors.toList());
+        final Map<Long, List<TransactionHistory>> transactionhistoryMap = assetRepository.getTransactionHistory(assetIds,
+                assets.get(0).getTenantId());
+        assets.forEach(assetsList -> assetsList.setTransactionHistory(transactionhistoryMap.get(assetsList.getId())));
     }
 
 }

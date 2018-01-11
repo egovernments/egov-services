@@ -136,7 +136,7 @@ public class DepreciationService {
     }
 
     public void validationAndGenerationDepreciationVoucherDetails(final List<DepreciationInputs> depreciationInputsList,
-            final List<DepreciationDetail> depreciationDetails, final List<AssetCurrentValue> currValList, final String tenantId,
+            final List<DepreciationDetail> depreciationDetailsList, final List<AssetCurrentValue> currValList, final String tenantId,
             final HttpHeaders headers, final RequestInfo requestInfo) {
         if (assetConfigurationService.getEnabledVoucherGeneration(AssetConfigurationKeys.ENABLEVOUCHERGENERATION,
                 tenantId))
@@ -149,8 +149,8 @@ public class DepreciationService {
                 final Long departmentId = depreciation.getDepartment();
 
                 log.debug("Asset Department ID :: " + departmentId);
-                for (final DepreciationDetail depreciationDetail : depreciationDetails)
-                    if (depreciationDetail.getStatus().equals(DepreciationStatus.SUCCESS)) {
+                for (final DepreciationDetail depreciationDetail : depreciationDetailsList)
+                    if (depreciationDetail!=null && depreciationDetail.getStatus().equals(DepreciationStatus.SUCCESS)) {
 
                         final BigDecimal amount = depreciationDetail.getDepreciationValue();
                         log.debug("Depreciation Amount :: " + amount);
@@ -189,7 +189,7 @@ public class DepreciationService {
 
                             final String voucherNumber = voucherService.createVoucher(voucherRequest, tenantId, headers);
                             log.debug("Voucher Number for Depreciation :: " + voucherNumber);
-                            setVoucherIdToDepreciaitionDetails(voucherNumber, depreciationInputsList, depreciationDetails);
+                            setVoucherIdToDepreciaitionDetails(voucherNumber, depreciationInputsList, depreciationDetailsList);
                         }
                     }
 

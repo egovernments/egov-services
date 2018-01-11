@@ -138,7 +138,7 @@ public class AssetQueryBuilder {
             selectQuery.append(" ASSET.assetCategory = ?");
             preparedStatementValues.add(searchAsset.getAssetCategory());
         }
-        
+
         if (searchAsset.getAssetCategoryType() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" assetCategory.assetcategorytype = ?");
@@ -255,6 +255,10 @@ public class AssetQueryBuilder {
             selectQuery.append(" AND asset.dateofcreation IS NOT NULL AND asset.dateofcreation<?");
             preparedStatementValues.add(searchAsset.getDateOfDepreciation());
         }
+        if(searchAsset.getIsTransactionHistoryRequired()!=null){
+            selectQuery.append( " AND ASSET.status='CAPITALIZED' ");
+            
+        }
 
     }
 
@@ -278,6 +282,23 @@ public class AssetQueryBuilder {
             pageNumber = searchAsset.getOffset() - 1;
         preparedStatementValues.add(pageNumber * pageSize); // Set offset to
                                                             // pageNo * pageSize
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public String getHistoryQuery(final List<Long> assetIds, final String tenantid) {
+
+        String assetIdString = null;
+        if (assetIds != null && !assetIds.isEmpty())
+            assetIdString = "AND cv.assetid IN (" + getIdQuery(assetIds);
+
+        return "select  * "
+                + "from egasset_current_value cv  "
+                + "left outer join egasset_revalution  rv on rv.assetid=cv.assetid and rv.valueafterrevaluation=cv.currentamount "
+                + "left outer join egasset_depreciation  dv on dv.assetid=cv.assetid and dv.valueafterdepreciation=cv.currentamount "
+                + "left outer join egasset_disposal  dp on dp.assetid=cv.assetid and dp.salevalue=cv.currentamount "
+                + "where  cv.assettrantype !='CREATE' AND cv.tenantid='" + tenantid + "' " + assetIdString
+                + " order by cv.assetid,cv.id,cv.createdtime ";
+
     }
 
     /**

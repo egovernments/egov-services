@@ -52,6 +52,7 @@ public class AssetCriteria {
     private Long assetCreatedTo;
     private String assetCategoryName;
 
-    private Long dateOfDepreciation;//
+    private Long dateOfDepreciation;
     private TransactionType transaction;
+    private Boolean isTransactionHistoryRequired;
 }

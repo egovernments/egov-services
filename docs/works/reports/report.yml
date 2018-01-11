@@ -6,18 +6,8 @@ ReportDefinitions:
   moduleName: works
   viewPath: workOrderRegister
   externalService:
-  - entity: $.MdmsRes.Works.TypeOfWork
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
-    keyOrder: name,code,description,tenantId
-    tableName: tbl_typeofwork
-    stateData: true
-  - entity: $.MdmsRes.Works.TypeOfWork
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
-    keyOrder: name, code, description, tenantId
-    tableName: tbl_subtypeofwork
-    stateData: true
   - entity: $.MdmsRes.egf-master.FinancialYear
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3D%27true%27%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     keyOrder: finYearRange,startingDate,endingDate,tenantId
     tableName: tbl_financialyear
     stateData: true
@@ -102,7 +92,7 @@ ReportDefinitions:
     searchClause : AND loae.estimateloaamount<=$amountUpto
     isMandatory: false
 
-  query: select wo.workorderdate, de.nameofwork, wo.workordernumber, de.projectcode as referencenoofwip, de.estimatevalue, de.workvalue as tenderamount, contractor.name as contractorname, loa.tenderfinalizedpercentage as approvedattherateof, loa.loaamount as totalvalueofthework, loa.emdamountdeposited as emdamount, (select finyear.finYearRange from (values tbl_financialyear) as finyear where wo.createdtime between startingDate and endingDate) as sanctionedfinyear, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor
+  query: select wo.workorderdate, de.nameofwork, wo.workordernumber, de.projectcode as referencenoofwip, de.estimatevalue, de.workvalue as tenderamount, contractor.name as contractorname, loa.tenderfinalizedpercentage as approvedattherateof, loa.loaamount as totalvalueofthework, loa.emdamountdeposited as emdamount, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount, (select finyear.finYearRange from (values tbl_financialyear) as finyear (finYearRange,startingDate,endingDate,tenantId) where wo.createdtime between startingDate and endingDate) as sanctionedfinyear from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor
 
 
 

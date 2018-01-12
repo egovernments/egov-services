@@ -612,6 +612,10 @@ class UpdateObjection extends React.Component {
 
             }
 
+            
+            if (ID.toLowerCase() === "approve"){
+              agreement.workflowDetails.assignee = _this.state.wfInitiator;
+            }
             //console.log("Agreement", agreement);
 
             if (agreement.documents && agreement.documents.constructor == FileList) {

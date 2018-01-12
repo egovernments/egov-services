@@ -616,6 +616,9 @@ class UpdateJudgement extends React.Component {
 
             }
 
+            if (ID.toLowerCase() === "approve"){
+              agreement.workflowDetails.assignee = _this.state.wfInitiator;
+            }
             //console.log("Agreement", agreement);
 
 

@@ -661,6 +661,7 @@ class UpdateJudgement extends React.Component {
                                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                                 type: 'POST',
                                                 dataType: 'json',
+                                                data: JSON.stringify(requestInfo),
                                                 contentType: 'application/json',
                                                 headers: {
                                                     'auth-token': authToken
@@ -722,6 +723,7 @@ class UpdateJudgement extends React.Component {
                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                 type: 'POST',
                                 dataType: 'json',
+                                data: JSON.stringify(requestInfo),
                                 contentType: 'application/json',
                                 headers: {
                                     'auth-token': authToken

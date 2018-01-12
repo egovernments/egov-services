@@ -93,6 +93,10 @@ public class PriceListService extends DomainService {
             List<String> priceListIdList = priceListJdbcRepository.getSequence(PriceList.class.getSimpleName(), priceListRequest.getPriceLists().size());
             priceListRequest.getPriceLists().forEach(priceList -> {
             	priceList.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+            	if(priceList.getRateContractNumber()!=null)
+            		priceList.setRateContractNumber(priceList.getRateContractNumber().toString());
+            	if(priceList.getAgreementNumber() != null)
+            		priceList.setAgreementNumber(priceList.getAgreementNumber().toString());
             });
             validate(priceListRequest.getPriceLists(), Constants.ACTION_CREATE,tenantId,priceListRequest);
             priceListRequest.getPriceLists().forEach(priceList -> {
@@ -161,6 +165,10 @@ public class PriceListService extends DomainService {
         	// TODO: Do not allow them to modify supplier,rate type, agreement start and end date in modify level.
         	priceListRequest.getPriceLists().stream().forEach(priceList -> {
                 priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
+            	if(priceList.getRateContractNumber()!=null)
+            		priceList.setRateContractNumber(priceList.getRateContractNumber().toString());
+            	if(priceList.getAgreementNumber() != null)
+            		priceList.setAgreementNumber(priceList.getAgreementNumber().toString());
         	});
         	
             validate(priceListRequest.getPriceLists(), Constants.ACTION_UPDATE,tenantId,priceListRequest);

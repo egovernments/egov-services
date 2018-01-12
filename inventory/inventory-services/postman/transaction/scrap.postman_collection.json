@@ -1,0 +1,136 @@
+{
+	"id": "5caef4ee-eb94-e05e-d28a-7e986e305b9e",
+	"name": "scrap",
+	"description": "",
+	"order": [
+		"072760b5-30ed-8666-f703-c31826fffe67",
+		"721d6ff3-850e-34fa-3f5e-124bd4cc5926",
+		"5fa48994-3adf-e84c-821b-69013c9053c7"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1515041648257,
+	"owner": "1498965",
+	"public": false,
+	"requests": [
+		{
+			"id": "072760b5-30ed-8666-f703-c31826fffe67",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/inventory-services/scraps/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1515746714351,
+			"name": "scrap create",
+			"description": "",
+			"collectionId": "5caef4ee-eb94-e05e-d28a-7e986e305b9e",
+			"responses": [],
+			"rawModeData": "{\n  \"scraps\": [\n    {\n    \t\t\"store\":{\n    \t\t\"code\":\"new123\",\n    \t\t\"name\":\"Store123\"\n    \t},\n\t      \"scrapDate\":\"1510117560000\",\n\t      \"scrapNumber\":\"abc\",\n          \"userReceivedQty\": \"4\",\n          \"description\":\"aaa\",\n          \"unitRate\": \"4\",\n          \"remarks\": \"ABCD\",\n          \"scrapDetails\": [\n            {\n            \t\"lotNumber\":123,\n              \"scrapReason\": \"DAMAGED\",\n              \"quantity\": \"5\",\n              \"scrapValue\":1,\n              \"userQuantity\":50,\n              \"existingValue\":5,\n              \"disposalQuantity\":\"5\"\n            }\n          ]\n        }\n      ],\n      \"tenantId\": \"default\",\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510549656506,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"d9f39229-28ac-4061-a27e-2a4d5810f0e8\",\n    \"userInfo\":{  \n         \"id\":1,\n         \"userName\":\"testUser\",\n         \"name\":\"test user\"\n      }\n   \n  }\n}"
+		},
+		{
+			"id": "5fa48994-3adf-e84c-821b-69013c9053c7",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/inventory-services/scraps/_search?tenantId=default&scrapNumber=SCRP/00035/2018",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "scrapNumber",
+					"value": "SCRP/00035/2018",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1515059684550,
+			"name": "scrap search",
+			"description": "",
+			"collectionId": "5caef4ee-eb94-e05e-d28a-7e986e305b9e",
+			"responses": [],
+			"rawModeData": "{\"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510400603623,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"7d3eb4e7-f937-4093-8eef-70e2c8522702\",\n    \"userInfo\":{  \n         \"id\":1,\n         \"userName\":\"testUser\",\n         \"name\":\"test user\"\n      }\n  }\n}"
+		},
+		{
+			"id": "721d6ff3-850e-34fa-3f5e-124bd4cc5926",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/inventory-services/scraps/_update?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1515746712545,
+			"name": "scrap update",
+			"description": "",
+			"collectionId": "5caef4ee-eb94-e05e-d28a-7e986e305b9e",
+			"responses": [],
+			"rawModeData": "{\n  \"scraps\": [\n    {\n\t    \"id\":\"120\",\n    \t\"store\":{\n    \t\t\"code\":\"new123\",\n    \t\t    \t\t\"name\":\"Store123\"\n\n    \t},\n    \t\"description\":\"update\",\n      \"scrapDate\":\"1510117560000\",\n      \"scrapNumber\":\"SCRP/defa/2017-18/00045\",\n          \"userReceivedQty\": \"8\",\n          \"unitRate\": \"4\",\n          \"remarks\": \"ABCD\",\n          \"scrapDetails\": [\n            {\n            \t\"id\":\"132\",\n            \t \"scrapReason\": \"DAMAGED\",\n              \"quantity\": \"5\",\n              \"scrapValue\":1,\n              \"userQuantity\":56,\n              \"existingValue\":5,\n              \"disposalQuantity\":\"5\"\n            }\n          ]\n        }\n      ],\n      \"tenantId\": \"default\",\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510549656506,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"781c8ee1-ecc0-4b45-9cd2-8073f6877c37\",\n    \"userInfo\":{  \n         \"id\":1,\n         \"userName\":\"testUser\",\n         \"name\":\"test user\"\n      }\n   \n  }\n}"
+		}
+	]
+}

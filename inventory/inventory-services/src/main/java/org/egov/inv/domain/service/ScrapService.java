@@ -104,20 +104,39 @@ public class ScrapService extends DomainService{
 	
 	 public List<Scrap> update(ScrapRequest scrapReq, String tenantId) {
 		try{
+			fetchRelated(scrapReq,tenantId);
 			List<Scrap> scrap = scrapReq.getScraps();
+			List<String> scrapDetailNumbers = new ArrayList<>();
+			List<String> scrapNumbers = new ArrayList<>();
 			validate(scrapReq.getScraps(), Constants.ACTION_UPDATE,tenantId,scrapReq.getRequestInfo());
 			
 			scrap.forEach(scrapData -> {
 				if (StringUtils.isEmpty(scrapData.getTenantId())) {
 						scrapData.setTenantId(tenantId);
 				}
+				if(StringUtils.isEmpty(scrapData.getId())){
+					scrapData.setId(scrapJdbcRepository.getSequence("seq_scrap"));
+				}
+				scrapNumbers.add(scrapData.getScrapNumber());
+
 				scrapData.getScrapDetails().forEach(scrapDetails -> {
+					if(StringUtils.isEmpty(scrapDetails.getId())){
+						scrapDetails.setId(scrapJdbcRepository.getSequence("seq_scrapDetail"));
+					}
 					if (StringUtils.isEmpty(scrapDetails.getTenantId())) {
 						scrapDetails.setTenantId(tenantId);
 					}
+					scrapDetails.setScrapNumber(scrapData.getScrapNumber());
+					scrapDetailNumbers.add(scrapDetails.getScrapNumber());
+
+					scrapJdbcRepository.markDeleted(scrapDetailNumbers, tenantId, "scrapDetail", "scrapNumber", scrapDetails.getScrapNumber());
+
+					scrapJdbcRepository.markDeleted(scrapNumbers, tenantId, "scrap", "scrapNumber", scrapData.getScrapNumber());
+
 				});
 			});
-						kafkaTemplate.send(updateTopic, scrapReq);
+			materialIssueBackUpdate(scrapReq,tenantId);
+			kafkaTemplate.send(updateTopic, scrapReq);
 			return scrapReq.getScraps();
 			}catch(CustomBindException e) {
 				throw e;
@@ -253,28 +272,29 @@ public class ScrapService extends DomainService{
 
 		}
 		for(MaterialIssue issue : response.getMaterialIssues()){
-			for(MaterialIssueDetail detail : issue.getMaterialIssueDetails()) {
+			for(MaterialIssueDetail issueDetail : issue.getMaterialIssueDetails()) {
 				ScrapDetail scrapDetail= new ScrapDetail();
 				MaterialIssueDetail matIssueDetail =  new MaterialIssueDetail();
-				matIssueDetail.setId(detail.getId());
-				matIssueDetail.setScrapedQuantity(detail.getScrapedQuantity());
+				matIssueDetail.setId(issueDetail.getId());
+				matIssueDetail.setScrapedQuantity(issueDetail.getScrapedQuantity());
 		if (issue == null )
 			errors.addDataError(ErrorCode.NO_DATA_FOUND.getCode(), "Scrap Process", null);
 		
 		else
+			scrapDetail.setId(scrapDetails.getId());
 			scrapDetail.setIssueDetail(matIssueDetail);
 			scrapDetail.setTenantId(tenantId); 
-			scrapDetail.setUom(detail.getUom());
-			scrapDetail.setMaterial(detail.getMaterial());
-			scrapDetail.setExistingValue(detail.getValue());
-			scrapDetail.setQuantity(detail.getQuantityIssued());
+			scrapDetail.setUom(issueDetail.getUom());
+			scrapDetail.setMaterial(issueDetail.getMaterial());
+			scrapDetail.setExistingValue(issueDetail.getValue());
+			scrapDetail.setQuantity(issueDetail.getQuantityIssued());
 			
 			if(scrapDetails.getUserQuantity() != null) {
-				setConvertedScrapQuantity(tenantId, scrapDetails,detail);
+				setConvertedScrapQuantity(tenantId, scrapDetails,issueDetail);
 			}
 			
 			if(scrapDetails.getScrapValue() != null) {
-				setConvertedScrapRate(tenantId, scrapDetails,detail);
+				setConvertedScrapRate(tenantId, scrapDetails,issueDetail);
 			}
 			scrapDetail.setScrapQuantity(scrapDetails.getScrapQuantity());
 			scrapDetail.setUserQuantity(scrapDetails.getUserQuantity());

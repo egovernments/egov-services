@@ -1599,14 +1599,14 @@ serviceMaps:
             - jsonPath: $.scraps.*.scrapNumber
             - jsonPath: $.scraps.*.tenantId
         - query: >-
-                 INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,scrapQuantity,userQuantity,disposalQuantity,scrapValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
-                 expiryDate = EXCLUDED.expiryDate, quantity = EXCLUDED.quantity,scrapQuantity = EXCLUDED.scrapQuantity,userQuantity = EXCLUDED.userQuantity, scrapValue = EXCLUDED.scrapValue,existingValue = EXCLUDED.existingValue,
-                 lotNumber = EXCLUDED.lotNumber, disposalQuantity = EXCLUDED.disposalQuantity;
+                 INSERT INTO scrapdetail(id,tenantId,scrapNumber,material,uom,lotnumber,expirydate,scrapReason,quantity,scrapQuantity,userQuantity,disposalQuantity,scrapValue,existingValue,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 expiryDate = EXCLUDED.expiryDate, quantity = EXCLUDED.quantity,scrapQuantity = EXCLUDED.scrapQuantity,userQuantity = EXCLUDED.userQuantity, disposalQuantity = EXCLUDED.disposalQuantity,scrapValue = EXCLUDED.scrapValue,existingValue = EXCLUDED.existingValue,
+                 lotNumber = EXCLUDED.lotNumber;
           basePath: $.scraps.*.scrapDetails.*
           jsonMaps:
             - jsonPath: $.scraps.*.scrapDetails.*.id
             - jsonPath: $.scraps.*.scrapDetails.*.tenantId
-            - jsonPath: $.scraps[?({id} in @.scrapDetails[*].id)].scrapNumber
+            - jsonPath: $.scraps.*.scrapDetails.*.scrapNumber
             - jsonPath: $.scraps.*.scrapDetails.*.material.code
             - jsonPath: $.scraps.*.scrapDetails.*.uom.code
             - jsonPath: $.scraps.*.scrapDetails.*.lotNumber

@@ -299,7 +299,7 @@ class UpdateRenewal extends React.Component {
 
                 var employeeName = commonApiPost("hr-employee", "employees", "_search", {
                     tenantId: tenantId,
-                    id: item.owner.id
+                    positionId: item.owner.id
                 }).responseJSON["Employee"] || {};
 
                 theArray[index].employeeName = employeeName[0] ? employeeName[0].code + " :: " + employeeName[0].name : "";
@@ -473,6 +473,7 @@ class UpdateRenewal extends React.Component {
                 Notice: {
                     tenantId,
                     agreementNumber: obj.noticeData.agreementNumber,
+                    acknowledgementNumber:obj.noticeData.acknowledgementNumber,
                     fileStore: obj.fileStoreId
                 }
             }),
@@ -1326,7 +1327,7 @@ class UpdateRenewal extends React.Component {
 
                 return (
                     <tr key={ind}>
-                        <td>{item.createdDate}</td>
+                        <td>{item.lastupdatedSince}</td>
                         <td>{item.senderName}</td>
                         <td>{item.employeeName}</td>
                         <td>{item.status}</td>

@@ -477,7 +477,9 @@ class UpdateEviction extends React.Component {
               Notice: {
                   tenantId,
                   agreementNumber: obj.noticeData.agreementNumber,
-                  fileStore:obj.fileStoreId
+                  acknowledgementNumber: obj.noticeData.acknowledgementNumber,
+                  fileStore:obj.fileStoreId,
+                  status : "EVICTED"
               }
           }),
           headers: {

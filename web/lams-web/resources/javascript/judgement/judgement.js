@@ -161,7 +161,7 @@ class JudgementAgreement extends React.Component {
               };
 
               $.ajax({
-                url: baseUrl + "/lams-services/agreements/_judgement?tenantId=" + tenantId,
+                url: baseUrl + "/lams-services/agreements/_courtjudgement?tenantId=" + tenantId,
                 type: 'POST',
                 dataType: 'json',
                 data: JSON.stringify(body),
@@ -218,7 +218,7 @@ class JudgementAgreement extends React.Component {
       };
 
       $.ajax({
-        url: baseUrl + "/lams-services/agreements/_judgement?tenantId=" + tenantId,
+        url: baseUrl + "/lams-services/agreements/_courtjudgement?tenantId=" + tenantId,
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify(body),

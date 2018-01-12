@@ -1176,7 +1176,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="timePeriod" id="timePeriod" className="selectStyle" onChange={(e) => { handleChange(e, "timePeriod") }} required disabled >
+                                        <select name="timePeriod" id="timePeriod" className="selectStyle" value={agreement.timePeriod} onChange={(e) => { handleChange(e, "timePeriod") }} required disabled >
                                             <option value="">Select </option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -1199,7 +1199,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} required disabled />
+                                        <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} value={agreement.securityDeposit} required disabled />
                                     </div>
                                 </div>
                             </div>
@@ -1213,7 +1213,7 @@ class UpdateRenewal extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span className="glyphicon glyphicon-calendar"></span>
-                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChange(e, "securityDepositDate") }} required disabled />
+                                            <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChange(e, "securityDepositDate") }} value={agreement.securityDepositDate} required disabled />
                                         </div>
                                     </div>
                                 </div>
@@ -1229,7 +1229,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="rentIncrementMethod" id="rentIncrementMethod" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod", "id") }} required disabled >
+                                        <select name="rentIncrementMethod" id="rentIncrementMethod" value={agreement.rentIncrementMethod.id} className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "rentIncrementMethod", "id") }} required disabled >
                                             <option value="">Choose Percentage</option>
                                             {renderOptionForRentInc(rentInc)}
                                         </select>
@@ -1244,7 +1244,7 @@ class UpdateRenewal extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required disabled >
+                                        <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" value={renewal.reasonForRenewal} onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required disabled >
                                             <option value="" >Select</option>
                                             {renderOption(renewalReasons)}
                                         </select>

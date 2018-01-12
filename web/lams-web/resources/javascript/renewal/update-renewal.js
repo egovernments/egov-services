@@ -117,6 +117,7 @@ class UpdateRenewal extends React.Component {
             userList: [],
             buttons: [],
             wfStatus: "",
+            wfInitiator:"",
             rentInc: []
 
         }
@@ -346,6 +347,7 @@ class UpdateRenewal extends React.Component {
             agreement: agreement,
             departmentList: departmentList,
             //owner:process.owner.id,
+            wfInitiator: process.initiatorPosition,
             wfStatus: process.status,
             workflow: workflow,
             buttons: _btns ? _btns : [],
@@ -619,6 +621,9 @@ class UpdateRenewal extends React.Component {
 
             }
 
+            if (ID.toLowerCase() === "approve"){
+              agreement.workflowDetails.assignee = _this.state.wfInitiator;
+            }
             //console.log("Agreement", agreement);
 
             if (agreement.documents && agreement.documents.constructor == FileList) {

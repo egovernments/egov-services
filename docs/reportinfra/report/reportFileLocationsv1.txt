@@ -1,9 +1,4 @@
 pgr=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/pgr/report/report.yml
-collection=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/collections/reports/report.yml
-wcms=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/wcms/reports/report.yml
-tradelicense=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/reports/report.yml
-hr=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/reports/hrReports.yml
-property=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propertytax/report/report.yml
 citizen=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/citizen/reports/report.yml
 asset=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/reports/report.yml
 lcms=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/report/report.yml

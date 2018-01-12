@@ -45,20 +45,6 @@ ReportDefinitions:
          replace('_url?/pgr/viewGrievance/:srn',':srn',replace(sub.crn, '/', '%2F')::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where
          sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED','ONHOLD') and sub.positionid IN ($positionId) and sub.tenantid = $tenantid order by createdDate desc)
          union
-         (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status,
-          property.id::character varying ||':'||comments as details,
-         replace('_url?/views/inbox/:id', ':id', property.property::character varying) as url from EG_WF_STATES states JOIN EGPT_PROPERTYDETAILS property
-         ON property.stateid::integer = states.id where type = 'Create Property'and owner_pos IN ($positionId) and tenantId=$tenantid and states.status<> 2 order by states.createdDate desc)
-         union
-         (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, water.acknowledgmentnumber::character varying ||':'||comments as details,
-         replace('_url?/wc/application/update/:id', ':id', water.stateid::character varying) as url from EG_WF_STATES states JOIN
-         egwtr_waterconnection water ON water.stateid = states.id where type = 'WaterConnection'and owner_pos IN ($positionId) and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
-         union
-         (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, tradeapplication.applicationnumber::character varying ||':'||comments as details,
-         replace('_url?/non-framework/tl/transaction/inbox/viewLicense/:id', ':id', tradeapplication.licenseid::character varying) as url from EG_WF_STATES states JOIN
-         egtl_license_application tradeapplication ON tradeapplication.state_id = states.id::character varying where type = 'New Trade License' and owner_pos IN ($positionId)
-         and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
-         union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, abstractestimate.abstractestimatenumber::character varying ||':'||comments as details,
          replace('_url?/non-framework/works/transaction/update/abstractEstimate/:id', ':id', replace(abstractestimate.abstractestimatenumber, '/', '%2F')::character varying) as url from EG_WF_STATES states JOIN
          egw_abstractestimate abstractestimate ON abstractestimate.stateid = states.id::character varying where type = 'AbstractEstimate' and owner_pos IN ($positionId)
@@ -77,15 +63,6 @@ ReportDefinitions:
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, detailedestimate.id::character varying ||':'||comments as details,
          replace('_url?/non-framework/works/transaction/viewDetailedEstimate/:id', ':id', replace(detailedestimate.estimatenumber, '/', '%2F')::character varying) as url from EG_WF_STATES states JOIN
          egw_detailedestimate detailedestimate ON detailedestimate.stateid = states.id::character varying where type = 'SpilloverDetailedEstimate' and owner_pos IN ($positionId)
-         and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
-         union
-         (select to_timestamp(states.createddate/1000)::timestamp without time zone as createddate,us.username as sendername, 'Citizen Service - New Water Connection' as natureoftask,
-         states.status as status, states.id as details,
-         '_url?/non-framework/citizenServices/view/update/wc/' || regexp_replace(states.id, '/', '%2F') as url from egov_citizen_service_req states,eg_user us where
-         us.id = userid and serviceCode = 'WATER_NEWCONN' and states.tenantId=$tenantid and states.status NOT IN ('APPROVED','CANCELLED') order by states.createddate desc)
-          union
-         (select to_timestamp(states.createddate/1000)::timestamp without time zone as createddate,us.username as sendername, 'Citizen Service - Fire NOC' as natureoftask,
-         states.status as status, states.id as details,
-         '_url?/non-framework/citizenServices/fireNoc/update/view/' || regexp_replace(states.id, '/', '%2F') || '/success' as url from egov_citizen_service_req states,eg_user us where
-         us.id = userid and serviceCode = 'BPA_FIRE_NOC' and states.tenantId=$tenantid and states.status NOT IN ('APPROVED','CANCELLED') order by states.createddate desc)) result
+         and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)) result
          order by createddate desc;
+         

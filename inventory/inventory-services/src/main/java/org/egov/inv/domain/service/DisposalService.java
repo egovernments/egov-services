@@ -93,7 +93,7 @@ public class DisposalService extends DomainService {
 			List<Disposal> disposals = new ArrayList<>();
 			if (!disposalRequest.getDisposals().isEmpty()) {
 				disposals = disposalRequest.getDisposals();
-				fetchRelated(disposals, tenantId, Constants.ACTION_CREATE.toString());
+				fetchRelated(disposals, tenantId);
 				validate(disposals, Constants.ACTION_CREATE);
 				List<String> disposalIds = disposalJdbcRepository.getSequence(Disposal.class.getSimpleName(),
 						disposals.size());
@@ -165,7 +165,7 @@ public class DisposalService extends DomainService {
 							}
 							if (disposalDetail.getDisposalQuantity().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "disposalquantity",
-										String.valueOf(i), disposalDetail.getDisposalQuantity().toString());
+										String.valueOf(i), InventoryUtilities.getQuantityInSelectedUom(disposalDetail.getDisposalQuantity(), disposalDetail.getUom().getConversionFactor()).toString());
 							if (disposalDetail.getScrapDetails() != null)
 								if (disposalDetail.getScrapDetails().getQuantity() != null
 										&& disposalDetail.getScrapDetails().getDisposalQuantity() != null)
@@ -175,8 +175,8 @@ public class DisposalService extends DomainService {
 							if (disposalDetail.getDisposalQuantity()
 									.compareTo(disposalDetail.getPendingScrapQuantity()) > 0)
 								errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "disposalquantity",
-										"scrapquantity", disposalDetail.getDisposalQuantity().toString(),
-										disposalDetail.getPendingScrapQuantity().toString(), String.valueOf(i));
+										"scrapquantity", InventoryUtilities.getQuantityInSelectedUom(disposalDetail.getDisposalQuantity(), disposalDetail.getUom().getConversionFactor()).toString(),
+										InventoryUtilities.getQuantityInSelectedUom(disposalDetail.getPendingScrapQuantity(), disposalDetail.getUom().getConversionFactor()).toString(), String.valueOf(i));
 							if (disposalDetail.getDisposalValue().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "disposalvalue",
 										String.valueOf(i), disposalDetail.getDisposalValue().toString());
@@ -198,7 +198,7 @@ public class DisposalService extends DomainService {
 							}
 							if (disposalDetail.getDisposalQuantity().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "disposalquantity",
-										String.valueOf(i), disposalDetail.getDisposalQuantity().toString());
+										String.valueOf(i), InventoryUtilities.getQuantityInSelectedUom(disposalDetail.getDisposalQuantity(), disposalDetail.getUom().getConversionFactor()).toString());
 							DisposalDetailEntity disposalDetailEntity = new DisposalDetailEntity();
 							disposalDetailEntity.setId(disposalDetail.getId());
 							disposalDetailEntity.setTenantId(disposal.getTenantId());
@@ -219,8 +219,8 @@ public class DisposalService extends DomainService {
 							if (disposalDetail.getDisposalQuantity()
 									.compareTo(disposalDetail.getPendingScrapQuantity()) > 0)
 								errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "disposalquantity",
-										"scrapquantity", disposalDetail.getDisposalQuantity().toString(),
-										disposalDetail.getPendingScrapQuantity().toString(), String.valueOf(i));
+										"scrapquantity", InventoryUtilities.getQuantityInSelectedUom(disposalDetail.getDisposalQuantity(), disposalDetail.getUom().getConversionFactor()).toString(),
+										InventoryUtilities.getQuantityInSelectedUom(disposalDetail.getPendingScrapQuantity(), disposalDetail.getUom().getConversionFactor()).toString(), String.valueOf(i));
 							if (disposalDetail.getDisposalValue().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "disposalvalue",
 										String.valueOf(i), disposalDetail.getDisposalValue().toString());
@@ -236,7 +236,7 @@ public class DisposalService extends DomainService {
 			throw errors;
 	}
 
-	private void fetchRelated(List<Disposal> disposals, String tenantId, String action) {
+	private void fetchRelated(List<Disposal> disposals, String tenantId) {
 		for (Disposal disposal : disposals) {
 			if (disposal.getStore() != null)
 				if (disposal.getStore().getCode() != null) {
@@ -258,18 +258,6 @@ public class DisposalService extends DomainService {
 				Map<String, Material> materialMap = getMaterials(disposal.getTenantId(), mapper, new RequestInfo());
 				Map<String, Uom> uomMap = getUoms(disposal.getTenantId(), mapper, new RequestInfo());
 				for (DisposalDetail disposalDetail : disposal.getDisposalDetails()) {
-					if (action.equals(Constants.ACTION_CREATE)) {
-						if (disposalDetail.getScrapDetails() != null)
-							if (disposalDetail.getScrapDetails().getMaterial() != null
-									&& disposalDetail.getScrapDetails().getMaterial().getCode() != null) {
-								if (materialMap.get(disposalDetail.getScrapDetails().getMaterial().getCode()) == null)
-									throw new CustomException("invalid.ref.value",
-											"the field material should have a valid value which exists in the system.");
-								else
-									disposalDetail.setMaterial(
-											materialMap.get(disposalDetail.getScrapDetails().getMaterial().getCode()));
-							}
-					} else {
 						if (disposalDetail.getMaterial() != null && disposalDetail.getMaterial().getCode() != null) {
 							if (materialMap.get(disposalDetail.getMaterial().getCode()) == null)
 								throw new CustomException("invalid.ref.value",
@@ -278,19 +266,6 @@ public class DisposalService extends DomainService {
 								disposalDetail.setMaterial(materialMap.get(disposalDetail.getMaterial().getCode()));
 
 						}
-					}
-					if (action.equals(Constants.ACTION_CREATE)) {
-						if (disposalDetail.getScrapDetails() != null)
-							if (disposalDetail.getScrapDetails().getUom() != null
-									&& disposalDetail.getScrapDetails().getUom().getCode() != null) {
-								if (uomMap.get(disposalDetail.getScrapDetails().getUom().getCode()) == null)
-									throw new CustomException("invalid.ref.value",
-											"the field uom should have a valid value which exists in the system.");
-								else
-									disposalDetail
-											.setUom(uomMap.get(disposalDetail.getScrapDetails().getUom().getCode()));
-							}
-					} else {
 						if (disposalDetail.getUom() != null && disposalDetail.getUom().getCode() != null) {
 							if (uomMap.get(disposalDetail.getUom().getCode()) == null)
 								throw new CustomException("invalid.ref.value",
@@ -298,7 +273,6 @@ public class DisposalService extends DomainService {
 							else
 								disposalDetail.setUom(uomMap.get(disposalDetail.getUom().getCode()));
 						}
-					}
 					if (disposalDetail.getScrapDetails() != null && disposalDetail.getScrapDetails().getId() != null) {
 						ScrapDetailEntity entity = new ScrapDetailEntity();
 						entity.setId(disposalDetail.getScrapDetails().getId());
@@ -316,7 +290,7 @@ public class DisposalService extends DomainService {
 		try {
 			if (!disposalRequest.getDisposals().isEmpty()) {
 				List<Disposal> disposals = disposalRequest.getDisposals();
-				fetchRelated(disposals, tenantId, Constants.ACTION_UPDATE.toString());
+				fetchRelated(disposals, tenantId);
 				validate(disposals, Constants.ACTION_UPDATE);
 				int i = 0;
 				for (Disposal disposal : disposals) {

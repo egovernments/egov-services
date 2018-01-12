@@ -177,7 +177,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 				break;
 		}
 		materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts);
-		return unitRate.multiply(materialIssueDetail.getQuantityIssued());
+		return unitRate;
 
 	}
 
@@ -263,7 +263,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 							}
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
-										String.valueOf(i), materialIssueDetail.getQuantityIssued().toString());
+										String.valueOf(i), InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getQuantityIssued(), materialIssueDetail.getUom().getConversionFactor()).toString());
 							FifoRequest fifoRequest = new FifoRequest();
 							Fifo fifo = new Fifo();
 							fifo.setStore(materialIssue.getFromStore());
@@ -278,13 +278,13 @@ public class NonIndentMaterialIssueService extends DomainService {
 							if (StringUtils.isNotBlank(balanceQuantity.toString())) {
 								if (balanceQuantity.compareTo(BigDecimal.ZERO) <= 0)
 									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "balanceQuantity",
-											String.valueOf(i), balanceQuantity.toString());
+											String.valueOf(i), InventoryUtilities.getQuantityInSelectedUom(balanceQuantity, materialIssueDetail.getUom().getConversionFactor()).toString());
 									if (materialIssueDetail.getQuantityIssued()
 											.compareTo(balanceQuantity) > 0) {
 										errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(),
 												"quantityIssued", "balanceQuantity",
-												materialIssueDetail.getQuantityIssued().toString(),
-												balanceQuantity.toString(), String.valueOf(i));
+												InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getQuantityIssued(), materialIssueDetail.getUom().getConversionFactor()).toString(),
+												InventoryUtilities.getQuantityInSelectedUom(balanceQuantity, materialIssueDetail.getUom().getConversionFactor()).toString(), String.valueOf(i));
 									}
 								}
 							if (materialIssue.getIssuePurpose() != null)
@@ -349,7 +349,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 									materialIssueDetail.getUserQuantityIssued(),materialIssueDetail.getUom().getConversionFactor()));
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
-										String.valueOf(i), materialIssueDetail.getQuantityIssued().toString());
+										String.valueOf(i), InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getQuantityIssued(), materialIssueDetail.getUom().getConversionFactor()).toString());
 							FifoRequest fifoRequest = new FifoRequest();
 							Fifo fifo = new Fifo();
 							fifo.setStore(materialIssue.getFromStore());
@@ -381,13 +381,13 @@ public class NonIndentMaterialIssueService extends DomainService {
 								if (StringUtils.isNotBlank(balanceQuantity.toString())) {
 									if (balanceQuantity.compareTo(BigDecimal.ZERO) <= 0)
 										errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "balanceQuantity",
-												String.valueOf(i), balanceQuantity.toString());
+												String.valueOf(i), InventoryUtilities.getQuantityInSelectedUom(balanceQuantity, materialIssueDetail.getUom().getConversionFactor()).toString());
 									if (materialIssueDetail.getQuantityIssued()
 											.compareTo(balanceQuantity) > 0) {
 										errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(),
 												"quantityIssued", "balanceQuantity",
-												materialIssueDetail.getQuantityIssued().toString(),
-												balanceQuantity.toString(), String.valueOf(i));
+												InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getQuantityIssued(), materialIssueDetail.getUom().getConversionFactor()).toString().toString(),
+												InventoryUtilities.getQuantityInSelectedUom(balanceQuantity, materialIssueDetail.getUom().getConversionFactor()).toString(), String.valueOf(i));
 									}
 								}
 							if (materialIssue.getIssuePurpose() != null)
@@ -427,6 +427,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 		fetchRelated(materialIssueRequest);
 		validate(materialIssueRequest.getMaterialIssues(), Constants.ACTION_UPDATE);
 		List<MaterialIssue> materialIssues = materialIssueRequest.getMaterialIssues();
+		int i=0;
 		for (MaterialIssue materialIssue : materialIssues) {
 			if (StringUtils.isEmpty(materialIssue.getTenantId()))
 				materialIssue.setTenantId(tenantId);
@@ -434,13 +435,6 @@ public class NonIndentMaterialIssueService extends DomainService {
 			searchContract.setIssueNoteNumber(materialIssue.getIssueNumber());
 			searchContract.setTenantId(materialIssue.getTenantId());
 			MaterialIssueResponse issueResponse = search(searchContract);
-			if (materialIssue.getMaterialIssueStatus() != null)
-				if (materialIssue.getMaterialIssueStatus().toString()
-						.equals(MaterialIssueStatusEnum.CANCELED.toString())) {
-					issueResponse.getMaterialIssues().get(0).setMaterialIssueStatus(MaterialIssueStatusEnum.CANCELED);
-					updateStatusAsCancelled(tenantId, materialIssue);
-					materialIssueRequest.setMaterialIssues(Arrays.asList(issueResponse.getMaterialIssues().get(0)));
-				}
 			List<MaterialIssueDetail> materialIssueDetails = issueResponse.getMaterialIssues().get(0)
 					.getMaterialIssueDetails();
 			List<String> materialIssuedFromReceiptsIds = new ArrayList<>();
@@ -457,8 +451,15 @@ public class NonIndentMaterialIssueService extends DomainService {
 			}
 			materialIssuedFromReceiptsJdbcRepository.updateStatus(materialIssuedFromReceiptsIds,
 					materialIssue.getTenantId());
-			if (materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString()))
-				break;
+			if (materialIssue.getMaterialIssueStatus() != null)
+				if (materialIssue.getMaterialIssueStatus().toString()
+						.equals(MaterialIssueStatusEnum.CANCELED.toString())) {
+					issueResponse.getMaterialIssues().get(0).setMaterialIssueStatus(MaterialIssueStatusEnum.CANCELED);
+					updateStatusAsCancelled(tenantId, materialIssue);
+					materialIssues.set(i,issueResponse.getMaterialIssues().get(0));
+					i++;
+					continue;
+				}
 			setMaterialIssueValues(materialIssue, null, Constants.ACTION_UPDATE);
 			materialIssue
 					.setAuditDetails(getAuditDetails(materialIssueRequest.getRequestInfo(), Constants.ACTION_UPDATE));
@@ -480,7 +481,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 			materialIssueDetailsJdbcRepository.markDeleted(materialIssueDetailsIds, tenantId, "materialissuedetail",
 					"materialissuenumber", materialIssue.getIssueNumber());
 			materialIssue.setTotalIssueValue(totalIssueValue);
-
+			i++;
 		}
 
 		kafkaTemplate.send(updateTopic, updateKey, materialIssueRequest);

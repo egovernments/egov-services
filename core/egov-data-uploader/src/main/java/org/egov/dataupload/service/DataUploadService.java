@@ -192,11 +192,11 @@ public class DataUploadService {
 	public String buildRequest(List<Object> coloumnHeaders, int additionFieldsCount, 
 			Definition uploadDefinition, DocumentContext documentContext, UploaderRequest uploaderRequest, List<Object>row) {
 		String request = null;
-		logger.info("row size: "+row.size());
-		logger.info("coloumnHeaders size: "+coloumnHeaders.size());
-		logger.info("additionFieldsCount: "+additionFieldsCount);
+		logger.debug("row size: "+row.size());
+		logger.debug("coloumnHeaders size: "+coloumnHeaders.size());
+		logger.debug("additionFieldsCount: "+additionFieldsCount);
 		for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
-			logger.info("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));			
+			logger.debug("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));			
         	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
         	if(null == jsonPathList){
 				logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));

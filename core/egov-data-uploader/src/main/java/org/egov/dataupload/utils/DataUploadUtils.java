@@ -60,14 +60,12 @@ public class DataUploadUtils {
             int j = 0;
             while(cellIterator.hasNext()){
 	            Cell cell = cellIterator.next();
-	            logger.info("cell: "+cell.toString());
 	            if(0 == cell.getRowIndex()) {
 	            	coloumnHeaders.add(cell.getStringCellValue());
 	            	j++;
 	            }
 	            else{
 		            if(!isCellEmpty(cell)) {
-		            	logger.debug("adding value for coloumn: "+coloumnHeaders.get(i));
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
 			            		dataList.add(cell.getDateCellValue().getTime());
@@ -76,16 +74,13 @@ public class DataUploadUtils {
 		            	    }
 		            	}
 		            	else if(cell.CELL_TYPE_STRING == cell.getCellType()) {
-		            		logger.debug("String: "+cell.getStringCellValue().trim());
-		            		if(!cell.getStringCellValue().trim().isEmpty()) {
+		            		if(cell.getStringCellValue().equals("NA") || 
+		            				cell.getStringCellValue().equals("N/A") || cell.getStringCellValue().equals("na")) {
+				            	logger.info("adding string null for coloumn: "+coloumnHeaders.get(i));
+			            		dataList.add(null);		            		
+			            	}else if(!cell.getStringCellValue().trim().isEmpty()){
 		            			dataList.add(cell.getStringCellValue());
-		            		}
-		            		else if(cell.getStringCellValue().equals("NA") || 
-		            				cell.getStringCellValue().equals("N/A") || cell.getStringCellValue().equals("na")){
-				            	logger.debug("adding string null for coloumn: "+coloumnHeaders.get(i));
-			            		dataList.add(null);
-		            		}else {
-				            	logger.debug("adding string null for coloumn: "+coloumnHeaders.get(i));
+		            		}else{
 			            		dataList.add(null);
 		            		}
 		            	}
@@ -94,7 +89,6 @@ public class DataUploadUtils {
 
 		            	}
 		            }else {
-		            	logger.debug("adding null for coloumn: "+coloumnHeaders.get(i));
 		            	dataList.add(null);
 		            }
 	            	

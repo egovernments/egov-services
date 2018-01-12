@@ -50,7 +50,6 @@ public class ReceiptNoteService extends DomainService {
     @Value("${inv.purchaseorders.cancelreceipt.topic}")
     private String cancelReceiptPOTopic;
 
-
     @Autowired
     private MaterialReceiptService materialReceiptService;
 
@@ -100,12 +99,12 @@ public class ReceiptNoteService extends DomainService {
         materialReceipts.forEach(materialReceipt ->
         {
             materialReceipt.setId(receiptNoteRepository.getSequence("seq_materialreceipt"));
-            materialReceipt.setMrnNumber(appendString(materialReceipt));
-            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.APPROVED);
-            materialReceipt.setAuditDetails(getAuditDetails(materialReceiptRequest.getRequestInfo(), tenantId));
             if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
                 materialReceipt.setTenantId(tenantId);
             }
+            materialReceipt.setMrnNumber(appendString(materialReceipt));
+            materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.APPROVED);
+            materialReceipt.setAuditDetails(getAuditDetails(materialReceiptRequest.getRequestInfo(), tenantId));
 
             materialReceipt.getReceiptDetails().forEach(materialReceiptDetail -> {
                 setMaterialDetails(tenantId, materialReceiptDetail);
@@ -515,13 +514,16 @@ public class ReceiptNoteService extends DomainService {
             if (purchaseOrderDetails.getPagedData().size() > 0) {
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
 
-                    if (materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
+                    if (materialReceiptDetail.getReceivedQty().compareTo(purchaseOrderDetail.getOrderQuantity()) > 0) {
                         errors.addDataError(ErrorCode.RCVED_QTY_LS_ODRQTY.getCode(), String.valueOf(i));
                     }
 
+                    BigDecimal remainingQuantity = purchaseOrderDetail.getOrderQuantity().subtract(purchaseOrderDetail.getReceivedQuantity());
+                    BigDecimal conversionFactor = materialReceiptDetail.getUom().getConversionFactor();
+                    BigDecimal convertedRemainingQuantity = getSearchConvertedQuantity(remainingQuantity, conversionFactor);
                     if (null != purchaseOrderDetail.getReceivedQuantity() &&
-                            materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getReceivedQuantity().longValue()) {
-                        errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(), String.valueOf(i));
+                            materialReceiptDetail.getReceivedQty().compareTo(remainingQuantity) > 0) {
+                        errors.addDataError(ErrorCode.RCVED_QTY_LS_PORCVEDATY.getCode(), materialReceiptDetail.getUserReceivedQty().toString(), convertedRemainingQuantity.toString(), String.valueOf(i));
                     }
 
                     PurchaseOrderEntity po = new PurchaseOrderEntity();

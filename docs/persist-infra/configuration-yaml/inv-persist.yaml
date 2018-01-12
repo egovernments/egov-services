@@ -255,7 +255,7 @@ serviceMaps:
             - jsonPath: $.materialStoreMappings.*.auditDetails.createdTime
               dbType: LONG
             - jsonPath: $.materialStoreMappings.*.auditDetails.lastModifiedTime
-              dbType: LONG  
+              dbType: LONG
 
     - version: 1.0
       name: material store mapping update
@@ -710,8 +710,8 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
             - jsonPath: $.materialReceipt.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
             - jsonPath: $.materialReceipt.*.tenantId
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userQuantity
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.manufactureDate
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
@@ -1302,7 +1302,7 @@ serviceMaps:
           jsonMaps:
             - jsonPath: $.transferInwards.*.id
             - jsonPath: $.transferInwards.*.mrnNumber
-            - jsonPath: $.transferInwards.*.issueNumber            
+            - jsonPath: $.transferInwards.*.issueNumber
             - jsonPath: $.transferInwards.*.receivingStore.code
             - jsonPath: $.transferInwards.*.issueingStore.code
             - jsonPath: $.transferInwards.*.receiptDate
@@ -1575,7 +1575,7 @@ serviceMaps:
             - jsonPath: $.scraps.*.auditDetails.lastModifiedBy
               type: LONG
             - type: CURRENTDATE
-              dbType: LONG          
+              dbType: LONG
 
     - version: 1.0
       name: Scrap
@@ -1630,7 +1630,7 @@ serviceMaps:
     - version: 1.0
       name: SupplierAdvanceRequisitions
       description: Create SupplierAdvanceRequisition
-      fromTopic: inv-supplieradvancerequisition-save-topic  
+      fromTopic: inv-supplieradvancerequisition-save-topic
       queryMaps:
         - query: INSERT INTO supplieradvancerequisition(id, tenantid, supplier, purchaseorder, advanceadjustedamount, advancefullyadjustedinbill, stateid, status, createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.supplierAdvanceRequisitions.*
@@ -1665,8 +1665,8 @@ serviceMaps:
     - version: 1.0
       name: SupplierAdvanceRequisitions
       description: Update SupplierAdvanceRequisition
-      fromTopic: inv-supplieradvancerequisition-update-topic  
-      queryMaps: 
+      fromTopic: inv-supplieradvancerequisition-update-topic
+      queryMaps:
         - query: Update supplieradvancerequisition set supplier=?, purchaseorder=?, advanceadjustedamount=?, advancefullyadjustedinbill=?, stateid=?, status=? where id=? and tenantId=?;
           basePath: $.supplierAdvanceRequisitions.*
           jsonMaps:
@@ -1713,7 +1713,7 @@ serviceMaps:
             - jsonPath: $.disposals.*.auditDetails.lastModifiedBy
             - jsonPath: $.disposals.*.auditDetails.lastModifiedTime
               dbType: LONG
-            
+
         - query: INSERT INTO disposaldetail(id,tenantId,userdisposalquantity,disposalquantity,material,uom,disposalvalue,disposalnumber,scrapdetailid )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.disposals.*.disposalDetails.*
           jsonMaps:
@@ -1731,7 +1731,7 @@ serviceMaps:
             - jsonPath: $.disposals.*.disposalDetails.*.scrapDetails.id
     - version: 1.0
       name: Disposal  update
-      description: Update Disposal 
+      description: Update Disposal
       fromTopic: inv-disposal-update-topic
       isTransaction: true
       queryMaps:

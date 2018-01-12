@@ -291,11 +291,11 @@ public class AssetQueryBuilder {
         if (assetIds != null && !assetIds.isEmpty())
             assetIdString = "AND cv.assetid IN (" + getIdQuery(assetIds);
 
-        return "select  * "
+        return "select  * ,dp.disposaldate as disposaldate,dp.salevalue as salevalue,dp.transactiontype as dp_transactiontype "
                 + "from egasset_current_value cv  "
                 + "left outer join egasset_revalution  rv on rv.assetid=cv.assetid and rv.valueafterrevaluation=cv.currentamount "
                 + "left outer join egasset_depreciation  dv on dv.assetid=cv.assetid and dv.valueafterdepreciation=cv.currentamount "
-                + "left outer join egasset_disposal  dp on dp.assetid=cv.assetid and dp.salevalue=cv.currentamount "
+                + "left outer join egasset_disposal  dp on dp.assetid=cv.assetid "
                 + "where  cv.assettrantype !='CREATE' AND cv.tenantid='" + tenantid + "' " + assetIdString
                 + " order by cv.assetid,cv.id,cv.createdtime ";
 

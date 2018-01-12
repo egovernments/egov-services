@@ -23,7 +23,7 @@ public class DepreciationInputRowMapper implements RowMapper<DepreciationInputs>
                 .depreciationMethod(DepreciationMethod.fromValue(rs.getString("depreciationMethod")))
                 .depreciationExpenseAccount(rs.getLong("depreciationexpenseaccount"))
                 .accumulatedDepreciation(rs.getBigDecimal("accumulatedDepreciation")).tenantId(rs.getString("tenantid"))
-                .depreciationRate(rs.getDouble("depreciationrate"))
+                .depreciationRate(rs.getDouble("assetcategory_depreciationrate"))
                 .yearwiseDepreciationRate(rs.getDouble("yearwisedepreciationrate"))
                 .grossValue(rs.getBigDecimal("grossValue")).assetCode(rs.getString("assetcode")).assetName(rs.getString("assetname"))
                 .assetId((Long) rs.getObject("assetid")).depreciationSum(rs.getBigDecimal("depreciationvaluesum")).build();

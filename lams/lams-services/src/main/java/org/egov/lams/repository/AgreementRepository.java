@@ -48,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AgreementRepository {
     public static final Logger logger = LoggerFactory.getLogger(AgreementRepository.class);
     
-	public static final String AGREEMENT_SEARCH_QUERY = "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand ON agreement.id = demand.agreementid LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id ";
+	public static final String AGREEMENT_SEARCH_QUERY = "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand ON agreement.id = demand.agreementid LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id where agreement.action is not null ";
 
 	public static final String AGREEMENT_UPDATE_QUERY = "UPDATE eglams_agreement SET Id=:agreementID,Agreement_Date=:agreementDate,Agreement_No=:agreementNo,Bank_Guarantee_Amount=:bankGuaranteeAmount,Bank_Guarantee_Date=:bankGuaranteeDate,Case_No=:caseNo,Commencement_Date=:commencementDate,Council_Date=:councilDate,Council_Number=:councilNumber,Expiry_Date=:expiryDate,Nature_Of_Allotment=:natureOfAllotment,Order_Date=:orderDate,Order_Details=:orderDetails,Order_No=:orderNumber,Payment_Cycle=:paymentCycle,Registration_Fee=:registrationFee,Remarks=:remarks,Rent=:rent,Rr_Reading_No=:rrReadingNo,Security_Deposit=:securityDeposit,Security_Deposit_Date=:securityDepositDate,solvency_certificate_date=:solvencyCertificateDate,solvency_certificate_no=:solvencyCertificateNo,status=:status,tin_number=:tinNumber,Tender_Date=:tenderDate,Tender_Number=:tenderNumber,Trade_license_Number=:tradelicenseNumber,created_by=:createdBy,last_modified_by=:lastmodifiedBy,last_modified_date=:lastmodifiedDate,allottee=:allottee,asset=:asset,Rent_Increment_Method=:rentIncrement,AcknowledgementNumber=:acknowledgementNumber,stateid=:stateId,Tenant_id=:tenantId,goodwillamount=:goodWillAmount,timeperiod=:timePeriod,collectedsecuritydeposit=:collectedSecurityDeposit,collectedgoodwillamount=:collectedGoodWillAmount,source=:source,reason=:reason,terminationDate=:terminationDate,courtReferenceNumber=:courtReferenceNumber,action=:action,courtcase_no=:courtCaseNo,courtcase_date=:courtCaseDate,courtfixed_rent=:courtFixedRent,effective_date=:effectiveDate,judgement_no=:judgementNo,judgement_date=:judgementDate,judgement_rent=:judgementRent,remission_fee=:remissionRent,remission_from_date=:remissionFromDate,remission_to_date=:remissionToDate,remission_order_no=:remissionOrder,adjustment_start_date=:adjustmentStartDate,is_under_workflow=:isUnderWorkflow,first_allotment=:firstAllotment,gstin=:gstin,municipal_order_no=:municaipalOrderNo,municipal_order_date=:municipalOrderDate,govt_order_no=:govtOrderNo,govt_order_date=:govtOrderDate,renewal_date=:renewalDate WHERE id=:agreementID and Tenant_id=:tenantId ";
 
@@ -242,11 +242,11 @@ public class AgreementRepository {
 		List<Agreement> agreements = null;
 		Map<String, Object> params = new HashMap<>();
 		if (agreementCriteria.getAgreementNumber() != null) {
-			appendQuery.append(" where agreement.agreement_No=:agreementNumber ");
+			appendQuery.append(" and agreement.agreement_No=:agreementNumber ");
 			params.put("agreementNumber", agreementCriteria.getAgreementNumber());
 		}
 		if (agreementCriteria.getAcknowledgementNumber() != null) {
-			appendQuery.append(" where agreement.acknowledgementnumber=:acknowledgementnumber ");
+			appendQuery.append(" and agreement.acknowledgementnumber=:acknowledgementnumber ");
 			params.put("acknowledgementnumber", agreementCriteria.getAcknowledgementNumber());
 		}
 		if (agreementCriteria.getStatus() != null) {

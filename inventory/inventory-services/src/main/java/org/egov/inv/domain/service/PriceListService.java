@@ -246,15 +246,16 @@ public class PriceListService extends DomainService {
 							pl.setTenantId(tenantId);
 						}
 						pl.getSupplier().setTenantId(tenantId);
+						if(pl.getRateContractNumber() != null)
 						if (!priceListJdbcRepository.uniqueCheck("rateContractNumber",
 								new PriceListEntity().toEntity(pl))) {
 							errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Rate Contract Number",
-									pl.getRateContractNumber());
+									pl.getRateContractNumber().toUpperCase());
 						}
 						if (!priceListJdbcRepository.uniqueCheck("agreementNumber",
 								new PriceListEntity().toEntity(pl))) {
 							errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Agreement Number",
-									pl.getAgreementNumber());
+									pl.getAgreementNumber().toUpperCase());
 						}
 					}
 				}
@@ -278,7 +279,12 @@ public class PriceListService extends DomainService {
 					if (!priceListJdbcRepository.uniqueCheck("rateContractNumber",
 							new PriceListEntity().toEntity(pl))) {
 						errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Rate Contract Number",
-								pl.getRateContractNumber());
+								pl.getRateContractNumber().toUpperCase());
+					}
+					if (!priceListJdbcRepository.uniqueCheck("agreementNumber",
+							new PriceListEntity().toEntity(pl))) {
+						errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Agreement Number",
+								pl.getAgreementNumber().toUpperCase());
 					}
 				}
                 }

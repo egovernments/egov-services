@@ -293,7 +293,7 @@ class AgreementSearch extends React.Component {
         break;
       case "collTax":
         $.ajax({
-          url: "/lams-services/payment/_create?tenantId=" + tenantId + "&" + (number ? "agreementNumber=" + number : "acknowledgementNumber=" + acknowledgementNumber),
+          url: "/lams-services/payment/_create?tenantId=" + tenantId + "&" + (acknowledgementNumber ? "acknowledgementNumber=" + acknowledgementNumber : "agreementNumber=" + number),
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify({

@@ -341,7 +341,7 @@ public class PriceListService extends DomainService {
 						} else if (priceListDetail.getQuantity() != null
 								&& priceListDetail.getQuantity().doubleValue() <= 0) {
 							errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantity",
-									priceListDetail.getQuantity().toString());
+									"" + (pl.getPriceListDetails().indexOf(priceListDetail) + 1));
 						}
 
 					}

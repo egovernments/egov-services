@@ -1806,6 +1806,16 @@ definitions:
           items:
             $ref: '#/definitions/RouteCollectionPointMap'
           description: List of RouteCollectionPointMap on the Route. This will have all the selected collection points based on Ward / zone / street.
+        totalDistance:
+          type: number
+          format: double
+          description: it captures total distance (in KMs) of the CollectionPoint, starting from First point to ending point. e.g. 10.75
+          minimum: 0
+          maximum: 500
+        totalGarbageEstimate:
+          type: number
+          format: double
+          description: it captures total garbage collection (in tonnes) for all the CollectionPoint. e.g. 4.26  
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -1813,6 +1823,8 @@ definitions:
       - name
       - collectionType
       - collectionPoints
+      - totalDistance
+      - totalGarbageEstimate
       
     RouteCollectionPointMap:
       type: object

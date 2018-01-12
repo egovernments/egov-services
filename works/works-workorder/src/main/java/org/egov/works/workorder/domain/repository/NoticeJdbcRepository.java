@@ -46,7 +46,7 @@ public class NoticeJdbcRepository extends JdbcRepository {
 
         StringBuilder orderBy = new StringBuilder("order by notice.createdtime");
         if (noticeSearchContract.getSortBy() != null && !noticeSearchContract.getSortBy().isEmpty()) {
-            orderBy.append("order by notice.").append(noticeSearchContract.getSortBy());
+            orderBy.delete(0,orderBy.length()).append("order by notice.").append(noticeSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

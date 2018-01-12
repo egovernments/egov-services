@@ -628,7 +628,7 @@ class UpdateCancellation extends React.Component {
                 else if (!agreement.workflowDetails.designation)
                     return showError("Please Select the Designation");
                 else if (!agreement.workflowDetails.assignee)
-                    return showError("Please Select the Employee Name");
+                    return showError("Please Select the Employee");
 
             }
 
@@ -1329,7 +1329,7 @@ class UpdateCancellation extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="">Employee Name <span>*</span></label>
+                                        <label htmlFor="">Employee <span>*</span></label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="styled-select">

@@ -84,6 +84,18 @@
       ]
     }
   },
+
+"egf-master": {
+   "Fund": {
+     "masterName": "Fund",
+     "moduleDefinition": null,
+     "isStateLevel": true,
+     "uniqueKeys": [
+       "$.code",
+       "$.tenantId"
+     ]
+   }
+ },
   "lcms": {
     "court": {
       "masterName": "court",

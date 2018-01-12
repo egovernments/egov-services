@@ -4188,10 +4188,18 @@ definitions:
             Unique Identifier of the Material Store Mapping
         material:
           $ref: "#/definitions/Material"
-        storeMapping:
-          type:  array
-          items:
-            $ref: '#/definitions/StoreMapping'
+        store:
+          $ref: "#/definitions/Store"
+        chartofAccount:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
+        active:
+          type: boolean
+          description: |
+            active or inactive flag of mapping
+        delete:
+          type: boolean
+          description: |
+            delete flag of mapping used during deleting the mapping.
         tenantId:
           type: string
           description: Tenant id of the Material Store
@@ -4200,7 +4208,7 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
-      - storeMapping
+      - store
       - material
       - tenantId
 
@@ -4215,10 +4223,18 @@ definitions:
             Unique Identifier of the Material Type Store Mapping
         materialType:
           $ref: "#/definitions/MaterialType"
-        storeMapping:
-          type:  array
-          items:
-            $ref: '#/definitions/StoreMapping'
+        store:
+          $ref: "#/definitions/Store"
+        chartofAccount:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/ChartOfAccount"
+        active:
+          type: boolean
+          description: |
+            active or inactive flag of mapping
+        delete:
+          type: boolean
+          description: |
+            delete flag of mapping used during deleting the mapping.
         tenantId:
           type: string
           description: Tenant id of the Material Type Store
@@ -4227,7 +4243,7 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
-      - storeMapping
+      - store
       - materialType
       - tenantId
 

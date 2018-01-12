@@ -260,7 +260,7 @@ public class MaterialIssue   {
    * @return fromStore
   **/
   @ApiModelProperty(required = true, value = "This field holds the issuing store information. ")
-  @Valid
+
 
   public Store getFromStore() {
     return fromStore;
@@ -280,7 +280,7 @@ public class MaterialIssue   {
    * @return toStore
   **/
   @ApiModelProperty(value = "This field holds the receiving store information.     ")
-  @Valid
+
   public Store getToStore() {
     return toStore;
   }

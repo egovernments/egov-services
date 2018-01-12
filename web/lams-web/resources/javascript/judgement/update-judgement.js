@@ -468,6 +468,7 @@ class UpdateJudgement extends React.Component {
                 Notice: {
                     tenantId,
                     agreementNumber: obj.noticeData.agreementNumber,
+                    acknowledgementNumber: obj.noticeData.acknowledgementNumber,
                     fileStore: obj.fileStoreId
                 }
             }),

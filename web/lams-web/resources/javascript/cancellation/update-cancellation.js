@@ -621,8 +621,7 @@ class UpdateCancellation extends React.Component {
 
             }
 
-            //if (ID === "Forward") {
-            if (ID != "Reject") {
+            if (ID === "Forward") {
 
                 if (!agreement.workflowDetails.department)
                     return showError("Please Select the Department");

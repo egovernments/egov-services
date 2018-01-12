@@ -463,7 +463,6 @@ public class MaterialIssue   {
   **/
   @ApiModelProperty(value = "Applicable for Indent Issue. This object holds the indent information for which the material is being issued. There could be multiple issues against an indent.")
 
-  @Valid
 
   public Indent getIndent() {
     return indent;

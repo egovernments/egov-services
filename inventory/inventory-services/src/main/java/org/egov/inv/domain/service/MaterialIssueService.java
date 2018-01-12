@@ -199,133 +199,84 @@ public class MaterialIssueService extends DomainService {
 				break;
 		}
 		materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts);
-		return unitRate.multiply(materialIssueDetail.getQuantityIssued());
+		return unitRate;
 	}
 
 	private void fetchRelated(MaterialIssueRequest materialIssueRequest, String action) {
 		if (action.equals(Constants.ACTION_CREATE)) {
 			for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
-
-				if (materialIssue.getIndent().getIssueStore() != null
-						&& StringUtils.isNotBlank(materialIssue.getIndent().getIssueStore().getCode())) {
-					List<Store> stores = searchStoreByParameters(materialIssue.getIndent().getIssueStore().getCode(),materialIssue.getTenantId());
-					if (stores.isEmpty())
-						throw new CustomException("invalid.ref.value",
-								"the field issuestore should have a valid value which exists in the system.");
-					else
-						materialIssue.setFromStore(stores.get(0));
-
-				}
-				if (materialIssue.getIndent().getIndentStore() != null
-						&& StringUtils.isNotBlank(materialIssue.getIndent().getIndentStore().getCode())) {
-					List<Store> stores = searchStoreByParameters(materialIssue.getIndent().getIndentStore().getCode(),materialIssue.getTenantId());
-					if (stores.isEmpty())
-						throw new CustomException("invalid.ref.value",
-								"the field indentstore should have a valid value which exists in the system.");
-					else
-						materialIssue.setToStore(stores.get(0));
-				}
-				if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
-					ObjectMapper mapper = new ObjectMapper();
-					Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper,
-							new RequestInfo());
-					Map<String, Uom> uomMap = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
-					for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
-						if (materialIssueDetail.getIndentDetail().getMaterial() != null && StringUtils
-								.isNotBlank(materialIssueDetail.getIndentDetail().getMaterial().getCode())) {
-							if (materialMap.get(materialIssueDetail.getIndentDetail().getMaterial().getCode()) == null)
-								throw new CustomException("invalid.ref.value",
-										"the field material should have a valid value which exists in the system.");
-
-							else
-								materialIssueDetail.setMaterial(
-										materialMap.get(materialIssueDetail.getIndentDetail().getMaterial().getCode()));
-						}
-						if (materialIssueDetail.getIndentDetail().getUom() != null
-								&& StringUtils.isNotBlank(materialIssueDetail.getIndentDetail().getUom().getCode())) {
-							if (uomMap.get(materialIssueDetail.getIndentDetail().getUom().getCode()) == null)
-								throw new CustomException("invalid.ref.value",
-										"the field uom should have a valid value which exists in the system.");
-
-							else
-								materialIssueDetail
-										.setUom(uomMap.get(materialIssueDetail.getIndentDetail().getUom().getCode()));
-						}
-
-						if (materialIssueDetail.getIndentDetail() != null
-								&& materialIssueDetail.getIndentDetail().getId() != null) {
-							IndentDetailEntity entity = new IndentDetailEntity();
-							entity.setId(materialIssueDetail.getIndentDetail().getId());
-							entity.setTenantId(materialIssue.getTenantId());
-							materialIssueDetail.setIndentDetail(indentDetailJdbcRepository.findById(entity) != null
-									? indentDetailJdbcRepository.findById(entity).toDomain() : null);
-						}
-					}
-				}
+				validateAndBuildMaterialIssueHeader(materialIssue);
+				validateAndBuildMaterialIssueDetails(materialIssue);
 
 			}
 		} else {
 			for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
 
-				if (materialIssue.getFromStore() != null
-						&& StringUtils.isNotBlank(materialIssue.getFromStore().getCode())) {
-					List<Store> stores = searchStoreByParameters(materialIssue.getFromStore().getCode(),materialIssue.getTenantId());
-					if (stores.isEmpty())
-						throw new CustomException("invalid.ref.value",
-								"the field issuestore should have a valid value which exists in the system.");
-					else
-						materialIssue.setFromStore(stores.get(0));
-
-				}
-				if (materialIssue.getToStore() != null
-						&& StringUtils.isNotBlank(materialIssue.getToStore().getCode())) {
-					List<Store> stores = searchStoreByParameters(materialIssue.getToStore().getCode(),
-							materialIssue.getTenantId());
-					if (stores.isEmpty())
-						throw new CustomException("invalid.ref.value",
-								"the field indentstore should have a valid value which exists in the system.");
-					else
-						materialIssue.setToStore(stores.get(0));
-				}
-				if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
-					ObjectMapper mapper = new ObjectMapper();
-					Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper,
-							new RequestInfo());
-					Map<String, Uom> uomMap = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
-					for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
-						if (materialIssueDetail.getMaterial() != null
-								&& StringUtils.isNotBlank(materialIssueDetail.getMaterial().getCode())) {
-							if (materialMap.get(materialIssueDetail.getMaterial().getCode()) == null)
-								throw new CustomException("invalid.ref.value",
-										"the field material should have a valid value which exists in the system.");
-
-							else
-								materialIssueDetail
-										.setMaterial(materialMap.get(materialIssueDetail.getMaterial().getCode()));
-						}
-						if (materialIssueDetail.getUom() != null
-								&& StringUtils.isNotBlank(materialIssueDetail.getUom().getCode())) {
-							if (uomMap.get(materialIssueDetail.getUom().getCode()) == null)
-								throw new CustomException("invalid.ref.value",
-										"the field uom should have a valid value which exists in the system.");
-
-							else
-								materialIssueDetail.setUom(uomMap.get(materialIssueDetail.getUom().getCode()));
-						}
-						if (materialIssueDetail.getIndentDetail() != null
-								&& materialIssueDetail.getIndentDetail().getId() != null) {
-							IndentDetailEntity entity = new IndentDetailEntity();
-							entity.setId(materialIssueDetail.getIndentDetail().getId());
-							entity.setTenantId(materialIssue.getTenantId());
-							materialIssueDetail.setIndentDetail(indentDetailJdbcRepository.findById(entity) != null
-									? indentDetailJdbcRepository.findById(entity).toDomain() : null);
-						}
-					}
-				}
+				validateAndBuildMaterialIssueHeader(materialIssue);
+				validateAndBuildMaterialIssueDetails(materialIssue);
 
 			}
 		}
 
+	}
+
+	private void validateAndBuildMaterialIssueHeader(MaterialIssue materialIssue) {
+		if (materialIssue.getFromStore() != null && StringUtils.isNotBlank(materialIssue.getFromStore().getCode())) {
+			List<Store> stores = searchStoreByParameters(materialIssue.getFromStore().getCode(),
+					materialIssue.getTenantId());
+			if (stores.isEmpty())
+				throw new CustomException("invalid.ref.value",
+						"the field issuestore should have a valid value which exists in the system.");
+			else
+				materialIssue.setFromStore(stores.get(0));
+
+		}
+		if (materialIssue.getToStore() != null && StringUtils.isNotBlank(materialIssue.getToStore().getCode())) {
+			List<Store> stores = searchStoreByParameters(materialIssue.getToStore().getCode(),
+					materialIssue.getTenantId());
+			if (stores.isEmpty())
+				throw new CustomException("invalid.ref.value",
+						"the field indentstore should have a valid value which exists in the system.");
+			else
+				materialIssue.setToStore(stores.get(0));
+		}
+	}
+
+	private void validateAndBuildMaterialIssueDetails(MaterialIssue materialIssue) {
+		if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
+			ObjectMapper mapper = new ObjectMapper();
+			Map<String, Material> materialMap = getMaterials(materialIssue.getTenantId(), mapper, new RequestInfo());
+			Map<String, Uom> uomMap = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
+
+			for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+				if (materialIssueDetail.getMaterial() != null
+						&& StringUtils.isNotBlank(materialIssueDetail.getMaterial().getCode())) {
+					if (materialMap.get(materialIssueDetail.getMaterial().getCode()) == null)
+						throw new CustomException("invalid.ref.value",
+								"the field material should have a valid value which exists in the system.");
+
+					else
+						materialIssueDetail.setMaterial(materialMap.get(materialIssueDetail.getMaterial().getCode()));
+				}
+				if (materialIssueDetail.getUom() != null
+						&& StringUtils.isNotBlank(materialIssueDetail.getUom().getCode())) {
+					if (uomMap.get(materialIssueDetail.getUom().getCode()) == null)
+						throw new CustomException("invalid.ref.value",
+								"the field uom should have a valid value which exists in the system.");
+
+					else
+						materialIssueDetail.setUom(uomMap.get(materialIssueDetail.getUom().getCode()));
+				}
+				if (materialIssueDetail.getIndentDetail() != null
+						&& materialIssueDetail.getIndentDetail().getId() != null) {
+					IndentDetailEntity entity = new IndentDetailEntity();
+					entity.setId(materialIssueDetail.getIndentDetail().getId());
+					entity.setTenantId(materialIssue.getTenantId());
+					materialIssueDetail.setIndentDetail(indentDetailJdbcRepository.findById(entity) != null
+							? indentDetailJdbcRepository.findById(entity).toDomain() : null);
+				}
+			}
+		}
 	}
 
 	private List<Store> searchStoreByParameters(String storeCode,String tenantId) {
@@ -364,37 +315,40 @@ public class MaterialIssueService extends DomainService {
 				}
 				for (MaterialIssue materialIssue : materialIssues) {
 					if (materialIssue.getIssueDate().compareTo(currentDate) > 0) {
-						String date = convertEpochtoDate(materialIssue.getIssueDate());
-						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate", date);
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "issueDate", convertEpochtoDate(materialIssue.getIssueDate()));
 					}
 					if(materialIssue.getIndent() != null &&  StringUtils.isNotBlank(materialIssue.getIndent().getIndentNumber() ))
 					{
+						BigDecimal totalIndentQuantity = BigDecimal.ZERO;
+
 						IndentEntity indentEntity = new IndentEntity();
 						indentEntity.setIndentNumber(materialIssue.getIndent().getIndentNumber());
 						indentEntity.setTenantId(materialIssue.getTenantId());
 						Object indenttEntity = materialIssueJdbcRepository.findById(indentEntity,
 								"IndentEntity");
-						IndentEntity indentEntityfromDb = (IndentEntity) indenttEntity;
-						if (indentEntityfromDb != null) {
-							if(!indentEntityfromDb.getIndentStatus().equals(IndentStatusEnum.APPROVED.toString()))
-								errors.addDataError(ErrorCode.INDENT_NOT_APPROVED.getCode(), materialIssue.getIndent().getIndentNumber());
-						}
-						BigDecimal totalIndentQuantity = BigDecimal.ZERO;
-						List <IndentDetailEntity> indentDetailEntity =indentDetailJdbcRepository.find(Arrays.asList(materialIssue.getIndent().getIndentNumber()), materialIssue.getTenantId(), null);
-				if(!indentDetailEntity.isEmpty())
-				{
-					for(IndentDetailEntity indentDetailsEntity :indentDetailEntity){
-						BigDecimal quantity =  BigDecimal.ZERO;
-						IndentDetail indentDetail = indentDetailsEntity.toDomain();
-						if(indentDetail.getIndentQuantity() != null && indentDetail.getIndentIssuedQuantity() != null)
-						 quantity =	indentDetail.getIndentQuantity().subtract(indentDetail.getIndentIssuedQuantity());
-						totalIndentQuantity = totalIndentQuantity.add(quantity);
-					}
-				}
-				//todo: if all items already issued?
-				if(totalIndentQuantity.compareTo(BigDecimal.ZERO) == 0)
-					errors.addDataError(ErrorCode.NO_ITEMS_TO_ISSUE.getCode());
-					}
+					
+					   if(indenttEntity!=null) {
+							IndentEntity indentEntityfromDb = (IndentEntity) indenttEntity;
+							if (indentEntityfromDb != null) {
+								if(!indentEntityfromDb.getIndentStatus().equals(IndentStatusEnum.APPROVED.toString()))
+									errors.addDataError(ErrorCode.INDENT_NOT_APPROVED.getCode(), materialIssue.getIndent().getIndentNumber());
+							}
+							List <IndentDetailEntity> indentDetailEntity =indentDetailJdbcRepository.find(Arrays.asList(materialIssue.getIndent().getIndentNumber()), materialIssue.getTenantId(), null);
+								if(!indentDetailEntity.isEmpty())
+								{
+									for(IndentDetailEntity indentDetailsEntity :indentDetailEntity){
+										BigDecimal quantity =  BigDecimal.ZERO;
+										IndentDetail indentDetail = indentDetailsEntity.toDomain();
+										if(indentDetail.getIndentQuantity() != null && indentDetail.getIndentIssuedQuantity() != null)
+										 quantity =	indentDetail.getIndentQuantity().subtract(indentDetail.getIndentIssuedQuantity());
+										totalIndentQuantity = totalIndentQuantity.add(quantity);
+									}
+								}
+							}
+						//todo: if all items already issued?
+						if(totalIndentQuantity.compareTo(BigDecimal.ZERO) == 0)
+							errors.addDataError(ErrorCode.NO_ITEMS_TO_ISSUE.getCode());
+					 }
 					if(type.equals(IssueTypeEnum.MATERIALOUTWARD.toString()))
 					{
 						if(materialIssue.getToStore() == null) 
@@ -449,8 +403,10 @@ public class MaterialIssueService extends DomainService {
 								if (materialIssueDetail.getQuantityIssued()
 										.compareTo(balanceQuantity) > 0) {
 									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
-											"balanceQuantity", materialIssueDetail.getQuantityIssued().toString(),
-											balanceQuantity.toString(), String.valueOf(i));
+											"balanceQuantity",InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getQuantityIssued(),materialIssueDetail.getUom().getConversionFactor())
+											.toString(),
+										  InventoryUtilities.getQuantityInSelectedUom(balanceQuantity,materialIssueDetail.getUom().getConversionFactor())
+											.toString(), String.valueOf(i));
 								}
 							}
 							if(materialIssueDetail.getIndentDetail() != null){
@@ -460,16 +416,18 @@ public class MaterialIssueService extends DomainService {
 								if (materialIssueDetail.getQuantityIssued()
 										.compareTo(materialIssueDetail.getPendingIndentQuantity()) > 0)
 									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
-											"indentQuantity", materialIssueDetail.getQuantityIssued().toString(),
-											materialIssueDetail.getPendingIndentQuantity().toString(),
+											"indentQuantity", InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getQuantityIssued(),materialIssueDetail.getUom().getConversionFactor())
+											.toString(),
+											InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getPendingIndentQuantity(),materialIssueDetail.getUom().getConversionFactor()).toString(),
 											String.valueOf(i));
 								if (materialIssueDetail.getPendingIndentQuantity()
 										.compareTo(BigDecimal.ZERO) <= 0)
 									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "indentQuantity",
 											String.valueOf(i),
-											materialIssueDetail.getPendingIndentQuantity().toString());
-							}
-							i++;
+											InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getPendingIndentQuantity(),materialIssueDetail.getUom().getConversionFactor()).toString());
+								i++;	
+						}
+							
 						}
 						validateDuplicateMaterials(materialIssue.getMaterialIssueDetails(), materialIssue.getTenantId(),
 								errors);
@@ -693,13 +651,14 @@ public class MaterialIssueService extends DomainService {
 					materialIssuedFromReceiptsIds.add(mifr.getId());
 					mifr.setStatus(false);
 				}
-			}
+			} 
+			//Update Material issue and receipt status as false.
 			materialIssuedFromReceiptsJdbcRepository.updateStatus(materialIssuedFromReceiptsIds,
 					materialIssue.getTenantId());
 			if (materialIssue.getMaterialIssueStatus().toString().equals(MaterialIssueStatusEnum.CANCELED.toString())){
 				backUpdateIndentInCaseOfCancellation(materialIssueDetails, materialIssue.getTenantId());
-				break;
-			}
+				//break;
+			}else {
 			setMaterialIssueValues(materialIssue, null, Constants.ACTION_UPDATE, type);
 			materialIssue
 					.setAuditDetails(getAuditDetails(materialIssueRequest.getRequestInfo(), Constants.ACTION_UPDATE));
@@ -723,6 +682,7 @@ public class MaterialIssueService extends DomainService {
 			materialIssueDetailsJdbcRepository.markDeleted(materialIssueDetailsIds, tenantId, "materialissuedetail",
 					"materialissuenumber", materialIssue.getIssueNumber());
 			materialIssue.setTotalIssueValue(totalIssueValue);
+			}
 		}
 		kafkaTemplate.send(updateTopic, updateKey, materialIssueRequest);
 		MaterialIssueResponse response = new MaterialIssueResponse();
@@ -850,15 +810,38 @@ public MaterialIssueResponse search(final MaterialIssueSearchContract searchCont
 				if (materialIssue.getIndent().getIssueStore() != null
 						&& StringUtils.isNotEmpty(materialIssue.getIndent().getIssueStore().getCode())) {
 					List<Store> stores = searchStoreByParameters(materialIssue.getIndent().getIssueStore().getCode(),materialIssue.getTenantId());
-					Store store =stores.get(0);
-					if (stores!=null && stores.get(0)!= null && store.getDepartment() != null
-							&& StringUtils.isNotBlank(store.getDepartment().getCode())) {
-						Department department = departmentService.getDepartment(tenantId,
-								store.getDepartment().getCode(), new RequestInfo());
-						store.setDepartment(department);
+					
+				if(!stores.isEmpty())
+					{
+						Store store =stores.get(0);
+						if (stores!=null && stores.get(0)!= null && store.getDepartment() != null
+								&& StringUtils.isNotBlank(store.getDepartment().getCode())) {
+							Department department = departmentService.getDepartment(tenantId,
+									store.getDepartment().getCode(), new RequestInfo());
+							store.setDepartment(department);
+						}
+						materialIssue.getIndent().setIssueStore(store);
+						materialIssue.setFromStore(store); //Adding indent issue store as material issue -> from store (Store issues material)
 					}
-					materialIssue.getIndent().setIssueStore(store);
 				}
+				if (materialIssue.getIndent().getIndentStore() != null
+						&& StringUtils.isNotBlank(materialIssue.getIndent().getIndentStore().getCode()))
+				{
+					List<Store> stores = searchStoreByParameters(materialIssue.getIndent().getIndentStore().getCode(),materialIssue.getTenantId());
+					if (!stores.isEmpty()){
+						Store store =stores.get(0);
+						if (stores!=null && stores.get(0)!= null && store.getDepartment() != null
+								&& StringUtils.isNotBlank(store.getDepartment().getCode())) {
+							Department department = departmentService.getDepartment(tenantId,
+									store.getDepartment().getCode(), new RequestInfo());
+							store.setDepartment(department);
+						}
+						materialIssue.getIndent().setIndentStore(store);
+						materialIssue.setToStore(store);
+					}
+				}
+						
+						
 				ObjectMapper mapper = new ObjectMapper();
 				if (!materialIssue.getIndent().getIndentDetails().isEmpty()) {
 					Map<String, Uom> uomMap = getUoms(tenantId, mapper, new RequestInfo());

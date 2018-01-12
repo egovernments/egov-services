@@ -115,7 +115,8 @@ class UpdateJudgement extends React.Component {
             designationList: [],
             userList: [],
             buttons: [],
-            wfStatus: ""
+            wfStatus: "",
+            wfInitiator:""
 
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -342,6 +343,7 @@ class UpdateJudgement extends React.Component {
             agreement: agreement,
             departmentList: departmentList,
             //owner:process.owner.id,
+            wfInitiator: process.initiatorPosition,
             wfStatus: process.status,
             workflow: workflow,
             buttons: _btns ? _btns : []

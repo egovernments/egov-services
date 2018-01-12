@@ -115,8 +115,8 @@ class UpdateObjection extends React.Component {
             designationList: [],
             userList: [],
             buttons: [],
-            wfStatus: ""
-
+            wfStatus: "",
+            wfInitiator:""
         }
         this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -340,6 +340,7 @@ class UpdateObjection extends React.Component {
             agreement: agreement,
             departmentList: departmentList,
             //owner:process.owner.id,
+            wfInitiator: process.initiatorPosition,
             wfStatus: process.status,
             workflow: workflow,
             buttons: _btns ? _btns : []
@@ -612,7 +613,7 @@ class UpdateObjection extends React.Component {
 
             }
 
-            
+
             if (ID.toLowerCase() === "approve"){
               agreement.workflowDetails.assignee = _this.state.wfInitiator;
             }

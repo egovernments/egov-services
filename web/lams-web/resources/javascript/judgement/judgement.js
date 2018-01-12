@@ -130,6 +130,7 @@ class JudgementAgreement extends React.Component {
   addOrUpdate(e) {
 
     e.preventDefault();
+    var ID = "Forward";
     var _this = this;
     var agreement = Object.assign({}, _this.state.agreement);
     agreement.action = "Judgement";

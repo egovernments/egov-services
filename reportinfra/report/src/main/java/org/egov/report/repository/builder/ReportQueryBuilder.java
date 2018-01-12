@@ -151,8 +151,15 @@ public class ReportQueryBuilder {
 						if(obj.has(jsonKeys[k])){
 					    value = String.valueOf(obj.get(jsonKeys[k]));
 						} 
-
-						sb.append("'" + value + "'");
+						if(value.contains("'")){
+							String formatted = value.replace("'", "''");
+							System.out.println("Values with single quotes "+formatted);
+							sb.append("'" + formatted + "'");
+							
+						} else {
+							sb.append("'" + value + "'");
+						}
+						
 						if ((k != jsonKeys.length-1)) {
 							sb.append(",");
 						}
@@ -385,7 +392,15 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 					jsonMap = mapper.readValue(array.getString(i).toString(), new TypeReference<Map<String, String>>(){});
 					values.append("(");
 					for(Map.Entry<String, Object> row: jsonMap.entrySet()){
+						String value = row.getValue().toString();
+						System.out.println("Values with single quotes without formatting"+value);
+						if(value.contains("'")){
+							String formatted = value.replace("'", "''");
+							System.out.println("Values with single quotes "+formatted);
+							values.append("'"+formatted+"'"+",");	
+						} else {
 						values.append("'"+row.getValue()+"'"+",");	
+						}
 					}
 					values.replace(values.length() - 1, values.length(), "),");
 				}

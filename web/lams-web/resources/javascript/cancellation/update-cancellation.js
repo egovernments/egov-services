@@ -621,7 +621,8 @@ class UpdateCancellation extends React.Component {
 
             }
 
-            if (ID === "Forward") {
+            //if (ID === "Forward") {
+            if (ID != "Reject") {
 
                 if (!agreement.workflowDetails.department)
                     return showError("Please Select the Department");
@@ -686,7 +687,7 @@ class UpdateCancellation extends React.Component {
                                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                                 type: 'POST',
                                                 dataType: 'json',
-                                                data: JSON.stringify(requestInfo),
+                                                data: JSON.stringify({ RequestInfo: requestInfo }),
                                                 contentType: 'application/json',
                                                 headers: {
                                                     'auth-token': authToken
@@ -755,7 +756,7 @@ class UpdateCancellation extends React.Component {
                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                 type: 'POST',
                                 dataType: 'json',
-                                data: JSON.stringify(requestInfo),
+                                data: JSON.stringify({ RequestInfo: requestInfo }),
                                 contentType: 'application/json',
                                 headers: {
                                     'auth-token': authToken

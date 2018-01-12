@@ -595,7 +595,7 @@ class UpdateEviction extends React.Component {
 
             }
 
-            if (ID != "Reject" || ID!="Approve") {
+            if (ID === "Forward") {
 
                 if (!agreement.workflowDetails.department)
                     return showError("Please Select the Department");
@@ -680,7 +680,7 @@ class UpdateEviction extends React.Component {
                                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                                 type: 'POST',
                                                 dataType: 'json',
-                                                data: JSON.stringify(requestInfo),
+                                                data: JSON.stringify({ RequestInfo: requestInfo }),
                                                 contentType: 'application/json',
                                                 headers: {
                                                     'auth-token': authToken
@@ -738,7 +738,7 @@ class UpdateEviction extends React.Component {
                                 url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
                                 type: 'POST',
                                 dataType: 'json',
-                                data: JSON.stringify(requestInfo),
+                                data: JSON.stringify({ RequestInfo: requestInfo }),
                                 contentType: 'application/json',
                                 headers: {
                                     'auth-token': authToken

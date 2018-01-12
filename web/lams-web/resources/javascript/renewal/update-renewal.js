@@ -672,15 +672,15 @@ class UpdateRenewal extends React.Component {
                                                     if (window.opener)
                                                         window.opener.location.reload();
                                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                     else
-                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                                 },
                                                 error: function (err) {
                                                     if (window.opener)
                                                         window.opener.location.reload();
-                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                                 }
                                             })
                                         }
@@ -734,15 +734,15 @@ class UpdateRenewal extends React.Component {
                                     if (window.opener)
                                         window.opener.location.reload();
                                     if (res1 && res1.Employee && res1.Employee[0].name)
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=${res1.Employee[0].name}&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                     else
-                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                        window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
 
                                 },
                                 error: function (err) {
                                     if (window.opener)
                                         window.opener.location.reload();
-                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
+                                    window.location.href = `app/acknowledgement/common-ack.html?wftype=Cancel&action=${ID}&name=&ackNo=${res.Agreements[0].acknowledgementNumber}`;
                                 }
                             })
                         }

@@ -89,12 +89,10 @@ public class AssetValidator implements Validator {
 				errorMap.put(applicationProperties.getWarranty(), "warrantyExpiryDate is Mandatory if Warranty is available");
 			else if (asset.getWarrantyExpiryDate().compareTo(asset.getDateOfCreation()) <= 0)
 				errorMap.put(applicationProperties.getWarranty(), "warrantyExpiryDate should be greater than asset date");
+		}else if(asset.getWarrantyAvailable().equals(false)) {
+			asset.setWarrantyExpiryDate(null);
 		}
 		
-	    if(asset.getAssetCategory().getIsAssetAllow().equals(false)) 
-		   errorMap.put(applicationProperties.getParentCategory(), "Cannot Create asset with parent category");
-           
-		  
 		if(asset.getDateOfCreation().compareTo(new Date().getTime()) > 0) 
 			errorMap.put(applicationProperties.getDateOfCreation(), "DateOfCreation cannot be future Date");
 		
@@ -144,7 +142,6 @@ public class AssetValidator implements Validator {
 		else {
 			System.err.println("masterAssetCat"+masterAssetCat);
 			if (masterAssetCat.getIsAssetAllow().equals(false))
-			/* if(asset.getAssetCategory().getIsAssetAllow().equals(false)) */
 				   errorMap.put(applicationProperties.getParentCategory(), "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
 		}

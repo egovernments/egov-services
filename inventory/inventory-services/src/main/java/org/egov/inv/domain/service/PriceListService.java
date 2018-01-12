@@ -251,7 +251,7 @@ public class PriceListService extends DomainService {
 							errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Rate Contract Number",
 									pl.getRateContractNumber());
 						}
-						if (!priceListJdbcRepository.uniqueCheck("agreementnumber",
+						if (!priceListJdbcRepository.uniqueCheck("agreementNumber",
 								new PriceListEntity().toEntity(pl))) {
 							errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Agreement Number",
 									pl.getAgreementNumber());

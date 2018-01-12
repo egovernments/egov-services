@@ -148,5 +148,8 @@ public class Agreement {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date governmentOrderDate;
 	private List<SubSeqRenewal> subSeqRenewals;
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date renewalDate;
 
 }

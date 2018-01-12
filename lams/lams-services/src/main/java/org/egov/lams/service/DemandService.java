@@ -64,8 +64,24 @@ public class DemandService {
 		}
 		return demands;
 	}
+	
+	public List<DemandDetails> prepareDemandDetailsForRenewal(AgreementRequest agreementRequest, List<DemandReason> demandReasons){
+		List<DemandDetails> demandDetails = new ArrayList<>();
+		DemandDetails demandDetail;
+		for (DemandReason demandReason : demandReasons) {
+			demandDetail = new DemandDetails();
+			demandDetail.setCollectionAmount(BigDecimal.ZERO);
+			demandDetail.setRebateAmount(BigDecimal.ZERO);
+			demandDetail.setTaxReason(demandReason.getName());
+			demandDetail.setTaxReasonCode(demandReason.getName());
+			demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
+			demandDetail.setTaxAmount(BigDecimal.valueOf(agreementRequest.getAgreement().getRent()));
+			demandDetails.add(demandDetail);
+		}
+		return demandDetails;
+	}
 
-	private List<DemandReason> getDemandReasons(AgreementRequest agreementRequest) {
+	public List<DemandReason> getDemandReasons(AgreementRequest agreementRequest) {
 		List<DemandReason> demandReasons = demandRepository.getDemandReason(agreementRequest);
 		if (demandReasons.isEmpty())
 			throw new RuntimeException("No demand reason found for given criteria");
@@ -281,5 +297,29 @@ public class DemandService {
 		}
 
 	}
-
+	
+	public List<Demand> prepareDemandsForRenewal(AgreementRequest agreementRequest,boolean isForApproval) {
+		List<Demand> demands;
+		List<DemandReason> demandReasons = demandRepository.getDemandReasonForRenewal(agreementRequest, isForApproval);
+		if (!demandReasons.isEmpty()) {
+			demands = demandRepository.getDemandList(agreementRequest, demandReasons);
+			demands.get(0).getDemandDetails().addAll(getExistingDemandDetails(agreementRequest.getAgreement().getDemands().get(0), agreementRequest.getRequestInfo()));
+			return demands;
+		} else
+			throw new RuntimeException("No demand reason found for given criteria in Renewal");
+	}
+	
+	public List<DemandDetails> getExistingDemandDetails(String demandId,RequestInfo requestInfo) {
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+		List<DemandDetails> clonedDemandDetails = new ArrayList<>();
+		if (demandId != null) {
+			demandSearchCriteria.setDemandId(Long.valueOf(demandId));
+			Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
+			for (DemandDetails demandDetail : demand.getDemandDetails()) {
+				demandDetail.setId(null);
+				clonedDemandDetails.add(demandDetail);
+			}
+		}
+		return clonedDemandDetails;
+	}
 }

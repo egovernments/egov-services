@@ -1,5 +1,6 @@
 package org.egov.lams.service;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.egov.lams.model.*;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.PaymentCycle;
@@ -190,14 +191,17 @@ public class AgreementService {
 	public Agreement createRenewal(AgreementRequest agreementRequest) {
 		logger.info("create Renewal of agreement::" + agreementRequest.getAgreement());
 		Agreement agreement = enrichAgreement(agreementRequest);
-		agreement.setExpiryDate(getExpiryDate(agreement));
+		//Renewal date = existing expiry date + 1
+		Date renewalStartDate = DateUtils.addDays(agreement.getExpiryDate(), 1);
 		agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
+		agreement.setRenewalDate(renewalStartDate);
 		
-		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getDemands().get(0),agreementRequest.getRequestInfo());
+		List<Demand> demands = demandService.prepareDemandsForRenewal(agreementRequest, false);
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
 		agreement.setDemands(demandIdList);
+		agreement.setExpiryDate(getExpiryDate(agreement));
 
 		agreementMessageQueueRepository.save(agreementRequest, START_WORKFLOW);
 		return agreement;
@@ -368,7 +372,7 @@ public class AgreementService {
 				agreement.setStatus(Status.ACTIVE);
 				agreement.setAgreementDate(new Date());
 				agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
-				List<Demand> demands = demandService.prepareDemands(agreementRequest);
+				List<Demand> demands = prepareDemandsForRenewalApproval(agreementRequest);
 				updateDemand(agreement.getDemands(), demands,
 						agreementRequest.getRequestInfo());
 			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -382,6 +386,26 @@ public class AgreementService {
 		}
 		agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
 		return agreement;
+	}
+
+	private List<Demand> prepareDemandsForRenewalApproval(AgreementRequest agreementRequest) {
+		String demandId = agreementRequest.getAgreement().getDemands().get(0);
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+		List<Demand> demands = new ArrayList<>();
+		if (demandId != null) {
+			demandSearchCriteria.setDemandId(Long.valueOf(demandId));
+			DemandResponse demandResponse = demandRepository
+					.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo());
+			if(demandResponse != null){
+				Demand demand = demandResponse.getDemands().get(0);
+				if (demand != null) {
+					demand.getDemandDetails().addAll(demandService.prepareDemandDetailsForRenewal(agreementRequest,
+							demandRepository.getDemandReasonForRenewal(agreementRequest, true)));
+					demands.add(demand);
+				}
+			}
+		}
+		return demands;
 	}
 
 	public List<Agreement> searchAgreement(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
@@ -533,7 +557,11 @@ public class AgreementService {
 	}
 
 	public Date getExpiryDate(Agreement agreement) {
-		Date commencementDate = agreement.getCommencementDate();
+		Date commencementDate;
+		if(Action.RENEWAL.equals(agreement.getAction()))
+			commencementDate = agreement.getRenewalDate();
+		else
+			commencementDate = agreement.getCommencementDate();
 		Instant instant = Instant.ofEpochMilli(commencementDate.getTime());
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 		LocalDate expiryDate = localDateTime.toLocalDate();

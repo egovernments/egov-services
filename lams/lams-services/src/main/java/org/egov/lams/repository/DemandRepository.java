@@ -2,6 +2,10 @@ package org.egov.lams.repository;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -340,5 +344,51 @@ public class DemandRepository {
 		}
 		LOGGER.info("the exception raised during update demand API call ::: " + demandResponse);
 		return demandResponse;
+	}
+	
+	/**
+	 * Based on Expiry date all the demand reasons are fetched 
+	 * expirydate = Renewal date + No.of Years(Time period)
+	 */
+	
+	public List<DemandReason> getDemandReasonForRenewal(AgreementRequest agreementRequest, boolean isForApproval) {
+
+		List<DemandReason> demandReasons = new ArrayList<>();
+		Agreement agreement = agreementRequest.getAgreement();
+		String taxReason;
+		Date effectiveInstDate;
+		Date expiryDate = agreement.getExpiryDate();
+		if (Status.ACTIVE.equals(agreement.getStatus())) {
+			taxReason = propertiesManager.getTaxReasonRent();
+			demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, expiryDate, taxReason));
+		} else {
+			Instant instant = Instant.ofEpochMilli(expiryDate.getTime());
+			LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+			LocalDate startDate = localDateTime.toLocalDate();
+			startDate = startDate.plusDays(1);
+			if (PaymentCycle.MONTH.equals(agreement.getPaymentCycle())) {
+				startDate = startDate.plusMonths(1);
+			} else if (PaymentCycle.QUARTER.equals(agreement.getPaymentCycle())) {
+				startDate = startDate.plusMonths(3);
+
+			} else if (PaymentCycle.HALFYEAR.equals(agreement.getPaymentCycle())) {
+				startDate = startDate.plusMonths(6);
+
+			} else if (PaymentCycle.ANNUAL.equals(agreement.getPaymentCycle())) {
+				startDate = startDate.plusYears(1);
+			}
+
+			effectiveInstDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			if(isForApproval){
+				taxReason = propertiesManager.getTaxReasonRent();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+			} else {
+				taxReason = propertiesManager.getTaxReasonAdvanceTax();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+				taxReason = propertiesManager.getTaxReasonGoodWillAmount();
+				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+			}
+		}
+		return demandReasons;
 	}
 }

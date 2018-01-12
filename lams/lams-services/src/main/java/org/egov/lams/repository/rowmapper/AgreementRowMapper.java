@@ -113,6 +113,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setMunicipalOrderDate(rs.getTimestamp("municipal_order_date"));
 					agreement.setGovernmentOrderNumber(rs.getString("govt_order_no"));
 					agreement.setGovernmentOrderDate(rs.getTimestamp("govt_order_date"));
+					agreement.setRenewalDate(rs.getTimestamp("renewal_date"));
 
 					RentIncrementType rentIncrementType = new RentIncrementType();
 					rentIncrementType.setId((Long) rs.getObject("rent_increment_method"));

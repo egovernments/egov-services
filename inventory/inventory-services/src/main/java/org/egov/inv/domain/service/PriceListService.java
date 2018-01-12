@@ -94,9 +94,9 @@ public class PriceListService extends DomainService {
             priceListRequest.getPriceLists().forEach(priceList -> {
             	priceList.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
             	if(priceList.getRateContractNumber()!=null)
-            		priceList.setRateContractNumber(priceList.getRateContractNumber().toString());
+            		priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
             	if(priceList.getAgreementNumber() != null)
-            		priceList.setAgreementNumber(priceList.getAgreementNumber().toString());
+            		priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
             });
             validate(priceListRequest.getPriceLists(), Constants.ACTION_CREATE,tenantId,priceListRequest);
             priceListRequest.getPriceLists().forEach(priceList -> {
@@ -166,9 +166,9 @@ public class PriceListService extends DomainService {
         	priceListRequest.getPriceLists().stream().forEach(priceList -> {
                 priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
             	if(priceList.getRateContractNumber()!=null)
-            		priceList.setRateContractNumber(priceList.getRateContractNumber().toString());
+            		priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
             	if(priceList.getAgreementNumber() != null)
-            		priceList.setAgreementNumber(priceList.getAgreementNumber().toString());
+            		priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
         	});
         	
             validate(priceListRequest.getPriceLists(), Constants.ACTION_UPDATE,tenantId,priceListRequest);

@@ -341,7 +341,7 @@
       "isStateLevel": true,
       "moduleDefinition": null,
       "uniqueKeys": [
-        "$.maxcode",
+        "$.name",
         "$.tenantId"
       ]
     }

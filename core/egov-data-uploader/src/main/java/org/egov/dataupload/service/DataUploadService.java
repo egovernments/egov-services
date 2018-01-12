@@ -13,7 +13,6 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import org.egov.DataUploadApplicationRunnerImpl;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.Defs;
 import org.egov.dataupload.model.JobSearchRequest;
@@ -121,7 +120,7 @@ public class DataUploadService {
     	    		uploadJob.getModuleName(), uploadJob.getDefName());
     	    logger.info("HeaderMap: "+uploadDefinition.getHeaderJsonPathMap());
         	if(null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()){
-        		uploadParentChildData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
+        		upload(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
 				dataUploadUtils.clearInternalDirectory();
         	}else{
         		uploadFlatData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
@@ -133,6 +132,7 @@ public class DataUploadService {
     		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
     		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
     		uploadRegistryRepository.updateJob(uploaderRequest);
+    		
 			dataUploadUtils.clearInternalDirectory();
         }
         
@@ -192,8 +192,11 @@ public class DataUploadService {
 	public String buildRequest(List<Object> coloumnHeaders, int additionFieldsCount, 
 			Definition uploadDefinition, DocumentContext documentContext, UploaderRequest uploaderRequest, List<Object>row) {
 		String request = null;
+		logger.info("row size: "+row.size());
+		logger.info("coloumnHeaders size: "+coloumnHeaders.size());
+		logger.info("additionFieldsCount: "+additionFieldsCount);
 		for(int i = 0; i < (coloumnHeaders.size() - additionFieldsCount); i++){
-			logger.debug("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));
+			logger.info("row val: "+row.get(i)+" coloumnHeader: "+coloumnHeaders.get(i));			
         	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(i).toString());
         	if(null == jsonPathList){
 				logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
@@ -267,6 +270,100 @@ public class DataUploadService {
 	    }
 	}
 		
+	private void upload(List<List<Object>> excelData,
+		     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest) {
+		ObjectMapper mapper = new ObjectMapper();		
+		String request = null;
+	    int additionFieldsCount = 0;
+		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
+		uploadJob.setEndTime(0L);uploadJob.setFailedRows(0);uploadJob.setStartTime(new Date().getTime());uploadJob.setSuccessfulRows(0);
+		uploadJob.setStatus(StatusEnum.fromValue("InProgress"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size() - 1);
+		uploadRegistryRepository.updateJob(uploaderRequest);
+		if(null == uploadDefinition.getUniqueParentKeys()){
+			logger.error("No parent unique keys.");
+    		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
+    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
+    		uploadRegistryRepository.updateJob(uploaderRequest);
+			dataUploadUtils.clearInternalDirectory();
+		}
+		Type type = new TypeToken<Map<String, Object>>() {}.getType();
+		Gson gson = new Gson();
+		Map<String, Object> objectMap = gson.fromJson(uploadDefinition.getApiRequest().toString(), type);
+		
+		logger.info("REQUEST MAP:: "+objectMap);
+		List<Integer> indexes = new ArrayList<>();
+		for(String key: uploadDefinition.getUniqueParentKeys()){
+			indexes.add(coloumnHeaders.indexOf(key));
+		}
+		for(int i = 0; i < excelData.size(); i++){
+			//fetching list of all the rows that will be combined to form ONE request.
+			List<List<Object>> filteredList = dataUploadUtils.filter(excelData, indexes, excelData.get(i));
+			logger.info("filteredList: "+filteredList);
+			for(int k = 0; k < filteredList.size(); k++){
+				for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
+	            	StringBuilder expression = new StringBuilder();
+	            	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(j).toString());
+	            	if(null == jsonPathList){
+						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+	            		continue;
+	            	}
+	            	if(jsonPathList.isEmpty()) {
+						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+	            		continue;
+	            	}
+	            	for(String jsonPath: jsonPathList) {
+	            		logger.info("jsonPath: "+jsonPath);
+		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
+		            	String[] pathArray = expression.toString().split("[.]");
+		            	Map<String, Object> tempMap = objectMap;
+		            	Map<String, Object> map = new HashMap<>();
+		            	for(String path: pathArray) {
+		            		logger.info("path: "+path);
+		            		if(path.equals("*")) {
+		            			continue;
+		            		}
+		            		if(path.equals("$")) {
+		            			continue;
+		            		}
+		            		if(tempMap.get(path) instanceof java.util.ArrayList) {
+		            			List tempList = new ArrayList<>();
+		            			tempList = (List<Object>) tempMap.get(path);
+		            			map = (Map<String, Object>) tempList.get(0);
+		            		}else {
+		            			map = (Map<String, Object>) tempMap.get(path);
+		            		}
+		            		tempMap = map;
+		            		logger.info("tempMap: "+tempMap);
+		            	}
+		            	tempMap.put(key, filteredList.get(k).get(j));
+	            		logger.info("tempMap update with val: "+filteredList.get(k).get(j)+" at key: "+key);
+		            	for(String path: pathArray) {
+		            		
+
+		            	}
+
+	            	}
+					
+				}
+			}
+			
+	    	//counter is incremented based on no of rows processed in this iteration.
+			i+=(filteredList.size() - 1);
+	    }
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	private void uploadParentChildData(List<List<Object>> excelData,
 		     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();		
@@ -282,7 +379,7 @@ public class DataUploadService {
     		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
     		uploadRegistryRepository.updateJob(uploaderRequest);
 			dataUploadUtils.clearInternalDirectory();
-		}
+		}		
 		DocumentContext documentContext = null;DocumentContext bulkApiRequest = null;
 		if(uploadDefinition.getIsBulkApi()){
 			String value = JsonPath.read(uploadDefinition.getApiRequest(), 

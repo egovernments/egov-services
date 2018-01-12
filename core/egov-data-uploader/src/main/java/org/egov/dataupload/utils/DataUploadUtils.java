@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -59,12 +60,14 @@ public class DataUploadUtils {
             int j = 0;
             while(cellIterator.hasNext()){
 	            Cell cell = cellIterator.next();
+	            logger.info("cell: "+cell.toString());
 	            if(0 == cell.getRowIndex()) {
 	            	coloumnHeaders.add(cell.getStringCellValue());
 	            	j++;
 	            }
 	            else{
-		            if(cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
+		            if(!isCellEmpty(cell)) {
+		            	logger.debug("adding value for coloumn: "+coloumnHeaders.get(i));
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
 			            		dataList.add(cell.getDateCellValue().getTime());
@@ -73,10 +76,16 @@ public class DataUploadUtils {
 		            	    }
 		            	}
 		            	else if(cell.CELL_TYPE_STRING == cell.getCellType()) {
-		            		if(null != cell.getStringCellValue() || !cell.getStringCellValue().isEmpty()) {
+		            		logger.debug("String: "+cell.getStringCellValue().trim());
+		            		if(!cell.getStringCellValue().trim().isEmpty()) {
 		            			dataList.add(cell.getStringCellValue());
 		            		}
-		            		else {
+		            		else if(cell.getStringCellValue().equals("NA") || 
+		            				cell.getStringCellValue().equals("N/A") || cell.getStringCellValue().equals("na")){
+				            	logger.debug("adding string null for coloumn: "+coloumnHeaders.get(i));
+			            		dataList.add(null);
+		            		}else {
+				            	logger.debug("adding string null for coloumn: "+coloumnHeaders.get(i));
 			            		dataList.add(null);
 		            		}
 		            	}
@@ -85,9 +94,11 @@ public class DataUploadUtils {
 
 		            	}
 		            }else {
+		            	logger.debug("adding null for coloumn: "+coloumnHeaders.get(i));
 		            	dataList.add(null);
 		            }
 	            	
+		            i++;
 	            }
             }
             if(!dataList.isEmpty())
@@ -100,6 +111,15 @@ public class DataUploadUtils {
         return excelData;
 
 		
+	}
+	
+	public static boolean isCellEmpty(final Cell cell) {
+	    if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK)
+	        return true;
+	    if (cell.getCellType() == Cell.CELL_TYPE_STRING && cell.getStringCellValue().isEmpty())
+	        return true;
+	
+	    return false;
 	}
 	
 	public Definition getUploadDefinition(Map<String, UploadDefinition> searchDefinitionMap,
@@ -194,6 +214,9 @@ public class DataUploadUtils {
 	            	cell.setCellType(CellType.NUMERIC);
 	            	cell.setCellValue(Long.parseLong(exisitingFields.get(i).toString()));
             	}
+            }else if(exisitingFields.get(i) instanceof Boolean) {
+            	cell.setCellType(CellType.BOOLEAN);
+            	cell.setCellValue(Boolean.parseBoolean(exisitingFields.get(i).toString()));
             }
             
         }

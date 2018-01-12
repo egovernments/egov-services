@@ -76,7 +76,7 @@ services:
           
  - name: Get Department
    description: Search Department
-   fromEndPont: /egov-common-masterstest/departments/_searchtest
+   fromEndPont: /egov-common-masters/departments/_searchtest
    finalResponse:       
      body: '{"responseInfo":null,"Department":[{"id":null,"name":null,"code":null,"active":null,"tenantId":null}]}'
      basePath: $.Department[*]

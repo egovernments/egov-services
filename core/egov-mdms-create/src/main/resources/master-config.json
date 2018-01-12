@@ -84,18 +84,17 @@
       ]
     }
   },
-
-"egf-master": {
-   "Fund": {
-     "masterName": "Fund",
-     "moduleDefinition": null,
-     "isStateLevel": true,
-     "uniqueKeys": [
-       "$.code",
-       "$.tenantId"
-     ]
-   }
- },
+  "egf-master": {
+    "Fund": {
+      "masterName": "Fund",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    }
+  },
   "lcms": {
     "court": {
       "masterName": "court",
@@ -333,7 +332,16 @@
       "isStateLevel": true,
       "moduleDefinition": null,
       "uniqueKeys": [
-        "$.code",
+        "$.class",
+        "$.tenantId"
+      ]
+    },
+    "BudgetGroup": {
+      "masterName": "BudgetGroup",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.maxcode",
         "$.tenantId"
       ]
     }

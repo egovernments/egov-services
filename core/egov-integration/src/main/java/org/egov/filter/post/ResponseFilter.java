@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.egov.filter.utils.FilterConstant;
 
-import com.netflix.client.http.HttpHeaders;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 

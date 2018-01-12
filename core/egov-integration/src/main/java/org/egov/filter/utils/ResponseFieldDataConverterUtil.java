@@ -1,5 +1,8 @@
 package org.egov.filter.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,17 @@ public class ResponseFieldDataConverterUtil {
 				else if (value instanceof Double)
 					value = String.valueOf(((Double) value).intValue());
 
+			} else if(sourceType.equals(TypeEnum.DATE.toString()) && destType.equals(TypeEnum.LONG.toString())) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a");
+				try {
+					Date date = dateFormat.parse(value.toString());
+					value = date.getTime();
+					log.info("time:"+ value);
+					
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		} else if (valueMapping != null) {
 			Map<String, Object> map = new HashMap<>();

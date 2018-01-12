@@ -77,7 +77,11 @@ mdms:
              destination: $.finYearRange
            - source: $.resultData[*].fromDate
              destination: $.startingDate
+             sourceType: DATE
+             destType: LONG
            - source: $.resultData[*].toDate
              destination: $.endingDate
+             sourceType: DATE
+             destType: LONG
            
             

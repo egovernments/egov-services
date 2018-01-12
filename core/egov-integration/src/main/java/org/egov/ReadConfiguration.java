@@ -1,5 +1,6 @@
 package org.egov;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.egov.filter.model.ServiceMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -46,9 +48,12 @@ public class ReadConfiguration {
 		ServiceMap serviceMap = null;
 		
 		try {
+			  
+			 /* Resource resource = resourceLoader.getResource("classpath:ServicesConfiguration.yml"); 
+			  File file = resource.getFile(); 
+			  serviceMap = mapper.readValue(file, ServiceMap.class);*/
+			  
 			  URL serviceConfigUrl = new URL(serviceConfigPath);
-			  /*Resource resource = resourceLoader.getResource("classpath:ServicesConfiguration.yml"); 
-			  File file = resource.getFile(); */
 			  serviceMap = mapper.readValue(new InputStreamReader(serviceConfigUrl.openStream()), ServiceMap.class);
 			  log.info("loadYaml service: " + serviceMap.toString());
 
@@ -65,9 +70,11 @@ public class ReadConfiguration {
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		MdmsMap mdmsMap = null;
 		try {
-			URL mdmsConfigUrl = new URL(mdmsConfigPath);
+			
 			  /*Resource resource = resourceLoader.getResource("classpath:MdmsConfig.yml"); 
-			  File file = resource.getFile(); */
+			  File file = resource.getFile(); 
+			  mdmsMap = mapper.readValue(file, MdmsMap.class);*/
+			  URL mdmsConfigUrl = new URL(mdmsConfigPath);
 			  mdmsMap = mapper.readValue(new InputStreamReader(mdmsConfigUrl.openStream()), MdmsMap.class);
 			  log.info("loadYaml mdms: " + mdmsMap);
 

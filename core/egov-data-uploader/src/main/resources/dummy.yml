@@ -7,7 +7,7 @@ UploadDefinitions:
    apiRequest: {"RequestInfo": {},"Dummy": [{"name": "Vishal","code": "VISH","address": [{"house": 1,"street": "Koramangala"}],"companies": [{"name": "tarento","offices": [{"name": "R and D","location": "koramangala"}]}]}]}
 
    headerJsonPathMap: {"Name": ["$.Dummy.*.name"], "Code": ["$.Dummy.*.code"], "HouseNo": ["$.Dummy.*.address.*.house"], "Street": ["$.Dummy.*.address.*.street"], 
-"Company": ["$.Dummy.*.company.*.name"], "officeType":["$.Dummy.*.company.*.offices.*.name"], "officeLocation":["$.Dummy.*.company.*.offices.*.location"]}
+"Company": ["$.Dummy.*.companies.*.name"], "officeType":["$.Dummy.*.companies.*.offices.*.name"], "officeLocation":["$.Dummy.*.companies.*.offices.*.location"]}
    isBulkApi: true
    arrayPath: $.Dummy.*
    isParentChild: true

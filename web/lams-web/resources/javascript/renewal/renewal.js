@@ -119,7 +119,8 @@ class RenewalAgreement extends React.Component {
       departmentList: [],
       designationList: [],
       userList: [],
-      rentInc: []
+      rentInc: [],
+      minRent:0
 
     }
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -140,7 +141,6 @@ class RenewalAgreement extends React.Component {
     var agreement = Object.assign({}, _this.state.agreement);
     agreement.action = "Renewal";
 
-    console.log("Documents", agreement);
 
     if (agreement.documents && agreement.documents.constructor == FileList) {
       let counter = agreement.documents.length,
@@ -494,7 +494,8 @@ class RenewalAgreement extends React.Component {
       ...this.state,
       agreement: agreement,
       departmentList: departmentList,
-      rentInc: rentInc
+      rentInc: rentInc,
+      minRent: agreement.rent
     });
 
 
@@ -546,11 +547,11 @@ class RenewalAgreement extends React.Component {
   render() {
     var _this = this;
     let { handleChange, handleChangeTwoLevel, addOrUpdate } = this;
-    let { agreement, renewalReasons, rentInc } = _this.state;
+    let { agreement, renewalReasons, rentInc, minRent } = _this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
       renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
-    let minRent = this.state.agreement.rent;
+    //agreement.rent;
 
     const renderOption = function (data) {
       if (data) {

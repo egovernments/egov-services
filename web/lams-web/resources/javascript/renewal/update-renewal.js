@@ -351,7 +351,8 @@ class UpdateRenewal extends React.Component {
             wfStatus: process.status,
             workflow: workflow,
             buttons: _btns ? _btns : [],
-            rentInc: rentInc
+            rentInc: rentInc,
+            minRent: agreement.rent
         });
 
     }
@@ -776,7 +777,7 @@ class UpdateRenewal extends React.Component {
     render() {
         var _this = this;
         let { handleChange, handleChangeTwoLevel, addOrUpdate, printNotice, handleProcess } = this;
-        let { agreement, renewalReasons, buttons, rentInc } = this.state;
+        let { agreement, renewalReasons, buttons, rentInc, minRent } = this.state;
         let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
             renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
         let { assetCategory, locationDetails } = this.state.agreement.asset;
@@ -1168,7 +1169,7 @@ class UpdateRenewal extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span>₹</span>
-                                            <input type="number" min={agreement.rent} name="renewalRent" id="renewalRent" value={agreement.rent}
+                                            <input type="number" min={minRent} name="renewalRent" id="renewalRent" value={agreement.rent}
                                                 onChange={(e) => { handleChange(e, "rent") }} required disabled />
                                         </div>
                                     </div>

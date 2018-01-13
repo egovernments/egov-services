@@ -270,6 +270,11 @@ public class AgreementService {
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 
+		if (Action.RENEWAL.equals(agreement.getAction())
+				&& (Status.WORKFLOW.equals(agreement.getStatus()) || Status.REJECTED.equals(agreement.getStatus()))) {
+			agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
+		}
+		
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			agreement.setDemands(updateDemand(agreement.getDemands(), agreement.getLegacyDemands(),
 					agreementRequest.getRequestInfo()));

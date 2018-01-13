@@ -120,7 +120,7 @@ public class DataUploadService {
     	    		uploadJob.getModuleName(), uploadJob.getDefName());
     	    logger.info("HeaderMap: "+uploadDefinition.getHeaderJsonPathMap());
         	if(null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()){
-        		upload(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
+        		uploadParentChildData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
 				dataUploadUtils.clearInternalDirectory();
         	}else{
         		uploadFlatData(excelData, coloumnHeaders, uploadDefinition, uploaderRequest);
@@ -582,15 +582,10 @@ public class DataUploadService {
         	filteredListObjects.add(objectMap);
 		}
 		Map<String, Object> requestMap = new HashMap<>();
-		requestMap = filteredListObjects.get(0);
-		for(Map<String, Object> map: filteredListObjects){
-			if(0 != filteredListObjects.indexOf(map)) {
-				for(String key: arrayKeys){
-					List<Object> entry = (List<Object>) requestMap.get(key);
-					entry.addAll((List<Object>) map.get(key));
-					requestMap.put(key, entry);
-				}
-			}
+		deepMerge(requestMap, filteredListObjects.get(0));
+		deepMerge(requestMap, filteredListObjects.get(1));
+		for(Map map: filteredListObjects) {
+			deepMerge(requestMap, map);
 		}
 		logger.info("requestMap: "+requestMap);
 		Object requestContentBody = null;
@@ -621,6 +616,27 @@ public class DataUploadService {
 		}
 		
 		return request;
+	}
+	
+	private static Map deepMerge(Map original, Map newMap) {
+	    for (Object key : newMap.keySet()) {
+	        if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
+	            Map originalChild = (Map) original.get(key);
+	            Map newChild = (Map) newMap.get(key);
+	            original.put(key, deepMerge(originalChild, newChild));
+	        } else if (newMap.get(key) instanceof List && original.get(key) instanceof List) {
+	            List originalChild = (List) original.get(key);
+	            List newChild = (List) newMap.get(key);
+	            for (Object each : newChild) {
+	                if (!originalChild.contains(each)) {
+	                    originalChild.add(each);
+	                }
+	            }
+	        } else {
+	            original.put(key, newMap.get(key));
+	        }
+	    }
+	    return original;
 	}
 	
 	

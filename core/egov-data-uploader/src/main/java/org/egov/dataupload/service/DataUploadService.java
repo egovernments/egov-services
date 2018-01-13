@@ -162,7 +162,7 @@ public class DataUploadService {
     	logger.info("Writing column headers to excel file....: "+coloumnHeaders);
     	String resultFilePath = dataUploadUtils.createANewFile(resFilePrefix + uploaderRequest.getUploadJobs().get(0).getRequestFileName());
 		dataUploadUtils.writeToexcelSheet(coloumnHeaders, resultFilePath);
-		int successCount = 0; int failureCount = 0;
+		Integer successCount = 0; Integer failureCount = 0;
 		for(List<Object> row: excelData){
 			String failureMessage = null;
 			logger.info("row: "+row.toString());
@@ -177,7 +177,9 @@ public class DataUploadService {
 				    	}
 				    	
 				    }
-				    writeToResultExcel(failureMessage, row, apiResponse, failureCount, successCount, resultFilePath, resJsonPathList);
+				    List<Integer> successFailureCounts = writeToResultExcel(failureMessage, row, apiResponse, failureCount, successCount, resultFilePath, resJsonPathList);
+				    failureCount = successFailureCounts.get(0);
+				    successCount = successFailureCounts.get(1);
 			}
 			String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 			uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
@@ -230,8 +232,9 @@ public class DataUploadService {
 	    return request;
 	}
 	
-	public void writeToResultExcel(String failureMessage, List<Object> row, Object apiResponse, int failureCount,
-			int successCount, String resultFilePath, List<Object> resJsonPathList) throws Exception {
+	public List<Integer> writeToResultExcel(String failureMessage, List<Object> row, Object apiResponse, Integer failureCount,
+			Integer successCount, String resultFilePath, List<Object> resJsonPathList) throws Exception {
+		List<Integer> successFailureCounts = new ArrayList<>();
 	    if(null != failureMessage && !failureMessage.isEmpty()) {
 	    	if(null != resJsonPathList){
 	    		for(Object obj: resJsonPathList){
@@ -268,6 +271,10 @@ public class DataUploadService {
 	    	logger.info("Writing SUCCESS ROW to excel....: "+row);
 			dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 	    }
+		successFailureCounts.add(failureCount);
+		successFailureCounts.add(successCount);
+		
+	    return successFailureCounts;
 	}
 		
 	private void upload(List<List<Object>> excelData,

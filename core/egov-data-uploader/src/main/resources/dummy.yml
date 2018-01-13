@@ -4,9 +4,10 @@ UploadDefinitions:
  version: 1.0.0
  definitions:
  - defName: dummycreation
-   apiRequest: {"RequestInfo": {},"Dummy": [{"name": "Vishal", "code": "VISH", "address": [{"house": 1, "street": "Koramangala"}]}]}
+   apiRequest: {"RequestInfo": {},"Dummy": [{"name": "Vishal","code": "VISH","address": [{"house": 1,"street": "Koramangala"}],"companies": [{"name": "tarento","offices": [{"name": "R and D","location": "koramangala"}]}]}]}
 
-   headerJsonPathMap: {"Name": ["$.Dummy.*.name"], "Code": ["$.Dummy.*.code"], "HouseNo": ["$.Dummy.*.address.*.house"], "Street": ["$.Dummy.*.address.*.street"]}
+   headerJsonPathMap: {"Name": ["$.Dummy.*.name"], "Code": ["$.Dummy.*.code"], "HouseNo": ["$.Dummy.*.address.*.house"], "Street": ["$.Dummy.*.address.*.street"], 
+"Company": ["$.Dummy.*.company.*.name"], "officeType":["$.Dummy.*.company.*.offices.*.name"], "officeLocation":["$.Dummy.*.company.*.offices.*.location"]}
    isBulkApi: true
    arrayPath: $.Dummy.*
    isParentChild: true

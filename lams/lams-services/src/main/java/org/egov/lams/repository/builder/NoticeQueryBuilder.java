@@ -16,8 +16,8 @@ public class NoticeQueryBuilder {
             + " (id, noticeno, noticedate, agreementno, assetcategory, acknowledgementnumber, assetno, allotteename,"
             + " allotteeaddress, allotteemobilenumber, agreementperiod, commencementdate, templateversion, expirydate, rent,"
             + " securitydeposit, commissionername, zone, ward, street, electionward, locality, block, createdby,"
-			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, filestore)"
-			+ " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			+ " createddate, lastmodifiedby ,lastmodifieddate, tenantId, filestore, noticetype)"
+			+ " VALUES (nextval('seq_eglams_notice'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     public final static String SEQ_NOTICE_NO = "SELECT nextval('seq_eglams_noticeno')";
 
@@ -53,6 +53,16 @@ public class NoticeQueryBuilder {
         if (noticeCriteria.getNoticeNo() != null) {
             selectQuery.append(" and notice.NoticeNo = :noticeNo");
             params.put("noticeNo", noticeCriteria.getNoticeNo());
+        }
+        
+        if (noticeCriteria.getNoticeType() != null) {
+            selectQuery.append(" and notice.noticetype = :noticeType");
+            params.put("noticeType", noticeCriteria.getNoticeType());
+        }
+        
+        if (noticeCriteria.getRevenueWard() != null) {
+            selectQuery.append(" and notice.ward = :revenueWard");
+            params.put("revenueWard", noticeCriteria.getRevenueWard());
         }
 
         if (noticeCriteria.getTenantId() != null) {

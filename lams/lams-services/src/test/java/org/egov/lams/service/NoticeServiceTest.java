@@ -1,6 +1,7 @@
 package org.egov.lams.service;
 
 import org.egov.lams.model.*;
+import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.NoticeRepository;
 import org.egov.lams.repository.WorkFlowRepository;
@@ -90,6 +91,7 @@ public class NoticeServiceTest {
                 .commencementDate(new Date())
                 .doorNo("4545")
                 .tenantId("kurnool")
+                .noticeType("RENEWAL")
                 .build();
     }
 
@@ -116,6 +118,7 @@ public class NoticeServiceTest {
                                     .councilNumber("454")
                                     .rent(2000d)
                                     .securityDeposit(2000d)
+                                    .action(Action.CREATE)
                                     .build();
 
         List<Agreement> agreementList = new ArrayList<>();

@@ -3,6 +3,7 @@ package org.egov.lams.repository;
 import org.egov.lams.model.Notice;
 import org.egov.lams.model.NoticeCriteria;
 import org.egov.lams.repository.builder.NoticeQueryBuilder;
+import org.egov.lams.repository.rowmapper.NoticeRowMapper;
 import org.egov.lams.web.contract.NoticeRequest;
 import org.egov.lams.web.contract.RequestInfo;
 import org.slf4j.Logger;
@@ -43,7 +44,7 @@ public class NoticeRepository {
 				notice.getExpiryDate(), notice.getRent(), notice.getSecurityDeposit(), notice.getCommissionerName(),
 				notice.getZone(), notice.getWard(), notice.getStreet(), notice.getElectionward(), notice.getLocality(),
 				notice.getBlock(), requestInfo.getRequesterId(), new Date(), requestInfo.getRequesterId(), new Date(),
-				notice.getTenantId(), notice.getFileStore() };
+				notice.getTenantId(), notice.getFileStore() ,notice.getNoticeType()};
 
         try {
             jdbcTemplate.update(NoticeQueryBuilder.INSERT_NOTICE_QUERY, obj);
@@ -69,18 +70,18 @@ public class NoticeRepository {
         return noticeNo.toString();
     }
 
-    public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
+	public List<Notice> getNotices(NoticeCriteria noticeCriteria) {
 
-        List<Notice> notices = null;
-        Map params = new HashMap<>();
-        String queryString = NoticeQueryBuilder.getNoticeQuery(noticeCriteria, params);
-        try {
-            notices = namedParameterJdbcTemplate.query(queryString, params, new BeanPropertyRowMapper<>(Notice.class));
-        } catch (DataAccessException e) {
-            LOGGER.info("the exception from notice repo query :: " + e);
-            throw new RuntimeException(e.getMessage());
-        }
-        return notices;
-    }
+		List<Notice> notices = null;
+		Map params = new HashMap<>();
+		String queryString = NoticeQueryBuilder.getNoticeQuery(noticeCriteria, params);
+		try {
+			notices = namedParameterJdbcTemplate.query(queryString, params, new NoticeRowMapper());
+		} catch (DataAccessException e) {
+			LOGGER.info("the exception from notice repo query :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		return notices;
+	}
 
 }

@@ -116,7 +116,12 @@ public class NoticeQueryBuilderTest {
         }
         if (noticeCriteria.getNoticeNo() != null) {
             query.append(" and notice.NoticeNo = :noticeNo");
+            
         }
+        if (noticeCriteria.getNoticeType() != null) {
+            query.append(" and notice.noticetype = :noticeType");
+        }
+        
         if (noticeCriteria.getTenantId() != null) {
             query.append(" and notice.TenantId = :tenantId");
         }

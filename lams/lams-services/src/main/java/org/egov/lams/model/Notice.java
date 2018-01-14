@@ -144,6 +144,7 @@ public class Notice   {
 	  this.ward = agreement.getAsset().getLocationDetails().getRevenueWard();
 	  this.zone = agreement.getAsset().getLocationDetails().getZone();
 	  this.doorNo = agreement.getAsset().getLocationDetails().getDoorNo();
+	  this.noticeType = agreement.getAction().toString();
   }
 
 }

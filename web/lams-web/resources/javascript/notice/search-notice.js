@@ -4,7 +4,8 @@ class Notice extends React.Component {
     this.state={
       searchSet:{
         tenantId
-      }
+      },
+      noticeType:["CREATE", "RENEWAL", "EVICTION", "CANCELLATION","OBJECTION","JUDGEMENT"]
     };
     this.handleChange=this.handleChange.bind(this);
     this.search=this.search.bind(this);
@@ -18,12 +19,8 @@ class Notice extends React.Component {
     let {handleChange} = this;
     this.setState({
       assetCategories:commonApiPost("asset-services","assetCategories","_search",{tenantId}).responseJSON["AssetCategory"],
-      locality:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId }).responseJSON["Boundary"],
-      electionWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION", tenantId }).responseJSON["Boundary"],
       revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"],
-      revenueZone:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "ZONE", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"],
-      revenueBlock:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "BLOCK", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
-    });
+      });
 
     let assets = commonApiPost("asset-services", "assets", "_search", { tenantId}).responseJSON.Assets;
 
@@ -70,6 +67,10 @@ class Notice extends React.Component {
   search(e){
     let {searchSet} = this.state;
     let _this=this;
+    if(!_this.state.searchSet.noticeType){
+      showError("Please select notice type.")
+      return false;
+    }
 
     // if(!searchSet['revenueWard']){
     //   this.setState({
@@ -99,6 +100,10 @@ class Notice extends React.Component {
       //resultset not changed in the state
       this.createPDFdocForMerge(resultSet);
     }else{
+         if(!searchSet.noticeType){
+         showError("Please select notice type.");
+         return false;
+         }
       //get the latest result from the API
       Promise.all([
         commonApiPost("lams-services/agreement","notice","_search",searchSet)
@@ -309,11 +314,15 @@ class Notice extends React.Component {
           <thead>
             <tr>
               <th>S.no</th>
-              <th>Asset Category</th>
+              <th>Agreement Number</th>
               <th>Asset Code</th>
-              <th>Asset Name</th>
-              <th>Locality</th>
-              <th>Election Ward</th>
+              <th>Asset Category</th>
+              <th>Revenue Ward</th>
+              <th>Allottee Name</th>
+              <th>Allottee MobileNo</th>
+              <th>Allottee Address</th>
+              <th>Notice Type</th>
+
             </tr>
           </thead>
           <tbody>
@@ -321,11 +330,14 @@ class Notice extends React.Component {
               return (
                 <tr onClick={e=>{this.showFile(list.fileStore)}}>
                   <td>{index+1}</td>
-                  <td>{getName(assetCategories, list.assetCategory)}</td>
+                  <td>{list.agreementNumber}</td>
                   <td>{list.assetNo}</td>
-                  <td>{list.assetName}</td>
-                  <td>{getName(locality, list.locality)}</td>
-                  <td>{getName(electionWard, list.electionward)}</td>
+                  <td>{list.assetCategory}</td>
+                  <td>{list.ward}</td>
+                  <td>{list.allotteeName}</td>
+                  <td>{list.allotteeMobileNumber}</td>
+                  <td>{list.allotteeAddress}</td>
+                  <td>{list.noticeType}</td>
                 </tr>
               )
             })}
@@ -360,6 +372,10 @@ class Notice extends React.Component {
       //resultset not changed in the state
       this.createZIP(resultSet);
     }else{
+      if(!searchSet.noticeType){
+        showError("Please select notice type.")
+        return false;
+      }
       //get the latest result from the API
       Promise.all([
         commonApiPost("lams-services/agreement","notice","_search",searchSet)
@@ -420,17 +436,17 @@ class Notice extends React.Component {
   }
   render(){
     console.log(this.state.searchSet);
-    let {assetCategories, locality, electionWard, revenueWard, revenueZone, revenueBlock, searchClicked} = this.state;
+    let {noticeType, assetCategories, locality, electionWard, revenueWard, revenueZone, revenueBlock, searchClicked} = this.state;
     let {handleChange, search, mergeDownload, zipDownload, closeWindow, showTable} = this;
     const renderOptions = function(list)
     {
         if(list)
-        {
+          {
             if (list.length) {
               return list.map((item)=>
               {
-                  return (<option key={item.id} value={item.id}>
-                          {item.name}
+                  return (<option key={item.id} value={typeof item == "object" ? item.id : item}>
+                    {typeof item == "object" ? item.name : item}
                     </option>)
               })
 
@@ -464,6 +480,7 @@ class Notice extends React.Component {
                               <div className="styled-select">
                                   <select id="noticeType" onChange={(e) => { handleChange(e.target.value, "noticeType") }}>
                                     <option value="">Select Notice Type</option>
+                                    {renderOptions(noticeType)}
                                   </select>
                               </div>
                           </div>
@@ -489,25 +506,53 @@ class Notice extends React.Component {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="">Asset Code</label>
+                              <label for="">Agreement Number</label>
                           </div>
                           <div className="col-sm-6">
-                            <input type="text" id="assetCode" />
+                            <input type="text" id="agreementNumber" onChange={(e) => { handleChange(e.target.value, "agreementNumber") }}/>
                           </div>
                       </div>
                   </div>
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="">Asset Name</label>
+                              <label for="">Acknowledgement No</label>
                           </div>
                           <div className="col-sm-6">
-                            <input type="text" id="assetName" />
+                            <input type="text" id="acknowledgementNumber" onChange={(e) => { handleChange(e.target.value, "acknowledgementNumber") }}/>
                           </div>
                       </div>
                   </div>
               </div>
               <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Asset Code</label>
+                          </div>
+                          <div className="col-sm-6">
+                            <input type="text" id="assetNo" onChange={(e) => { handleChange(e.target.value, "assetNo") }}/>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Revenue Ward</label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                  <select id="revenueWard" onChange={(e) => { handleChange(e.target.value, "revenueWard") }}>
+                                    <option value="">Select Revenue Ward</option>
+                                    {renderOptions(revenueWard)}
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              {/*<div className="row">
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
@@ -587,7 +632,7 @@ class Notice extends React.Component {
                           </div>
                       </div>
                   </div>
-              </div>
+              </div>*/}
               <div className="text-center">
                 <button type="button" className="btn btn-submit" onClick={(e)=>{search(e)}}>Search</button>  &nbsp;&nbsp;
                 <button type="button" className="btn btn-submit" onClick={(e)=>{mergeDownload(e)}}>Merge & Download</button>  &nbsp;&nbsp;

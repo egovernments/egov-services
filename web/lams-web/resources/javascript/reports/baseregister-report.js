@@ -70,6 +70,14 @@ class BaseRegister extends React.Component {
               <th>Locality</th>
               <th>Revenue Ward</th>
               <th>Election Ward</th>
+              <th>Security Deposit</th>
+              <th>Goodwill Amount</th>
+              <th>Date of Allotment</th>
+              <th>Agreement Time Period</th>
+              <th>Agreement Expiry Date</th>
+              <th>Agreement Status </th>
+              <th>Total Rent</th>
+              <th>Total Pending Rent</th>
             </tr>
           </thead>
           <tbody>
@@ -83,6 +91,14 @@ class BaseRegister extends React.Component {
                   <td>{list.locality}</td>
                   <td>{list.revenueward}</td>
                   <td>{list.electionward}</td>
+                  <td>{list.securityDeposit}</td>
+                  <td>{list.goodWillAmount}</td>
+                  <td>{list.commencementDate}</td>
+                  <td>{list.timePeriod}</td>
+                  <td>{list.expiryDate}</td>
+                  <td>{list.status}</td>
+                  <td>{list.rent}</td>
+                  <td>{list.balance}</td>
                 </tr>
               )
             })}

@@ -515,6 +515,46 @@ class AgreementDetails extends React.Component {
                                 </div>
                             </div>
                         </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="status">GSTIN :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="status" name="status">
+                                            {agreement.gstin ? agreement.gstin : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="status">Category :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="status" name="status">
+                                            {agreement.category ? agreement.category : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="status">Basis of Allotment :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="status" name="status">
+                                            {agreement.basisOfAllotment ? agreement.basisOfAllotment : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
@@ -530,11 +570,13 @@ class AgreementDetails extends React.Component {
                 <table id="subSeqRenewalble" className="table table-bordered">
                     <thead>
                     <tr>
-                        <th colSpan='3'>S.No</th>
-                        <th colSpan='3'>From Date</th>
-                        <th colSpan='3'>To Date</th>
-                        <th colSpan='3'>Years</th>
-                        <th colSpan='2'>Monthly Rent(Rs.)</th>
+                        <th>Sr.no</th>
+                        <th >Council/standing committee Resolution Number</th>
+                        <th>Council/standing committee Resolution date</th>
+                        <th >From Date</th>
+                        <th>To Date</th>
+                        <th>Years</th>
+                        <th>Monthly Rent(Rs.)</th>
 
                     </tr>
                     </thead>
@@ -554,11 +596,13 @@ class AgreementDetails extends React.Component {
 
             return subSeqRenewals.map((item,index)=>
             {                   return (<tr key={index}>
-                                      <td colSpan='3'>{index+1}</td>
-                                      <td colSpan='3'>{item.fromDate} </td>
-                                      <td colSpan='3'>{item.toDate}</td>
-                                      <td colSpan='3'>{item.years}</td>
-                                      <td colSpan='3'>{item.rent}</td>
+                                      <td>{index+1}</td>
+                                      <td>{item.resolutionNumber || 'N/A'}</td>
+                                      <td>{item.resolutionDate || 'N/A'}</td>
+                                      <td>{item.fromDate} </td>
+                                      <td>{item.toDate}</td>
+                                      <td>{item.years}</td>
+                                      <td>{item.rent}</td>
 
 
                       </tr>

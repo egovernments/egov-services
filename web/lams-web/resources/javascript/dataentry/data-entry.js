@@ -66,6 +66,7 @@ $(document).on("keyup","input", function() {
 
 var index=1;
 var create = true;
+var renewalOfRent;
 
 $(document).ready(function() {
 
@@ -79,6 +80,24 @@ $(document).ready(function() {
   }
 
   onLoadAsset();
+
+  //basis of allotment API call
+  var basisOfAllotment = [{label:'Goodwill Auction',value:'goodwillauction'},{label:'Normal',value:'normal'}];
+  $.each(basisOfAllotment, function (idx, basis){
+    $("#basisOfAllotment").append($("<option />").val(basis.value).text(basis.label));
+  });
+
+  //cattegory API call
+  var category = [{label:'SC',value:'SC'},{label:'ST',value:'ST'},{label:'Physically Handicapped',value:'Physically Handicapped'},{label:'SHG Member',value:'SHG Member'},{label:'Nayi Brahmin',value:'Nayi Brahmin'},{label:'Member of Washermen’s Co-opertative Society',value:'Member of Washermen’s Co-opertative Society'}];
+  $.each(category, function (idx, cat){
+    $("#category").append($("<option />").val(cat.value).text(cat.label));
+  });
+
+  // methos for renewal of rent API
+  renewalOfRent = [{label:'10% of the current market value',value:'10%'},{label:'33.33% above of the earlier amount',value:'33.33%'},{label:'Prevailing rent of such properties in the vicinity',value:'1%'}];
+  $.each(renewalOfRent, function (idx, rent){
+    $("#renewalOfRent").append($("<option />").val(rent.value).text(rent.label));
+  });
 
   // console.log(getUrlVars()["agreementNumber"]);
   if(getUrlVars()["agreementNumber"]){
@@ -162,13 +181,37 @@ $(document).ready(function() {
     calcFooterYearSum();
   });
 
+  //natureOfAllotment
+  $('#basisOfAllotment').on('change',function(){
+
+    // dependent fields show & hide
+    if(this.value && $('#timePeriod').val()){
+      dependentonBasisTime(this.value, $('#timePeriod').val());
+    }
+
+    // update natureOfAllotment and renewalOfRent dropdown
+    $('#natureOfAllotment, #renewalOfRent').find('option').remove().end().append('<option value="">Select</option>');
+    fillValueToObject({id:'natureOfAllotment',name:'natureOfAllotment',value:''});
+    fillValueToObject({id:'renewalOfRent',name:'renewalOfRent',value:''});
+    if(this.value === 'goodwillauction'){
+      $(`#natureOfAllotment`).append(`<option value='AUCTION'>AUCTION</option>`);
+      $(`#renewalOfRent`).append(`<option value='33.33%'>33.33%</option>`);
+    }else if(this.value === 'normal'){
+      Object.keys(natureOfAllotments).map((k, index)=>{
+          $(`#natureOfAllotment`).append('<option value='+k+'>'+natureOfAllotments[k]+'</option>')
+      });
+      $.each(renewalOfRent, function (idx, rent){
+        $("#renewalOfRent").append($("<option />").val(rent.value).text(rent.label));
+      });
+    }
+
+    //
+
+  });
+
   $('#timePeriod').on('change',function(){
-    if(this.value <= 3){
-      $('#governmentOrder').hide();
-      $('#municipalOrder').show();
-    }else{
-      $('#municipalOrder').hide();
-      $('#governmentOrder').show();
+    if($('#basisOfAllotment').val() && this.value){
+      dependentonBasisTime($('#basisOfAllotment').val(), this.value);
     }
   })
 
@@ -180,6 +223,42 @@ $(document).ready(function() {
    }
 
  });
+
+ function dependentonBasisTime(basis, time){
+   if(basis === 'goodwillauction'){
+     if(time <= 5){
+       $('#governmentOrder').hide();
+       clearGovernment();
+       $('#municipalOrder').show();
+     }else{
+       $('#municipalOrder').hide();
+       clearMunicipal();
+       $('#governmentOrder').show();
+     }
+   }else if(basis === 'normal'){
+     if(time <= 3){
+       $('#governmentOrder').hide();
+       clearGovernment();
+       $('#municipalOrder').show();
+     }else{
+       $('#municipalOrder').hide();
+       clearMunicipal();
+       $('#governmentOrder').show();
+     }
+   }
+ }
+
+ function clearGovernment(){
+   fillValueToObject({id:'governmentOrderNumber',name:'governmentOrderNumber',value:''});
+   fillValueToObject({id:'governmentOrderDate',name:'governmentOrderDate',value:''});
+   $('#governmentOrderNumber, #governmentOrderDate').val('');
+ }
+
+ function clearMunicipal(){
+   fillValueToObject({id:'municipalOrderNumber',name:'municipalOrderNumber',value:''});
+   fillValueToObject({id:'municipalOrderDate',name:'municipalOrderDate',value:''});
+   $('#municipalOrderNumber, #municipalOrderDate').val('');
+ }
 
 //Getting data for user input
 $("select").on("change", function() {
@@ -362,6 +441,15 @@ var commomFieldsRules = {
         required: true
     },
     expiryDate: {
+        required: true
+    },
+    basisOfAllotment: {
+        required: true
+    },
+    renewalOfRent: {
+        required: true
+    },
+    category: {
         required: true
     },
     rent: {
@@ -949,7 +1037,7 @@ function getAbsoulteMonths(momentDate) {
 
 function calcFooterYearSum(){
   let totalYear=0, totalMonth=0;
-  $("#subesquentrenewalsTable tbody tr").find('td:eq(2) input').each(function(index){
+  $("#subesquentrenewalsTable tbody tr").find('td:eq(4) input').each(function(index){
     let yearndmonth = $(this).val().split('.');
     totalMonth= isNaN(Number(yearndmonth[1])%12) ? totalMonth+0 : totalMonth+Number(yearndmonth[1])%12;
     if(totalMonth > 12){
@@ -1488,6 +1576,10 @@ function basedOnType(){
 ///^[0-9]*$/.test(value);
 $(document).on('keyup','.srRent',function(){
   $(this).val($(this).val().replace(/[^0-9]/g,''));
+});
+
+$(document).on('keyup','.resolutionNumber',function(){
+  $(this).val($(this).val().replace(/[^a-z0-9]/g,''));
 })
 
 function cloneRow(){

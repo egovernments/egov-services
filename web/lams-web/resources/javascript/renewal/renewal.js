@@ -140,7 +140,7 @@ class RenewalAgreement extends React.Component {
     var _this = this;
     var agreement = Object.assign({}, _this.state.agreement);
     agreement.action = "Renewal";
-
+    var ID = "Forward";
 
     if (agreement.documents && agreement.documents.constructor == FileList) {
       let counter = agreement.documents.length,

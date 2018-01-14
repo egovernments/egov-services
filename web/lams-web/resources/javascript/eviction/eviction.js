@@ -137,6 +137,7 @@ class EvictionAgreement extends React.Component {
         var _this = this;
         var agreement = Object.assign({}, _this.state.agreement);
         agreement.action = "Eviction";
+        var ID = "Forward";
 
         console.log("Documents", agreement);
 

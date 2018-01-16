@@ -108,7 +108,7 @@ $(document).ready(function() {
         create=false;
         let modifyAgreements = response.Agreements[0];
         // console.log(modifyAgreements);
-        agreement = {...modifyAgreements};
+        agreement = Object.assign({}, modifyAgreements);
         if(agreement['subSeqRenewals'].length > 1){
           for(let i=1;i<agreement['subSeqRenewals'].length;i++){
             cloneRow();

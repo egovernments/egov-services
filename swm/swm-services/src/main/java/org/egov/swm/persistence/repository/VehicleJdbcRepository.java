@@ -152,10 +152,10 @@ public class VehicleJdbcRepository extends JdbcRepository {
             paramValues.put("yearOfPurchase", searchRequest.getPurchaseYear());
         }
 
-        if (searchRequest.getVendorName() != null) {
+        if (searchRequest.getVendorNo() != null) {
             addAnd(params);
             params.append("vendor =:vendor");
-            paramValues.put("vendor", searchRequest.getVendorName());
+            paramValues.put("vendor", searchRequest.getVendorNo());
         }
 
         if (searchRequest.getIsUlbOwned() != null && searchRequest.getIsUlbOwned()) {

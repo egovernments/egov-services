@@ -12,7 +12,7 @@ import lombok.Setter;
 public class VehicleSearch extends Vehicle {
     private String regNumbers;
     private String vehicleTypeCode;
-    private String vendorName;
+    private String vendorNo;
     private String purchaseYear;
     private String fuelTypeCode;
     private String driverCode;

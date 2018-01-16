@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -615,6 +616,7 @@ public class AgreementServiceTest {
                 .installment("1000")
                 .minAmountPayable(1000d)
                 .moduleName("LAMS")
+                .demandDetails(Collections.emptyList())
                 .build();
 
         return Arrays.asList(demand);

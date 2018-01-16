@@ -64,6 +64,7 @@ public class APIAuthTokenService {
 
 		ResponseEntity<String> response = restTemplate.postForEntity(url.toString(), request, String.class);
 		String authToken = JsonPath.read(response.getBody(), "$.access_token");
+		log.info("auth Service response:"+response.getStatusCode()+ ","+ authToken);
 		return authToken;
 	}
 

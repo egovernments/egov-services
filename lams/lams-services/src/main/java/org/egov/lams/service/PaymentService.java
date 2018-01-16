@@ -303,7 +303,7 @@ public class PaymentService {
 		// FIXME get the query String from query builder //FIXME do the
 		// jdbctemplate in repository
 		String sql = AgreementQueryBuilder.BASE_SEARCH_QUERY + " where agreement.acknowledgementnumber='" 
-					+ consumerCode + "' OR agreement.agreement_no='" + consumerCode + "'";
+					+ consumerCode + "' OR agreement.agreement_no='" + consumerCode + "' order by id desc ";
 
 		LOGGER.info("the sql query for fetching agreement using consumercode ::: " + sql);
 		List<Agreement> agreements = null;

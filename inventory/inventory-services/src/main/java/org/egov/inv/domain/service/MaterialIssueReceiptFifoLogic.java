@@ -134,7 +134,7 @@ public class MaterialIssueReceiptFifoLogic extends DomainService {
 			}
 		FifoResponse fifoResponse = new FifoResponse();
 		fifoResponse.setResponseInfo(getResponseInfo(fifoRequest.getRequestInfo()));
-		fifoResponse.setUnitRate(value.divide(convertedQuantityIssued));
+		fifoResponse.setUnitRate(value.divide(quantityIssued));
 		fifoResponse.setValue(value);
 		return fifoResponse;
 	}

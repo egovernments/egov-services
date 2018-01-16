@@ -39,6 +39,7 @@ import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.FifoEntity;
+import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.egov.inv.persistence.repository.MaterialIssueDetailJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
@@ -502,16 +503,22 @@ public class NonIndentMaterialIssueService extends DomainService {
 				IssueTypeEnum.NONINDENTISSUE.toString());
 		if (materialIssues.getPagedData().size() > 0) {
 			for (MaterialIssue materialIssue : materialIssues.getPagedData()) {
+				ObjectMapper mapper = new ObjectMapper();
+				Map<String, Uom> uoms = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
 				Pagination<MaterialIssueDetail> materialIssueDetails = materialIssueDetailsJdbcRepository.search(
 						materialIssue.getIssueNumber(), materialIssue.getTenantId(),
 						IssueTypeEnum.NONINDENTISSUE.toString());
 				if (materialIssueDetails.getPagedData().size() > 0) {
 					for (MaterialIssueDetail materialIssueDetail : materialIssueDetails.getPagedData()) {
+						if(searchContract.getSearchPurpose() != null ){
+							if(searchContract.getSearchPurpose().equals("update")){
+						materialIssueDetail.setBalanceQuantity(InventoryUtilities.getQuantityInSelectedUom(getBalanceQuantityByStoreByMaterialAndIssueDate(materialIssue.getFromStore(),materialIssueDetail.getMaterial(),
+									materialIssue.getIssueDate(), materialIssue.getTenantId()).add(materialIssueDetail.getQuantityIssued()),uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor()));
+						}
+						}
 						Pagination<MaterialIssuedFromReceipt> materialIssuedFromReceipts = materialIssuedFromReceiptsJdbcRepository
 								.search(materialIssueDetail.getId(), materialIssueDetail.getTenantId());
-						ObjectMapper mapper = new ObjectMapper();
-						Map<String, Uom> uoms = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
-						if (materialIssueDetail.getUom() != null && materialIssueDetail.getUom().getCode() != null) {
+											if (materialIssueDetail.getUom() != null && materialIssueDetail.getUom().getCode() != null) {
 							for (MaterialIssuedFromReceipt mifr : materialIssuedFromReceipts.getPagedData()) {
 								BigDecimal quantity = getSearchConvertedQuantity(mifr.getQuantity(),
 										uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor());
@@ -557,6 +564,23 @@ public class NonIndentMaterialIssueService extends DomainService {
 
 		}
 		return materialMap;
+	}
+	
+	private BigDecimal getBalanceQuantityByStoreByMaterialAndIssueDate(Store store,Material material,
+			 Long issueDate, String tenantId) {
+		BigDecimal balanceQuantity = BigDecimal.ZERO;
+       LOG.info("store :" + store + "material :" + material + "issueDate :" + issueDate + "tenantId :" + tenantId);
+		FifoRequest fifoRequest = new FifoRequest();
+		Fifo fifo = new Fifo();
+		fifo.setStore(store);
+		fifo.setMaterial(material);
+		fifo.setIssueDate(issueDate);
+		fifo.setTenantId(tenantId);
+		fifoRequest.setFifo(fifo);
+		FifoResponse fifoResponse = materialIssueReceiptFifoLogic.getTotalStockAsPerMaterial(fifoRequest);
+		if (fifoResponse != null)
+			balanceQuantity = fifoResponse.getStock();
+		return balanceQuantity;
 	}
 
 	private void validateDuplicateMaterials(List<MaterialIssueDetail> materialIssueDetails, String tenantId,

@@ -34,23 +34,21 @@
 					"enabled": true
 				}
 			],
+			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
-			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "b1430b81-e392-a607-a43f-f173b6d043ca",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Create Transfer Inward receipt",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1513674920486,
-			"version": 2,
-			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\": {\n      \"id\": 73\n    }\n  },\n  \"materialReceipt\": [\n    {\n      \"receivingStore\": {\n        \"code\": \"ST002\"\n      },\n      \"receiptDate\": 1512973979000,\n      \"receiptType\": \"INWARD RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SAP0013\"\n      },\n      \"supplierBillNo\": \"AB-PO-2017\",\n      \"supplierBillDate\": 1512365762000,\n      \"challanNo\": \"CD-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt\",\n      \"paymentTerms\": \"paymentTerms for receipt\",\n      \"receivedBy\": \"sanjeev\",\n      \"designation\": \"ASST-ENG\",\n      \"inspectedBy\": \"ramesh\",\n      \"inspectionDate\": 45698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt\",\n      \"receiptDetails\": [\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 3,\n          \"acceptedQty\": 5,\n          \"unitRate\": 5,\n          \"isScrapItem\":\"true\",\n          \"rejectionRemark\": \"rejection remark for receipt detail\",\n          \"purchaseOrderDetail\": {\n            \"id\": 1\n          },\n         \"receiptDetailsAddnInfo\": [\n            {\n              \"quantity\": 5,\n              \"manufactureDate\": 12345698,\n              \"lotNo\":\"LOT-01\",\n              \"serialNo\": \"SR-02\",\n              \"expiryDate\": 1544509979000,\n              \"batchNo\": \"BA-NO-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+			"time": 1516086445314,
+			"name": "Create Transfer Inward receipt",
+			"description": "",
+			"collectionId": "b1430b81-e392-a607-a43f-f173b6d043ca",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"7b080ab5-6fdb-4071-9c96-d591d2c8f880\",\n    \"userInfo\": {\n      \"id\": 73\n    }\n  },\n\n  \"transferInwards\": [\n    {\n      \"receivingStore\": {\n        \"code\": \"ST002\"\n      },\n      \"issueNumber\":\"MRIN-2017-14\",\n      \"issueingStore\": {\n        \"code\": \"ST003\"\n      },\n      \"receiptDate\": 1512973979000,\n      \"receiptType\": \"INWARD RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SAP0013\"\n      },\n      \"supplierBillNo\": \"AB-PO-2017\",\n      \"supplierBillDate\": 1512365762000,\n      \"challanNo\": \"CD-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt\",\n      \"paymentTerms\": \"paymentTerms for receipt\",\n      \"receivedBy\": \"shashi\",\n      \"designation\": \"ASST-ENG\",\n      \"inspectedBy\": \"shashi\",\n      \"inspectionDate\": 45698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt\",\n      \"receiptDetails\": [\n        {\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"userReceivedQty\": 9,\n          \"userAcceptedQty\": 5,\n          \"unitRate\": 5,\n          \"isScrapItem\":\"true\",\n          \"rejectionRemark\": \"rejection remark for receipt detail\",\n          \"purchaseOrderDetail\": {\n            \"id\": 1\n          },\n         \"receiptDetailsAddnInfo\": [\n            {\n              \"quantity\": 5,\n              \"manufactureDate\": 12345698,\n              \"lotNo\":\"LOT-01\",\n              \"serialNo\": \"SR-02\",\n              \"expiryDate\": 1544509979000,\n              \"batchNo\": \"BA-NO-2017\",\n              \"receivedDate\":1544509979000\n            }\n          ]\n        }\n      ]\n    }\n  ]\n  \n}"
 		},
 		{
 			"id": "773c895e-76f3-3968-09a5-c7d03ece3be1",
@@ -73,23 +71,22 @@
 					"enabled": true
 				}
 			],
+			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
-			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "b1430b81-e392-a607-a43f-f173b6d043ca",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Update Transfer inward",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1513685613720,
 			"version": 2,
-			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"transferInwards\": [\n    {\n      \"id\": 100,\n      \"receivingStore\": {\n        \"code\": \"STR\"\n      },\n      \"issueingStore\": {\n        \"code\": \"dd\"\n      },\n      \"mrnNumber\":\"MRN/00542/2017\",\n      \"receiptDate\": 1512432086399,\n      \"mrnStatus\": \"CANCELED\",\n      \"receiptType\": \"MISCELLANEOUS RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"supplierBillNo\": \"ABCP-PO-2017\",\n      \"supplierBillDate\": 3654799,\n      \"challanNo\": \"CDE-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt update\",\n      \"paymentTerms\": \"paymentTerms for receipt update\",\n      \"receivedBy\": \"sanjeev prasad\",\n      \"designation\": \"ASST-ENG1\",\n      \"inspectedBy\": \"ramesh babu\",\n      \"inspectionDate\": 1245698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt update\",\n      \"isScrapItem\":\"true\",\n      \"receiptDetails\": [\n        {\n          \"id\": 67,\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": 29.5,\n          \"acceptedQty\": 11,\n          \"unitRate\": 20,\n          \"rejectionRemark\": \"rejection remark for receipt detail update\",\n          \"purchaseOrderDetail\": {\n            \"id\": 2\n          },\n          \"tenantid\":\"default\",\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"id\": 80,\n              \"quantity\": 5,\n              \"manufactureDate\": 345698,\n              \"lotNo\": \"LOTU-01\",\n              \"serialNo\": \"SRU-02\",\n              \"expiryDate\": 1512825037000,\n              \"batchNo\": \"BAC-NO-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
+			"time": 1516098445509,
+			"name": "Update Transfer inward",
+			"description": "",
+			"collectionId": "b1430b81-e392-a607-a43f-f173b6d043ca",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"7b080ab5-6fdb-4071-9c96-d591d2c8f880\",\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"transferInwards\": [\n    {\n    \t \"issueNumber\":\"MRIN-2017-14\",\n      \"id\": 100,\n      \"receivingStore\": {\n        \"code\": \"STR\"\n      },\n      \"issueingStore\": {\n        \"code\": \"dd\"\n      },\n      \"mrnNumber\":\"MRN/defa/2017-18/00003\",\n      \"receiptDate\": 1512432086399,\n      \"mrnStatus\": \"ff\",\n      \"receiptType\": \"MISCELLANEOUS RECEIPT\",\n      \"supplier\": {\n        \"code\": \"SUPPLIER\"\n      },\n      \"supplierBillNo\": \"ABCP-PO-2017\",\n      \"supplierBillDate\": 3654799,\n      \"challanNo\": \"CDE-LK-2017\",\n      \"challanDate\": 1512365762000,\n      \"description\": \"description for receipt update\",\n      \"paymentTerms\": \"paymentTerms for receipt update\",\n      \"receivedBy\": \"sanjeev prasad\",\n      \"designation\": \"ASST-ENG1\",\n      \"inspectedBy\": \"ramesh babu\",\n      \"inspectionDate\": 1245698756,\n      \"inspectionRemarks\": \"inspection remarks for receipt update\",\n      \"isScrapItem\":\"true\",\n      \"receiptDetails\": [\n        {\n          \"id\": 372,\n          \"material\": {\n            \"code\": \"MAT1\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n         \"userReceivedQty\": 9,\n          \"receivedQty\": 29.5,\n          \"acceptedQty\": 11,\n          \"unitRate\": 20,\n          \"rejectionRemark\": \"rejection remark for receipt detail update\",\n          \"purchaseOrderDetail\": {\n            \"id\": 2\n          },\n          \"tenantid\":\"default\",\n          \"receiptDetailsAddnInfo\": [\n            {\n              \"id\": 80,\n              \"quantity\": 5,\n              \"manufactureDate\": 345698,\n              \"lotNo\": \"LOTU-01\",\n              \"serialNo\": \"SRU-02\",\n              \"expiryDate\": 1512825037000,\n              \"receivedDate\":1544509979000,\n              \"batchNo\": \"BAC-NO-2017\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}"
 		},
 		{
 			"id": "ec22cdeb-5bfd-3376-3f26-5700ff9f6aa0",
@@ -102,7 +99,7 @@
 					"enabled": true
 				}
 			],
-			"url": "localhost:8080/inventory-services/transferinwards/_search?tenantId=default",
+			"url": "localhost:8080/inventory-services/transferinwards/_search?tenantId=default&status=RECEIPTED",
 			"queryParams": [
 				{
 					"key": "tenantId",
@@ -110,24 +107,29 @@
 					"equals": true,
 					"description": "",
 					"enabled": true
+				},
+				{
+					"key": "status",
+					"value": "RECEIPTED",
+					"equals": true,
+					"description": "",
+					"enabled": true
 				}
 			],
+			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
-			"preRequestScript": null,
 			"method": "POST",
-			"collectionId": "b1430b81-e392-a607-a43f-f173b6d043ca",
 			"data": [],
 			"dataMode": "raw",
-			"name": "Search Transfer inwards",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1513685732610,
-			"version": 2,
-			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
+			"time": 1516098933238,
+			"name": "Search Transfer inwards",
+			"description": "",
+			"collectionId": "b1430b81-e392-a607-a43f-f173b6d043ca",
+			"responses": [],
 			"rawModeData": "{\"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"{{authToken}}\",\n    \"userInfo\":{\n    \t\"id\":1,\n    \t\"tenantId\":\"default\",\n    \t\"username\":\"abc\"\n    }\n  }\n}\n"
 		}
 	]

@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DepreciationReportQueryBuilder {
 
     public static final String BASE_QUERY = "SELECT  depreciation.id as depreciationId,depreciation.tenantId as tenantId, depreciation.assetid as assetId,assetcategory.id as assetcategoryId,"
-            + "asset.name as assetname,asset.code as assetcode,asset.department as department,depreciation.depreciationrate as depreciation_depreciationrate,"
+            + "asset.name as assetname,asset.code as assetcode,asset.department as department,depreciation.depreciationrate as depreciationrate,"
             + "depreciation.depreciationvalue as depreciationvalue,depreciation.valueafterdepreciation as valueafterdepreciation,asset.grossvalue as grossvalue, "
             + "assetcategory.name as assetcategoryname,assetcategory.code as assetcategorycode,assetcategory.assetcategorytype as assetcategorytype,assetcategory.parentid as parentid, "
             + "assetcategory.depreciationrate as assetcategory_depreciationrate,depreciation.financialyear as financialyear "

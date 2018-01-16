@@ -1145,7 +1145,7 @@ class UpdateEviction extends React.Component {
                                         </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input type="text" name="evictionProceedingNo" id="evictionProceedingNo" value={eviction.evictionProceedingNo}
+                                        <input type="text" name="evictionProceedingNo" id="evictionProceedingNo" value={eviction.evictionProceedingNumber}
                                             onChange={(e) => { handleChangeTwoLevel(e, "eviction", "evictionProceedingNo") }} required disabled />
                                     </div>
                                 </div>

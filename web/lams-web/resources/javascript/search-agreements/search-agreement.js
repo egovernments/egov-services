@@ -650,7 +650,7 @@ class AgreementSearch extends React.Component {
                                       </div>
                                       <div className="col-sm-6">
                                           <div className="search-ui">
-                                              <input type="text" name="code" id="code" value={code} onChange={(e)=>{
+                                              <input type="text" name="code" id="code" pattern="[A-Za-z0-9]*" value={code} onChange={(e)=>{
                                       handleChange(e,"assetCode")
                                   }}/>
 

@@ -704,7 +704,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.userReceivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.userAcceptedQty
 
-        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, userquantity ,quantity, manufacturedate, lotNo, expiryDate, batchno, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId,  quantity, userquantity,manufacturedate, lotNo, expiryDate, batchno, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id

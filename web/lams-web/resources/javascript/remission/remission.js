@@ -844,7 +844,7 @@ class RemissionAgreement extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                             <span>₹</span>
-                                            <input type="number" name="remissionRent" id="remissionRent"
+                                            <input type="number" name="remissionRent" id="remissionRent" min="0"
                                                 onChange={(e) => { handleChangeTwoLevel(e, "remission", "remissionRent") }} required />
                                         </div>
                                     </div>

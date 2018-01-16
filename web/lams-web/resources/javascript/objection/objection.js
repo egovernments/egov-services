@@ -135,6 +135,21 @@ class ObjectionAgreement extends React.Component {
     agreement.action = "Objection";
     var ID = "Forward";
 
+    var asOnDate = new Date();
+    var dd = asOnDate.getDate();
+    var mm = asOnDate.getMonth() + 1; 
+    var yyyy = asOnDate.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+
+    asOnDate = dd + '/' + mm + '/' + yyyy;
+
     console.log("Documents", agreement);
 
     if (agreement.documents && agreement.documents.constructor == FileList) {
@@ -173,7 +188,7 @@ class ObjectionAgreement extends React.Component {
                 success: function (res) {
 
                   $.ajax({
-                    url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+                    url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee + "&asOnDate=" + asOnDate,
                     type: 'POST',
                     dataType: 'json',
                     contentType: 'application/json',
@@ -230,7 +245,7 @@ class ObjectionAgreement extends React.Component {
         success: function (res) {
 
           $.ajax({
-            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee,
+            url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&positionId=" + agreement.workflowDetails.assignee + "&asOnDate=" + asOnDate,
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',

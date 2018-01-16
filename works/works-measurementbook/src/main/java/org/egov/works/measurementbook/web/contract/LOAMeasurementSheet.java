@@ -1,20 +1,22 @@
 package org.egov.works.measurementbook.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object that holds the basic data for LOA Measurement Sheet
  */
 @ApiModel(description = "An Object that holds the basic data for LOA Measurement Sheet")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T09:56:01.690Z")
 
 public class LOAMeasurementSheet   {
   @JsonProperty("id")
@@ -25,6 +27,9 @@ public class LOAMeasurementSheet   {
 
   @JsonProperty("number")
   private BigDecimal number = null;
+
+  @JsonProperty("multiplier")
+  private BigDecimal multiplier = null;
 
   @JsonProperty("length")
   private BigDecimal length = null;
@@ -46,9 +51,9 @@ public class LOAMeasurementSheet   {
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
-  
+
   @JsonProperty("deleted")
-  private Boolean deleted = null;
+  private Boolean deleted = false;
 
   public LOAMeasurementSheet id(String id) {
     this.id = id;
@@ -110,6 +115,27 @@ public class LOAMeasurementSheet   {
 
   public void setNumber(BigDecimal number) {
     this.number = number;
+  }
+
+  public LOAMeasurementSheet multiplier(BigDecimal multiplier) {
+    this.multiplier = multiplier;
+    return this;
+  }
+
+   /**
+   * Multiplication factor for the number. If the multiplier is entered then number will be multiplied to number.
+   * @return multiplier
+  **/
+  @ApiModelProperty(value = "Multiplication factor for the number. If the multiplier is entered then number will be multiplied to number.")
+
+  @Valid
+
+  public BigDecimal getMultiplier() {
+    return multiplier;
+  }
+
+  public void setMultiplier(BigDecimal multiplier) {
+    this.multiplier = multiplier;
   }
 
   public LOAMeasurementSheet length(BigDecimal length) {
@@ -260,17 +286,29 @@ public class LOAMeasurementSheet   {
     this.auditDetails = auditDetails;
   }
 
+  public LOAMeasurementSheet deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
 
   public Boolean getDeleted() {
-	return deleted;
-}
+    return deleted;
+  }
 
-public void setDeleted(Boolean deleted) {
-	this.deleted = deleted;
-}
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
 
-@Override
-  public boolean equals(Object o) {
+
+  @Override
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -281,18 +319,20 @@ public void setDeleted(Boolean deleted) {
     return Objects.equals(this.id, loAMeasurementSheet.id) &&
         Objects.equals(this.tenantId, loAMeasurementSheet.tenantId) &&
         Objects.equals(this.number, loAMeasurementSheet.number) &&
+        Objects.equals(this.multiplier, loAMeasurementSheet.multiplier) &&
         Objects.equals(this.length, loAMeasurementSheet.length) &&
         Objects.equals(this.width, loAMeasurementSheet.width) &&
         Objects.equals(this.depthOrHeight, loAMeasurementSheet.depthOrHeight) &&
         Objects.equals(this.quantity, loAMeasurementSheet.quantity) &&
         Objects.equals(this.loaActivity, loAMeasurementSheet.loaActivity) &&
         Objects.equals(this.estimateMeasurementSheet, loAMeasurementSheet.estimateMeasurementSheet) &&
-        Objects.equals(this.auditDetails, loAMeasurementSheet.auditDetails);
+        Objects.equals(this.auditDetails, loAMeasurementSheet.auditDetails) &&
+        Objects.equals(this.deleted, loAMeasurementSheet.deleted);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, number, length, width, depthOrHeight, quantity, loaActivity, estimateMeasurementSheet, auditDetails);
+    return Objects.hash(id, tenantId, number, multiplier, length, width, depthOrHeight, quantity, loaActivity, estimateMeasurementSheet, auditDetails, deleted);
   }
 
   @Override
@@ -303,6 +343,7 @@ public void setDeleted(Boolean deleted) {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    number: ").append(toIndentedString(number)).append("\n");
+    sb.append("    multiplier: ").append(toIndentedString(multiplier)).append("\n");
     sb.append("    length: ").append(toIndentedString(length)).append("\n");
     sb.append("    width: ").append(toIndentedString(width)).append("\n");
     sb.append("    depthOrHeight: ").append(toIndentedString(depthOrHeight)).append("\n");
@@ -310,6 +351,7 @@ public void setDeleted(Boolean deleted) {
     sb.append("    loaActivity: ").append(toIndentedString(loaActivity)).append("\n");
     sb.append("    estimateMeasurementSheet: ").append(toIndentedString(estimateMeasurementSheet)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -318,7 +360,7 @@ public void setDeleted(Boolean deleted) {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

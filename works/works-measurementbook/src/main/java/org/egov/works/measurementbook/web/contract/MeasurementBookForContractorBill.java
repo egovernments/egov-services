@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Measurement Book information for the Contractor Bill
  */
 @ApiModel(description = "Measurement Book information for the Contractor Bill")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T09:56:01.690Z")
 
 public class MeasurementBookForContractorBill   {
   @JsonProperty("id")
@@ -28,7 +28,7 @@ public class MeasurementBookForContractorBill   {
   private MeasurementBook measurementBook = null;
 
   @JsonProperty("contractorBill")
-  private ContractorBill contractorBill = null;
+  private String contractorBill = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -98,7 +98,7 @@ public class MeasurementBookForContractorBill   {
     this.measurementBook = measurementBook;
   }
 
-  public MeasurementBookForContractorBill contractorBill(ContractorBill contractorBill) {
+  public MeasurementBookForContractorBill contractorBill(String contractorBill) {
     this.contractorBill = contractorBill;
     return this;
   }
@@ -110,13 +110,12 @@ public class MeasurementBookForContractorBill   {
   @ApiModelProperty(required = true, value = "Bill reference in the MB for Contractor Bill")
   @NotNull
 
-  @Valid
 
-  public ContractorBill getContractorBill() {
+  public String getContractorBill() {
     return contractorBill;
   }
 
-  public void setContractorBill(ContractorBill contractorBill) {
+  public void setContractorBill(String contractorBill) {
     this.contractorBill = contractorBill;
   }
 

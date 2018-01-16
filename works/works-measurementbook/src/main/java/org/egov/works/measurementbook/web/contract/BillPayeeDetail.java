@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * BillPayeeDetail
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T09:56:01.690Z")
 
 public class BillPayeeDetail   {
   @JsonProperty("tenantId")
@@ -43,7 +43,8 @@ public class BillPayeeDetail   {
    * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. 
    * @return tenantId
   **/
-  @ApiModelProperty(value = "tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. ")
+  @ApiModelProperty(required = true, value = "tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. ")
+  @NotNull
 
  @Size(min=0,max=256)
   public String getTenantId() {
@@ -83,7 +84,8 @@ public class BillPayeeDetail   {
    * account detail type of the BillPayeeDetail 
    * @return accountDetailType
   **/
-  @ApiModelProperty(value = "account detail type of the BillPayeeDetail ")
+  @ApiModelProperty(required = true, value = "account detail type of the BillPayeeDetail ")
+  @NotNull
 
   @Valid
 

@@ -1,7 +1,7 @@
 package org.egov.works.measurementbook.persistence.helper;
 
+import org.egov.works.measurementbook.web.contract.BillStatus;
 import org.egov.works.measurementbook.web.contract.ContractorBill;
-import org.egov.works.measurementbook.web.contract.FinancialStatus;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.measurementbook.web.contract.User;
 import org.joda.time.LocalDate;
@@ -76,7 +76,7 @@ public class ContractorBillHelper {
         cb.setLetterOfAcceptanceEstimate(new LetterOfAcceptanceEstimate());
         cb.getLetterOfAcceptanceEstimate().setId(this.letterOfAcceptanceEstimate);
         cb.stateId(this.stateId);
-        cb.setStatus(new FinancialStatus());
+        cb.setStatus(new BillStatus());
         cb.getStatus().setCode(this.status);
         cb.setSpillOver(this.spillOver);
         return cb;

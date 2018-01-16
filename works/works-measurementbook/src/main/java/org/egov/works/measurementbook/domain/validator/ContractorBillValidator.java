@@ -1,5 +1,6 @@
 package org.egov.works.measurementbook.domain.validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,11 +9,13 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.domain.repository.ContractorBillRepository;
 import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.domain.service.ContractorBillService;
+import org.egov.works.measurementbook.utils.MeasurementBookUtils;
 import org.egov.works.measurementbook.web.contract.ContractorBill;
 import org.egov.works.measurementbook.web.contract.ContractorBillRequest;
 import org.egov.works.measurementbook.web.contract.ContractorBillSearchContract;
@@ -29,6 +32,8 @@ import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import net.minidev.json.JSONArray;
+
 @Service
 public class ContractorBillValidator {
 
@@ -40,6 +45,8 @@ public class ContractorBillValidator {
     private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
     @Autowired
     private MeasurementBookRepository measurementBookRepository;
+    @Autowired
+    private MeasurementBookUtils measurementBookUtils;
 
     public void validateContractorBill(final ContractorBillRequest contractorBillRequest, Boolean isNew) {
         HashMap<String, String> messages = new HashMap<>();
@@ -74,7 +81,7 @@ public class ContractorBillValidator {
                 // Work completion date is mandatory for final bill.
                 if (contractorBill.getBillSubType() != null && !contractorBill.getBillSubType().isEmpty()
                         && contractorBill.getBillSubType().equalsIgnoreCase(Constants.BILL_SUB_TYPE_FINAL)
-                        && contractorBill.getLetterOfAcceptanceEstimate().getWorkCompletionDate() == null) {
+                        && contractorBill.getWorkCompletionDate() == null) {
                     messages.put(Constants.KEY_CB_LOA_WORKCOMPLETION_DATE_NULL,
                             Constants.MSG_CB_LOA_WORKCOMPLETION_DATE_NULL);
                 }
@@ -97,11 +104,62 @@ public class ContractorBillValidator {
                 if (StringUtils.isNotBlank(contractorBill.getBillNumber()))
                     validateUniqueBillNo(contractorBillRequest.getRequestInfo(), contractorBill, messages);
 
+                // Validate for Part Rate MB's. Max two bill's allowed for Part
+                // Rate Mb's
+                validatePartRateMBs(contractorBill, messages, contractorBillRequest.getRequestInfo());
+
             }
+            if(contractorBill.getId() != null)
+                validateUpdateStatus(contractorBill, contractorBillRequest.getRequestInfo(), messages);
         }
 
         if (!messages.isEmpty())
             throw new CustomException(messages);
+    }
+    
+    private void validateUpdateStatus(ContractorBill contractorBill, RequestInfo requestInfo, Map<String, String> messages) {
+            if(contractorBill.getId() != null) {
+                List<ContractorBill> contractorBills = searchContractorBillById(contractorBill, requestInfo);
+                List<String> fieldsNamesList = null;
+                List<String> fieldsValuesList = null;
+                if(contractorBills != null && !contractorBills.isEmpty()) {
+                    String status = contractorBills.get(0).getStatus().getCode();
+                    if (status.equals(Constants.STATUS_CANCELLED) || status.equals(Constants.STATUS_APPROVED)) {
+                        messages.put(Constants.KEY_CB_CANNOT_UPDATE_STATUS, Constants.MSG_CB_CANNOT_UPDATE_STATUS);
+                    } else if((status.equals(Constants.STATUS_REJECTED) && !contractorBill.getStatus().getCode().equals(Constants.STATUS_RESUBMITTED)) ||
+                            (status.equals(Constants.STATUS_RESUBMITTED) && !(contractorBill.getStatus().toString().equals(Constants.STATUS_CHECKED) ||
+                                    contractorBill.getStatus().getCode().equals(Constants.STATUS_CANCELLED)) )) {
+                        messages.put(Constants.KEY_CB_INVALID_STATUS, Constants.MSG_CB_INVALID_STATUS);
+                    } else if (!contractorBill.getStatus().getCode().equals(Constants.STATUS_REJECTED)) {
+                        fieldsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                        fieldsValuesList = new ArrayList<>(Arrays.asList(contractorBill.getStatus().getCode().toUpperCase(), CommonConstants.CONTRACTORBILL));
+                        JSONArray statusRequestArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, fieldsNamesList,
+                                fieldsValuesList, contractorBill.getTenantId(), requestInfo,
+                                CommonConstants.MODULENAME_WORKS);
+                        fieldsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                        fieldsValuesList = new ArrayList<>(Arrays.asList(status.toUpperCase(),CommonConstants.CONTRACTORBILL));
+                        JSONArray dBStatusArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, fieldsNamesList,
+                                fieldsValuesList, contractorBill.getTenantId(), requestInfo,
+                                CommonConstants.MODULENAME_WORKS);
+                        if (statusRequestArray != null && !statusRequestArray.isEmpty() && dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                            Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
+                            Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
+                            Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("orderNumber");
+                            Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
+                            if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
+                                messages.put(Constants.KEY_CB_INVALID_STATUS, Constants.MSG_CB_INVALID_STATUS);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }   
+
+    private List<ContractorBill> searchContractorBillById(ContractorBill contractorBill, final RequestInfo requestInfo) {
+        ContractorBillSearchContract contractorBillSearchContract = ContractorBillSearchContract.builder()
+                .tenantId(contractorBill.getTenantId()).ids(Arrays.asList(contractorBill.getId())).build();
+        return contractorBillRepository.searchContractorBills(contractorBillSearchContract,requestInfo);
     }
 
     private void validateBillInWorkflow(ContractorBill contractorBill, LetterOfAcceptance letterOfAcceptance,
@@ -213,23 +271,33 @@ public class ContractorBillValidator {
         List<String> mbIds = new ArrayList<String>();
         List<ContractorBill> contractorBills = new ArrayList<ContractorBill>();
         MBForContractorBillSearchContract mbForContractorBillSearchContract;
+        Boolean isPartRateMb = Boolean.FALSE;
         for (MeasurementBookForContractorBill mbContractorBill : contractorBill.getMbForContractorBill()) {
             mbIds.add(mbContractorBill.getId());
         }
         List<MeasurementBook> measurementBooks = searchMeasurementBookByIds(contractorBill, requestInfo, mbIds);
         if (measurementBooks != null && !measurementBooks.isEmpty()) {
             for (MeasurementBook measurementBook : measurementBooks) {
+                for (MeasurementBookDetail detail : measurementBook.getMeasurementBookDetails()) {
+                    if (detail != null & detail.getPartRate().compareTo(BigDecimal.ZERO) == 1) {
+                        isPartRateMb = Boolean.TRUE;
+                        break;
+                    }
+                }
                 mbForContractorBillSearchContract = new MBForContractorBillSearchContract();
                 mbForContractorBillSearchContract.setTenantId(contractorBill.getTenantId());
-                mbForContractorBillSearchContract.setMeasurementBook(measurementBook.getId()); 
-                contractorBills = contractorBillRepository.searchContractorBillsByMb(mbForContractorBillSearchContract, requestInfo);
-                for (MeasurementBookDetail detail : measurementBook.getMeasurementBookDetails()) {
-                    
+                mbForContractorBillSearchContract.setMeasurementBook(measurementBook.getId());
+                contractorBills = contractorBillRepository.searchContractorBillsByMb(mbForContractorBillSearchContract,
+                        requestInfo);
+                if (isPartRateMb && contractorBills != null && contractorBills.size() == 2) {
+                    messages.put(Constants.KEY_CB_PARTRATE_MB_MAX_EXISTS, Constants.MSG_CB_PARTRATE_MB_MAX_EXISTS);
+                } else if (!isPartRateMb && contractorBills != null && !contractorBills.isEmpty()) {
+                    messages.put(Constants.KEY_CB_REDUCEDRATE_MB_MAX_EXISTS,
+                            Constants.MSG_CB_REDUCEDRATE_MB_MAX_EXISTS);
                 }
             }
         }
-        messages.put(Constants.KEY_CB_MB_NOT_EXISTS, Constants.MSG_CB_MB_NOT_EXISTS);
+
     }
-    
 
 }

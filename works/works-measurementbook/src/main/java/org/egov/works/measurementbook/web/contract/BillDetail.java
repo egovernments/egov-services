@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * BillDetail
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T09:56:01.690Z")
 
 public class BillDetail   {
   @JsonProperty("tenantId")
@@ -27,8 +27,8 @@ public class BillDetail   {
   @JsonProperty("orderId")
   private Integer orderId = null;
 
-  @JsonProperty("glcode")
-  private String glcode = null;
+  @JsonProperty("chartOfAccount")
+  private ChartOfAccount chartOfAccount = null;
 
   @JsonProperty("debitAmount")
   private Double debitAmount = null;
@@ -54,7 +54,8 @@ public class BillDetail   {
    * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. 
    * @return tenantId
   **/
-  @ApiModelProperty(value = "tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. ")
+  @ApiModelProperty(required = true, value = "tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. ")
+  @NotNull
 
  @Size(min=0,max=256)
   public String getTenantId() {
@@ -105,25 +106,26 @@ public class BillDetail   {
     this.orderId = orderId;
   }
 
-  public BillDetail glcode(String glcode) {
-    this.glcode = glcode;
+  public BillDetail chartOfAccount(ChartOfAccount chartOfAccount) {
+    this.chartOfAccount = chartOfAccount;
     return this;
   }
 
    /**
-   * glcode of the BillDetail 
-   * @return glcode
+   * chart of account of the BillDetail 
+   * @return chartOfAccount
   **/
-  @ApiModelProperty(required = true, value = "glcode of the BillDetail ")
+  @ApiModelProperty(required = true, value = "chart of account of the BillDetail ")
   @NotNull
 
- @Size(max=16)
-  public String getGlcode() {
-    return glcode;
+  @Valid
+
+  public ChartOfAccount getChartOfAccount() {
+    return chartOfAccount;
   }
 
-  public void setGlcode(String glcode) {
-    this.glcode = glcode;
+  public void setChartOfAccount(ChartOfAccount chartOfAccount) {
+    this.chartOfAccount = chartOfAccount;
   }
 
   public BillDetail debitAmount(Double debitAmount) {
@@ -252,7 +254,7 @@ public class BillDetail   {
     return Objects.equals(this.tenantId, billDetail.tenantId) &&
         Objects.equals(this.id, billDetail.id) &&
         Objects.equals(this.orderId, billDetail.orderId) &&
-        Objects.equals(this.glcode, billDetail.glcode) &&
+        Objects.equals(this.chartOfAccount, billDetail.chartOfAccount) &&
         Objects.equals(this.debitAmount, billDetail.debitAmount) &&
         Objects.equals(this.creditAmount, billDetail.creditAmount) &&
         Objects.equals(this.function, billDetail.function) &&
@@ -262,7 +264,7 @@ public class BillDetail   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, id, orderId, glcode, debitAmount, creditAmount, function, billPayeeDetails, auditDetails);
+    return Objects.hash(tenantId, id, orderId, chartOfAccount, debitAmount, creditAmount, function, billPayeeDetails, auditDetails);
   }
 
   @Override
@@ -273,7 +275,7 @@ public class BillDetail   {
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    orderId: ").append(toIndentedString(orderId)).append("\n");
-    sb.append("    glcode: ").append(toIndentedString(glcode)).append("\n");
+    sb.append("    chartOfAccount: ").append(toIndentedString(chartOfAccount)).append("\n");
     sb.append("    debitAmount: ").append(toIndentedString(debitAmount)).append("\n");
     sb.append("    creditAmount: ").append(toIndentedString(creditAmount)).append("\n");
     sb.append("    function: ").append(toIndentedString(function)).append("\n");

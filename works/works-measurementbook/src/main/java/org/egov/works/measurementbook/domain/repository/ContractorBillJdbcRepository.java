@@ -27,7 +27,7 @@ public class ContractorBillJdbcRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_contractorbill cb";
     public static final String CB_LOAESTIMATE_EXTENTION = ", egw_letterofacceptanceestimate loaestimate";
     public static final String CB_BILLREGISTER_EXTENTION = ", eg_billregister br";
-    public static final String CB_MEASUREMENTBOOK_TABLE_NAME = "egw_contractorbill_mb cmb";
+    public static final String CB_MEASUREMENTBOOK_TABLE_NAME = ", egw_contractorbill_mb cmb";
 
     public List<ContractorBill> searchContractorBills(final ContractorBillSearchContract contractorBillSearchContract,
             final RequestInfo requestInfo) {
@@ -211,7 +211,7 @@ public class ContractorBillJdbcRepository extends JdbcRepository {
             final RequestInfo requestInfo) {
         List<ContractorBill> contractorBills = new ArrayList<>();
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
-        String tableName = CB_MEASUREMENTBOOK_TABLE_NAME;
+        String tableName = TABLE_NAME + CB_MEASUREMENTBOOK_TABLE_NAME + CB_BILLREGISTER_EXTENTION;
         String orderBy = "order by cmb.id";
         Map<String, Object> paramValues = new HashMap<>();
         StringBuilder params = new StringBuilder();
@@ -222,7 +222,7 @@ public class ContractorBillJdbcRepository extends JdbcRepository {
 
         searchQuery = searchQuery.replace(":tablename", tableName);
 
-        searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":selectfields", " cb.* ");
 
         if (mbForContractorBillSearchContract.getTenantId() != null) {
             addAnd(params);
@@ -231,12 +231,12 @@ public class ContractorBillJdbcRepository extends JdbcRepository {
         }
         if (mbForContractorBillSearchContract.getMeasurementBook() != null) {
             addAnd(params);
-            params.append("cmb.measurementBook in(:measurementBook) ");
+            params.append("cmb.measurementBook =:measurementBook ");
             paramValues.put("measurementBook", mbForContractorBillSearchContract.getMeasurementBook());
         }
 
         if (params.length() > 0) {
-            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", " where cb.id = cmb.contractorbill and cb.id = br.id and br.status not in ('CANCELLED') and " + params.toString());
 
         } else
 

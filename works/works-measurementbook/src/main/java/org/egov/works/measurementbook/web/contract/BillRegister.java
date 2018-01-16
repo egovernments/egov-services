@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * BillRegister
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T09:56:01.690Z")
 
 public class BillRegister   {
   @JsonProperty("tenantId")
@@ -45,7 +45,7 @@ public class BillRegister   {
   private String moduleName = null;
 
   @JsonProperty("status")
-  private FinancialStatus status = null;
+  private BillStatus status = null;
 
   @JsonProperty("fund")
   private Fund fund = null;
@@ -104,7 +104,8 @@ public class BillRegister   {
    * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. 
    * @return tenantId
   **/
-  @ApiModelProperty(value = "tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. ")
+  @ApiModelProperty(required = true, value = "tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. ")
+  @NotNull
 
  @Size(min=0,max=256)
   public String getTenantId() {
@@ -259,7 +260,7 @@ public class BillRegister   {
     this.moduleName = moduleName;
   }
 
-  public BillRegister status(FinancialStatus status) {
+  public BillRegister status(BillStatus status) {
     this.status = status;
     return this;
   }
@@ -272,11 +273,11 @@ public class BillRegister   {
 
   @Valid
 
-  public FinancialStatus getStatus() {
+  public BillStatus getStatus() {
     return status;
   }
 
-  public void setStatus(FinancialStatus status) {
+  public void setStatus(BillStatus status) {
     this.status = status;
   }
 
@@ -286,10 +287,10 @@ public class BillRegister   {
   }
 
    /**
-   * fundsource refers to the fundsounce master 
+   * fund refers to the fund master 
    * @return fund
   **/
-  @ApiModelProperty(value = "fundsource refers to the fundsounce master ")
+  @ApiModelProperty(value = "fund refers to the fund master ")
 
   @Valid
 

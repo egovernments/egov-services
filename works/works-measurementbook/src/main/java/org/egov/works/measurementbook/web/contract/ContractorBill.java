@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data for a Contractor Bill
  */
 @ApiModel(description = "An Object that holds the basic data for a Contractor Bill")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-20T10:00:39.005Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T10:26:42.085Z")
 
 public class ContractorBill extends BillRegister  {
   @JsonProperty("id")
@@ -64,6 +64,9 @@ public class ContractorBill extends BillRegister  {
 
   @JsonProperty("spillOver")
   private Boolean spillOver = false;
+
+  @JsonProperty("workCompletionDate")
+  private Long workCompletionDate = null;
 
   public ContractorBill id(String id) {
     this.id = id;
@@ -387,6 +390,26 @@ public class ContractorBill extends BillRegister  {
     this.spillOver = spillOver;
   }
 
+  public ContractorBill workCompletionDate(Long workCompletionDate) {
+    this.workCompletionDate = workCompletionDate;
+    return this;
+  }
+
+   /**
+   * Epoch time of when the Final Bill Completed
+   * @return workCompletionDate
+  **/
+  @ApiModelProperty(value = "Epoch time of when the Final Bill Completed")
+
+
+  public Long getWorkCompletionDate() {
+    return workCompletionDate;
+  }
+
+  public void setWorkCompletionDate(Long workCompletionDate) {
+    this.workCompletionDate = workCompletionDate;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -412,12 +435,13 @@ public class ContractorBill extends BillRegister  {
         Objects.equals(this.auditDetails, contractorBill.auditDetails) &&
         Objects.equals(this.deleted, contractorBill.deleted) &&
         Objects.equals(this.spillOver, contractorBill.spillOver) &&
+        Objects.equals(this.workCompletionDate, contractorBill.workCompletionDate) &&
         super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, billSequenceNumber, approvedDate, approvedBy, cancellationReason, cancellationRemarks, assets, mbForContractorBill, letterOfAcceptanceEstimate, workFlowDetails, stateId, auditDetails, deleted, spillOver, super.hashCode());
+    return Objects.hash(id, tenantId, billSequenceNumber, approvedDate, approvedBy, cancellationReason, cancellationRemarks, assets, mbForContractorBill, letterOfAcceptanceEstimate, workFlowDetails, stateId, auditDetails, deleted, spillOver, workCompletionDate, super.hashCode());
   }
 
   @Override
@@ -440,6 +464,7 @@ public class ContractorBill extends BillRegister  {
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    spillOver: ").append(toIndentedString(spillOver)).append("\n");
+    sb.append("    workCompletionDate: ").append(toIndentedString(workCompletionDate)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -455,4 +480,3 @@ public class ContractorBill extends BillRegister  {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

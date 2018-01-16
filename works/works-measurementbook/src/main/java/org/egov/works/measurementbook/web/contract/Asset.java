@@ -1,21 +1,23 @@
 package org.egov.works.measurementbook.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Hold the asset specific information.
  */
 @ApiModel(description = "Hold the asset specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T09:56:01.690Z")
 
 public class Asset   {
   @JsonProperty("anticipatedLife")
@@ -158,6 +160,9 @@ public class Asset   {
 
   @JsonProperty("landDetails")
   private List<LandDetails> landDetails = null;
+
+  @JsonProperty("transactionHistory")
+  private List<TransactionHistory> transactionHistory = null;
 
   public Asset anticipatedLife(Long anticipatedLife) {
     this.anticipatedLife = anticipatedLife;
@@ -1154,9 +1159,38 @@ public class Asset   {
     this.landDetails = landDetails;
   }
 
+  public Asset transactionHistory(List<TransactionHistory> transactionHistory) {
+    this.transactionHistory = transactionHistory;
+    return this;
+  }
+
+  public Asset addTransactionHistoryItem(TransactionHistory transactionHistoryItem) {
+    if (this.transactionHistory == null) {
+      this.transactionHistory = new ArrayList<TransactionHistory>();
+    }
+    this.transactionHistory.add(transactionHistoryItem);
+    return this;
+  }
+
+   /**
+   * This field is required to capture transaction history of the asset thisfield is used only in search.
+   * @return transactionHistory
+  **/
+  @ApiModelProperty(value = "This field is required to capture transaction history of the asset thisfield is used only in search.")
+
+  @Valid
+
+  public List<TransactionHistory> getTransactionHistory() {
+    return transactionHistory;
+  }
+
+  public void setTransactionHistory(List<TransactionHistory> transactionHistory) {
+    this.transactionHistory = transactionHistory;
+  }
+
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -1210,12 +1244,13 @@ public class Asset   {
         Objects.equals(this.fundSource, asset.fundSource) &&
         Objects.equals(this.location, asset.location) &&
         Objects.equals(this.openingDate, asset.openingDate) &&
-        Objects.equals(this.landDetails, asset.landDetails);
+        Objects.equals(this.landDetails, asset.landDetails) &&
+        Objects.equals(this.transactionHistory, asset.transactionHistory);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(anticipatedLife, orderNumber, orderDate, wipReferenceNo, acquiredFrom, warrantyAvailable, warrantyExpiryDate, defectLiabilityPeriod, securityDepositRetained, securityDepositRealized, acquisitionDate, originalValue, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, titleDocumentsAvalable, locationDetails, totalArea, address, longitude, latitude, quantity, tenantId, id, name, code, oldCode, department, assetCategory, modeOfAcquisition, status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks, version, assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate, yearWiseDepreciationRate, fundSource, location, openingDate, landDetails);
+    return Objects.hash(anticipatedLife, orderNumber, orderDate, wipReferenceNo, acquiredFrom, warrantyAvailable, warrantyExpiryDate, defectLiabilityPeriod, securityDepositRetained, securityDepositRealized, acquisitionDate, originalValue, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, titleDocumentsAvalable, locationDetails, totalArea, address, longitude, latitude, quantity, tenantId, id, name, code, oldCode, department, assetCategory, modeOfAcquisition, status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks, version, assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate, yearWiseDepreciationRate, fundSource, location, openingDate, landDetails, transactionHistory);
   }
 
   @Override
@@ -1270,6 +1305,7 @@ public class Asset   {
     sb.append("    location: ").append(toIndentedString(location)).append("\n");
     sb.append("    openingDate: ").append(toIndentedString(openingDate)).append("\n");
     sb.append("    landDetails: ").append(toIndentedString(landDetails)).append("\n");
+    sb.append("    transactionHistory: ").append(toIndentedString(transactionHistory)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -1278,7 +1314,7 @@ public class Asset   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

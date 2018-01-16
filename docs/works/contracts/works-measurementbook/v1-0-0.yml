@@ -885,6 +885,11 @@ definitions:
             type: boolean
             description: Boolean value to identify whether the bills are spillover or current.
             default: false  
+	workCompletionDate:
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            description: Epoch time of when the Final Bill Completed
     required:
       - tenantId
       - letterOfAcceptanceEstimate
@@ -952,7 +957,8 @@ definitions:
         $ref: '#/definitions/MeasurementBook'
         description: Measurement Book Reference in the MB for Contractor Bill
       contractorBill:
-        $ref: '#/definitions/ContractorBill'
+	#$ref: '#/definitions/ContractorBill'
+        type: string
         description: Bill reference in the MB for Contractor Bill
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"

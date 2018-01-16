@@ -43,8 +43,8 @@ public class IdGenerationRepository {
 		IdGenerationRequest idGenerationRequest = new IdGenerationRequest();
 		IdRequest idRequest = new IdRequest();
 		idRequest.setTenantId(tenantId);
-		/*idRequest.setFormat(propertiesManager.getBillNumberFormat());
-		idRequest.setIdName(propertiesManager.getBillNumber());*/
+		idRequest.setFormat(propertiesManager.getBillNumberFormat());
+		idRequest.setIdName(propertiesManager.getBillNumber());
 		idGenerationRequest.setIdRequests(Arrays.asList(idRequest));
 		idGenerationRequest.setRequestInfo(requestInfo);
 		try {

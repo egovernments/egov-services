@@ -35,6 +35,7 @@ public class CommonConstants {
     public static final String WORKORDER="WorkOrder";
     public static final String LETTEROFACCEPTANCE="LetterOfAcceptance";
     public static final String DETAILEDESTIMATE="DetailedEstimate";
+    public static final String CONTRACTORBILL="ContractorBill";
     
     public static final String CODE = "code";
     public static final String NAME = "name";

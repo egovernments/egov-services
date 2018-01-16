@@ -1,23 +1,25 @@
 package org.egov.works.measurementbook.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * An Object that holds the basic data for Letter Of Acceptance Activity
  */
 @ApiModel(description = "An Object that holds the basic data for Letter Of Acceptance Activity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-23T09:58:12.227Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T09:56:01.690Z")
 
 public class LOAActivity   {
   @JsonProperty("id")
@@ -50,11 +52,11 @@ public class LOAActivity   {
   @JsonProperty("loaMeasurements")
   private List<LOAMeasurementSheet> loaMeasurements = null;
 
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
+
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
-  
-  @JsonProperty("deleted")
-  private Boolean deleted = null;
 
   public LOAActivity id(String id) {
     this.id = id;
@@ -275,6 +277,26 @@ public class LOAActivity   {
     this.loaMeasurements = loaMeasurements;
   }
 
+  public LOAActivity deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public LOAActivity auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -297,16 +319,8 @@ public class LOAActivity   {
   }
 
 
-  public Boolean getDeleted() {
-	return deleted;
-}
-
-public void setDeleted(Boolean deleted) {
-	this.deleted = deleted;
-}
-
-@Override
-  public boolean equals(Object o) {
+  @Override
+  public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
     }
@@ -324,12 +338,13 @@ public void setDeleted(Boolean deleted) {
         Objects.equals(this.approvedAmount, loAActivity.approvedAmount) &&
         Objects.equals(this.remarks, loAActivity.remarks) &&
         Objects.equals(this.loaMeasurements, loAActivity.loaMeasurements) &&
+        Objects.equals(this.deleted, loAActivity.deleted) &&
         Objects.equals(this.auditDetails, loAActivity.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, letterOfAcceptanceEstimate, estimateActivity, parent, approvedRate, approvedQuantity, approvedAmount, remarks, loaMeasurements, auditDetails);
+    return Objects.hash(id, tenantId, letterOfAcceptanceEstimate, estimateActivity, parent, approvedRate, approvedQuantity, approvedAmount, remarks, loaMeasurements, deleted, auditDetails);
   }
 
   @Override
@@ -347,6 +362,7 @@ public void setDeleted(Boolean deleted) {
     sb.append("    approvedAmount: ").append(toIndentedString(approvedAmount)).append("\n");
     sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
     sb.append("    loaMeasurements: ").append(toIndentedString(loaMeasurements)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -356,7 +372,7 @@ public void setDeleted(Boolean deleted) {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(Object o) {
+  private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
     }

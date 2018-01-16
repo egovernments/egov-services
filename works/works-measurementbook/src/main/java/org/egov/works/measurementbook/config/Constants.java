@@ -138,4 +138,16 @@ public class Constants {
     public static final String KEY_CB_MB_NOT_EXISTS = "CB_LOA_WORKCOMPLETION_DATE_NULL";
     public static final String MSG_CB_MB_NOT_EXISTS = "Given Measurement Book does not exists/not in approved status.";
     
+    public static final String KEY_CB_PARTRATE_MB_MAX_EXISTS = "CB_PARTRATE_MB_MAX_EXISTS";
+    public static final String MSG_CB_PARTRATE_MB_MAX_EXISTS = "Can not create Bill. Max 2 bills exists for given Part Rate MB.";
+    
+    public static final String KEY_CB_REDUCEDRATE_MB_MAX_EXISTS = "CB_REDUCEDRATE_MB_MAX_EXISTS";
+    public static final String MSG_CB_REDUCEDRATE_MB_MAX_EXISTS = "Can not create Bill. Bill Exists for given MB.";
+    
+    public static final String KEY_CB_CANNOT_UPDATE_STATUS = "CB_CANNOT_UPDATE_STATUS";
+    public static final String MSG_CB_CANNOT_UPDATE_STATUS = "Status cannot be updated for Contractor Bill";
+    
+    public static final String KEY_CB_INVALID_STATUS = "INVALID_STATUS";
+    public static final String MSG_CB_INVALID_STATUS = "Status is invalid for Contractor Bill, please give proper status";
+    
 }

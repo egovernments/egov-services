@@ -2653,6 +2653,13 @@ paths:
             in: query
             description: |
               reference no of the priceList in which we want to find the usedQuantity
+          - name: uom
+            type: string
+            items:
+             type: string
+            in: query
+            description: |
+              UOM in which usedQuantity response need to be sent.
         responses:
           200:
             description: PriceList retrieved Successfully

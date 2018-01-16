@@ -1330,7 +1330,7 @@ serviceMaps:
             - jsonPath: $.transferInwards.*.auditDetails.lastModifiedBy
             - type: CURRENTDATE
               dbType: LONG
-        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark, podetailid, mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark, podetailid, mrnnumber, userreceivedqty, useracceptedqty,createdby, createdTime, lastmodifiedby, lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.transferInwards.*.receiptDetails.*
           jsonMaps:
             - jsonPath: $.transferInwards.*.receiptDetails.*.id
@@ -1338,11 +1338,13 @@ serviceMaps:
             - jsonPath: $.transferInwards.*.receiptDetails.*.material.code
             - jsonPath: $.transferInwards.*.receiptDetails.*.uom.code
             - jsonPath: $.transferInwards.*.receiptDetails.*.receivedQty
-            - jsonPath: $.transferInwards.*.receiptDetails.*.acceptedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receivedQty
             - jsonPath: $.transferInwards.*.receiptDetails.*.unitRate
             - jsonPath: $.transferInwards.*.receiptDetails.*.rejectionRemark
             - jsonPath: $.transferInwards.*.receiptDetails.*.purchaseOrderDetail.id
             - jsonPath: $.transferInwards[?({id} in @.receiptDetails[*].id)].mrnNumber
+            - jsonPath: $.transferInwards.*.receiptDetails.*.userReceivedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.userReceivedQty
             - jsonPath: $.transferInwards.*.receiptDetails.*.auditDetails.createdBy
             - type: CURRENTDATE
               dbType: LONG
@@ -1404,10 +1406,10 @@ serviceMaps:
             - jsonPath: $.transferInwards.*.tenantId
         - query: >-
                  INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark, podetailid,
-                 mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 mrnnumber, userReceivedQty,userAcceptedQty,createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  material = EXCLUDED.material, uomno  = EXCLUDED.uomno, receivedQty = EXCLUDED.receivedQty,
                  acceptedQty = EXCLUDED.acceptedQty, unitRate = EXCLUDED.unitRate, rejectionremark = EXCLUDED.rejectionremark,
-                 podetailid = EXCLUDED.podetailid, mrnnumber = EXCLUDED.mrnnumber, lastmodifiedby = EXCLUDED.lastmodifiedby,
+                 podetailid = EXCLUDED.podetailid, mrnnumber = EXCLUDED.mrnnumber,userReceivedQty = EXCLUDED.userReceivedQty,userAcceptedQty = EXCLUDED.userAcceptedQty, lastmodifiedby = EXCLUDED.lastmodifiedby,
                  lastModifiedTime = EXCLUDED.lastmodifiedtime ;
           basePath: $.transferInwards.*.receiptDetails.*
           jsonMaps:
@@ -1416,11 +1418,13 @@ serviceMaps:
             - jsonPath: $.transferInwards.*.receiptDetails.*.material.code
             - jsonPath: $.transferInwards.*.receiptDetails.*.uom.code
             - jsonPath: $.transferInwards.*.receiptDetails.*.receivedQty
-            - jsonPath: $.transferInwards.*.receiptDetails.*.acceptedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.receivedQty
             - jsonPath: $.transferInwards.*.receiptDetails.*.unitRate
             - jsonPath: $.transferInwards.*.receiptDetails.*.rejectionRemark
             - jsonPath: $.transferInwards.*.receiptDetails.*.purchaseOrderDetail.id
             - jsonPath: $.transferInwards[?({id} in @.receiptDetails[*].id)].mrnNumber
+            - jsonPath: $.transferInwards.*.receiptDetails.*.userReceivedQty
+            - jsonPath: $.transferInwards.*.receiptDetails.*.userReceivedQty
             - jsonPath: $.transferInwards.*.receiptDetails.*.auditDetails.createdBy
             - type: CURRENTDATE
               dbType: LONG

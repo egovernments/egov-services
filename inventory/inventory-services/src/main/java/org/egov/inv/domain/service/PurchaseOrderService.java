@@ -459,9 +459,20 @@ public class PurchaseOrderService extends DomainService {
 
             Long currentMilllis = System.currentTimeMillis();
 
+            for(PurchaseOrder  purchaseOrder : pos)
+            	if(purchaseOrder.getPurchaseType() == null)
+            		errors.addDataError(ErrorCode.INVALID_PURCHASETYPE_VALUE.getCode(), "purchaseType", null);
+            	
+            for(PurchaseOrder  purchaseOrder : pos)
+				if (!Arrays.stream(PurchaseOrder.PurchaseTypeEnum.values())
+						.anyMatch((t) -> t.equals(PurchaseOrder.PurchaseTypeEnum.fromValue(purchaseOrder.getPurchaseType().toString())))) {
+					errors.addDataError(ErrorCode.INVALID_PURCHASETYPE_VALUE.getCode(), "purchaseType", purchaseOrder.getPurchaseType().toString());
+				}
+
             //Second check for validating if Indent is valid for PO Creation
             if(method.equals(Constants.ACTION_CREATE))
             	for(PurchaseOrder purchaseOrder : pos)
+            	if (purchaseOrder.getPurchaseType().toString().equals("Indent"))
                 for (String indentNo : purchaseOrder.getIndentNumbers()) {
                     if (!purchaseOrderRepository.getIsIndentValidForPOCreate(indentNo)) {
                         errors.addDataError(ErrorCode.INVALID_INDENT_VALUE.getCode(), "indentNumber", indentNo);

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -276,6 +277,14 @@ public class AgreementService {
 		}
 		
 		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+			Demand demand = agreement.getLegacyDemands().get(0);
+			List<DemandDetails> demandDetailList = new ArrayList<>();
+			for(DemandDetails demandDetail : demand.getDemandDetails()){
+				if(demandDetail.getTaxAmount().compareTo(BigDecimal.ZERO) > 0)
+					demandDetailList.add(demandDetail);
+			}
+			demand.getDemandDetails().clear();
+			demand.setDemandDetails(demandDetailList);
 			agreement.setDemands(updateDemand(agreement.getDemands(), agreement.getLegacyDemands(),
 					agreementRequest.getRequestInfo()));
 			agreementMessageQueueRepository.save(agreementRequest, UPDATE);

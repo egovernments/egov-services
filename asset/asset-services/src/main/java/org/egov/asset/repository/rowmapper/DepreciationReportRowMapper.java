@@ -32,7 +32,7 @@ public class DepreciationReportRowMapper implements RowMapper<DepreciationReport
         depreciation.setAssetCategoryType(rs.getString("assetcategorytype"));
         depreciation.setAssetCategoryName(rs.getString("assetcategoryname"));
         depreciation.setParent((Long) rs.getObject("parentid"));
-        depreciation.setDepreciationRate(rs.getDouble("assetcategory_depreciationrate"));
+        depreciation.setDepreciationRate(rs.getDouble("depreciation_depreciationrate"));
         depreciation.setDepreciationValue(rs.getBigDecimal("depreciationvalue"));
         depreciation.setValueAfterDepreciation(rs.getBigDecimal("valueafterdepreciation"));
         return depreciation;

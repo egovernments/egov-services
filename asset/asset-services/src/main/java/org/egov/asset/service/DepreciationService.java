@@ -223,7 +223,7 @@ public class DepreciationService {
 
         final DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
         final Long todate = criteria.getToDate();
-        final DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         final Date depreciationDate = new Date(todate);
 
         final String url = applicationProperties.getEgfMastersHost()

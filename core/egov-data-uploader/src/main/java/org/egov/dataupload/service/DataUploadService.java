@@ -3,15 +3,21 @@ package org.egov.dataupload.service;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
+import org.assertj.core.util.Preconditions;
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.Defs;
@@ -100,7 +106,7 @@ public class DataUploadService {
 	}
 
 
-	public SuccessFailure parseExcel(UploaderRequest uploaderRequest) throws Exception {
+	public void parseExcel(UploaderRequest uploaderRequest) throws Exception {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 	    List<ResponseMetaData> success = new ArrayList<>();
@@ -138,12 +144,10 @@ public class DataUploadService {
         
         SuccessFailure uploaderResponse = new SuccessFailure();
         uploaderResponse.setSuccess(success);
-        uploaderResponse.setFailure(failure);
-                
-        return uploaderResponse;
+        uploaderResponse.setFailure(failure);                
 	}
 	
-	private String uploadFlatData(List<List<Object>> excelData,
+	private void uploadFlatData(List<List<Object>> excelData,
 			     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest) throws Exception{
 		String request = null;
 	    int additionFieldsCount = 0;
@@ -187,8 +191,6 @@ public class DataUploadService {
 			uploadRegistryRepository.updateJob(uploaderRequest);
 		
 		}
-
-	    return request;
 	}
 	
 	public String buildRequest(List<Object> coloumnHeaders, int additionFieldsCount, 
@@ -276,100 +278,6 @@ public class DataUploadService {
 		
 	    return successFailureCounts;
 	}
-		
-	private void upload(List<List<Object>> excelData,
-		     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest) {
-		ObjectMapper mapper = new ObjectMapper();		
-		String request = null;
-	    int additionFieldsCount = 0;
-		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
-		uploadJob.setEndTime(0L);uploadJob.setFailedRows(0);uploadJob.setStartTime(new Date().getTime());uploadJob.setSuccessfulRows(0);
-		uploadJob.setStatus(StatusEnum.fromValue("InProgress"));uploadJob.setResponseFilePath(null);uploadJob.setTotalRows(excelData.size() - 1);
-		uploadRegistryRepository.updateJob(uploaderRequest);
-		if(null == uploadDefinition.getUniqueParentKeys()){
-			logger.error("No parent unique keys.");
-    		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
-    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
-    		uploadRegistryRepository.updateJob(uploaderRequest);
-			dataUploadUtils.clearInternalDirectory();
-		}
-		Type type = new TypeToken<Map<String, Object>>() {}.getType();
-		Gson gson = new Gson();
-		Map<String, Object> objectMap = gson.fromJson(uploadDefinition.getApiRequest().toString(), type);
-		
-		logger.info("REQUEST MAP:: "+objectMap);
-		List<Integer> indexes = new ArrayList<>();
-		for(String key: uploadDefinition.getUniqueParentKeys()){
-			indexes.add(coloumnHeaders.indexOf(key));
-		}
-		for(int i = 0; i < excelData.size(); i++){
-			//fetching list of all the rows that will be combined to form ONE request.
-			List<List<Object>> filteredList = dataUploadUtils.filter(excelData, indexes, excelData.get(i));
-			logger.info("filteredList: "+filteredList);
-			for(int k = 0; k < filteredList.size(); k++){
-				for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
-	            	StringBuilder expression = new StringBuilder();
-	            	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(j).toString());
-	            	if(null == jsonPathList){
-						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
-	            		continue;
-	            	}
-	            	if(jsonPathList.isEmpty()) {
-						logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
-	            		continue;
-	            	}
-	            	for(String jsonPath: jsonPathList) {
-	            		logger.info("jsonPath: "+jsonPath);
-		            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-		            	String[] pathArray = expression.toString().split("[.]");
-		            	Map<String, Object> tempMap = objectMap;
-		            	Map<String, Object> map = new HashMap<>();
-		            	for(String path: pathArray) {
-		            		logger.info("path: "+path);
-		            		if(path.equals("*")) {
-		            			continue;
-		            		}
-		            		if(path.equals("$")) {
-		            			continue;
-		            		}
-		            		if(tempMap.get(path) instanceof java.util.ArrayList) {
-		            			List tempList = new ArrayList<>();
-		            			tempList = (List<Object>) tempMap.get(path);
-		            			map = (Map<String, Object>) tempList.get(0);
-		            		}else {
-		            			map = (Map<String, Object>) tempMap.get(path);
-		            		}
-		            		tempMap = map;
-		            		logger.info("tempMap: "+tempMap);
-		            	}
-		            	tempMap.put(key, filteredList.get(k).get(j));
-	            		logger.info("tempMap update with val: "+filteredList.get(k).get(j)+" at key: "+key);
-		            	for(String path: pathArray) {
-		            		
-
-		            	}
-
-	            	}
-					
-				}
-			}
-			
-	    	//counter is incremented based on no of rows processed in this iteration.
-			i+=(filteredList.size() - 1);
-	    }
-		
-		
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
 	
 	private void uploadParentChildData(List<List<Object>> excelData,
 		     List<Object> coloumnHeaders, Definition uploadDefinition, UploaderRequest uploaderRequest) throws Exception{
@@ -420,20 +328,8 @@ public class DataUploadService {
 		for(int i = 0; i < excelData.size(); i++){
 			String failureMessage = null;
 			//fetching list of all the rows that will be combined to form ONE request.
-			List<List<Object>> filteredList = dataUploadUtils.filter(excelData, indexes, excelData.get(i));
-			
-			/* Building a map that contains all row values of a given column. 
-			This map will be used to construct any arrays present in the request.*/
-			Map<String, List<Object>> allRowsOfAColumnMap = new HashMap<>();
-			for(int j = 0; j <  (coloumnHeaders.size() - additionFieldsCount); j++){
-				List<Object> rowsList = new ArrayList<>();
-				for(List<Object> list: filteredList){
-					rowsList.add(list.get(j));
-				}
-				allRowsOfAColumnMap.put(coloumnHeaders.get(j).toString(), rowsList);
-			}
-			
-			request = buildRequestForParentChild(i, filteredList, allRowsOfAColumnMap, coloumnHeaders, additionFieldsCount, uploadDefinition, 
+			List<List<Object>> filteredList = dataUploadUtils.filter(excelData, indexes, excelData.get(i));			
+			request = buildRequestForParentChild(i, filteredList, coloumnHeaders, additionFieldsCount, uploadDefinition, 
 					documentContext, uploaderRequest, bulkApiRequest);
 			
 			logger.info("FINAL REQUEST to EXTERNAL MODULE: "+request);
@@ -534,15 +430,13 @@ public class DataUploadService {
 
 	}
 	
-	private String buildRequestForParentChild(int i, List<List<Object>> filteredList, Map<String, List<Object>> allRowsOfAColumnMap,
+	private String buildRequestForParentChild(int i, List<List<Object>> filteredList,
 			List<Object> coloumnHeaders, int additionFieldsCount, Definition uploadDefinition, DocumentContext documentContext, 
 			UploaderRequest uploaderRequest, DocumentContext bulkApiRequest) throws Exception {
 		String request = null;
 		ObjectMapper mapper = new ObjectMapper();
 		logger.info("filteredList: "+filteredList);
-		logger.info("allRowsOfAColumnMap: "+allRowsOfAColumnMap);
 		List<Map<String, Object>> filteredListObjects = new ArrayList<>();
-		List<String> arrayKeys = new ArrayList<>();
 		for(int k = 0; k < filteredList.size(); k++){
 			for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
             	StringBuilder expression = new StringBuilder();
@@ -560,14 +454,6 @@ public class DataUploadService {
             			jsonPath = jsonPath.replace(uploadDefinition.getArrayPath(), "$");
             			//Because for bulk API, multiple such objects might have to be created, all of them will be appended at once in the end.
             		}
-	            	if(jsonPath.contains("*")){
-	            		String[] splitJsonPath = jsonPath.split("[.]");
-	            		List<String> list = Arrays.asList(splitJsonPath);
-	            		if(!(arrayKeys.contains(list.get((list.indexOf("*") - 1)))))
-	            			arrayKeys.add(list.get((list.indexOf("*") - 1)));
-	            		
-	            		//arrayKeys is the list of all keys which are arrays in the module api request.
-	            	}
 	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
 	            	if(key.contains("tenantId")){
 		            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
@@ -582,8 +468,6 @@ public class DataUploadService {
         	filteredListObjects.add(objectMap);
 		}
 		Map<String, Object> requestMap = new HashMap<>();
-		deepMerge(requestMap, filteredListObjects.get(0));
-		deepMerge(requestMap, filteredListObjects.get(1));
 		for(Map map: filteredListObjects) {
 			deepMerge(requestMap, map);
 		}
@@ -620,25 +504,59 @@ public class DataUploadService {
 	
 	private static Map deepMerge(Map original, Map newMap) {
 	    for (Object key : newMap.keySet()) {
+			logger.info("key: "+key);
 	        if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
 	            Map originalChild = (Map) original.get(key);
 	            Map newChild = (Map) newMap.get(key);
 	            original.put(key, deepMerge(originalChild, newChild));
 	        } else if (newMap.get(key) instanceof List && original.get(key) instanceof List) {
+	    		logger.info("Instance of list: ");
 	            List originalChild = (List) original.get(key);
+	    		logger.info("originalChild: "+originalChild);
 	            List newChild = (List) newMap.get(key);
-	            for (Object each : newChild) {
-	                if (!originalChild.contains(each)) {
-	                    originalChild.add(each);
-	                }
-	            }
+	    		logger.info("newChild: "+newChild);
+	    		Map<Object, Object> originalChildEntry = (Map) originalChild.get(originalChild.size() - 1);
+	    		Map<Object, Object> newChildEntry = (Map) newChild.get(0);
+	    		List<String> uniqueKeysForInnerObject = new ArrayList<>();
+	    		int counter = 0;
+	    		uniqueKeysForInnerObject.add("name");
+	    		try {
+		    		for(String mapKey: uniqueKeysForInnerObject) {
+		    			if(originalChildEntry.get(mapKey).
+		    					equals(newChildEntry.get(mapKey))) {
+		    				counter++;
+		    				continue;
+		    			}else {
+		    				break;
+		    			}
+		    		}
+		    		if(counter == uniqueKeysForInnerObject.size()) {
+		    			logger.info("Match found!");
+		    			for(Object originalMapKey: originalChildEntry.keySet()) {
+		    				if(originalChildEntry.get(originalMapKey) instanceof List) {
+		    					List newChildValue = (List) newChildEntry.get(originalMapKey);
+		    					List originalChildValue = (List) originalChildEntry.get(originalMapKey);
+		    					originalChildValue.addAll(newChildValue);
+		    					originalChildEntry.put(originalMapKey, originalChildValue);
+		    				}
+		    			}
+		    		}else {
+		    			logger.info("No match found!");
+		    			originalChild.add(newChildEntry);
+		    		}
+	    		}catch(Exception e) {
+	                if (!originalChild.contains(newChildEntry)) {
+	                    originalChild.add(newChildEntry);
+	                    continue;
+	    		    }
+	    	    }	
 	        } else {
+	    		logger.info("Adding new key: "+key+" value: "+newMap.get(key)+" to original");
 	            original.put(key, newMap.get(key));
-	        }
+	        }	        
 	    }
 	    return original;
 	}
-	
 	
 	public void writeToExcelForParentChild(String failureMessage, Object apiResponse, int failureCount, int successCount, 
 			String resultFilePath, List<Object> resJsonPathList, List<List<Object>> filteredList) throws Exception {

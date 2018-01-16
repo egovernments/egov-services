@@ -82,8 +82,7 @@ public class DataUploadRepository {
 	    HttpEntity<String> entity = new HttpEntity<String>(headers);
 	    try{
 		    ResponseEntity<byte[]> response = restTemplate.exchange(
-		    		filePath, HttpMethod.GET, entity, byte[].class, "1");
-	
+		    		filePath, HttpMethod.GET, entity, byte[].class, "1");	
 		    if (response.getStatusCode() == HttpStatus.OK) {
 		    	fullFilePath = dataUploadUtils.createANewFile(fileName);
 		        Files.write(Paths.get(fullFilePath), response.getBody());

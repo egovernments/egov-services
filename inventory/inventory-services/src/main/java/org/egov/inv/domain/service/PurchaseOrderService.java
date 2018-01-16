@@ -464,6 +464,7 @@ public class PurchaseOrderService extends DomainService {
             		errors.addDataError(ErrorCode.INVALID_PURCHASETYPE_VALUE.getCode(), "purchaseType", null);
             	
             for(PurchaseOrder  purchaseOrder : pos)
+            	if(purchaseOrder.getPurchaseType() != null)
 				if (!Arrays.stream(PurchaseOrder.PurchaseTypeEnum.values())
 						.anyMatch((t) -> t.equals(PurchaseOrder.PurchaseTypeEnum.fromValue(purchaseOrder.getPurchaseType().toString())))) {
 					errors.addDataError(ErrorCode.INVALID_PURCHASETYPE_VALUE.getCode(), "purchaseType", purchaseOrder.getPurchaseType().toString());
@@ -472,6 +473,7 @@ public class PurchaseOrderService extends DomainService {
             //Second check for validating if Indent is valid for PO Creation
             if(method.equals(Constants.ACTION_CREATE))
             	for(PurchaseOrder purchaseOrder : pos)
+            	if(purchaseOrder.getPurchaseType() != null)
             	if (purchaseOrder.getPurchaseType().toString().equals("Indent"))
                 for (String indentNo : purchaseOrder.getIndentNumbers()) {
                     if (!purchaseOrderRepository.getIsIndentValidForPOCreate(indentNo)) {
@@ -517,12 +519,14 @@ public class PurchaseOrderService extends DomainService {
                             IndentEntity ie = IndentEntity.builder().build();
 
                             //Indent Number mandatory for each PurchaseOrder
+                            if(eachPurchaseOrder.getPurchaseType() != null)
                             if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent")) {
                         		if(purchaseOrderDetail.getIndentNumber() == null)
                         			errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indentNumber", "null");
                             }
 
                             //indent reference validation
+                            if(eachPurchaseOrder.getPurchaseType() != null)
                             if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent")) {
                                 if(purchaseOrderDetail.getIndentNumber() != null) {
 	                            	ie = indentJdbcRepository.findById(IndentEntity.builder().indentNumber(purchaseOrderDetail.getIndentNumber()).tenantId(purchaseOrderDetail.getTenantId()).build());
@@ -551,6 +555,7 @@ public class PurchaseOrderService extends DomainService {
                     IndentSearch is = IndentSearch.builder().ids(new ArrayList<String>(Arrays.asList(indentNumbers.split(",")))).tenantId(tenantId).build();
                     IndentResponse isr = indentService.search(is, new RequestInfo());
 
+                    if(eachPurchaseOrder.getPurchaseType() != null)
                     if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
                         for (Indent in : isr.getIndents()) {
                             if (in.getIndentDate().compareTo(eachPurchaseOrder.getPurchaseOrderDate()) > 0) {
@@ -560,6 +565,7 @@ public class PurchaseOrderService extends DomainService {
                         }
 
                     //Allow only material which are part of the indent only for creating PO
+                    if(eachPurchaseOrder.getPurchaseType() != null)
                     if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
                         for (PurchaseOrderDetail poDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                             boolean materialPresent = false;
@@ -661,6 +667,7 @@ public class PurchaseOrderService extends DomainService {
                                         }
                                 }
 
+                            if(eachPurchaseOrder.getPurchaseType() != null)
                             if (eachPurchaseOrder.getPurchaseType().toString().equals("Indent"))
                                 if (poDetail != null && null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()) {
                                     int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());

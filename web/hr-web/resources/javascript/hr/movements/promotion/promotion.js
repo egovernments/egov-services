@@ -100,9 +100,25 @@ class EmployeePromotion extends React.Component {
                   },
                   success: function(res) {
 
+                    var asOnDate = new Date();
+                    var dd = asOnDate.getDate();
+                    var mm = asOnDate.getMonth() + 1; 
+                    var yyyy = asOnDate.getFullYear();
+              
+                    if (dd < 10) {
+                      dd = '0' + dd
+                    }
+              
+                    if (mm < 10) {
+                      mm = '0' + mm
+                    }
+              
+                    asOnDate = dd + '/' + mm + '/' + yyyy;
+
                     var employee, designation;
                     commonApiPost("hr-employee", "employees", "_search", {
                       tenantId,
+                      asOnDate,
                       "positionId": movement.workflowDetails.assignee
                     }, function(err, res) {
                       if (res && res.Employee && res.Employee[0])
@@ -151,9 +167,25 @@ class EmployeePromotion extends React.Component {
           },
           success: function(res) {
 
+            var asOnDate = new Date();
+            var dd = asOnDate.getDate();
+            var mm = asOnDate.getMonth() + 1; 
+            var yyyy = asOnDate.getFullYear();
+      
+            if (dd < 10) {
+              dd = '0' + dd
+            }
+      
+            if (mm < 10) {
+              mm = '0' + mm
+            }
+      
+            asOnDate = dd + '/' + mm + '/' + yyyy;
+      
             var employee, designation;
             commonApiPost("hr-employee", "employees", "_search", {
               tenantId,
+              asOnDate,
               "positionId": movement.workflowDetails.assignee
             }, function(err, res) {
               if (res && res.Employee && res.Employee[0])

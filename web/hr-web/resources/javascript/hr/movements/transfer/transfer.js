@@ -116,9 +116,25 @@ class EmployeeTransfer extends React.Component {
                   success: function(res) {
                     var employee, designation;
 
+                    var asOnDate = new Date();
+                    var dd = asOnDate.getDate();
+                    var mm = asOnDate.getMonth() + 1; 
+                    var yyyy = asOnDate.getFullYear();
+              
+                    if (dd < 10) {
+                      dd = '0' + dd
+                    }
+              
+                    if (mm < 10) {
+                      mm = '0' + mm
+                    }
+              
+                    asOnDate = dd + '/' + mm + '/' + yyyy;
+
                     commonApiPost("hr-employee", "employees", "_search", {
                       "positionId": movement.workflowDetails.assignee,
-                      tenantId
+                      tenantId,
+                      asOnDate
                     }, function(err, res) {
                       if (res && res.Employee && res.Employee[0])
                         employee = res.Employee[0];
@@ -171,9 +187,25 @@ class EmployeeTransfer extends React.Component {
           success: function(res) {
             var employee, designation;
 
+            var asOnDate = new Date();
+            var dd = asOnDate.getDate();
+            var mm = asOnDate.getMonth() + 1; 
+            var yyyy = asOnDate.getFullYear();
+      
+            if (dd < 10) {
+              dd = '0' + dd
+            }
+      
+            if (mm < 10) {
+              mm = '0' + mm
+            }
+      
+            asOnDate = dd + '/' + mm + '/' + yyyy;
+
             commonApiPost("hr-employee", "employees", "_search", {
               "positionId": movement.workflowDetails.assignee,
-              tenantId
+              tenantId,
+              asOnDate
             }, function(err, res) {
               if (res && res.Employee && res.Employee[0])
                 employee = res.Employee[0];

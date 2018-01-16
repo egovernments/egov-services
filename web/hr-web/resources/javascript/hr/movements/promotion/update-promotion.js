@@ -497,8 +497,25 @@ class UpdateMovement extends React.Component {
                   success: function (res) {
                     console.log("res", res.Movement[0].workflowDetails.assignee);
                     var employee, designation;
+
+                    var asOnDate = new Date();
+                    var dd = asOnDate.getDate();
+                    var mm = asOnDate.getMonth() + 1; 
+                    var yyyy = asOnDate.getFullYear();
+              
+                    if (dd < 10) {
+                      dd = '0' + dd
+                    }
+              
+                    if (mm < 10) {
+                      mm = '0' + mm
+                    }
+              
+                    asOnDate = dd + '/' + mm + '/' + yyyy;
+
                     commonApiPost("hr-employee", "employees", "_search", {
                       tenantId,
+                      asOnDate,
                       positionId: res.Movement[0].workflowDetails.assignee
                     }, function (err, res2) {
                       if (res2 && res2.Employee && res2.Employee[0])
@@ -552,8 +569,25 @@ class UpdateMovement extends React.Component {
           success: function (res) {
             console.log("res", res.Movement[0].workflowDetails.assignee);
             var employee, designation;
+
+            var asOnDate = new Date();
+            var dd = asOnDate.getDate();
+            var mm = asOnDate.getMonth() + 1; 
+            var yyyy = asOnDate.getFullYear();
+      
+            if (dd < 10) {
+              dd = '0' + dd
+            }
+      
+            if (mm < 10) {
+              mm = '0' + mm
+            }
+      
+            asOnDate = dd + '/' + mm + '/' + yyyy;
+
             commonApiPost("hr-employee", "employees", "_search", {
               tenantId,
+              asOnDate,
               positionId: res.Movement[0].workflowDetails.assignee
             }, function (err, res2) {
               if (res2 && res2.Employee && res2.Employee[0])

@@ -1,13 +1,11 @@
 package org.egov.works.masters.web.contract;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder
@@ -36,9 +34,11 @@ public class RemarksHelper {
         remarks.setTenantId(this.tenantId);
         TypeOfDocument typeOfDocument = new TypeOfDocument();
         typeOfDocument.setName(this.typeOfDocument);
+        typeOfDocument.setTenantId(this.tenantId);
         remarks.setTypeOfDocument(typeOfDocument);
         RemarksType remarksType = new RemarksType();
         remarksType.setName(this.remarksType);
+        remarksType.setTenantId(this.tenantId);
         remarks.remarksType(remarksType);
         remarks.setDeleted(this.deleted);
         return remarks;

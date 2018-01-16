@@ -387,8 +387,10 @@ public class DemandRepository {
 			} else {
 				taxReason = propertiesManager.getTaxReasonAdvanceTax();
 				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
-				taxReason = propertiesManager.getTaxReasonGoodWillAmount();
-				demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+				if(agreement.getGoodWillAmount() > 0){
+					taxReason = propertiesManager.getTaxReasonGoodWillAmount();
+					demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveInstDate, taxReason));
+				}
 			}
 		}
 		return demandReasons;

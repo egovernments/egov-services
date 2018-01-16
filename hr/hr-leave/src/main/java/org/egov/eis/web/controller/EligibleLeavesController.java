@@ -156,13 +156,9 @@ public class EligibleLeavesController {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 
 		final LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest = new LeaveOpeningBalanceGetRequest();
-
 		leaveOpeningBalanceGetRequest.getEmployee().add(employeeid);
-
 		leaveOpeningBalanceGetRequest.getLeaveType().add(leaveType);
-
 		leaveOpeningBalanceGetRequest.setTenantId(tenantId);
-
 		leaveOpeningBalanceGetRequest.setYear(asondate != null ? asondate.getYear() : null);
 
 		List<LeaveOpeningBalance> leaveOpeningBalancesList = null;
@@ -184,7 +180,7 @@ public class EligibleLeavesController {
 					tenantId);
 		}
 
-		if (leaveAllotmentsList.isEmpty() || leaveAllotmentsList == null) {
+		if ((leaveAllotmentsList != null && leaveAllotmentsList.isEmpty()) || leaveAllotmentsList == null) {
 			leaveAllotmentsList = leaveAllotmentRepository.getLeaveAllotmentByDesignation(leaveType, null, tenantId);
 		}
 
@@ -198,18 +194,12 @@ public class EligibleLeavesController {
 					* Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays();
 
 		final LeaveApplicationGetRequest leaveApplicationGetRequest = new LeaveApplicationGetRequest();
-
 		leaveApplicationGetRequest.getEmployee().add(employeeid);
-
 		leaveApplicationGetRequest.setLeaveType(leaveType);
-
 		leaveApplicationGetRequest.setStatus(LeaveStatus.APPROVED.toString());
-
 		leaveApplicationGetRequest.setTenantId(tenantId);
-
 		leaveApplicationGetRequest
 				.setFromDate(Date.from(yearStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-
 		leaveApplicationGetRequest.setToDate(Date.from(asondate.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
 		List<LeaveApplication> leaveApplicationsList = null;
@@ -225,11 +215,8 @@ public class EligibleLeavesController {
 			applicationValue = leaveApplicationsList.get(0).getLeaveDays();
 
 		final EligibleLeave eligibleLeave = new EligibleLeave();
-
 		eligibleLeave.setAsOnDate(asOnDate);
-
 		eligibleLeave.setEmployee(employeeid);
-
 		eligibleLeave.setLeaveType(leaveType);
 
 		if (dateOfAppointment != null && dateOfAppointment.isAfter(asondate))

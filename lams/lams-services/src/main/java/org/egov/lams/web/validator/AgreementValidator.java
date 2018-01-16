@@ -421,5 +421,18 @@ public class AgreementValidator {
 		}
 
 	}
+	
+	public void validatePartialCollection(AgreementRequest agreementRequest, Errors errors){
+		Agreement agreement = agreementRequest.getAgreement();
+		for(Demand demand : agreement.getLegacyDemands()){
+			for(DemandDetails demandDetails : demand.getDemandDetails()){
+				if ((propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetails.getTaxReason())
+						|| propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(demandDetails.getTaxReason()))
+						&& demandDetails.getTaxAmount().compareTo(demandDetails.getCollectionAmount()) > 0)
+					errors.reject("No Partial Collection allowed", "Partial collection is not allowed for "
+							+ demandDetails.getTaxReason() + " of " + demandDetails.getTaxPeriod());
+			}
+		}
+	}
 
 }

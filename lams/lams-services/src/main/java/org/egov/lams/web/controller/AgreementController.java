@@ -310,8 +310,11 @@ public class AgreementController {
 	public ResponseEntity<?> update(@PathVariable("code") String code, @RequestBody AgreementRequest agreementRequest,
 			BindingResult bindingResult) {
 
+		if(agreementRequest.getAgreement().getSource().equals(Source.DATA_ENTRY)){
+			agreementValidator.validatePartialCollection(agreementRequest, bindingResult);
+		}
 		if (bindingResult.hasErrors()) {
-			ErrorResponse errorResponse = populateErrors(bindingResult);
+			ErrorResponse errorResponse = populateValidationErrors(bindingResult);
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		if (agreementRequest.getAgreement().getSource().equals(Source.SYSTEM)) {

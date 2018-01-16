@@ -210,8 +210,8 @@ public class DemandService {
 						? Boolean.TRUE : Boolean.FALSE);
 			}
 
-			if (!isDemandDetailsExist
-					&& propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandReason.getName())) {
+			if (!isDemandDetailsExist && (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandReason.getName())
+					|| propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(demandReason.getName()))) {
 				demandDetail = new DemandDetails();
 				demandDetail.setCollectionAmount(BigDecimal.ZERO);
 				demandDetail.setRebateAmount(BigDecimal.ZERO);
@@ -219,7 +219,10 @@ public class DemandService {
 				demandDetail.setTaxReasonCode(demandReason.getName());
 				demandDetail.setTaxPeriod(demandReason.getTaxPeriod());
 				demandDetail.setTenantId(agreement.getTenantId());
-				demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+				if(propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandReason.getName()))
+					demandDetail.setTaxAmount(BigDecimal.valueOf(agreement.getRent()));
+				else
+					demandDetail.setTaxAmount(BigDecimal.ZERO);
 				demandDetail.setIsCollected(Boolean.FALSE);
 				legacyDetails.add(demandDetail);
 			}

@@ -164,4 +164,10 @@ public class PropertiesManager {
 	@Value("${egov.services.lams.assetcategory.market}")
 	public String assetCategoryMarket;
 	
+	@Value("${egov.services.demand_service.taxreason.penalty}")
+	public String taxReasonPenalty;
+	
+	
+	@Value("${egov.services.demand_service.penaltyCategoryName}")
+	private String penaltyCategoryName;
 }

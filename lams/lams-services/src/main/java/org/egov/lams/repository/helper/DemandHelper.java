@@ -39,7 +39,8 @@ public class DemandHelper {
 		urlParams.append("&taxPeriod=" + agreement.getTimePeriod());
 		urlParams.append("&fromDate=" + DateFormatUtils.format(fromDate, "dd/MM/yyyy"));
 		urlParams.append("&installmentType=" + agreement.getPaymentCycle().toString());
-		urlParams.append("&taxCategory=" + propertiesManager.getTaxCategoryName());
+		urlParams.append("&taxCategory=" + (propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(taxReason)
+				? propertiesManager.getPenaltyCategoryName() : propertiesManager.getTaxCategoryName()));
 		urlParams.append("&tenantId=" + agreement.getTenantId());
 		urlParams.append("&taxReason=" + taxReason);
 		urlParams.append("&toDate=" + DateFormatUtils.format(date, "dd/MM/yyyy"));

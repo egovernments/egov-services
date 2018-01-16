@@ -105,9 +105,11 @@ public class DemandRepository {
 
 		List<DemandReason> demandReasons = new ArrayList<>();
 		Agreement agreement = agreementRequest.getAgreement();
-		String taxReason = null;
-		taxReason = propertiesManager.getTaxReasonRent();
+		String taxReason;
 		Date effectiveTodate = getEfectiveTodate(agreement);
+		taxReason = propertiesManager.getTaxReasonRent();
+		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveTodate, taxReason));
+		taxReason = propertiesManager.getTaxReasonPenalty();
 		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveTodate, taxReason));
 		return demandReasons;
 

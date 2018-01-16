@@ -8,6 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.lams.notification.model.enums.Action;
+import org.egov.lams.notification.model.enums.BasisOfAllotment;
 import org.egov.lams.notification.model.enums.NatureOfAllotment;
 import org.egov.lams.notification.model.enums.PaymentCycle;
 import org.egov.lams.notification.model.enums.Source;
@@ -73,6 +74,8 @@ public class Agreement {
 	private Date securityDepositDate;
 	private Status status;
 
+	@NotNull
+	private BasisOfAllotment basisOfAllotment;
 	private NatureOfAllotment natureOfAllotment;
 	@Min(0)
 	private Double registrationFee;
@@ -154,5 +157,8 @@ public class Agreement {
 	
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date renewalDate;
+
+	@NotNull
+	private Long reservationCategory;
 
 }

@@ -21,12 +21,14 @@ public class SubSeqRenewalRowMapper implements ResultSetExtractor<List<SubSeqRen
 		while (rs.next()) {
 			SubSeqRenewal subSeqRenewal = new SubSeqRenewal();
 			try {
-				subSeqRenewal.setAgreementid((Long) rs.getObject("agreementid"));
+				subSeqRenewal.setAgreementId((Long) rs.getObject("agreementid"));
 				subSeqRenewal.setHistoryFromDate(rs.getTimestamp("fromdate"));
 				subSeqRenewal.setHistoryToDate(rs.getTimestamp("todate"));
 				subSeqRenewal.setYears(rs.getDouble("years"));
 				subSeqRenewal.setHistoryRent(rs.getDouble("rent"));
-
+				subSeqRenewal.setResolutionNumber(rs.getString("resolutionno"));
+				subSeqRenewal.setResolutionDate(rs.getTimestamp("resolutiondate"));
+                subSeqRenewal.setTenantId(rs.getString("tenantid"));
 				subSeqRenewalList.add(subSeqRenewal);
 			} catch (Exception e) {
 				logger.info("exception in subSeqRenewal RowMapper : " + e);

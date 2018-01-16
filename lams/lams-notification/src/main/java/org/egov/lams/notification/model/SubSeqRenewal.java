@@ -26,7 +26,16 @@ public class SubSeqRenewal {
 
 	@JsonProperty("rent")
 	private Double historyRent;
+	
+	@JsonProperty("resolutionNumber")
+	private String resolutionNumber;
+
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	@JsonProperty("resolutionDate")
+	private Date resolutionDate;
 
 	private Long agreementid;
+	
+	private String tenantId;
 
 }

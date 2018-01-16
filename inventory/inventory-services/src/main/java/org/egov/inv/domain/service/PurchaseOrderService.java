@@ -475,11 +475,14 @@ public class PurchaseOrderService extends DomainService {
             	for(PurchaseOrder purchaseOrder : pos)
             	if(purchaseOrder.getPurchaseType() != null)
             	if (purchaseOrder.getPurchaseType().toString().equals("Indent"))
+            	if(purchaseOrder.getIndentNumbers() != null)
                 for (String indentNo : purchaseOrder.getIndentNumbers()) {
                     if (!purchaseOrderRepository.getIsIndentValidForPOCreate(indentNo)) {
                         errors.addDataError(ErrorCode.INVALID_INDENT_VALUE.getCode(), "indentNumber", indentNo);
                     }
                 }
+            	else
+            		errors.addDataError(ErrorCode.NULL_VALUE.getCode(), "indentNumbers", null);
             
             //validate except during preparepofromindent
             if (!method.equals(Constants.ACTION_SEARCH_INDENT_FOR_PO))

@@ -35,7 +35,7 @@ public class PropertiesManager {
     @Value("${works.billnumber}")
     private String billNumber;
     
-    @Value("${works.billnumberprefix}")
+    @Value("${billnumber.prefix}")
     private String billNumberPrefix;
     
 }

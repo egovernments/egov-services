@@ -1,5 +1,6 @@
 package org.egov.works.workorder.domain.repository;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.works.common.persistence.repository.JdbcRepository;
 import org.egov.works.workorder.persistence.helper.NoticeHelper;
 import org.egov.works.workorder.web.contract.*;
@@ -46,7 +47,7 @@ public class NoticeJdbcRepository extends JdbcRepository {
 
         StringBuilder orderBy = new StringBuilder("order by notice.createdtime");
         if (noticeSearchContract.getSortBy() != null && !noticeSearchContract.getSortBy().isEmpty()) {
-            orderBy.delete(0,orderBy.length()).append("order by notice.").append(noticeSearchContract.getSortBy());
+            orderBy.delete(0, orderBy.length()).append("order by notice.").append(noticeSearchContract.getSortBy());
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -63,11 +64,23 @@ public class NoticeJdbcRepository extends JdbcRepository {
             params.append("notice.id in(:ids) ");
             paramValues.put("ids", noticeSearchContract.getIds());
         }
-        
+
         if (noticeSearchContract.getStatuses() != null) {
             addAnd(params);
             params.append("notice.status in(:statuses) ");
             paramValues.put("statuses", noticeSearchContract.getStatuses());
+        }
+
+        if (noticeSearchContract.getNoticeNumbers() != null) {
+            addAnd(params);
+            params.append("notice.noticenumber in(:noticenumbers) ");
+            paramValues.put("noticenumbers", noticeSearchContract.getNoticeNumbers());
+        }
+
+        if (StringUtils.isNotBlank(noticeSearchContract.getNoticeNumberLike())) {
+            addAnd(params);
+            params.append("upper(notice.noticenumber) =:noticeNumberLike ");
+            paramValues.put("noticeNumberLike", noticeSearchContract.getNoticeNumberLike().toUpperCase());
         }
 
         if (noticeSearchContract.getWorkOrderNumbers() != null) {
@@ -84,11 +97,32 @@ public class NoticeJdbcRepository extends JdbcRepository {
             paramValues.put("loaNumbers", noticeSearchContract.getLoaNumbers());
         }
 
+        if (StringUtils.isNotBlank(noticeSearchContract.getWorkOrderNumberLike())) {
+            addAnd(params);
+            params.append(
+                    "notice.letterofacceptance in (select wo.letterofacceptance from egw_workorder wo where upper(wo.workordernumber) =:workorderNumberLike and wo.tenantId=:tenantId and wo.deleted = false)");
+            paramValues.put("workorderNumberLike", noticeSearchContract.getWorkOrderNumberLike().toUpperCase());
+        }
+
+        if (StringUtils.isNotBlank(noticeSearchContract.getLoaNumberLike())) {
+            addAnd(params);
+            params.append(
+                    "notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where upper(loa.loanumber) =:loaNumberLike and loa.tenantId=:tenantId)");
+            paramValues.put("loaNumberLike", noticeSearchContract.getLoaNumberLike().toUpperCase());
+        }
+
         if (noticeSearchContract.getContractorCodes() != null) {
             addAnd(params);
             params.append(
                     "notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
             paramValues.put("contractorcodes", noticeSearchContract.getContractorCodes());
+        }
+
+        if (StringUtils.isNotBlank(noticeSearchContract.getContractorCodeLike())) {
+            addAnd(params);
+            params.append(
+                    "notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where upper(loa.contractor) =:contractorCodeLike)");
+            paramValues.put("contractorCodeLike", noticeSearchContract.getContractorCodeLike().toUpperCase());
         }
 
         List<String> contractorCodes = new ArrayList<>();
@@ -107,11 +141,35 @@ public class NoticeJdbcRepository extends JdbcRepository {
             }
         }
 
+        List<String> contractorCodesLike = new ArrayList<>();
+        if (StringUtils.isNotBlank(noticeSearchContract.getContractorNameLike())) {
+            List<Contractor> contractors = worksMastersRepository.searchContractors(noticeSearchContract.getTenantId(),
+                    Arrays.asList(noticeSearchContract.getContractorNameLike()), requestInfo);
+            for (Contractor contractor : contractors)
+                contractorCodesLike.add(contractor.getCode().toUpperCase());
+            if (!contractorCodesLike.isEmpty()) {
+                if (contractorCodesLike != null) {
+                    addAnd(params);
+                    params.append(
+                            "notice.letterofacceptance in (select loa.id from egw_letterofacceptance loa where upper(loa.contractor) =:contractorcodeslike)");
+                    paramValues.put("contractorcodeslike", contractorCodes);
+                }
+            }
+        }
+
         if (noticeSearchContract.getDetailedEstimateNumbers() != null) {
             addAnd(params);
             params.append(
-                    "loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid ");
+                    "loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in (:detailedestimatenumber) and loaestimate.tenantid=:tenantid ");
             paramValues.put("detailedestimatenumber", noticeSearchContract.getDetailedEstimateNumbers());
+            paramValues.put("tenantid", noticeSearchContract.getTenantId());
+        }
+
+        if (StringUtils.isNotBlank(noticeSearchContract.getDetailedEstimateNumberLike())) {
+            addAnd(params);
+            params.append(
+                    "loaestimate.letterofacceptance = notice.letterofacceptance and upper(loaestimate.detailedestimate) =:detailedEstimateNumberLike and loaestimate.tenantid=:tenantid ");
+            paramValues.put("detailedEstimateNumberLike", noticeSearchContract.getDetailedEstimateNumberLike());
             paramValues.put("tenantid", noticeSearchContract.getTenantId());
         }
 
@@ -126,9 +184,26 @@ public class NoticeJdbcRepository extends JdbcRepository {
 
             addAnd(params);
             params.append(
-                    "loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid");
+                    "loaestimate.letterofacceptance = notice.letterofacceptance and loaestimate.detailedestimate in (:detailedestimatenumber) and loaestimate.tenantid=:tenantid");
             paramValues.put("detailedestimatenumber", winEstimateNumbers);
             paramValues.put("tenantid", noticeSearchContract.getTenantId());
+        }
+
+        List<String> winEstimateNumberLike = new ArrayList<>();
+        if (StringUtils.isNotBlank(noticeSearchContract.getWorkIdentificationNumberLike())) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByProjectCode(
+                    Arrays.asList(noticeSearchContract.getWorkIdentificationNumberLike()), noticeSearchContract.getTenantId(),
+                    requestInfo);
+            for (DetailedEstimate detailedEstimate : detailedEstimates)
+                winEstimateNumberLike.add(detailedEstimate.getEstimateNumber().toUpperCase());
+            if (!winEstimateNumberLike.isEmpty()) {
+                addAnd(params);
+                params.append(
+                        "loaestimate.letterofacceptance = notice.letterofacceptance and upper(loaestimate.detailedestimate) =:detailedestimatenumberlike and loaestimate.tenantid=:tenantid");
+                paramValues.put("detailedestimatenumberlike", winEstimateNumberLike);
+                paramValues.put("tenantid", noticeSearchContract.getTenantId());
+            }
+
         }
 
         params.append(" and notice.deleted = false");

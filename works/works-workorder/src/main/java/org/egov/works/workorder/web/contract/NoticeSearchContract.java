@@ -40,4 +40,19 @@ public class NoticeSearchContract {
 
     private List<String> statuses;
 
+    private String workOrderNumberLike;
+
+    private String loaNumberLike;
+
+    private String detailedEstimateNumberLike;
+
+    private String workIdentificationNumberLike;
+
+    private List<String> noticeNumbers;
+
+    private String noticeNumberLike;
+    
+    private String contractorNameLike;
+
+    private String contractorCodeLike;
 }

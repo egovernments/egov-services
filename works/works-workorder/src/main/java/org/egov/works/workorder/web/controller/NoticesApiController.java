@@ -49,12 +49,22 @@ public class NoticesApiController implements NoticesApi {
             @Size(max = 50) @ApiParam(value = "Comma separated list of Work Identification Numbers") @RequestParam(value = "workIdentificationNumbers", required = false) List<String> workIdentificationNumbers,
             @Size(max = 50) @ApiParam(value = "Comma separated list of Names of the contractor to whom Notice is issued") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
             @Size(max = 50) @ApiParam(value = "Comma separated list of codes of the contractor to whom Notice is issued") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes,
-            @Size(max = 50) @ApiParam(value = "Comma separated list of the Notice Status") @RequestParam(value = "statuses", required = false) List<String> statuses) {
+            @Size(max = 50) @ApiParam(value = "Comma separated list of the Notice Status") @RequestParam(value = "statuses", required = false) List<String> statuses,
+            @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "workOrderNumberLike", required = false) String workOrderNumberLike,
+            @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "loaNumberLike", required = false) String loaNumberLike,
+            @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "detailedEstimateNumberLike", required = false) String detailedEstimateNumberLike,
+            @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "workIdentificationNumberLike", required = false) String workIdentificationNumberLike,
+            @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "noticeNumberLike", required = false) String noticeNumberLike,
+            @Size(max = 50) @ApiParam(value = "Comma separated list of Detailed Estimate Numbers") @RequestParam(value = "noticeNumbers", required = false) List<String> noticeNumbers,
+            @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "contractorCodeLike", required = false) String contractorCodeLike,
+            @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "contractorNameLike", required = false) String contractorNameLike) {
         NoticeSearchContract noticeSearchContract = NoticeSearchContract.builder().contractorCodes(contractorCodes)
                 .contractorNames(contractorNames).detailedEstimateNumbers(detailedEstimateNumbers).ids(ids)
                 .loaNumbers(loaNumbers).pageNumber(pageNumber).pageSize(pageSize).sortBy(sortBy).tenantId(tenantId)
                 .workIdentificationNumbers(workIdentificationNumbers).workOrderNumbers(workOrderNumbers)
-                .statuses(statuses).build();
+                .statuses(statuses).workIdentificationNumberLike(workIdentificationNumberLike).detailedEstimateNumberLike(detailedEstimateNumberLike)
+                .loaNumberLike(loaNumberLike).noticeNumberLike(noticeNumberLike).noticeNumbers(noticeNumbers)
+                .contractorCodeLike(contractorCodeLike).contractorNameLike(contractorNameLike).build();
         NoticeResponse noticeResponse = noticeService.search(noticeSearchContract, requestInfo);
         return new ResponseEntity<NoticeResponse>(noticeResponse, HttpStatus.OK);
     }

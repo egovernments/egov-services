@@ -278,8 +278,6 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_WORKORDER_CP_ZERO, Constants.MESSAGE_WORKORDER_CP_ZERO);
         }
 
-        // TODO validation for engineer incharge not added becouse of clarity
-
     }
 
     public void validateLOAAmount(LetterOfAcceptance letterOfAcceptance,

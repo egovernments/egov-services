@@ -641,6 +641,65 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of the Notice Status
+        - name: workOrderNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: loaNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: detailedEstimateNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: workIdentificationNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive. 
+        - name: noticeNumberLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
+        - name: noticeNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          format: autoComplete
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Detailed Estimate Numbers
+        - name: contractorCodeLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
+        - name: contractorNameLike
+          in: query
+          type: string
+          format: autoComplete
+          required: false
+          allowEmptyValue: true
+          description: Matches exact or like string given regardless of case-sensitive.
       responses:
         200:
           description: Notice(s) Retrieved Successfully
@@ -2180,6 +2239,7 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 
 

@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>works-qualitycontrol</name>
-	<description>Spring Boot project for Works Quality Testing</description>
+	<description>Spring Boot project for Works Quality Control</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

@@ -66,7 +66,6 @@ $(document).on("keyup","input", function() {
 
 var index=1;
 var create = true;
-var renewalOfRent;
 
 $(document).ready(function() {
 
@@ -82,7 +81,7 @@ $(document).ready(function() {
   onLoadAsset();
 
   //basis of allotment API call
-  var basisOfAllotment = [{label:'Goodwill Auction',value:'goodwillauction'},{label:'Normal',value:'normal'}];
+  var basisOfAllotment = [{label:'Goodwill Auction Basis',value:'Goodwill Auction Basis'},{label:'Normal Basis',value:'Normal Basis'}];
   $.each(basisOfAllotment, function (idx, basis){
     $("#basisOfAllotment").append($("<option />").val(basis.value).text(basis.label));
   });
@@ -94,10 +93,10 @@ $(document).ready(function() {
   });
 
   // methos for renewal of rent API
-  renewalOfRent = [{label:'10% of the current market value',value:'10%'},{label:'33.33% above of the earlier amount',value:'33.33%'},{label:'Prevailing rent of such properties in the vicinity',value:'1%'}];
-  $.each(renewalOfRent, function (idx, rent){
-    $("#renewalOfRent").append($("<option />").val(rent.value).text(rent.label));
-  });
+  // renewalOfRent = [{label:'10% of the current market value',value:'10%'},{label:'33.33% above of the earlier amount',value:'33.33%'},{label:'Prevailing rent of such properties in the vicinity',value:'1%'}];
+  // $.each(renewalOfRent, function (idx, rent){
+  //   $("#renewalOfRent").append($("<option />").val(rent.value).text(rent.label));
+  // });
 
   // console.log(getUrlVars()["agreementNumber"]);
   if(getUrlVars()["agreementNumber"]){
@@ -189,23 +188,23 @@ $(document).ready(function() {
       dependentonBasisTime(this.value, $('#timePeriod').val());
     }
 
-    // update natureOfAllotment and renewalOfRent dropdown
+    // update natureOfAllotment dropdown
     $('#natureOfAllotment, #renewalOfRent').find('option').remove().end().append('<option value="">Select</option>');
     fillValueToObject({id:'natureOfAllotment',name:'natureOfAllotment',value:''});
     fillValueToObject({id:'renewalOfRent',name:'renewalOfRent',value:''});
     if(this.value === 'goodwillauction'){
       $(`#natureOfAllotment`).append(`<option value='AUCTION'>AUCTION</option>`);
-      $(`#renewalOfRent`).append(`<option value='33.33%'>33.33%</option>`);
     }else if(this.value === 'normal'){
       Object.keys(natureOfAllotments).map((k, index)=>{
           $(`#natureOfAllotment`).append('<option value='+k+'>'+natureOfAllotments[k]+'</option>')
       });
-      $.each(renewalOfRent, function (idx, rent){
-        $("#renewalOfRent").append($("<option />").val(rent.value).text(rent.label));
-      });
     }
 
-    //
+    var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:this.value}).responseJSON;
+    $.each(renewalOfRent, function (idx, rent){
+      console.log(rent.id, rent.percentage);
+      $("#renewalOfRent").append($("<option />").val(rent.id).text(rent.percentage+'%'));
+    });
 
   });
 
@@ -511,19 +510,19 @@ var commomFieldsRules = {
     }
 };
 
-try {
-    rentInc = commonApiPost("lams-services", "getrentincrements", "", {
-        tenantId
-    }).responseJSON;
-
-    if (rentInc && rentInc.constructor == Array) {
-        for (var i = 0; i < rentInc.length; i++) {
-            $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`)
-        }
-    }
-} catch (e) {
-    console.log(e);
-}
+// try {
+//     rentInc = commonApiPost("lams-services", "getrentincrements", "", {
+//         tenantId
+//     }).responseJSON;
+//
+//     if (rentInc && rentInc.constructor == Array) {
+//         for (var i = 0; i < rentInc.length; i++) {
+//             $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`)
+//         }
+//     }
+// } catch (e) {
+//     console.log(e);
+// }
 
 // finalValidatinRules = Object.assign(validationRules, commomFieldsRules);
 finalValidatinRules = Object.assign({}, commomFieldsRules);

@@ -1003,29 +1003,30 @@ function makeAjaxUpload(file, cb) {
 }
 
 function initDatepicker(){
-    $('.srFromDate, .srToDate').datepicker({
+    $('.resolutionDate, .srFromDate, .srToDate').datepicker({
       format: 'dd/mm/yyyy',
       endDate : new Date(),
       autoclose:true
     }).on("changeDate", function() {
         fillValueToObject(this);
-        let fromDate = $(this).closest('tr').find('.srFromDate').val();
-        let toDate = $(this).closest('tr').find('.srToDate').val();
-        // console.log('index:',$(this).closest('tr').index(),fromDate, toDate);
-        if(fromDate && toDate){
-          let years = moment(toDate,"DD/MM/YYYY").diff(moment(fromDate,"DD/MM/YYYY"), 'years');
-          var startMonths = getAbsoulteMonths(moment(fromDate,"DD/MM/YYYY"));
-          var endMonths = getAbsoulteMonths(moment(toDate,"DD/MM/YYYY"));
-          var monthDifference = (endMonths - startMonths);
-          let months = (monthDifference+1)%12;
-          // console.log(years,'.',months);
-          let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
-          $(this).closest('tr').find('.srYears').val(noOfyears);
-          agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
-          //update no.of years
-          calcFooterYearSum();
+        if($(this).attr('class') === 'srFromDate' || $(this).attr('class') === 'srToDate'){
+          let fromDate = $(this).closest('tr').find('.srFromDate').val();
+          let toDate = $(this).closest('tr').find('.srToDate').val();
+          // console.log('index:',$(this).closest('tr').index(),fromDate, toDate);
+          if(fromDate && toDate){
+            let years = moment(toDate,"DD/MM/YYYY").diff(moment(fromDate,"DD/MM/YYYY"), 'years');
+            var startMonths = getAbsoulteMonths(moment(fromDate,"DD/MM/YYYY"));
+            var endMonths = getAbsoulteMonths(moment(toDate,"DD/MM/YYYY"));
+            var monthDifference = (endMonths - startMonths);
+            let months = (monthDifference+1)%12;
+            // console.log(years,'.',months);
+            let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
+            $(this).closest('tr').find('.srYears').val(noOfyears);
+            agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
+            //update no.of years
+            calcFooterYearSum();
+          }
         }
-        //set to agreement
     });
 }
 

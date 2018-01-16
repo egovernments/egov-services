@@ -20,5 +20,7 @@ public class FifoResponse {
 	private  BigDecimal unitRate;
 	
 	private BigDecimal stock;
+	
+	private BigDecimal value;
 
 }

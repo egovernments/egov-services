@@ -46,5 +46,7 @@ public class MaterialIssueSearchContract {
 	
 	private Integer pageSize;
 	
+	private String searchPurpose;
+	
 
 }

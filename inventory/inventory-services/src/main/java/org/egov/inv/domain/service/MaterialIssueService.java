@@ -167,7 +167,7 @@ public class MaterialIssueService extends DomainService {
 		List<MaterialIssuedFromReceipt> materialIssuedFromReceipts = new ArrayList<>();
 		List<FifoEntity> listOfFifoEntity = materialIssueReceiptFifoLogic.implementFifoLogic(store, material, issueDate,
 				tenantId);
-		BigDecimal unitRate = BigDecimal.ZERO;
+		BigDecimal value = BigDecimal.ZERO;
 		BigDecimal quantityIssued = materialIssueDetail.getQuantityIssued();
 		for (FifoEntity fifoEntity : listOfFifoEntity) {
 			MaterialIssuedFromReceipt materialIssuedFromReceipt = new MaterialIssuedFromReceipt();
@@ -183,15 +183,15 @@ public class MaterialIssueService extends DomainService {
 			if (quantityIssued.compareTo(BigDecimal.valueOf(fifoEntity.getBalance())) >= 0) {
 				materialIssuedFromReceipt
 						.setQuantity(BigDecimal.valueOf(fifoEntity.getBalance()));
-				unitRate = BigDecimal.valueOf(fifoEntity.getUnitRate())
+				value = BigDecimal.valueOf(fifoEntity.getUnitRate())
 						.multiply(BigDecimal.valueOf(fifoEntity.getBalance()))
-						.add(unitRate);
+						.add(value);
 				quantityIssued = quantityIssued
 						.subtract(BigDecimal.valueOf(fifoEntity.getBalance()));
 			} else {
 				materialIssuedFromReceipt.setQuantity(quantityIssued);
-				unitRate = quantityIssued
-						.multiply(BigDecimal.valueOf(fifoEntity.getUnitRate())).add(unitRate);
+				value = quantityIssued
+						.multiply(BigDecimal.valueOf(fifoEntity.getUnitRate())).add(value);
 				quantityIssued = BigDecimal.ZERO;
 			}
 			materialIssuedFromReceipts.add(materialIssuedFromReceipt);
@@ -199,7 +199,7 @@ public class MaterialIssueService extends DomainService {
 				break;
 		}
 		materialIssueDetail.setMaterialIssuedFromReceipts(materialIssuedFromReceipts);
-		return unitRate;
+		return value;
 	}
 
 	private void fetchRelated(MaterialIssueRequest materialIssueRequest) {
@@ -579,7 +579,6 @@ public class MaterialIssueService extends DomainService {
 		fifo.setMaterial(material);
 		fifo.setIssueDate(issueDate);
 		fifo.setTenantId(tenantId);
-
 		fifoRequest.setFifo(fifo);
 		FifoResponse fifoResponse = materialIssueReceiptFifoLogic.getTotalStockAsPerMaterial(fifoRequest);
 		if (fifoResponse != null)
@@ -751,14 +750,29 @@ public MaterialIssueResponse search(final MaterialIssueSearchContract searchCont
 		Pagination<MaterialIssue> materialIssues = materialIssueJdbcRepository.search(searchContract, type);
 		if (materialIssues.getPagedData().size() > 0)
 			for (MaterialIssue materialIssue : materialIssues.getPagedData()) {
+				ObjectMapper mapper = new ObjectMapper();
+				Map<String, Uom> uoms = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
 				Pagination<MaterialIssueDetail> materialIssueDetails = materialIssueDetailsJdbcRepository
 						.search(materialIssue.getIssueNumber(), materialIssue.getTenantId(), type);
 				if (materialIssueDetails.getPagedData().size() > 0) {
 					for (MaterialIssueDetail materialIssueDetail : materialIssueDetails.getPagedData()) {
+						if(searchContract.getSearchPurpose() != null ){
+							if(searchContract.getSearchPurpose().equals("update")){
+						materialIssueDetail.setBalanceQuantity(InventoryUtilities.getQuantityInSelectedUom(getBalanceQuantityByStoreByMaterialAndIssueDate(materialIssue.getFromStore(),materialIssueDetail.getMaterial(),
+									materialIssue.getIssueDate(), materialIssue.getTenantId()).add(materialIssueDetail.getQuantityIssued()),uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor()));
+						if (materialIssueDetail.getIndentDetail() != null
+								&& materialIssueDetail.getIndentDetail().getId() != null) {
+							IndentDetailEntity entity = new IndentDetailEntity();
+							entity.setId(materialIssueDetail.getIndentDetail().getId());
+							entity.setTenantId(materialIssue.getTenantId());
+							materialIssueDetail.setIndentDetail(indentDetailJdbcRepository.findById(entity) != null
+									? indentDetailJdbcRepository.findById(entity).toDomain() : null);
+						}
+						materialIssueDetail.setPendingIndentQuantity(InventoryUtilities.getQuantityInSelectedUom(materialIssueDetail.getIndentDetail().getIndentQuantity().subtract(materialIssueDetail.getIndentDetail().getIndentIssuedQuantity()).add(materialIssueDetail.getQuantityIssued()),uoms.get(materialIssueDetail.getUom().getCode()).getConversionFactor()));
+						}
+						}
 						Pagination<MaterialIssuedFromReceipt> materialIssuedFromReceipts = materialIssuedFromReceiptsJdbcRepository
 								.search(materialIssueDetail.getId(), materialIssueDetail.getTenantId());
-						ObjectMapper mapper = new ObjectMapper();
-						Map<String, Uom> uoms = getUoms(materialIssue.getTenantId(), mapper, new RequestInfo());
 						if (materialIssueDetail.getUom() != null
 								&& materialIssueDetail.getUom().getCode() != null)
 						{
@@ -782,7 +796,6 @@ public MaterialIssueResponse search(final MaterialIssueSearchContract searchCont
 		for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
 			if (materialIssue.getIndent() != null
 					&& StringUtils.isNotBlank(materialIssue.getIndent().getIndentNumber())) {
-				
 				// Show error if indent not found
 				IndentSearch indentSearch = new IndentSearch();
 				indentSearch.setIndentNumber(materialIssue.getIndent().getIndentNumber());
@@ -826,8 +839,6 @@ public MaterialIssueResponse search(final MaterialIssueSearchContract searchCont
 						materialIssue.setToStore(store);
 					}
 				}
-						
-						
 				ObjectMapper mapper = new ObjectMapper();
 				if (!materialIssue.getIndent().getIndentDetails().isEmpty()) {
 					Map<String, Uom> uomMap = getUoms(tenantId, mapper, new RequestInfo());
@@ -872,9 +883,8 @@ public MaterialIssueResponse search(final MaterialIssueSearchContract searchCont
 														: currentEpochWithoutTime()),
 												materialIssue.getTenantId()),
 										materialIssueDet.getUom().getConversionFactor()));
-
+							
 							}
-
 							materialIssueDet.setIndentDetail(indentDetail);
 							materialIssueDetail.add(materialIssueDet);
 						}

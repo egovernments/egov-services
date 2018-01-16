@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.egov.ReadConfiguration;
 import org.egov.filter.model.ServiceMap;
 import org.egov.filter.utils.FilterConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,6 @@ import net.minidev.json.JSONArray;
 @Slf4j
 public class TenantResponseMapFilter extends ZuulFilter {
 
-	@Autowired
-	public ResourceLoader resourceLoader;
 	
 	@Value("${egov.tenant.filter.uris}")
 	private String shouldFilter;
@@ -47,16 +46,9 @@ public class TenantResponseMapFilter extends ZuulFilter {
 			jsonArray = resDc.read("$.tenant");
 		}
 		
-		Map<String, Map<String,String>> tenantMap = null;
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			  Resource resource = resourceLoader.getResource("classpath:TenantMap.json"); 
-			  File file = resource.getFile(); 
-			  tenantMap= mapper.readValue(file, Map.class);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Map<String,String> tenant = tenantMap.get("tenantMap");
+		Map<String, Map<String,String>> tenantMap = ReadConfiguration.getTenantMap();
+		
+		Map<String,String> tenant = tenantMap.get(FilterConstant.TENANT_MAP_KEY);
 		log.info("jsonArray.size():"+jsonArray.size());
 		for(int i=0; i<jsonArray.size(); i++) {
 			LinkedHashMap<String, Object> linkedHashMap = (LinkedHashMap<String, Object>)jsonArray.get(i);

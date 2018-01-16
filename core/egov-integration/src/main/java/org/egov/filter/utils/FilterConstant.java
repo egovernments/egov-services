@@ -15,6 +15,7 @@ public class FilterConstant {
     public static final String RESPONSE_BODY = "responseBody";
     
     public static final String TENANT_MODULE_MASTER = "tenant-tenants";
+    public static final String TENANT_MAP_KEY = "tenantMap";
     
     
     

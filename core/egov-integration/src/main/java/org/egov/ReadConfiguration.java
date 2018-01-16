@@ -31,77 +31,109 @@ public class ReadConfiguration {
 
 	@Autowired
 	public ResourceLoader resourceLoader;
-	
+
 	private static Map<String, Map<String, MasterDetail>> moduleMap;
-	
+
 	@Value("${egov.service.config.path}")
 	private String serviceConfigPath;
-	
+
 	@Value("${egov.mdms.config.path}")
 	private String mdmsConfigPath;
 	
+	@Value("${egov.tenant.map.path}")
+	private String tenantMapPath;
+	
+	private static Map<String, Map<String, String>> tenantMap;
+
 	@PostConstruct
 	@Bean
 	public ServiceMap loadServiceConfigurationYaml() {
 		System.out.println(" Translator Service ReadConfiguration");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		ServiceMap serviceMap = null;
-		
+
 		try {
-			  
-			 /* Resource resource = resourceLoader.getResource("classpath:ServicesConfiguration.yml"); 
-			  File file = resource.getFile(); 
-			  serviceMap = mapper.readValue(file, ServiceMap.class);*/
-			  
-			  URL serviceConfigUrl = new URL(serviceConfigPath);
-			  serviceMap = mapper.readValue(new InputStreamReader(serviceConfigUrl.openStream()), ServiceMap.class);
-			  log.info("loadYaml service: " + serviceMap.toString());
+
+			/*
+			 * Resource resource =
+			 * resourceLoader.getResource("classpath:ServicesConfiguration.yml"); File file
+			 * = resource.getFile(); serviceMap = mapper.readValue(file, ServiceMap.class);
+			 */
+
+			URL serviceConfigUrl = new URL(serviceConfigPath);
+			serviceMap = mapper.readValue(new InputStreamReader(serviceConfigUrl.openStream()), ServiceMap.class);
+			log.info("loadYaml service: " + serviceMap.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return serviceMap;
 	}
-	
+
 	@PostConstruct
 	public void loadMdmsConfig() {
 		System.out.println("loading Mdms configuration");
-		
+
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		MdmsMap mdmsMap = null;
 		try {
-			
-			  /*Resource resource = resourceLoader.getResource("classpath:MdmsConfig.yml"); 
-			  File file = resource.getFile(); 
-			  mdmsMap = mapper.readValue(file, MdmsMap.class);*/
-			  URL mdmsConfigUrl = new URL(mdmsConfigPath);
-			  mdmsMap = mapper.readValue(new InputStreamReader(mdmsConfigUrl.openStream()), MdmsMap.class);
-			  log.info("loadYaml mdms: " + mdmsMap);
+
+			/*
+			 * Resource resource = resourceLoader.getResource("classpath:MdmsConfig.yml");
+			 * File file = resource.getFile(); mdmsMap = mapper.readValue(file,
+			 * MdmsMap.class);
+			 */
+			URL mdmsConfigUrl = new URL(mdmsConfigPath);
+			mdmsMap = mapper.readValue(new InputStreamReader(mdmsConfigUrl.openStream()), MdmsMap.class);
+			log.info("loadYaml mdms: " + mdmsMap);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		moduleMap = getMdmsMasterMap(mdmsMap);
 	}
-	
+
 	private Map<String, Map<String, MasterDetail>> getMdmsMasterMap(MdmsMap mdmsMap) {
 		List<Mdms> mdmsList = mdmsMap.getMdms();
 		Map<String, Map<String, MasterDetail>> moduleMap = new HashMap<>();
-		for(Mdms mdms : mdmsList) {
+		for (Mdms mdms : mdmsList) {
 			Map<String, MasterDetail> masterMap = new HashMap<>();
 			List<MasterDetail> masterDetails = mdms.getMasterDetails();
-			
-			for(MasterDetail masterDetail : masterDetails) {
+
+			for (MasterDetail masterDetail : masterDetails) {
 				masterMap.put(masterDetail.getMasterName(), masterDetail);
 			}
-			
+
 			moduleMap.put(mdms.getModuleName(), masterMap);
 		}
 		return moduleMap;
 	}
-	
-	
-	public static Map<String, Map<String, MasterDetail>> getMdmsConfigMap(){
+
+	public static Map<String, Map<String, MasterDetail>> getMdmsConfigMap() {
 		return moduleMap;
+	}
+
+	@PostConstruct
+	public void loadTenantMap() {
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+
+			/*
+			 * Resource resource = resourceLoader.getResource("classpath:MdmsConfig.yml");
+			 * File file = resource.getFile(); mdmsMap = mapper.readValue(file,
+			 * MdmsMap.class);
+			 */
+			URL mdmsConfigUrl = new URL(tenantMapPath);
+			tenantMap = mapper.readValue(new InputStreamReader(mdmsConfigUrl.openStream()), Map.class);
+			log.info("loadYaml tenantMap: " + tenantMap);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Map<String, Map<String, String>> getTenantMap() {
+		return tenantMap;
 	}
 }

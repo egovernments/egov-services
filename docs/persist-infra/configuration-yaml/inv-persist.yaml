@@ -1505,9 +1505,9 @@ serviceMaps:
             - type: CURRENTDATE
               dbType: LONG
         - query: >-
-                 INSERT INTO supplierbilladvanceadjustment(id,tenantid, supplierbill,
+                 INSERT INTO supplierbilladvanceadjustment(id,tenantid, supplierbill, supplierAdvanceRequisition,
                  advanceadjustedamount, createdby, lastmodifiedby, createdtime, lastmodifiedtime )
-                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  supplierbill = EXCLUDED.supplierbill,
                  advanceadjustedamount=EXCLUDED.advanceadjustedamount,
                  lastmodifiedby=EXCLUDED.lastmodifiedby,
@@ -1517,6 +1517,7 @@ serviceMaps:
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.id
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.tenantId
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierBill
+            - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.supplierAdvanceRequisition.id
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.advanceAdjustedAmount
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.auditDetails.createdBy
             - jsonPath: $.supplierBills.*.supplierBillAdvanceAdjustments.*.auditDetails.lastModifiedBy
@@ -1524,6 +1525,7 @@ serviceMaps:
               dbType: LONG
             - type: CURRENTDATE
               dbType: LONG
+
 
     - version: 1.0
       name: Scrap

@@ -3,11 +3,14 @@ package org.egov.inv.domain.service;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
+import org.egov.common.exception.ErrorCode;
+import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
-import org.egov.inv.persistence.repository.SupplierAdvanceRequisitionJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierBillAdvanceAdjusmentJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierBillJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierBillReceiptJdbcRepository;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,11 +37,18 @@ public class SupplierBillService extends DomainService {
     private SupplierBillAdvanceAdjusmentJdbcRepository supplierBillAdvanceAdjusmentJdbcRepository;
 
     @Autowired
-    private SupplierAdvanceRequisitionJdbcRepository supplierAdvanceRequisitionJdbcRepository;
+    private MaterialReceiptJdbcRepository materialReceiptJdbcRepository;
+
+    @Autowired
+    private SupplierAdvanceRequisitionService supplierAdvanceRequisitionService;
 
     public SupplierBillResponse create(SupplierBillRequest supplierBillRequest, String tenantId) {
 
+        fetchRelated(supplierBillRequest, tenantId);
+
         List<SupplierBill> supplierBillList = supplierBillRequest.getSupplierBills();
+
+        validate(supplierBillList, tenantId, Constants.ACTION_CREATE);
 
         AuditDetails auditDetails = getAuditDetails(supplierBillRequest.getRequestInfo(), Constants.ACTION_CREATE);
 
@@ -58,9 +68,16 @@ public class SupplierBillService extends DomainService {
                 //Set Supplier Bill Advance Adjustment Id
                 supplierBillAdvanceAdjustment.setId(supplierBillJdbcRepository.getSequence("seq_supplierbilladvanceadjustment"));
                 supplierBillAdvanceAdjustment.supplierBill(supplierBill.getId());
+
+                List<SupplierAdvanceRequisition> supplierAdvanceRequisitions = createSupplierAdvanceRequisition(supplierBillAdvanceAdjustment).getSupplierAdvanceRequisitions();
+
+                for (SupplierAdvanceRequisition supplierAdvanceRequisition : supplierAdvanceRequisitions) {
+                    supplierBillAdvanceAdjustment.setSupplierAdvanceRequisition(supplierAdvanceRequisition);
+                }
             }
 
             supplierBill.setAuditDetails(auditDetails);
+
 
         }
 
@@ -75,7 +92,11 @@ public class SupplierBillService extends DomainService {
 
     public SupplierBillResponse update(SupplierBillRequest supplierBillRequest, String tenantId) {
 
+        fetchRelated(supplierBillRequest, tenantId);
+
         List<SupplierBill> supplierBillList = supplierBillRequest.getSupplierBills();
+
+        validate(supplierBillList, tenantId, Constants.ACTION_UPDATE);
 
         AuditDetails auditDetails = getAuditDetails(supplierBillRequest.getRequestInfo(), Constants.ACTION_UPDATE);
 
@@ -143,4 +164,92 @@ public class SupplierBillService extends DomainService {
                 responseInfo(null)
                 .supplierBills(Collections.EMPTY_LIST);
     }
+
+    private void validate(List<SupplierBill> supplierBills, String tenantId, String method) {
+        InvalidDataException errors = new InvalidDataException();
+        int i = 0;
+        try {
+            switch (method) {
+
+                case Constants.ACTION_CREATE: {
+                    if (supplierBills == null) {
+                        throw new InvalidDataException("Supplier Bill", ErrorCode.NOT_NULL.getCode(), null);
+                    }
+                }
+                break;
+
+                case Constants.ACTION_UPDATE: {
+                    if (supplierBills == null) {
+                        throw new InvalidDataException("Supplier Bill", ErrorCode.NOT_NULL.getCode(), null);
+                    }
+                }
+
+                break;
+            }
+
+            validateSameStoreSB(supplierBills, errors, i);
+
+            for (SupplierBill supplierBill : supplierBills) {
+
+            }
+
+        } catch (IllegalArgumentException e) {
+
+        }
+
+        if (errors.getValidationErrors().size() > 0) {
+            throw errors;
+        }
+    }
+
+    private void validateSameStoreSB(List<SupplierBill> supplierBills, InvalidDataException errors, int i) {
+        for (SupplierBill supplierBill : supplierBills) {
+
+            long storeDistinctCount = supplierBill.getSupplierBillReceipts().
+                    stream()
+                    .map(supplierBillReceipt ->
+                            supplierBillReceipt.getMaterialReceipt().getReceivingStore().getCode())
+                    .distinct()
+                    .count();
+
+            if (storeDistinctCount > 1) {
+                errors.addDataError(ErrorCode.OBJECT_DOESNT_BELONG.getCode(), "Material Receipts", "store");
+            }
+
+            i++;
+        }
+    }
+
+    private void fetchRelated(SupplierBillRequest supplierBillRequest, String tenantId) {
+
+        List<SupplierBill> supplierBills = supplierBillRequest.getSupplierBills();
+
+        for (SupplierBill supplierBill : supplierBills) {
+            for (SupplierBillReceipt supplierBillReceipt : supplierBill.getSupplierBillReceipts()) {
+                MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder()
+                        .mrnNumber(Collections.singletonList(supplierBillReceipt.getMaterialReceipt().getMrnNumber()))
+                        .tenantId(tenantId)
+                        .receiptType(Collections.singletonList(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString()))
+                        .mrnStatus(Collections.singletonList(MaterialReceipt.MrnStatusEnum.APPROVED.toString()))
+                        .build();
+
+                Pagination<MaterialReceipt> receiptPagination = materialReceiptJdbcRepository.search(materialReceiptSearch);
+
+                if (receiptPagination.getPagedData().size() > 0) {
+                    supplierBillReceipt.setMaterialReceipt(receiptPagination.getPagedData().get(0));
+                } else {
+                    throw new CustomException("Material Receipt", "Material receipt " + supplierBillReceipt.getMaterialReceipt().getMrnNumber() + " is not found");
+                }
+            }
+        }
+
+    }
+
+    private SupplierAdvanceRequisitionResponse createSupplierAdvanceRequisition(SupplierBillAdvanceAdjustment supplierBillAdvanceAdjustment) {
+        SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest = new SupplierAdvanceRequisitionRequest();
+        supplierAdvanceRequisitionRequest.setRequestInfo(new RequestInfo());
+        supplierAdvanceRequisitionRequest.setSupplierAdvanceRequisitions(Collections.singletonList(supplierBillAdvanceAdjustment.getSupplierAdvanceRequisition()));
+        return supplierAdvanceRequisitionService.create(supplierAdvanceRequisitionRequest);
+    }
+
 }

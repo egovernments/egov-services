@@ -36,10 +36,11 @@ public class RentIncrementRepositoryTest {
         List<RentIncrementType> rentIncrements = new ArrayList<>();
         RentIncrementType rentIncrementType = new RentIncrementType();
         rentIncrementType.setId(1l);
+        rentIncrementType.setTenantId("1");
         rentIncrements.add(rentIncrementType);
 
-        when(jdbcTemplate.query(any(String.class), Matchers.<BeanPropertyRowMapper>any())).thenReturn(rentIncrements);
-        assertTrue(rentIncrements.equals(rentIncrementRepository.getRentIncrements()));
+        when(namedParameterJdbcTemplate.query(any(String.class),any(Map.class), Matchers.<BeanPropertyRowMapper>any())).thenReturn(rentIncrements);
+        assertTrue(rentIncrements.equals(rentIncrementRepository.getRentIncrements(rentIncrementType.getTenantId(), null)));
     }
 
     @Test

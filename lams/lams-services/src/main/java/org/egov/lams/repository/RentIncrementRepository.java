@@ -1,5 +1,6 @@
 package org.egov.lams.repository;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Service
 public class RentIncrementRepository {
 
-    public static final Logger logger = LoggerFactory.getLogger(RentIncrementRepository.class);
+	public static final Logger logger = LoggerFactory.getLogger(RentIncrementRepository.class);
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -25,13 +26,19 @@ public class RentIncrementRepository {
     @Autowired
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<RentIncrementType> getRentIncrements() {
-        String query = "select * from eglams_rentincrementtype rentincrement";
+    public List<RentIncrementType> getRentIncrements(String tenantId, String basisOfAllotment) {
+    	Map params = new HashMap();
+    	String query = "select * from eglams_rentincrementtype rentincrement where rentincrement.tenant_id=:tenantId";
+    	params.put("tenantId", tenantId);
+        if(StringUtils.isNotBlank(basisOfAllotment)){
+        	query = query.concat(" and rentincrement.type=:type ");
+            params.put("type", basisOfAllotment);
+        }
         List<RentIncrementType> rentIncrements = null;
         try {
-            rentIncrements = jdbcTemplate.query(query, new BeanPropertyRowMapper<>(RentIncrementType.class));
+            rentIncrements = namedParameterJdbcTemplate.query(query, params, new BeanPropertyRowMapper<>(RentIncrementType.class));
         } catch (Exception ex) {
-            ex.printStackTrace();
+        	logger.info(ex.getMessage(), ex);
             throw new RuntimeException("No records found for given criteria");
         }
         return rentIncrements;

@@ -79,10 +79,11 @@ public class LamsMasterControllerTest {
 		rentIncrementType.setTenantId("1");
 		rentIncrementType.setType("type1");
 		rentIncrementTypes.add(rentIncrementType);
-		when(rentIncrementService.getRentIncrements()).thenReturn(rentIncrementTypes);
+		when(rentIncrementService.getRentIncrements(rentIncrementType.getTenantId(), rentIncrementType.getType()))
+				.thenReturn(rentIncrementTypes);
 
-		mockMvc.perform(get("/getrentincrements"))
-				.andExpect(status().isOk())
+		mockMvc.perform(get("/getrentincrements?tenantId=" + rentIncrementType.getTenantId() + "&basisOfAllotment="
+				+ rentIncrementType.getType())).andExpect(status().isOk())
 				.andExpect(content().json(getFileContents("rentincrementtype.json")));
 	}
 

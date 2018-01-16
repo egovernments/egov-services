@@ -4023,6 +4023,10 @@ definitions:
           type: boolean
           description: |
             whether parent or not of material type
+        active:
+          type: boolean
+          description: |
+            whether material type is active or not.
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 

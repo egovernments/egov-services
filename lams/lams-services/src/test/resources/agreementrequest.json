@@ -97,6 +97,8 @@
       "stateId": "627",
       "source" : "DATA_ENTRY",
       "firstAllotment" : "04/2015",
-      "gstin" : "28ABCDE2015Q2Z5"
+      "gstin" : "28ABCDE2015Q2Z5",
+      "basisOfAllotment" :"NORMALBASIS",
+      "reservationCategory" : 1
    }
 }

@@ -11,6 +11,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+import java.util.stream.Stream;
+
 @Builder
 @Getter
 @Setter
@@ -57,5 +60,11 @@ public class VehicleTripSheetDetails {
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
+
+
+    public boolean isAllNotNull(){
+        return Stream.of(tenantId,vehicle,route,tripStartDate,tripEndDate,inTime,outTime,entryWeight,exitWeight)
+                .allMatch(Objects::nonNull);
+    }
 
 }

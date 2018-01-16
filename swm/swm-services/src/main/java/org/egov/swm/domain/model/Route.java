@@ -61,4 +61,10 @@ public class Route {
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
 
+    public boolean hasDumpingGround(){
+        Long count = collectionPoints.stream().filter(cp -> (cp.getDumpingGround().getCode()!= null)).count();
+
+        return count > 0;
+    }
+
 }

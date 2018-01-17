@@ -1,20 +1,15 @@
 package org.egov.inv.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.Asset;
-import org.egov.inv.model.Material;
-import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
-import org.egov.inv.model.PurchaseOrderDetail;
-import org.egov.inv.model.Uom;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * Hold the material receipt note material level information. This will show which material is received based on which purchase order.

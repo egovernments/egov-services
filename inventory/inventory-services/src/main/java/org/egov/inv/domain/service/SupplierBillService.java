@@ -6,7 +6,10 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
-import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
+import org.egov.inv.persistence.entity.MaterialReceiptEntity;
+import org.egov.inv.persistence.entity.PurchaseOrderDetailEntity;
+import org.egov.inv.persistence.entity.PurchaseOrderEntity;
+import org.egov.inv.persistence.repository.PurchaseOrderDetailJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierBillAdvanceAdjusmentJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierBillJdbcRepository;
 import org.egov.inv.persistence.repository.SupplierBillReceiptJdbcRepository;
@@ -16,7 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class SupplierBillService extends DomainService {
@@ -37,10 +43,16 @@ public class SupplierBillService extends DomainService {
     private SupplierBillAdvanceAdjusmentJdbcRepository supplierBillAdvanceAdjusmentJdbcRepository;
 
     @Autowired
-    private MaterialReceiptJdbcRepository materialReceiptJdbcRepository;
+    private MaterialReceiptService materialReceiptService;
 
     @Autowired
     private SupplierAdvanceRequisitionService supplierAdvanceRequisitionService;
+
+    @Autowired
+    private PurchaseOrderService purchaseOrderService;
+
+    @Autowired
+    private PurchaseOrderDetailJdbcRepository purchaseOrderDetailJdbcRepository;
 
     public SupplierBillResponse create(SupplierBillRequest supplierBillRequest, String tenantId) {
 
@@ -61,6 +73,7 @@ public class SupplierBillService extends DomainService {
                 supplierBillReceipt.setId(supplierBillJdbcRepository.getSequence("seq_supplierbillreceipt"));
                 supplierBillReceipt.setSupplierBill(supplierBill.getId());
                 supplierBillReceipt.setAuditDetails(auditDetails);
+                backUpdatePo(tenantId, supplierBillReceipt.getMaterialReceipt());
 
             }
 
@@ -104,10 +117,15 @@ public class SupplierBillService extends DomainService {
 
             for (SupplierBillReceipt supplierBillReceipt : supplierBill.getSupplierBillReceipts()) {
                 supplierBillReceipt.setAuditDetails(auditDetails);
+                if (supplierBill.getSupplierBillStatus().equalsIgnoreCase("CANCELLED")) {
+                    backUpdateReceipt(supplierBillReceipt);
+                    backUpdatePoCancelled(tenantId, supplierBillReceipt.getMaterialReceipt());
+                } else {
+                    backUpdatePo(tenantId, supplierBillReceipt.getMaterialReceipt());
+                }
             }
 
             supplierBill.setAuditDetails(auditDetails);
-
         }
 
         kafkaQue.send(saveTopic, savekey, supplierBillRequest);
@@ -226,6 +244,13 @@ public class SupplierBillService extends DomainService {
 
         for (SupplierBill supplierBill : supplierBills) {
             for (SupplierBillReceipt supplierBillReceipt : supplierBill.getSupplierBillReceipts()) {
+
+                //append tenantId
+                if (!isEmpty(supplierBillReceipt.getTenantId())) {
+                    supplierBillReceipt.setTenantId(tenantId);
+                }
+
+                //fetch material receipt
                 MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder()
                         .mrnNumber(Collections.singletonList(supplierBillReceipt.getMaterialReceipt().getMrnNumber()))
                         .tenantId(tenantId)
@@ -233,10 +258,24 @@ public class SupplierBillService extends DomainService {
                         .mrnStatus(Collections.singletonList(MaterialReceipt.MrnStatusEnum.APPROVED.toString()))
                         .build();
 
-                Pagination<MaterialReceipt> receiptPagination = materialReceiptJdbcRepository.search(materialReceiptSearch);
+                Pagination<MaterialReceipt> receiptPagination = materialReceiptService.search(materialReceiptSearch);
 
                 if (receiptPagination.getPagedData().size() > 0) {
-                    supplierBillReceipt.setMaterialReceipt(receiptPagination.getPagedData().get(0));
+                    for (MaterialReceipt materialReceipt : receiptPagination.getPagedData()) {
+                        supplierBillReceipt.setMaterialReceipt(materialReceipt);
+                        for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+                            //fetch purchase order details
+                            PurchaseOrderDetailEntity purchaseOrderDetailEntity = new PurchaseOrderDetailEntity();
+                            purchaseOrderDetailEntity.setId(materialReceiptDetail.getPurchaseOrderDetail().getId());
+                            purchaseOrderDetailEntity.setTenantId(tenantId);
+                            PurchaseOrderDetailEntity orderDetailEntity = purchaseOrderDetailJdbcRepository.findById(purchaseOrderDetailEntity);
+                            if (orderDetailEntity != null) {
+                                materialReceiptDetail.setPurchaseOrderDetail(orderDetailEntity.toDomain());
+                            } else {
+                                throw new CustomException("Purchase Order ", String.format("%s is not found", materialReceiptDetail.getPurchaseOrderDetail().getPurchaseOrderNumber()));
+                            }
+                        }
+                    }
                 } else {
                     throw new CustomException("Material Receipt", "Material receipt " + supplierBillReceipt.getMaterialReceipt().getMrnNumber() + " is not found");
                 }
@@ -250,6 +289,33 @@ public class SupplierBillService extends DomainService {
         supplierAdvanceRequisitionRequest.setRequestInfo(new RequestInfo());
         supplierAdvanceRequisitionRequest.setSupplierAdvanceRequisitions(Collections.singletonList(supplierBillAdvanceAdjustment.getSupplierAdvanceRequisition()));
         return supplierAdvanceRequisitionService.create(supplierAdvanceRequisitionRequest);
+    }
+
+    private void backUpdatePo(String tenantId, MaterialReceipt materialReceipt) {
+        for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+
+            PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+            purchaseOrderSearch.setPurchaseOrderNumber(materialReceiptDetail.getPurchaseOrderDetail().getPurchaseOrderNumber());
+            purchaseOrderSearch.setTenantId(tenantId);
+            if (purchaseOrderService.checkAllItemsSuppliedForPo(purchaseOrderSearch))
+                supplierBillJdbcRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(), "status = 'Fulfilled and Paid'"
+                        + " where purchaseordernumber = '" + materialReceiptDetail.getPurchaseOrderDetail().getPurchaseOrderNumber() + "' and tenantid = '" + tenantId + "'");
+        }
+    }
+
+
+    private void backUpdatePoCancelled(String tenantId, MaterialReceipt materialReceipt) {
+        for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+            supplierBillJdbcRepository.updateColumn(new PurchaseOrderEntity(), "purchaseorder", new HashMap<>(), "status = 'Rejected'"
+                    + " where purchaseordernumber = '" + materialReceiptDetail.getPurchaseOrderDetail().getPurchaseOrderNumber() + "' and tenantid = '" + tenantId + "'");
+        }
+    }
+
+    private void backUpdateReceipt(SupplierBillReceipt supplierBillReceipt) {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("supplierbillpaid", "false");
+        hashMap.put("mrnstatus", "'CANCELED'");
+        supplierBillJdbcRepository.updateColumn(new MaterialReceiptEntity().toEntity(supplierBillReceipt.getMaterialReceipt()), "materialreceipt", hashMap, null);
     }
 
 }

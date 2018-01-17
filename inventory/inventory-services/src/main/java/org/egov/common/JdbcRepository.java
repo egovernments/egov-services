@@ -1,18 +1,5 @@
 package org.egov.common;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.AuditDetails;
@@ -27,6 +14,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Repository
 public abstract class JdbcRepository {
@@ -666,27 +659,27 @@ public abstract class JdbcRepository {
 
     }
 
-	public Object findByCode(Object entity, String entityName) {
-		List<String> list = new ArrayList();
-		list.add("code");
-		list.add("tenantId");
+    public Object findByCode(Object entity, String entityName) {
+        List<String> list = new ArrayList();
+        list.add("code");
+        list.add("tenantId");
 
-		Map<String, Object> paramValues = new HashMap<>();
+        Map<String, Object> paramValues = new HashMap<>();
 
-		for (String s : list) {
-			paramValues.put(s, getValue(getField(entity, s), entity));
-		}
+        for (String s : list) {
+            paramValues.put(s, getValue(getField(entity, s), entity));
+        }
 
-		List<Object> indents = namedParameterJdbcTemplate.query(
-				"select * from " + entityName + " where code=:code and tenantid=:tenantId ", paramValues,
-				new BeanPropertyRowMapper(entity.getClass()));
-		if (indents.isEmpty()) {
-			return null;
-		} else {
-			return indents.get(0);
-		}
+        List<Object> indents = namedParameterJdbcTemplate.query(
+                "select * from " + entityName + " where code=:code and tenantid=:tenantId ", paramValues,
+                new BeanPropertyRowMapper(entity.getClass()));
+        if (indents.isEmpty()) {
+            return null;
+        } else {
+            return indents.get(0);
+        }
 
-	}
+    }
 
     @Transactional
     public int changeStatus(Object ob, String status, String tableName, String columnName) {
@@ -733,13 +726,13 @@ public abstract class JdbcRepository {
             updateQuery.append("UPDATE " + tableName + " set ");
 
             if (columns.size() > 0) {
+                String query = "";
                 Iterator iterator = columns.entrySet().iterator();
                 while (iterator.hasNext()) {
-                    String query = "";
                     Map.Entry pair = (Map.Entry) iterator.next();
-                     query = query + (pair.getKey() + " = " + pair.getValue() + ",");
-                    updateQuery.append(query.substring(0, query.length() - 1));
+                    query = query + (pair.getKey() + " = " + pair.getValue() + ",");
                 }
+                updateQuery.append(query.substring(0, query.length() - 1));
             }
 
             if (isEmpty(condition)) {

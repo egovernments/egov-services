@@ -113,9 +113,43 @@ public class MaterialReceiptEntity {
                 .totalReceiptValue(totalReceiptValue)
                 .fileStoreId(fileStoreId)
                 .paymentTerms(paymentTerms)
+                .tenantId(tenantId)
                 .auditDetails(buildAuditDetails());
     }
 
+
+    public MaterialReceiptEntity toEntity(MaterialReceipt materialReceipt) {
+        this.id = materialReceipt.getId();
+        this.bill = materialReceipt.getBill();
+        this.challanDate = materialReceipt.getChallanDate();
+        this.challanNo = materialReceipt.getChallanNo();
+        this.createdBy = materialReceipt.getAuditDetails() != null ? materialReceipt.getAuditDetails().getCreatedBy() : null;
+        this.createdTime = materialReceipt.getAuditDetails() != null ? materialReceipt.getAuditDetails().getCreatedTime() : null;
+        this.description = materialReceipt.getDescription();
+        this.designation = materialReceipt.getDesignation();
+        this.fileStoreId = materialReceipt.getFileStoreId();
+        this.financialYear = materialReceipt.getFinancialYear();
+        this.inspectedBy = materialReceipt.getInspectedBy();
+        this.inspectionDate = materialReceipt.getInspectionDate();
+        this.inspectionRemarks = materialReceipt.getInspectionRemarks();
+        this.issueingStore = materialReceipt.getIssueingStore() != null ? materialReceipt.getIssueingStore().getCode() : null;
+        this.issueNumber = materialReceipt.getIssueNumber();
+        this.lastModifiedBy = materialReceipt.getAuditDetails() != null ? materialReceipt.getAuditDetails().getLastModifiedBy() : null;
+        this.lastModifiedTime = materialReceipt.getAuditDetails() != null ? materialReceipt.getAuditDetails().getLastModifiedTime() : null;
+        this.mrnNumber = materialReceipt.getMrnNumber();
+        this.mrnStatus = materialReceipt.getMrnStatus() != null ? materialReceipt.getMrnStatus().toString() : null;
+        this.paymentTerms = materialReceipt.getPaymentTerms();
+        this.receiptPurpose = materialReceipt.getReceiptPurpose() != null ? materialReceipt.getReceiptPurpose().toString() : null;
+        this.receiptType = materialReceipt.getReceiptType() != null ? materialReceipt.getReceiptType().toString() : null;
+        this.receivedBy = materialReceipt.getReceivedBy();
+        this.receivingStore = materialReceipt.getReceivingStore() != null ? materialReceipt.getReceivingStore().getCode() : null;
+        this.supplierBillDate = materialReceipt.getSupplierBillDate();
+        this.supplierBillNo = materialReceipt.getSupplierBillNo();
+        this.supplierCode = materialReceipt.getSupplier() != null ? materialReceipt.getSupplier().getCode() : null;
+        this.totalReceiptValue = materialReceipt.getTotalReceiptValue();
+        this.tenantId = materialReceipt.getTenantId();
+        return this;
+    }
 
     private Supplier buildSupplier() {
         Supplier supplier = new Supplier();

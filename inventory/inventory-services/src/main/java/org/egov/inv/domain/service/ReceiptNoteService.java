@@ -15,6 +15,8 @@ import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
 import org.egov.inv.persistence.repository.ReceiptNoteRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -80,6 +82,8 @@ public class ReceiptNoteService extends DomainService {
     @Autowired
     private PurchaseOrderJdbcRepository purchaseOrderJdbcRepository;
 
+
+	private static final Logger LOG = LoggerFactory.getLogger(ReceiptNoteService.class);
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
@@ -513,7 +517,17 @@ public class ReceiptNoteService extends DomainService {
 
             if (purchaseOrderDetails.getPagedData().size() > 0) {
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
-
+                		LOG.info("materialReceiptDetail.getReceivedQty()"+materialReceiptDetail.getReceivedQty());
+                		LOG.info("materialReceiptDetail.getUserReceivedQty()"+materialReceiptDetail.getUserReceivedQty());
+                		LOG.info("purchaseOrderDetail.getOrderQuantity()"+purchaseOrderDetail.getOrderQuantity());
+                		LOG.info("purchaseOrderDetail.getOrderQuantity()"+purchaseOrderDetail.getUserQuantity());
+                		
+                		LOG.info("materialReceiptDetail.getReceivedQty()"+materialReceiptDetail.getUom().getCode()
+                			
+                				+" conversion"+materialReceiptDetail.getUom().getConversionFactor());
+                		
+                		LOG.info("materialReceiptDetail.getReceivedQty().compareTo(purchaseOrderDetail.getOrderQuantity())"+materialReceiptDetail.getReceivedQty().compareTo(purchaseOrderDetail.getOrderQuantity()));
+                	
                     if (materialReceiptDetail.getReceivedQty().compareTo(purchaseOrderDetail.getOrderQuantity()) > 0) {
                         errors.addDataError(ErrorCode.RCVED_QTY_LS_ODRQTY.getCode(), String.valueOf(i));
                     }

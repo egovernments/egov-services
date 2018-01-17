@@ -1,8 +1,8 @@
 /*
- * eGov suite of products aim to improve the internal efficiency,transparency,
+ *    eGov  SmartCity eGovernance suite aims to improve the internal efficiency,transparency,
  *    accountability and the service delivery of the government  organizations.
  *
- *     Copyright (C) <2015>  eGovernments Foundation
+ *     Copyright (C) 2017  eGovernments Foundation
  *
  *     The updated version of eGov suite of products as by eGovernments Foundation
  *     is available at http://www.egovernments.org
@@ -26,17 +26,26 @@
  *
  *         1) All versions of this program, verbatim or modified must carry this
  *            Legal Notice.
+ *            Further, all user interfaces, including but not limited to citizen facing interfaces,
+ *            Urban Local Bodies interfaces, dashboards, mobile applications, of the program and any
+ *            derived works should carry eGovernments Foundation logo on the top right corner.
+ *
+ *            For the logo, please refer http://egovernments.org/html/logo/egov_logo.png.
+ *            For any further queries on attribution, including queries on brand guidelines,
+ *            please contact contact@egovernments.org
  *
  *         2) Any misrepresentation of the origin of the material is prohibited. It
  *            is required that all modified versions of this material be marked in
  *            reasonable ways as different from the original version.
  *
- *         3) This license does not grant any rights to any Long of the program
+ *         3) This license does not grant any rights to any user of the program
  *            with regards to rights under trademark law for use of the trade names
  *            or trademarks of eGovernments Foundation.
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ *
  */
+
 package org.egov.asset.contract;
 
 import java.util.Date;
@@ -63,28 +72,27 @@ import lombok.ToString;
 @ToString
 
 @JsonPropertyOrder({ "id", "finYearRange", "startingDate", "endingDate", "active", "isActiveForPosting", "isClosed",
-		"transferClosingBalance", "fiscalPeriodList" })
+        "transferClosingBalance", "fiscalPeriodList" })
 public class FinancialYearContract {
 
-	private Long id;
+    private Long id;
 
-	@Length(min = 1, max = 25)
-	@NotBlank
-	private String finYearRange;
+    @Length(min = 1, max = 25)
+    @NotBlank
+    private String finYearRange;
 
-	@NotNull
-	private Date startingDate;
+    @NotNull
+    private Date startingDate;
 
-	@NotNull
-	private Date endingDate;
-	@NotNull
-	private Boolean active;
-	@NotNull
-	private Boolean isActiveForPosting;
+    @NotNull
+    private Date endingDate;
+    @NotNull
+    private Boolean active;
+    @NotNull
+    private Boolean isActiveForPosting;
 
-	private Boolean isClosed;
+    private Boolean isClosed;
 
-	private Boolean transferClosingBalance;
-
+    private Boolean transferClosingBalance;
 
 }

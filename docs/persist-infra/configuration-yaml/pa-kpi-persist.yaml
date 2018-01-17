@@ -59,7 +59,7 @@ serviceMaps:
    description: Update an existing KPI Master Record
    fromTopic: egov.pa.newkpi-update
    queryMaps: 
-    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, department = ? , category = ?, targettype = ? , instructions =?, periodicity = ?, active = ?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? AND id = ? ;
+    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, department = ? , category = ?, targettype = ? , instructions =?, periodicity = ?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? AND id = ? ;
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -78,8 +78,6 @@ serviceMaps:
        - jsonPath: $.KPIs.*.instructions
        
        - jsonPath: $.KPIs.*.periodicity
-       
-       - jsonPath: $.KPIs.*.active
          
        - jsonPath: $.RequestInfo.userInfo.id
          

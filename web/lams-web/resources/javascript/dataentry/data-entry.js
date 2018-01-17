@@ -102,30 +102,26 @@ $(document).ready(function() {
         let modifyAgreements = response.Agreements[0];
         // console.log(modifyAgreements);
         agreement = Object.assign({}, modifyAgreements);
+        //Load subSeqRenewals based on response agreement['subSeqRenewals']
         if(agreement['subSeqRenewals'].length > 1){
           for(let i=1;i<agreement['subSeqRenewals'].length;i++){
             cloneRow();
           }
         }
-        //Load subSeqRenewals based on response agreement['subSeqRenewals']
+        dependentonBasisTime(agreement.basisOfAllotment, agreement.timePeriod);
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){
           let value = JSONPath({json: modifyAgreements, path: `$.${$(this).attr('name')}`});
           // console.log($(this).attr('name'), value[0]);
-          if($(this).attr('name') === 'timePeriod' && value){
-            if(value <= 3){
-              $('#governmentOrder').hide();
-              $('#municipalOrder').show();
+          if($(this).attr('name') && value[0]){
+            if(typeof(value[0]) === 'object'){
+              $(this).val(value[0] && value[0].id)
             }else{
-              $('#municipalOrder').hide();
-              $('#governmentOrder').show();
+              $(this).val(value[0] && value[0].toString())
             }
           }
-          if($(this).attr('name') && value[0]){
-            // console.log($(this).attr('name'), value[0]);
-            // fillValueToObject({id:$(this).attr('name'),name:$(this).attr('name'),value:value[0]});
-            $(this).val(value[0] && value[0].toString())
-          }
+          if($(this).attr('name') === 'basisOfAllotment' && value[0])
+            loadRenewalRent(value[0]);
         });
         calcFooterYearSum();
       }else{
@@ -135,8 +131,8 @@ $(document).ready(function() {
   }
 
   initDatepicker();
-
   $("#subesquentrenewalsTable tbody tr:first").find('td:last .subsequentRenewalsDelete').hide();
+  
 
   $('#subsequentRenewalsAdd').click(function(){
     var valid = false;
@@ -195,10 +191,8 @@ $(document).ready(function() {
     }
 
     $('#rentIncrementMethod').find('option').remove().end().append('<option value="">Choose Percentage</option>');
-    var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:this.value}).responseJSON;
-    $.each(renewalOfRent, function (idx, rent){
-      $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.percentage));
-    });
+
+    loadRenewalRent(this.value);
 
   });
 
@@ -216,6 +210,13 @@ $(document).ready(function() {
    }
 
  });
+
+ async function loadRenewalRent(basisOfAllotment){
+   var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:basisOfAllotment}).responseJSON;
+   $.each(renewalOfRent, function (idx, rent){
+     $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.percentage));
+   });
+ }
 
  function dependentonBasisTime(basis, time){
    if(basis === 'Goodwill Auction Basis'){

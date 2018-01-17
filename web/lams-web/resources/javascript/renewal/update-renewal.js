@@ -338,9 +338,7 @@ class UpdateRenewal extends React.Component {
             agreement.workflowDetails = {};
         }
 
-        var rentInc = commonApiPost("lams-services", "getrentincrements", "", {
-            tenantId
-        }).responseJSON;
+        var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
 
         this.setState({
             ...this.state,
@@ -606,17 +604,17 @@ class UpdateRenewal extends React.Component {
 
             var asOnDate = new Date();
             var dd = asOnDate.getDate();
-            var mm = asOnDate.getMonth() + 1; 
+            var mm = asOnDate.getMonth() + 1;
             var yyyy = asOnDate.getFullYear();
-        
+
             if (dd < 10) {
               dd = '0' + dd
             }
-        
+
             if (mm < 10) {
               mm = '0' + mm
             }
-        
+
             asOnDate = dd + '/' + mm + '/' + yyyy;
 
 

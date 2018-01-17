@@ -43,6 +43,7 @@ public class PurchaseordersApiController implements PurchaseordersApi {
         @ApiParam(value = "purchase order date of the PurchaseOrder ") @RequestParam(value = "purchaseOrderDate", required = false) Long purchaseOrderDate,
         @ApiParam(value = "rate type of the PurchaseOrder ", allowableValues = "DGSC Rate Contract, ULB Rate Contract, One Time Tender, Quotation") @RequestParam(value = "rateType", required = false) String rateType,
         @ApiParam(value = "supplier code of the PurchaseOrder ") @RequestParam(value = "supplierCode", required = false) String supplierCode,
+        @ApiParam(value = "If this flag is truue, then po's eligible for advance requisition will be searched. ") @RequestParam(value = "searchPoAdvReq", required = false) Boolean searchPoAdvReq,
         @ApiParam(value = "status of the PurchaseOrder ") @RequestParam(value = "status", required = false) String status,
          @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
         @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
@@ -56,6 +57,7 @@ public class PurchaseordersApiController implements PurchaseordersApi {
         purchaseOrderSearch.setPurchaseOrderDate(purchaseOrderDate);
         purchaseOrderSearch.setRateType(rateType);
         purchaseOrderSearch.setSupplier(supplierCode);
+        purchaseOrderSearch.setSearchPoAdvReq(searchPoAdvReq);
         purchaseOrderSearch.setStatus(status);
         purchaseOrderSearch.setPageSize(pageSize);
         purchaseOrderSearch.setPageNumber(pageNumber);

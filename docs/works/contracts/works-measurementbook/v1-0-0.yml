@@ -878,18 +878,19 @@ definitions:
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
         deleted:
-            type: boolean
-            description: Boolean value to identify whether the object is deleted or not from UI.
-            default: false  
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false  
         spillOver:
-            type: boolean
-            description: Boolean value to identify whether the bills are spillover or current.
-            default: false  
-	workCompletionDate:
-            type: integer
-            format: int64
-            x-displayformat: 'dd/MM/yyyy'
-            description: Epoch time of when the Final Bill Completed
+          type: boolean
+          description: Boolean value to identify whether the bills are spillover or current.
+          default: false
+        workCompletionDate:
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          description: Epoch time of when the Work Completed. This field is mandatory if the Bill Type is 'Final'
+        
     required:
       - tenantId
       - letterOfAcceptanceEstimate
@@ -975,6 +976,7 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
+
 
 
 

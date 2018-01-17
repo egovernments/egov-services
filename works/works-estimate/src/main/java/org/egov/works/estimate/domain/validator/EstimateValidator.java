@@ -863,13 +863,19 @@ public class EstimateValidator {
                     messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE,
                             Constants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE);
 
+                boolean validRatesExists = false;
                 for (ScheduleOfRate scheduleOfRate : scheduleOfRates) {
                     for (SORRate sorRate : scheduleOfRate.getSorRates())
-                        if (detailedEstimate.getEstimateDate() < sorRate.getFromDate()
-                                || detailedEstimate.getEstimateDate() > sorRate.getToDate())
-                            messages.put(Constants.KEY_INVALID_SOR_RATES,
-                                    Constants.MESSAGE_INVALID_SOR_RATES);
+                        if (sorRate.getFromDate() <= detailedEstimate.getEstimateDate() &&
+                                sorRate.getToDate() >= detailedEstimate.getEstimateDate()) {
+                            validRatesExists = true;
+                            break;
+                        }
                 }
+
+                if(!validRatesExists)
+                    messages.put(Constants.KEY_INVALID_SOR_RATES,
+                            Constants.MESSAGE_INVALID_SOR_RATES);
 
                 if (scheduleOfRates != null && !scheduleOfRates.isEmpty())
                     activity.setScheduleOfRate(scheduleOfRates.get(0));

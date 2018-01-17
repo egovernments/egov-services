@@ -539,7 +539,7 @@ public class DataUploadService {
 		    				break;
 		    			}
 		    		}
-		    		if(counter == uniqueKeysForInnerObject.size()) {
+		    		if(counter == uniqueKeysForInnerObject.size() && counter != 0) {
 		    			logger.info("Match found!");
 		    			for(Object originalMapKey: originalChildEntry.keySet()) {
 		    				if(originalChildEntry.get(originalMapKey) instanceof List) {

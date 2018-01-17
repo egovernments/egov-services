@@ -48,6 +48,9 @@ public class Definition {
 	@JsonProperty("uniqueParentKeys")
 	private List<String> uniqueParentKeys;
 	
+	@JsonProperty("uniqueKeysForInnerObject")
+	private List<String> uniqueKeysForInnerObject;
+	
 	@JsonProperty("additionalResFields")
 	private Map<String, String> additionalResFields;
 	

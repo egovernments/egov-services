@@ -467,9 +467,15 @@ public class DataUploadService {
 			Map<String, Object> objectMap = gson.fromJson(documentContext.jsonString(), type);
         	filteredListObjects.add(objectMap);
 		}
+		List<String> uniqueKeysForInnerObject = new ArrayList<>();
+		for(String col: uploadDefinition.getUniqueKeysForInnerObject()) {
+		    StringBuilder expression = new StringBuilder();
+        	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getHeaderJsonPathMap().get(col).get(0), expression);
+        	uniqueKeysForInnerObject.add(key);
+		}
 		Map<String, Object> requestMap = new HashMap<>();
 		for(Map map: filteredListObjects) {
-			deepMerge(requestMap, map);
+			deepMerge(requestMap, map, uniqueKeysForInnerObject);
 		}
 		logger.info("requestMap: "+requestMap);
 		Object requestContentBody = null;
@@ -483,7 +489,7 @@ public class DataUploadService {
 		    	bulkApiRequest.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
 		    }catch(Exception e){
 		    	bulkApiRequest.put("$", "requestInfo", uploaderRequest.getRequestInfo());
-		    } 
+		    }
 		    StringBuilder expression = new StringBuilder();
         	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath().substring(0, uploadDefinition.getArrayPath().length() - 1), expression);
         	bulkApiRequest.put(expression.toString(), key, requestMap);
@@ -502,13 +508,18 @@ public class DataUploadService {
 		return request;
 	}
 	
-	private static Map deepMerge(Map original, Map newMap) {
+	@SuppressWarnings("rawtypes")
+	private static Map deepMerge(Map original, Map newMap, List<String> uniqueKeysForInnerObject) {
+		if(uniqueKeysForInnerObject.isEmpty()) {
+			logger.error("uniqueKeysForInnerObject is Empty!");
+		}
+		logger.info("uniqueKeysForInnerObject: "+uniqueKeysForInnerObject);
 	    for (Object key : newMap.keySet()) {
 			logger.info("key: "+key);
 	        if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
 	            Map originalChild = (Map) original.get(key);
 	            Map newChild = (Map) newMap.get(key);
-	            original.put(key, deepMerge(originalChild, newChild));
+	            original.put(key, deepMerge(originalChild, newChild, uniqueKeysForInnerObject));
 	        } else if (newMap.get(key) instanceof List && original.get(key) instanceof List) {
 	    		logger.info("Instance of list: ");
 	            List originalChild = (List) original.get(key);
@@ -517,9 +528,7 @@ public class DataUploadService {
 	    		logger.info("newChild: "+newChild);
 	    		Map<Object, Object> originalChildEntry = (Map) originalChild.get(originalChild.size() - 1);
 	    		Map<Object, Object> newChildEntry = (Map) newChild.get(0);
-	    		List<String> uniqueKeysForInnerObject = new ArrayList<>();
 	    		int counter = 0;
-	    		uniqueKeysForInnerObject.add("name");
 	    		try {
 		    		for(String mapKey: uniqueKeysForInnerObject) {
 		    			if(originalChildEntry.get(mapKey).

@@ -585,7 +585,7 @@ public class AgreementRepository {
 		agreementParameters.put("govtOrderNo", agreement.getGovernmentOrderNumber());
 		agreementParameters.put("govtOrderDate", agreement.getGovernmentOrderDate());
 		agreementParameters.put("renewalDate", agreement.getRenewalDate());
-		agreementParameters.put("basisAllotment", agreement.getBasisOfAllotment());
+		agreementParameters.put("basisAllotment", agreement.getBasisOfAllotment().toString());
 		agreementParameters.put("resCategory", agreement.getReservationCategory());
 
 		return agreementParameters;

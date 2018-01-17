@@ -92,12 +92,6 @@ $(document).ready(function() {
     $("#reservationCategory").append($("<option />").val(cat.id).text(cat.name));
   });
 
-  // methos for renewal of rent API
-  // renewalOfRent = [{label:'10% of the current market value',value:'10%'},{label:'33.33% above of the earlier amount',value:'33.33%'},{label:'Prevailing rent of such properties in the vicinity',value:'1%'}];
-  // $.each(renewalOfRent, function (idx, rent){
-  //   $("#renewalOfRent").append($("<option />").val(rent.value).text(rent.label));
-  // });
-
   // console.log(getUrlVars()["agreementNumber"]);
   if(getUrlVars()["agreementNumber"]){
     //modify - autopopulate the fields
@@ -189,21 +183,21 @@ $(document).ready(function() {
     }
 
     // update natureOfAllotment dropdown
-    $('#natureOfAllotment, #rentIncrementMethod').find('option').remove().end().append('<option value="">Select</option>');
+    $('#natureOfAllotment').find('option').remove().end().append('<option value="">Select</option>');
     fillValueToObject({id:'natureOfAllotment',name:'natureOfAllotment',value:''});
     fillValueToObject({id:'rentIncrementMethod',name:'rentIncrementMethod',value:''});
-    if(this.value === 'goodwillauction'){
-      $(`#natureOfAllotment`).append(`<option value='AUCTION'>AUCTION</option>`);
-    }else if(this.value === 'normal'){
+    if(this.value === 'Goodwill Auction Basis'){
+      $('#natureOfAllotment').append(`<option value='AUCTION'>AUCTION</option>`);
+    }else if(this.value === 'Normal Basis'){
       Object.keys(natureOfAllotments).map((k, index)=>{
-          $(`#natureOfAllotment`).append('<option value='+k+'>'+natureOfAllotments[k]+'</option>')
+          $('#natureOfAllotment').append('<option value='+k+'>'+natureOfAllotments[k]+'</option>')
       });
     }
 
+    $('#rentIncrementMethod').find('option').remove().end().append('<option value="">Choose Percentage</option>');
     var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:this.value}).responseJSON;
     $.each(renewalOfRent, function (idx, rent){
-      // console.log(rent.id, rent.percentage);
-      $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.percentage+'%'));
+      $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.percentage));
     });
 
   });

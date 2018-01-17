@@ -1044,6 +1044,11 @@ paths:
             in: query
             description: |
               issue purpose status of the materialissue
+          - name: purpose
+            type: string
+            in: query
+            description: |
+              This takes purpose of issuesearch    
           - name: totalIssueValue
             type: number
             format: BigDecimal
@@ -1162,6 +1167,16 @@ paths:
             in: query
             description: |
               description of the MaterialIssue
+          - name: issuePurpose
+            type: string
+            in: query
+            description: |
+              issue purpose status of the materialissue
+          - name: purpose
+            type: string
+            in: query
+            description: |
+              This takes purpose of issuesearch              
           - name: totalIssueValue
             type: number
             format: BigDecimal
@@ -1874,7 +1889,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /transferoutwards/_search:
+    /materialissues-to/_search:
       post:
         summary: Get the list of transfer outwards.
         description: Once the approved transfer indent is received by the issuing store, the issuing store initiated the transfer outward process to issue the material required by the indent store. This API is used to search Transfer Outward notes raised in the system.
@@ -1890,64 +1905,73 @@ paths:
             in: query
             maxItems: 50
             description: comma seperated list of Ids
-          - name: store
-            type: integer
-            format: int64
+          - name: fromStore
+            type: string
             in: query
             description: |
-              store of the TransferOutward
+             issuing store of the MaterialIssue
+          - name: toStore
+            type: string
+            in: query
+            description: |
+             receiving store of the MaterialIssue
+          - name: issueNoteNumber
+            type: string
+            in: query
+            description: |
+              issueNoteNumber  Auto generated number, read only
           - name: issueDate
             type: integer
             format: int64
+            x-displayformat: 'dd/MM/yyyy'
             in: query
             description: |
-              issue date of the TransferOutward
-          - name: issuedToEmployee
+              issue date of the MaterialIssue
+          - name: materialIssueStatus
             type: string
             in: query
             description: |
-              issued to employee of the TransferOutward
-          - name: outwardNoteNumber
-            type: string
-            in: query
-            description: |
-              outward note number of the TransferOutward
-          - name: outwardNoteStatus
-            type: string
-            in: query
-            description: |
-              outward note status of the TransferOutward
+              material issue status of the MaterialIssue
             enum:
               - CREATED
               - APPROVED
               - REJECTED
               - CANCELED
-          - name: indent
-            type: integer
-            format: int64
+          - name: description
+            type: string
             in: query
             description: |
-              indent of the TransferOutward
-          - name: stateId
-            type: integer
-            format: int64
+              description of the MaterialIssue
+          - name: issuePurpose
+            type: string
             in: query
             description: |
-              state id of the TransferOutward
+              issue purpose status of the materialissue
+          - name: purpose
+            type: string
+            in: query
+            description: |
+              This takes purpose of issuesearch    
+          - name: totalIssueValue
+            type: number
+            format: BigDecimal
+            in: query
+            description: |
+              total issue value of the MaterialIssue
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"
         responses:
           200:
-            description: TransferOutward retrieved Successfully
+            description: MaterialIssue retrieved Successfully
             schema:
-              $ref: '#/definitions/TransferOutwardResponse'
+              $ref: '#/definitions/MaterialIssueResponse'
           400:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /transferoutwards/_create:
+    /materialissues-to/_create:
       post:
         summary: Create new transfer outward note.
         description: Once the approved transfer indent is received by the issuing store, the issuing store initiated the transfer outward process to issue the material required by the indent store. This API is invoked to record the Transfer Outward note raised by the issuing store. Once the transfer outward note is approved, inventory information of materials for issuing store will be reduced accordingly.
@@ -1955,22 +1979,22 @@ paths:
           - TransferOutward
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: transferOutwardRequest
+          - name: materialIssueRequest
             in: body
-            description: Create  new
+            description: Create  new Transfer Outward
             schema:
-              $ref: '#/definitions/TransferOutwardRequest'
+              $ref: '#/definitions/MaterialIssueRequest'
         responses:
           200:
             description: TransferOutward created Successfully
             schema:
-              $ref: '#/definitions/TransferOutwardResponse'
+              $ref: '#/definitions/MaterialIssueResponse'
           400:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-    /transferoutwards/_update:
+    /materialissues-to/_update:
       post:
         summary: Update any of the transfer outwards
         description: This API is invoked to update the transfer outward note information and during the workflow.
@@ -1978,16 +2002,16 @@ paths:
           - TransferOutward
         parameters:
           - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-          - name: transferOutwardRequest
+          - name: materialIssueRequest
             in: body
-            description: common Request info
+            description: update Transfer Outward
             schema:
-              $ref: '#/definitions/TransferOutwardRequest'
+              $ref: '#/definitions/MaterialIssueRequest'
         responses:
           200:
             description: TransferOutward updated Successfully
             schema:
-              $ref: '#/definitions/TransferOutwardResponse'
+              $ref: '#/definitions/MaterialIssueResponse'
           400:
             description: Invalid Input
             schema:
@@ -5063,6 +5087,15 @@ definitions:
           type: string
           description: |
             Unique Identifier of the Disposal
+        tenantId:
+          type: string
+          description: |
+            tenantId
+        scrapNumbers:
+          type: array
+          items:
+           type: string
+          description: list of scrap numbers 
         store:
           $ref: "#/definitions/Store"
         disposalNumber:
@@ -5097,7 +5130,7 @@ definitions:
           description:  |
             This object contains the list of materials marked as scraped in the selected store and are to be disposed.
           items:
-            $ref: "#/definitions/DisposalDetails"
+            $ref: "#/definitions/DisposalDetail"
         disposalStatus:
           type: string
           enum:
@@ -5118,14 +5151,13 @@ definitions:
           type: number
           format: BigDecimal
           description: |
-            totalDisposalValue  denormalized value from Disposal Details
+            totalDisposalValue  denormalized value from Disposal Detail
       required:
       - store
-      - disposalNumber
       - disposalDate
       - disposalStatus
 
-    DisposalDetails:
+    DisposalDetail:
       type: object
       description: |
         This object contains the list of materials marked as scraped in the selected store and are to be disposed.
@@ -5133,22 +5165,42 @@ definitions:
         id:
           type: string
           description: |
-            Unique Identifier of the Disposal Details
-        scrapDetail:
+            Unique Identifier of the Disposal Detail
+        tenantId:
+          type: string
+          description: |
+            tenantId
+        material:
+            $ref: '#/definitions/Material'
+            description: Material Reference
+        uom:  
+            $ref: '#/definitions/Uom'
+            description: Uom reference        
+        scrapDetails:
           $ref: "#/definitions/ScrapDetail"
         disposalQuantity:
           type: number
           format: BigDecimal
           description: |
-            disposal quantity of the DisposalDetails
+            disposal quantity of the DisposalDetail in base uom
+        userDisposalQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            disposal quantity of the disposal detail
+        pendingScrapQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            left over scrap quantity
         disposalValue:
           type: number
           format: BigDecimal
           description: |
-            disposal value of the DisposalDetails
+            disposal value of the DisposalDetail
       required:
-      - scrapDetail
-      - disposalQuantity
+      - scrapDetails
+      - userDisposalQuantity
       - disposalValue
 
     DisposalRequest:

@@ -55,9 +55,6 @@ public class MaterialIssueDetail {
 	@JsonProperty("indentDetail")
 	private IndentDetail indentDetail = null;
 
-	@JsonProperty("quantityToBeIssued")
-	private BigDecimal quantityToBeIssued = null;
-
 	@JsonProperty("pendingIndentQuantity")
 	private BigDecimal pendingIndentQuantity = null;
 
@@ -129,7 +126,7 @@ public class MaterialIssueDetail {
 	 * @return material
 	 **/
 	@ApiModelProperty(required = true, value = "Applicable for Non Indent Issue. ")
-
+    @NotNull
 
 	public Material getMaterial() {
 		return material;
@@ -277,7 +274,7 @@ public class MaterialIssueDetail {
 	 * @return uom
 	 **/
 	@ApiModelProperty(required = true, value = "unit of measure of selected material.")
-	
+	@NotNull
 
 	public Uom getUom() {
 		return uom;
@@ -326,26 +323,6 @@ public class MaterialIssueDetail {
 
 	public void setIndentDetail(IndentDetail indentDetail) {
 		this.indentDetail = indentDetail;
-	}
-
-	public MaterialIssueDetail quantityToBeIssued(BigDecimal quantityToBeIssued) {
-		this.quantityToBeIssued = quantityToBeIssued;
-		return this;
-	}
-
-	/**
-	 * Balance quantity to be issued of the IndentDetails.
-	 * 
-	 * @return quantityToBeIssued
-	 **/
-	@ApiModelProperty(value = "Balance quantity to be issued of the IndentDetails. ")
-
-	public BigDecimal getQuantityToBeIssued() {
-		return quantityToBeIssued;
-	}
-
-	public void setQuantityToBeIssued(BigDecimal quantityToBeIssued) {
-		this.quantityToBeIssued = quantityToBeIssued;
 	}
 
 	public MaterialIssueDetail scrapedQuantity(BigDecimal scrapedQuantity) {
@@ -481,7 +458,6 @@ public class MaterialIssueDetail {
 				&& Objects.equals(this.uom, materialIssueDetail.uom)
 				&& Objects.equals(this.voucherHeader, materialIssueDetail.voucherHeader)
 				&& Objects.equals(this.indentDetail, materialIssueDetail.indentDetail)
-				&& Objects.equals(this.quantityToBeIssued, materialIssueDetail.quantityToBeIssued)
 				&& Objects.equals(this.scrapedQuantity, materialIssueDetail.scrapedQuantity)
 				&& Objects.equals(this.scrapValue, materialIssueDetail.scrapValue)
 				&& Objects.equals(this.mrnNumber, materialIssueDetail.mrnNumber)
@@ -492,7 +468,7 @@ public class MaterialIssueDetail {
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, tenantId, material, orderNumber, userQuantityIssued, quantityIssued, balanceQuantity,
-				value, uom, voucherHeader, indentDetail, quantityToBeIssued, scrapedQuantity, scrapValue, mrnNumber,
+				value, uom, voucherHeader, indentDetail, scrapedQuantity, scrapValue, mrnNumber,
 				description, materialIssuedFromReceipts);
 	}
 
@@ -512,7 +488,6 @@ public class MaterialIssueDetail {
 		sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
 		sb.append("    voucherHeader: ").append(toIndentedString(voucherHeader)).append("\n");
 		sb.append("    indentDetail: ").append(toIndentedString(indentDetail)).append("\n");
-		sb.append("    quantityToBeIssued: ").append(toIndentedString(quantityToBeIssued)).append("\n");
 		sb.append("    scrapedQuantity: ").append(toIndentedString(scrapedQuantity)).append("\n");
 		sb.append("    scrapValue: ").append(toIndentedString(scrapValue)).append("\n");
 		sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");

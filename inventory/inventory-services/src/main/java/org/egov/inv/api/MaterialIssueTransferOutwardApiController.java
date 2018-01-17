@@ -55,7 +55,7 @@ public class MaterialIssueTransferOutwardApiController implements MaterialIssueT
 			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.") @RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@ApiParam(value = "Page number") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy,
-			@ApiParam(value = "This takes purpose of issuesearch") @RequestParam(value = "sortBy", required = false) String purpose) {
+			@ApiParam(value = "This takes purpose of issuesearch") @RequestParam(value = "purpose", required = false) String purpose) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
 				issueNoteNumber,issuePurpose,issueDate,null, materialIssueStatus, description, totalIssueValue, null ,pageNumber, sortBy,
 				pageSize, purpose);

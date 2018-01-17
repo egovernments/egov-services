@@ -184,8 +184,6 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
     private void populateFuelTypes(List<RefillingPumpStation> refillingPumpStationList) {
 
-        StringBuffer pumpStationCodes = new StringBuffer();
-
         PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
 
         String tenantId = null;
@@ -195,13 +193,8 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
         for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
 
-            if (pumpStationCodes.length() >= 1)
-                pumpStationCodes.append(",");
-
-            pumpStationCodes.append(refillingPumpStation.getCode());
-
             pumpStation.setTenantId(tenantId);
-            pumpStation.setPumpStations(pumpStationCodes.toString());
+            pumpStation.setPumpStation(refillingPumpStation.getCode());
 
             refillingPumpStation.setFuelTypes(pumpStationFuelTypesJdbcRepository.search(pumpStation));
 

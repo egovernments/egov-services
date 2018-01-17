@@ -257,6 +257,7 @@ public class AbstractEstimateHelper {
 		BudgetGroup budgetGroup = new BudgetGroup();
 		budgetGroup.setName(this.budgetHead);
 		abstractEstimate.setBudgetGroup(budgetGroup);
+		abstractEstimate.setWorkFlowDetails(new WorkFlowDetails());
 		return abstractEstimate;
 	}
 }

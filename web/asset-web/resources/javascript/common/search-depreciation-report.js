@@ -7,7 +7,7 @@ class SearchDepreciationReport extends React.Component {
       searchSet:{
         tenantId
       },
-      isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],result:[],modify: false}
+      isSearchClicked:false,asset_category_type:[],assetCategories:[],departments:[],financialYears:[],result:[],modify: false}
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
@@ -31,26 +31,6 @@ class SearchDepreciationReport extends React.Component {
             self.setState({assetCategories:assetCategory});
         })
       }
-
-      // if(name == "assetName") {
-      //   return this.setState({
-      //     searchSet: {
-      //         ...this.state.searchSet,
-      //         [name]: e.target.value,
-      //         asset: ""
-      //     }
-      // })
-      // }
-      //
-      // if(name == "assetCode") {
-      //   return this.setState({
-      //     searchSet: {
-      //         ...this.state.searchSet,
-      //         [name]: e.target.value,
-      //         asset: ""
-      //     }
-      // })
-      // }
       this.setState({
           searchSet:{
               ...this.state.searchSet,
@@ -159,6 +139,9 @@ class SearchDepreciationReport extends React.Component {
       checkCountNCall("departments", res);
     });
 
+    getDropdown("financialYears", function(res) {
+      checkCountNCall("financialYears", res);
+    });
      var location;
 
      commonApiPost("asset-services", "assets", "_search", { tenantId}, function(err, res) {
@@ -194,106 +177,6 @@ class SearchDepreciationReport extends React.Component {
           }
         }
       });
-
-
-    //  $( "#assetName" ).autocomplete({
-    //    source: function( request, response ) {
-    //      $.ajax({
-    //        url: baseUrl + "/asset-services/assets/_search?tenantId=" + tenantId,
-    //        type: 'POST',
-    //        dataType: "json",
-    //        data: JSON.stringify({
-    //            RequestInfo: requestInfo,
-    //            name: request.term,
-    //            fuzzyLogic: true,
-    //            tenantId: tenantId
-    //        }),
-    //        contentType: 'application/json',
-    //        success: function( data ) {
-    //          if(data && data.Assets && data.Assets.length) {
-    //              let users = [];
-    //              for(let i=0;i<data.Assets.length;i++)
-    //                  users.push(data.Assets[i].name);
-    //              response(users);
-    //              _this.setState({
-    //                users: data.Assets
-    //              })
-    //          }
-    //        }
-    //      });
-    //    },
-    //    minLength: 3,
-    //    change: function( event, ui ) {
-    //      if(ui.item && ui.item.value) {
-    //          var id;
-    //          if(_this.state.users && _this.state.users.constructor == Array) {
-    //            for(var i=0; i<_this.state.users.length; i++) {
-    //              if(_this.state.users[i].name == ui.item.value) {
-    //                id = _this.state.users[i].id;
-    //              }
-    //            }
-    //          }
-     //
-    //          _this.setState({
-    //              searchSet:{
-    //                  ..._this.state.searchSet,
-    //                  assetName: ui.item.value,
-    //                  asset: id || ""
-    //              }
-    //          })
-    //      }
-    //    }
-    //  });
-     //
-    //  $( "#assetCode" ).autocomplete({
-    //    source: function( request, response ) {
-    //      $.ajax({
-    //        url: baseUrl + "/asset-services/assets/_search?tenantId=" + tenantId,
-    //        type: 'POST',
-    //        dataType: "json",
-    //        data: JSON.stringify({
-    //            RequestInfo: requestInfo,
-    //            name: request.term,
-    //            fuzzyLogic: true,
-    //            tenantId: tenantId
-    //        }),
-    //        contentType: 'application/json',
-    //        success: function( data ) {
-    //          if(data && data.Assets && data.Assets.length) {
-    //            console.log(data.Assets);
-    //             //  let users = [];
-    //             //  for(let i=0;i<data.Assets.length;i++)
-    //             //      users.push(data.Assets[i].code);
-    //             //  response(users);
-    //             //  _this.setState({
-    //             //    users: data.Assets
-    //             //  })
-    //          }
-    //        }
-    //      });
-    //    },
-    //    minLength: 3,
-    //    change: function( event, ui ) {
-    //      if(ui.item && ui.item.value) {
-    //          var id;
-    //          if(_this.state.users && _this.state.users.constructor == Array) {
-    //            for(var i=0; i<_this.state.users.length; i++) {
-    //              if(_this.state.users[i].code == ui.item.value) {
-    //                id = _this.state.users[i].id;
-    //              }
-    //            }
-    //          }
-     //
-    //          _this.setState({
-    //              searchSet:{
-    //                  ..._this.state.searchSet,
-    //                  assetCode: ui.item.value,
-    //                  asset: id || ""
-    //              }
-    //          })
-    //      }
-    //    }
-    //  });
 }
 
 close() {
@@ -302,8 +185,8 @@ close() {
 
   render() {
     let {handleChange, search, handleClick}=this;
-    let {assetCategoryType,assetCategory,financialYear,department,parent,assetName,assetCode}=this.state.searchSet;
-    let {isSearchClicked,list,departments,assetCategories,assetId}=this.state;
+    let {assetCategoryType,assetCategory,department,parent,assetName,assetCode,financialYear}=this.state.searchSet;
+    let {isSearchClicked,list,departments,assetCategories,financialYears,assetId}=this.state;
     console.log(this.state.searchSet);
       const renderOption = function(list) {
           if(list) {
@@ -439,10 +322,12 @@ close() {
                 </div>
                 <div className="col-sm-6">
                 <div className="styled-select">
-                  <select id="financialYear" name="financialYear" className="form-control" required= "true" onChange={(e)=>{handleChange(e,"financialYear")}}>
-                    <option value="">Select</option>
-                    <option value="2016-17">2016-17</option>
-                    <option value="2017-18">2017-18</option>
+                <select id="financialYear" name="financialYear" value={financialYear} required= "true" onChange={(e)=>{
+                handleChange(e,"financialYear")}}>
+                    <option value="">Select Financial Years</option>
+                    {this.state.financialYears.map((year)=>(
+                      <option value={year.finYearRange}>{year.finYearRange}</option>
+                    ))}
                   </select>
                 </div>
               </div>

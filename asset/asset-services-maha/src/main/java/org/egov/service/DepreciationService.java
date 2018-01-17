@@ -1,6 +1,7 @@
 package org.egov.service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,21 +72,20 @@ public class DepreciationService {
 
 		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
-		Date date=new Date();
+		/*Date date=new Date();
 		date.setHours(23);
 		date.setMinutes(59);
 		date.setSeconds(59);
+		*/
 		
-		/*
-		  Calendar calendar = Calendar.getInstance();
-		    Date today = calendar.getTime();
-			SimpleDateFormat sdf=new SimpleDateFormat("hh:mm:ss S");
-		    System.out.println("Current Time: " + sdf.format(today));
-		    calendar.add(Calendar.HOUR, 23);
-		    calendar.add(Calendar.MINUTE, 59);
-		    calendar.add(Calendar.SECOND, 59);
-		    calendar.add(Calendar.MILLISECOND, 000);
-		    Date addMilliSeconds = calendar.getTime();*/
+		
+		  Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(applicationProperties.getTimeZone()));
+		    calendar.setTimeInMillis(new Date().getTime());
+		    calendar.set(Calendar.HOUR_OF_DAY,23);
+	        calendar.set(Calendar.MINUTE, 59);
+		    calendar.set(Calendar.SECOND, 59);
+		    calendar.set(Calendar.MILLISECOND, 755);
+		    Date addMilliSeconds = calendar.getTime();
 		
 		System.err.println(criteria.getToDate()+"criteria.getToDate()");
 /*
@@ -93,11 +93,11 @@ public class DepreciationService {
 		
 		System.err.println(addMilliSeconds.getTime()+"epoc");*/
 		
-		System.err.println(date.getTime()+"new Date().getTime()");
+		System.err.println(addMilliSeconds.getTime()+"new Date().getTime()");
 		
 	
 
-		if (criteria.getToDate() > date.getTime() ) {
+		if (criteria.getToDate() > addMilliSeconds.getTime() ) {
 			Map<String, String> map = new HashMap<>();
 			map.put(applicationProperties.getDepreciationDate(), "Assets cannot be depreciated for future dates");
 			throw new CustomException(map);

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum BasisOfAllotment {
 
-	GODDWILLAUCTIONBASIS("GOODWILLAUCTIONBASIS"), NORMAL("NORMALBASIS");
+	GODDWILLAUCTIONBASIS("Goodwill Auction Basis"), NORMAL("Normal Basis");
 
 	private String value;
 

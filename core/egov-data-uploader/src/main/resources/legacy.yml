@@ -21,4 +21,4 @@ UploadDefinitions:
    tenantIdPaths: ["$.cases.*.tenantId", "$.cases.*.summon.tenantId", "$.cases.*.register.tenantId"]
    uniqueKeysForInnerObject: []
    uri: http://egov-micro-dev.egovernments.org/lcms-services/legalcase/case/_dataentry?tenantId=default
-   additionalResFields: []
+   additionalResFields:

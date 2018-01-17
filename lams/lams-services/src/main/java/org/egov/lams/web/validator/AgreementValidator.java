@@ -16,6 +16,7 @@ import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.AllotteeRepository;
 import org.egov.lams.repository.AssetRepository;
 import org.egov.lams.repository.DemandRepository;
@@ -390,6 +391,11 @@ public class AgreementValidator {
 
 	public void validateAgreementForWorkFLow(AgreementRequest agreementRequest, Errors errors, String action) {
 
+		Agreement agreement = agreementRequest.getAgreement();
+		if(Status.INACTIVE.equals(agreement.getStatus()) || Status.HISTORY.equals(agreement.getStatus())){
+			errors.reject(ERROR_FIELD_AGREEMENT_NO, "History/InActive agreements are not allowed.");
+		}
+		
 		if (Action.RENEWAL.toString().equals(action)) {
 			validateRenewal(agreementRequest, errors);
 		} else if (Action.CANCELLATION.toString().equals(action)) {

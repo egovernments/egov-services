@@ -144,7 +144,7 @@ class RenewalAgreement extends React.Component {
 
     var asOnDate = new Date();
     var dd = asOnDate.getDate();
-    var mm = asOnDate.getMonth() + 1; 
+    var mm = asOnDate.getMonth() + 1;
     var yyyy = asOnDate.getFullYear();
 
     if (dd < 10) {
@@ -500,20 +500,15 @@ class RenewalAgreement extends React.Component {
       agreement.workflowDetails = {};
     }
 
-    var rentInc = commonApiPost("lams-services", "getrentincrements", "", {
-      tenantId
-    }).responseJSON;
-
+    var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
 
     this.setState({
       ...this.state,
       agreement: agreement,
       departmentList: departmentList,
-      rentInc: rentInc,
+      rentInc,
       minRent: agreement.rent
     });
-
-
 
   }
 

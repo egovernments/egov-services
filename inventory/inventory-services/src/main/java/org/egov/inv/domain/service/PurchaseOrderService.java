@@ -865,10 +865,10 @@ public class PurchaseOrderService extends DomainService {
         if (materialFromMdms == null) {
             return false;
         }
-        if (material.getBaseUom().getCode() != null)
-            if (!materialFromMdms.getBaseUom().getCode().equals(material.getBaseUom().getCode())) {
-                return false;
-            }
+//        if (material.getBaseUom().getCode() != null)
+//            if (!materialFromMdms.getBaseUom().getCode().equals(material.getBaseUom().getCode())) {
+//                return false;
+//            }
         return true;
     }
     

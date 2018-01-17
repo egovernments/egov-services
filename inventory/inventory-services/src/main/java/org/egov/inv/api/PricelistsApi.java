@@ -50,10 +50,10 @@ public interface PricelistsApi {
         @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
     
     @RequestMapping(value = "/pricelists/_gettenderusedquantity",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<PriceListResponse> pricelistsGettenderusedquantityPost(@ApiParam(value = "Name of the material whose usedQuantity we want to find. ") @RequestParam(value = "material", required = false) String material,@ApiParam(value = "reference no of the priceList in which we want to find the usedQuantity ") @RequestParam(value = "priceListId", required = false) String priceListId);
+    produces = { "application/json" }, 
+    consumes = { "application/json" },
+    method = RequestMethod.POST)
+ResponseEntity<PriceListResponse> pricelistsGettenderusedquantityPost(@ApiParam(value = "Name of the material whose usedQuantity we want to find. ") @RequestParam(value = "material", required = false) String material,@ApiParam(value = "reference no of the priceList in which we want to find the usedQuantity ") @RequestParam(value = "priceListId", required = false) String priceListId,@ApiParam(value = "UOM in which usedQuantity response need to be sent. ") @RequestParam(value = "uom", required = false) String uom,@ApiParam(value = "tenantId for which the details apply ") @RequestParam(value = "tenantId", required = false) String tenantId);
 
 
     @ApiOperation(value = "Get the list of common pricelist information", notes = "PriceList is parent object that holds the common information for both.", response = PriceListResponse.class, tags={ "PriceList", })

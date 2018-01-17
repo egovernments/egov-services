@@ -2689,6 +2689,13 @@ paths:
             in: query
             description: |
               UOM in which usedQuantity response need to be sent.
+          - name: tenantId
+            type: string
+            items:
+             type: string
+            in: query
+            description: |
+              tenantId for which the details apply
         responses:
           200:
             description: PriceList retrieved Successfully
@@ -5090,7 +5097,7 @@ definitions:
         tenantId:
           type: string
           description: |
-            tenantId
+            tenantId 
         scrapNumbers:
           type: array
           items:

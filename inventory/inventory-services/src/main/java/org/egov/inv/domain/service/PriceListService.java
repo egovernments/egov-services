@@ -442,9 +442,10 @@ public class PriceListService extends DomainService {
 		 return s2;
 	 }
 
-	public PriceListResponse getTenderUsedQty(String material, String priceListId){
+	public PriceListResponse getTenderUsedQty(String material, String priceListId, String uom, String tenantId){
 		PriceListResponse plr = new PriceListResponse();
-		plr.setPriceLists(Arrays.asList(PriceList.builder().priceListDetails(Arrays.asList(PriceListDetails.builder().tenderUsedQuantity(purchaseOrderJdbcRepository.getTenderUsedQty(material, priceListId)).build())).build()));
+		Uom uomFetch = (Uom) mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", "code", uom, Uom.class);
+		plr.setPriceLists(Arrays.asList(PriceList.builder().priceListDetails(Arrays.asList(PriceListDetails.builder().tenderUsedQuantity(purchaseOrderJdbcRepository.getTenderUsedQty(material, priceListId).divide(uomFetch.getConversionFactor())).build())).build()));
 		return plr;
 	}
     

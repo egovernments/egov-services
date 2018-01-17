@@ -49,10 +49,12 @@ public class PricelistsApiController implements PricelistsApi {
     }
 
     public ResponseEntity<PriceListResponse> pricelistsGettenderusedquantityPost(@ApiParam(value = "Name of the material whose usedQuantity we want to find. ") @RequestParam(value = "material", required = false) String material,
-        @ApiParam(value = "reference no of the priceList in which we want to find the usedQuantity ") @RequestParam(value = "priceListId", required = false) String priceListId) {
-        // do some magic!
-    	return new ResponseEntity<PriceListResponse>(priceListService.getTenderUsedQty(material, priceListId), HttpStatus.OK);
-    }
+            @ApiParam(value = "reference no of the priceList in which we want to find the usedQuantity ") @RequestParam(value = "priceListId", required = false) String priceListId,
+            @ApiParam(value = "UOM in which usedQuantity response need to be sent. ") @RequestParam(value = "uom", required = false) String uom,
+            @ApiParam(value = "tenantId for which the details apply ") @RequestParam(value = "tenantId", required = false) String tenantId) {
+            // do some magic!
+    	return new ResponseEntity<PriceListResponse>(priceListService.getTenderUsedQty(material, priceListId, uom, tenantId), HttpStatus.OK);
+        }
 
 
     public ResponseEntity<PriceListResponse> pricelistsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,

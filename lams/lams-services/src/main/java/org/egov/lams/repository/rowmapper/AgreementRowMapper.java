@@ -19,6 +19,7 @@ import org.egov.lams.model.Remission;
 import org.egov.lams.model.Renewal;
 import org.egov.lams.model.RentIncrementType;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.BasisOfAllotment;
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.ReasonForCancellation;
@@ -114,6 +115,10 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setGovernmentOrderNumber(rs.getString("govt_order_no"));
 					agreement.setGovernmentOrderDate(rs.getTimestamp("govt_order_date"));
 					agreement.setRenewalDate(rs.getTimestamp("renewal_date"));
+					agreement.setReservationCategory((Long) rs.getObject("res_category"));
+					
+					String baseAllotment = rs.getString("base_allotment");
+					agreement.setBasisOfAllotment(BasisOfAllotment.fromValue(baseAllotment));
 
 					RentIncrementType rentIncrementType = new RentIncrementType();
 					rentIncrementType.setId((Long) rs.getObject("rent_increment_method"));

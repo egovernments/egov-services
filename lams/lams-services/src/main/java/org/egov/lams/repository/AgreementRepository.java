@@ -59,6 +59,9 @@ public class AgreementRepository {
 	public static final String SOURCE_SYSTEM = "SYSTEM";
 	
 	public static final String ACTION_MODIFY ="MODIFY";
+	
+	public static final String SUB_SEQ_RENEW_INSERT_QUERY = "INSERT INTO eglams_history (id,agreementid,resolutionno,resolutiondate,fromdate,todate,years,rent,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate) values "
+			+ "(nextval('seq_eglams_history'),?,?,?,?,?,?,?,?,?,?,?,?);";
 
 	@Autowired
     private AssetHelper assetHelper;
@@ -329,6 +332,8 @@ public class AgreementRepository {
 
         Map<String, Object> processMap = getProcessMap(agreementRequest);
         Agreement agreement = agreementRequest.getAgreement();
+        RequestInfo requestInfo = agreementRequest.getRequestInfo();
+        String userId = requestInfo.getUserInfo().getId().toString();
         logger.info("AgreementDao agreement::" + agreement);
 
         String agreementinsert = AgreementQueryBuilder.INSERT_AGREEMENT_QUERY;
@@ -386,16 +391,16 @@ public class AgreementRepository {
 		List<SubSeqRenewal> renewalDetails = agreement.getSubSeqRenewals();
 		if (Source.DATA_ENTRY.equals(agreement.getSource()) && Action.CREATE.equals(agreement.getAction())
 				&& renewalDetails != null) {
-			String sql = "INSERT INTO eglams_history (id,agreementid,fromdate,todate,years,rent,tenantid) values "
-					+ "(nextval('seq_eglams_history'),?,?,?,?,?,?);";
+			String sql = SUB_SEQ_RENEW_INSERT_QUERY;
 			logger.info("query for saving agreement history : " + sql);
 			List<Object[]> renewHistorytBatchArgs = new ArrayList<>();
 
 			for (SubSeqRenewal renewalHistory : renewalDetails) {
 
-				Object[] historyDetailList = { agreement.getId(), renewalHistory.getHistoryFromDate(),
+				Object[] historyDetailList = { agreement.getId(), renewalHistory.getResolutionNumber(),
+						renewalHistory.getResolutionDate(), renewalHistory.getHistoryFromDate(),
 						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
-						agreement.getTenantId() };
+						agreement.getTenantId(),userId,new Date(),userId,new Date()};
 				renewHistorytBatchArgs.add(historyDetailList);
 			}
 
@@ -453,6 +458,7 @@ public class AgreementRepository {
 	public void modifyAgreement(AgreementRequest agreementRequest) {
 
 		Agreement agreement = agreementRequest.getAgreement();
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		Map<String, Object> processMap = getProcessMap(agreementRequest);
 		logger.info("Modify agreement::" + agreement);
 		String agreementUpdate = AGREEMENT_UPDATE_QUERY;
@@ -483,10 +489,9 @@ public class AgreementRepository {
 		Map<String, List<Object[]>> paramsMap = null;
 		List<SubSeqRenewal> renewalDetails = agreement.getSubSeqRenewals();
 		if (!renewalDetails.isEmpty()) {
-			String insertQuery = "INSERT INTO eglams_history (id,agreementid,fromdate,todate,years,rent,tenantid) values "
-					+ "(nextval('seq_eglams_history'),?,?,?,?,?,?);";
-			String updateQuery = "update eglams_history set fromdate=?,todate=?,years=?,rent=?,tenantid=? where agreementid=? ";
-			paramsMap = getUpdateBatchParamsList(agreement.getId(), renewalDetails, agreement.getTenantId());
+			String insertQuery = SUB_SEQ_RENEW_INSERT_QUERY;
+			String updateQuery = "update eglams_history set resolutionno=?,resolutiondate=?,fromdate=?,todate=?,years=?,rent=?,tenantid=? ,lastmodifiedby=?,lastmodifieddate=? where agreementid=? ";
+			paramsMap = getUpdateBatchParamsList(agreement.getId(), renewalDetails, agreement.getTenantId(),requestInfo);
 			updateBatchArgs = paramsMap.get("UPDATEARGS");
 			insertBatchArgs = paramsMap.get("INSERTARGS");
 			try {
@@ -580,6 +585,8 @@ public class AgreementRepository {
 		agreementParameters.put("govtOrderNo", agreement.getGovernmentOrderNumber());
 		agreementParameters.put("govtOrderDate", agreement.getGovernmentOrderDate());
 		agreementParameters.put("renewalDate", agreement.getRenewalDate());
+		agreementParameters.put("basisAllotment", agreement.getBasisOfAllotment());
+		agreementParameters.put("resCategory", agreement.getReservationCategory());
 
 		return agreementParameters;
     }
@@ -727,20 +734,22 @@ public class AgreementRepository {
 	}
     
 	private Map<String, List<Object[]>> getUpdateBatchParamsList(Long agreementId, List<SubSeqRenewal> renewalDetails,
-			String tenantId) {
+			String tenantId,RequestInfo requestInfo) {
+		String userId = requestInfo.getUserInfo().getId().toString();
 		Map<String, List<Object[]>> paramsMap = new HashMap<>();
 		List<Object[]> updateBatchArgs = new ArrayList<>();
 		List<Object[]> insertBatchArgs = new ArrayList<>();
 		for (SubSeqRenewal renewalHistory : renewalDetails) {
-			if (renewalHistory.getAgreementid() != null) {
-				Object[] historyDetailUpdateList = { renewalHistory.getHistoryFromDate(),
-						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
-						tenantId, agreementId };
+			if (renewalHistory.getAgreementId() != null) {
+				Object[] historyDetailUpdateList = { renewalHistory.getResolutionNumber(), renewalHistory.getResolutionDate(),
+						renewalHistory.getHistoryFromDate(), renewalHistory.getHistoryToDate(),
+						renewalHistory.getYears(), renewalHistory.getHistoryRent(), tenantId,userId,new Date(), agreementId};
 				updateBatchArgs.add(historyDetailUpdateList);
 			} else {
-				Object[] historyDetailInsertList = { agreementId, renewalHistory.getHistoryFromDate(),
+				Object[] historyDetailInsertList = { agreementId, renewalHistory.getResolutionNumber(),
+						renewalHistory.getResolutionDate(), renewalHistory.getHistoryFromDate(),
 						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
-						tenantId };
+						tenantId ,userId,new Date(),userId,new Date()};
 				insertBatchArgs.add(historyDetailInsertList);
 			}
 		}
@@ -770,7 +779,7 @@ public class AgreementRepository {
 		}
 		if (!subSeqRenewals.isEmpty()) {
 
-			map = subSeqRenewals.stream().collect(Collectors.groupingBy(SubSeqRenewal::getAgreementid));
+			map = subSeqRenewals.stream().collect(Collectors.groupingBy(SubSeqRenewal::getAgreementId));
 
 		}
 		return map;

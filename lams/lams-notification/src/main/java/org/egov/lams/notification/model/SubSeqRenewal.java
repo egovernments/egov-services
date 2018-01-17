@@ -34,7 +34,7 @@ public class SubSeqRenewal {
 	@JsonProperty("resolutionDate")
 	private Date resolutionDate;
 
-	private Long agreementid;
+	private Long agreementId;
 	
 	private String tenantId;
 

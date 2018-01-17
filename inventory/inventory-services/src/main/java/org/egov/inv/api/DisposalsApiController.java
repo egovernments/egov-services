@@ -56,9 +56,11 @@ public class DisposalsApiController implements DisposalsApi {
 			@ApiParam(value = "totalDisposalValue  denormalized value from Disposal Details ") @RequestParam(value = "totalDisposalValue", required = false) Double totalDisposalValue,
 			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.") @RequestParam(value = "pageSize", required = false) Integer pageSize,
 			@ApiParam(value = "Page number") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy) {
+			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy,
+			@ApiParam(value = "This takes the purpose of issue search") @RequestParam(value = "purpose", required = false) String purpose) {
+
 		DisposalSearchContract disposalSearchContract = new DisposalSearchContract(ids,tenantId,store,disposalNumber,disposalDate,handOverTo,
-				auctionNumber,disposalStatus,stateId,totalDisposalValue,pageSize,pageNumber,sortBy);
+				auctionNumber,disposalStatus,stateId,totalDisposalValue,pageSize,pageNumber,sortBy,purpose);
 		DisposalResponse disposalResponse = disposalService.search(disposalSearchContract);
 		return new ResponseEntity(disposalResponse,HttpStatus.OK);
 	}

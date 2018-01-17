@@ -39,7 +39,6 @@ public class DisposalSearchContract {
 	
 	private String sortBy;
 	
-	
-	
+	private String purpose;
 
 }

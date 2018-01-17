@@ -428,11 +428,27 @@ public class DisposalService extends DomainService {
 			listOfDisposals = pageDisposal.getPagedData();
 		if (!listOfDisposals.isEmpty())
 			for (Disposal disposal : listOfDisposals) {
+				ObjectMapper mapper = new ObjectMapper();
+				Map<String, Uom> uoms = getUoms(disposal.getTenantId(), mapper, new RequestInfo());
 				Pagination<DisposalDetail> pageDisposalDetail = disposalDetailJdbcRepository
 						.search(disposal.getDisposalNumber(), disposal.getTenantId());
 				List<DisposalDetail> listOfDisposalDetails = new ArrayList<>();
 				if (pageDisposalDetail != null)
 					listOfDisposalDetails = pageDisposalDetail.getPagedData();
+				if(disposalSearchContract.getPurpose() != null){
+					if(disposalSearchContract.getPurpose().equals("update")){
+				for(DisposalDetail disposalDetail : listOfDisposalDetails){
+					if (disposalDetail.getScrapDetails() != null && disposalDetail.getScrapDetails().getId() != null) {
+						ScrapDetailEntity entity = new ScrapDetailEntity();
+						entity.setId(disposalDetail.getScrapDetails().getId());
+						entity.setTenantId(disposal.getTenantId());
+                        disposalDetail.setScrapDetails(scrapDetailJdbcRepository.findById(entity) != null
+								? scrapDetailJdbcRepository.findById(entity).toDomain() : null);
+					}
+					disposalDetail.setPendingScrapQuantity(getSearchConvertedQuantity(disposalDetail.getScrapDetails().getQuantity().subtract(disposalDetail.getScrapDetails().getDisposalQuantity()).add(disposalDetail.getDisposalQuantity()), uoms.get(disposalDetail.getUom().getCode()).getConversionFactor()));
+				}
+					}
+				}
 				disposal.setDisposalDetails(listOfDisposalDetails);
 			}
 		DisposalResponse disposalResponse = new DisposalResponse();

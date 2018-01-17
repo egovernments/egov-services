@@ -1045,7 +1045,7 @@ ReportDefinitions:
     source: asset
     searchClause : AND asset.originalvalue<=$originalvalueto
     isMandatory: false
- - name: fromDate
+  - name: fromDate
     label: reports.asset.fromDate
     type: date
     source: asset

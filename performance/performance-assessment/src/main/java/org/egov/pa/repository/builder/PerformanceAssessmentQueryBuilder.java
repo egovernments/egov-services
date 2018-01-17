@@ -376,7 +376,7 @@ public class PerformanceAssessmentQueryBuilder {
             preparedStatementValues.add(kpiGetRequest.getDepartmentId());
         }
         
-        if (null != kpiGetRequest.getCategoryId() && kpiGetRequest.getCategoryId() > 0) { 
+        if (StringUtils.isNotBlank(kpiGetRequest.getCategoryId())) { 
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.category = ? ");
             preparedStatementValues.add(kpiGetRequest.getCategoryId());

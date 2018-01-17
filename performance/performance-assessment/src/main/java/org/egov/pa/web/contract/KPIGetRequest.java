@@ -21,7 +21,7 @@ public class KPIGetRequest {
 	private String kpiCode;
 	private String tenantId;
 	private Long departmentId;
-	private Long categoryId;
+	private String categoryId;
 	private String pageSize;
 	private String pageNumber;
 	private String sort;

@@ -547,15 +547,6 @@ public class PurchaseOrderService extends DomainService {
                             	errors.addDataError(ErrorCode.NOT_NULL.getCode(), "rateContract", "null");                            	
                             }
 
-                            PriceListEntity ple = PriceListEntity.builder().build();
-                            
-                            if(purchaseOrderDetail.getPriceList() != null)
-                            	ple = priceListjdbcRepository.findById(PriceListEntity.builder().id(purchaseOrderDetail.getPriceList().getId()).tenantId(purchaseOrderDetail.getTenantId()).build());
-
-                            //RateContract reference validation
-                            if (ple == null || ple.getId() == null) {
-                                errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "priceList", null);
-                            }
                         }
                     indentNumbers.replaceAll(",$", "");
 
@@ -936,18 +927,24 @@ public class PurchaseOrderService extends DomainService {
     }
     
 	private void populatePriceListDetails(PurchaseOrderDetail purchaseOrderDetail) {
+		 InvalidDataException errors = new InvalidDataException();
 		if (purchaseOrderDetail.getPriceList() != null) {
-			if (!isEmpty(purchaseOrderDetail.getPriceList().getRateContractNumber())&& purchaseOrderDetail.getPriceList().getRateContractNumber() != null) {
-				PriceListSearchRequest pls = PriceListSearchRequest.builder().rateContractNumber(purchaseOrderDetail.getPriceList().getRateContractNumber()).build();
-				PriceList pl = priceListjdbcRepository.search(pls).getPagedData().get(0);
-				for (Iterator<PriceListDetails> iterator = pl.getPriceListDetails().iterator(); iterator.hasNext();) {
-					PriceListDetails pld = iterator.next();
-					if (!pld.getMaterial().getCode().equals(purchaseOrderDetail.getMaterial().getCode())) {
-						iterator.remove();
-					}
-				}
-				purchaseOrderDetail.setPriceList(pl);
+			if (purchaseOrderDetail.getPriceList().getRateContractNumber() != null
+					&& !isEmpty(purchaseOrderDetail.getPriceList().getRateContractNumber())  && purchaseOrderDetail.getMaterial()!=null && purchaseOrderDetail.getMaterial().getCode()!=null) {
+				List<PriceList> priceLists = priceListjdbcRepository.search(PriceListSearchRequest.builder()
+						.rateContractNumber(purchaseOrderDetail.getPriceList().getRateContractNumber())
+						.materialCode(purchaseOrderDetail.getMaterial().getCode()).build()).getPagedData();
+				if (!priceLists.isEmpty())
+					purchaseOrderDetail.setPriceList(priceLists.get(0));
+				else
+	                 errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "priceList", null);
+
 			}
+			else
+			{
+                 errors.addDataError(ErrorCode.INVALID_REF_VALUE.getCode(), "priceList", null);
+                 throw errors;
+             }
 		}
 	}
 

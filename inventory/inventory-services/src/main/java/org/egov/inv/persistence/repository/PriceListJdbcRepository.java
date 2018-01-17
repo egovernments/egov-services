@@ -443,6 +443,9 @@ public class PriceListJdbcRepository extends JdbcRepository {
             pdlsr.setPriceList(id);
             pdlsr.setDeleted(false);
             sgr.setCode(Arrays.asList(supCode));
+            if (priceListSearchRequest.getMaterialCode() != null) {
+            	pdlsr.setMaterial(priceListSearchRequest.getMaterialCode());
+            }
             pdlsr.setTenantId(priceListEntity.getTenantId());
             pl.setPriceListDetails(priceListDetailJdbcRepository.search(pdlsr).getPagedData());
             pl.setSupplier(supplierJdbcRepository.search(sgr).getPagedData().size() > 0 ? supplierJdbcRepository.search(sgr).getPagedData().get(0) : null);

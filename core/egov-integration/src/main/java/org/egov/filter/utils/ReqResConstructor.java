@@ -22,6 +22,7 @@ import org.egov.filter.pre.AuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,12 @@ public class ReqResConstructor {
 	
 	@Autowired
 	private ResponseFieldDataConverterUtil responseFieldDataConverterUtil;
+	
+	@Autowired
+	private APIAuthTokenService apiAuthTokenService; 
+	
+	@Autowired
+	private AuthFilter authFilter;
 
 	public void constructRequest(Service service, RequestContext ctx) {
 
@@ -235,7 +242,12 @@ public class ReqResConstructor {
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
-
+		
+		HttpStatus httpStatus = res.getStatusCode();
+		if (httpStatus.equals(HttpStatus.UNAUTHORIZED)) {
+			AuthFilter.setAuthToken(apiAuthTokenService.getAuthToken());
+			doServiceCall(url, body);
+		}
 		log.info("res:" + res.getBody());
 		// System.out.println("documentContext:" + documentContext.jsonString());
 		return res.getBody();

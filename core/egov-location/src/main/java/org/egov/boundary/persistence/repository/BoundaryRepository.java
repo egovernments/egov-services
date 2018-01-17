@@ -55,6 +55,8 @@ import org.egov.boundary.web.contract.MdmsBoundary;
 import org.egov.boundary.web.contract.MdmsTenantBoundary;
 import org.egov.boundary.web.contract.TenantBoundary;
 import org.egov.common.contract.request.RequestInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -68,6 +70,8 @@ import net.minidev.json.JSONArray;
 
 @Repository
 public class BoundaryRepository {
+	
+	public static final Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private JdbcTemplate jdbcTemplate;
@@ -336,12 +340,15 @@ public class BoundaryRepository {
 	
 	public List<MdmsTenantBoundary> getBoundariesByTenantAndHierarchyType(BoundarySearchRequest boundarySearchRequest,
 			RequestInfo requestInfo) {
-
+		Long startTime = null;
+		Long endTime = null;
 		JSONArray responseJSONArray;
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
+		startTime = new Date().getTime();
 		responseJSONArray = mdmsRepository.getByCriteria(boundarySearchRequest.getTenantId(),boundarySearchRequest.getHierarchyTypeName(), requestInfo);
+		endTime = new Date().getTime();
+		logger.info("Mdms Rest Call time taken  " + (endTime - startTime)+" ms");
 		List<TenantBoundary> tenantBoundary = null;
 		if (responseJSONArray != null && responseJSONArray.size() > 0) {
 			tenantBoundary = mapper.convertValue(responseJSONArray, new TypeReference<List<TenantBoundary>>() {
@@ -405,6 +412,22 @@ public class BoundaryRepository {
 				boundaryList.add(boundary12);
 			}
 			}
+			List<MdmsBoundary> boundaryList3 = new ArrayList<>();
+			if (boundaryList2 != null && !boundaryList2.isEmpty()) {
+				for (MdmsBoundary bndry : boundaryList2) {
+					if (bndry.getChildren() != null) {
+						for (MdmsBoundary bndry1 : bndry.getChildren()) {
+							boundaryList3.add(bndry1);
+						}
+					}
+				}
+			}
+			if(boundaryList3!=null && !boundaryList3.isEmpty()){
+			for(MdmsBoundary boundary12 : boundaryList3){
+				boundaryList.add(boundary12);
+			}
+			}
+			
 			return boundaryList;
 	}
 }

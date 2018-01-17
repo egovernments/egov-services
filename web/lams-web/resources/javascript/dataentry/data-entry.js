@@ -81,7 +81,7 @@ $(document).ready(function() {
   onLoadAsset();
 
   //basis of allotment API call
-  var basisOfAllotment = [{label:'Goodwill Auction Basis',value:'Goodwill Auction Basis'},{label:'Normal Basis',value:'Normal Basis'}];
+  var basisOfAllotment = [{label:'Goodwill Auction Basis',value:'GOODWILLAUCTIONBASIS'},{label:'Normal Basis',value:'NORMALBASIS'}];
   $.each(basisOfAllotment, function (idx, basis){
     $("#basisOfAllotment").append($("<option />").val(basis.value).text(basis.label));
   });
@@ -89,7 +89,7 @@ $(document).ready(function() {
   //cattegory API call
   var category = [{label:'SC',value:'SC'},{label:'ST',value:'ST'},{label:'Physically Handicapped',value:'Physically Handicapped'},{label:'SHG Member',value:'SHG Member'},{label:'Nayi Brahmin',value:'Nayi Brahmin'},{label:'Member of Washermen’s Co-opertative Society',value:'Member of Washermen’s Co-opertative Society'}];
   $.each(category, function (idx, cat){
-    $("#category").append($("<option />").val(cat.value).text(cat.label));
+    $("#reservationCategory").append($("<option />").val(cat.value).text(cat.label));
   });
 
   // methos for renewal of rent API
@@ -189,9 +189,9 @@ $(document).ready(function() {
     }
 
     // update natureOfAllotment dropdown
-    $('#natureOfAllotment, #renewalOfRent').find('option').remove().end().append('<option value="">Select</option>');
+    $('#natureOfAllotment, #rentIncrementMethod').find('option').remove().end().append('<option value="">Select</option>');
     fillValueToObject({id:'natureOfAllotment',name:'natureOfAllotment',value:''});
-    fillValueToObject({id:'renewalOfRent',name:'renewalOfRent',value:''});
+    fillValueToObject({id:'rentIncrementMethod',name:'rentIncrementMethod',value:''});
     if(this.value === 'goodwillauction'){
       $(`#natureOfAllotment`).append(`<option value='AUCTION'>AUCTION</option>`);
     }else if(this.value === 'normal'){
@@ -202,8 +202,8 @@ $(document).ready(function() {
 
     var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:this.value}).responseJSON;
     $.each(renewalOfRent, function (idx, rent){
-      console.log(rent.id, rent.percentage);
-      $("#renewalOfRent").append($("<option />").val(rent.id).text(rent.percentage+'%'));
+      // console.log(rent.id, rent.percentage);
+      $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.percentage+'%'));
     });
 
   });
@@ -224,7 +224,7 @@ $(document).ready(function() {
  });
 
  function dependentonBasisTime(basis, time){
-   if(basis === 'goodwillauction'){
+   if(basis === 'GOODWILLAUCTIONBASIS'){
      if(time <= 5){
        $('#governmentOrder').hide();
        clearGovernment();
@@ -234,7 +234,7 @@ $(document).ready(function() {
        clearMunicipal();
        $('#governmentOrder').show();
      }
-   }else if(basis === 'normal'){
+   }else if(basis === 'NORMALBASIS'){
      if(time <= 3){
        $('#governmentOrder').hide();
        clearGovernment();
@@ -445,10 +445,10 @@ var commomFieldsRules = {
     basisOfAllotment: {
         required: true
     },
-    renewalOfRent: {
+    "rentIncrementMethod": {
         required: true
     },
-    category: {
+    reservationCategory: {
         required: true
     },
     rent: {
@@ -464,9 +464,9 @@ var commomFieldsRules = {
     approverName: {
         required: false
     },
-    rentIncrementMethod: {
-        required: (decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "land" || decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shop") ? true : false
-    },
+    // rentIncrementMethod: {
+    //     required: (decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "land" || decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shop") ? true : false
+    // },
     remarks: {
         required: false
     },
@@ -509,20 +509,6 @@ var commomFieldsRules = {
       'mm/yyyy' : true
     }
 };
-
-// try {
-//     rentInc = commonApiPost("lams-services", "getrentincrements", "", {
-//         tenantId
-//     }).responseJSON;
-//
-//     if (rentInc && rentInc.constructor == Array) {
-//         for (var i = 0; i < rentInc.length; i++) {
-//             $(`#rentIncrementMethod`).append(`<option value='${rentInc[i]['id']}'>${rentInc[i]['percentage']}</option>`)
-//         }
-//     }
-// } catch (e) {
-//     console.log(e);
-// }
 
 // finalValidatinRules = Object.assign(validationRules, commomFieldsRules);
 finalValidatinRules = Object.assign({}, commomFieldsRules);
@@ -651,9 +637,9 @@ finalValidatinRules["messages"] = {
     // paymentCycle: {
     //     required: true
     // },
-    rentIncrementMethod: {
-        required: decodeURIComponent(getUrlVars()["type"]) == "land" || decodeURIComponent(getUrlVars()["type"]) == "shop" ? "Select increase in monthly rent at the time of renewal" : ""
-    },
+    // rentIncrementMethod: {
+    //     required: decodeURIComponent(getUrlVars()["type"]) == "land" || decodeURIComponent(getUrlVars()["type"]) == "shop" ? "Select increase in monthly rent at the time of renewal" : ""
+    // },
     // remarks: {
     //     required: "Enter Remarks if any"
     // },

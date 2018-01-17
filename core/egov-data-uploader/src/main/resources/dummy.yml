@@ -15,4 +15,4 @@ UploadDefinitions:
    tenantIdPaths: []
    uri: /asset-services-maha/assets/_create
    uniqueKeysForInnerObject: ["Company"]
-   additionalResFields: []
+   additionalResFields:

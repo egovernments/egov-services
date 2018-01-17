@@ -11,6 +11,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import org.egov.inv.model.IndentSearch;
 import org.egov.inv.model.Material;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
+import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.PurchaseIndentDetail;
 import org.egov.inv.model.PurchaseOrder;
 import org.egov.inv.model.PurchaseOrder.PurchaseTypeEnum;
@@ -125,7 +127,7 @@ public class PurchaseOrderService extends DomainService {
 
     @Autowired
     private MaterialReceiptJdbcRepository materialJdbcRepository;
-
+    
     @Autowired
     private MdmsRepository mdmsRepository;
 
@@ -148,6 +150,7 @@ public class PurchaseOrderService extends DomainService {
         		{
         			 Uom uom=getUom(tenantId, purchaseOrderDetail.getUom().getCode(), purchaseOrderRequest.getRequestInfo())	;
          		     purchaseOrderDetail.setUom(uom);
+         		     populatePriceListDetails(purchaseOrderDetail);
         			 if (purchaseOrderDetail.getUserQuantity() != null) {
                          purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getUserQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
                      }
@@ -317,6 +320,7 @@ public class PurchaseOrderService extends DomainService {
         		{
         		    Uom uom=getUom(tenantId, purchaseOrderDetail.getUom().getCode(), purchaseOrderRequest.getRequestInfo())	;
         		    purchaseOrderDetail.setUom(uom);
+        		    populatePriceListDetails(purchaseOrderDetail);
         			 if (purchaseOrderDetail.getUserQuantity() != null) {
                          purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getUserQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
                      }
@@ -930,5 +934,20 @@ public class PurchaseOrderService extends DomainService {
         String s2 = format.format(epoch);
         return s2;
     }
+    
+	private void populatePriceListDetails(PurchaseOrderDetail purchaseOrderDetail) {
+		if (purchaseOrderDetail.getPriceList() != null) {
+			if (!isEmpty(purchaseOrderDetail.getPriceList().getRateContractNumber())&& purchaseOrderDetail.getPriceList().getRateContractNumber() != null) {
+				PriceListSearchRequest pls = PriceListSearchRequest.builder().rateContractNumber(purchaseOrderDetail.getPriceList().getRateContractNumber()).build();
+				PriceList pl = priceListjdbcRepository.search(pls).getPagedData().get(0);
+				for (Iterator<PriceListDetails> iterator = pl.getPriceListDetails().iterator(); iterator.hasNext();) {
+					PriceListDetails pld = iterator.next();
+					if (!pld.getMaterial().getCode().equals(purchaseOrderDetail.getMaterial().getCode())) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+	}
 
 }

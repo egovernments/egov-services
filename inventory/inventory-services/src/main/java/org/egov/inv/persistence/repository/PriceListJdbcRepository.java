@@ -268,8 +268,10 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
                 paramValues.put("asOnDate", priceListSearchRequest.getAsOnDate());
             } else*/ if (priceListSearchRequest.getMaterialCode() != null) {
-                params.append(
-                        "  and id in ( select pricelist from pricelistdetails " + "where material=:materialCode )  ");
+            	if (params.length() > 0) {
+                    params.append(" and ");
+                }
+                params.append(" id in ( select pricelist from pricelistdetails " + "where material=:materialCode )  ");
                 paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
             }/* else if (priceListSearchRequest.getAsOnDate() != null) {
                 params.append(" and id in ( select pricelist from pricelistdetails "

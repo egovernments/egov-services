@@ -10,7 +10,9 @@ import java.util.List;
 
 import org.egov.lams.TestConfiguration;
 import org.egov.lams.model.RentIncrementType;
+import org.egov.lams.model.ReservationCategory;
 import org.egov.lams.repository.RentIncrementRepository;
+import org.egov.lams.service.AgreementMasterService;
 import org.egov.lams.util.FileUtils;
 import org.egov.lams.web.contract.factory.ResponseInfoFactory;
 import org.junit.Test;
@@ -36,6 +38,9 @@ public class LamsMasterControllerTest {
 	
 	@MockBean
 	private RentIncrementRepository rentIncrementService;
+	
+	@MockBean
+	private AgreementMasterService agreementMasterService;
 
 	@Test
 	public void test_Should_Return_Status() throws Exception{
@@ -89,5 +94,21 @@ public class LamsMasterControllerTest {
 
 	private String getFileContents(String fileName) throws IOException {
 		return new FileUtils().getFileContents(fileName);
+	}
+	
+	@Test
+	public void test_Should_return_Reservation_Categories() throws Exception {
+		List<ReservationCategory> reservationCategories = new ArrayList<>();
+		ReservationCategory reservationCategory = new ReservationCategory();
+		reservationCategory.setCode("SC");
+		reservationCategory.setName("Scheduled Caste");
+		reservationCategory.setIsactive(true);
+		reservationCategory.setTenantId("default");
+		reservationCategories.add(reservationCategory);
+		
+		when(agreementMasterService.getReservationCategories(reservationCategory.getTenantId())).thenReturn(reservationCategories);
+
+		mockMvc.perform(get("/getreservations?tenantId=" + reservationCategory.getTenantId()))
+				.andExpect(status().isOk()).andExpect(content().json(getFileContents("reservations.json")));
 	}
 }

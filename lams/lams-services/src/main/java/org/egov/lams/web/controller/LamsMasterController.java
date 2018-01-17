@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.lams.model.RentIncrementType;
+import org.egov.lams.model.ReservationCategory;
 import org.egov.lams.model.enums.NatureOfAllotment;
 import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.RentIncrementRepository;
+import org.egov.lams.service.AgreementMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class LamsMasterController {
 
 	@Autowired
-	RentIncrementRepository RentIncrementService;
+	private RentIncrementRepository RentIncrementService;
+	
+	@Autowired
+	private AgreementMasterService agreementMasterService;
 
 	@RequestMapping(value = "/getstatus")
 	public Map<String, Status> getSatusEnum() {
@@ -61,6 +66,11 @@ public class LamsMasterController {
 	public List<RentIncrementType> rentIncrementService(@RequestParam("tenantId") String tenantId,
 			@RequestParam("basisOfAllotment") String basisOfAllotment) {
 		return RentIncrementService.getRentIncrements(tenantId, basisOfAllotment);
+	}
+	
+	@RequestMapping(value = "/getreservations")
+	public List<ReservationCategory> getReservations(@RequestParam("tenantId") String tenantId) {
+		return agreementMasterService.getReservationCategories(tenantId);
 	}
 	
 }

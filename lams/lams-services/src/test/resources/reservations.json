@@ -1,0 +1,9 @@
+[
+  {
+    "id": null,
+    "code": "SC",
+    "name": "Scheduled Caste",
+    "isactive": true,
+    "tenantId": "default"
+  }
+]

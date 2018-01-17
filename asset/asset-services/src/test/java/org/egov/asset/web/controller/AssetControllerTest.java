@@ -509,7 +509,7 @@ public class AssetControllerTest {
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 		asset.setStatus(Status.CREATED.toString());
 		asset.setDescription(null);
-		asset.setDateOfCreation(null);
+		asset.setDateOfCreation(1504549800000l);
 
 		final Location location = new Location();
 		location.setLocality(4l);

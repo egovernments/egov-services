@@ -2012,11 +2012,11 @@ class CreateAsset extends React.Component {
                     <div className="col-sm-6">
                         <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="description">Date Of Creation</label>
+                              <label for="description">Date Of Creation<span> *</span> </label>
                           </div>
                           <div className="col-sm-6">
                               <input type="text" id="dateOfCreation" className="datepicker" name="dateOfCreation" value= {dateOfCreation}
-                                onChange={(e)=>{handleChange(e,"dateOfCreation")}}  disabled={readonly || getUrlVars()["type"] == "update"}/>
+                                onChange={(e)=>{handleChange(e,"dateOfCreation")}}  required disabled={readonly || getUrlVars()["type"] == "update"}/>
                           </div>
 
                         </div>

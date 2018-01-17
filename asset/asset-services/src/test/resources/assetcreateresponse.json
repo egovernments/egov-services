@@ -32,7 +32,7 @@
     "modeOfAcquisition": "ACQUIRED",
     "status": "CREATED",
     "description": null,
-    "dateOfCreation": null,
+    "dateOfCreation": 1504549800000,
     "locationDetails": {
       "locality": 4,
       "zone": null,

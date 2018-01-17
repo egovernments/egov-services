@@ -86,6 +86,7 @@ public class Asset {
     private String status;
     private String description;
 
+    @NotNull
     private Long dateOfCreation;
 
     private Location locationDetails;

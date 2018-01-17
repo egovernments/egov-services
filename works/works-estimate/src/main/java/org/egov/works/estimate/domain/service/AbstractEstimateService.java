@@ -241,6 +241,7 @@ public class AbstractEstimateService {
             details.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));
         for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails())
             assetDetail.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));
+        if(estimate.getDocumentDetails() != null && !estimate.getDocumentDetails().isEmpty())
         for (final DocumentDetail documentDetail : estimate.getDocumentDetails())
             documentDetail.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));
         estimate.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));

@@ -335,7 +335,7 @@ serviceMaps:
               type: LONG
             - type: CURRENTDATE
               dbType: LONG
-        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId,tenantId,receivedDate, lotNo,oldReceiptNumber,expiryDate,serialno )VALUES ( ?,?, ?, ?, ?, ?, ?,?);
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId,tenantId,receivedDate, lotNo,oldReceiptNumber,expiryDate,userquantity,quantity,serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
@@ -345,6 +345,8 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.oldReceiptNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userquantity
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
               type: LONG
@@ -379,9 +381,9 @@ serviceMaps:
             - type: CURRENTDATE
               dbType: LONG
 
-        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo,oldReceiptNumber, expiryDate, serialno)
-                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
-                 lotNo = EXCLUDED.lotNo, oldReceiptNumber = EXCLUDED.oldReceiptNumber,
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo,oldReceiptNumber, expiryDate,userquantity,quantity, serialno)
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 lotNo = EXCLUDED.lotNo, oldReceiptNumber = EXCLUDED.oldReceiptNumber,userquantity = EXCLUDED.userquantity,quantity = EXCLUDED.quantity,
                  expiryDate = EXCLUDED.expiryDate ;
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:
@@ -392,6 +394,8 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.oldReceiptNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userquantity
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
               type: LONG

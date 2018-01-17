@@ -93,13 +93,22 @@ public class OpeningBalanceService extends DomainService {
 						if (isEmpty(detail.getTenantId())) {
 							detail.setTenantId(tenantId);
 						}
-						if (null != detail.getReceiptDetailsAddnInfo()) {
+						if (null != detail.getReceiptDetailsAddnInfo() || detail.getReceiptDetailsAddnInfo().size() > 0 ) {
 							detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
+								if(!(isEmpty(addinfo.getLotNo()) && isEmpty(addinfo.getExpiryDate()) && isEmpty(addinfo.getOldReceiptNumber())&& isEmpty(addinfo.getReceivedDate()) && isEmpty(addinfo.getOldReceiptNumber()))){          
 								addinfo.setId(jdbcRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
+								addinfo.setUserQuantity(detail.getUserReceivedQty());
+								addinfo.setQuantity(detail.getReceivedQty());
 								if (isEmpty(addinfo.getTenantId())) {
 									addinfo.setTenantId(tenantId);
 								}
-							});
+								}	else{
+									detail.setReceiptDetailsAddnInfo(Collections.EMPTY_LIST);
+								}
+
+								});
+						}else{
+							detail.setReceiptDetailsAddnInfo(Collections.EMPTY_LIST);
 						}
 					});
 				}
@@ -133,14 +142,22 @@ public class OpeningBalanceService extends DomainService {
 						setMaterialDetails(tenantId, detail);
 					}
 					materialReceiptDetailIds.add(detail.getId());
-
+					if (null != detail.getReceiptDetailsAddnInfo()) {
 					detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
+						if(!(isEmpty(addinfo.getLotNo()) && isEmpty(addinfo.getExpiryDate()) && isEmpty(addinfo.getOldReceiptNumber())&& isEmpty(addinfo.getReceivedDate()) && isEmpty(addinfo.getOldReceiptNumber()))){          
 						if (isEmpty(addinfo.getTenantId())) {
 							addinfo.setTenantId(tenantId);
+							addinfo.setQuantity(detail.getReceivedQty());
+							addinfo.setUserQuantity(detail.getUserReceivedQty());
 						}
 						materialReceiptDetailAddlnInfoIds.add(addinfo.getId());
-
+						}	else{
+							detail.setReceiptDetailsAddnInfo(Collections.EMPTY_LIST);
+						}
 					});
+					}else{
+						detail.setReceiptDetailsAddnInfo(Collections.EMPTY_LIST);
+					}
 					jdbcRepository.markDeleted(materialReceiptDetailAddlnInfoIds, tenantId, "materialreceiptdetailaddnlinfo", "receiptdetailid", detail.getId());
 
 					jdbcRepository.markDeleted(materialReceiptDetailIds, tenantId, "materialreceiptdetail", "mrnNumber", materialReceipt.getMrnNumber());

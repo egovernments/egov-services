@@ -42,30 +42,6 @@ ReportDefinitions:
     type: number
     source: asset
   searchParams:
-  - name: fromDate
-    label: reports.asset.fromDate
-    type: date
-    source: asset
-    searchClause : AND asset.createddate>=$fromDate
-    isMandatory: false
-  - name: toDate
-    label: reports.asset.toDate
-    type: date
-    source: asset
-    searchClause : AND asset.createddate<=$toDate
-    isMandatory: false
-  - name: originalvaluefrom
-    label: reports.asset.originalvaluefrom
-    type: number
-    source: asset
-    searchClause : AND asset.originalvalue>=$originalvaluefrom
-    isMandatory: false
-  - name: originalvalueto
-    label: reports.asset.originalvalueto
-    type: number
-    source: asset
-    searchClause : AND asset.originalvalue<=$originalvalueto
-    isMandatory: false
   - name: assetcategory
     label: reports.asset.assetCategory
     isMandatory: false
@@ -93,18 +69,44 @@ ReportDefinitions:
     stateData: true
     wrapper: true
     searchClause : AND asset.departmentcode=$department
-  - name: name
-    label: reports.asset.name
-    type: string
-    isMandatory: false
-    source: asset
-    searchClause : AND asset.name ilike $name
   - name: code
     label: reports.asset.code
     type: string
     isMandatory: false
     source: asset
     searchClause : AND asset.code in ($code)
+  - name: name
+    label: reports.asset.name
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.name ilike $name
+  - name: originalvaluefrom
+    label: reports.asset.originalvaluefrom
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue>=$originalvaluefrom
+    isMandatory: false
+  - name: originalvalueto
+    label: reports.asset.originalvalueto
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue<=$originalvalueto
+    isMandatory: false
+  - name: fromDate
+    label: reports.asset.fromDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate>=$fromDate
+    isMandatory: false
+  - name: toDate
+    label: reports.asset.toDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate<=$toDate
+    isMandatory: false
+  
+ 
 
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,

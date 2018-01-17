@@ -218,6 +218,7 @@ public class ReqResConstructor {
 
 	public String doServiceCall(String url, String body) {
 
+		authToken = AuthFilter.getAuthToken();
 		log.info("ulr:" + url + "  ,  " + "body:" + body);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + authToken);

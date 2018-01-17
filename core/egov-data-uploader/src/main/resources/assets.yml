@@ -25,3 +25,4 @@ UploadDefinitions:
    tenantIdPaths: ["$.Asset.tenantId"]
    uri: /asset-services-maha/assets/_create
    additionalResFields:
+   templateFileName: Immovable_Asset_Template.xls

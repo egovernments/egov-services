@@ -946,6 +946,7 @@ public class PurchaseOrderService extends DomainService {
 						iterator.remove();
 					}
 				}
+				purchaseOrderDetail.setPriceList(pl);
 			}
 		}
 	}

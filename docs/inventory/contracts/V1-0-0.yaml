@@ -509,6 +509,11 @@ paths:
             in: query
             description: |
               supplier code of the PurchaseOrder
+          - name: searchPoAdvReq
+            in: query
+            description: |
+              If this flag is truue, then po's eligible for advance requisition will be searched.
+            type: boolean
           - name: status
             type: string
             in: query

@@ -31,6 +31,7 @@ public class PurchaseOrderSearch {
 	private String remarks;
 	private String status;
 	private String fileStoreId;
+	private Boolean searchPoAdvReq;
 	private String designation;
 	private Long stateId;
 	private Integer pageSize;

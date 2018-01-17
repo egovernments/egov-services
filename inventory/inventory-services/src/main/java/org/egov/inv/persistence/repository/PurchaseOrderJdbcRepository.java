@@ -200,6 +200,9 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	
 	public Pagination<PurchaseOrder> search(PurchaseOrderSearch purchaseOrderSearch) {
 
+		if(purchaseOrderSearch.getSearchPoAdvReq())
+			return searchPOsForAdvanceRequisition(purchaseOrderSearch.getTenantId());
+		
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
 		Map<String, Object> paramValues = new HashMap<>();

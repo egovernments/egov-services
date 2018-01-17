@@ -81,15 +81,15 @@ $(document).ready(function() {
   onLoadAsset();
 
   //basis of allotment API call
-  var basisOfAllotment = [{label:'Goodwill Auction Basis',value:'GOODWILLAUCTIONBASIS'},{label:'Normal Basis',value:'NORMALBASIS'}];
+  var basisOfAllotment = [{label:'Goodwill Auction Basis',value:'Goodwill Auction Basis'},{label:'Normal Basis',value:'Normal Basis'}];
   $.each(basisOfAllotment, function (idx, basis){
     $("#basisOfAllotment").append($("<option />").val(basis.value).text(basis.label));
   });
 
-  //cattegory API call
-  var category = [{label:'SC',value:'SC'},{label:'ST',value:'ST'},{label:'Physically Handicapped',value:'Physically Handicapped'},{label:'SHG Member',value:'SHG Member'},{label:'Nayi Brahmin',value:'Nayi Brahmin'},{label:'Member of Washermen’s Co-opertative Society',value:'Member of Washermen’s Co-opertative Society'}];
+  //category API call
+  var category = commonApiPost("lams-services", "getreservations", "", {tenantId}).responseJSON;
   $.each(category, function (idx, cat){
-    $("#reservationCategory").append($("<option />").val(cat.value).text(cat.label));
+    $("#reservationCategory").append($("<option />").val(cat.id).text(cat.name));
   });
 
   // methos for renewal of rent API
@@ -224,7 +224,7 @@ $(document).ready(function() {
  });
 
  function dependentonBasisTime(basis, time){
-   if(basis === 'GOODWILLAUCTIONBASIS'){
+   if(basis === 'Goodwill Auction Basis'){
      if(time <= 5){
        $('#governmentOrder').hide();
        clearGovernment();
@@ -234,7 +234,7 @@ $(document).ready(function() {
        clearMunicipal();
        $('#governmentOrder').show();
      }
-   }else if(basis === 'NORMALBASIS'){
+   }else if(basis === 'Normal Basis'){
      if(time <= 3){
        $('#governmentOrder').hide();
        clearGovernment();

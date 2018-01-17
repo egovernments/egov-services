@@ -347,8 +347,11 @@ public class DataUploadService {
 		    	
 		    }
 		    
-		    writeToExcelForParentChild(failureMessage, apiResponse, failureCount, successCount, 
+		    List<Integer> successFailureCounts = writeToExcelForParentChild(failureMessage, apiResponse, failureCount, successCount, 
 		    		resultFilePath, resJsonPathList, filteredList);
+		    
+		    failureCount = successFailureCounts.get(0);
+		    successCount = successFailureCounts.get(1);
 		    
 	    	//counter is incremented based on no of rows processed in this iteration.
 			i+=(filteredList.size() - 1);
@@ -571,8 +574,9 @@ public class DataUploadService {
 	    return original;
 	}
 	
-	public void writeToExcelForParentChild(String failureMessage, Object apiResponse, int failureCount, int successCount, 
+	public List<Integer> writeToExcelForParentChild(String failureMessage, Object apiResponse, int failureCount, int successCount, 
 			String resultFilePath, List<Object> resJsonPathList, List<List<Object>> filteredList) throws Exception {
+		List<Integer> successFailureCounts = new ArrayList<>();
 	    if(null != failureMessage && !failureMessage.isEmpty()) {
 	    	for(List<Object> row: filteredList) {
 		    	if(null != resJsonPathList){
@@ -613,5 +617,10 @@ public class DataUploadService {
 				dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 	    	}
 	    }
+	    
+		successFailureCounts.add(failureCount);
+		successFailureCounts.add(successCount);
+		
+	    return successFailureCounts;
 	}
 }

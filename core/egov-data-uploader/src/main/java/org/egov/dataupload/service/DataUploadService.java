@@ -72,6 +72,9 @@ public class DataUploadService {
 	@Value("${response.file.name.prefix}")
 	private String resFilePrefix;
 	
+	@Value("${template.download.prefix}")
+	private String templateFilePrefix;
+	
 	@Autowired
 	private DataUploadProducer dataUploadProducer;
 	
@@ -403,7 +406,8 @@ public class DataUploadService {
 			List<Defs> definitions = new ArrayList<>();
 			UploadDefinition uploadDefinition = entry.getValue();
 			for(Definition definition: uploadDefinition.getDefinitions()){
-				Defs def = Defs.builder().name(definition.getDefName()).build();
+				Defs def = Defs.builder().name(definition.getDefName()).
+						   templatePath(templateFilePrefix + "/" + definition.getTemplateFileName()).build();
 				definitions.add(def);
 			}
 			moduleDefs.setDefinitions(definitions);

@@ -54,4 +54,9 @@ public class Definition {
 	@JsonProperty("additionalResFields")
 	private Map<String, String> additionalResFields;
 	
+	@JsonProperty("templateFileName")
+	private String templateFileName;
+	
+	
+	
 }

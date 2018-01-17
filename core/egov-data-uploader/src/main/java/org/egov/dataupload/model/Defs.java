@@ -22,4 +22,8 @@ public class Defs {
 	
 	@JsonProperty("code")
 	private String code;
+	
+	@JsonProperty("templatePath")
+	private String templatePath;
+	
 }

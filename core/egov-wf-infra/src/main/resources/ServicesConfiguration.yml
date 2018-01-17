@@ -1,0 +1,66 @@
+processInstanceBody: '{"requestInfo":{0},"processInstances":[],"processInstance":{"id":null,"businessKey":{1},"type":{2},"assignee":{"id":{3},"name":null,"deptdesig":null,"isPostOutsourced":null,"active":null},"comments":null,"createdDate":null,"lastupdatedSince":null,"owner":null,"state":null,"status":null,"senderName":null,"details":{4},"tasks":[],"tenantId":{5},"initiatorPosition":null,"attributes":null}}'
+
+taskBody: '{"requestInfo":{0},"tasks":[],"task":{"id": {1},"businessKey":{2},"type":{3},"assignee":{"id":{4},"name":null,"deptdesig":null,"isPostOutsourced":null,"active":null},"comments":{5},"createdDate":null,"lastupdatedSince":null,"owner":null,"state":null,"status":{6},"url":null,"action":{7},"senderName":null,"details":null,"natureOfTask":null,"entity":null,"tenantId":{8}}}'
+
+topicMap:
+ - fromTopic: start-land-wf
+   toTopic: persist-land
+   name: start work flow
+   description: start land register workflow
+   basePath: $.EstateRegisters.*
+   request:       
+    url: 'http://egov-micro-dev.egovernments.org/egov-common-workflows/process/_start'
+    urlParameters:
+    body: processInstanceBody
+    bodyParameters:
+      - jsonPath: $.RequestInfo
+        type: JSON
+        
+      - defaultValue: Create Estate
+      
+      - defaultValue: Create Estate
+      
+      - jsonPath: $.EstateRegisters[*].workFlowDetails.assignee
+      
+      - jsonPath: $.EstateRegisters[*].workFlowDetails.assignee
+      
+      - jsonPath: $.EstateRegisters[*].tenantId
+   
+   response:       
+    replaceableParameter:   
+      - name: stateId
+        jsonPath: $.EstateRegisters[*] = $.processInstance.id
+      
+ 
+ - fromTopic: update-land-wf
+   toTopic: update-land
+   name: update work flow
+   description: update land register workflow
+   basePath: $.EstateRegisters.*
+   request:       
+    url: 'http://egov-micro-dev.egovernments.org/egov-common-workflows/tasks/{stateId}/_update'
+    urlParameters:
+    pathParameters:
+      - name: stateId
+        jsonPath: $.EstateRegisters[*].stateId
+        
+    body: taskBody
+    bodyParameters:
+      - jsonPath: $.RequestInfo
+        type: JSON
+        
+      - jsonPath: $.EstateRegisters[*].stateId
+      
+      - defaultValue: Create Estate
+      
+      - defaultValue: Create Estate
+      
+      - jsonPath: $.EstateRegisters[*].workFlowDetails.assignee
+      
+      - jsonPath: $.EstateRegisters[*].workFlowDetails.comments
+      
+      - jsonPath: $.EstateRegisters[*].workFlowDetails.status
+      
+      - jsonPath: $.EstateRegisters[*].workFlowDetails.action
+      
+      - jsonPath: $.EstateRegisters[*].tenantId

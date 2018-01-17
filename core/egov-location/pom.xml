@@ -172,10 +172,6 @@
             <name>central</name>
             <url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
         </repository>
-        <repository>
-	      <id>Jrepo.egovernments.org</id>
-	      <url>repo.egovernments.org</url>
-        </repository>
     </repositories>
 
 	<build>

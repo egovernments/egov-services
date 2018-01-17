@@ -124,14 +124,12 @@ public class VehicleMaintenanceService {
                     if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0
                             || vehicleMaintenance.getDowntimeforMaintenance() > 30.0)
                         throw new CustomException("DowntimeForMaintenance",
-                                "Maintenance Downtime shall be between 0 and 720 hours OR between 1 and 30 days: "
-                                        + vehicleMaintenance.getDowntimeforMaintenance());
+                                "Maintenance downtime should be with in the range of 1 to 30 days or 0 to 720 hours.");
                 } else {
                     if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0
                             || vehicleMaintenance.getDowntimeforMaintenance() > 720.0)
                         throw new CustomException("DowntimeForMaintenance",
-                                "Maintenance Downtime shall be between 0 and 720 hours OR between 1 and 30 days: "
-                                        + vehicleMaintenance.getDowntimeforMaintenance());
+                                "Maintenance downtime should be with in the range of 1 to 30 days or 0 to 720 hours.");
                 }
             }
 

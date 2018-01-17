@@ -3,7 +3,7 @@
     "id": null,
     "code": "SC",
     "name": "Scheduled Caste",
-    "isactive": true,
+    "isActive": true,
     "tenantId": "default"
   }
 ]

@@ -74,6 +74,16 @@ public class QualityTestingJdbcRepository extends JdbcRepository {
             params.append("qt.id in(:ids) ");
             paramValues.put("ids", qualityTestingSearchContract.getIds());
         }
+        if (qualityTestingSearchContract.getFromDate() != null) {
+            addAnd(params);
+            params.append("qt.createdtime >=:fromDate");
+            paramValues.put("fromDate", qualityTestingSearchContract.getFromDate());
+        }
+        if (qualityTestingSearchContract.getToDate() != null) {
+            addAnd(params);
+            params.append("qt.createdtime <=:toDate");
+            paramValues.put("toDate", qualityTestingSearchContract.getToDate());
+        }
 
         List<String> loaIds = new ArrayList<>();
         if(qualityTestingSearchContract.getLoaNumbers() != null && !qualityTestingSearchContract.getLoaNumbers().isEmpty()) {

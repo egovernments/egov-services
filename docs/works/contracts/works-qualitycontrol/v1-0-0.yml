@@ -184,6 +184,20 @@ paths:
           required: false
           allowEmptyValue: true
           description: Work Identification Number
+        - name: fromDate
+          in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time from when the Quality object created
+        - name: toDate
+          in: query
+          type: integer
+          format: int64
+          x-displayformat: 'dd/MM/yyyy'
+          required: false
+          description: Epoch time till the Quality object created
       responses:
         200:
           description: Quality Testing(s) Retrieved Successfully

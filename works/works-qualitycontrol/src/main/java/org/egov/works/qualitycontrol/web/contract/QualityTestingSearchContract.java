@@ -41,5 +41,8 @@ public class QualityTestingSearchContract {
 
     private String workIdentificationNumberLike;
 
+    private Long fromDate;
+
+    private Long toDate;
 
 }

@@ -76,8 +76,8 @@ public class AssetService {
 
 	public AssetResponse createAsync(final AssetRequest assetRequest) {
 		final Asset asset = assetRequest.getAsset();
+		 List<LandDetail> landDetails=asset.getLandDetails();
 		
-		final List<LandDetail> landDetails=asset.getLandDetails();
 		if(landDetails!=null) {
 		for (LandDetail landDetail : landDetails) {
 			landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));
@@ -102,7 +102,7 @@ public class AssetService {
 		logAwareKafkaTemplate.send(appProps.getCreateAssetTopicNameTemp(), assetRequest);
 
 		CurrentValue currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId())
-				.transactionDate(asset.getDateOfCreation()).assetTranType(TransactionType.CREATE).build();
+				.transactionDate(asset.getOpeningDate()).assetTranType(TransactionType.CREATE).build();
 
 		BigDecimal grossValue = asset.getGrossValue();
 		BigDecimal accumulatedDepreciation = asset.getAccumulatedDepreciation();
@@ -148,12 +148,12 @@ public class AssetService {
 		
 		if(!(assetResponse.getAssets().get(0).getGrossValue().equals(asset.getGrossValue())))
 		     {
-			
-        System.err.println("if gross");
+		 System.err.println("if gross");
 		List<Long> assetCurrentvalue = currentValueService.getNonTransactedCurrentValues(assetIds, asset.getTenantId(), assetRequest.getRequestInfo());
 		if(assetCurrentvalue.contains(asset.getId()))
 		      {
-			currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId()).transactionDate(asset.getDateOfCreation()).assetTranType(TransactionType.CREATE).currentAmount(asset.getGrossValue()).build();
+			
+			currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId()).transactionDate(asset.getOpeningDate()).assetTranType(TransactionType.CREATE).currentAmount(asset.getGrossValue()).build();
     		assetCurrentValueList.add(currentValue);
             logAwareKafkaTemplate.send(appProps.getUpdateAssetTopicName(), KafkaTopicName.UPDATEASSET.toString(),
     				assetRequest);
@@ -166,7 +166,7 @@ public class AssetService {
 			     throw new CustomException(errorMap);
 		}else {
 			
-	           System.err.println("assetResponse.getAssets().get(0).getGrossValue()"+assetResponse.getAssets().get(0).getGrossValue());
+			   System.err.println("assetResponse.getAssets().get(0).getGrossValue()"+assetResponse.getAssets().get(0).getGrossValue());
 			
 		       System.err.println("else for gross"+(assetResponse.getAssets().get(0).getGrossValue().equals(asset.getGrossValue())));
 			   logAwareKafkaTemplate.send(appProps.getUpdateAssetTopicName(), KafkaTopicName.UPDATEASSET.toString(),

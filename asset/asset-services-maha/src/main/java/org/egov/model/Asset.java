@@ -174,6 +174,7 @@ public class Asset {
 	@JsonProperty("location")
 	private String location;
 
+	@NotNull
 	@JsonProperty("openingDate")
 	private Long openingDate;
 

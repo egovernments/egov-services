@@ -71,8 +71,33 @@ public class DepreciationService {
 
 		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
 		RequestInfo requestInfo = depreciationRequest.getRequestInfo();
+		Date date=new Date();
+		date.setHours(23);
+		date.setMinutes(59);
+		date.setSeconds(59);
+		
+		/*
+		  Calendar calendar = Calendar.getInstance();
+		    Date today = calendar.getTime();
+			SimpleDateFormat sdf=new SimpleDateFormat("hh:mm:ss S");
+		    System.out.println("Current Time: " + sdf.format(today));
+		    calendar.add(Calendar.HOUR, 23);
+		    calendar.add(Calendar.MINUTE, 59);
+		    calendar.add(Calendar.SECOND, 59);
+		    calendar.add(Calendar.MILLISECOND, 000);
+		    Date addMilliSeconds = calendar.getTime();*/
+		
+		System.err.println(criteria.getToDate()+"criteria.getToDate()");
+/*
+		System.err.println(addMilliSeconds+"new Date().getTime()");
+		
+		System.err.println(addMilliSeconds.getTime()+"epoc");*/
+		
+		System.err.println(date.getTime()+"new Date().getTime()");
+		
+	
 
-		if (criteria.getToDate() > new Date().getTime()) {
+		if (criteria.getToDate() > date.getTime() ) {
 			Map<String, String> map = new HashMap<>();
 			map.put(applicationProperties.getDepreciationDate(), "Assets cannot be depreciated for future dates");
 			throw new CustomException(map);
@@ -85,8 +110,11 @@ public class DepreciationService {
 
 		// TODO put depreciation in kafka topic
 		kafkaTemplate.send(applicationProperties.getSaveDepreciationTopic(), depreciation);
-
-		return DepreciationResponse.builder().depreciation(depreciation).responseInfo(null).build();
+		
+		DepreciationResponse depreciationResponse = DepreciationResponse.builder().depreciation(depreciation).responseInfo(null).build();
+         System.err.println("depreciationResponse"+depreciationResponse);
+		
+		return depreciationResponse;
 	}
 
 	/***
@@ -239,6 +267,7 @@ public class DepreciationService {
 		
 		// returning the calculated amt to be depreciated using the currentvalue from
 		// dep inputs and depreciation rate for given period
+			
 		
 		if (depInputs.getDepreciationSum() != null)
 			return BigDecimal.valueOf((depInputs.getCurrentValue()).add(depInputs.getDepreciationSum()).doubleValue()

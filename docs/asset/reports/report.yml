@@ -489,30 +489,6 @@ ReportDefinitions:
     type: number
     source: asset
   searchParams:
-  - name: fromDate
-    label: reports.asset.fromDate
-    type: date
-    source: asset
-    searchClause : AND asset.createddate>=$fromDate
-    isMandatory: false
-  - name: toDate
-    label: reports.asset.toDate
-    type: date
-    source: asset
-    searchClause : AND asset.createddate<=$toDate
-    isMandatory: false
-  - name: originalvaluefrom
-    label: reports.asset.originalvaluefrom
-    type: number
-    source: asset
-    searchClause : AND asset.originalvalue>=$originalvaluefrom
-    isMandatory: false
-  - name: originalvalueto
-    label: reports.asset.originalvalueto
-    type: number
-    source: asset
-    searchClause : AND asset.originalvalue<=$originalvalueto
-    isMandatory: false
   - name: assetcategory
     label: reports.asset.assetCategory
     isMandatory: false
@@ -540,18 +516,44 @@ ReportDefinitions:
     wrapper: true
     stateData: true
     searchClause : AND asset.departmentcode=$department
-  - name: name
-    label: reports.asset.name
-    type: string
-    isMandatory: false
-    source: asset
-    searchClause : AND asset.name=$name
   - name: code
     label: reports.asset.code
     type: string
     isMandatory: false
     source: asset
     searchClause : AND asset.code in ($code)
+  - name: name
+    label: reports.asset.name
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.name=$name  
+  - name: originalvaluefrom
+    label: reports.asset.originalvaluefrom
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue>=$originalvaluefrom
+    isMandatory: false
+  - name: originalvalueto
+    label: reports.asset.originalvalueto
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue<=$originalvalueto
+    isMandatory: false
+  - name: fromDate
+    label: reports.asset.fromDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate>=$fromDate
+    isMandatory: false
+  - name: toDate
+    label: reports.asset.toDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate<=$toDate
+    isMandatory: false 
+
+
 
 
   
@@ -1016,45 +1018,7 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: 'list://IMMOVABLE:IMMOVABLE,MOVABLE:MOVABLE,LAND:LAND'
     source: asset
-  - name: assetcategory
-    label: reports.asset.assetCategory
-    isMandatory: false
-    type: url
-    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27{assetcategorytype}%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
-    source: asset
-    wrapper: true
-    stateData: true
-    searchClause : 
-  - name: assetsubcategory
-    label: reports.asset.assetSubCategory
-    isMandatory: false
-    type: url
-    pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
-    source: asset
-    stateData: true
-    wrapper: true
-    searchClause : AND asset.assetcategory=$assetsubcategory
-  - name: department
-    label: reports.asset.departmentCode
-    isMandatory: false
-    type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..code|$..name
-    source: asset
-    wrapper: true
-    stateData: true
-    searchClause : AND asset.departmentcode=$department
-  - name: name
-    label: reports.asset.name
-    type: string
-    isMandatory: false
-    source: asset
-    searchClause : AND asset.name=$name
-  - name: code
-    label: reports.asset.code
-    type: string
-    isMandatory: false
-    source: asset
-    searchClause : AND asset.code in ($code)
+
   
   query:  select asset.code,asset.assetcategory,asset.name,asset.originalvalue,asset.revaluationreserveaccount,
     asset.accumulateddepreciationaccount,asset.assetaccount,asset.accumulateddepreciation,previousfynetblock,endcurrentamount,
@@ -1132,30 +1096,6 @@ ReportDefinitions:
     type: number
     source: asset
   searchParams:
-  - name: fromDate
-    label: reports.asset.fromDate
-    type: date
-    source: asset
-    searchClause : AND asset.createddate>=$fromDate
-    isMandatory: false
-  - name: toDate
-    label: reports.asset.toDate
-    type: date
-    source: asset
-    searchClause : AND asset.createddate<=$toDate
-    isMandatory: false
-  - name: originalvaluefrom
-    label: reports.asset.originalvaluefrom
-    type: number
-    source: asset
-    searchClause : AND asset.originalvalue>=$originalvaluefrom
-    isMandatory: false
-  - name: originalvalueto
-    label: reports.asset.originalvalueto
-    type: number
-    source: asset
-    searchClause : AND asset.originalvalue<=$originalvalueto
-    isMandatory: false
   - name: assetcategory
     label: reports.asset.assetCategory
     isMandatory: false
@@ -1183,18 +1123,44 @@ ReportDefinitions:
     wrapper: true
     stateData: true
     searchClause : AND asset.departmentcode=$department
-  - name: name
-    label: reports.asset.name
-    type: string
-    isMandatory: false
-    source: asset
-    searchClause : AND asset.name=$name
   - name: code
     label: reports.asset.code
     type: string
     isMandatory: false
     source: asset
     searchClause : AND asset.code in ($code)
+  - name: name
+    label: reports.asset.name
+    type: string
+    isMandatory: false
+    source: asset
+    searchClause : AND asset.name=$name
+  - name: originalvaluefrom
+    label: reports.asset.originalvaluefrom
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue>=$originalvaluefrom
+    isMandatory: false
+  - name: originalvalueto
+    label: reports.asset.originalvalueto
+    type: number
+    source: asset
+    searchClause : AND asset.originalvalue<=$originalvalueto
+    isMandatory: false
+  - name: fromDate
+    label: reports.asset.fromDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate>=$fromDate
+    isMandatory: false
+  - name: toDate
+    label: reports.asset.toDate
+    type: date
+    source: asset
+    searchClause : AND asset.createddate<=$toDate
+    isMandatory: false
+
+  
 
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,

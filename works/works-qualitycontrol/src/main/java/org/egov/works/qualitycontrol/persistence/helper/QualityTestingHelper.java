@@ -5,10 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.egov.works.qualitycontrol.web.contract.LetterOfAcceptanceEstimate;
-import org.egov.works.qualitycontrol.web.contract.QualityTesting;
-import org.egov.works.qualitycontrol.web.contract.QualityTestingDetail;
-import org.egov.works.qualitycontrol.web.contract.WorksStatus;
+import org.egov.works.qualitycontrol.web.contract.*;
 
 import java.util.List;
 
@@ -36,6 +33,12 @@ public class QualityTestingHelper {
     @JsonProperty("deleted")
     private Boolean deleted = false;
 
+    @JsonProperty("createdBy")
+    private String createdBy = null;
+
+    @JsonProperty("createdTime")
+    private Long createdTime = null;
+
     public QualityTesting toDomain() {
         QualityTesting qualityTesting = new QualityTesting();
         qualityTesting.setId(this.id);
@@ -47,6 +50,10 @@ public class QualityTestingHelper {
         worksStatus.setCode(this.status);
         qualityTesting.setStatus(worksStatus);
         qualityTesting.setRemarks(this.remarks);
+        AuditDetails auditDetails = new AuditDetails();
+        auditDetails.setCreatedBy(this.createdBy);
+        auditDetails.setCreatedTime(this.createdTime);
+        qualityTesting.setAuditDetails(auditDetails);
         return qualityTesting;
     }
 }

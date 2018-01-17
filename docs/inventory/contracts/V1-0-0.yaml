@@ -1039,6 +1039,11 @@ paths:
             in: query
             description: |
               description of the MaterialIssue
+          - name: issuePurpose
+            type: string
+            in: query
+            description: |
+              issue purpose status of the materialissue
           - name: totalIssueValue
             type: number
             format: BigDecimal
@@ -2669,6 +2674,53 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /fifologic/_stock:
+      post:
+        summary: Get balance Quantity available in store for a particular material
+        description: Get balance Quantity available in store for a particular material.
+        tags:
+          - Stock
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: fifoRequest
+            in: body
+            description: get balance Quantity of a material in store's stock
+            schema:
+              $ref: '#/definitions/FifoRequest'
+        responses:
+          200:
+            description: balance Quantity got Successfully
+            schema:
+              $ref: '#/definitions/FifoResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'    
+
+    /fifologic/_unitrate:
+      post:
+        summary: Get unitRate for a particular material in stock
+        description: Get unitRate for a particular material in stock.
+        tags:
+          - UnitRate
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: fifoRequest
+            in: body
+            description: get Unitrate of a material in store's stock
+            schema:
+              $ref: '#/definitions/FifoRequest'
+        responses:
+          200:
+            description: balance Quantity got Successfully
+            schema:
+              $ref: '#/definitions/FifoResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'                  
+     
 
     /pricelists/_create:
       post:
@@ -3772,7 +3824,6 @@ definitions:
       - fromStore
       - issueDate
       - materialIssueStatus
-      - totalIssueValue
       - issueType
       - tenantId
 
@@ -3857,11 +3908,11 @@ definitions:
           description: >-
             Applicable for Indent Issue. Balance quantity to be issued of the IndentDetails. Mandatory in case of indent issue.
           $ref: "#/definitions/IndentDetail"
-        quantityToBeIssued:
+        pendingIndentQuantity:
           type: number
           format: BigDecimal
           description: |
-            Balance quantity to be issued of the IndentDetails.
+            Pending Indent Quantity.
         scrapedQuantity:
           type: number
           format: BigDecimal
@@ -3877,7 +3928,6 @@ definitions:
           maxLength: 100
           description: |
             Receipt number reference.
-
         description:
           type: string
           maxLength: 512
@@ -3889,8 +3939,7 @@ definitions:
           items:
             $ref: '#/definitions/MaterialIssuedFromReceipt'
       required:
-      - quantityIssued
-      - value
+      - userQuantityIssued
       - uom
       - material
       - tenantId
@@ -5505,6 +5554,75 @@ definitions:
       required:
         - tenantId
         - store
+        
+    FifoRequest:
+      description: Contract class for web request. Contains Fifo Object.
+      properties:
+        RequestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        Fifo:
+          description: contains parameters required to access stock available and unit Rate
+          type:  object
+          items:
+            $ref: '#/definitions/Fifo'
+      required:
+      - RequestInfo
+      - Fifo
+
+    FifoResponse:
+      description: Contract class for web response. Contains Fifo Object.
+      properties:
+        ResponseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        unitRate:
+          description: unitRate 
+          type:  number
+          format: BigDecimal
+        stock:
+          description: balance quantity for a particular material left in the store's stock
+          type: number
+          format: BigDecimal
+        value:
+          description: it is calculated as multiplication of quantity issued and unit rate
+          
+        
+    Fifo:
+      type: object
+      description: This api takes all the parameters required for fifo logic
+      properties:
+          store:
+            $ref: "#/definitions/Store"
+          tenantId:
+            type: string
+            description: Tenant id
+          material:
+            $ref: "#/definitions/Material"
+          uom:
+            $ref: "#/definitions/Uom"
+          userQuantityIssued:
+            type: number
+            format: BigDecimal
+            description: quantity issued entered by user in selected uom.
+          issueDate:
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            description: issueDate of material issue
+          mrnNumber:
+            type: string
+            description: material receipt number of receipt
+          purpose:
+            type: string
+            description: send value as update for update api else send null
+          issueDetailId:
+            type: string
+            description: required in case of update api, holds id of issuedetail object
+      required:
+        - tenantId
+        - store    
+        - material
+        - uom
+        - issueDate
 
 parameters:
   pageSize:
@@ -5530,3 +5648,5 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+    
+    

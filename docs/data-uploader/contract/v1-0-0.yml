@@ -210,8 +210,8 @@ definitions:
       name:
         description: Default display name of the deffinition
         type: string
-      path:
-        description: swagger API path for the API
+      templatePath:
+        description: Download path of the template file for upload.
         type: string
       
   ModuleDefs:

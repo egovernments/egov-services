@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
@@ -13,6 +14,7 @@ import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.TargetType;
 import org.egov.pa.model.ULBKpiValueList;
 import org.egov.pa.model.ValueDocument;
+import org.egov.pa.model.ValueList;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.service.KpiValueService;
@@ -109,6 +111,37 @@ public class KpiValueServiceImpl implements KpiValueService {
 		else { 
 			list = kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
 		}
+		
+			List<KpiValueDetail> detailList = new ArrayList<>(); 
+			List<String> valueIdList = new ArrayList<>(); 
+			for(ULBKpiValueList eachRecord : list) { 
+				List<ValueList> finYearList = eachRecord.getFinYearList();
+				for(ValueList eachValue : finYearList) {
+					List<KpiValue> kpiValuesList = eachValue.getKpiValueList(); 
+					for(KpiValue kpiValue : kpiValuesList) { 
+						if(null != kpiValue) {
+							detailList = kpiValue.getValueList(); 
+							valueIdList.add(kpiValue.getId()); 
+						}
+					}
+				}
+			}
+			
+			List<ValueDocument> documentList = kpiValueRepository.getDocsForValueRecords(valueIdList); 
+			for(KpiValueDetail detail : detailList) { 
+				Boolean hasDocument = Boolean.FALSE; 
+				List<ValueDocument> detailDocumentList = new ArrayList<>(); 
+				for(ValueDocument document : documentList) { 
+					if(StringUtils.isNotBlank(detail.getId()) && StringUtils.isNotBlank(document.getValueId()) && detail.getId().equals(document.getValueId())) { 
+						detailDocumentList.add(document);
+						hasDocument = Boolean.TRUE;
+					}
+				}
+				if(hasDocument)  detail.setDocumentList(detailDocumentList);
+			}
+			
+			
+		
 		return list;
 	}
 

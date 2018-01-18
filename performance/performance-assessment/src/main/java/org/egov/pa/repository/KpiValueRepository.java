@@ -5,6 +5,7 @@ import java.util.List;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.ULBKpiValueList;
+import org.egov.pa.model.ValueDocument;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 
@@ -33,4 +34,6 @@ public interface KpiValueRepository {
     public List<String> getNewKpiIds(int numberOfIds); 
     
     public int numberOfDocsRequired(String kpiCode); 
+    
+    public List<ValueDocument> getDocsForValueRecords(List<String> valueIdList); 
 }

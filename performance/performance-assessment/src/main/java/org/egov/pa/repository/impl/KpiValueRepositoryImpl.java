@@ -15,6 +15,7 @@ import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.TargetType;
 import org.egov.pa.model.ULBKpiValueList;
+import org.egov.pa.model.ValueDocument;
 import org.egov.pa.model.ValueList;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
@@ -333,6 +334,15 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 		} catch (Exception e) {
 		}
 		return numberOfDocsReq;
+	}
+
+	@Override
+	public List<ValueDocument> getDocsForValueRecords(List<String> valueIdList) {
+		String query = PerformanceAssessmentQueryBuilder.getDocsForValueRecordQuery();
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("valueIdList", valueIdList);
+		List<ValueDocument> documentList = namedParameterJdbcTemplate.query(query, parametersMap, new PerformanceAssessmentRowMapper().new ValueDocumentMapper());
+		return documentList;
 	}
 
 

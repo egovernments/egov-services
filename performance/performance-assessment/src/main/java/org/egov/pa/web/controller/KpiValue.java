@@ -35,6 +35,7 @@ public interface KpiValue {
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
 			 @RequestParam(value="categoryId", required = false) Long categoryId,
+			 @RequestParam(value="needDocs", required = false) Boolean needDocs,
 			 @RequestBody RequestInfoWrapper requestInfo);
 	
 	@PostMapping(value = "/_search")

@@ -77,21 +77,21 @@ public class PerformanceAssessmentQueryBuilder {
 	public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, master.category as categoryId,  "
     		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, target.finyear as targetFinYear, " 
     		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId,  "
-    		+ " detail.value as detailValue, detail.period as detailPeriod FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
+    		+ " detail.value as detailValue, detail.period as detailPeriod, detail.id as valueDetailId FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
     		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode  AND target.finyear = value.finyear "
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid " 
     		+ " WHERE master.targettype = 'VALUE' " ; 
     
     public static final String COMPARE_SEARCH_OBJECTIVE_BASE_QUERY = "SELECT master.id, master.name, master.code, master.targettype as targetType, master.instructions, master.finyear as finYear, master.department as departmentId, master.category as categoryId, master.periodicity,  "  
     		+ " target.id as targetId, target.kpicode as targetKpiCode, target.finyear as targetFinYear, target.targetvalue as targetValue, target.tenantid as targetTenantId, " 
-    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId, value.finyear as valueFinYear, detail.id as detailId, detail.valueid as detailValueId, detail.value as value, detail.period as period " 
+    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId, value.finyear as valueFinYear, detail.id as detailId, detail.valueid as detailValueId, detail.value as value, detail.period as period, detail.id as valueDetailId " 
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode AND value.finyear = target.finyear "  
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE (master.targettype = 'OBJECTIVE' OR master.targettype = 'TEXT') " ;   
     		
     
     public static final String COMPARE_GROUP_BY = " GROUP BY master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, "
     		+ " target.id, target.kpicode, target.targetvalue, target.tenantid, "  
-    		+ " value.id, value.kpicode, value.tenantid, detail.valueid , detail.value, detail.period" ;
+    		+ " value.id, value.kpicode, value.tenantid, detail.valueid , detail.value, detail.period, detail.id" ;
     
     public static String persistKpiQuery() { 
     	return "INSERT INTO egpa_kpi_master (id, name, code, finyear, createdby, createddate) " 
@@ -139,6 +139,11 @@ public class PerformanceAssessmentQueryBuilder {
     
     public static String fetchKpiByCode() { 
     	return "SELECT id, name, code, finyear as financialYear, targetvalue as targetValue FROM egpa_kpi_master where code = :code ";  
+    }
+    
+    public static String getDocsForValueRecordQuery() { 
+    	return " SELECT id as valueDocumentId, documentcode as documentCode, kpicode as kpiCode, valueid as valueDetailId, filestoreid as fileStoreId "  
+    	 + " from egpa_kpi_value_documents where valueid IN (select id from egpa_kpi_value_detail where valueid IN (:valueIdList)) " ; 
     }
     
     

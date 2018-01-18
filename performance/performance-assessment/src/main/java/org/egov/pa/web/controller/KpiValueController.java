@@ -124,6 +124,7 @@ public class KpiValueController implements KpiValue {
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
 			 @RequestParam(value="categoryId", required = false) Long categoryId,
+			 @RequestParam(value="needDocs", required = false) Boolean needDocs,
 			 @RequestBody RequestInfoWrapper requestInfo) {
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
     	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
@@ -134,6 +135,7 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setTenantId(tenantIdList);
     	kpiValueSearchReq.setUlbList(ulbList);
     	kpiValueSearchReq.setCategoryId(categoryId);
+    	kpiValueSearchReq.setNeedDocs(needDocs);
     	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq, Boolean.TRUE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

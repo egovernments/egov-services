@@ -40,11 +40,24 @@ public class KPIValueSearchRequest   {
   @JsonProperty("categoryId")
   private Long categoryId = null ; 
   
+  @JsonProperty("needDocs")
+  private Boolean needDocs = null;
+  
+  
+  
   
   
   
 
-  public Long getCategoryId() {
+  public Boolean getNeedDocs() {
+	return needDocs;
+}
+
+public void setNeedDocs(Boolean needDocs) {
+	this.needDocs = needDocs;
+}
+
+public Long getCategoryId() {
 	return categoryId;
 }
 

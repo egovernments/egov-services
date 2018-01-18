@@ -55,7 +55,7 @@ public class ContractorBillHelper {
     private String billSubType = null;
 
     @JsonProperty("billDate")
-    private String billDate = null;
+    private Long billDate = null;
 
     @JsonProperty("status")
     private String status = null;
@@ -70,7 +70,7 @@ public class ContractorBillHelper {
         cb.getApprovedBy().setName(this.approvedBy);
         cb.setCancellationRemarks(this.cancellationRemarks);
         cb.setCancellationReason(this.cancellationReason);
-        cb.setBillDate(LocalDate.parse(this.billDate));
+        cb.setBillDate(this.billDate);
         cb.setBillNumber(this.billNumber);
         cb.setBillSubType(this.billSubType);
         cb.setLetterOfAcceptanceEstimate(new LetterOfAcceptanceEstimate());

@@ -10,12 +10,17 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
+import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.measurementbook.config.Constants;
+import org.egov.works.measurementbook.domain.repository.BillRegisterRepository;
 import org.egov.works.measurementbook.domain.repository.ContractorBillRepository;
 import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.domain.service.ContractorBillService;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
+import org.egov.works.measurementbook.web.contract.BillRegister;
+import org.egov.works.measurementbook.web.contract.BillRegisterRequest;
+import org.egov.works.measurementbook.web.contract.BillRegisterResponse;
 import org.egov.works.measurementbook.web.contract.ContractorBill;
 import org.egov.works.measurementbook.web.contract.ContractorBillRequest;
 import org.egov.works.measurementbook.web.contract.ContractorBillSearchContract;
@@ -39,21 +44,34 @@ public class ContractorBillValidator {
 
     @Autowired
     private ContractorBillService contractorBillService;
+    
     @Autowired
     private ContractorBillRepository contractorBillRepository;
+    
     @Autowired
     private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+    
     @Autowired
     private MeasurementBookRepository measurementBookRepository;
+    
     @Autowired
     private MeasurementBookUtils measurementBookUtils;
+    
+    @Autowired
+    private BillRegisterRepository billRegisterRepository;
 
     public void validateContractorBill(final ContractorBillRequest contractorBillRequest, Boolean isNew) {
+
         HashMap<String, String> messages = new HashMap<>();
-        // Validate duplicate bill numbers with in request
+        
         if (contractorBillRequest.getContractorBills().size() > 1) {
             validateDuplicateBillNumber(messages, contractorBillRequest);
         }
+        
+        if(isNew)
+            createUpdateBillRegister(contractorBillRequest);
+        
+        // Validate duplicate bill numbers with in request
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
             if (isNew) {
                 // For LOA exists or not
@@ -115,6 +133,59 @@ public class ContractorBillValidator {
 
         if (!messages.isEmpty())
             throw new CustomException(messages);
+    }
+
+    private void createUpdateBillRegister(final ContractorBillRequest contractorBillRequest) {
+        BillRegisterRequest billRegisterRequest = new BillRegisterRequest();
+        List<BillRegister> billRegisters = new ArrayList<>();
+        BillRegister billRegister = null;
+        for(ContractorBill bill : contractorBillRequest.getContractorBills()) {
+            billRegister = prepairBillRegisterObject(bill);
+            billRegisters.add(billRegister);
+        }
+
+        billRegisterRequest.setBillRegisters(billRegisters);
+        billRegisterRequest.setRequestInfo(contractorBillRequest.getRequestInfo());
+        BillRegisterResponse billRegisterResponse =  billRegisterRepository.createUpdateBillRegister(billRegisterRequest, false);
+        
+        for(BillRegister billRegister2: billRegisterResponse.getBillRegisters()) {
+            for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
+                if(contractorBill.getBillNumber().equalsIgnoreCase(billRegister2.getBillNumber())) {
+                    if(StringUtils.isBlank(contractorBill.getId()))
+                            contractorBill.setId(new CommonUtils().getUUID());
+                }
+            }
+        }
+    }
+
+    private BillRegister prepairBillRegisterObject(ContractorBill bill) {
+        BillRegister billRegister;
+        billRegister = new BillRegister();
+        billRegister.setTenantId(bill.getTenantId());
+        billRegister.setBillType(bill.getBillType());
+        billRegister.setBillAmount(bill.getBillAmount());
+        billRegister.setBillDate(bill.getBillDate());
+        billRegister.setBillDetails(bill.getBillDetails());
+        billRegister.setBillNumber(bill.getBillNumber());
+        billRegister.setBillSubType(bill.getBillSubType());
+        billRegister.setBudgetAppropriationNo(bill.getBudgetAppropriationNo());
+        billRegister.budgetCheckRequired(billRegister.getBudgetCheckRequired());
+        billRegister.setDepartment(billRegister.getDepartment());
+        billRegister.setDescription(bill.getDescription());
+        billRegister.setDivision(bill.getDivision());
+        billRegister.setFunction(bill.getFunction());
+        billRegister.setFunctionary(bill.getFunctionary());
+        billRegister.setFund(bill.getFund());
+        billRegister.setFundsource(bill.getFundsource());
+        billRegister.setModuleName(bill.getModuleName());
+        billRegister.setPartyBillDate(bill.getPartyBillDate());
+        billRegister.setPartyBillNumber(bill.getPartyBillNumber());
+        billRegister.setPassedAmount(bill.getPassedAmount());
+        billRegister.setScheme(bill.getScheme());
+        billRegister.setSourcePath(bill.getSourcePath());
+        billRegister.setStatus(bill.getStatus());
+        billRegister.setSubScheme(bill.getSubScheme());
+        return billRegister;
     }
     
     private void validateUpdateStatus(ContractorBill contractorBill, RequestInfo requestInfo, Map<String, String> messages) {

@@ -159,7 +159,7 @@ public class ContractorBill extends BillRegister  {
   **/
   @ApiModelProperty(value = "User name of the User who approved the Bill")
 
-  @Valid
+//  @Valid
 
   public User getApprovedBy() {
     return approvedBy;
@@ -228,7 +228,7 @@ public class ContractorBill extends BillRegister  {
   **/
   @ApiModelProperty(value = "Array of Asset details for the Bill")
 
-  @Valid
+//  @Valid
 
   public List<AssetForBill> getAssets() {
     return assets;
@@ -278,7 +278,7 @@ public class ContractorBill extends BillRegister  {
   **/
   @ApiModelProperty(value = "LOA and Estimate reference for the Bill")
 
-  @Valid
+//  @Valid
 
   public LetterOfAcceptanceEstimate getLetterOfAcceptanceEstimate() {
     return letterOfAcceptanceEstimate;
@@ -299,7 +299,7 @@ public class ContractorBill extends BillRegister  {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+//  @Valid
 
   public WorkFlowDetails getWorkFlowDetails() {
     return workFlowDetails;
@@ -340,7 +340,7 @@ public class ContractorBill extends BillRegister  {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+//  @Valid
 
   public AuditDetails getAuditDetails() {
     return auditDetails;

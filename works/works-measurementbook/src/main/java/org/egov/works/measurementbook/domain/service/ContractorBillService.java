@@ -46,9 +46,17 @@ public class ContractorBillService {
 
     @Autowired
     private ContractorBillRepository contractorBillRepository;
-
+    
     @Transactional
     public ContractorBillResponse create(ContractorBillRequest contractorBillRequest) {
+        for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) { 
+            String billNumber = idGenerationRepository.generateBillNumber(contractorBill.getTenantId(),
+                    contractorBillRequest.getRequestInfo());
+            contractorBill.setBillNumber(measurementBookUtils.getCityCode(contractorBill.getTenantId(),
+                    contractorBillRequest.getRequestInfo()) + "/" + propertiesManager.getBillNumberPrefix() + "/"
+                    + billNumber);
+        }
+        
         validator.validateContractorBill(contractorBillRequest, true);
         CommonUtils commonUtils = new CommonUtils();
         BillStatus finStatus = new BillStatus();
@@ -56,11 +64,8 @@ public class ContractorBillService {
             contractorBill.setId(commonUtils.getUUID());
             contractorBill.setAuditDetails(
                     measurementBookUtils.setAuditDetails(contractorBillRequest.getRequestInfo(), false));
-            String billNumber = idGenerationRepository.generateBillNumber(contractorBill.getTenantId(),
-                    contractorBillRequest.getRequestInfo());
-            contractorBill.setBillNumber(measurementBookUtils.getCityCode(contractorBill.getTenantId(),
-                    contractorBillRequest.getRequestInfo()) + "/" + propertiesManager.getBillNumberPrefix() + "/"
-                    + billNumber);
+            
+            
             List<AssetForBill> assetForBill = new ArrayList<>();
             for (final AssetForBill assetBill : contractorBill.getAssets()) {
                 assetBill.setId(commonUtils.getUUID());
@@ -107,7 +112,7 @@ public class ContractorBillService {
 
     public ContractorBillResponse update(ContractorBillRequest contractorBillRequest) {
         ContractorBillResponse contractorBillResponse = new ContractorBillResponse();
-        validator.validateContractorBill(contractorBillRequest, true);
+        validator.validateContractorBill(contractorBillRequest, false);
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
             populateAuditDetails(contractorBillRequest.getRequestInfo(), contractorBill);
         }
@@ -118,8 +123,9 @@ public class ContractorBillService {
 
     private void populateAuditDetails(final RequestInfo requestInfo, final ContractorBill contractorBill) {
         contractorBill.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, true));
-        for (final AssetForBill assetForBill : contractorBill.getAssets())
-            assetForBill.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, true));
+        if(contractorBill.getAssets() != null && !contractorBill.getAssets().isEmpty())
+            for (final AssetForBill assetForBill : contractorBill.getAssets())
+                assetForBill.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, true));
         for (final MeasurementBookForContractorBill mbForBill : contractorBill.getMbForContractorBill())
             mbForBill.setAuditDetails(measurementBookUtils.setAuditDetails(requestInfo, true));
     }

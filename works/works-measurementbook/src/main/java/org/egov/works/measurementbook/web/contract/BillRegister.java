@@ -8,7 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.joda.time.LocalDate;
+//import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -31,9 +31,11 @@ public class BillRegister   {
 
   @JsonProperty("billNumber")
   private String billNumber = null;
-
-  @JsonProperty("billDate")
-  private LocalDate billDate = null;
+// Commenting becouse in egf billDate is of type long
+//  @JsonProperty("billDate")
+//  private LocalDate billDate = null;
+  
+  private Long billDate = null;
 
   @JsonProperty("billAmount")
   private Double billAmount = null;
@@ -84,7 +86,7 @@ public class BillRegister   {
   private String partyBillNumber = null;
 
   @JsonProperty("partyBillDate")
-  private LocalDate partyBillDate = null;
+  private Long partyBillDate = null;
 
   @JsonProperty("description")
   private String description = null;
@@ -177,7 +179,7 @@ public class BillRegister   {
     this.billNumber = billNumber;
   }
 
-  public BillRegister billDate(LocalDate billDate) {
+  public BillRegister billDate(Long billDate) {
     this.billDate = billDate;
     return this;
   }
@@ -191,11 +193,11 @@ public class BillRegister   {
 
   @Valid
 
-  public LocalDate getBillDate() {
+  public Long getBillDate() {
     return billDate;
   }
 
-  public void setBillDate(LocalDate billDate) {
+  public void setBillDate(Long billDate) {
     this.billDate = billDate;
   }
 
@@ -529,7 +531,7 @@ public class BillRegister   {
     this.partyBillNumber = partyBillNumber;
   }
 
-  public BillRegister partyBillDate(LocalDate partyBillDate) {
+  public BillRegister partyBillDate(Long partyBillDate) {
     this.partyBillDate = partyBillDate;
     return this;
   }
@@ -542,11 +544,11 @@ public class BillRegister   {
 
   @Valid
 
-  public LocalDate getPartyBillDate() {
+  public Long getPartyBillDate() {
     return partyBillDate;
   }
 
-  public void setPartyBillDate(LocalDate partyBillDate) {
+  public void setPartyBillDate(Long partyBillDate) {
     this.partyBillDate = partyBillDate;
   }
 

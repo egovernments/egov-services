@@ -108,7 +108,7 @@ public class MeasurementBookForContractorBill   {
    * @return contractorBill
   **/
   @ApiModelProperty(required = true, value = "Bill reference in the MB for Contractor Bill")
-  @NotNull
+//  @NotNull
 
 
   public String getContractorBill() {

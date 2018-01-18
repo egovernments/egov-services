@@ -337,9 +337,10 @@ public class AgreementService {
 	private void enrichAgreementWithWorkflowDetails(Agreement agreement, RequestInfo requestInfo, Status status){
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
 		updateAuditDetails(agreement, requestInfo);
+		String userId = requestInfo.getUserInfo().getId().toString();
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreementRepository.updateExistingAgreementAsHistory(agreement);
+				agreementRepository.updateExistingAgreementAsHistory(agreement,userId);
 				agreement.setStatus(status);
 				agreement.setAgreementDate(new Date());
 			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -355,12 +356,14 @@ public class AgreementService {
 
 	public Agreement updateObjectionAndJudgement(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		String userId = requestInfo.getUserInfo().getId().toString();
 		logger.info("update objection/judgement agreement ::" + agreement);
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
+		updateAuditDetails(agreement, requestInfo);
 
 		if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-			agreementRepository.updateExistingAgreementAsHistory(agreement);
+			agreementRepository.updateExistingAgreementAsHistory(agreement,userId);
 			agreement.setStatus(Status.ACTIVE);
 			List<Demand> demands = demandService.prepareDemandsByApprove(agreementRequest);
 			updateDemand(agreement.getDemands(), demands,
@@ -381,11 +384,13 @@ public class AgreementService {
 	public Agreement updateRenewal(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		logger.info("update renewal agreement ::" + agreement);
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		String userId = requestInfo.getUserInfo().getId().toString();
 		WorkflowDetails workFlowDetails = agreement.getWorkflowDetails();
-		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
+		updateAuditDetails(agreement, requestInfo);
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreementRepository.updateExistingAgreementAsHistory(agreement);
+				agreementRepository.updateExistingAgreementAsHistory(agreement,userId);
 				agreement.setStatus(Status.ACTIVE);
 				agreement.setAgreementDate(new Date());
 				agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));

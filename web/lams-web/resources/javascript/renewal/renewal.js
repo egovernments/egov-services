@@ -327,7 +327,7 @@ class RenewalAgreement extends React.Component {
 
     } else if(name === "rent"){
 
-      securityDeposit = 3 * e.target.value;
+      var securityDeposit = 3 * e.target.value;
 
       _this.setState({
         ..._this.state,

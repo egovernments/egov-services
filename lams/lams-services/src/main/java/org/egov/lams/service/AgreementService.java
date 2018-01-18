@@ -274,9 +274,7 @@ public class AgreementService {
 		if (Action.RENEWAL.equals(agreement.getAction())
 				&& (Status.WORKFLOW.equals(agreement.getStatus()) || Status.REJECTED.equals(agreement.getStatus()))) {
 			agreementMessageQueueRepository.save(agreementRequest, UPDATE_WORKFLOW);
-		}
-		
-		if (agreement.getSource().equals(Source.DATA_ENTRY)) {
+		} else if (agreement.getSource().equals(Source.DATA_ENTRY)) {
 			Demand demand = agreement.getLegacyDemands().get(0);
 			List<DemandDetails> demandDetailList = new ArrayList<>();
 			for(DemandDetails demandDetail : demand.getDemandDetails()){

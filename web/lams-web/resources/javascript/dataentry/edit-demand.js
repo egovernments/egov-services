@@ -27,7 +27,7 @@ class EditDemand extends React.Component {
     demands.forEach((demand) => {
       rent = demand.taxAmount;
       collection = demand.collectionAmount;
-      if (collection > rent) {
+      if (collection != 0 && collection != rent) {
         isValid = false;
       }
     });
@@ -214,7 +214,7 @@ class EditDemand extends React.Component {
             this.addOrUpdate(e);
           } else {
             e.preventDefault();
-            showError("Collection should not be greater than rent!");
+            showError("Advance Collection and Partial Collection are not allowed");
 
           }
         }}>

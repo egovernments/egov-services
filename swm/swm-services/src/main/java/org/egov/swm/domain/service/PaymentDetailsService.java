@@ -1,10 +1,6 @@
 package org.egov.swm.domain.service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.swm.domain.model.AuditDetails;
@@ -70,8 +66,41 @@ public class PaymentDetailsService {
     }
 
     public Pagination<PaymentDetails> search(final PaymentDetailsSearch paymentDetailsSearch) {
+        Pagination<PaymentDetails> paymentDetailsPage =  paymentDetailsRepository.search(paymentDetailsSearch);
 
-        return paymentDetailsRepository.search(paymentDetailsSearch);
+        List<PaymentDetails> paymentDetailsList = new ArrayList<>();
+
+        if(!paymentDetailsPage.getPagedData().isEmpty()){
+            paymentDetailsList = populatePendingAmount(paymentDetailsPage.getPagedData());
+            paymentDetailsPage.setPagedData(paymentDetailsList);
+        }
+
+        return paymentDetailsPage;
+    }
+
+    private List<PaymentDetails> populatePendingAmount(List<PaymentDetails> paymentDetailsList){
+
+        PaymentDetailsSearch paymentDetailsSearch = new PaymentDetailsSearch();
+
+        for(PaymentDetails paymentDetail : paymentDetailsList){
+            paymentDetailsSearch.setTenantId(paymentDetail.getTenantId());
+            paymentDetailsSearch.setPaymentNo(paymentDetail.getVendorPaymentDetails().getPaymentNo());
+
+            Pagination<PaymentDetails> paymentDetails = paymentDetailsRepository.search(paymentDetailsSearch);
+
+            Double payedAmount = 0.0;
+
+            if(!paymentDetails.getPagedData().isEmpty()){
+                payedAmount = paymentDetails.getPagedData().stream()
+                              .mapToDouble(PaymentDetails::getAmount)
+                              .sum();
+            }
+
+            paymentDetail.setPendingAmount(paymentDetail.getVendorPaymentDetails().getVendorInvoiceAmount() -
+                                            payedAmount);
+        }
+
+        return paymentDetailsList;
     }
 
     private void prepareDocuments(final PaymentDetails vendorPaymentDetail) {

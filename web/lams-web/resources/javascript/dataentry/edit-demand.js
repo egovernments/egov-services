@@ -24,14 +24,15 @@ class EditDemand extends React.Component {
     var isValid = true;
     var demands = this.state.demands;
 
-    for (var demand in demands) {
+    demands.forEach((demand) => {
       rent = demand.taxAmount;
       collection = demand.collectionAmount;
       if (collection > rent) {
         isValid = false;
         break;
       }
-    }
+    });
+
     return isValid;
   }
 
@@ -42,9 +43,9 @@ class EditDemand extends React.Component {
     var demands = this.state.demands;
     var tempt = [];
 
-    for (var variable in demands) {
-      tempt.push(variable);
-    }
+    demands.forEach((demand) => {
+      tempt.push(demand);
+    });
 
     agreementDetail["legacyDemands"][0]["demandDetails"] = tempt;
 
@@ -139,17 +140,17 @@ class EditDemand extends React.Component {
       console.log(e);
     }
 
-    for (var variable in agreementDetail["legacyDemands"][0]["demandDetails"]) {
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((variable) => {
       if (variable.taxReason.toLowerCase() == "rent") {
         rentDemands.push(variable);
       }
-    }
+    });
 
-    for (var variable in agreementDetail["legacyDemands"][0]["demandDetails"]) {
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((variable) => {
       if (variable.taxReason.toLowerCase() == "penalty") {
         penaltyDemands.push(variable);
       }
-    }
+    });
 
     var index = 0;
 
@@ -158,13 +159,14 @@ class EditDemand extends React.Component {
       demands.splice(index, 0, rentDemands[i]);
       index++;
 
-      for (var pDemand in penaltyDemands) {
+      penaltyDemands.forEach((pDemand) => {
         if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
           demands.splice(index, 0, pDemand);
           index++;
           break;
         }
-      }
+      });
+
 
     }
 

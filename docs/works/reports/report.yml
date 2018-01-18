@@ -60,6 +60,10 @@ ReportDefinitions:
     label: reports.works.securitydepositamount
     type: number
     source: works
+  - name: expectedcompletiondate
+    label: reports.works.expectedcompletiondate
+    type: epoch
+    source: works
   searchParams:
   - name: fromDate
     label: reports.works.wofromDate
@@ -92,4 +96,4 @@ ReportDefinitions:
     searchClause : AND loae.estimateloaamount<=$amountUpto
     isMandatory: false
 
-  query: select wo.workorderdate, de.nameofwork, wo.workordernumber, de.projectcode as referencenoofwip, de.estimatevalue, de.workvalue as tenderamount, contractor.name as contractorname, loa.tenderfinalizedpercentage as approvedattherateof, loa.loaamount as totalvalueofthework, loa.emdamountdeposited as emdamount, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount, (select finyear.finYearRange from (values tbl_financialyear) as finyear (finYearRange,startingDate,endingDate,tenantId) where wo.createdtime between startingDate::bigint and endingDate::bigint) as sanctionedfinyear from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor
+  query: select wo.workorderdate, de.nameofwork, wo.workordernumber, de.projectcode as referencenoofwip, de.estimatevalue as estimateamount, de.workvalue as tenderamount, contractor.name as contractorname, loa.tenderfinalizedpercentage as approvedattherateof, loa.loaamount as totalvalueofthework, loa.emdamountdeposited as emdamount, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount, (select finyear.finYearRange from (values tbl_financialyear) as finyear (finYearRange,startingDate,endingDate,tenantId) where wo.createdtime between startingDate::bigint and endingDate::bigint) as sanctionedfinyear, (select coalesce(statusdate, wo.workorderdate) from egw_offlinestatus where objecttype='WorkOrderOffline' and status='WORK_COMMENCED' and objectnumber=wo.workordernumber) as expectedcompletiondate, (select coalesce(statusdate, innerwo.workorderdate) from egw_workorder innerwo left join egw_offlinestatus fs on fs.objecttype='WorkOrderOffline' and fs.status='WORK_COMMENCED' and fs.objectnumber=innerwo.workordernumber where innerwo.workordernumber=wo.workordernumber) as expectedcompletiondate from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor

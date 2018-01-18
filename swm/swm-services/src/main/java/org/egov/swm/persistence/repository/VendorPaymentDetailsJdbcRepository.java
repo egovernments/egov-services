@@ -10,11 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.VendorContract;
-import org.egov.swm.domain.model.VendorContractSearch;
-import org.egov.swm.domain.model.VendorPaymentDetails;
-import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
+import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.service.VendorContractService;
 import org.egov.swm.persistence.entity.VendorPaymentDetailsEntity;
 import org.egov.swm.web.contract.Employee;
@@ -34,6 +30,9 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private DocumentJdbcRepository documentJdbcRepository;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -170,7 +169,7 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
         final BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorPaymentDetailsEntity.class);
 
-        final List<VendorPaymentDetails> vendorPaymentDetailsList = new ArrayList<>();
+        List<VendorPaymentDetails> vendorPaymentDetailsList = new ArrayList<>();
 
         final List<VendorPaymentDetailsEntity> vendorPaymentDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
@@ -187,10 +186,11 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
             populateEmployees(vendorPaymentDetailsList);
 
+            populateDocument(vendorPaymentDetailsList);
         }
 
         if(searchRequest.getVendorNo()!= null && !searchRequest.getVendorNo().isEmpty())
-            filterForVendorNumber(vendorPaymentDetailsList, searchRequest);
+            vendorPaymentDetailsList = filterForVendorNumber(vendorPaymentDetailsList, searchRequest);
 
         page.setTotalResults(vendorPaymentDetailsList.size());
 
@@ -199,12 +199,37 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void  filterForVendorNumber(List<VendorPaymentDetails> vendorPaymentDetailsList,
+    private List<VendorPaymentDetails> filterForVendorNumber(List<VendorPaymentDetails> vendorPaymentDetailsList,
                                         VendorPaymentDetailsSearch searchRequest){
-        vendorPaymentDetailsList.stream()
+        return vendorPaymentDetailsList.stream()
                 .filter(vp -> vp.getVendorContract().getVendor().getVendorNo()
                         .equalsIgnoreCase(searchRequest.getVendorNo()))
                 .collect(Collectors.toList());
+    }
+
+    private void populateDocument(List<VendorPaymentDetails> vendorPaymentDetailsList) {
+        String tenantId = null;
+        Map<String, List<Document>> documentMap = new HashMap<>();
+        String vendorPaymentCodes = vendorPaymentDetailsList.stream()
+                .map(VendorPaymentDetails::getPaymentNo)
+                .collect(Collectors.joining(","));
+
+        if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
+            tenantId = vendorPaymentDetailsList.get(0).getTenantId();
+
+        DocumentSearch search = new DocumentSearch();
+        search.setTenantId(tenantId);
+        search.setRefCodes(vendorPaymentCodes);
+
+        List<Document> docs = documentJdbcRepository.search(search);
+
+        if(docs != null)
+            documentMap = docs.stream().collect(Collectors.groupingBy(Document::getRefCode));
+
+        for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
+            vendorPaymentDetails.setDocuments(documentMap.get(vendorPaymentDetails.getPaymentNo()));
+        }
+
     }
 
     private void populateVendorContracts(List<VendorPaymentDetails> vendorPaymentDetailsList) {

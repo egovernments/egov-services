@@ -59,6 +59,7 @@ public class VehicleTripSheetDetailsEntity {
         vehicleTripSheetDetails.setOutTime(outTime);
         vehicleTripSheetDetails.setEntryWeight(entryWeight);
         vehicleTripSheetDetails.setExitWeight(exitWeight);
+        vehicleTripSheetDetails.setGarbageWeight(entryWeight - exitWeight);
         vehicleTripSheetDetails.setAuditDetails(new AuditDetails());
         vehicleTripSheetDetails.getAuditDetails().setCreatedBy(createdBy);
         vehicleTripSheetDetails.getAuditDetails().setCreatedTime(createdTime);

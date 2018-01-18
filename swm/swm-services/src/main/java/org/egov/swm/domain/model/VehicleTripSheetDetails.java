@@ -58,6 +58,9 @@ public class VehicleTripSheetDetails {
     @JsonProperty("exitWeight")
     private Double exitWeight = null;
 
+    @JsonProperty("garbageWeight")
+    private Double garbageWeight = null;
+
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
 

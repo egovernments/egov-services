@@ -353,7 +353,7 @@ public class DepreciationService {
             else
                 depreciationRate = depreciation.getDepreciationRate();
 
-            if (depreciation.getCurrentValue().compareTo(BigDecimal.ZERO) != 0)
+            if (depreciation.getCurrentValue()!=null && depreciation.getCurrentValue().compareTo(BigDecimal.ZERO) != 0)
                 if (depreciationRate==0.0)
                     reason = ReasonForFailure.DEPRECIATION_RATE_NOT_FOUND;
                 else if (depreciation.getCurrentValue().compareTo(minValue) <= 0)

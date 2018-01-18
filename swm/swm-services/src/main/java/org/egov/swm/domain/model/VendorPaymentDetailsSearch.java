@@ -12,7 +12,10 @@ import lombok.Setter;
 public class VendorPaymentDetailsSearch extends VendorPaymentDetails {
     private String paymentNos;
     private String contractNo;
+    private String vendorNo;
     private String employeeCode;
+    private Double fromAmount;
+    private Double toAmount;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

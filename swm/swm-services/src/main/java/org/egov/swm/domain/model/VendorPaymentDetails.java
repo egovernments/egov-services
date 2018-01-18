@@ -52,6 +52,10 @@ public class VendorPaymentDetails {
     private String invoiceNo;
 
     @NotNull
+    @JsonProperty("invoiceDate")
+    private Long invoiceDate;
+
+    @NotNull
     @JsonProperty("fromDate")
     private Long fromDate;
 

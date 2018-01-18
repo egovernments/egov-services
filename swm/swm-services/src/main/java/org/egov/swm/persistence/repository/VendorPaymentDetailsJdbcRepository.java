@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
@@ -99,6 +100,12 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("invoiceNo", searchRequest.getInvoiceNo());
         }
 
+        if(searchRequest.getInvoiceDate() != null){
+            addAnd(params);
+            params.append("invoiceDate =:invoiceDate");
+            paramValues.put("invoiceDate", searchRequest.getInvoiceDate());
+        }
+
         if (searchRequest.getFromDate() != null && searchRequest.getValidate() != null &&
                 !searchRequest.getValidate()) {
             addAnd(params);
@@ -111,6 +118,18 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("toDate =:toDate");
             paramValues.put("toDate", searchRequest.getToDate());
+        }
+
+        if(searchRequest.getFromAmount() != null){
+            addAnd(params);
+            params.append("vendorinvoiceamount >= :fromAmount");
+            paramValues.put("fromAmount", searchRequest.getFromAmount());
+        }
+
+        if(searchRequest.getToAmount() != null){
+            addAnd(params);
+            params.append("vendorinvoiceamount <= :toAmount");
+            paramValues.put("toAmount", searchRequest.getToAmount());
         }
 
         //Used for validation of overlapping time periods
@@ -167,12 +186,25 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             populateVendorContracts(vendorPaymentDetailsList);
 
             populateEmployees(vendorPaymentDetailsList);
+
         }
+
+        if(searchRequest.getVendorNo()!= null && !searchRequest.getVendorNo().isEmpty())
+            filterForVendorNumber(vendorPaymentDetailsList, searchRequest);
+
         page.setTotalResults(vendorPaymentDetailsList.size());
 
         page.setPagedData(vendorPaymentDetailsList);
 
         return page;
+    }
+
+    private void  filterForVendorNumber(List<VendorPaymentDetails> vendorPaymentDetailsList,
+                                        VendorPaymentDetailsSearch searchRequest){
+        vendorPaymentDetailsList.stream()
+                .filter(vp -> vp.getVendorContract().getVendor().getVendorNo()
+                        .equalsIgnoreCase(searchRequest.getVendorNo()))
+                .collect(Collectors.toList());
     }
 
     private void populateVendorContracts(List<VendorPaymentDetails> vendorPaymentDetailsList) {
@@ -188,9 +220,7 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
                     && !v.getVendorContract().getContractNo().isEmpty()) {
 
                 vendorContractNoSet.add(v.getVendorContract().getContractNo());
-
             }
-
         }
 
         List<String> vendorContractNoList = new ArrayList(vendorContractNoSet);

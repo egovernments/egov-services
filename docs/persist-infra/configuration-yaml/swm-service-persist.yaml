@@ -1399,7 +1399,7 @@ serviceMaps:
    description: create vehiclemaintenancedetails in egswm_vendorpaymentdetails
    fromTopic: swm-vendorpaymentdetails-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vendorpaymentdetails (paymentno, tenantid, vendorcontract, invoiceno, fromdate, todate, vendorinvoiceamount, employee,  createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vendorpaymentdetails (paymentno, tenantid, vendorcontract, invoiceno, invoicedate, fromdate, todate, vendorinvoiceamount, employee,  createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendorPaymentDetails.*
       jsonMaps:
        
@@ -1410,6 +1410,9 @@ serviceMaps:
        - jsonPath: $.vendorPaymentDetails.*.vendorContract.contractNo
 
        - jsonPath: $.vendorPaymentDetails.*.invoiceNo
+
+       - jsonPath: $.vendorPaymentDetails.*.invoiceDate
+         dbType: LONG
 
        - jsonPath: $.vendorPaymentDetails.*.fromDate
          dbType: LONG
@@ -1460,13 +1463,16 @@ serviceMaps:
    description: update vehiclemaintenancedetails in egswm_vendorpaymentdetails
    fromTopic: swm-vendorpaymentdetails-update-topic
    queryMaps: 
-    - query: update egswm_vendorpaymentdetails set vendorcontract=?, invoiceno=?, fromdate=?, todate=?, vendorinvoiceamount=?, employee=?, lastmodifiedby=?, lastmodifiedtime=? where paymentNo=? and tenantId=?;
+    - query: update egswm_vendorpaymentdetails set vendorcontract=?, invoiceno=?, invoicedate=?, fromdate=?, todate=?, vendorinvoiceamount=?, employee=?, lastmodifiedby=?, lastmodifiedtime=? where paymentNo=? and tenantId=?;
       basePath: $.vendorPaymentDetails.*
       jsonMaps:
        
        - jsonPath: $.vendorPaymentDetails.*.vendorContract.contractNo
 
        - jsonPath: $.vendorPaymentDetails.*.invoiceNo
+
+       - jsonPath: $.vendorPaymentDetails.*.invoiceDate
+         dbType: LONG
 
        - jsonPath: $.vendorPaymentDetails.*.fromDate
          dbType: LONG

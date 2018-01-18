@@ -28,6 +28,8 @@ public class VendorPaymentDetailsEntity {
 
     private String invoiceNo;
 
+    private Long invoiceDate;
+
     private Long fromDate;
 
     private Long toDate;
@@ -50,6 +52,7 @@ public class VendorPaymentDetailsEntity {
         vendorPaymentDetails.setVendorContract(VendorContract.builder().contractNo(vendorContract).build());
         vendorPaymentDetails.setVendorInvoiceAmount(vendorInvoiceAmount);
         vendorPaymentDetails.setInvoiceNo(invoiceNo);
+        vendorPaymentDetails.setInvoiceDate(invoiceDate);
         vendorPaymentDetails.setFromDate(fromDate);
         vendorPaymentDetails.setToDate(toDate);
         vendorPaymentDetails.setEmployee(Employee.builder().code(employee).build());

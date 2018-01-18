@@ -339,6 +339,7 @@ public class AgreementService {
 		updateAuditDetails(agreement, requestInfo);
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreementRepository.updateExistingAgreementAsHistory(agreement);
 				agreement.setStatus(status);
 				agreement.setAgreementDate(new Date());
 			} else if (WF_ACTION_REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
@@ -359,6 +360,7 @@ public class AgreementService {
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 
 		if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
+			agreementRepository.updateExistingAgreementAsHistory(agreement);
 			agreement.setStatus(Status.ACTIVE);
 			List<Demand> demands = demandService.prepareDemandsByApprove(agreementRequest);
 			updateDemand(agreement.getDemands(), demands,
@@ -383,6 +385,7 @@ public class AgreementService {
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
+				agreementRepository.updateExistingAgreementAsHistory(agreement);
 				agreement.setStatus(Status.ACTIVE);
 				agreement.setAgreementDate(new Date());
 				agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));

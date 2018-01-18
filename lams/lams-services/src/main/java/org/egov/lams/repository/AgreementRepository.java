@@ -24,6 +24,7 @@ import org.egov.lams.model.Renewal;
 import org.egov.lams.model.SubSeqRenewal;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
+import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.builder.AgreementQueryBuilder;
 import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
@@ -783,6 +784,23 @@ public class AgreementRepository {
 
 		}
 		return map;
+	}
+	
+	public void updateExistingAgreementAsHistory(Agreement agreement) {
+
+		String query = "update eglams_agreement set status=:status where agreement_no=:agreementNumber and status in ('ACTIVE')";
+		Map<String, Object> params = new HashMap<>();
+		params.put("status", Status.HISTORY.toString());
+		params.put("agreementNumber", agreement.getAgreementNumber());
+		logger.info("updating exiting agreement as history,agreementNo :: " + agreement.getAgreementNumber());
+		try {
+
+			namedParameterJdbcTemplate.update(query, params);
+		} catch (Exception e) {
+			logger.info("exception while updating existing agreementg as history :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+
 	}
 	
 }

@@ -40,12 +40,9 @@ class EditDemand extends React.Component {
     e.preventDefault();
     var agreementDetail = this.state.agreementDetail;
     var demands = this.state.demands;
-    var tempt = [];
+    var restOfDemands = this.state.restOfDemands;
 
-    demands.forEach((demand) => {
-      if(demand.taxAmount && demand.collectionAmount)
-      tempt.push(demand);
-    });
+    var tempt = demands.concat(restOfDemands);
 
     agreementDetail["legacyDemands"][0]["demandDetails"] = tempt;
 
@@ -124,6 +121,7 @@ class EditDemand extends React.Component {
     var demands = [];
     var rentDemands = [];
     var penaltyDemands = [];
+    var restOfDemands = [];
     var agreementDetail = {};
     //api call
 
@@ -151,6 +149,12 @@ class EditDemand extends React.Component {
       }
     });
 
+    agreementDetail["legacyDemands"][0]["demandDetails"].forEach((variable) => {
+      if (variable.taxReason.toLowerCase() != "rent" && variable.taxReason.toLowerCase() != "penalty") {
+        restOfDemands.push(variable);
+      }
+    });
+
     var index = 0;
 
     for (var i = 0; i < rentDemands.length; i++) {
@@ -171,6 +175,7 @@ class EditDemand extends React.Component {
     // console.log(demands);
     this.setState({
       demands,
+      restOfDemands,
       paymentCycle: agreementDetail["paymentCycle"],
       agreementDetail
     })

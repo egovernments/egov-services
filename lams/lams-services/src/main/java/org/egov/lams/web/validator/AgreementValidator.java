@@ -434,6 +434,7 @@ public class AgreementValidator {
 			for(DemandDetails demandDetails : demand.getDemandDetails()){
 				if ((propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetails.getTaxReason())
 						|| propertiesManager.getTaxReasonPenalty().equalsIgnoreCase(demandDetails.getTaxReason()))
+						&& demandDetails.getCollectionAmount().compareTo(BigDecimal.ZERO) > 0 
 						&& demandDetails.getTaxAmount().compareTo(demandDetails.getCollectionAmount()) > 0)
 					errors.reject("No Partial Collection allowed", "Partial collection is not allowed for "
 							+ demandDetails.getTaxReason() + " of " + demandDetails.getTaxPeriod());

@@ -144,6 +144,8 @@ public class DepreciationService {
 
 		// calculating the depreciation and adding the currenVal and DepDetail to the
 		// lists
+		System.err.println("depreciationCriteria"+depreciationCriteria.getFromDate());
+		System.err.println("depreciationCriteria"+depreciationCriteria.getToDate());
 		calculateDepreciationAndCurrentValue(depreciationInputsList, depreciationDetailsList, currentValues,
 				depreciationCriteria.getFromDate(), depreciationCriteria.getToDate());
 
@@ -257,7 +259,7 @@ public class DepreciationService {
 
 		// getting the no of days betweeen the from and todate (including both from and
 		// to date)
-		Long noOfDays = ((toDate - indvidualFromDate) / 1000 / 60 / 60 / 24) + 1;
+		Long noOfDays = ((toDate - indvidualFromDate) / 1000 / 60 / 60 / 24)+1;
 		log.info("no of days between fromdate : " + indvidualFromDate + " and todate : " + toDate + " is : " + noOfDays);
 		 
 
@@ -283,10 +285,21 @@ public class DepreciationService {
 		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
 			fromDate = depInputs.getLastDepreciationDate();
 			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
-		} else if (depInputs.getDateOfCreation() > fromDate) {
-			fromDate = depInputs.getDateOfCreation();
+		} else if(depInputs.getOpeningDate()>fromDate) {
+			fromDate=depInputs.getOpeningDate();
+			
+		}/*else  {
+			fromDate = depInputs.getOpeningDate();
+			// setting the toDate hours to 23 and mins to 59
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTimeInMillis(fromDate);
+			calendar.setTimeZone(TimeZone.getTimeZone(applicationProperties.getTimeZone()));
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			fromDate=calendar.getTimeInMillis();
 			//fromDate += 86400000l;
-		}
+		}*/
+		
 		return fromDate;
 	}
 
@@ -298,6 +311,7 @@ public class DepreciationService {
 		
 		FinancialYear financialYear = mDService.getFinancialYear(todate, depreciationRequest.getRequestInfo(),
 				criteria.getTenantId());
+		System.err.println("financialYear"+financialYear.getFinYearRange());
 		
 		if(financialYear==null)
 		{
@@ -306,13 +320,13 @@ public class DepreciationService {
 			throw new CustomException(errormap);
 		}
 		// setting the toDate hours to 23 and mins to 59
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(todate);
-		calendar.setTimeZone(TimeZone.getTimeZone(applicationProperties.getTimeZone()));
-		calendar.set(Calendar.HOUR_OF_DAY, 23);
-		calendar.set(Calendar.MINUTE, 59);
-
-		log.info(" to date set to 23 59... : "+todate);
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(applicationProperties.getTimeZone()));
+	    calendar.setTimeInMillis(todate);
+	    calendar.set(Calendar.HOUR_OF_DAY,23);
+        calendar.set(Calendar.MINUTE, 59);
+	    calendar.set(Calendar.SECOND, 59);
+	    calendar.set(Calendar.MILLISECOND, 755);
+		log.info(" to date set to 23 59... : "+calendar.getTimeInMillis());
 		criteria.setToDate(calendar.getTimeInMillis());
 		criteria.setFinancialYear(financialYear.getFinYearRange());
 		criteria.setFromDate(financialYear.getStartingDate());

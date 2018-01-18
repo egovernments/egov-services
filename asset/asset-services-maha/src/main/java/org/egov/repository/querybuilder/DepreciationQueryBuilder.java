@@ -13,7 +13,7 @@ public class DepreciationQueryBuilder {
 			
 			+ "currentval.currentamount as currentvalue,depreciation.maxtodate as lastdepreciationdate,depreciation.depreciationvaluesum,asset.originalvalue,"
 			
-			+ "asset.dateofcreation,asset.assetaccount,asset.accumulateddepreciationaccount,asset.revaluationreserveaccount,asset.depreciationexpenseaccount "
+			+ "asset.openingdate,asset.assetaccount,asset.accumulateddepreciationaccount,asset.revaluationreserveaccount,asset.depreciationexpenseaccount "
 			
 			+ "from egasset_asset asset left outer join (select currval.assetid,currval.createdtime,currval.currentamount,currval.tenantid "
 			
@@ -39,7 +39,7 @@ public class DepreciationQueryBuilder {
 			
 			+ "AND asset.tenantid=? AND id NOT IN (select assetid from egasset_depreciation where todate>=? AND status='SUCCESS') "
 			
-			+ "AND asset.dateofcreation<=? {assetids};";
+			+ "AND asset.openingdate<=? {assetids};";
 
 	public String getDepreciationQuery(DepreciationCriteria depreciationCriteria,List<Object> preparedStatementValues) {
 

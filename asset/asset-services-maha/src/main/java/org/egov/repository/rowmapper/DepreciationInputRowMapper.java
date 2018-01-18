@@ -14,7 +14,7 @@ public class DepreciationInputRowMapper implements RowMapper<DepreciationInputs>
 	public DepreciationInputs mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 		return DepreciationInputs.builder().lastDepreciationDate((Long) rs.getObject("lastdepreciationdate"))
-				.dateOfCreation((Long) rs.getObject("dateofcreation")).currentValue(rs.getBigDecimal("currentValue"))
+				.openingDate((Long) rs.getObject("openingdate")).currentValue(rs.getBigDecimal("currentValue"))
 				.assetCategory((Long) rs.getObject("assetCategory")).assetaccount(rs.getString("assetaccount"))
 				.accumulatedDepreciation(rs.getBigDecimal("accumulatedDepreciation")).tenantId(rs.getString("tenantid"))
 				.accumulateddepreciationaccount(rs.getString("accumulateddepreciationaccount"))

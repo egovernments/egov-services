@@ -35,7 +35,7 @@ public class DepreciationInputs {
 
 	private BigDecimal depreciationSum;
 	
-	private Long dateOfCreation;
+	private Long openingDate;
 	
 	private String assetaccount;
 	

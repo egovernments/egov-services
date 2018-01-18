@@ -79,6 +79,6 @@ public class PurchaseordersApiController implements PurchaseordersApi {
 
     public ResponseEntity<PurchaseOrderResponse> purchaseordersSearchpoforadvancerequisitionPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId) {
     	PurchaseOrderResponse response = purchaseOrderService.getPOsForAdvanceRequisition(tenantId);
-    	return new ResponseEntity<PurchaseOrderResponse>(HttpStatus.OK);
+    	return new ResponseEntity<PurchaseOrderResponse>(response, HttpStatus.OK);
     }
 }

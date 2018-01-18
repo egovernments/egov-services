@@ -326,21 +326,22 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 	}
 	
 	public Pagination<PurchaseOrder> searchPOsForAdvanceRequisition(String tenantId) {
-		
+		Pagination<PurchaseOrder> page = new Pagination<>();
+
 		String searchQuery = "select * from purchaseorder where lower(status) != 'rejected' and  advanceamount > 0 and totalamount > 0 and (totaladvancepaidamount is null or totaladvancepaidamount != totalamount) and advanceamount < totalamount and isdeleted is not true and tenantId = :tenantId";
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(PurchaseOrderEntity.class);
-		Map params=new HashMap<String,Object>();
-		params.put("tenantId",tenantId);
-		
-		List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
-				params, row);
+		Map params = new HashMap<String, Object>();
+		params.put("tenantId", tenantId);
 
-		Pagination<PurchaseOrder> page = new Pagination<>();
+		page = (Pagination<PurchaseOrder>) getPagination(searchQuery, page, params);
+		searchQuery = searchQuery + " :pagination";
+		searchQuery = searchQuery.replace(":pagination", "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+		List<PurchaseOrderEntity> purchaseOrderEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), params, row);
+
 		page.setTotalResults(purchaseOrderEntities.size());
 
 		List<PurchaseOrder> purchaseOrders = new ArrayList<>();
 		for (PurchaseOrderEntity poEntity : purchaseOrderEntities) {
-
 			purchaseOrders.add(poEntity.toDomain());
 		}
 		page.setPagedData(purchaseOrders);

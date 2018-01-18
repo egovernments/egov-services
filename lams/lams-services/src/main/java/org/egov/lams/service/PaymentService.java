@@ -314,7 +314,9 @@ public class PaymentService {
 			LOGGER.info("exception while fetching agreemment in paymentService");
 		}
 		LOGGER.info("the result form jdbc query ::: " + agreements);
+		agreements.sort((agreement1, agreement2) -> agreement2.getId().compareTo(agreement1.getId()));
 		Agreement agreement = agreements.get(0);
+		LOGGER.info("agreement under workflow --> "+agreement.getId());
 		if (Source.SYSTEM.equals(agreement.getSource())
 					|| (Source.DATA_ENTRY.equals(agreement.getSource()) && Action.RENEWAL.equals(agreement.getAction()))) {
 			AgreementRequest agreementRequest = new AgreementRequest();

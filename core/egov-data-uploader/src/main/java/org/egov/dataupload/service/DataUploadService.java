@@ -2,22 +2,14 @@ package org.egov.dataupload.service;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.assertj.core.util.Preconditions;
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.Defs;
@@ -112,8 +104,6 @@ public class DataUploadService {
 	public void parseExcel(UploaderRequest uploaderRequest) throws Exception {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
-	    List<ResponseMetaData> success = new ArrayList<>();
-	    List<ResponseMetaData> failure = new ArrayList<>();
 	    List<List<Object>> excelData = new ArrayList<>();
         List<Object> coloumnHeaders = new ArrayList<>();
 	    try{
@@ -143,11 +133,7 @@ public class DataUploadService {
     		uploadRegistryRepository.updateJob(uploaderRequest);
     		
 			dataUploadUtils.clearInternalDirectory();
-        }
-        
-        SuccessFailure uploaderResponse = new SuccessFailure();
-        uploaderResponse.setSuccess(success);
-        uploaderResponse.setFailure(failure);                
+        }           
 	}
 	
 	private void uploadFlatData(List<List<Object>> excelData,

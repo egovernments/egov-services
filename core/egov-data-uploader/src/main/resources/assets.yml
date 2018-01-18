@@ -30,3 +30,4 @@ UploadDefinitions:
    uniqueParentKeys: ["Asset Name"]
    additionalResFields:
    templateFileName: Immovable_Asset_Template.xls
+

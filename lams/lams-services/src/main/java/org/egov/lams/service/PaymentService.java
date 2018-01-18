@@ -315,13 +315,14 @@ public class PaymentService {
 		}
 		LOGGER.info("the result form jdbc query ::: " + agreements);
 		Agreement agreement = agreements.get(0);
-		if(agreement.getSource().equals(Source.SYSTEM)){
-		AgreementRequest agreementRequest = new AgreementRequest();
-		agreementRequest.setRequestInfo(requestInfo);
-		agreementRequest.setAgreement(agreement);
-		LOGGER.info("calling agreement service todo agreement update");
-		agreementService.updateAgreement(agreementRequest);
-		LOGGER.info("Workflow update for collection has been put into Kafka Queue");
+		if (Source.SYSTEM.equals(agreement.getSource())
+					|| (Source.DATA_ENTRY.equals(agreement.getSource()) && Action.RENEWAL.equals(agreement.getAction()))) {
+			AgreementRequest agreementRequest = new AgreementRequest();
+			agreementRequest.setRequestInfo(requestInfo);
+			agreementRequest.setAgreement(agreement);
+			LOGGER.info("calling agreement service todo agreement update");
+			agreementService.updateAgreement(agreementRequest);
+			LOGGER.info("Workflow update for collection has been put into Kafka Queue");
 		}
 	}
 

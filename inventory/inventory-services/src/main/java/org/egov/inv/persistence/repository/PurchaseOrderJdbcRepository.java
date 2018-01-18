@@ -11,7 +11,10 @@ import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.model.PurchaseIndentDetail;
 import org.egov.inv.model.PurchaseOrder;
+import org.egov.inv.model.PurchaseOrderDetail;
+import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderSearch;
 import org.egov.inv.persistence.entity.PurchaseOrderEntity;
 import org.slf4j.Logger;
@@ -22,6 +25,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository {
 	private static final Logger LOG = LoggerFactory.getLogger(PurchaseOrderJdbcRepository.class);
 
@@ -44,9 +48,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
         List<String> updateFields = new ArrayList<>();
         List<String> uniqueFields = new ArrayList<>();
 
-        String insertQuery = "";
         String updateQuery = "";
-        String searchQuery = "";
 
         try {
 
@@ -377,6 +379,36 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
         }
 
         return purchaseOrderList;
+    }
+    
+    public void markIndentUsedForPo(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
+    	for(PurchaseOrder purchaseOrder : purchaseOrderRequest.getPurchaseOrders()) {
+    		if(purchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Approved")))
+        	for(PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+        		for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+        			Map<String, Object> paramValues = new HashMap<>();
+        			String query = "update indentdetail set poorderedquantity = indentquantity where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
+        	        paramValues.put("id", purchaseIndentDetail.getIndentDetail().getId());
+        	        paramValues.put("tenantId", tenantId);
+        	        namedParameterJdbcTemplate.update(query.toString(), paramValues);
+        		}
+        	}
+    	}
+    }
+    
+    public void markIndentNotUsedForPo(PurchaseOrderRequest purchaseOrderRequest, String tenantId) {
+    	for(PurchaseOrder purchaseOrder : purchaseOrderRequest.getPurchaseOrders()) {
+    		if(purchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Rejected")))
+        	for(PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+        		for(PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail.getPurchaseIndentDetails()) {
+        			Map<String, Object> paramValues = new HashMap<>();
+        			String query = "update indentdetail set poorderedquantity = 0 where id = :id and tenantid = :tenantId and (deleted is not true or deleted is null)";
+        	        paramValues.put("id", purchaseIndentDetail.getIndentDetail().getId());
+        	        paramValues.put("tenantId", tenantId);
+        	        namedParameterJdbcTemplate.update(query.toString(), paramValues);
+        		}
+        	}
+    	}
     }
 
 }

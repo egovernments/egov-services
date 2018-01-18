@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +46,6 @@ import org.egov.inv.model.Supplier;
 import org.egov.inv.model.SupplierGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.IndentEntity;
-import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
@@ -63,6 +61,7 @@ import org.springframework.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
+@SuppressWarnings("unchecked")
 public class PurchaseOrderService extends DomainService {
 
     @Autowired
@@ -292,7 +291,10 @@ public class PurchaseOrderService extends DomainService {
             if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {
                 if (purchaseOrders.get(0).getPurchaseType().toString()
                         .equalsIgnoreCase(PurchaseTypeEnum.INDENT.toString()))
-                    kafkaQue.send(saveTopic, saveKey, purchaseOrderRequest);
+                {
+                	kafkaQue.send(saveTopic, saveKey, purchaseOrderRequest);
+                	purchaseOrderRepository.markIndentUsedForPo(purchaseOrderRequest, tenantId);
+                }
                 else
                     kafkaQue.send(saveNonIndentTopic, saveNonIndentKey, purchaseOrderRequest);
             } else { //TODO: REMOVE BELOW, IF PURCHASE TYPE IS PROPER. oTHER WISE BY DEFAULT PASSING TO INDENT PURCHASE.
@@ -332,10 +334,10 @@ public class PurchaseOrderService extends DomainService {
             for (PurchaseOrder eachPurchaseOrder : purchaseOrder) {
                 //TODO: handle the reversal only the amount not entirly zero
                 if (eachPurchaseOrder.getStatus().equals(PurchaseOrder.StatusEnum.fromValue("Rejected"))) {
+                	purchaseOrderRepository.markIndentNotUsedForPo(purchaseOrderRequest, tenantId);
                     for (PurchaseOrderDetail eachPurchaseOrderDetail : eachPurchaseOrder.getPurchaseOrderDetails()) {
                         for (PurchaseIndentDetail purchaseIndentDetail : eachPurchaseOrderDetail.getPurchaseIndentDetails()) {
                             purchaseIndentDetail.getIndentDetail().setPoOrderedQuantity(BigDecimal.ZERO);
-                            purchaseIndentDetail.getIndentDetail().setIndentQuantity(BigDecimal.ZERO);
                         }
                     }
                 } else {
@@ -419,7 +421,7 @@ public class PurchaseOrderService extends DomainService {
     }
 
 
-    public PurchaseOrderResponse search(PurchaseOrderSearch is) {
+	public PurchaseOrderResponse search(PurchaseOrderSearch is) {
         PurchaseOrderResponse response = new PurchaseOrderResponse();
         Pagination<PurchaseOrder> search = purchaseOrderRepository.search(is);
 

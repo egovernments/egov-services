@@ -870,11 +870,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
-        - query: update indentdetail set poorderedquantity = indentquantity where id = ? and tenantid = ? and (deleted is not true or deleted is null or deleted is false);
-          basePath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*
-          jsonMaps:
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.tenantId
+
 
     - version: 1.0
       name: Update Purchase Order with indent

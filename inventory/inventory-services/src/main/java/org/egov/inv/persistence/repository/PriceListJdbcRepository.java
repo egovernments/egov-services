@@ -45,9 +45,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
         List<String> updateFields = new ArrayList<>();
         List<String> uniqueFields = new ArrayList<>();
 
-        String insertQuery = "";
         String updateQuery = "";
-        String searchQuery = "";
 
         try {
 

@@ -345,7 +345,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.oldReceiptNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userquantity
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userQuantity
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
@@ -357,7 +357,7 @@ serviceMaps:
       fromTopic: inv-openbalance-update-topic
       queryMaps:
         - query: INSERT INTO materialreceiptdetail(id, tenantId, material, mrnNumber, uomNo,receivedQty, acceptedQty,userReceivedQty,userAcceptedQty,unitRate, remarks, createdby,createdTime,lastmodifiedby,lastModifiedTime) VALUES ( ?,?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
-                 receivedQty = EXCLUDED.receivedQty,acceptedQty = EXCLUDED.receivedQty, unitRate = EXCLUDED.unitRate,
+                 receivedQty = EXCLUDED.receivedQty,acceptedQty = EXCLUDED.receivedQty,userReceivedQty = EXCLUDED.userReceivedQty,userAcceptedQty = EXCLUDED.userReceivedQty,unitRate = EXCLUDED.unitRate,
                   lastmodifiedby = EXCLUDED.lastmodifiedby,lastModifiedTime = EXCLUDED.lastmodifiedtime ;
           basePath: $.materialReceipt.*.receiptDetails.*
           jsonMaps:
@@ -394,7 +394,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.oldReceiptNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userquantity
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.userQuantity
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.quantity
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
@@ -1779,6 +1779,7 @@ serviceMaps:
               dbType: DOUBLE
             - jsonPath: $.disposals[?({id} in @.disposalDetails[*].id)].disposalNumber
             - jsonPath: $.disposals.*.disposalDetails.*.scrapDetails.id
+
 
 
 

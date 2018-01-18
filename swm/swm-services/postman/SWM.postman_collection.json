@@ -2,7 +2,7 @@
 	"variables": [],
 	"info": {
 		"name": "SWM",
-		"_postman_id": "b105d4b3-c2ef-2986-fdc1-3c1a37900935",
+		"_postman_id": "0c81a02e-c640-9dbf-a4e1-a1201d04f36f",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -196,7 +196,7 @@
 			"name": "Vehicle Search",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/swm-services/vehicles/_search?tenantId=default&regNumber=2342323423",
+					"raw": "http://egov-micro-dev.egovernments.org/swm-services/vehicles/_search?tenantId=default&vendorNo=MH-SWM-VNDR-000279&isUlbOwned=false",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -219,6 +219,19 @@
 							"key": "regNumber",
 							"value": "2342323423",
 							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "vendorNo",
+							"value": "MH-SWM-VNDR-000279",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "isUlbOwned",
+							"value": "false",
+							"equals": true,
 							"description": ""
 						}
 					],
@@ -234,7 +247,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"6cb39bfb-4e15-4e4c-8124-60719a722d3c\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"caf7c2ba-d160-48b6-af71-d5a3724ac6f6\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -351,13 +364,12 @@
 			"name": "Route Search",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/swm-services/routes/_search?tenantId=default&code=ed65ab074adc44f78e6a216a16b21f92",
+					"raw": "http://localhost:8899/swm-services/routes/_search?tenantId=default",
 					"protocol": "http",
 					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
+						"localhost"
 					],
+					"port": "8899",
 					"path": [
 						"swm-services",
 						"routes",
@@ -372,9 +384,10 @@
 						},
 						{
 							"key": "code",
-							"value": "ed65ab074adc44f78e6a216a16b21f92",
+							"value": "f1c99f728dcf414c95579f584fc6b73a",
 							"equals": true,
-							"description": ""
+							"description": "",
+							"disabled": true
 						}
 					],
 					"variable": []
@@ -429,7 +442,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"79aa08bd-1a96-45ad-84c3-1f623d4db3a7\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"tenantId\": \"default\",\n      \"name\": \"Central city route\",\n      \"collectionType\": {\n        \"code\": \"Collection Type Code 1\"\n      },\n      \"collectionPoints\": [\n        {\n          \"collectionPoint\": {\n            \"code\": \"30790746b7d84809816c3604daa8512b\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 1000,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": {\n            \"code\": \"3fd9d50b18a14e76993f9e01cd3a5b19\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 1000,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":true\n        }\n        \n      ],\n      \"totalDistance\": 100,\n      \"totalGarbageEstimate\": 250\n    }\n  ]\n}"
+					"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"6c09db82-17ec-4793-8b57-22d395279335\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\": {\n      \"id\": 1\n    }\n  },\n  \"routes\": [\n    {\n      \"tenantId\": \"default\",\n      \"name\": \"Bypass route\",\n      \"collectionType\": {\n        \"code\": \"Collection Type Code 1\"\n      },\n      \"collectionPoints\": [\n        {\n          \"collectionPoint\": {\n            \"code\": \"30790746b7d84809816c3604daa8512b\"\n          },\n          \"distance\": 100,\n          \"garbageEstimate\": 1000,\n          \"isStartingCollectionPoint\":true,\n          \"isEndingCollectionPoint\":false\n        },\n        {\n          \"collectionPoint\": null,\n          \"distance\": 100,\n          \"garbageEstimate\": 1000,\n          \"isStartingCollectionPoint\":false,\n          \"isEndingCollectionPoint\":false,\n          \"dumpingGround\": {\n          \t\"code\": \"DG Code 1\"\n          }\n        }\n        \n      ],\n      \"totalDistance\": 100,\n      \"totalGarbageEstimate\": 250\n    }\n  ]\n}"
 				},
 				"description": ""
 			},
@@ -479,7 +492,7 @@
 			"name": "Vendor Search",
 			"request": {
 				"url": {
-					"raw": "localhost:8899/swm-services/vendors/_search?tenantId=default",
+					"raw": "localhost:8899/swm-services/vendors/_search?tenantId=default&codes=f1c99f728dcf414c95579f584fc6b73a",
 					"host": [
 						"localhost"
 					],
@@ -493,6 +506,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "codes",
+							"value": "f1c99f728dcf414c95579f584fc6b73a",
 							"equals": true,
 							"description": ""
 						}
@@ -559,11 +578,12 @@
 			"name": "Refilling Pump Station Search",
 			"request": {
 				"url": {
-					"raw": "localhost:8899/swm-services/refillingpumpstations/_search?tenantId=default",
+					"raw": "egov-micro-dev.egovernments.org/swm-services/refillingpumpstations/_search?tenantId=default",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"refillingpumpstations",
@@ -589,7 +609,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}"
+					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"0b03bf9d-4a58-4af0-bec1-70d4183ca519\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}"
 				},
 				"description": ""
 			},
@@ -799,11 +819,12 @@
 			"name": "Vehicle Schedule Search",
 			"request": {
 				"url": {
-					"raw": "localhost:8899/swm-services/vehicleschedules/_search?tenantId=default",
+					"raw": "egov-micro-dev.egovernments.org/swm-services/vehicleschedules/_search?tenantId=default&regNumber=regNumber 2283",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"vehicleschedules",
@@ -813,6 +834,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "regNumber",
+							"value": "regNumber 2283",
 							"equals": true,
 							"description": ""
 						}
@@ -829,7 +856,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"79087f8e-fede-4b17-91ad-875097a9a459\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -1011,7 +1038,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"route\" :{\n            \t\"code\":\"b9af15c98a8d4e7d8b5bb7d4d708e21f\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":100,\n            \"exitWeight\":200\n      }\n   ]\n } "
+					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"route\" :{\n            \t\"code\":\"f1c99f728dcf414c95579f584fc6b73a\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":100,\n            \"exitWeight\":200\n      }\n   ]\n } "
 				},
 				"description": ""
 			},
@@ -1247,7 +1274,7 @@
 		{
 			"name": "Vendor Payment Details Create",
 			"request": {
-				"url": "http://localhost:8899/swm-services/vendorpaymentdetails/_create",
+				"url": "http://egov-micro-dev.egovernments.org/swm-services/vendorpaymentdetails/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -1258,7 +1285,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendorPaymentDetails\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vendorContract\":{\n\t\t\t\t\"contractNo\": \"MH-SWM-VNDR-CTRT-000001\"\n\t\t\t},\n\t\t\t\"invoiceNo\": \"AAA-VNDR-111\",\n\t\t\t\"fromDate\": 1510371526000,\n\t\t\t\"toDate\": 161039526000,\n\t\t\t\"vendorInvoiceAmount\": 20000,\n\t\t\t\"employee\":{\n\t\t\t\t\"code\": \"EMPLOYEE\"\n\t\t\t},\n\t\t\t\"documents\":[\n\t\t\t\t{\n\t\t\t\t\t\"fileStoreId\":\"sfsdfsdfsdf\"\n\t\t\t\t}\n\t\t\t]\n      }\n   ]\n } "
+					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"cf1d335e-102d-4234-9a73-99e8cff97363\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendorPaymentDetails\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vendorContract\":{\n\t\t\t\t\"contractNo\": \"MH-SWM-VNDR-CTRT-000050\"\n\t\t\t},\n\t\t\t\"invoiceNo\": \"AAA-VNDR-112\",\n\t\t\t\"fromDate\": 1513298047000,\n\t\t\t\"toDate\": 1514162047000,\n\t\t\t\"vendorInvoiceAmount\": 30000,\n\t\t\t\"employee\":{\n\t\t\t\t\"code\": \"Driver3\"\n\t\t\t},\n\t\t\t\"documents\":[\n\t\t\t\t{\n\t\t\t\t\t\"fileStoreId\":\"sfsdfsdfsdf\"\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"invoiceDate\":1516235647000\n      }\n   ]\n } "
 				},
 				"description": ""
 			},
@@ -1268,12 +1295,13 @@
 			"name": "Vendor Payment Details Search",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8899/swm-services/vendorpaymentdetails/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/swm-services/vendorpaymentdetails/_search?tenantId=default&vendorNo=MH-SWM-VNDR-000175",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"vendorpaymentdetails",
@@ -1283,6 +1311,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "vendorNo",
+							"value": "MH-SWM-VNDR-000175",
 							"equals": true,
 							"description": ""
 						}
@@ -1299,7 +1333,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"0364339a-64bb-44b8-8598-797f983f8fc7\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -1319,7 +1353,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendorPaymentDetails\":[\n      {\n      \t\t\"paymentNo\": \"MH-SWM-VNDR-PMNT-000002\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vendorContract\":{\n\t\t\t\t\"contractNo\": \"MH-SWM-VNDR-CTRT-000002\"\n\t\t\t},\n\t\t\t\"invoiceNo\": \"AAA-VNDR-112\",\n\t\t\t\"fromDate\": 1510371526000,\n\t\t\t\"toDate\": 161039526000,\n\t\t\t\"vendorInvoiceAmount\": 30000,\n\t\t\t\"employee\":{\n\t\t\t\t\"code\": \"EMPLOYEE U\"\n\t\t\t},\n\t\t\t\"documents\":[\n\t\t\t\t{\n\t\t\t\t\t\"fileStoreId\":\"123456789\"\n\t\t\t\t}\n\t\t\t]\n      }\n   ]\n } "
+					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"update\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24cc2960-0d9f-45b3-8c9b-c69ab7019abb\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vendorPaymentDetails\":[\n      {\n      \t\t\"paymentNo\": \"MH-SWM-VNDR-PMNT-000002\",\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vendorContract\":{\n\t\t\t\t\"contractNo\": \"MH-SWM-VNDR-CTRT-000002\"\n\t\t\t},\n\t\t\t\"invoiceNo\": \"AAA-VNDR-112\",\n\t\t\t\"fromDate\": 1510371526000,\n\t\t\t\"toDate\": 161039526000,\n\t\t\t\"vendorInvoiceAmount\": 30000,\n\t\t\t\"employee\":{\n\t\t\t\t\"code\": \"EMPLOYEE U\"\n\t\t\t},\n\t\t\t\"documents\":[\n\t\t\t\t{\n\t\t\t\t\t\"fileStoreId\":\"123456789\"\n\t\t\t\t}\n\t\t\t],\n\t\t\t\"invoiceDate\":1516235647000\n      }\n   ]\n } "
 				},
 				"description": ""
 			},

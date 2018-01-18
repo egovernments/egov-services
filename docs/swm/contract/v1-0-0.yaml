@@ -1953,7 +1953,7 @@ definitions:
         regNumber:
           type: string
           description: registration Number of the Vehicle. Should be unique across the platform. Special characters are not allowed. Space not allowed. 
-          maxLength: 12
+          maxLength: 22
           minLength: 6
           example: KA519876
         vehicleType:
@@ -3499,6 +3499,10 @@ definitions:
           description: invoice Number. 
           maxLength: 256
           minLength: 1
+        invoiceDate:
+          type: integer
+          format: int64
+          description: Date on which invoice was created.
         fromDate:
           type: integer
           format: int64

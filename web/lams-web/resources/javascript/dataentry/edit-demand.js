@@ -11,28 +11,10 @@ class EditDemand extends React.Component {
     this.close = this.close.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleChangeAll = this.handleChangeAll.bind(this);
   }
 
   close() {
     open(location, '_self').close();
-  }
-
-  validateOnSubmit(e) {
-    var rent = null;
-    var collection = null;
-    var isValid = true;
-    var demands = this.state.demands;
-
-    demands.forEach((demand) => {
-      rent = demand.taxAmount;
-      collection = demand.collectionAmount;
-      if (collection != 0 && collection != rent) {
-        isValid = false;
-      }
-    });
-
-    return isValid;
   }
 
   addOrUpdate(e) {
@@ -41,6 +23,20 @@ class EditDemand extends React.Component {
     var agreementDetail = this.state.agreementDetail;
     var demands = this.state.demands;
     var restOfDemands = this.state.restOfDemands;
+
+    for (var i = 0; i < demands.length; i++) {
+
+      if (demands[i].taxAmount < 0 || demands[i].collectionAmount < 0)
+         return showError("amount can't be negative.");
+      if (demands[i].collectionAmount
+        && demands[i].taxAmount < demands[i].collectionAmount)
+        return showError("advance collection is not allowed");
+      if (demands[i].collectionAmount
+        && demands[i].taxAmount > demands[i].collectionAmount)
+        return showError("partial collection is not allowed");
+
+    }
+
 
     var tempt = demands.concat(restOfDemands);
 
@@ -73,40 +69,15 @@ class EditDemand extends React.Component {
   }
 
   handleChange(e, name, k) {
-    
-    if (e.target.value < 0) {
-      e.preventDefault();
-      showError("amount can't be negative.");
-    }
-    else {
 
-      var tempDemands = this.state.demands.slice();
-      tempDemands[k][name] = e.target.value;
+    var tempDemands = this.state.demands.slice();
+    tempDemands[k][name] = e.target.value;
 
-      this.setState({
-        demands: tempDemands
-      })
-    }
+    this.setState({
+      demands: tempDemands
+    })
+
   }
-
-  handleChangeAll(e, whichProperty) {
-    var demands = this.state.demands;
-    if (e.target.value < 0) {
-      e.target.value = 0;
-      e.preventDefault();
-      showError("amount can't be negative.");
-    }
-    else {
-      for (var variable in demands) {
-        demands[variable][whichProperty] = e.target.value;
-      }
-
-      this.setState({
-        demands
-      })
-    }
-  }
-
 
   componentDidMount() {
     if (window.opener && window.opener.document) {
@@ -115,6 +86,7 @@ class EditDemand extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
       }
     }
+
   }
 
   componentWillMount() {
@@ -184,7 +156,7 @@ class EditDemand extends React.Component {
 
   render() {
     let { demands, paymentCycle, commonDemand, commonCollection } = this.state;
-    let { handleCheckAll, handleChangeAll, handleChange, save } = this;
+    let { handleCheckAll, handleChange, save } = this;
 
     var paymentCycleTh = paymentCycle.charAt(0).toUpperCase() + paymentCycle.slice(1).toLowerCase() + "ly Period";
 
@@ -212,17 +184,8 @@ class EditDemand extends React.Component {
     return (
       <div>
 
-        <form onSubmit={(e) => {
+        <form onSubmit={(e) => { this.addOrUpdate(e) }} >
 
-          var valid = this.validateOnSubmit(e);
-          if (valid) {
-            this.addOrUpdate(e);
-          } else {
-            e.preventDefault();
-            showError("Advance Collection and Partial Collection are not allowed");
-
-          }
-        }}>
           <div className="form-section-inner">
 
             <table id="editDemand" className="table table-bordered">

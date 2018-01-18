@@ -43,6 +43,7 @@ class EditDemand extends React.Component {
     var tempt = [];
 
     demands.forEach((demand) => {
+      if(demand.taxAmount && demand.collectionAmount)
       tempt.push(demand);
     });
 
@@ -75,20 +76,18 @@ class EditDemand extends React.Component {
   }
 
   handleChange(e, name, k) {
-
+    
     if (e.target.value < 0) {
       e.preventDefault();
       showError("amount can't be negative.");
     }
     else {
+
+      var tempDemands = this.state.demands.slice();
+      tempDemands[k][name] = e.target.value;
+
       this.setState({
-        demands: {
-          ...this.state.demands,
-          [k]: {
-            ...this.state.demands[k],
-            [name]: e.target.value
-          }
-        }
+        demands: tempDemands
       })
     }
   }
@@ -122,6 +121,7 @@ class EditDemand extends React.Component {
   }
 
   componentWillMount() {
+    var demands = [];
     var rentDemands = [];
     var penaltyDemands = [];
     var agreementDetail = {};
@@ -181,11 +181,11 @@ class EditDemand extends React.Component {
     let { demands, paymentCycle, commonDemand, commonCollection } = this.state;
     let { handleCheckAll, handleChangeAll, handleChange, save } = this;
 
-    var paymentCycleTh = paymentCycle.charAt(0).toUpperCase() + paymentCycle.slice(1).toLowerCase() + "LY Period";
+    var paymentCycleTh = paymentCycle.charAt(0).toUpperCase() + paymentCycle.slice(1).toLowerCase() + "ly Period";
 
     const renderBody = function () {
 
-      return rentDemands.map((demand, index) => {
+      return demands.map((demand, index) => {
 
         return (<tr key={index}>
           <td>{demand["taxPeriod"] + "[" + demand["taxReason"].toLowerCase() + "]"}</td>
@@ -233,11 +233,8 @@ class EditDemand extends React.Component {
               </tbody>
             </table>
             <div className="text-center">
-              <button type="button" className="btn btn-default" onClick={(e) => {
-                this.close()
-              }}>Close</button>
-
-              <button type="Submit" className="btn btn-submit">Submit</button>
+              <button type="Submit" className="btn btn-submit">Submit</button> &nbsp;&nbsp;
+              <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>
             </div>
           </div>
         </form>

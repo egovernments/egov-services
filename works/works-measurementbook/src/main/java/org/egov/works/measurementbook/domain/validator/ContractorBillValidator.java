@@ -140,7 +140,7 @@ public class ContractorBillValidator {
         List<BillRegister> billRegisters = new ArrayList<>();
         BillRegister billRegister = null;
         for(ContractorBill bill : contractorBillRequest.getContractorBills()) {
-            billRegister = prepairBillRegisterObject(bill);
+            billRegister = prepareBillRegisterObject(bill);
             billRegisters.add(billRegister);
         }
 
@@ -158,7 +158,7 @@ public class ContractorBillValidator {
         }
     }
 
-    private BillRegister prepairBillRegisterObject(ContractorBill bill) {
+    private BillRegister prepareBillRegisterObject(ContractorBill bill) {
         BillRegister billRegister;
         billRegister = new BillRegister();
         billRegister.setTenantId(bill.getTenantId());

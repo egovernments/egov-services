@@ -59,12 +59,14 @@ public class VehicleTripSheetDetailsEntity {
         vehicleTripSheetDetails.setOutTime(outTime);
         vehicleTripSheetDetails.setEntryWeight(entryWeight);
         vehicleTripSheetDetails.setExitWeight(exitWeight);
-        vehicleTripSheetDetails.setGarbageWeight(entryWeight - exitWeight);
         vehicleTripSheetDetails.setAuditDetails(new AuditDetails());
         vehicleTripSheetDetails.getAuditDetails().setCreatedBy(createdBy);
         vehicleTripSheetDetails.getAuditDetails().setCreatedTime(createdTime);
         vehicleTripSheetDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
         vehicleTripSheetDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+
+        if(entryWeight != null && exitWeight !=null)
+            vehicleTripSheetDetails.setGarbageWeight(entryWeight - exitWeight);
 
         return vehicleTripSheetDetails;
 

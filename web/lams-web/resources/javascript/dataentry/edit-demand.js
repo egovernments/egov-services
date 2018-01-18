@@ -29,7 +29,6 @@ class EditDemand extends React.Component {
       collection = demand.collectionAmount;
       if (collection > rent) {
         isValid = false;
-        break;
       }
     });
 
@@ -163,7 +162,6 @@ class EditDemand extends React.Component {
         if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
           demands.splice(index, 0, pDemand);
           index++;
-          break;
         }
       });
 

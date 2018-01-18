@@ -2,22 +2,19 @@ class EditDemand extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      demands: {},
+      demands: [],
       agreementDetail: {},
       paymentCycle: "",
       commonDemand: null,
       commonCollection: null
     }
-
     this.close = this.close.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeAll = this.handleChangeAll.bind(this);
-
   }
 
   close() {
-    // widow.close();
     open(location, '_self').close();
   }
 
@@ -28,8 +25,8 @@ class EditDemand extends React.Component {
     var demands = this.state.demands;
 
     for (var demand in demands) {
-      rent = demands[demand].taxAmount;
-      collection = demands[demand].collectionAmount;
+      rent = demand.taxAmount;
+      collection = demand.collectionAmount;
       if (collection > rent) {
         isValid = false;
         break;
@@ -39,14 +36,14 @@ class EditDemand extends React.Component {
   }
 
   addOrUpdate(e) {
+
     e.preventDefault();
     var agreementDetail = this.state.agreementDetail;
     var demands = this.state.demands;
     var tempt = [];
 
     for (var variable in demands) {
-      console.log(demands[variable]);
-      tempt.push(demands[variable]);
+      tempt.push(variable);
     }
 
     agreementDetail["legacyDemands"][0]["demandDetails"] = tempt;
@@ -154,21 +151,23 @@ class EditDemand extends React.Component {
       }
     }
 
+    var index = 0;
 
     for (var i = 0; i < rentDemands.length; i++) {
 
+      demands.splice(index, 0, rentDemands[i]);
+      index++;
+
       for (var pDemand in penaltyDemands) {
         if (pDemand.taxPeriod === rentDemands[i].taxPeriod) {
-         rentDemands.splice(i+1, 0, pDemand);
-         break;
+          demands.splice(index, 0, pDemand);
+          index++;
+          break;
         }
       }
-      
-    }
- 
 
-    demands = rentDemands;
-     
+    }
+
     // console.log(demands);
     this.setState({
       demands,
@@ -191,12 +190,14 @@ class EditDemand extends React.Component {
         return (<tr key={index}>
           <td>{demand["taxPeriod"] + "[" + demand["taxReason"].toLowerCase() + "]"}</td>
           <td data-label="demand">
-            <input type="number" name={demand["taxPeriod"]+"demand"} value={demand["taxAmount"]} onChange={(e) => {
-              handleChange(e, "taxAmount", index) }} />
+            <input type="number" name={demand["taxPeriod"] + "demand"} value={demand["taxAmount"]} onChange={(e) => {
+              handleChange(e, "taxAmount", index)
+            }} />
           </td>
           <td data-label="collection">
-            <input type="number" name={demand["taxPeriod"]+"collection"} value={demand["collectionAmount"]} onChange={(e) => {
-              handleChange(e, "collectionAmount", index)  }} disabled={demand.isCollected} />
+            <input type="number" name={demand["taxPeriod"] + "collection"} value={demand["collectionAmount"]} onChange={(e) => {
+              handleChange(e, "collectionAmount", index)
+            }} disabled={demand.isCollected} />
           </td>
         </tr>)
       })
@@ -226,12 +227,9 @@ class EditDemand extends React.Component {
                   <th className="text-center">Demand</th>
                   <th>Collection</th>
                 </tr>
-
-                {renderBody()}
-
               </thead>
               <tbody>
-
+                {renderBody()}
               </tbody>
             </table>
             <div className="text-center">

@@ -290,6 +290,7 @@ class AssetDepreciation extends React.Component {
             <th>Value after Depreciation(Rs.)</th>
             <th>Success / Failure</th>
             <th>Reason for Failure</th>
+            <th>Voucher Number</th>
         </tr>
         </thead>
         <tbody>
@@ -319,6 +320,7 @@ class AssetDepreciation extends React.Component {
           <td>{asset.valueAfterDepreciation || 0}</td>
           <td>{asset.status}</td>
           <td>{asset.reasonForFailure || 'N/A'}</td>
+          <td>{asset.voucherReference}</td>
         </tr>
       )
     })

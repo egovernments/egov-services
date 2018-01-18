@@ -111,38 +111,41 @@ public class KpiValueServiceImpl implements KpiValueService {
 		else { 
 			list = kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
 		}
-		
-			List<KpiValueDetail> detailList = new ArrayList<>(); 
-			List<String> valueIdList = new ArrayList<>(); 
-			for(ULBKpiValueList eachRecord : list) { 
-				List<ValueList> finYearList = eachRecord.getFinYearList();
-				for(ValueList eachValue : finYearList) {
-					List<KpiValue> kpiValuesList = eachValue.getKpiValueList(); 
-					for(KpiValue kpiValue : kpiValuesList) { 
-						if(null != kpiValue) {
-							detailList = kpiValue.getValueList(); 
-							valueIdList.add(kpiValue.getId()); 
-						}
-					}
-				}
-			}
-			
-			List<ValueDocument> documentList = kpiValueRepository.getDocsForValueRecords(valueIdList); 
-			for(KpiValueDetail detail : detailList) { 
-				Boolean hasDocument = Boolean.FALSE; 
-				List<ValueDocument> detailDocumentList = new ArrayList<>(); 
-				for(ValueDocument document : documentList) { 
-					if(StringUtils.isNotBlank(detail.getId()) && StringUtils.isNotBlank(document.getValueId()) && detail.getId().equals(document.getValueId())) { 
-						detailDocumentList.add(document);
-						hasDocument = Boolean.TRUE;
-					}
-				}
-				if(hasDocument)  detail.setDocumentList(detailDocumentList);
-			}
-			
-			
-		
+		getDocsForValueList(list);
 		return list;
+	}
+	
+	private void getDocsForValueList(List<ULBKpiValueList> list) {
+		List<KpiValueDetail> detailList = new ArrayList<>();
+		List<String> valueIdList = new ArrayList<>();
+		for (ULBKpiValueList eachRecord : list) {
+			List<ValueList> finYearList = eachRecord.getFinYearList();
+			for (ValueList eachValue : finYearList) {
+				List<KpiValue> kpiValuesList = eachValue.getKpiValueList();
+				for (KpiValue kpiValue : kpiValuesList) {
+					if (null != kpiValue) {
+						detailList = kpiValue.getValueList();
+						valueIdList.add(kpiValue.getId());
+					}
+				}
+			}
+		}
+
+		List<ValueDocument> documentList = kpiValueRepository.getDocsForValueRecords(valueIdList);
+		for (KpiValueDetail detail : detailList) {
+			Boolean hasDocument = Boolean.FALSE;
+			List<ValueDocument> detailDocumentList = new ArrayList<>();
+			for (ValueDocument document : documentList) {
+				if (StringUtils.isNotBlank(detail.getId()) && StringUtils.isNotBlank(document.getValueId())
+						&& detail.getId().equals(document.getValueId())) {
+					detailDocumentList.add(document);
+					hasDocument = Boolean.TRUE;
+				}
+			}
+			if (hasDocument) { 
+				detail.setDocumentList(detailDocumentList);
+			}
+		}
 	}
 
 	@Override

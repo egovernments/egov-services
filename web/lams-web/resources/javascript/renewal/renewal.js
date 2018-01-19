@@ -861,7 +861,7 @@ class RenewalAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="securityDeposit">Advace Collection:</label>
+                    <label htmlFor="securityDeposit">Advance Collection:</label>
                   </div>
                   <div className="col-sm-6 label-view-text">
                     <label id="securityDeposit" name="securityDeposit">

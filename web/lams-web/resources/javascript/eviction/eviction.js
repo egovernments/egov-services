@@ -500,10 +500,12 @@ class EvictionAgreement extends React.Component {
     componentDidMount() {
 
         var _this = this;
+        var ad = this.state.agreement.agreementDate;
+        var startDate =  new Date(ad.split("/")[2], ad.split("/")[1] - 1, ad.split("/")[0]);
 
         $('#evictionProceedingDate').datepicker({
             format: 'dd/mm/yyyy',
-            //startDate: new Date(),
+            startDate: startDate,
             autoclose: true,
             defaultDate: ""
         });
@@ -805,7 +807,7 @@ class EvictionAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="securityDeposit">Advace Collection:</label>
+                                        <label htmlFor="securityDeposit">Advance Collection:</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="securityDeposit" name="securityDeposit">

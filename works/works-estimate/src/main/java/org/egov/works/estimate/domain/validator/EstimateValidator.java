@@ -580,7 +580,7 @@ public class EstimateValidator {
             List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
             List<String> filetsValuesList = new ArrayList<>(Arrays.asList(status.getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
             JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
-                    filetsValuesList, status.getTenantId(), requestInfo,
+                    filetsValuesList, tenantId, requestInfo,
                     CommonConstants.MODULENAME_WORKS);
             if(dBStatusArray != null && dBStatusArray.isEmpty())
                 messages.put(Constants.KEY_WORKS_ESTIMATE_STATUS_INVALID,

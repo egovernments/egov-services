@@ -41,6 +41,7 @@ public class ApplicationProperties {
     @Value("${kafka.topics.save.asset}")
     private String createAssetTopicName;
     
+    
     private String createAssetTopicNameTemp = "save-asset-maha";
 
     @Value("${kafka.topics.update.asset}")
@@ -168,6 +169,17 @@ public class ApplicationProperties {
     
     @Value("${errcode.depreciation.depreciationdate}")
     private String depreciationDate;
+    
+/*    @Value("${kafka.topics.save.workflow}")
+    private String startWfAssetTopicName;
+    
+    @Value("${kafka.topics.update.workflow}")
+    private String updateWfAssetTopicName;*/
+    
+    @Value("${errcode.asset.description}")
+    private String description;
+    
+    
     
     @Autowired
     private Environment environment;

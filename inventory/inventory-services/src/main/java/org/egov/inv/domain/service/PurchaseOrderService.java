@@ -621,6 +621,7 @@ public class PurchaseOrderService extends DomainService {
 
 
                             //validation of order quantity incase of tender
+                            if (poDetail.getPriceList() != null && poDetail.getPriceList().getRateType() != null && poDetail.getPriceList().getRateType().toString().equalsIgnoreCase(PriceList.RateTypeEnum.ONE_TIME_TENDER.toString()))
                             if(poDetail == null || poDetail.getTenderQuantity() != null) {
                             	if ((poDetail.getOrderQuantity().add(poDetail.getUsedQuantity())).compareTo(poDetail.getTenderQuantity()) > 0) {
                                     errors.addDataError(ErrorCode.ORDQTY_LE_TENDQTY.getCode(), poDetail.getOrderQuantity().toString() + " at serial no." + detailIndex);

@@ -430,8 +430,8 @@ class AgreementSearch extends React.Component {
                         <td>{item.asset.assetCategory.id ? category_name : "-"}</td>
                         <td>{item.asset.code}</td>
                         <td>{item.createdDate}</td>
-                        <td>{item.action == "CREATE" ? "NEW" : item.action}
-                        <td>{item.status}
+                        <td>{item.action == "CREATE" ? "NEW" : item.action}  </td>
+                        <td>{item.status}  </td>
                         <td>{item.source == "DATA_ENTRY" ? "Data Entry" : "System"}</td>
                         <td>
                             <div className="styled-select">

@@ -51,13 +51,25 @@ public class DataUploadUtils {
         List<List<Object>> excelData = new ArrayList<>(); 
         int rowStart = sheet.getFirstRowNum();
         int rowEnd = sheet.getLastRowNum();
-        List<Object> dataList = new ArrayList<>();
-        for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
+        int totalRows = 0;
+        logger.info("start row of the sheet: "+rowStart);
+        logger.info("last row of the sheet: "+rowEnd);
+        for (int rowNum = rowStart; rowNum < (rowEnd + 1); rowNum++) {
+            List<Object> dataList = new ArrayList<>();
+           logger.info("Parsing row: "+rowNum);
            Row row = sheet.getRow(rowNum);
            if (null == row) {
+        	  logger.info("empty row: row - "+rowNum);
               continue;
            }
-           int lastColumn = row.getLastCellNum();
+           int lastColumn = 0;
+           if(rowNum == 0) {
+        	   totalRows = row.getLastCellNum();
+        	   lastColumn = totalRows;
+           }else {
+        	   lastColumn = Math.max(totalRows, row.getLastCellNum());
+           }
+           logger.info("last column of this row: "+lastColumn);
            for (int colNum = 0; colNum < lastColumn; colNum++) {
               Cell cell = row.getCell(colNum, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL );
               if(null == cell) {
@@ -93,10 +105,13 @@ public class DataUploadUtils {
 
 		            	}
 		            }	
-		            if(!dataList.isEmpty())
-		               	excelData.add(dataList);
 	          }
            }
+           logger.info("dataList: "+dataList);
+           if(!dataList.isEmpty()) {
+              	excelData.add(dataList);
+           }
+           
         }
 	    logger.info("coloumnHeaders: "+coloumnHeaders);
 	    logger.info("excelData: "+excelData);

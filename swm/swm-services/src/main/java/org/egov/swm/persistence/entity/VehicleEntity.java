@@ -65,6 +65,8 @@ public class VehicleEntity {
 
     private Boolean isVehicleUnderWarranty;
 
+    private Boolean isUlbOwned;
+
     private String createdBy = null;
 
     private String lastModifiedBy = null;
@@ -99,6 +101,7 @@ public class VehicleEntity {
         vehicle.setKilometers(kilometers);
         vehicle.setEndOfWarranty(endOfWarranty);
         vehicle.setIsVehicleUnderWarranty(isVehicleUnderWarranty);
+        vehicle.setIsUlbOwned(isUlbOwned);
         vehicle.setAuditDetails(new AuditDetails());
         vehicle.getAuditDetails().setCreatedBy(createdBy);
         vehicle.getAuditDetails().setCreatedTime(createdTime);

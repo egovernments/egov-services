@@ -78,6 +78,9 @@ public class Vehicle {
     @JsonProperty("isVehicleUnderWarranty")
     private Boolean isVehicleUnderWarranty;
 
+    @JsonProperty("isUlbOwned")
+    private Boolean isUlbOwned;
+
     @Valid
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;

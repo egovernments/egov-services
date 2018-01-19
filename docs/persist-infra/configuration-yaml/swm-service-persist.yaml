@@ -91,7 +91,7 @@ serviceMaps:
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, driver, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, isvehicleunderwarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, driver, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, isvehicleunderwarranty, isulbowned, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*
       jsonMaps:
        
@@ -142,6 +142,9 @@ serviceMaps:
        - jsonPath: $.vehicles.*.isVehicleUnderWarranty
          dbType: BOOLEAN
 
+       - jsonPath: $.vehicles.*.isUlbOwned
+         dbType: BOOLEAN
+
        - jsonPath: $.vehicles.*.auditDetails.createdBy
 
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedBy
@@ -180,7 +183,7 @@ serviceMaps:
    fromTopic: swm-vehicle-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, operatorsReq=?, model=?, driver=?, vendor=?, purchasedate=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, kilometers=?, endOfWarranty=?, isvehicleunderwarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE regnumber=? AND tenantid=?;
+    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, operatorsReq=?, model=?, driver=?, vendor=?, purchasedate=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, kilometers=?, endOfWarranty=?, isvehicleunderwarranty=?, isulbowned=?, lastmodifiedby=?, lastmodifiedtime=? WHERE regnumber=? AND tenantid=?;
       basePath: $.vehicles.*
       jsonMaps:
 
@@ -225,6 +228,9 @@ serviceMaps:
          dbType: LONG
 
        - jsonPath: $.vehicles.*.isVehicleUnderWarranty
+         dbType: BOOLEAN
+
+       - jsonPath: $.vehicles.*.isUlbOwned
          dbType: BOOLEAN
 
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedBy

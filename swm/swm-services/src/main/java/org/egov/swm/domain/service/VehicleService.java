@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 @Transactional(readOnly = true)
 public class VehicleService {
@@ -122,7 +124,7 @@ public class VehicleService {
 
         if(!vehicleMaintenances.getPagedData().isEmpty()){
             vehicleSearch.setRegNumbers(vehicleMaintenances.getPagedData().stream()
-                            .map(v -> {return (v.getVehicle() != null) ? v.getVehicle().getRegNumber() : StringUtils.EMPTY;})
+                            .map(v -> (v.getVehicle() != null) ? v.getVehicle().getRegNumber() : StringUtils.EMPTY)
                             .distinct()
                             .collect(Collectors.joining(",")));
         }
@@ -227,6 +229,20 @@ public class VehicleService {
             } else {
                 throw new CustomException("Driver",
                         "The field Driver is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            }
+
+            //validate for is vehicle under warranty
+            if(vehicle.getIsVehicleUnderWarranty()){
+                if(vehicle.getKilometers() == null || vehicle.getEndOfWarranty() == null)
+                    throw new CustomException("isVehicleUnderWarranty",
+                            "Value should be present for both kilometer and endOfWarranty");
+            }
+
+            //validate for is ulb owned
+            if(vehicle.getIsUlbOwned()){
+                if(vehicle.getVendor() == null || !isEmpty(vehicle.getVendor()))
+                    throw new CustomException("isVehicleUnderWarranty",
+                            "Value should be present for vendor");
             }
 
             validateUniqueFields(action, vehicle);

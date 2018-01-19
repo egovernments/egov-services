@@ -1,0 +1,2 @@
+ALTER TABLE egswm_vehicle ADD COLUMN isulbowned BOOLEAN DEFAULT FALSE;
+

@@ -301,6 +301,14 @@ public class PriceListJdbcRepository extends JdbcRepository {
             params.append("supplier in (:suppliers)");
             paramValues.put("suppliers", priceListSearchRequest.getSuppliers());
         }
+        
+        if (priceListSearchRequest.getSupplierName() != null) {
+            if (params.length() > 0) {
+                params.append(" and ");
+            }
+            params.append("supplier =:supplierName");
+            paramValues.put("supplierName", priceListSearchRequest.getSupplierName());
+        }
 
         if (priceListSearchRequest.getRateType() != null) {
             if (params.length() > 0) {

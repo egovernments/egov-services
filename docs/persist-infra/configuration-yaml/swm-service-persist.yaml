@@ -810,6 +810,16 @@ serviceMaps:
 
        - jsonPath: $.vendorContracts.*.tenantId
 
+    - query: INSERT INTO egswm_vendorservicesOffered(tenantid, vendor, service) VALUES (?, ?, ?);
+      basePath: $.vendors.*.servicesOffered.*
+      jsonMaps:
+       
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].tenantId
+
+       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].vendorNo
+         
+       - jsonPath: $.vendors.*.servicesOffered.*.code
+
  - version: 1.0
    name: vehiclemaintenance create
    description: create vehiclemaintenance in egswm_vehiclemaintenance

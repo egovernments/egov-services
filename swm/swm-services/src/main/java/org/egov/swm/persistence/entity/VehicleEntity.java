@@ -63,6 +63,8 @@ public class VehicleEntity {
 
     private Long endOfWarranty = null;
 
+    private Boolean isVehicleUnderWarranty;
+
     private String createdBy = null;
 
     private String lastModifiedBy = null;
@@ -96,6 +98,7 @@ public class VehicleEntity {
         vehicle.getInsuranceDetails().setInsuranceValidityDate(insuranceValidityDate);
         vehicle.setKilometers(kilometers);
         vehicle.setEndOfWarranty(endOfWarranty);
+        vehicle.setIsVehicleUnderWarranty(isVehicleUnderWarranty);
         vehicle.setAuditDetails(new AuditDetails());
         vehicle.getAuditDetails().setCreatedBy(createdBy);
         vehicle.getAuditDetails().setCreatedTime(createdTime);

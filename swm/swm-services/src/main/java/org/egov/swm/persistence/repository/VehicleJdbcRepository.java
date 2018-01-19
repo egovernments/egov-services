@@ -163,6 +163,11 @@ public class VehicleJdbcRepository extends JdbcRepository {
             params.append(" vendor IS NULL");
         }
 
+        if(searchRequest.getIsUnderWarranty() != null){
+            addAnd(params);
+            params.append("isvehicleunderwarranty IS " + searchRequest.getIsUnderWarranty());
+        }
+
         Pagination<Vehicle> page = new Pagination<>();
         if (searchRequest.getOffset() != null)
             page.setOffset(searchRequest.getOffset());

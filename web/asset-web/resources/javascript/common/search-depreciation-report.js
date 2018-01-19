@@ -34,7 +34,7 @@ class SearchDepreciationReport extends React.Component {
       this.setState({
           searchSet:{
               ...this.state.searchSet,
-              [name]:e && e.target && e.target.value || e
+              [name]:e.target.value
           }
       })
   }
@@ -165,7 +165,8 @@ class SearchDepreciationReport extends React.Component {
       $( "#assetCode" ).autocomplete({
         source: assetCode,
         change: function( event, ui ) {
-          handleChange(ui.item.value, event.target.id)
+          let e = {target:{value:ui.item && ui.item.value || ''}};
+          handleChange(e, event.target.id)
         }
       });
 
@@ -173,7 +174,8 @@ class SearchDepreciationReport extends React.Component {
         source: uniqueNames,
         change: function( event, ui ) {
           if(ui.item){
-            handleChange(ui.item.value, event.target.id);
+            let e = {target:{value:ui.item && ui.item.value || ''}};
+            handleChange(e, event.target.id);
           }
         }
       });

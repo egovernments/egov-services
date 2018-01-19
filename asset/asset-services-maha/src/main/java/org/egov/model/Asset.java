@@ -188,5 +188,8 @@ public class Asset {
 	@JsonProperty("transactionHistory")
 	private List<TransactionHistory> transactionHistory;
 	
+	@JsonProperty("unitOfMeasurement")
+	private String unitOfMeasurement;
+	
 	
 }

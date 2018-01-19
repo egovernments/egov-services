@@ -91,6 +91,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setLongitude(getDoubleFromBigDecimal(rs.getBigDecimal("longitude")));
                 asset.setLatitude(getDoubleFromBigDecimal(rs.getBigDecimal("latitude")));
                 asset.setQuantity((Long) rs.getObject("quantity"));
+                asset.setUnitOfMeasurement(rs.getString("uom"));
                 asset.setAssetReference((Long) rs.getObject("assetreference"));
                 asset.setOpeningDate(rs.getLong("openingDate"));
                 asset.setLocation(rs.getString("location"));

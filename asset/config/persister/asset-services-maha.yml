@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: save-asset-maha
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egasset_asset( id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation, assetattributes, depreciationrate, anticipatedlife, ordernumber,  orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,  defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavailable, totalarea, address, longitude, latitude, quantity, tenantid, zone, revenueward, street, electionward, doorno, pincode, locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate, openingdate, fundsource, location, assetcategorytype)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?,?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egasset_asset( id, name, code, oldcode, departmentcode, assetcategory, modeofacquisition,status, grossvalue, accumulateddepreciation, description, dateofcreation,remarks, version, assetreference, enableyearwisedepreciation, assetattributes, depreciationrate, anticipatedlife, ordernumber,  orderdate, wipreferenceno, acquiredfrom, warrantyavailable, warrantyexpirydate,  defectliabilityyear, defectliabilitymonth, defectliabilityday,securitydepositretained, securitydepositrealized, acquisitiondate,originalvalue, assetaccount, accumulateddepreciationaccount,revaluationreserveaccount, depreciationexpenseaccount, titledocumentsavailable, totalarea, address, longitude, latitude, quantity, tenantid, zone, revenueward, street, electionward, doorno, pincode, locality, block, createdby, createddate, lastmodifiedby, lastmodifieddate, openingdate, fundsource, location, assetcategorytype, uom)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?,?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
 
       basePath: Asset
       jsonMaps:
@@ -133,6 +133,9 @@ serviceMaps:
        - jsonPath: $.Asset.location
        
        - jsonPath: $.Asset.assetCategory.assetCategoryType
+     
+       - jsonPath: $.Asset.unitOfMeasurement       
+       
        
     - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid, id)VALUES (?, ?, ?, ?, ?, ?)ON CONFLICT (id,tenantid,assetid) DO UPDATE  SET  code=?,surveynumber=?, area=?;
       basePath: Asset.landDetails.*
@@ -165,7 +168,7 @@ serviceMaps:
    fromTopic: update-asset-maha
    isTransaction: true
    queryMaps:
-    - query: UPDATE  egasset_asset SET name=?, oldcode=?, departmentcode=?, assetcategory=?, modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?, enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?, anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?, acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?, defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavailable=?, totalarea=?,address=?, longitude=?, latitude=?, quantity=?, zone=?,revenueward=?, street=?, electionward=?, doorno=?, pincode=?,locality=?, block=?, lastmodifiedby=?,lastmodifieddate=?, openingdate=?, fundsource=?, location=?,assetcategorytype=? WHERE id = ? AND tenantId = ?;
+    - query: UPDATE  egasset_asset SET name=?, oldcode=?, departmentcode=?, assetcategory=?, modeofacquisition=?, status=?, grossvalue=?, accumulateddepreciation=?,description=?, dateofcreation=?, remarks=?, version=?, assetreference=?, enableyearwisedepreciation=?, assetattributes=?, depreciationrate=?, anticipatedlife=?, ordernumber=?, orderdate=?, wipreferenceno=?, acquiredfrom=?, warrantyavailable=?, warrantyexpirydate=?, defectliabilityyear=?, defectliabilitymonth=?, defectliabilityday=?, securitydepositretained=?,securitydepositrealized=?, acquisitiondate=?, originalvalue=?,assetaccount=?, accumulateddepreciationaccount=?, revaluationreserveaccount=?,depreciationexpenseaccount=?, titledocumentsavailable=?, totalarea=?,address=?, longitude=?, latitude=?, quantity=?, zone=?,revenueward=?, street=?, electionward=?, doorno=?, pincode=?,locality=?, block=?, lastmodifiedby=?,lastmodifieddate=?, openingdate=?, fundsource=?, location=?,assetcategorytype=?, uom=? WHERE id = ? AND tenantId = ?;
       basePath: Asset
       jsonMaps:
       
@@ -280,6 +283,8 @@ serviceMaps:
        - jsonPath: $.Asset.location
        
        - jsonPath: $.Asset.assetCategory.assetCategoryType
+       
+       - jsonPath: $.Asset.unitOfMeasurement
        
        - jsonPath: $.Asset.id
        

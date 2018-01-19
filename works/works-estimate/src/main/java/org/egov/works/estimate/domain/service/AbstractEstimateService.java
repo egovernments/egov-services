@@ -262,7 +262,7 @@ public class AbstractEstimateService {
             }
             workFlowDetails.setStateId(abstractEstimate.getStateId());
             if (abstractEstimate.getStatus() != null)
-                workFlowDetails.setStatus(abstractEstimate.getStatus().toString());
+                workFlowDetails.setStatus(abstractEstimate.getStatus().getCode());
 
             if (null != requestInfo && null != requestInfo.getUserInfo()) {
                 workFlowDetails.setSenderName(requestInfo.getUserInfo().getUserName());

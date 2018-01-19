@@ -26,6 +26,7 @@ UploadDefinitions:
    tenantIdPaths: ["$.Asset.tenantId","$.Asset.landDetails.*.tenantId"]
    uri: /asset-services-maha/assets/_create
    isBulkApi: false
+   isParentChild: true
    uniqueKeysForInnerObject: []
    uniqueParentKeys: ["Asset Name","Asset Description"]
    additionalResFields:

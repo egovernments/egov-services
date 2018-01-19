@@ -1,7 +1,11 @@
 package org.egov.swm.persistence.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.PaymentTerms;
+import org.egov.swm.domain.model.ServicesOffered;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorContract;
 
@@ -45,7 +49,9 @@ public class VendorContractEntity {
     private Long createdTime = null;
 
     private Long lastModifiedTime = null;
-
+    
+    private List<ServicesOffered> serviceOffered = new ArrayList<>();
+    
     public VendorContract toDomain() {
 
         final VendorContract vendorContract = new VendorContract();

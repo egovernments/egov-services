@@ -2,17 +2,23 @@ package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.ServicesOffered;
+import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorContract;
 import org.egov.swm.domain.model.VendorContractSearch;
 import org.egov.swm.domain.model.VendorSearch;
+import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.domain.service.VendorService;
 import org.egov.swm.persistence.entity.VendorContractEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +32,12 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
     @Autowired
     private VendorService vendorService;
+    
+    @Autowired
+    private SwmProcessService swmProcessService;
+    
+    @Autowired
+    public VendorContractServicesOfferedJdbcRepository vendorContractServicesOfferedJdbcRepository;
 
     public Pagination<VendorContract> search(final VendorContractSearch searchRequest) {
 
@@ -97,6 +109,22 @@ public class VendorContractJdbcRepository extends JdbcRepository {
             params.append("paymentAmount =:paymentAmount");
             paramValues.put("paymentAmount", searchRequest.getPaymentAmount());
         }
+        
+        if (searchRequest.getServices() != null) {
+
+            ServicesOffered servicesOfferedSearch = ServicesOffered.builder().services(searchRequest.getServices())
+                    .tenantId(searchRequest.getTenantId())
+                    .build();
+            List<ServicesOffered> servicesOffereds = vendorContractServicesOfferedJdbcRepository.search(servicesOfferedSearch);
+            List<String> vendorNos = servicesOffereds.stream()
+                    .map(ServicesOffered::getVendor).distinct().collect(Collectors.toList());
+            if (vendorNos != null && !vendorNos.isEmpty()) {
+                addAnd(params);
+                params.append("vendor =:vendor");
+                paramValues.put("vendor", vendorNos);
+            }
+
+        }
 
         Pagination<VendorContract> page = new Pagination<>();
         if (searchRequest.getOffset() != null)
@@ -125,14 +153,28 @@ public class VendorContractJdbcRepository extends JdbcRepository {
         final List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
+        StringBuffer vendorNos = new StringBuffer();
+
+        
         for (final VendorContractEntity entity : vendorContractEntities) {
 
             vendorContractList.add(entity.toDomain());
+            
+            
+            if (vendorNos.length() >= 1)
+                vendorNos.append(",");
+
+            vendorNos.append(entity.getVendor());
+            
+            
+            
         }
 
         if (vendorContractList != null && !vendorContractList.isEmpty()) {
 
             populateVendors(vendorContractList);
+            
+            populateServicesOffered(vendorContractList, vendorNos.toString());
         }
         page.setTotalResults(vendorContractList.size());
 
@@ -201,6 +243,68 @@ public class VendorContractJdbcRepository extends JdbcRepository {
             }
         }
 
+    }
+    
+    
+    private void populateServicesOffered(List<VendorContract> vendorContracts, String vendorCodes) {
+        Map<String, List<ServicesOffered>> servicesOfferedMap = new HashMap<>();
+        Map<String, List<SwmProcess>> swmProcessListMap = new HashMap<>();
+        Map<String, SwmProcess> swmProcessMap = new HashMap<>();
+        String tenantId = null;
+        ServicesOffered cpds;
+        cpds = new ServicesOffered();
+
+        if (vendorContracts != null && !vendorContracts.isEmpty())
+            tenantId = vendorContracts.get(0).getTenantId();
+
+        if (tenantId != null && !tenantId.isEmpty()) {
+
+            cpds.setVendorNos(vendorCodes);
+            cpds.setTenantId(tenantId);
+
+            List<ServicesOffered> servicesOffered = vendorContractServicesOfferedJdbcRepository.search(cpds);
+
+            if (servicesOffered != null && !servicesOffered.isEmpty()) {
+
+                List<SwmProcess> swmProcessList = swmProcessService.getAll(tenantId, new RequestInfo());
+
+                for (SwmProcess sp : swmProcessList) {
+                    swmProcessMap.put(sp.getCode(), sp);
+                }
+
+                for (ServicesOffered cpd : servicesOffered) {
+
+                    if (servicesOfferedMap.get(cpd.getVendor()) == null) {
+
+                        swmProcessListMap.put(cpd.getVendor(), Collections.singletonList(swmProcessMap.get(cpd.getService())));
+
+                        servicesOfferedMap.put(cpd.getVendor(), Collections.singletonList(cpd));
+
+                    } else {
+
+                        List<SwmProcess> bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendor()));
+
+                        bList.add(swmProcessMap.get(cpd.getService()));
+
+                        swmProcessListMap.put(cpd.getVendor(), bList);
+
+                        List<ServicesOffered> cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendor()));
+
+                        cpdList.add(cpd);
+
+                        servicesOfferedMap.put(cpd.getVendor(), cpdList);
+
+                    }
+                }
+
+                for (VendorContract vendorContract : vendorContracts) {
+
+                    vendorContract.setServicesOffered(swmProcessListMap.get(vendorContract.getVendor().getVendorNo()));
+
+                }
+
+            }
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package org.egov.swm.domain.model;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -65,5 +67,10 @@ public class VendorContract {
     @Valid
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
+    
+    @NotNull
+    @Size(min = 1)
+    @JsonProperty("servicesOffered")
+    private List<SwmProcess> servicesOffered = null;
 
 }

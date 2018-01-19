@@ -15,4 +15,5 @@ public class VendorContractSearch extends VendorContract {
     private String sortBy;
     private Integer pageSize;
     private Integer offset;
+    private String services;
 }

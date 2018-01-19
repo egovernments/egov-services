@@ -761,6 +761,16 @@ serviceMaps:
        - jsonPath: $.vendorContracts.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendor, service) VALUES (?, ?, ?);
+      basePath: $.vendorContracts.*.servicesOffered.*
+      jsonMaps:
+       
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.tenantId
+
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.vendorNo
+         
+       - jsonPath: $.vendors.*.servicesOffered.*.code
+
  - version: 1.0
    name: vendorcontract update
    description: update vendorcontract in egswm_vendorcontract

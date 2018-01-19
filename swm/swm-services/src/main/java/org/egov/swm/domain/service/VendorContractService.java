@@ -8,6 +8,7 @@ import java.util.TimeZone;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorContract;
 import org.egov.swm.domain.model.VendorContractSearch;
@@ -37,6 +38,9 @@ public class VendorContractService {
     @Value("${egov.swm.vendor.contract.num.idgen.name}")
     private String idGenNameForVendorContractNumPath;
 
+    @Autowired
+    private SwmProcessService swmProcessService;
+    
     @Transactional
     public VendorContractRequest create(final VendorContractRequest vendorContractRequest) {
 
@@ -53,9 +57,11 @@ public class VendorContractService {
             for (final VendorContract vc : vendorContractRequest.getVendorContracts()) {
 
                 setAuditDetails(vc, userId);
-
-                vc.setContractNo(
-                        generateVendorContractNumber(vc.getTenantId(), vendorContractRequest.getRequestInfo()));
+                
+                vc.setContractNo("VCA");
+//
+//                vc.setContractNo(
+//                        generateVendorContractNumber(vc.getTenantId(), vendorContractRequest.getRequestInfo()));
 
             }
 
@@ -90,6 +96,7 @@ public class VendorContractService {
 
     private void validate(final VendorContractRequest vendorContractRequest) {
 
+        SwmProcess p;
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -101,6 +108,26 @@ public class VendorContractService {
                 throw new CustomException("FuelType",
                         "The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
+            if (vendorContract.getServicesOffered() != null)
+                for (final SwmProcess process : vendorContract.getServicesOffered()) {
+
+                    if (process != null && (process.getCode() == null || process.getCode().isEmpty()))
+                        throw new CustomException("ServicesOffered", "Code is missing in ServicesOffered");
+
+                    // Validate Swm Process
+                    if (process.getCode() != null) {
+
+                        p = swmProcessService.getSwmProcess(vendorContract.getTenantId(), process.getCode(),
+                                vendorContractRequest.getRequestInfo());
+
+                        if (p != null) {
+                            process.setTenantId(p.getTenantId());
+                            process.setName(p.getName());
+                        }
+
+                    }
+                }
+            
             if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null) {
                 vendorSearch = new VendorSearch();
                 vendorSearch.setTenantId(vendorContract.getTenantId());

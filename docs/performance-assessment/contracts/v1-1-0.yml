@@ -541,6 +541,11 @@ definitions:
       code:
         type: string
         description: Unique Code of the KPI Category
+      department: 
+        type: string
+        description: Unique code of the Department
+        format: singleValueList
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
     required:
       - name
       - code

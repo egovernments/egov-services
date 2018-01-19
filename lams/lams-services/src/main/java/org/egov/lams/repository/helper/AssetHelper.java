@@ -21,7 +21,11 @@ public class AssetHelper {
 		logger.info("inside get assetparams method");
 		StringBuilder assetParams = new StringBuilder();
 
-		if (assetCriteria.isAssetEmpty()) {
+		if (assetCriteria.getAssetCategory() == null && assetCriteria.getElectionWard() == null
+				&& assetCriteria.getRevenueWard() == null && assetCriteria.getAsset() == null
+				&& assetCriteria.getLocality() == null && assetCriteria.getAssetCode() == null
+				&& assetCriteria.getShopNumber() == null) {
+			// this if condition is not entered in general from search agreements
 			throw new RuntimeException("All search criteria for asset details are null");
 		}
 		boolean isAppendAndClause = false;
@@ -60,7 +64,7 @@ public class AssetHelper {
 
 		if (assetCriteria.getShopNumber() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
-			assetParams.append("doorno="+ assetCriteria.getShopNumber());
+			assetParams.append("doorNo="+ assetCriteria.getShopNumber());
 		}
 		
 		if (assetCriteria.getShoppingComplexName() != null) {

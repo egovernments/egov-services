@@ -2,6 +2,7 @@
   {
     "id": null,
     "type": "type1",
+    "description": null,
     "assetCategory": null,
     "fromDate": null,
     "toDate": null,

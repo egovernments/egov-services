@@ -20,6 +20,7 @@ public class RentIncrementType {
 	private Long id;
 	private String type;
 	private String assetCategory;
+	private String description;
 	
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date fromDate;

@@ -232,14 +232,14 @@ public class VehicleService {
             }
 
             //validate for is vehicle under warranty
-            if(vehicle.getIsVehicleUnderWarranty()){
+            if(vehicle.getIsVehicleUnderWarranty() != null && vehicle.getIsVehicleUnderWarranty()){
                 if(vehicle.getKilometers() == null || vehicle.getEndOfWarranty() == null)
                     throw new CustomException("isVehicleUnderWarranty",
                             "Value should be present for both kilometer and endOfWarranty");
             }
 
             //validate for is ulb owned
-            if(vehicle.getIsUlbOwned()){
+            if(vehicle.getIsUlbOwned() != null && vehicle.getIsUlbOwned()){
                 if(vehicle.getVendor() == null || isEmpty(vehicle.getVendor()))
                     throw new CustomException("isUlbOwned",
                             "Value should be present for vendor");

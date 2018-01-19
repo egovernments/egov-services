@@ -1,9 +1,7 @@
 package org.egov.swm.domain.service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPoint;
@@ -76,7 +74,22 @@ public class RouteService {
 
     public Pagination<Route> search(final RouteSearch routeSearch) {
 
-        return routeRepository.search(routeSearch);
+        Pagination<Route> routePage = routeRepository.search(routeSearch);
+
+        //Filter ending collection point or dumping ground
+        if(routeSearch.getIsEndingDumpingGround() != null &&
+                routeSearch.getIsEndingDumpingGround() && !routePage.getPagedData().isEmpty()){
+            List<Route> routes = routePage.getPagedData();
+            for(Route route : routes){
+                List<RouteCollectionPointMap> routeCollectionPointMapList = route.getCollectionPoints().stream()
+                        .filter(collectionPoint -> collectionPoint.getIsEndingCollectionPoint() || collectionPoint.getDumpingGround()!=null)
+                        .collect(Collectors.toList());
+
+                route.setCollectionPoints(routeCollectionPointMapList);
+            }
+            routePage.setPagedData(routes);
+        }
+        return routePage;
     }
 
     private void validate(final RouteRequest routeRequest) {

@@ -46,7 +46,7 @@ public class RouteCollectionPointMapEntity {
         routeCollectionPointMap.setGarbageEstimate(garbageEstimate);
         routeCollectionPointMap.setIsEndingCollectionPoint(isEndingCollectionPoint);
         routeCollectionPointMap.setIsStartingCollectionPoint(isStartingCollectionPoint);
-        routeCollectionPointMap.setDumpingGround(DumpingGround.builder().code(dumpingGround).build());
+        routeCollectionPointMap.setDumpingGround((dumpingGround == null) ? null :DumpingGround.builder().code(dumpingGround).build());
 
         return routeCollectionPointMap;
 

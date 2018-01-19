@@ -810,13 +810,13 @@ serviceMaps:
 
        - jsonPath: $.vendorContracts.*.tenantId
 
-    - query: INSERT INTO egswm_vendorservicesOffered(tenantid, vendor, service) VALUES (?, ?, ?);
-      basePath: $.vendors.*.servicesOffered.*
+    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendor, service) VALUES (?, ?, ?);
+      basePath: $.vendorContracts.*.servicesOffered.*
       jsonMaps:
        
-       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].tenantId
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.tenantId
 
-       - jsonPath: $.vendors[?({code} in @.servicesOffered[*].code)].vendorNo
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.vendorNo
          
        - jsonPath: $.vendors.*.servicesOffered.*.code
 

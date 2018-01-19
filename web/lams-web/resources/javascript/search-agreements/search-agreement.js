@@ -18,7 +18,7 @@ class AgreementSearch extends React.Component {
                 toDate: "",
                 acknowledgementNumber: "",
                 shopNumber: "",
-                shoppingComplexNo: "",
+                shoppingComplexName: "",
                 tenantId
             },
             isSearchClicked: false,
@@ -349,7 +349,7 @@ class AgreementSearch extends React.Component {
         let { locality,
             agreementNumber,
             shopNumber,
-            shoppingComplexNo,
+            shoppingComplexName,
             assetCategory,
             mobileNumber,
             allotteeName,
@@ -702,11 +702,11 @@ class AgreementSearch extends React.Component {
                                         <div className="col-sm-6">
                                             <div className="row">
                                                 <div className="col-sm-6 label-text">
-                                                    <label for="shoppingComplexNo">Shopping Complex Number </label>
+                                                    <label for="shoppingComplexName">Shopping Complex Name </label>
                                                 </div>
                                                 <div className="col-sm-6">
-                                                    <input type="text" name="shoppingComplexNo" id="shoppingComplexNo" value={shoppingComplexNo} onChange={(e) => {
-                                                        handleChange(e, "shoppingComplexNo")
+                                                    <input type="text" name="shoppingComplexName" id="shoppingComplexName" value={shoppingComplexName} onChange={(e) => {
+                                                        handleChange(e, "shoppingComplexName")
                                                     }} />
                                                 </div>
                                             </div>

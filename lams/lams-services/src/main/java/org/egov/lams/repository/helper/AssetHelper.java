@@ -8,21 +8,20 @@ import java.util.stream.Collectors;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.AgreementCriteria;
 import org.egov.lams.model.Asset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AssetHelper {
+	public static final Logger logger = LoggerFactory.getLogger(AssetHelper.class);
 
 	public String getAssetParams(AgreementCriteria assetCriteria) {
 
-		System.out.println("inside get assetparams method");
+		logger.info("inside get assetparams method");
 		StringBuilder assetParams = new StringBuilder();
 
-		if (assetCriteria.getAssetCategory() == null && assetCriteria.getElectionWard() == null
-				&& assetCriteria.getRevenueWard() == null && assetCriteria.getAsset() == null
-				&& assetCriteria.getLocality() == null && assetCriteria.getAssetCode() == null
-				&& assetCriteria.getDoorNo() == null) {
-			// this if condition is not entered in geneal from search agreements
+		if (assetCriteria.isAssetEmpty()) {
 			throw new RuntimeException("All search criteria for asset details are null");
 		}
 		boolean isAppendAndClause = false;
@@ -59,16 +58,21 @@ public class AssetHelper {
 			assetParams.append("tenantId=" + assetCriteria.getTenantId());
 		}
 
-		if (assetCriteria.getDoorNo() != null) {
+		if (assetCriteria.getShopNumber() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
-			assetParams.append("doorno="+ assetCriteria.getDoorNo());
+			assetParams.append("doorno="+ assetCriteria.getShopNumber());
 		}
 		
+		if (assetCriteria.getShoppingComplexName() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
+			assetParams.append("name=" + assetCriteria.getShoppingComplexName());
+		}
+
 		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, assetParams);
 		assetParams.append("size="+500);
 		//FIXME TODO remove hard coded values in asset and allottee helper
 
-		System.out.println("inside get asset method and the string query is"+assetParams);
+		logger.info("inside get asset method and the string query is"+assetParams);
 		return assetParams.toString();
 	}
 
@@ -86,7 +90,7 @@ public class AssetHelper {
 	}
 
 	/**
-	 * method to return list of assetid fro, agreement list object
+	 * method to return list of assetid from, agreement list object
 	 * 
 	 * @param agreementList
 	 * @return

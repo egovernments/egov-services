@@ -35,12 +35,12 @@ public class AgreementCriteria {
 	 private String tinNumber;
 	 private String tradelicenseNumber;
 	 private Long assetCategory;
-	 private String shoppingComplexNo;
+	 private String shoppingComplexName;
 	 private String assetCode;
 	 private Long locality;
 	 private Long revenueWard;
 	 private Long electionWard;
-	 private Long doorNo;
+	 private String shopNumber;
 	 private String allotteeName;
 	 private Long mobileNumber;
 	 private Long offSet;
@@ -66,8 +66,8 @@ public class AgreementCriteria {
 	 }
 
 	public boolean isAssetEmpty(){
-		 return Stream.of(assetCategory, shoppingComplexNo, assetCode, locality,
-				 revenueWard, electionWard, doorNo)
+		 return Stream.of(assetCategory, shoppingComplexName, assetCode, locality,
+				 revenueWard, electionWard, shopNumber)
 				 .allMatch(Objects::isNull);
 	 }
 

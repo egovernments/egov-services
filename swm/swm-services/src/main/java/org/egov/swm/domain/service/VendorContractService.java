@@ -58,10 +58,9 @@ public class VendorContractService {
 
                 setAuditDetails(vc, userId);
                 
-                vc.setContractNo("VCA");
-//
-//                vc.setContractNo(
-//                        generateVendorContractNumber(vc.getTenantId(), vendorContractRequest.getRequestInfo()));
+
+                vc.setContractNo(
+                        generateVendorContractNumber(vc.getTenantId(), vendorContractRequest.getRequestInfo()));
 
             }
 

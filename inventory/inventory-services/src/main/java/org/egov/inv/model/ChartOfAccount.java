@@ -35,7 +35,7 @@ public class ChartOfAccount {
     private Boolean isActiveForPosting = null;
 
     @JsonProperty("parentId")
-    private Long parentId = null;
+    private ChartOfAccount parentId = null;
 
     @JsonProperty("type")
     private String type = null;
@@ -188,7 +188,7 @@ public class ChartOfAccount {
         this.isActiveForPosting = isActiveForPosting;
     }
 
-    public ChartOfAccount parentId(Long parentId) {
+    public ChartOfAccount parentId(ChartOfAccount parentId) {
         this.parentId = parentId;
         return this;
     }
@@ -201,11 +201,11 @@ public class ChartOfAccount {
     @ApiModelProperty(value = "parentId is the id of other account code in the chart of account .Chart of account is created in tree structure. Any code can have other code as parent . All minor code will have manjor code as parent . All detailed code will have minor code as parent only leaf account code that is which is not parent for any account code will used for transactions. ")
 
 
-    public Long getParentId() {
+    public ChartOfAccount getParentId() {
         return parentId;
     }
 
-    public void setParentId(Long parentId) {
+    public void setParentId(ChartOfAccount parentId) {
         this.parentId = parentId;
     }
 

@@ -1,297 +1,129 @@
+/*
+ * eGov suite of products aim to improve the internal efficiency,transparency,
+ *    accountability and the service delivery of the government  organizations.
+ *
+ *     Copyright (C) <2015>  eGovernments Foundation
+ *
+ *     The updated version of eGov suite of products as by eGovernments Foundation
+ *     is available at http://www.egovernments.org
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program. If not, see http://www.gnu.org/licenses/ or
+ *     http://www.gnu.org/licenses/gpl.html .
+ *
+ *     In addition to the terms of the GPL license to be adhered to in using this
+ *     program, the following additional terms are to be complied with:
+ *
+ *         1) All versions of this program, verbatim or modified must carry this
+ *            Legal Notice.
+ *
+ *         2) Any misrepresentation of the origin of the material is prohibited. It
+ *            is required that all modified versions of this material be marked in
+ *            reasonable ways as different from the original version.
+ *
+ *         3) This license does not grant any rights to any Long of the program
+ *            with regards to rights under trademark law for use of the trade names
+ *            or trademarks of eGovernments Foundation.
+ *
+ *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+ */
 package org.egov.inv.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
-import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-/**
- * BillDetail
- */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-28T09:20:06.607Z")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+public class BillDetail {
 
-public class BillDetail   {
-  @JsonProperty("tenantId")
-  private String tenantId = null;
+    /**
+     * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is
+     * created.
+     *
+     * @return tenantId
+     **/
+    @NotNull
+    @Size(min = 0, max = 256)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-  @JsonProperty("id")
-  private String id = null;
+    /**
+     * Unique Identifier of the BillDetail
+     *
+     * @return id
+     **/
+    private String id;
 
-  @JsonProperty("orderId")
-  private Integer orderId = null;
+    @JsonProperty("bill")
+    private String bill = null;
 
-  @JsonProperty("chartOfAccount")
-  private ChartOfAccount chartOfAccount = null;
+    /**
+     * order id of the BillDetail
+     *
+     * @return orderId
+     **/
+    private Integer orderId;
 
-  @JsonProperty("debitAmount")
-  private Double debitAmount = null;
+    @NotNull
+    private ChartOfAccount chartOfAccount;
 
-  @JsonProperty("creditAmount")
-  private Double creditAmount = null;
+    /**
+     * debit amount of the BillDetail
+     *
+     * @return debitAmount
+     **/
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal debitAmount;
 
-  @JsonProperty("function")
-  private Function function = null;
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 999999999)
+    private BigDecimal creditAmount;
 
-  @JsonProperty("billPayeeDetails")
-  private List<BillPayeeDetail> billPayeeDetails = null;
+    /**
+     * function of the BillDetail
+     *
+     * @return function
+     **/
+    private Function function;
 
-  @JsonProperty("auditDetails")
-  private AuditDetails auditDetails = null;
+    /**
+     * bill payee details of the BillDetail
+     *
+     * @return billPayeeDetails
+     **/
 
-  public BillDetail tenantId(String tenantId) {
-    this.tenantId = tenantId;
-    return this;
-  }
+    private List<BillPayeeDetail> billPayeeDetails = new ArrayList<>();
 
-   /**
-   * tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. 
-   * @return tenantId
-  **/
-  @ApiModelProperty(required = true, value = "tenantId Unique Identifier of the tenant, Like AP, AP.Kurnool etc. represents the client for which the transaction is created. ")
-  @NotNull
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
- @Size(min=0,max=256)
-  public String getTenantId() {
-    return tenantId;
-  }
-
-  public void setTenantId(String tenantId) {
-    this.tenantId = tenantId;
-  }
-
-  public BillDetail id(String id) {
-    this.id = id;
-    return this;
-  }
-
-   /**
-   * Unique Identifier of the BillDetail 
-   * @return id
-  **/
-  @ApiModelProperty(value = "Unique Identifier of the BillDetail ")
-
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public BillDetail orderId(Integer orderId) {
-    this.orderId = orderId;
-    return this;
-  }
-
-   /**
-   * order id of the BillDetail 
-   * @return orderId
-  **/
-  @ApiModelProperty(value = "order id of the BillDetail ")
-
-
-  public Integer getOrderId() {
-    return orderId;
-  }
-
-  public void setOrderId(Integer orderId) {
-    this.orderId = orderId;
-  }
-
-  public BillDetail chartOfAccount(ChartOfAccount chartOfAccount) {
-    this.chartOfAccount = chartOfAccount;
-    return this;
-  }
-
-   /**
-   * chart of account of the BillDetail 
-   * @return chartOfAccount
-  **/
-  @ApiModelProperty(required = true, value = "chart of account of the BillDetail ")
-  @NotNull
-
-  @Valid
-
-  public ChartOfAccount getChartOfAccount() {
-    return chartOfAccount;
-  }
-
-  public void setChartOfAccount(ChartOfAccount chartOfAccount) {
-    this.chartOfAccount = chartOfAccount;
-  }
-
-  public BillDetail debitAmount(Double debitAmount) {
-    this.debitAmount = debitAmount;
-    return this;
-  }
-
-   /**
-   * debit amount of the BillDetail 
-   * @return debitAmount
-  **/
-  @ApiModelProperty(required = true, value = "debit amount of the BillDetail ")
-  @NotNull
-
-
-  public Double getDebitAmount() {
-    return debitAmount;
-  }
-
-  public void setDebitAmount(Double debitAmount) {
-    this.debitAmount = debitAmount;
-  }
-
-  public BillDetail creditAmount(Double creditAmount) {
-    this.creditAmount = creditAmount;
-    return this;
-  }
-
-   /**
-   * credit amount of the BillDetail 
-   * @return creditAmount
-  **/
-  @ApiModelProperty(required = true, value = "credit amount of the BillDetail ")
-  @NotNull
-
-
-  public Double getCreditAmount() {
-    return creditAmount;
-  }
-
-  public void setCreditAmount(Double creditAmount) {
-    this.creditAmount = creditAmount;
-  }
-
-  public BillDetail function(Function function) {
-    this.function = function;
-    return this;
-  }
-
-   /**
-   * function of the BillDetail 
-   * @return function
-  **/
-  @ApiModelProperty(value = "function of the BillDetail ")
-
-  @Valid
-
-  public Function getFunction() {
-    return function;
-  }
-
-  public void setFunction(Function function) {
-    this.function = function;
-  }
-
-  public BillDetail billPayeeDetails(List<BillPayeeDetail> billPayeeDetails) {
-    this.billPayeeDetails = billPayeeDetails;
-    return this;
-  }
-
-  public BillDetail addBillPayeeDetailsItem(BillPayeeDetail billPayeeDetailsItem) {
-    if (this.billPayeeDetails == null) {
-      this.billPayeeDetails = new ArrayList<BillPayeeDetail>();
-    }
-    this.billPayeeDetails.add(billPayeeDetailsItem);
-    return this;
-  }
-
-   /**
-   * bill payee details of the BillDetail 
-   * @return billPayeeDetails
-  **/
-  @ApiModelProperty(value = "bill payee details of the BillDetail ")
-
-  @Valid
-
-  public List<BillPayeeDetail> getBillPayeeDetails() {
-    return billPayeeDetails;
-  }
-
-  public void setBillPayeeDetails(List<BillPayeeDetail> billPayeeDetails) {
-    this.billPayeeDetails = billPayeeDetails;
-  }
-
-  public BillDetail auditDetails(AuditDetails auditDetails) {
-    this.auditDetails = auditDetails;
-    return this;
-  }
-
-   /**
-   * Get auditDetails
-   * @return auditDetails
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public AuditDetails getAuditDetails() {
-    return auditDetails;
-  }
-
-  public void setAuditDetails(AuditDetails auditDetails) {
-    this.auditDetails = auditDetails;
-  }
-
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    BillDetail billDetail = (BillDetail) o;
-    return Objects.equals(this.tenantId, billDetail.tenantId) &&
-        Objects.equals(this.id, billDetail.id) &&
-        Objects.equals(this.orderId, billDetail.orderId) &&
-        Objects.equals(this.chartOfAccount, billDetail.chartOfAccount) &&
-        Objects.equals(this.debitAmount, billDetail.debitAmount) &&
-        Objects.equals(this.creditAmount, billDetail.creditAmount) &&
-        Objects.equals(this.function, billDetail.function) &&
-        Objects.equals(this.billPayeeDetails, billDetail.billPayeeDetails) &&
-        Objects.equals(this.auditDetails, billDetail.auditDetails);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(tenantId, id, orderId, chartOfAccount, debitAmount, creditAmount, function, billPayeeDetails, auditDetails);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class BillDetail {\n");
-    
-    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    orderId: ").append(toIndentedString(orderId)).append("\n");
-    sb.append("    chartOfAccount: ").append(toIndentedString(chartOfAccount)).append("\n");
-    sb.append("    debitAmount: ").append(toIndentedString(debitAmount)).append("\n");
-    sb.append("    creditAmount: ").append(toIndentedString(creditAmount)).append("\n");
-    sb.append("    function: ").append(toIndentedString(function)).append("\n");
-    sb.append("    billPayeeDetails: ").append(toIndentedString(billPayeeDetails)).append("\n");
-    sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 }
-

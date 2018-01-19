@@ -2,6 +2,7 @@ package org.egov.inv.persistence.repository;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
+import org.egov.inv.model.CoaAmountGroup;
 import org.egov.inv.model.SupplierBill;
 import org.egov.inv.model.SupplierBillSearch;
 import org.egov.inv.persistence.entity.SupplierBillEntity;
@@ -121,4 +122,23 @@ public class SupplierBillJdbcRepository extends JdbcRepository {
         return page;
     }
 
+
+    public List<CoaAmountGroup> getGroupedCOAAmounts(List<String> mrnNumbers, String tenantId) {
+        String query = "select msm.chartofaccount, (sum(mrd.acceptedqty * mrd.unitrate)) as amount\n" +
+                "from materialstoremapping msm, materialreceipt mr , materialreceiptdetail mrd \n" +
+                "where mrd.material = msm.material \n" +
+                "and mrd.mrnnumber = mr.mrnnumber\n" +
+                "and msm.tenantid = mrd.tenantid\n" +
+                "and mrd.tenantid = mr.tenantid\n" +
+                "and mr.mrnnumber in (:mrnNumbers) \n" +
+                "and mr.tenantid = :tenantId \n" +
+                "group by msm.chartofaccount;\n";
+
+        Map params = new HashMap<String, Object>();
+        params.put("tenantId", tenantId);
+        params.put("mrnNumbers", mrnNumbers);
+        List<CoaAmountGroup> coaAmountGroups = namedParameterJdbcTemplate.query(query, params, new BeanPropertyRowMapper<>(CoaAmountGroup.class));
+
+        return coaAmountGroups;
+    }
 }

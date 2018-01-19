@@ -430,14 +430,13 @@ public class DataUploadService {
 		List<Map<String, Object>> filteredListObjects = new ArrayList<>();
 		for(int k = 0; k < filteredList.size(); k++){
 			for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
-            	StringBuilder expression = new StringBuilder();
             	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(j).toString());
             	if(null == jsonPathList){
-					logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+					logger.info("null jsonpath in config for: "+coloumnHeaders.get(j));
             		continue;
             	}
             	if(jsonPathList.isEmpty()) {
-					logger.info("no jsonpath in config for: "+coloumnHeaders.get(i));
+					logger.info("no jsonpath in config for: "+coloumnHeaders.get(j));
             		continue;
             	}
             	for(String jsonPath: jsonPathList) {
@@ -445,13 +444,16 @@ public class DataUploadService {
             			jsonPath = jsonPath.replace(uploadDefinition.getArrayPath(), "$");
             			//Because for bulk API, multiple such objects might have to be created, all of them will be appended at once in the end.
             		}
+                	StringBuilder expression = new StringBuilder();
 	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-	            	if(key.contains("tenantId")){
-		            	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());	            	
-	            	}else{
-	            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
-	            	}
+            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
             	}	            	
+			}
+			logger.info("Adding tenantId...");
+			for(String path: uploadDefinition.getTenantIdPaths()) {
+	        	StringBuilder expression = new StringBuilder();
+	        	String key = dataUploadUtils.getJsonPathKey(path, expression);
+	        	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());
 			}
 			Type type = new TypeToken<Map<String, Object>>() {}.getType();
 			Gson gson = new Gson();
@@ -469,12 +471,6 @@ public class DataUploadService {
 			deepMerge(requestMap, map, uniqueKeysForInnerObject);
 		}
 		logger.info("requestMap: "+requestMap);
-		Object requestContentBody = null;
-		try{
-			requestContentBody = mapper.writeValueAsString(requestMap);
-		}catch(Exception e){
-			logger.error("Exception while parsing requestMap to String", e);
-		}
 		if(uploadDefinition.getIsBulkApi()){
 		    try{
 		    	bulkApiRequest.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
@@ -486,14 +482,18 @@ public class DataUploadService {
         	bulkApiRequest.put(expression.toString(), key, requestMap);
         	request = bulkApiRequest.jsonString().toString();
 		}else{
-			DocumentContext docContext = JsonPath.parse(requestContentBody);
-		    try{
-		    	docContext.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
-			    request = docContext.jsonString().toString();
-		    }catch(Exception e){
-		    	docContext.put("$", "requestInfo", uploaderRequest.getRequestInfo());
-			    request = docContext.jsonString().toString();
-		    }  
+			try {
+				requestMap.put("RequestInfo", uploaderRequest.getRequestInfo());
+			}catch(Exception e) {
+				requestMap.put("requestInfo", uploaderRequest.getRequestInfo());
+			}
+			Object requestContentBody = null;
+			try{
+				requestContentBody = mapper.writeValueAsString(requestMap);
+			}catch(Exception e){
+				logger.error("Exception while parsing requestMap to String", e);
+			}
+			request = requestContentBody.toString();
 		}
 		
 		return request;
@@ -504,9 +504,8 @@ public class DataUploadService {
 		if(uniqueKeysForInnerObject.isEmpty()) {
 			logger.error("uniqueKeysForInnerObject is Empty!");
 		}
-		logger.info("uniqueKeysForInnerObject: "+uniqueKeysForInnerObject);
 	    for (Object key : newMap.keySet()) {
-			logger.info("key: "+key);
+			logger.debug("key: "+key);
 	        if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
 	            Map originalChild = (Map) original.get(key);
 	            Map newChild = (Map) newMap.get(key);

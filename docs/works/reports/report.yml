@@ -81,7 +81,7 @@ ReportDefinitions:
     label: reports.works.contractorname
     type: string
     source: works
-    searchClause : AND loa.contractor=$contractorName
+    searchClause : AND contractor.name=$contractorName
     isMandatory: false
   - name: amountFrom
     label: reports.works.woamountfrom

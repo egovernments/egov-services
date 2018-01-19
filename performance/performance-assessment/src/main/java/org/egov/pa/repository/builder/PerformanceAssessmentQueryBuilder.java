@@ -283,7 +283,7 @@ public class PerformanceAssessmentQueryBuilder {
         
         if (null != getReq.getCategoryId() && getReq.getCategoryId().size() > 0) { 
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" master.category IN " + getIdQuery(getReq.getCategoryId()));
+            selectQuery.append(" master.category IN " + getStringQuery(getReq.getCategoryId()));
         }
         
     }

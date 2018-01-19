@@ -7,7 +7,7 @@ public class KPITargetGetRequest {
 	private List<String> kpiCode; 
 	private List<String> finYear;
 	private List<Long> departmentId; 
-	private List<Long> categoryId; 
+	private List<String> categoryId; 
 	private String tenantId;
 	
 	
@@ -23,10 +23,10 @@ public class KPITargetGetRequest {
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
-	public List<Long> getCategoryId() {
+	public List<String> getCategoryId() {
 		return categoryId;
 	}
-	public void setCategoryId(List<Long> categoryId) {
+	public void setCategoryId(List<String> categoryId) {
 		this.categoryId = categoryId;
 	}
 	public List<Long> getDepartmentId() {

@@ -90,7 +90,7 @@ public class KpiTargetController implements KpiTarget{
 	public ResponseEntity<?> search(@RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="departmentId", required = false) List<Long> departmentId,
-			 @RequestParam(value="categoryId", required = false) List<Long> categoryId,
+			 @RequestParam(value="categoryId", required = false) List<String> categoryId,
 			 @RequestParam(value="tenantId", required = false) String tenantId,
 			 @RequestBody RequestInfoWrapper requestInfo) {
 		log.info("KPI Get Target Request as recieved in Controller : " + kpiCodes + finYearList + departmentId);

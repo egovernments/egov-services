@@ -43,11 +43,16 @@ class ViewDCB extends React.Component {
       }
 
       this.setInitialState = this.setInitialState.bind(this);
-
+      this.closeWindow=this.closeWindow.bind(this);
     }
 
     setInitialState(initState) {
       this.setState(initState);
+    }
+
+    closeWindow ()
+    {
+        open(location, '_self').close();
     }
     componentDidMount() {
 
@@ -383,7 +388,7 @@ function trim(value){
                {showTable()}
               <br/>
                   <div className="text-center">
-                    <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+                    <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
                   </div>
 
       </fieldset>

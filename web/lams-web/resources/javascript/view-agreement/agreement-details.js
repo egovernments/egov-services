@@ -133,7 +133,7 @@ class AgreementDetails extends React.Component {
         var acknowledgementNumber = _this.state.agreement.acknowledgementNumber;
         var status = _this.state.agreement.status;
         e.preventDefault();
-        window.open(`app/dcb/view-dcb.html?`+(agreementNumber ? "&agreementNumber=" + agreementNumber : "&acknowledgementNumber=" + acknowledgementNumber)+(status ? "&status="+status:"")+'&tenantId='+tenantId);
+        window.open(`app/dcb/view-dcb.html?`+(agreementNumber ? "&agreementNumber=" + agreementNumber : "&acknowledgementNumber=" + acknowledgementNumber)+(status ? "&status="+status:"")+'&tenantId='+tenantId, "pop", "width=800, height=600, scrollbars=yes");
 
     }
 

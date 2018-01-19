@@ -816,6 +816,10 @@ paths:
             in: query
             description: endingCollectionPoint code of the Route
             maxLength: 256
+          - name: isEndingDumpingGround
+            type: boolean
+            in: query
+            description: if true will only return ending collection point or Dumping ground in route response.
           - name: endingDumpingGroundPointCode
             type: string
             in: query
@@ -1997,6 +2001,12 @@ definitions:
           description: ULB admin can enter a comment 
           maxLength: 300
           minLength: 15
+        isVehicleUnderWarranty:
+          type: boolean
+          description: true if value is present for both kilometers and endOfWarranty
+        isVehicleUlbOwned:
+          type: boolean
+          description: true if value is present for vendor
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -2509,6 +2519,13 @@ definitions:
           description: ULB Admin can put remarks, if any
           maxLength: 500
           minLength: 0
+        servicesOffered:
+          type: array
+          items: 
+            $ref: "#/definitions/SwmProcess"
+            minItems: 1
+            format: multiSelectcheckbox
+            description: list of various services provided by vendor. At least one service has to be selected. That can be "others" too.        
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -3358,6 +3375,10 @@ definitions:
           type: number
           format: double
           description: Weight of vehicle at the time of leaving dumping ground. Mandatory if ending point is Dumping ground
+        garbageWeight:
+          type: number
+          format: double
+          description: This is the difference of entryWeight and  exitWeight.          
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -3576,6 +3597,10 @@ definitions:
           type: number 
           format: double
           description: Amount paid through the payment instrument
+        pendingAmount:
+          type: number 
+          format: double
+          description: This is the total pending amount calculated based on invoice amount.         
         bankName:
           type: string
           description: Bank Name from which payment is made. e.g. State bank of India

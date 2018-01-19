@@ -240,8 +240,8 @@ public class VehicleService {
 
             //validate for is ulb owned
             if(vehicle.getIsUlbOwned()){
-                if(vehicle.getVendor() == null || !isEmpty(vehicle.getVendor()))
-                    throw new CustomException("isVehicleUnderWarranty",
+                if(vehicle.getVendor() == null || isEmpty(vehicle.getVendor()))
+                    throw new CustomException("isUlbOwned",
                             "Value should be present for vendor");
             }
 

@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,7 +12,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -47,56 +45,58 @@ public class DataUploadUtils {
 	
 	@Value("${business.module.host}")
 	private String businessModuleHost;
-	
+		
 	@SuppressWarnings({ "deprecation", "static-access" })
 	public List<List<Object>> readExcelFile(HSSFSheet sheet, List<Object> coloumnHeaders){
         List<List<Object>> excelData = new ArrayList<>(); 
-        Iterator<Row> iterator = sheet.iterator();
-        while(iterator.hasNext()){
-            Row nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            List<Object> dataList = new ArrayList<>();
-            int i = 0;
-            int j = 0;
-            while(cellIterator.hasNext()){
-	            Cell cell = cellIterator.next();
-	            if(0 == cell.getRowIndex()) {
+        int rowStart = sheet.getFirstRowNum();
+        int rowEnd = sheet.getLastRowNum();
+        List<Object> dataList = new ArrayList<>();
+        for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
+           Row row = sheet.getRow(rowNum);
+           if (null == row) {
+              continue;
+           }
+           int lastColumn = row.getLastCellNum();
+           for (int colNum = 0; colNum < lastColumn; colNum++) {
+              Cell cell = row.getCell(colNum, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL );
+              if(null == cell) {
+          		    logger.info("empty cell");
+	            	dataList.add(null);
+              }else if(0 == cell.getRowIndex()) {
 	            	coloumnHeaders.add(cell.getStringCellValue());
-	            	j++;
-	            }
-	            else{
+	          }else {
 		            if(!isCellEmpty(cell)) {
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+			            		logger.debug("date: "+cell.getDateCellValue().getTime());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
+			            		logger.debug("numeric: "+cell.getNumericCellValue());
 		            	    	dataList.add(cell.getNumericCellValue());
 		            	    }
 		            	}
 		            	else if(cell.CELL_TYPE_STRING == cell.getCellType()) {
 		            		if(cell.getStringCellValue().equals("NA") || 
 		            				cell.getStringCellValue().equals("N/A") || cell.getStringCellValue().equals("na")) {
-				            	logger.info("adding string null for coloumn: "+coloumnHeaders.get(i));
 			            		dataList.add(null);		            		
 			            	}else if(!cell.getStringCellValue().trim().isEmpty()){
+			            		logger.debug("string: "+cell.getStringCellValue());
 		            			dataList.add(cell.getStringCellValue());
 		            		}else{
 			            		dataList.add(null);
 		            		}
 		            	}
 		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
+		            		logger.debug("bollean: "+cell.getBooleanCellValue());
 		            		dataList.add(cell.getBooleanCellValue());
 
 		            	}
-		            }else {
-		            	dataList.add(null);
-		            }
-	            	
-		            i++;
-	            }
-            }
-            if(!dataList.isEmpty())
-            	excelData.add(dataList);
+		            }	
+		            if(!dataList.isEmpty())
+		               	excelData.add(dataList);
+	          }
+           }
         }
 	    logger.info("coloumnHeaders: "+coloumnHeaders);
 	    logger.info("excelData: "+excelData);

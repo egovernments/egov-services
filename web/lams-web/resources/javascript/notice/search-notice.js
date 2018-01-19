@@ -303,7 +303,7 @@ class Notice extends React.Component {
     }
   }
   showTable(){
-    let {resultSet, assetCategories, locality, electionWard} = this.state;
+    let {resultSet, assetCategories, locality, electionWard, revenueWard} = this.state;
     let {getName} = this;
     return(
       <div className="form-section" >
@@ -332,8 +332,8 @@ class Notice extends React.Component {
                   <td>{index+1}</td>
                   <td>{list.agreementNumber}</td>
                   <td>{list.assetNo}</td>
-                  <td>{list.assetCategory}</td>
-                  <td>{list.ward}</td>
+                  <td>{getName(assetCategories, list.assetCategory)}</td>
+                  <td>{getName(revenueWard, list.ward)}</td>
                   <td>{list.allotteeName}</td>
                   <td>{list.allotteeMobileNumber}</td>
                   <td>{list.allotteeAddress}</td>

@@ -28,6 +28,8 @@ public class NoticeRowMapper implements ResultSetExtractor<List<Notice>> {
 				notice.setAllotteeName(rs.getString("allotteename"));
 				notice.setAllotteeMobileNumber(rs.getString("allotteemobilenumber"));
 				notice.setAllotteeAddress(rs.getString("allotteeaddress"));
+				notice.setAssetCategory((Long) rs.getObject("assetcategory"));
+				notice.setAssetNo((Long) rs.getObject("assetno"));
 				notice.setNoticeType(rs.getString("noticetype"));
 				notice.setWard((Long)rs.getObject("ward"));
 				notice.setTenantId(rs.getString("tenantid"));

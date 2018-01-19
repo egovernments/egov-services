@@ -94,7 +94,7 @@ public class EstimateValidator {
             validateCouncilSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             if (estimate.getId() != null) {
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
-                validateStatus(estimate.getStatus(), estimate.getTenantId(), abstractEstimateRequest.getRequestInfo(), messages);
+                validateStatus(estimate.getStatus(), estimate.getTenantId(), abstractEstimateRequest.getRequestInfo(), messages, CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
             }
             if (!messages.isEmpty())
                 throw new CustomException(messages);
@@ -527,7 +527,7 @@ public class EstimateValidator {
             validateActivities(detailedEstimate, messages, requestInfo);
             if (StringUtils.isNotBlank(detailedEstimate.getId())) {
                 validateIsModified(detailedEstimate, requestInfo, messages);
-                validateStatus(detailedEstimate.getStatus(), detailedEstimate.getTenantId(), requestInfo, messages);
+                validateStatus(detailedEstimate.getStatus(), detailedEstimate.getTenantId(), requestInfo, messages, CommonConstants.DETAILEDESTIMATE);
             }
             if (detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
                 messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
@@ -574,11 +574,11 @@ public class EstimateValidator {
         }
     }
 
-    private void validateStatus(WorksStatus status, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+    private void validateStatus(WorksStatus status, String tenantId, RequestInfo requestInfo, Map<String, String> messages, String object) {
 
         if(status != null && StringUtils.isNotBlank(status.getCode())) {
             List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
-            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(status.getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(status.getCode().toUpperCase(), object));
             JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
                     filetsValuesList, tenantId, requestInfo,
                     CommonConstants.MODULENAME_WORKS);

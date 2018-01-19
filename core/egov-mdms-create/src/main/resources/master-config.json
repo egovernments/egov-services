@@ -344,6 +344,15 @@
         "$.name",
         "$.tenantId"
       ]
+    },
+    "WorksStatus": {
+      "masterName": "WorksStatus",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
     }
   }
 }

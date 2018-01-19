@@ -196,7 +196,7 @@ public class AbstractEstimateService {
             Boolean isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
             
-            if(isSpilloverWFReq && estimate.getStatus().toString()
+            if(isSpilloverWFReq && estimate.getStatus().getCode().toString()
                     .equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
@@ -208,7 +208,7 @@ public class AbstractEstimateService {
                         
                 }
             }
-            if (estimate.getStatus().toString()
+            if (estimate.getStatus().getCode()
                     .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
@@ -219,7 +219,7 @@ public class AbstractEstimateService {
                 }
             }
 
-            if (estimate.getStatus().toString()
+            if (estimate.getStatus().getCode()
                     .equalsIgnoreCase(AbstractEstimateStatus.CANCELLED.toString())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),

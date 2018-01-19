@@ -47,7 +47,7 @@ public class AssetValidator implements Validator {
 
 	@Autowired
 	private AssetService assetService;
-	
+
 	@Autowired
 	private ApplicationProperties applicationProperties;
 
@@ -62,60 +62,72 @@ public class AssetValidator implements Validator {
 	}
 
 	public void validateAsset(AssetRequest assetRequest) {
-		
+
 		Map<String, String> errorMap = new HashMap<>();
 
 		Asset asset = assetRequest.getAsset();
 
-		validateLandDetails(assetRequest,errorMap);
-	    validateAndEnrichStateWideMasters(assetRequest, errorMap);
+		validateLandDetails(assetRequest, errorMap);
+		validateAndEnrichStateWideMasters(assetRequest, errorMap);
 		addMissingPathForPersister(asset);
 		AssetCategory assetCategory = asset.getAssetCategory();
-		validateDepreciationRate(assetCategory.getDepreciationRate(),assetCategory.getAssetCategoryType(),errorMap);
+		validateDepreciationRate(assetCategory.getDepreciationRate(), assetCategory.getAssetCategoryType(), errorMap);
 		if ((!assetCategory.getAssetCategoryType().equals(AssetCategoryType.LAND))) {
 			validateAnticipatedLife(asset.getAnticipatedLife(), assetCategory.getAssetCategoryType(),
 					assetCategory.getDepreciationRate(), errorMap);
-			
-		}/* assetAccountValidate(asset, errorMap); */
-		
-		if ((assetCategory.getAssetCategoryType().equals(AssetCategoryType.IMMOVABLE)) && asset.getWipReferenceNo() == null && StringUtils.isEmpty(asset.getWipReferenceNo())) {
+
+		} /* assetAccountValidate(asset, errorMap); */
+
+		if ((assetCategory.getAssetCategoryType().equals(AssetCategoryType.IMMOVABLE))
+				&& asset.getWipReferenceNo() == null && StringUtils.isEmpty(asset.getWipReferenceNo())) {
 			errorMap.put(applicationProperties.getWifRefNumber(),
 					"WIP Reference number is mandatory for " + assetCategory.getAssetCategoryType() + " Assets");
 		}
-	
-		
+
 		if (asset.getWarrantyAvailable()) {
 			if (asset.getWarrantyExpiryDate() == null)
-				errorMap.put(applicationProperties.getWarranty(), "warrantyExpiryDate is Mandatory if Warranty is available");
+				errorMap.put(applicationProperties.getWarranty(),
+						"warrantyExpiryDate is Mandatory if Warranty is available");
 			else if (asset.getWarrantyExpiryDate().compareTo(asset.getDateOfCreation()) <= 0)
-				errorMap.put(applicationProperties.getWarranty(), "warrantyExpiryDate should be greater than asset date");
-		}else if(asset.getWarrantyAvailable().equals(false)) {
+				errorMap.put(applicationProperties.getWarranty(),
+						"warrantyExpiryDate should be greater than asset date");
+		} else if (asset.getWarrantyAvailable().equals(false)) {
 			asset.setWarrantyExpiryDate(null);
 		}
-		
-		if(asset.getDateOfCreation().compareTo(new Date().getTime()) > 0) 
+
+		if (asset.getDateOfCreation().compareTo(new Date().getTime()) > 0)
 			errorMap.put(applicationProperties.getDateOfCreation(), "DateOfCreation cannot be future Date");
-		
-		if(asset.getOrderDate()!=null && asset.getOrderDate().compareTo(new Date().getTime()) > 0) 
+
+		if (asset.getOrderDate() != null && asset.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put(applicationProperties.getOrderDate(), "OderDate cannot be future Date");
-		
-		if(asset.getOpeningDate()!=null && asset.getOpeningDate().compareTo(new Date().getTime()) > 0) 
+
+		if (asset.getOpeningDate() != null && asset.getOpeningDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put(applicationProperties.getOpeningDate(), "OpeningDate cannot be future Date");
-		
-		if((asset.getAcquisitionDate().compareTo(new Date().getTime()) > 0))
+
+		if ((asset.getAcquisitionDate().compareTo(new Date().getTime()) > 0))
 			errorMap.put(applicationProperties.getAcquisitionDate(), "AcquisitionDate cannot be futureDate");
-		/*else if((asset.getAcquisitionDate().compareTo(asset.getDateOfCreation())<0))
-			errorMap.put("Asset_AcquisitionDate", "AcquisitionDate cannot be less than Dateofcreation");*/
-			
-		if(asset.getOriginalValue()!=null && asset.getOriginalValue().longValue()<0)
-			errorMap.put(applicationProperties.getOriginalValue(), "Negative  Amount Cannot Be Accepted for OriginalValue");
-		
-		if(asset.getGrossValue()!=null && asset.getGrossValue().longValue()<=0)
+		/*
+		 * else if((asset.getAcquisitionDate().compareTo(asset.getDateOfCreation())<0))
+		 * errorMap.put("Asset_AcquisitionDate",
+		 * "AcquisitionDate cannot be less than Dateofcreation");
+		 */
+
+		if (asset.getOriginalValue() != null && asset.getOriginalValue().longValue() < 0)
+			errorMap.put(applicationProperties.getOriginalValue(),
+					"Negative  Amount Cannot Be Accepted for OriginalValue");
+
+		if (asset.getGrossValue() != null && asset.getGrossValue().longValue() <= 0)
 			errorMap.put(applicationProperties.getGrossValue(), "Negative  Amount Cannot Be Accepted for GrossValue");
-				
-		if(asset.getAccumulatedDepreciation()!=null && asset.getAccumulatedDepreciation().longValue()<0)
-			errorMap.put(applicationProperties.getAccumulatedDepreciation(), "Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
+
+		if (asset.getAccumulatedDepreciation() != null && asset.getAccumulatedDepreciation().longValue() < 0)
+			errorMap.put(applicationProperties.getAccumulatedDepreciation(),
+					"Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
 		
+		System.err.println(asset.getDescription().toCharArray().length+"length");
+		if(asset.getDescription().toCharArray().length>1024)
+			errorMap.put(applicationProperties.getDescription(),
+					"length of the string crosses the system limit,please enter the description with lessthan or equal to 1024 characters");
+			
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
@@ -129,20 +141,22 @@ public class AssetValidator implements Validator {
 
 		Map<String, Map<String, JSONArray>> ResultDataMap = mDService.getStateWideMastersByListParams(assets,
 				assetRequest.getRequestInfo(), asset.getTenantId());
-		
-		log.debug(" the response for master : "+ResultDataMap);
-		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET").get("AssetCategory"));
-		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("Fund"));
-		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Department"));
 
-		
+		log.debug(" the response for master : " + ResultDataMap);
+		Map<Long, AssetCategory> assetCatMap = mDService
+				.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET").get("AssetCategory"));
+		Map<String, FundSource> fundMap = mDService
+				.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("Fund"));
+		Map<String, Department> departmentMap = mDService
+				.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Department"));
+
 		AssetCategory masterAssetCat = assetCatMap.get(asset.getAssetCategory().getId());
 		if (masterAssetCat == null)
 			errorMap.put(applicationProperties.getAssetCategory(), "the given AssetCategory Id is Invalid");
 		else {
-			System.err.println("masterAssetCat"+masterAssetCat);
+			System.err.println("masterAssetCat" + masterAssetCat);
 			if (masterAssetCat.getIsAssetAllow().equals(false))
-				   errorMap.put(applicationProperties.getParentCategory(), "Cannot Create asset with parent category");
+				errorMap.put(applicationProperties.getParentCategory(), "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
 		}
 		Department department = departmentMap.get(asset.getDepartment().getCode());
@@ -150,45 +164,50 @@ public class AssetValidator implements Validator {
 			errorMap.put(applicationProperties.getDepartmant(), "the  given Department code is Invalid");
 		else
 			asset.setDepartment(department);
-		
-		if(asset.getFundSource()!=null) {
-        String fundSourceCode = asset.getFundSource().getCode();
-		
-		if (fundSourceCode != null && !fundSourceCode.isEmpty()) {
-			FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
-			if (fundSource == null)
-				errorMap.put(applicationProperties.getFundSource(), "The given FundSource code is Invalid");
-			else
-				asset.setFundSource(fundSource);
+
+		if (asset.getFundSource() != null) {
+			String fundSourceCode = asset.getFundSource().getCode();
+
+			if (fundSourceCode != null && !fundSourceCode.isEmpty()) {
+				FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
+				if (fundSource == null)
+					errorMap.put(applicationProperties.getFundSource(), "The given FundSource code is Invalid");
+				else
+					asset.setFundSource(fundSource);
+			}
 		}
-		}
-		
+
 	}
 
 	private void validateAndEnrichUlbWideMasters(AssetRequest assetRequest) {
-		
-		
 
 	}
 
-	private void validateAnticipatedLife(Long anticipatedLife,AssetCategoryType type, Double depreciationRate, Map<String, String> errorMap) {
+	private void validateAnticipatedLife(Long anticipatedLife, AssetCategoryType type, Double depreciationRate,
+			Map<String, String> errorMap) {
 
-		if(anticipatedLife!=null&&depreciationRate!=null) {
-		long newVal = new Double(Math.round(100 / depreciationRate)).longValue();
-		System.err.println(newVal+"newVal");
-		if (anticipatedLife-newVal != 0) {
-			errorMap.put(applicationProperties.getAnticipatedLife(), "anticipatedLife Value is wrong");
-		}
-		}else
-			errorMap.put(applicationProperties.getAnticipatedLife(), "anticipatedLife Cannot be Null For "+ type.toString()+ " Assets");			
-	}
-	
-	private void validateDepreciationRate(Double depreciationRate,AssetCategoryType type ,Map<String, String> errorMap) {
-		/*if(type.equals(AssetCategoryType.LAND)||type.equals(AssetCategoryType.IMMOVABLE)||type.equals(AssetCategoryType.MOVABLE))*/
-		if ((!type.equals(AssetCategoryType.LAND)))
-		if(depreciationRate==null)
-			errorMap.put(applicationProperties.getAssetdepreciationRate(), "depreciationRate Cannot be Null For "+type.toString()+ " AssetCategory");
+		if (anticipatedLife != null && depreciationRate != null) {
+			long newVal = new Double(Math.round(100 / depreciationRate)).longValue();
+			System.err.println(newVal + "newVal");
+			if (anticipatedLife - newVal != 0) {
+				errorMap.put(applicationProperties.getAnticipatedLife(), "anticipatedLife Value is wrong");
 			}
+		} else
+			errorMap.put(applicationProperties.getAnticipatedLife(),
+					"anticipatedLife Cannot be Null For " + type.toString() + " Assets");
+	}
+
+	private void validateDepreciationRate(Double depreciationRate, AssetCategoryType type,
+			Map<String, String> errorMap) {
+		/*
+		 * if(type.equals(AssetCategoryType.LAND)||type.equals(AssetCategoryType.
+		 * IMMOVABLE)||type.equals(AssetCategoryType.MOVABLE))
+		 */
+		if ((!type.equals(AssetCategoryType.LAND)))
+			if (depreciationRate == null)
+				errorMap.put(applicationProperties.getAssetdepreciationRate(),
+						"depreciationRate Cannot be Null For " + type.toString() + " AssetCategory");
+	}
 
 	public void addMissingPathForPersister(Asset asset) {
 
@@ -196,70 +215,72 @@ public class AssetValidator implements Validator {
 			asset.setDefectLiabilityPeriod(new DefectLiability());
 		if (asset.getLocationDetails() == null)
 			asset.setLocationDetails(new Location());
-		if(asset.getFundSource() == null || asset.getFundSource().getCode().isEmpty()) {
-			
+		if (asset.getFundSource() == null || asset.getFundSource().getCode().isEmpty()) {
+
 			asset.setFundSource(new FundSource());
 		}
-		
-		//FIXME TODO remove it after ghansyam handles it in persister
-		if(asset.getTitleDocumentsAvailable()==null) {
+
+		// FIXME TODO remove it after ghansyam handles it in persister
+		if (asset.getTitleDocumentsAvailable() == null) {
 			asset.setTitleDocumentsAvailable(new ArrayList<>());
 		}
 	}
 
-
 	public void validateForRevaluation(RevaluationRequest revaluationRequest) {
-		
+
 		Map<String, String> errorMap = new HashMap<>();
-		
-		Revaluation revaluation= revaluationRequest.getRevaluation();
+
+		Revaluation revaluation = revaluationRequest.getRevaluation();
 		Asset asset = assetService.getAsset(revaluationRequest.getRevaluation().getTenantId(),
 				revaluationRequest.getRevaluation().getAssetId(), revaluationRequest.getRequestInfo());
-		System.err.println("asset"+asset);
-		
-		if(asset == null)
+		System.err.println("asset" + asset);
+
+		if (asset == null)
 			errorMap.put(applicationProperties.getRevaluation(), "Given Asset For Revaluation Cannot Be Found");
-		
-		if(revaluation.getRevaluationAmount()!=null && revaluation.getRevaluationAmount().longValue()<=0)
-			errorMap.put(applicationProperties.getRevaluationAmount(), "Negative Revaluation Amount Cannot Be Accepted");
-		
-		if(revaluation.getRevaluationDate().compareTo(new Date().getTime()) > 0)
+
+		if (revaluation.getRevaluationAmount() != null && revaluation.getRevaluationAmount().longValue() <= 0)
+			errorMap.put(applicationProperties.getRevaluationAmount(),
+					"Negative Revaluation Amount Cannot Be Accepted");
+
+		if (revaluation.getRevaluationDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put(applicationProperties.getRevaluationDate(), "Assets Cannot be Revaluated For Future Dates");
-		
-		if(revaluation.getOrderDate()!=null && revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
-			errorMap.put(applicationProperties.getRevaluationOrderDate(), "Future Dates Cannot Be Given For Order Date");
-		
-		if(revaluation.getValueAfterRevaluation().longValue()<=0)
-			errorMap.put(applicationProperties.getValueAfterRevaluation(), "Negative Amount Cannot Be Accepted for value after revaluation");
-			
-		
+
+		if (revaluation.getOrderDate() != null && revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
+			errorMap.put(applicationProperties.getRevaluationOrderDate(),
+					"Future Dates Cannot Be Given For Order Date");
+
+		if (revaluation.getValueAfterRevaluation().longValue() <= 0)
+			errorMap.put(applicationProperties.getValueAfterRevaluation(),
+					"Negative Amount Cannot Be Accepted for value after revaluation");
+
 		if (asset != null) {
-			
+
 			BigDecimal positiveTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
 			BigDecimal negativeTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
 			revaluation.setCurrentCapitalizedValue(asset.getCurrentValue());
 			if (revaluation.getTypeOfChange().equals(TypeOfChange.DECREASED))
 				if (!(asset.getCurrentValue().subtract(revaluation.getRevaluationAmount()).doubleValue()
 						- (revaluation.getValueAfterRevaluation().doubleValue()) == 0))
-					errorMap.put(applicationProperties.getValuationAmount(), "THE Valuation Amount Calculation Is Wrong");
+					errorMap.put(applicationProperties.getValuationAmount(),
+							"THE Valuation Amount Calculation Is Wrong");
 
 			if (revaluation.getTypeOfChange().equals(TypeOfChange.INCREASED))
 				if (!(asset.getCurrentValue().add(revaluation.getRevaluationAmount()).doubleValue()
 						- (revaluation.getValueAfterRevaluation().doubleValue()) == 0))
-					errorMap.put(applicationProperties.getValuationAmount(), "THE Valuation Amount Calculation Is Wrong");
+					errorMap.put(applicationProperties.getValuationAmount(),
+							"THE Valuation Amount Calculation Is Wrong");
 		}
-		
+
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
 
 	public void validateForDisposal(DisposalRequest disposalRequest) {
-		
+
 		Map<String, String> errorMap = new HashMap<>();
 
 		Disposal disposal = disposalRequest.getDisposal();
-		 
-		
+
 		Asset asset = assetService.getAsset(disposal.getTenantId(), disposal.getAssetId(),
 				disposalRequest.getRequestInfo());
 
@@ -274,39 +295,42 @@ public class AssetValidator implements Validator {
 
 		if (disposal.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put(applicationProperties.getDisposalOrderDate(), "Future Dates Cannot Be Given For Order Date");
-	
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
 
 	public void validateSearch(AssetCriteria assetCriteria) {
-		
+
 		Map<String, String> errorMap = new HashMap<>();
-				
-		
-		/*if(assetCriteria.getAssetSubCategory() == null || CollectionUtils.isEmpty(assetCriteria.getAssetSubCategory())) {
-			if(assetCriteria.getAssetCategory() == null || CollectionUtils.isEmpty(assetCriteria.getAssetCategory()))
-				errorMap.put("EGASSET_SEARCH_ASSET_CATEGORY", "Either AssetCategory Or AssetSubCategory Has To Be Given For Search");
-		}*/
-		
-		if(!errorMap.isEmpty())
+
+		/*
+		 * if(assetCriteria.getAssetSubCategory() == null ||
+		 * CollectionUtils.isEmpty(assetCriteria.getAssetSubCategory())) {
+		 * if(assetCriteria.getAssetCategory() == null ||
+		 * CollectionUtils.isEmpty(assetCriteria.getAssetCategory()))
+		 * errorMap.put("EGASSET_SEARCH_ASSET_CATEGORY",
+		 * "Either AssetCategory Or AssetSubCategory Has To Be Given For Search"); }
+		 */
+
+		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
-	
+
 	private void validateLandDetails(AssetRequest assetRequest, Map<String, String> errorMap) {
 		List<LandDetail> landDetails = assetRequest.getAsset().getLandDetails();
 		List<String> landDetailCode = new ArrayList<>();
-		if(landDetails!=null && !landDetails.isEmpty() ) {
-		landDetailCode.add(landDetails.get(0).getCode());
-		for (int i=1;i<landDetails.size();i++) {
-			if((!landDetailCode.isEmpty())&&(!landDetailCode.contains(landDetails.get(i).getCode())))
-			landDetailCode.add(landDetails.get(i).getCode());
-			else
-				errorMap.put(applicationProperties.getLandDetails(), "Same landdetails cannot be attached multiple times to the asset");
+		if (landDetails != null && !landDetails.isEmpty()) {
+			landDetailCode.add(landDetails.get(0).getCode());
+			for (int i = 1; i < landDetails.size(); i++) {
+				if ((!landDetailCode.isEmpty()) && (!landDetailCode.contains(landDetails.get(i).getCode())))
+					landDetailCode.add(landDetails.get(i).getCode());
+				else
+					errorMap.put(applicationProperties.getLandDetails(),
+							"Same landdetails cannot be attached multiple times to the asset");
+			}
 		}
-		}
-		
+
 	}
 
 	public void validateAssetId(AssetRequest assetRequest) {

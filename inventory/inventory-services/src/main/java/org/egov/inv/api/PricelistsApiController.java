@@ -59,8 +59,8 @@ public class PricelistsApiController implements PricelistsApi {
 
     public ResponseEntity<PriceListResponse> pricelistsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
         @ApiParam(value = "Parameter to carry Request metadata in the request body"  )   @RequestBody RequestInfo requestInfo,
-        @ApiParam(value = "Name of the vendor supplying materials required ") @RequestParam(value = "suppliers", required = false) List<String> suppliers,
-        @ApiParam(value = "Name of the vendor supplying materials required ") @RequestParam(value = "supplierName", required = false) String supplierName,
+        @ApiParam(value = "Code of the vendor supplying materials required ") @RequestParam(value = "suppliers", required = false) List<String> suppliers,
+        @ApiParam(value = "Code of the vendor supplying materials required ") @RequestParam(value = "supplierName", required = false) String supplierName,
         @ApiParam(value = "search on basis of ids ") @RequestParam(value = "ids", required = false) String ids,
         @ApiParam(value = "reference no of the material contract from the supplier ") @RequestParam(value = "rateContractNumber", required = false) String rateContractNumber,
         @ApiParam(value = "Agreement no with the supplier of materials ") @RequestParam(value = "agreementNumber", required = false) List<String> agreementNumber,

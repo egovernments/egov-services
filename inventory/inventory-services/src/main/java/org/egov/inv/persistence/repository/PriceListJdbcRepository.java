@@ -244,9 +244,6 @@ public class PriceListJdbcRepository extends JdbcRepository {
             orderBy = "order by " + priceListSearchRequest.getSortBy();
         }
         
-        
-        
-
         if (priceListSearchRequest.getTenantId() != null) {
             if (params.length() > 0) {
                 params.append(" and ");

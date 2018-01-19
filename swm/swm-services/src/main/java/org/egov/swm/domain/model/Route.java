@@ -62,7 +62,7 @@ public class Route {
     private AuditDetails auditDetails = null;
 
     public boolean hasDumpingGround(){
-        Long count = collectionPoints.stream().filter(cp -> (cp.getDumpingGround().getCode()!= null)).count();
+        Long count = collectionPoints.stream().filter(cp -> (cp.getDumpingGround()!= null)).count();
 
         return count > 0;
     }

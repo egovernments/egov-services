@@ -439,7 +439,7 @@ class JudgementAgreement extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
-    $('#lams-title').text("Judgement On Agreement");
+    $('#judgement-title').text("Judgement On Agreement");
     var _this = this;
 
     try {
@@ -957,7 +957,7 @@ class JudgementAgreement extends React.Component {
                     <label for="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea name="remarks" id="remarks" value={remarks}
+                    <textarea name="remarks" id="remarks" value=""
                       onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                   </div>
                 </div>
@@ -974,7 +974,7 @@ class JudgementAgreement extends React.Component {
         <div className="form-section">
           <div className="row">
             <div className="col-md-8 col-sm-8">
-              <h3 className="categoryType">Workflow Details </h3>
+              <h3 className="categoryType">Approval Details </h3>
             </div>
           </div>
           <div className="row">

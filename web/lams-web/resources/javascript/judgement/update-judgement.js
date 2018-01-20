@@ -1289,7 +1289,7 @@ class UpdateJudgement extends React.Component {
                     <div className="form-section">
                         <div className="row">
                             <div className="col-md-8 col-sm-8">
-                                <h3 className="categoryType">Workflow Details </h3>
+                                <h3 className="categoryType">Approval Details </h3>
                             </div>
                         </div>
                         <div className="row">

@@ -34,7 +34,7 @@ public class NoticeQueryBuilderTest {
         ids.add("2");
         noticeCriteria.setId(ids);
         noticeCriteria.setAgreementNumber("1");
-        noticeCriteria.setAcknowledgementnumber("ack");
+        noticeCriteria.setAcknowledgementNumber("ack");
         noticeCriteria.setAssetCategory(1l);
         noticeCriteria.setNoticeNo("Notice1");
         noticeCriteria.setTenantId("1");
@@ -67,7 +67,7 @@ public class NoticeQueryBuilderTest {
     @Test
     public void test_query_with_acknowlegement() {
         NoticeCriteria noticeCriteria = new NoticeCriteria();
-        noticeCriteria.setAcknowledgementnumber("ack");
+        noticeCriteria.setAcknowledgementNumber("ack");
         Map params = new HashMap();
         assertEquals(getQueryWithCriteria(noticeCriteria), NoticeQueryBuilder.getNoticeQuery(noticeCriteria, params));
         assertEquals(1, params.size() - 2);
@@ -108,7 +108,7 @@ public class NoticeQueryBuilderTest {
         if (noticeCriteria.getAgreementNumber() != null) {
             query.append(" and notice.agreementno = :agreementNumber");
         }
-        if (noticeCriteria.getAcknowledgementnumber() != null) {
+        if (noticeCriteria.getAcknowledgementNumber() != null) {
             query.append(" and notice.acknowledgementnumber = :ackNumber");
         }
         if (noticeCriteria.getAssetCategory() != null) {

@@ -42,9 +42,9 @@ public class NoticeQueryBuilder {
             selectQuery.append(" and notice.agreementno = :agreementNumber");
             params.put("agreementNumber", noticeCriteria.getAgreementNumber());
         }
-        if (noticeCriteria.getAcknowledgementnumber() != null) {
+        if (noticeCriteria.getAcknowledgementNumber() != null) {
             selectQuery.append(" and notice.acknowledgementnumber = :ackNumber");
-            params.put("ackNumber", noticeCriteria.getAcknowledgementnumber());
+            params.put("ackNumber", noticeCriteria.getAcknowledgementNumber());
         }
         if (noticeCriteria.getAssetCategory() != null) {
             selectQuery.append(" and notice.assetcategory = :assetCategory");

@@ -67,7 +67,7 @@ public class NoticeQueryBuilder {
 
         if (noticeCriteria.getAssetNo() != null) {
             selectQuery.append(" and notice.assetno = :assetNo");
-            params.put("assetNo", noticeCriteria.getTenantId());
+            params.put("assetNo", noticeCriteria.getAssetNo());
         }
         
         if (noticeCriteria.getTenantId() != null) {

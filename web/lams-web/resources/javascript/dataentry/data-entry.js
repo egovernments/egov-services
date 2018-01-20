@@ -993,28 +993,39 @@ function initDatepicker(){
           let fromDate = $(this).closest('tr').find('.srFromDate').val();
           let toDate = $(this).closest('tr').find('.srToDate').val();
           // console.log('index:',$(this).closest('tr').index(),fromDate, toDate);
-          if(fromDate && toDate){
+          var datePattern = new RegExp(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/);
+          if(datePattern.test(fromDate), datePattern.test(toDate)){
+
             let splitTo = toDate.split('/');
             let splitFrom = fromDate.split('/');
-            var diff = calcDate(new Date(splitTo[2],splitTo[1]-1,splitTo[0]),new Date(splitFrom[2],splitFrom[1]-1,splitFrom[0]));//toDate, fromDate
-            console.log(diff);
-            let months = (diff.months+1)%12;
-            let years = months == 0 ? diff.years+1 : diff.years;
+
+            // var diff = calcDate(new Date(splitTo[2],splitTo[1]-1,splitTo[0]),new Date(splitFrom[2],splitFrom[1]-1,splitFrom[0]));//toDate, fromDate
+            // console.log(diff);
+            // let months = (diff.months+1)%12;
+            // let years = months == 0 ? diff.years+1 : diff.years;
+            // let noOfyears = years+'.'+months;
+            // $(this).closest('tr').find('.srYears').val(noOfyears);
+            // agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
+
+            let years = moment(toDate,"DD/MM/YYYY").diff(moment(fromDate,"DD/MM/YYYY"), 'years');
+            var startMonths = getAbsoulteMonths(moment(fromDate,"DD/MM/YYYY"));
+            var endMonths = getAbsoulteMonths(moment(toDate,"DD/MM/YYYY"));
+            var monthDifference = (endMonths - startMonths);
+            let months = (monthDifference+1)%12;
+
+            if((months == 1 && (Number(splitFrom[0])>Number(splitTo[0]))) || months == 0){
+              years+=1;
+            }
+            // console.log(years,'.',months);
+            // let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
             let noOfyears = years+'.'+months;
             $(this).closest('tr').find('.srYears').val(noOfyears);
             agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
 
-            // let years = moment(toDate,"DD/MM/YYYY").diff(moment(fromDate,"DD/MM/YYYY"), 'years');
-            // var startMonths = getAbsoulteMonths(moment(fromDate,"DD/MM/YYYY"));
-            // var endMonths = getAbsoulteMonths(moment(toDate,"DD/MM/YYYY"));
-            // var monthDifference = (endMonths - startMonths);
-            // let months = (monthDifference+1)%12;
-            // // console.log(years,'.',months);
-            // let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
-            // $(this).closest('tr').find('.srYears').val(noOfyears);
-            // agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
-
             // //update no.of years
+            calcFooterYearSum();
+          }else{
+            $(this).closest('tr').find('.srYears').val('');
             calcFooterYearSum();
           }
         }

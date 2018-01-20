@@ -34,7 +34,7 @@ public class NoticeQueryBuilderTest {
         ids.add("2");
         noticeCriteria.setId(ids);
         noticeCriteria.setAgreementNumber("1");
-        noticeCriteria.setAckNumber("ack");
+        noticeCriteria.setAcknowledgementnumber("ack");
         noticeCriteria.setAssetCategory(1l);
         noticeCriteria.setNoticeNo("Notice1");
         noticeCriteria.setTenantId("1");
@@ -67,7 +67,7 @@ public class NoticeQueryBuilderTest {
     @Test
     public void test_query_with_acknowlegement() {
         NoticeCriteria noticeCriteria = new NoticeCriteria();
-        noticeCriteria.setAckNumber("ack");
+        noticeCriteria.setAcknowledgementnumber("ack");
         Map params = new HashMap();
         assertEquals(getQueryWithCriteria(noticeCriteria), NoticeQueryBuilder.getNoticeQuery(noticeCriteria, params));
         assertEquals(1, params.size() - 2);
@@ -106,24 +106,28 @@ public class NoticeQueryBuilderTest {
             query.append("and notice.id IN (:noticeId)");
         }
         if (noticeCriteria.getAgreementNumber() != null) {
-            query.append(" and notice.AgreementNumber = :agreementNumber");
+            query.append(" and notice.agreementno = :agreementNumber");
         }
-        if (noticeCriteria.getAckNumber() != null) {
-            query.append(" and notice.AckNumber = :ackNumber");
+        if (noticeCriteria.getAcknowledgementnumber() != null) {
+            query.append(" and notice.acknowledgementnumber = :ackNumber");
         }
         if (noticeCriteria.getAssetCategory() != null) {
-            query.append(" and notice.AssetCategory = :assetCategory");
+            query.append(" and notice.assetcategory = :assetCategory");
         }
         if (noticeCriteria.getNoticeNo() != null) {
-            query.append(" and notice.NoticeNo = :noticeNo");
+            query.append(" and notice.noticeno = :noticeNo");
             
         }
-        if (noticeCriteria.getNoticeType() != null) {
-            query.append(" and notice.noticetype = :noticeType");
-        }
-        
+		if (noticeCriteria.getNoticeType() != null) {
+			query.append(" and notice.noticetype = :noticeType");
+		}
+
+		if (noticeCriteria.getAssetNo() != null) {
+			query.append(" and notice.assetno = :assetNo");
+		}
+
         if (noticeCriteria.getTenantId() != null) {
-            query.append(" and notice.TenantId = :tenantId");
+            query.append(" and notice.tenantid = :tenantId");
         }
         return query.append(ORDER_BY_QUERY).toString();
     }

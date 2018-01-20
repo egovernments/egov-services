@@ -39,19 +39,19 @@ public class NoticeQueryBuilder {
         }
 
         if (noticeCriteria.getAgreementNumber() != null) {
-            selectQuery.append(" and notice.AgreementNumber = :agreementNumber");
+            selectQuery.append(" and notice.agreementno = :agreementNumber");
             params.put("agreementNumber", noticeCriteria.getAgreementNumber());
         }
-        if (noticeCriteria.getAckNumber() != null) {
-            selectQuery.append(" and notice.AckNumber = :ackNumber");
-            params.put("ackNumber", noticeCriteria.getAckNumber());
+        if (noticeCriteria.getAcknowledgementnumber() != null) {
+            selectQuery.append(" and notice.acknowledgementnumber = :ackNumber");
+            params.put("ackNumber", noticeCriteria.getAcknowledgementnumber());
         }
         if (noticeCriteria.getAssetCategory() != null) {
-            selectQuery.append(" and notice.AssetCategory = :assetCategory");
+            selectQuery.append(" and notice.assetcategory = :assetCategory");
             params.put("assetCategory", noticeCriteria.getAssetCategory());
         }
         if (noticeCriteria.getNoticeNo() != null) {
-            selectQuery.append(" and notice.NoticeNo = :noticeNo");
+            selectQuery.append(" and notice.noticeno = :noticeNo");
             params.put("noticeNo", noticeCriteria.getNoticeNo());
         }
         
@@ -65,8 +65,13 @@ public class NoticeQueryBuilder {
             params.put("revenueWard", noticeCriteria.getRevenueWard());
         }
 
+        if (noticeCriteria.getAssetNo() != null) {
+            selectQuery.append(" and notice.assetno = :assetNo");
+            params.put("assetNo", noticeCriteria.getTenantId());
+        }
+        
         if (noticeCriteria.getTenantId() != null) {
-            selectQuery.append(" and notice.TenantId = :tenantId");
+            selectQuery.append(" and notice.tenantid = :tenantId");
             params.put("tenantId", noticeCriteria.getTenantId());
         }
 

@@ -14,6 +14,24 @@ public class ExternalService {
 	public String tableName;
 	@JsonProperty("stateData")
 	public Boolean stateData = false;
+	@JsonProperty("postObject")
+	public String postObject;
+	
+	public String getPostObject() {
+		return postObject;
+	}
+	public void setPostObject(String postObject) {
+		this.postObject = postObject;
+	}
+	@JsonProperty("objectKey")
+	public String objectKey;
+	public String getObjectKey() {
+		return objectKey;
+	}
+	public void setObjectKey(String objectKey) {
+		this.objectKey = objectKey;
+	}
+	
 	public Boolean getStateData() {
 		return stateData;
 	}
@@ -44,6 +62,7 @@ public class ExternalService {
 	public void setApiURL(String apiURL) {
 		this.apiURL = apiURL;
 	}
+	
 	
 	
 }

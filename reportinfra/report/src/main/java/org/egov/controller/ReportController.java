@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 @RestController
 public class ReportController {
 
@@ -70,6 +72,19 @@ public class ReportController {
 		try {
 			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
 			return new ResponseEntity<>(reportResponse, HttpStatus.OK);
+		} catch(NullPointerException e){
+			e.printStackTrace();
+			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
+		}
+	}
+	
+	@PostMapping("/{moduleName}/total/_get")
+	@ResponseBody
+	public ResponseEntity<?> getReportDataTotal(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
+			final BindingResult errors)  {
+		try {
+			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
+			return new ResponseEntity<>(reportResponse.getReportData().size(), HttpStatus.OK);
 		} catch(NullPointerException e){
 			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());

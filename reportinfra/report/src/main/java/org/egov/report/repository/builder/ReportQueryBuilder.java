@@ -1,5 +1,6 @@
 package org.egov.report.repository.builder;
 
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,7 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.egov.common.contract.request.RequestInfo;
+import javax.xml.ws.RequestWrapper;
+
+import org.egov.swagger.model.RequestInfo;
+import org.egov.domain.model.ReportDefinitions;
+import org.egov.domain.model.RequestInfoWrapper;
 import org.egov.swagger.model.ExternalService;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.SearchColumn;
@@ -21,11 +26,24 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.jayway.jsonpath.JsonPath;
 
 @Component
@@ -36,7 +54,7 @@ public class ReportQueryBuilder {
 		 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
 	   
-	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
+	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition) {
 		
 		String baseQuery = null;
 		
@@ -102,32 +120,54 @@ public class ReportQueryBuilder {
 	}
 	
 	private String populateExternalServiceValues(ReportDefinition reportDefinition, String baseQuery,String tenantid)
-			throws JSONException {
+			throws JSONException{
 		String url;
 		String res = "";
 		String replacetableQuery = baseQuery;
-		
+		String json = "";
 		for (ExternalService es : reportDefinition.getExternalService()) {
 			
+			if(es.getPostObject() != null) {
+			JsonObject jsonObjecttest = (new JsonParser()).parse(es.getPostObject()).getAsJsonObject();
+			HashMap map = new HashMap();
+			map.put("RequestInfo", getRInfo());
+			map.put(es.getObjectKey(), jsonObjecttest);
+			try {
+				 Gson gson = new Gson(); 
+				  json = gson.toJson(map); 
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			}
 			url = es.getApiURL();
+			LOGGER.info("URL from yaml config: "+url);
 			url = url.replaceAll("\\$currentTime", Long.toString(getCurrentTime()));
 			 String[] stateid = null;
 			if(es.getStateData() && (!tenantid.equals("default"))) {
 				stateid = tenantid.split("\\.");
 				url = url.replaceAll("\\$tenantid",stateid[0]);
+				json = json.replaceAll("\\$tenantid",stateid[0]);
 			} else {
 			
 			url = url.replaceAll("\\$tenantid",tenantid);
+			json = json.replaceAll("\\$tenantid",tenantid);
 			}
-			
-			
-			
-			
-			
-			URI uri = URI.create(url);
+			LOGGER.info("Mapper Converted string with replaced values "+json);
+			 URI uri = URI.create(url);
+			 MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+		        Map headerMap = new HashMap<String, String>();
+		        headerMap.put("Content-Type", "application/json");
+		        headers.setAll(headerMap);
+		        HttpEntity<?> request = new HttpEntity<>(json, headers);
+
 			try {
-			res = restTemplate.postForObject(uri, getRInfo(),String.class);
-			} catch(Exception e){
+			if(es.getPostObject() != null){
+			res = restTemplate.postForObject(uri,request ,String.class);
+			} else {
+				res = restTemplate.postForObject(uri,getRInfo() ,String.class);	
+			}
+			} catch(HttpClientErrorException e){
 				e.printStackTrace();
 			}
 
@@ -284,14 +324,15 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
       }
       }else {
       
+    	  finalUnionQuery.append(" "+ finalQuery);
   	if(orderByQuery != null){
-  		finalUnionQuery.append(" "+ finalQuery);
+  		
   		finalUnionQuery.append(" "+ orderByQuery);
       }
       }
       
       
-      return finalQuery.toString();
+      return finalUnionQuery.toString();
     }
 	public String generateJoinQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition){
 		
@@ -472,5 +513,14 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 		  calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 		  return calendar.getTimeInMillis();
 		}
+	private static ObjectMapper getMapperConfig() {
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.setSerializationInclusion(Include.NON_NULL);
+		return mapper;
+	}
 
 }
+
+

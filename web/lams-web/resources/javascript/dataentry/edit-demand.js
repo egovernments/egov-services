@@ -38,6 +38,20 @@ class EditDemand extends React.Component {
     }
 
 
+    for (var i = 0; i < demands.length; i++) {
+
+      if (demands[i].taxReason.toLowerCase() == "rent" && 
+            demands[i].taxAmount === 0 && 
+            demands[i+1].taxAmount != 0) {
+
+              return showError("Penalty cannot be entered for the taxperiod where rent is 0");
+
+            }
+        
+    }
+
+
+
     var tempt = demands.concat(restOfDemands);
 
     agreementDetail["legacyDemands"][0]["demandDetails"] = tempt;

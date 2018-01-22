@@ -54,7 +54,7 @@ public class ReportQueryBuilder {
 		 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
 	   
-	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition) {
+	public String buildQuery(List<SearchParam> searchParams, String tenantId, ReportDefinition reportDefinition,String authToken) {
 		
 		String baseQuery = null;
 		
@@ -74,7 +74,7 @@ public class ReportQueryBuilder {
 		
 		try {
 			if(reportDefinition.getExternalService().size() > 0) {
-				baseQuery = populateExternalServiceValues(reportDefinition, baseQuery,tenantId);
+				baseQuery = populateExternalServiceValues(reportDefinition, baseQuery,tenantId,authToken);
 			} } catch(JSONException e){
 				e.printStackTrace();
 			}
@@ -119,7 +119,7 @@ public class ReportQueryBuilder {
 		return baseQuery;
 	}
 	
-	private String populateExternalServiceValues(ReportDefinition reportDefinition, String baseQuery,String tenantid)
+	private String populateExternalServiceValues(ReportDefinition reportDefinition, String baseQuery,String tenantid,String authToken)
 			throws JSONException{
 		String url;
 		String res = "";
@@ -130,8 +130,9 @@ public class ReportQueryBuilder {
 			if(es.getPostObject() != null) {
 			JsonObject jsonObjecttest = (new JsonParser()).parse(es.getPostObject()).getAsJsonObject();
 			HashMap map = new HashMap();
-			map.put("RequestInfo", getRInfo());
-			map.put(es.getObjectKey(), jsonObjecttest);
+			map.put("RequestInfo", getRInfo(authToken));
+			map.put(es.getObjectKey(),jsonObjecttest);
+			
 			try {
 				 Gson gson = new Gson(); 
 				  json = gson.toJson(map); 
@@ -165,7 +166,7 @@ public class ReportQueryBuilder {
 			if(es.getPostObject() != null){
 			res = restTemplate.postForObject(uri,request ,String.class);
 			} else {
-				res = restTemplate.postForObject(uri,getRInfo() ,String.class);	
+				res = restTemplate.postForObject(uri,getRInfo(authToken) ,String.class);	
 			}
 			} catch(HttpClientErrorException e){
 				e.printStackTrace();
@@ -492,12 +493,12 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 		return inlineQuery.toString();
 	}
 	
-	public RequestInfo getRInfo()
+	public RequestInfo getRInfo(String authToken)
 	{
 		// TODO Auto-generated method stub
 				RequestInfo ri = new RequestInfo();
 				ri.setAction("action");
-				ri.setAuthToken("a487e887-cafd-41cf-bb8a-2245acbb6c01");
+				ri.setAuthToken(authToken);
 				/*ri.setTs(new Date());*/
 				ri.setApiId("apiId");
 				ri.setVer("version");

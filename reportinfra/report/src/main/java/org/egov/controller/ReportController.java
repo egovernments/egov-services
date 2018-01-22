@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+
 @RestController
 public class ReportController {
 
@@ -69,8 +70,12 @@ public class ReportController {
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
+		   LOGGER.info("Auth Token is: "+reportRequest.getReportName());
+		   LOGGER.info("TenantID is: "+reportRequest.getTenantId());
+		   LOGGER.info("Request Info: "+reportRequest.getRequestInfo());
+		   
 		try {
-			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
+			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName(),reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 		} catch(NullPointerException e){
 			e.printStackTrace();
@@ -80,10 +85,10 @@ public class ReportController {
 	
 	@PostMapping("/{moduleName}/total/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportDataTotal(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
+	public ResponseEntity<?> getReportDataTotal(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,String authToken,
 			final BindingResult errors)  {
 		try {
-			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName());
+			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName(),authToken);
 			return new ResponseEntity<>(reportResponse.getReportData().size(), HttpStatus.OK);
 		} catch(NullPointerException e){
 			e.printStackTrace();
@@ -122,10 +127,10 @@ public class ReportController {
 	
 	@PostMapping("/{moduleName}/{version}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportDatav1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
+	public ResponseEntity<?> getReportDatav1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,String authToken,
 			final BindingResult errors) {
 		try {
-		List<ReportResponse> reportResponse = reportService.getAllReportData(reportRequest,moduleName);
+		List<ReportResponse> reportResponse = reportService.getAllReportData(reportRequest,moduleName,authToken);
 		return reportService.getReportDataSuccessResponse(reportResponse, reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());

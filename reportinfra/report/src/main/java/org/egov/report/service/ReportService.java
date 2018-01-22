@@ -167,7 +167,7 @@ public class ReportService {
 
 	}
 
-	public List<ReportResponse> getAllReportData(ReportRequest reportRequest,String moduleName) {
+	public List<ReportResponse> getAllReportData(ReportRequest reportRequest,String moduleName,String authToken) {
 		List<ReportResponse> reportResponse = new ArrayList<ReportResponse>();
 		ReportDataResponse rdr = new ReportDataResponse();
 		ReportResponse rResponse = new ReportResponse();
@@ -175,15 +175,15 @@ public class ReportService {
 		List<String> subReportNames = new ArrayList<>();
 		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportRequest.getReportName());
 		if(reportDefinition.isSubReport()) {
-			rResponse = getReportData(reportRequest, moduleName, reportRequest.getReportName());
+			rResponse = getReportData(reportRequest, moduleName, reportRequest.getReportName(),authToken);
 			reportResponse.add(rResponse);
 			subReportNames = reportDefinition.getSubReportNames();
 			for(String sr : subReportNames) {
-				rResponse = getReportData(reportRequest,moduleName,sr);
+				rResponse = getReportData(reportRequest,moduleName,sr,authToken);
 				reportResponse.add(rResponse);				
 			}
 		}else {
-			rResponse = getReportData(reportRequest,moduleName,reportRequest.getReportName());
+			rResponse = getReportData(reportRequest,moduleName,reportRequest.getReportName(),authToken);
 			reportResponse.add(rResponse);
 		}
 		rdr.setReportResponses(reportResponse);
@@ -194,12 +194,12 @@ public class ReportService {
 
 
 
-	public ReportResponse getReportData(ReportRequest reportRequest,String moduleName,String reportName) {
+	public ReportResponse getReportData(ReportRequest reportRequest,String moduleName,String reportName,String authToken) {
 		
 	
 		ReportDefinitions rds = ReportApp.getReportDefs();
 		ReportDefinition reportDefinition = rds.getReportDefinition(moduleName+ " "+reportName);
-		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition);
+		List<Map<String, Object>> maps = reportRepository.getData(reportRequest, reportDefinition,authToken);
 		List<SourceColumn> columns = reportDefinition.getSourceColumns();
 		ReportResponse reportResponse = new ReportResponse();
 		populateData(columns, maps, reportResponse);

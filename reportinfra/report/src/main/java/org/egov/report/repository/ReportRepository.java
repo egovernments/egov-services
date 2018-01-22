@@ -27,8 +27,8 @@ public class ReportRepository {
 	
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportRepository.class);
 	
-	public List<Map<String, Object>> getData(ReportRequest reportRequest, ReportDefinition reportDefinition) {
-		String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportDefinition);
+	public List<Map<String, Object>> getData(ReportRequest reportRequest, ReportDefinition reportDefinition,String authToken) {
+		String query = reportQueryBuilder.buildQuery(reportRequest.getSearchParams(),reportRequest.getTenantId(),reportDefinition,authToken);
 		Long startTime = new Date().getTime();
 		LOGGER.info("final query:"+query);
 		List<Map<String, Object>> maps = jdbcTemplate.queryForList(query);

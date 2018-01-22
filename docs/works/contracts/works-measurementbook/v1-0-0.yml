@@ -839,6 +839,15 @@ definitions:
           description: Bill sequence number of the Bill
           pattern: '[a-zA-Z0-9-/]+'
           maxLength: 50
+        billNumber:
+          type: string
+          description: Bill Number of the Bill
+          maxLength: 50
+        contractorBillAmount:
+          type: number
+          format: BigDecimal
+          description: Amount for the Contractor Bill Amount 
+          maxLength: 20
         approvedDate:
           type: integer
           format: int64
@@ -976,6 +985,7 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
+
 
 
 

@@ -177,7 +177,7 @@ serviceMaps:
    fromTopic: works-contractorbill-create-update
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_contractorbill(id, billsequencenumber, approveddate, approvedby, cancellationreason, cancellationremarks, letterofacceptanceestimate, stateid, tenantid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, spillover, workcompletiondate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?) on CONFLICT (id,tenantid) DO UPDATE SET billsequencenumber=EXCLUDED.billsequencenumber, approveddate=EXCLUDED.approveddate, approvedby=EXCLUDED.approvedby, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, stateid=EXCLUDED.stateid, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted, spillover=EXCLUDED.spillover, workcompletiondate=EXCLUDED.workcompletiondate;
+    - query: INSERT INTO egw_contractorbill(id, billsequencenumber, approveddate, approvedby, cancellationreason, cancellationremarks, letterofacceptanceestimate, stateid, tenantid, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted, spillover, workcompletiondate,billNumber,contractorBillAmount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?) on CONFLICT (id,tenantid) DO UPDATE SET billsequencenumber=EXCLUDED.billsequencenumber, approveddate=EXCLUDED.approveddate, approvedby=EXCLUDED.approvedby, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, stateid=EXCLUDED.stateid, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted, spillover=EXCLUDED.spillover, workcompletiondate=EXCLUDED.workcompletiondate, billNumber=EXCLUDED.billNumber, contractorBillAmount=EXCLUDED.contractorBillAmount;
       basePath: $.contractorBills.*
       jsonMaps:
 
@@ -213,6 +213,10 @@ serviceMaps:
        - jsonPath: $.contractorBills.*.spillOver 
 
        - jsonPath: $.contractorBills.*.workCompletionDate
+
+       - jsonPath: $.contractorBills.*.billNumber
+
+       - jsonPath: $.contractorBills.*.contractorBillAmount
        
     - query: INSERT INTO egw_contractorbill_assets(id, tenantid, asset, chartofaccounts, description, amount, contractorbill, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET asset=EXCLUDED.asset, chartofaccounts=EXCLUDED.chartofaccounts, description=EXCLUDED.description, amount=EXCLUDED.amount, contractorbill=EXCLUDED.contractorbill, lastmodifiedby=EXCLUDED.lastmodifiedby, 
        lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;

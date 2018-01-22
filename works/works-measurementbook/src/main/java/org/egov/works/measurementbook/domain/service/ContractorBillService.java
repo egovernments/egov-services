@@ -50,14 +50,16 @@ public class ContractorBillService {
     @Transactional
     public ContractorBillResponse create(ContractorBillRequest contractorBillRequest) {
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) { 
-            String billNumber = idGenerationRepository.generateBillNumber(contractorBill.getTenantId(),
-                    contractorBillRequest.getRequestInfo());
-            contractorBill.setBillNumber(measurementBookUtils.getCityCode(contractorBill.getTenantId(),
-                    contractorBillRequest.getRequestInfo()) + "/" + propertiesManager.getBillNumberPrefix() + "/"
-                    + billNumber);
+//            String billNumber = idGenerationRepository.generateBillNumber(contractorBill.getTenantId(),
+//                    contractorBillRequest.getRequestInfo());
+//            contractorBill.setBillNumber(measurementBookUtils.getCityCode(contractorBill.getTenantId(),
+//                    contractorBillRequest.getRequestInfo()) + "/" + propertiesManager.getBillNumberPrefix() + "/"
+//                    + billNumber);
+            
+            contractorBill.setBillNumber("ss123");
         }
         
-        validator.validateContractorBill(contractorBillRequest, true);
+//        validator.validateContractorBill(contractorBillRequest, true);
         CommonUtils commonUtils = new CommonUtils();
         BillStatus finStatus = new BillStatus();
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {

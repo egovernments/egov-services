@@ -1,5 +1,6 @@
 package org.egov.works.measurementbook.web.contract;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data for a Contractor Bill
  */
 @ApiModel(description = "An Object that holds the basic data for a Contractor Bill")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-16T10:26:42.085Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-19T09:28:13.160Z")
 
 public class ContractorBill extends BillRegister  {
   @JsonProperty("id")
@@ -28,6 +29,12 @@ public class ContractorBill extends BillRegister  {
 
   @JsonProperty("billSequenceNumber")
   private String billSequenceNumber = null;
+
+  @JsonProperty("billNumber")
+  private String billNumber = null;
+
+  @JsonProperty("contractorBillAmount")
+  private BigDecimal contractorBillAmount = null;
 
   @JsonProperty("approvedDate")
   private Long approvedDate = null;
@@ -126,6 +133,47 @@ public class ContractorBill extends BillRegister  {
 
   public void setBillSequenceNumber(String billSequenceNumber) {
     this.billSequenceNumber = billSequenceNumber;
+  }
+
+  public ContractorBill billNumber(String billNumber) {
+    this.billNumber = billNumber;
+    return this;
+  }
+
+   /**
+   * Bill Number of the Bill
+   * @return billNumber
+  **/
+  @ApiModelProperty(value = "Bill Number of the Bill")
+
+ @Size(max=50)
+  public String getBillNumber() {
+    return billNumber;
+  }
+
+  public void setBillNumber(String billNumber) {
+    this.billNumber = billNumber;
+  }
+
+  public ContractorBill contractorBillAmount(BigDecimal contractorBillAmount) {
+    this.contractorBillAmount = contractorBillAmount;
+    return this;
+  }
+
+   /**
+   * Amount for the Contractor Bill Amount
+   * @return contractorBillAmount
+  **/
+  @ApiModelProperty(value = "Amount for the Contractor Bill Amount")
+
+  @Valid
+
+  public BigDecimal getContractorBillAmount() {
+    return contractorBillAmount;
+  }
+
+  public void setContractorBillAmount(BigDecimal contractorBillAmount) {
+    this.contractorBillAmount = contractorBillAmount;
   }
 
   public ContractorBill approvedDate(Long approvedDate) {
@@ -396,10 +444,10 @@ public class ContractorBill extends BillRegister  {
   }
 
    /**
-   * Epoch time of when the Final Bill Completed
+   * Epoch time of when the Work Completed. This field is mandatory if the Bill Type is 'Final'
    * @return workCompletionDate
   **/
-  @ApiModelProperty(value = "Epoch time of when the Final Bill Completed")
+  @ApiModelProperty(value = "Epoch time of when the Work Completed. This field is mandatory if the Bill Type is 'Final'")
 
 
   public Long getWorkCompletionDate() {
@@ -423,6 +471,8 @@ public class ContractorBill extends BillRegister  {
     return Objects.equals(this.id, contractorBill.id) &&
         Objects.equals(this.tenantId, contractorBill.tenantId) &&
         Objects.equals(this.billSequenceNumber, contractorBill.billSequenceNumber) &&
+        Objects.equals(this.billNumber, contractorBill.billNumber) &&
+        Objects.equals(this.contractorBillAmount, contractorBill.contractorBillAmount) &&
         Objects.equals(this.approvedDate, contractorBill.approvedDate) &&
         Objects.equals(this.approvedBy, contractorBill.approvedBy) &&
         Objects.equals(this.cancellationReason, contractorBill.cancellationReason) &&
@@ -441,7 +491,7 @@ public class ContractorBill extends BillRegister  {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, billSequenceNumber, approvedDate, approvedBy, cancellationReason, cancellationRemarks, assets, mbForContractorBill, letterOfAcceptanceEstimate, workFlowDetails, stateId, auditDetails, deleted, spillOver, workCompletionDate, super.hashCode());
+    return Objects.hash(id, tenantId, billSequenceNumber, billNumber, contractorBillAmount, approvedDate, approvedBy, cancellationReason, cancellationRemarks, assets, mbForContractorBill, letterOfAcceptanceEstimate, workFlowDetails, stateId, auditDetails, deleted, spillOver, workCompletionDate, super.hashCode());
   }
 
   @Override
@@ -452,6 +502,8 @@ public class ContractorBill extends BillRegister  {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    billSequenceNumber: ").append(toIndentedString(billSequenceNumber)).append("\n");
+    sb.append("    billNumber: ").append(toIndentedString(billNumber)).append("\n");
+    sb.append("    contractorBillAmount: ").append(toIndentedString(contractorBillAmount)).append("\n");
     sb.append("    approvedDate: ").append(toIndentedString(approvedDate)).append("\n");
     sb.append("    approvedBy: ").append(toIndentedString(approvedBy)).append("\n");
     sb.append("    cancellationReason: ").append(toIndentedString(cancellationReason)).append("\n");

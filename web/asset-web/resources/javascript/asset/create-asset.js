@@ -834,7 +834,7 @@ class CreateAsset extends React.Component {
 	     		$('#assetCategory,#code').attr('disabled','disabled');
 		 		})
 			}
-      var count = 12;
+      var count = 13;
       var _state = {
         readonly: (type === "view")
       };
@@ -881,6 +881,9 @@ class CreateAsset extends React.Component {
       getDropdown("financialYears", function(res) {
         checkCountNCall("financialYears", res);
       });
+      getDropdown("assignments_function", function(res) {
+       checkCountNCall("functions", res);
+     });
 
       var id = getUrlVars()["id"];
       $(document).on('focus',".custom-date-picker", function(){
@@ -1096,8 +1099,9 @@ class CreateAsset extends React.Component {
   }
 
   render() {
+    console.log(this.state.assetSet);
     let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles, handleAddNewYearRow, handleDelYearRow, handleYearChange} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles, financialYears} = this.state;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles, financialYears, functions} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -2109,6 +2113,26 @@ class CreateAsset extends React.Component {
                       </div>
                     </div>}
                 </div>
+                <div className="row">
+  									<div className="col-sm-6">
+  										<div className="row">
+  											<div className="col-sm-6 label-text">
+  												<label for="function">Function <span>* </span></label>
+  											</div>
+  											<div className="col-sm-6">
+  											<div className="styled-select">
+  												<select id="function" name="function" required value={this.state.assetSet.function} onChange={(e)=>
+  														{handleChange(e,"function") }} disabled={readonly}>
+  														<option value="">Select Function</option>
+                              {functions && functions.map((func, index)=>(
+                                <option value={func.code}>{`${func.code} - ${func.name}`}</option>
+                              ))}
+  												</select>
+  											</div>
+  										</div>
+  										</div>
+  									</div>
+  								</div>
                 {showYearWiseDep()}
             </div>
 						  </div>

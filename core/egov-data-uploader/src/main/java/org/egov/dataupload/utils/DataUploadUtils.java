@@ -3,6 +3,8 @@ package org.egov.dataupload.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,7 +83,7 @@ public class DataUploadUtils {
 		            if(!isCellEmpty(cell)) {
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-			            		logger.debug("date: "+cell.getDateCellValue().getTime());
+			            		logger.info("date: "+cell.getDateCellValue().getTime());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
 			            		logger.debug("numeric: "+cell.getNumericCellValue());
@@ -92,7 +94,17 @@ public class DataUploadUtils {
 		            		if(cell.getStringCellValue().equals("NA") || 
 		            				cell.getStringCellValue().equals("N/A") || cell.getStringCellValue().equals("na")) {
 			            		dataList.add(null);		            		
-			            	}else if(!cell.getStringCellValue().trim().isEmpty()){
+			            	}else if(validateDate(cell.getStringCellValue())){
+			            		logger.debug("date - string: "+cell.getStringCellValue());
+			            		try {
+				            		DateFormat format = new SimpleDateFormat("dd/MM/YYYY");
+				            		Date date = format.parse(cell.getStringCellValue());
+			            			dataList.add(date.getTime());
+			            		}catch(Exception e) {
+			            			logger.info("Couldn't parse date", e);
+			            			dataList.add(cell.getStringCellValue());
+			            		}
+		            		}else if(!cell.getStringCellValue().trim().isEmpty()){
 			            		logger.debug("string: "+cell.getStringCellValue());
 		            			dataList.add(cell.getStringCellValue());
 		            		}else{
@@ -100,7 +112,7 @@ public class DataUploadUtils {
 		            		}
 		            	}
 		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
-		            		logger.debug("bollean: "+cell.getBooleanCellValue());
+		            		logger.debug("boolean: "+cell.getBooleanCellValue());
 		            		dataList.add(cell.getBooleanCellValue());
 
 		            	}
@@ -120,6 +132,15 @@ public class DataUploadUtils {
         return excelData;
 
 		
+	}
+	
+	public boolean validateDate(String date) {
+		boolean isValid = false;
+		String dateRegex = "([0-9]{2})\\\\([0-9]{2})\\\\([0-9]{4})";
+        if(date.matches(dateRegex))
+        	isValid = true;
+        
+		return isValid;
 	}
 	
 	public static boolean isCellEmpty(final Cell cell) {

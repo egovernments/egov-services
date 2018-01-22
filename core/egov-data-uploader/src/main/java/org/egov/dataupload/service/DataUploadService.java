@@ -451,6 +451,9 @@ public class DataUploadService {
 			}
 			logger.info("Adding tenantId...");
 			for(String path: uploadDefinition.getTenantIdPaths()) {
+        		if(uploadDefinition.getIsBulkApi()) {
+        			path = path.replace(uploadDefinition.getArrayPath(), "$");
+        		}
 	        	StringBuilder expression = new StringBuilder();
 	        	String key = dataUploadUtils.getJsonPathKey(path, expression);
 	        	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());
@@ -472,15 +475,25 @@ public class DataUploadService {
 		}
 		logger.info("requestMap: "+requestMap);
 		if(uploadDefinition.getIsBulkApi()){
-		    try{
-		    	bulkApiRequest.put("$", "RequestInfo", uploaderRequest.getRequestInfo());
-		    }catch(Exception e){
-		    	bulkApiRequest.put("$", "requestInfo", uploaderRequest.getRequestInfo());
-		    }
 		    StringBuilder expression = new StringBuilder();
+			Map<String, Object> apiRequest = (Map<String, Object>) uploadDefinition.getApiRequest();
+			try {
+				apiRequest.put("RequestInfo", uploaderRequest.getRequestInfo());
+			}catch(Exception e) {
+				apiRequest.put("requestInfo", uploaderRequest.getRequestInfo());
+			}
         	String key = dataUploadUtils.getJsonPathKey(uploadDefinition.getArrayPath().substring(0, uploadDefinition.getArrayPath().length() - 1), expression);
-        	bulkApiRequest.put(expression.toString(), key, requestMap);
-        	request = bulkApiRequest.jsonString().toString();
+			List<Object> moduleSpecificData = (List<Object>) apiRequest.get(key);
+			moduleSpecificData.clear();
+			moduleSpecificData.add(requestMap);
+			apiRequest.put(key, moduleSpecificData);
+			Object requestContentBody = null;
+			try{
+				requestContentBody = mapper.writeValueAsString(apiRequest);
+			}catch(Exception e){
+				logger.error("Exception while parsing requestMap to String", e);
+			}
+			request = requestContentBody.toString();
 		}else{
 			try {
 				requestMap.put("RequestInfo", uploaderRequest.getRequestInfo());
@@ -530,7 +543,7 @@ public class DataUploadService {
 		    			}
 		    		}
 		    		if(counter == uniqueKeysForInnerObject.size() && counter != 0) {
-		    			logger.info("Match found!");
+		    			logger.debug("Match found!");
 		    			for(Object originalMapKey: originalChildEntry.keySet()) {
 		    				if(originalChildEntry.get(originalMapKey) instanceof List) {
 		    					List newChildValue = (List) newChildEntry.get(originalMapKey);
@@ -540,7 +553,7 @@ public class DataUploadService {
 		    				}
 		    			}
 		    		}else {
-		    			logger.info("No match found!");
+		    			logger.debug("No match found!");
 		    			originalChild.add(newChildEntry);
 		    		}
 	    		}catch(Exception e) {
@@ -550,7 +563,7 @@ public class DataUploadService {
 	    		    }
 	    	    }	
 	        } else {
-	    		logger.info("Adding new key: "+key+" value: "+newMap.get(key)+" to original");
+	    		logger.debug("Adding new key: "+key+" value: "+newMap.get(key)+" to original");
 	            original.put(key, newMap.get(key));
 	        }	        
 	    }

@@ -70,9 +70,7 @@ public class ReportController {
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
-		   LOGGER.info("Auth Token is: "+reportRequest.getReportName());
-		   LOGGER.info("TenantID is: "+reportRequest.getTenantId());
-		   LOGGER.info("Request Info: "+reportRequest.getRequestInfo());
+		  
 		   
 		try {
 			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName(),reportRequest.getRequestInfo().getAuthToken());
@@ -85,10 +83,10 @@ public class ReportController {
 	
 	@PostMapping("/{moduleName}/total/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportDataTotal(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,String authToken,
+	public ResponseEntity<?> getReportDataTotal(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors)  {
 		try {
-			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName(),authToken);
+			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName(),reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse.getReportData().size(), HttpStatus.OK);
 		} catch(NullPointerException e){
 			e.printStackTrace();
@@ -127,10 +125,10 @@ public class ReportController {
 	
 	@PostMapping("/{moduleName}/{version}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportDatav1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,String authToken,
+	public ResponseEntity<?> getReportDatav1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
-		List<ReportResponse> reportResponse = reportService.getAllReportData(reportRequest,moduleName,authToken);
+		List<ReportResponse> reportResponse = reportService.getAllReportData(reportRequest,moduleName,reportRequest.getRequestInfo().getAuthToken());
 		return reportService.getReportDataSuccessResponse(reportResponse, reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		} catch(NullPointerException e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());

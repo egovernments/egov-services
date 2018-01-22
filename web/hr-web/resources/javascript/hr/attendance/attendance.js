@@ -270,7 +270,7 @@ class Attendance extends React.Component {
         employeeType: queryParam["type"],
         code: queryParam["code"],
         "assignment.isPrimary": true,
-        asOnDate: (currentDate.getDate().toString().length == 2 ? currentDate.getDate() : "0" + currentDate.getDate()) + "/" + (currentDate.getMonth().toString().length == 2 ? (currentDate.getMonth() + 1) : "0" + (currentDate.getMonth() + 1)) + "/" + currentDate.getFullYear(),
+        //asOnDate: (currentDate.getDate().toString().length == 2 ? currentDate.getDate() : "0" + currentDate.getDate()) + "/" + (currentDate.getMonth().toString().length == 2 ? (currentDate.getMonth() + 1) : "0" + (currentDate.getMonth() + 1)) + "/" + currentDate.getFullYear(),
         pageSize:500
     }, function(err, res) {
       if(res) {

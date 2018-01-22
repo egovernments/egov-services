@@ -58,6 +58,11 @@ class EmployeeSearch extends React.Component {
   search(e) {
     let {month,year,designationCode,departmentCode,code,employeeType}=this.state.searchSet;
     e.preventDefault();
+
+    if (!code && !departmentCode) {
+        return showError("Either Employee Code or Department is mandatory");
+    }
+
     window.location=`app/hr/attendance/attendance.html?month=${month}&year=${year}&designationCode=${designationCode}&departmentCode=${departmentCode}&code=${code}&type=${employeeType}`;
   }
 
@@ -252,6 +257,10 @@ class EmployeeSearch extends React.Component {
                 <button type="submit"  className="btn btn-submit">Search</button> &nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
+            </div>
+            <br />
+            <div className="text-right text-danger">
+                            Note: Either Employee Code or Department is mandatory.
             </div>
           </fieldset>
           </form>

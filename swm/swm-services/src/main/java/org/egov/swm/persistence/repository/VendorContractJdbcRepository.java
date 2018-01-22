@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.ContractServicesOffered;
 import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.ServicesOffered;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorContract;
@@ -32,10 +32,10 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
     @Autowired
     private VendorService vendorService;
-    
+
     @Autowired
     private SwmProcessService swmProcessService;
-    
+
     @Autowired
     public VendorContractServicesOfferedJdbcRepository vendorContractServicesOfferedJdbcRepository;
 
@@ -109,19 +109,21 @@ public class VendorContractJdbcRepository extends JdbcRepository {
             params.append("paymentAmount =:paymentAmount");
             paramValues.put("paymentAmount", searchRequest.getPaymentAmount());
         }
-        
+
         if (searchRequest.getServices() != null) {
 
-            ServicesOffered servicesOfferedSearch = ServicesOffered.builder().services(searchRequest.getServices())
+            ContractServicesOffered servicesOfferedSearch = ContractServicesOffered.builder()
+                    .services(searchRequest.getServices())
                     .tenantId(searchRequest.getTenantId())
                     .build();
-            List<ServicesOffered> servicesOffereds = vendorContractServicesOfferedJdbcRepository.search(servicesOfferedSearch);
-            List<String> vendorNos = servicesOffereds.stream()
-                    .map(ServicesOffered::getVendor).distinct().collect(Collectors.toList());
-            if (vendorNos != null && !vendorNos.isEmpty()) {
+            List<ContractServicesOffered> servicesOffereds = vendorContractServicesOfferedJdbcRepository
+                    .search(servicesOfferedSearch);
+            List<String> vendorContractNos = servicesOffereds.stream()
+                    .map(ContractServicesOffered::getVendorcontract).distinct().collect(Collectors.toList());
+            if (vendorContractNos != null && !vendorContractNos.isEmpty()) {
                 addAnd(params);
-                params.append("vendor =:vendor");
-                paramValues.put("vendor", vendorNos);
+                params.append("contractNo in(:vendorContractNos) ");
+                paramValues.put("vendorContractNos", vendorContractNos);
             }
 
         }
@@ -153,28 +155,24 @@ public class VendorContractJdbcRepository extends JdbcRepository {
         final List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
-        StringBuffer vendorNos = new StringBuffer();
+        StringBuffer vendorContractNos = new StringBuffer();
 
-        
         for (final VendorContractEntity entity : vendorContractEntities) {
 
             vendorContractList.add(entity.toDomain());
-            
-            
-            if (vendorNos.length() >= 1)
-                vendorNos.append(",");
 
-            vendorNos.append(entity.getVendor());
-            
-            
-            
+            if (vendorContractNos.length() >= 1)
+                vendorContractNos.append(",");
+
+            vendorContractNos.append(entity.getVendor());
+
         }
 
         if (vendorContractList != null && !vendorContractList.isEmpty()) {
 
             populateVendors(vendorContractList);
-            
-            populateServicesOffered(vendorContractList, vendorNos.toString());
+
+            populateServicesOffered(vendorContractList, vendorContractNos.toString());
         }
         page.setTotalResults(vendorContractList.size());
 
@@ -244,25 +242,24 @@ public class VendorContractJdbcRepository extends JdbcRepository {
         }
 
     }
-    
-    
-    private void populateServicesOffered(List<VendorContract> vendorContracts, String vendorCodes) {
-        Map<String, List<ServicesOffered>> servicesOfferedMap = new HashMap<>();
+
+    private void populateServicesOffered(List<VendorContract> vendorContracts, String vendorContractNos) {
+        Map<String, List<ContractServicesOffered>> servicesOfferedMap = new HashMap<>();
         Map<String, List<SwmProcess>> swmProcessListMap = new HashMap<>();
         Map<String, SwmProcess> swmProcessMap = new HashMap<>();
         String tenantId = null;
-        ServicesOffered cpds;
-        cpds = new ServicesOffered();
+        ContractServicesOffered cpds;
+        cpds = new ContractServicesOffered();
 
         if (vendorContracts != null && !vendorContracts.isEmpty())
             tenantId = vendorContracts.get(0).getTenantId();
 
         if (tenantId != null && !tenantId.isEmpty()) {
 
-            cpds.setVendorNos(vendorCodes);
+            cpds.setVendorcontracts(vendorContractNos);
             cpds.setTenantId(tenantId);
 
-            List<ServicesOffered> servicesOffered = vendorContractServicesOfferedJdbcRepository.search(cpds);
+            List<ContractServicesOffered> servicesOffered = vendorContractServicesOfferedJdbcRepository.search(cpds);
 
             if (servicesOffered != null && !servicesOffered.isEmpty()) {
 
@@ -272,34 +269,35 @@ public class VendorContractJdbcRepository extends JdbcRepository {
                     swmProcessMap.put(sp.getCode(), sp);
                 }
 
-                for (ServicesOffered cpd : servicesOffered) {
+                for (ContractServicesOffered cpd : servicesOffered) {
 
-                    if (servicesOfferedMap.get(cpd.getVendor()) == null) {
+                    if (servicesOfferedMap.get(cpd.getVendorcontract()) == null) {
 
-                        swmProcessListMap.put(cpd.getVendor(), Collections.singletonList(swmProcessMap.get(cpd.getService())));
+                        swmProcessListMap.put(cpd.getVendorcontract(),
+                                Collections.singletonList(swmProcessMap.get(cpd.getService())));
 
-                        servicesOfferedMap.put(cpd.getVendor(), Collections.singletonList(cpd));
+                        servicesOfferedMap.put(cpd.getVendorcontract(), Collections.singletonList(cpd));
 
                     } else {
 
-                        List<SwmProcess> bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendor()));
+                        List<SwmProcess> bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendorcontract()));
 
                         bList.add(swmProcessMap.get(cpd.getService()));
 
-                        swmProcessListMap.put(cpd.getVendor(), bList);
+                        swmProcessListMap.put(cpd.getVendorcontract(), bList);
 
-                        List<ServicesOffered> cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendor()));
+                        List<ContractServicesOffered> cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendorcontract()));
 
                         cpdList.add(cpd);
 
-                        servicesOfferedMap.put(cpd.getVendor(), cpdList);
+                        servicesOfferedMap.put(cpd.getVendorcontract(), cpdList);
 
                     }
                 }
 
                 for (VendorContract vendorContract : vendorContracts) {
 
-                    vendorContract.setServicesOffered(swmProcessListMap.get(vendorContract.getVendor().getVendorNo()));
+                    vendorContract.setServicesOffered(swmProcessListMap.get(vendorContract.getContractNo()));
 
                 }
 

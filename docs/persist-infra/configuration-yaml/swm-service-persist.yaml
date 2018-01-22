@@ -761,15 +761,15 @@ serviceMaps:
        - jsonPath: $.vendorContracts.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendor, service) VALUES (?, ?, ?);
+    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendorcontract, service) VALUES (?, ?, ?);
       basePath: $.vendorContracts.*.servicesOffered.*
       jsonMaps:
        
        - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.tenantId
 
-       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.vendorNo
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].contractNo
          
-       - jsonPath: $.vendors.*.servicesOffered.*.code
+       - jsonPath: $.vendorContracts.*.servicesOffered.*.code
 
  - version: 1.0
    name: vendorcontract update
@@ -810,15 +810,15 @@ serviceMaps:
 
        - jsonPath: $.vendorContracts.*.tenantId
 
-    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendor, service) VALUES (?, ?, ?);
+    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendorcontract, service) VALUES (?, ?, ?);
       basePath: $.vendorContracts.*.servicesOffered.*
       jsonMaps:
        
        - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.tenantId
 
-       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.vendorNo
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].contractNo
          
-       - jsonPath: $.vendors.*.servicesOffered.*.code
+       - jsonPath: $.vendorContracts.*.servicesOffered.*.code
 
  - version: 1.0
    name: vehiclemaintenance create

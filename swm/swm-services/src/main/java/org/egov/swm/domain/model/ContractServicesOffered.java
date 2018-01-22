@@ -11,13 +11,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServicesOffered {
+public class ContractServicesOffered {
 
     private String tenantId;
 
-    private String vendor;
+    private String vendorcontract;
 
-    private String vendorNos;
+    private String vendorcontracts;
 
     private String service;
 

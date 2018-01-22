@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.swm.domain.model.ServicesOffered;
+import org.egov.swm.domain.model.ContractServicesOffered;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +18,10 @@ public class VendorContractServicesOfferedJdbcRepository extends JdbcRepository 
 
     @Transactional
     public void delete(final String tenantId, final String vendor) {
-        delete(TABLE_NAME, tenantId, "vendor", vendor);
+        delete(TABLE_NAME, tenantId, "vendorcontract", vendor);
     }
 
-    public List<ServicesOffered> search(final ServicesOffered searchRequest) {
+    public List<ContractServicesOffered> search(final ContractServicesOffered searchRequest) {
 
         String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
@@ -46,16 +46,16 @@ public class VendorContractServicesOfferedJdbcRepository extends JdbcRepository 
             paramValues.put("services", new ArrayList<>(Arrays.asList(searchRequest.getServices().split(","))));
         }
 
-        if (searchRequest.getVendor() != null) {
+        if (searchRequest.getVendorcontract() != null) {
             addAnd(params);
-            params.append("vendor =:vendor");
-            paramValues.put("vendor", searchRequest.getVendor());
+            params.append("vendorcontract =:vendorcontract");
+            paramValues.put("vendorcontract", searchRequest.getVendorcontract());
         }
 
-        if (searchRequest.getVendorNos() != null) {
+        if (searchRequest.getVendorcontracts() != null) {
             addAnd(params);
-            params.append("vendor in (:vendors)");
-            paramValues.put("vendors", new ArrayList<>(Arrays.asList(searchRequest.getVendorNos().split(","))));
+            params.append("vendorcontract in (:vendorcontracts)");
+            paramValues.put("vendorcontracts", new ArrayList<>(Arrays.asList(searchRequest.getVendorcontracts().split(","))));
         }
 
         if (params.length() > 0)
@@ -64,7 +64,7 @@ public class VendorContractServicesOfferedJdbcRepository extends JdbcRepository 
 
             searchQuery = searchQuery.replace(":condition", "");
 
-        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(ServicesOffered.class);
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(ContractServicesOffered.class);
 
         return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
     }

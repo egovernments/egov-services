@@ -42,7 +42,7 @@ public class VendorContractQueueRepository {
 
         for (final VendorContract cp : vendorContractRequest.getVendorContracts()) {
 
-            vendorContractServicesOfferedJdbcRepository.delete(cp.getTenantId(), cp.getVendor().getVendorNo());
+            vendorContractServicesOfferedJdbcRepository.delete(cp.getTenantId(), cp.getContractNo());
         }
         
         kafkaTemplate.send(updateTopic, vendorContractRequest);

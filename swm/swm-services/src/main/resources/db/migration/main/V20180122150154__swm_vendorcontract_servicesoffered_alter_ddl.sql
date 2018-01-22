@@ -1,0 +1,1 @@
+ALTER TABLE egswm_vendorcontractservicesOffered RENAME COLUMN vendor TO vendorcontract;

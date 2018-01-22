@@ -2537,6 +2537,7 @@ definitions:
       - securityDeposit
       - paymentTerms
       - paymentAmount
+      - servicesOffered
       
     VendorContractRequest:
       description: Contract class to receive request. Array of VendorContract items are used in case of create, whereas single VendorContract item is used for update
@@ -3718,6 +3719,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

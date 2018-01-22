@@ -32,9 +32,24 @@ public class Document   {
   @JsonProperty("active")
   private Boolean active = null;
   
+  @JsonProperty("auditDetails")
+  private AuditDetails auditDetails = null; 
+  
   
 
-  public String getKpiCode() {
+  public AuditDetails getAuditDetails() {
+	return auditDetails;
+}
+
+
+
+public void setAuditDetails(AuditDetails auditDetails) {
+	this.auditDetails = auditDetails;
+}
+
+
+
+public String getKpiCode() {
 	return kpiCode;
 }
 

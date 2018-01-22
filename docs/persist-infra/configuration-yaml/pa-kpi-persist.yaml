@@ -94,7 +94,7 @@ serviceMaps:
 
        - jsonPath: $.KPIs.*.code
          
-    - query: INSERT INTO egpa_kpi_master_document (id, kpicode, documentcode, documentname, mandatoryflag, createdby, createddate)  values (nextval('seq_egpa_kpi_master_document'), ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egpa_kpi_master_document (id, kpicode, documentcode, documentname, mandatoryflag, createdby, createddate, lastmodifiedby, lastmodifieddate)  values (nextval('seq_egpa_kpi_master_document'), ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.KPIs.*.documentsReq.*
       jsonMaps:
 
@@ -106,6 +106,12 @@ serviceMaps:
          
        - jsonPath: $.KPIs.*.documentsReq.*.active
 
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG
+       
+       - jsonPath: $.KPIs.*.auditDetails.lastModifiedTime
+         type: LONG
+         
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
        
@@ -282,3 +288,4 @@ serviceMaps:
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG  
          
+

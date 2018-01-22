@@ -1,5 +1,7 @@
 package org.egov.pa.service.impl;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
+import org.egov.pa.model.Document;
 import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiCategory;
@@ -135,6 +138,11 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     		audit.setCreatedTime(new java.util.Date().getTime());
     		audit.setLastModifiedTime(new java.util.Date().getTime());
     		kpi.setAuditDetails(audit);
+    		if(null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
+    			for(Document doc : kpi.getDocuments()) { 
+    				doc.setAuditDetails(audit);
+        		}
+    		}
     	}
     }
     

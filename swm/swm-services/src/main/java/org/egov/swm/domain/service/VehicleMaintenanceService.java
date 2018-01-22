@@ -172,11 +172,12 @@ public class VehicleMaintenanceService {
 
         Pagination<VehicleMaintenance> vehicleMaintenancePage =  vehicleMaintenanceRepository.search(vehicleMaintenanceSearch);
 
-        if(!vehicleMaintenancePage.getPagedData().isEmpty() && !isEmpty(vehicleMaintenanceSearch.getVendorNo())){
+        if(!vehicleMaintenancePage.getPagedData().isEmpty() && !isEmpty(vehicleMaintenanceSearch.getVehicleTypeCode())){
             List<VehicleMaintenance> vehicleMaintenances = vehicleMaintenancePage.getPagedData().stream()
                                                            .filter(vehicleMaintenance -> vehicleMaintenance.getVehicle() != null &&
-                                                                   vehicleMaintenance.getVehicle().getVendor() != null &&
-                                                                   vehicleMaintenance.getVehicle().getVendor().getVendorNo().equals(vehicleMaintenanceSearch.getVendorNo()))
+                                                                   vehicleMaintenance.getVehicle().getVehicleType() != null &&
+                                                                   vehicleMaintenance.getVehicle().getVehicleType().getCode()
+                                                                           .equals(vehicleMaintenanceSearch.getVehicleTypeCode()))
                                                            .collect(Collectors.toList());
             vehicleMaintenancePage.setPagedData(vehicleMaintenances);
         }

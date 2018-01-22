@@ -164,7 +164,7 @@ public class VendorContractJdbcRepository extends JdbcRepository {
             if (vendorContractNos.length() >= 1)
                 vendorContractNos.append(",");
 
-            vendorContractNos.append(entity.getVendor());
+            vendorContractNos.append(entity.getContractNo());
 
         }
 

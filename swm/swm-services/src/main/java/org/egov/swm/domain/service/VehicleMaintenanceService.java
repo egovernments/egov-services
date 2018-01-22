@@ -174,8 +174,9 @@ public class VehicleMaintenanceService {
 
         if(!vehicleMaintenancePage.getPagedData().isEmpty() && !isEmpty(vehicleMaintenanceSearch.getVendorNo())){
             List<VehicleMaintenance> vehicleMaintenances = vehicleMaintenancePage.getPagedData().stream()
-                                                           .filter(v -> v.getVehicle().getVendor() != null &&
-                                                                   v.getVehicle().getVendor().getVendorNo().equals(vehicleMaintenanceSearch.getVendorNo()))
+                                                           .filter(vehicleMaintenance -> vehicleMaintenance.getVehicle() != null &&
+                                                                   vehicleMaintenance.getVehicle().getVendor() != null &&
+                                                                   vehicleMaintenance.getVehicle().getVendor().getVendorNo().equals(vehicleMaintenanceSearch.getVendorNo()))
                                                            .collect(Collectors.toList());
             vehicleMaintenancePage.setPagedData(vehicleMaintenances);
         }

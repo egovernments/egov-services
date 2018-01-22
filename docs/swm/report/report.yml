@@ -96,7 +96,7 @@ ReportDefinitions:
   searchParams:
   - name: vehicle
     label: reports.swm.vehicle
-    type: singlevaluelist
+    type: singlevaluelistac
     source: egswm_vehicle
     isMandatory: true
     wrapper: true

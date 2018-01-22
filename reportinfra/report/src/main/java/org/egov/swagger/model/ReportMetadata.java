@@ -15,7 +15,18 @@ public class ReportMetadata   {
   @JsonProperty("reportName")
   private String reportName = null;
   
-  @JsonProperty("sorting")
+  @JsonProperty("serialNo")
+  private boolean serialNo = false;
+  
+  public boolean isSerialNo() {
+	return serialNo;
+}
+
+public void setSerialNo(boolean serialNo) {
+	this.serialNo = serialNo;
+}
+
+@JsonProperty("sorting")
   private boolean sorting = true;
   
   public boolean isSorting() {

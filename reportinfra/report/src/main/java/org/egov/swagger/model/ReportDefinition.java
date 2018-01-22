@@ -25,7 +25,16 @@ public class ReportDefinition   {
 	
 	@JsonProperty("sorting")
 	private boolean sorting = true;
+	
+	@JsonProperty("serialNo")
+	private boolean serialNo = false;
     
+	public boolean isSerialNo() {
+		return serialNo;
+	}
+	public void setSerialNo(boolean serialNo) {
+		this.serialNo = serialNo;
+	}
 	public boolean isSorting() {
 		return sorting;
 	}

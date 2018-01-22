@@ -51,7 +51,7 @@ public class IntegrationService {
 		
 		for(SearchColumn searchColumn : searchColumns){
 			
-			if(searchColumn.getType().equals(TypeEnum.SINGLEVALUELIST) || searchColumn.getType().equals(TypeEnum.MULTIVALUELIST)){
+			if(searchColumn.getType().equals(TypeEnum.SINGLEVALUELIST) || searchColumn.getType().equals(TypeEnum.SINGLEVALUELISTAC) || searchColumn.getType().equals(TypeEnum.MULTIVALUELIST) || searchColumn.getType().equals(TypeEnum.MULTIVALUELISTAC)){
 				LOGGER.info("if searchColumn:"+searchColumn);
 				LOGGER.info("Pattern is:"+searchColumn.getColName());
 				

@@ -78,8 +78,9 @@ public ColumnDetail(String label, TypeEnum type, String name) {
     URL("url"),
     
     SINGLEVALUELIST("singlevaluelist"),
-    
-    MULTIVALUELIST("multivaluelist");
+    SINGLEVALUELISTAC("singlevaluelistac"),
+    MULTIVALUELIST("multivaluelist"),
+    MULTIVALUELISTAC("multivaluelistac");
 
     private String value;
 

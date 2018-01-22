@@ -59,7 +59,8 @@ public class ReportService {
         rmt.setSummary(reportDefinition.getSummary());
         rmt.setViewPath(reportDefinition.getViewPath());
         rmt.setSearchFilter(reportDefinition.isSearchFilter());
-        rmt.setSorting(reportDefinition.isSorting());
+        rmt.setSorting(reportDefinition.isSorting()); 
+        rmt.setSerialNo(reportDefinition.isSerialNo());
         rmt.setSelectiveDownload(reportDefinition.isSelectiveDownload());
 		List<ColumnDetail> reportHeaders = new ArrayList<>();
 		List<ColumnDetail> searchParams = new ArrayList<>();

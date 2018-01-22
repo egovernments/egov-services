@@ -97,3 +97,113 @@ ReportDefinitions:
     isMandatory: false
 
   query: select wo.workorderdate, de.nameofwork, wo.workordernumber, de.projectcode as referencenoofwip, de.estimatevalue as estimateamount, de.workvalue as tenderamount, contractor.name as contractorname, loa.tenderfinalizedpercentage as approvedattherateof, loa.loaamount as totalvalueofthework, loa.emdamountdeposited as emdamount, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount, (select finyear.finYearRange from (values tbl_financialyear) as finyear (finYearRange,startingDate,endingDate,tenantId) where wo.createdtime between startingDate::bigint and endingDate::bigint) as sanctionedfinyear, ((select coalesce(statusdate, innerwo.workorderdate) from egw_workorder innerwo left join egw_offlinestatus fs on fs.objecttype='WorkOrderOffline' and fs.status='WORK_COMMENCED' and fs.objectnumber=innerwo.workordernumber where innerwo.workordernumber=wo.workordernumber) + loa.contractperiod*24*12*60*1000) as expectedcompletiondate from egw_workorder wo, egw_letterofacceptance loa, egw_letterofacceptanceestimate loae, egw_detailedestimate de, egw_contractor contractor where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber and contractor.code=loa.contractor
+
+- reportName: WorkOrderRegister
+  summary: Work Order Register
+  version: 1.0.0
+  moduleName: works
+  viewPath: workOrderRegister
+  externalService:
+  - entity: $.MdmsRes.egf-master.FinancialYear
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    keyOrder: finYearRange,startingDate,endingDate,tenantId
+    tableName: tbl_financialyear
+    stateData: true
+  sourceColumns:
+  - name: nameofwork
+    label: reports.works.nameofwork
+    type: epoch
+    source: works
+  - name: fund
+    label: reports.works.fund
+    type: string
+    source: works
+  - name: typeofwork
+    label: reports.works.typeofwork
+    type: string
+    source: works
+  - name: subtypeofwork
+    label: reports.works.subtypeofwork
+    type: string
+    source: works
+  - name: estimatevalue
+    label: reports.works.estimatevalue
+    type: number
+    source: works
+  - name: agencyfirmname
+    label: reports.works.agencyfirmname
+    type: string
+    source: works
+  - name: workorderamount
+    label: reports.works.workorderamount
+    type: number
+    source: works
+  - name: billsubmittedtilldate
+    label: reports.works.billsubmittedtilldate
+    type: number
+    source: works
+  - name: worksstatuspercentage
+    label: reports.works.worksstatuspercentage
+    type: number
+    source: works
+  - name: amountpaidtilldate
+    label: reports.works.amountpaidtilldate
+    type: number
+    source: works
+  searchParams:
+  - name: fund
+    label: reports.works.fund
+    isMandatory: false
+    type: multivaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=Fund&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    source: works
+    stateData: true
+    wrapper: true
+    searchClause : AND de.fund in $fund
+  - name: typeofwork
+    label: reports.works.typeofwork
+    isMandatory: false
+    type: multivaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    source: works
+    stateData: true
+    wrapper: true
+    searchClause : AND de.workstype in $workstype
+  - name: subtypeofwork
+    label: reports.works.subtypeofwork
+    isMandatory: false
+    type: multivaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=TypeOfWork&tenantId=$tenantid&filter%3D%5B%3F%28%40.active%3D%3Dtrue%26%26%40.code%3D%24typeofwork%29%5D
+    source: works
+    stateData: true
+    wrapper: true
+    searchClause : AND de.workssubtype in $workssubtype
+  - name: department
+    label: reports.works.department
+    isMandatory: false
+    type: multivaluelist
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    source: works
+    stateData: true
+    wrapper: true
+    searchClause : AND de.department in $department
+  - name: scheme
+    label: reports.works.scheme
+    isMandatory: false
+    type: multivaluelist
+    pattern:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    source: works
+    stateData: true
+    wrapper: true
+    searchClause : AND de.scheme in $scheme
+  - name: status
+    label: reports.works.status
+    isMandatory: false
+    type: multivaluelist
+    pattern: 'list://Documentation stage:Documentation stage,Tendering Stage:Tendering Stage,Work In Progress Stage:Work In Progress Stage,Completed:Completed'
+    source: works
+    stateData: true
+    wrapper: true
+    searchClause : AND de.status in 'Approved'
+
+  query: select de.nameofwork AS nameofwork, de.fund as fund, de.workstype AS typeofwork, de.workssubtype AS subtypeofwork, de.estimatevalue As estimatevalue, contractor.name as firmname, loa.loaamount AS workorderamount, cb.contractorbillamount as billsubmittedtilldate, tm.totalpercentage AS workstatuspercentage, (select sum(billamount) from egf_billregister br where br.billnumber=cb.billnumber) as amountpaidtilldate from egw_detailedestimate de, egw_letterofacceptanceestimate loae,egw_contractor contractor, egw_milestone m, egw_trackmilestone tm, egw_letterofacceptance loa, egw_contractorbill cb where loa.id=loae.letterofacceptance and loae.detailedestimate=de.id and contractor.code = loa.contractor and m.letterofacceptanceestimate = loae.id and m.id=tm.milestone and loae.id=cb.letterofacceptanceestimate;

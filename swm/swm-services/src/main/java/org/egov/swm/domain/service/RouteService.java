@@ -1,6 +1,10 @@
 package org.egov.swm.domain.service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.swm.domain.model.AuditDetails;
@@ -76,13 +80,14 @@ public class RouteService {
 
         Pagination<Route> routePage = routeRepository.search(routeSearch);
 
-        //Filter ending collection point or dumping ground
-        if(routeSearch.getIsEndingDumpingGround() != null &&
-                routeSearch.getIsEndingDumpingGround() && !routePage.getPagedData().isEmpty()){
+        // Filter ending collection point or dumping ground
+        if (routeSearch.getIsEndingDumpingGround() != null &&
+                routeSearch.getIsEndingDumpingGround() && !routePage.getPagedData().isEmpty()) {
             List<Route> routes = routePage.getPagedData();
-            for(Route route : routes){
+            for (Route route : routes) {
                 List<RouteCollectionPointMap> routeCollectionPointMapList = route.getCollectionPoints().stream()
-                        .filter(collectionPoint -> collectionPoint.getIsEndingCollectionPoint() || collectionPoint.getDumpingGround()!=null)
+                        .filter(collectionPoint -> collectionPoint.getIsEndingCollectionPoint()
+                                || collectionPoint.getDumpingGround() != null)
                         .collect(Collectors.toList());
 
                 route.setCollectionPoints(routeCollectionPointMapList);
@@ -90,12 +95,13 @@ public class RouteService {
             routePage.setPagedData(routes);
         }
 
-        //Filter to return only collection point's excluding dumping ground.
-        if(routeSearch.getExcludeDumpingGround() != null &&
-                routeSearch.getExcludeDumpingGround() && !routePage.getPagedData().isEmpty()){
+        // Filter to return only collection point's excluding dumping ground.
+        if (routeSearch.getExcludeDumpingGround() != null &&
+                routeSearch.getExcludeDumpingGround() && !routePage.getPagedData().isEmpty()) {
             List<Route> routes = routePage.getPagedData();
-            for(Route route : routes){
-                route.getCollectionPoints().removeIf(routeCollectionPointMap -> routeCollectionPointMap.getDumpingGround() != null);
+            for (Route route : routes) {
+                route.getCollectionPoints()
+                        .removeIf(routeCollectionPointMap -> routeCollectionPointMap.getDumpingGround() != null);
             }
         }
 
@@ -245,6 +251,11 @@ public class RouteService {
                         collectionPointMap.put(rcpm.getCollectionPoint().getCode(), rcpm.getCollectionPoint().getCode());
                     }
                 }
+
+                if (!endingCollectionPoint && !dumpingGround)
+                    throw new CustomException("collectionPoint",
+                            "Either ending collection point or ending dumping should be mandatory while route creation");
+
             }
 
         }

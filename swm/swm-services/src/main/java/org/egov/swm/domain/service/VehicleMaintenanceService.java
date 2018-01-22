@@ -1,9 +1,7 @@
 package org.egov.swm.domain.service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Pagination;
@@ -17,6 +15,8 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 @Transactional(readOnly = true)
@@ -170,7 +170,17 @@ public class VehicleMaintenanceService {
 
     public Pagination<VehicleMaintenance> search(final VehicleMaintenanceSearch vehicleMaintenanceSearch) {
 
-        return vehicleMaintenanceRepository.search(vehicleMaintenanceSearch);
+        Pagination<VehicleMaintenance> vehicleMaintenancePage =  vehicleMaintenanceRepository.search(vehicleMaintenanceSearch);
+
+        if(!vehicleMaintenancePage.getPagedData().isEmpty() && !isEmpty(vehicleMaintenanceSearch.getVendorNo())){
+            List<VehicleMaintenance> vehicleMaintenances = vehicleMaintenancePage.getPagedData().stream()
+                                                           .filter(v -> v.getVehicle().getVendor() != null &&
+                                                                   v.getVehicle().getVendor().getVendorNo().equals(vehicleMaintenanceSearch.getVendorNo()))
+                                                           .collect(Collectors.toList());
+            vehicleMaintenancePage.setPagedData(vehicleMaintenances);
+        }
+
+        return vehicleMaintenancePage;
     }
 
     private void setAuditDetails(final VehicleMaintenance contract, final Long userId) {

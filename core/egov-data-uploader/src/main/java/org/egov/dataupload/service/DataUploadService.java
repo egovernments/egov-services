@@ -524,7 +524,7 @@ public class DataUploadService {
 	            Map newChild = (Map) newMap.get(key);
 	            original.put(key, deepMerge(originalChild, newChild, uniqueKeysForInnerObject));
 	        } else if (newMap.get(key) instanceof List && original.get(key) instanceof List) {
-	    		logger.info("Instance of list: ");
+	    		logger.debug("Instance of list: ");
 	            List originalChild = (List) original.get(key);
 	    		logger.info("originalChild: "+originalChild);
 	            List newChild = (List) newMap.get(key);

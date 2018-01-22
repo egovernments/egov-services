@@ -3,8 +3,10 @@ package org.egov.pa.service.impl;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
@@ -116,7 +118,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 	}
 	
 	private void getDocsForValueList(List<ULBKpiValueList> list) {
-		List<KpiValueDetail> detailList = new ArrayList<>();
+		Map<String, List<KpiValueDetail>> map = new HashMap<>(); 
 		List<String> valueIdList = new ArrayList<>();
 		for (ULBKpiValueList eachRecord : list) {
 			List<ValueList> finYearList = eachRecord.getFinYearList();
@@ -124,7 +126,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 				List<KpiValue> kpiValuesList = eachValue.getKpiValueList();
 				for (KpiValue kpiValue : kpiValuesList) {
 					if (null != kpiValue) {
-						detailList = kpiValue.getValueList();
+						map.put(kpiValue.getKpiCode(), kpiValue.getValueList());  
 						valueIdList.add(kpiValue.getId());
 					}
 				}
@@ -132,18 +134,26 @@ public class KpiValueServiceImpl implements KpiValueService {
 		}
 
 		List<ValueDocument> documentList = kpiValueRepository.getDocsForValueRecords(valueIdList);
-		for (KpiValueDetail detail : detailList) {
-			Boolean hasDocument = Boolean.FALSE;
-			List<ValueDocument> detailDocumentList = new ArrayList<>();
-			for (ValueDocument document : documentList) {
-				if (StringUtils.isNotBlank(detail.getId()) && StringUtils.isNotBlank(document.getValueId())
-						&& detail.getId().equals(document.getValueId())) {
-					detailDocumentList.add(document);
-					hasDocument = Boolean.TRUE;
+		
+		Iterator<Entry<String, List<KpiValueDetail>>> itr = map.entrySet().iterator();
+		while(itr.hasNext()) { 
+			Entry<String, List<KpiValueDetail>> entry = itr.next();
+			List<KpiValueDetail> detailList = entry.getValue(); 
+			if(null != detailList && detailList.size() > 0) { 
+				for (KpiValueDetail detail : detailList) {
+					Boolean hasDocument = Boolean.FALSE;
+					List<ValueDocument> detailDocumentList = new ArrayList<>();
+					for (ValueDocument document : documentList) {
+						if (StringUtils.isNotBlank(detail.getId()) && StringUtils.isNotBlank(document.getValueId())
+								&& detail.getId().equals(document.getValueId())) {
+							detailDocumentList.add(document);
+							hasDocument = Boolean.TRUE;
+						}
+					}
+					if (hasDocument) { 
+						detail.setDocumentList(detailDocumentList);
+					}
 				}
-			}
-			if (hasDocument) { 
-				detail.setDocumentList(detailDocumentList);
 			}
 		}
 	}
@@ -239,7 +249,8 @@ public class KpiValueServiceImpl implements KpiValueService {
 	public String searchPossibilityCheck(String tenantCount, String kpiCount, String finYearCount) {
 		return kpiValueRepository.searchPossibilityCheck(tenantCount, kpiCount, finYearCount);
 	}
-
+	
+	
 	private String getFiscalYear() {
 		Calendar calendarDate;
 		final int FIRST_FISCAL_MONTH = Calendar.MARCH;

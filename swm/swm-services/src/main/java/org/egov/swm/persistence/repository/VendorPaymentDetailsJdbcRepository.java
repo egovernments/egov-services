@@ -105,17 +105,17 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("invoiceDate", searchRequest.getInvoiceDate());
         }
 
-        if (searchRequest.getFromDate() != null && searchRequest.getValidate() != null &&
-                !searchRequest.getValidate()) {
+        if (searchRequest.getFromDate() != null && (searchRequest.getValidate() == null ||
+                searchRequest.getValidate().equals(Boolean.FALSE))) {
             addAnd(params);
-            params.append("fromDate =:fromDate");
+            params.append("fromDate >=:fromDate");
             paramValues.put("fromDate", searchRequest.getFromDate());
         }
 
-        if (searchRequest.getToDate() != null && searchRequest.getValidate() != null &&
-                !searchRequest.getValidate()) {
+        if (searchRequest.getToDate() != null && (searchRequest.getValidate() == null ||
+                searchRequest.getValidate().equals(Boolean.FALSE))) {
             addAnd(params);
-            params.append("toDate =:toDate");
+            params.append("toDate <=:toDate");
             paramValues.put("toDate", searchRequest.getToDate());
         }
 

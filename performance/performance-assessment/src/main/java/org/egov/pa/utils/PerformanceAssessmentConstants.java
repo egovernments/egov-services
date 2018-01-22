@@ -197,6 +197,10 @@ public class PerformanceAssessmentConstants {
     public static final String TARGETVALUE_INVALID_CODE = "pa.0033";
     public static final String TARGETVALUE_INVALID_FIELD_NAME = "targetValue";
     public static final String TARGETVALUE_INVALID_ERROR_MESSAGE = "Target Value cannot be set as ZERO!";
+    
+    public static final String TARGETUPDATE_INVALID_CODE = "pa.0034";
+    public static final String TARGETUPDATE_INVALID_FIELD_NAME = "targetValue";
+    public static final String TARGETUPDATE_INVALID_ERROR_MESSAGE = "Actual Values entry has already been started for this KPI. Cannot update the Target Now!!!";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

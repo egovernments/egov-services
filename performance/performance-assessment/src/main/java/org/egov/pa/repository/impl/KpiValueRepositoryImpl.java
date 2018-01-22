@@ -338,11 +338,14 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 
 	@Override
 	public List<ValueDocument> getDocsForValueRecords(List<String> valueIdList) {
-		String query = PerformanceAssessmentQueryBuilder.getDocsForValueRecordQuery();
-		final HashMap<String, Object> parametersMap = new HashMap<>();
-		parametersMap.put("valueIdList", valueIdList);
-		List<ValueDocument> documentList = namedParameterJdbcTemplate.query(query, parametersMap, new PerformanceAssessmentRowMapper().new ValueDocumentMapper());
-		return documentList;
+		if(null != valueIdList && valueIdList.size() > 0 ) { 
+			String query = PerformanceAssessmentQueryBuilder.getDocsForValueRecordQuery();
+			final HashMap<String, Object> parametersMap = new HashMap<>();
+			parametersMap.put("valueIdList", valueIdList);
+			List<ValueDocument> documentList = namedParameterJdbcTemplate.query(query, parametersMap, new PerformanceAssessmentRowMapper().new ValueDocumentMapper());
+			return documentList;
+		}
+		return null; 
 	}
 
 

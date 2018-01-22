@@ -19,6 +19,7 @@ import org.egov.pa.web.contract.KPITargetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +40,9 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
 	
 	@Autowired
     private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     private PerformanceAssessmentQueryBuilder queryBuilder;
@@ -104,6 +108,24 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
 		for(Department dept : deptList) { 
 			deptMap.put(dept.getId(), dept); 
 		}
+	}
+
+	@Override
+	public boolean checkActualValuesForKpi(List<String> kpiCodeList) {
+		String query = queryBuilder.checkActualValueForKpi();
+		log.info("Query to run for checkActualValuesForKpi : " + query);
+		Map<String, Object> paramValues = new HashMap<>();
+		int count = 0;
+		paramValues.put("kpiCodeList", kpiCodeList);
+		try {
+			count = namedParameterJdbcTemplate.queryForObject(query, paramValues, Integer.class);
+		} catch (Exception e) {
+			throw new RuntimeException("Count of KPI Actual Values unavailable for some reason");
+		}
+		log.info("Count obtained after query  : "  + count);
+		if (count > 0)
+			return true;
+		return false;
 	}
 	
 

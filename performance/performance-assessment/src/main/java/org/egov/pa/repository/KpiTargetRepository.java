@@ -14,4 +14,5 @@ public interface KpiTargetRepository {
 	
 	public List<KpiTarget> searchKpiTargets(KPITargetGetRequest getReq); 
 
+	public boolean checkActualValuesForKpi(List<String> kpiCodeList); 
 }

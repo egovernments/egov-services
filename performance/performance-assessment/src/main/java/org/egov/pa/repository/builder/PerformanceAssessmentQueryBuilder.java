@@ -204,6 +204,10 @@ public class PerformanceAssessmentQueryBuilder {
     	return "select targettype as targetType from egpa_kpi_master master where master.code = :kpiCode AND exists (select 1 from egpa_kpi_master_target where kpicode = master.code) " ;
     }
     
+    public String checkActualValueForKpi() { 
+    	return "SELECT COUNT(*) FROM egpa_kpi_value_detail WHERE valueid IN (select id from egpa_kpi_value where kpicode IN (:kpiCodeList)) AND value IS NOT NULL AND value <> ''  " ; 
+    }
+    
     private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, master.category as categoryId, "  
 			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
 			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  

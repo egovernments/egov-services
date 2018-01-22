@@ -162,4 +162,14 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 		}
 		return targetList;
 	}
+
+	@Override
+	public boolean checkActualValuesForKpi(KPITargetRequest kpiTargetRequest) {
+		List<String> kpiCodeList = new ArrayList<>(); 
+		for(KpiTarget target : kpiTargetRequest.getKpiTargets()) { 
+			kpiCodeList.add(target.getKpiCode());  
+		}
+		log.info("List of codes to be checked for actual values : " + kpiCodeList);
+		return kpiTargetRepository.checkActualValuesForKpi(kpiCodeList);
+	}
 }

@@ -143,11 +143,13 @@ public class KpiValueServiceImpl implements KpiValueService {
 				for (KpiValueDetail detail : detailList) {
 					Boolean hasDocument = Boolean.FALSE;
 					List<ValueDocument> detailDocumentList = new ArrayList<>();
-					for (ValueDocument document : documentList) {
-						if (StringUtils.isNotBlank(detail.getId()) && StringUtils.isNotBlank(document.getValueId())
-								&& detail.getId().equals(document.getValueId())) {
-							detailDocumentList.add(document);
-							hasDocument = Boolean.TRUE;
+					if(null != documentList && documentList.size() > 0 ) { 
+						for (ValueDocument document : documentList) {
+							if (StringUtils.isNotBlank(detail.getId()) && StringUtils.isNotBlank(document.getValueId())
+									&& detail.getId().equals(document.getValueId())) {
+								detailDocumentList.add(document);
+								hasDocument = Boolean.TRUE;
+							}
 						}
 					}
 					if (hasDocument) { 

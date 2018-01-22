@@ -15,6 +15,8 @@ public interface KpiTargetService {
 	public KPITargetRequest updateNewTarget(KPITargetRequest kpiTargetRequest);
 	
 	public List<KpiTarget> searchKpiTarget(KPITargetGetRequest getReq);
+	
+	public boolean checkActualValuesForKpi(KPITargetRequest kpiTargetRequest); 
 
 	
 	

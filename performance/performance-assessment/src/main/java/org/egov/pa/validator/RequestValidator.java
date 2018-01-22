@@ -51,6 +51,7 @@ import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.TargetType;
 import org.egov.pa.service.impl.KpiMasterServiceImpl;
+import org.egov.pa.service.impl.KpiTargetServiceImpl;
 import org.egov.pa.service.impl.KpiValueServiceImpl;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.egov.pa.web.contract.KPIRequest;
@@ -77,6 +78,9 @@ public class RequestValidator {
 	
 	@Autowired
 	private KpiMasterServiceImpl kpiMasterService; 
+	
+	@Autowired
+	private KpiTargetServiceImpl kpiTargetService; 
 	
 	private static final String DEFAULT_COUNT = "*"; 
 	private static final String SEARCH_POSSIBLE = "YES"; 
@@ -206,6 +210,12 @@ public class RequestValidator {
 	public Error getError(final KPITargetRequest kpiTargetRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		List<KpiTarget> targetList = kpiTargetRequest.getKpiTargets();
+		
+		if(kpiTargetService.checkActualValuesForKpi(kpiTargetRequest)) { 
+			errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGETUPDATE_INVALID_CODE,
+					PerformanceAssessmentConstants.TARGETUPDATE_INVALID_ERROR_MESSAGE,
+					PerformanceAssessmentConstants.TARGETUPDATE_INVALID_FIELD_NAME));
+		}
 
 		for (KpiTarget target : targetList) {
 
@@ -237,6 +247,9 @@ public class RequestValidator {
 						PerformanceAssessmentConstants.TARGETVALUE_INVALID_ERROR_MESSAGE,
 						PerformanceAssessmentConstants.TARGETVALUE_INVALID_FIELD_NAME));
 			}
+			
+			
+			
 			
 		}
 

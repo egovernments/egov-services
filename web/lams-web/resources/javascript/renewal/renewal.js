@@ -513,6 +513,12 @@ class RenewalAgreement extends React.Component {
       agreement.workflowDetails = {};
     }
 
+    agreement.rent = "";
+    agreement.timePeriod = "";
+    agreement.securityDeposit = "";
+    agreement.securityDepositDate = "";
+    agreement.remarks = "";
+
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
 
     this.setState({

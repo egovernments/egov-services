@@ -480,6 +480,7 @@ class JudgementAgreement extends React.Component {
       agreement.workflowDetails = {};
     }
 
+    agreement.remarks = "";
 
     this.setState({
       ...this.state,
@@ -957,7 +958,7 @@ class JudgementAgreement extends React.Component {
                     <label for="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea name="remarks" id="remarks" value=""
+                    <textarea name="remarks" id="remarks" value={remarks}
                       onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                   </div>
                 </div>

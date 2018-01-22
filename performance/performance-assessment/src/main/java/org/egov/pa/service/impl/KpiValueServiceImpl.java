@@ -126,7 +126,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 				List<KpiValue> kpiValuesList = eachValue.getKpiValueList();
 				for (KpiValue kpiValue : kpiValuesList) {
 					if (null != kpiValue) {
-						map.put(kpiValue.getKpiCode(), kpiValue.getValueList());  
+						map.put(eachRecord.getUlbName().concat("_"+kpiValue.getKpiCode()), kpiValue.getValueList());  
 						valueIdList.add(kpiValue.getId());
 					}
 				}

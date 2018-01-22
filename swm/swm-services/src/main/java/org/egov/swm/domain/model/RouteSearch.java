@@ -15,6 +15,7 @@ public class RouteSearch extends Route {
     private String endingDumpingGroundPointCode;
     private String collectionPointCode;
     private Boolean isEndingDumpingGround;
+    private Boolean excludeDumpingGround;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

@@ -89,6 +89,16 @@ public class RouteService {
             }
             routePage.setPagedData(routes);
         }
+
+        //Filter to return only collection point's excluding dumping ground.
+        if(routeSearch.getExcludeDumpingGround() != null &&
+                routeSearch.getExcludeDumpingGround() && !routePage.getPagedData().isEmpty()){
+            List<Route> routes = routePage.getPagedData();
+            for(Route route : routes){
+                route.getCollectionPoints().removeIf(routeCollectionPointMap -> routeCollectionPointMap.getDumpingGround() != null);
+            }
+        }
+
         return routePage;
     }
 

@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object that holds the basic data for a Work Order
  */
 @ApiModel(description = "An Object that holds the basic data for a Work Order")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-11T09:15:34.262Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-21T14:55:23.877Z")
 
 public class WorkOrder   {
   @JsonProperty("id")
@@ -57,6 +57,12 @@ public class WorkOrder   {
 
   @JsonProperty("remarks")
   private String remarks = null;
+
+  @JsonProperty("approvedBy")
+  private User approvedBy = null;
+
+  @JsonProperty("approvedDate")
+  private Long approvedDate = null;
 
   public WorkOrder id(String id) {
     this.id = id;
@@ -343,6 +349,47 @@ public class WorkOrder   {
     this.remarks = remarks;
   }
 
+  public WorkOrder approvedBy(User approvedBy) {
+    this.approvedBy = approvedBy;
+    return this;
+  }
+
+   /**
+   * User who approved the WorkOrder
+   * @return approvedBy
+  **/
+  @ApiModelProperty(value = "User who approved the WorkOrder")
+
+//  @Valid
+
+  public User getApprovedBy() {
+    return approvedBy;
+  }
+
+  public void setApprovedBy(User approvedBy) {
+    this.approvedBy = approvedBy;
+  }
+
+  public WorkOrder approvedDate(Long approvedDate) {
+    this.approvedDate = approvedDate;
+    return this;
+  }
+
+   /**
+   * Epoch time of Date on which WorkOrder approved. Future date is not allowed. WorkOrder Approved date should be on or after the WorkOrder date.
+   * @return approvedDate
+  **/
+  @ApiModelProperty(value = "Epoch time of Date on which WorkOrder approved. Future date is not allowed. WorkOrder Approved date should be on or after the WorkOrder date.")
+
+
+  public Long getApprovedDate() {
+    return approvedDate;
+  }
+
+  public void setApprovedDate(Long approvedDate) {
+    this.approvedDate = approvedDate;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -365,12 +412,14 @@ public class WorkOrder   {
         Objects.equals(this.status, workOrder.status) &&
         Objects.equals(this.stateId, workOrder.stateId) &&
         Objects.equals(this.deleted, workOrder.deleted) &&
-        Objects.equals(this.remarks, workOrder.remarks);
+        Objects.equals(this.remarks, workOrder.remarks) &&
+        Objects.equals(this.approvedBy, workOrder.approvedBy) &&
+        Objects.equals(this.approvedDate, workOrder.approvedDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails, workFlowDetails, auditDetails, status, stateId, deleted, remarks);
+    return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails, workFlowDetails, auditDetails, status, stateId, deleted, remarks, approvedBy, approvedDate);
   }
 
   @Override
@@ -391,6 +440,8 @@ public class WorkOrder   {
     sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
     sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
+    sb.append("    approvedBy: ").append(toIndentedString(approvedBy)).append("\n");
+    sb.append("    approvedDate: ").append(toIndentedString(approvedDate)).append("\n");
     sb.append("}");
     return sb.toString();
   }

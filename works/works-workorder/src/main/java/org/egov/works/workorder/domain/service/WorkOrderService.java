@@ -1,13 +1,17 @@
 package org.egov.works.workorder.domain.service;
 
+import java.util.Date;
+
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
+import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.config.PropertiesManager;
 import org.egov.works.workorder.domain.repository.WorkOrderRepository;
 import org.egov.works.workorder.domain.repository.builder.IdGenerationRepository;
 import org.egov.works.workorder.domain.validator.WorkOrderValidator;
 import org.egov.works.workorder.utils.WorkOrderUtils;
 import org.egov.works.workorder.web.contract.RequestInfo;
+import org.egov.works.workorder.web.contract.User;
 import org.egov.works.workorder.web.contract.WorkOrder;
 import org.egov.works.workorder.web.contract.WorkOrderDetail;
 import org.egov.works.workorder.web.contract.WorkOrderRequest;
@@ -71,6 +75,14 @@ public class WorkOrderService {
 
             }
 
+            if (workOrder.getStatus() != null
+                    && workOrder.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
+                workOrder.setApprovedDate(new Date().getTime());
+                User approvedBy = new User();
+                approvedBy.setUserName(workOrderRequest.getRequestInfo().getUserInfo().getUserName());
+                workOrder.setApprovedBy(approvedBy);
+            }
+
         }
         kafkaTemplate.send(propertiesManager.getWorksWorkOrderCreateTopic(), workOrderRequest);
         WorkOrderResponse workOrderResponse = new WorkOrderResponse();
@@ -90,6 +102,14 @@ public class WorkOrderService {
                     workOrderDetail.setId(commonUtils.getUUID());
                 workOrderDetail.setWorkOrder(workOrder.getId());
                 workOrderDetail.setAuditDetails(workOrderUtils.setAuditDetails(workOrderRequest.getRequestInfo(), true));
+            }
+            
+            if (workOrder.getStatus() != null
+                    && workOrder.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
+                workOrder.setApprovedDate(new Date().getTime());
+                User approvedBy = new User();
+                approvedBy.setUserName(workOrderRequest.getRequestInfo().getUserInfo().getUserName());
+                workOrder.setApprovedBy(approvedBy);
             }
         }
         kafkaTemplate.send(propertiesManager.getWorksWorkOrderCreateTopic(), workOrderRequest);

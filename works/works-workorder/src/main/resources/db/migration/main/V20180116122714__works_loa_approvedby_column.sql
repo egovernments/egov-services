@@ -1,0 +1,1 @@
+ALTER TABLE egw_letterofacceptance ADD COLUMN approvedby character varying(1024);

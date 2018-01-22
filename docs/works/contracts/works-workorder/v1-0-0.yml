@@ -1336,6 +1336,9 @@ definitions:
         format: double
         maxLength: 6
         description: Tender Finalized Percentage for the Letter Of Acceptance
+      approvedBy:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+        description: User who approved the LOA
       approvedDate:
         type: integer
         format: int64
@@ -1744,6 +1747,14 @@ definitions:
         description: Remarks for the Work Order
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
+      approvedBy:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+        description: User who approved the WorkOrder
+      approvedDate:
+        type: integer
+        format: int64
+        x-displayformat: 'dd/MM/yyyy'
+        description: Epoch time of Date on which WorkOrder approved. Future date is not allowed. WorkOrder Approved date should be on or after the WorkOrder date. 
     required:
       - tenantId
       - workOrderDate

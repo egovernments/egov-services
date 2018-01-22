@@ -3,6 +3,7 @@ package org.egov.works.workorder.domain.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -134,6 +135,14 @@ public class LetterOfAcceptanceService {
 
             letterOfAcceptance
                     .setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+            
+            
+            if(letterOfAcceptance.getStatus() != null && letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
+                letterOfAcceptance.setApprovedDate(new Date().getTime());
+                User approvedBy = new User();
+                approvedBy.setUserName(letterOfAcceptanceRequest.getRequestInfo().getUserInfo().getUserName());
+                letterOfAcceptance.setApprovedBy(approvedBy);
+            }
 
         }
 
@@ -254,6 +263,13 @@ public class LetterOfAcceptanceService {
 
             letterOfAcceptance
                     .setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
+            
+            if(letterOfAcceptance.getStatus() != null && letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
+                letterOfAcceptance.setApprovedDate(new Date().getTime());
+                User approvedBy = new User();
+                approvedBy.setUserName(letterOfAcceptanceRequest.getRequestInfo().getUserInfo().getUserName());
+                letterOfAcceptance.setApprovedBy(approvedBy);
+            }
 
         }
 

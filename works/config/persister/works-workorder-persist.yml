@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: works-letterofacceptance-create-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_letterofacceptance(id, tenantid, contractor, loadate, loanumber, contractperiod, emdamountdeposited, stamppaperamount,engineerincharge, defectliabilityperiod, loaamount, status, tenderfinalizedpercentage, approveddate, filenumber, filedate,  parent, stateid, cancellationreason, cancellationremarks, createdby, createdtime,councilResolutionNumber,councilResolutionDate,spilloverflag,lastmodifiedby,lastmodifiedtime,deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET contractor=EXCLUDED.contractor, loadate=EXCLUDED.loadate, loanumber=EXCLUDED.loanumber, contractperiod=EXCLUDED.contractperiod, emdamountdeposited=EXCLUDED.emdamountdeposited, stamppaperamount=EXCLUDED.stamppaperamount, engineerincharge=EXCLUDED.engineerincharge, defectliabilityperiod=EXCLUDED.defectliabilityperiod, loaamount=EXCLUDED.loaamount, status=EXCLUDED.status, tenderfinalizedpercentage=EXCLUDED.tenderfinalizedpercentage, approveddate=EXCLUDED.approveddate, filenumber=EXCLUDED.filenumber, filedate=EXCLUDED.filedate, stateid=EXCLUDED.stateid, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+    - query: INSERT INTO egw_letterofacceptance(id, tenantid, contractor, loadate, loanumber, contractperiod, emdamountdeposited, stamppaperamount,engineerincharge, defectliabilityperiod, loaamount, status, tenderfinalizedpercentage, approveddate, filenumber, filedate,  parent, stateid, cancellationreason, cancellationremarks, createdby, createdtime,councilResolutionNumber,councilResolutionDate,spilloverflag,lastmodifiedby,lastmodifiedtime,deleted,approveddate, approvedby) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET contractor=EXCLUDED.contractor, loadate=EXCLUDED.loadate, loanumber=EXCLUDED.loanumber, contractperiod=EXCLUDED.contractperiod, emdamountdeposited=EXCLUDED.emdamountdeposited, stamppaperamount=EXCLUDED.stamppaperamount, engineerincharge=EXCLUDED.engineerincharge, defectliabilityperiod=EXCLUDED.defectliabilityperiod, loaamount=EXCLUDED.loaamount, status=EXCLUDED.status, tenderfinalizedpercentage=EXCLUDED.tenderfinalizedpercentage, approveddate=EXCLUDED.approveddate, filenumber=EXCLUDED.filenumber, filedate=EXCLUDED.filedate, stateid=EXCLUDED.stateid, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted, approveddate=EXCLUDED.approveddate, approvedby=EXCLUDED.approvedby;
 
       basePath: $.letterOfAcceptances.*
       jsonMaps:
@@ -71,6 +71,11 @@ serviceMaps:
        - jsonPath: $.letterOfAcceptances.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.letterOfAcceptances.*.deleted
+
+       - jsonPath: $.letterOfAcceptances.*.approvedDate
+         dbType: LONG
+       
+       - jsonPath: $.letterOfAcceptances.*.approvedBy.userName
 
     - query: INSERT INTO egw_letterofacceptanceestimate(id, tenantid, letterofacceptance, detailedestimate, workcompletiondate, estimateloaamount, createdby, createdtime,lastmodifiedby,lastmodifiedtime,deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET workcompletiondate=EXCLUDED.workcompletiondate, estimateloaamount=EXCLUDED.estimateloaamount, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*
@@ -269,7 +274,7 @@ serviceMaps:
    fromTopic: works-workorder-createupdate-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_workorder(id, tenantid, letterofacceptance, workorderdate, workordernumber, status, stateid, createdby, createdtime,lastmodifiedby, lastmodifiedtime, deleted,remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) on CONFLICT (id,tenantid) DO UPDATE SET workorderdate=EXCLUDED.workorderdate, status= EXCLUDED.status, stateid=EXCLUDED.stateid, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted, remarks=EXCLUDED.remarks;
+    - query: INSERT INTO egw_workorder(id, tenantid, letterofacceptance, workorderdate, workordernumber, status, stateid, createdby, createdtime,lastmodifiedby, lastmodifiedtime, deleted,remarks,approveddate, approvedby) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET workorderdate=EXCLUDED.workorderdate, status= EXCLUDED.status, stateid=EXCLUDED.stateid, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted, remarks=EXCLUDED.remarks, approveddate=EXCLUDED.approveddate, approvedby=EXCLUDED.approvedby;
 
       basePath: $.workOrders.*
       jsonMaps:
@@ -302,6 +307,11 @@ serviceMaps:
        - jsonPath: $.workOrders.*.deleted
 
        - jsonPath: $.workOrders.*.remarks
+
+       - jsonPath: $.workOrders.*.approvedDate
+         dbType: LONG
+       
+       - jsonPath: $.workOrders.*.approvedBy.userName
 
     - query: INSERT INTO egw_workorder_details(id, tenantid, workorder, remarks, editable, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, editable=EXCLUDED.editable, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby, deleted=EXCLUDED.deleted;
 

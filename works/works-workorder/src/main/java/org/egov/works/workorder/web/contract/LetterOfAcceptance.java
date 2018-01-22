@@ -17,7 +17,7 @@ import java.util.Objects;
  * An Object holds the basic data of Letter Of Acceptance
  */
 @ApiModel(description = "An Object holds the basic data of Letter Of Acceptance")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:14:22.308Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-21T14:55:23.877Z")
 
 public class LetterOfAcceptance {
     @JsonProperty("id")
@@ -61,6 +61,9 @@ public class LetterOfAcceptance {
 
     @JsonProperty("tenderFinalizedPercentage")
     private Double tenderFinalizedPercentage = null;
+
+    @JsonProperty("approvedBy")
+    private User approvedBy = null;
 
     @JsonProperty("approvedDate")
     private Long approvedDate = null;
@@ -414,6 +417,27 @@ public class LetterOfAcceptance {
         this.tenderFinalizedPercentage = tenderFinalizedPercentage;
     }
 
+    public LetterOfAcceptance approvedBy(User approvedBy) {
+        this.approvedBy = approvedBy;
+        return this;
+    }
+
+    /**
+     * User who approved the LOA
+     * @return approvedBy
+     **/
+    @ApiModelProperty(value = "User who approved the LOA")
+
+    @Valid
+
+    public User getApprovedBy() {
+        return approvedBy;
+    }
+
+    public void setApprovedBy(User approvedBy) {
+        this.approvedBy = approvedBy;
+    }
+
     public LetterOfAcceptance approvedDate(Long approvedDate) {
         this.approvedDate = approvedDate;
         return this;
@@ -702,7 +726,7 @@ public class LetterOfAcceptance {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
+    // @Valid
 
     public AuditDetails getAuditDetails() {
         return auditDetails;
@@ -732,7 +756,7 @@ public class LetterOfAcceptance {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -754,6 +778,7 @@ public class LetterOfAcceptance {
                 Objects.equals(this.documentDetails, letterOfAcceptance.documentDetails) &&
                 Objects.equals(this.status, letterOfAcceptance.status) &&
                 Objects.equals(this.tenderFinalizedPercentage, letterOfAcceptance.tenderFinalizedPercentage) &&
+                Objects.equals(this.approvedBy, letterOfAcceptance.approvedBy) &&
                 Objects.equals(this.approvedDate, letterOfAcceptance.approvedDate) &&
                 Objects.equals(this.fileNumber, letterOfAcceptance.fileNumber) &&
                 Objects.equals(this.fileDate, letterOfAcceptance.fileDate) &&
@@ -775,7 +800,7 @@ public class LetterOfAcceptance {
     public int hashCode() {
         return Objects.hash(id, tenantId, contractor, loaDate, loaNumber, contractPeriod, emdAmountDeposited, stampPaperAmount,
                 engineerIncharge, defectLiabilityPeriod, loaAmount, documentDetails, status, tenderFinalizedPercentage,
-                approvedDate, fileNumber, fileDate, parent, stateId, cancellationReason, cancellationRemarks,
+                approvedBy, approvedDate, fileNumber, fileDate, parent, stateId, cancellationReason, cancellationRemarks,
                 councilResolutionNumber, councilResolutionDate, spillOverFlag, letterOfAcceptanceEstimates, securityDeposits,
                 workFlowDetails, auditDetails, deleted);
     }
@@ -799,6 +824,7 @@ public class LetterOfAcceptance {
         sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
         sb.append("    status: ").append(toIndentedString(status)).append("\n");
         sb.append("    tenderFinalizedPercentage: ").append(toIndentedString(tenderFinalizedPercentage)).append("\n");
+        sb.append("    approvedBy: ").append(toIndentedString(approvedBy)).append("\n");
         sb.append("    approvedDate: ").append(toIndentedString(approvedDate)).append("\n");
         sb.append("    fileNumber: ").append(toIndentedString(fileNumber)).append("\n");
         sb.append("    fileDate: ").append(toIndentedString(fileDate)).append("\n");
@@ -821,7 +847,7 @@ public class LetterOfAcceptance {
     /**
      * Convert the given object to string with each line indented by 4 spaces (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }

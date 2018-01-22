@@ -61,5 +61,8 @@ public class PositionResponse {
 
 	@JsonProperty("Position")
 	private List<Position> position = new ArrayList<Position>();
+		
+	private Integer pageSize;
 
+	private Integer offset; 
 }

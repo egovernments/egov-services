@@ -80,5 +80,6 @@ public class PositionGetRequest {
 	private Short pageSize;
 
 	private Short pageNumber;
-
+	
+	private Integer offset; 
 }

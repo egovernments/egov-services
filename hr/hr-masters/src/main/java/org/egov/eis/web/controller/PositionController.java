@@ -80,7 +80,7 @@ public class PositionController {
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-
+		Integer pageSize = 0 ;
 		// validate input params
 		if (modelAttributeBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
@@ -90,7 +90,10 @@ public class PositionController {
 		if (requestBodyBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
-
+		
+		if(positionGetRequest.getPageSize()!=null && !positionGetRequest.getPageSize().equals(""))
+		   pageSize = Integer.parseInt(positionGetRequest.getPageSize().toString());
+		
 		// Call service
 		List<Position> positionsList = null;
 		try {
@@ -100,7 +103,7 @@ public class PositionController {
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(positionsList, requestInfo);
+		return getSuccessResponse(positionsList, pageSize , requestInfo);
 	}
 
 	/**
@@ -171,12 +174,14 @@ public class PositionController {
 	 * @param positionsList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Position> positionsList, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(List<Position> positionsList, Integer pageSize, RequestInfo requestInfo) {
 		PositionResponse positionRes = new PositionResponse();
 		positionRes.setPosition(positionsList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		positionRes.setResponseInfo(responseInfo);
+		positionRes.setPageSize(pageSize);
+		positionRes.setOffset(positionsList.size());
 		return new ResponseEntity<PositionResponse>(positionRes, HttpStatus.OK);
 
 	}

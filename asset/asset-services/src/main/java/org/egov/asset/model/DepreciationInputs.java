@@ -108,4 +108,6 @@ public class DepreciationInputs {
     private String financialyear;
     
     private Long department;
+    
+    private String function;
 }

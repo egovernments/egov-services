@@ -75,7 +75,7 @@ public class DepreciationInputRowMapper implements RowMapper<DepreciationInputs>
                 .depreciationRate(rs.getDouble("assetcategory_depreciationrate"))
                 .yearwiseDepreciationRate(rs.getDouble("yearwisedepreciationrate"))
                 .grossValue(rs.getBigDecimal("grossValue")).assetCode(rs.getString("assetcode"))
-                .assetName(rs.getString("assetname"))
+                .assetName(rs.getString("assetname")).function(rs.getString("function"))
                 .assetId((Long) rs.getObject("assetid")).depreciationSum(rs.getBigDecimal("depreciationvaluesum")).build();
     }
 

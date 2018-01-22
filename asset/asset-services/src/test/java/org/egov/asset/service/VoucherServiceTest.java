@@ -222,7 +222,7 @@ public class VoucherServiceTest {
                         .thenReturn("Asset Disposal Journal Voucher");
 
         final VoucherRequest generatedVoucherRequest = voucherService.createDisposalVoucherRequest(disposal,
-                asset.getId(), asset.getDepartment().getId(), accountCodeDetails, getHttpHeaders());
+                asset.getId(), asset.getDepartment().getId(), accountCodeDetails,asset.getFunction(), getHttpHeaders());
 
         final Fund fund = getFund();
         final Voucher voucher = getVoucher(asset.getDepartment().getId(), fund);

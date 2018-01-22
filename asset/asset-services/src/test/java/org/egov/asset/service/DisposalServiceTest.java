@@ -193,7 +193,7 @@ public class DisposalServiceTest {
         final VoucherRequest voucherRequest = getVoucherRequest();
         when(assetRepository.findForCriteria(any(AssetCriteria.class))).thenReturn(assets);
         when(voucherService.createDisposalVoucherRequest(any(Disposal.class), any(Long.class), any(Long.class),
-                any(List.class), any(HttpHeaders.class))).thenReturn(voucherRequest);
+                any(List.class),any(String.class) ,any(HttpHeaders.class))).thenReturn(voucherRequest);
         disposalService.createVoucherForDisposal(disposalRequest, headers);
     }
 

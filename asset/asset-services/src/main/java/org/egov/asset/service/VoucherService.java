@@ -283,7 +283,7 @@ public class VoucherService {
     }
 
     public VoucherRequest createDisposalVoucherRequest(final Disposal disposal, final Long assetId,
-            final Long departmentId, final List<VoucherAccountCodeDetails> accountCodeDetails,
+            final Long departmentId, final List<VoucherAccountCodeDetails> accountCodeDetails,final String functionCode,
             final HttpHeaders header) {
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<>();
@@ -302,7 +302,7 @@ public class VoucherService {
         log.debug("Disposal source :: " + source);
         voucher.setSource(source);
 
-        setFinancialParameters(voucher, accountCodeDetails, tenantId);
+        setFinancialParameters(voucher, accountCodeDetails, tenantId,functionCode);
 
         voucher.setLedgers(accountCodeDetails);
 
@@ -315,21 +315,21 @@ public class VoucherService {
     }
 
     public VoucherRequest createDepreciationVoucherRequest(
-            final List<DepreciationInputs> depreciationInputsList, final Long departmentId,
+            final List<DepreciationInputs> depreciationInputsList, final Long departmentId,final String functionCode,
             final List<VoucherAccountCodeDetails> accountCodeDetails, final String tenantId, final HttpHeaders header) {
 
         final VoucherRequest voucherRequest = new VoucherRequest();
         final List<Voucher> vouchers = new ArrayList<>();
-
+        
         final Voucher voucher = generateVoucher(departmentId);
-
+        
         voucher.setName(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERNAME, tenantId));
         voucher.setDescription(assetConfigurationService
                 .getAssetConfigValueByKeyAndTenantId(AssetConfigurationKeys.DEPRECIATIONVOUCHERDESCRIPTION, tenantId));
-
-        setFinancialParameters(voucher, accountCodeDetails, tenantId);
-
+        
+        setFinancialParameters(voucher, accountCodeDetails, tenantId,functionCode);
+       
         voucher.setLedgers(accountCodeDetails);
 
         log.debug("Depreciation Voucher :: " + voucher);
@@ -383,15 +383,14 @@ public class VoucherService {
     }
 
     public void setFinancialParameters(final Voucher voucher, final List<VoucherAccountCodeDetails> accountCodeDetails,
-            final String tenantId) {
+            final String tenantId,final String functionCode) {
 
         final Map<String, String> voucherParams = getVoucherParameters(tenantId);
 
         log.debug("Voucher Parameters :: " + voucherParams);
 
         final String fundCode = voucherParams.get(AssetFinancialParams.FUND.toString());
-        final String functionCode = voucherParams.get(AssetFinancialParams.FUNCTION.toString());
-
+      
         if (fundCode != null) {
             final Fund fund = new Fund();
             fund.setCode(fundCode);

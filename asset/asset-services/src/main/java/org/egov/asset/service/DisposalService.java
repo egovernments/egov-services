@@ -192,7 +192,7 @@ public class DisposalService {
         log.debug("Voucher Create Account Code Details :: " + accountCodeDetails);
 
         final VoucherRequest voucherRequest = voucherService.createDisposalVoucherRequest(disposal, asset.getId(),
-                asset.getDepartment().getId(), accountCodeDetails, headers);
+                asset.getDepartment().getId(), accountCodeDetails, asset.getFunction(),headers);
 
         log.debug("Voucher Request for Disposal :: " + voucherRequest);
 

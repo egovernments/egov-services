@@ -195,6 +195,7 @@ public class DepreciationService {
                 final List<VoucherAccountCodeDetails> accountCodeDetails = new ArrayList<>();
 
                 final Long departmentId = depreciation.getDepartment();
+                final String functionCode=depreciation.getFunction();
 
                 log.debug("Asset Department ID :: " + departmentId);
                 for (final DepreciationDetail depreciationDetail : depreciationDetailsList)
@@ -232,7 +233,7 @@ public class DepreciationService {
                         validateDepreciationSubledgerDetails(requestInfo, tenantId, ledgerMap.keySet());
                         if (!accountCodeDetails.isEmpty()) {
                             final VoucherRequest voucherRequest = voucherService.createDepreciationVoucherRequest(
-                                    depreciationInputsList, departmentId, accountCodeDetails, tenantId, headers);
+                                    depreciationInputsList, departmentId, functionCode,accountCodeDetails, tenantId, headers);
                             log.debug("Voucher Request for Depreciation :: " + voucherRequest);
 
                             final String voucherNumber = voucherService.createVoucher(voucherRequest, tenantId, headers);

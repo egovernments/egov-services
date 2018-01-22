@@ -87,10 +87,10 @@ public class VehicleScheduleService {
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicleList;
 
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+      /*  DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         DateFormat validationDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));*/
 
         for (final VehicleSchedule vehicleSchedule : vehicleScheduleRequest.getVehicleSchedules()) {
 
@@ -147,7 +147,7 @@ public class VehicleScheduleService {
                         "The field Route is Mandatory . It cannot be not be null or empty.Please provide correct value ");
             }
 
-            try {
+      /*      try {
                 if (!validationDateFormat.parse(validationDateFormat.format(vehicleSchedule.getScheduledFrom())).equals(
                         validationDateFormat.parse(validationDateFormat.format(new Date())))
                         && new Date(vehicleSchedule.getScheduledFrom()).before(new Date()))
@@ -156,7 +156,7 @@ public class VehicleScheduleService {
                                     dateFormat.format(new Date(vehicleSchedule.getScheduledFrom())));
             } catch (ParseException e) {
                 throw new CustomException("ScheduleFrom", "Invalid From Date");
-            }
+            }*/
         }
     }
 

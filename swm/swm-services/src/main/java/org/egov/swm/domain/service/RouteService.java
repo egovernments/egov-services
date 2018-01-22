@@ -215,11 +215,6 @@ public class RouteService {
                                         + rcpm.getDumpingGround().getCode());
                     }
 
-                    if (endingCollectionPoint && dumpingGround) {
-                        throw new CustomException("collectionPoint",
-                                "Both ending collection point and  ending dumping ground cannot be send");
-                    }
-
                     if (rcpm.getDumpingGround() != null && rcpm.getDumpingGround().getCode() != null
                             && !rcpm.getDumpingGround().getCode().isEmpty()) {
                         dumpingGround = true;
@@ -250,6 +245,16 @@ public class RouteService {
 
                         collectionPointMap.put(rcpm.getCollectionPoint().getCode(), rcpm.getCollectionPoint().getCode());
                     }
+                }
+
+                if (!startingCollectionPoint) {
+                    throw new CustomException("startingCollectionPoint",
+                            "The field starting collection point is Mandatory . It cannot be not be null or empty.Please provide correct value");
+                }
+
+                if (endingCollectionPoint && dumpingGround) {
+                    throw new CustomException("collectionPoint",
+                            "Both ending collection point and  ending dumping ground cannot be send");
                 }
 
                 if (!endingCollectionPoint && !dumpingGround)

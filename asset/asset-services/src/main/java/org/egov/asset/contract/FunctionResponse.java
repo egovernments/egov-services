@@ -60,8 +60,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Data;
 
 @JsonInclude(value = Include.NON_NULL)
-@Data
-public class FunctionResponse {
+public @Data class FunctionResponse {
     private ResponseInfo responseInfo;
     private List<Function> functions;
     private Function function;

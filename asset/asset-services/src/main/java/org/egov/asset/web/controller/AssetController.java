@@ -158,6 +158,9 @@ public class AssetController {
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
+        final List<ErrorResponse> errorResponses =  assetValidator.validateAssetRequest(assetRequest);
+        if (!errorResponses.isEmpty())
+                return new ResponseEntity<List<ErrorResponse>>(errorResponses, HttpStatus.BAD_REQUEST);
         assetValidator.validateAsset(assetRequest);
 
         final AssetResponse assetResponse = assetService.createAsync(assetRequest);

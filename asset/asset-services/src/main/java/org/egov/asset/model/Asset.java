@@ -120,4 +120,9 @@ public class Asset {
 
     @JsonProperty("transactionHistory")
     private List<TransactionHistory> transactionHistory;
+   
+    
+    @JsonProperty("function")
+    @NotNull
+    private String function;
 }

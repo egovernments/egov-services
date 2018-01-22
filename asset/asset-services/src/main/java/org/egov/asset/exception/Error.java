@@ -55,6 +55,7 @@ import java.util.Map;
 import org.egov.common.contract.response.ErrorField;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -67,6 +68,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Builder
 public class Error {
 
     private Integer code;

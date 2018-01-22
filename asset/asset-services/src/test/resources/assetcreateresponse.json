@@ -50,7 +50,8 @@
     "grossValue": null,
     "accumulatedDepreciation": null,
     "assetReference": null,
-    "version": null
+    "version": null,
+     "function":"020"
       }
     ]
 }

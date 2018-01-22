@@ -63,12 +63,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.asset.config.ApplicationProperties;
 import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.contract.DepreciationRequest;
 import org.egov.asset.contract.DisposalRequest;
+import org.egov.asset.contract.FunctionResponse;
+import org.egov.asset.contract.RequestInfoWrapper;
 import org.egov.asset.contract.RevaluationRequest;
-import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.exception.Error;
+import org.egov.asset.exception.ErrorResponse;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCriteria;
@@ -93,8 +96,11 @@ import org.egov.asset.service.AssetService;
 import org.egov.asset.service.CurrentValueService;
 import org.egov.asset.util.ApplicationConstants;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.response.ErrorField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -122,6 +128,12 @@ public class AssetValidator {
 
     @Autowired
     private ApplicationConstants applicationConstants;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
@@ -574,13 +586,11 @@ public class AssetValidator {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         boolean isDateOfDepreciatioInFutureDate = true;
         boolean isDateOfDepreciationManadatoryFeilds = true;
-        
-       if (assetCriteria.getDateOfDepreciation() == null) {
-            isDateOfDepreciationManadatoryFeilds = false;
-        } else if (assetCriteria.getDateOfDepreciation() > new Date().getTime()) {
-            isDateOfDepreciatioInFutureDate = false;
 
-        }
+        if (assetCriteria.getDateOfDepreciation() == null)
+            isDateOfDepreciationManadatoryFeilds = false;
+        else if (assetCriteria.getDateOfDepreciation() > new Date().getTime())
+            isDateOfDepreciatioInFutureDate = false;
 
         if (!isDateOfDepreciationManadatoryFeilds) {
             final ErrorResponse errorResponse = new ErrorResponse();
@@ -603,6 +613,68 @@ public class AssetValidator {
         }
 
         return errorResponses;
+    }
+
+    public List<ErrorResponse> validateAssetRequest(final AssetRequest assetRequest) {
+        final List<ErrorResponse> errorResponses = new ArrayList<>();
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final Asset asset = assetRequest.getAsset();
+        final Error error = getError(asset);
+        errorResponse.setError(error);
+        if (!errorResponse.getErrorFields().isEmpty())
+            errorResponses.add(errorResponse);
+
+        return errorResponses;
+    }
+
+    public Error getError(final Asset asset) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+
+        final List<ErrorField> errorList = validateAssetRequest(asset);
+        errorFields.addAll(errorList);
+
+        return Error.builder().code(HttpStatus.BAD_REQUEST.value())
+                .message(ApplicationConstants.INVALID_REQUEST_MESSAGE).errorFields(errorFields).build();
+    }
+
+    public List<ErrorField> validateAssetRequest(final Asset asset) {
+        final List<ErrorField> errorFields = new ArrayList<>();
+
+        if (!getFunctionByCodeAndName(asset))
+            errorFields.add(buildErrorField(ApplicationConstants.ASSET_FUNCTION_CODE_INVALID_CODE,
+                    ApplicationConstants.ASSET_FUNCTION_CODE_INVALID_ERROR_MESSAGE,
+                    ApplicationConstants.ASSET_FUNCTION_CODE_INVALID_NAME));
+
+        return errorFields;
+    }
+
+    private ErrorField buildErrorField(final String code, final String message, final String field) {
+        return ErrorField.builder().code(code).message(message).field(field).build();
+
+    }
+
+    private boolean getFunctionByCodeAndName(final Asset asset) {
+
+        final StringBuilder url = new StringBuilder();
+        Boolean isValidFunctionCode = Boolean.FALSE;
+        url.append(applicationProperties.getEgfMastersHost())
+                .append(applicationProperties.getEgfServiceFunctionsSearchPath())
+                .append("?code=").append(asset.getFunction())
+                .append(
+                        "&tenantId=")
+                .append(asset.getTenantId());
+
+        final RequestInfo requestInfo = RequestInfo.builder().build();
+        final RequestInfoWrapper wrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
+        final FunctionResponse functionRes = new RestTemplate().postForObject(url.toString(), wrapper, FunctionResponse.class);
+        if (functionRes != null && !functionRes.getFunctions().isEmpty()) {
+            asset.setFunction(functionRes.getFunctions() != null
+                    && functionRes.getFunctions().get(0) != null ? String.valueOf(functionRes.getFunctions().get(0).getCode())
+                            : "");
+            isValidFunctionCode = Boolean.TRUE;
+        }
+        return isValidFunctionCode;
+
     }
 
 }

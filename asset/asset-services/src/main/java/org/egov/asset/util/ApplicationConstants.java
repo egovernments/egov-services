@@ -61,8 +61,15 @@ import org.springframework.core.env.Environment;
 public class ApplicationConstants {
 
     
+    public static final String INVALID_REQUEST_MESSAGE = "Request is invalid";
+    
     public static final String MSG_DEPRECIATION_DATE = "asset.search.depreciation.date";
     public static final String MSG_DEPRECIATION_FUTURE_DATE = "asset.search.depreciation.future.date";
+   
+    
+    public static final String ASSET_FUNCTION_CODE_INVALID_CODE = "asset";
+    public static final String ASSET_FUNCTION_CODE_INVALID_NAME = "functionCode";
+    public static final String ASSET_FUNCTION_CODE_INVALID_ERROR_MESSAGE = "Please provide valid Function Name and Code";
  
 
 

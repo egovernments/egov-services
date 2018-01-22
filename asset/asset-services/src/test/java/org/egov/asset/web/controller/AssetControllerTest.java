@@ -558,6 +558,7 @@ public class AssetControllerTest {
 		asset.setStatus(Status.CREATED.toString());
 		asset.setDescription(null);
 		asset.setDateOfCreation(1504549800000l);
+		asset.setFunction("020");
 
 		final Location location = new Location();
 		location.setLocality(4l);

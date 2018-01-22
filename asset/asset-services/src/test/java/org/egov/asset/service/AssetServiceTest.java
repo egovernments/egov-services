@@ -233,6 +233,7 @@ public class AssetServiceTest {
 		asset.setModeOfAcquisition(ModeOfAcquisition.ACQUIRED);
 		asset.setEnableYearWiseDepreciation(false);
 		asset.setDepreciationRate(Double.valueOf("13.17"));
+		asset.setFunction("020");
 
 		final Location location = new Location();
 		location.setLocality(4l);

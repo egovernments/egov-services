@@ -181,6 +181,7 @@ public class AssetRepositoryTest {
         asset.setDepreciationRate(Double.valueOf("6.33"));
         asset.setSurveyNumber("123");
         asset.setMarketValue(new BigDecimal("700"));
+        asset.setFunction("020");
         final Location location = new Location();
         location.setLocality(4l);
         location.setDoorNo("door no");

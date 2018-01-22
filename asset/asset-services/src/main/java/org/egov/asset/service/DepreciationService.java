@@ -281,8 +281,7 @@ public class DepreciationService {
         log.debug("Financial Year Search URL :: " + url);
         final List<FinancialYearContract> financialYearContracts = restTemplate
                 .postForObject(url, new RequestInfoWrapper(requestInfo), FinancialYearContractResponse.class)
-                .getFinancialYears();
-        log.debug("Financial Year Response :: " + financialYearContracts);
+               .getFinancialYears();
         log.debug("Financial Year Response :: " + financialYearContracts);
         if (financialYearContracts != null && !financialYearContracts.isEmpty()) {
             final FinancialYearContract financialYearContract = financialYearContracts.get(0);

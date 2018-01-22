@@ -103,9 +103,9 @@ ReportDefinitions:
     pattern: http://swm-services:8080/swm-services/vehicles/_search?tenantId=$tenantid|$..regNumber|$..regNumber
   - name: typeofvehicle
     label: reports.swm.vehicletype
-    type: url
+    type: string
     source: egswm_vehicle
-    isMandatory: true
+    isMandatory: false
     wrapper: true
     pattern: /swm-services/vehicles/_search?tenantId=$tenantid&regNumbers={vehicle}|$..vehicleType.code|$..vehicleType.name    
   - name: fromDate

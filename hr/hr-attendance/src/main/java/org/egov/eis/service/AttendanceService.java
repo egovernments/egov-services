@@ -42,6 +42,7 @@ package org.egov.eis.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -99,6 +100,21 @@ public class AttendanceService {
 	public List<Attendance> findAttendanceForHolidays(final AttendanceGetRequest attendanceGetRequest,
 			RequestInfo requestInfo) throws ParseException {
 		List<Date> holidayDates = getHolidayDates(attendanceGetRequest, requestInfo);
+		
+		final Map<String, List<String>> weeklyHolidays = hrConfigurationService
+				.getWeeklyHolidays(attendanceGetRequest.getTenantId(), requestInfo);
+		
+		holidayDates.addAll(getSundaysForDateRange(attendanceGetRequest.getFromDate(), new Date()));
+		if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWeek()
+				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+			holidayDates.addAll(getSaturdaysForDateRange(attendanceGetRequest.getFromDate(), new Date()));
+		} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
+				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
+			holidayDates.addAll(getSecondSaturdaysForDateRange(attendanceGetRequest.getFromDate(), new Date()));
+		} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
+				.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0)))
+			holidayDates.addAll(getSecondOrFourthSaturdaysForDateRange(attendanceGetRequest.getFromDate(), new Date()));
+
 		return attendanceRepository.findByCriteria(attendanceGetRequest, holidayDates);
 	}
 
@@ -183,16 +199,16 @@ public class AttendanceService {
 				&& (currentDate.get(Calendar.MONTH) == calendar.get(Calendar.MONTH))) {
 			monthEnd = currentDate.getTime();
 
-			count += sundaysCount(monthStart, monthEnd);
+			count += getSundaysForDateRange(monthStart, monthEnd).size();
 			if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWeek()
 					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
-				count += saturdayCount(monthStart, monthEnd);
+				count += getSaturdaysForDateRange(monthStart, monthEnd).size();
 			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondSaturday()
 					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0))) {
-				count += secondSaturdayCount(monthStart, monthEnd);
+				count += getSecondSaturdaysForDateRange(monthStart, monthEnd).size();
 			} else if (propertiesManager.getHrMastersServiceConfigurationsFiveDayWithSecondAndFourthSaturday()
 					.equals(weeklyHolidays.get(propertiesManager.getHrMastersServiceConfigurationsKey()).get(0)))
-				count += secondOrFourthSaturdayCount(monthStart, monthEnd);
+				count += getSecondOrFourthSaturdaysForDateRange(monthStart, monthEnd).size();
 
 		} else {
 			monthEnd = calendar.getTime();
@@ -224,72 +240,74 @@ public class AttendanceService {
 		return Long.valueOf(count);
 	}
 
-	public int sundaysCount(Date fromDate, Date toDate) {
+	@SuppressWarnings("null")
+	public List<Date> getSundaysForDateRange(Date fromDate, Date toDate) {
 
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(fromDate);
 		Calendar c2 = Calendar.getInstance();
 		c2.setTime(toDate);
-		int sundays = 0;
+		List<Date> sundays = new ArrayList<>();
 
 		while (c2.after(c1)) {
 			if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-				sundays++;
+				sundays.add(c1.getTime());
 			}
 			c1.add(Calendar.DATE, 1);
 		}
 
 		if (c1.equals(c2) && c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			sundays++;
+			sundays.add(c1.getTime());
 		}
 
 		return sundays;
 	}
 
-	public int saturdayCount(Date fromDate, Date toDate) {
+	@SuppressWarnings("null")
+	public List<Date> getSaturdaysForDateRange(Date fromDate, Date toDate) {
 
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(fromDate);
 		Calendar c2 = Calendar.getInstance();
 		c2.setTime(toDate);
-		int sundays = 0;
+		List<Date> saturdays = new ArrayList<>();
 
 		while (c2.after(c1)) {
 			if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-				sundays++;
+				saturdays.add(c1.getTime());
 			}
 			c1.add(Calendar.DATE, 1);
 		}
 		if (c1.equals(c2) && c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			sundays++;
+			saturdays.add(c1.getTime());
 		}
-		return sundays;
+		return saturdays;
 	}
 
-	public int secondSaturdayCount(Date fromDate, Date toDate) {
+	public List<Date> getSecondSaturdaysForDateRange(Date fromDate, Date toDate) {
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(fromDate);
 		Calendar c2 = Calendar.getInstance();
 		c2.setTime(toDate);
-		int secondSaturday = 0;
+		List<Date> secondSaturdays = new ArrayList<>();
 
 		while (c2.after(c1)) {
 			if ((c1.get(Calendar.WEEK_OF_MONTH) == 2) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
-				secondSaturday++;
+				secondSaturdays.add(c1.getTime());
 			}
 			c1.add(Calendar.DATE, 1);
 
 		}
 		if (c1.equals(c2) && (c1.get(Calendar.WEEK_OF_MONTH) == 2)
 				&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
-			secondSaturday++;
+			secondSaturdays.add(c1.getTime());
 		}
 
-		return secondSaturday;
+		return secondSaturdays;
 	}
 
-	public int secondOrFourthSaturdayCount(Date fromDate, Date toDate) {
-		int fourthSaturday = secondSaturdayCount(fromDate, toDate);
+	public List<Date> getSecondOrFourthSaturdaysForDateRange(Date fromDate, Date toDate) {
+		List<Date> fourthSaturdays = getSecondSaturdaysForDateRange(fromDate, toDate);
 
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(fromDate);
@@ -298,16 +316,16 @@ public class AttendanceService {
 
 		while (c2.after(c1)) {
 			if ((c1.get(Calendar.WEEK_OF_MONTH) == 4) && (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
-				fourthSaturday++;
+				fourthSaturdays.add(c1.getTime());
 			}
 			c1.add(Calendar.DATE, 1);
 
 		}
 		if (c1.equals(c2) && (c1.get(Calendar.WEEK_OF_MONTH) == 4)
 				&& (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)) {
-			fourthSaturday++;
+			fourthSaturdays.add(c1.getTime());
 		}
-		return fourthSaturday;
+		return fourthSaturdays;
 	}
 
 	public boolean getByEmployeeAndDate(final Long employee, final Date attendanceDate, final String tenantId) {

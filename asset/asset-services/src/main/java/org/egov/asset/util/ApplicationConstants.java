@@ -69,7 +69,7 @@ public class ApplicationConstants {
     
     public static final String ASSET_FUNCTION_CODE_INVALID_CODE = "asset";
     public static final String ASSET_FUNCTION_CODE_INVALID_NAME = "functionCode";
-    public static final String ASSET_FUNCTION_CODE_INVALID_ERROR_MESSAGE = "Please provide valid Function Name and Code";
+    public static final String ASSET_FUNCTION_CODE_INVALID_ERROR_MESSAGE = "Please provide valid Function Code";
  
 
 

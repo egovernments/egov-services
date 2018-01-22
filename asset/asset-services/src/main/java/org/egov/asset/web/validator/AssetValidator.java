@@ -584,15 +584,15 @@ public class AssetValidator {
 
     public List<ErrorResponse> validateSearchAssetDepreciation(final AssetCriteria assetCriteria) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
-        boolean isDateOfDepreciatioInFutureDate = true;
-        boolean isDateOfDepreciationManadatoryFeilds = true;
+        boolean isDateOfDepreciatioInFutureDate = false;
+        boolean isDateOfDepreciationManadatoryFeilds = false;
 
         if (assetCriteria.getDateOfDepreciation() == null)
-            isDateOfDepreciationManadatoryFeilds = false;
+            isDateOfDepreciationManadatoryFeilds = true;
         else if (assetCriteria.getDateOfDepreciation() > new Date().getTime())
-            isDateOfDepreciatioInFutureDate = false;
+            isDateOfDepreciatioInFutureDate = true;
 
-        if (!isDateOfDepreciationManadatoryFeilds) {
+        if (isDateOfDepreciationManadatoryFeilds) {
             final ErrorResponse errorResponse = new ErrorResponse();
             final Error error = new Error();
             error.setDescription(
@@ -602,7 +602,7 @@ public class AssetValidator {
             errorResponses.add(errorResponse);
         }
 
-        if (!isDateOfDepreciatioInFutureDate) {
+        if (isDateOfDepreciatioInFutureDate) {
             final ErrorResponse errorResponse = new ErrorResponse();
             final Error error = new Error();
             error.setDescription(
@@ -640,7 +640,7 @@ public class AssetValidator {
     public List<ErrorField> validateAssetRequest(final Asset asset) {
         final List<ErrorField> errorFields = new ArrayList<>();
 
-        if (!getFunctionByCodeAndName(asset))
+        if (!getFunctionByCode(asset))
             errorFields.add(buildErrorField(ApplicationConstants.ASSET_FUNCTION_CODE_INVALID_CODE,
                     ApplicationConstants.ASSET_FUNCTION_CODE_INVALID_ERROR_MESSAGE,
                     ApplicationConstants.ASSET_FUNCTION_CODE_INVALID_NAME));
@@ -653,7 +653,7 @@ public class AssetValidator {
 
     }
 
-    private boolean getFunctionByCodeAndName(final Asset asset) {
+    private boolean getFunctionByCode(final Asset asset) {
 
         final StringBuilder url = new StringBuilder();
         Boolean isValidFunctionCode = Boolean.FALSE;

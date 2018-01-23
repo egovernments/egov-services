@@ -1,6 +1,6 @@
 ReportDefinitions:
 - reportName: DumpingGroundDetailReport
-  summary: Report regarding dumping ground details
+  summary: Dumping Ground Details report
   version: 1.0.0
   moduleName: swm
   externalService:
@@ -59,7 +59,7 @@ ReportDefinitions:
   groupBy: group by date, dumpinggroundname;
   
 - reportName: ExpenditureIncurredReport
-  summary: Report regarding Expenditure incurred on Transportation
+  summary: Expenditure incurred on Transportation report
   version: 1.0.0
   moduleName: swm
   externalService:

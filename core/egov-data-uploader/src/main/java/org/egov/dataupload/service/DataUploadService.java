@@ -168,9 +168,11 @@ public class DataUploadService {
 				    	}
 				    	
 				    }
-				    List<Integer> successFailureCounts = writeToResultExcel(failureMessage, row, apiResponse, failureCount, successCount, resultFilePath, resJsonPathList);
-				    failureCount = successFailureCounts.get(0);
-				    successCount = successFailureCounts.get(1);
+				    Map<String, Integer> rowResultReport = writeToResultExcel(failureMessage, row, apiResponse, 
+				    		failureCount, successCount, resultFilePath, resJsonPathList);
+				    
+				    failureCount = rowResultReport.get("fail");
+				    successCount = rowResultReport.get("success");
 			}
 			String responseFilePath = getFileStoreId(uploadJob.getTenantId(), uploadJob.getModuleName(), resultFilePath);
 			uploadJob.setSuccessfulRows(successCount);uploadJob.setFailedRows(failureCount); uploadJob.setEndTime(new Date().getTime());
@@ -221,9 +223,11 @@ public class DataUploadService {
 	    return request;
 	}
 	
-	public List<Integer> writeToResultExcel(String failureMessage, List<Object> row, Object apiResponse, Integer failureCount,
+	public Map<String, Integer> writeToResultExcel(String failureMessage, List<Object> row, Object apiResponse, Integer failureCount,
 			Integer successCount, String resultFilePath, List<Object> resJsonPathList) throws Exception {
 		List<Integer> successFailureCounts = new ArrayList<>();
+		Map<String, Integer> rowResultReport = new HashMap<>();
+
 	    if(null != failureMessage && !failureMessage.isEmpty()) {
 	    	if(null != resJsonPathList){
 	    		for(Object obj: resJsonPathList){
@@ -260,10 +264,10 @@ public class DataUploadService {
 	    	logger.info("Writing SUCCESS ROW to excel....: "+row);
 			dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 	    }
-		successFailureCounts.add(failureCount);
-		successFailureCounts.add(successCount);
+	    rowResultReport.put("success", successCount);
+	    rowResultReport.put("fail", failureCount);
 		
-	    return successFailureCounts;
+	    return rowResultReport;
 	}
 	
 	private void uploadParentChildData(List<List<Object>> excelData,
@@ -331,11 +335,13 @@ public class DataUploadService {
 		    	
 		    }
 		    
-		    List<Integer> successFailureCounts = writeToExcelForParentChild(failureMessage, apiResponse, failureCount, successCount, 
+			Map<String, Integer> rowResultReport = writeToExcelForParentChild(failureMessage, apiResponse, failureCount, successCount, 
 		    		resultFilePath, resJsonPathList, filteredList);
 		    
-		    failureCount = successFailureCounts.get(0);
-		    successCount = successFailureCounts.get(1);
+			logger.info("rowResultReport: "+rowResultReport);
+			
+		    failureCount = rowResultReport.get("fail");
+		    successCount = rowResultReport.get("success");
 		    
 	    	//counter is incremented based on no of rows processed in this iteration.
 			i+=(filteredList.size() - 1);
@@ -514,9 +520,6 @@ public class DataUploadService {
 	
 	@SuppressWarnings("rawtypes")
 	private static Map deepMerge(Map original, Map newMap, List<String> uniqueKeysForInnerObject) {
-		if(uniqueKeysForInnerObject.isEmpty()) {
-			logger.error("uniqueKeysForInnerObject is Empty!");
-		}
 	    for (Object key : newMap.keySet()) {
 			logger.debug("key: "+key);
 	        if (newMap.get(key) instanceof Map && original.get(key) instanceof Map) {
@@ -570,9 +573,10 @@ public class DataUploadService {
 	    return original;
 	}
 	
-	public List<Integer> writeToExcelForParentChild(String failureMessage, Object apiResponse, int failureCount, int successCount, 
+	public Map<String, Integer> writeToExcelForParentChild(String failureMessage, Object apiResponse, int failureCount, int successCount, 
 			String resultFilePath, List<Object> resJsonPathList, List<List<Object>> filteredList) throws Exception {
 		List<Integer> successFailureCounts = new ArrayList<>();
+		Map<String, Integer> rowResultReport = new HashMap<>();
 	    if(null != failureMessage && !failureMessage.isEmpty()) {
 	    	for(List<Object> row: filteredList) {
 		    	if(null != resJsonPathList){
@@ -613,10 +617,9 @@ public class DataUploadService {
 				dataUploadUtils.writeToexcelSheet(row, resultFilePath);
 	    	}
 	    }
-	    
-		successFailureCounts.add(failureCount);
-		successFailureCounts.add(successCount);
+	    rowResultReport.put("success", successCount);
+	    rowResultReport.put("fail", failureCount);
 		
-	    return successFailureCounts;
+	    return rowResultReport;
 	}
 }

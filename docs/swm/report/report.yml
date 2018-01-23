@@ -107,7 +107,7 @@ ReportDefinitions:
     source: egswm_vehicle
     isMandatory: false
     wrapper: true
-    pattern: /swm-services/vehicles/_search?tenantId=$tenantid&regNumbers={vehicle}|$..vehicleType.name    
+    pattern: /swm-services/vehicles/_search?tenantId=$tenantid&regNumbers={vehicle}|$..vehicleType.name|$..vehicleType.name    
   - name: fromDate
     label: reports.swm.datefrom
     type: epoch

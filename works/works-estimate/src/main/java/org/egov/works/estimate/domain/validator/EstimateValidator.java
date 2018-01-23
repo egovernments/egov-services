@@ -503,9 +503,10 @@ public class EstimateValidator {
     public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
         final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
         Map<String, String> messages = new HashMap<>();
+        AbstractEstimate abstactEstimate = null;
         for (DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
             if (isRevision == null || (isRevision != null && !isRevision)) {
-                AbstractEstimate abstactEstimate = searchAbstractEstimate(detailedEstimate);
+                abstactEstimate = searchAbstractEstimate(detailedEstimate);
                 if (abstactEstimate == null)
                     messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
                             Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
@@ -523,6 +524,7 @@ public class EstimateValidator {
                 validateUpdateStatus(detailedEstimate, requestInfo, messages);
                 if(detailedEstimate.getDetailedEstimateDeductions() != null && !detailedEstimate.getDetailedEstimateDeductions().isEmpty())
                     validateDeductions(detailedEstimate, requestInfo, messages);
+
             }
             validateActivities(detailedEstimate, messages, requestInfo);
             if (StringUtils.isNotBlank(detailedEstimate.getId())) {
@@ -546,6 +548,12 @@ public class EstimateValidator {
                     detailedEstimate.getEstimateValue().compareTo(detailedEstimate.getWorkValue()) < 0)
                 messages.put(Constants.KEY_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE,
                         Constants.MESSAGE_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE);
+
+            if(!workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&
+                    detailedEstimate.getStatus() != null && detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED) &&
+                    !abstactEstimate.getDetailedEstimateCreated()) {
+                validateTechnicalSanctionDetail(detailedEstimate, messages);
+            }
 
         }
         if (messages != null && !messages.isEmpty())
@@ -1075,11 +1083,11 @@ public class EstimateValidator {
 
                     // TODO FIX aset code validation getting deserialization error
                     // for AttributeDefinition["columns"]
-                     if( abstractEstimateAssetDetail.getAsset() != null && StringUtils.isNotBlank(abstractEstimateAssetDetail.getAsset().getCode())) {
+                   /*  if( abstractEstimateAssetDetail.getAsset() != null && StringUtils.isNotBlank(abstractEstimateAssetDetail.getAsset().getCode())) {
                          List<Asset> assets = assetRepository.searchAssets(abstractEstimateAssetDetail.getTenantId(),
                              abstractEstimateAssetDetail.getAsset().getCode(),requestInfo);
                          if(assets != null && assets.isEmpty())
-                          messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID); }
+                          messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID); }*/
                     if (asset != null && asset.getCode().equals(abstractEstimateAssetDetail.getAsset().getCode()))
                         messages.put(Constants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS,
                                 Constants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);

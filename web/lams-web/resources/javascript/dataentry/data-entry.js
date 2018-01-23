@@ -995,9 +995,12 @@ function initDatepicker(){
           var datePattern = new RegExp(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/);
           if(datePattern.test(fromDate), datePattern.test(toDate)){
 
+            let noOfyears = '0.0';
+
             if(moment(fromDate,"DD/MM/YYYY").isAfter(moment(toDate,"DD/MM/YYYY")))//from date exceeds toDate
             {
               alert('From Date should not exceed To Date!');
+              noOfyears ='0.0';
               $(this).val('');
             }else{
               //calculate no. of years
@@ -1015,14 +1018,14 @@ function initDatepicker(){
               }
               // console.log(years,'.',months);
               // let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
-              let noOfyears = years+'.'+months;
-              $(this).closest('tr').find('.srYears').val(noOfyears);
-              agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
+              noOfyears = years+'.'+months;
 
-              // //update no.of years
-              calcFooterYearSum();
             }
 
+            $(this).closest('tr').find('.srYears').val(noOfyears);
+            agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
+            //update no.of years
+            calcFooterYearSum();
 
           }else{
             $(this).closest('tr').find('.srYears').val('');

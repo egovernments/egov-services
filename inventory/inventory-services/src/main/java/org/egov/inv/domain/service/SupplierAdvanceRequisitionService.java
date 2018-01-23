@@ -9,6 +9,11 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.AdvanceRequisition;
+import org.egov.inv.model.AdvanceRequisitionDetails;
+import org.egov.inv.model.AdvanceRequisitionStatus;
+import org.egov.inv.model.AdvanceRequisitionType;
+import org.egov.inv.model.ChartOfAccount;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.SupplierAdvanceRequisition;
 import org.egov.inv.model.SupplierAdvanceRequisitionRequest;
@@ -52,6 +57,11 @@ public class SupplierAdvanceRequisitionService extends DomainService {
 					supplierAdvanceRequisitionRequest.getSupplierAdvanceRequisitions().size());
 			int i = 0;
 			for (SupplierAdvanceRequisition b : supplierAdvanceRequisitionRequest.getSupplierAdvanceRequisitions()) {
+				ArrayList<AdvanceRequisitionDetails> lard = new ArrayList<AdvanceRequisitionDetails>();
+				//since there will be no debit in case of advance amount, only credit amount populated in details.
+				lard.add(AdvanceRequisitionDetails.builder().creditAmount(b.getAdvanceAdjustedAmount()).chartOfAccounts(ChartOfAccount.builder().name(AdvanceRequisitionType.SUPPLIER.name()).tenantId(b.getTenantId()).build()).build());
+				AdvanceRequisition advReq = AdvanceRequisition.builder().arfType(AdvanceRequisitionType.SUPPLIER).advanceRequisitionDate(System.currentTimeMillis()).status(AdvanceRequisitionStatus.APPROVED).amount(b.getAdvanceAdjustedAmount()).tenantId(b.getTenantId()).advanceRequisitionDetails(lard).build();
+				//persist the above advance requisition by sending the object to financial service, get the id, set that id as id for supplier advance requisition
 				b.setId(sequenceNos.get(i));
 				i++;
 				b.setAuditDetails(getAuditDetails(supplierAdvanceRequisitionRequest.getRequestInfo(), Constants.ACTION_CREATE));

@@ -1,23 +1,34 @@
 package org.egov.inv.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Objects;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
  */
 @ApiModel(description = "")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-28T09:20:06.607Z")
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ChartOfAccount {
     @JsonProperty("id")
     private String id = null;
+    
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
     @JsonProperty("glcode")
     private String glcode = null;
@@ -230,6 +241,28 @@ public class ChartOfAccount {
     public void setType(String type) {
         this.type = type;
     }
+    
+    public ChartOfAccount tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
+
+    /**
+     * tenantId for the chartOfAccount
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "tenantId for the chartOfAccount")
+    @NotNull
+
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
     public ChartOfAccount classification(Long classification) {
         this.classification = classification;
@@ -379,6 +412,7 @@ public class ChartOfAccount {
                 Objects.equals(this.isActiveForPosting, chartOfAccount.isActiveForPosting) &&
                 Objects.equals(this.parentId, chartOfAccount.parentId) &&
                 Objects.equals(this.type, chartOfAccount.type) &&
+                Objects.equals(this.tenantId, chartOfAccount.tenantId) &&
                 Objects.equals(this.classification, chartOfAccount.classification) &&
                 Objects.equals(this.functionRequired, chartOfAccount.functionRequired) &&
                 Objects.equals(this.budgetCheckRequired, chartOfAccount.budgetCheckRequired) &&
@@ -389,7 +423,7 @@ public class ChartOfAccount {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, glcode, name, accountCodePurpose, description, isActiveForPosting, parentId, type, classification, functionRequired, budgetCheckRequired, majorCode, isSubLedger, auditDetails);
+        return Objects.hash(id, glcode, name, accountCodePurpose, description, isActiveForPosting, parentId, type, tenantId, classification, functionRequired, budgetCheckRequired, majorCode, isSubLedger, auditDetails);
     }
 
     @Override
@@ -405,6 +439,7 @@ public class ChartOfAccount {
         sb.append("    isActiveForPosting: ").append(toIndentedString(isActiveForPosting)).append("\n");
         sb.append("    parentId: ").append(toIndentedString(parentId)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
         sb.append("    classification: ").append(toIndentedString(classification)).append("\n");
         sb.append("    functionRequired: ").append(toIndentedString(functionRequired)).append("\n");
         sb.append("    budgetCheckRequired: ").append(toIndentedString(budgetCheckRequired)).append("\n");

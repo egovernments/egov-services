@@ -1,8 +1,15 @@
 package org.egov.swm.domain.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Document;
 import org.egov.swm.domain.model.Pagination;
@@ -28,8 +35,8 @@ public class PaymentDetailsService {
     public PaymentDetailsRequest create(final PaymentDetailsRequest paymentDetailsRequest) {
 
         validate(paymentDetailsRequest);
-        validatePaymentAmount(paymentDetailsRequest);
-        
+        validatePaymentAmount(paymentDetailsRequest, Constants.ACTION_CREATE);
+
         Long userId = null;
         if (paymentDetailsRequest.getRequestInfo() != null
                 && paymentDetailsRequest.getRequestInfo().getUserInfo() != null
@@ -62,15 +69,17 @@ public class PaymentDetailsService {
 
         validate(paymentDetailsRequest);
 
+        validatePaymentAmount(paymentDetailsRequest, Constants.ACTION_UPDATE);
+
         return paymentDetailsRepository.update(paymentDetailsRequest);
     }
 
     public Pagination<PaymentDetails> search(final PaymentDetailsSearch paymentDetailsSearch) {
-        Pagination<PaymentDetails> paymentDetailsPage =  paymentDetailsRepository.search(paymentDetailsSearch);
+        Pagination<PaymentDetails> paymentDetailsPage = paymentDetailsRepository.search(paymentDetailsSearch);
 
         List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
-        if(!paymentDetailsPage.getPagedData().isEmpty()){
+        if (!paymentDetailsPage.getPagedData().isEmpty()) {
             paymentDetailsList = populatePendingAmount(paymentDetailsPage.getPagedData());
             paymentDetailsPage.setPagedData(paymentDetailsList);
         }
@@ -78,11 +87,11 @@ public class PaymentDetailsService {
         return paymentDetailsPage;
     }
 
-    private List<PaymentDetails> populatePendingAmount(List<PaymentDetails> paymentDetailsList){
+    private List<PaymentDetails> populatePendingAmount(List<PaymentDetails> paymentDetailsList) {
 
         PaymentDetailsSearch paymentDetailsSearch = new PaymentDetailsSearch();
 
-        for(PaymentDetails paymentDetail : paymentDetailsList){
+        for (PaymentDetails paymentDetail : paymentDetailsList) {
             paymentDetailsSearch.setTenantId(paymentDetail.getTenantId());
             paymentDetailsSearch.setPaymentNo(paymentDetail.getVendorPaymentDetails().getPaymentNo());
 
@@ -90,14 +99,14 @@ public class PaymentDetailsService {
 
             Double payedAmount = 0.0;
 
-            if(!paymentDetails.getPagedData().isEmpty()){
+            if (!paymentDetails.getPagedData().isEmpty()) {
                 payedAmount = paymentDetails.getPagedData().stream()
-                              .mapToDouble(PaymentDetails::getAmount)
-                              .sum();
+                        .mapToDouble(PaymentDetails::getAmount)
+                        .sum();
             }
 
             paymentDetail.setPendingAmount(paymentDetail.getVendorPaymentDetails().getVendorInvoiceAmount() -
-                                            payedAmount);
+                    payedAmount);
         }
 
         return paymentDetailsList;
@@ -155,13 +164,14 @@ public class PaymentDetailsService {
 
     }
 
-    private void validatePaymentAmount(PaymentDetailsRequest paymentDetailsRequest) {
+    private void validatePaymentAmount(PaymentDetailsRequest paymentDetailsRequest, String action) {
 
         Map<String, Double> requestPaymentAmountMap = new HashMap<String, Double>();
 
         Map<String, Double> vendorPaymentAmountMap = new HashMap<String, Double>();
-
+        Map<String, List<PaymentDetails>> paymentDetailsMap = new HashMap<String, List<PaymentDetails>>();
         Double amount;
+        List<PaymentDetails> paymentDetailsList;
         String tenantId = null;
 
         if (paymentDetailsRequest != null && paymentDetailsRequest.getPaymentDetails() != null
@@ -184,32 +194,57 @@ public class PaymentDetailsService {
 
                 requestPaymentAmountMap.put(pd.getVendorPaymentDetails().getPaymentNo(), amount);
             }
+
+            if (paymentDetailsMap.get(pd.getVendorPaymentDetails().getPaymentNo()) == null) {
+
+                paymentDetailsMap.put(pd.getVendorPaymentDetails().getPaymentNo(), Collections.singletonList(pd));
+
+            } else {
+
+                paymentDetailsList = paymentDetailsMap.get(pd.getVendorPaymentDetails().getPaymentNo());
+                paymentDetailsList.add(pd);
+
+                paymentDetailsMap.put(pd.getVendorPaymentDetails().getPaymentNo(), paymentDetailsList);
+            }
         }
 
         for (String paymentNo : vendorPaymentAmountMap.keySet()) {
 
-            if ((requestPaymentAmountMap.get(paymentNo) + getAlreadyPaidAmount(tenantId, paymentNo)) > vendorPaymentAmountMap
-                    .get(paymentNo)) {
+            if ((requestPaymentAmountMap.get(paymentNo) + getAlreadyPaidAmount(tenantId, paymentNo, action,
+                    paymentDetailsMap.get(paymentNo))) > vendorPaymentAmountMap
+                            .get(paymentNo)) {
 
-                throw new CustomException("PaymentAmount", "Payment amount more than invoice amount for Payment number: " + paymentNo);
+                throw new CustomException("PaymentAmount",
+                        "Payment amount more than invoice amount for Payment number: " + paymentNo);
             }
 
         }
 
     }
 
-    private Double getAlreadyPaidAmount(String tenantId, String paymentNo) {
+    private Double getAlreadyPaidAmount(String tenantId, String paymentNo, String action,
+            List<PaymentDetails> paymentDetailsList) {
 
+        Map<String, PaymentDetails> paymentDetailsMap = new HashMap<String, PaymentDetails>();
         PaymentDetailsSearch search = new PaymentDetailsSearch();
         Double paidAmount = (double) 0;
         search.setTenantId(tenantId);
         search.setPaymentNo(paymentNo);
 
+        if (Constants.ACTION_UPDATE.equalsIgnoreCase(action)) {
+            for (PaymentDetails pd : paymentDetailsList) {
+                paymentDetailsMap.put(pd.getCode(), pd);
+            }
+        }
         Pagination<PaymentDetails> response = search(search);
 
         if (response != null && response.getPagedData() != null && !response.getPagedData().isEmpty())
             for (PaymentDetails pd : response.getPagedData()) {
-                paidAmount = paidAmount + pd.getAmount();
+
+                if (Constants.ACTION_CREATE.equalsIgnoreCase(action)
+                        || (Constants.ACTION_UPDATE.equalsIgnoreCase(action) && paymentDetailsMap.get(pd.getCode()) == null)) {
+                    paidAmount = paidAmount + pd.getAmount();
+                }
             }
 
         return paidAmount;

@@ -1791,7 +1791,7 @@ definitions:
           type: string
           description: ULB Admin can enter the remarkks, if any
           maxLength: 300
-          minLength: 15
+          minLength: 0
       required:
       - tenantId
       - collectionType
@@ -3736,6 +3736,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

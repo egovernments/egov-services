@@ -27,7 +27,7 @@ public class CollectionPointDetails {
 
     @JsonProperty("collectionPoint")
     private String collectionPoint = null;
-    
+
     @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
@@ -39,11 +39,11 @@ public class CollectionPointDetails {
     @NotNull
     @JsonProperty("garbageEstimate")
     @Digits(fraction = 2, integer = 3, message = "garbageEstimate shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "garbageEstimate shall be between 1 and 100 Tons")
-    @DecimalMax(value = "100", message = "garbageEstimate shall be between 1 and 100 Tons")
+    @DecimalMin(value = "0", message = "Garbage estimate shall be greater then 0 and greater then or equel to 100 Tons")
+    @DecimalMax(value = "100", message = "Garbage estimate shall be greater then 0 and greater then or equel to 100 Tons")
     private Double garbageEstimate = null;
 
-    @Length(min = 0, max = 300, message = "Value of description shall be between 1 and 300")
+    @Length(min = 0, max = 300, message = "Value of description shall be greater then 0 and greater then or equel to 300 ")
     @JsonProperty("description")
     private String description = null;
 

@@ -146,11 +146,6 @@ public class VendorPaymentDetailsService {
                     vendorPaymentDetail.setVendorContract(vendorContractPage.getPagedData().get(0));
             }
 
-            // Validate for employee
-            if (vendorPaymentDetail.getEmployee() != null && (vendorPaymentDetail.getEmployee().getCode() == null
-                    || vendorPaymentDetail.getEmployee().getCode().isEmpty()))
-                throw new CustomException("Employee", "Employee code required" + vendorPaymentDetail.getPaymentNo());
-
             if (vendorPaymentDetail.getEmployee() != null && vendorPaymentDetail.getEmployee().getCode() != null) {
 
                 employeeResponse = employeeRepository.getEmployeeByCode(vendorPaymentDetail.getEmployee().getCode(),

@@ -1,6 +1,7 @@
 package org.egov.inv.domain.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -60,7 +61,7 @@ public class SupplierAdvanceRequisitionService extends DomainService {
 				ArrayList<AdvanceRequisitionDetails> lard = new ArrayList<AdvanceRequisitionDetails>();
 				//since there will be no debit in case of advance amount, only credit amount populated in details.
 				lard.add(AdvanceRequisitionDetails.builder().creditAmount(b.getAdvanceAdjustedAmount()).chartOfAccounts(ChartOfAccount.builder().name(AdvanceRequisitionType.SUPPLIER.name()).tenantId(b.getTenantId()).build()).build());
-				AdvanceRequisition advReq = AdvanceRequisition.builder().arfType(AdvanceRequisitionType.SUPPLIER).advanceRequisitionDate(System.currentTimeMillis()).status(AdvanceRequisitionStatus.APPROVED).amount(b.getAdvanceAdjustedAmount()).tenantId(b.getTenantId()).advanceRequisitionDetails(lard).build();
+				AdvanceRequisition advReq = AdvanceRequisition.builder().arfType(AdvanceRequisitionType.SUPPLIER).advanceRequisitionDate(new Date().getTime()).status(AdvanceRequisitionStatus.APPROVED).amount(b.getAdvanceAdjustedAmount()).tenantId(b.getTenantId()).advanceRequisitionDetails(lard).build();
 				//persist the above advance requisition by sending the object to financial service, get the id, set that id as id for supplier advance requisition
 				b.setId(sequenceNos.get(i));
 				i++;

@@ -35,8 +35,6 @@ public class SupplierAdvanceRequisitionRequest   {
    * @return requestInfo
   **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
-
 
   public RequestInfo getRequestInfo() {
     return requestInfo;

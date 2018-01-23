@@ -293,16 +293,10 @@ class ViewDCB extends React.Component {
                     </tr>
                         <tr>
                             <th>Installment </th>
-                            <th>Rent    </th>
-                            <th>Penalty </th>
-                            <th> S.Tax</th>
-                            <th>Rent </th>
-                            <th>Penalty</th>
-                            <th>S.Tax</th>
-                            <th>Rent </th>
-                            <th>Penalty</th>
-                            <th>S.Tax</th>
-                        </tr>
+                            <th colSpan='3'>Rent </th>
+                            <th colSpan='3'>Rent </th>
+                            <th colSpan='3'>Rent </th>
+                            </tr>
                     </thead>
                     <tbody id="demandDetailsTableBody">
                         {
@@ -315,7 +309,7 @@ class ViewDCB extends React.Component {
                         }
                     </tfoot>
                 </table>
-                    Note: Advance tax will be adjusted to last installment.
+
                   </div>
               )
 
@@ -327,15 +321,9 @@ class ViewDCB extends React.Component {
             return demandDetails.map((item,index)=>
             {                   return (<tr key={index}>
                                       <td>{trim(item.taxPeriod)}[{item.taxReason}] </td>
-                                      <td>{item.taxAmount}</td>
-                                      <td>{0}</td>
-                                      <td>{0}</td>
-                                      <td>{item.collectionAmount}</td>
-                                      <td>{0}</td>
-                                      <td>{0}</td>
-                                      <td>{item.taxAmount-item.collectionAmount}</td>
-                                      <td>{0}</td>
-                                      <td>{0}</td>
+                                      <td colSpan='3'>{item.taxAmount}</td>
+                                      <td colSpan='3'>{item.collectionAmount}</td>
+                                      <td colSpan='3'>{item.taxAmount-item.collectionAmount}</td>
 
                       </tr>
                   );
@@ -356,18 +344,12 @@ class ViewDCB extends React.Component {
            });
           return [<tr>
               <td> Total</td>
-              <td>  {totalRent}    </td>
-              <td>   {0}   </td>
-              <td>   {0}   </td>
-              <td>   {totalCollection}   </td>
-              <td>   {0}   </td>
-              <td>   {0}   </td>
-              <td>   {totalRent-totalCollection}   </td>
-              <td>   {0}   </td>
-              <td>   {0}   </td>
-            </tr>,
+              <td colSpan='3'> {totalRent} </td>
+              <td colSpan='3'> {totalCollection} </td>
+              <td colSpan='3'> {totalRent-totalCollection} </td>
+              </tr>,
            <tr>
-           <td colSpan='8'></td>
+           <td colSpan='6'></td>
            <td>Total Balance</td>
            <td>{totalRent-totalCollection}</td>
            </tr>

@@ -166,7 +166,7 @@ public class PurchaseOrderService extends DomainService {
             	BigDecimal totalAmount = BigDecimal.ZERO;
             	
             	for(PurchaseOrderDetail poDetail : purchaseOrder.getPurchaseOrderDetails()) {
-            		totalAmount = totalAmount.add(poDetail.getOrderQuantity().multiply(poDetail.getUnitPrice()).add(totalAmount));
+            		totalAmount = totalAmount.add(poDetail.getOrderQuantity().multiply(poDetail.getUnitPrice()));
             	}
             	
             	purchaseOrder.setTotalAmount(totalAmount);

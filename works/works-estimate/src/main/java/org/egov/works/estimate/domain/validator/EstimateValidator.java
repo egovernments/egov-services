@@ -530,8 +530,8 @@ public class EstimateValidator {
                 validateStatus(detailedEstimate.getStatus(), detailedEstimate.getTenantId(), requestInfo, messages, CommonConstants.DETAILEDESTIMATE);
             }
             if (detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
-                messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
-                        Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
+                messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE,
+                        Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE);
 
             if (detailedEstimate.getWorkValue() != null && detailedEstimate.getWorkValue().compareTo(BigDecimal.ZERO) <= 0)
                 messages.put(Constants.KEY_WORK_VALUE_INVALID,

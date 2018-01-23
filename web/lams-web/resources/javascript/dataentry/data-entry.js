@@ -691,6 +691,10 @@ function onLoadAsset(){
 
       $("#code").val(assetDetails["code"]);
 
+      $("#surveyNumber").val(assetDetails["surveyNumber"] || '');
+
+      $("#marketValue").val(assetDetails["marketValue"] || '');
+
       $("#locationDetails\\.locality").val(getNameById(locality, assetDetails["locationDetails"]["locality"]));
 
       $("#locationDetails\\.street").val(getNameById(street, assetDetails["locationDetails"]["street"]));

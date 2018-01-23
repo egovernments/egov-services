@@ -23,6 +23,8 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 public class PaymentDetailsService {
 
@@ -81,10 +83,22 @@ public class PaymentDetailsService {
 
         if (!paymentDetailsPage.getPagedData().isEmpty()) {
             paymentDetailsList = populatePendingAmount(paymentDetailsPage.getPagedData());
+            if(!isEmpty(paymentDetailsSearch.getVendorNo()))
+                paymentDetailsList = filterVendors(paymentDetailsPage.getPagedData(), paymentDetailsSearch.getVendorNo());
             paymentDetailsPage.setPagedData(paymentDetailsList);
         }
 
         return paymentDetailsPage;
+    }
+
+    private List<PaymentDetails> filterVendors(List<PaymentDetails> paymentDetailsList, String vendorNumber){
+        return paymentDetailsList.stream()
+                .filter(paymentDetail -> paymentDetail.getVendorPaymentDetails() != null &&
+                        paymentDetail.getVendorPaymentDetails().getVendorContract() != null &&
+                        paymentDetail.getVendorPaymentDetails().getVendorContract().getVendor() != null &&
+                        paymentDetail.getVendorPaymentDetails().getVendorContract().getVendor().getVendorNo()
+                                .equals(vendorNumber))
+                .collect(Collectors.toList());
     }
 
     private List<PaymentDetails> populatePendingAmount(List<PaymentDetails> paymentDetailsList) {

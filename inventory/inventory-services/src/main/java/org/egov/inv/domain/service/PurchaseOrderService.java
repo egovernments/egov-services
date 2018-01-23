@@ -166,7 +166,7 @@ public class PurchaseOrderService extends DomainService {
             	BigDecimal totalAmount = BigDecimal.ZERO;
             	
             	for(PurchaseOrderDetail poDetail : purchaseOrder.getPurchaseOrderDetails()) {
-            		totalAmount = totalAmount.add(poDetail.getOrderQuantity().multiply(poDetail.getUnitPrice()));
+            		totalAmount = totalAmount.add(poDetail.getUserQuantity().multiply(poDetail.getUnitPrice()));
             	}
             	
             	purchaseOrder.setTotalAmount(totalAmount);
@@ -216,8 +216,6 @@ public class PurchaseOrderService extends DomainService {
                 List<String> detailSequenceNos = purchaseOrderRepository.getSequence(PurchaseOrderDetail.class.getSimpleName(), purchaseOrder.getPurchaseOrderDetails().size());
 
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
-                	
-                	totalAmount = totalAmount.add(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUnitPrice()).add(totalAmount));
                 	
                     purchaseOrderDetail.setId(detailSequenceNos.get(j));
                     purchaseOrderDetail.setTenantId(purchaseOrder.getTenantId());
@@ -278,8 +276,6 @@ public class PurchaseOrderService extends DomainService {
                     }
                     j++;
                 }
-
-                purchaseOrder.setTotalAmount(totalAmount);
             }
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,

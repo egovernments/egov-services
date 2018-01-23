@@ -129,7 +129,7 @@ public class SupplierAdvanceRequisitionJdbcRepository extends JdbcRepository {
 	    params.put("tenantId",tenantId);
 		params.put("purchaseordernumber",purchaseordernumber);
 	    BigDecimal count = namedParameterJdbcTemplate.queryForObject(poValidityQuery, params, BigDecimal.class);
-	    if(count.compareTo(BigDecimal.ZERO) > 0 )
+	    if(count.compareTo(BigDecimal.ZERO) != 1 )
 	    	return false;
 	    else
 	    	return true;

@@ -155,13 +155,15 @@ serviceMaps:
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*.insuranceDetails.insuranceDocument
       jsonMaps:
        
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.id
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.tenantId
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.name
          
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.refCode
 
@@ -243,11 +245,13 @@ serviceMaps:
        - jsonPath: $.vehicles.*.tenantId
 
 
-    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
+    - query: update egswm_document set fileStoreId=?, name=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
       basePath: $.vehicles.*.insuranceDetails.insuranceDocument
       jsonMaps:
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.fileStoreId
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.name
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.lastModifiedBy
 
@@ -598,13 +602,15 @@ serviceMaps:
        - jsonPath: $.vendors.*.servicesOffered.*.code
 
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendors.*.agreementDocument
       jsonMaps:
        
        - jsonPath: $.vendors.*.agreementDocument.id
 
        - jsonPath: $.vendors.*.agreementDocument.tenantId
+
+       - jsonPath: $.vendors.*.agreementDocument.name
          
        - jsonPath: $.vendors.*.agreementDocument.refCode
 
@@ -702,11 +708,13 @@ serviceMaps:
          
        - jsonPath: $.vendors.*.servicesOffered.*.code
 
-    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
+    - query: update egswm_document set fileStoreId=?, name=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
       basePath: $.vendors.*.agreementDocument
       jsonMaps:
 
        - jsonPath: $.vendors.*.agreementDocument.fileStoreId
+
+       - jsonPath: $.vendors.*.agreementDocument.name
 
        - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedBy
 
@@ -1467,13 +1475,15 @@ serviceMaps:
        - jsonPath: $.vendorPaymentDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendorPaymentDetails.*.documents.*
       jsonMaps:
        
        - jsonPath: $.vendorPaymentDetails.*.documents.*.id
 
        - jsonPath: $.vendorPaymentDetails.*.documents.*.tenantId
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.name
          
        - jsonPath: $.vendorPaymentDetails.*.documents.*.refCode
 
@@ -1527,13 +1537,15 @@ serviceMaps:
        - jsonPath: $.vendorPaymentDetails.*.tenantId
 
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendorPaymentDetails.*.documents.*
       jsonMaps:
        
        - jsonPath: $.vendorPaymentDetails.*.documents.*.id
 
        - jsonPath: $.vendorPaymentDetails.*.documents.*.tenantId
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.name
          
        - jsonPath: $.vendorPaymentDetails.*.documents.*.refCode
 

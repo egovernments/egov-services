@@ -108,7 +108,7 @@ public class RefillingPumpStationService {
                 refillingPumpStation.setTypeOfPump(oilCompanyService.getOilCompany(refillingPumpStation.getTenantId(),
                         refillingPumpStation.getTypeOfPump().getCode(), refillingPumpStationRequest.getRequestInfo()));
 
-           /* // Validate Boundary
+            // Validate Boundary
             if (refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null
                     || refillingPumpStation.getLocation().getCode().isEmpty()))
                 throw new CustomException("Boundary", "Boundary code is Mandatory");
@@ -118,17 +118,17 @@ public class RefillingPumpStationService {
                 final TenantBoundary boundary = boundaryService.getByCode(refillingPumpStation.getTenantId(),
                         refillingPumpStation.getLocation().getCode(), new RequestInfo());
 
-                
-                 * if (boundary != null && boundary.getBoundary() != null)
-                 * refillingPumpStation.setLocation(boundary.getBoundary()); else throw new CustomException("Boundary",
-                 * "Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());
-                 
+                if (boundary != null && boundary.getBoundary() != null)
+                    refillingPumpStation.setLocation(boundary.getBoundary());
+                else
+                    throw new CustomException("Boundary",
+                            "Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());
 
                 if (boundary == null || boundary.getBoundary() == null || boundary.getBoundary().getCode() == null
                         || boundary.getBoundary().getCode().isEmpty())
                     throw new CustomException("Location",
                             "Given Location is Invalid: " + refillingPumpStation.getLocation().getCode());
-            }*/
+            }
 
         }
 

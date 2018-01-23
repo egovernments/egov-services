@@ -1,0 +1,1 @@
+ALTER TABLE egswm_document ADD COLUMN name varchar(256);

@@ -3640,9 +3640,14 @@ definitions:
           description: Unique Identifier of the Support Document
         tenantId:
           type: string
-          description: tenant id of the Vendor Payment Details
+          description: tenant id of the document
           maxLength: 128
           minLength: 1
+        name:
+          type: string
+          description: name of the document
+          maxLength: 128
+          minLength: 0
         refId:
           type: string
           maxLength: 256
@@ -3719,6 +3724,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

@@ -428,7 +428,7 @@ public class LetterOfAcceptance {
      **/
     @ApiModelProperty(value = "User who approved the LOA")
 
-    @Valid
+//    @Valid
 
     public User getApprovedBy() {
         return approvedBy;

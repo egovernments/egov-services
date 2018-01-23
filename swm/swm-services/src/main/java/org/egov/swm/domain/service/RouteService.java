@@ -261,7 +261,7 @@ public class RouteService {
 
                 if (endingCollectionPoint && dumpingGround) {
                     throw new CustomException("collectionPoint",
-                            "Both ending collection point and  ending dumping ground cannot be send");
+                            "Both ending collection point and ending dumping ground cannot be sent");
                 }
 
                 if (!endingCollectionPoint && !dumpingGround)

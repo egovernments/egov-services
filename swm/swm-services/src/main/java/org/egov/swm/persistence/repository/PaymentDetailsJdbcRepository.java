@@ -77,7 +77,7 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
         if (searchRequest.getVoucherDate() != null) {
             addAnd(params);
             params.append("voucherDate =:voucherDate");
-            paramValues.put("voucherDate", searchRequest.getVoucherNumber());
+            paramValues.put("voucherDate", searchRequest.getVoucherDate());
         }
 
         if (searchRequest.getInstrumentType() != null) {

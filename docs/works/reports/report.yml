@@ -103,12 +103,6 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: works
   viewPath: WorkStatusReport
-  externalService:
-  - entity: $.MdmsRes.egf-master.FinancialYear
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
-    keyOrder: finYearRange,startingDate,endingDate,tenantId
-    tableName: tbl_financialyear
-    stateData: true
   sourceColumns:
   - name: nameofwork
     label: reports.works.nameofwork
@@ -206,4 +200,4 @@ ReportDefinitions:
     wrapper: true
     searchClause : AND de.status in 'Approved'
 
-  query: select de.nameofwork AS nameofwork, de.fund as fund, de.workstype AS typeofwork, de.workssubtype AS subtypeofwork, de.estimatevalue As estimatevalue, contractor.name as firmname, loa.loaamount AS workorderamount, cb.contractorbillamount as billsubmittedtilldate, tm.totalpercentage AS workstatuspercentage, (select sum(billamount) from egf_billregister br where br.billnumber=cb.billnumber) as amountpaidtilldate from egw_detailedestimate de, egw_letterofacceptanceestimate loae,egw_contractor contractor, egw_milestone m, egw_trackmilestone tm, egw_letterofacceptance loa, egw_contractorbill cb where loa.id=loae.letterofacceptance and loae.detailedestimate=de.id and contractor.code = loa.contractor and m.letterofacceptanceestimate = loae.id and m.id=tm.milestone and loae.id=cb.letterofacceptanceestimate;
+  query: select de.nameofwork AS nameofwork, de.fund as fund, de.workstype AS typeofwork, de.workssubtype AS subtypeofwork, de.estimatevalue As estimatevalue, contractor.name as firmname, loa.loaamount AS workorderamount, cb.contractorbillamount as billsubmittedtilldate, tm.totalpercentage AS workstatuspercentage, (select COALESCE(sum(br.billamount),0) from egf_billregister br where br.billnumber=cb.billnumber) as amountpaidtilldate from egw_detailedestimate de, egw_letterofacceptanceestimate loae,egw_contractor contractor, egw_milestone m, egw_trackmilestone tm, egw_letterofacceptance loa, egw_contractorbill cb where loa.id=loae.letterofacceptance and loae.detailedestimate=de.id and contractor.code = loa.contractor and m.letterofacceptanceestimate = loae.id and m.id=tm.milestone and loae.id=cb.letterofacceptanceestimate;

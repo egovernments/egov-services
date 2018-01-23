@@ -91,13 +91,13 @@ public class RouteJdbcRepository extends JdbcRepository {
             paramValues.put("name", searchRequest.getName());
         }
 
-        if(searchRequest.getTotalDistance() != null){
+        if (searchRequest.getTotalDistance() != null) {
             addAnd(params);
             params.append("totalDistance = :totalDistance");
             paramValues.put("totalDistance", searchRequest.getTotalDistance());
         }
 
-        if(searchRequest.getTotalGarbageEstimate() != null){
+        if (searchRequest.getTotalGarbageEstimate() != null) {
             addAnd(params);
             params.append("totalGarbageEstimate = :totalGarbageEstimate");
             paramValues.put("totalGarbageEstimate", searchRequest.getTotalGarbageEstimate());
@@ -113,6 +113,25 @@ public class RouteJdbcRepository extends JdbcRepository {
 
             RouteCollectionPointMapSearch routeCollectionPointMap = new RouteCollectionPointMapSearch();
             routeCollectionPointMap.setCollectionPointCode(searchRequest.getCollectionPointCode());
+            routeCollectionPointMap.setTenantId(searchRequest.getTenantId());
+
+            List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository
+                    .search(routeCollectionPointMap);
+            List<String> routeCodes = routeCollectionPointMaps.stream()
+                    .map(RouteCollectionPointMap::getRoute)
+                    .collect(Collectors.toList());
+            if (routeCodes != null && !routeCodes.isEmpty()) {
+                addAnd(params);
+                params.append("code in (:routecodes) ");
+                paramValues.put("routecodes", routeCodes);
+            }
+
+        }
+
+        if (searchRequest.getDumpingGroundCode() != null) {
+
+            RouteCollectionPointMapSearch routeCollectionPointMap = new RouteCollectionPointMapSearch();
+            routeCollectionPointMap.setDumpingGroundCode(searchRequest.getDumpingGroundCode());
             routeCollectionPointMap.setTenantId(searchRequest.getTenantId());
 
             List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository

@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RouteCollectionPointMapSearch extends RouteCollectionPointMap {
     private String routes;
-    private String endingDumpingGroundPointCode;
+    private String dumpingGroundCode;
     private String collectionPointCode;
     private String sortBy;
     private Integer pageSize;

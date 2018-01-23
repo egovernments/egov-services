@@ -12,7 +12,7 @@ import lombok.Setter;
 public class RouteSearch extends Route {
     private String codes;
     private String collectionTypeCode;
-    private String endingDumpingGroundPointCode;
+    private String dumpingGroundCode;
     private String collectionPointCode;
     private Boolean isEndingDumpingGround;
     private Boolean excludeDumpingGround;

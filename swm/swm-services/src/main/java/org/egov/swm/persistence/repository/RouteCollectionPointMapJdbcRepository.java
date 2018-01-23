@@ -54,6 +54,12 @@ public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
             paramValues.put("collectionPoint", searchRequest.getCollectionPointCode());
         }
 
+        if (searchRequest.getDumpingGroundCode() != null && !searchRequest.getDumpingGroundCode().isEmpty()) {
+            addAnd(params);
+            params.append("dumpingGround =:dumpingGround");
+            paramValues.put("dumpingGround", searchRequest.getDumpingGroundCode());
+        }
+
         if (params.length() > 0)
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());
         else

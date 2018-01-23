@@ -267,7 +267,7 @@ class Sale extends React.Component {
             [name]: e.target.value
           },
           showPANNAadhar: true
-        })        
+        })
       }
 
       this.setState({
@@ -277,7 +277,7 @@ class Sale extends React.Component {
         }
       })
     }
-    
+
     handlePANValidation(e) {
       if(!e.target.value) {
         e.target.setCustomValidity("Please fill out this field.");
@@ -387,7 +387,7 @@ class Sale extends React.Component {
               </tr>
             )
           })
-        }) 
+        })
       }
 
       const showAttachedFiles = function() {
@@ -516,7 +516,7 @@ class Sale extends React.Component {
                     <h3 className="categoryType">Asset Disposal Details </h3>
                   </div>
                   <div className="col-md-4 col-sm-4 text-right">
-                    
+
                 </div>
                 <div className="form-section-inner">
                     <div className="row">
@@ -550,7 +550,7 @@ class Sale extends React.Component {
                             </div>
                         </div>
                       </div>
-                    </div>  
+                    </div>
                     <div className="row">
                       <div className="col-sm-6">
                           <div className="row">
@@ -582,7 +582,7 @@ class Sale extends React.Component {
                             </div>
                         </div>
                       </div>
-                    </div>  
+                    </div>
                     <div className="row">
                       <div className="col-sm-6">
                           <div className="row">
@@ -603,7 +603,7 @@ class Sale extends React.Component {
                             </div>
                         </div>
                       </div>
-                    </div>  
+                    </div>
                     {showOtherDetails()}
                     <div className="row">
                       <div className="col-sm-6">
@@ -636,7 +636,7 @@ class Sale extends React.Component {
                             </div>
                         </div>
                       </div>
-                    </div> 
+                    </div>
                     <div className="row">
                       <div className="col-sm-6">
                         <div className="row">
@@ -693,7 +693,7 @@ class Sale extends React.Component {
                               <label>Voucher Reference</label>
                             </div>
                             <div className="col-sm-6 label-view-text">
-                              <label>{disposal.voucherReference}</label>
+                              <label>{disposal.profitLossVoucherReference}</label>
                             </div>
                         </div>
                       </div>

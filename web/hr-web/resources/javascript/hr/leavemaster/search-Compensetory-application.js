@@ -21,6 +21,7 @@ class SearchLeaveApplication extends React.Component {
     this.search=this.search.bind(this);
     this.setInitialState=this.setInitialState.bind(this);
     this.handleClick=this.handleClick.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
 
@@ -115,6 +116,37 @@ class SearchLeaveApplication extends React.Component {
     }
   }
 
+  handleBlur(e) {
+    setTimeout(function(){
+       if(document.activeElement.id == "sub") {
+          $("#sub").click();
+       }
+    }, 100);
+    var _this = this;
+
+    if(e.target.value) {
+       var code = e.target.value;
+       //Make get employee call
+       commonApiPost("hr-employee","employees","_search",{code,tenantId}, function(err, res) {
+        if(res) {
+          _this.setState({
+            searchSet: {
+              ..._this.state.searchSet,
+              name: res.Employee && res.Employee[0] ? res.Employee[0].name : ""
+            }
+          })
+        }
+       });
+    } else {
+      _this.setState({
+        searchSet: {
+          ..._this.state.searchSet,
+          name: ""
+        }
+      })
+    }
+  }
+
 
   componentDidUpdate(prevProps, prevState) {
       if (this.state.modified) {
@@ -133,7 +165,7 @@ class SearchLeaveApplication extends React.Component {
   }
 
   render() {
-    let {handleChange,search,assignments_designation,assignments_department,handleClick}=this;
+    let {handleChange,search,assignments_designation,assignments_department,handleClick,handleBlur}=this;
     let {isSearchClicked,compensatoryleaves}=this.state;
     let {name,
     code,
@@ -255,7 +287,7 @@ class SearchLeaveApplication extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <input type="text" id="code" name="code" value={code}
-                              onChange={(e)=>{handleChange(e,"code")}} />
+                              onChange={(e)=>{handleChange(e,"code")}} onBlur={(e)=>{handleBlur(e)}} />
                         </div>
                     </div>
                   </div>

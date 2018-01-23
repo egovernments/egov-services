@@ -16,6 +16,8 @@ public class VendorPaymentDetailsSearch extends VendorPaymentDetails {
     private String employeeCode;
     private Double fromAmount;
     private Double toAmount;
+    private Long invoiceFromDate;
+    private Long invoiceToDate;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

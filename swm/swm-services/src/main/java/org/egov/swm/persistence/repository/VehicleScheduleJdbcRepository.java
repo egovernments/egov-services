@@ -88,13 +88,13 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getScheduledFrom() != null) {
             addAnd(params);
-            params.append("scheduledFrom =:scheduledFrom");
+            params.append("scheduledFrom >=:scheduledFrom");
             paramValues.put("scheduledFrom", searchRequest.getScheduledFrom());
         }
 
         if (searchRequest.getScheduledTo() != null) {
             addAnd(params);
-            params.append("scheduledTo =:scheduledTo");
+            params.append("scheduledTo <=:scheduledTo");
             paramValues.put("scheduledTo", searchRequest.getScheduledTo());
         }
 

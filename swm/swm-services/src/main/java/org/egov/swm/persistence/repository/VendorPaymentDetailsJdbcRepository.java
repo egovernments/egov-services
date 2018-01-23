@@ -119,6 +119,18 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("toDate", searchRequest.getToDate());
         }
 
+        if (searchRequest.getInvoiceFromDate() != null) {
+            addAnd(params);
+            params.append("invoicedate >=:invoiceFromDate");
+            paramValues.put("invoiceFromDate", searchRequest.getInvoiceFromDate());
+        }
+
+        if (searchRequest.getInvoiceToDate() != null) {
+            addAnd(params);
+            params.append("invoicedate <=:invoiceToDate");
+            paramValues.put("invoiceToDate", searchRequest.getInvoiceToDate());
+        }
+
         if(searchRequest.getFromAmount() != null){
             addAnd(params);
             params.append("vendorinvoiceamount >= :fromAmount");

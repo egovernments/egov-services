@@ -14,6 +14,7 @@ import java.util.TimeZone;
 import javax.xml.ws.RequestWrapper;
 
 import org.egov.swagger.model.RequestInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.egov.domain.model.ReportDefinitions;
 import org.egov.domain.model.RequestInfoWrapper;
 import org.egov.swagger.model.ExternalService;
@@ -124,23 +125,29 @@ public class ReportQueryBuilder {
 		String url;
 		String res = "";
 		String replacetableQuery = baseQuery;
-		String json = "";
+		String requestInfoJson = "";
+		String finalJson = "";
 		for (ExternalService es : reportDefinition.getExternalService()) {
 			
 			if(es.getPostObject() != null) {
-			JsonObject jsonObjecttest = (new JsonParser()).parse(es.getPostObject()).getAsJsonObject();
+			//JsonObject jsonObjecttest = (new JsonParser()).parse(es.getPostObject()).getAsJsonObject();
+			String jsonObjecttest = es.getPostObject();
+			
 			HashMap map = new HashMap();
 			map.put("RequestInfo", getRInfo(authToken));
-			map.put(es.getObjectKey(),jsonObjecttest);
-			
+			//map.put(es.getObjectKey(),jsonObjecttest);
 			try {
 				 Gson gson = new Gson(); 
-				  json = gson.toJson(map); 
+				 requestInfoJson = gson.toJson(map); 
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			requestInfoJson = StringUtils.chop(requestInfoJson);
+			 finalJson = jsonObjecttest.replaceAll("\\$RequestInfo", requestInfoJson);
+			 finalJson = finalJson.concat("}");
 			}
+			
 			url = es.getApiURL();
 			LOGGER.info("URL from yaml config: "+url);
 			url = url.replaceAll("\\$currentTime", Long.toString(getCurrentTime()));
@@ -148,19 +155,19 @@ public class ReportQueryBuilder {
 			if(es.getStateData() && (!tenantid.equals("default"))) {
 				stateid = tenantid.split("\\.");
 				url = url.replaceAll("\\$tenantid",stateid[0]);
-				json = json.replaceAll("\\$tenantid",stateid[0]);
+				finalJson = finalJson.replaceAll("\\$tenantid",stateid[0]);
 			} else {
 			
 			url = url.replaceAll("\\$tenantid",tenantid);
-			json = json.replaceAll("\\$tenantid",tenantid);
+			finalJson = finalJson.replaceAll("\\$tenantid",tenantid);
 			}
-			LOGGER.info("Mapper Converted string with replaced values "+json);
+			LOGGER.info("Mapper Converted string with replaced values "+requestInfoJson);
 			 URI uri = URI.create(url);
 			 MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 		        Map headerMap = new HashMap<String, String>();
 		        headerMap.put("Content-Type", "application/json");
 		        headers.setAll(headerMap);
-		        HttpEntity<?> request = new HttpEntity<>(json, headers);
+		        HttpEntity<?> request = new HttpEntity<>(finalJson, headers);
 
 			try {
 			if(es.getPostObject() != null){
@@ -194,7 +201,6 @@ public class ReportQueryBuilder {
 						} 
 						if(value.contains("'")){
 							String formatted = value.replace("'", "''");
-							System.out.println("Values with single quotes "+formatted);
 							sb.append("'" + formatted + "'");
 							
 						} else {

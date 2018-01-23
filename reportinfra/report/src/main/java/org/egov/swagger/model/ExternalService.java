@@ -23,15 +23,6 @@ public class ExternalService {
 	public void setPostObject(String postObject) {
 		this.postObject = postObject;
 	}
-	@JsonProperty("objectKey")
-	public String objectKey;
-	public String getObjectKey() {
-		return objectKey;
-	}
-	public void setObjectKey(String objectKey) {
-		this.objectKey = objectKey;
-	}
-	
 	public Boolean getStateData() {
 		return stateData;
 	}

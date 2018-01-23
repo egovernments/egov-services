@@ -158,7 +158,7 @@ public class Constants {
     public static final String MESSAGE_TRACKMILESTONE_MILESTONEID_INVALID = "Given Milestone is invalid:";
 
     public static final String KEY_TRACKMILESTONE_COMPLETED= "WORKS.TRACKMILESTONE.COMPLETED";
-    public static final String MESSAGE_TRACKMILESTONE_COMPLETED = "This milestone is not completed hence total percentage should be 100";
+    public static final String MESSAGE_TRACKMILESTONE_COMPLETED = "This milestone is completed hence total percentage should be 100";
 
     public static final String KEY_TRACKMILESTONE_NOT_STARTED= "WORKS.TRACKMILESTONE.NOT.STARTED";
     public static final String MESSAGE_TRACKMILESTONE_NOT_STARTED = "This milestone is not yet started hence total percentage cannot be more than zero";

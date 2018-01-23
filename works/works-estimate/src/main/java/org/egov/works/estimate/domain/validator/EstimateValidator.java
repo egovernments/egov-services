@@ -892,7 +892,7 @@ public class EstimateValidator {
                         messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED,
                                 Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED);
                     else {
-                        if (estimateMeasurementSheet.getIdentifier().equals("+"))
+                        if (estimateMeasurementSheet.getIdentifier().equals("A"))
                             measurementQuantitySum = measurementQuantitySum.add(estimateMeasurementSheet.getQuantity());
                         else
                             measurementQuantitySum = measurementQuantitySum.subtract(estimateMeasurementSheet.getQuantity());
@@ -907,7 +907,7 @@ public class EstimateValidator {
                 }
             }
 
-            if (measurementQuantitySum.compareTo(BigDecimal.valueOf(activity.getQuantity())) == 0) {
+            if (measurementQuantitySum.compareTo(BigDecimal.valueOf(activity.getQuantity())) != 0) {
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER,
                         Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER);
             }

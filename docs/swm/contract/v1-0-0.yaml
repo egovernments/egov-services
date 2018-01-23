@@ -1970,7 +1970,7 @@ definitions:
           type: string
           description: registration Number of the Vehicle. Should be unique across the platform. Special characters are not allowed. Space not allowed. 
           maxLength: 22
-          minLength: 6
+          minLength: 1
           example: KA519876
         vehicleType:
           $ref: "#/definitions/VehicleType"
@@ -3736,6 +3736,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

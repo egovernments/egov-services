@@ -1,0 +1,11 @@
+{
+  "name": "datagen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "swagger-parser": "^4.0.2",
+    "winston": "^2.4.0",
+    "yamljs": "^0.3.0"
+  }
+}

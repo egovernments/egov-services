@@ -1,0 +1,23 @@
+ignorefields: ["tenantId", "RequestInfo", "auditDetails", "requestInfo"]
+contract: https://github.com/egovernments/egov-services/raw/master/docs/swm/contract/v1-0-0.yaml
+output_folder: ./swm/
+
+apis:
+  /vendors/_create:
+    reference:
+      servicedLocations:
+      servicesOffered:
+    generated:
+      vendorNo:
+
+  /vehicles/_create:
+    ignorefields: ["vehicleType"]
+    reference:
+      vehicleType:
+      fuelType:
+      driver:
+      vendor:
+    generated:
+      regNumber
+
+

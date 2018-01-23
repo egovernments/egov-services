@@ -191,8 +191,7 @@ public class PaymentDetailsService {
             if ((requestPaymentAmountMap.get(paymentNo) + getAlreadyPaidAmount(tenantId, paymentNo)) > vendorPaymentAmountMap
                     .get(paymentNo)) {
 
-                throw new CustomException("PaymentAmount", "Invalid Amount for Payment Number: " + paymentNo);
-
+                throw new CustomException("PaymentAmount", "Payment amount more than invoice amount for Payment number: " + paymentNo);
             }
 
         }

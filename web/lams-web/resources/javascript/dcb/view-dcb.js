@@ -285,18 +285,12 @@ class ViewDCB extends React.Component {
                 <table id="demandTable" className="table table-bordered">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th>Installment </th>
                         <th colSpan='3'>Demand</th>
                         <th colSpan='3'>Collection</th>
                         <th colSpan='3'>Balance</th>
 
                     </tr>
-                        <tr>
-                            <th>Installment </th>
-                            <th colSpan='3'>Rent </th>
-                            <th colSpan='3'>Rent </th>
-                            <th colSpan='3'>Rent </th>
-                            </tr>
                     </thead>
                     <tbody id="demandDetailsTableBody">
                         {

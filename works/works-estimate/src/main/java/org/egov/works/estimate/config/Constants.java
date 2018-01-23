@@ -86,8 +86,8 @@ public class Constants {
     public static final String KEY_ADMINSANCTION_PROPOSAL_DATE = "INVALID_ADMINSANCTION_PROPOSAL_DATE";
     public static final String MESSAGE_ADMINSANCTION_PROPOSAL_DATE = "Admin sanction date should be on or after the Date of Proposal";
 
-    public static final String KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "INVALID_ESTIMATE_DATE_SPILLOVER";
-    public static final String MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "Estimate Date cannot be future date";
+    public static final String KEY_FUTUREDATE_ESTIMATEDATE = "INVALID_ESTIMATE_DATE";
+    public static final String MESSAGE_FUTUREDATE_ESTIMATEDATE = "Estimate Date cannot be future date";
 
     public static final String KEY_WORK_VALUE_INVALID = "WORK_VALUE_INVALID";
     public static final String MESSAGE_WORK_VALUE_INVALID = "Work value should be greater than zero";

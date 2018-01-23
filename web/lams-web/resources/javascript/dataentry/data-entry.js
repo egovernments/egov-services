@@ -644,7 +644,6 @@ finalValidatinRules["messages"] = {
     solvencyCertificateDate: {
         required: "Enter Solvency certificate date"
     }
-
 }
 
 function onLoadAsset(){
@@ -996,34 +995,35 @@ function initDatepicker(){
           var datePattern = new RegExp(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/);
           if(datePattern.test(fromDate), datePattern.test(toDate)){
 
-            let splitTo = toDate.split('/');
-            let splitFrom = fromDate.split('/');
+            if(moment(fromDate,"DD/MM/YYYY").isAfter(moment(toDate,"DD/MM/YYYY")))//from date exceeds toDate
+            {
+              alert('From Date should not exceed To Date!');
+              $(this).val('');
+            }else{
+              //calculate no. of years
+              let splitTo = toDate.split('/');
+              let splitFrom = fromDate.split('/');
 
-            // var diff = calcDate(new Date(splitTo[2],splitTo[1]-1,splitTo[0]),new Date(splitFrom[2],splitFrom[1]-1,splitFrom[0]));//toDate, fromDate
-            // console.log(diff);
-            // let months = (diff.months+1)%12;
-            // let years = months == 0 ? diff.years+1 : diff.years;
-            // let noOfyears = years+'.'+months;
-            // $(this).closest('tr').find('.srYears').val(noOfyears);
-            // agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
+              let years = moment(toDate,"DD/MM/YYYY").diff(moment(fromDate,"DD/MM/YYYY"), 'years');
+              var startMonths = getAbsoulteMonths(moment(fromDate,"DD/MM/YYYY"));
+              var endMonths = getAbsoulteMonths(moment(toDate,"DD/MM/YYYY"));
+              var monthDifference = (endMonths - startMonths);
+              let months = (monthDifference+1)%12;
 
-            let years = moment(toDate,"DD/MM/YYYY").diff(moment(fromDate,"DD/MM/YYYY"), 'years');
-            var startMonths = getAbsoulteMonths(moment(fromDate,"DD/MM/YYYY"));
-            var endMonths = getAbsoulteMonths(moment(toDate,"DD/MM/YYYY"));
-            var monthDifference = (endMonths - startMonths);
-            let months = (monthDifference+1)%12;
+              if((months == 1 && (Number(splitFrom[0])>Number(splitTo[0]))) || months == 0){
+                years+=1;
+              }
+              // console.log(years,'.',months);
+              // let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
+              let noOfyears = years+'.'+months;
+              $(this).closest('tr').find('.srYears').val(noOfyears);
+              agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
 
-            if((months == 1 && (Number(splitFrom[0])>Number(splitTo[0]))) || months == 0){
-              years+=1;
+              // //update no.of years
+              calcFooterYearSum();
             }
-            // console.log(years,'.',months);
-            // let noOfyears = (months == 0 ? years+1 : years)+'.'+months;
-            let noOfyears = years+'.'+months;
-            $(this).closest('tr').find('.srYears').val(noOfyears);
-            agreement['subSeqRenewals'][$(this).closest('tr').index()]=Object.assign(agreement['subSeqRenewals'][$(this).closest('tr').index()] || {}, {years:noOfyears});
 
-            // //update no.of years
-            calcFooterYearSum();
+
           }else{
             $(this).closest('tr').find('.srYears').val('');
             calcFooterYearSum();
@@ -1597,24 +1597,4 @@ function cloneRow(){
   $("#subesquentrenewalsTable tbody tr:last").find('td:last .subsequentRenewalsDelete').show();
   initDatepicker();
   index++;
-}
-
-function calcDate(date1,date2) {
-    // console.log(date1, date2);
-    var diff = Math.floor(date1.getTime() - date2.getTime());
-    var day = 1000 * 60 * 60 * 24;
-
-    var days = Math.floor(diff/day);
-    var months = Math.floor(days/31);
-    var years = Math.floor(months/12);
-
-    // console.log(days, months, years);
-
-    // var message = date2.toDateString();
-    // message += " was "
-    // message += days + " days "
-    // message += months + " months "
-    // message += years + " years ago \n"
-
-    return {days:days,months:months,years:years};
 }

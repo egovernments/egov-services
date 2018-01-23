@@ -130,9 +130,9 @@ public class SupplierAdvanceRequisitionJdbcRepository extends JdbcRepository {
 		params.put("purchaseordernumber",purchaseordernumber);
 	    BigDecimal count = namedParameterJdbcTemplate.queryForObject(poValidityQuery, params, BigDecimal.class);
 	    if(count.compareTo(BigDecimal.ZERO) > 0 )
-	    	return true;
-	    else
 	    	return false;
+	    else
+	    	return true;
 	}
 	
 }

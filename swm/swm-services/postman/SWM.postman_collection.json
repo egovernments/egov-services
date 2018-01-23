@@ -186,7 +186,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"1d837b4c-573a-49e4-be42-3d8879d7cfcc\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicles\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"regNumber\":\"regNumber Final2\",\n\t\t\t\"vehicleType\" :{\n            \t\"code\":\"Fake Vehicle Type Code 1\"\n            },\n\t\t\t\"purchaseInfo\":{\n\t            \"purchaseDate\" : \"1508323548\",\n\t            \"price\" : 1000,\n\t            \"sourceOfPurchase\":\"sourceOfPurchase\"\n            },\n            \"fuelType\" :{\n            \t\"code\":\"Fake Fuel Type Code 1\"\n            },\n            \"operatorsReq\":10,\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000075\"\n            },\n           \"manufacturingDetails\":{\n\t\t\t\t\"engineSrNumber\":\"engineSrNumber Final2\",\n\t            \"chassisSrNumber\" : \"chassisSrNumber Final2\",\n\t            \"model\":\"model\",\n\t            \"vehicleCapacity\":100\n\t\t\t},\n           \"insuranceDetails\":{\n           \t\t\"insuranceNumber\":\"MH-SWM-VNDR-000075\",\n            \t\"insuranceValidityDate\":1514745000000,\n            \t\"insuranceDocument\":{\n            \t\t\"fileStoreId\":\"fileStoreId\"\n            \t}\n           },\n           \"kilometers\":100,\n           \"endOfWarranty\":1508323548,\n           \"remarks\":\"remarks\"\n      }\n   ]\n } "
+					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"e99295cb-53ae-4a91-bcc8-6f5c3af4ee08\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicles\":[\n      {\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"regNumber\":\"regNumber Final222\",\n\t\t\t\"vehicleType\" :{\n            \t\"code\":\"Vehicle Type Code 1\"\n            },\n\t\t\t\"purchaseInfo\":{\n\t            \"purchaseDate\" : \"1508323548\",\n\t            \"price\" : 1000,\n\t            \"sourceOfPurchase\":\"sourceOfPurchase\"\n            },\n            \"fuelType\" :{\n            \t\"code\":\"Fuel Type Code 1\"\n            },\n            \"operatorsReq\":10,\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000172\"\n            },\n           \"manufacturingDetails\":{\n\t\t\t\t\"engineSrNumber\":\"engineSrNumber Final289\",\n\t            \"chassisSrNumber\" : \"chassisSrNumber Final289\",\n\t            \"model\":\"model\",\n\t            \"vehicleCapacity\":100\n\t\t\t},\n           \"insuranceDetails\":{\n           \t\t\"insuranceNumber\":\"MH-SWM-VNDR-000077\",\n            \t\"insuranceValidityDate\":1516417338000,\n            \t\"insuranceDocument\":{\n            \t\t\"fileStoreId\":\"fileStoreId\"\n            \t}\n           },\n           \"kilometers\":100,\n           \"endOfWarranty\":1508323548,\n           \"remarks\":\"remarks\",\n           \"isVehicleUnderWarranty\": true,\n           \"isUlbOwned\":true,\n           \"driver\":{\n    \t\t\t\"code\":\"Driver3\"\n       \n    \t\t}\n      }\n   ]\n } "
 				},
 				"description": ""
 			},
@@ -196,7 +196,7 @@
 			"name": "Vehicle Search",
 			"request": {
 				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/swm-services/vehicles/_search?tenantId=default&vendorNo=MH-SWM-VNDR-000279&isUlbOwned=false",
+					"raw": "http://egov-micro-dev.egovernments.org/swm-services/vehicles/_search?tenantId=default&vehicleTypeCode=Vehicle Type Code 2",
 					"protocol": "http",
 					"host": [
 						"egov-micro-dev",
@@ -224,13 +224,21 @@
 						},
 						{
 							"key": "vendorNo",
-							"value": "MH-SWM-VNDR-000279",
+							"value": "MH-SWM-VNDR-000172",
 							"equals": true,
-							"description": ""
+							"description": "",
+							"disabled": true
 						},
 						{
 							"key": "isUlbOwned",
-							"value": "false",
+							"value": "true",
+							"equals": true,
+							"description": "",
+							"disabled": true
+						},
+						{
+							"key": "vehicleTypeCode",
+							"value": "Vehicle Type Code 2",
 							"equals": true,
 							"description": ""
 						}
@@ -247,7 +255,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"caf7c2ba-d160-48b6-af71-d5a3724ac6f6\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"e99295cb-53ae-4a91-bcc8-6f5c3af4ee08\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -364,12 +372,13 @@
 			"name": "Route Search",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8899/swm-services/routes/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/swm-services/routes/_search?tenantId=default&code=c66772004fee484e9c9b0f5b0e19549f&excludeDumpingGround=true",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"routes",
@@ -384,10 +393,22 @@
 						},
 						{
 							"key": "code",
-							"value": "f1c99f728dcf414c95579f584fc6b73a",
+							"value": "c66772004fee484e9c9b0f5b0e19549f",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "isEndingDumpingGround",
+							"value": "true",
 							"equals": true,
 							"description": "",
 							"disabled": true
+						},
+						{
+							"key": "excludeDumpingGround",
+							"value": "true",
+							"equals": true,
+							"description": ""
 						}
 					],
 					"variable": []
@@ -402,7 +423,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"79aa08bd-1a96-45ad-84c3-1f623d4db3a7\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"dda179b8-fe78-4066-981a-462b944513c3\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -492,11 +513,12 @@
 			"name": "Vendor Search",
 			"request": {
 				"url": {
-					"raw": "localhost:8899/swm-services/vendors/_search?tenantId=default&codes=f1c99f728dcf414c95579f584fc6b73a",
+					"raw": "egov-micro-dev.egovernments.org/swm-services/vendors/_search?tenantId=default",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"vendors",
@@ -513,7 +535,8 @@
 							"key": "codes",
 							"value": "f1c99f728dcf414c95579f584fc6b73a",
 							"equals": true,
-							"description": ""
+							"description": "",
+							"disabled": true
 						}
 					],
 					"variable": []
@@ -528,7 +551,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"6991475f-c9f7-427b-b057-46685248aa2b\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -659,11 +682,12 @@
 			"name": "Vehicle Maintenance Search",
 			"request": {
 				"url": {
-					"raw": "localhost:8899/swm-services/vehiclemaintenances/_search?tenantId=default",
+					"raw": "egov-micro-dev.egovernments.org/swm-services/vehiclemaintenances/_search?tenantId=default&regNumber=regNumber 8922&vehicleTypeCode=Vehicle Type Code 2",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"vehiclemaintenances",
@@ -673,6 +697,18 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "regNumber",
+							"value": "regNumber 8922",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "vehicleTypeCode",
+							"value": "Vehicle Type Code 2",
 							"equals": true,
 							"description": ""
 						}
@@ -689,7 +725,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"e73ea078-b807-42ed-87db-c29857d31f32\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"c817af31-7f5d-462f-add1-5cb228d1a3e4\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -739,11 +775,12 @@
 			"name": "Sanitation Staff Target Search",
 			"request": {
 				"url": {
-					"raw": "localhost:8899/swm-services/sanitationstafftargets/_search?tenantId=default",
+					"raw": "egov-micro-dev.egovernments.org/swm-services/sanitationstafftargets/_search?tenantId=default",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"sanitationstafftargets",
@@ -1027,7 +1064,7 @@
 		{
 			"name": "Vehicle Trip Sheet Details Create",
 			"request": {
-				"url": "localhost:8899/swm-services/vehicletripsheetdetails/_create",
+				"url": "egov-micro-dev.egovernments.org/swm-services/vehicletripsheetdetails/_create",
 				"method": "POST",
 				"header": [
 					{
@@ -1038,7 +1075,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"24564a82-b515-4b02-bf25-8508f1dbfc18\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"regNumber Final2\"\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"route\" :{\n            \t\"code\":\"f1c99f728dcf414c95579f584fc6b73a\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":100,\n            \"exitWeight\":200\n      }\n   ]\n } "
+					"raw": "{\n  \"RequestInfo\":\n   {\n    \"action\": \"create\",\n    \"did\": \"\",\n    \"msgId\": null,\n    \"authToken\": \"46f0adfb-6227-493c-82d0-a1bfeb9dd658\",\n    \"apiId\": null,\n    \"ver\": null,\n    \"ts\": \"\",\n    \"key\": null,\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  },\n  \"vehicleTripSheetDetails\":[\n      {\n      \t\n\t\t\t\"tenantId\":\"default\",\n\t\t\t\"vehicle\" :{\n            \t\"regNumber\":\"KA05HK1212\"\n            },\n            \"vendor\" :{\n            \t\"vendorNo\":\"MH-SWM-VNDR-000005\"\n            },\n            \"route\" :{\n            \t\"code\":\"f1c99f728dcf414c95579f584fc6b73a\"\n            },\n            \"tripStartDate\":1234567890,\n            \"tripEndDate\":1234567890,\n            \"inTime\":1234567890,\n            \"outTime\":1234567890,\n            \"entryWeight\":500,\n            \"exitWeight\":100\n      }\n   ]\n } "
 				},
 				"description": ""
 			},
@@ -1048,11 +1085,12 @@
 			"name": "Vehicle Trip Sheet Details Search",
 			"request": {
 				"url": {
-					"raw": "localhost:8899/swm-services/vehicletripsheetdetails/_search?tenantId=default",
+					"raw": "egov-micro-dev.egovernments.org/swm-services/vehicletripsheetdetails/_search?tenantId=default",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"vehicletripsheetdetails",
@@ -1078,7 +1116,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"a5aabf33-0d0f-4044-842e-ea629ffbf64d\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"46f0adfb-6227-493c-82d0-a1bfeb9dd658\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},
@@ -1403,12 +1441,13 @@
 			"name": "Payment Details Search",
 			"request": {
 				"url": {
-					"raw": "http://localhost:8899/swm-services/paymentdetails/_search?tenantId=default",
+					"raw": "http://egov-micro-dev.egovernments.org/swm-services/paymentdetails/_search?tenantId=default&codes=1c106e69ede242738e0b4503169acf74",
 					"protocol": "http",
 					"host": [
-						"localhost"
+						"egov-micro-dev",
+						"egovernments",
+						"org"
 					],
-					"port": "8899",
 					"path": [
 						"swm-services",
 						"paymentdetails",
@@ -1418,6 +1457,12 @@
 						{
 							"key": "tenantId",
 							"value": "default",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "codes",
+							"value": "1c106e69ede242738e0b4503169acf74",
 							"equals": true,
 							"description": ""
 						}
@@ -1434,7 +1479,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"3d585dec-bd33-4cf2-88fb-36c48fcf3d78\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
+					"raw": "{\n\t\"requestInfo\":{\n\t    \"action\": \"search\",\n\t    \"did\": \"\",\n\t    \"msgId\": null,\n\t    \"authToken\": \"dda179b8-fe78-4066-981a-462b944513c3\",\n\t    \"apiId\": null,\n\t    \"ver\": null,\n\t    \"ts\": \"\",\n\t    \"key\": null\n\t \n\t}\n}"
 				},
 				"description": ""
 			},

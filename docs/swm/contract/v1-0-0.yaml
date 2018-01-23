@@ -607,6 +607,10 @@ paths:
             type: string
             in: query
             description: registration number of vehicle
+          - name: vehicleTypeCode
+            type: string
+            in: query
+            description: code of vehicle Type
           - name: code
             type: string
             in: query
@@ -1508,6 +1512,14 @@ paths:
             type: string
             in: query
             description: paymentNo of the PaymentDetails 
+          - name: invoiceFromDate
+            type: string
+            in: query
+            description: search for from invoice date specified
+          - name: invoiceToDate
+            type: string
+            in: query
+            description: search for till invoice date specified
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offSet'
         responses:

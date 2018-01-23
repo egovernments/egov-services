@@ -194,11 +194,12 @@ public class RouteService {
         final Map<String, String> nameMap = new HashMap<>();
         final Map<String, String> collectionPointMap = new HashMap<>();
         Boolean startingCollectionPoint, endingCollectionPoint, dumpingGround;
+        Double totalDistance, totalGarbageEstimate = (double) 0;
 
         for (final Route route : routeRequest.getRoutes()) {
 
             startingCollectionPoint = endingCollectionPoint = dumpingGround = false;
-
+            totalDistance = totalGarbageEstimate = (double) 0;
             if (route.getName() != null) {
                 if (nameMap.get(route.getName()) != null)
                     throw new CustomException("name", "Duplicate names in given routes : " + route.getName());
@@ -207,6 +208,12 @@ public class RouteService {
             }
             if (route.getCollectionPoints() != null) {
                 for (RouteCollectionPointMap rcpm : route.getCollectionPoints()) {
+
+                    if (rcpm.getDistance() != null)
+                        totalDistance = totalDistance + rcpm.getDistance();
+
+                    if (rcpm.getGarbageEstimate() != null)
+                        totalGarbageEstimate = totalGarbageEstimate + rcpm.getGarbageEstimate();
 
                     if (dumpingGround && rcpm.getDumpingGround() != null && rcpm.getDumpingGround().getCode() != null
                             && !rcpm.getDumpingGround().getCode().isEmpty()) {
@@ -261,6 +268,18 @@ public class RouteService {
                     throw new CustomException("collectionPoint",
                             "Either ending collection point or ending dumping should be mandatory while route creation");
 
+            }
+
+            if (route.getTotalDistance() != null && totalDistance != null
+                    && totalDistance.compareTo(route.getTotalDistance()) != 0) {
+                throw new CustomException("totalDistance",
+                        "Total distance covered is not same as the sum of distance covered by the collection points");
+            }
+
+            if (route.getTotalGarbageEstimate() != null && totalGarbageEstimate != null
+                    && totalGarbageEstimate.compareTo(route.getTotalGarbageEstimate()) != 0) {
+                throw new CustomException("totalGarbageEstimate",
+                        "Total garbage collection estimate is not same as the sum of garbage collection estimates defined in the collection points");
             }
 
         }

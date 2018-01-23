@@ -37,7 +37,6 @@ public class SupplierAdvanceRequisitionRequest   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
 
   public RequestInfo getRequestInfo() {
     return requestInfo;
@@ -63,8 +62,6 @@ public class SupplierAdvanceRequisitionRequest   {
   **/
   @ApiModelProperty(required = true, value = "Used for search result and create only")
   @NotNull
-
-  @Valid
 
   public List<SupplierAdvanceRequisition> getSupplierAdvanceRequisitions() {
     return supplierAdvanceRequisitions;

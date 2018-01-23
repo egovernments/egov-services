@@ -37,7 +37,7 @@ public interface SupplieradvancerequisitionsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create new supplieradvancerequisition"  )  @Valid @RequestBody SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest);
+    ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create new supplieradvancerequisition"  ) @RequestBody SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest);
 
 
     @ApiOperation(value = "Get the list of common supplieradvancerequisitions information", notes = "SupplierAdvanceRequisition is parent object that holds the common information for both.", response = SupplierAdvanceRequisitionResponse.class, tags={ "SupplierAdvanceRequisition", })
@@ -49,7 +49,7 @@ public interface SupplieradvancerequisitionsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,@ApiParam(value = "reference no of the supplier ") @RequestParam(value = "supplier", required = false) String supplier,@ApiParam(value = "reference no of the purchaseOrder placed with the supplier ") @RequestParam(value = "purchaseOrder", required = false) String purchaseOrder,@ApiParam(value = "status of the SupplierAdvanceRequisition ") @RequestParam(value = "sarStatus", required = false) String sarStatus,@ApiParam(value = "stateId of the SupplierAdvanceRequisition ") @RequestParam(value = "stateId", required = false) String stateId,@ApiParam(value = "Date on which purchaseOrder raised with supplier ") @RequestParam(value = "purchaseOrderDate", required = false) Long purchaseOrderDate);
+    ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Parameter to carry Request metadata in the request body"  ) @RequestBody RequestInfo requestInfo,@ApiParam(value = "reference no of the supplier ") @RequestParam(value = "supplier", required = false) String supplier,@ApiParam(value = "reference no of the purchaseOrder placed with the supplier ") @RequestParam(value = "purchaseOrder", required = false) String purchaseOrder,@ApiParam(value = "status of the SupplierAdvanceRequisition ") @RequestParam(value = "sarStatus", required = false) String sarStatus,@ApiParam(value = "stateId of the SupplierAdvanceRequisition ") @RequestParam(value = "stateId", required = false) String stateId,@ApiParam(value = "Date on which purchaseOrder raised with supplier ") @RequestParam(value = "purchaseOrderDate", required = false) Long purchaseOrderDate);
 
 
     @ApiOperation(value = "Update any of the supplieradvancerequisition", notes = "The common set of information shared by supplieradvancerequisition will be updated upon invoking this API.", response = SupplierAdvanceRequisitionResponse.class, tags={ "SupplierAdvanceRequisition", })
@@ -61,6 +61,6 @@ public interface SupplieradvancerequisitionsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  )  @Valid @RequestBody SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest);
+    ResponseEntity<SupplierAdvanceRequisitionResponse> supplieradvancerequisitionsUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  ) @RequestBody SupplierAdvanceRequisitionRequest supplierAdvanceRequisitionRequest);
 
 }

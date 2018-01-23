@@ -1,5 +1,7 @@
 package org.egov.swm.domain.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -22,8 +24,6 @@ import org.egov.swm.web.requests.PaymentDetailsRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class PaymentDetailsService {
@@ -83,7 +83,7 @@ public class PaymentDetailsService {
 
         if (!paymentDetailsPage.getPagedData().isEmpty()) {
             paymentDetailsList = populatePendingAmount(paymentDetailsPage.getPagedData());
-            if(!isEmpty(paymentDetailsSearch.getVendorNo()))
+            if (!isEmpty(paymentDetailsSearch.getVendorNo()))
                 paymentDetailsList = filterVendors(paymentDetailsPage.getPagedData(), paymentDetailsSearch.getVendorNo());
             paymentDetailsPage.setPagedData(paymentDetailsList);
         }
@@ -91,7 +91,7 @@ public class PaymentDetailsService {
         return paymentDetailsPage;
     }
 
-    private List<PaymentDetails> filterVendors(List<PaymentDetails> paymentDetailsList, String vendorNumber){
+    private List<PaymentDetails> filterVendors(List<PaymentDetails> paymentDetailsList, String vendorNumber) {
         return paymentDetailsList.stream()
                 .filter(paymentDetail -> paymentDetail.getVendorPaymentDetails() != null &&
                         paymentDetail.getVendorPaymentDetails().getVendorContract() != null &&
@@ -229,7 +229,7 @@ public class PaymentDetailsService {
                             .get(paymentNo)) {
 
                 throw new CustomException("PaymentAmount",
-                        "Payment amount more than invoice amount for Payment number: " + paymentNo);
+                        "Total of payment amount(s) is more than the invoice amount");
             }
 
         }

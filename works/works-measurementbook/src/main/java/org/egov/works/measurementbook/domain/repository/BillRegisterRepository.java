@@ -44,9 +44,9 @@ public class BillRegisterRepository {
 
     @Autowired
     public BillRegisterRepository(final RestTemplate restTemplate,
-            @Value("${financial.service.hostname}") final String worksEstimateHostname,
-            @Value("${financial.service.billregister.createpath}") final String billRegisterCreateUrl,
-            @Value("${financial.service.billregister.updatepath}") final String billRegisterUpdateUrl) {
+            @Value("${egov.services.egf.bill.hostname}") final String worksEstimateHostname,
+            @Value("${egov.services.egf.billregister.createpath}") final String billRegisterCreateUrl,
+            @Value("${egov.services.egf.billregister.updatepath}") final String billRegisterUpdateUrl) {
         this.restTemplate = restTemplate;
         this.billRegisterCreateUrl = worksEstimateHostname + billRegisterCreateUrl;
         this.billRegisterUpdateUrl = worksEstimateHostname + billRegisterUpdateUrl;

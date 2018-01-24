@@ -201,6 +201,10 @@ public class PerformanceAssessmentConstants {
     public static final String TARGETUPDATE_INVALID_CODE = "pa.0034";
     public static final String TARGETUPDATE_INVALID_FIELD_NAME = "targetValue";
     public static final String TARGETUPDATE_INVALID_ERROR_MESSAGE = "Actual Values entry has already been started for this KPI. Cannot update the Target Now!!!";
+    
+    public static final String REMARKS_MANDATORY_ONCONDITION_CODE= "pa.0035";
+    public static final String REMARKS_MANDATORY_ONCONDITION_FIELD_NAME = "remarks";
+    public static final String REMARKS_MANDATORY_ONCONDITION_ERROR_MESSAGE = "Remarks cannot be left blank if value is entered as 'No' or 'WIP'. Please enter the remarks!!!";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

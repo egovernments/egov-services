@@ -61,7 +61,7 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL AND master.active IS TRUE" ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.id, value.finyear as valueFinYear, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
-    		+ " detail.id as valueDetailId, detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value , docs.filestoreid as fileStoreId, docs.kpicode as docKpiCode, docs.documentcode as docDocumentCode , docs.documentname as docDocumentName , "  
+    		+ " detail.id as valueDetailId, detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value , detail.remarks as valueRemarks, docs.filestoreid as fileStoreId, docs.kpicode as docKpiCode, docs.documentcode as docDocumentCode , docs.documentname as docDocumentName , "  
     		+ " (select documentname from egpa_kpi_master_document where documentcode = docs.documentcode) as docMasterDocName FROM  "  
     		+ " egpa_kpi_value value LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid " 
     		+ " LEFT JOIN egpa_kpi_value_documents docs ON detail.id = docs.valueid WHERE value.id IS NOT NULL  "; 

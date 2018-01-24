@@ -533,6 +533,7 @@ public class PerformanceAssessmentRowMapper {
 			detail.setValue(rs.getString("value"));
 			detail.setValueid(rs.getString("valueId"));
 			detail.setId(rs.getString("valueDetailId"));
+			detail.setRemarks(rs.getString("valueRemarks"));
 		}  catch (Exception e) {
 			log.error("Encountered an exception while adding Value Details" + e);
 		}

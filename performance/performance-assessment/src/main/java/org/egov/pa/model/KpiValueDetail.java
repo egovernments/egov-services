@@ -24,9 +24,22 @@ public class KpiValueDetail {
 	@JsonProperty("kpiCode")
 	private String kpiCode = null; 
 	
+	@JsonProperty("remarks")
+	private String remarks = null; 
 	
 	
 	
+	
+	
+	
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 
 	public String getKpiCode() {
 		return kpiCode;

@@ -288,6 +288,17 @@ public class RequestValidator {
 		                    PerformanceAssessmentConstants.VALUE_DETAIL_INVALID_FIELD_NAME));
 				}
 				
+				/*if(null != vr.getKpi() && null != vr.getKpi().getTargetType() && vr.getKpi().getTargetType().equals(TargetType.OBJECTIVE.toString())) { 
+					log.info("Validation for Objective Type KPI for No or Work In Progress Values");
+					if(null != valueDetail.getValue() && (valueDetail.getValue().equals("2") || valueDetail.getValue().equals("3"))
+							&& StringUtils.isBlank(valueDetail.getRemarks())) {
+						String customErrorMessage = PerformanceAssessmentConstants.REMARKS_MANDATORY_ONCONDITION_ERROR_MESSAGE.concat(" Check Month "+ valueDetail.getPeriod()); 
+						errorFields.add(buildErrorField(PerformanceAssessmentConstants.REMARKS_MANDATORY_ONCONDITION_CODE,
+								customErrorMessage,
+			                    PerformanceAssessmentConstants.REMARKS_MANDATORY_ONCONDITION_FIELD_NAME));
+					}
+				}*/
+				
 				if(StringUtils.isBlank(valueDetail.getPeriod())) { 
 					errorFields.add(buildErrorField(PerformanceAssessmentConstants.VALUE_PERIOD_INVALID_CODE, 
 		                    PerformanceAssessmentConstants.VALUE_PERIOD_INVALID_ERROR_MESSAGE,

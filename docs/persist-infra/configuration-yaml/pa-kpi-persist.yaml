@@ -255,7 +255,7 @@ serviceMaps:
                
        - jsonPath: $.kpiValues.*.kpiValue.id
 
-    - query: INSERT INTO egpa_kpi_value_detail (id, valueid, period, value, createdby, createddate) values (?, ?, ?, ?, ?, ?)   
+    - query: INSERT INTO egpa_kpi_value_detail (id, valueid, period, value, remarks, createdby, createddate) values (?, ?, ?, ?, ?, ?, ?)   
       basePath: $.kpiValues.*.kpiValue.valueList.*
       jsonMaps:
       
@@ -266,6 +266,8 @@ serviceMaps:
        - jsonPath: $.kpiValues.*.kpiValue.valueList.*.period  
        
        - jsonPath: $.kpiValues.*.kpiValue.valueList.*.value
+       
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.remarks
          
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG  

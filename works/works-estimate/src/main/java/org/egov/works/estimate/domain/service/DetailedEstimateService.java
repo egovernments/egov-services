@@ -331,6 +331,7 @@ public class DetailedEstimateService {
         EstimateTechnicalSanction estimateTechnicalSanction = new EstimateTechnicalSanction();
         estimateTechnicalSanction.setId(commonUtils.getUUID());
         estimateTechnicalSanction.setTenantId(detailedEstimate.getTenantId());
+        estimateTechnicalSanction.setDetailedEstimate(detailedEstimate.getId());
         estimateTechnicalSanction.setAuditDetails(createDetails);
         User user = new User();
         user.setUserName(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName());

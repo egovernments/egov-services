@@ -113,7 +113,7 @@ public class RequestValidator {
                 List<String> filetsValuesList = new ArrayList<>(
                         Arrays.asList(offlineStatus.getStatus().getCode().toUpperCase(), offlineStatus.getObjectType()));
                 JSONArray dBStatusArray = serviceUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
-                        filetsValuesList, offlineStatus.getStatus().getTenantId(), requestInfo,
+                        filetsValuesList, offlineStatus.getTenantId(), requestInfo,
                         CommonConstants.MODULENAME_WORKS);
                 if (dBStatusArray != null && dBStatusArray.isEmpty())
                     messages.put(Constants.KEY_OFFLINE_STATUS_VALUE_INVALID,

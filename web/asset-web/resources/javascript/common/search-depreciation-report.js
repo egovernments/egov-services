@@ -11,6 +11,7 @@ class SearchDepreciationReport extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.reset=this.reset.bind(this);
   }
 
   handleChange(e, name) {
@@ -41,6 +42,18 @@ class SearchDepreciationReport extends React.Component {
 
   setInitialState(initState) {
     this.setState(initState);
+  }
+
+  reset(){
+    let searchSet = {...this.state.searchSet};
+    for(let key in searchSet){
+      if(key!='tenantId'){
+        searchSet[key]=''
+      }
+    }
+    this.setState({
+      searchSet
+    })
   }
 
   search(e) {
@@ -195,7 +208,7 @@ close() {
     let {handleChange, search, handleClick}=this;
     let {assetCategoryType,assetCategory,department,parent,assetName,assetCode,financialYear}=this.state.searchSet;
     let {isSearchClicked,list,departments,assetCategories,financialYears,assetId}=this.state;
-    // console.log(this.state.financialYears);
+    console.log(this.state.searchSet);
       const renderOption = function(list) {
           if(list) {
 
@@ -378,8 +391,9 @@ close() {
               </div>
               </div>
               <div className="text-center">
-                  <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
-                  <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
+                  <button type="submit" className="btn btn-primary">Search</button>&nbsp;&nbsp;
+                  <button type="button" className="btn btn-default" onClick={(e)=>{this.reset()}}>Reset</button>&nbsp;&nbsp;
+                  <button type="button" className="btn btn-default" onClick={(e)=>{this.close()}}>Close</button>
               </div>
 
               </form>

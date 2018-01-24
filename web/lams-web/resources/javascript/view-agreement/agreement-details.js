@@ -427,7 +427,7 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="referenceNumber">ShopNumber/ReferneceNo:</label>
+                                        <label htmlFor="referenceNumber">ShopNumber/ReferenceNo:</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="referenceNumber" name="referenceNumber">

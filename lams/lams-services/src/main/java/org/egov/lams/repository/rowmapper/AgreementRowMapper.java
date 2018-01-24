@@ -117,6 +117,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 					agreement.setRenewalDate(rs.getTimestamp("renewal_date"));
 					agreement.setReservationCategory((Long) rs.getObject("res_category"));
 					agreement.setOldAgreementNumber(rs.getString("old_agreement_no"));
+					agreement.setReferenceNumber(rs.getString("referenceno"));
 					
 					String baseAllotment = rs.getString("base_allotment");
 					agreement.setBasisOfAllotment(BasisOfAllotment.fromValue(baseAllotment));

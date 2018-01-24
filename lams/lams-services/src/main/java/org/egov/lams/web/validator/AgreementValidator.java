@@ -283,10 +283,8 @@ public class AgreementValidator {
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
 		AssetResponse assetResponse = assetService.getAssets(queryString, requestInfoWrapper);
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().isEmpty())
-			errors.rejectValue("Agreement.securityDeposit", "", "the asset given does not exist");
+			errors.rejectValue("Agreement.securityDeposit", "", "No asset is created");
 
-		if (!assetService.isAssetAvailable(assetId))
-			errors.rejectValue("Agreement.Asset.id", "", "Agreement has been already signed for the given asset");
 	}
 
 	public void validateAllottee(AgreementRequest agreementRequest, Errors errors) {

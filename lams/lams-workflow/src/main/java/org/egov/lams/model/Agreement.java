@@ -159,4 +159,5 @@ public class Agreement {
 	private Long reservationCategory;
 	
 	private String oldAgreementNumber;
+	private String referenceNumber;
 }

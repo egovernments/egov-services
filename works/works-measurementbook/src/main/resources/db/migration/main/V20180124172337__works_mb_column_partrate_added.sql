@@ -1,0 +1,1 @@
+ALTER TABLE egw_measurementbook ADD COLUMN ispartrate boolean default false;

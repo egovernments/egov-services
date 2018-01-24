@@ -850,7 +850,7 @@ class CreateAsset extends React.Component {
 	     		$('#assetCategory,#code').attr('disabled','disabled');
 		 		})
 			}
-      var count = 13;
+      var count = 12;
       var _state = {
         readonly: (type === "view")
       };
@@ -861,8 +861,8 @@ class CreateAsset extends React.Component {
           _this.setInitialState(_state);
         }
       }
-      getDropdown("assetCategories", function(res) {
-        checkCountNCall("assetCategories", res);
+      commonApiPost("asset-services", "assetCategories", "_search", {tenantId,isChildCategory:true}, function(err, res) {
+          _this.setState({"assetCategories":res["AssetCategory"]});
       });
       getDropdown("locality", function(res) {
         checkCountNCall("locality", res);

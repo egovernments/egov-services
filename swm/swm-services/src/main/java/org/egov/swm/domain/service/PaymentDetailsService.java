@@ -82,7 +82,6 @@ public class PaymentDetailsService {
         List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
         if (!paymentDetailsPage.getPagedData().isEmpty()) {
-            paymentDetailsList = populatePendingAmount(paymentDetailsPage.getPagedData());
             if (!isEmpty(paymentDetailsSearch.getVendorNo()))
                 paymentDetailsList = filterVendors(paymentDetailsPage.getPagedData(), paymentDetailsSearch.getVendorNo());
             paymentDetailsPage.setPagedData(paymentDetailsList);
@@ -99,31 +98,6 @@ public class PaymentDetailsService {
                         paymentDetail.getVendorPaymentDetails().getVendorContract().getVendor().getVendorNo()
                                 .equals(vendorNumber))
                 .collect(Collectors.toList());
-    }
-
-    private List<PaymentDetails> populatePendingAmount(List<PaymentDetails> paymentDetailsList) {
-
-        PaymentDetailsSearch paymentDetailsSearch = new PaymentDetailsSearch();
-
-        for (PaymentDetails paymentDetail : paymentDetailsList) {
-            paymentDetailsSearch.setTenantId(paymentDetail.getTenantId());
-            paymentDetailsSearch.setPaymentNo(paymentDetail.getVendorPaymentDetails().getPaymentNo());
-
-            Pagination<PaymentDetails> paymentDetails = paymentDetailsRepository.search(paymentDetailsSearch);
-
-            Double payedAmount = 0.0;
-
-            if (!paymentDetails.getPagedData().isEmpty()) {
-                payedAmount = paymentDetails.getPagedData().stream()
-                        .mapToDouble(PaymentDetails::getAmount)
-                        .sum();
-            }
-
-            paymentDetail.setPendingAmount(paymentDetail.getVendorPaymentDetails().getVendorInvoiceAmount() -
-                    payedAmount);
-        }
-
-        return paymentDetailsList;
     }
 
     private void prepareDocuments(final PaymentDetails vendorPaymentDetail) {
@@ -231,7 +205,6 @@ public class PaymentDetailsService {
                 throw new CustomException("PaymentAmount",
                         "Total of payment amount(s) is more than the invoice amount");
             }
-
         }
 
     }

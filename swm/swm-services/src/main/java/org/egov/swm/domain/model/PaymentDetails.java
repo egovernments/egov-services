@@ -70,9 +70,6 @@ public class PaymentDetails {
     @JsonProperty("branchName")
     private String branchName;
 
-    @JsonProperty("pendingAmount")
-    private Double pendingAmount;
-
     @JsonProperty("documents")
     private List<Document> documents;
 

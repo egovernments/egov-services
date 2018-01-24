@@ -2,20 +2,12 @@ package org.egov.swm.domain.service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Document;
-import org.egov.swm.domain.model.Pagination;
-import org.egov.swm.domain.model.VendorContract;
-import org.egov.swm.domain.model.VendorContractSearch;
-import org.egov.swm.domain.model.VendorPaymentDetails;
-import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
+import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.repository.PaymentDetailsRepository;
 import org.egov.swm.domain.repository.VendorPaymentDetailsRepository;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.EmployeeRepository;
@@ -38,14 +30,17 @@ public class VendorPaymentDetailsService {
 
     private final String idGenNameForPaymentNumberPath;
 
+    private final PaymentDetailsRepository paymentDetailsRepository;
+
     public VendorPaymentDetailsService(final VendorPaymentDetailsRepository vendorPaymentDetailsRepository,
             final VendorContractService vendorContractService, final EmployeeRepository employeeRepository,
-            final IdgenRepository idgenRepository,
+            final IdgenRepository idgenRepository, PaymentDetailsRepository paymentDetailsRepository,
             @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath) {
         this.vendorPaymentDetailsRepository = vendorPaymentDetailsRepository;
         this.vendorContractService = vendorContractService;
         this.employeeRepository = employeeRepository;
         this.idgenRepository = idgenRepository;
+        this.paymentDetailsRepository = paymentDetailsRepository;
         this.idGenNameForPaymentNumberPath = idGenNameForPaymentNumberPath;
     }
 
@@ -88,7 +83,52 @@ public class VendorPaymentDetailsService {
 
     public Pagination<VendorPaymentDetails> search(final VendorPaymentDetailsSearch vendorPaymentDetailsSearch) {
 
-        return vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
+        Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
+
+        if(vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())
+            vendorPaymentDetailsPage.setPagedData(enrichWithPendingAmount(vendorPaymentDetailsPage.getPagedData(),
+                    vendorPaymentDetailsSearch));
+
+        return vendorPaymentDetailsPage;
+    }
+
+    private List<VendorPaymentDetails> enrichWithPendingAmount(List<VendorPaymentDetails> vendorPaymentDetailsList,
+                                                               VendorPaymentDetailsSearch vendorPaymentDetailsSearch){
+
+        String paymentNumbers = vendorPaymentDetailsList.stream().map(VendorPaymentDetails::getPaymentNo)
+                                .collect(Collectors.joining(","));
+
+        PaymentDetailsSearch paymentDetailsSearch = new PaymentDetailsSearch();
+        paymentDetailsSearch.setTenantId(vendorPaymentDetailsSearch.getTenantId());
+        paymentDetailsSearch.setPaymentNos(paymentNumbers);
+        paymentDetailsSearch.setExcludeVendorPaymentDetails(true);
+
+        Pagination<PaymentDetails> paymentDetailsPage =  paymentDetailsRepository.search(paymentDetailsSearch);
+
+        HashMap<String, Double> amountMap = new HashMap<>();
+        if(paymentDetailsPage.getPagedData() != null && !paymentDetailsPage.getPagedData().isEmpty()){
+            //Build map of sum of amount for payment number
+            for(String paymentNo : Arrays.asList(paymentNumbers.split(","))){
+                Double sum = 0.0;
+                sum = sum + paymentDetailsPage.getPagedData().stream()
+                            .filter(paymentDetail -> paymentDetail.getVendorPaymentDetails().getPaymentNo().equals(paymentNo))
+                            .mapToDouble(PaymentDetails::getAmount).sum();
+                amountMap.put(paymentNo,sum);
+            }
+        }
+
+        for(VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsList){
+            if(amountMap.get(vendorPaymentDetail.getPaymentNo()) != null){
+                vendorPaymentDetail.setPaidAmount(amountMap.get(vendorPaymentDetail.getPaymentNo()));
+                vendorPaymentDetail.setPendingAmount(vendorPaymentDetail.getVendorInvoiceAmount() -
+                                                     amountMap.get(vendorPaymentDetail.getPaymentNo()));
+            }else{
+                vendorPaymentDetail.setPaidAmount(0.0);
+                vendorPaymentDetail.setPendingAmount(vendorPaymentDetail.getVendorInvoiceAmount());
+            }
+        }
+
+        return vendorPaymentDetailsList;
     }
 
     private void validateForUniquePaymentInfoInRequest(final VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {

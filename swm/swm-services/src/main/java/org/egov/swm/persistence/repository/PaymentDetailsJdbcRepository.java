@@ -56,6 +56,13 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("paymentNo", searchRequest.getPaymentNo());
         }
 
+        if (searchRequest.getPaymentNos() != null) {
+            addAnd(params);
+            params.append("paymentNo in (:paymentNos)");
+            paramValues.put("paymentNos",
+                    new ArrayList<>(Arrays.asList(searchRequest.getPaymentNos().split(","))));
+        }
+
         if (searchRequest.getCodes() != null) {
             addAnd(params);
             params.append("code in (:codes)");
@@ -131,7 +138,9 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
 
         }
 
-        if (paymentdetailsList != null && !paymentdetailsList.isEmpty()) {
+        if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
+                (searchRequest.getExcludeVendorPaymentDetails() == null ||
+                searchRequest.getExcludeVendorPaymentDetails().equals(Boolean.FALSE))) {
 
             populateVendorPaymentDetails(paymentdetailsList);
 

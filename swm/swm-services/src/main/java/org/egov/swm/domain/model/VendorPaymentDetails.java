@@ -66,6 +66,12 @@ public class VendorPaymentDetails {
     @JsonProperty("employee")
     private Employee employee;
 
+    @JsonProperty("paidAmount")
+    private Double paidAmount;
+
+    @JsonProperty("pendingAmount")
+    private Double pendingAmount;
+
     @Valid
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails;

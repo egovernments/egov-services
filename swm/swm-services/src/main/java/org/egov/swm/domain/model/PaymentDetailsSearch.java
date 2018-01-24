@@ -11,8 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentDetailsSearch extends PaymentDetails {
     private String paymentNo;
+    private String paymentNos;
     private String vendorNo;
     private String codes;
+    private Boolean excludeVendorPaymentDetails;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

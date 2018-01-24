@@ -24,8 +24,8 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egswm_paymentdetails";
 
-    @Autowired
-    private VendorPaymentDetailsService vendorPaymentDetailsService;
+    /*@Autowired
+    private VendorPaymentDetailsService vendorPaymentDetailsService;*/
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -138,20 +138,20 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
 
         }
 
-        if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
+      /*  if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
                 (searchRequest.getExcludeVendorPaymentDetails() == null ||
                 searchRequest.getExcludeVendorPaymentDetails().equals(Boolean.FALSE))) {
 
             populateVendorPaymentDetails(paymentdetailsList);
 
-        }
+        }*/
         page.setTotalResults(paymentdetailsList.size());
 
         page.setPagedData(paymentdetailsList);
 
         return page;
     }
-
+/*
     private void populateVendorPaymentDetails(List<PaymentDetails> paymentdetailsList) {
 
         VendorPaymentDetailsSearch vendorPaymentDetailsSearch;
@@ -214,6 +214,6 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
             }
         }
 
-    }
+    }*/
 
 }

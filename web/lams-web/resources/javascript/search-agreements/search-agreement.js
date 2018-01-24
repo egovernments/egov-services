@@ -19,6 +19,7 @@ class AgreementSearch extends React.Component {
                 acknowledgementNumber: "",
                 shopNumber: "",
                 shoppingComplexName: "",
+                referenceNumber:"",
                 tenantId
             },
             isSearchClicked: false,
@@ -356,7 +357,7 @@ class AgreementSearch extends React.Component {
             revenueWard,
             electionWard,
             code,
-            tenderNumber, fromDate, toDate, shopComplexNumber, acknowledgementNumber } = this.state.searchSet;
+            tenderNumber, fromDate, toDate, shopComplexNumber, acknowledgementNumber ,referenceNumber} = this.state.searchSet;
 
         const showCollectTaxOption = function () {
             if (!hideCollectTaxOption) {
@@ -541,11 +542,11 @@ class AgreementSearch extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="row">
                                             <div className="col-sm-6 label-text">
-                                                <label for="shopNumber">Shop Number </label>
+                                                <label for="referenceNumber">Shop Number </label>
                                             </div>
                                             <div className="col-sm-6">
-                                                <input type="text" name="shopNumber" id="shopNumber" value={shopNumber} onChange={(e) => {
-                                                    handleChange(e, "shopNumber")
+                                                <input type="text" name="referenceNumber" id="referenceNumber" value={referenceNumber} onChange={(e) => {
+                                                    handleChange(e, "referenceNumber")
                                                 }} />
                                             </div>
                                         </div>

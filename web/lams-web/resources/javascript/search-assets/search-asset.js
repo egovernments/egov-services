@@ -39,21 +39,6 @@ class AssetSearch extends React.Component {
       assetIds += (i == 0 ? '' : ',') + list[i].id;
     }
 
-    if(assetIds) {
-      try {
-        var agreements = commonApiPost("lams-services", "agreements", "_search", { tenantId, asset: assetIds}).responseJSON["Agreements"] || [];
-        list.map(function(val, ind) {
-          for(var i=0; i<agreements.length; i++) {
-            if(val.id == agreements[i].asset.id) {
-              list[ind].hasAgreement = true;
-            }
-          }
-        });
-      } catch(e) {
-        console.log(e);
-      }
-    }
-
     flag = 1;
     this.setState({
       isSearchClicked: true,
@@ -205,7 +190,7 @@ class AssetSearch extends React.Component {
     }
 
     const showActions = function(item) {
-      if(!item.hasAgreement && _this.state.categories.indexOf(item.assetCategory.name.toLowerCase()) > -1) {
+      if( _this.state.categories.indexOf(item.assetCategory.name.toLowerCase()) > -1) {
         return (
           <div className="styled-select">
               <select id="myOptions" onChange={(e)=>{
@@ -358,7 +343,7 @@ class AssetSearch extends React.Component {
 
 
                     <div className="text-right text-danger">
-                          Note: Any one field is mandatory other than Asset category.
+                          Note: Asset category is mandatory.
                     </div>
                     <br/>
                     <div className="text-center">

@@ -22,38 +22,38 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-19T12:22:16.579Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-24T06:03:25.640Z")
 
 @Api(value = "milestones", description = "the milestones API")
 public interface MilestonesApi {
 
     @ApiOperation(value = "Create new Milestone(s).", notes = "To create new Milestone in the system. API supports bulk creation with max limit as defined in the Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Milestone, please pass array with one Milestone object.  Milestone can be created for Approved Letter of Acceptance/Work Order. ", response = MilestoneResponse.class, tags={ "Milestone", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Milestone(s) created successfully", response = MilestoneResponse.class),
-        @ApiResponse(code = 400, message = "Milestone(s) creation failed", response = ErrorRes.class) })
-    
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Milestone(s) created successfully", response = MilestoneResponse.class),
+            @ApiResponse(code = 400, message = "Milestone(s) creation failed", response = ErrorRes.class) })
+
     @RequestMapping(value = "/milestones/_create",
-        method = RequestMethod.POST)
-    ResponseEntity<MilestoneResponse> milestonesCreatePost(@ApiParam(value = "Details of new Milestone(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MilestoneRequest milestoneRequest);
+            method = RequestMethod.POST)
+    ResponseEntity<MilestoneResponse> milestonesCreatePost(@ApiParam(value = "Details of new Milestone(s) + RequestInfo meta data." ,required=true )  @Valid @RequestBody MilestoneRequest milestoneRequest);
 
 
     @ApiOperation(value = "Get the list of Milestone(s) defined in the system.", notes = "Search and get Milestone(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params.  In case multiple parameters are passed Milestone(s) will be searched as an AND combination of all the parameters.  Maximum result size is restricted based on the maxlength of Milestone as defined in MilestoneResponse model.  Search results will be sorted by the sortProperty Provided in the parameters ", response = MilestoneResponse.class, tags={ "Milestone", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Milestone(s) Retrieved Successfully", response = MilestoneResponse.class),
-        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
-    
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Milestone(s) Retrieved Successfully", response = MilestoneResponse.class),
+            @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
+
     @RequestMapping(value = "/milestones/_search",
-        method = RequestMethod.POST)
-    ResponseEntity<MilestoneResponse> milestonesSearchPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo, @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize, @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber, @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy, @Size(max = 50) @ApiParam(value = "Comma separated list of Ids of Milestone to get the Milestones") @RequestParam(value = "ids", required = false) List<String> ids, @Size(max = 50) @ApiParam(value = "Status of the Milestone") @RequestParam(value = "statuses", required = false) List<String> statuses, @Size(max = 50) @ApiParam(value = "Comma separated list of Work Order Numbers") @RequestParam(value = "workOrderNumbers", required = false) List<String> workOrderNumbers, @Size(max = 50) @ApiParam(value = "Comma separated list of LOA Numbers") @RequestParam(value = "loaNumbers", required = false) List<String> loaNumbers, @Size(max = 50) @ApiParam(value = "Comma separated list of Detailed Estimate Numbers") @RequestParam(value = "detailedEstimateNumbers", required = false) List<String> detailedEstimateNumbers, @Size(max = 50) @ApiParam(value = "Comma separated list of Work Identification Numbers") @RequestParam(value = "workIdentificationNumbers", required = false) List<String> workIdentificationNumbers, @Size(max = 50) @ApiParam(value = "Comma separated list of the Department for which the Milestone belongs to") @RequestParam(value = "department", required = false) List<String> department, @Size(max = 50) @ApiParam(value = "Comma separated list of Names of the contractor to which Milestone belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames, @Size(max = 50) @ApiParam(value = "Comma separated list of codes of the contractor to which Milestone belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes);
+            method = RequestMethod.POST)
+    ResponseEntity<MilestoneResponse> milestonesSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo, @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy, @Size(max=50)@ApiParam(value = "Comma separated list of Ids of Milestone to get the Milestones") @RequestParam(value = "ids", required = false) List<String> ids, @Size(max=50)@ApiParam(value = "Status of the Milestone") @RequestParam(value = "statuses", required = false) List<String> statuses, @Size(max=50)@ApiParam(value = "Comma separated list of Work Order Numbers") @RequestParam(value = "workOrderNumbers", required = false) List<String> workOrderNumbers, @Size(max=50)@ApiParam(value = "Comma separated list of LOA Numbers") @RequestParam(value = "loaNumbers", required = false) List<String> loaNumbers, @Size(max=50)@ApiParam(value = "Comma separated list of Detailed Estimate Numbers") @RequestParam(value = "detailedEstimateNumbers", required = false) List<String> detailedEstimateNumbers, @Size(max=50)@ApiParam(value = "Comma separated list of Work Identification Numbers") @RequestParam(value = "workIdentificationNumbers", required = false) List<String> workIdentificationNumbers, @Size(max=50)@ApiParam(value = "Comma separated list of the Department for which the Milestone belongs to") @RequestParam(value = "departments", required = false) List<String> departments, @Size(max=50)@ApiParam(value = "Comma separated list of Names of the contractor to which Milestone belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames, @Size(max=50)@ApiParam(value = "Comma separated list of codes of the contractor to which Milestone belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes,@ApiParam(value = "if this values is true, API returns all the milestones where associated track milestones are 100% completed. if this values is false, API returns all the milestones where associated track milestones are 100% not completed. If no value then it returns all the milestones.") @RequestParam(value = "isTrackMilestoneCompleted", required = false) Boolean isTrackMilestoneCompleted);
 
 
     @ApiOperation(value = "Update existing Milestone(s).", notes = "To update existing Milestone in the system. API supports bulk updation with max limit as defined in the Milestone Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Milestone, please pass array with one Milestone object. ", response = MilestoneResponse.class, tags={ "Milestone", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Milestone(s) updated successfully", response = MilestoneResponse.class),
-        @ApiResponse(code = 400, message = "Milestone(s) updation failed", response = ErrorRes.class) })
-    
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Milestone(s) updated successfully", response = MilestoneResponse.class),
+            @ApiResponse(code = 400, message = "Milestone(s) updation failed", response = ErrorRes.class) })
+
     @RequestMapping(value = "/milestones/_update",
-        method = RequestMethod.POST)
-    ResponseEntity<MilestoneResponse> milestonesUpdatePost(@ApiParam(value = "Details of Milestone(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MilestoneRequest milestoneRequest);
+            method = RequestMethod.POST)
+    ResponseEntity<MilestoneResponse> milestonesUpdatePost(@ApiParam(value = "Details of Milestone(s) + RequestInfo meta data." ,required=true )  @Valid @RequestBody MilestoneRequest milestoneRequest);
 
 }

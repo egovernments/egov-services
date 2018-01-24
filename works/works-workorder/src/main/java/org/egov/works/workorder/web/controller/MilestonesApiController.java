@@ -19,7 +19,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-19T12:22:16.579Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-24T06:03:25.640Z")
 
 @Controller
 public class MilestonesApiController implements MilestonesApi {
@@ -33,22 +33,24 @@ public class MilestonesApiController implements MilestonesApi {
     }
 
     public ResponseEntity<MilestoneResponse> milestonesSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @RequestBody RequestInfo requestInfo,
-         @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
-        @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
-        @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy,
-         @Size(max=50)@ApiParam(value = "Comma separated list of Ids of Milestone to get the Milestones") @RequestParam(value = "ids", required = false) List<String> ids,
-         @Size(max=50)@ApiParam(value = "Status of the Milestone") @RequestParam(value = "statuses", required = false) List<String> statuses,
-         @Size(max=50)@ApiParam(value = "Comma separated list of Work Order Numbers") @RequestParam(value = "workOrderNumbers", required = false) List<String> workOrderNumbers,
-         @Size(max=50)@ApiParam(value = "Comma separated list of LOA Numbers") @RequestParam(value = "loaNumbers", required = false) List<String> loaNumbers,
-         @Size(max=50)@ApiParam(value = "Comma separated list of Detailed Estimate Numbers") @RequestParam(value = "detailedEstimateNumbers", required = false) List<String> detailedEstimateNumbers,
-         @Size(max=50)@ApiParam(value = "Comma separated list of Work Identification Numbers") @RequestParam(value = "workIdentificationNumbers", required = false) List<String> workIdentificationNumbers,
-         @Size(max=50)@ApiParam(value = "Comma separated list of the Department for which the Milestone belongs to") @RequestParam(value = "departments", required = false) List<String> departments,
-         @Size(max=50)@ApiParam(value = "Comma separated list of Names of the contractor to which Milestone belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
-         @Size(max=50)@ApiParam(value = "Comma separated list of codes of the contractor to which Milestone belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes) {
+                                                                   @ApiParam(value = "Parameter to carry Request metadata in the request body"  ) @RequestBody RequestInfo requestInfo,
+                                                                   @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
+                                                                   @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
+                                                                   @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of Ids of Milestone to get the Milestones") @RequestParam(value = "ids", required = false) List<String> ids,
+                                                                   @Size(max=50)@ApiParam(value = "Status of the Milestone") @RequestParam(value = "statuses", required = false) List<String> statuses,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of Work Order Numbers") @RequestParam(value = "workOrderNumbers", required = false) List<String> workOrderNumbers,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of LOA Numbers") @RequestParam(value = "loaNumbers", required = false) List<String> loaNumbers,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of Detailed Estimate Numbers") @RequestParam(value = "detailedEstimateNumbers", required = false) List<String> detailedEstimateNumbers,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of Work Identification Numbers") @RequestParam(value = "workIdentificationNumbers", required = false) List<String> workIdentificationNumbers,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of the Department for which the Milestone belongs to") @RequestParam(value = "departments", required = false) List<String> departments,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of Names of the contractor to which Milestone belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
+                                                                   @Size(max=50)@ApiParam(value = "Comma separated list of codes of the contractor to which Milestone belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes,
+                                                                   @ApiParam(value = "if this values is true, API returns all the milestones where associated track milestones are 100% completed. if this values is false, API returns all the milestones where associated track milestones are 100% not completed. If no value then it returns all the milestones.") @RequestParam(value = "isTrackMilestoneCompleted", required = false) Boolean isTrackMilestoneCompleted) {
+
         MilestoneSearchContract milestoneSearchContract = MilestoneSearchContract.builder()
                 .pageSize(pageSize).pageNumber(pageNumber).tenantId(tenantId).ids(ids).statuses(statuses).workOrderNumbers(workOrderNumbers).loaNumbers(loaNumbers).detailedEstimateNumbers(detailedEstimateNumbers)
-                .workIdentificationNumbers(workIdentificationNumbers).departments(departments).contractorNames(contractorNames).contractorCodes(contractorCodes)
+                .workIdentificationNumbers(workIdentificationNumbers).departments(departments).contractorNames(contractorNames).contractorCodes(contractorCodes).isTrackMilestoneCompleted(isTrackMilestoneCompleted)
                 .pageNumber(pageNumber).pageSize(pageSize).build();
         MilestoneResponse milestoneResponse = milestoneService.search(milestoneSearchContract, requestInfo);
         return new ResponseEntity(milestoneResponse, HttpStatus.OK);

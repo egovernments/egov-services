@@ -25,6 +25,7 @@ public class MilestoneSearchContract {
     private List<String> departments;
     private List<String> contractorNames;
     private List<String> contractorCodes;
+    private Boolean isTrackMilestoneCompleted;
     private Integer pageSize;
     private Integer pageNumber;
     private String sortBy;

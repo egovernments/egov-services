@@ -879,6 +879,12 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of codes of the contractor to which Milestone belongs to
+        - name: isTrackMilestoneCompleted
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this values is true, API returns all the milestones where associated track milestones are 100% completed. if this values is false, API returns all the milestones where associated track milestones are 100% not completed. If no value then it returns all the milestones.
       responses:
         200:
           description: Milestone(s) Retrieved Successfully
@@ -2250,6 +2256,7 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 
 

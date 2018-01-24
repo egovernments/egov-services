@@ -23,6 +23,7 @@ public class MilestoneJdbcRepository extends JdbcRepository {
     public static final String MILESTONE_WORKORDER_EXTENTION = " , egw_workorder wo";
     public static final String MILESTONE_LOA_EXTENTION = " , egw_letterofacceptance loa";
     public static final String MILESTONE_CONTRACTOR_EXTENTION = " , egw_contractor contractor";
+    public static final String MILESTONE_TRACKMILESTONE_EXTENTION = " , egw_trackmilestone tm";
     public static final String GET_MILESTONE_ACTIVTIES_BY_MILESTONE = "select * from egw_milestoneactivity where " +
             "tenantid = :tenantId and deleted=false and milestone=:milestone;";
     public static final String GET_MILESTONE_ACTIVTIES_BY_ID = "select * from egw_milestoneactivity where " +
@@ -58,6 +59,10 @@ public class MilestoneJdbcRepository extends JdbcRepository {
                 || (milestoneSearchContract.getContractorCodes() != null && !milestoneSearchContract.getContractorCodes().isEmpty())) {
             tableName += MILESTONE_LOA_EXTENTION;
             tableName += MILESTONE_CONTRACTOR_EXTENTION;
+        }
+
+        if (milestoneSearchContract.getIsTrackMilestoneCompleted() != null) {
+            tableName += MILESTONE_TRACKMILESTONE_EXTENTION;
         }
 
         if ((milestoneSearchContract.getDetailedEstimateNumbers() != null && !milestoneSearchContract.getDetailedEstimateNumbers().isEmpty())
@@ -148,6 +153,15 @@ public class MilestoneJdbcRepository extends JdbcRepository {
             paramValues.put("tenantid", milestoneSearchContract.getTenantId());
         }
 
+        if(milestoneSearchContract.getIsTrackMilestoneCompleted()!=null){
+            addAnd(params);
+            params.append("milestone.id=tm.milestone");
+            addAnd(params);
+            if(milestoneSearchContract.getIsTrackMilestoneCompleted())
+                params.append("tm.status='COMPLETED' and tm.totalpercentage=100 and tm.deleted=false");
+            else
+                params.append("tm.status!='COMPLETED' and tm.totalpercentage!=100 and tm.deleted=false");
+        }
         params.append(" and milestone.deleted = false");
 
         if (params.length() > 0) {

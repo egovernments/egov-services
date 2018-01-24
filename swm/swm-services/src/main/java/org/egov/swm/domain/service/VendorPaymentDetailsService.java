@@ -14,35 +14,30 @@ import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.VendorPaymentDetailsRequest;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VendorPaymentDetailsService {
 
-    private final VendorPaymentDetailsRepository vendorPaymentDetailsRepository;
+    @Autowired
+    private VendorPaymentDetailsRepository vendorPaymentDetailsRepository;
 
-    private final VendorContractService vendorContractService;
+    @Autowired
+    private VendorContractService vendorContractService;
 
-    private final EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-    private final IdgenRepository idgenRepository;
+    @Autowired
+    private IdgenRepository idgenRepository;
 
-    private final String idGenNameForPaymentNumberPath;
+    @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}")
+    private String idGenNameForPaymentNumberPath;
 
-    private final PaymentDetailsRepository paymentDetailsRepository;
-
-    public VendorPaymentDetailsService(final VendorPaymentDetailsRepository vendorPaymentDetailsRepository,
-            final VendorContractService vendorContractService, final EmployeeRepository employeeRepository,
-            final IdgenRepository idgenRepository, PaymentDetailsRepository paymentDetailsRepository,
-            @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath) {
-        this.vendorPaymentDetailsRepository = vendorPaymentDetailsRepository;
-        this.vendorContractService = vendorContractService;
-        this.employeeRepository = employeeRepository;
-        this.idgenRepository = idgenRepository;
-        this.paymentDetailsRepository = paymentDetailsRepository;
-        this.idGenNameForPaymentNumberPath = idGenNameForPaymentNumberPath;
-    }
+    @Autowired
+    private PaymentDetailsRepository paymentDetailsRepository;
 
     public VendorPaymentDetailsRequest create(final VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
         validate(vendorPaymentDetailsRequest);

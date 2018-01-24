@@ -29,7 +29,7 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
     private VendorPaymentDetailsService vendorPaymentDetailsService;*/
 
     @Autowired
-    private VendorPaymentDetailsRepository vendorPaymentDetailsRepository;
+    private VendorPaymentDetailsJdbcRepository vendorPaymentDetailsJdbcRepository;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -195,7 +195,7 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
             vendorPaymentDetailsSearch.setTenantId(tenantId);
             vendorPaymentDetailsSearch.setPaymentNos(paymentNos.toString());
 
-            vendorPaymentDetailsPage = vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
+            vendorPaymentDetailsPage = vendorPaymentDetailsJdbcRepository.search(vendorPaymentDetailsSearch);
 
             if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null)
                 for (VendorPaymentDetails bd : vendorPaymentDetailsPage.getPagedData()) {

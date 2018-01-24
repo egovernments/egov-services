@@ -24,3 +24,9 @@ apis:
     reference:
       location:
       collectionType:
+  
+  /sourcesegregations/_create:
+    reference:
+      dumpingGround:
+      collectionDetails:
+      collectionType:

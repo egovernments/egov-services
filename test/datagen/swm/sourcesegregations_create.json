@@ -1,0 +1,200 @@
+[
+  {
+    "field_name": "code",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].code",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "dumpingGround",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].dumpingGround",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "ulb",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "code",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.code",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "name",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.name",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "imageId",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.imageId",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "logoId",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.logoId",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "type",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.type",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "address",
+    "type": "length",
+    "subtype": "maximum(300)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.address",
+        "value": "{{$randomString(301)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "contactNumber",
+    "type": "length",
+    "subtype": "maximum(16)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.contactNumber",
+        "value": "{{$randomString(17)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "helpLineNumber",
+    "type": "length",
+    "subtype": "maximum(16)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.helpLineNumber",
+        "value": "{{$randomString(17)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "twitterUrl",
+    "type": "length",
+    "subtype": "maximum(100)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.twitterUrl",
+        "value": "{{$randomString(101)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "facebookUrl",
+    "type": "length",
+    "subtype": "maximum(100)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.facebookUrl",
+        "value": "{{$randomString(101)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "emailId",
+    "type": "length",
+    "subtype": "maximum(100)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.emailId",
+        "value": "{{$randomString(101)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "shapeFilePath",
+    "type": "length",
+    "subtype": "maximum(100)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.city.shapeFilePath",
+        "value": "{{$randomString(101)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "captcha",
+    "type": "length",
+    "subtype": "maximum(100)",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].ulb.city.captcha",
+        "value": "{{$randomString(101)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "sourceSegregationDate",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].sourceSegregationDate",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "collectionDetails",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.sourceSegregations[0].collectionDetails",
+        "value": "##delete##"
+      }
+    ]
+  }
+]

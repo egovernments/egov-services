@@ -143,6 +143,9 @@ definitions:
       requestFileName:
         description: name of hte excel file that is uploaded
         type: string
+      reasonForFailure:
+        description: In case the upload fails, this field contains the reason for failure
+        type: string
     required:
       - tenantId
       - moduleName

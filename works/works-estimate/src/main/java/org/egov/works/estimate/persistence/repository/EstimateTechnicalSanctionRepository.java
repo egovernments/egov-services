@@ -23,7 +23,7 @@ public class EstimateTechnicalSanctionRepository  extends JdbcRepository
 
     public List<EstimateTechnicalSanction> search(
             TechnicalSanctionSearchContract technicalSanctionSearchContract) {
-        String searchQuery = "select * from egw_estimate_technicalsanction where id is not null ";
+        String searchQuery = "select * from egw_estimate_technicalsanction :condition :orderby ";
 
         Map<String, Object> paramValues = new HashMap<>();
         StringBuffer params = new StringBuffer();

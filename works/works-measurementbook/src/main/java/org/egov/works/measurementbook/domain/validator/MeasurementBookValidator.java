@@ -121,7 +121,8 @@ public class MeasurementBookValidator {
 
             if(measurementBook.getId() != null)
                 validateUpdateStatus(measurementBook, measurementBookRequest.getRequestInfo(), messages);
-
+			//Validating for part rated MB
+			validateMBForPartRate(measurementBook, messages);
 		}
 		if (!messages.isEmpty())
 	                throw new CustomException(messages);
@@ -327,5 +328,14 @@ public class MeasurementBookValidator {
                 .tenantId(measurementBook.getTenantId()).ids(Arrays.asList(measurementBook.getId())).build();
         return measurementBookRepository.searchMeasurementBooks(measurementBookSearchContract,requestInfo);
     }
+
+	private void validateMBForPartRate(MeasurementBook measurementBook, Map<String, String> messages) {
+		for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()){
+			if(measurementBookDetail.getPartRate()!=null && measurementBookDetail.getPartRate().compareTo(BigDecimal.ZERO)==1){
+				if(!measurementBook.getIsPartRate())
+					messages.put(Constants.KEY_MB_SHOULDBE_PARTRATE, Constants.MSG_MB_SHOULDBE_PARTRATE);
+			}
+		}
+	}
 
 }

@@ -102,6 +102,9 @@ public class Constants {
     public static final String KEY_MB_CANNOT_UPDATE_STATUS = "MB_CANNOT_UPDATE_STATUS";
     public static final String MSG_MB_CANNOT_UPDATE_STATUS = "Status cannot be updated for MB";
 
+    public static final String KEY_MB_SHOULDBE_PARTRATE = "WORKS.MB.SHOULDBE.PARTRATE";
+    public static final String MSG_MB_SHOULDBE_PARTRATE = "There are part rates for MB details, Measurement Sheet should be marked part rated";
+
     public static final String KEY_MB_INVALID_STATUS = "INVALID_STATUS";
     public static final String MSG_MB_INVALID_STATUS = "Status is invalid for MB, please give proper status";
 

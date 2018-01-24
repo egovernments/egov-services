@@ -5,14 +5,7 @@
  */
 package org.egov.works.measurementbook.web.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import io.swagger.annotations.*;
 import org.egov.works.measurementbook.web.contract.ErrorRes;
 import org.egov.works.measurementbook.web.contract.MeasurementBookRequest;
 import org.egov.works.measurementbook.web.contract.MeasurementBookResponse;
@@ -23,62 +16,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-19T06:59:20.916Z")
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.List;
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-24T10:52:01.165Z")
 
 @Api(value = "measurementbooks", description = "the measurementbooks API")
 public interface MeasurementbooksApi {
 
-	@ApiOperation(value = "Create new Measurement Book(s).", notes = "To create new Measurement Book in the system. API supports bulk creation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Measurement Book, please pass array with one Measurement Book object.  To create Measurement Book, the Letter of Acceptance/Work Order must be genarated and its offline status should be Work Commenced. There can be multiple measurement books for single Letter Of acceptance Estimate. Measurement books are not allowed to create once the Final bill is generated for Letter of Acceptance Estimate.  The workflow will be there for measurement book. Save as drafts also required. Atleast one item Tendered Item or Non Tendered or Lump sum item is mandatory before submitting the Measurememnt Book.   Detailed Measurements needs to be captured for Measurement Book activities if there exists detailed measurements in estimate for the same activity.If Detailed Measurements are captured then the Cureent Entry Quantity at activity level will be defaulted from the computed value from measurements and not allowed to edit. Cureent Entry Quantity at activity can be directly entered if no measurements exists for the the Estimate/LOA activity. ", response = MeasurementBookResponse.class, tags = {
-			"Measurement Book", })
+	@ApiOperation(value = "Create new Measurement Book(s).", notes = "To create new Measurement Book in the system. API supports bulk creation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one Measurement Book, please pass array with one Measurement Book object.  To create Measurement Book, the Letter of Acceptance/Work Order must be genarated and its offline status should be Work Commenced. There can be multiple measurement books for single Letter Of acceptance Estimate. Measurement books are not allowed to create once the Final bill is generated for Letter of Acceptance Estimate.  The workflow will be there for measurement book. Save as drafts also required. Atleast one item Tendered Item or Non Tendered or Lump sum item is mandatory before submitting the Measurememnt Book.   Detailed Measurements needs to be captured for Measurement Book activities if there exists detailed measurements in estimate for the same activity.If Detailed Measurements are captured then the Cureent Entry Quantity at activity level will be defaulted from the computed value from measurements and not allowed to edit. Cureent Entry Quantity at activity can be directly entered if no measurements exists for the the Estimate/LOA activity. ", response = MeasurementBookResponse.class, tags={ "Measurement Book", })
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Measurement Book(s) created successfully", response = MeasurementBookResponse.class),
 			@ApiResponse(code = 400, message = "Measurement Book(s) creation failed", response = ErrorRes.class) })
 
-	@RequestMapping(value = "/measurementbooks/_create", method = RequestMethod.POST)
-	ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(
-			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
+	@RequestMapping(value = "/measurementbooks/_create",
+			method = RequestMethod.POST)
+	ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data." ,required=true )  @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
 
-	@ApiOperation(value = "Get the list of Measurement Book(s) defined in the system.", notes = "Search and get Measurement Book(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params.  In case multiple parameters are passed Measurement Book(s) will be searched as an AND combination of all the parameters.  Maximum result size is restricted based on the maxlength of Notice as defined in MeasurementBookResponse model.  Search results will be sorted by the sortProperty Provided in the parameters ", response = MeasurementBookResponse.class, tags = {
-			"Measurement Book", })
+
+	@ApiOperation(value = "Get the list of Measurement Book(s) defined in the system.", notes = "Search and get Measurement Book(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params.  In case multiple parameters are passed Measurement Book(s) will be searched as an AND combination of all the parameters.  Maximum result size is restricted based on the maxlength of Notice as defined in MeasurementBookResponse model.  Search results will be sorted by the sortProperty Provided in the parameters ", response = MeasurementBookResponse.class, tags={ "Measurement Book", })
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Measurement Book(s) Retrieved Successfully", response = MeasurementBookResponse.class),
 			@ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
 
-	@RequestMapping(value = "/measurementbooks/_search", method = RequestMethod.POST)
-	ResponseEntity<MeasurementBookResponse> measurementbooksSearchPost(
-			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
-			@Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
-			@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
-			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of Ids of Measurement Book to get the Measurement Books") @RequestParam(value = "ids", required = false) List<String> ids,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of the Measurement Book Status") @RequestParam(value = "statuses", required = false) List<String> statuses,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of Work Order Numbers") @RequestParam(value = "workOrderNumbers", required = false) List<String> workOrderNumbers,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of MB Reference Numbers") @RequestParam(value = "mbRefNumbers", required = false) List<String> mbRefNumbers,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of LOA Numbers") @RequestParam(value = "loaNumbers", required = false) List<String> loaNumbers,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of Detailed Estimate Numbers") @RequestParam(value = "detailedEstimateNumbers", required = false) List<String> detailedEstimateNumbers,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of Work Identification Numbers") @RequestParam(value = "workIdentificationNumbers", required = false) List<String> workIdentificationNumbers,
-			@ApiParam(value = "Epoch time from when the Measurement Book is created") @RequestParam(value = "fromDate", required = false) Long fromDate,
-			@ApiParam(value = "Epoch time till when the Measurement Book is created") @RequestParam(value = "toDate", required = false) Long toDate,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of the Department for which Measurement Book belongs to") @RequestParam(value = "department", required = false) List<String> department,
-			@ApiParam(value = "The user who created the Measurement Book") @RequestParam(value = "createdBy", required = false) String createdBy,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of Names of the contractor to which Measurement Book belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
-			@Size(max = 50) @ApiParam(value = "Comma separated list of codes of the contractor to which Measurement Book belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes);
+	@RequestMapping(value = "/measurementbooks/_search",
+			method = RequestMethod.POST)
+	ResponseEntity<MeasurementBookResponse> measurementbooksSearchPost(@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo, @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize, @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber, @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy, @Size(max=50)@ApiParam(value = "Comma separated list of Ids of Measurement Book to get the Measurement Books") @RequestParam(value = "ids", required = false) List<String> ids, @Size(max=50)@ApiParam(value = "Comma separated list of the Measurement Book Status") @RequestParam(value = "statuses", required = false) List<String> statuses, @Size(max=50)@ApiParam(value = "Comma separated list of Work Order Numbers") @RequestParam(value = "workOrderNumbers", required = false) List<String> workOrderNumbers, @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "workOrderNumberLike", required = false) String workOrderNumberLike, @Size(max=50)@ApiParam(value = "Comma separated list of MB Reference Numbers") @RequestParam(value = "mbRefNumbers", required = false) List<String> mbRefNumbers, @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "mbRefNumberLike", required = false) String mbRefNumberLike, @Size(max=50)@ApiParam(value = "Comma separated list of LOA Numbers") @RequestParam(value = "loaNumbers", required = false) List<String> loaNumbers, @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "loaNumberLike", required = false) String loaNumberLike, @Size(max=50)@ApiParam(value = "Comma separated list of Detailed Estimate Numbers") @RequestParam(value = "detailedEstimateNumbers", required = false) List<String> detailedEstimateNumbers, @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "detailedEstimateNumberLike", required = false) String detailedEstimateNumberLike, @Size(max=50)@ApiParam(value = "Comma separated list of Work Identification Numbers") @RequestParam(value = "workIdentificationNumbers", required = false) List<String> workIdentificationNumbers, @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "workIdentificationNumbersLike", required = false) String workIdentificationNumbersLike, @ApiParam(value = "Epoch time from when the Measurement Book is created") @RequestParam(value = "fromDate", required = false) Long fromDate, @ApiParam(value = "Epoch time till when the Measurement Book is created") @RequestParam(value = "toDate", required = false) Long toDate, @Size(max=50)@ApiParam(value = "Comma separated list of the Department for which Measurement Book belongs to") @RequestParam(value = "department", required = false) List<String> department, @ApiParam(value = "The user who created the Measurement Book") @RequestParam(value = "createdBy", required = false) String createdBy, @Size(max=50)@ApiParam(value = "Comma separated list of Names of the contractor to which Measurement Book belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames, @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "contractorNameLike", required = false) String contractorNameLike, @Size(max=50)@ApiParam(value = "Comma separated list of codes of the contractor to which Measurement Book belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes, @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "contractorCodeLike", required = false) String contractorCodeLike, @ApiParam(value = "if this value is true then API returns all the part rated MBs. If this values is false then API returns all the non part rated MBs. If no value then it returns all the MBs.") @RequestParam(value = "isPartRate", required = false) Boolean isPartRate, @ApiParam(value = "if this value is true, API returns all the MBs where bill is created. if this values is false, API returns all the MBs where bill is not created. If no value then it returns all the MBs.") @RequestParam(value = "isBillCreated", required = false) Boolean isBillCreated);
 
-	@ApiOperation(value = "Update existing Measurement Book(s).", notes = "To update existing Measurement Book in the system. API supports bulk updation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Measurement Book, please pass array with one Measurement Book object.  In update fields can be modified based on confguration defined in the system i.e., configuration for allowing the workflow users to edit the Measurement Book details.   If configuration says not allowed to edit during the workflow then all the fields are disabled except the Workflow details and the fields which needs to be captured at different status are enabled. Only the creator can edit all the fields when the Measurement Book in creator inbox(in Rejected status) or in drafts.   Auditing should be in place to keep track of the changes edited during the workflow.   ", response = MeasurementBookResponse.class, tags = {
-			"Measurement Book", })
+
+	@ApiOperation(value = "Update existing Measurement Book(s).", notes = "To update existing Measurement Book in the system. API supports bulk updation with max limit as defined in the Measurement Book Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Measurement Book, please pass array with one Measurement Book object.  In update fields can be modified based on confguration defined in the system i.e., configuration for allowing the workflow users to edit the Measurement Book details.   If configuration says not allowed to edit during the workflow then all the fields are disabled except the Workflow details and the fields which needs to be captured at different status are enabled. Only the creator can edit all the fields when the Measurement Book in creator inbox(in Rejected status) or in drafts.   Auditing should be in place to keep track of the changes edited during the workflow.   ", response = MeasurementBookResponse.class, tags={ "Measurement Book", })
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Measurement Book(s) updated successfully", response = MeasurementBookResponse.class),
 			@ApiResponse(code = 400, message = "Measurement Book(s) updation failed", response = ErrorRes.class) })
 
-	@RequestMapping(value = "/measurementbooks/_update", method = RequestMethod.POST)
-	ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
-			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
+	@RequestMapping(value = "/measurementbooks/_update",
+			method = RequestMethod.POST)
+	ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data." ,required=true )  @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
 
 }

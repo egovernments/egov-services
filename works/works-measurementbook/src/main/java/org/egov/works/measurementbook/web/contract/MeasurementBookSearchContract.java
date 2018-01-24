@@ -66,4 +66,8 @@ public class MeasurementBookSearchContract {
     private String workIdentificationNumberLike;
 
     private List<String> statuses;
+
+    private Boolean isPartRate;
+
+    private Boolean isBillCreated;
 }

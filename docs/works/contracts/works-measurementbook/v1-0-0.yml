@@ -280,6 +280,18 @@ paths:
           required: false
           allowEmptyValue: true
           description: Matches exact or like string given regardless of case-sensitive.
+        - name: isPartRate
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true then API returns all the part rated MBs. If this values is false then API returns all the non part rated MBs. If no value then it returns all the MBs.
+        - name: isBillCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the MBs where bill is created. if this values is false, API returns all the MBs where bill is not created. If no value then it returns all the MBs.
       responses:
         200:
           description: Measurement Book(s) Retrieved Successfully
@@ -618,7 +630,11 @@ definitions:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of when the bills created  
+        description: Epoch time of when the bills created
+      isPartRate:
+        type: boolean
+        description: If any one of MeasurementBookDetail has Part Rate then MeasurementBook marked as part rated.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       deleted:
@@ -967,7 +983,7 @@ definitions:
         $ref: '#/definitions/MeasurementBook'
         description: Measurement Book Reference in the MB for Contractor Bill
       contractorBill:
-	#$ref: '#/definitions/ContractorBill'
+	    #$ref: '#/definitions/ContractorBill'
         type: string
         description: Bill reference in the MB for Contractor Bill
       auditDetails:
@@ -985,8 +1001,4 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
-
-
-
-
 

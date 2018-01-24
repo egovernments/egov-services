@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: works-measurementbook-create-update
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_measurementbook(id, tenantid, mbrefno, contractorcomments, mbdate, mbissueddate, mbabstract, frompageno, topageno, letterofacceptanceestimate, revisionloa, status, islegacymb, mbamount, approveddate, stateid, cancellationreason, cancellationremarks, billnumber, billdate, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET mbrefno=EXCLUDED.mbrefno, contractorcomments=EXCLUDED.contractorcomments, mbdate=EXCLUDED.mbdate, mbissueddate=EXCLUDED.mbissueddate, mbabstract=EXCLUDED.mbabstract, frompageno=EXCLUDED.frompageno, topageno=EXCLUDED.topageno, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, revisionloa=EXCLUDED.revisionloa, status=EXCLUDED.status, islegacymb=EXCLUDED.islegacymb, mbamount=EXCLUDED.mbamount, approveddate=EXCLUDED.approveddate, stateid=EXCLUDED.stateid, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, billnumber=EXCLUDED.billnumber, billdate=EXCLUDED.billdate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
+    - query: INSERT INTO egw_measurementbook(id, tenantid, mbrefno, contractorcomments, mbdate, mbissueddate, mbabstract, frompageno, topageno, letterofacceptanceestimate, revisionloa, status, islegacymb, mbamount, approveddate, stateid, cancellationreason, cancellationremarks, billnumber, billdate, isPartRate, createdby, createdtime, lastmodifiedby, lastmodifiedtime, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET mbrefno=EXCLUDED.mbrefno, contractorcomments=EXCLUDED.contractorcomments, mbdate=EXCLUDED.mbdate, mbissueddate=EXCLUDED.mbissueddate, mbabstract=EXCLUDED.mbabstract, frompageno=EXCLUDED.frompageno, topageno=EXCLUDED.topageno, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, revisionloa=EXCLUDED.revisionloa, status=EXCLUDED.status, islegacymb=EXCLUDED.islegacymb, mbamount=EXCLUDED.mbamount, approveddate=EXCLUDED.approveddate, stateid=EXCLUDED.stateid, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, billnumber=EXCLUDED.billnumber, billdate=EXCLUDED.billdate, isPartRate=EXCLUDED.isPartRate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime, deleted=EXCLUDED.deleted;
       basePath: $.measurementBooks.*
       jsonMaps:
 
@@ -53,6 +53,8 @@ serviceMaps:
        - jsonPath: $.measurementBooks.*.billnumber
 
        - jsonPath: $.measurementBooks.*.billdate
+
+       - jsonPath: $.measurementBooks.*.isPartRate
        
        - jsonPath: $.measurementBooks.*.auditDetails.createdBy
        

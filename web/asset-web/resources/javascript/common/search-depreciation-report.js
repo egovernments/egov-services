@@ -125,8 +125,14 @@ class SearchDepreciationReport extends React.Component {
     $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
     var count =0 , _this = this, _state = {};
     var checkCountNCall = function(key, res) {
-      _state[key] = res;
-      // console.log(res);
+      if(key == 'financialYears'){
+          let finYears = res && res.sort(function (left, right) {
+              return moment.utc(right.startingDate).diff(moment.utc(left.startingDate))
+          });
+          _state[key] = finYears;
+      }else{
+          _state[key] = res;
+      }
       if(count == 0)
         _this.setInitialState(_state);
     }
@@ -189,7 +195,7 @@ close() {
     let {handleChange, search, handleClick}=this;
     let {assetCategoryType,assetCategory,department,parent,assetName,assetCode,financialYear}=this.state.searchSet;
     let {isSearchClicked,list,departments,assetCategories,financialYears,assetId}=this.state;
-    console.log(this.state.searchSet);
+    // console.log(this.state.financialYears);
       const renderOption = function(list) {
           if(list) {
 

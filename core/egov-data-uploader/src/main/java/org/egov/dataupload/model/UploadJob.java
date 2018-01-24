@@ -95,6 +95,9 @@ public class UploadJob   {
   
   @JsonProperty("localFilePath")
   private String localFilePath;
+  
+  @JsonProperty("reasonForFailure")
+  private String reasonForFailure;
 
 
 }

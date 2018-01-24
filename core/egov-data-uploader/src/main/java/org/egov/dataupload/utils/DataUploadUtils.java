@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.UploadDefinition;
 import org.egov.tracer.model.CustomException;
@@ -134,6 +135,92 @@ public class DataUploadUtils {
 		
 	}
 	
+	@SuppressWarnings({ "deprecation", "static-access" })
+	public List<List<Object>> readExcelFile(XSSFSheet sheet, List<Object> coloumnHeaders){
+		logger.info("entering read excel for xlsx...");
+        List<List<Object>> excelData = new ArrayList<>(); 
+        int rowStart = sheet.getFirstRowNum();
+        int rowEnd = sheet.getLastRowNum();
+        int totalRows = 0;
+        logger.info("start row of the sheet: "+rowStart);
+        logger.info("last row of the sheet: "+rowEnd);
+        for (int rowNum = rowStart; rowNum < (rowEnd + 1); rowNum++) {
+            List<Object> dataList = new ArrayList<>();
+           logger.info("Parsing row: "+rowNum);
+           Row row = sheet.getRow(rowNum);
+           if (null == row) {
+        	  logger.info("empty row: row - "+rowNum);
+              continue;
+           }
+           int lastColumn = 0;
+           if(rowNum == 0) {
+        	   totalRows = row.getLastCellNum();
+        	   lastColumn = totalRows;
+           }else {
+        	   lastColumn = Math.max(totalRows, row.getLastCellNum());
+           }
+           logger.info("last column of this row: "+lastColumn);
+           for (int colNum = 0; colNum < lastColumn; colNum++) {
+              Cell cell = row.getCell(colNum, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL );
+              if(null == cell) {
+          		    logger.debug("empty cell");
+	            	dataList.add(null);
+              }else if(0 == cell.getRowIndex()) {
+	            	coloumnHeaders.add(cell.getStringCellValue());
+	          }else {
+		            if(!isCellEmpty(cell)) {
+		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+			            		logger.debug("date: "+cell.getDateCellValue().getTime());
+			            		dataList.add(cell.getDateCellValue().getTime());
+		            	    }else {
+			            		logger.debug("numeric: "+cell.getNumericCellValue());
+		            	    	dataList.add(cell.getNumericCellValue());
+		            	    }
+		            	}
+		            	else if(cell.CELL_TYPE_STRING == cell.getCellType()) {
+		            		if(cell.getStringCellValue().equals("NA") || 
+		            				cell.getStringCellValue().equals("N/A") || cell.getStringCellValue().equals("na")) {
+			            		dataList.add(null);		            		
+			            	}else if(validateDate(cell.getStringCellValue())){
+			            		logger.debug("date - string: "+cell.getStringCellValue());
+			            		try {
+				            		DateFormat format = new SimpleDateFormat("dd/MM/YYYY");
+				            		Date date = format.parse(cell.getStringCellValue());
+			            			dataList.add(date.getTime());
+			            		}catch(Exception e) {
+			            			logger.info("Couldn't parse date", e);
+			            			dataList.add(cell.getStringCellValue());
+			            		}
+		            		}else if(!cell.getStringCellValue().trim().isEmpty()){
+			            		logger.debug("string: "+cell.getStringCellValue());
+		            			dataList.add(cell.getStringCellValue());
+		            		}else{
+			            		dataList.add(null);
+		            		}
+		            	}
+		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
+		            		logger.debug("boolean: "+cell.getBooleanCellValue());
+		            		dataList.add(cell.getBooleanCellValue());
+
+		            	}
+		            }	
+	          }
+           }
+           logger.info("dataList: "+dataList);
+           if(!dataList.isEmpty()) {
+              	excelData.add(dataList);
+           }
+           
+        }
+	    logger.info("coloumnHeaders: "+coloumnHeaders);
+	    logger.info("excelData: "+excelData);
+
+        
+        return excelData;
+
+		
+	}
 	public boolean validateDate(String date) {
 		boolean isValid = false;
 		String dateRegex = "([0-9]{2})\\\\([0-9]{2})\\\\([0-9]{4})";

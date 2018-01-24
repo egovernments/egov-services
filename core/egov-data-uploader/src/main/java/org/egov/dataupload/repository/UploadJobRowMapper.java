@@ -29,6 +29,7 @@ public class UploadJobRowMapper implements RowMapper<UploadJob>{
 		uploadJob.setStatus(StatusEnum.fromValue(rs.getString("status")));
 		uploadJob.setResponseFilePath(rs.getString("responsefile_path"));
 		uploadJob.setRequestFileName(rs.getString("file_name"));
+		uploadJob.setReasonForFailure(rs.getString("reason_for_failure"));
 	
 
 		return uploadJob;

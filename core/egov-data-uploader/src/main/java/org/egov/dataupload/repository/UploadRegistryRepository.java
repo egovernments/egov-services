@@ -42,11 +42,11 @@ public class UploadRegistryRepository {
 	}
 	
 	public void updateJob(UploaderRequest uploaderRequest){
-		String query="Update EGDU_UPLOADREGISTRY set START_TIME=?, END_TIME=?, TOTAL_ROWS=?, SUCCESS_ROWS=?, FAILED_ROWS=?, RESPONSEFILE_PATH=?, STATUS=? where CODE=? AND TENANTID=?";
+		String query="Update EGDU_UPLOADREGISTRY set START_TIME=?, END_TIME=?, TOTAL_ROWS=?, SUCCESS_ROWS=?, FAILED_ROWS=?, RESPONSEFILE_PATH=?, STATUS=?, REASON_FOR_FAILURE = ? where CODE=? AND TENANTID=?";
 		UploadJob uploadJob = uploaderRequest.getUploadJobs().get(0);
 		try{
 			jdbcTemplate.update(query, new Object[] {uploadJob.getStartTime(), uploadJob.getEndTime(), uploadJob.getTotalRows(), uploadJob.getSuccessfulRows(),
-					uploadJob.getFailedRows(), uploadJob.getResponseFilePath(), uploadJob.getStatus().toString(), uploadJob.getCode(), uploadJob.getTenantId()});
+					uploadJob.getFailedRows(), uploadJob.getResponseFilePath(), uploadJob.getStatus().toString(), uploadJob.getReasonForFailure(), uploadJob.getCode(), uploadJob.getTenantId()});
 		}catch(Exception e){
 			logger.error("Exception while updating job in db for job code: "+uploadJob.getCode(), e);
 		}

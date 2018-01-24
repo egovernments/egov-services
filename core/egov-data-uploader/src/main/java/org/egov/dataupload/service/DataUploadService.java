@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.dataupload.model.Definition;
 import org.egov.dataupload.model.Defs;
@@ -106,14 +108,22 @@ public class DataUploadService {
         List<Object> coloumnHeaders = new ArrayList<>();
 	    try{
 		    MultipartFile file = dataUploadUtils.getExcelFile(uploadJob.getLocalFilePath());
-			HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
-	        HSSFSheet sheet = wb.getSheetAt(0);
-	        excelData = dataUploadUtils.readExcelFile(sheet, coloumnHeaders);
+		    if(uploadJob.getRequestFileName().endsWith(".xlsx")) {
+		    	logger.info(".xlsx file!");
+				XSSFWorkbook wb = new XSSFWorkbook(file.getInputStream());
+		        XSSFSheet sheet = wb.getSheetAt(0);
+		        excelData = dataUploadUtils.readExcelFile(sheet, coloumnHeaders);
+		    }else {
+		    	logger.info(".xls file!");
+				HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
+		        HSSFSheet sheet = wb.getSheetAt(0);
+		        excelData = dataUploadUtils.readExcelFile(sheet, coloumnHeaders);
+		    }
 	    }catch(Exception e){
 	    	logger.error("Couldn't parse excel sheet", e);
 	    	logger.error("Jumping to failed state...");
     		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
-    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
+    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());uploadJob.setReasonForFailure(e.getMessage());
     		uploadRegistryRepository.updateJob(uploaderRequest);
     		
 			dataUploadUtils.clearInternalDirectory();
@@ -132,10 +142,10 @@ public class DataUploadService {
         	}
 
         }catch(Exception e){
-        	logger.info("Exception while proccessing data: ",e);
+	    	logger.error("Couldn't parse excel sheet", e);
 	    	logger.error("Jumping to failed state...");
     		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
-    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
+    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());uploadJob.setReasonForFailure(e.getMessage());
     		uploadRegistryRepository.updateJob(uploaderRequest);
     		
 			dataUploadUtils.clearInternalDirectory();

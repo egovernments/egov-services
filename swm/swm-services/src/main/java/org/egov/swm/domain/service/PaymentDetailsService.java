@@ -82,9 +82,10 @@ public class PaymentDetailsService {
         List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
         if (!paymentDetailsPage.getPagedData().isEmpty()) {
-            if (!isEmpty(paymentDetailsSearch.getVendorNo()))
+            if (!isEmpty(paymentDetailsSearch.getVendorNo())){
                 paymentDetailsList = filterVendors(paymentDetailsPage.getPagedData(), paymentDetailsSearch.getVendorNo());
-            paymentDetailsPage.setPagedData(paymentDetailsList);
+                paymentDetailsPage.setPagedData(paymentDetailsList);
+            }
         }
 
         return paymentDetailsPage;

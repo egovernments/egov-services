@@ -244,7 +244,8 @@ public class LetterOfAcceptanceValidator {
 
     private void validateLOA(HashMap<String, String> messages,
             LetterOfAcceptance letterOfAcceptance, final RequestInfo requestInfo, final DetailedEstimate detailedEstimate) {
-        if (letterOfAcceptance.getLoaDate() > new Date().getTime()) {
+        if (letterOfAcceptance.getLoaDate() != null
+                && letterOfAcceptance.getLoaDate() > new Date().getTime()) {
             messages.put(Constants.KEY_FUTUREDATE_LOADATE, Constants.MESSAGE_FUTUREDATE_LOADATE);
         }
 

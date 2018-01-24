@@ -111,6 +111,8 @@ public class LetterOfAcceptanceService {
                     letterOfAcceptance.setLoaNumber(workOrderUtils.getCityCode(letterOfAcceptance.getTenantId(),
                             letterOfAcceptanceRequest.getRequestInfo()) + "/" + propertiesManager.getLoaNumberPrefix() + "/"
                             + detailedEstimate.getDepartment().getCode() + loaNumber);
+                    letterOfAcceptance.setLoaDate(new Date().getTime());
+                    
                 }
             }
 

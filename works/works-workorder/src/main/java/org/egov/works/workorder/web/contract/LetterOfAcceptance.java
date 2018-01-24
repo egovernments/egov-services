@@ -184,7 +184,7 @@ public class LetterOfAcceptance {
      * @return loaDate
      **/
     @ApiModelProperty(required = true, value = "Epoch time of LOA Date. Default the current date for new LOA and do not allow to modify. This field is user entered for spillover LOA. Allowed to edit during rejected status or drafts for LOA. Future date is not allowed to enter in this field. LOA date should be on or after the L1 Tender Finalized status date of Detailed Estimate.")
-    @NotNull
+//    @NotNull
 
     public Long getLoaDate() {
         return loaDate;
@@ -205,7 +205,7 @@ public class LetterOfAcceptance {
      * @return loaNumber
      **/
     @ApiModelProperty(required = true, value = "Unique LOA Number of the Letter Of Acceptance. If the LOA is spillover then the LOA number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover LOA.")
-    @NotNull
+//    @NotNull
 
     @Pattern(regexp = "[0-9a-zA-Z-/]+")
     @Size(max = 50)

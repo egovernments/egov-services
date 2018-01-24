@@ -46,6 +46,7 @@ public class Vehicle {
     private FuelType fuelType = null;
 
     @NotNull
+    @Max(value = 100, message = "Operators Required shall be between 0 and 100")
     @JsonProperty("operatorsReq")
     private Long operatorsReq = null;
 

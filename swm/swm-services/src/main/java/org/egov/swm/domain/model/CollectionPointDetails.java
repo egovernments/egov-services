@@ -1,7 +1,6 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
@@ -39,8 +38,7 @@ public class CollectionPointDetails {
     @NotNull
     @JsonProperty("garbageEstimate")
     @Digits(fraction = 2, integer = 3, message = "garbageEstimate shall be with 2 decimal points")
-    @DecimalMin(value = "0", message = "Garbage estimate shall be greater then 0 and greater then or equel to 100 Tons")
-    @DecimalMax(value = "100", message = "Garbage estimate shall be greater then 0 and greater then or equel to 100 Tons")
+    @DecimalMax(value = "100", message = "Garbage estimate shall be greater then 0 and less then or equel to 100 Tons")
     private Double garbageEstimate = null;
 
     @Length(min = 0, max = 300, message = "Value of description shall be greater then 0 and greater then or equel to 300 ")

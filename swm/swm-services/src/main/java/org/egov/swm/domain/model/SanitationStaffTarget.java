@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -59,8 +58,7 @@ public class SanitationStaffTarget {
 
     @NotNull
     @Digits(fraction = 2, integer = 3, message = "targeted Garbage shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "targeted Garbage shall be between 1 and 500000 Tons")
-    @DecimalMax(value = "500000", message = "targeted Garbage shall be between 1 and 500000 Tons")
+    @DecimalMax(value = "500000", message = "Targeted garbage shall be greater then 0 and less then or equel to 500000 Tons")
     @JsonProperty("targetedGarbage")
     private Double targetedGarbage = null;
 

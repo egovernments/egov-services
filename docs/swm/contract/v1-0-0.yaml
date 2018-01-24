@@ -1983,7 +1983,7 @@ definitions:
           format: int64
           description: number Of Persons Required to operate the Vehicle. Shall be >= 0
           minimum: 0
-          maximum: 15
+          maximum: 100
           example: 3
         driver:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
@@ -2997,7 +2997,7 @@ definitions:
           type: number
           format: double
           description: Expected Garbage (in tonnes) to be collected by vehicle.
-          minimum: 1
+          minimum: 0
           maximum: 75
       required:
       - tenantId
@@ -3071,7 +3071,7 @@ definitions:
           type: number
           format: double
           description: targeted Garbage (in tonnes) to be assigned to Sanitatary Staff. If process selected is segregation, this filed will be autofilled (Wet waste + Dry waste)
-          minimum: 1
+          minimum: 0
           maximum: 500000
         wetWaste: 
           type: number
@@ -3736,6 +3736,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

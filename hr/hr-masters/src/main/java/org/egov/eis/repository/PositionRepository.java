@@ -40,6 +40,11 @@
 
 package org.egov.eis.repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.eis.model.Position;
 import org.egov.eis.repository.builder.PositionQueryBuilder;
 import org.egov.eis.repository.rowmapper.IdsRowMapper;
@@ -50,97 +55,113 @@ import org.egov.eis.web.contract.PositionRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 public class PositionRepository {
 
-    public static final String INSERT_POSITION_QUERY = "INSERT INTO egeis_position" +
-            " (id, name, deptDesigId, isPostOutsourced, active, tenantId)" +
-            " VALUES (?, ?, ?, ?, ?, ?)";
+	public static final String INSERT_POSITION_QUERY = "INSERT INTO egeis_position"
+			+ " (id, name, deptDesigId, isPostOutsourced, active, tenantId)" + " VALUES (?, ?, ?, ?, ?, ?)";
 
-    public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ?, isPostOutsourced = ?" +
-            " WHERE id = ? AND tenantId = ?";
+	public static final String UPDATE_POSITION_QUERY = "UPDATE egeis_position SET active = ?, isPostOutsourced = ?"
+			+ " WHERE id = ? AND tenantId = ?";
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private PositionRowMapper positionRowMapper;
+	@Autowired
+	private PositionRowMapper positionRowMapper;
 
-    @Autowired
-    private IdsRowMapper idsRowMapper;
+	@Autowired
+	private IdsRowMapper idsRowMapper;
 
-    @Autowired
-    private PositionQueryBuilder positionQueryBuilder;
+	@Autowired
+	private PositionQueryBuilder positionQueryBuilder;
 
-    @Autowired
-    private DepartmentDesignationService departmentDesignationService;
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Position> findForCriteria(PositionGetRequest positionGetRequest) {
-        List<Object> preparedStatementValues = new ArrayList<Object>();
-        String queryStr = positionQueryBuilder.getQuery(positionGetRequest, preparedStatementValues);
-        List<Position> positions = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), positionRowMapper);
-        return positions;
-    }
+	@Autowired
+	private DepartmentDesignationService departmentDesignationService;
 
-    public List<Long> generateSequences(Integer noOfPositions) {
-        return jdbcTemplate.query("SELECT nextval('seq_egeis_position') AS id FROM generate_series(1, ?)",
-                new Object[]{noOfPositions}, idsRowMapper);
-    }
+	public List<Position> findForCriteria(PositionGetRequest positionGetRequest) {
+		Map<String, Object> preparedStatementValues = new HashMap<>();
+		String queryStr = positionQueryBuilder.getQuery(positionGetRequest, preparedStatementValues);
+		List<Position> positions = namedParameterJdbcTemplate.query(queryStr, preparedStatementValues,
+				positionRowMapper);
+		return positions;
+	}
 
-    public void create(PositionRequest positionRequest) {
-        List<Object[]> batchArgs = new ArrayList<>();
+	public List<Long> generateSequences(Integer noOfPositions) {
+		return jdbcTemplate.query("SELECT nextval('seq_egeis_position') AS id FROM generate_series(1, ?)",
+				new Object[] { noOfPositions }, idsRowMapper);
+	}
 
-        for (Position position : positionRequest.getPosition()) {
-            Long deptDesigId = position.getDeptdesig().getId();
-            Object[] positionRecord = {position.getId(), position.getName(),
-                    deptDesigId, position.getIsPostOutsourced(), position.getActive(), position.getTenantId()};
-            batchArgs.add(positionRecord);
-        }
+	public void create(PositionRequest positionRequest) {
+		List<Object[]> batchArgs = new ArrayList<>();
 
-        try {
-            jdbcTemplate.batchUpdate(INSERT_POSITION_QUERY, batchArgs);
-        } catch (DataAccessException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex.getMessage());
-        }
-    }
+		for (Position position : positionRequest.getPosition()) {
+			Long deptDesigId = position.getDeptdesig().getId();
+			Object[] positionRecord = { position.getId(), position.getName(), deptDesigId,
+					position.getIsPostOutsourced(), position.getActive(), position.getTenantId() };
+			batchArgs.add(positionRecord);
+		}
 
-    public void update(PositionRequest positionRequest) {
-        List<Object[]> batchArgs = new ArrayList<>();
+		try {
+			jdbcTemplate.batchUpdate(INSERT_POSITION_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
 
-        for (Position position : positionRequest.getPosition()) {
-            Object[] positionRecord = {position.getActive(), position.getIsPostOutsourced(), position.getId(), position.getTenantId()};
-            batchArgs.add(positionRecord);
-        }
+	public void update(PositionRequest positionRequest) {
+		List<Object[]> batchArgs = new ArrayList<>();
 
-        try {
-            jdbcTemplate.batchUpdate(UPDATE_POSITION_QUERY, batchArgs);
-        } catch (DataAccessException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex.getMessage());
-        }
-    }
+		for (Position position : positionRequest.getPosition()) {
+			Object[] positionRecord = { position.getActive(), position.getIsPostOutsourced(), position.getId(),
+					position.getTenantId() };
+			batchArgs.add(positionRecord);
+		}
 
-    public String generatePositionNameWithMultiplePosition(String name, Long deptDesigId, String tenantId, int index) {
-        String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id))::TEXT, 3, '0') FROM egeis_position" +
-                " WHERE deptDesigId = " + deptDesigId + " AND tenantId = '" + tenantId + "'";
+		try {
+			jdbcTemplate.batchUpdate(UPDATE_POSITION_QUERY, batchArgs);
+		} catch (DataAccessException ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
 
-        String result = String.valueOf(jdbcTemplate.queryForObject(seqQuery, String.class));
-        Integer integer = Integer.parseInt(result.split("_")[2]) + index;
+	public Integer getTotalDBRecords(PositionGetRequest positionGetRequest) {
+		Map<String, Object> namedParamsForMatchingRecords = new HashMap<>();
+		String queryStrForMatchingRecords = positionQueryBuilder.getQuery(positionGetRequest,
+				namedParamsForMatchingRecords);
 
-        if (integer < 10)
-            result = result.split("_")[0] + "_" + result.split("_")[1] + "_00" + integer;
-        else if (integer >= 10 && integer < 100)
-            result = result.split("_")[0] + "_" + result.split("_")[1] + "_0" + integer;
-        else
-            result = result.split("_")[0] + "_" + result.split("_")[1] + "_" + integer;
-        return result;
-    }
+		String queryForTotalMatchingRecords = "SELECT count(DISTINCT p_id) FROM (" + queryStrForMatchingRecords
+				+ ") AS pos";
+		log.debug("queryForTotalMatchingRecords :: " + queryForTotalMatchingRecords);
+		return namedParameterJdbcTemplate.queryForObject(queryForTotalMatchingRecords, namedParamsForMatchingRecords,
+				Integer.class);
+	}
 
+	public String generatePositionNameWithMultiplePosition(String name, Long deptDesigId, String tenantId, int index) {
+		String seqQuery = "SELECT '" + name + "'::TEXT || LPAD((count(id))::TEXT, 3, '0') FROM egeis_position"
+				+ " WHERE deptDesigId = " + deptDesigId + " AND tenantId = '" + tenantId + "'";
+
+		String result = String.valueOf(jdbcTemplate.queryForObject(seqQuery, String.class));
+		Integer integer = Integer.parseInt(result.split("_")[2]) + index;
+
+		if (integer < 10)
+			result = result.split("_")[0] + "_" + result.split("_")[1] + "_00" + integer;
+		else if (integer >= 10 && integer < 100)
+			result = result.split("_")[0] + "_" + result.split("_")[1] + "_0" + integer;
+		else
+			result = result.split("_")[0] + "_" + result.split("_")[1] + "_" + integer;
+		return result;
+	}
 
 }

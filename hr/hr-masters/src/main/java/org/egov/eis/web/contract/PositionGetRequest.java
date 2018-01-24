@@ -77,9 +77,9 @@ public class PositionGetRequest {
 
 	@Min(1)
 	@Max(500)
-	private Short pageSize;
+	private Integer pageSize;
 
-	private Short pageNumber;
+	private Integer pageNumber;
 	
 	private Integer offset; 
 }

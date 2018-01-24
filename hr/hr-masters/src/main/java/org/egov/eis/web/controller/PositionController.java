@@ -40,11 +40,21 @@
 
 package org.egov.eis.web.controller;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.Position;
 import org.egov.eis.service.PositionService;
-import org.egov.eis.web.contract.*;
+import org.egov.eis.web.contract.PositionBulkRequest;
+import org.egov.eis.web.contract.PositionGetRequest;
+import org.egov.eis.web.contract.PositionRequest;
+import org.egov.eis.web.contract.PositionResponse;
+import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandlers.ErrorHandler;
 import org.egov.eis.web.errorhandlers.InvalidDataException;
@@ -54,10 +64,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/positions")
@@ -80,7 +92,7 @@ public class PositionController {
 			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
 			BindingResult requestBodyBindingResult) {
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
-		Integer pageSize = 0 ;
+		Integer pageSize = 0;
 		// validate input params
 		if (modelAttributeBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
@@ -90,10 +102,7 @@ public class PositionController {
 		if (requestBodyBindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
 		}
-		
-		if(positionGetRequest.getPageSize()!=null && !positionGetRequest.getPageSize().equals(""))
-		   pageSize = Integer.parseInt(positionGetRequest.getPageSize().toString());
-		
+
 		// Call service
 		List<Position> positionsList = null;
 		try {
@@ -103,11 +112,41 @@ public class PositionController {
 			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
 		}
 
-		return getSuccessResponse(positionsList, pageSize , requestInfo);
+		return getSuccessResponse(positionsList, requestInfo);
+	}
+
+	@PostMapping("_paginatedsearch")
+	@ResponseBody
+	public ResponseEntity<?> paginatedSearch(@ModelAttribute @Valid PositionGetRequest positionGetRequest,
+			BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		Integer pageSize = 0;
+		// validate input params
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		}
+
+		// validate input params
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		}
+
+		// Call service
+		Map<String, Object> positionMap = null;
+		try {
+			positionMap = positionService.getPaginatedPosistions(positionGetRequest, requestInfo);
+		} catch (Exception exception) {
+			logger.error("Error while processing request " + positionGetRequest, exception);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+		}
+
+		return getPaginatedSuccessResponse(positionMap, requestInfo);
 	}
 
 	/**
-	 * Maps Post Requests for _create & returns ResponseEntity of either PositionResponse type or ErrorResponse type
+	 * Maps Post Requests for _create & returns ResponseEntity of either
+	 * PositionResponse type or ErrorResponse type
 	 * 
 	 * @param positionRequest
 	 * @param bindingResult
@@ -123,15 +162,15 @@ public class PositionController {
 		try {
 			return positionService.createPosition(positionRequest);
 		} catch (InvalidDataException ex) {
-			return	 errHandler.getErrorInvalidData(ex, positionRequest.getRequestInfo());
-		}
-		catch (Exception ex) {
-			return	 errHandler.getResponseEntityForUnexpectedErrors(positionRequest.getRequestInfo());
+			return errHandler.getErrorInvalidData(ex, positionRequest.getRequestInfo());
+		} catch (Exception ex) {
+			return errHandler.getResponseEntityForUnexpectedErrors(positionRequest.getRequestInfo());
 		}
 	}
 
 	/**
-	 * Maps Post Requests for _bulkcreate & returns ResponseEntity of either PositionResponse type or ErrorResponse type
+	 * Maps Post Requests for _bulkcreate & returns ResponseEntity of either
+	 * PositionResponse type or ErrorResponse type
 	 *
 	 * @param positionBulkRequest
 	 * @param bindingResult
@@ -139,12 +178,14 @@ public class PositionController {
 	 */
 	@PostMapping("_bulkcreate")
 	@ResponseBody
-	public ResponseEntity<?> bulkCreate(@RequestBody PositionBulkRequest positionBulkRequest, BindingResult bindingResult) {
+	public ResponseEntity<?> bulkCreate(@RequestBody PositionBulkRequest positionBulkRequest,
+			BindingResult bindingResult) {
 		if (bindingResult.hasErrors())
-			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, positionBulkRequest.getRequestInfo());
+			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult,
+					positionBulkRequest.getRequestInfo());
 
-		try{
-		return positionService.createBulkPositions(positionBulkRequest);
+		try {
+			return positionService.createBulkPositions(positionBulkRequest);
 		} catch (InvalidDataException ex) {
 			return errHandler.getErrorInvalidData(ex, positionBulkRequest.getRequestInfo());
 		} catch (Exception ex) {
@@ -153,7 +194,8 @@ public class PositionController {
 	}
 
 	/**
-	 * Maps Post Requests for _update & returns ResponseEntity of either PositionResponse type or ErrorResponse type
+	 * Maps Post Requests for _update & returns ResponseEntity of either
+	 * PositionResponse type or ErrorResponse type
 	 * 
 	 * @param positionRequest
 	 * @param bindingResult
@@ -174,14 +216,12 @@ public class PositionController {
 	 * @param positionsList
 	 * @return
 	 */
-	private ResponseEntity<?> getSuccessResponse(List<Position> positionsList, Integer pageSize, RequestInfo requestInfo) {
+	private ResponseEntity<?> getSuccessResponse(List<Position> positionsList,  RequestInfo requestInfo) {
 		PositionResponse positionRes = new PositionResponse();
 		positionRes.setPosition(positionsList);
 		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		positionRes.setResponseInfo(responseInfo);
-		positionRes.setPageSize(pageSize);
-		positionRes.setOffset(positionsList.size());
 		return new ResponseEntity<PositionResponse>(positionRes, HttpStatus.OK);
 
 	}
@@ -201,6 +241,16 @@ public class PositionController {
 		}
 
 		return null;
+	}
+
+	public ResponseEntity<?> getPaginatedSuccessResponse(Map<String, Object> requestMap, RequestInfo requestInfo) {
+		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("ResponseInfo", responseInfo);
+		requestMap.forEach(response::put);
+
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
 }

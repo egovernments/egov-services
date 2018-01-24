@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class PositionQueryBuilder {
@@ -68,7 +69,7 @@ public class PositionQueryBuilder {
 			+ " JOIN egeis_designation des ON depDes.designationid = des.id AND des.tenantId = p.tenantId";
 
 	@SuppressWarnings("rawtypes")
-	public String getQuery(PositionGetRequest positionGetRequest, List preparedStatementValues) {
+	public String getQuery(PositionGetRequest positionGetRequest,  Map<String, Object> preparedStatementValues) {
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
 		addWhereClause(selectQuery, preparedStatementValues, positionGetRequest);
@@ -80,7 +81,7 @@ public class PositionQueryBuilder {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
+	private void addWhereClause(StringBuilder selectQuery,  Map<String, Object> preparedStatementValues,
 			PositionGetRequest positionGetRequest) {
 
 		if (positionGetRequest.getId() == null && positionGetRequest.getName() == null
@@ -93,8 +94,8 @@ public class PositionQueryBuilder {
 
 		if (positionGetRequest.getTenantId() != null) {
 			isAppendAndClause = true;
-			selectQuery.append(" p.tenantId = ?");
-			preparedStatementValues.add(positionGetRequest.getTenantId());
+			selectQuery.append(" p.tenantId = :tenantId");
+			preparedStatementValues.put("tenantId",positionGetRequest.getTenantId());
 		}
 
 		if (positionGetRequest.getId() != null && !positionGetRequest.getId().isEmpty()) {
@@ -104,26 +105,26 @@ public class PositionQueryBuilder {
 
 		if (positionGetRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" p.name = ?");
-			preparedStatementValues.add(positionGetRequest.getName());
+			selectQuery.append(" p.name = :name");
+			preparedStatementValues.put("name",positionGetRequest.getName());
 		}
 
 		if (positionGetRequest.getDepartmentId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" depDes.departmentId = ?");
-			preparedStatementValues.add(positionGetRequest.getDepartmentId());
+			selectQuery.append(" depDes.departmentId = :deptId");
+			preparedStatementValues.put("deptId",positionGetRequest.getDepartmentId());
 		}
 
 		if (positionGetRequest.getDesignationId() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" depDes.designationId = ?");
-			preparedStatementValues.add(positionGetRequest.getDesignationId());
+			selectQuery.append(" depDes.designationId = :desigId");
+			preparedStatementValues.put("desigId",positionGetRequest.getDesignationId());
 		}
 
 		if (positionGetRequest.getActive() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" p.active = ?");
-			preparedStatementValues.add(positionGetRequest.getActive());
+			selectQuery.append(" p.active = :active");
+			preparedStatementValues.put("active",positionGetRequest.getActive());
 		}
 	}
 
@@ -136,21 +137,21 @@ public class PositionQueryBuilder {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
+	private void addPagingClause(StringBuilder selectQuery, Map<String, Object> preparedStatementValues,
 			PositionGetRequest positionGetRequest) {
 		// handle limit(also called pageSize) here
-		selectQuery.append(" LIMIT ?");
+		selectQuery.append(" LIMIT :pageSize");
 		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
 		if (positionGetRequest.getPageSize() != null)
 			pageSize = positionGetRequest.getPageSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+		preparedStatementValues.put("pageSize", pageSize); // Set limit to pagesize
 
 		// handle offset here
-		selectQuery.append(" OFFSET ?");
+		selectQuery.append(" OFFSET :pageNumber");
 		int pageNumber = 0; // Default pageNo is zero meaning first page
 		if (positionGetRequest.getPageNumber() != null)
 			pageNumber = positionGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
+		preparedStatementValues.put("pageNumber",pageNumber * pageSize); // Set offset to pageNo * pageSize
 	}
 
 	/**

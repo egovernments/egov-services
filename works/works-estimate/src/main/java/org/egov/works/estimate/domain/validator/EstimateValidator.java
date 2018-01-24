@@ -1121,6 +1121,10 @@ public class EstimateValidator {
                     messages.put(Constants.KEY_ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED,
                             Constants.MESSAGE_ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED);
 
+                if(detailedEstimateCreated && estimateTechnicalSanction.getTechnicalSanctionDate() == null)
+                    messages.put(Constants.KEY_ESTIMATE_TECHNICALSANCTION_DATE_REQUIRED,
+                            Constants.MESSAGE_ESTIMATE_TECHNICALSANCTION_DATE_REQUIRED);
+
                 if (estimateTechnicalSanction.getTechnicalSanctionDate() != null
                         && estimateTechnicalSanction.getTechnicalSanctionDate() > new Date().getTime())
                     messages.put(Constants.KEY_TECHNICAL_SANCTION_DATE_FUTUREDATE,

@@ -205,6 +205,11 @@ public class DetailedEstimateService {
                     detailedEstimate.setStatus(status);
                 }
             }
+
+            /*if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CREATED) ||
+                    detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
+                kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimate);
+            }*/
         }
         if (isRevision == null || (isRevision != null && !isRevision))
             kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
@@ -300,6 +305,7 @@ public class DetailedEstimateService {
                     }
                 }
             }
+
             if (validator.workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo())) {
                 populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
                 Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
@@ -333,6 +339,7 @@ public class DetailedEstimateService {
         estimateTechnicalSanction.setTenantId(detailedEstimate.getTenantId());
         estimateTechnicalSanction.setDetailedEstimate(detailedEstimate.getId());
         estimateTechnicalSanction.setAuditDetails(createDetails);
+        estimateTechnicalSanction.setTechnicalSanctionDate(new Date().getTime());
         User user = new User();
         user.setUserName(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName());
         estimateTechnicalSanction.setTechnicalSanctionBy(user);

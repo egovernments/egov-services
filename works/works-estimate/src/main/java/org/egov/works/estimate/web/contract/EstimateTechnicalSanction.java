@@ -92,7 +92,7 @@ public class EstimateTechnicalSanction   {
    * @return technicalSanctionNumber
   **/
   @ApiModelProperty(required = true, value = "Technical Sanction Number of the Detailed Estimate")
-  @NotNull
+  //@NotNull
 
  @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(min=1,max=50)
   public String getTechnicalSanctionNumber() {
@@ -134,7 +134,7 @@ public class EstimateTechnicalSanction   {
    * @return technicalSanctionDate
   **/
   @ApiModelProperty(required = true, value = "Epoch time of the Technical Sanction Date. Technical Sanctioned date should be on or after the Detailed Estimate date.")
-  @NotNull
+  //@NotNull
 
 
   public Long getTechnicalSanctionDate() {

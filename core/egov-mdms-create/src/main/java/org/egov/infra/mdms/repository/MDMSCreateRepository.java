@@ -72,7 +72,7 @@ public class MDMSCreateRepository {
 	public Object post(String uri, String body, String userName, String password){
 		Object result = null;
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         String auth = userName + ":" + password;
         byte[] encodedAuth = Base64.encodeBase64( 
            auth.getBytes(Charset.forName("US-ASCII")) );

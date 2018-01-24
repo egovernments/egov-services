@@ -370,7 +370,19 @@ var commomFieldsRules = {
     gstin: {
         required: true,
         alphaNumer: true
-    }
+    },
+    municipalOrderNumber:{
+      required :false,
+      alphaNumer: true
+    },
+    governmentOrderNumber :{
+      required :false,
+      alphaNumer: true
+    },
+    referenceNumber:{
+      required: false,
+      alphaNumersh: true
+    },
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     // validation rules for land agreement
@@ -940,8 +952,12 @@ $.validator.addMethod('alloName', function(value) {
 }, 'Please enter a valid name.');
 
 $.validator.addMethod('alphaNumer', function(value) {
-  return value ? /^([0-9]+[a-zA-Z]+|[a-zA-Z]+[0-9]+|[0-9])[0-9a-zA-Z]*$/i.test(value) : true;
+  return value ? /^[a-z0-9]+$/i.test(value) : true;
 }, 'Please enter only Alpha/Numeric Value');
+
+$.validator.addMethod('alphaNumersh', function(value) {
+  return value ? /^[a-z0-9/-]+$/i.test(value) : true;
+}, 'Alhpabets, Numbers and / - are only allowed');
 
 $.validator.addMethod('integerOnly',function(value){
   return /^[0-9]*$/.test(value);

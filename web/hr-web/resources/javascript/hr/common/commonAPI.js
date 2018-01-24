@@ -535,10 +535,29 @@ function getDropdown(name, cb, params) {
             break;
         case 'assignments_position':
             if (!localStorage.getItem("assignments_position") || localStorage.getItem("assignments_position") == "undefined") {
-                getCommonMaster("hr-masters", "positions", function(err, res) {
+                commonApiPost("hr-masters", "positions", "_paginatedsearch", { tenantId, pageSize: 500 }, function (err, res) {
+
                     if (res) {
-                        localStorage.setItem("assignments_position", JSON.stringify(res["Position"]));
-                        cb(res["Position"]);
+                        var positions = res["Position"];
+                        if (res.Page && res.Page.totalPages > 1) {
+
+                            try {
+                                for (var i = 2; i <= res.Page.totalPages; i++) {
+
+                                    var queryParam = { tenantId, pageSize: 500 }
+                                    queryParam.pageNumber = i;
+                                    commonApiPost("hr-masters", "positions", "_paginatedsearch", queryParam, function (err, res) {
+                                        if (res) {
+                                            positions = positions.concat(res["Position"]);
+                                        }
+                                    });
+                                }
+                            } catch (error) {
+                                console.log(error);
+                            }
+                        }
+                        localStorage.setItem("assignments_position", JSON.stringify(positions));
+                        cb(positions);
                     } else {
                         cb([]);
                     }

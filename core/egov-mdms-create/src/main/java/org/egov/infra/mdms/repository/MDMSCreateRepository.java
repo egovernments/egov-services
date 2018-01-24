@@ -143,7 +143,7 @@ public class MDMSCreateRepository {
 		   .append(reloadobjPathEndpoint);
 		logger.info("URI: "+uri.toString());
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		HttpEntity<String> entity = new HttpEntity<String>(reloadReq, headers);
 		try{
 			restTemplate.exchange(uri.toString(), HttpMethod.POST, entity, String.class);

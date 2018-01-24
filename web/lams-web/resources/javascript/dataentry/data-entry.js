@@ -413,7 +413,8 @@ var commomFieldsRules = {
         required: true
     },
     bankGuaranteeAmount: {
-        required: false
+        required: false,
+        integerOnly:true
     },
     bankGuaranteeDate: {
         required: false

@@ -115,9 +115,9 @@ public class AgreementValidator {
 		if (agreement.getSource().equals(Source.SYSTEM)) {
 			validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
 		}
-		/*if(Source.DATA_ENTRY.equals(agreement.getSource()) && StringUtils.isBlank(agreement.getOldAgreementNumber()))
+		if(Source.DATA_ENTRY.equals(agreement.getSource()) && StringUtils.isBlank(agreement.getOldAgreementNumber()))
 			errors.rejectValue("Agreement.oldAgreementNumber", "",
-					"Old agreement number is mandatory for Data Entry");*/
+					"Old agreement number is mandatory for Data Entry");
 	}
 
 	public void validateModifiedData(AgreementRequest agreementRequest, Errors errors) {

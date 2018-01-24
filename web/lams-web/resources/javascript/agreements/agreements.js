@@ -59,12 +59,64 @@ var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
 
 $(document).ready(function(){
+
+  $('#municipalOrder, #governmentOrder').hide();
+
   if(window.opener && window.opener.document) {
      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");
      if(logo_ele && logo_ele[0]) {
        document.getElementsByClassName("homepage_logo")[0].src = logo_ele[0].getAttribute("src");
      }
    }
+
+   $('#timePeriod').append($("<option/>").val('').text('Select Time Period'));
+   for(var i=0;i<25;i++){
+     $('#timePeriod').append($("<option/>").val(i+1).text(i+1));
+   }
+
+   //basis of allotment API call
+   var basisOfAllotment = [{label:'Goodwill Auction Basis',value:'Goodwill Auction Basis'},{label:'Normal Basis',value:'Normal Basis'}];
+   $.each(basisOfAllotment, function (idx, basis){
+     $("#basisOfAllotment").append($("<option />").val(basis.value).text(basis.label));
+   });
+
+   //category API call
+   var category = commonApiPost("lams-services", "getreservations", "", {tenantId}).responseJSON;
+   $.each(category, function (idx, cat){
+     $("#reservationCategory").append($("<option />").val(cat.id).text(cat.name));
+   });
+
+   $('#basisOfAllotment').on('change',function(){
+
+     // dependent fields show & hide
+     if(this.value && $('#timePeriod').val()){
+       dependentonBasisTime(this.value, $('#timePeriod').val());
+     }
+
+     // update natureOfAllotment dropdown
+     $('#natureOfAllotment').find('option').remove().end().append('<option value="">Select</option>');
+     fillValueToObject({id:'natureOfAllotment',name:'natureOfAllotment',value:''});
+     fillValueToObject({id:'rentIncrementMethod',name:'rentIncrementMethod',value:''});
+     if(this.value === 'Goodwill Auction Basis'){
+       $('#natureOfAllotment').append(`<option value='AUCTION'>AUCTION</option>`);
+     }else if(this.value === 'Normal Basis'){
+       Object.keys(natureOfAllotments).map((k, index)=>{
+           $('#natureOfAllotment').append('<option value='+k+'>'+natureOfAllotments[k]+'</option>')
+       });
+     }
+
+     $('#rentIncrementMethod').find('option').remove().end().append('<option value="">Choose Percentage</option>');
+
+     loadRenewalRent(this.value);
+
+   });
+
+   $('#timePeriod').on('change',function(){
+     if($('#basisOfAllotment').val() && this.value){
+       dependentonBasisTime($('#basisOfAllotment').val(), this.value);
+     }
+   })
+
 });
 
 $(".disabled").attr("disabled", true);
@@ -176,6 +228,8 @@ function fillValueToObject(currentState) {
         agreement[currentState.id] = currentState.value;
 
     }
+
+    console.log(agreement);
 }
 
 
@@ -288,9 +342,9 @@ var commomFieldsRules = {
     approverPositionId: {
         required: true
     },
-    rentIncrementMethod: {
-        required: (decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "land" || decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shop") ? true : false
-    },
+    // rentIncrementMethod: {
+    //     required: (decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "land" || decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shop") ? true : false
+    // },
     remarks: {
         required: false
     },
@@ -303,6 +357,19 @@ var commomFieldsRules = {
     },
     timePeriod: {
         required: true
+    },
+    basisOfAllotment: {
+        required: true
+    },
+    "rentIncrementMethod": {
+        required: true
+    },
+    reservationCategory: {
+        required: true
+    },
+    gstin: {
+        required: true,
+        alphaNumer: true
     }
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
@@ -1324,4 +1391,47 @@ function makeAjaxUpload(file, cb) {
               }]
             });
     }
+}
+
+async function loadRenewalRent(basisOfAllotment){
+  var renewalOfRent = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:basisOfAllotment}).responseJSON;
+ $.each(renewalOfRent, function (idx, rent){
+    $("#rentIncrementMethod").append($("<option />").val(rent.id).text(rent.description));
+  });
+}
+
+function dependentonBasisTime(basis, time){
+  if(basis === 'Goodwill Auction Basis'){
+    if(time <= 5){
+      $('#governmentOrder').hide();
+      clearGovernment();
+      $('#municipalOrder').show();
+    }else{
+      $('#municipalOrder').hide();
+      clearMunicipal();
+      $('#governmentOrder').show();
+    }
+  }else if(basis === 'Normal Basis'){
+    if(time <= 3){
+      $('#governmentOrder').hide();
+      clearGovernment();
+      $('#municipalOrder').show();
+    }else{
+      $('#municipalOrder').hide();
+      clearMunicipal();
+      $('#governmentOrder').show();
+    }
+  }
+}
+
+function clearGovernment(){
+  fillValueToObject({id:'governmentOrderNumber',name:'governmentOrderNumber',value:''});
+  fillValueToObject({id:'governmentOrderDate',name:'governmentOrderDate',value:''});
+  $('#governmentOrderNumber, #governmentOrderDate').val('');
+}
+
+function clearMunicipal(){
+  fillValueToObject({id:'municipalOrderNumber',name:'municipalOrderNumber',value:''});
+  fillValueToObject({id:'municipalOrderDate',name:'municipalOrderDate',value:''});
+  $('#municipalOrderNumber, #municipalOrderDate').val('');
 }

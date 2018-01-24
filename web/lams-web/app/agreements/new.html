@@ -1515,6 +1515,36 @@
                                                 <div class="col-sm-6">
                                                     <div class="row">
                                                         <div class="col-sm-6 label-text">
+                                                            <label for="reservationCategory">Category </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select name="reservationCategory" id="reservationCategory">
+                                                                  <option value="">Select</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="basisOfAllotment">Basis of allotment </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="styled-select">
+                                                                <select name="basisOfAllotment" id="basisOfAllotment">
+                                                                  <option value="">Select</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
                                                             <label for="natureOfAllotment">Nature of allotment </label>
                                                         </div>
                                                         <div class="col-sm-6">
@@ -1727,7 +1757,7 @@
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="commencementDate">Date of Commencement  </label>
+                                                          <label for="commencementDate">Date of Allotment  </label>
                                                       </div>
                                                       <div class="col-sm-6">
                                                         <div class="text-no-ui">
@@ -1737,19 +1767,20 @@
                                                     </div>
                                                   </div>
                                               </div>
-                                                <div class="col-sm-6" id="rendCalculatedMethod">
-                                                    <div class="row">
-                                                        <div class="col-sm-6 label-text">
-                                                            <label for="rentIncrementMethod">Method by increase in rent is calculated during renewal  </label>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                                <select name="rentIncrementMethod" id="rentIncrementMethod" class="selectStyle">
-                                                              <option value="">Choose</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="rentIncrementMethod">Method for Renewal of Rent  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                              <select name="rentIncrementMethod" id="rentIncrementMethod">
+                                                                <option value="">Choose Percentage</option>
+                                                              </select>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
                                             </div>
                                             <div class="row">
                                               <div class="col-sm-6">
@@ -1767,24 +1798,86 @@
                                                     </div>
                                                   </div>
                                               </div>
+                                            </div>
+                                            <div class="row">
+                                              <div class="col-sm-6">
+                                                    <div class="row">
+                                                        <div class="col-sm-6 label-text">
+                                                            <label for="timePeriod">Time Period  </label>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                            <select name="timePeriod" id="timePeriod">
+                                                            </select>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="gstin">GSTIN  </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <input type="text" name="gstin" id="gstin">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>
+                                          <div class="row" id="municipalOrder">
+                                            <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="municipalOrderNumber">Municipal Order Number</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div>
+                                                          <input type="text" id="municipalOrderNumber" name="municipalOrderNumber" >
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
                                               <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
-                                                          <label for="timePeriod">Time Period  </label>
+                                                          <label for="municipalOrderDate">Municipal Order Date</label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <select name="timePeriod" id="timePeriod" class="selectStyle">
-                                                            <option value="">Select Time Period</option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
-                                                          </select>
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
                                                       </div>
+                                                    </div>
                                                   </div>
                                               </div>
-                                            </div>
+                                          </div>
+                                          <div class="row" id="governmentOrder">
+                                            <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="governmentOrderNumber">Government Order Number</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div>
+                                                          <input type="text" id="governmentOrderNumber" name="governmentOrderNumber" >
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="governmentOrderDate">Government Order Date</label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                        <div class="text-no-ui">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                          <input type="text" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                              </div>
+                                          </div>
                                             <div class="row">
                                               <div class="col-sm-6">
                                                   <div class="row">
@@ -1838,6 +1931,36 @@
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                           <input type="text" class="datepicker" name="tenderDate" id="tenderDate">
                                                         </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="row">
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="reservationCategory">Category </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                              <select name="reservationCategory" id="reservationCategory">
+                                                                <option value="">Select</option>
+                                                              </select>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="basisOfAllotment">Basis of allotment </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                              <select name="basisOfAllotment" id="basisOfAllotment">
+                                                                <option value="">Select</option>
+                                                              </select>
+                                                          </div>
                                                       </div>
                                                   </div>
                                               </div>
@@ -2058,7 +2181,7 @@
                                             <div class="col-sm-6">
                                                 <div class="row">
                                                     <div class="col-sm-6 label-text">
-                                                        <label for="commencementDate">Date of Commencement  </label>
+                                                        <label for="commencementDate">Date of Allotment  </label>
                                                     </div>
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
@@ -2068,19 +2191,20 @@
                                                   </div>
                                                 </div>
                                             </div>
-                                              <div class="col-sm-6" id="rendCalculatedMethod">
-                                                  <div class="row">
-                                                      <div class="col-sm-6 label-text">
-                                                          <label for="rentIncrementMethod">Method by increase in rent is calculated during renewal  </label>
-                                                      </div>
-                                                      <div class="col-sm-6">
-                                                          <select name="rentIncrementMethod" id="rentIncrementMethod" class="selectStyle">
-                                                            <option value="">Choose</option>
-                                                          </select>
-                                                      </div>
-                                                  </div>
-                                              </div>
-
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="rentIncrementMethod">Method for Renewal of Rent  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select name="rentIncrementMethod" id="rentIncrementMethod">
+                                                              <option value="">Choose Percentage</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                           </div>
                                           <div class="row">
                                             <div class="col-sm-6">
@@ -2098,24 +2222,86 @@
                                                   </div>
                                                 </div>
                                             </div>
+                                          </div>
+                                          <div class="row">
                                             <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
                                                           <label for="timePeriod">Time Period  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <select name="timePeriod" id="timePeriod" class="selectStyle">
-                                                            <option value="">Select Time Period </option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
+                                                        <div class="styled-select">
+                                                          <select name="timePeriod" id="timePeriod">
                                                           </select>
+                                                      </div>
                                                     </div>
                                                   </div>
                                               </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="gstin">GSTIN  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <input type="text" name="gstin" id="gstin">
+                                                  </div>
+                                              </div>
                                           </div>
+                                        </div>
+                                        <div class="row" id="municipalOrder">
+                                          <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="municipalOrderNumber">Municipal Order Number</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div>
+                                                        <input type="text" id="municipalOrderNumber" name="municipalOrderNumber" >
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="municipalOrderDate">Municipal Order Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="text-no-ui">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        <input type="text" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="governmentOrder">
+                                          <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="governmentOrderNumber">Government Order Number</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div>
+                                                        <input type="text" id="governmentOrderNumber" name="governmentOrderNumber" >
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="governmentOrderDate">Government Order Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="text-no-ui">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        <input type="text" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                           <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="row">
@@ -2170,6 +2356,36 @@
                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                           <input type="text" class="datepicker" name="tenderDate" id="tenderDate">
                                                         </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="row">
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="reservationCategory">Category </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                              <select name="reservationCategory" id="reservationCategory">
+                                                                <option value="">Select</option>
+                                                              </select>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                      <div class="col-sm-6 label-text">
+                                                          <label for="basisOfAllotment">Basis of allotment </label>
+                                                      </div>
+                                                      <div class="col-sm-6">
+                                                          <div class="styled-select">
+                                                              <select name="basisOfAllotment" id="basisOfAllotment">
+                                                                <option value="">Select</option>
+                                                              </select>
+                                                          </div>
                                                       </div>
                                                   </div>
                                               </div>
@@ -2390,7 +2606,7 @@
                                             <div class="col-sm-6">
                                                 <div class="row">
                                                     <div class="col-sm-6 label-text">
-                                                        <label for="commencementDate">Date of Commencement  </label>
+                                                        <label for="commencementDate">Date of Allotment  </label>
                                                     </div>
                                                     <div class="col-sm-6">
                                                       <div class="text-no-ui">
@@ -2400,19 +2616,20 @@
                                                   </div>
                                                 </div>
                                             </div>
-                                              <div class="col-sm-6" id="rendCalculatedMethod">
-                                                  <div class="row">
-                                                      <div class="col-sm-6 label-text">
-                                                          <label for="rentIncrementMethod">Method by increase in rent is calculated during renewal  </label>
-                                                      </div>
-                                                      <div class="col-sm-6">
-                                                              <select name="rentIncrementMethod" id="rentIncrementMethod" class="selectStyle">
-                                                            <option value="">Choose</option>
-                                                          </select>
-                                                      </div>
-                                                  </div>
-                                              </div>
-
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="rentIncrementMethod">Method for Renewal of Rent  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="styled-select">
+                                                            <select name="rentIncrementMethod" id="rentIncrementMethod">
+                                                              <option value="">Choose Percentage</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                           </div>
                                           <div class="row">
                                             <div class="col-sm-6">
@@ -2430,24 +2647,86 @@
                                                   </div>
                                                 </div>
                                             </div>
+                                          </div>
+                                          <div class="row">
                                             <div class="col-sm-6">
                                                   <div class="row">
                                                       <div class="col-sm-6 label-text">
                                                           <label for="timePeriod">Time Period  </label>
                                                       </div>
                                                       <div class="col-sm-6">
-                                                          <select name="timePeriod" id="timePeriod" class="selectStyle">
-                                                            <option value="">Select Time Period</option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
+                                                        <div class="styled-select">
+                                                          <select name="timePeriod" id="timePeriod">
                                                           </select>
+                                                      </div>
                                                     </div>
                                                   </div>
                                               </div>
+                                              <div class="col-sm-6">
+                                                  <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="gstin">GSTIN  </label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <input type="text" name="gstin" id="gstin">
+                                                  </div>
+                                              </div>
                                           </div>
+                                        </div>
+                                        <div class="row" id="municipalOrder">
+                                          <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="municipalOrderNumber">Municipal Order Number</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div>
+                                                        <input type="text" id="municipalOrderNumber" name="municipalOrderNumber" >
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="municipalOrderDate">Municipal Order Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="text-no-ui">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        <input type="text" class="datepicker" name="municipalOrderDate" id="municipalOrderDate">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="governmentOrder">
+                                          <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="governmentOrderNumber">Government Order Number</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div>
+                                                        <input type="text" id="governmentOrderNumber" name="governmentOrderNumber" >
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6 label-text">
+                                                        <label for="governmentOrderDate">Government Order Date</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                      <div class="text-no-ui">
+                                                          <span class="glyphicon glyphicon-calendar"></span>
+                                                        <input type="text" class="datepicker" name="governmentOrderDate" id="governmentOrderDate">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                           <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="row">

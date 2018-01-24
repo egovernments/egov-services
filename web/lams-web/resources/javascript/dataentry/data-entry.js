@@ -170,7 +170,6 @@ $(document).ready(function() {
     calcFooterYearSum();
   });
 
-  //natureOfAllotment
   $('#basisOfAllotment').on('change',function(){
 
     // dependent fields show & hide

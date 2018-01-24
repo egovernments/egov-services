@@ -111,11 +111,13 @@ public class DataUploadService {
 	        excelData = dataUploadUtils.readExcelFile(sheet, coloumnHeaders);
 	    }catch(Exception e){
 	    	logger.error("Couldn't parse excel sheet", e);
+	    	logger.error("Jumping to failed state...");
     		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
     		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
     		uploadRegistryRepository.updateJob(uploaderRequest);
     		
 			dataUploadUtils.clearInternalDirectory();
+			return;
 	    }
         try{
     	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
@@ -131,11 +133,14 @@ public class DataUploadService {
 
         }catch(Exception e){
         	logger.info("Exception while proccessing data: ",e);
+	    	logger.error("Jumping to failed state...");
     		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
     		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
     		uploadRegistryRepository.updateJob(uploaderRequest);
     		
 			dataUploadUtils.clearInternalDirectory();
+			return;
+
         }           
 	}
 	

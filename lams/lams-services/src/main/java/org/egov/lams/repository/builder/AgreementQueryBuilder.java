@@ -1,5 +1,6 @@
 package org.egov.lams.repository.builder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.lams.model.AgreementCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +104,11 @@ public class AgreementQueryBuilder {
 		if (agreementsModel.getReferenceNumber() != null) {
 			selectQuery.append(" and AGREEMENT.referenceno = :referenceNo");
 			params.put("referenceNo", agreementsModel.getReferenceNumber());
+		}
+		
+		if(StringUtils.isNotBlank(agreementsModel.getOldAgreementNumber())){
+			selectQuery.append(" and AGREEMENT.old_agreement_no = :oldAgreementNumber");
+			params.put("oldAgreementNumber", agreementsModel.getOldAgreementNumber());
 		}
 
         if (agreementsModel.getFromDate() != null && agreementsModel.getToDate() != null) {

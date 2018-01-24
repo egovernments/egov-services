@@ -13,6 +13,7 @@ import org.egov.swm.domain.model.PaymentDetails;
 import org.egov.swm.domain.model.PaymentDetailsSearch;
 import org.egov.swm.domain.model.VendorPaymentDetails;
 import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
+import org.egov.swm.domain.repository.VendorPaymentDetailsRepository;
 import org.egov.swm.domain.service.VendorPaymentDetailsService;
 import org.egov.swm.persistence.entity.PaymentDetailsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
 
     /*@Autowired
     private VendorPaymentDetailsService vendorPaymentDetailsService;*/
+
+    @Autowired
+    private VendorPaymentDetailsRepository vendorPaymentDetailsRepository;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -138,20 +142,20 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
 
         }
 
-      /*  if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
+       if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
                 (searchRequest.getExcludeVendorPaymentDetails() == null ||
                 searchRequest.getExcludeVendorPaymentDetails().equals(Boolean.FALSE))) {
 
             populateVendorPaymentDetails(paymentdetailsList);
 
-        }*/
+        }
         page.setTotalResults(paymentdetailsList.size());
 
         page.setPagedData(paymentdetailsList);
 
         return page;
     }
-/*
+
     private void populateVendorPaymentDetails(List<PaymentDetails> paymentdetailsList) {
 
         VendorPaymentDetailsSearch vendorPaymentDetailsSearch;
@@ -191,7 +195,7 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
             vendorPaymentDetailsSearch.setTenantId(tenantId);
             vendorPaymentDetailsSearch.setPaymentNos(paymentNos.toString());
 
-            vendorPaymentDetailsPage = vendorPaymentDetailsService.search(vendorPaymentDetailsSearch);
+            vendorPaymentDetailsPage = vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
 
             if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null)
                 for (VendorPaymentDetails bd : vendorPaymentDetailsPage.getPagedData()) {
@@ -214,6 +218,6 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
             }
         }
 
-    }*/
+    }
 
 }

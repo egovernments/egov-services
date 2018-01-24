@@ -552,7 +552,7 @@ public class EstimateValidator {
             if(!workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&
                     detailedEstimate.getStatus() != null && detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED) &&
                     !abstactEstimate.getDetailedEstimateCreated()) {
-                validateTechnicalSanctionDetail(detailedEstimate, messages);
+                validateTechnicalSanctionDetail(detailedEstimate, messages, abstactEstimate.getDetailedEstimateCreated());
             }
 
         }
@@ -745,7 +745,7 @@ public class EstimateValidator {
             else
                 validateEstimateNumberUnique(detailedEstimate, messages);
 
-            validateTechnicalSanctionDetail(detailedEstimate, messages);
+            validateTechnicalSanctionDetail(detailedEstimate, messages, abstractEstimate.getDetailedEstimateCreated());
         }
     }
 
@@ -1097,7 +1097,7 @@ public class EstimateValidator {
 
     }
 
-    public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate, Map<String, String> messages) {
+    public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate, Map<String, String> messages, boolean detailedEstimateCreated) {
         if (detailedEstimate.getEstimateTechnicalSanctions() == null
                 || detailedEstimate.getEstimateTechnicalSanctions() != null
                         && detailedEstimate.getEstimateTechnicalSanctions().isEmpty()) {
@@ -1116,6 +1116,10 @@ public class EstimateValidator {
                 if (StringUtils.isNotBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
                     validateUniqueTechnicalSanctionForDetailedEstimate(detailedEstimate, estimateTechnicalSanction,
                             messages);
+
+                if(detailedEstimateCreated && StringUtils.isBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
+                    messages.put(Constants.KEY_ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED,
+                            Constants.MESSAGE_ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED);
 
                 if (estimateTechnicalSanction.getTechnicalSanctionDate() != null
                         && estimateTechnicalSanction.getTechnicalSanctionDate() > new Date().getTime())

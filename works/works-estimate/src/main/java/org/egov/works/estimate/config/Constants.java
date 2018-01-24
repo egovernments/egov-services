@@ -225,6 +225,9 @@ public class Constants {
     public static final String KEY_INVALID_TECHNICALSANCTION_NUMBER = "INVALID_TECHNICALSANCTION_NUMBER";
     public static final String MESSAGE_INVALID_TECHNICALSANCTION_NUMBER= "Technical sanction number already exists, please provide valid technical sanction number";
 
+    public static final String KEY_ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED = "ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED";
+    public static final String MESSAGE_ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED= "Technical sanction number required for an estimate";
+
     public static final String KEY_TECHNICAL_SANCTION_DATE_FUTUREDATE = "TECHNICAL_SANCTION_DATE_FUTUREDATE";
     public static final String MESSAGE_TECHNICAL_SANCTION_DATE_FUTUREDATE= "Estimate technical sanction date cannot be a future date";
     

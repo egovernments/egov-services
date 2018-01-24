@@ -111,6 +111,11 @@ public class DataUploadService {
 	        excelData = dataUploadUtils.readExcelFile(sheet, coloumnHeaders);
 	    }catch(Exception e){
 	    	logger.error("Couldn't parse excel sheet", e);
+    		uploadJob.setEndTime(new Date().getTime());uploadJob.setFailedRows(excelData.size());uploadJob.setSuccessfulRows(0);
+    		uploadJob.setStatus(StatusEnum.fromValue("failed"));uploadJob.setTotalRows(excelData.size());
+    		uploadRegistryRepository.updateJob(uploaderRequest);
+    		
+			dataUploadUtils.clearInternalDirectory();
 	    }
         try{
     	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
@@ -438,7 +443,7 @@ public class DataUploadService {
 			for(int j = 0; j < (coloumnHeaders.size() - additionFieldsCount); j++){
             	List<String> jsonPathList = uploadDefinition.getHeaderJsonPathMap().get(coloumnHeaders.get(j).toString());
             	if(null == jsonPathList){
-					logger.info("null jsonpath in config for: "+coloumnHeaders.get(j));
+					logger.info("no jsonpath in config for: "+coloumnHeaders.get(j));
             		continue;
             	}
             	if(jsonPathList.isEmpty()) {

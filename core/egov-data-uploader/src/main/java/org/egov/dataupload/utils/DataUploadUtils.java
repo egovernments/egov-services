@@ -75,7 +75,7 @@ public class DataUploadUtils {
            for (int colNum = 0; colNum < lastColumn; colNum++) {
               Cell cell = row.getCell(colNum, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL );
               if(null == cell) {
-          		    logger.info("empty cell");
+          		    logger.debug("empty cell");
 	            	dataList.add(null);
               }else if(0 == cell.getRowIndex()) {
 	            	coloumnHeaders.add(cell.getStringCellValue());
@@ -83,7 +83,7 @@ public class DataUploadUtils {
 		            if(!isCellEmpty(cell)) {
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-			            		logger.info("date: "+cell.getDateCellValue().getTime());
+			            		logger.debug("date: "+cell.getDateCellValue().getTime());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
 			            		logger.debug("numeric: "+cell.getNumericCellValue());
@@ -313,7 +313,9 @@ public class DataUploadUtils {
 	
 	public List<List<Object>> filter(List<List<Object>> excelData, List<Integer> indexes, List<Object> row){
 		List<List<Object>> result = null;
+		logger.info("indexes: "+indexes);
 		for(Integer index: indexes){
+			logger.info("index: "+index);
 			result = excelData.parallelStream()
 					.filter(obj -> ((obj.get(index)).equals(row.get(index))))
 					.collect(Collectors.toList());

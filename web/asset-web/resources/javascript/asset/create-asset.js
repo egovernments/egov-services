@@ -477,7 +477,7 @@ class CreateAsset extends React.Component {
     flag = 1;
   }
 
-  handleChange(e, name) {
+  handleChange(e, name, pattern) {
       if(name === "status") {
         this.state.capitalized = ( e.target.value === "CAPITALIZED");
       } else if(name == "enableYearWiseDepreciation") {
@@ -489,12 +489,28 @@ class CreateAsset extends React.Component {
          })
       }
 
-      this.setState({
-          assetSet: {
-              ...this.state.assetSet,
-              [name]: e.target.value
-          }
-      })
+      if(pattern && e.target.value){
+        // console.log('pattern exists');
+        var reg = new RegExp(pattern);
+        if(reg.test(e.target.value)){
+          // console.log('pattern success');
+          this.setState({
+              assetSet: {
+                  ...this.state.assetSet,
+                  [name]: e.target.value
+              }
+          })
+        }else{
+          // console.log('pattern fails'); //Dont update the state
+        }
+      }else{
+        this.setState({
+            assetSet: {
+                ...this.state.assetSet,
+                [name]: e.target.value
+            }
+        })
+      }
 
   }
 
@@ -1744,8 +1760,8 @@ class CreateAsset extends React.Component {
                           <label for="marketValue">Market Value(Rs.)</label>
                       </div>
                       <div className="col-sm-6">
-                          <input type="number" id="marketValue" name="marketValue" value= {marketValue}
-                            onChange={(e)=>{handleChange(e, "marketValue")}} min="1" maxlength="16" disabled={readonly}/>
+                          <input type="text" id="marketValue" name="marketValue" value= {marketValue}
+                            onChange={(e)=>{handleChange(e, "marketValue",/^\d+$/)}} min="1" maxlength="16" disabled={readonly}/>
                       </div>
                     </div>
                 </div>

@@ -605,11 +605,15 @@ div#relatedTable_filter input {
 }
 
 input[type="search"] {
-	border: solid 1px #ddd;	
+	border: solid 1px #ddd;
 }
 
 input:disabled,
 textarea:disabled,
 select:disabled {
 	background: #fff !important;
+}
+
+table.dataTable tbody td {
+  word-break: break-all;
 }

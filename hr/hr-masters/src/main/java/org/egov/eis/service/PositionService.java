@@ -130,10 +130,9 @@ public class PositionService {
 	public Map<String, Object> getPaginatedPosistions(PositionGetRequest positionGetRequest, RequestInfo requestInfo)
 			throws CloneNotSupportedException {
 		List<Position> positions = getPositions(positionGetRequest);
-
 		if (isEmpty(positions))
 			return getResponseForNoRecords(positionGetRequest.getPageSize(), positionGetRequest.getPageNumber());
-
+		
 		return getResponseForExistingRecords(positionGetRequest.getPageSize(), positionGetRequest.getPageNumber(),
 				positions.size(), positionGetRequest, positions);
 	}
@@ -146,13 +145,12 @@ public class PositionService {
 
 		Integer totalDBRecords = positionRepository.getTotalDBRecords(positionGetRequest);
 		Integer totalpages = (int) Math.ceil((double) totalDBRecords / pageSize);
-
 		Pagination page = Pagination.builder().totalResults(recordsFetched).totalPages(totalpages)
 				.currentPage(pageNumber).pageNumber(pageNumber).pageSize(pageSize).build();
 
 		return new LinkedHashMap<String, Object>() {
 			{
-				put("Employee", positions);
+				put("Position", positions);
 				put("Page", page);
 			}
 		};

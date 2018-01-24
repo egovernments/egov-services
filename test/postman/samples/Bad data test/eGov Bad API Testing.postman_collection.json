@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "SWM",
+			"name": "Vendor Bad Data",
 			"description": "",
 			"item": [
 				{
@@ -16,7 +16,7 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "8371e513-37fd-4faa-a6d3-900896c4b676",
+								"id": "8ce3156d-07e4-4dc6-8015-a21ccb469c92",
 								"type": "text/javascript",
 								"exec": [
 									"eval(loader_script)",
@@ -31,7 +31,7 @@
 									"})",
 									"",
 									"console.log(\"all done\")",
-									"setTimeout(()=>{console.log(\"All really done\")}, 5000)"
+									"setTimeout(()=>{console.log(\"All really done\")}, 4000)"
 								]
 							}
 						},
@@ -113,14 +113,210 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Vehicle Bad Data",
+			"description": "",
+			"item": [
+				{
+					"name": "Vendor Create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2acbbb84-1e9a-4135-b20d-1b82ab907b08",
+								"type": "text/javascript",
+								"exec": [
+									"eval(loader_script)",
+									"",
+									" pmutil.getPostBody(\"swm_bad_api_vehicle_create.json\").then((postBody) => {",
+									"    console.log(postBody)",
+									"    pmutil.jp.performOperations(postBody, data[\"operations\"])",
+									"    pmutil.setPostBody(postBody, pm);",
+									"    ",
+									"}).catch(err => {",
+									"    console.log(\"something messed up\", err)",
+									"})",
+									"",
+									"console.log(\"all done\")",
+									"setTimeout(()=>{console.log(\"All really done\")}, 4000)"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "93fa163b-4864-4c5f-a3a2-e6ae4ecc077e",
+								"type": "text/javascript",
+								"exec": [
+									"eval(loader_script)",
+									"",
+									"describe(\"Vendor Create - \" + data[\"field_name\"] + \" \" + data[\"type\"] + \" \" + data[\"subtype\"], () => {",
+									"    it(\"should have 400 status\", () => {",
+									"        response.should.have.status(400);",
+									"    })",
+									"    ",
+									"    it('should return a JSON response', () => {",
+									"     response.should.be.json;",
+									"    });",
+									"",
+									"    it(\"Response body present\", () => {",
+									"        response.body.should.not.be.null;",
+									"    })",
+									"    ",
+									"    it(\"Response body has errors\", () => {",
+									"        response.body.Errors.should.not.be.null;",
+									"    })",
+									"",
+									"    it(\"Error message has code with field name\" + data[\"field_name\"], () => {",
+									"        response.body.Errors[0].code.should.contain(data[\"field_name\"])",
+									"    })",
+									"",
+									"    it(\"Error message has message\", () => {",
+									"        response.body.Errors[0].message.should.contain(\"may not be null\");",
+									"        console.log(response.body.Errors.message);",
+									"    })",
+									"})"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{postBody}}"
+						},
+						"url": {
+							"raw": "{{url}}/swm-services/vehicles/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"swm-services",
+								"vehicles",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Bad File Testing Vehicle Create API copy",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"eval(loader_script)",
+									"",
+									" pmutil.getPostBody(\"swm_bad_api_vehicle_create.json\").then((postBody) => {",
+									"    console.log(postBody)",
+									"    pmutil.jp.performOperations(postBody, data[\"operations\"])",
+									"    pmutil.setPostBody(postBody, pm);",
+									"    ",
+									"}).catch(err => {",
+									"    console.log(\"something messed up\", err)",
+									"})",
+									"",
+									"console.log(\"all done\")",
+									"setTimeout(()=>{console.log(\"All really done\")}, 4000)"
+								],
+								"id": "2acbbb84-1e9a-4135-b20d-1b82ab907b08",
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(loader_script)",
+									"",
+									"describe(\"Vendor Create - \" + data[\"field_name\"] + \" \" + data[\"type\"] + \" \" + data[\"subtype\"], () => {",
+									"    it(\"should have 400 status\", () => {",
+									"        response.should.have.status(400);",
+									"    })",
+									"    ",
+									"    it('should return a JSON response', () => {",
+									"     response.should.be.json;",
+									"    });",
+									"",
+									"    it(\"Response body present\", () => {",
+									"        response.body.should.not.be.null;",
+									"    })",
+									"    ",
+									"    it(\"Response body has errors\", () => {",
+									"        response.body.Errors.should.not.be.null;",
+									"    })",
+									"",
+									"    it(\"Error message has code with field name\" + data[\"field_name\"], () => {",
+									"        response.body.Errors[0].code.should.contain(data[\"field_name\"])",
+									"    })",
+									"",
+									"    it(\"Error message has message\", () => {",
+									"        response.body.Errors[0].message.should.contain(\"may not be null\");",
+									"        console.log(response.body.Errors.message);",
+									"    })",
+									"})"
+								],
+								"id": "93fa163b-4864-4c5f-a3a2-e6ae4ecc077e",
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{postBody}}"
+						},
+						"url": {
+							"raw": "{{url}}/swm-services/vehicles/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"swm-services",
+								"vehicles",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log('at level 2.2')"
+						],
+						"id": "4da227a3-ee94-423b-9b2d-96810a036332",
+						"type": "text/javascript"
+					}
+				}
+			]
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "e4e0b0ba-6ad2-440e-9b0c-c5ff0545c17c",
-				"type": "text/javascript",
 				"exec": [
 					"initjs_url = \"https://raw.githubusercontent.com/egovernments/egov-services/egov-mr-functional-test-automation/test/postman/init.js?_=\" + (new Date).getTime();",
 					"if (!pm.variables.has(\"__postman_started\")) {",
@@ -134,17 +330,19 @@
 					"}",
 					"",
 					""
-				]
+				],
+				"id": "e4e0b0ba-6ad2-440e-9b0c-c5ff0545c17c",
+				"type": "text/javascript"
 			}
 		},
 		{
 			"listen": "test",
 			"script": {
-				"id": "d4ab2927-bc53-4c9e-a644-37633d159865",
-				"type": "text/javascript",
 				"exec": [
 					""
-				]
+				],
+				"id": "d4ab2927-bc53-4c9e-a644-37633d159865",
+				"type": "text/javascript"
 			}
 		}
 	]

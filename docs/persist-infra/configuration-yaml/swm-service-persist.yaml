@@ -1662,9 +1662,12 @@ serviceMaps:
    description: update paymentdetails in egswm_paymentdetails
    fromTopic: swm-paymentdetails-update-topic
    queryMaps: 
-    - query: update egswm_paymentdetails set paymentNo=?, voucherNumber=?, voucherDate=?, instrumentType=?, instrumentNumber=?, instrumentDate=?, bankName=?, branchName=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+    - query: update egswm_paymentdetails set amount=?, paymentNo=?, voucherNumber=?, voucherDate=?, instrumentType=?, instrumentNumber=?, instrumentDate=?, bankName=?, branchName=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
       basePath: $.paymentDetails.*
       jsonMaps:
+
+       - jsonPath: $.paymentDetails.*.amount
+         dbType: DOUBLE
        
        - jsonPath: $.paymentDetails.*.vendorPaymentDetails.paymentNo
 

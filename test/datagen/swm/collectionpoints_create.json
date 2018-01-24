@@ -1,0 +1,134 @@
+[
+  {
+    "field_name": "code",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].code",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "name",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].name",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "name",
+    "type": "length",
+    "subtype": "maximum(128)",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].name",
+        "value": "{{$randomString(129)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "location",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].location",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "id",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].binDetails[0].id",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "assetOrBinId",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].binDetails[0].assetOrBinId",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "assetOrBinId",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].binDetails[0].assetOrBinId",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "rfid",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].binDetails[0].rfid",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "id",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].collectionPointDetails[0].id",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "collectionType",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].collectionPointDetails[0].collectionType",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "garbageEstimate",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].collectionPointDetails[0].garbageEstimate",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "description",
+    "type": "length",
+    "subtype": "maximum(300)",
+    "operations": [
+      {
+        "json_path": "$.collectionPoints[0].collectionPointDetails[0].description",
+        "value": "{{$randomString(301)}}"
+      }
+    ]
+  }
+]

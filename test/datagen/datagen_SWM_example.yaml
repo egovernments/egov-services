@@ -20,4 +20,7 @@ apis:
     generated:
       regNumber
 
-
+  /collectionpoints/_create:
+    reference:
+      location:
+      collectionType:

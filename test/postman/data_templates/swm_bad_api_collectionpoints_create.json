@@ -1,0 +1,42 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "collectionPoints": [
+    {
+      "tenantId": "default",
+      "name": "CollectionPoint {{$GUIDWD(10)}}",
+      "location": {
+        "code": "5"
+      },
+      "binDetails": [
+        {
+          "assetOrBinId": "Bin {{$randomDigits(10)}}",
+          "rfidAssigned": true,
+          "rfid": "RFID {{$randomDigits(5)}}",
+          "latitude": null,
+          "longitude": null
+        }
+      ],
+      "collectionPointDetails": [
+        {
+          "collectionType": {
+            "code": "Collection Type Code 3"
+          },
+          "garbageEstimate": "{{$randomInt(50,100)}}",
+        "description": "description"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,321 @@
+[
+  {
+    "field_name": "name",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].name",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "name",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].name",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "servicedLocations",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].servicedLocations",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "registrationNo",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].registrationNo",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "registrationNo",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].registrationNo",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "supplierNo",
+    "type": "length",
+    "subtype": "maximum(128)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.supplierNo",
+        "value": "{{$randomString(129)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "name",
+    "type": "length",
+    "subtype": "maximum(100)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.name",
+        "value": "{{$randomString(101)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "agencyName",
+    "type": "length",
+    "subtype": "maximum(100)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.agencyName",
+        "value": "{{$randomString(101)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "mobileNo",
+    "type": "length",
+    "subtype": "maximum(10)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.mobileNo",
+        "value": "{{$randomString(11)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "contactNo",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.contactNo",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "contactNo",
+    "type": "length",
+    "subtype": "maximum(10)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.contactNo",
+        "value": "{{$randomString(11)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "contactNo",
+    "type": "length",
+    "subtype": "minimum(10)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.contactNo",
+        "value": "{{$randomString(9)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "faxNumber",
+    "type": "length",
+    "subtype": "minimum(10)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.faxNumber",
+        "value": "{{$randomString(9)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "email",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.email",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "email",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.email",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "email",
+    "type": "length",
+    "subtype": "minimum(7)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.email",
+        "value": "{{$randomString(6)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "address",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.address",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "address",
+    "type": "length",
+    "subtype": "maximum(500)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.address",
+        "value": "{{$randomString(501)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "address",
+    "type": "length",
+    "subtype": "minimum(10)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.address",
+        "value": "{{$randomString(9)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "tinNumber",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.tinNumber",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "gst",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.gst",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "gst",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].supplier.gst",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "tenantId",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].agreementDocument.tenantId",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "name",
+    "type": "length",
+    "subtype": "maximum(128)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].agreementDocument.name",
+        "value": "{{$randomString(129)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "refId",
+    "type": "length",
+    "subtype": "maximum(256)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].agreementDocument.refId",
+        "value": "{{$randomString(257)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "fileStoreId",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].agreementDocument.fileStoreId",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "comments",
+    "type": "length",
+    "subtype": "maximum(1024)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].agreementDocument.comments",
+        "value": "{{$randomString(1025)}}"
+      }
+    ]
+  },
+  {
+    "field_name": "servicesOffered",
+    "type": "required",
+    "subtype": "missing",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].servicesOffered",
+        "value": "##delete##"
+      }
+    ]
+  },
+  {
+    "field_name": "details",
+    "type": "length",
+    "subtype": "maximum(500)",
+    "operations": [
+      {
+        "json_path": "$.vendors[0].details",
+        "value": "{{$randomString(501)}}"
+      }
+    ]
+  }
+]

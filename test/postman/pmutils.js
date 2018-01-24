@@ -111,6 +111,9 @@ if (typeof PMUtil === "undefined") {
             $randomStringC: function (min, max, set = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
                 return this.$randomString(min, max, set)
             },
+            $randomDigits: function (min, max, set = '1234567890') {
+                return this.$randomString(min, max, set)
+            },
             $randomStringS: function (min, max, set = 'abcdefghijklmnopqrstuvwxyz') {
                 return this.$randomString(min, max, set)
             },

@@ -63,7 +63,7 @@ public class LetterOfAcceptanceValidator {
                 letterOfAcceptanceRequest.getRequestInfo());
 
         for (LetterOfAcceptance acceptance : letterOfAcceptances) {
-            if (!acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
+            if (!acceptance.getStatus().getCode().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
                 messages.put(Constants.KEY_INVALID_LOA_EXISTS, Constants.MESSAGE_INVALID_LOA_EXISTS);
                 break;
             }
@@ -160,7 +160,7 @@ public class LetterOfAcceptanceValidator {
 
         for (LetterOfAcceptance acceptance : letterOfAcceptances) {
             if (acceptance.getStatus() != null
-                    && !acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
+                    && !acceptance.getStatus().getCode().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
                 messages.put(Constants.KEY_WORKS_LOA_DE_EXISTS, Constants.MESSAGE_WORKS_LOA_DE_EXISTS);
                 break;
             }
@@ -191,7 +191,7 @@ public class LetterOfAcceptanceValidator {
                 letterOfAcceptanceRequest.getRequestInfo());
 
         for (LetterOfAcceptance acceptance : letterOfAcceptances) {
-            if (!acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
+            if (!acceptance.getStatus().getCode().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
                 messages.put(Constants.KEY_INVALID_LOA_DE_EXISTS, Constants.MESSAGE_INVALID_LOA_DE_EXISTS);
             }
         }

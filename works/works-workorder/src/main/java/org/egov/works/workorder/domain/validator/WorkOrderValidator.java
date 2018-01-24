@@ -193,7 +193,7 @@ public class WorkOrderValidator {
 
         if (!isUpdate)
             for (WorkOrder workOrder2 : workOrders) {
-                if (!workOrder2.getStatus().toString().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
+                if (!workOrder2.getStatus().getCode().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
                     messages.put(Constants.KEY_INVALID_WORKORDER_EXISTS, Constants.MESSAGE_INVALID_WORKORDER_EXISTS);
                     break;
                 }
@@ -231,7 +231,7 @@ public class WorkOrderValidator {
         List<WorkOrder> workOrders = workOrderRepository.search(workOrderSearchContract, workOrderRequest.getRequestInfo());
 
         for (WorkOrder workOrder2 : workOrders) {
-            if (!workOrder2.getStatus().toString().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
+            if (!workOrder2.getStatus().getCode().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
                 messages.put(Constants.KEY_INVALID_LOA_WORKORDER, Constants.MESSAGE_INVALID_LOA_WORKORDER);
                 break;
             }

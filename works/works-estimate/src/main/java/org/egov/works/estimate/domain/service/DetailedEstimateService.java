@@ -310,7 +310,7 @@ public class DetailedEstimateService {
                 detailedEstimate.setStatus(status);
             }
 
-            if (!detailedEstimate.getSpillOverFlag() && detailedEstimate.getStatus().toString()
+            if (!detailedEstimate.getSpillOverFlag() && detailedEstimate.getStatus().getCode()
                     .equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
                 detailedEstimate.setApprovedDate(new Date().getTime());
 
@@ -364,7 +364,7 @@ public class DetailedEstimateService {
             }
             workFlowDetails.setStateId(detailedEstimate.getStateId());
             if (detailedEstimate.getStatus() != null)
-                workFlowDetails.setStatus(detailedEstimate.getStatus().toString());
+                workFlowDetails.setStatus(detailedEstimate.getStatus().getCode());
 
             if (null != requestInfo && null != requestInfo.getUserInfo()) {
                 workFlowDetails.setSenderName(requestInfo.getUserInfo().getUserName());

@@ -303,7 +303,7 @@ public class ContractorBillValidator {
         if (!oldBill.isEmpty())
             for (ContractorBill bill : oldBill) {
                 // TODO : need to read bill status from mdms
-                if (!contractorBill.getStatus().toString().equals(Constants.BILL_CANCELLED_STATUS.toString()))
+                if (!contractorBill.getStatus().getCode().equals(Constants.BILL_CANCELLED_STATUS.toString()))
                     messages.put(Constants.KEY_UNIQUE_CONTRACTORBILLNUMBER,
                             Constants.MESSAGE_UNIQUE_CONTRACTORBILLNUMBER);
             }

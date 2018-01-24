@@ -293,7 +293,7 @@ public class MeasurementBookValidator {
                 if (status.equals(Constants.STATUS_CANCELLED) || status.equals(Constants.STATUS_APPROVED)) {
                     messages.put(Constants.KEY_MB_CANNOT_UPDATE_STATUS, Constants.MSG_MB_CANNOT_UPDATE_STATUS);
                 } else if((status.equals(Constants.STATUS_REJECTED) && !measurementBook.getStatus().getCode().equals(Constants.STATUS_RESUBMITTED)) ||
-                        (status.equals(Constants.STATUS_RESUBMITTED) && !(measurementBook.getStatus().toString().equals(Constants.STATUS_CHECKED) ||
+                        (status.equals(Constants.STATUS_RESUBMITTED) && !(measurementBook.getStatus().getCode().equals(Constants.STATUS_CHECKED) ||
                                 measurementBook.getStatus().getCode().equals(Constants.STATUS_CANCELLED)) )) {
                     messages.put(Constants.KEY_MB_INVALID_STATUS, Constants.MSG_MB_INVALID_STATUS);
                 } else if (!measurementBook.getStatus().getCode().equals(Constants.STATUS_REJECTED)) {

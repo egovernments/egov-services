@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Objects;
  * An Object that holds the basic data for Measurement Book
  */
 @ApiModel(description = "An Object that holds the basic data for Measurement Book")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-24T10:52:01.165Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T07:36:21.338Z")
 
 public class MeasurementBook   {
     @JsonProperty("id")
@@ -298,7 +299,7 @@ public class MeasurementBook   {
     @ApiModelProperty(required = true, value = "Reference of Letter of Acceptance Estimate")
     @NotNull
 
-    @Valid
+//  @Valid
 
     public LetterOfAcceptanceEstimate getLetterOfAcceptanceEstimate() {
         return letterOfAcceptanceEstimate;
@@ -307,18 +308,6 @@ public class MeasurementBook   {
     public void setLetterOfAcceptanceEstimate(LetterOfAcceptanceEstimate letterOfAcceptanceEstimate) {
         this.letterOfAcceptanceEstimate = letterOfAcceptanceEstimate;
     }
-
-    public MeasurementBook revisionLOA(String revisionLOA) {
-        this.revisionLOA = revisionLOA;
-        return this;
-    }
-
-    /**
-     * Reference of Revision LOA
-     * @return revisionLOA
-     **/
-    @ApiModelProperty(value = "Reference of Revision LOA")
-
 
     public String getRevisionLOA() {
         return revisionLOA;
@@ -369,7 +358,7 @@ public class MeasurementBook   {
      **/
     @ApiModelProperty(value = "Array of Measurement Book Details")
 
-    @Valid
+//  @Valid
     @Size(min=1)
     public List<MeasurementBookDetail> getMeasurementBookDetails() {
         return measurementBookDetails;
@@ -378,6 +367,8 @@ public class MeasurementBook   {
     public void setMeasurementBookDetails(List<MeasurementBookDetail> measurementBookDetails) {
         this.measurementBookDetails = measurementBookDetails;
     }
+
+
 
     public List<MeasurementBookDetail> getLumpSumMBDetails() {
         return lumpSumMBDetails;
@@ -468,7 +459,7 @@ public class MeasurementBook   {
      **/
     @ApiModelProperty(value = "Array of document details")
 
-    @Valid
+//  @Valid
 
     public List<DocumentDetail> getDocumentDetails() {
         return documentDetails;
@@ -559,18 +550,6 @@ public class MeasurementBook   {
         this.cancellationRemarks = cancellationRemarks;
     }
 
-    public MeasurementBook billNumber(String billNumber) {
-        this.billNumber = billNumber;
-        return this;
-    }
-
-    /**
-     * Comma separated Bill Numbers.
-     * @return billNumber
-     **/
-    @ApiModelProperty(value = "Comma separated Bill Numbers.")
-
-    @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(min=1,max=256)
     public String getBillNumber() {
         return billNumber;
     }
@@ -578,18 +557,6 @@ public class MeasurementBook   {
     public void setBillNumber(String billNumber) {
         this.billNumber = billNumber;
     }
-
-    public MeasurementBook billDate(Long billDate) {
-        this.billDate = billDate;
-        return this;
-    }
-
-    /**
-     * Epoch time of when the bills created
-     * @return billDate
-     **/
-    @ApiModelProperty(value = "Epoch time of when the bills created")
-
 
     public Long getBillDate() {
         return billDate;
@@ -640,10 +607,6 @@ public class MeasurementBook   {
         this.auditDetails = auditDetails;
     }
 
-    public MeasurementBook deleted(Boolean deleted) {
-        this.deleted = deleted;
-        return this;
-    }
 
     /**
      * Boolean value to identify whether the object is deleted or not from UI.
@@ -660,9 +623,8 @@ public class MeasurementBook   {
         this.deleted = deleted;
     }
 
-
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -691,8 +653,6 @@ public class MeasurementBook   {
                 Objects.equals(this.stateId, measurementBook.stateId) &&
                 Objects.equals(this.cancellationReason, measurementBook.cancellationReason) &&
                 Objects.equals(this.cancellationRemarks, measurementBook.cancellationRemarks) &&
-                Objects.equals(this.billNumber, measurementBook.billNumber) &&
-                Objects.equals(this.billDate, measurementBook.billDate) &&
                 Objects.equals(this.isPartRate, measurementBook.isPartRate) &&
                 Objects.equals(this.auditDetails, measurementBook.auditDetails) &&
                 Objects.equals(this.deleted, measurementBook.deleted);
@@ -700,7 +660,7 @@ public class MeasurementBook   {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, revisionLOA, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, billNumber, billDate, isPartRate, auditDetails, deleted);
+        return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, revisionLOA, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, isPartRate, auditDetails, deleted);
     }
 
     @Override
@@ -729,8 +689,6 @@ public class MeasurementBook   {
         sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
         sb.append("    cancellationReason: ").append(toIndentedString(cancellationReason)).append("\n");
         sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
-        sb.append("    billNumber: ").append(toIndentedString(billNumber)).append("\n");
-        sb.append("    billDate: ").append(toIndentedString(billDate)).append("\n");
         sb.append("    isPartRate: ").append(toIndentedString(isPartRate)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
@@ -742,7 +700,7 @@ public class MeasurementBook   {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(java.lang.Object o) {
+    private String toIndentedString(Object o) {
         if (o == null) {
             return "null";
         }

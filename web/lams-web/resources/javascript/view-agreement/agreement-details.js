@@ -415,6 +415,32 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
+                                        <label htmlFor="oldAgreementNumber"> Old Agreement Number :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="oldAgreementNumber" name="oldAgreementNumber">
+                                            {agreement.oldAgreementNumber ? agreement.oldAgreementNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="referenceNumber">ShopNumber/ReferneceNo:</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="referenceNumber" name="referenceNumber">
+                                            {agreement.referenceNumber ? agreement.referenceNumber : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
                                         <label htmlFor="commencementDate"> Allotment Date :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">

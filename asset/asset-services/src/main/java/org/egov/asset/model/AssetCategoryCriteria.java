@@ -84,8 +84,12 @@ public class AssetCategoryCriteria {
 
     @JsonProperty("code")
     private String code = null;
+    
+    private Long parent;
 
     @JsonProperty("assetCategoryType")
     private List<String> assetCategoryType = new ArrayList<>();
+    
+    private Boolean isChildCategory;
 
 }

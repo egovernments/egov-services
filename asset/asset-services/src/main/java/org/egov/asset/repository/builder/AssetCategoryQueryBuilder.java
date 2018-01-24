@@ -114,12 +114,22 @@ public class AssetCategoryQueryBuilder {
             selectQuery.append(" assetcategory.assetcategorytype IN ("
                     + getAssetCategoryTypeQuery(assetCategoryCriteria.getAssetCategoryType()));
         }
+        if (assetCategoryCriteria.getIsChildCategory() != null) {
+            selectQuery.append( " AND assetcategory.parentid IS NOT NULL ");
+
+        }
+
+        if (assetCategoryCriteria.getParent() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" assetcategory.parentid = ?");
+            preparedStatementValues.add(assetCategoryCriteria.getParent());
+        }
 
     }
 
     /**
-     * This method is always called at the beginning of the method so that and
-     * is prepended before the field's predicate is handled.
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
      *
      * @param appendAndClauseFlag
      * @param queryString

@@ -89,13 +89,13 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getTargetFrom() != null) {
             addAnd(params);
-            params.append("targetFrom =:targetFrom");
+            params.append("targetFrom >=:targetFrom");
             paramValues.put("targetFrom", searchRequest.getTargetFrom());
         }
 
         if (searchRequest.getTargetTo() != null) {
             addAnd(params);
-            params.append("targetTo =:targetTo");
+            params.append("targetTo <=:targetTo");
             paramValues.put("targetTo", searchRequest.getTargetTo());
         }
 

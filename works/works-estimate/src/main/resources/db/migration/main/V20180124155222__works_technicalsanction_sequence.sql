@@ -1,0 +1,1 @@
+CREATE SEQUENCE seq_egw_technicalsanction;

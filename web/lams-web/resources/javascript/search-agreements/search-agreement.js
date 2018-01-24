@@ -357,8 +357,8 @@ class AgreementSearch extends React.Component {
             revenueWard,
             electionWard,
             code,
-            tenderNumber, fromDate, toDate, shopComplexNumber, acknowledgementNumber ,referenceNumber} = this.state.searchSet;
-
+            oldAgreementNumber,
+            tenderNumber, fromDate, toDate, shopComplexNumber, acknowledgementNumber, referenceNumber } = this.state.searchSet;
         const showCollectTaxOption = function () {
             if (!hideCollectTaxOption) {
                 return (<option value="collTax">Collect Tax</option>);
@@ -551,6 +551,20 @@ class AgreementSearch extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div className="col-sm-6">
+                                        <div className="row">
+                                            <div className="col-sm-6 label-text">
+                                                <label for="oldAgreementNumber">Old Agreement Number </label>
+                                            </div>
+                                            <div className="col-sm-6">
+                                                <input type="text" name="oldAgreementNumber" id="oldAgreementNumber" value={oldAgreementNumber} onChange={(e) => {
+                                                    handleChange(e, "oldAgreementNumber")
+                                                }} />
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <button type="button" className="btn btn-default btn-action pull-right" style={{ marginRight: "2%" }} data-toggle="collapse" data-target="#demo"><span className="glyphicon glyphicon-plus"></span></button>
                                 </div>
                                 <div id="demo" className="collapse">

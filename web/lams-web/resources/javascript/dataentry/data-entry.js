@@ -479,6 +479,9 @@ var commomFieldsRules = {
         required: true,
         alphaNumer: true
     },
+    oldAgreementNumber:{
+      required: true,
+    },
     referenceNumber:{
       required: false,
       alphaNumersh: true

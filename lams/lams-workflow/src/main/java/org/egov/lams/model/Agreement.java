@@ -157,4 +157,6 @@ public class Agreement {
 
 	@NotNull
 	private Long reservationCategory;
+	
+	private String oldAgreementNumber;
 }

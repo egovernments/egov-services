@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.lams.config.PropertiesManager;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
@@ -114,6 +115,9 @@ public class AgreementValidator {
 		if (agreement.getSource().equals(Source.SYSTEM)) {
 			validateWorkflowDetails(agreement.getWorkflowDetails(), errors);
 		}
+		if(Source.DATA_ENTRY.equals(agreement.getSource()) && StringUtils.isBlank(agreement.getOldAgreementNumber()))
+			errors.rejectValue("Agreement.oldAgreementNumber", "",
+					"Old agreement number is mandatory for Data Entry");
 	}
 
 	public void validateModifiedData(AgreementRequest agreementRequest, Errors errors) {

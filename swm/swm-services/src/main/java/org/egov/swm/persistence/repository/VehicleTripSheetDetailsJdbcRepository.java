@@ -89,13 +89,13 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getTripStartDate() != null) {
             addAnd(params);
-            params.append("tripStartDate =:tripStartDate");
+            params.append("tripStartDate >=:tripStartDate");
             paramValues.put("tripStartDate", searchRequest.getTripStartDate());
         }
 
         if (searchRequest.getTripEndDate() != null) {
             addAnd(params);
-            params.append("tripEndDate =:tripEndDate");
+            params.append("tripEndDate <=:tripEndDate");
             paramValues.put("tripEndDate", searchRequest.getTripEndDate());
         }
 

@@ -52,9 +52,9 @@ public class VehicleFuellingDetails {
     private RefillingPumpStation refuellingStation = null;
 
     @NotNull
+    @DecimalMin(value = "1", message = "fuelFilled shall be between 1 and 500 Ltrs")
+    @DecimalMax(value = "500", message = "fuelFilled shall be between 1 and 500 Ltrs")
     @Digits(fraction = 2, integer = 3, message = "fuelFilled shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "fuelFilled shall be between 1 and 100 Ltrs")
-    @DecimalMax(value = "500", message = "fuelFilled shall be between 1 and 100 Ltrs")
     @JsonProperty("fuelFilled")
     private Double fuelFilled = null;
 

@@ -91,7 +91,7 @@ serviceMaps:
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, driver, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, driver, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, isvehicleunderwarranty, isulbowned, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*
       jsonMaps:
        
@@ -139,6 +139,12 @@ serviceMaps:
        - jsonPath: $.vehicles.*.endOfWarranty
          dbType: LONG
 
+       - jsonPath: $.vehicles.*.isVehicleUnderWarranty
+         dbType: BOOLEAN
+
+       - jsonPath: $.vehicles.*.isUlbOwned
+         dbType: BOOLEAN
+
        - jsonPath: $.vehicles.*.auditDetails.createdBy
 
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedBy
@@ -149,13 +155,15 @@ serviceMaps:
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*.insuranceDetails.insuranceDocument
       jsonMaps:
        
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.id
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.tenantId
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.name
          
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.refCode
 
@@ -177,7 +185,7 @@ serviceMaps:
    fromTopic: swm-vehicle-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, operatorsReq=?, model=?, driver=?, vendor=?, purchasedate=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE regnumber=? AND tenantid=?;
+    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, operatorsReq=?, model=?, driver=?, vendor=?, purchasedate=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, kilometers=?, endOfWarranty=?, isvehicleunderwarranty=?, isulbowned=?, lastmodifiedby=?, lastmodifiedtime=? WHERE regnumber=? AND tenantid=?;
       basePath: $.vehicles.*
       jsonMaps:
 
@@ -221,6 +229,12 @@ serviceMaps:
        - jsonPath: $.vehicles.*.endOfWarranty
          dbType: LONG
 
+       - jsonPath: $.vehicles.*.isVehicleUnderWarranty
+         dbType: BOOLEAN
+
+       - jsonPath: $.vehicles.*.isUlbOwned
+         dbType: BOOLEAN
+
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedBy
 
        - jsonPath: $.vehicles.*.auditDetails.lastModifiedTime
@@ -231,11 +245,13 @@ serviceMaps:
        - jsonPath: $.vehicles.*.tenantId
 
 
-    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
+    - query: update egswm_document set fileStoreId=?, name=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
       basePath: $.vehicles.*.insuranceDetails.insuranceDocument
       jsonMaps:
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.fileStoreId
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.name
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.lastModifiedBy
 
@@ -385,7 +401,7 @@ serviceMaps:
    description: create route in egswm_route
    fromTopic: swm-route-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_route(code, tenantid, name, collectionType, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_route(code, tenantid, name, collectionType, totalDistance, totalGarbageEstimate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.routes.*
       jsonMaps:
        
@@ -396,6 +412,12 @@ serviceMaps:
        - jsonPath: $.routes.*.name
 
        - jsonPath: $.routes.*.collectionType.code
+
+       - jsonPath: $.routes.*.totalDistance
+         dbType: DOUBLE
+
+       - jsonPath: $.routes.*.totalGarbageEstimate
+         dbType: DOUBLE
          
        - jsonPath: $.routes.*.auditDetails.createdBy
 
@@ -439,13 +461,19 @@ serviceMaps:
    fromTopic: swm-route-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_route SET name=?, collectionType=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
+    - query: UPDATE egswm_route SET name=?, collectionType=?, totalDistance=?, totalGarbageEstimate=?, lastmodifiedby=?, lastmodifiedtime=? WHERE code=? AND tenantid=?;
       basePath: $.routes.*
       jsonMaps:
 
        - jsonPath: $.routes.*.name
 
        - jsonPath: $.routes.*.collectionType.code
+
+       - jsonPath: $.routes.*.totalDistance
+         dbType: DOUBLE
+
+       - jsonPath: $.routes.*.totalGarbageEstimate
+         dbType: DOUBLE
 
        - jsonPath: $.routes.*.auditDetails.lastModifiedBy
 
@@ -574,13 +602,15 @@ serviceMaps:
        - jsonPath: $.vendors.*.servicesOffered.*.code
 
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendors.*.agreementDocument
       jsonMaps:
        
        - jsonPath: $.vendors.*.agreementDocument.id
 
        - jsonPath: $.vendors.*.agreementDocument.tenantId
+
+       - jsonPath: $.vendors.*.agreementDocument.name
          
        - jsonPath: $.vendors.*.agreementDocument.refCode
 
@@ -678,11 +708,13 @@ serviceMaps:
          
        - jsonPath: $.vendors.*.servicesOffered.*.code
 
-    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
+    - query: update egswm_document set fileStoreId=?, name=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
       basePath: $.vendors.*.agreementDocument
       jsonMaps:
 
        - jsonPath: $.vendors.*.agreementDocument.fileStoreId
+
+       - jsonPath: $.vendors.*.agreementDocument.name
 
        - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedBy
 
@@ -737,6 +769,16 @@ serviceMaps:
        - jsonPath: $.vendorContracts.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendorcontract, service) VALUES (?, ?, ?);
+      basePath: $.vendorContracts.*.servicesOffered.*
+      jsonMaps:
+       
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.tenantId
+
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].contractNo
+         
+       - jsonPath: $.vendorContracts.*.servicesOffered.*.code
+
  - version: 1.0
    name: vendorcontract update
    description: update vendorcontract in egswm_vendorcontract
@@ -775,6 +817,16 @@ serviceMaps:
        - jsonPath: $.vendorContracts.*.contractNo
 
        - jsonPath: $.vendorContracts.*.tenantId
+
+    - query: INSERT INTO egswm_vendorcontractservicesoffered(tenantid, vendorcontract, service) VALUES (?, ?, ?);
+      basePath: $.vendorContracts.*.servicesOffered.*
+      jsonMaps:
+       
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].vendor.tenantId
+
+       - jsonPath: $.vendorContracts[?({code} in @.servicesOffered[*].code)].contractNo
+         
+       - jsonPath: $.vendorContracts.*.servicesOffered.*.code
 
  - version: 1.0
    name: vehiclemaintenance create
@@ -1387,7 +1439,7 @@ serviceMaps:
    description: create vehiclemaintenancedetails in egswm_vendorpaymentdetails
    fromTopic: swm-vendorpaymentdetails-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vendorpaymentdetails (paymentno, tenantid, vendorcontract, invoiceno, fromdate, todate, vendorinvoiceamount, employee,  createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vendorpaymentdetails (paymentno, tenantid, vendorcontract, invoiceno, invoicedate, fromdate, todate, vendorinvoiceamount, employee,  createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendorPaymentDetails.*
       jsonMaps:
        
@@ -1398,6 +1450,9 @@ serviceMaps:
        - jsonPath: $.vendorPaymentDetails.*.vendorContract.contractNo
 
        - jsonPath: $.vendorPaymentDetails.*.invoiceNo
+
+       - jsonPath: $.vendorPaymentDetails.*.invoiceDate
+         dbType: LONG
 
        - jsonPath: $.vendorPaymentDetails.*.fromDate
          dbType: LONG
@@ -1420,13 +1475,15 @@ serviceMaps:
        - jsonPath: $.vendorPaymentDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendorPaymentDetails.*.documents.*
       jsonMaps:
        
        - jsonPath: $.vendorPaymentDetails.*.documents.*.id
 
        - jsonPath: $.vendorPaymentDetails.*.documents.*.tenantId
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.name
          
        - jsonPath: $.vendorPaymentDetails.*.documents.*.refCode
 
@@ -1448,13 +1505,16 @@ serviceMaps:
    description: update vehiclemaintenancedetails in egswm_vendorpaymentdetails
    fromTopic: swm-vendorpaymentdetails-update-topic
    queryMaps: 
-    - query: update egswm_vendorpaymentdetails set vendorcontract=?, invoiceno=?, fromdate=?, todate=?, vendorinvoiceamount=?, employee=?, lastmodifiedby=?, lastmodifiedtime=? where paymentNo=? and tenantId=?;
+    - query: update egswm_vendorpaymentdetails set vendorcontract=?, invoiceno=?, invoicedate=?, fromdate=?, todate=?, vendorinvoiceamount=?, employee=?, lastmodifiedby=?, lastmodifiedtime=? where paymentNo=? and tenantId=?;
       basePath: $.vendorPaymentDetails.*
       jsonMaps:
        
        - jsonPath: $.vendorPaymentDetails.*.vendorContract.contractNo
 
        - jsonPath: $.vendorPaymentDetails.*.invoiceNo
+
+       - jsonPath: $.vendorPaymentDetails.*.invoiceDate
+         dbType: LONG
 
        - jsonPath: $.vendorPaymentDetails.*.fromDate
          dbType: LONG
@@ -1477,13 +1537,15 @@ serviceMaps:
        - jsonPath: $.vendorPaymentDetails.*.tenantId
 
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendorPaymentDetails.*.documents.*
       jsonMaps:
        
        - jsonPath: $.vendorPaymentDetails.*.documents.*.id
 
        - jsonPath: $.vendorPaymentDetails.*.documents.*.tenantId
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.name
          
        - jsonPath: $.vendorPaymentDetails.*.documents.*.refCode
 
@@ -1603,10 +1665,10 @@ serviceMaps:
     - query: update egswm_paymentdetails set amount=?, paymentNo=?, voucherNumber=?, voucherDate=?, instrumentType=?, instrumentNumber=?, instrumentDate=?, bankName=?, branchName=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
       basePath: $.paymentDetails.*
       jsonMaps:
-       
+
        - jsonPath: $.paymentDetails.*.amount
          dbType: DOUBLE
-
+       
        - jsonPath: $.paymentDetails.*.vendorPaymentDetails.paymentNo
 
        - jsonPath: $.paymentDetails.*.voucherNumber

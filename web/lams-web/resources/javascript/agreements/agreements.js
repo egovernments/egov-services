@@ -438,7 +438,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
             // }
         }
         // remove all other Asset Details block from DOM except land asset related fields
-    $("#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
     //disabling input tag of asset details
@@ -503,7 +503,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#shoppingComplexAssetDetailsBlock,#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
     //disabling input tag of asset details
@@ -514,7 +514,22 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     $("#shopAssetDetailsBlock select").attr("disabled", true);
     //append category text
     $(".categoryType").prepend("Shop ");
-} else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
+} else if (decodeURIComponent(getUrlVars()["type"]) == "Shopping Complex") {
+    // validation rules for shop agreement
+    // remove all other Asset Details block from DOM except shop asset related fields
+    $("#shopAssetDetailsBlock,#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    //remove agreement template two and three from screen
+    $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateThree").remove();
+    //disabling input tag of asset details
+    $("#shoppingComplexAssetDetailsBlock input").attr("disabled", true);
+    //disabling textarea tag of asset details
+    $("#shoppingComplexAssetDetailsBlock textarea").attr("disabled", true);
+    //disabling select tag of asset details
+    $("#shoppingComplexAssetDetailsBlock select").attr("disabled", true);
+    //append category text
+    $(".categoryType").prepend("Shopping Complex ");
+}
+else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {
     // validation rules for shop agreement
     validationRules = {
         // assetCategory: {
@@ -553,7 +568,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -600,7 +615,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -650,7 +665,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -699,7 +714,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #shoppingComplexAssetDetailsBlock,#landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -746,7 +761,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -794,7 +809,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -841,7 +856,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -888,7 +903,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     }
 
     // remove all other Asset Details block from DOM except shop asset related fields
-    $("#rendCalculatedMethod,#shopAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock").remove();
+    $("#rendCalculatedMethod,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #landAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo").remove();
     //disabling input tag of asset details
@@ -898,7 +913,7 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     $(".categoryType").prepend("Park ");
 } else {
     // remove all other Asset Details block from DOM except land asset related fields
-    $("#landAssetDetailsBlock,#shopAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
+    $("#landAssetDetailsBlock,#shopAssetDetailsBlock,#shoppingComplexAssetDetailsBlock, #marketAssetDetailsBlock, #kalyanamandapamAssetDetailsBlock, #parkingSpaceAssetDetailsBlock, #slaughterHousesAssetDetailsBlock, #usfructsAssetDetailsBlock, #communityAssetDetailsBlock, #fishTankAssetDetailsBlock, #parkAssetDetailsBlock").remove();
     //remove agreement template two and three from screen
     $("#agreementDetailsBlockTemplateOne,#agreementDetailsBlockTemplateTwo,#agreementDetailsBlockTemplateThree").remove();
     alert("Agreement is not applicable for selected category");
@@ -1129,6 +1144,8 @@ if (assetDetails && Object.keys(assetDetails).length) {
 
     $("#code").val(assetDetails["code"]);
 
+    $("#shoppingComplexName").val(assetDetails["name"]);
+
     $("#locationDetails\\.locality").val(getNameById(locality, assetDetails["locationDetails"]["locality"]));
 
     $("#locationDetails\\.street").val(getNameById(street, assetDetails["locationDetails"]["street"]));
@@ -1169,6 +1186,12 @@ if (assetDetails && Object.keys(assetDetails).length) {
                 case 'Shopping Complex No.':
                     $("#shoppingComplexNo").val(attrs[i].value);
                     break;
+                case 'Total No. of Shops':
+                            $("#shoppingComplexNoShops").val(attrs[i].value);
+                            break;
+               case 'No. of Floors':
+                            $("#shoppingComplexNoFloors").val(attrs[i].value);
+                            break;
                 case 'Shop No':
                     $("#shoppingComplexShopNo").val(attrs[i].value);
                     break;

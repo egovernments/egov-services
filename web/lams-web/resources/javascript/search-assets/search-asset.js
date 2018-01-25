@@ -18,7 +18,7 @@ class AssetSearch extends React.Component {
         locality: [],
         electionwards: [],
         modify: false,
-        categories: ["land", "shop", "market", "kalyana mandapam", "parking space", "slaughter house", "usufruct", "community toilet complex", "fish tanks", "parks"]
+        categories: ["land", "shop", "shopping complex","market", "kalyana mandapam", "parking space", "slaughter house", "usufruct", "community toilet complex", "fish tanks", "parks"]
     }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);

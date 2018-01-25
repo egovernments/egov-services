@@ -3,6 +3,7 @@ class AssetDepreciation extends React.Component {
   constructor(props) {
     super(props);
     this.state={
+      headerLabelText : 'Select All',
       isAssetDeprecated:false,
       searchSet:{
         tenantId,
@@ -232,6 +233,7 @@ class AssetDepreciation extends React.Component {
       ids = [];
     }
     this.setState({
+      headerLabelText : boolean ? 'Unselect All' : 'Select All',
       createDepreciation:{
         Depreciation:{
           ...this.state.createDepreciation.Depreciation,
@@ -341,7 +343,7 @@ class AssetDepreciation extends React.Component {
 
   render() {
       let {handleChange, search, closeWindow, getName, handleClick, addRemoveAsset, createDepreciation, bulkAddRemoveAsset, showAssetDeprecatedTable}=this;
-      let {isSearchClicked, assetCategory, assetCategoryName, department, resultSet, isAssetDeprecated}=this.state;
+      let {isSearchClicked, assetCategory, assetCategoryName, department, resultSet, isAssetDeprecated, headerLabelText}=this.state;
       let {assetIds} = this.state.createDepreciation.Depreciation;
       let {
         dateOfDepreciation,assetCategoryType,assetCreatedFrom,assetCreatedTo,code,name
@@ -379,7 +381,7 @@ class AssetDepreciation extends React.Component {
               <table id="agreementTable" className="table table-bordered">
                   <thead>
                   <tr>
-                      <th><input type="checkbox" className="checkAll" onClick={(e)=>{bulkAddRemoveAsset(e.target.checked)}} /> Select All</th>
+                      <th><input type="checkbox" className="checkAll" onClick={(e)=>{bulkAddRemoveAsset(e.target.checked)}} /> {headerLabelText}</th>
                       <th>Sr. No.</th>
                       <th>Asset Category Name</th>
                       <th>Department</th>

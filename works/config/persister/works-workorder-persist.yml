@@ -777,3 +777,189 @@ serviceMaps:
 
        - jsonPath: $.contractorAdvanceRequisitions.*.deleted
 
+ - version: 1.0
+   name: Letter Of Acceptance Backupdate
+   description: Backupdate workordercreated flag isWorkOrderCreated on creation/cancel of Letter Of Acceptance in egw_letterofacceptance table
+   fromTopic: works-letterofacceptance-wo-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_letterofacceptance set isWorkOrderCreated=? where id=? and tenantId=?;
+      basePath: $.workOrders.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.backUpdateLOA
+         type: BOOLEAN
+
+       - jsonPath: $.workOrders.*.letterOfAcceptance.id
+
+       - jsonPath: $.workOrders.*.tenantId
+
+ - version: 1.0
+   name: Letter Of Acceptance Backupdate
+   description: Backupdate offlinestatus flag isOfflineStatusCreated on creation of Letter Of Acceptance in egw_letterofacceptance table
+   fromTopic: works-letterofacceptance-os-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_letterofacceptance set isOfflineStatusCreated=? where id=? and tenantId=?;
+      basePath: $.letterOfAcceptances.*
+      jsonMaps:
+
+       - jsonPath: $.letterOfAcceptances.*.backUpdateLOA
+         type: BOOLEAN
+
+       - jsonPath: $.letterOfAcceptances.*.id
+
+       - jsonPath: $.letterOfAcceptances.*.tenantId
+
+ - version: 1.0
+   name: Letter Of Acceptance Backupdate
+   description: Backupdate milestone flag isMilestoneCreated on creation of Milestone in egw_letterofacceptance table
+   fromTopic: works-letterofacceptance-milestone-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_letterofacceptance set isMilestoneCreated=? where id=? and tenantId=?;
+      basePath: $.milestones.*
+      jsonMaps:
+
+       - jsonPath: $.milestones.*.backUpdateLOA
+         type: BOOLEAN
+
+       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.letterOfAcceptance
+
+       - jsonPath: $.milestones.*.tenantId
+
+ - version: 1.0
+   name: Letter Of Acceptance Backupdate
+   description: Backupdate billscreated flag isbillscreated on creation of Bill in egw_letterofacceptance table
+   fromTopic: works-letterofacceptance-bill-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_letterofacceptance set isBillsCreated=? where id=? and tenantId=?;
+      basePath: $.contractorBills.*
+      jsonMaps:
+
+       - jsonPath: $.contractorBills.*.backUpdateLOA
+         type: BOOLEAN
+
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
+
+       - jsonPath: $.contractorBills.*.tenantId
+
+ - version: 1.0
+   name: Letter Of Acceptance Backupdate
+   description: Backupdate advancerequisition flag isarfcreated on creation of ARF in egw_letterofacceptance table
+   fromTopic: works-letterofacceptance-arf-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_letterofacceptance set isarfCreated=? where id=? and tenantId=?;
+      basePath: $.contractorAdvanceRequisitions.*
+      jsonMaps:
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.backUpdateLOA
+         type: BOOLEAN
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.letterOfAcceptance
+
+       - jsonPath: $.contractorAdvanceRequisitions.*.tenantId
+
+ - version: 1.0
+   name: Letter Of Acceptance Backupdate
+   description: Backupdate mb flag isarfcreated on creation of MB in egw_letterofacceptance table
+   fromTopic: works-letterofacceptance-mb-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_letterofacceptance set ismbCreated=? where id=? and tenantId=?;
+      basePath: $.measurementBooks.*
+      jsonMaps:
+
+       - jsonPath: $.measurementBooks.*.backUpdateLOA
+         type: BOOLEAN
+
+       - jsonPath: $.measurementBooks.*.letterOfAcceptanceEstimate.letterOfAcceptance
+
+       - jsonPath: $.measurementBooks.*.tenantId
+
+ - version: 1.0
+   name: WorkOrder Backupdate
+   description: Backupdate offlinestatus flag isOfflineStatusCreated on creation of WorkOrder in egw_workorder table
+   fromTopic: works-workorder-os-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_workorder set isOfflineStatusCreated=? where id=? and tenantId=?;
+      basePath: $.workOrders.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.backUpdateWO
+         type: BOOLEAN
+
+       - jsonPath: $.workOrders.*.id
+
+       - jsonPath: $.workOrders.*.tenantId
+
+ - version: 1.0
+   name: WorkOrder Backupdate
+   description: Backupdate milestone flag isMilestoneCreated on creation of Milestone in egw_workorder table
+   fromTopic: works-workorder-milestone-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_workorder set isMilestoneCreated=? where id=? and tenantId=?;
+      basePath: $.workOrders.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.backUpdateWO
+         type: BOOLEAN
+
+       - jsonPath: $.workOrders.*.id
+
+       - jsonPath: $.workOrders.*.tenantId
+
+ - version: 1.0
+   name: WorkOrder Backupdate
+   description: Backupdate billscreated flag isbillscreated on creation of Bill in egw_workorder table
+   fromTopic: works-workorder-bill-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_workorder set isBillsCreated=? where id=? and tenantId=?;
+      basePath: $.workOrders.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.backUpdateWO
+         type: BOOLEAN
+
+       - jsonPath: $.workOrders.*.id
+
+       - jsonPath: $.workOrders.*.tenantId
+
+ - version: 1.0
+   name: WorkOrder Backupdate
+   description: Backupdate advancerequisition flag isarfcreated on creation of ARF in egw_workorder table
+   fromTopic: works-workorder-arf-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_workorder set isarfCreated=? where id=? and tenantId=?;
+      basePath: $.workOrders.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.backUpdateWO
+         type: BOOLEAN
+
+       - jsonPath: $.workOrders.*.id
+
+       - jsonPath: $.workOrders.*.tenantId
+
+ - version: 1.0
+   name: WorkOrder Backupdate
+   description: Backupdate mb flag isarfcreated on creation of MB in egw_workorder table
+   fromTopic: works-workorder-mb-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_workorder set ismbCreated=? where id=? and tenantId=?;
+      basePath: $.workOrders.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.backUpdateWO
+         type: BOOLEAN
+
+       - jsonPath: $.workOrders.*.id
+
+       - jsonPath: $.workOrders.*.tenantId

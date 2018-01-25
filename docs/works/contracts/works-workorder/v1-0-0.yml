@@ -1474,6 +1474,30 @@ definitions:
         type: boolean
         description: Boolean value to identify whether the object is deleted or not from UI.
         default: false
+      isWorkOrderCreated:
+        type: boolean
+        description: If WorkOrder is created for a this LOA, value will be updated to true.
+        default: false
+      isOfflineStatusCreated:
+        type: boolean
+        description: If Offline Status is created for a this LOA, value will be updated to true.
+        default: false
+      isMilestoneCreated:
+        type: boolean
+        description: If Milestone is created for a this LOA, value will be updated to true.
+        default: false
+      isBillCreated:
+        type: boolean
+        description: If bill is created for a this LOA, value will be updated to true.
+        default: false
+      isARFCreated:
+        type: boolean
+        description: If ARF is created for a this LOA, value will be updated to true.
+        default: false
+      isMBCreated:
+        type: boolean
+        description: If MB is created for a this LOA, value will be updated to true.
+        default: false
     required:
       - tenantId
       - loaNumber
@@ -1827,7 +1851,27 @@ definitions:
         type: integer
         format: int64
         x-displayformat: 'dd/MM/yyyy'
-        description: Epoch time of Date on which WorkOrder approved. Future date is not allowed. WorkOrder Approved date should be on or after the WorkOrder date. 
+        description: Epoch time of Date on which WorkOrder approved. Future date is not allowed. WorkOrder Approved date should be on or after the WorkOrder date.
+      isOfflineStatusCreated:
+        type: boolean
+        description: If Offline Status is created for a this WO, value will be updated to true.
+        default: false
+      isMilestoneCreated:
+        type: boolean
+        description: If Milestone is created for a this WO, value will be updated to true.
+        default: false
+      isBillCreated:
+        type: boolean
+        description: If bill is created for a this WO, value will be updated to true.
+        default: false
+      isARFCreated:
+        type: boolean
+        description: If ARF is created for a this WO, value will be updated to true.
+        default: false
+      isMBCreated:
+        type: boolean
+        description: If MB is created for a this WO, value will be updated to true.
+        default: false
     required:
       - tenantId
       - workOrderDate
@@ -2323,6 +2367,7 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 
 

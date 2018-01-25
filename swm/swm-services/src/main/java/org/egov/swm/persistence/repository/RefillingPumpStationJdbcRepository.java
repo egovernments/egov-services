@@ -232,6 +232,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
         pumpStationFuelTypes = pumpStationFuelTypesJdbcRepository.search(pumpStation);
 
+        List<PumpStationFuelTypes> tempList;
         for (PumpStationFuelTypes psft : pumpStationFuelTypes) {
 
             if (pumpStationFuelTypesMap.get(psft.getPumpStation()) == null) {
@@ -239,9 +240,9 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
                 pumpStationFuelTypesMap.put(psft.getPumpStation(), Collections.singletonList(psft));
 
             } else {
-                pumpStationFuelTypes = pumpStationFuelTypesMap.get(psft.getPumpStation());
-                pumpStationFuelTypes.add(psft);
-                pumpStationFuelTypesMap.put(psft.getPumpStation(), pumpStationFuelTypes);
+                tempList = pumpStationFuelTypesMap.get(psft.getPumpStation());
+                tempList.add(psft);
+                pumpStationFuelTypesMap.put(psft.getPumpStation(), tempList);
             }
         }
 

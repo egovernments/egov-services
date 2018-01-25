@@ -912,7 +912,7 @@ class JudgementAgreement extends React.Component {
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span>₹</span>
-                      <input type="text" min="0" name="judgementRent" id="judgementRent" value={judgement.judgementRent}
+                      <input type="number" min="0" name="judgementRent" id="judgementRent" value={judgement.judgementRent}
                         onChange={(e) => { handleChangeTwoLevel(e, "judgement", "judgementRent") }} required />
                     </div>
                   </div>

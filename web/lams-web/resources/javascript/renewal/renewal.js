@@ -513,6 +513,7 @@ class RenewalAgreement extends React.Component {
       agreement.workflowDetails = {};
     }
 
+    var minRent = agreement.rent; 
     agreement.rent = "";
     agreement.timePeriod = "";
     agreement.securityDeposit = "";
@@ -526,7 +527,7 @@ class RenewalAgreement extends React.Component {
       agreement: agreement,
       departmentList: departmentList,
       rentInc,
-      minRent: agreement.rent
+      minRent
     });
 
   }

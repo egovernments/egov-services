@@ -216,7 +216,7 @@ public class LetterOfAcceptanceValidator {
                     Constants.MESSAGE_DETAILEDESTIMATE_OFFLINE_STATUS);
         }
 
-        if (offlineStatus != null && offlineStatus.getStatusDate() > letterOfAcceptance.getLoaDate())
+        if (offlineStatus != null && letterOfAcceptance.getLoaDate() != null && offlineStatus.getStatusDate() > letterOfAcceptance.getLoaDate())
             messages.put(Constants.KEY_FUTUREDATE_LOADATE_OFFLINESTATUS,
                     Constants.MESSAGE_FUTUREDATE_LOADATE_OFFLINESTATUS);
 

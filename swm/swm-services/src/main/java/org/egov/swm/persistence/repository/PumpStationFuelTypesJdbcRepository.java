@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +49,7 @@ public class PumpStationFuelTypesJdbcRepository extends JdbcRepository {
         if (searchRequest.getPumpStations() != null) {
             addAnd(params);
             params.append("pumpStation in (:pumpStations)");
-            paramValues.put("pumpStations", searchRequest.getPumpStations());
+            paramValues.put("pumpStations", new ArrayList<>(Arrays.asList(searchRequest.getPumpStations().split(","))));
         }
 
         if (params.length() > 0)
@@ -58,8 +60,9 @@ public class PumpStationFuelTypesJdbcRepository extends JdbcRepository {
 
         final BeanPropertyRowMapper row = new BeanPropertyRowMapper(PumpStationFuelTypes.class);
 
-        return namedParameterJdbcTemplate
+        List<PumpStationFuelTypes> result = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
+        return result;
     }
 
 }

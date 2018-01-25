@@ -3,7 +3,10 @@ package org.egov.swm.domain.model;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -41,13 +44,13 @@ public class Route {
 
     @NotNull
     @Digits(fraction = 2, integer = 10, message = "totalDistance shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "totalDistance shall be minimum 1 Kms")
+    @DecimalMin(value = "0", message = "totalDistance shall be minimum 0 Kms")
     @JsonProperty("totalDistance")
     private Double totalDistance = null;
 
     @NotNull
     @Digits(fraction = 2, integer = 10, message = "totalGarbageEstimate shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "totalGarbageEstimate shall be minimum 1 Kms")
+    @DecimalMin(value = "0", message = "totalGarbageEstimate shall be minimum 0 Tons")
     @JsonProperty("totalGarbageEstimate")
     private Double totalGarbageEstimate = null;
 
@@ -61,8 +64,8 @@ public class Route {
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
 
-    public boolean hasDumpingGround(){
-        Long count = collectionPoints.stream().filter(cp -> (cp.getDumpingGround()!= null)).count();
+    public boolean hasDumpingGround() {
+        Long count = collectionPoints.stream().filter(cp -> (cp.getDumpingGround() != null)).count();
 
         return count > 0;
     }

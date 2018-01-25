@@ -94,12 +94,6 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
         }
 
         if (searchRequest.getTypeOfFuelCode() != null) {
-            addAnd(params);
-            params.append("typeoffuel =:typeoffuel");
-            paramValues.put("typeoffuel", searchRequest.getTypeOfFuelCode());
-        }
-
-        if (searchRequest.getTypeOfFuelCode() != null) {
 
             PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
             pumpStation.setTenantId(searchRequest.getTenantId());
@@ -247,7 +241,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
             } else {
                 pumpStationFuelTypes = pumpStationFuelTypesMap.get(psft.getPumpStation());
                 pumpStationFuelTypes.add(psft);
-                pumpStationFuelTypesMap.put(psft.getPumpStation(), Collections.singletonList(psft));
+                pumpStationFuelTypesMap.put(psft.getPumpStation(), pumpStationFuelTypes);
             }
         }
 

@@ -88,13 +88,15 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getScheduledFrom() != null) {
             addAnd(params);
-            params.append("scheduledFrom >=:scheduledFrom");
+            params.append("(to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata') >= " +
+                    " (to_timestamp(:scheduledFrom/1000) AT TIME ZONE 'Asia/Kolkata')");
             paramValues.put("scheduledFrom", searchRequest.getScheduledFrom());
         }
 
         if (searchRequest.getScheduledTo() != null) {
             addAnd(params);
-            params.append("scheduledTo <=:scheduledTo");
+            params.append("(to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata') <= " +
+                    " (to_timestamp(:scheduledTo/1000) AT TIME ZONE 'Asia/Kolkata')");
             paramValues.put("scheduledTo", searchRequest.getScheduledTo());
         }
 

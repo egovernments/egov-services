@@ -3537,6 +3537,14 @@ definitions:
           type: integer
           format: int64
           description: Date on which invoice was created.
+        pendingAmount:
+          type: number 
+          format: double
+          description: This is the total pending amount calculated based on invoice amount.
+        paidAmount:
+          type: number 
+          format: double
+          description: This is the total amount already paid out of invoice amount.          
         fromDate:
           type: integer
           format: int64
@@ -3610,10 +3618,6 @@ definitions:
           type: number 
           format: double
           description: Amount paid through the payment instrument
-        pendingAmount:
-          type: number 
-          format: double
-          description: This is the total pending amount calculated based on invoice amount.         
         bankName:
           type: string
           description: Bank Name from which payment is made. e.g. State bank of India

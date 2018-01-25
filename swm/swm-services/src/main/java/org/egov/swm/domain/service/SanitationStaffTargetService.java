@@ -31,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SanitationStaffTargetService {
 
+    public static final String COLLECTION_CODE = "Process 1";
+    public static final String SEGGREGATION_CODE = "Process 2";
     @Autowired
     private SanitationStaffTargetRepository sanitationStaffTargetRepository;
 
@@ -154,6 +156,17 @@ public class SanitationStaffTargetService {
                 sanitationStaffTarget.setSwmProcess(swmProcessService.getSwmProcess(sanitationStaffTarget.getTenantId(),
                         sanitationStaffTarget.getSwmProcess().getCode(),
                         sanitationStaffTargetRequest.getRequestInfo()));
+
+            //Validate for collection point based on swmprocess
+            if(sanitationStaffTarget.getSwmProcess() != null && sanitationStaffTarget.getSwmProcess().getCode() != null &&
+                    (sanitationStaffTarget.getSwmProcess().getCode().equals(COLLECTION_CODE) ||
+                            sanitationStaffTarget.getSwmProcess().getCode().equals(SEGGREGATION_CODE))){
+
+                if(sanitationStaffTarget.getCollectionPoints() != null &&
+                        sanitationStaffTarget.getCollectionPoints().size() == 0)
+                    throw new CustomException("CollectionPoint",
+                            "At least one collection point required");
+            }
 
             // Validate Route
 

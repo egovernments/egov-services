@@ -37,5 +37,7 @@ public class PropertiesManager {
     
     @Value("${billnumber.prefix}")
     private String billNumberPrefix;
-    
+
+    @Value("${egov.services.works.measurementbook.backupdate.for.billstatus.topic}")
+    private String measurementBookBackUpdateForBillStatus;
 }

@@ -28,7 +28,7 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
     public List<MeasurementBook> searchMeasurementBooks(final MeasurementBookSearchContract measurementBookSearchContract,
             final RequestInfo requestInfo) {
 
-        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+        String searchQuery = "select :selectfields from :tablename :condition :orderby ";
 
         String tableName = TABLE_NAME;
 
@@ -46,8 +46,7 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
                 || (measurementBookSearchContract.getDetailedEstimateNumbers() != null && !measurementBookSearchContract.getDetailedEstimateNumbers().isEmpty())
                 || StringUtils.isNotBlank(measurementBookSearchContract.getDetailedEstimateNumberLike())
                 || (measurementBookSearchContract.getWorkOrderNumbers() != null && !measurementBookSearchContract.getWorkOrderNumbers().isEmpty())
-                || StringUtils.isNotBlank(measurementBookSearchContract.getWorkOrderNumberLike())
-                || measurementBookSearchContract.getIsBillCreated()!=null)
+                || StringUtils.isNotBlank(measurementBookSearchContract.getWorkOrderNumberLike()))
             tableName += MB_LOAESTIMATE_EXTENTION;
 
         String orderBy = "order by mb.id";
@@ -75,8 +74,7 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
                 || (measurementBookSearchContract.getDetailedEstimateNumbers() != null && !measurementBookSearchContract.getDetailedEstimateNumbers().isEmpty())
                 || StringUtils.isNotBlank(measurementBookSearchContract.getDetailedEstimateNumberLike())
                 || (measurementBookSearchContract.getWorkOrderNumbers() != null && !measurementBookSearchContract.getWorkOrderNumbers().isEmpty())
-                || StringUtils.isNotBlank(measurementBookSearchContract.getWorkOrderNumberLike())
-                || measurementBookSearchContract.getIsBillCreated()!=null) {
+                || StringUtils.isNotBlank(measurementBookSearchContract.getWorkOrderNumberLike())) {
             addAnd(params);
             params.append("mb.letterOfAcceptanceEstimate = loaestimate.id");
         }
@@ -151,12 +149,16 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             paramValues.put("isPartRate", measurementBookSearchContract.getIsPartRate());
         }
 
-        if(measurementBookSearchContract.getIsBillCreated()!=null){
+        if (measurementBookSearchContract.getIsBillCreated()!=null) {
             addAnd(params);
-            if(measurementBookSearchContract.getIsBillCreated())
-                params.append("loaestimate.id in (select letterofacceptanceestimate from egw_contractorbill where deleted=false)");
-            else
-                params.append("loaestimate.id not in (select letterofacceptanceestimate from egw_contractorbill where deleted=false)");
+            params.append("mb.isBillCreated =:isBillCreated");
+            paramValues.put("isBillCreated", measurementBookSearchContract.getIsBillCreated());
+        }
+
+        if (StringUtils.isNotBlank(measurementBookSearchContract.getLoaEstimateId())) {
+            addAnd(params);
+            params.append("mb.letterofacceptanceestimate =:loaEstimateId");
+            paramValues.put("loaEstimateId", measurementBookSearchContract.getLoaEstimateId());
         }
 
         List<String> detailedEstimateNumbers = new ArrayList<>();

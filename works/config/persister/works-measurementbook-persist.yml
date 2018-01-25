@@ -271,3 +271,18 @@ serviceMaps:
   
        - jsonPath: $.contractorBills.*.mbForContractorBill.*.deleted   
        
+ - version: 1.0
+   name: Measurement Book Create/Update
+   description: Back update Measurement Book for bill status
+   fromTopic: works-measurementbook-backupdate-for-billstatus
+   isTransaction: true
+   queryMaps:
+    - query: update egw_measurementbook set isBillCreated=? where id=? and tenantId=?;;
+      basePath: $.measurementBooks.*
+      jsonMaps:
+
+       - jsonPath: $.measurementBooks.*.isBillCreated
+
+       - jsonPath: $.measurementBooks.*.id
+       
+       - jsonPath: $.measurementBooks.*.tenantId

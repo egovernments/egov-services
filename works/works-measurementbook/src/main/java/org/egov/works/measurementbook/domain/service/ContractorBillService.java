@@ -9,17 +9,11 @@ import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.measurementbook.config.PropertiesManager;
 import org.egov.works.measurementbook.domain.repository.ContractorBillRepository;
+import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.domain.repository.builder.IdGenerationRepository;
 import org.egov.works.measurementbook.domain.validator.ContractorBillValidator;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
-import org.egov.works.measurementbook.web.contract.AssetForBill;
-import org.egov.works.measurementbook.web.contract.BillStatus;
-import org.egov.works.measurementbook.web.contract.ContractorBill;
-import org.egov.works.measurementbook.web.contract.ContractorBillRequest;
-import org.egov.works.measurementbook.web.contract.ContractorBillResponse;
-import org.egov.works.measurementbook.web.contract.ContractorBillSearchContract;
-import org.egov.works.measurementbook.web.contract.MeasurementBookForContractorBill;
-import org.egov.works.measurementbook.web.contract.RequestInfo;
+import org.egov.works.measurementbook.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +40,9 @@ public class ContractorBillService {
 
     @Autowired
     private ContractorBillRepository contractorBillRepository;
+
+    @Autowired
+    private MeasurementBookRepository measurementBookRepository;
     
     @Transactional
     public ContractorBillResponse create(ContractorBillRequest contractorBillRequest) {
@@ -106,6 +103,7 @@ public class ContractorBillService {
             }
         }
         kafkaTemplate.send(propertiesManager.getContractorBillCreateUpdateTopic(), contractorBillRequest);
+        updateMBForBillStatus(contractorBillRequest);
         ContractorBillResponse contractorBillResponse = new ContractorBillResponse();
         contractorBillResponse.setContractorBills(contractorBillRequest.getContractorBills());
         return contractorBillResponse;
@@ -118,6 +116,7 @@ public class ContractorBillService {
             populateAuditDetails(contractorBillRequest.getRequestInfo(), contractorBill);
         }
         kafkaTemplate.send(propertiesManager.getContractorBillCreateUpdateTopic(), contractorBillRequest);
+        updateMBForBillStatus(contractorBillRequest);
         contractorBillResponse.setContractorBills(contractorBillRequest.getContractorBills());
         return contractorBillResponse;
     }
@@ -137,5 +136,23 @@ public class ContractorBillService {
         contractorBillResponse.setContractorBills(
                 contractorBillRepository.searchContractorBills(contractorBillSearchContract, requestInfo));
         return contractorBillResponse;
+    }
+
+    public void updateMBForBillStatus(ContractorBillRequest contractorBillRequest){
+        MeasurementBookRequest measurementBookRequest = new MeasurementBookRequest();
+        measurementBookRequest.setRequestInfo(contractorBillRequest.getRequestInfo());
+        List<MeasurementBook> measurementBooks = new ArrayList<>();
+        for(ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
+            MeasurementBook measurementBook = measurementBookRepository.searchMeasurementBooks(MeasurementBookSearchContract.
+                    builder().loaEstimateId(contractorBill.getLetterOfAcceptanceEstimate().getId()).tenantId(contractorBill.getTenantId()).build(),
+                    contractorBillRequest.getRequestInfo()).get(0);
+            if(contractorBill.getDeleted())
+                measurementBook.setIsBillCreated(Boolean.FALSE);
+            else
+                measurementBook.setIsBillCreated(Boolean.TRUE);
+            measurementBooks.add(measurementBook);
+        }
+        measurementBookRequest.setMeasurementBooks(measurementBooks);
+        kafkaTemplate.send(propertiesManager.getMeasurementBookBackUpdateForBillStatus(), measurementBookRequest);
     }
 }

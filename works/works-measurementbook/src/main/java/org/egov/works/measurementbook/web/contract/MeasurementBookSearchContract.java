@@ -70,4 +70,6 @@ public class MeasurementBookSearchContract {
     private Boolean isPartRate;
 
     private Boolean isBillCreated;
+
+    private String loaEstimateId;
 }

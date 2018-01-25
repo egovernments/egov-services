@@ -617,3 +617,7 @@ select:disabled {
 table.dataTable tbody td {
   word-break: break-all;
 }
+
+.table thead:first-child > tr:first-child th {
+    vertical-align: baseline;
+}

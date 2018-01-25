@@ -29,6 +29,19 @@ class AssetDepreciation extends React.Component {
     this.closeWindow = this.closeWindow.bind(this);
     this.showAssetDeprecatedTable=this.showAssetDeprecatedTable.bind(this);
     this.renderAssetDepBody=this.renderAssetDepBody.bind(this);
+    this.reset=this.reset.bind(this);
+  }
+
+  reset(){
+    let searchSet = {...this.state.searchSet};
+    for(let key in searchSet){
+      if(key!='tenantId'){
+        searchSet[key]=''
+      }
+    }
+    this.setState({
+      searchSet
+    })
   }
 
   handleChange(value, property) {
@@ -330,7 +343,10 @@ class AssetDepreciation extends React.Component {
       let {handleChange, search, closeWindow, getName, handleClick, addRemoveAsset, createDepreciation, bulkAddRemoveAsset, showAssetDeprecatedTable}=this;
       let {isSearchClicked, assetCategory, assetCategoryName, department, resultSet, isAssetDeprecated}=this.state;
       let {assetIds} = this.state.createDepreciation.Depreciation;
-      // console.log(this.state.searchSet);
+      let {
+        dateOfDepreciation,assetCategoryType,assetCreatedFrom,assetCreatedTo,code,name
+      } = this.state.searchSet;
+      console.log(this.state.searchSet);
 
       const renderOptions = function(list)
       {
@@ -363,7 +379,7 @@ class AssetDepreciation extends React.Component {
               <table id="agreementTable" className="table table-bordered">
                   <thead>
                   <tr>
-                      <th><input type="checkbox" className="checkAll" onClick={(e)=>{bulkAddRemoveAsset(e.target.checked)}} /></th>
+                      <th><input type="checkbox" className="checkAll" onClick={(e)=>{bulkAddRemoveAsset(e.target.checked)}} /> Select All</th>
                       <th>Sr. No.</th>
                       <th>Asset Category Name</th>
                       <th>Department</th>
@@ -422,7 +438,7 @@ class AssetDepreciation extends React.Component {
           <div className="row">
             <label className="col-sm-3 control-label text-right">Date of Depreciation <span className="error"> *</span></label>
             <div className="col-sm-3 add-margin">
-              <input type="text" className="datePicker" name="dateOfDepreciation" id="dateOfDepreciation"
+              <input type="text" className="datePicker" value={dateOfDepreciation} name="dateOfDepreciation" id="dateOfDepreciation"
               onChange={(e)=>{handleChange(e.target.value,"dateOfDepreciation")}} />
               <label className="error">{this.state.error.dateOfDepreciation}</label>
             </div>
@@ -437,47 +453,48 @@ class AssetDepreciation extends React.Component {
           <div className="row">
             <label className="col-sm-3 control-label text-right">Asset Category Name</label>
             <div className="col-sm-3 add-margin">
-              <select className="form-control" id="assetCategory" name="" onChange={(e)=>{handleChange(e.target.value,"assetCategory")}}>
+              <select className="form-control" id="assetCategory" name="" value={this.state.searchSet.assetCategoryType} onChange={(e)=>{handleChange(e.target.value,"assetCategory")}}>
                 <option value="">Select</option>
                 {renderOptions(assetCategoryName)}
               </select>
             </div>
             <label className="col-sm-2 control-label text-right">Department</label>
             <div className="col-sm-3 add-margin">
-              <select className="form-control" id="department" onChange={(e)=>{handleChange(e.target.value,"department")}}>
+              <select className="form-control" id="department" value={this.state.searchSet.department} onChange={(e)=>{handleChange(e.target.value,"department")}}>
                 <option value="">Select</option>
                 {renderOptions(department)}
               </select>
             </div>
           </div>
           <div className="row">
-            <label className="col-sm-3 control-label text-right"> From Date</label>
+            <label className="col-sm-3 control-label text-right">Asset Created From Date</label>
             <div className="col-sm-3 add-margin">
-              <input type="text" className="datePicker" name="assetCreatedFrom" id="assetCreatedFrom"
+              <input type="text" value={assetCreatedFrom} className="datePicker" name="assetCreatedFrom" id="assetCreatedFrom"
               onChange={(e)=>{handleChange(e.target.value,"assetCreatedFrom")}} />
             </div>
-            <label className="col-sm-2 control-label text-right"> To Date</label>
+            <label className="col-sm-2 control-label text-right">Asset Created To Date</label>
             <div className="col-sm-3 add-margin">
-              <input type="text" className="datePicker" name="assetCreatedTo" id="assetCreatedTo"
+              <input type="text" value={assetCreatedTo} className="datePicker" name="assetCreatedTo" id="assetCreatedTo"
               onChange={(e)=>{handleChange(e.target.value,"assetCreatedTo")}}/>
             </div>
           </div>
           <div className="row">
             <label className="col-sm-3 control-label text-right">Asset Code</label>
             <div className="col-sm-3 add-margin">
-              <input type="text" className="" name="code" id="code"
+              <input type="text" value={code} className="" name="code" id="code"
               onChange={(e)=>{handleChange(e.target.value,"code")}} />
             </div>
             <label className="col-sm-2 control-label text-right">Asset Name</label>
             <div className="col-sm-3 add-margin">
-              <input type="text" className="" name="name" id="name"
+              <input type="text" value={name} className="" name="name" id="name"
               onChange={(e)=>{handleChange(e.target.value,"name")}} />
             </div>
           </div>
           <br/>
               <div className="text-center">
-                  <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
-                  <button type="button" className="btn btn-close" onClick={(e)=>{this.closeWindow()}}>Close</button>
+                  <button type="submit" className="btn btn-primary">Search</button>&nbsp;&nbsp;
+                  <button type="button" className="btn btn-default" onClick={(e)=>{this.reset()}}>Reset</button>&nbsp;&nbsp;
+                  <button type="button" className="btn btn-default" onClick={(e)=>{this.closeWindow()}}>Close</button>
               </div>
           </form>
           </div>

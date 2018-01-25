@@ -1,0 +1,32 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "refillingPumpStations": [
+    {
+      "tenantId": "{{tenantId}}",
+      "name": "{{RefillingFillingStationName}}",
+      "location": {
+        "code": "{{locationCode}}"
+      },
+      "typeOfPump": {
+        "code": "{{OilCompany}}"
+      },
+      "remarks": "Ramarks",
+      "typeOfFuel": {
+        "code": "{{FuelType}}"
+      },
+      "quantity": "quantity  {{$randomDigits(2)}}"
+    }
+  ]
+}

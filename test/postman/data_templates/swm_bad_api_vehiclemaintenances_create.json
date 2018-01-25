@@ -1,0 +1,27 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "vehicleMaintenances": [
+    {
+      "tenantId": "{{tenantId}}",
+      "vehicle": {
+        "regNumber": "{{regNumber}}"
+      },
+      "maintenanceUom": "Days",
+      "maintenanceAfter": "{{$randomInt(10,100)}}",
+      "downtimeforMaintenanceUom": "Hrs",
+      "downtimeforMaintenance": "{{$randomDigits(2)}}",
+    }
+  ]
+}

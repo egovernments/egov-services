@@ -1,0 +1,49 @@
+{
+  "requestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "vendors": [
+    {
+      "tenantId": "{{tenantId}}",
+      "name": "vendor name",
+      "registrationNo": "REGNO-{{contractorRegistrationNo}}",
+      "details": "detailsasdfghjkl",
+      "servicedLocations": [
+        {
+          "code": "{{locationCode}}"
+        },
+        {
+          "code": "{{locationCode1}}"
+        }
+      ],
+      "supplier": {
+        "email": "abc@xyz.com",
+        "tinNumber": "tinNumber  {{$GUIDWD(8)}}",
+        "gst":"GST {{$GUIDWD(8)}}",
+        "mobileNo": "9{{$randomDigits(9)}} ",
+        "contactNo": "9{{$randomDigits(9)}} ",
+        "faxNumber": "9{{$randomDigits(9)}} ",
+        "address": "ADDRESS {{$GUIDWD(8)}}",
+        "registrationNo": "Reg No {{$GUIDWD(8)}}"
+      },
+      "agreementDocument": {
+        "fileStoreId": "fileStoreId"
+      },
+      "servicesOffered": [
+        {
+          "code": "{{serviceOffered1}}"
+        }
+      ]
+    }
+  ]
+}

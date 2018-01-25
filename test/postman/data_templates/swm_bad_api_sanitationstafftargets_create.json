@@ -1,0 +1,48 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "sanitationStaffTargets": [
+    {
+      "tenantId": "{{tenantId}}",
+      "swmProcess": {
+        "code": "{{SwmProcess}}"
+      },
+      "location": {
+        "code": "{{locationCode}}"
+      },
+      "route": {
+        "code": "{{routeCode}}"
+      },
+      "employee": {
+        "code": "Driver3"
+      },
+      "targetFrom": "{{todayDate}}",
+      "targetTo": 1578723633000,
+      "targetedGarbage": "{{$randomInt(10,100)}}",
+      "wetWaste": "{{$randomInt(10,100)}}",
+      "dryWaste": "{{$randomInt(10,100)}}",
+      "dumpingGround": {
+        "code": "{{DumpingGround}}"
+      },
+      "collectionPoints": [
+        {
+          "code": "{{collectionPoints1code}}"
+        },
+        {
+          "code": "{{collectionPoints2code}}"
+        }
+      ]
+    }
+  ]
+}

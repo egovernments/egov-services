@@ -1,0 +1,32 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "vendorContracts": [
+    {
+      "tenantId": "{{tenantId}}",
+      "vendor": {
+        "vendorNo": "{{vendorNo}}"
+      },
+      "contractDate": 1513509547,
+      "contractPeriodFrom": "1513595947",
+      "contractPeriodTo": "1514719147",
+      "securityDeposit": 10,
+      "paymentTerms": {
+        "label": "label"
+      },
+      "paymentAmount": "paymentAmount {{$randomDigits(5)}}",
+      "remarks": "{{$randomInt(15,100)}}",
+    }
+  ]
+}

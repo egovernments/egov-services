@@ -1,0 +1,45 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "paymentDetails": [
+    {
+      "tenantId": "{{tenantId}}",
+      "vendorPaymentDetails": {
+        "paymentNo": "{{paymentNo}}"
+      },
+      "voucherNumber": "{{voucherNumber}}",
+      "voucherDate": 1510371526000,
+      "instrumentType": "instrumentType",
+      "instrumentNumber": "{{instrumentNumber}}",
+      "instrumentDate": 161039526000,
+      "amount":  "{{$randomDigits(4)}}",
+      "bankName": "bankName",
+      "branchName": "branchName"
+    },
+    {
+      "tenantId": "{{tenantId}}",
+      "vendorPaymentDetails": {
+        "paymentNo": "{{paymentNo}}"
+      },
+      "voucherNumber": "{{voucherNumber}}",
+      "voucherDate": 1510371526000,
+      "instrumentType": "instrumentType",
+      "instrumentNumber": "{{instrumentNumber}}",
+      "instrumentDate": 161039526000,
+      "amount":  "{{$randomDigits(4)}}",
+      "bankName": "bankName",
+      "branchName": "branchName"
+    }
+  ]
+}

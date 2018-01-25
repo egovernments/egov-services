@@ -1,0 +1,31 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "vehicleSchedules": [
+    {
+      "tenantId": "{{tenantId}}",
+      "scheduledFrom": "{{today}}",
+      "scheduledTo": "{{today}}",
+      "route": {
+        "code": "{{routeCode}}"
+      },
+      "vehicle": {
+        "tenantId": "{{tenantId}}",
+        "regNumber": "{{regNumber}}",
+        "operatorsReq":  "{{$randomDigits(2)}}"
+      },
+      "targetedGarbage":  "{{$randomDigits(2)}}"
+    }
+  ]
+}

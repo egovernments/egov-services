@@ -1,0 +1,26 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "sanitationStaffSchedules": [
+    {
+      "tenantId": "{{tenantId}}",
+      "sanitationStaffTarget": {
+        "targetNo": "{{targetNo}}"
+      },
+      "shift": {
+        "code": "{{ShiftCode}}"
+      }
+    }
+  ]
+}

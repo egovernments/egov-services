@@ -1,4 +1,4 @@
-ignorefields: ["tenantId", "RequestInfo", "auditDetails", "requestInfo"]
+ignorefields: ["tenantId", "RequestInfo", "auditDetails", "requestInfo","parent"]
 contract: https://github.com/egovernments/egov-services/raw/master/docs/swm/contract/v1-0-0.yaml
 output_folder: ./swm/
 
@@ -24,9 +24,85 @@ apis:
     reference:
       location:
       collectionType:
+
   
   /sourcesegregations/_create:
     reference:
       dumpingGround:
       collectionDetails:
       collectionType:
+
+  /routes/_create:
+    reference:
+      collectionType:
+      collectionPoints:
+        
+  /sanitationstafftargets/_create:
+    reference:
+      swmProcess:
+      location:
+      route:
+      employee:
+      dumpingGround:
+      collectionPoints:
+
+  /sanitationstaffschedules/_create:
+    reference:
+      sanitationStaffTarget:
+      shift:    
+
+  /vehiclemaintenances/_create:
+    reference:
+      vehicle:
+
+  /vendorcontracts/_create:
+    reference:
+      vendor:
+      paymentTerms:
+
+  /refillingpumpstations/_create:
+    reference:
+      location:
+      typeOfPump:
+      typeOfFuel:
+
+  /vehicleschedules/_create:
+    reference:
+      route:
+      vehicle:
+        
+  /vendorpaymentdetails/_create:
+    reference:
+      vendorContract:
+      documents:
+      employee:
+
+  /paymentdetails/_create:
+    reference:
+      vendorPaymentDetails:
+
+  /sanitationstafftargets/_create:
+    reference:
+      swmProcess:
+      location:
+      route:
+      employee:
+      dumpingGround:
+      collectionPoints:
+
+  /vehiclefuellingdetails/_create:
+    reference:
+      vehicle:
+      refuellingStation:
+      receiptCopy:
+
+  /vehiclemaintenancedetails/_create:
+    reference:
+      vehicle:
+
+  /vehicletripsheetdetails/_create:
+    reference:
+      vehicle:
+      vendor:
+      route:
+     

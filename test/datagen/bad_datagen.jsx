@@ -159,6 +159,7 @@ SwaggerParser.dereference(contract_url)
 
                 const properties = parameters["properties"];
                 for (var param_name in properties) {
+                    log.debug("Processing", path, param_name)
                     var param = properties[param_name];
                     let current_path = path + "." + param_name;
 

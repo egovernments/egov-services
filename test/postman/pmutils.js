@@ -95,8 +95,65 @@ if (typeof PMUtil === "undefined") {
             for (const key in values)
                 values[key].enabled ? pm.environment.set(values[key].key, values[key].value) : null
         };
+        const moment = require("moment")
+        function moment_applyDelta(moment, delta) {
+            delta = delta || "";
+            let add = true;
+            if (delta[0] === "-")
+                add = false;
+
+            let deltaArr = delta.split(/[ -+]/g);
+
+            let pattern = /(\d+)([a-z]+)/ig
+
+            for (let i in deltaArr) {
+                if (!deltaArr[i])
+                    continue
+                pattern.lastIndex = 0;
+
+                if (pattern.test(deltaArr[i])) {
+                    pattern.lastIndex = 0;
+                    let [,num,type] = pattern.exec(delta)
+                    num = parseFloat(num)
+                    moment = add ? moment.add(num, type) : moment.subtract(num, type)
+                }
+            }
+
+            return moment;
+        }
 
         this.rand = {
+            // Generate time including milliseconds
+            $TS: function(delta) {
+                return this.$TIME(delta, "epochms")
+            },
+
+            // Generate time without milliseconds
+            $TSS: function(delta) {
+                return this.$TIME(delta, "epoch")
+            },
+
+            $TIME: function(delta, format) {
+                format = format || "HH:mm:ss"
+              let date = moment_applyDelta(moment(), delta)
+                if (format === "epoch"){
+                    return date.unix()
+                } else if (format == "epochms") {
+                    return date.valueOf()
+                }
+                return date.format(format)
+            },
+
+            $DATE: function(delta, format) {
+                format = format || "DDMMYY"
+                return this.$TIME(delta, format)
+            },
+
+            $NOW: function(delta, format) {
+                format = format || "DDMMYYHHmmss"
+                return this.$TIME(delta, format)
+            },
+
             $randomInt: function (min, max) {
                 if (!min) {
                     min = 0;
@@ -336,6 +393,22 @@ if (typeof PMUtil === "undefined") {
 
 }
 
+(function test() {
+    let rand = pmutil.rand;
+
+    console.log(rand.$TIME("+2h"))
+    console.log(rand.$TS("-1y"))
+    console.log(rand.$TS("+1y"))
+    console.log(rand.$TSS())
+
+    console.log(rand.$NOW())
+    console.log(rand.$TIME())
+    console.log(rand.$TIME("-2h"))
+    console.log(rand.$DATE())
+    console.log(rand.$DATE("+1day"))
+    console.log(rand.$DATE("-1day","DD-MMM-YY"))
+
+});
 /* loading script to be used at collection level
 if (typeof pmutil == "undefined") {
     var url = "https://raw.githubusercontent.com/tarunlalwani/postman-utils/master/pmutils.js";

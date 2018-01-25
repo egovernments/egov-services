@@ -514,11 +514,6 @@ class RenewalAgreement extends React.Component {
     }
 
     var minRent = agreement.rent; 
-    agreement.rent = "";
-    agreement.timePeriod = "";
-    agreement.securityDeposit = "";
-    agreement.securityDepositDate = "";
-    agreement.remarks = "";
 
     var rentInc = commonApiPost("lams-services", "getrentincrements", "", {tenantId, basisOfAllotment:agreement.basisOfAllotment}).responseJSON;
 
@@ -925,7 +920,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="text" name="renewalOrderNumber" id="renewalOrderNumber" value={renewal.renewalOrderNumber}
+                    <input type="text" name="renewalOrderNumber" id="renewalOrderNumber"
                       onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderNumber") }} required />
                   </div>
                 </div>
@@ -940,7 +935,7 @@ class RenewalAgreement extends React.Component {
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span className="glyphicon glyphicon-calendar"></span>
-                      <input type="text" className="datepicker" name="renewalOrderDate" id="renewalOrderDate" value={renewal.renewalOrderDate}
+                      <input type="text" className="datepicker" name="renewalOrderDate" id="renewalOrderDate" 
                         onChange={(e) => { handleChangeTwoLevel(e, "renewal", "renewalOrderDate") }} required />
                     </div>
                   </div>
@@ -960,7 +955,7 @@ class RenewalAgreement extends React.Component {
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span>₹</span>
-                      <input type="number" min={minRent} name="renewalRent" id="renewalRent" value={agreement.rent}
+                      <input type="number" min={minRent} name="renewalRent" id="renewalRent" 
                         onChange={(e) => { handleChange(e, "rent") }} required />
                     </div>
                   </div>
@@ -974,7 +969,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="timePeriod" id="timePeriod" className="selectStyle" value={agreement.timePeriod} onChange={(e) => { handleChange(e, "timePeriod") }} required >
+                    <select name="timePeriod" id="timePeriod" className="selectStyle"  onChange={(e) => { handleChange(e, "timePeriod") }} required >
                       <option value="">Select </option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -997,7 +992,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} value={agreement.securityDeposit} required />
+                    <input type="number" min="0" id="securityDeposit" name="securityDeposit" onChange={(e) => { handleChange(e, "securityDeposit") }} required />
                   </div>
                 </div>
               </div>
@@ -1012,7 +1007,7 @@ class RenewalAgreement extends React.Component {
                     <div className="text-no-ui">
                       <span className="glyphicon glyphicon-calendar"></span>
                       <input type="text" className="datepicker" id="securityDepositDate" name="securityDepositDate" onChange={(e) => { handleChange(e, "securityDepositDate") }}
-                        value={agreement.securityDepositDate} required />
+                         required />
                     </div>
                   </div>
                 </div>
@@ -1043,7 +1038,7 @@ class RenewalAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" value={renewal.reasonForRenewal} onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required>
+                    <select name="reasonForRenewal" id="reasonForRenewal" className="selectStyle" onChange={(e) => { handleChangeTwoLevel(e, "renewal", "reasonForRenewal") }} required>
                       <option>Select</option>
                       {renderOption(renewalReasons)}
                     </select>
@@ -1073,7 +1068,7 @@ class RenewalAgreement extends React.Component {
                     <label for="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea name="remarks" id="remarks" value={remarks}
+                    <textarea name="remarks" id="remarks"
                       onChange={(e) => { handleChange(e, "remarks") }}></textarea>
                   </div>
                 </div>

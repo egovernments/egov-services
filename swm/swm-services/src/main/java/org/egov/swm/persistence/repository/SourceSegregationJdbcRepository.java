@@ -165,7 +165,7 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
         cds.setTenantId(tenantId);
 
         List<CollectionDetails> collectionDetailss = collectionDetailsJdbcRepository.search(cds);
-
+        List<CollectionDetails> bdList;
         for (CollectionDetails bd : collectionDetailss) {
 
             if (collectionDetailsMap.get(bd.getSourceSegregation()) == null) {
@@ -174,7 +174,7 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
             } else {
 
-                List<CollectionDetails> bdList = new ArrayList<>(collectionDetailsMap.get(bd.getSourceSegregation()));
+                bdList = new ArrayList<>(collectionDetailsMap.get(bd.getSourceSegregation()));
 
                 bdList.add(bd);
 

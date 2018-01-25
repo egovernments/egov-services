@@ -266,7 +266,8 @@ public class VendorContractJdbcRepository extends JdbcRepository {
                 for (SwmProcess sp : swmProcessList) {
                     swmProcessMap.put(sp.getCode(), sp);
                 }
-
+                List<SwmProcess> bList;
+                List<ContractServicesOffered> cpdList;
                 for (ContractServicesOffered cpd : servicesOffered) {
 
                     if (servicesOfferedMap.get(cpd.getVendorcontract()) == null) {
@@ -278,13 +279,13 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
                     } else {
 
-                        List<SwmProcess> bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendorcontract()));
+                        bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendorcontract()));
 
                         bList.add(swmProcessMap.get(cpd.getService()));
 
                         swmProcessListMap.put(cpd.getVendorcontract(), bList);
 
-                        List<ContractServicesOffered> cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendorcontract()));
+                        cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendorcontract()));
 
                         cpdList.add(cpd);
 

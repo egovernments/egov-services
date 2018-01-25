@@ -189,7 +189,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         bds.setTenantId(tenantId);
 
         List<BinDetails> binDetails = binIdDetailsJdbcRepository.search(bds);
-
+        List<BinDetails> bdList;
         for (BinDetails bd : binDetails) {
 
             if (binDetailsMap.get(bd.getCollectionPoint()) == null) {
@@ -198,7 +198,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
             } else {
 
-                List<BinDetails> bdList = new ArrayList<>(binDetailsMap.get(bd.getCollectionPoint()));
+                bdList = new ArrayList<>(binDetailsMap.get(bd.getCollectionPoint()));
 
                 bdList.add(bd);
 
@@ -235,7 +235,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         for (CollectionType ct : collectionTypes) {
             collectionTypeMap.put(ct.getCode(), ct);
         }
-
+        List<CollectionPointDetails> cpdList;
         for (CollectionPointDetails cpd : collectionPointDetails) {
 
             if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null
@@ -250,7 +250,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
             } else {
 
-                List<CollectionPointDetails> cpdList = new ArrayList<>(collectionPointDetailsMap.get(cpd.getCollectionPoint()));
+                cpdList = new ArrayList<>(collectionPointDetailsMap.get(cpd.getCollectionPoint()));
 
                 cpdList.add(cpd);
 

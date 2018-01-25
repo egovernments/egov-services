@@ -240,7 +240,7 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
                 pumpStationFuelTypesMap.put(psft.getPumpStation(), Collections.singletonList(psft));
 
             } else {
-                tempList = pumpStationFuelTypesMap.get(psft.getPumpStation());
+                tempList = new ArrayList<>(pumpStationFuelTypesMap.get(psft.getPumpStation()));
                 tempList.add(psft);
                 pumpStationFuelTypesMap.put(psft.getPumpStation(), tempList);
             }

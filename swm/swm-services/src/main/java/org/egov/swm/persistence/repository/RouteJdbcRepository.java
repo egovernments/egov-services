@@ -285,7 +285,7 @@ public class RouteJdbcRepository extends JdbcRepository {
             for (DumpingGround dg : dumpingGrounds) {
                 dumpingGroundMap.put(dg.getCode(), dg);
             }
-
+        List<RouteCollectionPointMap> rcpmList;
         if (routeCollectionPoints != null)
             for (RouteCollectionPointMap rcp : routeCollectionPoints) {
 
@@ -307,7 +307,7 @@ public class RouteJdbcRepository extends JdbcRepository {
 
                 } else {
 
-                    List<RouteCollectionPointMap> rcpmList = new ArrayList<>(routeCollectionPointMap.get(rcp.getRoute()));
+                    rcpmList = new ArrayList<>(routeCollectionPointMap.get(rcp.getRoute()));
 
                     rcpmList.add(rcp);
 

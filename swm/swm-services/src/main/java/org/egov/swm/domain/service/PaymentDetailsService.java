@@ -82,7 +82,7 @@ public class PaymentDetailsService {
         List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
         if (!paymentDetailsPage.getPagedData().isEmpty()) {
-            if (!isEmpty(paymentDetailsSearch.getVendorNo())){
+            if (!isEmpty(paymentDetailsSearch.getVendorNo())) {
                 paymentDetailsList = filterVendors(paymentDetailsPage.getPagedData(), paymentDetailsSearch.getVendorNo());
                 paymentDetailsPage.setPagedData(paymentDetailsList);
             }
@@ -190,7 +190,8 @@ public class PaymentDetailsService {
 
             } else {
 
-                paymentDetailsList = paymentDetailsMap.get(pd.getVendorPaymentDetails().getPaymentNo());
+                paymentDetailsList = new ArrayList<>(paymentDetailsMap.get(pd.getVendorPaymentDetails().getPaymentNo()));
+
                 paymentDetailsList.add(pd);
 
                 paymentDetailsMap.put(pd.getVendorPaymentDetails().getPaymentNo(), paymentDetailsList);

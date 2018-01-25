@@ -295,7 +295,8 @@ public class VendorJdbcRepository extends JdbcRepository {
                     boundaryMap.put(b.getCode(), b);
                 }
             }
-
+            List<Boundary> bList;
+            List<ServicedLocations> cpdList;
             for (ServicedLocations sl : servicedLocations) {
 
                 if (servicedLocationsMap.get(sl.getVendor()) == null) {
@@ -306,13 +307,13 @@ public class VendorJdbcRepository extends JdbcRepository {
 
                 } else {
 
-                    List<Boundary> bList = new ArrayList<>(boundaryListMap.get(sl.getVendor()));
+                    bList = new ArrayList<>(boundaryListMap.get(sl.getVendor()));
 
                     bList.add(boundaryMap.get(sl.getLocation()));
 
                     boundaryListMap.put(sl.getVendor(), bList);
 
-                    List<ServicedLocations> cpdList = new ArrayList<>(servicedLocationsMap.get(sl.getVendor()));
+                    cpdList = new ArrayList<>(servicedLocationsMap.get(sl.getVendor()));
 
                     cpdList.add(sl);
 
@@ -355,7 +356,8 @@ public class VendorJdbcRepository extends JdbcRepository {
                 for (SwmProcess sp : swmProcessList) {
                     swmProcessMap.put(sp.getCode(), sp);
                 }
-
+                List<SwmProcess> bList;
+                List<ServicesOffered> cpdList;
                 for (ServicesOffered cpd : servicesOffered) {
 
                     if (servicesOfferedMap.get(cpd.getVendor()) == null) {
@@ -366,13 +368,13 @@ public class VendorJdbcRepository extends JdbcRepository {
 
                     } else {
 
-                        List<SwmProcess> bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendor()));
+                        bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendor()));
 
                         bList.add(swmProcessMap.get(cpd.getService()));
 
                         swmProcessListMap.put(cpd.getVendor(), bList);
 
-                        List<ServicesOffered> cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendor()));
+                        cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendor()));
 
                         cpdList.add(cpd);
 

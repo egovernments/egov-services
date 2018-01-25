@@ -265,7 +265,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             sstm.setTargetNos(targetNos.toString());
 
             targetCollectionPoints = sanitationStaffTargetMapJdbcRepository.search(sstm);
-
+            List<SanitationStaffTargetMap> mapList;
             for (SanitationStaffTargetMap map : targetCollectionPoints) {
 
                 if (map.getCollectionPoint() != null && !map.getCollectionPoint().isEmpty()) {
@@ -279,8 +279,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
                 } else {
 
-                    List<SanitationStaffTargetMap> mapList = new ArrayList<>(
-                            sanitationStaffTargetMap.get(map.getSanitationStaffTarget()));
+                    mapList = new ArrayList<>(sanitationStaffTargetMap.get(map.getSanitationStaffTarget()));
 
                     mapList.add(map);
 
@@ -316,6 +315,8 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
                     }
                 }
 
+                List<CollectionPoint> cpList;
+
                 for (SanitationStaffTargetMap map : targetCollectionPoints) {
 
                     if (collectionPointsMap.get(map.getSanitationStaffTarget()) == null) {
@@ -325,7 +326,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
                     } else {
 
-                        List<CollectionPoint> cpList = new ArrayList<>(collectionPointsMap.get(map.getSanitationStaffTarget()));
+                        cpList = new ArrayList<>(collectionPointsMap.get(map.getSanitationStaffTarget()));
 
                         cpList.add(collectionPointMap.get(map.getCollectionPoint()));
 

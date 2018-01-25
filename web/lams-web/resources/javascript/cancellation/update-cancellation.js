@@ -613,17 +613,17 @@ class UpdateCancellation extends React.Component {
 
             var asOnDate = new Date();
             var dd = asOnDate.getDate();
-            var mm = asOnDate.getMonth() + 1; 
+            var mm = asOnDate.getMonth() + 1;
             var yyyy = asOnDate.getFullYear();
-        
+
             if (dd < 10) {
               dd = '0' + dd
             }
-        
+
             if (mm < 10) {
               mm = '0' + mm
             }
-        
+
             asOnDate = dd + '/' + mm + '/' + yyyy;
 
 
@@ -1371,7 +1371,7 @@ class UpdateCancellation extends React.Component {
                         </div>
                     </div>
                 );
-            } else {
+            } else if (flg === 1){
                 return (
                     <div className="form-section">
                         <div className="row">

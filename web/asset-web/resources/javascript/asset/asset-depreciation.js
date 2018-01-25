@@ -446,7 +446,7 @@ class AssetDepreciation extends React.Component {
             </div>
             <label className="col-sm-2 control-label text-right">Asset Category Type</label>
             <div className="col-sm-3 add-margin">
-              <select className="form-control" id="assetCategoryType" onChange={(e)=>{handleChange(e.target.value,"assetCategoryType")}}>
+              <select className="form-control" id="assetCategoryType" value={assetCategoryType} onChange={(e)=>{handleChange(e.target.value,"assetCategoryType")}}>
                 <option value="">Select</option>
                 {renderOptions(assetCategory)}
               </select>
@@ -455,7 +455,7 @@ class AssetDepreciation extends React.Component {
           <div className="row">
             <label className="col-sm-3 control-label text-right">Asset Category Name</label>
             <div className="col-sm-3 add-margin">
-              <select className="form-control" id="assetCategory" name="" value={this.state.searchSet.assetCategoryType} onChange={(e)=>{handleChange(e.target.value,"assetCategory")}}>
+              <select className="form-control" id="assetCategory" name="" value={this.state.searchSet.assetCategory} onChange={(e)=>{handleChange(e.target.value,"assetCategory")}}>
                 <option value="">Select</option>
                 {renderOptions(assetCategoryName)}
               </select>

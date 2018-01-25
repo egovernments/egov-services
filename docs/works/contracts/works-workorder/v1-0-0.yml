@@ -115,7 +115,6 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/searchPurpose"
         - name: loaNumbers
           in: query
           type: array
@@ -233,6 +232,43 @@ paths:
           type: boolean
           required: false
           description: Boolean value of the LOA whether its Spillover or not
+        - name: isWorkOrderCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the LOAs where WorkOrder is created. if this values is false, API returns all the LOAs where WorkOrder is not created. If no value then it returns all the LOAs.
+        - name: isOfflineStatusCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the LOAs where Offline Status is AGREEMENT_ORDER_SIGNED. if this values is false, API returns all the LOAs where Offline Status is not created. If no value then it returns all the LOAs.
+        - name: isMilestoneCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the LOAs where Milestone is created. if this values is false, API returns all the LOAs where Milestone is not created. If no value then it returns all the LOAs.
+        - name: isBillCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the LOAs where bill is created. if this values is false, API returns all the LOAs where bill is not created. If no value then it returns all the LOAs.
+        - name: isARFCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the LOAs where ARF is created. if this values is false, API returns all the LOAs where ARF is not created. If no value then it returns all the LOAs.
+        - name: isMBApproved
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the LOAs where MB is approved. if this values is false, API returns all the LOAs where MB is not approved. If no value then it returns all the LOAs.
+          
       responses:
         200:
           description: Letter Of Acceptance(s) Retrieved Successfully
@@ -325,7 +361,6 @@ paths:
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageSize"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/pageNumber"
         - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/sortProperty"
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/parameters/searchPurpose"
         - name: workOrderNumbers
           in: query
           type: array
@@ -474,6 +509,36 @@ paths:
           required: false
           allowEmptyValue: true
           description: Matches exact or like string given regardless of case-sensitive.
+        - name: isOfflineStatusCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the WOs where Offline Status is WORK_COMMENCED. if this values is false, API returns all the WOs where Offline Status is not created. If no value then it returns all the WOs.
+        - name: isMilestoneCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the WOs where Milestone is created. if this values is false, API returns all the WOs where Milestone is not created. If no value then it returns all the WOs.
+        - name: isBillCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the WOs where bill are approved. if this values is false, API returns all the WOs where bill is not created. If no value then it returns all the WOs.'
+        - name: isARFCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the WOs where ARF is created. if this values is false, API returns all the WOs where ARF is not created. If no value then it returns all the WOs.
+        - name: isMBApproved
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the WOs where MB is approved. if this values is false, API returns all the WOs where MB is not approved. If no value then it returns all the WOs.
       responses:
         200:
           description: Work Order(s) Retrieved Successfully
@@ -2258,6 +2323,7 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 
 

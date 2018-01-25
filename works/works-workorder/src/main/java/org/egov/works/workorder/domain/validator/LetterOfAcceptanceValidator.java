@@ -291,7 +291,7 @@ public class LetterOfAcceptanceValidator {
             }
         }
 
-        if (detailedEstimate.getApprovedDate() != null && detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
+        if (detailedEstimate.getApprovedDate() != null && letterOfAcceptance.getLoaDate() != null && detailedEstimate.getApprovedDate() > letterOfAcceptance.getLoaDate()) {
             messages.put(Constants.KEY_FUTUREDATE_LOADATE_DETAILEDESTIMATE,
                     Constants.MESSAGE_FUTUREDATE_LOADATE_DETAILEDESTIMATE);
         }

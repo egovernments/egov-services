@@ -1,0 +1,35 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "vehicleTripSheetDetails": [
+    {
+      "tenantId": "{{tenantId}}",
+      "vehicle": {
+        "regNumber": "{{regNumber}}"
+      },
+      "vendor": {
+        "vendorNo": "{{vendorNo}}"
+      },
+      "route": {
+        "code": "{{routeCode}}"
+      },
+      "tripStartDate": 1234567890,
+      "tripEndDate": 1234567890,
+      "inTime": 1234567890,
+      "outTime": 1234567890,
+      "entryWeight": "{{$randomDigits(2)}}",
+      "exitWeight": "{{$randomDigits(2)}}"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "vehicleMaintenanceDetails": [
+    {
+      "tenantId": "{{tenantId}}",
+      "isScheduled": false,
+      "maintenanceType": "MAINTENANCE",
+      "vehicle": {
+        "regNumber": "{{regNumber}}"
+      },
+      "actualMaintenanceDate": 1510371526000,
+      "vehicleScheduledMaintenanceDate": null,
+      "vehicleDowntimeActual": "{{$randomInt(2,3)}}",
+      "vehicleDownTimeActualUom": "days",
+      "vehicleReadingDuringMaintenance": "{{$randomDigits(5)}}",
+      "remarks": "Vehicle Given for Maintenance",
+      "costIncurred": "{{$randomInt(500,1000)}}"
+    }
+  ]
+}

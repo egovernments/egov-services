@@ -1,0 +1,62 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "routes": [
+    {
+      "tenantId": "{{tenantId}}",
+      "name": "{{routeName}}",
+      "collectionType": {
+        "code": "{{CollectionType}}"
+      },
+      "collectionPoints": [
+        {
+          "collectionPoint": {
+            "code": "{{collectionPoints1code}}"
+          },
+          "distance": "randomInt()",
+          "garbageEstimate": 10,
+          "isStartingCollectionPoint": true,
+          "isEndingCollectionPoint": false
+        },
+        {
+          "collectionPoint": {
+            "code": "{{collectionPoints2code}}"
+          },
+          "distance": 100,
+          "garbageEstimate": 10,
+          "isStartingCollectionPoint": false,
+          "isEndingCollectionPoint": false
+        },
+        {
+          "collectionPoint": {
+            "code": "{{collectionPoints3code}}"
+          },
+          "distance": 100,
+          "garbageEstimate": 10,
+          "isStartingCollectionPoint": false,
+          "isEndingCollectionPoint": false
+        },
+        {
+          "collectionPoint": {
+            "code": "{{collectionPoints4code}}"
+          },
+          "distance": 100,
+          "garbageEstimate": 10,
+          "isStartingCollectionPoint": false,
+          "isEndingCollectionPoint": true
+        }
+      ]
+    }
+  ]
+}

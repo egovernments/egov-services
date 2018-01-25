@@ -17,6 +17,10 @@ public class Constants {
     public static final String SAVE = "Save";
     public static final String LETTEROFACCEPTANCE_OBJECT = "LetterOfAcceptance";
     public static final String STATUS_APPROVED = "APPROVED";
+    
+    public static final String WORKORDER_OFFLINE="WorkOrderOffline";
+    public static final String LETTEROFACCEPTANCE_OFFLINE="LetterOfAcceptanceOffline";
+    public static final String DETAILEDESTIMATE_OFFLINE="DetailedEstimateOffline";
 
     public static final String STATUS_MILESTONE_APPROVED = "APPROVED";
     public static final String STATUS_MILESTONE_CANCELLED = "CANCELLED";

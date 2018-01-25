@@ -12,6 +12,7 @@ import org.egov.works.workorder.web.contract.OfflineStatusSearchContract;
 import org.egov.works.workorder.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.egov.works.workorder.config.Constants;
 
 @Service
 public class OfflineStatusService {
@@ -28,7 +29,7 @@ public class OfflineStatusService {
         List<String> statuses = new ArrayList<>();
         statuses.add(DetailedEstimateOfflineStatus.L1_TENDER_FINALIZED.toString());
         offlineStatusSearchContract.setStatuses(statuses);
-        offlineStatusSearchContract.setObjectType(CommonConstants.DETAILEDESTIMATE);
+        offlineStatusSearchContract.setObjectType(Constants.DETAILEDESTIMATE_OFFLINE);
         offlineStatusSearchContract.setTenantId(tenantId);
 
         final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
@@ -45,7 +46,7 @@ public class OfflineStatusService {
         List<String> statuses = new ArrayList<>();
         statuses.add(LOAOfflineStatuses.AGREEMENT_ORDER_SIGNED.toString());
         offlineStatusSearchContract.setStatuses(statuses);
-        offlineStatusSearchContract.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
+        offlineStatusSearchContract.setObjectType(Constants.LETTEROFACCEPTANCE_OFFLINE);
         offlineStatusSearchContract.setTenantId(tenantId);
 
         final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository

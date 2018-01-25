@@ -292,6 +292,12 @@ paths:
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the MBs where bill is created. if this values is false, API returns all the MBs where bill is not created. If no value then it returns all the MBs.
+        - name: isBillCreated
+          in: query
+          type: boolean
+          required: false
+          allowEmptyValue: true
+          description: if this value is true, API returns all the MBs where bill is created. if this values is false, API returns all the MBs where bill is not created. If no value then it returns all the MBs.
       responses:
         200:
           description: Measurement Book(s) Retrieved Successfully
@@ -435,6 +441,11 @@ paths:
           type: boolean
           required: false
           description: Boolean value to check whether its Spillover or not
+        - name: loaEstimateId
+          in: query
+          type: string
+          required: false
+          description: Letter Of Acceptance Estimate id of MB.
       responses:
         200:
           description: Contractor Bill(s) Retrieved Successfully
@@ -634,6 +645,10 @@ definitions:
       isPartRate:
         type: boolean
         description: If any one of MeasurementBookDetail has Part Rate then MeasurementBook marked as part rated.
+        default: false
+      isBillCreated:
+        type: boolean
+        description: If bill is created for a this MB, value will be updated to true.
         default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"

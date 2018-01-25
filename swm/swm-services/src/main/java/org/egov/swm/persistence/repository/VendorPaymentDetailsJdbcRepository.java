@@ -10,7 +10,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.Document;
+import org.egov.swm.domain.model.DocumentSearch;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.VendorContract;
+import org.egov.swm.domain.model.VendorContractSearch;
+import org.egov.swm.domain.model.VendorPaymentDetails;
+import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
 import org.egov.swm.domain.service.VendorContractService;
 import org.egov.swm.persistence.entity.VendorPaymentDetailsEntity;
 import org.egov.swm.web.contract.Employee;
@@ -99,7 +105,7 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("invoiceNo", searchRequest.getInvoiceNo());
         }
 
-        if(searchRequest.getInvoiceDate() != null){
+        if (searchRequest.getInvoiceDate() != null) {
             addAnd(params);
             params.append("invoiceDate =:invoiceDate");
             paramValues.put("invoiceDate", searchRequest.getInvoiceDate());
@@ -131,29 +137,32 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("invoiceToDate", searchRequest.getInvoiceToDate());
         }
 
-        if(searchRequest.getFromAmount() != null){
+        if (searchRequest.getFromAmount() != null) {
             addAnd(params);
             params.append("vendorinvoiceamount >= :fromAmount");
             paramValues.put("fromAmount", searchRequest.getFromAmount());
         }
 
-        if(searchRequest.getToAmount() != null){
+        if (searchRequest.getToAmount() != null) {
             addAnd(params);
             params.append("vendorinvoiceamount <= :toAmount");
             paramValues.put("toAmount", searchRequest.getToAmount());
         }
 
-        //Used for validation of overlapping time periods
-        if(searchRequest.getFromDate() != null && searchRequest.getToDate() != null &&
-                 searchRequest.getValidate() != null && searchRequest.getValidate()){
+        // Used for validation of overlapping time periods
+        if (searchRequest.getFromDate() != null && searchRequest.getToDate() != null &&
+                searchRequest.getValidate() != null && searchRequest.getValidate()) {
             addAnd(params);
             params.append("((to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
-                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')" +
+                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')"
+                    +
                     " or (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
-                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')"+
-                    " or (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN"+ 
-                    " (to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata')"+ 
-                    " or (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN"+
+                    " (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata')"
+                    +
+                    " or (to_timestamp(:fromDate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " (to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata')"
+                    +
+                    " or (to_timestamp(:toDate/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
                     " (to_timestamp(fromdate/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(todate/1000) AT TIME ZONE 'Asia/Kolkata'))");
             paramValues.put("fromDate", searchRequest.getFromDate());
             paramValues.put("toDate", searchRequest.getToDate());
@@ -201,10 +210,8 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             populateDocument(vendorPaymentDetailsList);
         }
 
-        if(searchRequest.getVendorNo()!= null && !searchRequest.getVendorNo().isEmpty())
+        if (searchRequest.getVendorNo() != null && !searchRequest.getVendorNo().isEmpty())
             vendorPaymentDetailsList = filterForVendorNumber(vendorPaymentDetailsList, searchRequest);
-
-        page.setTotalResults(vendorPaymentDetailsList.size());
 
         page.setPagedData(vendorPaymentDetailsList);
 
@@ -212,7 +219,7 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
     }
 
     private List<VendorPaymentDetails> filterForVendorNumber(List<VendorPaymentDetails> vendorPaymentDetailsList,
-                                        VendorPaymentDetailsSearch searchRequest){
+            VendorPaymentDetailsSearch searchRequest) {
         return vendorPaymentDetailsList.stream()
                 .filter(vp -> vp.getVendorContract().getVendor().getVendorNo()
                         .equalsIgnoreCase(searchRequest.getVendorNo()))
@@ -235,7 +242,7 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
         List<Document> docs = documentJdbcRepository.search(search);
 
-        if(docs != null)
+        if (docs != null)
             documentMap = docs.stream().collect(Collectors.groupingBy(Document::getRefCode));
 
         for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {

@@ -155,7 +155,6 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
         if (vehicleMaintenanceDetailsList != null && !vehicleMaintenanceDetailsList.isEmpty()) {
             populateVehicles(vehicleMaintenanceDetailsList);
         }
-        page.setTotalResults(vehicleMaintenanceDetailsList.size());
 
         page.setPagedData(vehicleMaintenanceDetailsList);
 

@@ -192,8 +192,6 @@ public class RouteJdbcRepository extends JdbcRepository {
 
         }
 
-        page.setTotalResults(routeList.size());
-
         page.setPagedData(routeList);
 
         return page;

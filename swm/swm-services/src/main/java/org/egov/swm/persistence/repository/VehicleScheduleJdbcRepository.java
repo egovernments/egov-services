@@ -137,8 +137,6 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
             populateRoutes(vehicleScheduleList);
         }
 
-        page.setTotalResults(vehicleScheduleList.size());
-
         page.setPagedData(vehicleScheduleList);
 
         return page;

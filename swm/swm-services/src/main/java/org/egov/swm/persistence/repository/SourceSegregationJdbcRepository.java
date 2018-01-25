@@ -146,8 +146,6 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
             populateULBs(sourceSegregationList);
         }
-        page.setTotalResults(sourceSegregationList.size());
-
         page.setPagedData(sourceSegregationList);
 
         return page;

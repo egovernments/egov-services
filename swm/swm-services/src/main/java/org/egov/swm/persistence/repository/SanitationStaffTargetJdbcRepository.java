@@ -169,8 +169,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             populateRoutes(sanitationStaffTargetList);
 
         }
-        page.setTotalResults(sanitationStaffTargetList.size());
-
         page.setPagedData(sanitationStaffTargetList);
 
         return page;

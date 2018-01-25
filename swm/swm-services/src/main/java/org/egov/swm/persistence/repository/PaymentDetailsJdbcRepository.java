@@ -13,8 +13,6 @@ import org.egov.swm.domain.model.PaymentDetails;
 import org.egov.swm.domain.model.PaymentDetailsSearch;
 import org.egov.swm.domain.model.VendorPaymentDetails;
 import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
-import org.egov.swm.domain.repository.VendorPaymentDetailsRepository;
-import org.egov.swm.domain.service.VendorPaymentDetailsService;
 import org.egov.swm.persistence.entity.PaymentDetailsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -24,9 +22,6 @@ import org.springframework.stereotype.Service;
 public class PaymentDetailsJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egswm_paymentdetails";
-
-    /*@Autowired
-    private VendorPaymentDetailsService vendorPaymentDetailsService;*/
 
     @Autowired
     private VendorPaymentDetailsJdbcRepository vendorPaymentDetailsJdbcRepository;
@@ -142,9 +137,9 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
 
         }
 
-       if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
+        if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
                 (searchRequest.getExcludeVendorPaymentDetails() == null ||
-                searchRequest.getExcludeVendorPaymentDetails().equals(Boolean.FALSE))) {
+                        searchRequest.getExcludeVendorPaymentDetails().equals(Boolean.FALSE))) {
 
             populateVendorPaymentDetails(paymentdetailsList);
 

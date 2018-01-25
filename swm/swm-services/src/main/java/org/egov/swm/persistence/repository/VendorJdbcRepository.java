@@ -179,8 +179,6 @@ public class VendorJdbcRepository extends JdbcRepository {
 
             populateDocument(vendorList, vendorCodes.toString());
         }
-        page.setTotalResults(vendorList.size());
-
         page.setPagedData(vendorList);
 
         return page;

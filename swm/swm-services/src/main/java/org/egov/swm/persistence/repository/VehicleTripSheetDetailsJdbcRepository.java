@@ -139,8 +139,6 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
             populateVehicles(vehicleTripSheetDetailsList);
         }
 
-        page.setTotalResults(vehicleTripSheetDetailsList.size());
-
         page.setPagedData(vehicleTripSheetDetailsList);
 
         return page;

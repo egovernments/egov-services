@@ -122,8 +122,6 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
             populateVehicles(vehicleMaintenanceList);
         }
 
-        page.setTotalResults(vehicleMaintenanceList.size());
-
         page.setPagedData(vehicleMaintenanceList);
 
         return page;

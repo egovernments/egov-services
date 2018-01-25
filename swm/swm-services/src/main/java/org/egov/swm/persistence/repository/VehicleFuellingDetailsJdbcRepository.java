@@ -164,8 +164,6 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 
             populateRefillingPumpStations(vehicleFuellingDetailsList);
         }
-        page.setTotalResults(vehicleFuellingDetailsList.size());
-
         page.setPagedData(vehicleFuellingDetailsList);
 
         return page;

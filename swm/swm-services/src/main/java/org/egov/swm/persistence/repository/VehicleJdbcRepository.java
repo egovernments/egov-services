@@ -218,7 +218,6 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
             populateDocument(vehicleList, vehicleCodes.toString());
         }
-        page.setTotalResults(vehicleList.size());
 
         page.setPagedData(vehicleList);
 

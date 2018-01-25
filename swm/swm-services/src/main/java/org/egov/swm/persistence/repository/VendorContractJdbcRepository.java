@@ -174,8 +174,6 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
             populateServicesOffered(vendorContractList, vendorContractNos.toString());
         }
-        page.setTotalResults(vendorContractList.size());
-
         page.setPagedData(vendorContractList);
 
         return page;

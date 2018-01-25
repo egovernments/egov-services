@@ -145,8 +145,6 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
             populateTypeOfPumps(refillingPumpStationList);
 
         }
-        page.setTotalResults(refillingPumpStationList.size());
-
         page.setPagedData(refillingPumpStationList);
 
         return page;

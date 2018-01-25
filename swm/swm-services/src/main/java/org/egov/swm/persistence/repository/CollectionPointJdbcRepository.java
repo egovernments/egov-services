@@ -139,7 +139,6 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
             populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
         }
-        page.setTotalResults(collectionPointList.size());
 
         page.setPagedData(collectionPointList);
 

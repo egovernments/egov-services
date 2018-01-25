@@ -42,6 +42,7 @@ public abstract class JdbcRepository {
         final String countQuery = "select count(*) from (" + searchQuery + ") as x";
         final Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);
         final Integer totalpages = (int) Math.ceil((double) count / page.getPageSize());
+        page.setTotalResults(count.intValue());
         page.setTotalPages(totalpages);
         page.setCurrentPage(page.getOffset());
 
@@ -76,7 +77,8 @@ public abstract class JdbcRepository {
             for (int i = 0; i < object.getDeclaredFields().length; i++) {
                 if (object.getDeclaredFields()[i].getName().equalsIgnoreCase("auditDetails")) {
                     for (int j = 0; j < object.getDeclaredFields()[i].getType().getDeclaredFields().length; j++) {
-                        if (object.getDeclaredFields()[i].getType().getDeclaredFields()[j].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
+                        if (object.getDeclaredFields()[i].getType().getDeclaredFields()[j].getName()
+                                .equals(s.contains(" ") ? s.split(" ")[0] : s)) {
                             isAuditableFieldExist = Boolean.TRUE;
                             break;
                         } else

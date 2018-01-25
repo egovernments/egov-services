@@ -117,8 +117,6 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 
             populateSanitationStaffTargets(sanitationStaffScheduleList);
         }
-        page.setTotalResults(sanitationStaffScheduleList.size());
-
         page.setPagedData(sanitationStaffScheduleList);
 
         return page;

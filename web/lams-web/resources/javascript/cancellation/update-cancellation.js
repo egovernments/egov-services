@@ -1292,7 +1292,7 @@ class UpdateCancellation extends React.Component {
             var flg = 0;
 
             buttons.forEach(function (btn, ind) {
-                if (btn.key.toLowerCase() === "approve") {
+                if (btn.key.toLowerCase() === "approve" || btn.key.toLowerCase() === "print notice") {
                     flg = 1;
                 }
             });
@@ -1371,7 +1371,7 @@ class UpdateCancellation extends React.Component {
                         </div>
                     </div>
                 );
-            } else if (flg === 1){
+            } else {
                 return (
                     <div className="form-section">
                         <div className="row">

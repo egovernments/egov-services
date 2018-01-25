@@ -163,7 +163,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
             params.append("isulbowned IS " + searchRequest.getIsUlbOwned());
         }
 
-        if(searchRequest.getIsUnderWarranty() != null){
+        if (searchRequest.getIsUnderWarranty() != null) {
             addAnd(params);
             params.append("isvehicleunderwarranty IS " + searchRequest.getIsUnderWarranty());
         }

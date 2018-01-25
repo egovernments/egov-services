@@ -2,18 +2,22 @@ package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.OilCompany;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.PumpStationFuelTypes;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
 import org.egov.swm.domain.service.BoundaryService;
+import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.OilCompanyService;
 import org.egov.swm.persistence.entity.RefillingPumpStationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,9 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
     @Autowired
     private OilCompanyService oilCompanyService;
+
+    @Autowired
+    private FuelTypeService fuelTypeService;
 
     @Autowired
     private PumpStationFuelTypesJdbcRepository pumpStationFuelTypesJdbcRepository;
@@ -90,6 +97,25 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("typeoffuel =:typeoffuel");
             paramValues.put("typeoffuel", searchRequest.getTypeOfFuelCode());
+        }
+
+        if (searchRequest.getTypeOfFuelCode() != null) {
+
+            PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
+            pumpStation.setTenantId(searchRequest.getTenantId());
+            pumpStation.setFuelType(searchRequest.getTypeOfFuelCode());
+
+            List<PumpStationFuelTypes> pumpStationFuelTypes = pumpStationFuelTypesJdbcRepository.search(pumpStation);
+
+            List<String> pumpStationCodes = pumpStationFuelTypes.stream()
+                    .map(PumpStationFuelTypes::getPumpStation)
+                    .collect(Collectors.toList());
+            if (pumpStationCodes != null && !pumpStationCodes.isEmpty()) {
+                addAnd(params);
+                params.append("code in (:pumpStationCodes) ");
+                paramValues.put("pumpStationCodes", pumpStationCodes);
+            }
+
         }
 
         if (searchRequest.getLocationCode() != null) {
@@ -183,19 +209,62 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
     private void populateFuelTypes(List<RefillingPumpStation> refillingPumpStationList) {
 
         PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
+        List<PumpStationFuelTypes> pumpStationFuelTypes = new ArrayList<>();
+        Map<String, FuelType> fuelTypeMap = new HashMap<>();
+        Map<String, List<PumpStationFuelTypes>> pumpStationFuelTypesMap = new HashMap<>();
+        Map<String, List<FuelType>> fuelTypesMap = new HashMap<>();
+        StringBuffer pumpStationCodes = new StringBuffer();
 
         String tenantId = null;
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
+        List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
+
+        for (FuelType ft : fuelTypes) {
+            fuelTypeMap.put(ft.getCode(), ft);
+        }
+
         for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
+            if (pumpStationCodes.length() >= 1)
+                pumpStationCodes.append(",");
 
-            pumpStation.setTenantId(tenantId);
-            pumpStation.setPumpStation(refillingPumpStation.getCode());
+            pumpStationCodes.append(refillingPumpStation.getCode());
+        }
 
-            refillingPumpStation.setFuelTypes(pumpStationFuelTypesJdbcRepository.search(pumpStation));
+        pumpStation.setTenantId(tenantId);
+        pumpStation.setPumpStations(pumpStationCodes.toString());
 
+        pumpStationFuelTypes = pumpStationFuelTypesJdbcRepository.search(pumpStation);
+
+        for (PumpStationFuelTypes psft : pumpStationFuelTypes) {
+
+            if (pumpStationFuelTypesMap.get(psft.getPumpStation()) == null) {
+
+                pumpStationFuelTypesMap.put(psft.getPumpStation(), Collections.singletonList(psft));
+
+            } else {
+                pumpStationFuelTypes = pumpStationFuelTypesMap.get(psft.getPumpStation());
+                pumpStationFuelTypes.add(psft);
+                pumpStationFuelTypesMap.put(psft.getPumpStation(), Collections.singletonList(psft));
+            }
+        }
+
+        for (String pumpStationCode : pumpStationFuelTypesMap.keySet()) {
+
+            fuelTypes = new ArrayList<>();
+
+            for (PumpStationFuelTypes psft : pumpStationFuelTypesMap.get(pumpStationCode)) {
+                fuelTypes.add(fuelTypeMap.get(psft.getFuelType()));
+            }
+
+            fuelTypesMap.put(pumpStationCode, fuelTypes);
+
+        }
+
+        for (RefillingPumpStation station : refillingPumpStationList) {
+            station.setFuelTypes(fuelTypesMap.get(station.getCode()));
         }
     }
 

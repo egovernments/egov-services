@@ -65,4 +65,6 @@ public class AbstractEstimateSearchContract {
 
     private String councilResolutionNumberLike;
 
+    private Boolean detailedEstimateExists;
+
 }

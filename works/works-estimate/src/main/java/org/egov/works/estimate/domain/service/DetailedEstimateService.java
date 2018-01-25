@@ -59,6 +59,7 @@ public class DetailedEstimateService {
     public DetailedEstimateResponse create(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
         validator.validateDetailedEstimates(detailedEstimateRequest, isRevision);
         AuditDetails auditDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
+        List<DetailedEstimate> detailedEstimateList = new ArrayList<>();
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
             detailedEstimate.setId(commonUtils.getUUID());
             detailedEstimate.setAuditDetails(auditDetails);
@@ -205,16 +206,31 @@ public class DetailedEstimateService {
                     detailedEstimate.setStatus(status);
                 }
             }
+            DetailedEstimate de = null;
+            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_NEW) ||
+                    detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED)) {
+                de = detailedEstimate;
+                de.setBackUpdateAE(true);
+                detailedEstimateList.add(de);
+            }
 
-            /*if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CREATED) ||
-                    detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
-                kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimate);
-            }*/
+            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
+                de = detailedEstimate;
+                de.setBackUpdateAE(false);
+                detailedEstimateList.add(de);
+            }
         }
+
         if (isRevision == null || (isRevision != null && !isRevision))
             kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
         else
             kafkaTemplate.send(propertiesManager.getWorksRECreateUpdateTopic(), detailedEstimateRequest);
+
+        if(detailedEstimateList != null && !detailedEstimateList.isEmpty()) {
+            DetailedEstimateRequest backUpdateRequest = new DetailedEstimateRequest();
+            backUpdateRequest.setDetailedEstimates(detailedEstimateList);
+            kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateBackupdateTopic(), backUpdateRequest);
+        }
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
         response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
         response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));

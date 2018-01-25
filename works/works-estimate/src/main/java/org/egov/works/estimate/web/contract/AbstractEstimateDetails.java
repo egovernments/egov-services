@@ -15,7 +15,7 @@ import java.util.Objects;
  * An Object that hold Abstract Estimate Detail for a given Abstract Estimate
  */
 @ApiModel(description = "An Object that hold Abstract Estimate Detail for a given Abstract Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-24T10:56:00.880Z")
 
 public class AbstractEstimateDetails   {
   @JsonProperty("id")
@@ -47,6 +47,9 @@ public class AbstractEstimateDetails   {
 
   @JsonProperty("deleted")
   private Boolean deleted = false;
+
+  @JsonProperty("detailedEstimateExists")
+  private Boolean detailedEstimateExists = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -258,6 +261,26 @@ public class AbstractEstimateDetails   {
     this.deleted = deleted;
   }
 
+  public AbstractEstimateDetails detailedEstimateExists(Boolean detailedEstimateExists) {
+    this.detailedEstimateExists = detailedEstimateExists;
+    return this;
+  }
+
+   /**
+   * Boolean value to check whether DE created for AE, if DE created the value will be true..
+   * @return detailedEstimateExists
+  **/
+  @ApiModelProperty(value = "Boolean value to check whether DE created for AE, if DE created the value will be true..")
+
+
+  public Boolean getDetailedEstimateExists() {
+    return detailedEstimateExists;
+  }
+
+  public void setDetailedEstimateExists(Boolean detailedEstimateExists) {
+    this.detailedEstimateExists = detailedEstimateExists;
+  }
+
   public AbstractEstimateDetails auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -299,12 +322,13 @@ public class AbstractEstimateDetails   {
         Objects.equals(this.abstractEstimateAppropriations, abstractEstimateDetails.abstractEstimateAppropriations) &&
         Objects.equals(this.documentDetails, abstractEstimateDetails.documentDetails) &&
         Objects.equals(this.deleted, abstractEstimateDetails.deleted) &&
+        Objects.equals(this.detailedEstimateExists, abstractEstimateDetails.detailedEstimateExists) &&
         Objects.equals(this.auditDetails, abstractEstimateDetails.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, abstractEstimate, nameOfWork, estimateAmount, grossAmountBilled, projectCode, abstractEstimateAppropriations, documentDetails, deleted, auditDetails);
+    return Objects.hash(id, tenantId, abstractEstimate, nameOfWork, estimateAmount, grossAmountBilled, projectCode, abstractEstimateAppropriations, documentDetails, deleted, detailedEstimateExists, auditDetails);
   }
 
   @Override
@@ -322,6 +346,7 @@ public class AbstractEstimateDetails   {
     sb.append("    abstractEstimateAppropriations: ").append(toIndentedString(abstractEstimateAppropriations)).append("\n");
     sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
     sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+    sb.append("    detailedEstimateExists: ").append(toIndentedString(detailedEstimateExists)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

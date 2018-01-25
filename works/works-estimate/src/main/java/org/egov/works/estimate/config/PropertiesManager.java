@@ -89,5 +89,8 @@ public class PropertiesManager {
     @Value("${works.technicalsanctionnumber.format}")
     private String worksTechnicalSanctionNumberFormat;
 
+    @Value("${egov.services.works.abstract.estimate.backupdate.topic}")
+    private String worksAbstractEstimateBackupdateTopic;
+
 
 }

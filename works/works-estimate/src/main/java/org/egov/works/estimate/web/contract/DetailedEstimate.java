@@ -17,7 +17,7 @@ import java.util.Objects;
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-26T08:10:27.515Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-25T07:12:28.125Z")
 
 public class DetailedEstimate   {
   @JsonProperty("id")
@@ -187,6 +187,12 @@ public class DetailedEstimate   {
 
   @JsonProperty("deleted")
   private Boolean deleted = false;
+
+  @JsonProperty("loaCreated")
+  private Boolean loaCreated = false;
+
+  @JsonProperty("backUpdateAE")
+  private Boolean backUpdateAE = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -1419,6 +1425,46 @@ public class DetailedEstimate   {
     this.deleted = deleted;
   }
 
+  public DetailedEstimate loaCreated(Boolean loaCreated) {
+    this.loaCreated = loaCreated;
+    return this;
+  }
+
+   /**
+   * Boolean value to check whether LOA created for DE, if LOA is created the value will be true.
+   * @return loaCreated
+  **/
+  @ApiModelProperty(value = "Boolean value to check whether LOA created for DE, if LOA is created the value will be true.")
+
+
+  public Boolean getLoaCreated() {
+    return loaCreated;
+  }
+
+  public void setLoaCreated(Boolean loaCreated) {
+    this.loaCreated = loaCreated;
+  }
+
+  public DetailedEstimate backUpdateAE(Boolean backUpdateAE) {
+    this.backUpdateAE = backUpdateAE;
+    return this;
+  }
+
+   /**
+   * Boolean value to set true/false for abstract estimate based on DE created/cancelled.
+   * @return backUpdateAE
+  **/
+  @ApiModelProperty(value = "Boolean value to set true/false for abstract estimate based on DE created/cancelled.")
+
+
+  public Boolean getBackUpdateAE() {
+    return backUpdateAE;
+  }
+
+  public void setBackUpdateAE(Boolean backUpdateAE) {
+    this.backUpdateAE = backUpdateAE;
+  }
+
   public DetailedEstimate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -1506,12 +1552,14 @@ public class DetailedEstimate   {
         Objects.equals(this.subScheme, detailedEstimate.subScheme) &&
         Objects.equals(this.budgetGroup, detailedEstimate.budgetGroup) &&
         Objects.equals(this.deleted, detailedEstimate.deleted) &&
+        Objects.equals(this.loaCreated, detailedEstimate.loaCreated) &&
+        Objects.equals(this.backUpdateAE, detailedEstimate.backUpdateAE) &&
         Objects.equals(this.auditDetails, detailedEstimate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, auditDetails);
+    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, loaCreated, backUpdateAE, auditDetails);
   }
 
   @Override
@@ -1575,6 +1623,8 @@ public class DetailedEstimate   {
     sb.append("    subScheme: ").append(toIndentedString(subScheme)).append("\n");
     sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
     sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+    sb.append("    loaCreated: ").append(toIndentedString(loaCreated)).append("\n");
+    sb.append("    backUpdateAE: ").append(toIndentedString(backUpdateAE)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

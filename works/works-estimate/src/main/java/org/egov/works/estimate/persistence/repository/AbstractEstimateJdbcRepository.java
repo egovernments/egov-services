@@ -38,7 +38,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 
         String tableName = TABLE_NAME;
 
-        if (abstractEstimateSearchContract.getNameOfWork() != null
+        if (abstractEstimateSearchContract.getNameOfWork() != null || abstractEstimateSearchContract.getDetailedEstimateExists() != null
                 || abstractEstimateSearchContract.getWorkIdentificationNumbers() != null || StringUtils.isNotBlank(abstractEstimateSearchContract.getWorkIdentificationNumberLike()))
             tableName += DETAILS_SEARCH_EXTENTION;
 
@@ -170,6 +170,12 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("estimate.councilResolutionNumber in (:councilSanctionNumbers)");
             paramValues.put("councilSanctionNumbers", abstractEstimateSearchContract.getCouncilResolutionNumbers());
+        }
+
+        if(abstractEstimateSearchContract.getDetailedEstimateExists() != null) {
+            addAnd(params);
+            params.append("estimate.id = details.abstractEstimate and details.tenantId=:tenantId and details.deleted = false and details.detailedEstimateExists = :detailedEstimateExists");
+            paramValues.put("detailedEstimateExists", abstractEstimateSearchContract.getDetailedEstimateExists());
         }
 
         params.append(" and estimate.deleted = false");

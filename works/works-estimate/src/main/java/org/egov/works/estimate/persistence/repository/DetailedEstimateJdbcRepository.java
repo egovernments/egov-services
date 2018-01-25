@@ -195,6 +195,12 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
             paramValues.put("scheduleofrate", detailedEstimateSearchContract.getScheduleOfRate());
         }
 
+        if(detailedEstimateSearchContract.getLoaCreated() != null) {
+            addAnd(params);
+            params.append("de.loaCreated =:loaCreated");
+            paramValues.put("loaCreated", detailedEstimateSearchContract.getLoaCreated());
+        }
+
         params.append(" and de.deleted = false");
         if (params.length() > 0) {
 

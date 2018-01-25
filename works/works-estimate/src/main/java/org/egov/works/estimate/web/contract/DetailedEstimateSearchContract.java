@@ -72,4 +72,10 @@ public class DetailedEstimateSearchContract {
 
     private String scheduleOfRate;
 
+    private Boolean loaCreated;
+
+    private Boolean withoutOfflineStatus;
+
+    private Boolean withAllOfflineStatusAndLoaNotCreated;
+
 }

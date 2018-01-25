@@ -34,6 +34,7 @@ public class Constants {
     public static final String ESTIMATE_STATUS_REJECTED = "REJECTED";
     public static final String ESTIMATE_STATUS_RESUBMITTED = "RESUBMITTED";
     public static final String ESTIMATE_STATUS_CANCELLED = "CANCELLED";
+    public static final String ESTIMATE_STATUS_NEW = "NEW";
     public static final String PROJECTCODE_OBJECT = "ProjectCode";
 
 

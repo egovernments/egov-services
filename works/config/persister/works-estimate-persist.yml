@@ -870,3 +870,17 @@ serviceMaps:
 
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.deleted
          type: BOOLEAN
+
+ - version: 1.0
+   name: Abstract Estimate Backupdate
+   description: Backupdate abstract estimate flag DetailedEstimateExists on creation/cancel of Detailed estimate in egw_abstractestimate_details table
+   fromTopic: works-abstract-estimate-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_abstractestimate_details set detailedEstimateExists=true where id=? and tenantId=?;
+      basePath: $.detailedEstimates.*
+      jsonMaps:
+
+       - jsonPath: $.detailedEstimates.*.abstractEstimateDetail.id
+
+       - jsonPath: $.detailedEstimates.*.tenantId

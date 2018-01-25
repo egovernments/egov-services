@@ -109,7 +109,7 @@ public class CollectionPointService {
     private void validate(final CollectionPointRequest collectionPointRequest) {
 
         findDuplicatesInUniqueFields(collectionPointRequest);
-
+        TenantBoundary boundary;
         for (final CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
 
             // Validate Boundary
@@ -121,7 +121,7 @@ public class CollectionPointService {
 
             if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
-                final TenantBoundary boundary = boundaryService.getByCode(collectionPoint.getTenantId(),
+                boundary = boundaryService.getByCode(collectionPoint.getTenantId(),
                         collectionPoint.getLocation().getCode(), new RequestInfo());
 
                 /*

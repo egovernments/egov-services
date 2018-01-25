@@ -118,12 +118,11 @@ public class RefillingPumpStationService {
                 final TenantBoundary boundary = boundaryService.getByCode(refillingPumpStation.getTenantId(),
                         refillingPumpStation.getLocation().getCode(), new RequestInfo());
 
-                if (boundary != null && boundary.getBoundary() != null)
-                    refillingPumpStation.setLocation(boundary.getBoundary());
-                else
-                    throw new CustomException("Boundary",
-                            "Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());
-
+                /*
+                 * if (boundary != null && boundary.getBoundary() != null)
+                 * refillingPumpStation.setLocation(boundary.getBoundary()); else throw new CustomException("Boundary",
+                 * "Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());
+                 */
                 if (boundary == null || boundary.getBoundary() == null || boundary.getBoundary().getCode() == null
                         || boundary.getBoundary().getCode().isEmpty())
                     throw new CustomException("Location",

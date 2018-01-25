@@ -108,6 +108,9 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
                 addAnd(params);
                 params.append("code in (:pumpStationCodes) ");
                 paramValues.put("pumpStationCodes", pumpStationCodes);
+            } else {
+                addAnd(params);
+                params.append("code = '' ");
             }
 
         }

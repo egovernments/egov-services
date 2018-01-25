@@ -124,6 +124,9 @@ public class VendorContractJdbcRepository extends JdbcRepository {
                 addAnd(params);
                 params.append("contractNo in(:vendorContractNos) ");
                 paramValues.put("vendorContractNos", vendorContractNos);
+            } else {
+                addAnd(params);
+                params.append("contractNo = '' ");
             }
 
         }

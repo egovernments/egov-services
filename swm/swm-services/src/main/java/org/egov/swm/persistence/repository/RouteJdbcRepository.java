@@ -124,6 +124,9 @@ public class RouteJdbcRepository extends JdbcRepository {
                 addAnd(params);
                 params.append("code in (:routecodes) ");
                 paramValues.put("routecodes", routeCodes);
+            } else {
+                addAnd(params);
+                params.append("code = '' ");
             }
 
         }
@@ -143,6 +146,9 @@ public class RouteJdbcRepository extends JdbcRepository {
                 addAnd(params);
                 params.append("code in (:routecodes) ");
                 paramValues.put("routecodes", routeCodes);
+            } else {
+                addAnd(params);
+                params.append("code = '' ");
             }
 
         }

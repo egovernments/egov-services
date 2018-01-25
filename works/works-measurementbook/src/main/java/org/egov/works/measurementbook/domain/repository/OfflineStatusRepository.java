@@ -21,7 +21,7 @@ public class OfflineStatusRepository {
 
 	public OfflineStatusResponse searchOfflineStatus(String workOrderNumber, String tenantId,
 			RequestInfo requestInfo) {
-		offlineStatusSearchUrl += "?tenantId=" + tenantId + ",workOrderNumbers=" + workOrderNumber + ",statuses=WORK_COMMENCED";
+		offlineStatusSearchUrl += "?tenantId=" + tenantId + "&workOrderNumbers=" + workOrderNumber + "&statuses=WORK_COMMENCED";
 		return restTemplate.postForObject(offlineStatusSearchUrl, requestInfo, OfflineStatusResponse.class);
 	}
 }

@@ -1,5 +1,6 @@
 package org.egov.works.services.domain.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.works.services.web.contract.OfflineStatus;
+import org.egov.works.services.web.contract.OfflineStatusHelper;
 import org.egov.works.services.web.contract.OfflineStatusSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -106,9 +108,18 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
 
         searchQuery = searchQuery.replace(":orderby", orderBy);
 
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(OfflineStatus.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(OfflineStatusHelper.class);
+        
+        
+        List<OfflineStatusHelper> offlineStatusHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        
+        List<OfflineStatus> offlineStatus = new ArrayList<>();
+        
+        for(OfflineStatusHelper helper: offlineStatusHelpers) {
+            offlineStatus.add(helper.toDomain());
+        }
 
-        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        return offlineStatus;
     }
 
 }

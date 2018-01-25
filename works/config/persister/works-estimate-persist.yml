@@ -877,9 +877,12 @@ serviceMaps:
    fromTopic: works-abstract-estimate-backupdate
    isTransaction: true
    queryMaps:
-    - query: Update egw_abstractestimate_details set detailedEstimateExists=true where id=? and tenantId=?;
+    - query: Update egw_abstractestimate_details set detailedEstimateExists=? where id=? and tenantId=?;
       basePath: $.detailedEstimates.*
       jsonMaps:
+
+       - jsonPath: $.detailedEstimates.*.backUpdateAE
+         type: BOOLEAN
 
        - jsonPath: $.detailedEstimates.*.abstractEstimateDetail.id
 

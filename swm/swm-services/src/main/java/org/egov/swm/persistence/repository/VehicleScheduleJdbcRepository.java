@@ -1,6 +1,6 @@
 package org.egov.swm.persistence.repository;
 
-import java.sql.Date;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
@@ -88,6 +89,10 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
             params.append("vehicle =:vehicle");
             paramValues.put("vehicle", searchRequest.getRegNumber());
         }
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        DateFormat validationDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         if (searchRequest.getFromTripSheet() != null && searchRequest.getFromTripSheet()) {
 
@@ -95,28 +100,28 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
                 addAnd(params);
                 params.append(
                         "to_char((to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:scheduledFrom");
-                paramValues.put("scheduledFrom", sdf.format(new Date(searchRequest.getScheduledFrom())));
+                paramValues.put("scheduledFrom", validationDateFormat.format(searchRequest.getScheduledFrom()));
             }
 
             if (searchRequest.getScheduledTo() != null) {
                 addAnd(params);
                 params.append(
                         "to_char((to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:scheduledTo");
-                paramValues.put("scheduledTo", sdf.format(new Date(searchRequest.getScheduledTo())));
+                paramValues.put("scheduledTo", validationDateFormat.format(searchRequest.getScheduledTo()));
             }
         } else {
             if (searchRequest.getScheduledFrom() != null) {
                 addAnd(params);
                 params.append(
                         "to_char((to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:scheduledFrom");
-                paramValues.put("scheduledFrom", sdf.format(new Date(searchRequest.getScheduledFrom())));
+                paramValues.put("scheduledFrom", validationDateFormat.format(searchRequest.getScheduledFrom()));
             }
 
             if (searchRequest.getScheduledTo() != null) {
                 addAnd(params);
                 params.append(
                         "to_char((to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:scheduledTo");
-                paramValues.put("scheduledTo", sdf.format(new Date(searchRequest.getScheduledTo())));
+                paramValues.put("scheduledTo", validationDateFormat.format(searchRequest.getScheduledTo()));
             }
         }
 

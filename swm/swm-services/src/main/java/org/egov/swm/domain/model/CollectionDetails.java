@@ -37,14 +37,14 @@ public class CollectionDetails {
 
     @NotNull
     @Digits(fraction = 2, integer = 4, message = "EnteredWet Waste Collected shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "Entered Wet Waste quantity shall be between 0 and 20000.")
+    @DecimalMin(value = "0", message = "Entered Wet Waste quantity shall be between 0 and 20000.")
     @DecimalMax(value = "20000", message = "Entered Wet Waste quantity shall be between 0 and 20000.")
     @JsonProperty("wetWasteCollected")
     private Double wetWasteCollected = null;
 
     @NotNull
     @Digits(fraction = 2, integer = 4, message = "Entered Dry Waste Collected shall be with 2 decimal points")
-    @DecimalMin(value = "1", message = "Entered Dry Waste quantity shall be between 0 and 20000.")
+    @DecimalMin(value = "0", message = "Entered Dry Waste quantity shall be between 0 and 20000.")
     @DecimalMax(value = "20000", message = "Entered Dry Waste quantity shall be between 0 and 20000.")
     @JsonProperty("dryWasteCollected")
     private Double dryWasteCollected = null;

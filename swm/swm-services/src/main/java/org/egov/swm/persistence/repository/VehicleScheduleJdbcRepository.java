@@ -89,18 +89,35 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
             paramValues.put("vehicle", searchRequest.getRegNumber());
         }
 
-        if (searchRequest.getScheduledFrom() != null) {
-            addAnd(params);
-            params.append(
-                    "to_char((to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:scheduledFrom");
-            paramValues.put("scheduledFrom", sdf.format(new Date(searchRequest.getScheduledFrom())));
-        }
+        if (searchRequest.getFromTripSheet() != null && searchRequest.getFromTripSheet()) {
 
-        if (searchRequest.getScheduledTo() != null) {
-            addAnd(params);
-            params.append(
-                    "to_char((to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:scheduledTo");
-            paramValues.put("scheduledTo", sdf.format(new Date(searchRequest.getScheduledTo())));
+            if (searchRequest.getScheduledFrom() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:scheduledFrom");
+                paramValues.put("scheduledFrom", sdf.format(new Date(searchRequest.getScheduledFrom())));
+            }
+
+            if (searchRequest.getScheduledTo() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:scheduledTo");
+                paramValues.put("scheduledTo", sdf.format(new Date(searchRequest.getScheduledTo())));
+            }
+        } else {
+            if (searchRequest.getScheduledFrom() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:scheduledFrom");
+                paramValues.put("scheduledFrom", sdf.format(new Date(searchRequest.getScheduledFrom())));
+            }
+
+            if (searchRequest.getScheduledTo() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:scheduledTo");
+                paramValues.put("scheduledTo", sdf.format(new Date(searchRequest.getScheduledTo())));
+            }
         }
 
         Pagination<VehicleSchedule> page = new Pagination<>();

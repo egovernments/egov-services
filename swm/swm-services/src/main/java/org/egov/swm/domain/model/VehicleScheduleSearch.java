@@ -13,6 +13,7 @@ public class VehicleScheduleSearch extends VehicleSchedule {
     private String transactionNos;
     private String routeCode;
     private String regNumber;
+    private Boolean fromTripSheet;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

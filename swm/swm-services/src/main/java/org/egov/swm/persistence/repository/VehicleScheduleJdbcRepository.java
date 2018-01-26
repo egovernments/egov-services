@@ -89,8 +89,6 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
             params.append("vehicle =:vehicle");
             paramValues.put("vehicle", searchRequest.getRegNumber());
         }
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         DateFormat validationDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 

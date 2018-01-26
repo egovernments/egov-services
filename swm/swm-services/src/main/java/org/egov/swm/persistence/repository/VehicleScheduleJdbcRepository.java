@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egswm_vehicleschedule";
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     private VehicleService vehicleService;
@@ -88,16 +91,16 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getScheduledFrom() != null) {
             addAnd(params);
-            params.append("(to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata') >= " +
-                    " (to_timestamp(:scheduledFrom/1000) AT TIME ZONE 'Asia/Kolkata')");
-            paramValues.put("scheduledFrom", searchRequest.getScheduledFrom());
+            params.append(
+                    "to_char((to_timestamp(scheduledfrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:scheduledFrom");
+            paramValues.put("scheduledFrom", sdf.format(new Date(searchRequest.getScheduledFrom())));
         }
 
         if (searchRequest.getScheduledTo() != null) {
             addAnd(params);
-            params.append("(to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata') <= " +
-                    " (to_timestamp(:scheduledTo/1000) AT TIME ZONE 'Asia/Kolkata')");
-            paramValues.put("scheduledTo", searchRequest.getScheduledTo());
+            params.append(
+                    "to_char((to_timestamp(scheduledto/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:scheduledTo");
+            paramValues.put("scheduledTo", sdf.format(new Date(searchRequest.getScheduledTo())));
         }
 
         Pagination<VehicleSchedule> page = new Pagination<>();

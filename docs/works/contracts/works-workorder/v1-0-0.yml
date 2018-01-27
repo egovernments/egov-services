@@ -1513,7 +1513,7 @@ definitions:
       - fileDate
       - letterOfAcceptanceEstimates
       - stampPaperAmount
-    
+
   AssetsForLOA:
       type: object
       description: An Object that holds the basic data of Assets or Land assets for LOA
@@ -1534,7 +1534,7 @@ definitions:
           type: string
           pattern: '[a-zA-Z0-9-\\]+'
           description: Land Asset ID. This field needs to be shown if Nature of work is 'New' and landAssetRequired=true from Abstract/Detailed Estimate.
-          format: singleValueList 
+          format: singleValueList
         letterOfAcceptanceEstimate:
           type: string
           description: LOA Estimate reference, primary key is reference here.
@@ -1548,7 +1548,7 @@ definitions:
         - tenantId
         - asset
         - letterOfAcceptanceEstimate
-    
+
   LetterOfAcceptanceEstimate:
     type: object
     description: An Object that holds the basic data of Letter Of Acceptance Estimate
@@ -1591,6 +1591,10 @@ definitions:
       deleted:
         type: boolean
         description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
+      backUpdateDE:
+        type: boolean
+        description: Boolean value to update true/false for detailedestimate based on LOA create/Cancelled.
         default: false
     required:
       - tenantId

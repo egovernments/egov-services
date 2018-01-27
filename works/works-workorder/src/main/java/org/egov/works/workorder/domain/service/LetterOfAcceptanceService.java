@@ -57,6 +57,8 @@ public class LetterOfAcceptanceService {
     public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
             final Boolean isRevision) {
         letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest, Boolean.FALSE, isRevision);
+        List<LetterOfAcceptanceEstimate> letterOfAcceptanceEstimates = new ArrayList<>();
+        List<LetterOfAcceptance> letterOfAcceptanceList = new ArrayList<>();
         for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
             letterOfAcceptance.setId(commonUtils.getUUID());
@@ -114,6 +116,20 @@ public class LetterOfAcceptanceService {
                     letterOfAcceptance.setLoaDate(new Date().getTime());
                     
                 }
+
+                LetterOfAcceptanceEstimate loae = null;
+                if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
+                    loae = letterOfAcceptanceEstimate;
+                    loae.setBackUpdateDE(true);
+                    letterOfAcceptanceEstimates.add(loae);
+                }
+            }
+
+            if(letterOfAcceptanceEstimates !=null && !letterOfAcceptanceEstimates.isEmpty()) {
+                LetterOfAcceptance loa = new LetterOfAcceptance();
+                loa = letterOfAcceptance;
+                loa.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimates);
+                letterOfAcceptanceList.add(letterOfAcceptance);
             }
 
             if ((isRevision != null && !isRevision) && letterOfAcceptance.getSecurityDeposits() != null)
@@ -152,6 +168,12 @@ public class LetterOfAcceptanceService {
             kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
         else
             kafkaTemplate.send(propertiesManager.getWorksRevisionLOACreateUpdateTopic(), letterOfAcceptanceRequest);
+
+        if(letterOfAcceptanceEstimates != null && !letterOfAcceptanceEstimates.isEmpty()) {
+            LetterOfAcceptanceRequest backUpdateRequest = new LetterOfAcceptanceRequest();
+            backUpdateRequest.setLetterOfAcceptances(letterOfAcceptanceList);
+            kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateBackupdateTopic(), backUpdateRequest);
+        }
 
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
         letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
@@ -214,6 +236,8 @@ public class LetterOfAcceptanceService {
     public LetterOfAcceptanceResponse update(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
             final Boolean isRevision) {
         letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest, Boolean.TRUE, isRevision);
+        List<LetterOfAcceptanceEstimate> letterOfAcceptanceEstimates = new ArrayList<>();
+        List<LetterOfAcceptance> letterOfAcceptanceList = new ArrayList<>();
         for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
             if (letterOfAcceptance.getId() == null || letterOfAcceptance.getId().isEmpty())
@@ -239,6 +263,13 @@ public class LetterOfAcceptanceService {
                 letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
                 letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimate);
                 letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
+
+                LetterOfAcceptanceEstimate loae = null;
+                if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_CANCELLED)) {
+                    loae = letterOfAcceptanceEstimate;
+                    loae.setBackUpdateDE(false);
+                    letterOfAcceptanceEstimates.add(loae);
+                }
 
             }
 
@@ -273,9 +304,21 @@ public class LetterOfAcceptanceService {
                 letterOfAcceptance.setApprovedBy(approvedBy);
             }
 
+            if(letterOfAcceptanceEstimates !=null && !letterOfAcceptanceEstimates.isEmpty()) {
+                LetterOfAcceptance loa = new LetterOfAcceptance();
+                loa = letterOfAcceptance;
+                loa.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimates);
+                letterOfAcceptanceList.add(letterOfAcceptance);
+            }
+
         }
 
         kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
+        if(letterOfAcceptanceEstimates != null && !letterOfAcceptanceEstimates.isEmpty()) {
+            LetterOfAcceptanceRequest backUpdateRequest = new LetterOfAcceptanceRequest();
+            backUpdateRequest.setLetterOfAcceptances(letterOfAcceptanceList);
+            kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateBackupdateTopic(), backUpdateRequest);
+        }
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
         letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
         letterOfAcceptanceResponse

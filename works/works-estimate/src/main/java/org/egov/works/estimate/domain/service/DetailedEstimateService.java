@@ -52,8 +52,8 @@ public class DetailedEstimateService {
     @Autowired
     private EstimateValidator validator;
 
-    public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
-        return detailedEstimateRepository.search(detailedEstimateSearchContract);
+    public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract, final RequestInfo requestInfo) {
+        return detailedEstimateRepository.search(detailedEstimateSearchContract, requestInfo);
     }
 
     public DetailedEstimateResponse create(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
@@ -214,11 +214,6 @@ public class DetailedEstimateService {
                 detailedEstimateList.add(de);
             }
 
-            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
-                de = detailedEstimate;
-                de.setBackUpdateAE(false);
-                detailedEstimateList.add(de);
-            }
         }
 
         if (isRevision == null || (isRevision != null && !isRevision))
@@ -263,6 +258,7 @@ public class DetailedEstimateService {
         AuditDetails updateDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), true);
         AuditDetails createDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
         AbstractEstimate abstactEstimate = null;
+        List<DetailedEstimate> detailedEstimateList = new ArrayList<>();
         for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
             abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
 
@@ -339,8 +335,20 @@ public class DetailedEstimateService {
                 setTechnicalSanctionDetails(detailedEstimateRequest, createDetails, detailedEstimate);
             }
 
+            DetailedEstimate de = null;
+            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
+                de = detailedEstimate;
+                de.setBackUpdateAE(false);
+                detailedEstimateList.add(de);
+            }
+
         }
         kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
+        if(detailedEstimateList != null && !detailedEstimateList.isEmpty()) {
+            DetailedEstimateRequest backUpdateRequest = new DetailedEstimateRequest();
+            backUpdateRequest.setDetailedEstimates(detailedEstimateList);
+            kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateBackupdateTopic(), backUpdateRequest);
+        }
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
         response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
         response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));

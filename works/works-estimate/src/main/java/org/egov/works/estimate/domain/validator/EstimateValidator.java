@@ -510,13 +510,13 @@ public class EstimateValidator {
                 if (abstactEstimate == null)
                     messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
                             Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
-                validateDetailedEstimateExists(detailedEstimate, abstactEstimate, messages);
+                validateDetailedEstimateExists(detailedEstimate, abstactEstimate, messages, detailedEstimateRequest.getRequestInfo());
                 if (!checkAbstractEstimateRequired(detailedEstimate, requestInfo)) {
                     validateMasterData(detailedEstimate, requestInfo, messages);
                     validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
                 }
                 validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
-                validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
+                validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate, detailedEstimateRequest.getRequestInfo());
                 validateLocationDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
                 if(detailedEstimate.getEstimateOverheads() != null && !detailedEstimate.getEstimateOverheads().isEmpty())
                     validateOverheads(detailedEstimate, requestInfo, messages);
@@ -552,7 +552,7 @@ public class EstimateValidator {
             if(!workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&
                     detailedEstimate.getStatus() != null && detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED) &&
                     !abstactEstimate.getDetailedEstimateCreated()) {
-                validateTechnicalSanctionDetail(detailedEstimate, messages, abstactEstimate.getDetailedEstimateCreated());
+                validateTechnicalSanctionDetail(detailedEstimate, messages, abstactEstimate.getDetailedEstimateCreated(), requestInfo);
             }
 
         }
@@ -600,7 +600,7 @@ public class EstimateValidator {
 
     private void validateUpdateStatus(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
         if(detailedEstimate.getId() != null) {
-            List<DetailedEstimateHelper> lists = searchDetailedEstimatesById(detailedEstimate);
+            List<DetailedEstimateHelper> lists = searchDetailedEstimatesById(detailedEstimate, requestInfo);
             List<String> filetsNamesList = null;
             List<String> filetsValuesList = null;
             if(lists != null && !lists.isEmpty()) {
@@ -639,13 +639,13 @@ public class EstimateValidator {
     }
 
     private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,
-            Map<String, String> messages) {
+            Map<String, String> messages, final RequestInfo requestInfo) {
         if (abstractEstimate != null && StringUtils.isBlank(detailedEstimate.getId())) {
             String projectCode = abstractEstimate.getAbstractEstimateDetails().get(0).getProjectCode().getCode();
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
                     .workIdentificationNumbers(Arrays.asList(projectCode)).build();
-            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract, requestInfo);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
                 if (!detailedEstimateHelper.getStatus().equals(Constants.ESTIMATE_STATUS_CANCELLED))
                     messages.put(Constants.KEY_DE_EXISTS_FOR_AE, Constants.MESSAGE_DE_EXISTS_FOR_AE);
@@ -657,7 +657,7 @@ public class EstimateValidator {
             Map<String, String> messages) {
         DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                 .tenantId(detailedEstimate.getTenantId()).ids(Arrays.asList(detailedEstimate.getId())).build();
-        List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+        List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract, requestInfo);
         if (lists.isEmpty())
             messages.put(Constants.KEY_ESTIMATE_NOT_EXISTS, Constants.MESSAGE_ESTIMATE_NOT_EXISTS);
         else {
@@ -737,24 +737,24 @@ public class EstimateValidator {
     }
 
     public void validateSpillOverEstimate(final DetailedEstimate detailedEstimate, Map<String, String> messages,
-            AbstractEstimate abstractEstimate) {
+            AbstractEstimate abstractEstimate, final RequestInfo requestInfo) {
         if (abstractEstimate != null && abstractEstimate.getDetailedEstimateCreated()) {
             if (StringUtils.isBlank(detailedEstimate.getEstimateNumber()))
                 messages.put(Constants.KEY_NULL_DETAILEDESTIMATE_NUMBER,
                         Constants.MESSAGE_NULL_DETAILEDESTIMATE_NUMBER);
             else
-                validateEstimateNumberUnique(detailedEstimate, messages);
+                validateEstimateNumberUnique(detailedEstimate, messages, requestInfo);
 
-            validateTechnicalSanctionDetail(detailedEstimate, messages, abstractEstimate.getDetailedEstimateCreated());
+            validateTechnicalSanctionDetail(detailedEstimate, messages, abstractEstimate.getDetailedEstimateCreated(), requestInfo);
         }
     }
 
-    private void validateEstimateNumberUnique(DetailedEstimate detailedEstimate, Map<String, String> messages) {
+    private void validateEstimateNumberUnique(DetailedEstimate detailedEstimate, Map<String, String> messages, RequestInfo requestInfo) {
         if (detailedEstimate.getId() == null) {
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
                     .detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
-            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract, requestInfo);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
                 if (!detailedEstimateHelper.getStatus().equals(Constants.ESTIMATE_STATUS_CANCELLED))
                     messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
@@ -1097,7 +1097,7 @@ public class EstimateValidator {
 
     }
 
-    public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate, Map<String, String> messages, boolean detailedEstimateCreated) {
+    public void validateTechnicalSanctionDetail(final DetailedEstimate detailedEstimate, Map<String, String> messages, boolean detailedEstimateCreated, RequestInfo requestInfo) {
         if (detailedEstimate.getEstimateTechnicalSanctions() == null
                 || detailedEstimate.getEstimateTechnicalSanctions() != null
                         && detailedEstimate.getEstimateTechnicalSanctions().isEmpty()) {
@@ -1115,7 +1115,7 @@ public class EstimateValidator {
 
                 if (StringUtils.isNotBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
                     validateUniqueTechnicalSanctionForDetailedEstimate(detailedEstimate, estimateTechnicalSanction,
-                            messages);
+                            messages, requestInfo);
 
                 if(detailedEstimateCreated && StringUtils.isBlank(estimateTechnicalSanction.getTechnicalSanctionNumber()))
                     messages.put(Constants.KEY_ESTIMATE_TECHNICALSANCTION_NUMBER_REQUIRED,
@@ -1140,7 +1140,7 @@ public class EstimateValidator {
     }
 
     private void validateUniqueTechnicalSanctionForDetailedEstimate(DetailedEstimate detailedEstimate,
-            EstimateTechnicalSanction estimateTechnicalSanction, Map<String, String> messages) {
+            EstimateTechnicalSanction estimateTechnicalSanction, Map<String, String> messages, final RequestInfo requestInfo) {
         DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                 .tenantId(detailedEstimate.getTenantId())
                 .technicalSanctionNumbers(Arrays.asList(estimateTechnicalSanction.getTechnicalSanctionNumber()))
@@ -1149,7 +1149,7 @@ public class EstimateValidator {
         if (StringUtils.isNotBlank(detailedEstimate.getId())) {
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
         }
-        List<DetailedEstimateHelper> detailedEstimates = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+        List<DetailedEstimateHelper> detailedEstimates = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract, requestInfo);
         if (detailedEstimates != null && !detailedEstimates.isEmpty())
             messages.put(Constants.KEY_INVALID_TECHNICALSANCTION_NUMBER, Constants.MESSAGE_INVALID_TECHNICALSANCTION_NUMBER);
     }
@@ -1267,10 +1267,10 @@ public class EstimateValidator {
         return workflowRequired;
     }
 
-    public List<DetailedEstimateHelper> searchDetailedEstimatesById(final DetailedEstimate detailedEstimate) {
+    public List<DetailedEstimateHelper> searchDetailedEstimatesById(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo) {
         DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                 .ids(Arrays.asList(detailedEstimate.getId()))
                 .tenantId(detailedEstimate.getTenantId()).build();
-        return detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+        return detailedEstimateJdbcRepository.search(detailedEstimateSearchContract, requestInfo);
     }
 }

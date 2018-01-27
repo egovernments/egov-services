@@ -40,7 +40,7 @@ public class DetailedEstimateRepository {
     @Autowired
     private EstimateTechnicalSanctionRepository estimateTechnicalSanctionRepository;
 	
-	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
+	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract, final RequestInfo requestInfo) {
 		DetailedEstimate detailedEstimate;
 		List<DetailedEstimate> detailedEstimates = new ArrayList<>();
 		AbstractEstimateDetailsSearchContract abstractEstimateDetailsSearchContract;
@@ -51,7 +51,7 @@ public class DetailedEstimateRepository {
 		EstimateActivitySearchContract estimateActivitySearchContract;
 		EstimateMeasurementSheetSearchContract estimateMeasurementSheetSearchContract;
 		for (DetailedEstimateHelper estimate : detailedEstimateJdbcRepository
-				.search(detailedEstimateSearchContract)) {
+				.search(detailedEstimateSearchContract, requestInfo)) {
 			detailedEstimate = estimate.toDomain(estimate);
 			
 			abstractEstimateDetailsSearchContract = AbstractEstimateDetailsSearchContract.builder().tenantId(estimate.getTenantId())

@@ -49,6 +49,9 @@ public class LetterOfAcceptanceEstimate {
     @JsonProperty("deleted")
     private Boolean deleted = false;
 
+    @JsonProperty("backUpdateDE")
+    private Boolean backUpdateDE = false;
+
     public LetterOfAcceptanceEstimate id(String id) {
         this.id = id;
         return this;
@@ -283,8 +286,29 @@ public class LetterOfAcceptanceEstimate {
     }
 
 
+    public LetterOfAcceptanceEstimate backUpdateDE(Boolean backUpdateDE) {
+        this.backUpdateDE = backUpdateDE;
+        return this;
+    }
+
+    /**
+     * Boolean value to update true/false for detailedestimate based on LOA create/Cancelled.
+     * @return backUpdateDE
+     **/
+    @ApiModelProperty(value = "Boolean value to update true/false for detailedestimate based on LOA create/Cancelled.")
+
+
+    public Boolean getBackUpdateDE() {
+        return backUpdateDE;
+    }
+
+    public void setBackUpdateDE(Boolean backUpdateDE) {
+        this.backUpdateDE = backUpdateDE;
+    }
+
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -301,12 +325,13 @@ public class LetterOfAcceptanceEstimate {
                 Objects.equals(this.assetForLOAs, letterOfAcceptanceEstimate.assetForLOAs) &&
                 Objects.equals(this.loaActivities, letterOfAcceptanceEstimate.loaActivities) &&
                 Objects.equals(this.auditDetails, letterOfAcceptanceEstimate.auditDetails) &&
-                Objects.equals(this.deleted, letterOfAcceptanceEstimate.deleted);
+                Objects.equals(this.deleted, letterOfAcceptanceEstimate.deleted) &&
+                Objects.equals(this.backUpdateDE, letterOfAcceptanceEstimate.backUpdateDE);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, letterOfAcceptance, detailedEstimate, workCompletionDate, estimateLOAAmount, assetForLOAs, loaActivities, auditDetails, deleted);
+        return Objects.hash(id, tenantId, letterOfAcceptance, detailedEstimate, workCompletionDate, estimateLOAAmount, assetForLOAs, loaActivities, auditDetails, deleted, backUpdateDE);
     }
 
     @Override
@@ -324,6 +349,7 @@ public class LetterOfAcceptanceEstimate {
         sb.append("    loaActivities: ").append(toIndentedString(loaActivities)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+        sb.append("    backUpdateDE: ").append(toIndentedString(backUpdateDE)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -332,7 +358,7 @@ public class LetterOfAcceptanceEstimate {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }

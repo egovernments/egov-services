@@ -36,6 +36,8 @@ public class Constants {
     public static final String ESTIMATE_STATUS_CANCELLED = "CANCELLED";
     public static final String ESTIMATE_STATUS_NEW = "NEW";
     public static final String PROJECTCODE_OBJECT = "ProjectCode";
+    public static final String DETAILEDESTIMATE_OFFLINESTATUS = "L1_TENDER_FINALIZED";
+    public static final String DETAILEDESTIMATE_OFFLINE = "DetailedEstimateOffline";
 
 
     public static final String BOUNDARY_OBJECT = "Boundary";

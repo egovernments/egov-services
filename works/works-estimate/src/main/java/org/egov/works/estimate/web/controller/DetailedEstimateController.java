@@ -36,7 +36,7 @@ public class DetailedEstimateController {
 	public DetailedEstimateResponse search(
 			@ModelAttribute @Valid DetailedEstimateSearchContract detailedEstimateSearchContract,
 			@RequestBody RequestInfo requestInfo, @RequestParam(required = true) String tenantId) {
-		final List<DetailedEstimate> detailedEstimates = detailedEstimateService.search(detailedEstimateSearchContract);
+		final List<DetailedEstimate> detailedEstimates = detailedEstimateService.search(detailedEstimateSearchContract, requestInfo);
 		final DetailedEstimateResponse response = new DetailedEstimateResponse();
 		response.setDetailedEstimates(detailedEstimates);
 		response.setResponseInfo(estimateUtils.getResponseInfo(requestInfo));

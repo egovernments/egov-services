@@ -887,3 +887,20 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.abstractEstimateDetail.id
 
        - jsonPath: $.detailedEstimates.*.tenantId
+
+ - version: 1.0
+   name: Detailed Estimate Backupdate
+   description: Backupdate detailed estimate flag loaCreated on creation/cancel of Letterofaccaptance in egw_detailedestimate table
+   fromTopic: works-detailedestimate-backupdate
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_detailedestimate set loacreated=? where estimatenumber=? and tenantId=?;
+      basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*
+      jsonMaps:
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.backUpdateDE
+         type: BOOLEAN
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.estimateNumber
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.tenantId

@@ -2,15 +2,21 @@ package org.egov.works.estimate.persistence.repository;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.persistence.repository.JdbcRepository;
+import org.egov.works.commons.utils.CommonConstants;
+import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.persistence.helper.DetailedEstimateHelper;
 import org.egov.works.estimate.web.contract.DetailedEstimate;
 import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
+import org.egov.works.estimate.web.contract.OfflineStatus;
+import org.egov.works.estimate.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class DetailedEstimateJdbcRepository extends JdbcRepository {
@@ -21,7 +27,10 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
     public static final String TABLE_NAME_AE = ", egw_abstractestimate ae";
     public static final String TABLE_NAME_AED = ", egw_abstractestimate_details aed";
 
-    public List<DetailedEstimateHelper> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
+    @Autowired
+    private OfflineStatusRepository offlineStatusRepository;
+
+    public List<DetailedEstimateHelper> search(DetailedEstimateSearchContract detailedEstimateSearchContract, final RequestInfo requestInfo) {
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
         Map<String, Object> paramValues = new HashMap<>();
@@ -199,6 +208,22 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("de.loaCreated =:loaCreated");
             paramValues.put("loaCreated", detailedEstimateSearchContract.getLoaCreated());
+        }
+
+        if(detailedEstimateSearchContract.getWithoutOfflineStatus() != null && detailedEstimateSearchContract.getWithoutOfflineStatus()) {
+            List<OfflineStatus> offlineStatuses = offlineStatusRepository.searchOfflineStatus(detailedEstimateSearchContract.getTenantId(), Constants.DETAILEDESTIMATE_OFFLINE, null, requestInfo);
+            String detailedEstimateNumbers = offlineStatuses.stream().map(OfflineStatus::getObjectNumber).collect(Collectors.joining(","));
+            addAnd(params);
+            params.append("de.estimatenumber not in (:detailedEstimateNumbers)");
+            paramValues.put("detailedEstimateNumbers", detailedEstimateNumbers);
+        }
+
+        if(detailedEstimateSearchContract.getWithAllOfflineStatusAndLoaNotCreated() != null && detailedEstimateSearchContract.getWithAllOfflineStatusAndLoaNotCreated() != null) {
+            List<OfflineStatus> offlineStatuses = offlineStatusRepository.searchOfflineStatus(detailedEstimateSearchContract.getTenantId(), Constants.DETAILEDESTIMATE_OFFLINE, Constants.DETAILEDESTIMATE_OFFLINESTATUS, requestInfo);
+            String detailedEstimateNumbers = offlineStatuses.stream().map(OfflineStatus::getObjectNumber).collect(Collectors.joining(","));
+            addAnd(params);
+            params.append("de.status = 'TECHNICAL_SANCTIONED' and de.estimatenumber in (:detailedEstimateNumbers) and de.loaCreated=false");
+            paramValues.put("detailedEstimateNumbers", detailedEstimateNumbers);
         }
 
         params.append(" and de.deleted = false");

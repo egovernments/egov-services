@@ -43,7 +43,7 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", offlineStatusSearchContract.getTenantId());
         }
-        if (offlineStatusSearchContract.getDetailedEstimateNumbers() != null) {
+        if (offlineStatusSearchContract.getDetailedEstimateNumbers() != null && !offlineStatusSearchContract.getDetailedEstimateNumbers().isEmpty()) {
             addAnd(params);
             params.append("objectnumber in (:detailedEstimateNumbers)");
             paramValues.put("detailedEstimateNumbers", offlineStatusSearchContract.getDetailedEstimateNumbers());
@@ -61,7 +61,7 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
             paramValues.put("ids", offlineStatusSearchContract.getIds());
         }
 
-        if (offlineStatusSearchContract.getWorkOrderNumbers() != null) {
+        if (offlineStatusSearchContract.getWorkOrderNumbers() != null && !offlineStatusSearchContract.getWorkOrderNumbers().isEmpty()) {
             addAnd(params);
             params.append("objectnumber in (:workOrderNumbers)");
             paramValues.put("workOrderNumbers", offlineStatusSearchContract.getWorkOrderNumbers());
@@ -73,7 +73,7 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
             paramValues.put("workOrderNumberLike", "%" + offlineStatusSearchContract.getWorkOrderNumberLike().toLowerCase() + "%");
         }
 
-        if (offlineStatusSearchContract.getLoaNumbers() != null) {
+        if (offlineStatusSearchContract.getLoaNumbers() != null && !offlineStatusSearchContract.getLoaNumbers().isEmpty()) {
             addAnd(params);
             params.append("objectnumber in (:loaNumbers)");
             paramValues.put("loaNumbers", offlineStatusSearchContract.getLoaNumbers());
@@ -85,7 +85,7 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
             paramValues.put("loaNumberLike", "%" + offlineStatusSearchContract.getLoaNumberLike().toLowerCase() + "%");
         }
 
-        if (offlineStatusSearchContract.getStatuses() != null) {
+        if (offlineStatusSearchContract.getStatuses() != null && !offlineStatusSearchContract.getStatuses().isEmpty()) {
             addAnd(params);
             params.append("status in (:statuses)");
             paramValues.put("statuses", offlineStatusSearchContract.getStatuses());

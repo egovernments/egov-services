@@ -28,7 +28,7 @@ public class Vehicle {
     private String tenantId = null;
 
     @NotNull
-    @Length(min = 1, max = 22, message = "Value of regNumber shall be between 6 and 22")
+    @Length(min = 1, max = 22, message = "Value of regNumber shall be between 1 and 22")
     @JsonProperty("regNumber")
     private String regNumber = null;
 

@@ -481,6 +481,7 @@ var commomFieldsRules = {
     },
     oldAgreementNumber:{
       required: true,
+      alphaNumersh: true
     },
     referenceNumber:{
       required: false,
@@ -500,11 +501,11 @@ var commomFieldsRules = {
     },
     municipalOrderNumber:{
       required :false,
-      alphaNumer: true
+      alphaNumersh: true
     },
     governmentOrderNumber :{
       required :false,
-      alphaNumer: true
+      alphaNumersh: true
     },
     firstAllotment :{
       required :false,

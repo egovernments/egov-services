@@ -81,8 +81,10 @@ public class DisposalQueryBuilder {
 		selectQuery.append(" OFFSET ?");
 		long pageNumber = 0; // Default pageNo is zero meaning first page
 		if (disposalCriteria.getOffset() != null)
-			pageNumber = disposalCriteria.getOffset() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+		   	pageNumber = disposalCriteria.getOffset() < 1 ? 0 : disposalCriteria.getOffset() - 1;
+        preparedStatementValues.add( pageNumber * pageSize); 
+	/*		pageNumber = disposalCriteria.getOffset() - 1;
+		preparedStatementValues.add(pageNumber * pageSize);*/ // Set offset to
 															// pageNo * pageSize
 	}
 

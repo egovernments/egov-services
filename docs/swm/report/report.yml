@@ -37,15 +37,6 @@ ReportDefinitions:
     wrapper: true
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.swm.DumpingGround.*.code|$.MdmsRes.swm.DumpingGround.*.name
     searchClause: and ssg.dumpingground = $dumpinggroundcode
-  - name: collectiontypecode
-    label: reports.swm.collectiontype
-    type: singlevaluelist
-    source: mdms
-    isMandatory: false  
-    stateData: true
-    wrapper: true
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.swm.CollectionType.*.code|$.MdmsRes.swm.CollectionType.*.name    
-    searchClause: and cd.collectiontype = $collectiontypecode
   - name: fromDate
     label: reports.swm.datefrom
     type: epoch

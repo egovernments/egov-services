@@ -550,7 +550,7 @@ $.validator.addMethod('alphaNumer', function(value) {//^[a-zA-Z0-9_]+$
 }, 'Please enter only Alpha/Numeric Value');
 
 $.validator.addMethod('alphaNumersh', function(value) {
-  return value ? /^[a-z0-9/-]+$/i.test(value) : true;
+  return value ? /^[a-z0-9./-]+$/i.test(value) : true;
 }, 'Alhpabets, Numbers and / - are only allowed');
 
 $.validator.addMethod('integerOnly',function(value){

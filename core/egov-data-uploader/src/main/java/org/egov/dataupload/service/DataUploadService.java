@@ -88,7 +88,7 @@ public class DataUploadService {
 		}catch(Exception e){
 			logger.info("FIle write exception: ",e);
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
-					"No .xls file found for: fileStoreId = "+uploadJob.getRequestFilePath()
+					"No .xls/.xlsx file found for: fileStoreId = "+uploadJob.getRequestFilePath()
 					+" AND tenantId = "+uploadJob.getTenantId());		
 		}
 		uploadJob.setCode(dataUploadUtils.mockIdGen(uploadJob.getModuleName(), uploadJob.getDefName()));

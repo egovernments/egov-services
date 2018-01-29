@@ -92,8 +92,10 @@ public class RevaluationQueryBuilder {
         selectQuery.append(" OFFSET ?");
         long pageNumber = 0; // Default pageNo is zero meaning first page
         if (revaluationCriteria.getOffset() != null)
-            pageNumber = revaluationCriteria.getOffset() - 1;
-        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+        	pageNumber = revaluationCriteria.getOffset() < 1 ? 0 : revaluationCriteria.getOffset() - 1;
+        preparedStatementValues.add( pageNumber * pageSize); 
+           /* pageNumber = revaluationCriteria.getOffset() - 1;
+        preparedStatementValues.add(pageNumber * pageSize);*/ // Set offset to
                                                             // pageNo * pageSize
     }
 

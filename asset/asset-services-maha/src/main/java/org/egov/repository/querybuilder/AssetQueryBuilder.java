@@ -212,8 +212,10 @@ public class AssetQueryBuilder {
 		selectQuery.append(" OFFSET ?");
 		long pageNumber = 0; // Default pageNo is zero meaning first page
 		if (searchAsset.getOffset() != null)
-			pageNumber = searchAsset.getOffset() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+			pageNumber = searchAsset.getOffset() < 1 ? 0 : searchAsset.getOffset() - 1;
+        preparedStatementValues.add( pageNumber * pageSize); 
+			/*pageNumber = searchAsset.getOffset() - 1;
+		preparedStatementValues.add(pageNumber * pageSize);*/ // Set offset to
 															// pageNo * pageSize
 	}
 

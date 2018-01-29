@@ -212,6 +212,8 @@ public class RouteJdbcRepository extends JdbcRepository {
             if (route.getCollectionPoints() != null && route.getCollectionPoints().size() > 2) {
 
                 route.setTotalNoOfStops(route.getCollectionPoints().size() - 2);
+            } else {
+                route.setTotalNoOfStops(0);
             }
         }
 

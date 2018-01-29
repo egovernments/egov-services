@@ -54,8 +54,19 @@ public class AssetService {
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
 
+        StringBuffer assetCodes = new StringBuffer();
+
+        if (codes != null && !codes.isEmpty()) {
+            for (String code : codes) {
+                if (assetCodes.length() >= 1)
+                    assetCodes.append(",");
+
+                assetCodes.append(code);
+            }
+        }
+
         AssetResponse response = restTemplate.postForObject(assetsBySearchCriteriaUrlByCodes, wrapper, AssetResponse.class,
-                codes, tenantId);
+                assetCodes.toString(), tenantId);
 
         if (response != null && !response.getAssets().isEmpty())
             return response.getAssets();

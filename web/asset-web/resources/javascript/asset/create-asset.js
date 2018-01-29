@@ -479,6 +479,7 @@ class CreateAsset extends React.Component {
 
   handleChange(e, name, pattern) {
       if(name === "status") {
+        // console.log(name, e.target.value);
         this.state.capitalized = ( e.target.value === "CAPITALIZED");
       } else if(name == "enableYearWiseDepreciation") {
         return this.setState({
@@ -861,7 +862,9 @@ class CreateAsset extends React.Component {
           _this.setInitialState(_state);
         }
       }
+      let assetCat = [];
       commonApiPost("asset-services", "assetCategories", "_search", {tenantId,isChildCategory:true}, function(err, res) {
+          assetCat = res["AssetCategory"];
           _this.setState({"assetCategories":res["AssetCategory"]});
       });
       getDropdown("locality", function(res) {
@@ -940,7 +943,7 @@ class CreateAsset extends React.Component {
                 asset.assetAttributes = [];
               }
 
-              setTimeout(function() {
+              // setTimeout(function() {
                 _this.setState({
                     assetSet: {
                       ...asset,
@@ -948,19 +951,19 @@ class CreateAsset extends React.Component {
                     },
                     allFiles: JSON.parse(JSON.stringify(_files))
                 });
-              }, 100);
+              // }, 100);
 
               if(asset.status == "CAPITALIZED") {
-                let ifassetLandIMObj = _this.state.assetCategories && _this.state.assetCategories.find((obj)=>{return obj.name === asset.assetCategory.name});
-                // console.log(ifassetLandIMObj);
-                if(ifassetLandIMObj && (ifassetLandIMObj.assetCategoryType === 'LAND' || ifassetLandIMObj.assetCategoryType === 'IMMOVABLE')){
+                // setTimeout(function() {
+                  console.log('Global var : ', assetCat);
+                  console.log('Asset Category Master : ',_this.state.assetCategories);
+                  let ifassetLandIMObj = assetCat && assetCat.find((obj)=>{return obj.name === asset.assetCategory.name});
+                  console.log('LANDIMMOV : ',ifassetLandIMObj);
                   _this.setState({
-                      ifassetLandIM: true
+                      capitalized: true,
+                      ifassetLandIM: ifassetLandIMObj && (ifassetLandIMObj.assetCategoryType === 'LAND' || ifassetLandIMObj.assetCategoryType === 'IMMOVABLE') ? true : false
                   })
-                }
-                _this.setState({
-                    capitalized: true
-                })
+                // }, 100);
               }
 
               if(asset.assetCategory && asset.assetCategory.id) {
@@ -981,14 +984,14 @@ class CreateAsset extends React.Component {
               if(asset.assetReference) {
                 getCommonMasterById("asset-services", "assets", asset.assetReference, function(err, res1) {
                   if(res1 && res1["Assets"] && res1["Assets"][0]) {
-                    setTimeout(function() {
+                    // setTimeout(function() {
                       _this.setState({
                         assetSet: {
                             ..._this.state.assetSet,
                             assetReferenceName: res1["Assets"][0].name
                         }
                       })
-                    }, 200);
+                    // }, 200);
                   }
                 })
               }

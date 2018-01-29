@@ -158,7 +158,7 @@ ReportDefinitions:
     label: reports.works.typeofwork
     isMandatory: false
     type: multivaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     source: works
     stateData: true
     wrapper: true
@@ -167,7 +167,7 @@ ReportDefinitions:
     label: reports.works.subtypeofwork
     isMandatory: false
     type: multivaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=TypeOfWork&tenantId=$tenantid&filter%3D%5B%3F%28%20%40.parent%3D%3D%7Btypeofwork%7D%29%5D%7C%24.MdmsRes.Works.TypeOfWork.%2A.code%7C%24.MdmsRes..Works.TypeOfWork.%2A.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter%3D%5B%3F%28%20%40.parent%3D%3D%7Btypeofwork%7D%29%5D%7C%24.MdmsRes.works.TypeOfWork.%2A.code%7C%24.MdmsRes..works.TypeOfWork.%2A.name
     source: works
     stateData: true
     wrapper: true
@@ -206,7 +206,6 @@ ReportDefinitions:
   summary: Work In Progress Register
   version: 1.0.0
   moduleName: works
-  viewPath: WorkInProWessRegister
   externalService:
   - entity: $.MdmsRes.works.TypeOfWork
     apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D
@@ -214,9 +213,14 @@ ReportDefinitions:
     tableName: tbl_typeofwork
     stateData: true
   - entity: $.MdmsRes.works.TypeOfWork
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%29%5D
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
     keyOrder: name,code,description,tenantId
     tableName: tbl_subtypeofwork
+    stateData: true
+  - entity: $.MdmsRes.works.WorksStatus
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=WorksStatus&tenantId=$tenantid&filter=%5B%3F%28%40.moduleType%3D%3D%27DetailedEstimate%27%29%5D
+    keyOrder: code,description,tenantId
+    tableName: tbl_workstatus
     stateData: true
   sourceColumns:
   - name: wincode
@@ -241,15 +245,17 @@ ReportDefinitions:
   searchParams:
   - name: typeOfWork
     label: reports.works.typeOfWork
-    type: string
+    type: singlevaluelist
     source: works
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
     searchClause : AND de.workstype=$typeOfWork
     isMandatory: false
   - name: subTypeOfWork
     label: reports.works.subtypeofwork
-    type: string
+    type: singlevaluelist
     source: works
-    searchClause : AND de.workstype=$subTypeOfWork
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    searchClause : AND de.workssubtype=$subTypeOfWork
     isMandatory: false
   - name: nameOfWork
     label: reports.works.nameofwork
@@ -276,32 +282,17 @@ ReportDefinitions:
     searchClause : AND loae.estimateloaamount<=$amountUpto
     isMandatory: false
 
-  query: select de.projectcode as wincode, de.nameofwork, de.workstype as subtypeofwork, de.status from egw_detailedestimate de where status='TECHNICAL_SANCTIONED'
+  query: select de.projectcode as wincode, de.nameofwork, tw.name||'/'||stw.name as subtypeofwork, workstatus.description as status from egw_detailedestimate de, (values tbl_workstatus) as workstatus (code,description,tenantId), (values tbl_typeofwork) as tw (name,code,description,tenantId), (values tbl_subtypeofwork) as stw (name,code,description,tenantId) where de.status='TECHNICAL_SANCTIONED' and workstatus.code=de.status and tw.code=de.workstype and stw.code=de.workssubtype
 
 - reportName: WorkInProgressDetails
   summary: Work In Progress Details
   version: 1.0.0
   moduleName: works
   externalService:
-  - entity: $.MdmsRes.works.TypeOfWork
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D
-    keyOrder: name,code,description,tenantId
-    tableName: tbl_typeofwork
-    stateData: true
-  - entity: $.MdmsRes.works.TypeOfWork
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%29%5D
-    keyOrder: name,code,description,tenantId
-    tableName: tbl_subtypeofwork
-    stateData: true
   - entity: $.MdmsRes.egf-master.FinancialYear
     apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     keyOrder: finYearRange,startingDate,endingDate,tenantId
     tableName: tbl_financialyear
-    stateData: true
-  - entity: $.MdmsRes.works.Scheme
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%29%5D
-    keyOrder: name,code
-    tableName: tbl_scheme
     stateData: true
   - entity: $.MdmsRes.works.Scheme
     apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%29%5D

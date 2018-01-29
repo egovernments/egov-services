@@ -40,7 +40,7 @@ ReportDefinitions:
   - name: wasteprocess
     label: reports.swm.wasteprocess
     type: singlevaluelist
-    pattern: 'list://Dump:false,Process:true'
+    pattern: 'list://false:Dump,true:Process'
     source: wastetypeprocess
     isMandatory: false
   - name: fromDate

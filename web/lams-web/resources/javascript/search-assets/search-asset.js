@@ -17,9 +17,8 @@ class AssetSearch extends React.Component {
         assetCategories: [],
         locality: [],
         electionwards: [],
-        modify: false,
-        categories: ["land", "shop", "shopping complex","market", "kalyana mandapam", "parking space", "slaughter house", "usufruct", "community toilet complex", "fish tanks", "parks"]
-    }
+        modify: false
+      }
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
   }
@@ -69,7 +68,7 @@ class AssetSearch extends React.Component {
     }
 
     try {
-      var assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories"));
+      var assetCategories = !localStorage.getItem("assetCategories") || localStorage.getItem("assetCategories") == "undefined" ? (localStorage.setItem("assetCategories", JSON.stringify(commonApiPost("asset-services", "assetCategories", "_search", {usedForLease:true, tenantId}).responseJSON["AssetCategory"] || [])), JSON.parse(localStorage.getItem("assetCategories"))) : JSON.parse(localStorage.getItem("assetCategories"));
     } catch (e) {
         console.log(e);
       var  assetCategories = [];
@@ -190,7 +189,7 @@ class AssetSearch extends React.Component {
     }
 
     const showActions = function(item) {
-      if( _this.state.categories.indexOf(item.assetCategory.name.toLowerCase()) > -1) {
+      if( item.assetCategory.usedForLease ) {
         return (
           <div className="styled-select">
               <select id="myOptions" onChange={(e)=>{

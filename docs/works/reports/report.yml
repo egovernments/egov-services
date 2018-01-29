@@ -225,7 +225,7 @@ ReportDefinitions:
     source: works
     linkedReport:
       reportName: WorkInProgressDetails
-      linkedColumn: _parent?reportName={reportName}&wincode={wincode}
+      linkedColumn: _parent?reportName={reportName}&wcode={wincode}
   - name: nameofwork
     label: reports.works.nameofwork
     type: string
@@ -415,11 +415,11 @@ ReportDefinitions:
     type: string
     source: works
   searchParams:
-  - name: wincode
+  - name: wcode
     label: reports.works.wincode
     type: string
     source: works
-    searchClause : AND de.projectcode=$wincode
+    searchClause : AND de.projectcode=$wcode
     isMandatory: false
 
   query: select de.nameofwork, (select finyear.finYearRange from (values tbl_financialyear) as finyear (finYearRange,startingDate,endingDate,tenantId) where de.estimatedate between startingDate::bigint and endingDate::bigint) as distributedforfinyear, de.budgetgroup as accountcode, de.estimatevalue, de.location, ((select coalesce(statusdate, innerwo.workorderdate) from egw_workorder innerwo left join egw_offlinestatus fs on fs.objecttype='WorkOrderOffline' and fs.status='WORK_COMMENCED' and fs.objectnumber=innerwo.workordernumber where innerwo.workordernumber=wo.workordernumber) + loa.contractperiod*24*12*60*1000) as expectedcompletiondate, (select scheme.name from (values tbl_scheme) as scheme (name, code) where scheme.code=de.scheme) as schemename, (select cb.workcompletiondate from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and bg.billsubtype='Final' and cb.letterofacceptanceestimate=loae.id) as actualcompletiondate, de.councilresolutionnumber||'/'||de.councilresolutiondate as resolutionnumberanddate, (select bg.billdate from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and bg.billsubtype='Final' and cb.letterofacceptanceestimate=loae.id) as capitalisationdate, wo.workordernumber, de.projectcode as wincode, de.estimatevalue as approvedbudget, '' as assetidentificationnumber, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount, (select sum(bg.billamount) from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and cb.deleted=false and cb.letterofacceptanceestimate=loae.id) as totalexpensesincurredsofar, br.billdate as paymentdate, br.billamount as amount, br.billnumber as vouchernumber from egw_workorder wo, egw_letterofacceptance loa, egw_detailedestimate de, egw_letterofacceptanceestimate loae left join egw_contractorbill cb on cb.letterofacceptanceestimate=loae.id left join egf_billregister br on cb.billnumber=br.billnumber and br.billtype='contractorbill' where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber

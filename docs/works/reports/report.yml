@@ -227,8 +227,8 @@ ReportDefinitions:
     label: reports.works.nameofwork
     type: string
     source: works
-  - name: typeofsubtypeofwork
-    label: reports.works.typeofsubtypeofwork
+  - name: subtypeofwork
+    label: reports.works.subtypeofwork
     type: string
     source: works
   - name: status
@@ -243,7 +243,7 @@ ReportDefinitions:
     searchClause : AND de.workstype=$typeOfWork
     isMandatory: false
   - name: subTypeOfWork
-    label: reports.works.subTypeOfWork
+    label: reports.works.subtypeofwork
     type: string
     source: works
     searchClause : AND de.workstype=$subTypeOfWork
@@ -276,7 +276,7 @@ ReportDefinitions:
     searchClause : AND loae.estimateloaamount<=$amountUpto
     isMandatory: false
 
-  query: select de.projectcode as wincode, de.nameofwork, de.workstype as typeofsubtypeofwork, de.status from egw_detailedestimate de where status='TECHNICAL_SANCTIONED'
+  query: select de.projectcode as wincode, de.nameofwork, de.workstype as subtypeofwork, de.status from egw_detailedestimate de where status='TECHNICAL_SANCTIONED'
 
 - reportName: WorkInProgressDetails
   summary: Work In Progress Details

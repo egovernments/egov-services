@@ -112,6 +112,9 @@ public class AssetValidator implements Validator {
 		 * "AcquisitionDate cannot be less than Dateofcreation");
 		 */
 
+		if ((asset.getAssetCategory().getIsAssetAllow()!=null) && (asset.getAssetCategory().getIsAssetAllow().equals(false)))
+			errorMap.put(applicationProperties.getParentCategory(), "Asset cannot be created for parent category");
+		
 		if (asset.getOriginalValue() != null && asset.getOriginalValue().longValue() < 0)
 			errorMap.put(applicationProperties.getOriginalValue(),
 					"Negative  Amount Cannot Be Accepted for OriginalValue");
@@ -123,7 +126,7 @@ public class AssetValidator implements Validator {
 			errorMap.put(applicationProperties.getAccumulatedDepreciation(),
 					"Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
 		
-		System.err.println(asset.getDescription().toCharArray().length+"length");
+		log.info(asset.getDescription().toCharArray().length+"length");
 		if(asset.getDescription().toCharArray().length>1024)
 			errorMap.put(applicationProperties.getDescription(),
 					"length of the string crosses the system limit,please enter the description with lessthan or equal to 1024 characters");
@@ -154,7 +157,7 @@ public class AssetValidator implements Validator {
 		if (masterAssetCat == null)
 			errorMap.put(applicationProperties.getAssetCategory(), "the given AssetCategory Id is Invalid");
 		else {
-			System.err.println("masterAssetCat" + masterAssetCat);
+			log.info("masterAssetCat" + masterAssetCat);
 			if (masterAssetCat.getIsAssetAllow().equals(false))
 				errorMap.put(applicationProperties.getParentCategory(), "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
@@ -188,7 +191,7 @@ public class AssetValidator implements Validator {
 
 		if (anticipatedLife != null && depreciationRate != null) {
 			long newVal = new Double(Math.round(100 / depreciationRate)).longValue();
-			System.err.println(newVal + "newVal");
+			log.info(newVal + "newVal");
 			if (anticipatedLife - newVal != 0) {
 				errorMap.put(applicationProperties.getAnticipatedLife(), "anticipatedLife Value is wrong");
 			}
@@ -233,7 +236,7 @@ public class AssetValidator implements Validator {
 		Revaluation revaluation = revaluationRequest.getRevaluation();
 		Asset asset = assetService.getAsset(revaluationRequest.getRevaluation().getTenantId(),
 				revaluationRequest.getRevaluation().getAssetId(), revaluationRequest.getRequestInfo());
-		System.err.println("asset" + asset);
+		log.info("asset" + asset);
 
 		if (asset == null)
 			errorMap.put(applicationProperties.getRevaluation(), "Given Asset For Revaluation Cannot Be Found");

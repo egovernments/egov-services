@@ -1,0 +1,1 @@
+INSERT INTO eglams_reservation_category (id, code, name, isactive, createddate, createdby, lastmodifieddate, lastmodifiedby, tenantid) values (nextval('seq_eglams_reservation_category'),'GENERAL','General',true,now(),4,now(),4,'default');

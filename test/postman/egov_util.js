@@ -85,3 +85,31 @@ const ErrorUtil = function() {
 }
 
 var error = new ErrorUtil();
+
+function bad_api_tests(api_name, data) {
+    describe(api_name  + " - " + data["field_name"] + " " + data["type"] + " " + data["subtype"], () => {
+        it("should have 400 status", () => {
+            response.should.have.status(400);
+        })
+
+        it('should return a JSON response', () => {
+            response.should.be.json;
+        });
+
+        it("Response body present", () => {
+            response.body.should.not.be.null;
+        })
+
+        it("Response body has errors", () => {
+            response.body.Errors.should.not.be.null;
+        })
+
+        it("Error message has code with field name " + error_details.code, () => {
+            response.body.Errors[0].code.should.contain(error_details.code)
+        })
+
+        it("Error message is - " + error_details.message, () => {
+            response.body.Errors[0].message.should.equal(error_details.message);
+        })
+    })
+}

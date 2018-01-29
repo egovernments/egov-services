@@ -16,9 +16,9 @@
     "vendors": [
         {
             "tenantId": "default",
-            "name": "vendor name - {{type}} {{subtype}}",
+            "name": "Ve",
             "registrationNo": "Registration {{$GUIDWD}}",
-            "details": "detailsasdfghjkl",
+            "details": "DETAILS-{{$GUIDWD}}",
             "servicedLocations":
                 [
                     {

@@ -4,6 +4,7 @@ output_folder: ./swm/
 
 apis:
   /vendors/_create:
+    ignorefields: ["agreementDocument"]
     reference:
       servicedLocations:
       servicesOffered:

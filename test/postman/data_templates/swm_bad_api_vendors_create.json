@@ -16,7 +16,7 @@
     {
       "tenantId": "{{tenantId}}",
       "name": "vendor name",
-      "registrationNo": "REGNO-{{$TS}}",
+      "registrationNo": "REGNO-{{$DATE(-2year,dd/mm/yy)}}",
       "details": "detailsasdfghjkl",
       "servicedLocations": [
         {

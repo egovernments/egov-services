@@ -223,6 +223,9 @@ ReportDefinitions:
     label: reports.works.wincode
     type: string
     source: works
+    linkedReport:
+      reportName: WorkInProgressDetails
+      linkedColumn: _parent?reportName={reportName}&wincode={wincode}
   - name: nameofwork
     label: reports.works.nameofwork
     type: string
@@ -257,9 +260,6 @@ ReportDefinitions:
   - name: wincode
     label: reports.works.wincode
     type: string
-    linkedReport:
-      reportName: WorkInProgressDetails
-      linkedColumn: _parent?reportName={reportName}&wincode={wincode}
     source: works
     searchClause : AND de.projectcode=$wincode
     isMandatory: false

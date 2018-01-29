@@ -66,6 +66,7 @@ SwaggerParser.dereference(contract_url)
                 var tests = [];
                 var common = {
                     field_name: param_name,
+                    field_path: path,
                     type: type
                 };
 
@@ -96,6 +97,8 @@ SwaggerParser.dereference(contract_url)
                         tests.push(Object.assign({}, common, {
                             type: "length",
                             subtype: "maximum(" + param.maxLength + ")",
+                            minimum: param.minLength,
+                            maximum: param.maxLength,
                             operations: [{
                                 json_path: path,
                                 value: "{{$randomString(" + (param.maxLength + 1) + ")}}"
@@ -107,6 +110,8 @@ SwaggerParser.dereference(contract_url)
                         tests.push(Object.assign({}, common, {
                             type: "length",
                             subtype: "minimum(" + param.minLength + ")",
+                            minimum: param.minLength,
+                            maximum: param.maxLength,
                             operations: [{
                                 json_path: path,
                                 value: "{{$randomString(" + (param.minLength - 1) + ")}}"
@@ -128,7 +133,9 @@ SwaggerParser.dereference(contract_url)
                         tests.push(Object.assign({}, common, {
                             type: "intvalue",
                             subtype: "maximum(" + param.maximum + ")",
-                            expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,
+                            minimum: param.minimum,
+                            maximum: param.maximum,
+                            // expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,
                             operations: [{json_path: path, value: param.maximum + 1}],
                             // value: param.maximum + 1
                         }));
@@ -137,6 +144,8 @@ SwaggerParser.dereference(contract_url)
                         tests.push(Object.assign({}, common, {
                             type: "intvalue",
                             subtype: "minimum(" + param.minimum + ")",
+                            minimum: param.minimum,
+                            maximum: param.maximum,
                             expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,
                             operations: [{json_path: path, value: param.maximum - 1}],
                             // value: param.minimum - 1
@@ -160,6 +169,12 @@ SwaggerParser.dereference(contract_url)
                 const properties = parameters["properties"];
                 for (var param_name in properties) {
                     log.debug("Processing", path, param_name)
+
+                    if (param_name === "parent") {
+                        log.info("Encountered field parent, might lead to recursion, ignoring the field");
+                        continue;
+                    }
+
                     var param = properties[param_name];
                     let current_path = path + "." + param_name;
 

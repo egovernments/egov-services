@@ -137,7 +137,8 @@ class CreateAsset extends React.Component {
         "depreciationRate": null,
         "assetFieldsDefination": [],
         "version": "",
-        "depreciationRate": ""
+        "depreciationRate": "",
+        usedForLease : false
       },
       customField:{
            "name": null,
@@ -321,7 +322,7 @@ class CreateAsset extends React.Component {
       this.setState({
         assetCategory: {
           ...this.state.assetCategory,
-          [name]: e.target.value
+          [name]: name === 'usedForLease' ? !this.state.assetCategory.usedForLease : e.target.value
         }
       })
     }
@@ -530,10 +531,12 @@ class CreateAsset extends React.Component {
 
   render() {
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
-    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
+    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, usedForLease, readonly, showMsg}=this.state;
 
     let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate}=assetCategory;
     let mode = getUrlVars()["type"];
+
+    console.log(this.state.assetCategory);
 
     const showActionButton = function() {
         if((!mode) ||mode==="update") {
@@ -1007,6 +1010,16 @@ class CreateAsset extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <input type="number" name="depreciationRate" value={depreciationRate} onChange={(e)=>{handleChange(e,"depreciationRate")}}/>
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label for=""> Used for Lease and Agreement </label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="checkbox" name="usedForLease" checked={usedForLease} onChange={(e)=>{handleChange(e,"usedForLease")}} />
                   </div>
                 </div>
               </div>

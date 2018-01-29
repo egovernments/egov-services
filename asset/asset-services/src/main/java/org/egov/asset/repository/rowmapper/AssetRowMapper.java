@@ -180,7 +180,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 assetCategory.setRevaluationReserveAccount((Long) rs.getObject("revaluationReserveAccount"));
                 assetCategory.setUnitOfMeasurement((Long) rs.getObject("unitOfMeasurement"));
                 assetCategory.setTenantId(rs.getString("tenantId"));
-
+                assetCategory.setUsedForLease(rs.getBoolean("usedforlease"));
                 asset.setAssetCategory(assetCategory);
 
                 log.debug("AssetRowMapper asset:: " + asset);

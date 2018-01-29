@@ -69,7 +69,9 @@ SwaggerParser.dereference(contract_url)
                     field_name: param_name,
                     field_path: path,
                     type: type,
-                    subtype: ""
+                    subtype: "",
+                    minimum: "",
+                    maximum: ""
                 };
 
                 switch (type) {

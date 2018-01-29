@@ -20,9 +20,6 @@
       "details": "detailsasdfghjkl",
       "servicedLocations": [
         {
-          "code": "{{locationCode}}"
-        },
-        {
           "code": "{{locationCode1}}"
         }
       ],

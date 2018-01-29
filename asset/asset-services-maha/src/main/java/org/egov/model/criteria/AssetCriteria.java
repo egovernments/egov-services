@@ -31,6 +31,7 @@ public class AssetCriteria {
 	private String department;
 	private String name;
 	private String code;
+	private List<String> codes;//added for SWM integration
 	private Set<Long> id;
 	private BigDecimal originalValueFrom;
 	private BigDecimal originalValueTo;
@@ -50,7 +51,8 @@ public class AssetCriteria {
 	private TransactionType transaction;
 	
 	private  Boolean isTransactionHistoryRequired;
-	
+	//added for SWM integration
+	private String categoryName;
 	
 	private Long size;
 	private Long offset;

@@ -105,6 +105,9 @@ public class AssetQueryBuilder {
 		if (searchAsset.getAssetSubCategory() != null && !searchAsset.getAssetSubCategory().isEmpty()) {
 			selectQuery.append(" AND ASSET.assetCategory IN ("+ getIdQuery(searchAsset.getAssetSubCategory())+") ");
 		}
+		if (searchAsset.getCodes() != null && !searchAsset.getCodes().isEmpty()) {
+			selectQuery.append(" AND ASSET.code IN ("+ getString(searchAsset.getCodes())+") ");
+		}
 
 		if (searchAsset.getAssetCreatedFrom() != null && searchAsset.getAssetCreatedTo() != null) {
 			selectQuery.append(" AND (ASSET.dateofcreation BETWEEN ? AND ?)");
@@ -236,4 +239,16 @@ public class AssetQueryBuilder {
 		return query.toString();
 	}
 
+	private String getString(final List<String> strings) {
+		StringBuilder query = null;
+		String[] arr = new String[strings.size()];
+		arr = strings.toArray(arr);
+		// String join = "'" + StringUtils.join(arr,"','") + "'";
+		System.out.println("arr" + arr);
+		query = new StringBuilder("'" + arr[0].toString() + "'");
+		for (int i = 1; i < arr.length; i++)
+			query.append("," + "'" + arr[i].toString() + "'");
+		return query.toString();
+	}
+	
 }

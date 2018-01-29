@@ -17,6 +17,7 @@ import org.egov.contract.AssetCurrentValueRequest;
 import org.egov.contract.AssetCurrentValueResponse;
 import org.egov.contract.AssetRequest;
 import org.egov.contract.AssetResponse;
+import org.egov.mdms.service.MdmsClientService;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
@@ -74,6 +75,7 @@ public class AssetService {
 	@Autowired
 	private RevaluationService revaluationService;
 
+
 	public AssetResponse createAsync(final AssetRequest assetRequest) {
 		final Asset asset = assetRequest.getAsset();
 		 List<LandDetail> landDetails=asset.getLandDetails();
@@ -99,6 +101,7 @@ public class AssetService {
 		asset.setStatus(Status.CAPITALIZED.toString());
 
 		asset.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));
+		/*logAwareKafkaTemplate.send(appProps.getStartWfAssetTopicName(),)*/
 		logAwareKafkaTemplate.send(appProps.getCreateAssetTopicNameTemp(), assetRequest);
 
 		CurrentValue currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId())
@@ -145,30 +148,30 @@ public class AssetService {
 		log.debug("assetRequest updateAsync::" + assetRequest);
 		AssetCriteria  assetCriteria=AssetCriteria.builder().id(assetIds).tenantId(asset.getTenantId()).build();
 		AssetResponse assetResponse=getAssets(assetCriteria,assetRequest.getRequestInfo());
-		
+		List<Long> assetCurrentvalue = currentValueService.getNonTransactedCurrentValues(assetIds, asset.getTenantId(), assetRequest.getRequestInfo());
 		if(!(assetResponse.getAssets().get(0).getGrossValue().equals(asset.getGrossValue())))
 		     {
 		 System.err.println("if gross");
-		List<Long> assetCurrentvalue = currentValueService.getNonTransactedCurrentValues(assetIds, asset.getTenantId(), assetRequest.getRequestInfo());
-		if(assetCurrentvalue.contains(asset.getId()))
+		
+		   if(assetCurrentvalue.contains(asset.getId()))
 		      {
-			
 			currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId()).transactionDate(asset.getOpeningDate()).assetTranType(TransactionType.CREATE).currentAmount(asset.getGrossValue()).build();
     		assetCurrentValueList.add(currentValue);
             logAwareKafkaTemplate.send(appProps.getUpdateAssetTopicName(), KafkaTopicName.UPDATEASSET.toString(),
     				assetRequest);
             currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder().assetCurrentValue(assetCurrentValueList).requestInfo(assetRequest.getRequestInfo()).build());
-			
-			
-		      }else 
-			     errorMap.put("Asset_Grossvalue", "Grossvalue cannot be updated for assets whose transactions are already done");
+			 }else 
+		         errorMap.put("Asset_Grossvalue", "Grossvalue cannot be updated for assets whose transactions are already done");
 		         if (!errorMap.isEmpty())
 			     throw new CustomException(errorMap);
 		}else {
-			
-			   System.err.println("assetResponse.getAssets().get(0).getGrossValue()"+assetResponse.getAssets().get(0).getGrossValue());
-			
-		       System.err.println("else for gross"+(assetResponse.getAssets().get(0).getGrossValue().equals(asset.getGrossValue())));
+			 System.err.println("else for gross"+(assetResponse.getAssets().get(0).getGrossValue().equals(asset.getGrossValue())));
+			 System.err.println("assetResponse.getAssets().get(0).getGrossValue()"+assetResponse.getAssets().get(0).getGrossValue());
+			 if(assetCurrentvalue.contains(asset.getId())) {
+				 currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId()).transactionDate(asset.getOpeningDate()).assetTranType(TransactionType.CREATE).currentAmount(asset.getGrossValue()).build();
+			     assetCurrentValueList.add(currentValue);
+			     currentValueService.createCurrentValueAsync(AssetCurrentValueRequest.builder().assetCurrentValue(assetCurrentValueList).requestInfo(assetRequest.getRequestInfo()).build());
+			 }
 			   logAwareKafkaTemplate.send(appProps.getUpdateAssetTopicName(), KafkaTopicName.UPDATEASSET.toString(),
     				assetRequest);
     	}
@@ -179,6 +182,22 @@ public class AssetService {
 	}
 
 	public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
+		if(searchAsset.getCategoryName()!=null) {
+			Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
+			Map<String, String> paramsMap = new HashMap<>();
+			Map<String, Map<String, String>> masterMap = new HashMap<>();
+			paramsMap.put("name", searchAsset.getCategoryName());
+			masterMap.put("AssetCategory", paramsMap);
+			moduleMap.put("ASSET", masterMap);
+			JSONArray jsonArray = mDRepo.getMastersByListParams(moduleMap, requestInfo, searchAsset.getTenantId()).get("ASSET")
+					.get("AssetCategory");
+			Map<Long, AssetCategory> asCatMap = mDService.getAssetCategoryMapFromJSONArray(jsonArray);
+			System.err.println("asCatMap for assetcategory name"+asCatMap+"asCatMap.keySet()"+asCatMap.keySet());
+			if (searchAsset.getCategoryName() != null)
+				searchAsset.setAssetSubCategory(asCatMap.keySet());
+
+		}
+		System.err.println("searchAsset.get"+searchAsset.getAssetSubCategory());
 		
 		enrichParentCategory(searchAsset,requestInfo);
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
@@ -269,6 +288,7 @@ public class AssetService {
 				searchAsset.getAssetSubCategory().addAll(asCatMap.keySet());
 		}
 	}
+	
 
 	private void enrichTransactionHistory(List<Asset> assets) {
        Set<Long> assetIds=assets.stream().map(a -> a.getId()).collect(Collectors.toSet());

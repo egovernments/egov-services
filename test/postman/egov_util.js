@@ -37,7 +37,7 @@ login = async (username, password) => {
 
 const ErrorUtil = function() {
     this.getErrorDetails = (test) => {
-        const minimum = test["minimum"];
+        let minimum = test["minimum"];
         const maximum = test["maximum"];
         const field_name = test["field_name"];
         const field_path = test["field_path"];
@@ -45,12 +45,18 @@ const ErrorUtil = function() {
         const test_subtype = test["subtype"];
         const api_path = test["api_path"];
 
-        switch (field_name) {
-            case "mobileNo":
+        if (minimum === 0 )
+            minimum = 1;
+
+        switch (test_type + "." + test_subtype + "." + field_name) {
+            case "length.maximum.mobileNo":
+            case "length.minimum.mobileNo":
                 return {code: field_name, message: "Please enter a ten digit mobile number"}
-            case "contactNo":
+            case "length.maximum.contactNo":
+            case "length.minimum.contactNo":
                 return {code: field_name, message: "Please enter a ten digit contact number"}
-            case "faxNumber":
+            case "length.maximum.faxNumber":
+            case "length.minimum.faxNumber":
                 return {code: field_name, message: "Please enter a ten digit fax number"}
         }
 

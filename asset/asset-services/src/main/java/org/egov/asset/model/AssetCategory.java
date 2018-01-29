@@ -106,4 +106,6 @@ public class AssetCategory {
     private Double depreciationRate;
 
     private List<AttributeDefinition> assetFieldsDefination;
+    
+    private Boolean usedForLease;
 }

@@ -91,5 +91,7 @@ public class AssetCategoryCriteria {
     private List<String> assetCategoryType = new ArrayList<>();
     
     private Boolean isChildCategory;
+    
+    private Boolean usedForLease;
 
 }

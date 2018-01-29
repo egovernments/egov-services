@@ -194,8 +194,8 @@ public class AssetCategoryQueryBuilderTest {
     public void getInsertQuery() {
         final String insertQuery = "INSERT into egasset_assetcategory (id,name,code,parentid,assetcategorytype,depreciationmethod,"
                 + "depreciationrate,assetaccount,accumulateddepreciationaccount,revaluationreserveaccount,depreciationexpenseaccount,"
-                + "unitofmeasurement,customfields,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate,isassetallow,version)"
-                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "unitofmeasurement,customfields,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate,isassetallow,version,usedforlease)"
+                + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         assertEquals(insertQuery, assetCategoryQueryBuilder.getInsertQuery());
 
     }
@@ -204,7 +204,7 @@ public class AssetCategoryQueryBuilderTest {
     public void getUpdateQuery() {
         final String updateQuery = "UPDATE egasset_assetcategory SET parentid=?,assetcategorytype=?,depreciationmethod=?,depreciationrate=?,"
                 + "assetaccount=?,accumulateddepreciationaccount=?,revaluationreserveaccount=?,depreciationexpenseaccount=?,"
-                + "unitofmeasurement=?,customfields=?,lastmodifiedby=?,lastmodifieddate=?,isassetallow=?,version=?WHERE code=? and "
+                + "unitofmeasurement=?,customfields=?,lastmodifiedby=?,lastmodifieddate=?,isassetallow=?,version=?,usedforlease=? WHERE code=? and "
                 + "tenantid=?";
         assertEquals(updateQuery, assetCategoryQueryBuilder.getUpdateQuery());
     }

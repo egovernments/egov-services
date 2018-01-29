@@ -11,7 +11,7 @@ import java.util.Map;
  */
 @Service
 public class ScheduleOfRateQueryBuilder {
-    public static final String BASE_SEARCH_QUERY = "SELECT * FROM egw_scheduleofrate sor";
+    public static final String BASE_SEARCH_QUERY = "SELECT sor.* FROM egw_scheduleofrate sor";
     public static final String SORRATE_SEARCH_EXTENTION = ", egw_sorrate sorrate";
     public static final String MARKETRATE_SEARCH_EXTENTION = ", egw_marketrate marketrate";
     public static final String GETSORRATE_BY_SCHEDULEOFRATE = "select * from egw_sorrate sor where tenantid = :tenantId and sor.deleted=false and sor.scheduleofrate=:scheduleOfRate;";
@@ -52,11 +52,11 @@ public class ScheduleOfRateQueryBuilder {
         selectQuery.append(" where sor.id is not null and sor.deleted=false");
 
         if (isSorRate) {
-            selectQuery.append(" and sorrate.scheduleofrate=sor.code and :validSORRateDate between sorrate.fromdate and sorrate.todate and sorrate.deleted=false");
+            selectQuery.append(" and sorrate.scheduleofrate=sor.id and :validSORRateDate between sorrate.fromdate and sorrate.todate and sorrate.deleted=false");
             params.put("validSORRateDate", scheduleOfRateSearchCriteria.getValidSORRateDate());
         }
         if (isMarketRate) {
-            selectQuery.append(" and marketrate.scheduleofrate=sor.code and :validMarketRateDate between marketrate.fromdate and marketrate.todate and marketrate.deleted=false");
+            selectQuery.append(" and marketrate.scheduleofrate=sor.id and :validMarketRateDate between marketrate.fromdate and marketrate.todate and marketrate.deleted=false");
             params.put("validMarketRateDate", scheduleOfRateSearchCriteria.getValidMarketRateDate());
         }
 

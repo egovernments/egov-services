@@ -521,6 +521,9 @@ class UpdateCancellation extends React.Component {
             $("#documents").prop("disabled", false)
             $("#remarks").prop("disabled", false)
         }
+        if (this.state.wfStatus === "Commissioner Approved") {
+            $("#approvalDetailsSection").remove();
+        }
 
         $('#orderDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -1373,7 +1376,7 @@ class UpdateCancellation extends React.Component {
                 );
             } else {
                 return (
-                    <div className="form-section">
+                    <div className="form-section" id="approvalDetailsSection">
                         <div className="row">
                             <div className="col-md-8 col-sm-8">
                                 <h3 className="categoryType">Approval Details </h3>

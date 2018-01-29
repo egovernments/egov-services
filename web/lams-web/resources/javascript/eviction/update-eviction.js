@@ -519,6 +519,9 @@ class UpdateEviction extends React.Component {
             $("#remarks").prop("disabled", false)
         }
 
+        if (this.state.wfStatus === "Commissioner Approved") {
+            $("#approvalDetailsSection").remove();
+        }
 
         $('#evictionProceedingDate').datepicker({
             format: 'dd/mm/yyyy',
@@ -1367,10 +1370,10 @@ class UpdateEviction extends React.Component {
                 );
             } else {
                 return (
-                    <div className="form-section">
+                    <div className="form-section" id="approvalDetailsSection">
                         <div className="row">
                             <div className="col-md-8 col-sm-8">
-                                <h3 className="categoryType">Workflow Details </h3>
+                                <h3 className="categoryType">Approval Details </h3>
                             </div>
                         </div>
                         <div className="row">

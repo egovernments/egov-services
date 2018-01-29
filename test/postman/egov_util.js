@@ -87,6 +87,8 @@ const ErrorUtil = function() {
 var error = new ErrorUtil();
 
 function bad_api_tests(api_name, data) {
+    let error_details = error.getErrorDetails(data);
+
     describe(api_name  + " - " + data["field_name"] + " " + data["type"] + " " + data["subtype"], () => {
         it("should have 400 status", () => {
             response.should.have.status(400);

@@ -34,3 +34,48 @@ login = async (username, password) => {
         console.log(ex)
     }
 }
+
+const ErrorUtil = function() {
+    this.getErrorDetails = (test) => {
+        const minimum = test["minimum"];
+        const maximum = test["maximum"];
+        const field_name = test["field_name"];
+        const field_path = test["field_path"];
+        const test_type = test["type"];
+        const test_subtype = test["subtype"];
+        const api_path = test["api_path"];
+
+        switch (field_name) {
+            case "mobileNo":
+                return {code: field_name, message: "Please enter a ten digit mobile number"}
+            case "contactNo":
+                return {code: field_name, message: "Please enter a ten digit contact number"}
+            case "faxNumber":
+                return {code: field_name, message: "Please enter a ten digit fax number"}
+        }
+
+        let custom_error_map = {
+            "required": {
+                "missing": {code: field_name, message: "may not be null"}
+            },
+            "length": {
+                "minimum": {
+                    code: field_name, message: `Value of ${field_name} shall be between ${minimum} and ${maximum}`
+                },
+                "maximum": {
+                    code: field_name, message: `Value of ${field_name} shall be between ${minimum} and ${maximum}`
+                },
+            }
+        }
+
+        if (test_type in custom_error_map) {
+            if (test_subtype in custom_error_map[test_type]) {
+                return custom_error_map[test_type][test_subtype]
+            }
+        }
+
+        return {code: field_name, message:"Please handle the error message in egov_utils.js"}
+    }
+}
+
+var error = new ErrorUtil();

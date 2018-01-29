@@ -65,9 +65,11 @@ SwaggerParser.dereference(contract_url)
             function generate_test(param, param_name, path, type) {
                 var tests = [];
                 var common = {
+                    api_path: api_path,
                     field_name: param_name,
                     field_path: path,
-                    type: type
+                    type: type,
+                    subtype: ""
                 };
 
                 switch (type) {
@@ -96,7 +98,7 @@ SwaggerParser.dereference(contract_url)
                     case "maxLength":
                         tests.push(Object.assign({}, common, {
                             type: "length",
-                            subtype: "maximum(" + param.maxLength + ")",
+                            subtype: "maximum",
                             minimum: param.minLength,
                             maximum: param.maxLength,
                             operations: [{
@@ -109,7 +111,7 @@ SwaggerParser.dereference(contract_url)
                     case "minLength":
                         tests.push(Object.assign({}, common, {
                             type: "length",
-                            subtype: "minimum(" + param.minLength + ")",
+                            subtype: "minimum",
                             minimum: param.minLength,
                             maximum: param.maxLength,
                             operations: [{
@@ -132,7 +134,7 @@ SwaggerParser.dereference(contract_url)
                     case "maximum":
                         tests.push(Object.assign({}, common, {
                             type: "intvalue",
-                            subtype: "maximum(" + param.maximum + ")",
+                            subtype: "maximum",
                             minimum: param.minimum,
                             maximum: param.maximum,
                             // expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,
@@ -143,7 +145,7 @@ SwaggerParser.dereference(contract_url)
                     case "minimum":
                         tests.push(Object.assign({}, common, {
                             type: "intvalue",
-                            subtype: "minimum(" + param.minimum + ")",
+                            subtype: "minimum",
                             minimum: param.minimum,
                             maximum: param.maximum,
                             expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,

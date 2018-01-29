@@ -282,7 +282,6 @@ ReportDefinitions:
   summary: Work In Progress Details
   version: 1.0.0
   moduleName: works
-  viewPath: WorkInProWessRegister
   externalService:
   - entity: $.MdmsRes.works.TypeOfWork
     apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D

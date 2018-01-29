@@ -951,11 +951,16 @@ class CreateAsset extends React.Component {
               }, 100);
 
               if(asset.status == "CAPITALIZED") {
-                setTimeout(function() {
+                let ifassetLandIMObj = _this.state.assetCategories && _this.state.assetCategories.find((obj)=>{return obj.name === asset.assetCategory.name});
+                // console.log(ifassetLandIMObj);
+                if(ifassetLandIMObj && (ifassetLandIMObj.assetCategoryType === 'LAND' || ifassetLandIMObj.assetCategoryType === 'IMMOVABLE')){
                   _this.setState({
-                      capitalized: true
+                      ifassetLandIM: true
                   })
-                }, 100);
+                }
+                _this.setState({
+                    capitalized: true
+                })
               }
 
               if(asset.assetCategory && asset.assetCategory.id) {
@@ -1115,7 +1120,7 @@ class CreateAsset extends React.Component {
   }
 
   render() {
-    console.log(this.state.assetSet);
+    // console.log(this.state);
     let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles, handleAddNewYearRow, handleDelYearRow, handleYearChange} = this;
     let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles, financialYears, functions} = this.state;
     let {

@@ -207,9 +207,9 @@ if (typeof PMUtil === "undefined") {
             resolvePMVariables = resolvePMVariables || false;
             let paramPattern;
             if (resolvePMVariables) {
-                paramPattern = /({{(\$?[a-z_]+)(?:\((['"a-z0-9, ]+)\))?}})/ig;
+                paramPattern = /({{(\$?[a-z_]+)(?:\((['"a-z0-9, /:\\+-]+)\))?}})/ig;
             } else {
-                paramPattern = /({{(\$[a-z_]+)(?:\((['"a-z0-9, ]+)\))?}})/ig;
+                paramPattern = /({{(\$[a-z_]+)(?:\((['"a-z0-9, /:\\+-]+)\))?}})/ig;
             }
             let m;
 

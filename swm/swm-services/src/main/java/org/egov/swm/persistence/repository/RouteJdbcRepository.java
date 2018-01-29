@@ -196,11 +196,25 @@ public class RouteJdbcRepository extends JdbcRepository {
 
             populateRouteCollectionPointMaps(routeList, routeCodes.toString());
 
+            populateTotalNoOfStops(routeList);
+
         }
 
         page.setPagedData(routeList);
 
         return page;
+    }
+
+    private void populateTotalNoOfStops(List<Route> routeList) {
+
+        for (Route route : routeList) {
+
+            if (route.getCollectionPoints() != null && route.getCollectionPoints().size() > 2) {
+
+                route.setTotalNoOfStops(route.getCollectionPoints().size() - 2);
+            }
+        }
+
     }
 
     private void populateCollectionTypes(List<Route> routeList) {

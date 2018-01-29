@@ -43,6 +43,7 @@ ReportDefinitions:
     pattern: 'list://false:Dump,true:Process'
     source: wastetypeprocess
     isMandatory: false
+    searchClause: and dg.isProcessingSite = $wasteprocess  
   - name: fromDate
     label: reports.swm.datefrom
     type: epoch
@@ -53,7 +54,7 @@ ReportDefinitions:
     type: epoch
     source: egswm_sourcesegregation
     isMandatory: true
-  query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, to_char((to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'Asia/Kolkata')::date,'dd/mm/yyyy') as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId,isProcessingSite) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid  and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and ssg.sourcesegregationdate >= $fromDate and  ssg.sourcesegregationdate <= $toDate  and dg.isProcessingSite = $wasteprocess 
+  query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, to_char((to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'Asia/Kolkata')::date,'dd/mm/yyyy') as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId,isProcessingSite) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid  and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and ssg.sourcesegregationdate >= $fromDate and  ssg.sourcesegregationdate <= $toDate 
   groupBy: group by date, dumpinggroundname;
   
 - reportName: ExpenditureIncurredReport

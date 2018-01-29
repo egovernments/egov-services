@@ -23,6 +23,7 @@ public class Constants {
     public static final String SWMPROCESS_MASTER_NAME = "SwmProcess";
     public static final String SHIFT_MASTER_NAME = "Shift";
     public static final String TENANTBOUNDARY_MASTER_NAME = "TenantBoundary";
+    public static final String BIN_ASSET_CATEGORY = "Bin";
 
 }
 

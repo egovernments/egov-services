@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.BinDetailsSearch;
+import org.egov.swm.persistence.entity.BinDetailsEntity;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,10 +55,10 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("rfidAssigned", searchRequest.getRfidAssigned());
         }
 
-        if (searchRequest.getAssetOrBinId() != null) {
+        if (searchRequest.getAssetCode() != null) {
             addAnd(params);
-            params.append("assetOrBinId =:assetOrBinId");
-            paramValues.put("assetOrBinId", searchRequest.getAssetOrBinId());
+            params.append("asset =:asset");
+            paramValues.put("asset", searchRequest.getAssetCode());
         }
 
         if (searchRequest.getCollectionPoint() != null) {
@@ -70,18 +71,6 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("collectionPoint in (:collectionPoints)");
             paramValues.put("collectionPoints", new ArrayList<>(Arrays.asList(searchRequest.getCollectionPoints().split(","))));
-        }
-
-        if (searchRequest.getLongitude() != null) {
-            addAnd(params);
-            params.append("longitude =:longitude");
-            paramValues.put("longitude", searchRequest.getLongitude());
-        }
-
-        if (searchRequest.getLatitude() != null) {
-            addAnd(params);
-            params.append("latitude =:latitude");
-            paramValues.put("latitude", searchRequest.getLatitude());
         }
 
         if (searchRequest.getCollectionPoint() != null) {
@@ -102,9 +91,22 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
 
             searchQuery = searchQuery.replace(":condition", "");
 
-        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(BinDetails.class);
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(BinDetailsEntity.class);
 
-        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        final List<BinDetailsEntity> entityList = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+
+        final List<BinDetails> resultList = new ArrayList<>();
+
+        if (entityList != null && !entityList.isEmpty()) {
+
+            for (final BinDetailsEntity bde : entityList) {
+
+                resultList.add(bde.toDomain());
+            }
+
+        }
+
+        return resultList;
     }
 
 }

@@ -1,5 +1,6 @@
 package org.egov.swm.domain.model;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -22,7 +23,7 @@ public class BinDetails {
 
     @JsonProperty("id")
     private String id = null;
-    
+
     @JsonProperty("collectionPoint")
     private String collectionPoint = null;
 
@@ -31,9 +32,9 @@ public class BinDetails {
     private String tenantId = null;
 
     @NotNull
-    @Length(min = 1, max = 256, message = "Value of assetOrBinId shall be between 1 and 256")
-    @JsonProperty("assetOrBinId")
-    private String assetOrBinId = null;
+    @Valid
+    @JsonProperty("asset")
+    private Asset asset = null;
 
     @JsonProperty("rfidAssigned")
     private Boolean rfidAssigned = null;
@@ -41,11 +42,5 @@ public class BinDetails {
     @Size(min = 0, max = 256, message = "Value of rfid shall be between 0 and 256")
     @JsonProperty("rfid")
     private String rfid = null;
-
-    @JsonProperty("latitude")
-    private Double latitude = null;
-
-    @JsonProperty("longitude")
-    private Double longitude = null;
 
 }

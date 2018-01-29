@@ -37,6 +37,9 @@ public class CollectionPointService {
     @Autowired
     private CollectionTypeService collectionTypeService;
 
+    @Autowired
+    private AssetService assetService;
+
     @Transactional
     public CollectionPointRequest create(final CollectionPointRequest collectionPointRequest) {
 
@@ -152,6 +155,22 @@ public class CollectionPointService {
                         throw new CustomException("CollectionType", "CollectionType is required");
                 }
 
+            if (collectionPoint.getBinDetails() != null)
+                for (final BinDetails bd : collectionPoint.getBinDetails()) {
+
+                    if (bd.getAsset() != null && (bd.getAsset().getCode() == null
+                            || bd.getAsset().getCode().isEmpty()))
+                        throw new CustomException("Asset",
+                                "The field Asset Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                    // Validate Asset
+                    if (bd.getAsset() != null && bd.getAsset().getCode() != null)
+                        bd.setAsset(assetService.getByCode(bd.getAsset().getCode(), collectionPoint.getTenantId(),
+                                collectionPointRequest.getRequestInfo()));
+                    else
+                        throw new CustomException("Asset", "Asset is required");
+                }
+
             validateUniqueFields(collectionPoint);
 
         }
@@ -194,13 +213,13 @@ public class CollectionPointService {
 
             for (final BinDetails bd : collectionPoint.getBinDetails()) {
 
-                if (bd.getAssetOrBinId() != null) {
+                if (bd.getAsset() != null && bd.getAsset().getCode() != null) {
 
-                    if (assetOrBinIdsMap.get(bd.getAssetOrBinId()) != null)
+                    if (assetOrBinIdsMap.get(bd.getAsset().getCode()) != null)
                         throw new CustomException("BinId",
-                                "Duplicate BinIds in given Bin details: " + bd.getAssetOrBinId());
+                                "Duplicate BinIds in given Bin details: " + bd.getAsset().getCode());
 
-                    assetOrBinIdsMap.put(bd.getAssetOrBinId(), bd.getAssetOrBinId());
+                    assetOrBinIdsMap.put(bd.getAsset().getCode(), bd.getAsset().getCode());
 
                 }
 
@@ -228,11 +247,11 @@ public class CollectionPointService {
 
         for (final BinDetails bd : collectionPoint.getBinDetails()) {
 
-            if (bd.getAssetOrBinId() != null)
-                if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "assetOrBinId",
-                        bd.getAssetOrBinId(), "collectionPoint", collectionPoint.getCode()))
+            if (bd.getAsset() != null && bd.getAsset().getCode() != null)
+                if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "asset",
+                        bd.getAsset().getCode(), "collectionPoint", collectionPoint.getCode()))
                     throw new CustomException("BinId", "The field BinId must be unique in the system The  value "
-                            + bd.getAssetOrBinId()
+                            + bd.getAsset().getCode()
                             + " for the field BinId already exists in the system. Please provide different value ");
 
             if (bd.getRfidAssigned() != null && bd.getRfidAssigned())

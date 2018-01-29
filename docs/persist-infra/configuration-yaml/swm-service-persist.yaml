@@ -290,7 +290,7 @@ serviceMaps:
        - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, assetorbinid, rfidassigned, rfid,latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, asset, rfidassigned, rfid) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.binDetails.*
       jsonMaps:
        
@@ -300,18 +300,12 @@ serviceMaps:
          
        - jsonPath: $.collectionPoints[?({id} in @.binDetails[*].id)].code
 
-       - jsonPath: $.collectionPoints.*.binDetails.*.assetOrBinId
+       - jsonPath: $.collectionPoints.*.binDetails.*.asset.code
          
        - jsonPath: $.collectionPoints.*.binDetails.*.rfidAssigned
          dbType: BOOLEAN
 
        - jsonPath: $.collectionPoints.*.binDetails.*.rfid
-
-       - jsonPath: $.collectionPoints.*.binDetails.*.latitude
-         dbType: DOUBLE
-
-       - jsonPath: $.collectionPoints.*.binDetails.*.longitude
-         dbType: DOUBLE
 
 
     - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description) VALUES (?, ?, ?, ?, ?, ?);
@@ -355,7 +349,7 @@ serviceMaps:
        - jsonPath: $.collectionPoints.*.tenantId
 
 
-    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, assetorbinid, rfidassigned, rfid,latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, asset, rfidassigned, rfid) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.binDetails.*
       jsonMaps:
        
@@ -365,18 +359,12 @@ serviceMaps:
          
        - jsonPath: $.collectionPoints[?({id} in @.binDetails[*].id)].code
 
-       - jsonPath: $.collectionPoints.*.binDetails.*.assetOrBinId
+       - jsonPath: $.collectionPoints.*.binDetails.*.asset.code
          
        - jsonPath: $.collectionPoints.*.binDetails.*.rfidAssigned
          dbType: BOOLEAN
 
        - jsonPath: $.collectionPoints.*.binDetails.*.rfid
-
-       - jsonPath: $.collectionPoints.*.binDetails.*.latitude
-         dbType: DOUBLE
-
-       - jsonPath: $.collectionPoints.*.binDetails.*.longitude
-         dbType: DOUBLE
 
 
     - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description) VALUES (?, ?, ?, ?, ?, ?);

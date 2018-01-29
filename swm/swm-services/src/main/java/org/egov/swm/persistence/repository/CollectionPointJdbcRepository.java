@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.Asset;
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.BinDetailsSearch;
 import org.egov.swm.domain.model.Boundary;
@@ -17,6 +20,7 @@ import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.service.AssetService;
 import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
@@ -37,6 +41,9 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
     @Autowired
     private CollectionTypeService collectionTypeService;
+
+    @Autowired
+    private AssetService assetService;
 
     @Autowired
     private BoundaryService boundaryService;
@@ -178,6 +185,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
     private void populateBinDetails(List<CollectionPoint> collectionPointList, String collectionPointCodes) {
         Map<String, List<BinDetails>> binDetailsMap = new HashMap<>();
+        Map<String, Asset> assetMap = new HashMap<>();
         String tenantId = null;
         BinDetailsSearch bds;
         bds = new BinDetailsSearch();
@@ -189,8 +197,13 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         bds.setTenantId(tenantId);
 
         List<BinDetails> binDetails = binIdDetailsJdbcRepository.search(bds);
+        Set<String> assetCodes = new HashSet<>();
+
         List<BinDetails> bdList;
+
         for (BinDetails bd : binDetails) {
+
+            assetCodes.add(bd.getAsset().getCode());
 
             if (binDetailsMap.get(bd.getCollectionPoint()) == null) {
 
@@ -207,9 +220,25 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             }
         }
 
+        List<Asset> assets = assetService.getByCodes(new ArrayList<>(assetCodes), tenantId, new RequestInfo());
+
+        if (assets != null)
+            for (Asset asset : assets) {
+                assetMap.put(asset.getCode(), asset);
+            }
+
         for (CollectionPoint collectionPoint : collectionPointList) {
 
             collectionPoint.setBinDetails(binDetailsMap.get(collectionPoint.getCode()));
+
+        }
+
+        for (CollectionPoint collectionPoint : collectionPointList) {
+
+            for (BinDetails bd : collectionPoint.getBinDetails()) {
+
+                bd.setAsset(assetMap.get(bd.getAsset().getCode()));
+            }
 
         }
 

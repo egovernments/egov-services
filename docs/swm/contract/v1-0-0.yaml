@@ -1738,11 +1738,8 @@ definitions:
           description: tenant id of the BinIdDetails
           maxLength: 128
           minLength: 1
-        assetOrBinId:
-          type: string
-          description: asset or BIN Id of the Collection Point. If defined, shall be unique within ULB
-          maxLength: 256
-          minLength: 1
+        asset:
+           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/contracts/v1-0-0.yml#/definitions/Asset'
         rfidAssigned:
           type: boolean
           format: checkbox
@@ -1752,19 +1749,9 @@ definitions:
           description: rfid of the Collection Point. If rfidAssigned is TRUE, this field is mandatory
           maxLength: 256
           minLength: 1
-        latitude:
-          type: number 
-          format: double
-          description: latitude of the Collection Point. e.g. 12.9716. Latitudes range from -90 to 90. Positive latitude is above the equator (N), and negative latitude is below the equator (S).
-          example: 38.544907
-        longitude:
-          type: number 
-          format: double
-          description: longitude of the Collection Point. e.g. 77.5946. Longitudes range from -180 to 180. Positive longitude is east of the prime meridian, while negative longitude is west of the prime meridian
-          example: -121.740517
       required:
       - tenantId
-      - assetOrBinId
+      - asset
       
     CollectionPointDetails:
       type: object
@@ -3740,6 +3727,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

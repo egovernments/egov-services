@@ -464,7 +464,7 @@ public class MaterialIssueService extends DomainService {
 						MaterialIssueEntity issueEntityfromDb = (MaterialIssueEntity) issueEntity;
 						if (issueEntityfromDb != null) {
 							if (materialIssue.getIssueType() != null) {
-								if (!issueEntityfromDb.getIssueType().equals(materialIssue.getIssueType())){
+								if (!issueEntityfromDb.getIssueType().equals(materialIssue.getIssueType().name())){
 									System.out.println("DBValue" + issueEntityfromDb.getIssueType());
 									System.out.println("UIValue" + materialIssue.getIssueType());
 									errors.addDataError(ErrorCode.NOT_ALLOWED_TO_UPDATE.getCode(), "issueType",

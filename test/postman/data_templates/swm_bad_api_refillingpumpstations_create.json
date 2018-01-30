@@ -15,18 +15,20 @@
   "refillingPumpStations": [
     {
       "tenantId": "{{tenantId}}",
-      "name": "{{RefillingFillingStationName}}",
+      "name": "Pump {{$randomDigits(3)}}",
       "location": {
-        "code": "{{locationCode}}"
+        "code": "5"
       },
       "typeOfPump": {
-        "code": "{{OilCompany}}"
+        "code": "Code IOCL"
       },
-      "remarks": "Ramarks",
-      "typeOfFuel": {
-        "code": "{{FuelType}}"
-      },
-      "quantity": "quantity  {{$randomDigits(2)}}"
+      "remarks": "Remarks",
+       "quantity": 5,
+       "fuelTypes": [
+        {
+        "code": "Fuel Type Code 1"
+      }
+    ]
     }
   ]
 }

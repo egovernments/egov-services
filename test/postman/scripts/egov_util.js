@@ -101,7 +101,7 @@ function bad_api_prerequest(template_name) {
 function bad_api_tests(api_name, data) {
     let error_details = error.getErrorDetails(data);
 
-    describe(api_name  + " - " + data["field_name"] + " " + data["type"] + " " + data["subtype"], () => {
+    describe(api_name  + " " + data["field_path"] + " - " + data["field_name"] + " " + data["type"] + " " + data["subtype"], () => {
         it("should have 400 status", () => {
             response.should.have.status(400);
         })

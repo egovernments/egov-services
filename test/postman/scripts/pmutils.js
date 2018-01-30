@@ -22,6 +22,12 @@ if (typeof PMUtil === "undefined") {
 
         this.get = this.fetch;
 
+        this.capture = (fields, pm) => {
+            for (let [key, value] of Object.entries(fields)) {
+                pm.environment.set(key, this.jp.get(response.body, value))
+            }
+        }
+
         let cache = {};
         // cache = pm.globals.has("__pmutil_cache") ? JSON.parse(pm.globals.get('__pmutil_cache')) : {}
 

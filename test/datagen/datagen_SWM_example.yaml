@@ -61,12 +61,16 @@ apis:
     reference:
       vendor:
       paymentTerms:
-
+      servicesOffered:
+        
   /refillingpumpstations/_create:
+    ignorefields: ["children"]
     reference:
       location:
       typeOfPump:
-      typeOfFuel:
+      fuelTypes:
+    generated:
+      code:  
 
   /vehicleschedules/_create:
     reference:

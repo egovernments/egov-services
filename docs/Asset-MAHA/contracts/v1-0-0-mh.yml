@@ -140,6 +140,22 @@ paths:
           description: isTransactionHistoryRequired when true return the transaction history of the asset used only in asset search.
           required: false
           type: boolean
+        - name: codes
+          in: query
+          description: >-
+            Pass List of Unique Asset codes(s) then the API will returns list of
+            asset. 
+          required: false
+          type: array
+          items:
+            type: string
+          format: varchar
+        - name: categoryName
+          in: query
+          description: Name  of the assetCaregory.
+          required: false
+          type: string
+          format: varchar
         - name: status
           in: query
           description: Asset status description.

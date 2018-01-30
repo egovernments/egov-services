@@ -120,7 +120,7 @@ public class LetterOfAcceptanceService {
                 LetterOfAcceptanceEstimate loae = null;
                 if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
                     loae = letterOfAcceptanceEstimate;
-                    loae.setBackUpdateDE(true);
+                    loae.setLoaExists(true);
                     letterOfAcceptanceEstimates.add(loae);
                 }
             }
@@ -267,7 +267,7 @@ public class LetterOfAcceptanceService {
                 LetterOfAcceptanceEstimate loae = null;
                 if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_CANCELLED)) {
                     loae = letterOfAcceptanceEstimate;
-                    loae.setBackUpdateDE(false);
+                    loae.setLoaExists(false);
                     letterOfAcceptanceEstimates.add(loae);
                 }
 

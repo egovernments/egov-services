@@ -210,7 +210,7 @@ public class DetailedEstimateService {
             if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_NEW) ||
                     detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED)) {
                 de = detailedEstimate;
-                de.setBackUpdateAE(true);
+                de.setDetailedEstimateExists(true);
                 detailedEstimateList.add(de);
             }
 
@@ -338,7 +338,7 @@ public class DetailedEstimateService {
             DetailedEstimate de = null;
             if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
                 de = detailedEstimate;
-                de.setBackUpdateAE(false);
+                de.detailedEstimateExists(false);
                 detailedEstimateList.add(de);
             }
 

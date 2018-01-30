@@ -1285,6 +1285,10 @@ definitions:
           type: boolean
           description: Boolean value to identify whether the object is deleted or not from UI.
           default: false
+      detailedEstimateExists:
+          type: boolean
+          description: Boolean value to update true/false for abstractestimate based on detailed estimate created/Cancelled.
+          default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1645,6 +1649,10 @@ definitions:
       loaCreated:
         type: boolean
         description: Boolean value to check whether LOA created for DE, if LOA is created the value will be true.
+        default: false
+      detailedEstimateExists:
+        type: boolean
+        description: Boolean value to update true/false for abstractestimate based on detailed estimate created/Cancelled.
         default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"

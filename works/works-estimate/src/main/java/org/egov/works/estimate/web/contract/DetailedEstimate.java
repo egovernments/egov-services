@@ -191,8 +191,8 @@ public class DetailedEstimate   {
   @JsonProperty("loaCreated")
   private Boolean loaCreated = false;
 
-  @JsonProperty("backUpdateAE")
-  private Boolean backUpdateAE = false;
+  @JsonProperty("detailedEstimateExists")
+  private Boolean detailedEstimateExists = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -1445,25 +1445,25 @@ public class DetailedEstimate   {
     this.loaCreated = loaCreated;
   }
 
-  public DetailedEstimate backUpdateAE(Boolean backUpdateAE) {
-    this.backUpdateAE = backUpdateAE;
-    return this;
-  }
+    public DetailedEstimate detailedEstimateExists(Boolean detailedEstimateExists) {
+        this.detailedEstimateExists = detailedEstimateExists;
+        return this;
+    }
 
-   /**
-   * Boolean value to set true/false for abstract estimate based on DE created/cancelled.
-   * @return backUpdateAE
-  **/
-  @ApiModelProperty(value = "Boolean value to set true/false for abstract estimate based on DE created/cancelled.")
+    /**
+     * Boolean value to update true/false for abstractestimate based on detailed estimate created/Cancelled.
+     * @return detailedEstimateExists
+     **/
+    @ApiModelProperty(value = "Boolean value to update true/false for abstractestimate based on detailed estimate created/Cancelled.")
 
 
-  public Boolean getBackUpdateAE() {
-    return backUpdateAE;
-  }
+    public Boolean getDetailedEstimateExists() {
+        return detailedEstimateExists;
+    }
 
-  public void setBackUpdateAE(Boolean backUpdateAE) {
-    this.backUpdateAE = backUpdateAE;
-  }
+    public void setDetailedEstimateExists(Boolean detailedEstimateExists) {
+        this.detailedEstimateExists = detailedEstimateExists;
+    }
 
   public DetailedEstimate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
@@ -1487,158 +1487,158 @@ public class DetailedEstimate   {
   }
 
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DetailedEstimate detailedEstimate = (DetailedEstimate) o;
+        return Objects.equals(this.id, detailedEstimate.id) &&
+                Objects.equals(this.tenantId, detailedEstimate.tenantId) &&
+                Objects.equals(this.estimateNumber, detailedEstimate.estimateNumber) &&
+                Objects.equals(this.estimateDate, detailedEstimate.estimateDate) &&
+                Objects.equals(this.nameOfWork, detailedEstimate.nameOfWork) &&
+                Objects.equals(this.description, detailedEstimate.description) &&
+                Objects.equals(this.department, detailedEstimate.department) &&
+                Objects.equals(this.adminSanctionNumber, detailedEstimate.adminSanctionNumber) &&
+                Objects.equals(this.adminSanctionDate, detailedEstimate.adminSanctionDate) &&
+                Objects.equals(this.adminSanctionBy, detailedEstimate.adminSanctionBy) &&
+                Objects.equals(this.status, detailedEstimate.status) &&
+                Objects.equals(this.workValue, detailedEstimate.workValue) &&
+                Objects.equals(this.estimateValue, detailedEstimate.estimateValue) &&
+                Objects.equals(this.projectCode, detailedEstimate.projectCode) &&
+                Objects.equals(this.parent, detailedEstimate.parent) &&
+                Objects.equals(this.copiedFrom, detailedEstimate.copiedFrom) &&
+                Objects.equals(this.approvedDate, detailedEstimate.approvedDate) &&
+                Objects.equals(this.approvedBy, detailedEstimate.approvedBy) &&
+                Objects.equals(this.copiedEstimate, detailedEstimate.copiedEstimate) &&
+                Objects.equals(this.beneficiary, detailedEstimate.beneficiary) &&
+                Objects.equals(this.modeOfAllotment, detailedEstimate.modeOfAllotment) &&
+                Objects.equals(this.worksType, detailedEstimate.worksType) &&
+                Objects.equals(this.worksSubtype, detailedEstimate.worksSubtype) &&
+                Objects.equals(this.natureOfWork, detailedEstimate.natureOfWork) &&
+                Objects.equals(this.ward, detailedEstimate.ward) &&
+                Objects.equals(this.location, detailedEstimate.location) &&
+                Objects.equals(this.latitude, detailedEstimate.latitude) &&
+                Objects.equals(this.longitude, detailedEstimate.longitude) &&
+                Objects.equals(this.workCategory, detailedEstimate.workCategory) &&
+                Objects.equals(this.locality, detailedEstimate.locality) &&
+                Objects.equals(this.councilResolutionNumber, detailedEstimate.councilResolutionNumber) &&
+                Objects.equals(this.councilResolutionDate, detailedEstimate.councilResolutionDate) &&
+                Objects.equals(this.workOrderCreated, detailedEstimate.workOrderCreated) &&
+                Objects.equals(this.billsCreated, detailedEstimate.billsCreated) &&
+                Objects.equals(this.spillOverFlag, detailedEstimate.spillOverFlag) &&
+                Objects.equals(this.grossAmountBilled, detailedEstimate.grossAmountBilled) &&
+                Objects.equals(this.cancellationReason, detailedEstimate.cancellationReason) &&
+                Objects.equals(this.cancellationRemarks, detailedEstimate.cancellationRemarks) &&
+                Objects.equals(this.totalIncludingRE, detailedEstimate.totalIncludingRE) &&
+                Objects.equals(this.abstractEstimateDetail, detailedEstimate.abstractEstimateDetail) &&
+                Objects.equals(this.estimateActivities, detailedEstimate.estimateActivities) &&
+                Objects.equals(this.multiYearEstimates, detailedEstimate.multiYearEstimates) &&
+                Objects.equals(this.estimateTechnicalSanctions, detailedEstimate.estimateTechnicalSanctions) &&
+                Objects.equals(this.detailedEstimateDeductions, detailedEstimate.detailedEstimateDeductions) &&
+                Objects.equals(this.documentDetails, detailedEstimate.documentDetails) &&
+                Objects.equals(this.assets, detailedEstimate.assets) &&
+                Objects.equals(this.estimateOverheads, detailedEstimate.estimateOverheads) &&
+                Objects.equals(this.workFlowDetails, detailedEstimate.workFlowDetails) &&
+                Objects.equals(this.stateId, detailedEstimate.stateId) &&
+                Objects.equals(this.fund, detailedEstimate.fund) &&
+                Objects.equals(this.function, detailedEstimate.function) &&
+                Objects.equals(this.functionary, detailedEstimate.functionary) &&
+                Objects.equals(this.scheme, detailedEstimate.scheme) &&
+                Objects.equals(this.subScheme, detailedEstimate.subScheme) &&
+                Objects.equals(this.budgetGroup, detailedEstimate.budgetGroup) &&
+                Objects.equals(this.deleted, detailedEstimate.deleted) &&
+                Objects.equals(this.loaCreated, detailedEstimate.loaCreated) &&
+                Objects.equals(this.detailedEstimateExists, detailedEstimate.detailedEstimateExists) &&
+                Objects.equals(this.auditDetails, detailedEstimate.auditDetails);
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, loaCreated, detailedEstimateExists, auditDetails);
     }
-    DetailedEstimate detailedEstimate = (DetailedEstimate) o;
-    return Objects.equals(this.id, detailedEstimate.id) &&
-        Objects.equals(this.tenantId, detailedEstimate.tenantId) &&
-        Objects.equals(this.estimateNumber, detailedEstimate.estimateNumber) &&
-        Objects.equals(this.estimateDate, detailedEstimate.estimateDate) &&
-        Objects.equals(this.nameOfWork, detailedEstimate.nameOfWork) &&
-        Objects.equals(this.description, detailedEstimate.description) &&
-        Objects.equals(this.department, detailedEstimate.department) &&
-        Objects.equals(this.adminSanctionNumber, detailedEstimate.adminSanctionNumber) &&
-        Objects.equals(this.adminSanctionDate, detailedEstimate.adminSanctionDate) &&
-        Objects.equals(this.adminSanctionBy, detailedEstimate.adminSanctionBy) &&
-        Objects.equals(this.status, detailedEstimate.status) &&
-        Objects.equals(this.workValue, detailedEstimate.workValue) &&
-        Objects.equals(this.estimateValue, detailedEstimate.estimateValue) &&
-        Objects.equals(this.projectCode, detailedEstimate.projectCode) &&
-        Objects.equals(this.parent, detailedEstimate.parent) &&
-        Objects.equals(this.copiedFrom, detailedEstimate.copiedFrom) &&
-        Objects.equals(this.approvedDate, detailedEstimate.approvedDate) &&
-        Objects.equals(this.approvedBy, detailedEstimate.approvedBy) &&
-        Objects.equals(this.copiedEstimate, detailedEstimate.copiedEstimate) &&
-        Objects.equals(this.beneficiary, detailedEstimate.beneficiary) &&
-        Objects.equals(this.modeOfAllotment, detailedEstimate.modeOfAllotment) &&
-        Objects.equals(this.worksType, detailedEstimate.worksType) &&
-        Objects.equals(this.worksSubtype, detailedEstimate.worksSubtype) &&
-        Objects.equals(this.natureOfWork, detailedEstimate.natureOfWork) &&
-        Objects.equals(this.ward, detailedEstimate.ward) &&
-        Objects.equals(this.location, detailedEstimate.location) &&
-        Objects.equals(this.latitude, detailedEstimate.latitude) &&
-        Objects.equals(this.longitude, detailedEstimate.longitude) &&
-        Objects.equals(this.workCategory, detailedEstimate.workCategory) &&
-        Objects.equals(this.locality, detailedEstimate.locality) &&
-        Objects.equals(this.councilResolutionNumber, detailedEstimate.councilResolutionNumber) &&
-        Objects.equals(this.councilResolutionDate, detailedEstimate.councilResolutionDate) &&
-        Objects.equals(this.workOrderCreated, detailedEstimate.workOrderCreated) &&
-        Objects.equals(this.billsCreated, detailedEstimate.billsCreated) &&
-        Objects.equals(this.spillOverFlag, detailedEstimate.spillOverFlag) &&
-        Objects.equals(this.grossAmountBilled, detailedEstimate.grossAmountBilled) &&
-        Objects.equals(this.cancellationReason, detailedEstimate.cancellationReason) &&
-        Objects.equals(this.cancellationRemarks, detailedEstimate.cancellationRemarks) &&
-        Objects.equals(this.totalIncludingRE, detailedEstimate.totalIncludingRE) &&
-        Objects.equals(this.abstractEstimateDetail, detailedEstimate.abstractEstimateDetail) &&
-        Objects.equals(this.estimateActivities, detailedEstimate.estimateActivities) &&
-        Objects.equals(this.multiYearEstimates, detailedEstimate.multiYearEstimates) &&
-        Objects.equals(this.estimateTechnicalSanctions, detailedEstimate.estimateTechnicalSanctions) &&
-        Objects.equals(this.detailedEstimateDeductions, detailedEstimate.detailedEstimateDeductions) &&
-        Objects.equals(this.documentDetails, detailedEstimate.documentDetails) &&
-        Objects.equals(this.assets, detailedEstimate.assets) &&
-        Objects.equals(this.estimateOverheads, detailedEstimate.estimateOverheads) &&
-        Objects.equals(this.workFlowDetails, detailedEstimate.workFlowDetails) &&
-        Objects.equals(this.stateId, detailedEstimate.stateId) &&
-        Objects.equals(this.fund, detailedEstimate.fund) &&
-        Objects.equals(this.function, detailedEstimate.function) &&
-        Objects.equals(this.functionary, detailedEstimate.functionary) &&
-        Objects.equals(this.scheme, detailedEstimate.scheme) &&
-        Objects.equals(this.subScheme, detailedEstimate.subScheme) &&
-        Objects.equals(this.budgetGroup, detailedEstimate.budgetGroup) &&
-        Objects.equals(this.deleted, detailedEstimate.deleted) &&
-        Objects.equals(this.loaCreated, detailedEstimate.loaCreated) &&
-        Objects.equals(this.backUpdateAE, detailedEstimate.backUpdateAE) &&
-        Objects.equals(this.auditDetails, detailedEstimate.auditDetails);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, loaCreated, backUpdateAE, auditDetails);
-  }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class DetailedEstimate {\n");
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class DetailedEstimate {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-    sb.append("    estimateNumber: ").append(toIndentedString(estimateNumber)).append("\n");
-    sb.append("    estimateDate: ").append(toIndentedString(estimateDate)).append("\n");
-    sb.append("    nameOfWork: ").append(toIndentedString(nameOfWork)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    department: ").append(toIndentedString(department)).append("\n");
-    sb.append("    adminSanctionNumber: ").append(toIndentedString(adminSanctionNumber)).append("\n");
-    sb.append("    adminSanctionDate: ").append(toIndentedString(adminSanctionDate)).append("\n");
-    sb.append("    adminSanctionBy: ").append(toIndentedString(adminSanctionBy)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    workValue: ").append(toIndentedString(workValue)).append("\n");
-    sb.append("    estimateValue: ").append(toIndentedString(estimateValue)).append("\n");
-    sb.append("    projectCode: ").append(toIndentedString(projectCode)).append("\n");
-    sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
-    sb.append("    copiedFrom: ").append(toIndentedString(copiedFrom)).append("\n");
-    sb.append("    approvedDate: ").append(toIndentedString(approvedDate)).append("\n");
-    sb.append("    approvedBy: ").append(toIndentedString(approvedBy)).append("\n");
-    sb.append("    copiedEstimate: ").append(toIndentedString(copiedEstimate)).append("\n");
-    sb.append("    beneficiary: ").append(toIndentedString(beneficiary)).append("\n");
-    sb.append("    modeOfAllotment: ").append(toIndentedString(modeOfAllotment)).append("\n");
-    sb.append("    worksType: ").append(toIndentedString(worksType)).append("\n");
-    sb.append("    worksSubtype: ").append(toIndentedString(worksSubtype)).append("\n");
-    sb.append("    natureOfWork: ").append(toIndentedString(natureOfWork)).append("\n");
-    sb.append("    ward: ").append(toIndentedString(ward)).append("\n");
-    sb.append("    location: ").append(toIndentedString(location)).append("\n");
-    sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
-    sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
-    sb.append("    workCategory: ").append(toIndentedString(workCategory)).append("\n");
-    sb.append("    locality: ").append(toIndentedString(locality)).append("\n");
-    sb.append("    councilResolutionNumber: ").append(toIndentedString(councilResolutionNumber)).append("\n");
-    sb.append("    councilResolutionDate: ").append(toIndentedString(councilResolutionDate)).append("\n");
-    sb.append("    workOrderCreated: ").append(toIndentedString(workOrderCreated)).append("\n");
-    sb.append("    billsCreated: ").append(toIndentedString(billsCreated)).append("\n");
-    sb.append("    spillOverFlag: ").append(toIndentedString(spillOverFlag)).append("\n");
-    sb.append("    grossAmountBilled: ").append(toIndentedString(grossAmountBilled)).append("\n");
-    sb.append("    cancellationReason: ").append(toIndentedString(cancellationReason)).append("\n");
-    sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
-    sb.append("    totalIncludingRE: ").append(toIndentedString(totalIncludingRE)).append("\n");
-    sb.append("    abstractEstimateDetail: ").append(toIndentedString(abstractEstimateDetail)).append("\n");
-    sb.append("    estimateActivities: ").append(toIndentedString(estimateActivities)).append("\n");
-    sb.append("    multiYearEstimates: ").append(toIndentedString(multiYearEstimates)).append("\n");
-    sb.append("    estimateTechnicalSanctions: ").append(toIndentedString(estimateTechnicalSanctions)).append("\n");
-    sb.append("    detailedEstimateDeductions: ").append(toIndentedString(detailedEstimateDeductions)).append("\n");
-    sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
-    sb.append("    assets: ").append(toIndentedString(assets)).append("\n");
-    sb.append("    estimateOverheads: ").append(toIndentedString(estimateOverheads)).append("\n");
-    sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
-    sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
-    sb.append("    fund: ").append(toIndentedString(fund)).append("\n");
-    sb.append("    function: ").append(toIndentedString(function)).append("\n");
-    sb.append("    functionary: ").append(toIndentedString(functionary)).append("\n");
-    sb.append("    scheme: ").append(toIndentedString(scheme)).append("\n");
-    sb.append("    subScheme: ").append(toIndentedString(subScheme)).append("\n");
-    sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
-    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
-    sb.append("    loaCreated: ").append(toIndentedString(loaCreated)).append("\n");
-    sb.append("    backUpdateAE: ").append(toIndentedString(backUpdateAE)).append("\n");
-    sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    estimateNumber: ").append(toIndentedString(estimateNumber)).append("\n");
+        sb.append("    estimateDate: ").append(toIndentedString(estimateDate)).append("\n");
+        sb.append("    nameOfWork: ").append(toIndentedString(nameOfWork)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    department: ").append(toIndentedString(department)).append("\n");
+        sb.append("    adminSanctionNumber: ").append(toIndentedString(adminSanctionNumber)).append("\n");
+        sb.append("    adminSanctionDate: ").append(toIndentedString(adminSanctionDate)).append("\n");
+        sb.append("    adminSanctionBy: ").append(toIndentedString(adminSanctionBy)).append("\n");
+        sb.append("    status: ").append(toIndentedString(status)).append("\n");
+        sb.append("    workValue: ").append(toIndentedString(workValue)).append("\n");
+        sb.append("    estimateValue: ").append(toIndentedString(estimateValue)).append("\n");
+        sb.append("    projectCode: ").append(toIndentedString(projectCode)).append("\n");
+        sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+        sb.append("    copiedFrom: ").append(toIndentedString(copiedFrom)).append("\n");
+        sb.append("    approvedDate: ").append(toIndentedString(approvedDate)).append("\n");
+        sb.append("    approvedBy: ").append(toIndentedString(approvedBy)).append("\n");
+        sb.append("    copiedEstimate: ").append(toIndentedString(copiedEstimate)).append("\n");
+        sb.append("    beneficiary: ").append(toIndentedString(beneficiary)).append("\n");
+        sb.append("    modeOfAllotment: ").append(toIndentedString(modeOfAllotment)).append("\n");
+        sb.append("    worksType: ").append(toIndentedString(worksType)).append("\n");
+        sb.append("    worksSubtype: ").append(toIndentedString(worksSubtype)).append("\n");
+        sb.append("    natureOfWork: ").append(toIndentedString(natureOfWork)).append("\n");
+        sb.append("    ward: ").append(toIndentedString(ward)).append("\n");
+        sb.append("    location: ").append(toIndentedString(location)).append("\n");
+        sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
+        sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
+        sb.append("    workCategory: ").append(toIndentedString(workCategory)).append("\n");
+        sb.append("    locality: ").append(toIndentedString(locality)).append("\n");
+        sb.append("    councilResolutionNumber: ").append(toIndentedString(councilResolutionNumber)).append("\n");
+        sb.append("    councilResolutionDate: ").append(toIndentedString(councilResolutionDate)).append("\n");
+        sb.append("    workOrderCreated: ").append(toIndentedString(workOrderCreated)).append("\n");
+        sb.append("    billsCreated: ").append(toIndentedString(billsCreated)).append("\n");
+        sb.append("    spillOverFlag: ").append(toIndentedString(spillOverFlag)).append("\n");
+        sb.append("    grossAmountBilled: ").append(toIndentedString(grossAmountBilled)).append("\n");
+        sb.append("    cancellationReason: ").append(toIndentedString(cancellationReason)).append("\n");
+        sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
+        sb.append("    totalIncludingRE: ").append(toIndentedString(totalIncludingRE)).append("\n");
+        sb.append("    abstractEstimateDetail: ").append(toIndentedString(abstractEstimateDetail)).append("\n");
+        sb.append("    estimateActivities: ").append(toIndentedString(estimateActivities)).append("\n");
+        sb.append("    multiYearEstimates: ").append(toIndentedString(multiYearEstimates)).append("\n");
+        sb.append("    estimateTechnicalSanctions: ").append(toIndentedString(estimateTechnicalSanctions)).append("\n");
+        sb.append("    detailedEstimateDeductions: ").append(toIndentedString(detailedEstimateDeductions)).append("\n");
+        sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
+        sb.append("    assets: ").append(toIndentedString(assets)).append("\n");
+        sb.append("    estimateOverheads: ").append(toIndentedString(estimateOverheads)).append("\n");
+        sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
+        sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
+        sb.append("    fund: ").append(toIndentedString(fund)).append("\n");
+        sb.append("    function: ").append(toIndentedString(function)).append("\n");
+        sb.append("    functionary: ").append(toIndentedString(functionary)).append("\n");
+        sb.append("    scheme: ").append(toIndentedString(scheme)).append("\n");
+        sb.append("    subScheme: ").append(toIndentedString(subScheme)).append("\n");
+        sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
+        sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+        sb.append("    loaCreated: ").append(toIndentedString(loaCreated)).append("\n");
+        sb.append("    detailedEstimateExists: ").append(toIndentedString(detailedEstimateExists)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
 

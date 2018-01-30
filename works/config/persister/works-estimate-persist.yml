@@ -881,7 +881,7 @@ serviceMaps:
       basePath: $.detailedEstimates.*
       jsonMaps:
 
-       - jsonPath: $.detailedEstimates.*.backUpdateAE
+       - jsonPath: $.detailedEstimates.*.detailedEstimateExists
          type: BOOLEAN
 
        - jsonPath: $.detailedEstimates.*.abstractEstimateDetail.id
@@ -898,7 +898,7 @@ serviceMaps:
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*
       jsonMaps:
 
-       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.backUpdateDE
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaExists
          type: BOOLEAN
 
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.estimateNumber

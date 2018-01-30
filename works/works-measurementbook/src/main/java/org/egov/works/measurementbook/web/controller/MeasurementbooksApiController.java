@@ -60,16 +60,16 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 																			   @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "contractorNameLike", required = false) String contractorNameLike,
 																			   @Size(max=50)@ApiParam(value = "Comma separated list of codes of the contractor to which Measurement Book belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes,
 																			   @ApiParam(value = "Matches exact or like string given regardless of case-sensitive.") @RequestParam(value = "contractorCodeLike", required = false) String contractorCodeLike,
-																			   @ApiParam(value = "if this value is true then API returns all the part rated MBs. If this values is false then API returns all the non part rated MBs. If no value then it returns all the MBs.") @RequestParam(value = "isPartRate", required = false) Boolean isPartRate,
-																			   @ApiParam(value = "if this value is true, API returns all the MBs where bill is created. if this values is false, API returns all the MBs where bill is not created. If no value then it returns all the MBs.") @RequestParam(value = "isBillCreated", required = false) Boolean isBillCreated,
+																			   @ApiParam(value = "if this value is true then API returns all the part rated MBs. If this values is false then API returns all the non part rated MBs. If no value then it returns all the MBs.") @RequestParam(value = "partRateExists", required = false) Boolean partRateExists,
+																			   @ApiParam(value = "if this value is true, API returns all the MBs where bill is created. if this values is false, API returns all the MBs where bill is not created. If no value then it returns all the MBs.") @RequestParam(value = "billExists", required = false) Boolean billExists,
 																			   @ApiParam(value = "Letter Of Acceptance Estimate id of MB.") @RequestParam(value = "loaEstimateId", required = false) String loaEstimateId) {
 		MeasurementBookSearchContract measurementBookSearchContract = MeasurementBookSearchContract.builder()
 				.tenantId(tenantId).pageSize(pageSize).pageNumber(pageNumber).sortProperty(sortBy).ids(ids)
 				.statuses(statuses).workOrderNumbers(workOrderNumbers).mbRefNumbers(mbRefNumbers).loaNumbers(loaNumbers)
 				.detailedEstimateNumbers(detailedEstimateNumbers).workIdentificationNumbers(workIdentificationNumbers)
 				.fromDate(fromDate).toDate(toDate).department(department).createdBy(createdBy)
-				.contractorNames(contractorNames).contractorCodes(contractorCodes).isBillCreated(isBillCreated)
-				.isPartRate(isPartRate).loaEstimateId(loaEstimateId).build();
+				.contractorNames(contractorNames).contractorCodes(contractorCodes).billExists(billExists)
+				.partRateExists(partRateExists).loaEstimateId(loaEstimateId).build();
         MeasurementBookResponse measurementBookResponse = measurementBookService.search(measurementBookSearchContract, requestInfo);
         return new ResponseEntity<>(measurementBookResponse, HttpStatus.OK);
 	}

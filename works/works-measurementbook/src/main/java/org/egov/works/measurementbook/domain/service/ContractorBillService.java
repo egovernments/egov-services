@@ -147,9 +147,9 @@ public class ContractorBillService {
                     builder().loaEstimateId(contractorBill.getLetterOfAcceptanceEstimate().getId()).tenantId(contractorBill.getTenantId()).build(),
                     contractorBillRequest.getRequestInfo()).get(0);
             if(contractorBill.getDeleted())
-                measurementBook.setIsBillCreated(Boolean.FALSE);
+                measurementBook.setBillExists(Boolean.FALSE);
             else
-                measurementBook.setIsBillCreated(Boolean.TRUE);
+                measurementBook.setBillExists(Boolean.TRUE);
             measurementBooks.add(measurementBook);
         }
         measurementBookRequest.setMeasurementBooks(measurementBooks);

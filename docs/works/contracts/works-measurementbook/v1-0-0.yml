@@ -280,19 +280,13 @@ paths:
           required: false
           allowEmptyValue: true
           description: Matches exact or like string given regardless of case-sensitive.
-        - name: isPartRate
+        - name: partRateExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true then API returns all the part rated MBs. If this values is false then API returns all the non part rated MBs. If no value then it returns all the MBs.
-        - name: isBillCreated
-          in: query
-          type: boolean
-          required: false
-          allowEmptyValue: true
-          description: if this value is true, API returns all the MBs where bill is created. if this values is false, API returns all the MBs where bill is not created. If no value then it returns all the MBs.
-        - name: isBillCreated
+        - name: billExists
           in: query
           type: boolean
           required: false
@@ -642,11 +636,11 @@ definitions:
         format: int64
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of when the bills created
-      isPartRate:
+      partRateExists:
         type: boolean
         description: If any one of MeasurementBookDetail has Part Rate then MeasurementBook marked as part rated.
         default: false
-      isBillCreated:
+      billExists:
         type: boolean
         description: If bill is created for a this MB, value will be updated to true.
         default: false

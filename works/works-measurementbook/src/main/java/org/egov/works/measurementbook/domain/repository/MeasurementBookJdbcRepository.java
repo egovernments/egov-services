@@ -143,16 +143,16 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             paramValues.put("mbRefNo", measurementBookSearchContract.getMbRefNumbers());
         }
 
-        if (measurementBookSearchContract.getIsPartRate() != null) {
+        if (measurementBookSearchContract.getPartRateExists() != null) {
             addAnd(params);
             params.append("mb.isPartRate =:isPartRate");
-            paramValues.put("isPartRate", measurementBookSearchContract.getIsPartRate());
+            paramValues.put("isPartRate", measurementBookSearchContract.getPartRateExists());
         }
 
-        if (measurementBookSearchContract.getIsBillCreated()!=null) {
+        if (measurementBookSearchContract.getBillExists()!=null) {
             addAnd(params);
             params.append("mb.isBillCreated =:isBillCreated");
-            paramValues.put("isBillCreated", measurementBookSearchContract.getIsBillCreated());
+            paramValues.put("isBillCreated", measurementBookSearchContract.getBillExists());
         }
 
         if (StringUtils.isNotBlank(measurementBookSearchContract.getLoaEstimateId())) {

@@ -67,9 +67,9 @@ public class MeasurementBookSearchContract {
 
     private List<String> statuses;
 
-    private Boolean isPartRate;
+    private Boolean partRateExists;
 
-    private Boolean isBillCreated;
+    private Boolean billExists;
 
     private String loaEstimateId;
 }

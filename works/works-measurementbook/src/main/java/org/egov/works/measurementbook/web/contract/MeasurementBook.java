@@ -93,11 +93,11 @@ public class MeasurementBook   {
     @JsonProperty("billDate")
     private Long billDate = null;
 
-    @JsonProperty("isPartRate")
-    private Boolean isPartRate = false;
+    @JsonProperty("partRateExists")
+    private Boolean partRateExists = false;
 
-    @JsonProperty("isBillCreated")
-    private Boolean isBillCreated = false;
+    @JsonProperty("billExists")
+    private Boolean billExists = false;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
@@ -569,44 +569,44 @@ public class MeasurementBook   {
         this.billDate = billDate;
     }
 
-    public MeasurementBook isPartRate(Boolean isPartRate) {
-        this.isPartRate = isPartRate;
+    public MeasurementBook partRateExists(Boolean partRateExists) {
+        this.partRateExists = partRateExists;
         return this;
     }
 
     /**
      * If any one of MeasurementBookDetail has Part Rate then MeasurementBook marked as part rated.
-     * @return isPartRate
+     * @return partRateExists
      **/
     @ApiModelProperty(value = "If any one of MeasurementBookDetail has Part Rate then MeasurementBook marked as part rated.")
 
 
-    public Boolean getIsPartRate() {
-        return isPartRate;
+    public Boolean getPartRateExists() {
+        return partRateExists;
     }
 
-    public void setIsPartRate(Boolean isPartRate) {
-        this.isPartRate = isPartRate;
+    public void setPartRateExists(Boolean partRateExists) {
+        this.partRateExists = partRateExists;
     }
 
-    public MeasurementBook isBillCreated(Boolean isBillCreated) {
-        this.isBillCreated = isBillCreated;
+    public MeasurementBook billExists(Boolean billExists) {
+        this.billExists = billExists;
         return this;
     }
 
     /**
      * If bill is created for a this MB, value will be updated to true.
-     * @return isBillCreated
+     * @return billExists
      **/
     @ApiModelProperty(value = "If any one of MeasurementBookDetail has Part Rate then MeasurementBook marked as part rated.")
 
 
-    public Boolean getIsBillCreated() {
-        return isBillCreated;
+    public Boolean getBillExists() {
+        return billExists;
     }
 
-    public void setIsBillCreated(Boolean isBillCreated) {
-        this.isBillCreated = isBillCreated;
+    public void setBillExists(Boolean billExists) {
+        this.billExists = billExists;
     }
 
     public MeasurementBook auditDetails(AuditDetails auditDetails) {
@@ -676,15 +676,15 @@ public class MeasurementBook   {
                 Objects.equals(this.stateId, measurementBook.stateId) &&
                 Objects.equals(this.cancellationReason, measurementBook.cancellationReason) &&
                 Objects.equals(this.cancellationRemarks, measurementBook.cancellationRemarks) &&
-                Objects.equals(this.isPartRate, measurementBook.isPartRate) &&
-                Objects.equals(this.isBillCreated, measurementBook.isBillCreated) &&
+                Objects.equals(this.partRateExists, measurementBook.partRateExists) &&
+                Objects.equals(this.billExists, measurementBook.billExists) &&
                 Objects.equals(this.auditDetails, measurementBook.auditDetails) &&
                 Objects.equals(this.deleted, measurementBook.deleted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, revisionLOA, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, isPartRate, isBillCreated, auditDetails, deleted);
+        return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, revisionLOA, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, partRateExists, billExists, auditDetails, deleted);
     }
 
     @Override
@@ -713,8 +713,8 @@ public class MeasurementBook   {
         sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
         sb.append("    cancellationReason: ").append(toIndentedString(cancellationReason)).append("\n");
         sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
-        sb.append("    isPartRate: ").append(toIndentedString(isPartRate)).append("\n");
-        sb.append("    isBillCreated: ").append(toIndentedString(isBillCreated)).append("\n");
+        sb.append("    partRateExists: ").append(toIndentedString(partRateExists)).append("\n");
+        sb.append("    billExists: ").append(toIndentedString(billExists)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
         sb.append("}");

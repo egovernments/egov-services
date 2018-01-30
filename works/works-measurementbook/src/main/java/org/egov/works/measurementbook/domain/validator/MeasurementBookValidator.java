@@ -332,7 +332,7 @@ public class MeasurementBookValidator {
 	private void validateMBForPartRate(MeasurementBook measurementBook, Map<String, String> messages) {
 		for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()){
 			if(measurementBookDetail.getPartRate()!=null && measurementBookDetail.getPartRate().compareTo(BigDecimal.ZERO)==1){
-				if(!measurementBook.getIsPartRate())
+				if(!measurementBook.getPartRateExists())
 					messages.put(Constants.KEY_MB_SHOULDBE_PARTRATE, Constants.MSG_MB_SHOULDBE_PARTRATE);
 			}
 		}

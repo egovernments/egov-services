@@ -15,6 +15,7 @@ import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
+import org.egov.swm.domain.model.RouteCollectionPointMap;
 import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetMap;
@@ -168,10 +169,41 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
             populateRoutes(sanitationStaffTargetList);
 
+            populateSelectedCollectionPoints(sanitationStaffTargetList);
+
         }
         page.setPagedData(sanitationStaffTargetList);
 
         return page;
+    }
+
+    private void populateSelectedCollectionPoints(List<SanitationStaffTarget> sanitationStaffTargetList) {
+
+        Map<String, CollectionPoint> selectedCollectionPointMap;
+        List<CollectionPoint> routeCollectionPoints;
+        CollectionPoint cp;
+        for (SanitationStaffTarget sst : sanitationStaffTargetList) {
+
+            routeCollectionPoints = new ArrayList<>();
+            selectedCollectionPointMap = new HashMap<String, CollectionPoint>();
+            for (CollectionPoint scp : sst.getCollectionPoints()) {
+                selectedCollectionPointMap.put(scp.getCode(), scp);
+            }
+            for (RouteCollectionPointMap rcpm : sst.getRoute().getCollectionPoints()) {
+
+                if (rcpm.getCollectionPoint() != null) {
+                    cp = rcpm.getCollectionPoint();
+                    if (selectedCollectionPointMap.get(cp.getCode()) == null)
+                        cp.setIsSelected(false);
+                    else {
+                        cp.setIsSelected(true);
+                    }
+                    routeCollectionPoints.add(cp);
+                }
+            }
+            sst.setCollectionPoints(routeCollectionPoints);
+        }
+
     }
 
     private void populateRoutes(List<SanitationStaffTarget> sanitationStaffTargetList) {

@@ -48,6 +48,8 @@ public class CollectionPoint {
     @JsonProperty("collectionPointDetails")
     private List<CollectionPointDetails> collectionPointDetails = null;
 
+    private Boolean isSelected;
+
     @Valid
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;

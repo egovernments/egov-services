@@ -21,7 +21,7 @@
       "maintenanceUom": "Days",
       "maintenanceAfter": "{{$randomInt(10,100)}}",
       "downtimeforMaintenanceUom": "Hrs",
-      "downtimeforMaintenance": "{{$randomDigits(2)}}",
+      "downtimeforMaintenance": "{{$randomDigits(2)}}"
     }
   ]
 }

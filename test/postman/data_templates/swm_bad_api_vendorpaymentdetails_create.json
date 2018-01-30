@@ -19,9 +19,9 @@
         "contractNo": "{{contractNo}}"
       },
       "invoiceNo": "AAA-VNDR-{{$randomDigits(3)}}",
-      "fromDate": 1510464834000,
-      "toDate": 1515476034000,
-      "vendorInvoiceAmount": "{{$randomDigits(4)}}"
+      "fromDate": "{{$TS(-2month)}}",
+      "toDate": "{{$TS(-1month)}}",
+      "vendorInvoiceAmount": "{{$randomDigits(4)}}",
       "employee": {
         "code": "658039"
       },

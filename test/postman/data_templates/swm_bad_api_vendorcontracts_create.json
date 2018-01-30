@@ -26,7 +26,7 @@
         "label": "label"
       },
       "paymentAmount": "paymentAmount {{$randomDigits(5)}}",
-      "remarks": "{{$randomInt(15,100)}}",
+      "remarks": "{{$randomInt(15,100)}}"
     }
   ]
 }

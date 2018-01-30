@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.egov.boundary.domain.model.Boundary;
 import org.egov.boundary.domain.model.BoundarySearchRequest;
 import org.egov.boundary.persistence.repository.querybuilder.BoundaryQueryBuilder;
@@ -70,7 +71,7 @@ import net.minidev.json.JSONArray;
 
 @Repository
 public class BoundaryRepository {
-	
+
 	public static final Logger logger = LoggerFactory.getLogger(BoundaryRepository.class);
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -78,7 +79,8 @@ public class BoundaryRepository {
 	private MdmsRepository mdmsRepository;
 
 	@Autowired
-	public BoundaryRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate,MdmsRepository mdmsRepository) {
+	public BoundaryRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate,
+			MdmsRepository mdmsRepository) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 		this.jdbcTemplate = jdbcTemplate;
 		this.mdmsRepository = mdmsRepository;
@@ -268,8 +270,9 @@ public class BoundaryRepository {
 		List<Boundary> boundaryList = namedParameterJdbcTemplate
 				.query(BoundaryQueryBuilder.findAllBoundariesByIdsAndTenant(), parametersMap, new BoundaryRowMapper());
 		boundaryList = setBoundariesWithParents(boundaryList);
-		if(boundaryList!=null && !boundaryList.isEmpty())
-		boundaryList = boundaryList.stream().filter(i -> boundaryIds.contains(i.getId())).collect(Collectors.toList());
+		if (boundaryList != null && !boundaryList.isEmpty())
+			boundaryList = boundaryList.stream().filter(i -> boundaryIds.contains(i.getId()))
+					.collect(Collectors.toList());
 		return boundaryList;
 	}
 
@@ -337,7 +340,7 @@ public class BoundaryRepository {
 		}
 		return boundaryList;
 	}
-	
+
 	public List<MdmsTenantBoundary> getBoundariesByTenantAndHierarchyType(BoundarySearchRequest boundarySearchRequest,
 			RequestInfo requestInfo) {
 		Long startTime = null;
@@ -346,9 +349,10 @@ public class BoundaryRepository {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		startTime = new Date().getTime();
-		responseJSONArray = mdmsRepository.getByCriteria(boundarySearchRequest.getTenantId(),boundarySearchRequest.getHierarchyTypeName(), requestInfo);
+		responseJSONArray = mdmsRepository.getByCriteria(boundarySearchRequest.getTenantId(),
+				boundarySearchRequest.getHierarchyTypeName(), requestInfo);
 		endTime = new Date().getTime();
-		logger.info("Mdms Rest Call time taken  " + (endTime - startTime)+" ms");
+		logger.info("Mdms Rest Call time taken  " + (endTime - startTime) + " ms");
 		List<TenantBoundary> tenantBoundary = null;
 		if (responseJSONArray != null && responseJSONArray.size() > 0) {
 			tenantBoundary = mapper.convertValue(responseJSONArray, new TypeReference<List<TenantBoundary>>() {
@@ -356,78 +360,129 @@ public class BoundaryRepository {
 		}
 		List<MdmsTenantBoundary> boundaryList = new ArrayList<MdmsTenantBoundary>();
 
-		if(tenantBoundary!=null){
-		for (TenantBoundary tenantBndry : tenantBoundary) {
-			MdmsTenantBoundary mdmsBoundary = MdmsTenantBoundary.builder().tenantId(boundarySearchRequest.getTenantId())
-					.hierarchyType(tenantBndry.getHierarchyType()).build();
-			List<MdmsBoundary> list = prepareChildBoundaryList(tenantBndry);
-		 	    list.add(tenantBndry.getBoundary());
-			if(boundarySearchRequest.getCodes()!=null && !boundarySearchRequest.getCodes().isEmpty()){
-				list = list.stream().filter(p -> boundarySearchRequest.getCodes().contains(p.getCode())).collect(Collectors.toList());
+		if (tenantBoundary != null) {
+			for (TenantBoundary tenantBndry : tenantBoundary) {
+				MdmsTenantBoundary mdmsBoundary = MdmsTenantBoundary.builder()
+						.tenantId(boundarySearchRequest.getTenantId()).hierarchyType(tenantBndry.getHierarchyType())
+						.build();
+				List<MdmsBoundary> list = new ArrayList<MdmsBoundary>();// prepareChildBoundaryList(tenantBndry);
+				list.add(tenantBndry.getBoundary());
+				if (boundarySearchRequest.getCodes() != null && !boundarySearchRequest.getCodes().isEmpty()) {
+					list.clear();
+					list = filterBoundaryCodes(tenantBndry.getBoundary().getChildren(),
+							boundarySearchRequest.getCodes());
+				}
+
+				if (boundarySearchRequest.getBoundaryTypeName() != null
+						&& !boundarySearchRequest.getBoundaryTypeName().isEmpty()) {
+					list.clear();
+					list = prepareChildBoundaryList(tenantBndry);
+					list = list.stream()
+							.filter(p -> boundarySearchRequest.getBoundaryTypeName().equalsIgnoreCase(p.getLabel()))
+							.collect(Collectors.toList());
+				}
+
+				if (boundarySearchRequest.getCodes() != null && !boundarySearchRequest.getCodes().isEmpty()
+						&& boundarySearchRequest.getBoundaryTypeName() != null
+						&& !boundarySearchRequest.getBoundaryTypeName().isEmpty()) {
+					list.clear();
+					list = prepareChildBoundaryList(tenantBndry);
+					list = list.stream()
+							.filter(p -> boundarySearchRequest.getBoundaryTypeName().equalsIgnoreCase(p.getLabel()))
+							.collect(Collectors.toList());
+					list = filterBoundaryCodes(list, boundarySearchRequest.getCodes());
+				}
+				mdmsBoundary.setBoundary(list);
+				boundaryList.add(mdmsBoundary);
 			}
-			if(boundarySearchRequest.getBoundaryTypeName()!=null && !boundarySearchRequest.getBoundaryTypeName().isEmpty()){
-				list = list.stream().filter(p -> boundarySearchRequest.getBoundaryTypeName().equalsIgnoreCase(p.getLabel())).collect(Collectors.toList());
-			}
-			mdmsBoundary.setBoundary(list);
-			boundaryList.add(mdmsBoundary);
-		}
 		}
 		return boundaryList;
 	}
-	
-	private List<MdmsBoundary> prepareChildBoundaryList(TenantBoundary tenantBndry){
-		
-			List<MdmsBoundary> boundaryList = new ArrayList<>();
-			if (tenantBndry.getBoundary().getChildren() != null) {
-				for (MdmsBoundary bndry : tenantBndry.getBoundary().getChildren()) {
-					boundaryList.add(bndry);
-				}
-			}
-			List<MdmsBoundary> boundaryList1 = new ArrayList<>();
-			if (boundaryList != null && !boundaryList.isEmpty()) {
-				for (MdmsBoundary bndry : boundaryList) {
-					if (bndry.getChildren() != null) {
-						for (MdmsBoundary bndry1 : bndry.getChildren()) {
-							boundaryList1.add(bndry1);
+
+	private List<MdmsBoundary> filterBoundaryCodes(List<MdmsBoundary> boundaryList, List<String> codes) {
+		List<MdmsBoundary> list = new ArrayList<MdmsBoundary>();
+		for (String code : codes) {
+			for (MdmsBoundary boundary : boundaryList) {
+				if (boundary.getCode().equals(code)) {
+					list.add(boundary);
+				} else if (boundary.getChildren() != null) {
+					for (MdmsBoundary boundary1 : boundary.getChildren()) {
+						if (boundary1.getCode().equals(code)) {
+							list.add(boundary);
+						} else if (boundary1.getChildren() != null) {
+							for (MdmsBoundary boundary2 : boundary1.getChildren()) {
+								if (boundary2.getCode().equals(code)) {
+									list.add(boundary);
+								} else if (boundary2.getChildren() != null) {
+									for (MdmsBoundary boundary3 : boundary2.getChildren()) {
+										if (boundary3.getCode().equals(code)) {
+											list.add(boundary);
+										}
+									}
+								}
+							}
 						}
 					}
 				}
 			}
-			if(boundaryList1!=null && !boundaryList1.isEmpty()){
-			for(MdmsBoundary boundary12 : boundaryList1){
-				boundaryList.add(boundary12);
-			}}
-			List<MdmsBoundary> boundaryList2 = new ArrayList<>();
-			if (boundaryList1 != null && !boundaryList1.isEmpty()) {
-				for (MdmsBoundary bndry : boundaryList1) {
-					if (bndry.getChildren() != null) {
-						for (MdmsBoundary bndry1 : bndry.getChildren()) {
-							boundaryList2.add(bndry1);
-						}
+		}
+		return list;
+	}
+
+	private List<MdmsBoundary> prepareChildBoundaryList(TenantBoundary tenantBndry) {
+
+		List<MdmsBoundary> boundaryList = new ArrayList<>();
+		if (tenantBndry.getBoundary().getChildren() != null) {
+			for (MdmsBoundary bndry : tenantBndry.getBoundary().getChildren()) {
+				boundaryList.add(bndry);
+			}
+		}
+		List<MdmsBoundary> boundaryList1 = new ArrayList<>();
+		if (boundaryList != null && !boundaryList.isEmpty()) {
+			for (MdmsBoundary bndry : boundaryList) {
+				if (bndry.getChildren() != null) {
+					for (MdmsBoundary bndry1 : bndry.getChildren()) {
+						boundaryList1.add(bndry1);
 					}
 				}
 			}
-			if(boundaryList2!=null && !boundaryList2.isEmpty()){
-			for(MdmsBoundary boundary12 : boundaryList2){
+		}
+		if (boundaryList1 != null && !boundaryList1.isEmpty()) {
+			for (MdmsBoundary boundary12 : boundaryList1) {
 				boundaryList.add(boundary12);
 			}
-			}
-			List<MdmsBoundary> boundaryList3 = new ArrayList<>();
-			if (boundaryList2 != null && !boundaryList2.isEmpty()) {
-				for (MdmsBoundary bndry : boundaryList2) {
-					if (bndry.getChildren() != null) {
-						for (MdmsBoundary bndry1 : bndry.getChildren()) {
-							boundaryList3.add(bndry1);
-						}
+		}
+		List<MdmsBoundary> boundaryList2 = new ArrayList<>();
+		if (boundaryList1 != null && !boundaryList1.isEmpty()) {
+			for (MdmsBoundary bndry : boundaryList1) {
+				if (bndry.getChildren() != null) {
+					for (MdmsBoundary bndry1 : bndry.getChildren()) {
+						boundaryList2.add(bndry1);
 					}
 				}
 			}
-			if(boundaryList3!=null && !boundaryList3.isEmpty()){
-			for(MdmsBoundary boundary12 : boundaryList3){
+		}
+		if (boundaryList2 != null && !boundaryList2.isEmpty()) {
+			for (MdmsBoundary boundary12 : boundaryList2) {
 				boundaryList.add(boundary12);
 			}
+		}
+		List<MdmsBoundary> boundaryList3 = new ArrayList<>();
+		if (boundaryList2 != null && !boundaryList2.isEmpty()) {
+			for (MdmsBoundary bndry : boundaryList2) {
+				if (bndry.getChildren() != null) {
+					for (MdmsBoundary bndry1 : bndry.getChildren()) {
+						boundaryList3.add(bndry1);
+					}
+				}
 			}
-			
-			return boundaryList;
+		}
+		if (boundaryList3 != null && !boundaryList3.isEmpty()) {
+			for (MdmsBoundary boundary12 : boundaryList3) {
+				boundaryList.add(boundary12);
+			}
+		}
+
+		return boundaryList;
 	}
 }

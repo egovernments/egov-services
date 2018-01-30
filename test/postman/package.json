@@ -4,7 +4,18 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.16.2",
+    "fs-walk": "0.0.1",
     "moment": "^2.20.1",
+    "node-watch": "^0.5.6",
     "uuid": "^3.2.1"
+  },
+  "scripts": {
+    "postman": "node postman_server.js",
+    "postman-dev": "nodemon -w postman_server.js postman_server.js",
+    "start": "npm run postman-dev"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.11"
   }
 }

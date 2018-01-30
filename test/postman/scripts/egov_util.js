@@ -28,7 +28,8 @@ login = async (username, password) => {
     try {
         let data = await pmutil.fetch(pmutil.resolveParamsObject(login_request, true))
         let body = JSON.parse(data.text())
-        pm.variables.set("access_token", body.access_token);
+        pm.globals.set("access_token", body.access_token);
+        console.log("Logged in Successfully with auth token - " + body.access_token )
     } catch (ex) {
         console.log("Exception occurred during login")
         console.log(ex)
@@ -86,6 +87,17 @@ const ErrorUtil = function() {
 
 var error = new ErrorUtil();
 
+function bad_api_prerequest(template_name) {
+    let postBody = pmutil.getPostBody(template_name)
+    if (data) {
+        pmutil.jp.performOperations(postBody, data["operations"])
+    } else {
+        console.log("Data object is not there, so not performing any bad api data manipulation")
+    }
+
+    pmutil.setPostBody(postBody, pm);
+}
+
 function bad_api_tests(api_name, data) {
     let error_details = error.getErrorDetails(data);
 
@@ -98,13 +110,13 @@ function bad_api_tests(api_name, data) {
             response.should.be.json;
         });
 
-        it("Response body present", () => {
-            response.body.should.not.be.null;
-        })
-
-        it("Response body has errors", () => {
-            response.body.Errors.should.not.be.null;
-        })
+        // it("Response body present", () => {
+        //     response.body.should.not.be.null;
+        // })
+        //
+        // it("Response body has errors", () => {
+        //     response.body.Errors.should.not.be.null;
+        // })
 
         it("Error message has code with field name " + error_details.code, () => {
             response.body.Errors[0].code.should.contain(error_details.code)

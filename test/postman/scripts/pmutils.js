@@ -135,7 +135,7 @@ if (typeof PMUtil === "undefined") {
 
             $TIME: function(delta, format) {
                 format = format || "HH:mm:ss"
-              let date = moment_applyDelta(moment(), delta)
+                let date = moment_applyDelta(moment(), delta)
                 if (format === "epoch"){
                     return date.unix()
                 } else if (format == "epochms") {
@@ -243,11 +243,11 @@ if (typeof PMUtil === "undefined") {
             return v;
         }
         this.deepCloneObject = (obj) => JSON.parse(JSON.stringify(obj))
-        
+
         this.resolveParamsObject = (obj, resolvePMVariables) => {
             return JSON.parse(JSON.stringify(obj, (k, v) => typeof v === "string" ? this.resolveParams(v, resolvePMVariables) : v));
         }
-        
+
         this.loadRandomEnvironmentVariables = () => {
             for (const variable in pm.environment.toObject()) {
                 if (variable.startsWith("_")) {
@@ -321,11 +321,21 @@ if (typeof PMUtil === "undefined") {
         }
 
         this.jp = new JSONPath();
-        this.getPostBody = async (url) => {
+        this.getPostBody = (url) => {
+            let data = null;
+            if (pm.globals.has(url))
+                data = pm.globals.get(url)
+            else if (pm.globals.has("data_templates/" + url))
+                data = pm.globals.get("data_templates/" + url)
+
+            return JSON.parse(data)
+        }
+
+        this.getPostBodyAsync = async (url) => {
             try {
                 if (url) {
                     console.log("getting data from " + url)
-                    let postBody = await this.getTemplate(url)
+                    let postBody = await this.getTemplate("data_templates/" + url)
                     console.log("postBody returned data from url - ", postBody)
                     return JSON.parse(postBody);
                 }
@@ -340,6 +350,8 @@ if (typeof PMUtil === "undefined") {
                 throw (ex)
             }
         }
+
+        this.loadPostBody = (template) => this.setPostBody(this.getPostBody(template))
 
         this.setPostBody = (postBody, pm) => {
             console.log("Setting the postBody using pmutil")

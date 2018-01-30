@@ -2,6 +2,7 @@ package org.egov.pa.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -88,6 +89,8 @@ public class KpiValueServiceImpl implements KpiValueService {
 			for (KpiValueDetail detail : vr.getKpiValue().getValueList()) {
 				detail.setValueid(vr.getKpiValue().getId());
 				detail.setKpiCode(vr.getKpiValue().getKpiCode());
+				detail.setCreatedBy(kpiValueRequest.getRequestInfo().getUserInfo().getId());
+				detail.setCreatedTime(new Date().getTime());
 			}
 		}
 	}

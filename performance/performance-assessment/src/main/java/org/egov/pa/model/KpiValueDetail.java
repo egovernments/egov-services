@@ -27,11 +27,35 @@ public class KpiValueDetail {
 	@JsonProperty("remarks")
 	private String remarks = null; 
 	
+	@JsonProperty("createdBy")
+	private Long createdBy = null;
+	
+	@JsonProperty("createdTime")
+	private Long createdTime = null; 
 	
 	
 	
 	
 	
+	
+	
+	
+
+	public Long getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Long getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Long createdTime) {
+		this.createdTime = createdTime;
+	}
 
 	public String getRemarks() {
 		return remarks;

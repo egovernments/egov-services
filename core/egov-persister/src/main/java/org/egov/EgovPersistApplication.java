@@ -73,9 +73,9 @@ public class EgovPersistApplication {
 							mappingsMap.put(mapping.getFromTopic(),service.getServiceMaps().getMappings().get(i++));
 						}
 						
-					} else if(yamlLocation.startsWith("file://")){
+					} else { //  if(yamlLocation.startsWith("file://")){
 						log.info("Reading....: "+yamlLocation);
-							Resource resource = resourceLoader.getResource(yamlLocation);
+							Resource resource = resourceLoader.getResource("classpath:"+yamlLocation);
 							File file = resource.getFile();
 							try{
 								service = mapper.readValue(file, Service.class);

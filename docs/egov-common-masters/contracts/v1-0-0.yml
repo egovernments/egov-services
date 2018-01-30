@@ -2147,6 +2147,31 @@ definitions:
         description : Unique identification of related business account details.
         items:
           $ref: '#/definitions/BusinessAccountDetails'
+          
+  CensusYear:
+      type: object
+      description: This object captures census years
+      properties:
+        code:
+          type: string
+          description: Unique Identifier of the CensusYear
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the CensusYear
+          maxLength: 128
+          minLength: 1
+        name:
+          type: string
+          description: name of oil CensusYear
+          maxLength: 256
+          minLength: 1
+      required:
+      - code
+      - tenantId
+      - name
+      
 parameters:
   tenantId:
     name: tenantid
@@ -2316,3 +2341,4 @@ parameters:
     description: Page number
     type: integer
     default: 1  
+

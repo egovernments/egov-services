@@ -2785,17 +2785,15 @@ definitions:
           description: tenant id of the Population
           maxLength: 128
           minLength: 1
-        location:
+        ward:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
+        zone:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         ulb:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1.0.1.yml#/definitions/Tenant'
         censusYear:
-          type: integer
-          format: int64
-          description: census Year
-          maxLength: 4
-          minLength: 1
-        population:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/CensusYear'
+        populationEstimated:
           type: integer
           format: int64
           description: population according to census year
@@ -2806,9 +2804,10 @@ definitions:
       required:
       - code
       - tenantId
-      - location
+      - ward
+      - zone
       - censusYear
-      - population
+      - populationEstimated
       - garbageToBeCollected
       
     RefillingPumpStation:
@@ -2923,9 +2922,8 @@ definitions:
           description: tenant id of the Toilet
           maxLength: 128
           minLength: 1
-        publicToilet:
-          type: boolean
-          description: Option should be selected if toilet is public toilet. else will be considered as community toilet
+        toiletType:
+          $ref: '#/definitions/ToiletType'
         name:
           type: string
           description: name of the Toilet. Shall be unique within ULB
@@ -2948,11 +2946,41 @@ definitions:
           description: number of seats in the toilet
           minimum: 0
           exclusiveMinimum: true
+        address:
+          type: string
+          description: address of the Toilet.
+          maxLength: 500
+          minLength: 0
       required:
+      - toiletType
       - tenantId
       - name
       - location
       - seatCount
+      
+    ToiletType:
+      type: object
+      description: This object captures Toilet Type
+      properties:
+        code:
+          type: string
+          description: Unique Identifier of the ToiletType
+          maxLength: 256
+          minLength: 1
+        tenantId:
+          type: string
+          description: tenant id of the ToiletType
+          maxLength: 128
+          minLength: 1
+        name:
+          type: string
+          description: name of oil ToiletType
+          maxLength: 256
+          minLength: 1
+      required:
+      - code
+      - tenantId
+      - name
       
     VehicleSchedule:
       type: object
@@ -3727,6 +3755,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

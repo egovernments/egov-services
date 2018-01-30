@@ -863,10 +863,23 @@ class CreateAsset extends React.Component {
         }
       }
       let assetCat = [];
-      commonApiPost("asset-services", "assetCategories", "_search", {tenantId,isChildCategory:true}, function(err, res) {
-          assetCat = res["AssetCategory"];
-          _this.setState({"assetCategories":res["AssetCategory"]});
+      // commonApiPost("asset-services", "assetCategories", "_search", {tenantId,isChildCategory:true}, function(err, res) {
+      //     assetCat = res["AssetCategory"];
+      //     console.log('inside asset');
+      //     _this.setState({"assetCategories":res["AssetCategory"]});
+      // });
+
+      var assetCategoryPromise = new Promise(function(resolve, reject) {
+        // console.log('came to promise');
+        // setTimeout(resolve, 100, 'foo');
+        commonApiPost("asset-services", "assetCategories", "_search", {tenantId,isChildCategory:true}, function(err, res) {
+            // assetCat = res["AssetCategory"];
+            resolve(res["AssetCategory"]);
+            // console.log('inside asset');
+            //
+        });
       });
+
       getDropdown("locality", function(res) {
         checkCountNCall("locality", res);
       });
@@ -954,16 +967,21 @@ class CreateAsset extends React.Component {
               // }, 100);
 
               if(asset.status == "CAPITALIZED") {
-                // setTimeout(function() {
-                  console.log('Global var : ', assetCat);
-                  console.log('Asset Category Master : ',_this.state.assetCategories);
-                  let ifassetLandIMObj = assetCat && assetCat.find((obj)=>{return obj.name === asset.assetCategory.name});
+                assetCategoryPromise.then((response) => {
+                  // console.log("Yay! " + JSON.stringify(response));
+                  _this.setState({"assetCategories":response});
+                  // console.log('Global var : ', response);
+                  console.log('Asset Category Master from Promise for update / view: ',response);
+                  let ifassetLandIMObj = response && response.find((obj)=>{return obj.name === asset.assetCategory.name});
                   console.log('LANDIMMOV : ',ifassetLandIMObj);
                   _this.setState({
                       capitalized: true,
                       ifassetLandIM: ifassetLandIMObj && (ifassetLandIMObj.assetCategoryType === 'LAND' || ifassetLandIMObj.assetCategoryType === 'IMMOVABLE') ? true : false
-                  })
-                // }, 100);
+                  });
+                });
+                // setTimeout(function() {
+
+                // }, 1500);
               }
 
               if(asset.assetCategory && asset.assetCategory.id) {
@@ -997,6 +1015,13 @@ class CreateAsset extends React.Component {
               }
             }
           })
+      }else{
+        //no update or view.. its create
+        assetCategoryPromise.then((response) => {
+          // console.log("Yay! " + JSON.stringify(response));
+          console.log('Asset Category Master from Promise for create: ',response);
+          this.setState({"assetCategories":response});
+        });
       }
   }
 

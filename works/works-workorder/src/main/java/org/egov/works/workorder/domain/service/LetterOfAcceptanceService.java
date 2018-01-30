@@ -117,19 +117,12 @@ public class LetterOfAcceptanceService {
                     
                 }
 
-                LetterOfAcceptanceEstimate loae = null;
-                if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
-                    loae = letterOfAcceptanceEstimate;
-                    loae.setLoaExists(true);
-                    letterOfAcceptanceEstimates.add(loae);
-                }
             }
 
-            if(letterOfAcceptanceEstimates !=null && !letterOfAcceptanceEstimates.isEmpty()) {
-                LetterOfAcceptance loa = new LetterOfAcceptance();
+            LetterOfAcceptance loa = null;
+            if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
                 loa = letterOfAcceptance;
-                loa.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimates);
-                letterOfAcceptanceList.add(letterOfAcceptance);
+                letterOfAcceptanceList.add(loa);
             }
 
             if ((isRevision != null && !isRevision) && letterOfAcceptance.getSecurityDeposits() != null)
@@ -169,10 +162,10 @@ public class LetterOfAcceptanceService {
         else
             kafkaTemplate.send(propertiesManager.getWorksRevisionLOACreateUpdateTopic(), letterOfAcceptanceRequest);
 
-        if(letterOfAcceptanceEstimates != null && !letterOfAcceptanceEstimates.isEmpty()) {
+        if(letterOfAcceptanceList != null && !letterOfAcceptanceList.isEmpty()) {
             LetterOfAcceptanceRequest backUpdateRequest = new LetterOfAcceptanceRequest();
             backUpdateRequest.setLetterOfAcceptances(letterOfAcceptanceList);
-            kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateBackupdateTopic(), backUpdateRequest);
+            kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateBackupdateOnCreateLoaTopic(), backUpdateRequest);
         }
 
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
@@ -263,14 +256,6 @@ public class LetterOfAcceptanceService {
                 letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
                 letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimate);
                 letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
-
-                LetterOfAcceptanceEstimate loae = null;
-                if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_CANCELLED)) {
-                    loae = letterOfAcceptanceEstimate;
-                    loae.setLoaExists(false);
-                    letterOfAcceptanceEstimates.add(loae);
-                }
-
             }
 
             if(letterOfAcceptance.getSecurityDeposits() != null)
@@ -304,20 +289,18 @@ public class LetterOfAcceptanceService {
                 letterOfAcceptance.setApprovedBy(approvedBy);
             }
 
-            if(letterOfAcceptanceEstimates !=null && !letterOfAcceptanceEstimates.isEmpty()) {
-                LetterOfAcceptance loa = new LetterOfAcceptance();
+            LetterOfAcceptance loa = null;
+            if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_CANCELLED)) {
                 loa = letterOfAcceptance;
-                loa.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimates);
-                letterOfAcceptanceList.add(letterOfAcceptance);
+                letterOfAcceptanceList.add(loa);
             }
-
         }
 
         kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
-        if(letterOfAcceptanceEstimates != null && !letterOfAcceptanceEstimates.isEmpty()) {
+        if(letterOfAcceptanceList != null && !letterOfAcceptanceList.isEmpty()) {
             LetterOfAcceptanceRequest backUpdateRequest = new LetterOfAcceptanceRequest();
             backUpdateRequest.setLetterOfAcceptances(letterOfAcceptanceList);
-            kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateBackupdateTopic(), backUpdateRequest);
+            kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateBackupdateOnCancelLoaTopic(), backUpdateRequest);
         }
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
         letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());

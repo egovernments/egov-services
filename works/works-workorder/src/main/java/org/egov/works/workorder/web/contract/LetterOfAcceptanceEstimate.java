@@ -49,9 +49,6 @@ public class LetterOfAcceptanceEstimate {
     @JsonProperty("deleted")
     private Boolean deleted = false;
 
-    @JsonProperty("loaExists")
-    private Boolean loaExists = false;
-
     public LetterOfAcceptanceEstimate id(String id) {
         this.id = id;
         return this;
@@ -286,27 +283,6 @@ public class LetterOfAcceptanceEstimate {
     }
 
 
-    public LetterOfAcceptanceEstimate loaExists(Boolean loaExists) {
-        this.loaExists = loaExists;
-        return this;
-    }
-
-    /**
-     * Boolean value to update true/false for detailedestimate based on LOA create/Cancelled.
-     * @return loaExists
-     **/
-    @ApiModelProperty(value = "Boolean value to update true/false for detailedestimate based on LOA create/Cancelled.")
-
-
-    public Boolean getLoaExists() {
-        return loaExists;
-    }
-
-    public void setLoaExists(Boolean loaExists) {
-        this.loaExists = loaExists;
-    }
-
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -325,13 +301,12 @@ public class LetterOfAcceptanceEstimate {
                 Objects.equals(this.assetForLOAs, letterOfAcceptanceEstimate.assetForLOAs) &&
                 Objects.equals(this.loaActivities, letterOfAcceptanceEstimate.loaActivities) &&
                 Objects.equals(this.auditDetails, letterOfAcceptanceEstimate.auditDetails) &&
-                Objects.equals(this.deleted, letterOfAcceptanceEstimate.deleted) &&
-                Objects.equals(this.loaExists, letterOfAcceptanceEstimate.loaExists);
+                Objects.equals(this.deleted, letterOfAcceptanceEstimate.deleted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, letterOfAcceptance, detailedEstimate, workCompletionDate, estimateLOAAmount, assetForLOAs, loaActivities, auditDetails, deleted, loaExists);
+        return Objects.hash(id, tenantId, letterOfAcceptance, detailedEstimate, workCompletionDate, estimateLOAAmount, assetForLOAs, loaActivities, auditDetails, deleted);
     }
 
     @Override
@@ -349,7 +324,6 @@ public class LetterOfAcceptanceEstimate {
         sb.append("    loaActivities: ").append(toIndentedString(loaActivities)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
-        sb.append("    loaExists: ").append(toIndentedString(loaExists)).append("\n");
         sb.append("}");
         return sb.toString();
     }

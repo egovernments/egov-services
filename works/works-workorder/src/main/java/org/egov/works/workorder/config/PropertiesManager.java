@@ -76,7 +76,10 @@ public class PropertiesManager {
     @Value("${egov.services.works.advance.saveorupdate.validated}")
     private String worksAdvanceSaveOrUpdateValidatedTopic;
 
-    @Value("${egov.services.works.detailedestimate.backupdate}")
-    private String worksDetailedEstimateBackupdateTopic;
+    @Value("${egov.services.works.detailedestimate.backupdate.oncreateloa.topic}")
+    private String worksDetailedEstimateBackupdateOnCreateLoaTopic;
+
+    @Value("${egov.services.works.detailedestimate.backupdate.oncancelloa.topic}")
+    private String worksDetailedEstimateBackupdateOnCancelLoaTopic;
 
 }

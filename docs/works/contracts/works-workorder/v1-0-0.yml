@@ -1592,10 +1592,6 @@ definitions:
         type: boolean
         description: Boolean value to identify whether the object is deleted or not from UI.
         default: false
-      loaExists:
-        type: boolean
-        description: Boolean value to update true/false for detailedestimate based on LOA create/Cancelled.
-        default: false
     required:
       - tenantId
       - detailedEstimate

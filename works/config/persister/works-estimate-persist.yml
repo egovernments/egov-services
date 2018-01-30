@@ -872,34 +872,56 @@ serviceMaps:
          type: BOOLEAN
 
  - version: 1.0
-   name: Abstract Estimate Backupdate
-   description: Backupdate abstract estimate flag DetailedEstimateExists on creation/cancel of Detailed estimate in egw_abstractestimate_details table
-   fromTopic: works-abstract-estimate-backupdate
+   name: Abstract Estimate Backupdate on Create of Detailed Estimate
+   description: Backupdate abstract estimate flag DetailedEstimateExists as true on creation of Detailed estimate in egw_abstractestimate_details table
+   fromTopic: works-abstract-estimate-backupdate-oncreate-detailedestimate
    isTransaction: true
    queryMaps:
-    - query: Update egw_abstractestimate_details set detailedEstimateExists=? where id=? and tenantId=?;
+    - query: Update egw_abstractestimate_details set detailedEstimateExists=true where id=? and tenantId=?;
       basePath: $.detailedEstimates.*
       jsonMaps:
-
-       - jsonPath: $.detailedEstimates.*.detailedEstimateExists
-         type: BOOLEAN
 
        - jsonPath: $.detailedEstimates.*.abstractEstimateDetail.id
 
        - jsonPath: $.detailedEstimates.*.tenantId
 
  - version: 1.0
-   name: Detailed Estimate Backupdate
-   description: Backupdate detailed estimate flag loaCreated on creation/cancel of Letterofaccaptance in egw_detailedestimate table
-   fromTopic: works-detailedestimate-backupdate
+   name: Abstract Estimate Backupdate on Cancel of Detailed Estimate
+   description: Backupdate abstract estimate flag DetailedEstimateExists as false on cancel of Detailed estimate in egw_abstractestimate_details table
+   fromTopic: works-abstract-estimate-backupdate-oncancel-detailedestimate
    isTransaction: true
    queryMaps:
-    - query: Update egw_detailedestimate set loacreated=? where estimatenumber=? and tenantId=?;
+    - query: Update egw_abstractestimate_details set detailedEstimateExists=false where id=? and tenantId=?;
+      basePath: $.detailedEstimates.*
+      jsonMaps:
+
+       - jsonPath: $.detailedEstimates.*.abstractEstimateDetail.id
+
+       - jsonPath: $.detailedEstimates.*.tenantId
+
+ - version: 1.0
+   name: Detailed Estimate Backupdate on Create of LOA
+   description: Backupdate detailed estimate flag loaCreated as true on creationof Letterofaccaptance in egw_detailedestimate table
+   fromTopic: works-detailedestimate-backupdate-oncreate-loa
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_detailedestimate set loacreated=true where estimatenumber=? and tenantId=?;
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*
       jsonMaps:
 
-       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaExists
-         type: BOOLEAN
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.estimateNumber
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.tenantId
+
+ - version: 1.0
+   name: Detailed Estimate Backupdate on Cancel of LOA
+   description: Backupdate detailed estimate flag loaCreated as false on cancel of Letterofaccaptance in egw_detailedestimate table
+   fromTopic: works-detailedestimate-backupdate-oncancel-loa
+   isTransaction: true
+   queryMaps:
+    - query: Update egw_detailedestimate set loacreated=false where estimatenumber=? and tenantId=?;
+      basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*
+      jsonMaps:
 
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.estimateNumber
 

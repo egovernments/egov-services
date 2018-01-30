@@ -210,7 +210,6 @@ public class DetailedEstimateService {
             if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_NEW) ||
                     detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED)) {
                 de = detailedEstimate;
-                de.setDetailedEstimateExists(true);
                 detailedEstimateList.add(de);
             }
 
@@ -224,7 +223,7 @@ public class DetailedEstimateService {
         if(detailedEstimateList != null && !detailedEstimateList.isEmpty()) {
             DetailedEstimateRequest backUpdateRequest = new DetailedEstimateRequest();
             backUpdateRequest.setDetailedEstimates(detailedEstimateList);
-            kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateBackupdateTopic(), backUpdateRequest);
+            kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateBackupdateOnCreateDETopic(), backUpdateRequest);
         }
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
         response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
@@ -338,7 +337,6 @@ public class DetailedEstimateService {
             DetailedEstimate de = null;
             if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
                 de = detailedEstimate;
-                de.detailedEstimateExists(false);
                 detailedEstimateList.add(de);
             }
 
@@ -347,7 +345,7 @@ public class DetailedEstimateService {
         if(detailedEstimateList != null && !detailedEstimateList.isEmpty()) {
             DetailedEstimateRequest backUpdateRequest = new DetailedEstimateRequest();
             backUpdateRequest.setDetailedEstimates(detailedEstimateList);
-            kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateBackupdateTopic(), backUpdateRequest);
+            kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateBackupdateOnCancelDETopic(), backUpdateRequest);
         }
         final DetailedEstimateResponse response = new DetailedEstimateResponse();
         response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());

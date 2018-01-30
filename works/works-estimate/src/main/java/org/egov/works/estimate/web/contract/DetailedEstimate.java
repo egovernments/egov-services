@@ -191,9 +191,6 @@ public class DetailedEstimate   {
   @JsonProperty("loaCreated")
   private Boolean loaCreated = false;
 
-  @JsonProperty("detailedEstimateExists")
-  private Boolean detailedEstimateExists = false;
-
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
 
@@ -1445,25 +1442,6 @@ public class DetailedEstimate   {
     this.loaCreated = loaCreated;
   }
 
-    public DetailedEstimate detailedEstimateExists(Boolean detailedEstimateExists) {
-        this.detailedEstimateExists = detailedEstimateExists;
-        return this;
-    }
-
-    /**
-     * Boolean value to update true/false for abstractestimate based on detailed estimate created/Cancelled.
-     * @return detailedEstimateExists
-     **/
-    @ApiModelProperty(value = "Boolean value to update true/false for abstractestimate based on detailed estimate created/Cancelled.")
-
-
-    public Boolean getDetailedEstimateExists() {
-        return detailedEstimateExists;
-    }
-
-    public void setDetailedEstimateExists(Boolean detailedEstimateExists) {
-        this.detailedEstimateExists = detailedEstimateExists;
-    }
 
   public DetailedEstimate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
@@ -1553,13 +1531,12 @@ public class DetailedEstimate   {
                 Objects.equals(this.budgetGroup, detailedEstimate.budgetGroup) &&
                 Objects.equals(this.deleted, detailedEstimate.deleted) &&
                 Objects.equals(this.loaCreated, detailedEstimate.loaCreated) &&
-                Objects.equals(this.detailedEstimateExists, detailedEstimate.detailedEstimateExists) &&
                 Objects.equals(this.auditDetails, detailedEstimate.auditDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, loaCreated, detailedEstimateExists, auditDetails);
+        return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, loaCreated, auditDetails);
     }
 
     @Override
@@ -1624,7 +1601,6 @@ public class DetailedEstimate   {
         sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
         sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
         sb.append("    loaCreated: ").append(toIndentedString(loaCreated)).append("\n");
-        sb.append("    detailedEstimateExists: ").append(toIndentedString(detailedEstimateExists)).append("\n");
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("}");
         return sb.toString();

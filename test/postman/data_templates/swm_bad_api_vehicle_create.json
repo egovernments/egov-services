@@ -24,7 +24,7 @@
       },
       "purchaseInfo": {
         "purchaseDate": "{{$TS(-1month)}}",
-        "price": "{{$randomDigits(4)}}",
+        "price": 1000,
         "sourceOfPurchase": "sourceOfPurchase"
       },
       "fuelType": {
@@ -36,7 +36,7 @@
       },
       "manufacturingDetails": {
         "engineSrNumber": "{{$GUIDWD}}",
-        "chassisSrNumber":"{{$randomInt(1,128)}}",
+        "chassisSrNumber":"{{$GUIDWD}}",
         "model": "model",
         "vehicleCapacity": 100
       },
@@ -49,6 +49,9 @@
       },
       "kilometers": 100,
       "endOfWarranty": "{{$TS(+11month)}}",
+      "isVehicleUnderWarranty": true,
+      "kilometers": 100,
+      "endOfWarranty": "{{$TS(+9month)}}",
       "remarks": "remarks"
     }
   ]

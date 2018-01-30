@@ -20,7 +20,7 @@
       "vehicle": {
         "regNumber": "REGNO-{{$GUIDWD(15)}}"
       },
-      "actualMaintenanceDate":"{{$TS-3month}}",
+     "actualMaintenanceDate":"{{$TS-3month}}",
       "vehicleScheduledMaintenanceDate": null,
       "vehicleDowntimeActual": "{{$randomInt(2,3)}}",
       "vehicleDownTimeActualUom": "days",

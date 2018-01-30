@@ -12,7 +12,7 @@ apis:
       vendorNo:
 
   /vehicles/_create:
-    ignorefields: ["vehicleType","insuranceDocument"]
+    ignorefields: ["vehicleType" ,"insuranceDocument"]
     reference:
       vehicleType:
       fuelType:

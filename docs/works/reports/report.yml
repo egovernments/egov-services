@@ -7,7 +7,7 @@ ReportDefinitions:
   viewPath: workOrderRegister
   externalService:
   - entity: $.MdmsRes.egf-master.FinancialYear
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     keyOrder: finYearRange,startingDate,endingDate,tenantId
     tableName: tbl_financialyear
     stateData: true
@@ -149,7 +149,7 @@ ReportDefinitions:
     label: reports.works.fund
     isMandatory: false
     type: multivaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=Fund&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=Fund&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     source: works
     stateData: true
     wrapper: true
@@ -158,7 +158,7 @@ ReportDefinitions:
     label: reports.works.typeofwork
     isMandatory: false
     type: multivaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     source: works
     stateData: true
     wrapper: true
@@ -167,7 +167,7 @@ ReportDefinitions:
     label: reports.works.subtypeofwork
     isMandatory: false
     type: multivaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter%3D%5B%3F%28%20%40.parent%3D%3D%7Btypeofwork%7D%29%5D%7C%24.MdmsRes.works.TypeOfWork.%2A.code%7C%24.MdmsRes..works.TypeOfWork.%2A.name
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter%3D%5B%3F%28%20%40.parent%3D%3D%7Btypeofwork%7D%29%5D%7C%24.MdmsRes.works.TypeOfWork.%2A.code%7C%24.MdmsRes..works.TypeOfWork.%2A.name
     source: works
     stateData: true
     wrapper: true
@@ -176,7 +176,7 @@ ReportDefinitions:
     label: reports.works.department
     isMandatory: false
     type: multivaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     source: works
     stateData: true
     wrapper: true
@@ -185,7 +185,7 @@ ReportDefinitions:
     label: reports.works.scheme
     isMandatory: false
     type: multivaluelist
-    pattern:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=Works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    pattern:  http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=Works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     source: works
     stateData: true
     wrapper: true
@@ -208,17 +208,17 @@ ReportDefinitions:
   moduleName: works
   externalService:
   - entity: $.MdmsRes.works.TypeOfWork
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D
     keyOrder: name,code,description,tenantId
     tableName: tbl_typeofwork
     stateData: true
   - entity: $.MdmsRes.works.TypeOfWork
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
     keyOrder: name,code,description,tenantId
     tableName: tbl_subtypeofwork
     stateData: true
   - entity: $.MdmsRes.works.WorksStatus
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=WorksStatus&tenantId=$tenantid&filter=%5B%3F%28%40.moduleType%3D%3D%27DetailedEstimate%27%29%5D
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=WorksStatus&tenantId=$tenantid&filter=%5B%3F%28%40.moduleType%3D%3D%27DetailedEstimate%27%29%5D
     keyOrder: code,description,tenantId
     tableName: tbl_workstatus
     stateData: true
@@ -247,14 +247,14 @@ ReportDefinitions:
     label: reports.works.typeOfWork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
     searchClause : AND de.workstype=$typeOfWork
     isMandatory: false
   - name: subTypeOfWork
     label: reports.works.subtypeofwork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
     searchClause : AND de.workssubtype=$subTypeOfWork
     isMandatory: false
   - name: nameOfWork
@@ -275,14 +275,14 @@ ReportDefinitions:
     source: works
     searchClause : AND de.status=$status
     isMandatory: false
-  - name: statusAsOn
-    label: reports.works.statusAsOn
+  - name: statusason
+    label: reports.works.statusason
     type: string
     source: works
-    searchClause : AND loae.estimateloaamount<=$amountUpto
+    searchClause : AND de.status=$statusason
     isMandatory: false
 
-  query: select de.projectcode as wincode, de.nameofwork, tw.name||'/'||stw.name as subtypeofwork, workstatus.description as status from egw_detailedestimate de, (values tbl_workstatus) as workstatus (code,description,tenantId), (values tbl_typeofwork) as tw (name,code,description,tenantId), (values tbl_subtypeofwork) as stw (name,code,description,tenantId) where de.status='TECHNICAL_SANCTIONED' and workstatus.code=de.status and tw.code=de.workstype and stw.code=de.workssubtype
+  query: select de.projectcode as wincode, de.nameofwork, tw.name||'/'||stw.name as subtypeofwork, workstatus.description as status from egw_detailedestimate de, (values tbl_workstatus) as workstatus (code,description,tenantId), (values tbl_typeofwork) as tw (name,code,description,tenantId), (values tbl_subtypeofwork) as stw (name,code,description,tenantId) where de.status='CREATED' and workstatus.code=de.status and tw.code=de.workstype and stw.code=de.workssubtype
 
 - reportName: WorkInProgressDetails
   summary: Work In Progress Details
@@ -290,12 +290,12 @@ ReportDefinitions:
   moduleName: works
   externalService:
   - entity: $.MdmsRes.egf-master.FinancialYear
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=FinancialYear&tenantId=$tenantid&filter=%5B%3F%28%40.active%3D%3Dtrue%29%5D
     keyOrder: finYearRange,startingDate,endingDate,tenantId
     tableName: tbl_financialyear
     stateData: true
   - entity: $.MdmsRes.works.Scheme
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%29%5D
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%29%5D
     keyOrder: name,code
     tableName: tbl_scheme
     stateData: true
@@ -414,4 +414,132 @@ ReportDefinitions:
 
   query: select de.nameofwork, (select finyear.finYearRange from (values tbl_financialyear) as finyear (finYearRange,startingDate,endingDate,tenantId) where de.estimatedate between startingDate::bigint and endingDate::bigint) as distributedforfinyear, de.budgetgroup as accountcode, de.estimatevalue, de.location, ((select coalesce(statusdate, innerwo.workorderdate) from egw_workorder innerwo left join egw_offlinestatus fs on fs.objecttype='WorkOrderOffline' and fs.status='WORK_COMMENCED' and fs.objectnumber=innerwo.workordernumber where innerwo.workordernumber=wo.workordernumber) + loa.contractperiod*24*12*60*1000) as expectedcompletiondate, (select scheme.name from (values tbl_scheme) as scheme (name, code) where scheme.code=de.scheme) as schemename, (select cb.workcompletiondate from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and bg.billsubtype='Final' and cb.letterofacceptanceestimate=loae.id) as actualcompletiondate, de.councilresolutionnumber||'/'||de.councilresolutiondate as resolutionnumberanddate, (select bg.billdate from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and bg.billsubtype='Final' and cb.letterofacceptanceestimate=loae.id) as capitalisationdate, wo.workordernumber, de.projectcode as wincode, de.estimatevalue as approvedbudget, '' as assetidentificationnumber, (select sum(amount) from egw_securitydeposit where letterofacceptance=loa.id) as securitydepositamount, (select sum(bg.billamount) from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and cb.deleted=false and cb.letterofacceptanceestimate=loae.id) as totalexpensesincurredsofar, br.billdate as paymentdate, br.billamount as amount, br.billnumber as vouchernumber from egw_workorder wo, egw_letterofacceptance loa, egw_detailedestimate de, egw_letterofacceptanceestimate loae left join egw_contractorbill cb on cb.letterofacceptanceestimate=loae.id left join egf_billregister br on cb.billnumber=br.billnumber and br.billtype='contractorbill' where wo.letterofacceptance=loa.id and wo.letterofacceptance=loae.letterofacceptance and loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber
 
-
+- reportName: ProjectStatusReport
+  summary: Project Status Report
+  version: 1.0.0
+  moduleName: works
+  externalService:
+  - entity: $.MdmsRes.tenant.tenants[*].city
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_search
+    keyOrder: name,districtName, regionName
+    tableName: tbl_tenant
+    postObject: $RequestInfo,"MdmsCriteria":{"tenantId":"default","moduleDetails":[{"moduleName":"tenant","masterDetails":[{"name":"tenants","filter":"[?(@.code=='$tenantid')]"}]}]}
+    stateData: true
+  - entity: $.MdmsRes.works.Scheme
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=Scheme&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%29%5D
+    keyOrder: name,code
+    tableName: tbl_scheme
+    stateData: true
+  - entity: $.MdmsRes.works.TypeOfWork
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D
+    keyOrder: name,code,description,tenantId
+    tableName: tbl_typeofwork
+    stateData: true
+  - entity: $.MdmsRes.works.TypeOfWork
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
+    keyOrder: name,code,description,tenantId
+    tableName: tbl_subtypeofwork
+    stateData: true
+  sourceColumns:
+  - name: divisionname
+    label: reports.works.divisionname
+    type: string
+    source: works
+  - name: districtname
+    label: reports.works.districtname
+    type: string
+    source: works
+  - name: ulbname
+    label: reports.works.ulbname
+    type: string
+    source: works
+  - name: typeofwork
+    label: reports.works.typeofwork
+    type: string
+    source: works
+  - name: subtypeofwork
+    label: reports.works.subtypeofwork
+    type: string
+    source: works
+  - name: schemename
+    label: reports.works.schemename
+    type: string
+    source: works
+  - name: estimatenumber
+    label: reports.works.estimatenumber
+    type: string
+    source: works
+  - name: nameofwork
+    label: reports.works.nameofwork
+    type: string
+    source: works
+  - name: estimateamount
+    label: reports.works.estimateamount
+    type: number
+    source: works
+  - name: sanctionedamount
+    label: reports.works.sanctionedamount
+    type: number
+    source: works
+  - name: workstatus
+    label: reports.works.workstatus
+    type: string
+    source: works
+  - name: billsreceivedtill
+    label: reports.works.billsreceivedtill
+    type: string
+    source: works
+  - name: paymentdonetill
+    label: reports.works.paymentdonetill
+    type: number
+    source: works
+  searchParams:
+  - name: division
+    label: reports.works.division
+    isMandatory: false
+    type: string
+    source: works
+    stateData: true
+    searchClause : AND de.fund in ($fund)
+  - name: district
+    label: reports.works.district
+    isMandatory: false
+    type: string
+    source: works
+    stateData: true
+    searchClause : AND de.workstype in ($typeofwork)
+  - name: ulb
+    label: reports.works.ulb
+    isMandatory: false
+    type: multivaluelist
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants|MdmsRes.tenant.tenants.code%2A.code%7C%24.MdmsRes.tenant.tenants.name
+    source: works
+    stateData: true
+    searchClause : AND de.workssubtype in ($subtypeofwork)
+  - name: statusason
+    label: reports.works.statusason
+    type: string
+    source: works
+    searchClause : AND de.status=$statusason
+    isMandatory: false
+  - name: typeOfWork
+    label: reports.works.typeOfWork
+    type: singlevaluelist
+    source: works
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    searchClause : AND de.workstype=$typeOfWork
+    isMandatory: false
+  - name: subTypeOfWork
+    label: reports.works.subtypeofwork
+    type: singlevaluelist
+    source: works
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    searchClause : AND de.workssubtype=$subTypeOfWork
+    isMandatory: false
+  - name: statusason
+    label: reports.works.statusason
+    type: string
+    source: works
+    searchClause : AND de.status=$statusason
+    isMandatory: false
+  query: select (select city.name from (values tbl_tenant) as city (name, districtName, regionName)) as divisionname, (select city.districtName from (values tbl_tenant) as city (name, districtName, regionName)) as districtname, (select name from (values tbl_tenant) as city (name, districtName, regionName)) as ulbname, (select tw.name from (values tbl_typeofwork) as tw (name,code,description,tenantId) where tw.code=de.workstype) as typeofwork, (select stw.name from (values tbl_subtypeofwork) as stw (name,code,description,tenantId) where stw.code=de.workssubtype) as subtypeofwork, (select scheme.name from (values tbl_scheme) as scheme (name, code) where scheme.code=de.scheme) as schemename, de.estimatenumber, de.nameofwork, de.estimatevalue as estimateamount, loa.loaamount as sanctionedamount, (select sum(bg.billamount) from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and cb.deleted=false and cb.letterofacceptanceestimate=loae.id) as billsreceivedtill from egw_letterofacceptance loa, egw_detailedestimate de, egw_letterofacceptanceestimate loae left join egw_contractorbill cb on cb.letterofacceptanceestimate=loae.id left join egf_billregister br on cb.billnumber=br.billnumber and br.billtype='contractorbill' where loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber

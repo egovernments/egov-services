@@ -25,7 +25,7 @@
             "code": "{{collectionPoints1code}}"
           },
           "distance": "randomInt()",
-          "garbageEstimate": 10,
+          "garbageEstimate": "{{randomInt(2)}}",
           "isStartingCollectionPoint": true,
           "isEndingCollectionPoint": false
         },

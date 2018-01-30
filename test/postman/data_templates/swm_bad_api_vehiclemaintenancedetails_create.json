@@ -18,9 +18,9 @@
       "isScheduled": false,
       "maintenanceType": "MAINTENANCE",
       "vehicle": {
-        "regNumber": "{{regNumber}}"
+        "regNumber": "REGNO-{{$GUIDWD(15)}}"
       },
-      "actualMaintenanceDate": 1510371526000,
+      "actualMaintenanceDate":"{{$TS-3month}}",
       "vehicleScheduledMaintenanceDate": null,
       "vehicleDowntimeActual": "{{$randomInt(2,3)}}",
       "vehicleDownTimeActualUom": "days",

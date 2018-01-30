@@ -24,10 +24,10 @@
       "route": {
         "code": "{{routeCode}}"
       },
-      "tripStartDate": 1234567890,
-      "tripEndDate": 1234567890,
-      "inTime": 1234567890,
-      "outTime": 1234567890,
+      "tripStartDate": "{{$TSS}}",
+      "tripEndDate": "{{$TSS}}",
+      "inTime": "{{$TSS}}",
+      "outTime": "{{$TSS}}",
       "entryWeight": "{{$randomDigits(2)}}",
       "exitWeight": "{{$randomDigits(2)}}"
     }

@@ -15,8 +15,8 @@
   "vehicleSchedules": [
     {
       "tenantId": "{{tenantId}}",
-      "scheduledFrom": "{{today}}",
-      "scheduledTo": "{{today}}",
+      "scheduledFrom": "{{$TS}}",
+      "scheduledTo": "{{$TS}}",
       "route": {
         "code": "{{routeCode}}"
       },

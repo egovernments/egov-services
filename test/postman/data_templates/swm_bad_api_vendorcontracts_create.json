@@ -18,13 +18,14 @@
       "vendor": {
         "vendorNo": "{{vendorNo}}"
       },
-      "contractDate": 1513509547,
-      "contractPeriodFrom": "1513595947",
-      "contractPeriodTo": "1514719147",
-      "securityDeposit": 10,
+      "contractDate": "{{$TS-1month}}",
+      "contractPeriodFrom":  "{{$TS-1month}}",
+      "contractPeriodTo":  "{{$TS+11month}}",
+      "securityDeposit": "{{$randomDigits(2)}}",
       "paymentTerms": {
         "label": "label"
       },
+      
       "paymentAmount": "paymentAmount {{$randomDigits(5)}}",
       "remarks": "{{$randomInt(15,100)}}"
     }

@@ -27,8 +27,8 @@
       "employee": {
         "code": "Driver3"
       },
-      "targetFrom": "{{todayDate}}",
-      "targetTo": 1578723633000,
+      "targetFrom": "{{$TS}}",
+      "targetTo":  "{{$TS(+2year)}}",
       "targetedGarbage": "{{$randomInt(10,100)}}",
       "wetWaste": "{{$randomInt(10,100)}}",
       "dryWaste": "{{$randomInt(10,100)}}",

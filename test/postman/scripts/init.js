@@ -65,9 +65,10 @@ if (!pm.variables.has("__postman_started")) {
         //     pm.globals.set('postman-bdd', res);
         // })
         console.log("Loading global scripts")
+        var initTimeout = setTimeout(() => {}, 3000)
         eval(loader_script)
         console.log("Running init scripts")
-        init().then(beforeRequest)
+        init().then(beforeRequest).then(()=> {clearTimeout(initTimeout)})
     });
 
 } else {

@@ -1,56 +1,55 @@
 {
-    "requestInfo":
-        {
-            "action": "create",
-            "did": "",
-            "msgId": null,
-            "authToken": "{{access_token}}",
-            "apiId": null,
-            "ver": null,
-            "ts": "",
-            "key": null,
-            "userInfo": {
-                "id": 1
-            }
-        },
-    "vendors": [
-        {
-            "tenantId": "default",
-            "name": "Ve",
-            "registrationNo": "Registration {{$GUIDWD}}",
-            "details": "DETAILS-{{$GUIDWD}}",
-            "servicedLocations":
-                [
-                    {
-                        "code": "3"
-                    },
-                    {
-                        "code": "5"
-                    }
-                ],
-            "supplier": {
-                "email": "abc@xyz.com",
-                "tinNumber": "contractor tinNumber",
-                "gst": "GST {{$GUIDWD(8)}}",
-                "mobileNo": "0000000000",
-                "contactNo": "1111111111",
-                "faxNumber": "2222222222",
-                "address": "contractor address",
-                "registrationNo": "Reg No 1",
-                "supplierNo": "something",
-                "name": "supplier name",
-                "agencyName": "supplier agency"
-            },
-            "agreementDocument": {
-                "fileStoreId": "fileStoreId"
-
-            },
-            "servicesOffered":
-                [
-                    {
-                        "code": "Process 2"
-                    }
-                ]
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 1
+    }
+  },
+  "vehicles": [
+    {
+      "tenantId": "{{tenantId}}",
+      "regNumber": "REGNO-{{$GUIDWD(15)}}",
+      "driver": {
+        "code": "Driver3"
+      },
+      "vehicleType": {
+        "code": "{{vehicleType}}"
+      },
+      "purchaseInfo": {
+        "purchaseDate": "{{$TS(-1month)}}",
+        "price": "{{$randomDigits(4)}}",
+        "sourceOfPurchase": "sourceOfPurchase"
+      },
+      "fuelType": {
+        "code": "{{FuelType}}"
+      },
+      "operatorsReq": 10,
+      "vendor": {
+        "vendorNo": "{{vendorNo}}"
+      },
+      "manufacturingDetails": {
+        "engineSrNumber": "{{$GUIDWD}}",
+        "chassisSrNumber":"{{$randomInt(1,128)}}",
+        "model": "model",
+        "vehicleCapacity": 100
+      },
+      "insuranceDetails": {
+        "insuranceNumber": "{{$randomInt(1,128)}}",
+        "insuranceValidityDate": "{{$TS(+11month)}}",
+        "insuranceDocument": {
+          "fileStoreId": "fileStoreId"
         }
-    ]
+      },
+      "kilometers": 100,
+      "endOfWarranty": "{{$TS(+11month)}}",
+      "remarks": "remarks"
+    }
+  ]
 }

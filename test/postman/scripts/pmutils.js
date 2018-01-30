@@ -125,12 +125,12 @@ if (typeof PMUtil === "undefined") {
         this.rand = {
             // Generate time including milliseconds
             $TS: function(delta) {
-                return this.$TIME(delta, "epochms")
+                return parseFloat(this.$TIME(delta, "epochms"))
             },
 
             // Generate time without milliseconds
             $TSS: function(delta) {
-                return this.$TIME(delta, "epoch")
+                return parseFloat(this.$TIME(delta, "epoch"))
             },
 
             $TIME: function(delta, format) {
@@ -204,6 +204,7 @@ if (typeof PMUtil === "undefined") {
         }
 
         this.resolveParams = (v, resolvePMVariables) => {
+            let originalValue = v
             resolvePMVariables = resolvePMVariables || false;
             let paramPattern;
             if (resolvePMVariables) {
@@ -240,6 +241,10 @@ if (typeof PMUtil === "undefined") {
                     }
                 }
             } while (m)
+            
+            if (/\$TS/.test(originalValue))
+                return parseFloat(v);
+
             return v;
         }
         this.deepCloneObject = (obj) => JSON.parse(JSON.stringify(obj))
@@ -261,6 +266,7 @@ if (typeof PMUtil === "undefined") {
                 for (let op in operations){
                     let json_path = operations[op]["json_path"]
                     let value = operations[op]["value"];
+                    console.log("Performing - " + json_path + " - " + value)
 
                     if (value == "##delete##")
                         this.remove(data, json_path)
@@ -351,7 +357,7 @@ if (typeof PMUtil === "undefined") {
             }
         }
 
-        this.loadPostBody = (template) => this.setPostBody(this.getPostBody(template))
+        this.loadPostBody = (template, pm) => this.setPostBody(this.getPostBody(template), pm)
 
         this.setPostBody = (postBody, pm) => {
             console.log("Setting the postBody using pmutil")

@@ -4,7 +4,7 @@ output_folder: ./swm/
 
 apis:
   /vendors/_create:
-    ignorefields: ["agreementDocument"]
+    ignorefields: ["agreementDocument","agreementDocument"]
     reference:
       servicedLocations:
       servicesOffered:
@@ -12,16 +12,17 @@ apis:
       vendorNo:
 
   /vehicles/_create:
-    ignorefields: ["vehicleType"]
+    ignorefields: ["vehicleType","insuranceDocument"]
     reference:
       vehicleType:
       fuelType:
       driver:
       vendor:
     generated:
-      regNumber
+      regNumber:
 
   /collectionpoints/_create:
+    ignorefields: ["columns"]
     reference:
       location:
       collectionType:
@@ -73,6 +74,7 @@ apis:
       vehicle:
         
   /vendorpaymentdetails/_create:
+    ignorefields: ["documents"]
     reference:
       vendorContract:
       documents:
@@ -92,6 +94,7 @@ apis:
       collectionPoints:
 
   /vehiclefuellingdetails/_create:
+    ignorefields: ["receiptCopy"]
     reference:
       vehicle:
       refuellingStation:

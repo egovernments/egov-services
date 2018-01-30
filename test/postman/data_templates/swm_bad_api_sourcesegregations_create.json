@@ -21,7 +21,7 @@
       "dumpingGround": {
         "code": "{{DumpingGround}}"
       },
-      "sourceSegregationDate": 1234567890,
+      "sourceSegregationDate": "{{$TS(+18year)}}",
       "collectionDetails": [
         {
           "collectionType": {

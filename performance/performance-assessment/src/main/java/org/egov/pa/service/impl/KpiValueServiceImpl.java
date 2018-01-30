@@ -86,11 +86,12 @@ public class KpiValueServiceImpl implements KpiValueService {
 	private void kpiValueDetailListUpdate(KPIValueRequest kpiValueRequest) {
 		List<ValueResponse> valueResponseList = kpiValueRequest.getKpiValues();
 		for (ValueResponse vr : valueResponseList) {
+			Long currentTime = new Date().getTime(); 
 			for (KpiValueDetail detail : vr.getKpiValue().getValueList()) {
 				detail.setValueid(vr.getKpiValue().getId());
 				detail.setKpiCode(vr.getKpiValue().getKpiCode());
 				detail.setCreatedBy(kpiValueRequest.getRequestInfo().getUserInfo().getId());
-				detail.setCreatedTime(new Date().getTime());
+				detail.setCreatedTime(currentTime);
 			}
 		}
 	}

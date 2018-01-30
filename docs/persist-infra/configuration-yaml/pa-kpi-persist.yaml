@@ -272,7 +272,7 @@ serviceMaps:
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG  
          
-       - jsonPath: $.kpiValues.*.auditDetails.createdTime
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.createdTime
          type: LONG
          
     - query: INSERT INTO egpa_kpi_value_documents (id, kpicode, valueid, documentcode, filestoreid, createdby) values (nextval('seq_egpa_kpi_value_documents'), ?, ?, ?, ?, ?)   

@@ -521,7 +521,8 @@ public class EstimateValidator {
                 if(detailedEstimate.getEstimateOverheads() != null && !detailedEstimate.getEstimateOverheads().isEmpty())
                     validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
-                validateUpdateStatus(detailedEstimate, requestInfo, messages);
+                if(!detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED))
+                   validateUpdateStatus(detailedEstimate, requestInfo, messages);
                 if(detailedEstimate.getDetailedEstimateDeductions() != null && !detailedEstimate.getDetailedEstimateDeductions().isEmpty())
                     validateDeductions(detailedEstimate, requestInfo, messages);
 

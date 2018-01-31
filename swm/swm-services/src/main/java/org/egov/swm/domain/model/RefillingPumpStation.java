@@ -6,6 +6,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -21,12 +23,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RefillingPumpStation {
 
-    @Size(min = 1, max = 256, message = "Value of code shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of code shall be between 1 and 128")
     @JsonProperty("code")
     private String code = null;
 
     @NotNull
-    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -35,7 +37,7 @@ public class RefillingPumpStation {
     private Boundary location = null;
 
     @NotNull
-    @Size(min = 1, max = 256, message = "Value of name shall be between 1 and 256")
+    @Length(min = 1, max = 256, message = "Value of name shall be between 1 and 256")
     @JsonProperty("name")
     private String name = null;
 
@@ -43,7 +45,7 @@ public class RefillingPumpStation {
     @JsonProperty("typeOfPump")
     private OilCompany typeOfPump = null;
 
-    @Size(min = 0, max = 300, message = "Value of remarks shall be between 1 and 128")
+    @Length(min = 0, max = 300, message = "Value of remarks shall be between 0 and 300")
     @JsonProperty("remarks")
     private String remarks = null;
 

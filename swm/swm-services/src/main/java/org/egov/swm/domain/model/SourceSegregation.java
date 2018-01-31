@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,12 +23,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SourceSegregation {
 
-    @Size(min = 1, max = 256, message = "Value of code shall be between 1 and 256")
+    @Length(min = 1, max = 256, message = "Value of code shall be between 1 and 256")
     @JsonProperty("code")
     private String code = null;
 
     @NotNull
-    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 

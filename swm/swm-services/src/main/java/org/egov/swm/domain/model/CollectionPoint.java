@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -32,7 +31,7 @@ public class CollectionPoint {
     private String tenantId = null;
 
     @NotNull
-    @Size(min = 1, max = 128, message = "Value of name shall be between 1 and 128")
+    @Length(min = 1, max = 128, message = "Value of name shall be between 1 and 128")
     @JsonProperty("name")
     private String name = null;
 

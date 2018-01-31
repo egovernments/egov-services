@@ -32,7 +32,7 @@ public class VendorContract {
     @JsonProperty("vendor")
     private Vendor vendor = null;
 
-    @Size(min = 6, max = 128, message = "Value of contractNo shall be between 6 and 128")
+    @Length(min = 6, max = 128, message = "Value of contractNo shall be between 6 and 128")
     @JsonProperty("contractNo")
     private String contractNo = null;
 

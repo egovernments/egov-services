@@ -1,7 +1,8 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PumpStationFuelTypes {
 
-    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -27,7 +28,7 @@ public class PumpStationFuelTypes {
     private String pumpStation = null;
 
     @NotNull
-    @Size(min = 1, max = 256, message = "Value of fuelType shall be between 1 and 256")
+    @Length(min = 1, max = 256, message = "Value of fuelType shall be between 1 and 256")
     @JsonProperty("fuelType")
     private String fuelType = null;
 

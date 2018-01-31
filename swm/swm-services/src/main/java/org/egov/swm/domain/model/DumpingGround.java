@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -37,7 +36,7 @@ public class DumpingGround {
     private String name;
 
     @JsonProperty("ulbs")
-    @Size(min = 1)
+    @Length(min = 1)
     @NotNull
     private List<Tenant> ulbs = new ArrayList<>();
 

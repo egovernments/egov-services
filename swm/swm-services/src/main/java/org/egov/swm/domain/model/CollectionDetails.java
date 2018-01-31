@@ -4,7 +4,8 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,11 +22,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionDetails {
 
-    @Size(min = 1, max = 256, message = "Value of id shall be between 1 and 256")
+    @Length(min = 1, max = 256, message = "Value of id shall be between 1 and 256")
     @JsonProperty("id")
     private String id = null;
 
-    @Size(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 

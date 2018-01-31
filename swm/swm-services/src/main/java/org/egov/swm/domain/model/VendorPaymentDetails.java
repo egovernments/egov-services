@@ -5,7 +5,6 @@ import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.egov.swm.web.contract.Employee;
 import org.hibernate.validator.constraints.Length;
@@ -26,7 +25,7 @@ import lombok.Setter;
 public class VendorPaymentDetails {
 
     @NotNull
-    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId;
 
@@ -47,7 +46,7 @@ public class VendorPaymentDetails {
     private List<Document> documents;
 
     @NotNull
-    @Size(min = 1, max = 256, message = "Value of invoiceNo shall be between 1 and 256")
+    @Length(min = 1, max = 256, message = "Value of invoiceNo shall be between 1 and 256")
     @JsonProperty("invoiceNo")
     private String invoiceNo;
 

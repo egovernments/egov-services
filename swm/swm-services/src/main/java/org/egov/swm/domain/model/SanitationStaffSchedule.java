@@ -1,7 +1,8 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,11 +20,11 @@ import lombok.Setter;
 public class SanitationStaffSchedule {
 
     @NotNull
-    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
-    @Size(min = 0, max = 256, message = "Value of transactionNo shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of transactionNo shall be between 1 and 256")
     @JsonProperty("transactionNo")
     private String transactionNo = null;
 

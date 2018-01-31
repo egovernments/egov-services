@@ -1,7 +1,8 @@
 package org.egov.swm.web.contract;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,13 +16,13 @@ public class Department {
 
     @NotNull
 
-    @Size(min = 1, max = 64)
+    @Length(min = 1, max = 64)
     @JsonProperty("name")
     private String name = null;
 
     @NotNull
 
-    @Size(min = 1, max = 10)
+    @Length(min = 1, max = 10)
     @JsonProperty("code")
     private String code = null;
 
@@ -30,7 +31,7 @@ public class Department {
     private Boolean active = null;
 
     @NotNull
-    @Size(min = 1, max = 128)
+    @Length(min = 1, max = 128)
     @JsonProperty("tenantId")
     private String tenantId = null;
 

@@ -1,7 +1,8 @@
 package org.egov.swm.domain.model;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,7 +23,7 @@ public class PaymentTerms {
     private Long noOfDays = null;
 
     @NotNull
-    @Size(min = 1, max = 20, message = "Value of label shall be between 1 and 20")
+    @Length(min = 1, max = 20, message = "Value of label shall be between 1 and 20")
     @JsonProperty("label")
     private String label = null;
 

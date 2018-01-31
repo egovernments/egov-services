@@ -1,8 +1,11 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 
 import org.egov.swm.domain.enums.MaintenanceType;
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,12 +21,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleMaintenanceDetails {
-    @Size(min = 1, max = 256, message = "Value of code shall be between 1 and 256")
+    @Length(min = 1, max = 256, message = "Value of code shall be between 1 and 256")
     @JsonProperty("code")
     private String code = null;
 
     @NotNull
-    @Size(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -61,7 +64,7 @@ public class VehicleMaintenanceDetails {
     private Double vehicleReadingDuringMaintenance = null;
 
     @JsonProperty("remarks")
-    @Size(min = 0, max = 300, message = "Value of remarks shall be between 0 and 300")
+    @Length(min = 0, max = 300, message = "Value of remarks shall be between 0 and 300")
     private String remarks = null;
 
     @NotNull

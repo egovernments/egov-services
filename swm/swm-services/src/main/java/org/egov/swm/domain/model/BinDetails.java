@@ -2,7 +2,6 @@ package org.egov.swm.domain.model;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -39,7 +38,7 @@ public class BinDetails {
     @JsonProperty("rfidAssigned")
     private Boolean rfidAssigned = null;
 
-    @Size(min = 0, max = 256, message = "Value of rfid shall be between 0 and 256")
+    @Length(min = 0, max = 256, message = "Value of rfid shall be between 0 and 256")
     @JsonProperty("rfid")
     private String rfid = null;
 

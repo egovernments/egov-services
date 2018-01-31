@@ -204,13 +204,13 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 				}
 			}
 		}
-		/*if (getTargets) {
+		if (getTargets) {
 			mapTargetToKpi(mapper.kpiTargetMap, kpiList);
-		}*/
+		}
 		return kpiList;
 	}
 	
-	/*private void mapTargetToKpi(Map<String, List<KpiTarget>> map, List<KPI> kpiList){
+	private void mapTargetToKpi(Map<String, List<KpiTarget>> map, List<KPI> kpiList){
 		for(KPI kpi : kpiList) { 
 			List<KpiTarget> targetList = map.get(kpi.getCode());
 			if(null != targetList && targetList.size() > 0) { 
@@ -218,7 +218,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 			}
 			
 		}
-	}*/
+	}
 	
 	private List<Document> getDocumentListForKpi(List<String> kpiCode) {
 		String query = queryBuilder.getDocumentForKpi(); 

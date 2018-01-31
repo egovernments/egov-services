@@ -67,7 +67,7 @@ public class PerformanceAssessmentRowMapper {
 
 	public class KPIMasterRowMapper implements RowMapper<KPI> {
 		public Map<String, KPI> kpiMap = new HashMap<>(); 
-		/*public Map<String, KpiTarget> kpiTargetMap = new HashMap<>();*/
+		public Map<String, List<KpiTarget>> kpiTargetMap = new HashMap<>();
 
 		@Override
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -84,15 +84,17 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setTargetType(rs.getString("targetType"));
 				kpi.setAuditDetails(addAuditDetails(rs));
 				kpi.setCategoryId(rs.getString("categoryId"));
-				List<KpiTarget> targetList = new ArrayList<>(); 
-				targetList.add(constructKpiTargetObject(rs));
-				kpi.setKpiTargets(targetList);
-				kpiMap.put(rs.getString("code").concat("_"+rs.getString("targetFinYear")), kpi); 
+				kpiMap.put(rs.getString("code"), kpi); 
 			}
 			
-			/*if(!kpiTargetMap.containsKey(rs.getString("code").concat("_"+rs.getString("targetFinYear")))) { 
-				kpiTargetMap.put(rs.getString("code").concat("_"+rs.getString("targetFinYear")), constructKpiTargetObject(rs)); 
-			} */
+			if(!kpiTargetMap.containsKey(rs.getString("code"))) { 
+				List<KpiTarget> targetList = new ArrayList<>(); 
+				targetList.add(constructKpiTargetObject(rs));
+				kpiTargetMap.put(rs.getString("code"), targetList); 
+			} else { 
+				List<KpiTarget> targetList = kpiTargetMap.get(rs.getString("code")); 
+				targetList.add(constructKpiTargetObject(rs));
+			}
 			return null;
 		}
 		

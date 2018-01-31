@@ -220,6 +220,14 @@ public class AbstractEstimateService {
                 }
             }
 
+            UserInfo userInfo = abstractEstimateRequest.getRequestInfo().getUserInfo();
+            if(!estimate.getSpillOverFlag() && estimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_FINANCIAL_SANCTIONED)) {
+                estimate.setAdminSanctionDate(new Date().getTime());
+                User user = new User();
+                user.setUserName(userInfo.getUserName());
+                estimate.setAdminSanctionBy(user);
+            }
+
             if (estimate.getStatus().getCode()
                     .equalsIgnoreCase(CommonConstants.STATUS_CANCELLED)) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {

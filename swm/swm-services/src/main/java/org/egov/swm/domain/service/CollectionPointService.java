@@ -217,7 +217,7 @@ public class CollectionPointService {
 
                     if (assetOrBinIdsMap.get(bd.getAsset().getCode()) != null)
                         throw new CustomException("BinId",
-                                "Duplicate BinIds in given Bin details: " + bd.getAsset().getCode());
+                                "Duplicate bin/asset's in given Bin details: " + bd.getAsset().getCode());
 
                     assetOrBinIdsMap.put(bd.getAsset().getCode(), bd.getAsset().getCode());
 
@@ -250,9 +250,8 @@ public class CollectionPointService {
             if (bd.getAsset() != null && bd.getAsset().getCode() != null)
                 if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "asset",
                         bd.getAsset().getCode(), "collectionPoint", collectionPoint.getCode()))
-                    throw new CustomException("BinId", "The field BinId must be unique in the system The  value "
-                            + bd.getAsset().getCode()
-                            + " for the field BinId already exists in the system. Please provide different value ");
+                    throw new CustomException("BinId",
+                            "The selected bin/asset is already associated with another collection point");
 
             if (bd.getRfidAssigned() != null && bd.getRfidAssigned())
                 if (bd.getRfid() == null || bd.getRfid().isEmpty())

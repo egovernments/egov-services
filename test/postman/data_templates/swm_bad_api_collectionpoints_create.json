@@ -21,11 +21,11 @@
       },
       "binDetails": [
         {
-          "assetOrBinId": "Bin {{$randomDigits(10)}}",
+          "asset": {
+                "code":"fixed"
+          },
           "rfidAssigned": true,
-          "rfid": "RFID {{$randomDigits(5)}}",
-          "latitude": null,
-          "longitude": null
+          "rfid": "RFID {{$randomDigits(5)}}"
         }
       ],
       "collectionPointDetails": [

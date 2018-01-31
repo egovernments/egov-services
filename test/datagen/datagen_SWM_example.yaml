@@ -22,10 +22,11 @@ apis:
       regNumber:
 
   /collectionpoints/_create:
-    ignorefields: ["columns"]
+    ignorefields: ["columns" , "asset"]
     reference:
       location:
       collectionType:
+      asset:
 
   
   /sourcesegregations/_create:

@@ -15,7 +15,7 @@
  "vehicleFuellingDetails": [
    {
      "tenantId": "{{tenantId}}",
-     "transactionDate": "{{$TS(-3month)}}",
+     "transactionDate": "{{$TSD(-3month)}}",
      "vehicle": {
        "regNumber": "{{regNumber}}"
      },
@@ -26,7 +26,7 @@
      "fuelFilled": 99,
      "totalCostIncurred": 10000,
      "receiptNo": "MH-SWM-REN-{{$randomString(8)}}",
-     "receiptDate": "{{$TS(-3month)}}",
+     "receiptDate": "{{$TSD(-3month )}}",
      "receiptCopy": {
        "fileStoreId": "fileStoreId"
      }

@@ -41,7 +41,7 @@
         "vehicleCapacity": 100
       },
       "insuranceDetails": {
-        "insuranceNumber": "{{$randomInt(1,128)}}",
+        "insuranceNumber": "{{$GUIDWD}}",
         "insuranceValidityDate": "{{$TS(+11month)}}",
         "insuranceDocument": {
           "fileStoreId": "fileStoreId"

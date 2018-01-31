@@ -134,14 +134,20 @@ if (typeof PMUtil === "undefined") {
                 return parseFloat(this.$TIME(delta, "epochms"))
             },
 
+            // Generate date including milliseconds with time set to zero
+            $TSD: function(delta) {
+                return parseFloat(this.$TIME(delta, "epochms", moment().startOf('day')))
+            },
+
             // Generate time without milliseconds
             $TSS: function(delta) {
                 return parseFloat(this.$TIME(delta, "epoch"))
             },
 
-            $TIME: function(delta, format) {
+            $TIME: function(delta, format, initial) {
+                initial = initial || moment()
                 format = format || "HH:mm:ss"
-                let date = moment_applyDelta(moment(), delta)
+                let date = moment_applyDelta(initial, delta)
                 if (format === "epoch"){
                     return date.unix()
                 } else if (format == "epochms") {

@@ -1,3 +1,4 @@
+*.log
 .idea/
 *.lock
 package-lock.json

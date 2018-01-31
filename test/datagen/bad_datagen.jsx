@@ -151,7 +151,7 @@ SwaggerParser.dereference(contract_url)
                             minimum: param.minimum,
                             maximum: param.maximum,
                             expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,
-                            operations: [{json_path: path, value: param.maximum - 1}],
+                            operations: [{json_path: path, value: param.minimum - 1}],
                             // value: param.minimum - 1
                         }));
                         break;

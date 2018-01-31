@@ -186,22 +186,25 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
             routeCollectionPoints = new ArrayList<>();
             selectedCollectionPointMap = new HashMap<String, CollectionPoint>();
-            for (CollectionPoint scp : sst.getCollectionPoints()) {
-                selectedCollectionPointMap.put(scp.getCode(), scp);
-            }
-            for (RouteCollectionPointMap rcpm : sst.getRoute().getCollectionPoints()) {
+            if (sst.getCollectionPoints() != null) {
 
-                if (rcpm.getCollectionPoint() != null) {
-                    cp = rcpm.getCollectionPoint();
-                    if (selectedCollectionPointMap.get(cp.getCode()) == null)
-                        cp.setIsSelected(false);
-                    else {
-                        cp.setIsSelected(true);
-                    }
-                    routeCollectionPoints.add(cp);
+                for (CollectionPoint scp : sst.getCollectionPoints()) {
+                    selectedCollectionPointMap.put(scp.getCode(), scp);
                 }
+                for (RouteCollectionPointMap rcpm : sst.getRoute().getCollectionPoints()) {
+
+                    if (rcpm.getCollectionPoint() != null) {
+                        cp = rcpm.getCollectionPoint();
+                        if (selectedCollectionPointMap.get(cp.getCode()) == null)
+                            cp.setIsSelected(false);
+                        else {
+                            cp.setIsSelected(true);
+                        }
+                        routeCollectionPoints.add(cp);
+                    }
+                }
+                sst.setCollectionPoints(routeCollectionPoints);
             }
-            sst.setCollectionPoints(routeCollectionPoints);
         }
 
     }

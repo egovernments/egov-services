@@ -186,7 +186,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
             routeCollectionPoints = new ArrayList<>();
             selectedCollectionPointMap = new HashMap<String, CollectionPoint>();
-            if (sst.getCollectionPoints() != null) {
+            if (sst.getCollectionPoints() != null && sst.getRoute() != null && sst.getRoute().getCollectionPoints() != null) {
 
                 for (CollectionPoint scp : sst.getCollectionPoints()) {
                     selectedCollectionPointMap.put(scp.getCode(), scp);

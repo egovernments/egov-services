@@ -208,7 +208,7 @@ ReportDefinitions:
   moduleName: works
   externalService:
   - entity: $.MdmsRes.works.TypeOfWork
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
     keyOrder: name,code,description,tenantId
     tableName: tbl_typeofwork
     stateData: true
@@ -244,10 +244,10 @@ ReportDefinitions:
     source: works
   searchParams:
   - name: typeOfWork
-    label: reports.works.typeOfWork
+    label: reports.works.typeofwork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$..code|$..name
     wrapper: true
     stateData: true
     searchClause : AND de.workstype=$typeOfWork
@@ -435,7 +435,7 @@ ReportDefinitions:
     tableName: tbl_scheme
     stateData: true
   - entity: $.MdmsRes.works.TypeOfWork
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%29%5D
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D
     keyOrder: name,code,description,tenantId
     tableName: tbl_typeofwork
     stateData: true
@@ -500,24 +500,29 @@ ReportDefinitions:
   searchParams:
   - name: division
     label: reports.works.division
-    isMandatory: false
-    type: string
+    type: singlevaluelist
     source: works
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants[*].city.regionName|$.MdmsRes.tenant.tenants[*].city.regionName
+    wrapper: true
     stateData: true
-    searchClause : AND de.fund in ($fund)
+    searchClause : AND de.workstype=$typeOfWork
+    isMandatory: false
   - name: district
     label: reports.works.district
     isMandatory: false
     type: string
     source: works
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants[*].city.districtName|$.MdmsRes.tenant.tenants[*].city.districtName
+    wrapper: true
     stateData: true
     searchClause : AND de.workstype in ($typeofwork)
   - name: ulb
     label: reports.works.ulbname
     isMandatory: false
     type: multivaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants|MdmsRes.tenant.tenants.code%2A.code%7C%24.MdmsRes.tenant.tenants.name
     source: works
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants[*].code|$.MdmsRes.tenant.tenants[*].name
+    wrapper: true
     stateData: true
     searchClause : AND de.workssubtype in ($subtypeofwork)
   - name: statusason
@@ -527,17 +532,21 @@ ReportDefinitions:
     searchClause : AND de.status=$statusason
     isMandatory: false
   - name: typeOfWork
-    label: reports.works.typeOfWork
+    label: reports.works.typeofwork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$..code|$..name
+    wrapper: true
+    stateData: true
     searchClause : AND de.workstype=$typeOfWork
     isMandatory: false
   - name: subTypeOfWork
     label: reports.works.subtypeofwork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3D%7BtypeOfWork%7D%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$..code|$..name
+    wrapper: true
+    stateData: true
     searchClause : AND de.workssubtype=$subTypeOfWork
     isMandatory: false
   - name: statusason

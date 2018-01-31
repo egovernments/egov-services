@@ -321,7 +321,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 							MaterialIssueEntity issueEntityfromDb = (MaterialIssueEntity) issueEntity;
 							if (issueEntityfromDb != null) {
 								if (materialIssue.getIssueType() != null) {
-									if (!issueEntityfromDb.getIssueType().equals(materialIssue.getIssueType()))
+									if (!issueEntityfromDb.getIssueType().equals(materialIssue.getIssueType().name()))
 										errors.addDataError(ErrorCode.NOT_ALLOWED_TO_UPDATE.getCode(), "issueType",
 												"MaterialIssue");
 								}
@@ -341,6 +341,7 @@ public class NonIndentMaterialIssueService extends DomainService {
 									errors.addDataError(ErrorCode.NOT_ALLOWED_TO_UPDATE.getCode(), "issuePurpose",
 											"MaterialIssue");
 							}
+				
 						}
 					
 					if (!materialIssue.getMaterialIssueDetails().isEmpty()) {

@@ -1,0 +1,149 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Disposal",
+		"_postman_id": "a180b7b4-533e-f80d-c601-0b7e61e4f802",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/disposals/_create?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/disposals/_create?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"disposals",
+								"_create"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"e7c906ef-a141-4be1-8889-de56032baa82\",\n    \"userInfo\":{\n    \t\"id\":\"1\",\n    \t\"tenantId\":\"default\",\n    \t\"userName\":\"mansi\"\n    }\n\n  },\n  \"disposals\":[{\n  \t\n    \"disposalStatus\":\"CREATED\",\n  \t\"tenantId\":\"default\",\n  \t\"store\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"disposalDate\":\"1515400824\",\n    \"handOverTo\":\"mansi\",\n    \"auctionNumber\":\"auctionNum\",\n    \"description\":\"desc for disposal\",\n    \"disposalDetails\":[{\n    \t\"tenantId\":\"default\",\n    \t\"scrapDetails\":{\n    \t\t\"id\":\"1\",\n    \t   \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"pensss\",\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         },\n           \"uom\":{\n           \"id\":\"1\",\n           \"code\":\"KGS\",\n           \"name\":\"dozens\"\n            }\n         \n         },\n    \"userDisposalQuantity\":\"0.05\",\n    \"disposalValue\":\"6\"\n    },\n    {\n    \t\"tenantId\":\"default\",\n    \t\"scrapDetails\":{\n    \t\t\"id\":\"2\",\n    \t   \"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT2\",\n           \"name\":\"pensss\",\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         },\n           \"uom\":{\n           \"id\":\"1\",\n           \"code\":\"GMS\",\n           \"name\":\"dozens\"\n            }\n         \n         },\n    \"userDisposalQuantity\":\"7000\",\n    \"disposalValue\":\"8\"\n    \n    }\n    \n  \t\n ] }\n ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "search",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:9900/inventory-service/stores/_update?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/disposals/_search?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"disposals",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"emp\",\n    \"ver\": \"1.0\",\n    \"ts\": \"12345677\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"rajesh\",\n    \"authToken\": \"6763e47e-ecac-4c21-8c3e-dd50f0d181a1\",\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "update",
+			"description": "",
+			"item": [
+				{
+					"name": "localhost:8080/inventory-services/disposals/_update?tenantId=default",
+					"request": {
+						"url": {
+							"raw": "localhost:8080/inventory-services/disposals/_update?tenantId=default",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"inventory-services",
+								"disposals",
+								"_update"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "default",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510290513893,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"e7c906ef-a141-4be1-8889-de56032baa82\",\n    \"userInfo\":{\n    \t\"id\":\"1\",\n    \t\"tenantId\":\"default\",\n    \t\"userName\":\"mansi\"\n    }\n\n  },\n  \"disposals\":[{\n  \t\"disposalNumber\":\"DISP-2018-6\",\n    \"disposalStatus\":\"APPROVED\",\n  \t\"tenantId\":\"default\",\n  \t\"store\":{\n      \"id\":\"1\",\n      \"code\":\"store123\",\n      \"name\":\"manyavars\",\n        \"description\":\"njdcfjdjc\",\n        \"billingAddress\":\"djsadjsadxj\",\n          \"department\":{\n        \"id\":\"1\",\n        \"name\":\"clothes\"\n      },\n      \"deliveryAddress\":\"jhvjdshjdsjc\",\n      \"storeInCharge\":{\n        \"code\":\"storeincharge1\"\n      },\n      \"tenantId\":\"default\"\n    },\n    \"disposalDate\":\"1515400824\",\n    \"handOverTo\":\"shipra\",\n    \"auctionNumber\":\"auctionNumber\",\n    \"description\":\"desc for disposal\",\n    \"disposalDetails\":[{\n    \t\"id\":\"7\",\n    \t\"tenantId\":\"default\",\n    \t\"material\":{\n           \"id\":\"1\",\n           \"tenantId\":\"default\",\n           \"code\":\"MAT1\",\n           \"name\":\"pensss\",\n           \"description\":\"stationary pen\",\n           \"reorderLevel\":\"2\",\n           \"materialType\":{\n             \"id\":\"1\",\n             \"name\":\"stationary\"\n           },\n           \"baseUom\":{\n             \"id\":\"1\"\n           },\n           \"minQuantity\":\"5\",\n           \"stockingUom\":{\n             \"id\":\"1\"\n           },\n           \"inventoryType\":\"Asset\",\n         \"materialClass\":\"MediumUsage\",\n           \"maxQuantity\":\"9\",\n           \"reorderQuantity\":\"56\",\n             \"purchaseUom\":{\n             \"id\":\"1\"\n           },\n             \"materialControlType\":\"LOTControl\"\n         \n         },\n           \"uom\":{\n           \"id\":\"1\",\n           \"code\":\"KGS\",\n           \"name\":\"dozens\"\n            },\n    \t\"scrapDetails\":{\n    \t   \"id\":\"1\"\n\n         \n         },\n    \"userDisposalQuantity\":\"0.06\",\n    \"disposalValue\":\"6\"\n    }\n    \n  \t\n ] }\n ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

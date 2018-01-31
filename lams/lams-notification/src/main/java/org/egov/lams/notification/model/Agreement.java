@@ -163,5 +163,6 @@ public class Agreement {
 	
 	private String oldAgreementNumber;
 	private String referenceNumber;
+	private String floorNumber;
 
 }

@@ -27,19 +27,9 @@ public class Constants {
     public static final String REFERENCETYPE_OBJECT = "ReferenceType";
     public static final String MODEOFALLOTMENT_OBJECT = "ModeOfAllotment";
     public static final String ABSTRACT_ESTIMATE_REQUIRED_APPCONFIG = "Abstract_Estimate_Required";
-    public static final String ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED = "ADMINISTRATIVE_SANCTIONED";
-    public static final String DETAILEDESTIMATE_STATUS_TECH_SANCTIONED = "TECHNICAL_SANCTIONED";
-    public static final String ESTIMATE_STATUS_FINANCIAL_SANCTIONED = "FINANCIAL_SANCTIONED";
-    public static final String ESTIMATE_STATUS_CREATED = "CREATED";
-    public static final String ESTIMATE_STATUS_CHECKED = "CHECKED";
-    public static final String ESTIMATE_STATUS_REJECTED = "REJECTED";
-    public static final String ESTIMATE_STATUS_RESUBMITTED = "RESUBMITTED";
-    public static final String ESTIMATE_STATUS_CANCELLED = "CANCELLED";
-    public static final String ESTIMATE_STATUS_NEW = "NEW";
     public static final String PROJECTCODE_OBJECT = "ProjectCode";
     public static final String DETAILEDESTIMATE_OFFLINESTATUS = "L1_TENDER_FINALIZED";
     public static final String DETAILEDESTIMATE_OFFLINE = "DetailedEstimateOffline";
-
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";

@@ -7,14 +7,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.ContractorAdvanceRequisitionRepository;
 import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
-import org.egov.works.workorder.web.contract.AdvanceRequisitionStatus;
 import org.egov.works.workorder.web.contract.ContractorAdvanceRequisition;
 import org.egov.works.workorder.web.contract.ContractorAdvanceRequisitionRequest;
 import org.egov.works.workorder.web.contract.ContractorAdvanceSearchContract;
-import org.egov.works.workorder.web.contract.LOAStatus;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +72,7 @@ public class ContractorAdvanceValidator {
             LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
             letterOfAcceptanceSearchContract.setIds(
                     Arrays.asList(contractorAdvanceRequisition.getLetterOfAcceptanceEstimate().getLetterOfAcceptance()));
-            letterOfAcceptanceSearchContract.setStatuses(Arrays.asList(LOAStatus.APPROVED.toString()));
+            letterOfAcceptanceSearchContract.setStatuses(Arrays.asList(CommonConstants.STATUS_APPROVED));
             List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository
                     .searchLOAs(letterOfAcceptanceSearchContract, contractorAdvanceRequisitionRequest.getRequestInfo());
 
@@ -93,7 +92,7 @@ public class ContractorAdvanceValidator {
             LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
             letterOfAcceptanceSearchContract.setIds(
                     Arrays.asList(contractorAdvanceRequisition.getLetterOfAcceptanceEstimate().getLetterOfAcceptance()));
-            letterOfAcceptanceSearchContract.setStatuses(Arrays.asList(LOAStatus.APPROVED.toString()));
+            letterOfAcceptanceSearchContract.setStatuses(Arrays.asList(CommonConstants.STATUS_APPROVED));
             letterOfAcceptances = letterOfAcceptanceRepository
                     .searchLOAs(letterOfAcceptanceSearchContract, contractorAdvanceRequisitionRequest.getRequestInfo());
 

@@ -193,7 +193,7 @@ public class WorkOrderValidator {
 
         if (!isUpdate)
             for (WorkOrder workOrder2 : workOrders) {
-                if (!workOrder2.getStatus().getCode().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
+                if (!workOrder2.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_CANCELLED)) {
                     messages.put(Constants.KEY_INVALID_WORKORDER_EXISTS, Constants.MESSAGE_INVALID_WORKORDER_EXISTS);
                     break;
                 }
@@ -231,7 +231,7 @@ public class WorkOrderValidator {
         List<WorkOrder> workOrders = workOrderRepository.search(workOrderSearchContract, workOrderRequest.getRequestInfo());
 
         for (WorkOrder workOrder2 : workOrders) {
-            if (!workOrder2.getStatus().getCode().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
+            if (!workOrder2.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_CANCELLED)) {
                 messages.put(Constants.KEY_INVALID_LOA_WORKORDER, Constants.MESSAGE_INVALID_LOA_WORKORDER);
                 break;
             }
@@ -248,7 +248,7 @@ public class WorkOrderValidator {
             letterOfAcceptanceSearchCriteria.setLoaNumbers(Arrays.asList(workOrder.getLetterOfAcceptance().getLoaNumber()));
         letterOfAcceptanceSearchCriteria.setTenantId(workOrder.getTenantId());
         letterOfAcceptanceSearchCriteria.setIds(Arrays.asList(workOrder.getLetterOfAcceptance().getId()));
-        letterOfAcceptanceSearchCriteria.setStatuses(Arrays.asList(LOAStatus.APPROVED.toString()));
+        letterOfAcceptanceSearchCriteria.setStatuses(Arrays.asList(CommonConstants.STATUS_APPROVED));
         return letterOfAcceptanceService.search(letterOfAcceptanceSearchCriteria, workOrderRequest.getRequestInfo());
     }
 

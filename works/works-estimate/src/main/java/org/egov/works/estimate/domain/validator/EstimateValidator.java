@@ -242,7 +242,7 @@ public class EstimateValidator {
 
         if (isNew && !oldEstimates.isEmpty())
             for (AbstractEstimate abstractEstimate : oldEstimates) {
-                if (!abstractEstimate.getStatus().getCode().toString().equals(Constants.ESTIMATE_STATUS_CANCELLED))
+                if (!abstractEstimate.getStatus().getCode().toString().equals(CommonConstants.STATUS_CANCELLED))
                     messages.put(Constants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER, Constants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
             }
     }
@@ -314,7 +314,7 @@ public class EstimateValidator {
         }
         // TODO:
         if (abstractEstimate.getSpillOverFlag()
-                || (!isNew && Constants.ESTIMATE_STATUS_CHECKED.equals(abstractEstimate.getStatus().getCode())
+                || (!isNew && CommonConstants.STATUS_CHECKED.equals(abstractEstimate.getStatus().getCode())
                         && Constants.FORWARD.equalsIgnoreCase(abstractEstimate.getWorkFlowDetails().getAction())))
             validateFinancialDetails(abstractEstimate, isFinIntReq, requestInfo, messages);
         validateTypeOfWork(abstractEstimate.getTypeOfWork(), abstractEstimate.getTenantId(), requestInfo, messages);
@@ -521,7 +521,7 @@ public class EstimateValidator {
                 if(detailedEstimate.getEstimateOverheads() != null && !detailedEstimate.getEstimateOverheads().isEmpty())
                     validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
-                if(!detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED))
+                if(!detailedEstimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_CANCELLED))
                    validateUpdateStatus(detailedEstimate, requestInfo, messages);
                 if(detailedEstimate.getDetailedEstimateDeductions() != null && !detailedEstimate.getDetailedEstimateDeductions().isEmpty())
                     validateDeductions(detailedEstimate, requestInfo, messages);
@@ -551,7 +551,7 @@ public class EstimateValidator {
                         Constants.MESSAGE_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE);
 
             if(!workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&
-                    detailedEstimate.getStatus() != null && detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED) &&
+                    detailedEstimate.getStatus() != null && detailedEstimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_TECH_SANCTIONED) &&
                     !abstactEstimate.getDetailedEstimateCreated()) {
                 validateTechnicalSanctionDetail(detailedEstimate, messages, abstactEstimate.getDetailedEstimateCreated(), requestInfo);
             }
@@ -606,13 +606,13 @@ public class EstimateValidator {
             List<String> filetsValuesList = null;
             if(lists != null && !lists.isEmpty()) {
                 String status = lists.get(0).getStatus();
-                if (status.equals(Constants.ESTIMATE_STATUS_CANCELLED) || status.equals(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED)) {
+                if (status.equals(CommonConstants.STATUS_CANCELLED) || status.equals(CommonConstants.STATUS_TECH_SANCTIONED)) {
                     messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE);
-                } else if((status.equals(Constants.ESTIMATE_STATUS_REJECTED) && !detailedEstimate.getStatus().getCode().equals(Constants.ESTIMATE_STATUS_RESUBMITTED)) ||
-                        (status.equals(Constants.ESTIMATE_STATUS_RESUBMITTED) && !(detailedEstimate.getStatus().getCode().equals(Constants.ESTIMATE_STATUS_CHECKED) ||
-                                detailedEstimate.getStatus().getCode().equals(Constants.ESTIMATE_STATUS_CANCELLED)) )) {
+                } else if((status.equals(CommonConstants.STATUS_REJECTED) && !detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED)) ||
+                        (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
+                                detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) )) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
-                } else if (!detailedEstimate.getStatus().getCode().equals(Constants.ESTIMATE_STATUS_REJECTED)) {
+                } else if (!detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {
                     filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
                     filetsValuesList = new ArrayList<>(Arrays.asList(detailedEstimate.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
                     JSONArray statusRequestArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
@@ -648,7 +648,7 @@ public class EstimateValidator {
                     .workIdentificationNumbers(Arrays.asList(projectCode)).build();
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract, requestInfo);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
-                if (!detailedEstimateHelper.getStatus().equals(Constants.ESTIMATE_STATUS_CANCELLED))
+                if (!detailedEstimateHelper.getStatus().equals(CommonConstants.STATUS_CANCELLED))
                     messages.put(Constants.KEY_DE_EXISTS_FOR_AE, Constants.MESSAGE_DE_EXISTS_FOR_AE);
             }
         }
@@ -704,7 +704,7 @@ public class EstimateValidator {
 
     private void validateEstimateAdminSanction(DetailedEstimate detailedEstimate, Map<String, String> messages,
             AbstractEstimate abstractEstimate) {
-        if (abstractEstimate != null && detailedEstimate.getEstimateDate() != null
+        if (abstractEstimate != null && detailedEstimate.getEstimateDate() != null && abstractEstimate.getAdminSanctionDate() != null
                 && detailedEstimate.getEstimateDate() < abstractEstimate.getAdminSanctionDate()) {
             messages.put(Constants.KEY_INVALID_ADMINSANCTION_DATE, Constants.MESSAGE_INVALID_ADMINSANCTION_DATE);
         }
@@ -719,7 +719,7 @@ public class EstimateValidator {
                     .tenantId(detailedEstimate.getTenantId())
                     .workIdentificationNumbers(
                             Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getProjectCode().getCode()))
-                    .statuses(Arrays.asList(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED))
+                    .statuses(Arrays.asList(CommonConstants.STATUS_ADMIN_SANCTIONED))
                     .build();
             List<AbstractEstimate> abstractEstimates = abstractEstimateRepository
                     .search(abstractEstimateSearchContract);
@@ -757,7 +757,7 @@ public class EstimateValidator {
                     .detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract, requestInfo);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
-                if (!detailedEstimateHelper.getStatus().equals(Constants.ESTIMATE_STATUS_CANCELLED))
+                if (!detailedEstimateHelper.getStatus().equals(CommonConstants.STATUS_CANCELLED))
                     messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
                             Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
             }
@@ -1145,7 +1145,7 @@ public class EstimateValidator {
         DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                 .tenantId(detailedEstimate.getTenantId())
                 .technicalSanctionNumbers(Arrays.asList(estimateTechnicalSanction.getTechnicalSanctionNumber()))
-                .statuses(Arrays.asList(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED))
+                .statuses(Arrays.asList(CommonConstants.STATUS_TECH_SANCTIONED))
                 .build();
         if (StringUtils.isNotBlank(detailedEstimate.getId())) {
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));

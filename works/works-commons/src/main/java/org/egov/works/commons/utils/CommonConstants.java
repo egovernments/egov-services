@@ -68,4 +68,15 @@ public class CommonConstants {
     public static  final String CONTRACTOR_STATUS = "ACTIVE";
     public static final String CONTRACTORBILL_SPILLOVER_WORKFLOW_REQUIRED = "Contractorbill_Spillover_WF_Required";
 
+    public static final String STATUS_ADMIN_SANCTIONED = "ADMINISTRATIVE_SANCTIONED";
+    public static final String STATUS_TECH_SANCTIONED = "TECHNICAL_SANCTIONED";
+    public static final String STATUS_FINANCIAL_SANCTIONED = "FINANCIAL_SANCTIONED";
+    public static final String STATUS_CREATED = "CREATED";
+    public static final String STATUS_CHECKED = "CHECKED";
+    public static final String STATUS_REJECTED = "REJECTED";
+    public static final String STATUS_RESUBMITTED = "RESUBMITTED";
+    public static final String STATUS_CANCELLED = "CANCELLED";
+    public static final String STATUS_NEW = "NEW";
+    public static final String STATUS_APPROVED = "APPROVED";
+
 }

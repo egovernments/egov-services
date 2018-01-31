@@ -50,13 +50,13 @@ public class ProjectCodeService {
             projectCode.setAuditDetails(estimateUtils.setAuditDetails(projectCodeRequest.getRequestInfo(), false));
             projectCode.setActive(true);
             List<String> filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE, CommonConstants.MODULE_TYPE));
-            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(Constants.ESTIMATE_STATUS_CREATED,Constants.PROJECTCODE_OBJECT));
+            List<String> filetsValuesList = new ArrayList<>(Arrays.asList(CommonConstants.STATUS_CREATED,Constants.PROJECTCODE_OBJECT));
             JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
                     filetsValuesList, projectCode.getTenantId(), projectCodeRequest.getRequestInfo(),
                     CommonConstants.MODULENAME_WORKS);
             if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
                 WorksStatus status = new WorksStatus();
-                status.code(Constants.ESTIMATE_STATUS_CREATED);
+                status.code(CommonConstants.STATUS_CREATED);
                 projectCode.setStatus(status);
             }
 

@@ -107,13 +107,13 @@ public class AbstractEstimateService {
                         abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
             if (!isSpilloverWFReq && estimate.getSpillOverFlag()) {
                 filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
-                filetsValuesList = new ArrayList<>(Arrays.asList(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED,CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY));
+                filetsValuesList = new ArrayList<>(Arrays.asList(CommonConstants.STATUS_ADMIN_SANCTIONED,CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY));
                 JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
                         filetsValuesList, estimate.getTenantId(), abstractEstimateRequest.getRequestInfo(),
                         CommonConstants.MODULENAME_WORKS);
                 if(dBStatusArray != null && !dBStatusArray.isEmpty()) {
                     WorksStatus status = new WorksStatus();
-                    status.code(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED);
+                    status.code(CommonConstants.STATUS_ADMIN_SANCTIONED);
                     estimate.setStatus(status);
                 }
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
@@ -198,7 +198,7 @@ public class AbstractEstimateService {
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
             
             if(isSpilloverWFReq && estimate.getStatus().getCode().toString()
-                    .equalsIgnoreCase(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED)) {
+                    .equalsIgnoreCase(CommonConstants.STATUS_ADMIN_SANCTIONED)) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
@@ -210,7 +210,7 @@ public class AbstractEstimateService {
                 }
             }
             if (estimate.getStatus().getCode()
-                    .equalsIgnoreCase(Constants.ESTIMATE_STATUS_FINANCIAL_SANCTIONED)) {
+                    .equalsIgnoreCase(CommonConstants.STATUS_FINANCIAL_SANCTIONED)) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
@@ -221,7 +221,7 @@ public class AbstractEstimateService {
             }
 
             if (estimate.getStatus().getCode()
-                    .equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
+                    .equalsIgnoreCase(CommonConstants.STATUS_CANCELLED)) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.TRUE));

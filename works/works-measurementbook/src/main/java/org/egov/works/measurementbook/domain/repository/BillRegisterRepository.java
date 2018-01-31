@@ -2,7 +2,6 @@ package org.egov.works.measurementbook.domain.repository;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.egov.tracer.model.CustomException;
@@ -10,12 +9,6 @@ import org.egov.tracer.model.ErrorRes;
 import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.web.contract.BillRegisterRequest;
 import org.egov.works.measurementbook.web.contract.BillRegisterResponse;
-import org.egov.works.measurementbook.web.contract.ContractorBillRequest;
-import org.egov.works.measurementbook.web.contract.DetailedEstimate;
-import org.egov.works.measurementbook.web.contract.DetailedEstimateRequest;
-import org.egov.works.measurementbook.web.contract.DetailedEstimateResponse;
-import org.egov.works.measurementbook.web.contract.DetailedEstimateStatus;
-import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

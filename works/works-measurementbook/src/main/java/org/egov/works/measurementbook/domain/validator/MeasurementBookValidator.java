@@ -27,7 +27,6 @@ import org.egov.works.measurementbook.web.contract.MeasurementBook;
 import org.egov.works.measurementbook.web.contract.MeasurementBookDetail;
 import org.egov.works.measurementbook.web.contract.MeasurementBookRequest;
 import org.egov.works.measurementbook.web.contract.MeasurementBookSearchContract;
-import org.egov.works.measurementbook.web.contract.MeasurementBookStatus;
 import org.egov.works.measurementbook.web.contract.OfflineStatusResponse;
 import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.egov.works.measurementbook.web.contract.WorkOrder;
@@ -276,8 +275,8 @@ public class MeasurementBookValidator {
 		List<MeasurementBook> measurementBooks = measurementBookRepository
 				.searchMeasurementBooks(measurementBookSearchContract, requestInfo);
 		for (MeasurementBook book : measurementBooks) {
-			if (book.getStatus() != null && !(book.getStatus().equals(MeasurementBookStatus.APPROVED)
-					|| book.getStatus().equals(MeasurementBookStatus.CANCELLED)))
+			if (book.getStatus() != null && !(book.getStatus().equals(CommonConstants.STATUS_APPROVED)
+					|| book.getStatus().equals(CommonConstants.STATUS_CANCELLED)))
 				messages.put(Constants.KEY_MB_IN_WORKFLOW, Constants.MSG_MB_IN_WORKFLOW);
 			if (measurementBook.getMbDate() < book.getMbDate())
 				messages.put(Constants.MSG_MB_DATE_PREVIOUS_DATE, Constants.MSG_MB_DATE_PREVIOUS_DATE);

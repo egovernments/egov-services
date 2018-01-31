@@ -1,6 +1,7 @@
 package org.egov.works.workorder.domain.repository;
 
 import org.egov.works.common.persistence.repository.JdbcRepository;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.workorder.persistence.helper.LetterOfAcceptanceEstimateHelper;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +89,7 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
 
             DetailedEstimateSearchContract detailedEstimateSearchContract = new DetailedEstimateSearchContract();
             detailedEstimateSearchContract.setDetailedEstimateNumbers(Arrays.asList(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber()));
-            detailedEstimateSearchContract.setStatuses(Arrays.asList(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()));
+            detailedEstimateSearchContract.setStatuses(Arrays.asList(CommonConstants.STATUS_TECH_SANCTIONED));
             letterOfAcceptanceEstimate.setDetailedEstimate(estimateRepository.getDetailedEstimateByEstimateNumber(detailedEstimateSearchContract,letterOfAcceptanceEstimateSearchCriteria.getTenantId(),requestInfo).getDetailedEstimates().get(0));
 
             AssetsForLoaSearchContract assetsForLoaSearchCriteria = AssetsForLoaSearchContract.builder()

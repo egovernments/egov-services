@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ErrorRes;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.measurementbook.config.Constants;
-import org.egov.works.measurementbook.web.contract.LOAStatus;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceRequest;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
@@ -56,7 +56,7 @@ public class LetterOfAcceptanceRepository {
 
     public List<LetterOfAcceptance> searchLetterOfAcceptance(List<String> codes,List<String> names, String tenantId,
                                                              RequestInfo requestInfo) {
-        String status = LOAStatus.APPROVED.toString();
+        String status = CommonConstants.STATUS_APPROVED;
         String contractorCodes = codes != null ? String.join(",", codes) : "";
         String contractorNames = names != null ? String.join(",", names) : "";
         return restTemplate.postForObject(contractorSearchUrl,requestInfo, LetterOfAcceptanceResponse.class,tenantId, contractorCodes,contractorNames,status).getLetterOfAcceptances();
@@ -65,7 +65,7 @@ public class LetterOfAcceptanceRepository {
     
 	public LetterOfAcceptanceResponse searchLOAById(List<String> idList, String tenantId,
 			RequestInfo requestInfo) {
-		String status = LOAStatus.APPROVED.toString();
+		String status = CommonConstants.STATUS_APPROVED;
 		String ids = idList != null ? String.join(",", idList) : "";
 		return restTemplate.postForObject(loaSearchUrl, requestInfo, LetterOfAcceptanceResponse.class, tenantId,
 				ids, status);

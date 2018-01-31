@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.LOAStatus;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.EmployeeRepository;
@@ -17,7 +18,6 @@ import org.egov.works.workorder.domain.service.EstimateService;
 import org.egov.works.workorder.domain.service.OfflineStatusService;
 import org.egov.works.workorder.web.contract.Contractor;
 import org.egov.works.workorder.web.contract.DetailedEstimate;
-import org.egov.works.workorder.web.contract.DetailedEstimateStatus;
 import org.egov.works.workorder.web.contract.EmployeeResponse;
 import org.egov.works.workorder.web.contract.LOAActivity;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
@@ -322,7 +322,7 @@ public class LetterOfAcceptanceValidator {
             messages.put(Constants.KEY_DETAILEDESTIMATE_EXIST, Constants.MESSAGE_DETAILEDESTIMATE_EXIST);
 
         if (detailedEstimate != null && detailedEstimate.getStatus() != null && !detailedEstimate.getStatus().getCode().toString()
-                .equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
+                .equalsIgnoreCase(CommonConstants.STATUS_TECH_SANCTIONED)) {
             messages.put(Constants.KEY_DETAILEDESTIMATE_STATUS, Constants.MESSAGE_DETAILEDESTIMATE_STATUS);
         }
 

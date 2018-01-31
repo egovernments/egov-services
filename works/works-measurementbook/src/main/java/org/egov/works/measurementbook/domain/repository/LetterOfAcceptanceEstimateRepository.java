@@ -1,17 +1,9 @@
 package org.egov.works.measurementbook.domain.repository;
 
-import java.util.List;
-
-import org.egov.works.measurementbook.web.contract.LOAStatus;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.measurementbook.web.contract.RequestInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class LetterOfAcceptanceEstimateRepository {

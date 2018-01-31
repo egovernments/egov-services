@@ -1,6 +1,7 @@
 package org.egov.works.workorder.domain.validator;
 
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.LetterOfAcceptanceEstimateRepository;
 import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
@@ -41,7 +42,7 @@ public class MilestoneValidator {
                 if (loaes != null && loaes.size() > 0) {
                     LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceRepository.searchLOAs(LetterOfAcceptanceSearchContract.builder().tenantId(milestone.getTenantId()).ids(Arrays.asList(loaes.get(0).getLetterOfAcceptance())).build(), milestoneRequest.getRequestInfo()).get(0);
                     workOrder = workOrderRepository.search(WorkOrderSearchContract.builder().tenantId(milestone.getTenantId()).letterOfAcceptances(Arrays.asList(letterOfAcceptance.getId())).build(), milestoneRequest.getRequestInfo()).get(0);
-                    if (!workOrder.getStatus().getCode().equals(WorkOrderStatus.APPROVED.toString()))
+                    if (!workOrder.getStatus().getCode().equals(CommonConstants.STATUS_APPROVED))
                         validationMessages.put(Constants.KEY_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE, Constants.MESSAGE_MILESTONE_WORKORDER_SHOULD_BE_APPROVED_STATE);
                 } else {
                     validationMessages.put(Constants.KEY_MILESTONE_LOA_ESTIMATE_ID_INVALID, Constants.MESSAGE_MILESTONE_LOA_ESTIMATE_ID_INVALID + milestone.getLetterOfAcceptanceEstimate().getId());

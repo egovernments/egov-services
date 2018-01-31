@@ -184,31 +184,31 @@ public class DetailedEstimateService {
             } else if (detailedEstimate.getSpillOverFlag()) {
                 filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE, CommonConstants.MODULE_TYPE));
                 filetsValuesList = new ArrayList<>(
-                        Arrays.asList(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED, CommonConstants.DETAILEDESTIMATE));
+                        Arrays.asList(CommonConstants.STATUS_TECH_SANCTIONED, CommonConstants.DETAILEDESTIMATE));
                 JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
                         filetsValuesList, detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo(),
                         CommonConstants.MODULENAME_WORKS);
                 if (dBStatusArray != null && !dBStatusArray.isEmpty()) {
                     WorksStatus status = new WorksStatus();
-                    status.code(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED);
+                    status.code(CommonConstants.STATUS_TECH_SANCTIONED);
                     detailedEstimate.setStatus(status);
                 }
             } else {
                 filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE, CommonConstants.MODULE_TYPE));
                 filetsValuesList = new ArrayList<>(
-                        Arrays.asList(Constants.ESTIMATE_STATUS_CREATED, CommonConstants.DETAILEDESTIMATE));
+                        Arrays.asList(CommonConstants.STATUS_CREATED, CommonConstants.DETAILEDESTIMATE));
                 JSONArray dBStatusArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
                         filetsValuesList, detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo(),
                         CommonConstants.MODULENAME_WORKS);
                 if (dBStatusArray != null && !dBStatusArray.isEmpty()) {
                     WorksStatus status = new WorksStatus();
-                    status.code(Constants.ESTIMATE_STATUS_CREATED);
+                    status.code(CommonConstants.STATUS_CREATED);
                     detailedEstimate.setStatus(status);
                 }
             }
             DetailedEstimate de = null;
-            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_NEW) ||
-                    detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED)) {
+            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_NEW) ||
+                    detailedEstimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_TECH_SANCTIONED)) {
                 de = detailedEstimate;
                 detailedEstimateList.add(de);
             }
@@ -328,14 +328,14 @@ public class DetailedEstimateService {
             }
 
             if (!detailedEstimate.getSpillOverFlag() && detailedEstimate.getStatus().getCode()
-                    .equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED.toString())) {
+                    .equalsIgnoreCase(CommonConstants.STATUS_TECH_SANCTIONED.toString())) {
                 detailedEstimate.setApprovedDate(new Date().getTime());
 
                 setTechnicalSanctionDetails(detailedEstimateRequest, createDetails, detailedEstimate);
             }
 
             DetailedEstimate de = null;
-            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
+            if(detailedEstimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_CANCELLED)) {
                 de = detailedEstimate;
                 detailedEstimateList.add(de);
             }

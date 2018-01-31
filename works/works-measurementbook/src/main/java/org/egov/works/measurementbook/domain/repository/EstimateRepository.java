@@ -1,29 +1,24 @@
 package org.egov.works.measurementbook.domain.repository;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ErrorRes;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.web.contract.DetailedEstimate;
 import org.egov.works.measurementbook.web.contract.DetailedEstimateRequest;
 import org.egov.works.measurementbook.web.contract.DetailedEstimateResponse;
-import org.egov.works.measurementbook.web.contract.DetailedEstimateStatus;
 import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class EstimateRepository {
@@ -57,14 +52,14 @@ public class EstimateRepository {
 
     public List<DetailedEstimate> searchDetailedEstimatesByDepartment(final List<String> departmentCodes, final String tenantId,final RequestInfo requestInfo) {
 
-        String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+        String status = CommonConstants.STATUS_TECH_SANCTIONED;
         String departments = String.join(",", departmentCodes);
         return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departments, status).getDetailedEstimates();
     }
     
     public List<DetailedEstimate> searchDetailedEstimatesByIds(final List<String> idList, final String tenantId,final RequestInfo requestInfo) {
 
-        String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+        String status = CommonConstants.STATUS_TECH_SANCTIONED;
         String ids = String.join(",", idList);
         return restTemplate.postForObject(detailedEstimateByIdsUrl, requestInfo, DetailedEstimateResponse.class,tenantId,ids, status).getDetailedEstimates();
     }

@@ -32,7 +32,6 @@ import org.egov.works.measurementbook.web.contract.MeasurementBook;
 import org.egov.works.measurementbook.web.contract.MeasurementBookDetail;
 import org.egov.works.measurementbook.web.contract.MeasurementBookForContractorBill;
 import org.egov.works.measurementbook.web.contract.MeasurementBookSearchContract;
-import org.egov.works.measurementbook.web.contract.MeasurementBookStatus;
 import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -330,7 +329,7 @@ public class ContractorBillValidator {
             List<String> mbIds) {
         MeasurementBookSearchContract measurementBookSearchContract = new MeasurementBookSearchContract();
         measurementBookSearchContract.setTenantId(contractorBill.getTenantId());
-        measurementBookSearchContract.setStatuses(Arrays.asList(MeasurementBookStatus.APPROVED.toString()));
+        measurementBookSearchContract.setStatuses(Arrays.asList(CommonConstants.STATUS_APPROVED));
         measurementBookSearchContract.setIds(mbIds);
         List<MeasurementBook> measurementBooks = measurementBookRepository
                 .searchMeasurementBooks(measurementBookSearchContract, requestInfo);

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.repository.WorksMastersRepository;
 import org.egov.works.workorder.domain.service.LetterOfAcceptanceService;
@@ -57,7 +58,7 @@ public class NoticeValidator {
 		WorkOrderSearchContract workOrderSearchContract = new WorkOrderSearchContract();
 		workOrderSearchContract.setLetterOfAcceptances(Arrays.asList(letterOfAcceptanceId));
 		workOrderSearchContract.setTenantId(tenantId);
-		workOrderSearchContract.setStatuses(Arrays.asList(WorkOrderStatus.APPROVED.toString()));
+		workOrderSearchContract.setStatuses(Arrays.asList(CommonConstants.STATUS_APPROVED));
 		return workOrderService.search(workOrderSearchContract, requestInfo);
 	}
 
@@ -68,7 +69,7 @@ public class NoticeValidator {
 					.setLoaNumbers(Arrays.asList(notice.getLetterOfAcceptance().getLoaNumber()));
 		letterOfAcceptanceSearchCriteria.setTenantId(notice.getTenantId());
 		letterOfAcceptanceSearchCriteria.setIds(Arrays.asList(notice.getLetterOfAcceptance().getId()));
-		letterOfAcceptanceSearchCriteria.setStatuses(Arrays.asList(LOAStatus.APPROVED.toString()));
+		letterOfAcceptanceSearchCriteria.setStatuses(Arrays.asList(CommonConstants.STATUS_APPROVED));
 		return letterOfAcceptanceService.search(letterOfAcceptanceSearchCriteria, requestInfo);
 	}
 }

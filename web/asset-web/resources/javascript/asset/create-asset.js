@@ -966,23 +966,21 @@ class CreateAsset extends React.Component {
                 });
               // }, 100);
 
-              if(asset.status == "CAPITALIZED") {
-                assetCategoryPromise.then((response) => {
-                  // console.log("Yay! " + JSON.stringify(response));
-                  _this.setState({"assetCategories":response});
-                  // console.log('Global var : ', response);
-                  console.log('Asset Category Master from Promise for update / view: ',response);
+              assetCategoryPromise.then((response) => {
+                // console.log("Yay! " + JSON.stringify(response));
+                _this.setState({"assetCategories":response});
+                // console.log('Global var : ', response);
+                console.log('Asset Category Master from Promise for update / view: ',response);
+                if(asset.status == "CAPITALIZED") {
+                  console.log('Its capitalized');
                   let ifassetLandIMObj = response && response.find((obj)=>{return obj.name === asset.assetCategory.name});
                   console.log('LANDIMMOV : ',ifassetLandIMObj);
                   _this.setState({
                       capitalized: true,
                       ifassetLandIM: ifassetLandIMObj && (ifassetLandIMObj.assetCategoryType === 'LAND' || ifassetLandIMObj.assetCategoryType === 'IMMOVABLE') ? true : false
                   });
-                });
-                // setTimeout(function() {
-
-                // }, 1500);
-              }
+                }
+              });
 
               if(asset.assetCategory && asset.assetCategory.id) {
                   let count = 10;

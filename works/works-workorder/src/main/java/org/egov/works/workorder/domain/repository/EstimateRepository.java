@@ -1,6 +1,7 @@
 package org.egov.works.workorder.domain.repository;
 
 import org.egov.tracer.http.LogAwareRestTemplate;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +48,7 @@ public class EstimateRepository {
 
     public List<DetailedEstimate> searchDetailedEstimatesByDepartment(final List<String> departmentCodes, final String tenantId,final RequestInfo requestInfo) {
 
-        String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+        String status = CommonConstants.STATUS_TECH_SANCTIONED;
         String departments = String.join(",", departmentCodes);
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
@@ -56,7 +57,7 @@ public class EstimateRepository {
 
 	public List<DetailedEstimate> searchDetailedEstimatesByProjectCode(final List<String> winCodes, final String tenantId,final RequestInfo requestInfo) {
 
-		String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+		String status = CommonConstants.STATUS_TECH_SANCTIONED;
 		return restTemplate.postForObject(detailedEstimateByWINUrl, requestInfo, DetailedEstimateResponse.class, tenantId, winCodes, status).getDetailedEstimates();
 	}
 

@@ -88,7 +88,7 @@ public class EstimateValidator {
                 throw new CustomException(messages);
             if (StringUtils.isNotBlank(estimate.getAbstractEstimateNumber()))
                 validateAbstractEstimateNumber(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
-            if (StringUtils.isNotBlank(estimate.getAdminSanctionNumber()))
+            if (estimate.getStatus() != null && estimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_FINANCIAL_SANCTIONED))
                 validateAdminSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             validateEstimateAssetDetails(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             validateCouncilSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);

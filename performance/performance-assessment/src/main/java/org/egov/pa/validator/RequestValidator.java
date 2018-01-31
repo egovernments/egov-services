@@ -118,10 +118,10 @@ public class RequestValidator {
         return errorResponses;
     }
 	
-	public List<ErrorResponse> validateRequest(final KPITargetRequest kpiTargetRequest) {
+	public List<ErrorResponse> validateRequest(final KPITargetRequest kpiTargetRequest, Boolean createOrUpdate) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(kpiTargetRequest);
+        final Error error = getError(kpiTargetRequest,createOrUpdate);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
@@ -207,11 +207,11 @@ public class RequestValidator {
 				.message(PerformanceAssessmentConstants.INVALID_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}
 	
-	public Error getError(final KPITargetRequest kpiTargetRequest) {
+	public Error getError(final KPITargetRequest kpiTargetRequest, Boolean createOrUpdate) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		List<KpiTarget> targetList = kpiTargetRequest.getKpiTargets();
 		
-		if(kpiTargetService.checkActualValuesForKpi(kpiTargetRequest)) { 
+		if(!createOrUpdate && kpiTargetService.checkActualValuesForKpi(kpiTargetRequest)) { 
 			errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGETUPDATE_INVALID_CODE,
 					PerformanceAssessmentConstants.TARGETUPDATE_INVALID_ERROR_MESSAGE,
 					PerformanceAssessmentConstants.TARGETUPDATE_INVALID_FIELD_NAME));

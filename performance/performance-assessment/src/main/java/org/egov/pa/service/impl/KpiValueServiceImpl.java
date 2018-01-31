@@ -185,10 +185,12 @@ public class KpiValueServiceImpl implements KpiValueService {
 
 	private List<ValueResponse> sortKpiAndValues(KPIValueSearchRequest kpiValueSearchReq, List<KpiValue> kpiValueList,
 			List<KPI> kpiList) {
-		List<ValueResponse> list = new ArrayList<>();
+		List<ValueResponse> list = new ArrayList<>();	
 		for (int i = 0; i < kpiValueList.size(); i++) {
 			for (int j = 0; j < kpiList.size(); j++) {
 				if (kpiValueList.get(i).getKpiCode().equals(kpiList.get(j).getCode())) {
+					log.info("Value Financial Year : " + kpiValueList.get(i).getFinYear());
+					log.info("KPI Financial Year : " + kpiList.get(j).getKpiTargets());
 					list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j), kpiValueList.get(i),
 							kpiValueSearchReq.getGraphType()));
 				}

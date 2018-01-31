@@ -53,7 +53,7 @@ public class KpiTargetController implements KpiTarget{
             errResList.add(requestValidator.populateErrors(errors)); 
             return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
         }
-		final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiTargetRequest);
+		final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiTargetRequest, Boolean.TRUE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         kpiTargetService.createNewTarget(kpiTargetRequest); 
@@ -71,7 +71,7 @@ public class KpiTargetController implements KpiTarget{
             errResList.add(requestValidator.populateErrors(errors)); 
             return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
         }
-		final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiTargetRequest);
+		final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiTargetRequest, Boolean.FALSE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         kpiTargetService.updateNewTarget(kpiTargetRequest); 

@@ -132,9 +132,6 @@ public class AssetValidator {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
     public void validateAsset(final AssetRequest assetRequest) {
         final AssetCategory assetCategory = findAssetCategory(assetRequest);
         final Asset asset = assetRequest.getAsset();

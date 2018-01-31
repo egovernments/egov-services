@@ -133,5 +133,11 @@ public class ApplicationProperties {
 
     @Value("${egov.services.egf_service.funds.searchpath}")
     private String egfServiceFundsSearchPath;
+    
+    @Value("${egov.services.lams_service.host}")
+    private String lamsServiceHost;
+
+    @Value("${egov.services.lams_service.agreements.searchpath}")
+    private String lamsServiceAgreementsSearchPath;
 
 }

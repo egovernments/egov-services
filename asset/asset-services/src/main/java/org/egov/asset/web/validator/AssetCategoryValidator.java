@@ -49,15 +49,27 @@
 package org.egov.asset.web.validator;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.egov.asset.config.ApplicationProperties;
+import org.egov.asset.contract.AgreementResponse;
 import org.egov.asset.contract.AssetCategoryRequest;
+import org.egov.asset.model.Agreement;
+import org.egov.asset.model.AgreementCriteria;
+import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCategory;
 import org.egov.asset.model.AssetCategoryCriteria;
+import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.service.AssetCategoryService;
 import org.egov.asset.service.AssetCommonService;
+import org.egov.asset.service.AssetService;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,6 +82,14 @@ public class AssetCategoryValidator {
 
     @Autowired
     private AssetCommonService assetCommonService;
+
+    @Autowired
+    private AssetService assetService;
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public void validateAssetCategory(final AssetCategoryRequest assetCategoryRequest) {
 
@@ -125,13 +145,45 @@ public class AssetCategoryValidator {
     }
 
     public void validateAssetCategoryForUpdate(final AssetCategoryRequest assetCategoryRequest) {
+        final Set<Long> assetIds = new HashSet<>();
+        final RequestInfo requestInfo = assetCategoryRequest.getRequestInfo();
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
         final List<AssetCategory> assetCategories = findByIdAndCode(assetCategory.getId(), assetCategory.getCode(),
                 assetCategory.getTenantId());
+
         if (assetCategories.isEmpty())
             throw new RuntimeException("Invalid Asset Category Code for Asset :: " + assetCategory.getName());
 
+        if (!assetCategories.isEmpty()) {
+            final AssetCriteria assetCriteria = new AssetCriteria();
+            assetCriteria.setAssetCategory(assetCategories.get(0).getId());
+            assetCriteria.setTenantId(assetCategories.get(0).getTenantId());
+            final List<Asset> assets = assetService.getAssets(assetCriteria, requestInfo).getAssets();
+            if (assets != null && !assets.isEmpty()) {
+                assetIds.addAll(assets.stream().map(asset -> asset.getId()).collect(Collectors.toList()));
+                getAggrementsByAsset(assetIds, assets.get(0).getTenantId(), requestInfo);
+            }
+        }
         validateDepreciationRate(assetCategory);
+    }
+
+    private void getAggrementsByAsset(final Set<Long> assetIds, final String tenantId, final RequestInfo requestInfo) {
+
+        final String url = applicationProperties.getLamsServiceHost()
+                + applicationProperties.getLamsServiceAgreementsSearchPath() + "?tenantId=" + tenantId;
+        final AgreementCriteria criteria = new AgreementCriteria();
+        criteria.setStatus("ACTIVE");
+        criteria.setAsset(assetIds);
+        criteria.setTenantId(tenantId);
+        criteria.setRequestInfo(requestInfo);
+        log.debug("Agreement Search URL :: " + url);
+        final List<Agreement> agreements = restTemplate
+                .postForObject(url, criteria, AgreementResponse.class)
+                .getAgreement();
+        log.debug("Agreement Response Response :: " + agreements);
+        if (agreements != null && !agreements.isEmpty())
+            throw new RuntimeException("This category has already been used for agreements,hence can not be modified .");
+
     }
 
 }

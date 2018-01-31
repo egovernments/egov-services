@@ -554,8 +554,8 @@ public class DataUploadService {
 	    		logger.info("originalChild: "+originalChild);
 	            List newChild = (List) newMap.get(key);
 	    		logger.info("newChild: "+newChild);
-	    		Map<Object, Object> originalChildEntry = (Map) originalChild.get(originalChild.size() - 1);
-	    		Map<Object, Object> newChildEntry = (Map) newChild.get(0);
+	    		Map<Object, Object> originalChildEntry = (Map) originalChild.get(originalChild.size() - 1); //other entries have been verified in previous iterations
+	    		Map<Object, Object> newChildEntry = (Map) newChild.get(0);  //cuz definitely the list will always have only one entry.
 	    		int counter = 0;
 	    		try {
 		    		for(String mapKey: uniqueKeysForInnerObject) {

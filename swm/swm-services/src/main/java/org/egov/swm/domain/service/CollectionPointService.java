@@ -6,11 +6,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.Asset;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointSearch;
+import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.TenantBoundary;
 import org.egov.swm.domain.repository.BinDetailsRepository;
@@ -113,6 +115,8 @@ public class CollectionPointService {
 
         findDuplicatesInUniqueFields(collectionPointRequest);
         TenantBoundary boundary;
+        CollectionType collectionType;
+        Asset asset;
         for (final CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
 
             // Validate Boundary
@@ -147,10 +151,11 @@ public class CollectionPointService {
                         throw new CustomException("CollectionType",
                                 "The field CollectionType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
+                    collectionType = collectionTypeService.getCollectionType(collectionPoint.getTenantId(),
+                            cpd.getCollectionType().getCode(), collectionPointRequest.getRequestInfo());
                     // Validate Collection Type
-                    if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null)
-                        cpd.setCollectionType(collectionTypeService.getCollectionType(collectionPoint.getTenantId(),
-                                cpd.getCollectionType().getCode(), collectionPointRequest.getRequestInfo()));
+                    if (collectionType != null && collectionType != null)
+                        cpd.setCollectionType(collectionType);
                     else
                         throw new CustomException("CollectionType", "CollectionType is required");
                 }
@@ -163,10 +168,11 @@ public class CollectionPointService {
                         throw new CustomException("Asset",
                                 "The field Asset Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
+                    asset = assetService.getByCode(bd.getAsset().getCode(), collectionPoint.getTenantId(),
+                            collectionPointRequest.getRequestInfo());
                     // Validate Asset
-                    if (bd.getAsset() != null && bd.getAsset().getCode() != null)
-                        bd.setAsset(assetService.getByCode(bd.getAsset().getCode(), collectionPoint.getTenantId(),
-                                collectionPointRequest.getRequestInfo()));
+                    if (asset != null && asset.getCode() != null)
+                        bd.setAsset(asset);
                     else
                         throw new CustomException("Asset", "Asset is required");
                 }

@@ -221,7 +221,7 @@ public class AbstractEstimateService {
             }
 
             UserInfo userInfo = abstractEstimateRequest.getRequestInfo().getUserInfo();
-            if(!estimate.getSpillOverFlag() && estimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_FINANCIAL_SANCTIONED)) {
+            if(!estimate.getSpillOverFlag() && estimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_ADMIN_SANCTIONED)) {
                 estimate.setAdminSanctionDate(new Date().getTime());
                 User user = new User();
                 user.setUserName(userInfo.getUserName());

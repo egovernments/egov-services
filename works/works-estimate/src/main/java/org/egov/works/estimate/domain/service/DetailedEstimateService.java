@@ -328,7 +328,7 @@ public class DetailedEstimateService {
             }
 
             if (!detailedEstimate.getSpillOverFlag() && detailedEstimate.getStatus().getCode()
-                    .equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
+                    .equalsIgnoreCase(Constants.DETAILEDESTIMATE_STATUS_TECH_SANCTIONED.toString())) {
                 detailedEstimate.setApprovedDate(new Date().getTime());
 
                 setTechnicalSanctionDetails(detailedEstimateRequest, createDetails, detailedEstimate);

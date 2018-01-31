@@ -2,6 +2,7 @@ package org.egov.works.estimate.domain.service;
 
 import java.util.*;
 
+import org.apache.tomcat.util.bcel.Const;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
@@ -197,7 +198,7 @@ public class AbstractEstimateService {
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
             
             if(isSpilloverWFReq && estimate.getStatus().getCode().toString()
-                    .equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString())) {
+                    .equalsIgnoreCase(Constants.ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED)) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
@@ -209,7 +210,7 @@ public class AbstractEstimateService {
                 }
             }
             if (estimate.getStatus().getCode()
-                    .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) {
+                    .equalsIgnoreCase(Constants.ESTIMATE_STATUS_FINANCIAL_SANCTIONED)) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
@@ -220,7 +221,7 @@ public class AbstractEstimateService {
             }
 
             if (estimate.getStatus().getCode()
-                    .equalsIgnoreCase(AbstractEstimateStatus.CANCELLED.toString())) {
+                    .equalsIgnoreCase(Constants.ESTIMATE_STATUS_CANCELLED)) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.TRUE));

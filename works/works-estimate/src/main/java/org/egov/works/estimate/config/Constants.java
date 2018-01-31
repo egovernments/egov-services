@@ -29,6 +29,7 @@ public class Constants {
     public static final String ABSTRACT_ESTIMATE_REQUIRED_APPCONFIG = "Abstract_Estimate_Required";
     public static final String ABSTRACTESTIMATE_STATUS_ADMIN_SANCTIONED = "ADMINISTRATIVE_SANCTIONED";
     public static final String DETAILEDESTIMATE_STATUS_TECH_SANCTIONED = "TECHNICAL_SANCTIONED";
+    public static final String ESTIMATE_STATUS_FINANCIAL_SANCTIONED = "FINANCIAL_SANCTIONED";
     public static final String ESTIMATE_STATUS_CREATED = "CREATED";
     public static final String ESTIMATE_STATUS_CHECKED = "CHECKED";
     public static final String ESTIMATE_STATUS_REJECTED = "REJECTED";

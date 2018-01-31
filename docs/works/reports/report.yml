@@ -247,14 +247,14 @@ ReportDefinitions:
     label: reports.works.typeOfWork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$..code|$..name
     searchClause : AND de.workstype=$typeOfWork
     isMandatory: false
   - name: subTypeOfWork
     label: reports.works.subtypeofwork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%21%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$..code|$..name
     searchClause : AND de.workssubtype=$subTypeOfWork
     isMandatory: false
   - name: nameOfWork
@@ -442,11 +442,11 @@ ReportDefinitions:
     stateData: true
   sourceColumns:
   - name: divisionname
-    label: reports.works.divisionname
+    label: reports.works.division
     type: string
     source: works
   - name: districtname
-    label: reports.works.districtname
+    label: reports.works.district
     type: string
     source: works
   - name: ulbname
@@ -482,7 +482,7 @@ ReportDefinitions:
     type: number
     source: works
   - name: workstatus
-    label: reports.works.workstatus
+    label: reports.works.status
     type: string
     source: works
   - name: billsreceivedtill
@@ -509,7 +509,7 @@ ReportDefinitions:
     stateData: true
     searchClause : AND de.workstype in ($typeofwork)
   - name: ulb
-    label: reports.works.ulb
+    label: reports.works.ulbname
     isMandatory: false
     type: multivaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants|MdmsRes.tenant.tenants.code%2A.code%7C%24.MdmsRes.tenant.tenants.name
@@ -517,7 +517,7 @@ ReportDefinitions:
     stateData: true
     searchClause : AND de.workssubtype in ($subtypeofwork)
   - name: statusason
-    label: reports.works.statusason
+    label: reports.works.status
     type: string
     source: works
     searchClause : AND de.status=$statusason

@@ -531,9 +531,8 @@ class CreateAsset extends React.Component {
 
   render() {
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
-    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, usedForLease, readonly, showMsg}=this.state;
-
-    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate}=assetCategory;
+    let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
+    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate, usedForLease}=assetCategory;
     let mode = getUrlVars()["type"];
 
     console.log(this.state.assetCategory);
@@ -1019,7 +1018,7 @@ class CreateAsset extends React.Component {
                     <label for=""> Used for Lease and Agreement </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="checkbox" name="usedForLease" checked={usedForLease} onChange={(e)=>{handleChange(e,"usedForLease")}} />
+                    <input type="checkbox" name="usedForLease" { ...( usedForLease ? { checked: 'checked' } :  {} ) } onChange={(e)=>{handleChange(e,"usedForLease")}} />
                   </div>
                 </div>
               </div>

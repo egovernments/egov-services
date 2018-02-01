@@ -311,6 +311,7 @@ public class PerformanceAssessmentRowMapper {
 			doc.setId(rs.getString("valueDocumentId"));
 			doc.setKpiCode(rs.getString("kpiCode"));
 			doc.setDocumentCode(rs.getString("documentCode"));
+			doc.setDocumentName(rs.getString("documentName"));
 			doc.setFileStoreId(rs.getString("fileStoreId"));
 			doc.setValueId(rs.getString("valueDetailId"));
 			return doc;

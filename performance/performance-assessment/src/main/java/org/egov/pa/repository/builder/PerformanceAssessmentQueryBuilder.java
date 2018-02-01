@@ -142,7 +142,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public static String getDocsForValueRecordQuery() { 
-    	return " SELECT id as valueDocumentId, documentcode as documentCode, kpicode as kpiCode, valueid as valueDetailId, filestoreid as fileStoreId "  
+    	return " SELECT id as valueDocumentId, documentcode as documentCode, documentname as documentName, kpicode as kpiCode, valueid as valueDetailId, filestoreid as fileStoreId "  
     	 + " from egpa_kpi_value_documents where valueid IN (select id from egpa_kpi_value_detail where valueid IN (:valueIdList)) " ; 
     }
     

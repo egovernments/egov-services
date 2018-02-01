@@ -15,6 +15,7 @@
 		"depreciationExpenseAccount": 3,
 		"unitOfMeasurement": 10,
 		"version": "v1",
-		"depreciationRate": null
+		"depreciationRate": null,
+		"isAgreementsExists":false
 	}
 }

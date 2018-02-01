@@ -237,7 +237,8 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
             for (BinDetails bd : collectionPoint.getBinDetails()) {
 
-                bd.setAsset(assetMap.get(bd.getAsset().getCode()));
+                if (bd.getAsset() != null && bd.getAsset().getCode() != null)
+                    bd.setAsset(assetMap.get(bd.getAsset().getCode()));
             }
 
         }

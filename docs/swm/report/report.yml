@@ -48,7 +48,7 @@ ReportDefinitions:
     label: reports.swm.wastetype
     type: singlevaluelist
     emptyIfNotSet: true
-    pattern: 'list://Wet:Wet,Dry:Dry'
+    pattern: 'list://Wet:Wet,Dry:Dry,Both:Both'
     source: wastetype
     isMandatory: false    
   - name: fromDate

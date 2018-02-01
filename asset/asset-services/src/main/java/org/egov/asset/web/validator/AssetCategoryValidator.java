@@ -167,8 +167,9 @@ public class AssetCategoryValidator {
             if (assets != null && !assets.isEmpty()) {
                 assetIds.addAll(assets.stream().map(asset -> asset.getId()).collect(Collectors.toList()));
                 agreements = getAggrementsByAsset(assetIds, assets.get(0).getTenantId(), requestInfo);
-                if (agreements != null && !agreements.isEmpty())
+                if (!agreements.isEmpty() && agreements != null ){
                     assetCategories.get(0).setIsAgreementsExists(true);
+                }
 
             }
         }

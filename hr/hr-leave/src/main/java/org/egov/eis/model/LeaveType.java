@@ -76,6 +76,12 @@ public class LeaveType {
 	@NotNull
 	private Boolean encashable;
 
+	@NotNull
+	private Boolean encloseHoliday;
+
+	@NotNull
+	private Boolean includePrefixSuffix;
+
 	private Boolean active;
 
 	private Long createdBy;

@@ -114,19 +114,21 @@ public class LeaveTypeRepository {
 					ps.setBoolean(4, leaveType.getPayEligible());
 					ps.setBoolean(5, leaveType.getAccumulative());
 					ps.setBoolean(6, leaveType.getEncashable());
-					ps.setBoolean(7, leaveType.getActive() == null ? true : leaveType.getActive());
-					ps.setLong(8, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
-					ps.setLong(9, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
+					ps.setBoolean(7, leaveType.getEncloseHoliday());
+					ps.setBoolean(8, leaveType.getIncludePrefixSuffix());
+					ps.setBoolean(9, leaveType.getActive() == null ? true : leaveType.getActive());
+					ps.setLong(10, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
+					ps.setLong(11, Long.valueOf(leaveTypeRequest.getRequestInfo().getMsgId()));
 					if (leaveType.getId() != null) {
-						ps.setDate(10, new Date(leaveType.getCreatedDate().getTime()));
-						ps.setDate(11, new Date(leaveType.getLastModifiedDate().getTime()));
-						ps.setString(12, leaveType.getTenantId());
-						ps.setLong(13, leaveType.getId());
+						ps.setDate(12, new Date(leaveType.getCreatedDate().getTime()));
+						ps.setDate(13, new Date(leaveType.getLastModifiedDate().getTime()));
 						ps.setString(14, leaveType.getTenantId());
+						ps.setLong(15, leaveType.getId());
+						ps.setString(16, leaveType.getTenantId());
 					} else {
-						ps.setDate(10, new Date(new java.util.Date().getTime()));
-						ps.setDate(11, new Date(new java.util.Date().getTime()));
-						ps.setString(12, leaveType.getTenantId());
+						ps.setDate(12, new Date(new java.util.Date().getTime()));
+						ps.setDate(13, new Date(new java.util.Date().getTime()));
+						ps.setString(14, leaveType.getTenantId());
 
 					}
 				}

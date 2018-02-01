@@ -80,6 +80,17 @@ public class PositionQueryBuilder {
 		return selectQuery.toString();
 	}
 
+	@SuppressWarnings("rawtypes")
+	public String getPaginatedQuery(PositionGetRequest positionGetRequest,  Map<String, Object> preparedStatementValues) {
+		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+
+		addWhereClause(selectQuery, preparedStatementValues, positionGetRequest);
+		addOrderByClause(selectQuery, positionGetRequest);
+
+		logger.debug("Query : " + selectQuery);
+		return selectQuery.toString();
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addWhereClause(StringBuilder selectQuery,  Map<String, Object> preparedStatementValues,
 			PositionGetRequest positionGetRequest) {

@@ -138,7 +138,7 @@ public class PositionRepository {
 
 	public Integer getTotalDBRecords(PositionGetRequest positionGetRequest) {
 		Map<String, Object> namedParamsForMatchingRecords = new HashMap<>();
-		String queryStrForMatchingRecords = positionQueryBuilder.getQuery(positionGetRequest,
+		String queryStrForMatchingRecords = positionQueryBuilder.getPaginatedQuery(positionGetRequest,
 				namedParamsForMatchingRecords);
 
 		String queryForTotalMatchingRecords = "SELECT count(DISTINCT p_id) FROM (" + queryStrForMatchingRecords

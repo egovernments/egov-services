@@ -58,7 +58,7 @@ public class LeaveTypeQueryBuilder {
 	private ApplicationProperties applicationProperties;
 
 	private static final String BASE_QUERY = "SELECT id, name, description, halfdayAllowed, payEligible, accumulative,"
-			+ " encashable, active, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
+			+ " encashable, encloseHoliday, includePrefixSuffix, active, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
 			+ " FROM egeis_leaveType";
 
 	@SuppressWarnings("rawtypes")
@@ -160,14 +160,14 @@ public class LeaveTypeQueryBuilder {
 	}
 
 	public static String insertLeaveTypeQuery() {
-		return "INSERT INTO egeis_leavetype(id,name,description,halfdayallowed,payeligible,accumulative,encashable,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(nextval('seq_egeis_leaveType'),?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egeis_leavetype(id,name,description,halfdayallowed,payeligible,accumulative,encashable,encloseholiday,includeprefixsuffix,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(nextval('seq_egeis_leaveType'),?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public static String updateLeaveTypeQuery() {
 		return "UPDATE egeis_leavetype SET name = ?, description = ?,"
-				+ " halfdayAllowed = ?, payEligible = ?, accumulative = ?, encashable = ?,"
-				+ "active = ? , createdBy = ?, lastModifiedBy=?, createdDate=? , lastModifiedDate=?, tenantId=? where id = ? and tenantid=?";
+				+ " halfdayAllowed = ?, payEligible = ?, accumulative = ?, encashable = ?, encloseholiday = ?, includeprefixsuffix = ?,"
+				+ " active = ? , createdBy = ?, lastModifiedBy=?, createdDate=? , lastModifiedDate=?, tenantId=? where id = ? and tenantid=?";
 	}
 
 	public static String selectLeaveTypeByNameQuery() {

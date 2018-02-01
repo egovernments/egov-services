@@ -67,6 +67,8 @@ public class LeaveTypeRowMapper implements RowMapper<LeaveType> {
 		leaveType.setPayEligible((Boolean) rs.getObject("payEligible"));
 		leaveType.setAccumulative((Boolean) rs.getObject("accumulative"));
 		leaveType.setEncashable((Boolean) rs.getObject("encashable"));
+		leaveType.setEncloseHoliday((Boolean) rs.getObject("encloseHoliday"));
+		leaveType.setIncludePrefixSuffix((Boolean) rs.getObject("includePrefixSuffix"));
 		leaveType.setActive((Boolean) rs.getObject("active"));
 		leaveType.setCreatedBy((Long) rs.getObject("createdBy"));
 		leaveType.setLastModifiedBy((Long) rs.getObject("lastModifiedBy"));

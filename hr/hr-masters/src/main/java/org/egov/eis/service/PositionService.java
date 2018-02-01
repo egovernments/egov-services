@@ -145,7 +145,7 @@ public class PositionService {
 
 		Integer totalDBRecords = positionRepository.getTotalDBRecords(positionGetRequest);
 		Integer totalpages = (int) Math.ceil((double) totalDBRecords / pageSize);
-		Pagination page = Pagination.builder().totalResults(recordsFetched).totalPages(totalpages)
+		Pagination page = Pagination.builder().totalResults(totalDBRecords).totalPages(totalpages)
 				.currentPage(pageNumber).pageNumber(pageNumber).pageSize(pageSize).build();
 
 		return new LinkedHashMap<String, Object>() {

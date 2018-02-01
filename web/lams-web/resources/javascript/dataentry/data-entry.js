@@ -543,8 +543,7 @@ var commomFieldsRules = {
       'mm/yyyy' : true
     },
     floorNumber :{
-      required :true,
-      alphaNumersh: true
+      required :true
     }
 
 };

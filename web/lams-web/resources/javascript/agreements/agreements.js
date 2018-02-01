@@ -145,9 +145,9 @@ $("select").on("change", function() {
             $(".disabled").attr("disabled", false);
         } else {
             $(".disabled").attr("disabled", true);
-        }else if(this.id == "floorNumber"){
-          validateAgreementsForFloor(this.value);
         }
+    } else if(this.id == "floorNumber"){
+      validateAgreementsForFloor(this.value);
     }
 
     if (($("#approverDepartment").val() != "" && $("#approverDesignation").val() != "") && (this.id == "approverDepartment" || this.id == "approverDesignation")) {
@@ -415,6 +415,9 @@ var commomFieldsRules = {
       required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex"  ? true : false,
       alphaNumersh: true
     },
+    floorNumber :{
+      required :true
+    }
 };
 if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     // validation rules for land agreement

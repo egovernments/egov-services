@@ -109,6 +109,12 @@ $(document).ready(function() {
             cloneRow();
           }
         }
+
+        //setting FloorNumber and ShopNumber values
+        if(agreement.asset.assetCategory.name == "Shopping Complex"){
+        $("#floorNumber").val(agreement.floorNumber).attr('disabled',true);
+        $("#referenceNumber").val(agreement.referenceNumber).attr('disabled',true);
+        }
         dependentonBasisTime(agreement.basisOfAllotment, agreement.timePeriod);
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){

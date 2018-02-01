@@ -893,6 +893,7 @@ $("#createAgreementForm").validate({
     rules: finalValidatinRules,
     messages: finalValidatinRules["messages"],
     submitHandler: function(form) {
+
     var id1 = $('#collectedGoodWillAmount').val();
     var id2 = $('#goodWillAmount').val();
     if (id1 && id2 && Number(id1) > Number(id2)) {
@@ -907,6 +908,8 @@ $("#createAgreementForm").validate({
         return false;
 
     }
+
+    showLoading();
 
         // form.submit();
         // form.preventDefault();
@@ -965,6 +968,7 @@ $("#createAgreementForm").validate({
                 if (response["status"] === 201) { //Response
                     if (typeof(response["responseJSON"]["Error"]) != "undefined") {
                         showError(response["responseJSON"]["Error"]["message"]);
+                        hideLoading();
                     } else {
                         if(window.opener)
                             window.opener.location.reload();
@@ -987,11 +991,14 @@ $("#createAgreementForm").validate({
                         err += "\n " + _key + "- " + response["responseJSON"].Error.fields[key] + " "; //HERE
                       }
                       showError(err);
+                      hideLoading();
                     } else {
                       showError(response["statusText"]);
+                      hideLoading();
                     }
                 } else {
                     showError(err);
+                    hideLoading();
                 }
             }
         })

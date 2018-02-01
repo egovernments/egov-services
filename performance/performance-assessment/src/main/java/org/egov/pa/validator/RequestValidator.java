@@ -146,12 +146,12 @@ public class RequestValidator {
 	                    PerformanceAssessmentConstants.KPINAME_MANDATORY_FIELD_NAME));
 			}
 			
-			if(StringUtils.isBlank(kpi.getCode())) { 
+			/*if(StringUtils.isBlank(kpi.getCode())) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.KPICODE_MANDATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.KPICODE_MANDATORY_FIELD_NAME));
 			}
-			
+			*/
 			if(!createOrUpdate && errorFields.size() <= 0) {
 				String targetType = kpiMasterService.targetAlreadyAvailable(kpi.getCode()); 
 				if(StringUtils.isNotBlank(targetType) && !targetType.equals(kpi.getTargetType())) {  
@@ -174,11 +174,11 @@ public class RequestValidator {
 						PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_FIELD_NAME));
 			}
 			
-			if(kpiMasterService.checkNameOrCodeExists(kpiRequest, createOrUpdate)) {
+			/*if(kpiMasterService.checkNameOrCodeExists(kpiRequest, createOrUpdate)) {
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.NAMECODE_UNIQUE_CODE, 
 	                    PerformanceAssessmentConstants.NAMECODE_UNIQUE_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.NAMECODE_UNIQUE_FIELD_NAME));
-			}
+			}*/
 			
 			// Check whether the document details are available and validate them
 			if(null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 

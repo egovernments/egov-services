@@ -137,7 +137,6 @@ public void setFinancialYear(String financialYear) {
 * @return department
 **/
 @Valid
-@Pattern(regexp="^[a-zA-Z0-9:-]+$")
 public String getCode() {
  return code;
 }

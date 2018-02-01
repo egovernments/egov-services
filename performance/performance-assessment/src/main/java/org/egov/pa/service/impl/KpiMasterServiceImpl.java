@@ -48,8 +48,27 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     	}
     	setCreatedDateAndUpdatedDate(kpiRequest);
     	prepareDocumentObjects(kpiRequest);
+    	autoGenerateKpiCode(kpiRequest);
     	kpiMasterRepository.persistKpi(kpiRequest);
     	return kpiRequest;
+	}
+	
+	private void autoGenerateKpiCode(KPIRequest kpiRequest) { 
+		List<KPI> kpiList = kpiRequest.getKpIs(); 
+		StringBuilder kpiCode = new StringBuilder(); 
+		for(KPI kpi : kpiList) { 
+			String[] kpiName = kpi.getName().split("\\s");
+			if(kpiName.length > 0) { 
+				for(String word : kpiName) {
+					kpiCode.append(String.valueOf(word.charAt(0)).toUpperCase()); 
+				}
+			} else { 
+				kpiCode.append(kpiName[0].toUpperCase());
+			}
+			kpiCode.append("_"+kpi.getFinancialYear()+"_"+String.valueOf(new Date().getTime()).substring(8, 13));
+			kpi.setCode(kpiCode.toString());
+		}
+		
 	}
 	
 	@Override

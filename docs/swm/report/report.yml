@@ -50,7 +50,7 @@ ReportDefinitions:
     emptyIfNotSet: true
     pattern: 'list://Wet:Wet,Dry:Dry'
     source: wastetype
-    isMandatory: false    
+    isMandatory: true    
   - name: fromDate
     label: reports.swm.datefrom
     type: epoch

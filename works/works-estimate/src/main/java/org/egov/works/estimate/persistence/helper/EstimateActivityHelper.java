@@ -90,12 +90,15 @@ public class EstimateActivityHelper {
 		estimateActivity.setTenantId(this.tenantId);
 		estimateActivity.setDetailedEstimate(this.detailedEstimate);
 		estimateActivity.setEstimateRate(this.estimateRate);
-		NonSOR nonSOR = new NonSOR();
-		if(this.nonSor != null)
-			nonSOR.setId(this.nonSor);
+		NonSOR nonSOR = null;
+		if(this.nonSor != null) {
+            nonSOR = new NonSOR();
+            nonSOR.setId(this.nonSor);
+        }
 		estimateActivity.setNonSor(nonSOR);
 		ScheduleOfRate scheduleOfRate = new ScheduleOfRate();
 		scheduleOfRate.setCode(this.scheduleOfRate);
+        estimateActivity.setScheduleOfRate(scheduleOfRate);
 		UOM uom = new UOM();
 		uom.setCode(this.uom);
 		estimateActivity.setUom(uom);

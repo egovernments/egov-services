@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.egov.works.estimate.web.contract.Overhead;
 
 /**
  * An Object holds the basic data of Estimate Overheads
@@ -63,6 +64,9 @@ public class EstimateOverheadHelper {
 		estimateOverhead.setTenantId(this.tenantId);
 		estimateOverhead.setDetailedEstimate(this.detailedEstimate);
 		estimateOverhead.setAmount(this.amount);
+        Overhead overhead1 = new Overhead();
+        overhead1.setCode(this.overhead);
+        estimateOverhead.setOverhead(overhead1);
 		return estimateOverhead;
 	}
 	

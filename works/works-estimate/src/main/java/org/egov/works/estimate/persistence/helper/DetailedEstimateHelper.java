@@ -166,12 +166,6 @@ public class DetailedEstimateHelper   {
 
 		DetailedEstimate detailedEstimate = new DetailedEstimate();
 		detailedEstimate.setAdminSanctionDate(estimate.getAdminSanctionDate());
-		final User user = new User();
-		user.setUserName(estimate.getAdminSanctionBy());
-		detailedEstimate.setAdminSanctionBy(user);
-		detailedEstimate.setAdminSanctionNumber(estimate.getAdminSanctionNumber());
-		user.setUserName(estimate.getApprovedBy());
-		detailedEstimate.setApprovedBy(user);
 		detailedEstimate.setApprovedDate(estimate.getApprovedDate());
 		detailedEstimate.setBeneficiary(Beneficiary.valueOf(estimate.getBeneficiary()));
 		detailedEstimate.setBillsCreated(estimate.getBillsCreated());

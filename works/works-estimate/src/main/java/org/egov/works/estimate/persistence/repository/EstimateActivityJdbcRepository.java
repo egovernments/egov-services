@@ -76,8 +76,8 @@ public class EstimateActivityJdbcRepository extends JdbcRepository {
 
         List<EstimateActivity> estimateActivities = new ArrayList<>();
 
-        for (EstimateActivityHelper estimateOverheadEntity : estimateActivityEntities) {
-            estimateActivities.add(estimateOverheadEntity.toDomain());
+        for (EstimateActivityHelper estimateActivityHelper : estimateActivityEntities) {
+            estimateActivities.add(estimateActivityHelper.toDomain());
         }
 
         return estimateActivities;

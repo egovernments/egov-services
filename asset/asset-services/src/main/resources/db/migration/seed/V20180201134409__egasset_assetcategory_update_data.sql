@@ -1,0 +1,2 @@
+update egasset_assetcategory set usedforlease =true where name in ('Shopping Complex' ,'Shop','Land','Market','Kalyana Mandapam','Parking Space',
+'Slaughter House','Fish Tank','Usufruct','Community Toilet Complex') ;

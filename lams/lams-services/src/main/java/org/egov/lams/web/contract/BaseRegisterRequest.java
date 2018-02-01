@@ -23,5 +23,11 @@ public class BaseRegisterRequest {
 
     @NotNull
     private String tenantId;
-	
+    
+    private Long locality;
+    private Long electionWard;
+    private String agreementNo;
+    private String oldAgreementNo;
+    private String councilResolutionNo;
+    private String aadharNo;
 }

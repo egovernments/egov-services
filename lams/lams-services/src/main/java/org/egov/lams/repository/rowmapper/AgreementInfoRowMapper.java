@@ -2,6 +2,8 @@ package org.egov.lams.repository.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +43,28 @@ public class AgreementInfoRowMapper implements ResultSetExtractor<List<Agreement
 				agreementInfo.setTimePeriod(Long.parseLong(rs.getString("timeperiod")));
 				agreementInfo.setExpiryDate(rs.getTimestamp("expirydate"));
 				agreementInfo.setPaymentCycle(rs.getString("paymentcycle"));
-				agreementInfo.setRent(rs.getDouble("rent"));
+				agreementInfo.setDemand(rs.getDouble("rent"));
 				agreementInfo.setBalance(rs.getDouble("pendingrent"));
 				agreementInfo.setStatus(rs.getString("status"));
 				agreementInfo.setSource(rs.getString("source"));
+				
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
+				String councilResolutionDate = dateFormat.format(rs.getDate("councilResolutionDate"));
+				agreementInfo.setAssetName(rs.getString("assetname"));
+				agreementInfo.setMobileNumber(rs.getString("mobilenumber"));
+				agreementInfo.setGstin(rs.getString("gstin"));
+				agreementInfo.setCouncilResolutionNo(rs.getString("councilResolutionNo"));
+				agreementInfo.setCouncilResolutionDate(rs.getDate("councilResolutionDate"));
+				agreementInfo.setCouncilResolutionNumberDate(rs.getString("councilResolutionNo").concat("/").concat(councilResolutionDate));
+				agreementInfo.setBasisOfAllotment(rs.getString("basisOfAllotment"));
+				agreementInfo.setMethodOfRenewal(rs.getString("methodOfRenewal"));
+				agreementInfo.setReservationCategory(rs.getString("reservationcategory"));
+				agreementInfo.setShopNo(rs.getString("shoporsurveyno"));
+				agreementInfo.setAssetArea(rs.getString("assetarea"));
+				agreementInfo.setMonthlyRent(rs.getDouble("monthlyrent"));
+				agreementInfo.setCollection(rs.getDouble("collection"));
+				agreementInfo.setPenalty(rs.getDouble("penalty"));
+				
 
 				agreementInfos.add(agreementInfo);
 

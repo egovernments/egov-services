@@ -54,9 +54,25 @@ public class AgreementInfo {
 	private String assetCategory;
 	private String status;
 	private String natureOfAllotment;
-	private Double rent;
+	private Double demand;
 	private Double balance;
 	private String paymentCycle;
 	private String source;
-
+	
+	private String assetName;
+	private String mobileNumber;
+	private String gstin;
+	private String councilResolutionNo;
+	@JsonFormat(pattern = "dd/MM/yyyy")
+	private Date councilResolutionDate;
+	private String councilResolutionNumberDate;
+	private String basisOfAllotment;
+	private String methodOfRenewal;
+	private String reservationCategory;
+	private String shopNo;
+	private String assetArea;
+	private Double collection;
+	private Double penalty;
+	private Double monthlyRent;
+	
 }

@@ -23,7 +23,7 @@
       "instrumentType": "instrumentType",
       "instrumentNumber": "{{instrumentNumber}}",
       "instrumentDate": "{{$TS(-42year)}}",
-      "amount":  "{{$randomDigits(4)}}",
+      "amount": "{{$randomDigits(4)}}",
       "bankName": "bankName",
       "branchName": "branchName"
     },
@@ -36,8 +36,8 @@
       "voucherDate": "{{$TS(-3months)}}",
       "instrumentType": "instrumentType",
       "instrumentNumber": "{{instrumentNumber}}",
-      "instrumentDate":"{{$TS(-42year)}}" ,
-      "amount":  "{{$randomDigits(4)}}",
+      "instrumentDate": "{{$TS(-42year)}}",
+      "amount": "{{$randomDigits(4)}}",
       "bankName": "bankName",
       "branchName": "branchName"
     }

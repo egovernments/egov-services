@@ -46,8 +46,8 @@ const ErrorUtil = function() {
         const test_subtype = test["subtype"];
         const api_path = test["api_path"];
 
-        if (minimum === 0 )
-            minimum = 1;
+        // if (minimum === 0 )
+        //     minimum = 1;
 
         switch (test_type + "." + test_subtype + "." + field_name) {
             case "length.maximum.mobileNo":

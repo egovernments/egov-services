@@ -4,20 +4,29 @@ output_folder: ./swm/
 
 apis:
   /vendors/_create:
-    ignorefields: ["agreementDocument","agreementDocument"]
     reference:
       servicedLocations:
+        code:
       servicesOffered:
+        code:
+      agreementDocument:
+        fileStoreId:
     generated:
       vendorNo:
 
   /vehicles/_create:
-    ignorefields: ["vehicleType" ,"insuranceDocument"]
+    ignorefields: []
     reference:
+      insuranceDocument:
+        fileStoreId:
       vehicleType:
+        code:
       fuelType:
+        code:
       driver:
+        code:
       vendor:
+        vendorNo:
     generated:
       regNumber:
 

@@ -64,6 +64,14 @@ SwaggerParser.dereference(contract_url)
 
             function generate_test(param, param_name, path, type) {
                 var tests = [];
+                let minimum = param.minimum;
+                let maximum = param.maximum;
+
+                if (param.exclusiveMinimum)
+                    minimum += 1
+                if (param.exclusiveMaximum)
+                    maximum -= 1
+
                 var common = {
                     api_path: api_path,
                     field_name: param_name,
@@ -134,13 +142,14 @@ SwaggerParser.dereference(contract_url)
                         // }));
                         break;
                     case "maximum":
+
                         tests.push(Object.assign({}, common, {
                             type: "intvalue",
                             subtype: "maximum",
-                            minimum: param.minimum,
-                            maximum: param.maximum,
+                            minimum: minimum,
+                            maximum: maximum,
                             // expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,
-                            operations: [{json_path: path, value: param.maximum + 1}],
+                            operations: [{json_path: path, value: maximum + 1}],
                             // value: param.maximum + 1
                         }));
                         break;
@@ -148,10 +157,10 @@ SwaggerParser.dereference(contract_url)
                         tests.push(Object.assign({}, common, {
                             type: "intvalue",
                             subtype: "minimum",
-                            minimum: param.minimum,
-                            maximum: param.maximum,
-                            expected_error_message: "Value of " + param_name + " shall be between " + param.minimum + " and " + param.maximum,
-                            operations: [{json_path: path, value: param.minimum - 1}],
+                            minimum: minimum,
+                            maximum: maximum,
+                            // expected_error_message: "Value of " + param_name + " shall be between " + minimum + " and " + maximum,
+                            operations: [{json_path: path, value: minimum - 1}],
                             // value: param.minimum - 1
                         }));
                         break;

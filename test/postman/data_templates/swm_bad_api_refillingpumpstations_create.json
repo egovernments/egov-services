@@ -23,12 +23,12 @@
         "code": "Code IOCL"
       },
       "remarks": "Remarks",
-       "quantity": 5,
-       "fuelTypes": [
+      "quantity": 5,
+      "fuelTypes": [
         {
-        "code": "Fuel Type Code 1"
-      }
-    ]
+          "code": "Fuel Type Code 1"
+        }
+      ]
     }
   ]
 }

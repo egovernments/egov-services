@@ -18,8 +18,8 @@
       "vendor": {
         "vendorNo": "{{vendorNo}}"
       },
-      "contractDate": "{{$TS(-3month)}}",
-      "contractPeriodFrom":  "{{$TS(-2month)}}",
+      "contractDate": "{{$TS(-1month-13day)}}",
+      "contractPeriodFrom":  "{{$TS(-1month-11day)}}",
       "contractPeriodTo":  "{{$TS(-1month)}}",
       "securityDeposit": "{{$randomInt(5000, 25000)}}",
       "paymentTerms": {

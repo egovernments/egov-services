@@ -19,9 +19,9 @@
         "contractNo": "{{contractNo}}"
       },
       "invoiceNo": "AAA-VNDR-{{$randomDigits(8)}}",
-      "invoiceDate": "{{$TS(-1day)}}",
-      "fromDate": "{{$TS(-2month -1day)}}",
-      "toDate": "{{$TS(-1month -1day)}}",
+      "invoiceDate": "{{$TS(-1month - 9day)}}",//   "{{$TS(-1month-11day)}}",
+      "fromDate": "{{$TS(-2month +8day)}}",//   "{{$TS(-1month-11day)}}",
+      "toDate": "{{$TS(-1month-2day)}}",
       "vendorInvoiceAmount": "{{$randomInt(5000,10000)}}",
       "employee": {
         "code": "658039"

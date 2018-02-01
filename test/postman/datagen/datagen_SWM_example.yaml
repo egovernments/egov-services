@@ -43,6 +43,7 @@ apis:
       dumpingGround:
       collectionDetails:
       collectionType:
+      ulb:  
 
   /routes/_create:
     reference:

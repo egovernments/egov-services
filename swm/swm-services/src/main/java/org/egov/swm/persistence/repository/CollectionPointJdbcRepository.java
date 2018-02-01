@@ -235,11 +235,12 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
         for (CollectionPoint collectionPoint : collectionPointList) {
 
-            for (BinDetails bd : collectionPoint.getBinDetails()) {
+            if (collectionPoint.getBinDetails() != null)
+                for (BinDetails bd : collectionPoint.getBinDetails()) {
 
-                if (bd.getAsset() != null && bd.getAsset().getCode() != null)
-                    bd.setAsset(assetMap.get(bd.getAsset().getCode()));
-            }
+                    if (bd.getAsset() != null && bd.getAsset().getCode() != null)
+                        bd.setAsset(assetMap.get(bd.getAsset().getCode()));
+                }
 
         }
 

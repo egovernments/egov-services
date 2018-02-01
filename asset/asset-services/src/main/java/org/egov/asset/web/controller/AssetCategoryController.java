@@ -79,6 +79,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/assetCategories")
 @Slf4j
 public class AssetCategoryController {
+    
+    public static final String UPDATE = "update";
+    
     @Autowired
     private AssetCategoryService assetCategoryService;
 
@@ -100,6 +103,9 @@ public class AssetCategoryController {
         }
 
         final List<AssetCategory> assetCategories = assetCategoryService.search(assetCategoryCriteria);
+        if(!assetCategories.isEmpty() && UPDATE.equalsIgnoreCase(assetCategoryCriteria.getAction()))
+            assetCategoryValidator.getAssetExistInAgreements( assetCategories,requestInfoWrapper.getRequestInfo());
+        
         final AssetCategoryResponse response = new AssetCategoryResponse();
         response.setAssetCategory(assetCategories);
         response.setResponseInfo(new ResponseInfo());

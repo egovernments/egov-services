@@ -145,8 +145,7 @@ public class AssetCategoryValidator {
     }
 
     public void validateAssetCategoryForUpdate(final AssetCategoryRequest assetCategoryRequest) {
-        final Set<Long> assetIds = new HashSet<>();
-        final RequestInfo requestInfo = assetCategoryRequest.getRequestInfo();
+
         final AssetCategory assetCategory = assetCategoryRequest.getAssetCategory();
         final List<AssetCategory> assetCategories = findByIdAndCode(assetCategory.getId(), assetCategory.getCode(),
                 assetCategory.getTenantId());
@@ -154,6 +153,12 @@ public class AssetCategoryValidator {
         if (assetCategories.isEmpty())
             throw new RuntimeException("Invalid Asset Category Code for Asset :: " + assetCategory.getName());
 
+        validateDepreciationRate(assetCategory);
+    }
+
+    public void getAssetExistInAgreements(final List<AssetCategory> assetCategories, final RequestInfo requestInfo) {
+        final Set<Long> assetIds = new HashSet<>();
+        List<Agreement> agreements;
         if (!assetCategories.isEmpty()) {
             final AssetCriteria assetCriteria = new AssetCriteria();
             assetCriteria.setAssetCategory(assetCategories.get(0).getId());
@@ -161,13 +166,15 @@ public class AssetCategoryValidator {
             final List<Asset> assets = assetService.getAssets(assetCriteria, requestInfo).getAssets();
             if (assets != null && !assets.isEmpty()) {
                 assetIds.addAll(assets.stream().map(asset -> asset.getId()).collect(Collectors.toList()));
-                getAggrementsByAsset(assetIds, assets.get(0).getTenantId(), requestInfo);
+                agreements = getAggrementsByAsset(assetIds, assets.get(0).getTenantId(), requestInfo);
+                if (agreements != null && !agreements.isEmpty())
+                    assetCategories.get(0).setIsAgreementsExists(true);
+
             }
         }
-        validateDepreciationRate(assetCategory);
     }
 
-    private void getAggrementsByAsset(final Set<Long> assetIds, final String tenantId, final RequestInfo requestInfo) {
+    private List<Agreement> getAggrementsByAsset(final Set<Long> assetIds, final String tenantId, final RequestInfo requestInfo) {
 
         final String url = applicationProperties.getLamsServiceHost()
                 + applicationProperties.getLamsServiceAgreementsSearchPath() + "?tenantId=" + tenantId;
@@ -181,9 +188,10 @@ public class AssetCategoryValidator {
                 .postForObject(url, criteria, AgreementResponse.class)
                 .getAgreement();
         log.debug("Agreement Response Response :: " + agreements);
-        if (agreements != null && !agreements.isEmpty())
-            throw new RuntimeException("This category has already been used for agreements,hence can not be modified .");
+        // if (agreements != null && !agreements.isEmpty())
+        // throw new RuntimeException("This category has already been used for agreements,hence can not be modified .");
 
+        return agreements;
     }
 
 }

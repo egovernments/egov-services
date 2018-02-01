@@ -108,4 +108,6 @@ public class AssetCategory {
     private List<AttributeDefinition> assetFieldsDefination;
     
     private Boolean usedForLease;
+    
+    private Boolean isAgreementsExists=false;
 }

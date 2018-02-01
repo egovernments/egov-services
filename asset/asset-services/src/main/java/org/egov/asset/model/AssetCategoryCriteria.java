@@ -93,5 +93,9 @@ public class AssetCategoryCriteria {
     private Boolean isChildCategory;
     
     private Boolean usedForLease;
+    
+    private Boolean isAgreementsExists=false;
+    
+    private String action;
 
 }

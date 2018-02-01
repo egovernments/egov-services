@@ -51,6 +51,7 @@ public class AgreementCriteria {
 	 private String action;
 	 private String referenceNumber;
 	 private String oldAgreementNumber;
+	 private String floorNumber;
 
 	/* Below three methods use the Java Stream api and stream all specified fields
 	 * and check for null all these methods return true only when all the fields
@@ -58,7 +59,7 @@ public class AgreementCriteria {
 	 */
 	public boolean isAgreementEmpty(){
 		 return Stream.of(agreementId, agreementNumber, status, fromDate, toDate, tenderNumber,
-				 tinNumber, tradelicenseNumber, asset, allottee,referenceNumber, oldAgreementNumber)
+				 tinNumber, tradelicenseNumber, asset, allottee,referenceNumber, oldAgreementNumber,floorNumber)
 				 .allMatch(Objects::isNull);
 	 }
 

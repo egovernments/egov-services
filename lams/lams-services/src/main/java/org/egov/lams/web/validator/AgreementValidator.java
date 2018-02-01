@@ -47,6 +47,7 @@ public class AgreementValidator {
 	public static final String ERROR_FIELD_AGREEMENT_NO = "Agreement.agreementNumber" ;
 	public static final String ERROR_MSG_UNDER_WORKFLOW = "Agreement is already under going in some workflow.";
 	public static final String ACTION_MODIFY ="Modify";
+	public static final String SHOPPING_COMPLEX = "Shopping Complex";
 	@Autowired
 	private AssetRepository assetService;
 
@@ -166,7 +167,7 @@ public class AgreementValidator {
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
-		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
+		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, Action.RENEWAL.toString());
 
 		Long assetId = agreement.getAsset().getId();
 
@@ -210,7 +211,7 @@ public class AgreementValidator {
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
-		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
+		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, Action.CANCELLATION.toString());
 	}
 
 	public void validateObjection(AgreementRequest agreementRequest, Errors errors) {
@@ -277,16 +278,36 @@ public class AgreementValidator {
 
 	public void validateAsset(AgreementRequest agreementRequest, Errors errors) {
 
+		Agreement agreement = agreementRequest.getAgreement();
 		Long assetId = agreementRequest.getAgreement().getAsset().getId();
+		String assetCategory = agreementRequest.getAgreement().getAsset().getCategory().getName();
+
 		String queryString = "id=" + assetId + "&tenantId=" + agreementRequest.getAgreement().getTenantId();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
 		AssetResponse assetResponse = assetService.getAssets(queryString, requestInfoWrapper);
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().isEmpty())
 			errors.rejectValue("Agreement.securityDeposit", "", "No asset is created");
+		if (SHOPPING_COMPLEX.equalsIgnoreCase(assetCategory))
+			validateAgreementsForFloor(agreement, assetId, errors);
 
 	}
 
+	private void validateAgreementsForFloor(Agreement agreement, Long assetId, Errors errors) {
+		List<Agreement> agreements;
+		Boolean isExist = Boolean.FALSE;
+		String shopNumber = agreement.getReferenceNumber();
+		agreements = agreementService.getAgreementsForAssetIdAndFloor(agreement, assetId);
+
+		if (!agreements.isEmpty()) {
+			isExist = agreements.stream().anyMatch(a -> a.getReferenceNumber().equalsIgnoreCase(shopNumber));
+		}
+		if (isExist) {
+			errors.rejectValue("Agreement.ReferenceNumber","", "Agreement already exists with the shop Number: "+shopNumber);
+ 
+		}
+
+	}
 	public void validateAllottee(AgreementRequest agreementRequest, Errors errors) {
 
 		Allottee allottee = agreementRequest.getAgreement().getAllottee();

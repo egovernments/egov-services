@@ -111,6 +111,11 @@ public class AgreementQueryBuilder {
 			params.put("oldAgreementNumber", agreementsModel.getOldAgreementNumber());
 		}
 
+		if (StringUtils.isNotBlank(agreementsModel.getFloorNumber())) {
+			selectQuery.append(" and AGREEMENT.floorno = :floorNo");
+			params.put("floorNo", agreementsModel.getFloorNumber());
+		}
+
         if (agreementsModel.getFromDate() != null && agreementsModel.getToDate() != null) {
 
             if (agreementsModel.getToDate().compareTo(agreementsModel.getFromDate()) < 0)

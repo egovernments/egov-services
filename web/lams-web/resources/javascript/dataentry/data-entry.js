@@ -66,6 +66,7 @@ $(document).on("keyup","input", function() {
 
 var index=1;
 var create = true;
+var shopsMap = {};
 
 $(document).ready(function() {
 
@@ -262,12 +263,42 @@ $("select").on("change", function() {
         } else {
             $(".disabled").attr("disabled", true);
         }
+    } else if(this.id == "floorNumber"){
+      validateAgreementsForFloor(this.value);
     }
 
     fillValueToObject(this);
 
 });
 
+$("input").on("change", function() {
+if (this.id == "referenceNumber"){
+     validateAgreementsForShopNo(this.value);
+  }
+  fillValueToObject(this);
+});
+function validateAgreementsForFloor(floorNumber) {
+   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,assetCode:getUrlVars()["assetId"]}).responseJSON["Agreements"];
+   var noOfShops = shopsMap[floorNumber];
+ if(noOfAgreements.length === noOfShops){
+   showError("Agreements should not exceed number of shops in the floor ");
+   $("#createAgreement").attr("disabled",true);
+   return false;
+ } else{
+   $("#createAgreement").attr("disabled",false);
+ }
+}
+function validateAgreementsForShopNo(referenceNumber) {
+   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, referenceNumber:referenceNumber,assetCode:getUrlVars()["assetId"]}).responseJSON["Agreements"];
+
+ if(noOfAgreements.length >= 1){
+   showError("Agreement already exist with same shop number, change the shop number");
+   $("#createAgreement").attr("disabled",true);
+   return false;
+ }else{
+   $("#createAgreement").attr("disabled",false);
+ }
+}
 $("textarea").on("keyup", function() {
     fillValueToObject(this);
 });
@@ -484,7 +515,7 @@ var commomFieldsRules = {
       alphaNumersh: true
     },
     referenceNumber:{
-      required: false,
+      required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex"  ? true : false,
       alphaNumersh: true
     },
     collectedGoodWillAmount: {
@@ -510,7 +541,12 @@ var commomFieldsRules = {
     firstAllotment :{
       required :false,
       'mm/yyyy' : true
+    },
+    floorNumber :{
+      required :true,
+      alphaNumersh: true
     }
+
 };
 
 // finalValidatinRules = Object.assign(validationRules, commomFieldsRules);
@@ -768,7 +804,13 @@ function onLoadAsset(){
                   case 'Shopping Complex Address':
                       $("#shoppingComplexAddress").val(attrs[i].value);
                       break;
-
+                  case 'Floor Details':
+                        var floorDetails = attrs[i].value;
+                      for (let i in floorDetails){
+                       $(`#floorNumber`).append(`<option value='${floorDetails[i]["Floor No."]}'>${floorDetails[i]["Floor No."]}</option>`);
+                          shopsMap[floorDetails[i]["Floor No."]]=parseInt(floorDetails[i]["No. of Shops"]);
+                         }
+                         break;
               }
           }
       }
@@ -1224,6 +1266,9 @@ function basedOnType(){
       $("#shoppingComplexAssetDetailsBlock textarea").attr("disabled", true);
       //disabling select tag of asset details
       $("#shoppingComplexAssetDetailsBlock select").attr("disabled", true);
+      $("#referenceNumber").attr("disabled",false);
+      $("#floorNumber").attr("disabled",false);
+      $("#referenceNumberSection").remove();
       //append category text
       $(".categoryType").prepend("Shopping Complex ");
   }else if (decodeURIComponent(getUrlVars()["type"]) == "Market") {

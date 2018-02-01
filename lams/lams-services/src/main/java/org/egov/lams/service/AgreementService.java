@@ -80,6 +80,18 @@ public class AgreementService {
 		agreementCriteria.setAsset(assets);
 		return agreementRepository.getAgreementForCriteria(agreementCriteria);
 	}
+	
+	public List<Agreement> getAgreementsForAssetIdAndFloor(Agreement agreement,Long assetId) {
+
+		AgreementCriteria agreementCriteria = new AgreementCriteria();
+		Set<Long> assets = new HashSet<>();
+		assets.add(assetId);
+		agreementCriteria.setAsset(assets);
+		if(agreement.getReferenceNumber()!=null){
+		agreementCriteria.setReferenceNumber(agreement.getReferenceNumber());
+		}
+		return agreementRepository.getAgreementForCriteria(agreementCriteria);
+	}
 
 	/**
 	 * This method is used to create new agreement

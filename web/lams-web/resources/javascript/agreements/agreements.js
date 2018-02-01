@@ -57,6 +57,7 @@ var CONST_API_GET_FILE = "/filestore/v1/files/id?fileStoreId=";
 var agreement = {};
 var employees = [];
 var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
+var shopsMap = {};
 
 $(document).ready(function(){
 
@@ -144,6 +145,8 @@ $("select").on("change", function() {
             $(".disabled").attr("disabled", false);
         } else {
             $(".disabled").attr("disabled", true);
+        }else if(this.id == "floorNumber"){
+          validateAgreementsForFloor(this.value);
         }
     }
 
@@ -164,6 +167,35 @@ $("select").on("change", function() {
     fillValueToObject(this);
 
 });
+
+$("input").on("change", function() {
+if (this.id == "referenceNumber"){
+     validateAgreementsForShopNo(this.value);
+  }
+  fillValueToObject(this);
+});
+function validateAgreementsForFloor(floorNumber) {
+   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,assetCode:getUrlVars()["assetId"]}).responseJSON["Agreements"];
+   var noOfShops = shopsMap[floorNumber];
+ if(noOfAgreements.length === noOfShops){
+   showError("Agreements should not exceed number of shops in the floor ");
+   $("#createAgreement").attr("disabled",true);
+   return false;
+ } else{
+   $("#createAgreement").attr("disabled",false);
+ }
+}
+function validateAgreementsForShopNo(referenceNumber) {
+   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, referenceNumber:referenceNumber,assetCode:getUrlVars()["assetId"]}).responseJSON["Agreements"];
+
+ if(noOfAgreements.length >= 1){
+   showError("Agreement already exist with same shop number, change the shop number");
+   $("#createAgreement").attr("disabled",true);
+   return false;
+ }else{
+   $("#createAgreement").attr("disabled",false);
+ }
+}
 
 //file change handle for file upload
 $("input[type=file]").on("change", function(evt) {
@@ -380,7 +412,7 @@ var commomFieldsRules = {
       alphaNumersh: true
     },
     referenceNumber:{
-      required: false,
+      required: decodeURIComponent(getUrlVars()["type"]).toLowerCase() == "shopping complex"  ? true : false,
       alphaNumersh: true
     },
 };
@@ -526,6 +558,9 @@ if (decodeURIComponent(getUrlVars()["type"]) == "Land") {
     $("#shoppingComplexAssetDetailsBlock textarea").attr("disabled", true);
     //disabling select tag of asset details
     $("#shoppingComplexAssetDetailsBlock select").attr("disabled", true);
+    $("#referenceNumber").attr("disabled",false);
+    $("#floorNumber").attr("disabled",false);
+    $("#referenceNumberSection").remove();
     //append category text
     $(".categoryType").prepend("Shopping Complex ");
 }
@@ -1204,6 +1239,13 @@ if (assetDetails && Object.keys(assetDetails).length) {
                 case 'Shopping Complex Address':
                     $("#shoppingComplexAddress").val(attrs[i].value);
                     break;
+                    case 'Floor Details':
+                          var floorDetails = attrs[i].value;
+                        for (let i in floorDetails){
+                         $(`#floorNumber`).append(`<option value='${floorDetails[i]["Floor No."]}'>${floorDetails[i]["Floor No."]}</option>`);
+                           shopsMap[floorDetails[i]["Floor No."]]=parseInt(floorDetails[i]["No. of Shops"]);
+                           }
+                           break;
 
             }
         }

@@ -298,15 +298,30 @@ class CreateAsset extends React.Component {
     if (getUrlVars()["type"] === "view") {
       $("input,select").prop("disabled", true);
     }
+
+
     if (type === "view" || type === "update") {
-      setTimeout(function(){
-        getCommonMasterById("asset-services", "assetCategories", id, function(err, res) {
-          if(res && res["AssetCategory"])
-            _this.setState({
-              assetCategory: res["AssetCategory"][0]
-            })
+
+      var promise = new Promise(function(resolve, reject) {
+        commonApiPost("asset-services","assetCategories","_search",{tenantId,id,action:"update"},function(err,res){
+          resolve(res.AssetCategory[0]);
         })
-      }, 100);
+      });
+
+      promise.then(function(response) {
+        _this.setState({
+          assetCategory: response
+        })
+      });
+
+      // setTimeout(function(){
+      //   getCommonMasterById("asset-services", "assetCategories", id, function(err, res) {
+      //     if(res && res["AssetCategory"])
+      //       _this.setState({
+      //         assetCategory: res["AssetCategory"][0]
+      //       })
+      //   })
+      // }, 100);
     }
   }
 
@@ -532,7 +547,7 @@ class CreateAsset extends React.Component {
   render() {
     let {handleChange,addOrUpdate,renderDelEvent,addAsset,handleChangeTwoLevel,showCustomFieldForm}=this;
     let {isSearchClicked,list,customField,column,isEdit,index,assetCategory,isCustomFormVisible, readonly, showMsg}=this.state;
-    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate, usedForLease}=assetCategory;
+    let {assetCategoryType,AssetCategory,parent,name,assetFieldsDefination,isMandatory,depreciationMethod,assetAccount,accumulatedDepreciationAccount,revaluationReserveAccount,depreciationExpenseAccount,unitOfMeasurement, version, depreciationRate, usedForLease, isAgreementsExists}=assetCategory;
     let mode = getUrlVars()["type"];
 
     console.log(this.state.assetCategory);
@@ -1018,7 +1033,11 @@ class CreateAsset extends React.Component {
                     <label for=""> Used for Lease and Agreement </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="checkbox" name="usedForLease" { ...( usedForLease ? { checked: 'checked' } :  {} ) } onChange={(e)=>{handleChange(e,"usedForLease")}} />
+                    <input type="checkbox" name="usedForLease"
+                      { ...( isAgreementsExists && mode == 'update' ? { disabled: 'disabled' } :  {} ) }
+                      { ...( usedForLease ? { checked: 'checked' } :  {} ) }
+                      onChange={(e)=>{handleChange(e,"usedForLease")}}
+                    />
                   </div>
                 </div>
               </div>

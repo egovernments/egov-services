@@ -275,8 +275,11 @@ ReportDefinitions:
     isMandatory: false
   - name: status
     label: reports.works.status
-    type: string
+    type: singlevaluelist
     source: works
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=WorksStatus&tenantId=$tenantid&filter=%5B%3F%28%40.moduleType%3D%3D%27DetailedEstimate%27%29%5D|$..code|$..description
+    wrapper: true
+    stateData: true
     searchClause : AND de.status=$status
     isMandatory: false
   - name: statusason
@@ -509,6 +512,7 @@ ReportDefinitions:
     isMandatory: false
   - name: district
     label: reports.works.district
+    type: singlevaluelist
     isMandatory: false
     type: string
     source: works
@@ -525,8 +529,17 @@ ReportDefinitions:
     wrapper: true
     stateData: true
     searchClause : AND de.workssubtype in ($subtypeofwork)
-  - name: statusason
+  - name: status
     label: reports.works.status
+    type: singlevaluelist
+    source: works
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=WorksStatus&tenantId=$tenantid&filter=%5B%3F%28%40.moduleType%3D%3D%27DetailedEstimate%27%29%5D|$..code|$..description
+    wrapper: true
+    stateData: true
+    searchClause : AND de.status=$status
+    isMandatory: false
+  - name: statusason
+    label: reports.works.statusason
     type: string
     source: works
     searchClause : AND de.status=$statusason
@@ -548,11 +561,5 @@ ReportDefinitions:
     wrapper: true
     stateData: true
     searchClause : AND de.workssubtype=$subTypeOfWork
-    isMandatory: false
-  - name: statusason
-    label: reports.works.statusason
-    type: string
-    source: works
-    searchClause : AND de.status=$statusason
     isMandatory: false
   query: select (select city.name from (values tbl_tenant) as city (name, districtName, regionName)) as divisionname, (select city.districtName from (values tbl_tenant) as city (name, districtName, regionName)) as districtname, (select name from (values tbl_tenant) as city (name, districtName, regionName)) as ulbname, (select tw.name from (values tbl_typeofwork) as tw (name,code,description,tenantId) where tw.code=de.workstype) as typeofwork, (select stw.name from (values tbl_subtypeofwork) as stw (name,code,description,tenantId) where stw.code=de.workssubtype) as subtypeofwork, (select scheme.name from (values tbl_scheme) as scheme (name, code) where scheme.code=de.scheme) as schemename, de.estimatenumber, de.nameofwork, de.estimatevalue as estimateamount, loa.loaamount as sanctionedamount, (select sum(bg.billamount) from egw_contractorbill cb, egf_billregister bg where bg.billnumber=cb.billnumber and bg.billtype='contractorbill' and cb.deleted=false and cb.letterofacceptanceestimate=loae.id) as billsreceivedtill from egw_letterofacceptance loa, egw_detailedestimate de, egw_letterofacceptanceestimate loae left join egw_contractorbill cb on cb.letterofacceptanceestimate=loae.id left join egf_billregister br on cb.billnumber=br.billnumber and br.billtype='contractorbill' where loae.letterofacceptance=loa.id and loae.detailedestimate=de.estimatenumber

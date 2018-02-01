@@ -39,6 +39,7 @@ public class KpiMasterServiceImpl implements KpiMasterService {
 	public KPIRequest createNewKpi(KPIRequest kpiRequest) {
 		int numberOfIds = kpiRequest.getKpIs().size(); 
     	log.info("KPI Message Received at Service Level : " + kpiRequest);
+    	autoGenerateKpiCode(kpiRequest);
     	List<Long> kpiIdList = kpiMasterRepository.getNewKpiIds(numberOfIds);
     	log.info("KPI Master Next ID Generated is : " + kpiIdList);
     	if(kpiIdList.size() == kpiRequest.getKpIs().size()) { 
@@ -48,7 +49,6 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     	}
     	setCreatedDateAndUpdatedDate(kpiRequest);
     	prepareDocumentObjects(kpiRequest);
-    	autoGenerateKpiCode(kpiRequest);
     	kpiMasterRepository.persistKpi(kpiRequest);
     	return kpiRequest;
 	}

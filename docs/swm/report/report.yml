@@ -49,6 +49,7 @@ ReportDefinitions:
     type: singlevaluelist
     emptyIfNotSet: true
     pattern: 'list://Wet:Wet,Dry:Dry,Both:Both'
+    defaultValue: 'Both'
     source: wastetype
     isMandatory: false    
   - name: fromDate

@@ -97,7 +97,7 @@ public class EstimateActivityHelper {
         }
 		estimateActivity.setNonSor(nonSOR);
 		ScheduleOfRate scheduleOfRate = new ScheduleOfRate();
-		scheduleOfRate.setCode(this.scheduleOfRate);
+		scheduleOfRate.setId(this.scheduleOfRate);
         estimateActivity.setScheduleOfRate(scheduleOfRate);
 		UOM uom = new UOM();
 		uom.setCode(this.uom);

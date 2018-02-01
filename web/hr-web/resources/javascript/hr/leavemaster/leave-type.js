@@ -253,6 +253,44 @@ addOrUpdate(e, mode) {
                         </div>
                     </div>
                 </div>
+                
+                <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Encloses Holiday <span> *</span> </label>
+                          </div>
+                          <div className="col-sm-6">
+                                <label className="radio-inline radioUi">
+                                  <input type="radio" name="encloseHoliday"  value="true" checked={encloseHoliday == "true" || encloseHoliday  ==  true}
+                                      onChange={(e)=>{handleChange(e,"encloseHoliday")  }}/> Yes
+                                </label>
+                                <label className="radio-inline radioUi">
+                                  <input type="radio" name="encloseHoliday" value="false" checked={encloseHoliday == "false" || !encloseHoliday}
+                                      onChange={(e)=>{handleChange(e,"encloseHoliday")}}/> No
+                                </label>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Prefix/Suffix <span> * </span> </label>
+                          </div>
+                          <div className="col-sm-6">
+                                <label className="radio-inline radioUi">
+                                  <input type="radio" name="includePrefixSuffix" value="true" checked={includePrefixSuffix == "true" || includePrefixSuffix  ==  true }
+                                   onChange={(e)=>{handleChange(e,"includePrefixSuffix")}}  /> Yes
+                                </label>
+                                <label className="radio-inline radioUi">
+                                  <input type="radio"  name="includePrefixSuffix" value="false" checked={includePrefixSuffix == "false" || !includePrefixSuffix}
+                                  onChange={(e)=>{handleChange(e,"includePrefixSuffix")}}/> No
+                                </label>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+
                 <div className="row">
                 <div className="col-sm-6">
                   <div className="row">

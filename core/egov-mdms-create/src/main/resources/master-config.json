@@ -260,6 +260,15 @@
         "$.tenantId"
       ]
     },
+   "ToiletType": {
+      "masterName": "ToiletType",
+      "isStateLevel": true,
+      "moduleDefinition": null,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
     "SwmProcess": {
       "masterName": "SwmProcess",
       "moduleDefinition": null,

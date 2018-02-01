@@ -216,6 +216,18 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
+                                        <label htmlFor="categoryType">Asset Category :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="assetCategoryType" name="assetCategoryType">
+                                            { assetCategory.name ? assetCategory.name : "N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
                                         <label htmlFor="aName">Asset Name :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
@@ -225,6 +237,8 @@ class AgreementDetails extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div className="row">
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
@@ -233,20 +247,6 @@ class AgreementDetails extends React.Component {
                                     <div className="col-sm-6 label-view-text">
                                         <label id="code" name="code">
                                             { asset.code ? asset.code :"N/A"}
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="categoryType">Asset Category Type :</label>
-                                    </div>
-                                    <div className="col-sm-6 label-view-text">
-                                        <label id="assetCategoryType" name="assetCategoryType">
-                                            { assetCategory.name ? assetCategory.name : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -280,30 +280,17 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="revenueWard">Revenue Ward :</label>
+                                        <label htmlFor="locationDetails.street">Street :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <label id="revenueWard" name="revenueWard">
-                                            {locationDetails.revenueWard? getNamebyId(revenueWards, locationDetails.revenueWard) :"N/A"}
+                                        <label id="locationDetails.street" name="locationDetails.street">
+                                            {locationDetails.street || "N/A"}
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-sm-6">
-                                <div className="row">
-                                    <div className="col-sm-6 label-text">
-                                        <label htmlFor="block">Block :</label>
-                                    </div>
-                                    <div className="col-sm-6 label-view-text">
-                                        <label id="Block" name="Block">
-                                          {locationDetails.block? getNamebyId(revenueBlock, locationDetails.block) :"N/A"}
-                                        </label>
-                                    </div>
-
-                                </div>
-                            </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
@@ -316,6 +303,71 @@ class AgreementDetails extends React.Component {
                                     </div>
                                 </div>
                             </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="revenueWard">Revenue Ward :</label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <label id="revenueWard" name="revenueWard">
+                                            {locationDetails.revenueWard? getNamebyId(revenueWards, locationDetails.revenueWard) :"N/A"}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="block">Revenue Block :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="Block" name="Block">
+                                        {locationDetails.block? getNamebyId(revenueBlock, locationDetails.block) :"N/A"}
+                                      </label>
+                                  </div>
+
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="electionWard">Election Ward :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="electionWard" name="electionWard">
+                                          {locationDetails.electionWard ? getNamebyId(electionwards, locationDetails.electionWard) :"N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="surveyNumber">Survey Number :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="surveyNumber" name="surveyNumber">
+                                        {agreement.surveyNumber || "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="row">
+                                  <div className="col-sm-6 label-text">
+                                      <label htmlFor="marketValue">Market value :</label>
+                                  </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="marketValue" name="marketValue">
+                                          {agreement.marketValue || "N/A"}
+                                      </label>
+                                  </div>
+                              </div>
+                          </div>
                         </div>
                     </div>
                 </div>);

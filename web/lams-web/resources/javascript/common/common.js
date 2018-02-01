@@ -279,3 +279,13 @@ function showError(message) {
 function getTimestamp() {
     return new Date().getTime();
 }
+
+function showLoading(){
+ document.getElementById("loadingMask").style.display = "block";
+ document.getElementById("loading").style.display = "block";
+}
+
+function hideLoading(){
+ document.getElementById("loadingMask").style.display = "none";
+ document.getElementById("loading").style.display = "none";
+}

@@ -82,6 +82,15 @@
         "$.code",
         "$.tenantId"
       ]
+    },
+   "CensusYear": {
+      "masterName": "CensusYear",
+      "moduleDefinition": null,
+      "isStateLevel": true,
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
     }
   },
   "egf-master": {
@@ -149,6 +158,7 @@
     "VehicleType": {
       "masterName": "VehicleType",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -157,6 +167,7 @@
     "FuelType": {
       "masterName": "FuelType",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -165,6 +176,7 @@
     "OilCompany": {
       "masterName": "OilCompany",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -173,6 +185,7 @@
     "WasteType": {
       "masterName": "WasteType",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -181,6 +194,7 @@
     "WasteSubType": {
       "masterName": "WasteSubType",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -189,6 +203,7 @@
     "DumpingGround": {
       "masterName": "DumpingGround",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -197,6 +212,7 @@
     "ProcessingSite": {
       "masterName": "ProcessingSite",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -205,6 +221,7 @@
     "ShiftType": {
       "masterName": "ShiftType",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -221,6 +238,7 @@
     "CollectionType": {
       "masterName": "CollectionType",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -245,6 +263,7 @@
     "SwmProcess": {
       "masterName": "SwmProcess",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.code",
         "$.tenantId"
@@ -253,6 +272,7 @@
     "PaymentTerms": {
       "masterName": "PaymentTerms",
       "moduleDefinition": null,
+      "isStateLevel": true,
       "uniqueKeys": [
         "$.label",
         "$.tenantId"

@@ -275,7 +275,7 @@ serviceMaps:
        - jsonPath: $.kpiValues.*.kpiValue.valueList.*.createdTime
          type: LONG
          
-    - query: INSERT INTO egpa_kpi_value_documents (id, kpicode, valueid, documentcode, documentname, filestoreid, createdby) values (nextval('seq_egpa_kpi_value_documents'), ?, ?, ?, ?, ?)   
+    - query: INSERT INTO egpa_kpi_value_documents (id, kpicode, valueid, documentcode, documentname, filestoreid, createdby) values (nextval('seq_egpa_kpi_value_documents'), ?, ?, ?, ?, ?, ?)   
       basePath: $.kpiValues.*.kpiValue.valueList.*.documents.*
       jsonMaps:
        

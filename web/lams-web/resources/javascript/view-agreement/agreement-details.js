@@ -3,6 +3,7 @@ class AgreementDetails extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            reservationCategory:[],
             agreement: {
                 id: "",
                 tenantId: tenantId,
@@ -173,24 +174,30 @@ class AgreementDetails extends React.Component {
         var agreementNumber = getUrlVars()["agreementNumber"];
         var acknowledgementNumber = getUrlVars()["acknowledgementNumber"];
         var status = getUrlVars()["status"];
-        var agreement = commonApiPost("lams-services",
-            "agreements",
-            "_search", { agreementNumber,status,acknowledgementNumber,action:"Modify",tenantId}).responseJSON["Agreements"][0] || {};
-        this.setState({
-            ...this.state,
-            agreement: agreement,
-            subSeqRenewals: agreement.subSeqRenewals
+
+        var promise1 = new Promise(function(resolve, reject) {
+          var reservationCategory = commonApiPost("lams-services", "getreservations", "", {tenantId}).responseJSON;
+          var agreement = commonApiPost("lams-services","agreements","_search", { agreementNumber,status,acknowledgementNumber,action:"Modify",tenantId}).responseJSON["Agreements"][0] || {};
+          resolve({reservationCategory:reservationCategory,agreement:agreement});
         });
 
+        promise1.then((response) => {
+          this.setState({
+              ...this.state,
+              reservationCategory:response.reservationCategory,
+              agreement: response.agreement,
+              subSeqRenewals: response.agreement.subSeqRenewals
+          });
+        });
     }
     render() {
         var _this = this;
         let { viewDCB } = this;
-        let { agreement} = this.state;
+        let { agreement, reservationCategory} = this.state;
         let { allottee, asset,subSeqRenewals } = this.state.agreement;
         let { assetCategory, locationDetails } = this.state.agreement.asset;
 
-        console.log(agreement);
+        console.log(this.state);
 
         const renderOption = function (data) {
             if (data) {
@@ -202,9 +209,9 @@ class AgreementDetails extends React.Component {
             }
         }
 
-        const getNamebyId = function(arr, id){
+        const getNamebyIdFromMaster = function(arr, id){
           let validObj = arr && arr.find((obj)=>{return obj.id == id});
-          return validObj.name;
+          return validObj && validObj.name || 'N/A';
         }
 
         const renderAssetDetails = function () {
@@ -272,7 +279,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="locationDetails.locality" name="locationDetails.locality">
-                                            {locationDetails.locality ? getNamebyId(locality, locationDetails.locality) : "N/A"}
+                                            {locationDetails.locality ? getNamebyIdFromMaster(locality, locationDetails.locality) : "N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -298,7 +305,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="zone" name="zone">
-                                            {locationDetails.zone ? getNamebyId(revenueZone, locationDetails.zone) :"N/A"}
+                                            {locationDetails.zone ? getNamebyIdFromMaster(revenueZone, locationDetails.zone) :"N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -310,7 +317,7 @@ class AgreementDetails extends React.Component {
                                     </div>
                                     <div className="col-sm-6 label-view-text">
                                         <label id="revenueWard" name="revenueWard">
-                                            {locationDetails.revenueWard? getNamebyId(revenueWards, locationDetails.revenueWard) :"N/A"}
+                                            {locationDetails.revenueWard? getNamebyIdFromMaster(revenueWards, locationDetails.revenueWard) :"N/A"}
                                         </label>
                                     </div>
                                 </div>
@@ -324,7 +331,7 @@ class AgreementDetails extends React.Component {
                                   </div>
                                   <div className="col-sm-6 label-view-text">
                                       <label id="Block" name="Block">
-                                        {locationDetails.block? getNamebyId(revenueBlock, locationDetails.block) :"N/A"}
+                                        {locationDetails.block? getNamebyIdFromMaster(revenueBlock, locationDetails.block) :"N/A"}
                                       </label>
                                   </div>
 
@@ -337,7 +344,7 @@ class AgreementDetails extends React.Component {
                                   </div>
                                   <div className="col-sm-6 label-view-text">
                                       <label id="electionWard" name="electionWard">
-                                          {locationDetails.electionWard ? getNamebyId(electionwards, locationDetails.electionWard) :"N/A"}
+                                          {locationDetails.electionWard ? getNamebyIdFromMaster(electionwards, locationDetails.electionWard) :"N/A"}
                                       </label>
                                   </div>
                               </div>
@@ -599,11 +606,11 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="status">Category :</label>
+                                        <label htmlFor="reservationCategory">Reservation Category :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <label id="status" name="status">
-                                            {agreement.category ? agreement.category : "N/A"}
+                                        <label id="reservationCategory" name="reservationCategory">
+                                            {reservationCategory && agreement.reservationCategory ? getNamebyIdFromMaster(reservationCategory,agreement.reservationCategory) : "N/A"}
                                         </label>
                                     </div>
                                 </div>

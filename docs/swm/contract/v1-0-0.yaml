@@ -1421,80 +1421,6 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-    /sourcesegregation/_search:
-      post:
-        summary: Get the list of sourcesegregation
-        description: sourcesegregation
-        tags: 
-          - SourceSegregation
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: ids
-            type: array
-            items: 
-              type: integer
-              format: int64
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
-          - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
-        responses:
-          200:
-            description: SourceSegregation(s) retrieved Successfully
-            schema:
-              $ref: '#/definitions/SourceSegregationResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /sourcesegregation/_create:
-      post:
-        summary: Create new sourcesegregation(s)
-        description: Create new sourcesegregation(s)
-        tags: 
-          - SourceSegregation
-        parameters:
-          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: sourceSegregationRequest
-            in: body
-            description: SourceSegregation Request
-            schema:
-              $ref: '#/definitions/SourceSegregationRequest'
-        responses:
-          201:
-            description: SourceSegregation(s) created Successfully
-            schema:
-              $ref: '#/definitions/SourceSegregationResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
-    /sourcesegregation/_update:
-      post:
-        summary: Update any of the sourcesegregation
-        description: Update any of the sourcesegregation
-        tags: 
-          - SourceSegregation
-        parameters:
-          - name: sourceSegregationRequest
-            in: body
-            description: SourceSegregation Request
-            schema:
-              $ref: '#/definitions/SourceSegregationRequest'
-        responses:
-          200:
-            description: SourceSegregation updated Successfully
-            schema:
-              $ref: '#/definitions/SourceSegregationResponse'
-          400:
-            description: Invalid Input
-            schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
     /vendorpaymentdetails/_search:
       post:
         summary: Get the list of vendorpaymentdetails
@@ -3755,6 +3681,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

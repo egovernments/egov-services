@@ -193,7 +193,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
                 }
                 for (RouteCollectionPointMap rcpm : sst.getRoute().getCollectionPoints()) {
 
-                    if (rcpm.getCollectionPoint() != null) {
+                    if (rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null) {
                         cp = rcpm.getCollectionPoint();
                         if (selectedCollectionPointMap.get(cp.getCode()) == null)
                             cp.setIsSelected(false);

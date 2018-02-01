@@ -9,6 +9,20 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * @author Veswanth
+ * 
+ *  The LCMS (Legal Case Management System) includes the following key features. 
+ *        
+ *         ⦁  Summon/Warrant detail Entry
+ *         ⦁  Assigning Advocate 
+ *         ⦁  Case Registration 
+ *         ⦁  Vakalatnama Generation 
+ *         ⦁  Parawise comments Creation 
+ *         ⦁  Hearing Process detail entry 
+ *         ⦁  Opinion against the case.
+ * 
+ */
 @SpringBootApplication
 public class EgovLcmsApplication {
 	public static void main(String[] args) {

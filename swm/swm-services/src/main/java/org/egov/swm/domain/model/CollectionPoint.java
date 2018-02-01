@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -40,10 +41,12 @@ public class CollectionPoint {
     private Boundary location = null;
 
     @Valid
+    @Size(min = 1)
     @JsonProperty("binDetails")
     private List<BinDetails> binDetails = null;
 
     @Valid
+    @Size(min = 1)
     @JsonProperty("collectionPointDetails")
     private List<CollectionPointDetails> collectionPointDetails = null;
 

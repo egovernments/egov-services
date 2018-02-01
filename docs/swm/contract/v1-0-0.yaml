@@ -1628,6 +1628,8 @@ definitions:
       - tenantId
       - name
       - location
+      - binDetails
+      - collectionPointDetails
       
     CollectionPointRequest:
       description: Contract class to receive request. Array of CollectionPoint items are used in case of create, whereas single CollectionPoint item is used for update
@@ -3681,6 +3683,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

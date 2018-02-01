@@ -115,9 +115,9 @@ public class AssetCategoryQueryBuilder {
                     + getAssetCategoryTypeQuery(assetCategoryCriteria.getAssetCategoryType()));
         }
         if (assetCategoryCriteria.getIsChildCategory() != null) {
-            selectQuery.append( " AND assetcategory.parentid IS NOT NULL ");
-
-        }
+            selectQuery.append(
+                    " AND NOT EXISTS (select category.parentid from egasset_assetcategory category where assetcategory.id= category.parentid)");
+            }
 
         if (assetCategoryCriteria.getParent() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);

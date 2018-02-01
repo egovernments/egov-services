@@ -521,8 +521,7 @@ public class EstimateValidator {
                 if(detailedEstimate.getEstimateOverheads() != null && !detailedEstimate.getEstimateOverheads().isEmpty())
                     validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
-                if(detailedEstimate.getStatus() != null && !detailedEstimate.getStatus().getCode().equalsIgnoreCase(CommonConstants.STATUS_CANCELLED))
-                   validateUpdateStatus(detailedEstimate, requestInfo, messages);
+                validateUpdateStatus(detailedEstimate, requestInfo, messages);
                 if(detailedEstimate.getDetailedEstimateDeductions() != null && !detailedEstimate.getDetailedEstimateDeductions().isEmpty())
                     validateDeductions(detailedEstimate, requestInfo, messages);
 
@@ -609,7 +608,8 @@ public class EstimateValidator {
                 if (status.equals(CommonConstants.STATUS_CANCELLED) || status.equals(CommonConstants.STATUS_TECH_SANCTIONED)) {
                     messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_DETAILED_ESTIMATE);
                 } else if((status.equals(CommonConstants.STATUS_REJECTED) && !detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED)) ||
-                        (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
+                        (status.equals(CommonConstants.STATUS_REJECTED) && !detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) ||
+                       (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
                                 detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) )) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
                 } else if (!detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {

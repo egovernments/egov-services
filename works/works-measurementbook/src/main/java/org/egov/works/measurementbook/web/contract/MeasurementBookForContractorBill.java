@@ -88,7 +88,7 @@ public class MeasurementBookForContractorBill   {
   **/
   @ApiModelProperty(value = "Measurement Book Reference in the MB for Contractor Bill")
 
-  @Valid
+  //@Valid
 
   public MeasurementBook getMeasurementBook() {
     return measurementBook;

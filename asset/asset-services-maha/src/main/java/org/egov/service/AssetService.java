@@ -138,6 +138,8 @@ public class AssetService {
 		
 		final List<LandDetail> landDetailsFromSearch =assetResponse.getAssets().get(0).getLandDetails();
 		final List<LandDetail> deletedLandDetails=new ArrayList<>();
+		
+		if(landDetailsFromReq!=null) {
 		if(landDetailsFromSearch!=null) {
 			for (LandDetail lD: landDetailsFromSearch) {
 			if(!landDetailsFromReq.contains(lD)) {
@@ -153,6 +155,15 @@ public class AssetService {
 				}
 			landDetailsFromReq.addAll(deletedLandDetails);
 		}
+		}else {
+			if(landDetailsFromSearch!=null) {
+				for (LandDetail landDetail : landDetailsFromSearch) {
+					landDetail.setIsEnabled(false);
+				}
+				asset.setLandDetails(landDetailsFromSearch);
+			}
+			
+		}
 		
 		if (landDetailsFromReq != null) {
 
@@ -160,7 +171,14 @@ public class AssetService {
 				if (landDetail.getId() == null)
 					landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));
 			}
+		}else {
+			for (LandDetail landDetail : landDetailsFromSearch) {
+				if (landDetail.getId() == null)
+					landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));
+			}
+			
 		}
+		assetRequest.setAsset(asset);
 		
 		
 		List<Long> assetCurrentvalue = currentValueService.getNonTransactedCurrentValues(assetIds, asset.getTenantId(),

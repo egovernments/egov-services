@@ -55,7 +55,7 @@ public class ContractorBillService {
             
         }
         
-        validator.validateContractorBill(contractorBillRequest, true);
+        //validator.validateContractorBill(contractorBillRequest, true);
         CommonUtils commonUtils = new CommonUtils();
         BillStatus finStatus = new BillStatus();
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
@@ -111,7 +111,7 @@ public class ContractorBillService {
 
     public ContractorBillResponse update(ContractorBillRequest contractorBillRequest) {
         ContractorBillResponse contractorBillResponse = new ContractorBillResponse();
-        validator.validateContractorBill(contractorBillRequest, false);
+        //validator.validateContractorBill(contractorBillRequest, false);
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
             populateAuditDetails(contractorBillRequest.getRequestInfo(), contractorBill);
         }

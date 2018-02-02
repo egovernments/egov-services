@@ -256,13 +256,14 @@ class SearchAsset extends React.Component {
       if (assetList.length>0) {
         return assetList.map((item, index)=>
         {
+          console.log(item);
           return (<tr key={index} onClick={(e) => {handleAction(e, item.id)}}>
                     <td>{index+1}</td>
                     <td>{item.code}</td>
                     <td>{item.name}</td>
                     <td>{item.assetCategory.name}</td>
                     <td>{item.locationDetails.locality ? getNameById(locality, item.locationDetails.locality) : ""}</td>
-                    <td>{item.grossValue}</td>
+                    <td>{item.currentValue === null ? (item.grossValue === null ? 0 : item.grossValue) : item.currentValue}</td>
               </tr>  );
         })
       }

@@ -13,7 +13,6 @@ class Revaluation extends React.Component {
             "tenantId": tenantId,
             "id": "",
             "assetId": "",
-            "currentCapitalizedValue": "",
             "typeOfChange": "",
             "revaluationAmount": "",
             "valueAfterRevaluation": "",
@@ -113,8 +112,7 @@ class Revaluation extends React.Component {
           if(res) {
           	checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
             commonApiPost("asset-services", "assets", "currentvalue/_search", {tenantId, assetIds: res["Assets"][0].id}, function(er, res) {
-              if(res && res.AssetCurrentValues) {
-                console.log(res.AssetCurrentValues[0].currentAmount);
+              if(res && res.AssetCurrentValues.length > 0) {
                 _this.setState({
                   revaluationSet: {
                     ..._this.state.revaluationSet,
@@ -190,61 +188,84 @@ class Revaluation extends React.Component {
             })
           }
         })
-      } else if(name == "revaluationAmount" || name == "typeOfChange" && this.state.revaluationSet.currentCapitalizedValue) {
-        switch(name) {
-          case 'revaluationAmount':
-            if(this.state.revaluationSet.typeOfChange) {
-              switch (this.state.revaluationSet.typeOfChange) {
-                case 'INCREASED':
-                  setTimeout(function() {
-                    _this.setState({
-                      revaluationSet: {
-                        ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.state.revaluationSet.currentCapitalizedValue) + Number(val)
-                      }
-                    })
-                  }, 200);
-                  break;
-                case 'DECREASED':
-                  setTimeout(function() {
-                    _this.setState({
-                      revaluationSet: {
-                        ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.state.revaluationSet.currentCapitalizedValue) - Number(val)
-                      }
-                    });
-                  }, 200);
-                  break;
-              }
-            }
-            break;
-          case 'typeOfChange':
-            if(this.state.revaluationSet.revaluationAmount) {
-              switch (val) {
-                case 'INCREASED':
-                  setTimeout(function() {
-                    _this.setState({
-                      revaluationSet: {
-                        ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) + Number(_this.state.revaluationSet.revaluationAmount)
-                      }
-                    })
-                  }, 200);
-                  break;
-                case 'DECREASED':
-                  setTimeout(function() {
-                    _this.setState({
-                      revaluationSet: {
-                        ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) - Number(_this.state.revaluationSet.revaluationAmount)
-                      }
-                    });
-                  }, 200);
-                  break;
-              }
-            }
-            break;
+      } else if(name == "revaluationAmount" || name == "typeOfChange") {
+
+        let valueAfterRevaluation = 0;
+        if(this.state.revaluationSet.currentCapitalizedValue){
+          valueAfterRevaluation = Number(this.state.revaluationSet.currentCapitalizedValue);
+        }else if(this.state.assetSet.grossValue){
+          valueAfterRevaluation = Number(this.state.assetSet.grossValue);
         }
+
+        let revaluationAmount = 0;
+        if(name == "revaluationAmount"){
+          revaluationAmount = Number(val);
+        }else{
+          revaluationAmount = Number(this.state.revaluationSet.revaluationAmount);
+        }
+
+        let typeOfChange = '';
+        if(name == 'revaluationAmount'){
+          typeOfChange = this.state.revaluationSet.typeOfChange;
+        }else{
+          typeOfChange = val;
+        }
+        // console.log(typeOfChange, revaluationAmount, valueAfterRevaluation, revaluationAmount+valueAfterRevaluation);
+        if(typeOfChange) {
+          switch (typeOfChange) {
+            case 'INCREASED':
+              setTimeout(function() {
+                _this.setState({
+                  revaluationSet: {
+                    ..._this.state.revaluationSet,
+                    "valueAfterRevaluation": valueAfterRevaluation + revaluationAmount
+                  }
+                })
+              }, 200);
+              break;
+            case 'DECREASED':
+              setTimeout(function() {
+                _this.setState({
+                  revaluationSet: {
+                    ..._this.state.revaluationSet,
+                    "valueAfterRevaluation": valueAfterRevaluation - revaluationAmount
+                  }
+                });
+              }, 200);
+              break;
+          }
+        }
+        // switch(name) {
+        //   case 'revaluationAmount':
+        //
+        //     break;
+        //   case 'typeOfChange':
+        //     if(this.state.revaluationSet.revaluationAmount) {
+        //       switch (val) {
+        //         case 'INCREASED':
+        //           setTimeout(function() {
+        //             _this.setState({
+        //               revaluationSet: {
+        //                 ..._this.state.revaluationSet,
+        //                 "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) + Number(_this.state.revaluationSet.revaluationAmount)
+        //               }
+        //             })
+        //           }, 200);
+        //           break;
+        //         case 'DECREASED':
+        //           setTimeout(function() {
+        //             _this.setState({
+        //               revaluationSet: {
+        //                 ..._this.state.revaluationSet,
+        //                 "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) - Number(_this.state.revaluationSet.revaluationAmount)
+        //               }
+        //             });
+        //           }, 200);
+        //           break;
+        //       }
+        //     }
+        //     break;
+        // }
       }
 
       this.setState({

@@ -60,44 +60,64 @@ class BaseRegister extends React.Component {
         <h3 className="pull-left">Search Result</h3>
         <div className="clearfix"></div>
         <div className="view-table">
-        <table className="table table-bordered">
-          <thead>
+        <table className="table table-bordered" style={{'height': '300px', 'overflow':'scroll', 'display': 'block'}}>
+          <thead >
             <tr>
               <th>S.no</th>
+              <th>Asset Category</th>
+              <th>Asset Name</th>
               <th>Agreement No.</th>
               <th>Name of the Allottee </th>
+              <th>Mobile Number</th>
+              <th>GSTIN</th>
+              <th>CR Number & Date</th>
+              <th>Date of Allotment</th>
+              <th>Basis of Allotment</th>
+              <th>Method of Renewal</th>
+              <th>Category</th>
+              <th>Shop No./ Survey No.</th>
               <th>Door No.</th>
               <th>Locality</th>
               <th>Revenue Ward</th>
               <th>Election Ward</th>
-              <th>Security Deposit</th>
-              <th>Goodwill Amount</th>
-              <th>Date of Allotment</th>
+              <th>Area of the Asset(Sq.ft)</th>
               <th>Agreement Time Period</th>
-              <th>Agreement Expiry Date</th>
               <th>Agreement Status </th>
-              <th>Total Rent</th>
-              <th>Total Pending Rent</th>
+              <th>Monthly Rent</th>
+              <th>Total Demand</th>
+              <th>Total Penalty</th>
+              <th>Total Collection</th>
+              <th>Total Balance</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             {resultSet && resultSet.map((list, index)=>{
               return (
                 <tr>
                   <td>{index+1}</td>
+                  <td>{list.assetCategory}</td>
+                  <td>{list.assetName}</td>
                   <td>{list.agreementNumber}</td>
                   <td>{list.allotteeName}</td>
-                  <td>{list.doorno}</td>
-                  <td>{list.locality}</td>
-                  <td>{list.revenueward}</td>
-                  <td>{list.electionward}</td>
-                  <td>{list.securityDeposit}</td>
-                  <td>{list.goodWillAmount}</td>
+                  <td>{list.mobileNumber}</td>
+                  <td>{list.gstin}</td>
+                  <td>{list.councilResolutionNumberDate  || "N/A"}</td>
                   <td>{list.commencementDate}</td>
+                  <td>{list.basisOfAllotment}</td>
+                  <td>{list.methodOfRenewal || "N/A"}</td>
+                  <td>{list.reservationCategory}</td>
+                  <td>{list.shopNo || "N/A"}</td>
+                  <td>{list.doorno  || "N/A"}</td>
+                  <td>{list.locality || "N/A"}</td>
+                  <td>{list.revenueward  || "N/A"}</td>
+                  <td>{list.electionward  || "N/A"}</td>
+                  <td>{list.assetArea  || "N/A"}</td>
                   <td>{list.timePeriod}</td>
-                  <td>{list.expiryDate}</td>
                   <td>{list.status}</td>
-                  <td>{list.rent}</td>
+                  <td>{list.monthlyRent}</td>
+                  <td>{list.demand}</td>
+                  <td>{list.penalty}</td>
+                  <td>{list.collection}</td>
                   <td>{list.balance}</td>
                 </tr>
               )

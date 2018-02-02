@@ -51,6 +51,7 @@ public class AgreementInfoRowMapper implements ResultSetExtractor<List<Agreement
 				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
 				String councilResolutionDate = dateFormat.format(rs.getDate("councilResolutionDate"));
 				agreementInfo.setAssetName(rs.getString("assetname"));
+				agreementInfo.setAssetCategory(rs.getString("assetcategory"));
 				agreementInfo.setMobileNumber(rs.getString("mobilenumber"));
 				agreementInfo.setGstin(rs.getString("gstin"));
 				agreementInfo.setCouncilResolutionNo(rs.getString("councilResolutionNo"));

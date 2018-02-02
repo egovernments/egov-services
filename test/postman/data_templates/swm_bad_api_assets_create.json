@@ -1,0 +1,96 @@
+{
+  "RequestInfo": {
+    "action": "create",
+    "did": "",
+    "msgId": null,
+    "authToken": "{{access_token}}",
+    "apiId": null,
+    "ver": null,
+    "ts": "",
+    "key": null,
+    "userInfo": {
+      "id": 23143
+    }
+  },
+  "Asset": {
+    "assetCategory": {
+      "depreciationMethod": "Straight Line method",
+      "isAssetAllowFromUi": true,
+      "name": "{{BinName}}",
+      "assetCategoryType": "IMMOVABLE",
+      "parent": "2",
+      "unitOfMeasurement": "KGS",
+      "isDepreciationApplicable": true,
+      "depreciationRate": "3",
+      "assetFieldsDefination": [
+        {
+          "name": "Type",
+          "type": "Text",
+          "isActive": true,
+          "order": "1"
+        },
+        {
+          "name": "Size",
+          "type": "Number",
+          "isActive": true,
+          "order": "2"
+        },
+        {
+          "name": "Track Id",
+          "type": "Text",
+          "isActive": true,
+          "isMandatory": false
+        }
+      ],
+      "isAssetAllow": true,
+      "id": "2012",
+      "code": "2012",
+      "tenantId": "default"
+    },
+    "latitude": 19.076,
+    "warrantyAvailable": false,
+    "name": "Waste Bin-098345",
+    "dateOfCreation": 1517164200000,
+    "anticipatedLife": 33,
+    "wipReferenceNo": "ref_2018/93",
+    "department": {
+      "code": "PHS"
+    },
+    "acquisitionDate": 1517164200000,
+    "modeOfAcquisition": {
+      "code": "ACQUIRED"
+    },
+    "longitude": 72.8777,
+    "address": "89, CST Rd, Friends Colony, Hallow Pul, Kurla, Mumbai, Maharashtra 400077, India",
+    "location": "192, CST Rd, Friends Colony, Hallow Pul, Kurla, Mumbai, Maharashtra 400077, India",
+    "locationDetails": {
+      "electionWard": "13"
+    },
+    "originalValue": "10000",
+    "grossValue": "5000",
+    "openingDate": 1517164200000,
+    "description": "none",
+    "landDetails": null,
+    "titleDocumentsAvailable": [
+      
+    ],
+    "tenantId": "default",
+    "assetAttributes": [
+      {
+        "key": "Type",
+        "type": "Text",
+        "value": "permanent"
+      },
+      {
+        "key": "Size",
+        "type": "Number",
+        "value": "6"
+      },
+      {
+        "key": "Track Id",
+        "type": "Text",
+        "value": "0976"
+      }
+    ]
+  }
+}

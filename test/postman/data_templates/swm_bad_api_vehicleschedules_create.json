@@ -23,9 +23,12 @@
       "vehicle": {
         "tenantId": "{{tenantId}}",
         "regNumber": "{{regNumber}}",
-        "operatorsReq":  "{{$randomDigits(2)}}"
+        "operatorsReq": "{{$randomInt(1,11)}}"
+
       },
-      "targetedGarbage":  "{{$randomDigits(2)}}"
+
+       "targetedGarbage": "{{$randomInt(2,10)}}",
+     
     }
   ]
 }

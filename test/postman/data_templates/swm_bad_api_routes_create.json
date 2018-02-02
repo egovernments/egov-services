@@ -1,0 +1,46 @@
+{
+ "RequestInfo": {
+   "action": "create",
+   "did": "",
+   "msgId": null,
+   "authToken": "{{access_token}}",
+   "apiId": null,
+   "ver": null,
+   "ts": "",
+   "key": null,
+   "userInfo": {
+     "id": 1
+   }
+ },
+ "routes": [
+   {
+     "tenantId": "{{tenantId}}",
+     "name": "ROUTE-{{$GUIDWD}}",
+     "totalDistance": 20, 
+     "totalGarbageEstimate": 20,
+     "collectionType": {
+       "code": "{{CollectionType}}"
+     },
+     "collectionPoints": [
+       {
+         "collectionPoint": {
+           "code": "{{collectionPoints1code}}"
+         },
+         "distance": 10,
+         "garbageEstimate": 10,
+         "isStartingCollectionPoint": true,
+         "isEndingCollectionPoint": false
+       },
+       {
+         "collectionPoint": {
+           "code": "{{collectionPoints2code}}"
+         },
+         "distance": 10,
+         "garbageEstimate": 10,
+         "isStartingCollectionPoint": false,
+         "isEndingCollectionPoint": true
+       }      
+     ]
+   }
+ ]
+}

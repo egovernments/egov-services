@@ -18,9 +18,9 @@
       "vendor": {
         "vendorNo": "{{vendorNo}}"
       },
-      "contractDate": "{{$TS(-1month-13day)}}",
-      "contractPeriodFrom":  "{{$TS(-1month-11day)}}",
-      "contractPeriodTo":  "{{$TS(-1month)}}",
+      "contractDate": "{{$TS(-15day)}}",
+      "contractPeriodFrom":  "{{$TS(-15days)}}",
+      "contractPeriodTo":  "{{$TS(-5days)}}",
       "securityDeposit": "{{$randomInt(5000, 25000)}}",
       "paymentTerms": {
         "label": "label"

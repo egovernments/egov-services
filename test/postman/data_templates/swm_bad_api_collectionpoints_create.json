@@ -21,9 +21,11 @@
       },
       "binDetails": [
         {
+
           "asset": {
-            "code": "fixed"
-          },
+                  "code":"{{assetCode}}"  
+                },
+      
           "rfidAssigned": true,
           "rfid": "RFID {{$randomDigits(5)}}"
         }

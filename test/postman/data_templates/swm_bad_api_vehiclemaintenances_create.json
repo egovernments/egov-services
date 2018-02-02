@@ -19,7 +19,7 @@
         "regNumber": "{{regNumber}}"
       },
       "maintenanceUom": "Days",
-      "maintenanceAfter": "{{$randomInt(10,100)}}",
+      "maintenanceAfter": "{{$randomInt(10,60)}}",
       "downtimeforMaintenanceUom": "Hrs",
       "downtimeforMaintenance": "{{$randomDigits(2)}}"
     }

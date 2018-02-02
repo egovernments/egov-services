@@ -15,7 +15,6 @@ apis:
       vendorNo:
 
   /vehicles/_create:
-    ignorefields: []
     reference:
       insuranceDocument:
         fileStoreId:
@@ -31,97 +30,172 @@ apis:
       regNumber:
 
   /collectionpoints/_create:
-    ignorefields: ["columns" , "asset"]
+    ignorefields: ["columns"]
     reference:
       location:
+        code:
       collectionType:
-      asset:
+        code:
+    generated:
+      code:    
 
   
   /sourcesegregations/_create:
     reference:
       dumpingGround:
-      collectionDetails:
+        code:
       collectionType:
-      ulb:  
+        code:
+      ulb: 
+        code:
+    generated:
+      sourceCode:
+
+           
 
   /routes/_create:
+    ignorefields: ["children"]
     reference:
       collectionType:
-      collectionPoints:
+        code:
+      collectionPoint:
+        code:
+    generated:
+      routeCode:
+            
         
   /sanitationstafftargets/_create:
     reference:
       swmProcess:
+        code:
       location:
+        code:
       route:
+        code:
       employee:
+        code:
       dumpingGround:
+        code:
       collectionPoints:
+        code:
+    generated:
+      targetNo:
+          
 
   /sanitationstaffschedules/_create:
     reference:
       sanitationStaffTarget:
-      shift:    
+        targetNo:
+      shift:
+         code:
+    generated:
+
+             
+
 
   /vehiclemaintenances/_create:
     reference:
       vehicle:
+        regNumber:
+    generated:
+      vehicleMaintenanceCode:      
+
+
 
   /vendorcontracts/_create:
     reference:
       vendor:
+        vendorNo:
       paymentTerms:
+        label:
       servicesOffered:
+        code:
+    generated:
+      contractNo:    
         
   /refillingpumpstations/_create:
     ignorefields: ["children"]
     reference:
       location:
+        code:
       typeOfPump:
+        code:
       fuelTypes:
+        code:
     generated:
-      code:  
+      refillingPumpCode:  
 
   /vehicleschedules/_create:
+    ignorefields: ["children"]
     reference:
       route:
-      vehicle:
+        code:
+    generated:    
+         
         
   /vendorpaymentdetails/_create:
-    ignorefields: ["documents"]
     reference:
       vendorContract:
+        contractNo:
       documents:
+        fileStoreId:
       employee:
+        code:
+    generated:
+      paymentNo:
+            
+
 
   /paymentdetails/_create:
     reference:
       vendorPaymentDetails:
+        paymentNo:
+    generated:
+            
 
   /sanitationstafftargets/_create:
     reference:
       swmProcess:
+        code:
       location:
+        code:
       route:
+        code:
       employee:
+        code:
       dumpingGround:
+        code:
       collectionPoints:
+        code:
+    generated:
+            
 
   /vehiclefuellingdetails/_create:
-    ignorefields: ["receiptCopy"]
     reference:
       vehicle:
+        regNumber:
       refuellingStation:
+        code:
       receiptCopy:
+        fileStoreId:
+    generated:
+            
 
   /vehiclemaintenancedetails/_create:
     reference:
       vehicle:
+        regNumber:
+    generated:
+          
 
   /vehicletripsheetdetails/_create:
     reference:
       vehicle:
+        regNumber:
       vendor:
+        vendorNo:
       route:
-     
+        code:
+    generated:   
+      tripNo:   
+      

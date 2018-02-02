@@ -23,7 +23,7 @@
       "instrumentType": "instrumentType",
       "instrumentNumber": "{{instrumentNumber}}",
       "instrumentDate": "{{$TS(-42year)}}",
-      "amount": "{{$randomDigits(4)}}",
+      "amount": 10,
       "bankName": "bankName",
       "branchName": "branchName"
     },
@@ -37,7 +37,7 @@
       "instrumentType": "instrumentType",
       "instrumentNumber": "{{instrumentNumber}}",
       "instrumentDate": "{{$TS(-42year)}}",
-      "amount": "{{$randomDigits(4)}}",
+      "amount": 10,
       "bankName": "bankName",
       "branchName": "branchName"
     }

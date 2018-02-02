@@ -28,7 +28,8 @@ login = async (username, password) => {
     try {
         let data = await pmutil.fetch(pmutil.resolveParamsObject(login_request, true))
         let body = JSON.parse(data.text())
-        pm.globals.set("access_token", body.access_token);
+        pm.environment.set("access_token", body.access_token);
+        pm.variables.set("access_token", body.access_token);
         console.log("Logged in Successfully with auth token - " + body.access_token )
     } catch (ex) {
         console.log("Exception occurred during login")

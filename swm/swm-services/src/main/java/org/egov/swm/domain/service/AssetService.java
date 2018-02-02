@@ -20,17 +20,17 @@ public class AssetService {
     private final RestTemplate restTemplate;
 
     private final String assetsBySearchCriteriaUrlByCode;
-    private final String assetsBySearchCriteriaUrlByCodes;
+    private final String assetsBySearchCriteriaUrlByCategory;
 
     @Autowired
     public AssetService(final RestTemplate restTemplate,
             @Value("${egov.services.egov_asset.hostname}") final String assetServiceHostname,
             @Value("${egov.services.egov_asset.searchpath_by_code}") final String assetsBySearchCriteriaUrlByCode,
-            @Value("${egov.services.egov_asset.searchpath_by_codes}") final String assetsBySearchCriteriaUrlByCodes) {
+            @Value("${egov.services.egov_asset.searchpath_by_categoryname}") final String assetsBySearchCriteriaUrlByCategory) {
 
         this.restTemplate = restTemplate;
         this.assetsBySearchCriteriaUrlByCode = assetServiceHostname + assetsBySearchCriteriaUrlByCode;
-        this.assetsBySearchCriteriaUrlByCodes = assetServiceHostname + assetsBySearchCriteriaUrlByCodes;
+        this.assetsBySearchCriteriaUrlByCategory = assetServiceHostname + assetsBySearchCriteriaUrlByCategory;
     }
 
     public Asset getByCode(final String code, final String tenantId, final RequestInfo requestInfo) {
@@ -49,24 +49,14 @@ public class AssetService {
 
     }
 
-    public List<Asset> getByCodes(final List<String> codes, final String tenantId, final RequestInfo requestInfo) {
+    public List<Asset> getAll(final String tenantId, final RequestInfo requestInfo) {
 
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
 
-        StringBuffer assetCodes = new StringBuffer();
-
-        if (codes != null && !codes.isEmpty()) {
-            for (String code : codes) {
-                if (assetCodes.length() >= 1)
-                    assetCodes.append(",");
-
-                assetCodes.append(code);
-            }
-        }
-
-        AssetResponse response = restTemplate.postForObject(assetsBySearchCriteriaUrlByCodes, wrapper, AssetResponse.class,
-                assetCodes.toString(), tenantId);
+        AssetResponse response = restTemplate.postForObject(assetsBySearchCriteriaUrlByCategory, wrapper, AssetResponse.class,
+                Constants.BIN_ASSET_CATEGORY,
+                tenantId);
 
         if (response != null && !response.getAssets().isEmpty())
             return response.getAssets();

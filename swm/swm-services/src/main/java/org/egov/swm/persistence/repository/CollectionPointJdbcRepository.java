@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Asset;
@@ -197,13 +195,10 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         bds.setTenantId(tenantId);
 
         List<BinDetails> binDetails = binIdDetailsJdbcRepository.search(bds);
-        Set<String> assetCodes = new HashSet<>();
 
         List<BinDetails> bdList;
 
         for (BinDetails bd : binDetails) {
-
-            assetCodes.add(bd.getAsset().getCode());
 
             if (binDetailsMap.get(bd.getCollectionPoint()) == null) {
 
@@ -220,7 +215,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             }
         }
 
-        List<Asset> assets = assetService.getByCodes(new ArrayList<>(assetCodes), tenantId, new RequestInfo());
+        List<Asset> assets = assetService.getAll(tenantId, new RequestInfo());
 
         if (assets != null)
             for (Asset asset : assets) {

@@ -329,12 +329,12 @@ public class AssetValidator {
             assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
         else if (asset.getAccumulatedDepreciation() != null) {
             assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
-            assetCurrentAmount = new BigDecimal(assetCurrentAmount.setScale(1, BigDecimal.ROUND_HALF_UP).toString());
         } else
             assetCurrentAmount = asset.getGrossValue();
+            
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);
-
+        assetCurrentAmount = new BigDecimal(assetCurrentAmount.setScale(1, BigDecimal.ROUND_HALF_UP).toString());
         revaluation.setCurrentCapitalizedValue(assetCurrentAmount);
 
         final BigDecimal valueAfterRevaluation = revaluation.getValueAfterRevaluation();
@@ -368,6 +368,7 @@ public class AssetValidator {
             revaluatedValue = assetCurrentAmount.add(revaluationAmount);
         else if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0)
             revaluatedValue = assetCurrentAmount.subtract(revaluationAmount);
+        revaluatedValue = new BigDecimal(revaluatedValue.setScale(1, BigDecimal.ROUND_HALF_UP).toString());
 
         if (revaluatedValue != null && revaluatedValue.compareTo(valueAfterRevaluation) != 0)
             throw new RuntimeException("Value after revaluation of asset should be :: " + revaluatedValue

@@ -169,15 +169,6 @@ public class AgreementValidator {
 		}
 		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, Action.RENEWAL.toString());
 
-		Long assetId = agreement.getAsset().getId();
-
-		for (Agreement agreement2 : agreementService.getAgreementsForAssetId(assetId)) {
-			if (!agreement2.getAgreementNumber().equals(agreement.getAgreementNumber())) {
-				errors.rejectValue(ERROR_FIELD_AGREEMENT_NO, "",
-						"new agreement has already been signed for the particular asset");
-			}
-		}
-
 		Date today = new Date();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(agreement.getExpiryDate());

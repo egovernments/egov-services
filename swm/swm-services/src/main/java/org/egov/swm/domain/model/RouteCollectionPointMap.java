@@ -2,6 +2,9 @@ package org.egov.swm.domain.model;
 
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,7 +13,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 @Builder
 @Getter
@@ -23,7 +25,7 @@ public class RouteCollectionPointMap {
     private String id = null;
 
     @JsonProperty("tenantId")
-    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of tenantId shall be between 0 and 256")
     private String tenantId = null;
 
     @JsonProperty("route")
@@ -41,9 +43,11 @@ public class RouteCollectionPointMap {
     @JsonProperty("garbageEstimate")
     private Double garbageEstimate = null;
 
+    @NotNull
     @JsonProperty("isStartingCollectionPoint")
     private Boolean isStartingCollectionPoint = null;
 
+    @NotNull
     @JsonProperty("isEndingCollectionPoint")
     private Boolean isEndingCollectionPoint = null;
 

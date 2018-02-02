@@ -58,6 +58,10 @@ public class ReportQueryBuilder {
 			selectQuery.append(" and asset.electionward =:electionward ");
 			params.put("electionward", baseRegisterModel.getElectionWard());
 		}
+		if (baseRegisterModel.getLocality() != null) {
+			selectQuery.append(" and asset.locality =:locality ");
+			params.put("locality", baseRegisterModel.getLocality());
+		}
 		if(StringUtils.isNotBlank(baseRegisterModel.getAgreementNo())){
 			selectQuery.append(" and agreement.agreement_no =:agreementNo ");
 			params.put("agreementNo", baseRegisterModel.getAgreementNo());

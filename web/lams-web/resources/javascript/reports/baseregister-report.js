@@ -17,7 +17,9 @@ class BaseRegister extends React.Component {
   componentDidMount(){
     this.setState({
       assetCategories:commonApiPost("asset-services","assetCategories","_search",{usedForLease:true,tenantId}).responseJSON["AssetCategory"],
-      revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"]
+      revenueWard:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "REVENUE", tenantId }).responseJSON["Boundary"],
+      locality:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "LOCALITY", hierarchyTypeName: "LOCATION", tenantId }).responseJSON["Boundary"],
+      electionWards:commonApiPost("egov-location/boundarys", "boundariesByBndryTypeNameAndHierarchyTypeName", "", { boundaryTypeName: "WARD", hierarchyTypeName: "ADMINISTRATION", tenantId }).responseJSON["Boundary"]
     });
   }
   handleChange(value, property){
@@ -154,7 +156,7 @@ class BaseRegister extends React.Component {
 
   }
   render(){
-    let {assetCategories, revenueWard, searchClicked} = this.state;
+    let {assetCategories, revenueWard,locality, electionWards, searchClicked} = this.state;
     let {handleChange, search, closeWindow, showTable} = this;
     const renderOptions = function(list)
     {
@@ -218,6 +220,83 @@ class BaseRegister extends React.Component {
                                     {renderOptions(assetCategories)}
                                   </select>
                               </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Locality </label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                  <select id="locality" onChange={(e) => { handleChange(e.target.value, "locality") }}>
+                                    <option value="">Select Locality</option>
+                                    {renderOptions(locality)}
+                                  </select>
+                              </div>
+
+                          </div>
+                      </div>
+                  </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Election Ward</label>
+                          </div>
+                          <div className="col-sm-6">
+                              <div className="styled-select">
+                                  <select id="electionWard" onChange={(e) => { handleChange(e.target.value, "electionWard") }}>
+                                    <option value="">Select ElectionWard</option>
+                                    {renderOptions(electionWards)}
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Agreement Number</label>
+                          </div>
+                          <div className="col-sm-6">
+                            <input type="text" id="agreementNo" onChange={(e) => { handleChange(e.target.value, "agreementNo") }}/>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Old Agreement No</label>
+                          </div>
+                          <div className="col-sm-6">
+                            <input type="text" id="oldAgreementNo" onChange={(e) => { handleChange(e.target.value, "oldAgreementNo") }}/>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div className="row">
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">CR Number</label>
+                          </div>
+                          <div className="col-sm-6">
+                            <input type="text" id="councilResolutionNo" onChange={(e) => { handleChange(e.target.value, "councilResolutionNo") }}/>
+                          </div>
+                      </div>
+                  </div>
+                  <div className="col-sm-6">
+                      <div className="row">
+                          <div className="col-sm-6 label-text">
+                              <label for="">Aadhar Number</label>
+                          </div>
+                          <div className="col-sm-6">
+                            <input type="text" id="aadharNo" onChange={(e) => { handleChange(e.target.value, "aadharNo") }}/>
                           </div>
                       </div>
                   </div>

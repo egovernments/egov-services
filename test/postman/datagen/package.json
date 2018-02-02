@@ -6,6 +6,7 @@
   "dependencies": {
     "swagger-parser": "^4.0.2",
     "winston": "^2.4.0",
+    "winston-console-formatter": "^1.0.0-beta.1",
     "yamljs": "^0.3.0"
   }
 }

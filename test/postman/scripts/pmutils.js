@@ -105,12 +105,10 @@ if (typeof PMUtil === "undefined") {
         function moment_applyDelta(moment, delta) {
             delta = delta || "";
             let add = true;
-            if (delta[0] === "-")
-                add = false;
 
-            let deltaArr = delta.split(/[ -+]/g);
+            let deltaArr = delta.split(/[ ]/g);
 
-            let pattern = /(\d+)([a-z]+)/ig
+            let pattern = /^([+-]?)(\d+)([a-z]+)$/ig
 
             for (let i in deltaArr) {
                 if (!deltaArr[i])
@@ -119,9 +117,9 @@ if (typeof PMUtil === "undefined") {
 
                 if (pattern.test(deltaArr[i])) {
                     pattern.lastIndex = 0;
-                    let [,num,type] = pattern.exec(delta)
+                    let [_, sign,num,type] = pattern.exec(deltaArr[i])
                     num = parseFloat(num)
-                    moment = add ? moment.add(num, type) : moment.subtract(num, type)
+                    moment = sign === "-" ? moment.subtract(num, type): moment.add(num, type)
                 }
             }
 
@@ -426,17 +424,9 @@ if (typeof PMUtil === "undefined") {
 (function test() {
     let rand = pmutil.rand;
 
-    console.log(rand.$TIME("+2h"))
-    console.log(rand.$TS("-1y"))
-    console.log(rand.$TS("+1y"))
-    console.log(rand.$TSS())
-
-    console.log(rand.$NOW())
-    console.log(rand.$TIME())
-    console.log(rand.$TIME("-2h"))
-    console.log(rand.$DATE())
-    console.log(rand.$DATE("+1day"))
-    console.log(rand.$DATE("-1day","DD-MMM-YY"))
+    // console.log(rand.$TS())
+    // console.log(rand.$TS("-1month"))
+    console.log(rand.$TS("-1month +2days"))
 
 });
 /* loading script to be used at collection level

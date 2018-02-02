@@ -1,6 +1,14 @@
-ignorefields: ["tenantId", "RequestInfo", "auditDetails", "requestInfo","parent"]
 contract: https://github.com/egovernments/egov-services/raw/master/docs/swm/contract/v1-0-0.yaml
 output_folder: ./swm/
+defaults:
+  enabled: true
+  ignorefields: ["tenantId", "RequestInfo", "auditDetails", "requestInfo"]
+  data:
+    requestInfo: &ri {
+                  "action":"create","did":"","msgId":null,
+                  "authToken":"{{access_token}}","apiId":null,"ver":null,"ts":"","key":null,"userInfo":{"id":1}
+                  }
+    RequestInfo: <<*ri
 
 apis:
   /vendors/_create:
@@ -16,7 +24,7 @@ apis:
 
   /vehicles/_create:
     reference:
-      insuranceDocument:
+      insuranceDocuments:
         fileStoreId:
       vehicleType:
         code:
@@ -30,40 +38,38 @@ apis:
       regNumber:
 
   /collectionpoints/_create:
-    ignorefields: ["columns"]
     reference:
       location:
         code:
       collectionType:
         code:
+      asset:
+        code:
     generated:
-      code:    
+      code:
 
-  
   /sourcesegregations/_create:
     reference:
       dumpingGround:
         code:
       collectionType:
         code:
-      ulb: 
+      ulb:
         code:
     generated:
       sourceCode:
 
-           
-
   /routes/_create:
-    ignorefields: ["children"]
     reference:
       collectionType:
         code:
       collectionPoint:
         code:
+      dumpingGround:
+        code:
     generated:
       routeCode:
-            
-        
+
   /sanitationstafftargets/_create:
     reference:
       swmProcess:
@@ -80,7 +86,6 @@ apis:
         code:
     generated:
       targetNo:
-          
 
   /sanitationstaffschedules/_create:
     reference:
@@ -90,17 +95,12 @@ apis:
          code:
     generated:
 
-             
-
-
   /vehiclemaintenances/_create:
     reference:
       vehicle:
         regNumber:
     generated:
-      vehicleMaintenanceCode:      
-
-
+      vehicleMaintenanceCode:
 
   /vendorcontracts/_create:
     reference:
@@ -111,10 +111,10 @@ apis:
       servicesOffered:
         code:
     generated:
-      contractNo:    
-        
+      contractNo:
+
   /refillingpumpstations/_create:
-    ignorefields: ["children"]
+#    ignorefields: ["children"]
     reference:
       location:
         code:
@@ -123,16 +123,17 @@ apis:
       fuelTypes:
         code:
     generated:
-      refillingPumpCode:  
+      refillingPumpCode:
 
   /vehicleschedules/_create:
-    ignorefields: ["children"]
     reference:
       route:
         code:
-    generated:    
-         
-        
+      vehicle:
+        regNumber:
+        operatorsReq:
+    generated:
+
   /vendorpaymentdetails/_create:
     reference:
       vendorContract:
@@ -143,15 +144,16 @@ apis:
         code:
     generated:
       paymentNo:
-            
 
 
   /paymentdetails/_create:
     reference:
       vendorPaymentDetails:
         paymentNo:
+      documents:
+        fileStoreId:
     generated:
-            
+      code:
 
   /sanitationstafftargets/_create:
     reference:
@@ -168,7 +170,6 @@ apis:
       collectionPoints:
         code:
     generated:
-            
 
   /vehiclefuellingdetails/_create:
     reference:
@@ -179,14 +180,12 @@ apis:
       receiptCopy:
         fileStoreId:
     generated:
-            
 
   /vehiclemaintenancedetails/_create:
     reference:
       vehicle:
         regNumber:
     generated:
-          
 
   /vehicletripsheetdetails/_create:
     reference:
@@ -196,6 +195,4 @@ apis:
         vendorNo:
       route:
         code:
-    generated:   
-      tripNo:   
-      
+    generated:

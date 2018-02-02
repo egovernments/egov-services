@@ -1,0 +1,28 @@
+contract: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/pgr/contract/v1-0-0.yml
+output_folder: ./pgr/
+defaults:
+  enabled: true
+  ignorefields: ["tenantId", "RequestInfo", "auditDetails", "requestInfo"]
+  data:
+    requestInfo: &ri {
+                  "action":"create","did":"","msgId":null,
+                  "authToken":"{{access_token}}","apiId":null,"ver":null,"ts":"","key":null,"userInfo":{"id":1}
+                  }
+    RequestInfo:
+      <<: *ri
+
+apis:
+  /services/_create:
+    reference:
+#      attributes:
+#        code:
+#      groups:
+#        code:
+  /serviceGroup/_create:
+  /OTPConfig/_create:
+  /seva/_create:
+  /receivingmode/_create:
+  /receivingcenter/_create:
+  /router/_create:
+  /escalation/_create:
+  /draft/v1/_create:

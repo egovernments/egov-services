@@ -19,9 +19,15 @@
         "contractNo": "{{contractNo}}"
       },
       "invoiceNo": "AAA-VNDR-{{$randomDigits(8)}}",
+<<<<<<< HEAD
       "invoiceDate": "{{$TS(-5days)}}",
       "fromDate": "{{$TS(-13days)}}",
       "toDate": "{{$TS(-6days)}}",
+=======
+      "invoiceDate": "{{$TS(-1month -9day)}}",
+      "fromDate": "{{$TS(-2month +8day)}}",
+      "toDate": "{{$TS(-1month 1-2day)}}",
+>>>>>>> updated swm collections
       "vendorInvoiceAmount": "{{$randomInt(5000,10000)}}",
       "employee": {
         "code": "658039"

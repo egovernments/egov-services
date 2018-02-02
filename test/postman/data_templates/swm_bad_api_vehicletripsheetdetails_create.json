@@ -28,8 +28,8 @@
       "tripEndDate": "{{$TSS}}",
       "inTime": "{{$TSS}}",
       "outTime": "{{$TSS}}",
-      "entryWeight": "{{$randomDigits(2)}}",
-      "exitWeight": "{{$randomDigits(2)}}"
+      "entryWeight": "{{$randomInt(5,10)}}",
+      "exitWeight": "{{$randomInt(1,5)}}"
     }
   ]
 }

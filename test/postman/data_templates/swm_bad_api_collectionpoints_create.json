@@ -25,7 +25,6 @@
           "asset": {
                   "code":"{{assetCode}}"  
                 },
-      
           "rfidAssigned": true,
           "rfid": "RFID {{$randomDigits(5)}}"
         }

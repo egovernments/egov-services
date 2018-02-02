@@ -125,4 +125,6 @@ public class Asset {
     @JsonProperty("function")
     @NotNull
     private String function;
+    
+    private BigDecimal currentValue;
 }

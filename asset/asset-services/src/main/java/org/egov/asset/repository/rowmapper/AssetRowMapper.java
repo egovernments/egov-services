@@ -47,7 +47,6 @@
  *
  */
 
-
 package org.egov.asset.repository.rowmapper;
 
 import java.io.IOException;
@@ -114,7 +113,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setDepreciationRate(rs.getDouble("depreciationrate"));
                 asset.setSurveyNumber(rs.getString("surveynumber"));
                 asset.setFunction(rs.getString("function"));
-               
+                asset.setCurrentValue(rs.getBigDecimal("currentamount"));
+
                 final BigDecimal marketValue = rs.getBigDecimal("marketValue");
                 if (marketValue == BigDecimal.ZERO)
                     asset.setMarketValue(null);
@@ -203,6 +203,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 
             asset.setYearWiseDepreciation(ywd);
         }
+
         return new ArrayList<Asset>(map.values());
     }
 }

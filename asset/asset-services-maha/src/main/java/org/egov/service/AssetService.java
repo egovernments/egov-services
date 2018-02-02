@@ -172,6 +172,7 @@ public class AssetService {
 					landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));
 			}
 		}else {
+			if(landDetailsFromSearch != null)
 			for (LandDetail landDetail : landDetailsFromSearch) {
 				if (landDetail.getId() == null)
 					landDetail.setId(assetCommonService.getNextId(Sequence.LANDDETAILSSEQUENCE));

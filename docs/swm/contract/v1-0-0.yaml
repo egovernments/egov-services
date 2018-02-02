@@ -1600,16 +1600,16 @@ definitions:
           type: string
           description: Unique Identifier of the CollectionPoint
           maxLength: 256
-          minLength: 1
+          minLength: 0
         tenantId:
           type: string
           description: tenant id of the CollectionPoint
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the CollectionPoint
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
@@ -1617,6 +1617,7 @@ definitions:
           type: array
           items:
             $ref: "#/definitions/BinDetails"
+          minItems: 1            
         collectionPointDetails:
           type: array
           items:
@@ -1664,7 +1665,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the BinIdDetails
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         asset:
            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/contracts/v1-0-0.yml#/definitions/Asset'
@@ -1693,18 +1694,19 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the CollectionPointDetails
-          maxLength: 128
-          minLength: 4
+          maxLength: 256
+          minLength: 1
         collectionType:
           $ref: '#/definitions/CollectionType'
           format: singleValueList
+          minItems: 1          
         garbageEstimate:
           type: number
           format: double
           description: Quantity of garbage (in tonnes) that is expected at collection point
         description:
           type: string
-          description: ULB Admin can enter the remarkks, if any
+          description: ULB Admin can enter the remarks, if any
           maxLength: 300
           minLength: 0
       required:
@@ -1723,12 +1725,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Route
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the Route. Shall be unique within ULB
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         collectionType:  
           $ref: "#/definitions/CollectionType"
@@ -1737,6 +1739,7 @@ definitions:
           items:
             $ref: '#/definitions/RouteCollectionPointMap'
           description: List of RouteCollectionPointMap on the Route. This will have all the selected collection points based on Ward / zone / street.
+          minItems: 1                      
         totalDistance:
           type: number
           format: double
@@ -1768,7 +1771,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the RouteCollectionPointMap
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         route:
           type: string
@@ -1832,17 +1835,17 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the FuelType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the FuelType. e.g  Diesel, Petrol etc
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         code:
           type: string
           description: code of the FuelType. Unique code assigned to the FuelType. Shall be of at least 2 digits. fuelCode will be system generated
-          maxLength: 128
+          maxLength: 256
           minLength: 1
       required:
       - tenantId

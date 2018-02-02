@@ -26,7 +26,7 @@ public class BinDetails {
     @JsonProperty("collectionPoint")
     private String collectionPoint = null;
 
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -41,5 +41,4 @@ public class BinDetails {
     @Length(min = 0, max = 256, message = "Value of rfid shall be between 0 and 256")
     @JsonProperty("rfid")
     private String rfid = null;
-
 }

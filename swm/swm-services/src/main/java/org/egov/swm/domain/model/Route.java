@@ -3,10 +3,7 @@ package org.egov.swm.domain.model;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -29,12 +26,12 @@ public class Route {
     private String code = null;
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of name shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of name shall be between 1 and 256")
     @JsonProperty("name")
     private String name = null;
 
@@ -45,6 +42,7 @@ public class Route {
     @NotNull
     @Digits(fraction = 2, integer = 10, message = "totalDistance shall be with 2 decimal points")
     @DecimalMin(value = "0", message = "totalDistance shall be minimum 0 Kms")
+    @DecimalMax(value = "500", message = "totalDistance Shall not exceed 500 Kms")
     @JsonProperty("totalDistance")
     private Double totalDistance = null;
 

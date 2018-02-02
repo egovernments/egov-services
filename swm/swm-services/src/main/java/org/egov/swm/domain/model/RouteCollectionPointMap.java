@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 @Builder
 @Getter
@@ -22,6 +23,7 @@ public class RouteCollectionPointMap {
     private String id = null;
 
     @JsonProperty("tenantId")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     private String tenantId = null;
 
     @JsonProperty("route")

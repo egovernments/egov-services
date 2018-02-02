@@ -27,12 +27,12 @@ public class CollectionPoint {
     private String code = null;
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of name shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of name shall be between 1 and 256")
     @JsonProperty("name")
     private String name = null;
 
@@ -42,11 +42,13 @@ public class CollectionPoint {
 
     @Valid
     @Size(min = 1)
+    @NotNull
     @JsonProperty("binDetails")
     private List<BinDetails> binDetails = null;
 
     @Valid
     @Size(min = 1)
+    @NotNull
     @JsonProperty("collectionPointDetails")
     private List<CollectionPointDetails> collectionPointDetails = null;
 

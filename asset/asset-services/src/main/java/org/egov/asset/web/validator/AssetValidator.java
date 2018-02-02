@@ -327,9 +327,10 @@ public class AssetValidator {
                 .getCurrentValues(ids, tenantId, requestInfo).getAssetCurrentValues();
         if (assetCurrentValues != null && !assetCurrentValues.isEmpty())
             assetCurrentAmount = assetCurrentValues.get(0).getCurrentAmount();
-        else if (asset.getAccumulatedDepreciation() != null)
+        else if (asset.getAccumulatedDepreciation() != null) {
             assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
-        else
+            assetCurrentAmount = new BigDecimal(assetCurrentAmount.setScale(1, BigDecimal.ROUND_HALF_UP).toString());
+        } else
             assetCurrentAmount = asset.getGrossValue();
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);
@@ -362,6 +363,7 @@ public class AssetValidator {
     private void validateValueAfterRevaluation(final BigDecimal assetCurrentAmount, final BigDecimal revaluationAmount,
             final BigDecimal valueAfterRevaluation, final TypeOfChangeEnum typeOfChange) {
         BigDecimal revaluatedValue = null;
+
         if (typeOfChange != null && TypeOfChangeEnum.INCREASED.compareTo(typeOfChange) == 0)
             revaluatedValue = assetCurrentAmount.add(revaluationAmount);
         else if (typeOfChange != null && TypeOfChangeEnum.DECREASED.compareTo(typeOfChange) == 0)

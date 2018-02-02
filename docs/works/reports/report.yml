@@ -247,7 +247,7 @@ ReportDefinitions:
     label: reports.works.typeofwork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F%28%40.parent%3D%3Dnull%20%26%26%20%40.active%3D%3D%27true%27%29%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
     wrapper: true
     stateData: true
     searchClause : AND de.workstype=$typeOfWork
@@ -256,7 +256,7 @@ ReportDefinitions:
     label: reports.works.subtypeofwork
     type: singlevaluelist
     source: works
-    pattern: /egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F(%40.parent%3D%3D%27{typeOfWork}%27%20%26%26%20%40.active%3D%3D%27true%27)%5D|$..code|$..name
+    pattern: /egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F(%40.parent%3D%3D%27{typeOfWork}%27%20%26%26%20%40.active%3D%3D%27true%27)%5D|$.MdmsRes.works.TypeOfWork.*.code|$.MdmsRes.works.TypeOfWork.*.name
     wrapper: true
     stateData: true
     searchClause : AND de.workssubtype=$subTypeOfWork
@@ -505,7 +505,7 @@ ReportDefinitions:
     label: reports.works.division
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants[*].city.regionName|$.MdmsRes.tenant.tenants[*].city.regionName
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants.*.city.regionName|$.MdmsRes.tenant.tenants.*.city.regionName
     wrapper: true
     stateData: true
     searchClause : AND de.workstype=$typeOfWork
@@ -516,7 +516,7 @@ ReportDefinitions:
     isMandatory: false
     type: string
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants[*].city.districtName|$.MdmsRes.tenant.tenants[*].city.districtName
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants.*.city.districtName|$.MdmsRes.tenant.tenants.*.city.districtName
     wrapper: true
     stateData: true
     searchClause : AND de.workstype in ($typeofwork)
@@ -525,7 +525,7 @@ ReportDefinitions:
     isMandatory: false
     type: multivaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants[*].code|$.MdmsRes.tenant.tenants[*].name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=tenant&masterName=tenants&tenantId=$tenantid|$.MdmsRes.tenant.tenants.*.code|$.MdmsRes.tenant.tenants.*.name
     wrapper: true
     stateData: true
     searchClause : AND de.workssubtype in ($subtypeofwork)

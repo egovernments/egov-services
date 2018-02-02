@@ -24,7 +24,7 @@ public class ArtifactRepository {
 	}
 
 	public List<String> save(List<org.egov.filestore.domain.model.Artifact> artifacts) {
-		//diskFileStoreRepository.write(artifacts);
+		diskFileStoreRepository.write(artifacts);
 		List<Artifact> artifactEntities = mapArtifactsListToEntitiesList(artifacts);
 		return fileStoreJpaRepository.save(artifactEntities).stream()
 				.map(Artifact::getFileStoreId)

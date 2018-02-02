@@ -157,7 +157,7 @@ addOrUpdate(e, mode) {
         <div className="col-sm-6">
             <div className="row">
                 <div className="col-sm-6 label-text">
-                    <label for="">Leave Type Name <span> * </span></label>
+                    <label htmlFor="">Leave Type Name <span> * </span></label>
                 </div>
                 <div className="col-sm-6">
                     <input type="text" name="name" id="name" value={name}
@@ -169,7 +169,7 @@ addOrUpdate(e, mode) {
           <div className="col-sm-6">
               <div className="row">
                   <div className="col-sm-6 label-text">
-                      <label for="">Description <span> * </span></label>
+                      <label htmlFor="">Description <span> * </span></label>
                   </div>
                   <div className="col-sm-6">
                       <textarea name="description" id="description" value={description}
@@ -183,7 +183,7 @@ addOrUpdate(e, mode) {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="">Pay Eligible <span> *</span> </label>
+                              <label htmlFor="">Pay Eligible <span> *</span> </label>
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
@@ -200,7 +200,7 @@ addOrUpdate(e, mode) {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="">Is Half Day <span> * </span> </label>
+                              <label htmlFor="">Is Half Day <span> * </span> </label>
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
@@ -220,7 +220,7 @@ addOrUpdate(e, mode) {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="">encashable <span> *</span></label>
+                              <label htmlFor="">encashable <span> *</span></label>
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
@@ -237,7 +237,7 @@ addOrUpdate(e, mode) {
                     <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6 label-text">
-                                <label for="">accumulative <span> *</span></label>
+                                <label htmlFor="">accumulative <span> *</span></label>
                             </div>
                             <div className="col-sm-6">
                                   <label className="radio-inline radioUi">
@@ -258,7 +258,7 @@ addOrUpdate(e, mode) {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="">Encloses Holiday <span> *</span> </label>
+                              <label htmlFor="">Encloses Holiday <span> *</span> </label>
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
@@ -275,7 +275,7 @@ addOrUpdate(e, mode) {
                   <div className="col-sm-6">
                       <div className="row">
                           <div className="col-sm-6 label-text">
-                              <label for="">Prefix/Suffix <span> * </span> </label>
+                              <label htmlFor="">Prefix/Suffix <span> * </span> </label>
                           </div>
                           <div className="col-sm-6">
                                 <label className="radio-inline radioUi">
@@ -295,7 +295,7 @@ addOrUpdate(e, mode) {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                        <label for="">Active</label>
+                        <label htmlFor="">Active</label>
                     </div>
                         <div className="col-sm-6">
                               <label className="radioUi">

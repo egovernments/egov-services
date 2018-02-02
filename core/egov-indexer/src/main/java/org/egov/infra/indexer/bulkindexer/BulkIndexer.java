@@ -2,6 +2,7 @@ package org.egov.infra.indexer.bulkindexer;
 
 import java.util.Map;
 import org.egov.infra.indexer.util.IndexerUtils;
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class BulkIndexer {
 			indexerUtils.orchestrateListenerOnESHealth();
 		}catch(Exception e){
 			logger.error("Exception while trying to index to ES. Note: ES is not Down.",e);
-			throw e;
+			throw new CustomException("500", "Exception while trying to index to ES. Note: ES is not Down.");
 		}
 	}
 	

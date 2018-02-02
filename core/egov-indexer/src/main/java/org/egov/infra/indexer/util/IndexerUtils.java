@@ -1,5 +1,6 @@
 package org.egov.infra.indexer.util;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -199,9 +200,13 @@ public class IndexerUtils {
 	public void validateAndIndex(String finalJson, String url, Index index) throws Exception{
 		if(null == finalJson){
 			logger.info("Indexing will not be done, please modify the data and retry.");
-		    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. In that case, change either of them.");
+		    logger.info("Advice: Looks like isBulk = true in the config yaml but the record sent on the queue is a json object and not an array of objects. "
+		    		+ "In that case, change either of them.");
 		}else{
+			Long startTime = new Date().getTime();
 			doIndexing(finalJson, url.toString(), index);
+			Long endTime = new Date().getTime();
+			logger.info("TIME TAKEN for indexing on es: "+(endTime - startTime));
 		}
 	}
 	

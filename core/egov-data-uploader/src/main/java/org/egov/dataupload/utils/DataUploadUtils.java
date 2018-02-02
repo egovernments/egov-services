@@ -87,7 +87,7 @@ public class DataUploadUtils {
 			            		logger.debug("date: "+cell.getDateCellValue());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
-		            	    	logger.debug("numeric: "+cell.getNumericCellValue());
+		            	    	logger.info("numeric: "+cell.getNumericCellValue());
 		            	    	dataList.add(cell.getNumericCellValue());
 		            	    }
 		            	}
@@ -106,14 +106,14 @@ public class DataUploadUtils {
 			            			dataList.add(cell.getStringCellValue());
 			            		}
 		            		}else if(!cell.getStringCellValue().trim().isEmpty()){
-			            		logger.debug("string: "+cell.getStringCellValue());
+			            		logger.info("string: "+cell.getStringCellValue());
 		            			dataList.add(cell.getStringCellValue());
 		            		}else{
 			            		dataList.add(null);
 		            		}
 		            	}
 		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
-		            		logger.debug("boolean: "+cell.getBooleanCellValue());
+		            		logger.info("boolean: "+cell.getBooleanCellValue());
 		            		dataList.add(cell.getBooleanCellValue());
 
 		            	}

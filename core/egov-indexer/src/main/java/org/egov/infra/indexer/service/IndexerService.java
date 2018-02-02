@@ -1,5 +1,6 @@
 package org.egov.infra.indexer.service;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.egov.IndexerApplicationRunnerImpl;
@@ -10,6 +11,7 @@ import org.egov.infra.indexer.web.contract.FieldMapping;
 import org.egov.infra.indexer.web.contract.Index;
 import org.egov.infra.indexer.web.contract.Mapping;
 import org.egov.infra.indexer.web.contract.UriMapping;
+import org.egov.tracer.model.CustomException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -48,7 +50,6 @@ public class IndexerService {
 		
 	public void elasticIndexer(String topic, String kafkaJson) throws Exception{
 		Map<String, Mapping> mappingsMap = runner.getMappingMaps();
-		logger.info("MappingsMap: "+mappingsMap);
 		if(null != mappingsMap.get(topic)){
 			Mapping mapping = mappingsMap.get(topic);
 			logger.info("Mapping to be used: "+mapping);
@@ -59,11 +60,11 @@ public class IndexerService {
 				}
 			}catch(Exception e){
 				logger.error("Exception while indexing, Uncaught at the indexer level: ", e);
-				throw e;
+				throw new CustomException("500", "Exception while indexing, Uncaught at the indexer level");
 			}
 		}else{
 			logger.error("No mappings found for the service to which the following topic belongs: "+topic);
-			
+			throw new CustomException("500", "No mappings found for the service to which the following topic belongs: "+topic);
 		}
 	}
 	
@@ -77,7 +78,7 @@ public class IndexerService {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
 				indexerUtils.validateAndIndex(buildIndexJsonWithJsonpath(index, kafkaJson, isBulk), 
 						url.toString(), index);
-		} else if(!(null == index.getCustomJsonMapping())){
+		} else if(null != index.getCustomJsonMapping()){
 			    logger.info("Building custom json using the mapping: "+index.getCustomJsonMapping());
 			    StringBuilder urlForMap = new StringBuilder();
 			    urlForMap.append(esHostUrl).append(index.getName()).append("/").append("_mapping").append("/").append(index.getType());	
@@ -91,6 +92,9 @@ public class IndexerService {
 	}
 	
 	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception{
+        Long startTime = null;
+        Long endTime = null;
+        startTime = new Date().getTime();
         StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         JSONArray kafkaJsonArray = null;
@@ -116,18 +120,23 @@ public class IndexerService {
 			result = jsonTobeIndexed.toString();
 	    }catch(JSONException e){
 	    	logger.error("Error while parsing the JSONArray", e);
-	    	throw e;
+			throw new CustomException("500", "Error while parsing the JSONArray");
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
-	    	throw e;
+			throw new CustomException("500", "Error while building jsonstring for indexing");
 	    }
 		logger.info("Json being indexed: "+result.toString());
+        endTime = new Date().getTime();
+		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime));
 
 		return result;
   }
 	
 	public String buildIndexJsonWithoutJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception{
-        StringBuilder jsonTobeIndexed = new StringBuilder();
+        Long startTime = null;
+        Long endTime = null;
+        startTime = new Date().getTime();
+		StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         JSONArray kafkaJsonArray = null;
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
@@ -150,19 +159,23 @@ public class IndexerService {
 			result = jsonTobeIndexed.toString();
 	    }catch(JSONException e){
 	    	logger.error("Error while parsing the JSONArray", e);
-	    	throw e;
+			throw new CustomException("500", "Error while parsing the JSONArray");
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
-	    	throw e;
-
+			throw new CustomException("500", "Error while building jsonstring for indexing");
 	    }
 		logger.info("Json being indexed: "+result.toString());
-
+        endTime = new Date().getTime();
+		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime));
+		
 		return result;
   }
 	
 	public String buildCustomJsonForBulk(Index index, String kafkaJson, String urlForMap, boolean isBulk) throws Exception{
-        StringBuilder jsonTobeIndexed = new StringBuilder();
+        Long startTime = null;
+        Long endTime = null;
+        startTime = new Date().getTime();
+		StringBuilder jsonTobeIndexed = new StringBuilder();
         String result = null;
         JSONArray kafkaJsonArray = null;
         final String format = "{ \"index\" : {\"_id\" : \"%s\" } }%n ";
@@ -186,12 +199,14 @@ public class IndexerService {
 			result = jsonTobeIndexed.toString();
 	    }catch(JSONException e){
 	    	logger.error("Error while parsing the JSONArray", e);
-	    	throw e;
+			throw new CustomException("500", "Error while parsing the JSONArray");
 	    }catch(Exception e){
 	    	logger.error("Error while building jsonstring for indexing", e);
-	    	throw e;
+			throw new CustomException("500", "Error while building jsonstring for indexing");
 	    }
 		logger.info("Json being indexed: "+result.toString());
+        endTime = new Date().getTime();
+		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime));
 
 		return result;
   }
@@ -259,7 +274,6 @@ public class IndexerService {
 					
 			}
 		}else{
-    		logger.info("uri mapping list is empty");
 	        logger.info("Indexing entire index map");
 		}
 		customJson = documentContext.jsonString(); 

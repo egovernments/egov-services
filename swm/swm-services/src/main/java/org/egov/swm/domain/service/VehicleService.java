@@ -1,13 +1,27 @@
 package org.egov.swm.domain.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.InsuranceDetails;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Vehicle;
+import org.egov.swm.domain.model.VehicleMaintenance;
+import org.egov.swm.domain.model.VehicleMaintenanceSearch;
+import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.model.Vendor;
+import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.utils.Utils;
 import org.egov.swm.web.contract.DesignationResponse;
@@ -19,8 +33,6 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 @Transactional(readOnly = true)
@@ -110,23 +122,23 @@ public class VehicleService {
 
     public Pagination<Vehicle> search(final VehicleSearch vehicleSearch) {
 
-        if(vehicleSearch.getIsScheduled() != null && vehicleSearch.getIsScheduled())
+        if (vehicleSearch.getIsScheduled() != null && vehicleSearch.getIsScheduled())
             setVehicleCodesFromVehicleMaintenance(vehicleSearch);
 
         return vehicleRepository.search(vehicleSearch);
     }
 
-    private void setVehicleCodesFromVehicleMaintenance(VehicleSearch vehicleSearch){
+    private void setVehicleCodesFromVehicleMaintenance(VehicleSearch vehicleSearch) {
         VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
         vehicleMaintenanceSearch.setTenantId(vehicleSearch.getTenantId());
 
         Pagination<VehicleMaintenance> vehicleMaintenances = vehicleMaintenanceService.search(vehicleMaintenanceSearch);
 
-        if(!vehicleMaintenances.getPagedData().isEmpty()){
+        if (!vehicleMaintenances.getPagedData().isEmpty()) {
             vehicleSearch.setRegNumbers(vehicleMaintenances.getPagedData().stream()
-                            .map(v -> (v.getVehicle() != null) ? v.getVehicle().getRegNumber() : StringUtils.EMPTY)
-                            .distinct()
-                            .collect(Collectors.joining(",")));
+                    .map(v -> (v.getVehicle() != null) ? v.getVehicle().getRegNumber() : StringUtils.EMPTY)
+                    .distinct()
+                    .collect(Collectors.joining(",")));
         }
     }
 
@@ -203,7 +215,8 @@ public class VehicleService {
             if (vehicle.getDriver() != null && vehicle.getDriver().getCode() != null
                     && !vehicle.getDriver().getCode().isEmpty()) {
 
-                designationResponse = designationRepository.getDesignationByName("Driver", vehicle.getTenantId(),
+                designationResponse = designationRepository.getDesignationByName(Constants.DRIVER_DESIGNATION_NAME,
+                        vehicle.getTenantId(),
                         vehicleRequest.getRequestInfo());
                 if (designationResponse != null && designationResponse.getDesignation() != null
                         && !designationResponse.getDesignation().isEmpty()) {
@@ -231,16 +244,16 @@ public class VehicleService {
                         "The field Driver is Mandatory . It cannot be not be null or empty.Please provide correct value ");
             }
 
-            //validate for is vehicle under warranty
-            if(vehicle.getIsVehicleUnderWarranty() != null && vehicle.getIsVehicleUnderWarranty()){
-                if(vehicle.getKilometers() == null || vehicle.getEndOfWarranty() == null)
+            // validate for is vehicle under warranty
+            if (vehicle.getIsVehicleUnderWarranty() != null && vehicle.getIsVehicleUnderWarranty()) {
+                if (vehicle.getKilometers() == null || vehicle.getEndOfWarranty() == null)
                     throw new CustomException("isVehicleUnderWarranty",
                             "Value should be present for both kilometer and endOfWarranty");
             }
 
-            //validate for is ulb owned
-            if(vehicle.getIsUlbOwned() != null && vehicle.getIsUlbOwned()){
-                if(vehicle.getVendor() == null || isEmpty(vehicle.getVendor()))
+            // validate for is ulb owned
+            if (vehicle.getIsUlbOwned() != null && vehicle.getIsUlbOwned()) {
+                if (vehicle.getVendor() == null || isEmpty(vehicle.getVendor()))
                     throw new CustomException("isUlbOwned",
                             "Value should be present for vendor");
             }

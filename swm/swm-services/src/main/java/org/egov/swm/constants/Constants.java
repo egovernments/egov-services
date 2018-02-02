@@ -24,6 +24,7 @@ public class Constants {
     public static final String SHIFT_MASTER_NAME = "Shift";
     public static final String TENANTBOUNDARY_MASTER_NAME = "TenantBoundary";
     public static final String BIN_ASSET_CATEGORY = "Bin";
+    public static final String DRIVER_DESIGNATION_NAME = "Driver";
 
 }
 

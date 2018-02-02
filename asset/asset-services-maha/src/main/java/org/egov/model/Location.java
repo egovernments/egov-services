@@ -33,7 +33,7 @@ public class Location   {
 	  private Long street = null;
 
 	  @JsonProperty("electionWard")
-	  private Long electionWard = null;
+	  private String electionWard = null;//changed to string for boundary code to be saved
 
 	  @JsonProperty("doorNo")
 	  private String doorNo = null;

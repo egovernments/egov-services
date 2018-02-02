@@ -27,4 +27,6 @@ public class LandDetail {
 	
 	@NotNull
 	private String tenantId;
+	
+	private Boolean isEnabled;
 }

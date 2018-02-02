@@ -138,7 +138,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 location.setBlock((Long) rs.getObject("block"));
                 location.setLocality((Long) rs.getObject("locality"));
                 location.setDoorNo(rs.getString("doorNo"));
-                location.setElectionWard((Long) rs.getObject("electionWard"));
+                location.setElectionWard(rs.getString("electionWard"));
                 location.setRevenueWard((Long) rs.getObject("revenueWard"));
                 location.setPinCode((Long) rs.getObject("pincode"));
                 location.setZone((Long) rs.getObject("zone"));
@@ -163,7 +163,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
             
 			if (assetId.equals(rs.getLong("landassetid"))) {
 				LandDetail landDetail = LandDetail.builder().surveyNo(rs.getString("surveynumber"))
-						.id(rs.getLong("landid")).tenantId(rs.getString("tenantid"))
+						.id(rs.getLong("landid")).tenantId(rs.getString("tenantid")).isEnabled(rs.getBoolean("isenabled"))
 						.area(getDoubleFromBigDecimal(rs.getBigDecimal("area"))).code(rs.getString("landcode")).build();
 				if (asset.getLandDetails() != null)
 					asset.getLandDetails().add(landDetail);

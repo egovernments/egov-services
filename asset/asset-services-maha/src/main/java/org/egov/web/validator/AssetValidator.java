@@ -322,20 +322,34 @@ public class AssetValidator implements Validator {
 
 	private void validateLandDetails(AssetRequest assetRequest, Map<String, String> errorMap) {
 		List<LandDetail> landDetails = assetRequest.getAsset().getLandDetails();
+		List<LandDetail> landDetailsList= new ArrayList<>();
+		if(landDetails!=null) {
+	     for (int i = 0; i < landDetails.size(); i++) {
+	    	 if(landDetails.get(i).getIsEnabled()==true) {
+	    		 landDetailsList.add(landDetails.get(i));
+	    	 }
+			
+		}
+		}
 		List<String> landDetailCode = new ArrayList<>();
-		if (landDetails != null && !landDetails.isEmpty()) {
-			landDetailCode.add(landDetails.get(0).getCode());
-			for (int i = 1; i < landDetails.size(); i++) {
-				if ((!landDetailCode.isEmpty()) && (!landDetailCode.contains(landDetails.get(i).getCode())))
-					landDetailCode.add(landDetails.get(i).getCode());
+		if (landDetailsList != null && !landDetailsList.isEmpty()) {
+			/*if(landDetails.get(0).getIsEnabled()==true) {*/
+			landDetailCode.add(landDetailsList.get(0).getCode());
+			//}
+			for (int i = 1; i < landDetailsList.size(); i++) {
+				/*if(landDetails.get(i).getIsEnabled()==true) {*/
+				if ((!landDetailCode.isEmpty()) && (!landDetailCode.contains(landDetailsList.get(i).getCode())))
+					landDetailCode.add(landDetailsList.get(i).getCode());
+				//}
 				else
 					errorMap.put(applicationProperties.getLandDetails(),
 							"Same landdetails cannot be attached multiple times to the asset");
 			}
 		}
-
-	}
-
+			
+			}
+		
+	
 	public void validateAssetId(AssetRequest assetRequest) {
 
 		Map<String, String> errorMap = new HashMap<>();

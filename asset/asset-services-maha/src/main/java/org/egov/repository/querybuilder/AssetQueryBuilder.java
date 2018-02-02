@@ -3,6 +3,7 @@ package org.egov.repository.querybuilder;
 import java.util.List;
 import java.util.Set;
 
+import org.egov.model.LandDetail;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.AssetCategoryType;
 import org.egov.model.enums.TransactionType;
@@ -23,9 +24,9 @@ public class AssetQueryBuilder {
 
 	private static final String BASE_QUERY = "SELECT *,asd.code as landcode,asd.assetid as landassetid,asd.id as landid,currentval.currentamount "
 
-			+ "from egasset_asset asset left outer join egasset_asset_landdetails asd ON  asset.id=asd.assetid AND asset.tenantid=asd.tenantid "
+			+ "from egasset_asset asset left outer join egasset_asset_landdetails asd ON  asset.id=asd.assetid AND asset.tenantid=asd.tenantid  AND isenabled=true"
 
-			+ "left outer join (select current.assetid,current.tenantid,current.transactiondate,"
+			+ " left outer join (select current.assetid,current.tenantid,current.transactiondate,"
 
 			+ "maxcurr.currentamount from egasset_current_value current inner join (select curr.currentamount,curr.assetid,curr.tenantid,curr.createdtime,"
 
@@ -42,6 +43,8 @@ public class AssetQueryBuilder {
 			+ " and current.createdtime=maxcurr.createdtime order by maxcurr.createdtime desc) as currentval "
 
 			+ "ON asset.id=currentval.assetid AND asset.tenantid=currentval.tenantid ";
+	
+	
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String getQuery(final AssetCriteria searchAsset, final List preparedStatementValues) {
@@ -185,6 +188,8 @@ public class AssetQueryBuilder {
 		}
 
 	}
+	
+	
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void addPagingClause(final StringBuilder selectQuery, final List preparedStatementValues,

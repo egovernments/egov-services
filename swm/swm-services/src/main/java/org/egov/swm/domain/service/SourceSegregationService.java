@@ -1,11 +1,18 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.CollectionDetails;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.SourceSegregation;
+import org.egov.swm.domain.model.SourceSegregationSearch;
 import org.egov.swm.domain.repository.SourceSegregationRepository;
 import org.egov.swm.web.requests.SourceSegregationRequest;
 import org.egov.tracer.model.CustomException;
@@ -93,6 +100,9 @@ public class SourceSegregationService {
 
     private void validate(final SourceSegregationRequest sourceSegregationRequest) {
 
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
         for (final SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
 
             if (sourceSegregation.getUlb() != null && (sourceSegregation.getUlb().getCode() == null
@@ -127,7 +137,7 @@ public class SourceSegregationService {
                 if (new Date()
                         .before(new Date(sourceSegregation.getSourceSegregationDate())))
                     throw new CustomException("SourceSegregationDate ", "Given Source Segregation Date is invalid: "
-                            + new Date(sourceSegregation.getSourceSegregationDate()));
+                            + dateFormat.format(new Date(sourceSegregation.getSourceSegregationDate())));
 
             for (final CollectionDetails cd : sourceSegregation.getCollectionDetails()) {
 
@@ -149,13 +159,13 @@ public class SourceSegregationService {
         }
     }
 
-    private void validateForDuplicateCollectionTypes(final SourceSegregationRequest sourceSegregationRequest){
+    private void validateForDuplicateCollectionTypes(final SourceSegregationRequest sourceSegregationRequest) {
 
         final Map<String, String> codeMap = new HashMap<>();
 
-        for(SourceSegregation sourceSegregation :sourceSegregationRequest.getSourceSegregations()){
+        for (SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
 
-            for(CollectionDetails collectionDetail : sourceSegregation.getCollectionDetails()){
+            for (CollectionDetails collectionDetail : sourceSegregation.getCollectionDetails()) {
 
                 if (codeMap.get(collectionDetail.getCollectionType().getCode()) != null)
                     throw new CustomException("Collection Type",

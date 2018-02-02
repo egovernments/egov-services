@@ -146,7 +146,7 @@ public class RouteService {
                             && rcpm.getDumpingGround().getCode() != null
                             && !rcpm.getDumpingGround().getCode().isEmpty() && rcpm.getCollectionPoint() != null
                             && rcpm.getCollectionPoint().getCode() != null && !rcpm.getCollectionPoint().getCode().isEmpty()
-                            && rcpm.getIsEndingCollectionPoint())
+                            && rcpm.getIsEndingCollectionPoint() != null && rcpm.getIsEndingCollectionPoint())
                         throw new CustomException("CollectionPoint",
                                 "Both Collection point and  Ending DumpingGround cannot be  Mandatory .");
 
@@ -235,7 +235,7 @@ public class RouteService {
                                     "Duplicate starting collectionPoints in given routes : "
                                             + rcpm.getCollectionPoint().getCode());
 
-                        if (rcpm.getIsStartingCollectionPoint())
+                        if (rcpm.getIsStartingCollectionPoint() != null && rcpm.getIsStartingCollectionPoint())
                             startingCollectionPoint = true;
 
                         if (endingCollectionPoint && rcpm.getIsEndingCollectionPoint())
@@ -243,14 +243,16 @@ public class RouteService {
                                     "Duplicate ending collectionPoints in given routes : "
                                             + rcpm.getCollectionPoint().getCode());
 
-                        if (rcpm.getIsEndingCollectionPoint())
+                        if (rcpm.getIsEndingCollectionPoint() != null && rcpm.getIsEndingCollectionPoint())
                             endingCollectionPoint = true;
 
-                        if (collectionPointMap.get(rcpm.getCollectionPoint().getCode()) != null)
+                        if (rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null
+                                && collectionPointMap.get(rcpm.getCollectionPoint().getCode()) != null)
                             throw new CustomException("collectionPoint",
                                     "Duplicate collectionPoints in given routes : " + rcpm.getCollectionPoint().getCode());
-
-                        collectionPointMap.put(rcpm.getCollectionPoint().getCode(), rcpm.getCollectionPoint().getCode());
+                        if (rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null) {
+                            collectionPointMap.put(rcpm.getCollectionPoint().getCode(), rcpm.getCollectionPoint().getCode());
+                        }
                     }
                 }
 

@@ -137,7 +137,7 @@ serviceMaps:
        - jsonPath: $.Asset.unitOfMeasurement       
        
        
-    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid, id)VALUES (?, ?, ?, ?, ?, ?)ON CONFLICT (id,tenantid,assetid) DO UPDATE  SET  code=?,surveynumber=?, area=?;
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid, id,isenabled)VALUES (?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id,tenantid,assetid) DO UPDATE  SET  code=?,surveynumber=?, area=?,isenabled=?;
       basePath: Asset.landDetails.*
       jsonMaps:
          
@@ -153,11 +153,17 @@ serviceMaps:
        
        - jsonPath: $.Asset.landDetails.*.id
        
+       - jsonPath: $.Asset.landDetails.*.isEnabled
+       
        - jsonPath: $.Asset.landDetails.*.code      
        
        - jsonPath: $.Asset.landDetails.*.surveyNo
        
-       - jsonPath: $.Asset.landDetails.*.area      
+       - jsonPath: $.Asset.landDetails.*.area
+       
+       - jsonPath: $.Asset.landDetails.*.isEnabled
+       
+             
        
               
               
@@ -291,7 +297,7 @@ serviceMaps:
        - jsonPath: $.Asset.tenantId 
        
        
-    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid, id)VALUES (?, ?, ?, ?, ?, ?)ON CONFLICT (id,tenantid,assetid) DO UPDATE  SET  code=?,surveynumber=?, area=?;
+    - query: INSERT INTO egasset_asset_landdetails(code, surveynumber, area, tenantid, assetid, id, isenabled)VALUES (?, ?, ?, ?, ?, ?, ?)ON CONFLICT (id,tenantid,assetid) DO UPDATE  SET  code=?,surveynumber=?, area=?,isenabled=?;
       basePath: Asset.landDetails.*
       jsonMaps:
          
@@ -307,11 +313,15 @@ serviceMaps:
        
        - jsonPath: $.Asset.landDetails.*.id
        
+       - jsonPath: $.Asset.landDetails.*.isEnabled
+       
        - jsonPath: $.Asset.landDetails.*.code      
        
        - jsonPath: $.Asset.landDetails.*.surveyNo
        
-       - jsonPath: $.Asset.landDetails.*.area      
+       - jsonPath: $.Asset.landDetails.*.area 
+       
+       - jsonPath: $.Asset.landDetails.*.isEnabled      
        
 
        

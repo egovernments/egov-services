@@ -113,11 +113,12 @@ class Revaluation extends React.Component {
           if(res) {
           	checkCountAndCall("assetSet", res["Assets"] && res["Assets"][0] ? res["Assets"][0] : {});
             commonApiPost("asset-services", "assets", "currentvalue/_search", {tenantId, assetIds: res["Assets"][0].id}, function(er, res) {
-              if(res && res.AssetCurrentValue) {
+              if(res && res.AssetCurrentValues) {
+                console.log(res.AssetCurrentValues[0].currentAmount);
                 _this.setState({
                   revaluationSet: {
                     ..._this.state.revaluationSet,
-                    currentCapitalizedValue: res.AssetCurrentValue.currentAmmount
+                    currentCapitalizedValue: res.AssetCurrentValues[0].currentAmount
                   }
                 })
               }
@@ -189,7 +190,7 @@ class Revaluation extends React.Component {
             })
           }
         })
-      } else if(name == "revaluationAmount" || name == "typeOfChange" && this.state.assetSet.grossValue) {
+      } else if(name == "revaluationAmount" || name == "typeOfChange" && this.state.revaluationSet.currentCapitalizedValue) {
         switch(name) {
           case 'revaluationAmount':
             if(this.state.revaluationSet.typeOfChange) {
@@ -199,7 +200,7 @@ class Revaluation extends React.Component {
                     _this.setState({
                       revaluationSet: {
                         ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) + Number(val)
+                        "valueAfterRevaluation": Number(_this.state.revaluationSet.currentCapitalizedValue) + Number(val)
                       }
                     })
                   }, 200);
@@ -209,7 +210,7 @@ class Revaluation extends React.Component {
                     _this.setState({
                       revaluationSet: {
                         ..._this.state.revaluationSet,
-                        "valueAfterRevaluation": Number(_this.state.assetSet.grossValue) - Number(val)
+                        "valueAfterRevaluation": Number(_this.state.revaluationSet.currentCapitalizedValue) - Number(val)
                       }
                     });
                   }, 200);
@@ -305,7 +306,6 @@ class Revaluation extends React.Component {
   	render() {
       let {handleChange, close, createRevaluation, viewAssetDetails} = this;
       let {assetSet, functions, funds, revaluationSet, schemes, subSchemes, fixedAssetAccount} = this.state;
-
       const renderOptions = function(list) {
       	if(list) {
       		if(list.constructor == Array) {

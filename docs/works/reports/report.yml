@@ -256,7 +256,7 @@ ReportDefinitions:
     label: reports.works.subtypeofwork
     type: singlevaluelist
     source: works
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B(%40.parent%3D%3D{typeOfWork}%20%26%26%20%40.active%3D%3D%27true%27)%5D|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=works&masterName=TypeOfWork&tenantId=$tenantid&filter=%5B%3F(%40.parent%3D%3D%27{typeOfWork}%27%20%26%26%20%40.active%3D%3D%27true%27)%5D|$..code|$..name
     wrapper: true
     stateData: true
     searchClause : AND de.workssubtype=$subTypeOfWork

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,7 @@ public class StorageService {
 		}).collect(Collectors.toList());
 	}
 
-	public Resource retrieve(String fileStoreId, String tenantId) {
+	public Resource retrieve(String fileStoreId, String tenantId) throws IOException {
 		return artifactRepository.find(fileStoreId, tenantId);
 	}
 

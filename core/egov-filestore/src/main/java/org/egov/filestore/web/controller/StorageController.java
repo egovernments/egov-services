@@ -2,6 +2,7 @@ package org.egov.filestore.web.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,17 +40,38 @@ public class StorageController {
 	@GetMapping("/id")
 	@ResponseBody
 	public ResponseEntity<Resource> getFile(@RequestParam(value = "tenantId") String tenantId,
-											@RequestParam("fileStoreId") String fileStoreId) {
-		org.egov.filestore.domain.model.Resource resource = storageService.retrieve(fileStoreId, tenantId);
+			@RequestParam("fileStoreId") String fileStoreId) {
+		org.egov.filestore.domain.model.Resource resource =null;
+		try {
+			resource = storageService.retrieve(fileStoreId, tenantId);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return ResponseEntity.ok()
 				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFileName() + "\"")
 				.header(HttpHeaders.CONTENT_TYPE, resource.getContentType()).body(resource.getResource());
 	}
 
+	@GetMapping("/MetaData")
+	@ResponseBody
+	public ResponseEntity<org.egov.filestore.domain.model.Resource> getMetaData(
+			@RequestParam(value = "tenantId") String tenantId, @RequestParam("fileStoreId") String fileStoreId) {
+		org.egov.filestore.domain.model.Resource resource =null;
+		try {
+		    resource = storageService.retrieve(fileStoreId, tenantId);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		resource.setResource(null);
+		return new ResponseEntity<org.egov.filestore.domain.model.Resource>(resource, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/tag", produces = APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public GetFilesByTagResponse getUrlListByTag(@RequestParam(value = "tenantId") String tenantId,
-												 @RequestParam("tag") String tag) {
+			@RequestParam("tag") String tag) {
 		final List<FileInfo> fileInfoList = storageService.retrieveByTag(tag, tenantId);
 		return responseFactory.getFilesByTagResponse(fileInfoList);
 	}
@@ -58,9 +80,8 @@ public class StorageController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public StorageResponse storeFiles(@RequestParam("file") List<MultipartFile> files,
-									  @RequestParam(value = "tenantId") String tenantId,
-									  @RequestParam("module") String module,
-									  @RequestParam(value = "tag", required = false) String tag) {
+			@RequestParam(value = "tenantId") String tenantId, @RequestParam("module") String module,
+			@RequestParam(value = "tag", required = false) String tag) {
 		final List<String> fileStoreIds = storageService.save(files, module, tag, tenantId);
 		return getStorageResponse(fileStoreIds, tenantId);
 	}

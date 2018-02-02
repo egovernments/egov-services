@@ -146,6 +146,8 @@
 										<exclude>org.egov.filestore.persistence.repository.FileRepository</exclude>
                                         <exclude>org.egov.filestore.persistence.entity.AbstractPersistable</exclude>
 										<exclude>org.egov.filestore.persistence.entity.Artifact</exclude>
+										<exclude>org.egov.filestore.domain.model.Resource</exclude>
+										<exclude>org.egov.filestore.web.controller.StorageController</exclude>
                                     </excludes>
                                     <limits>
                                         <limit>

@@ -7,6 +7,7 @@ import org.egov.filestore.domain.model.Resource;
 import org.egov.filestore.persistence.entity.Artifact;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class ArtifactRepository {
 	}
 
 	public List<String> save(List<org.egov.filestore.domain.model.Artifact> artifacts) {
-		diskFileStoreRepository.write(artifacts);
+		//diskFileStoreRepository.write(artifacts);
 		List<Artifact> artifactEntities = mapArtifactsListToEntitiesList(artifacts);
 		return fileStoreJpaRepository.save(artifactEntities).stream()
 				.map(Artifact::getFileStoreId)
@@ -47,13 +48,13 @@ public class ArtifactRepository {
 		return artifactEntity;
 	}
 
-	public Resource find(String fileStoreId, String tenantId) {
+	public Resource find(String fileStoreId, String tenantId) throws IOException {
 		Artifact artifact = fileStoreJpaRepository.findByFileStoreIdAndTenantId(fileStoreId, tenantId);
 		if (artifact == null)
 			throw new ArtifactNotFoundException(fileStoreId);
 
 		org.springframework.core.io.Resource resource = diskFileStoreRepository.read(artifact.getFileLocation());
-		return new Resource(artifact.getContentType(), artifact.getFileName(), resource, artifact.getTenantId());
+		return new Resource(artifact.getContentType(), artifact.getFileName(), resource, artifact.getTenantId(),resource.getFile().length());
 	}
 
 	public List<FileInfo> findByTag(String tag, String tenantId) {

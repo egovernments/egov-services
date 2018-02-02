@@ -140,7 +140,7 @@ addOrUpdate(e, mode) {
   render()
   {
     let {handleChange,addOrUpdate}=this;
-    let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active}=this.state.LeaveType;
+    let {name,payEligible,encashable,halfdayAllowed,accumulative,description,active,encloseHoliday,includePrefixSuffix}=this.state.LeaveType;
     let mode=getUrlVars()["type"];
     const showActionButton=function() {
       if((!mode)|| mode==="update")

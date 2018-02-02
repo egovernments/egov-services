@@ -1860,17 +1860,17 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the VehicleType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the VehicleType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         code:
           type: string
           description: code of the VehicleType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
       required:
       - tenantId
@@ -1884,7 +1884,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Vehicle
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         regNumber:
           type: string
@@ -1998,13 +1998,14 @@ definitions:
           format: double
           description: capacity of the Vehicle in Tonnes. Shall be > 0
           minimum: 0
+          maximum: 100
           exclusiveMinimum: true
           example: 0.24
         model:
           type: string
           description: Make / Model / Manufaturer of the Vehicle. / special character is allowed. Space is not allowed
           maxLength: 256
-          minLength: 1
+          minLength: 0
           example: Dzire/LDi/Maruti
       required:
       - engineSrNumber
@@ -2064,17 +2065,17 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the WasteType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the WasteType. e.g. Dry, wet or medicinal waste etc. Special chararcter not allowed. Space allowed
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         code:
           type: string
           description: code of the WasteType. e.g. Dry, wet or medicinal waste etc. Special chararcter not allowed. Space allowed
-          maxLength: 128
+          maxLength: 256
           minLength: 1
       required:
       - tenantId
@@ -3688,7 +3689,6 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
-
 
 
 

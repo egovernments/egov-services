@@ -23,7 +23,7 @@ import lombok.Setter;
 public class Vehicle {
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -72,7 +72,7 @@ public class Vehicle {
     @JsonProperty("endOfWarranty")
     private Long endOfWarranty = null;
 
-    @Length(min = 0, max = 300, message = "Value of remarks shall be between 0 and 300")
+    @Length(min = 15, max = 300, message = "Value of remarks shall be between 15 and 300")
     @JsonProperty("remarks")
     private String remarks = null;
 

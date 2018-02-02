@@ -31,7 +31,7 @@ public class PurchaseInfo {
     @DecimalMax(value = "10000000", message = "price shall be between 1 and 10000000 Rs")
     private Double price = null;
 
-    @Length(min = 0, max = 256, message = "Value of sourceOfPurchase shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of sourceOfPurchase shall be between 0 and 256")
     @JsonProperty("sourceOfPurchase")
     private String sourceOfPurchase = null;
 

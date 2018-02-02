@@ -33,6 +33,7 @@ public class Constants {
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
+    public static final String APPCONFIG_EXCEPTIONALUOMS = "EXCEPTIONALUOMS";
     
     public static final String APPROVE = "Approve";
     public static final String SUBMIT = "Submit";
@@ -302,6 +303,9 @@ public class Constants {
 
     public static final String KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE= "ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE";
     public static final String MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE= "Total Estimate activity amount should be equal to work value";
+
+    public static final String KEY_ACTIVITY_INVALID_UNITRATE= "ACTIVITY_INVALID_UNITRATE";
+    public static final String MESSAGE_ACTIVITY_INVALID_UNITRATE= "Invalid unitrate for estimate activity";
 
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";

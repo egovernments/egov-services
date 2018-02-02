@@ -823,6 +823,7 @@ public class EstimateValidator {
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
         ScheduleOfRate sor = null;
+        List<String> exceptionalUoms = getExceptionalUOMS(detailedEstimate.getTenantId(), requestInfo);
         for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
 
             if (activity.getScheduleOfRate() != null && (StringUtils.isBlank(activity.getScheduleOfRate().getId()) &&
@@ -921,6 +922,19 @@ public class EstimateValidator {
                         Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER);
             }
 
+            if(activity.getUom() != null && activity.getUom().getCoversionFactor() != null && activity.getEstimateRate() != null) {
+                for(String uom : exceptionalUoms) {
+                    if (activity.getUom().getCoversionFactor().equals(Float.valueOf(uom))) {
+                        BigDecimal unitRate = activity.getEstimateRate().divide(new BigDecimal(activity.getUom().getCoversionFactor()));
+                        if (!unitRate.equals(activity.getUnitRate()))
+                            messages.put(Constants.KEY_ACTIVITY_INVALID_UNITRATE,
+                                    Constants.MESSAGE_ACTIVITY_INVALID_UNITRATE);
+                    }
+                }
+
+            }
+
+
         }
 
         BigDecimal totalActivityAmount = getTotalActivityAmount(detailedEstimate.getEstimateActivities());
@@ -929,6 +943,21 @@ public class EstimateValidator {
             messages.put(Constants.KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE,
                     Constants.MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_WORKVALUE);
 
+    }
+
+    private List<String> getExceptionalUOMS(final String tenantId, final RequestInfo requestInfo) {
+            JSONArray mdmsArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+                    Constants.APPCONFIG_EXCEPTIONALUOMS, tenantId, requestInfo,
+                    CommonConstants.MODULENAME_WORKS);
+          List<String> exceptionalUoms = new ArrayList<>();
+            if (mdmsArray != null && !mdmsArray.isEmpty()) {
+                for (int i = 0; i < mdmsArray.size(); i++) {
+                    Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(i);
+                    String value = jsonMap.get("value").toString().split(",")[1];
+                    exceptionalUoms.add(value);
+                }
+            }
+        return exceptionalUoms;
     }
 
     private boolean validateSorRates(List<ScheduleOfRate> scheduleOfRates, DetailedEstimate detailedEstimate) {

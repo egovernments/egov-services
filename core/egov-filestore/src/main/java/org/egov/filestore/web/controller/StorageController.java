@@ -53,7 +53,7 @@ public class StorageController {
 				.header(HttpHeaders.CONTENT_TYPE, resource.getContentType()).body(resource.getResource());
 	}
 
-	@GetMapping("/MetaData")
+	@GetMapping("/metadata")
 	@ResponseBody
 	public ResponseEntity<org.egov.filestore.domain.model.Resource> getMetaData(
 			@RequestParam(value = "tenantId") String tenantId, @RequestParam("fileStoreId") String fileStoreId) {

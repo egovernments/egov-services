@@ -1,0 +1,2173 @@
+{
+	"info": {
+		"name": "eGov_Works_QA_Collections_Regular",
+		"_postman_id": "bf20a1ce-cb14-939f-0efd-ee98fda8f52e",
+		"description": "For Regular Work -\r\n\r\nAbstract Estimate\r\nDetailed Estimate\r\nOffline status for Detailed Estimate\r\nLetter of Acceptance\r\nOffline status for Letter of Acceptance\r\nWork Order\r\nOffline status for Work Order\r\nCreate Milestone\r\nTrack Milestone\r\nNotice Generation\r\nMeasurement Book entries\r\nOffline status for Measurement Book\r\nQuality Testing\r\nContractor Payment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Workflow",
+			"description": "Abstract Estimate with workflow",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5294b8c8-2320-476c-b079-28b94a34db2b",
+								"type": "text/javascript",
+								"exec": [
+									"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\") && environment.tenantId.has(\"default\")){",
+									"    pm.environment.get(\"username\");",
+									"    pm.environment.get(\"password\");",
+									"}",
+									"",
+									"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+									"    pm.environment.get(\"username\");",
+									"    pm.environment.get(\"password\");",
+									"}"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4d925a00-92c5-41e7-8e49-3fa2a75b2e64",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var loginUserName = pm.environment.get(\"username\");",
+									"",
+									"pm.environment.set(\"access_token\", jsonData.access_token);",
+									"",
+									"pass = true;",
+									"fail = false;",
+									"",
+									"if (responseCode.code === 201 || responseCode.code === 200) {",
+									"    tests[\"Request Succesfully Sent\"] = pass;",
+									"}",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+									"",
+									"pm.test(\"Login UserRequest Matches\", function () {",
+									"    pm.expect(loginUserName).to.include(jsonData.UserRequest.userName);",
+									"});",
+									"",
+									"var nextSwitch = pm.environment.get(\"callTo\");",
+									"if(nextSwitch === \"Create AE\"){",
+									" postman.setNextRequest(\"WorksMdmsData\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Update AE\"){",
+									" postman.setNextRequest(\"Update AE\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Update AE (FS)\"){",
+									" postman.setNextRequest(\"Update AE (FS)\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Update AE (AS)\"){",
+									" postman.setNextRequest(\"Update AE (AS)\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Search Project Code\"){",
+									" postman.setNextRequest(\"Search Project Code\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Search SOR\"){",
+									" postman.setNextRequest(\"Search SOR\");   ",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c429c435-9abe-4a93-9213-986e6415b914",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"var isLogin = pm.environment.get(\"callTo\");",
+									"// if(isLogin != \"Search AE (AS)\")",
+									"postman.setNextRequest(\"Login\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "WorksMdmsData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "551ba9c0-7e9e-4f65-b3b1-8a246cd1f630",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var uom = jsonData.MdmsRes[\"common-masters\"].Uom;",
+									"var dep = jsonData.MdmsRes[\"common-masters\"].Department;",
+									"var typeOfWork = jsonData.MdmsRes.works.TypeOfWork;",
+									"var scheduleCategory = jsonData.MdmsRes.works.ScheduleCategory;",
+									"var referenceType = jsonData.MdmsRes.works.ReferenceType;",
+									"var budgetGroup = jsonData.MdmsRes.works.BudgetGroup;",
+									"var modeOfAllotment = jsonData.MdmsRes.works.ModeOfAllotment;",
+									"var natureOfWork = jsonData.MdmsRes.works.NatureOfWork;",
+									"",
+									"var uomCode = uom[Math.floor(Math.random() * uom.length)];",
+									"var depCode = dep[Math.floor(Math.random() * dep.length)];",
+									"var typeOfWorkCode = typeOfWork[Math.floor(Math.random() * typeOfWork.length)];",
+									"var scheduleCategoryCode = scheduleCategory[Math.floor(Math.random() * scheduleCategory.length)];",
+									"var referenceTypeCode = referenceType[Math.floor(Math.random() * referenceType.length)];",
+									"var budgetGroupCode = budgetGroup[Math.floor(Math.random() * budgetGroup.length)];",
+									"var modeOfAllotmentCode = modeOfAllotment[Math.floor(Math.random() * modeOfAllotment.length)];",
+									"var natureOfWorkCode = natureOfWork[Math.floor(Math.random() * natureOfWork.length)];",
+									"var tW = \"\";",
+									"",
+									"for(var j=0; j<typeOfWork.length; j++){",
+									"var tow = typeOfWork[Math.floor(Math.random() * typeOfWork.length)];",
+									"    if(tow.parent == null){",
+									"        pm.environment.set(\"typeOfWork\", typeOfWork[j].code);",
+									"        tW = typeOfWork[j].code;",
+									"        break;",
+									"    }",
+									"}",
+									"for (var i=0; i<typeOfWork.length; i++){",
+									"    if(typeOfWork[i].parent !== null && typeOfWork[i].parent == tW){",
+									"    pm.environment.set(\"subTypeOfWork\", typeOfWork[i].code);",
+									"    break;",
+									"    }",
+									"}",
+									"",
+									"pm.environment.set(\"uom\", uomCode.code);",
+									"pm.environment.set(\"dep\", depCode.code);",
+									"pm.environment.set(\"scheduleCategory\", scheduleCategoryCode.code);",
+									"pm.environment.set(\"referenceType\", referenceTypeCode.code);",
+									"pm.environment.set(\"budgetGroup\", budgetGroupCode.name);",
+									"pm.environment.set(\"modeOfAllotment\", modeOfAllotmentCode.code);",
+									"pm.environment.set(\"natureOfWork\", natureOfWorkCode.name);",
+									"",
+									"postman.setNextRequest(\"Create AE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \n  \"RequestInfo\":{  \n     \"apiId\":\"works-services\",\n      \"ver\":null,\n      \"ts\":null,\n      \"action\":null,\n      \"did\":null,\n      \"key\":null,\n      \"msgId\":\"search mdms data\",\n      \"authToken\":\"{{access_token}}\",\n      \"tenantId\": \"{{tenantId}}\"\n   },\n   \"MdmsCriteria\":{  \n     \"tenantId\":\"{{tenantId}}\",\n      \"moduleDetails\":[  \n        {  \n           \"moduleName\":\"works\",\n            \"masterDetails\":[  \n              {  \n                 \"name\":\"ScheduleCategory\"\n               },\n                {  \n                 \"name\":\"TypeOfWork\"\n               },\n               {\n               \"name\": \"Overhead\"\n               },\n               {\n                 \"name\": \"Remarks\"\n               },\n               {\n                 \"name\": \"ReferenceType\"\n               },\n               {\n                 \"name\": \"BudgetGroup\"\n               },\n               {\n                 \"name\": \"NatureOfWork\"\n               },\n               {\n                 \"name\": \"ModeOfAllotment\"\n               },\n               {\n                 \"name\": \"ContractorClass\"\n               },\n               {\n                 \"name\": \"WorksStatus\"\n               }\n            ]\n         },\n         {  \n           \"moduleName\":\"common-masters\",\n            \"masterDetails\":[  \n              {  \n                 \"name\":\"Department\"\n               },\n               {\n                  \"name\":\"Uom\"\n               }\n            ]\n         }\n      ]\n   }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/egov-mdms-service/v1/_search",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"egov-mdms-service",
+								"v1",
+								"_search"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create AE",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "de510e42-0137-4254-81a1-79b6b81f7bbb",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var b = [\"SC\", \"ST\", \"BC\", \"MINORITY\", \"WOMEN_CHILDREN_WELFARE\", \"GENERAL\"]",
+									"var beneficiary = b[Math.floor(Math.random() * b.length)];",
+									"var url = pm.environment.get(\"url\");",
+									"",
+									"pm.environment.set(\"beneficiary\", beneficiary);",
+									"pm.environment.set(\"referenceNumber\", \"RefNum\"+num1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"",
+									"if(url === \"http://egov-micro-dev.egovernments.org\"){",
+									"    pm.environment.set(\"assignee\", 459);",
+									"}else",
+									"    pm.environment.set(\"assignee\", 25164);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "91445d7c-4c4c-4aa1-a5bf-7e5fe3473d9a",
+								"type": "text/javascript",
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"",
+									"if (responseCode.code === 201 || responseCode.code === 200) {",
+									"    tests[\"Request Succesfully Sent\"] = pass;",
+									"}",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"AEid\", jsonData.abstractEstimates[0].id);",
+									"pm.environment.set(\"AEamount\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].estimateAmount);",
+									"pm.environment.set(\"AEdetailsId\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].id);",
+									"pm.environment.set(\"AEnumber\", jsonData.abstractEstimates[0].abstractEstimateNumber);",
+									"// pm.globals.set(\"AEnumber\", jsonData.abstractEstimates[0].abstractEstimateNumber);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"pm.environment.set(\"stateId\", jsonData.abstractEstimates[0].stateId);",
+									"",
+									"postman.setNextRequest(\"Search AE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"dateOfProposal\": \"{{epochDate}}\",\n      \"subject\": \"Normal/Regular/New AE: Project Work\",\n      \"referenceType\": {\n        \"code\": \"{{referenceType}}\"\n      },\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"2\"\n      },\n      \"documentDetails\": [],\n      \"assetDetails\": [],\n      \"description\": \"Project Estimation for the proposed work\",\n      \"budgetGroup\": {\n        \"name\": \"{{budgetGroup}}\"\n      },\n      \"department\": {\n        \"code\": \"{{dep}}\"\n      },\n      \"beneficiary\": \"{{beneficiary}}\",\n      \"modeOfAllotment\": {\n        \"code\": \"{{modeOfAllotment}}\"\n      },\n      \"fund\": {\n        \"code\": \"1\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUPBSUP\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"{{typeOfWork}}\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"{{subTypeOfWork}}\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"{{natureOfWork}}\"\n      },\n      \"ward\": {\n        \"code\": 172\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"workOrderCreated\": false,\n      \"billsCreated\": false,\n      \"spillOverFlag\": false,\n      \"detailedEstimateCreated\": false,\n      \"implementationPeriod\": 1,\n      \"fundAvailable\": true,\n      \"pmcRequired\": true,\n      \"pmcType\": \"pmc type\",\n      \"pmcName\":{\n        \"code\": \"default-Grade-35\"\n      },\n      \"workProposedAsPerDP\": true,\n      \"dpRemarks\": \"DP Remarks\",\n      \"landAssetRequired\": true,\n      \"noOfLands\": 2,\n      \"otherAssetSpecificationRemarks\": \"Other Asset Remarks\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Project 1\",\n          \"estimateAmount\": 1000\n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"Create\",\n        \"assignee\": {{assignee}}\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7af76a74-b28a-445d-b431-6a9dd32b26f5",
+								"type": "text/javascript",
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"",
+									"var url = pm.environment.get(\"url\");",
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"if (responseCode.code === 201 || responseCode.code === 200) {",
+									"    tests[\"Request Succesfully Sent\"] = pass;",
+									"}",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"AE status is Created\", function () {",
+									"    pm.expect(\"CREATED\").to.include(ae[0].status.code);",
+									"});",
+									"if(url === \"http://egov-micro-qa.egovernments.org\" && ae[0].status.code === \"CREATED\"){",
+									"    ae[0].workFlowDetails.assignee = \"25165\";",
+									"    ae[0].status.tenantId = \"{{tenantId}}\";",
+									"    ae[0].workFlowDetails.action = \"Submit\";",
+									"    pm.environment.set(\"username\",\"WMS002\");",
+									"}",
+									"if(url === \"http://egov-micro-dev.egovernments.org\" && ae[0].status.code === \"CREATED\"){",
+									"        ae[0].workFlowDetails.assignee = \"509\";",
+									"        pm.environment.set(\"username\",\"HOD\");",
+									"        ae[0].status.tenantId = \"{{tenantId}}\";",
+									"        ae[0].workFlowDetails.action = \"Submit\";",
+									"}",
+									"pm.environment.set(\"abstractEstimates\", JSON.stringify(ae));",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Update AE\");",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{AEid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{AEid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update AE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a1ab9641-dfd3-446c-8eea-20adccc81321",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"",
+									"postman.setNextRequest(\"Search AE Checked\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1403f27e-55f6-4481-93ba-c4ba2768aeed",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"userName\": \"WMS002\"\n    }\n  },\n  \"abstractEstimates\": {{abstractEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_update"
+							]
+						},
+						"description": "@JE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE Checked",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "75fb920d-8d08-44c0-a174-0b5a00e6dbfe",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"if(ae[0].status.code === \"CHECKED\"){",
+									"    ",
+									"    pm.test(\"AE status is Checked\", function () {",
+									"        pm.expect(ae[0].status.code).to.eql(\"CHECKED\");",
+									"    });",
+									"    ",
+									"    ae[0].status.tenantId = \"{{tenantId}}\";",
+									"    ae[0].workFlowDetails.action = \"Submit\";",
+									"    ae[0].workFlowDetails.assignee = \"25165\";",
+									"    // ae[0].workFlowDetails.assignee = \"510\";",
+									"    ae[0].financialSanctionNumber = \"FS-ENG-NS-\"+year+\"-\"+num1;",
+									"}",
+									"pm.environment.set(\"abstractEstimates\", JSON.stringify(ae));",
+									"pm.environment.set(\"username\",\"WMS003\");",
+									"// pm.environment.set(\"username\",\"10001\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Update AE (FS)\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&abstractEstimateNumbers={{AEnumber}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "abstractEstimateNumbers",
+									"value": "{{AEnumber}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "@JE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Update AE (FS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5846aa0a-08c6-43ab-93b1-73ae394afed5",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.globals.set(\"projectCode\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].projectCode.code);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"postman.setNextRequest(\"Search AE (FS)\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "87c08381-9933-44fe-bce4-86a292fb3206",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n     \"tenantId\": \"{{tenantId}}\",\n     \"userName\": \"WMS003\"\n    }\n  },\n\t\"abstractEstimates\": {{abstractEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_update"
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE (FS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a57fa2f-3cf4-4629-9110-69ef34d5624b",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"if(ae[0].status.code === \"FINANCIAL_SANCTIONED\"){",
+									"    ",
+									"    pm.test(\"AE status is Financial Sanctioned\", function () {",
+									"        pm.expect(ae[0].status.code).to.eql(\"FINANCIAL_SANCTIONED\");",
+									"    });    ",
+									"    ae[0].status.tenantId = \"{{tenantId}}\";",
+									"    ae[0].workFlowDetails.action = \"Approve\";",
+									"    ae[0].workFlowDetails.assignee = \"25166\";",
+									"    // ae[0].workFlowDetails.assignee = \"510\";",
+									"    ae[0].adminSanctionNumber = \"ADN-\"+year+\"-\"+num1;",
+									"    ae[0].councilResolutionNumber = \"CRN-\"+year+\"-\"+num1;",
+									"}",
+									"pm.environment.set(\"abstractEstimates\", JSON.stringify(ae));",
+									"pm.environment.set(\"username\",\"WMS004\");",
+									"// pm.environment.set(\"username\",\"10002\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Update AE (AS)\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{AEid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{AEid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Update AE (AS)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5e7fd0fa-a29c-4537-8ed8-fa940cbd4ba0",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0727d512-b60f-497b-ab81-e03b70e9298d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"postman.setNextRequest(\"Search AE (AS)\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n     \"tenantId\": \"{{tenantId}}\",\n     \"userName\": \"WMS004\"\n    }\n  },\n\t\"abstractEstimates\": {{abstractEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_update"
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE (AS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d942cc6-edfe-47fa-b8f8-893e46cac153",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"if(ae[0].status.code === \"ADMINISTRATIVE_SANCTIONED\"){",
+									"    pm.test(\"AE status is Adminstrative Sanctioned\", function () {",
+									"        pm.expect(ae[0].status.code).to.eql(\"ADMINISTRATIVE_SANCTIONED\");",
+									"    });",
+									"    pm.environment.set(\"AEnumber\", ae[0].abstractEstimateNumber);",
+									"    pm.environment.set(\"AEprojectCode\", ae[0].abstractEstimateDetails[0].projectCode.code);",
+									"    pm.environment.set(\"adminSanctionDate\", ae[0].adminSanctionDate);",
+									"}",
+									"pm.environment.set(\"username\",\"W001\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Search Project Code\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&abstractEstimateNumbers={{AEnumber}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "abstractEstimateNumbers",
+									"value": "{{AEnumber}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Project Code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa97ca53-fcd9-48d4-b6c4-04bf07940179",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var pc = pm.environment.get(\"AEprojectCode\");",
+									"",
+									"if(jsonData.projectCodes[0].status.code === \"CREATED\"){",
+									"",
+									"    pm.test(\"Project Code Matches\", function () {",
+									"        pm.expect(jsonData.projectCodes[0].code).to.eql(pc);",
+									"    });",
+									"}",
+									"pm.environment.set(\"username\",\"W001\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Search SOR\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\":{\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"search\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n    }\n }"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/projectcodes/_search?tenantId={{tenantId}}&codes={{AEprojectCode}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"projectcodes",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "codes",
+									"value": "{{AEprojectCode}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Search SOR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "eb89a3dd-e997-447b-86b0-63ea01d7befd",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"sorCode\", jsonData.scheduleOfRates[0].code);",
+									"pm.environment.set(\"sorId\", jsonData.scheduleOfRates[0].id);",
+									"postman.setNextRequest(\"Create DE Normal\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"RequestInfo\":{\r\n  \"apiId\": \"works-masters\",\r\n  \"ver\": \"1.0\",\r\n  \"ts\": 0,\r\n  \"action\": \"search\",\r\n  \"did\": \"1\",\r\n  \"key\": \"string\",\r\n  \"msgId\": \"string\",\r\n  \"requesterId\": \"clerk\",\r\n  \"authToken\": \"{{access_token}}\"\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-masters/v1/scheduleofrates/_search?tenantId={{tenantId}}&sorCodes=SOR115",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-masters",
+								"v1",
+								"scheduleofrates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "sorCodes",
+									"value": "SOR115",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search SOR master data"
+					},
+					"response": []
+				},
+				{
+					"name": "Create DE Normal",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d86fbd9e-d11b-4689-ac24-6344617d1bc2",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = today.getTime();",
+									"var year = today.getFullYear();",
+									"",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.get(\"AEprojectCode\");",
+									"pm.environment.get(\"sorCode\");",
+									"pm.environment.get(\"sorId\");",
+									"pm.environment.get(\"AEid\");",
+									"pm.environment.get(\"AEdetailsId\");",
+									"pm.environment.get(\"AEnumber\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "75050eec-eb23-4e59-8341-5c4b2f633592",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"var de = jsonData.detailedEstimates;",
+									"",
+									"pm.environment.set(\"detailedEstimates\", JSON.stringify(de));",
+									"pm.environment.set(\"DEid\", jsonData.detailedEstimates[0].id);",
+									"pm.environment.set(\"DEnumber\", jsonData.detailedEstimates[0].estimateNumber);",
+									"",
+									"postman.setNextRequest(\"Search DE Normal\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"1427784646000\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"detailedEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"estimateDate\": {{adminSanctionDate}},\n      \"nameOfWork\": \"Detailed Estimation for the proposed work\",\n      \"description\": \"Detailed Estimation for the proposed work\",\n      \"department\": {\n        \"code\": \"{{dep}}\"\n      },\n      \"workValue\": 900,\n      \"estimateValue\": 1000,\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"{{modeOfAllotment}}\"\n      },\n      \"worksType\": {\n        \"code\": \"{{typeOfWork}}\"\n      },\n      \"worksSubtype\": {\n        \"code\": \"{{subTypeOfWork}}\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"{{natureOfWork}}\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"location\": \"Roha, MH\",\n      \"workCategory\": \"NON_SLUM\",\n      \"workOrderCreated\": false,\n      \"billsCreated\": false,\n      \"spillOverFlag\": false,\n      \"abstractEstimateDetail\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": \"{{AEdetailsId}}\",\n        \"nameOfWork\": \"Project 1\",\n        \"estimateAmount\": \"{{AEamount}}\",\n        \"projectCode\": {\n          \"code\": \"{{AEprojectCode}}\"\n        }\n      },\n      \"documentDetails\": [],\n      \"assets\": [],\n      \"multiYearEstimates\": [],\n      \"estimateActivities\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"scheduleOfRate\": {\n            \"id\": \"{{sorId}}\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"code\": \"{{sorCode}}\"\n          },\n          \"nonSor\": null,\n          \"uom\": {\n            \"code\": \"{{uom}}\"\n          },\n          \"unitRate\": 225,\n          \"estimateRate\": 225,\n          \"quantity\": 2,\n          \"serviceTaxPerc\": 0,\n          \"revisionType\": \"NON_TENDERED_ITEM\",\n          \"estimateMeasurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 1,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 1: with SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 2,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 2: with SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            }\n          ],\n          \"deleted\": false\n        },\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"scheduleOfRate\": null,\n          \"nonSor\": {\n            \"tenantId\": \"{{tenantId}}\",\n            \"description\": \"Man Power\",\n            \"uom\": {\n              \"code\": \"NOS\"\n            },\n            \"deleted\": false\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"unitRate\": 225,\n          \"quantity\": 2,\n          \"estimateRate\": 225,\n          \"serviceTaxPerc\": 0,\n          \"revisionType\": \"NON_TENDERED_ITEM\",\n          \"estimateMeasurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 1,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 1: with NON-SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 2,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 2: with NON-SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            }\n          ],\n          \"deleted\": false\n        }\n      ],\n      \"estimateOverheads\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"overhead\": {\n            \"accountCode\": \"123\",\n            \"name\": \"TAXFake\",\n            \"code\": \"TAXFake\",\n            \"tenantId\": \"{{tenantId}}\"\n          },\n          \"amount\": 100\n        }\n      ],\n      \"detailedEstimateDeductions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"chartOfAccounts\": {\n            \"glcode\": \"1981\"\n          },\n          \"amount\": 50\n        }\n      ],\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"budgetGroup\": {\n        \"name\": \"{{budgetGroup}}\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_create"
+							]
+						},
+						"description": "Create Detailed Estimate with workflow"
+					},
+					"response": []
+				},
+				{
+					"name": "Search DE Normal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e4789aa6-ee59-407e-a90d-78dc50e0a1d7",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var deID = pm.environment.get(\"DEid\");",
+									"var deNum = pm.environment.get(\"DEnumber\");",
+									"var de = JSON.parse(pm.environment.get(\"detailedEstimates\"));",
+									"",
+									"console.log(de[0]);",
+									"pm.test(\"Detailed Estimate matches ID\", function () {",
+									"    pm.expect(deID).to.include(jsonData.detailedEstimates[0].id);",
+									"});",
+									"pm.test(\"Detailed Estimate matches Number\", function () {",
+									"    pm.expect(deNum).to.include(jsonData.detailedEstimates[0].estimateNumber);",
+									"});",
+									"",
+									"if(jsonData.detailedEstimates[0].status.code === \"CREATED\"){",
+									"    pm.test(\"Detailed Estimate\"+\" CREATED \"+\"matches Status\", function () {",
+									"    pm.expect(\"CREATED\").to.include(jsonData.detailedEstimates[0].status.code);",
+									"    });",
+									"    de[0].status.tenantId = \"{{tenantId}}\";",
+									"    de[0].status.code = \"CHECKED\";",
+									"}",
+									"if(jsonData.detailedEstimates[0].status.code === \"CHECKED\"){",
+									"    pm.test(\"Detailed Estimate\"+\" CHECKED \"+\"matches Status\", function () {",
+									"    pm.expect(\"CHECKED\").to.include(jsonData.detailedEstimates[0].status.code);",
+									"    });",
+									"    de[0].status.tenantId = \"{{tenantId}}\";",
+									"    de[0].status.code = \"TECHNICAL_SANCTIONED\";",
+									"    de[0].estimateTechnicalSanctions = [{}];",
+									"    de[0].estimateTechnicalSanctions[0].tenantId = \"{{tenantId}}\";",
+									"    de[0].estimateTechnicalSanctions[0].technicalSanctionDate = \"{{adminSanctionDate}}\";",
+									"    de[0].estimateTechnicalSanctions[0].technicalSanctionBy = {};",
+									"    de[0].estimateTechnicalSanctions[0].technicalSanctionBy.userName = \"W001\";",
+									"    de[0].estimateTechnicalSanctions[0].technicalSanctionBy.tenantId = \"{{tenantId}}\";",
+									"}",
+									"if(jsonData.detailedEstimates[0].status.code === \"TECHNICAL_SANCTIONED\"){",
+									"    pm.test(\"Detailed Estimate\"+\" TECHNICAL_SANCTIONED \"+\"matches Status\", function () {",
+									"    pm.expect(\"TECHNICAL_SANCTIONED\").to.include(jsonData.detailedEstimates[0].status.code);",
+									"    });",
+									"    // pm.globals.set(\"DEid\", jsonData.detailedEstimates[0].id);",
+									"    // pm.globals.set(\"DEnum\", jsonData.detailedEstimates[0].estimateNumber);",
+									"}",
+									"pm.environment.set(\"detailedEstimates\", JSON.stringify(de));"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b29dab2e-6018-42be-82fc-3dc7d50aa3a6",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_search?tenantId={{tenantId}}&ids={{DEid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{DEid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Update DE Normal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ba61d3d5-7b9e-4bcf-b64a-dbe1c5cdf777",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"// var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"// var today = new Date();",
+									"// var epoch = Math.round(today.getTime()/1000);",
+									"// var year = today.getFullYear();",
+									"// var tenant = pm.environment.get(\"tenantId\");",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var de = jsonData.detailedEstimates;",
+									"pm.environment.set(\"detailedEstimates\", JSON.stringify(de));"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5a9f88cb-ef50-4f57-ab77-24ea10adea56",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"userName\": \"clerk\"\n    }\n  },\n    \"detailedEstimates\": {{detailedEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_update"
+							]
+						},
+						"description": "Update Detailed Estimate"
+					},
+					"response": []
+				},
+				{
+					"name": "Create DE Offline Status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a3848418-8e75-4a3a-b869-52b4a54d6192",
+								"type": "text/javascript",
+								"exec": [
+									"var objectDate = pm.environment.get(\"adminSanctionDate\");",
+									"pm.environment.set(\"technicalSanctionDate\", objectDate);",
+									"pm.environment.set(\"statusDate\", objectDate);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"offlineStatuses\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"NOTICEINVITINGTENDERRELEASED\"\n      },\n      \"objectDate\": \"{{technicalSanctionDate}}\",\n      \"statusDate\": \"{{statusDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"TENDER_DOCUMENT_RELEASED\"\n      },\n      \"objectDate\": \"{{technicalSanctionDate}}\",\n      \"statusDate\": \"{{statusDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"TENDER_OPENED\"\n      },\n      \"objectDate\": \"{{technicalSanctionDate}}\",\n      \"statusDate\": \"{{statusDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"TECHNICAL_EVALUATION_DONE\"\n      },\n      \"objectDate\": \"{{technicalSanctionDate}}\",\n      \"statusDate\": \"{{statusDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"COMMERCIAL_EVALUATION_DONE\"\n      },\n      \"objectDate\": \"{{technicalSanctionDate}}\",\n      \"statusDate\": \"{{statusDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"L1_TENDER_FINALIZED\"\n      },\n      \"objectDate\": \"{{technicalSanctionDate}}\",\n      \"statusDate\": \"{{statusDate}}\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Contractor_byCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e581237-bce1-4eab-996b-13abdfd9db3b",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var contractors = jsonData.contractors;",
+									"var activeContractors = contractors[Math.floor(Math.random()) * contractors.length];",
+									"pm.environment.set(\"contractor\" ,activeContractors.code);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"search\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"\",\n        \"authToken\": \"{{access_token}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-masters/v1/contractors/_search?tenantId={{tenantId}}&statuses=ACTIVE",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-masters",
+								"v1",
+								"contractors",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "statuses",
+									"value": "ACTIVE",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create LOA",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "09f92eb2-4798-4c54-b67f-ca84f1732434",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"fileNumber\", \"FN-\"+num1);",
+									"pm.environment.set(\"loaCRN\", \"CRN-LOA-\"+num1);",
+									"var loa = jsonData.letterOfAcceptances;",
+									"pm.environment.set(\"loa\", JSON.stringify(loa));"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "fcd25f27-a742-4adc-a896-a26b583d6bf5",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"loaNumber\", jsonData.letterOfAcceptances[0].loaNumber);",
+									"pm.environment.set(\"loaId\", jsonData.letterOfAcceptances[0].id);",
+									"pm.environment.set(\"loaDate\", jsonData.letterOfAcceptances[0].loaDate);",
+									"pm.environment.set(\"loaMBSheet1\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[0].loaMeasurements[0].id);",
+									"pm.environment.set(\"loaMBSheet2\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[0].loaMeasurements[1].id);",
+									"pm.environment.set(\"loaMBSheet3\",jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[1].loaMeasurements[0].id);",
+									"pm.environment.set(\"loaMBSheet4\",jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[1].loaMeasurements[1].id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"letterofacceptances\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractor\": {\n        \"code\": \"{{contractor}}\",\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"contractPeriod\": 5,\n      \"emdAmountDeposited\": 200,\n      \"stampPaperAmount\": 100,\n      \"engineerIncharge\": {\n        \"code\": \"WMS002\"\n      },\n      \"defectLiabilityPeriod\": 10,\n      \"tenderFinalizedPercentage\": 0,\n      \"loaAmount\": 900,\n      \"fileNumber\": \"{{fileNumber}}\",\n      \"fileDate\": {{epochDate}},\n      \"councilResolutionNumber\": \"{{loaCRN}}\",\n      \"councilResolutionDate\": {{epochDate}},\n      \"spillOverFlag\": false,\n      \"status\":{\n      \t\"code\": \"CREATED\"\n      },\n      \"letterOfAcceptanceEstimates\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"detailedEstimate\": {\n          \t\"id\": \"{{DEid}}\",\n            \"estimateNumber\": \"{{DEnumber}}\"\n          },\n          \"workCompletionDate\": {{epochDate}},\n          \"loaActivities\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"collectionMode\": \"CASH\",\n              \"percentage\": 10,\n              \"amount\": 100\n            }\n          ],\n          \"estimateLOAAmount\": 900\n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"Submit\",\n        \"assignee\": 25163\n      },      \n      \"securityDeposits\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_create"
+							]
+						},
+						"description": "LOA for the spillover estimates"
+					},
+					"response": []
+				},
+				{
+					"name": "Search LOA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b519a6d-f122-4d59-a26a-491d38e51574",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"loaId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].letterOfAcceptance);",
+									"pm.environment.set(\"loaNumber\", jsonData.letterOfAcceptances[0].loaNumber);",
+									"pm.environment.set(\"loaStatus\", jsonData.letterOfAcceptances[0].status.code);",
+									"pm.environment.set(\"loaEstimateId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].id);",
+									"pm.environment.set(\"loaActId1\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[0].id);",
+									"pm.environment.set(\"loaActId2\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[1].id);",
+									"",
+									"pm.test(\"LOA ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaId\")).to.include(jsonData.letterOfAcceptances[0].id);",
+									"});",
+									"pm.test(\"LOA Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaNumber\")).to.include(jsonData.letterOfAcceptances[0].loaNumber);",
+									"});",
+									"if(jsonData.letterOfAcceptances[0].status.code == \"CREATED\"){",
+									"    pm.test(\"LOA status as Created matches\", function () {",
+									"    pm.expect(\"CREATED\").to.include(jsonData.letterOfAcceptances[0].status.code);",
+									"});",
+									"}",
+									"if(jsonData.letterOfAcceptances[0].status.code == \"CHECKED\"){",
+									"    pm.test(\"LOA status as Checked matches\", function () {",
+									"    pm.expect(\"CHECKED\").to.include(jsonData.letterOfAcceptances[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.letterOfAcceptances[0].status.code == \"APPROVED\"){",
+									"    pm.test(\"LOA status as Approved matches\", function () {",
+									"    pm.expect(\"APPROVED\").to.include(jsonData.letterOfAcceptances[0].status.code);",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"{{tenantId}}\",\n   \t\"userName\" : \"clerk\"\n   }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_search?tenantId={{tenantId}}&ids={{loaId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{loaId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search LOA"
+					},
+					"response": []
+				},
+				{
+					"name": "Upldate LOA (Checked)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"letterOfAcceptances\": [\n    {\n      \"id\": \"{{loaId}}\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractor\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"code\": \"{{contractor}}\",\n        \"pmc\": false\n      },\n      \"loaDate\": {{loaDate}},\n      \"loaNumber\": \"{{loaNumber}}\",\n      \"contractPeriod\": 5,\n      \"emdAmountDeposited\": 200,\n      \"stampPaperAmount\": 100,\n      \"engineerIncharge\": {\n        \"code\": \"WMS004\"\n      },\n      \"defectLiabilityPeriod\": 10,\n      \"loaAmount\": 900,\n      \"documentDetails\": null,\n      \"status\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"code\": \"CHECKED\",\n        \"description\": null,\n        \"moduleType\": null,\n        \"orderNumber\": null\n      },\n      \"tenderFinalizedPercentage\": 0,\n      \"approvedBy\": null,\n      \"approvedDate\": null,\n      \"fileNumber\": \"{{fileNumber}}\",\n      \"fileDate\": {{adminSanctionDate}},\n      \"councilResolutionNumber\": \"{{loaCRN}}\",\n      \"councilResolutionDate\": {{adminSanctionDate}},\n      \"spillOverFlag\": false,\n      \"letterOfAcceptanceEstimates\": [\n        {\n          \"id\": \"{{loaEstimateId}}\",\n          \"tenantId\": \"{{tenantId}}\",\n          \"letterOfAcceptance\": \"{{loaId}}\",\n          \"detailedEstimate\": {\n            \"id\": \"{{DEid}}\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"estimateNumber\": \"{{DEnumber}}\"\n          },\n          \"workCompletionDate\": {{epochDate}},\n          \"estimateLOAAmount\": 900,\n          \"loaActivities\": [\n            {\n              \"id\": \"{{loaActId1}}\",\n              \"tenantId\": \"{{tenantId}}\",\n              \"letterOfAcceptanceEstimate\": \"{{loaEstimateId}}\",\n              \"loaMeasurements\": [\n                {\n                  \"id\": \"{{loaMBSheet1}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                },\n                {\n                  \"id\": \"{{loaMBSheet2}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                }\n              ],\n              \"deleted\": false\n            },\n            {\n              \"id\": \"{{loaActId2}}\",\n              \"tenantId\": \"{{tenantId}}\",\n              \"letterOfAcceptanceEstimate\": \"{{loaEstimateId}}\",\n              \"loaMeasurements\": [\n                {\n                  \"id\": \"{{loaMBSheet3}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                },\n                {\n                  \"id\": \"{{loaMBSheet4}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                }\n              ],\n              \"deleted\": false\n            }\n          ],\n          \"deleted\": false\n        }\n      ],\n      \"securityDeposits\": [],\n      \"workFlowDetails\": {\n        \"assignee\": 510,\n        \"action\": \"Submit\"\n      },\n      \"deleted\": false\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Upldate LOA (Approved)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"letterOfAcceptances\": [\n    {\n      \"id\": \"{{loaId}}\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractor\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"code\": \"{{contractor}}\",\n        \"pmc\": false\n      },\n      \"loaDate\": {{loaDate}},\n      \"loaNumber\": \"{{loaNumber}}\",\n      \"contractPeriod\": 5,\n      \"emdAmountDeposited\": 200,\n      \"stampPaperAmount\": 100,\n      \"engineerIncharge\": {\n        \"code\": \"WMS004\"\n      },\n      \"defectLiabilityPeriod\": 10,\n      \"loaAmount\": 900,\n      \"documentDetails\": null,\n      \"status\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"code\": \"APPROVED\",\n        \"description\": null,\n        \"moduleType\": null,\n        \"orderNumber\": null\n      },\n      \"tenderFinalizedPercentage\": 0,\n      \"approvedBy\": null,\n      \"approvedDate\": null,\n      \"fileNumber\": \"{{fileNumber}}\",\n      \"fileDate\": {{adminSanctionDate}},\n      \"councilResolutionNumber\": \"{{loaCRN}}\",\n      \"councilResolutionDate\": {{adminSanctionDate}},\n      \"spillOverFlag\": false,\n      \"letterOfAcceptanceEstimates\": [\n        {\n          \"id\": \"{{loaEstimateId}}\",\n          \"tenantId\": \"{{tenantId}}\",\n          \"letterOfAcceptance\": \"{{loaId}}\",\n          \"detailedEstimate\": {\n            \"id\": \"{{DEid}}\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"estimateNumber\": \"{{DEnumber}}\"\n          },\n          \"workCompletionDate\": {{epochDate}},\n          \"estimateLOAAmount\": 900,\n          \"loaActivities\": [\n            {\n              \"id\": \"{{loaActId1}}\",\n              \"tenantId\": \"{{tenantId}}\",\n              \"letterOfAcceptanceEstimate\": \"{{loaEstimateId}}\",\n              \"loaMeasurements\": [\n                {\n                  \"id\": \"{{loaMBSheet1}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                },\n                {\n                  \"id\": \"{{loaMBSheet2}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                }\n              ],\n              \"deleted\": false\n            },\n            {\n              \"id\": \"{{loaActId2}}\",\n              \"tenantId\": \"{{tenantId}}\",\n              \"letterOfAcceptanceEstimate\": \"{{loaEstimateId}}\",\n              \"loaMeasurements\": [\n                {\n                  \"id\": \"{{loaMBSheet3}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                },\n                {\n                  \"id\": \"{{loaMBSheet4}}\",\n                  \"tenantId\": \"{{tenantId}}\",\n                  \"number\": 1,\n                  \"multiplier\": null,\n                  \"length\": 1,\n                  \"width\": 1,\n                  \"depthOrHeight\": 1,\n                  \"quantity\": 1,\n                  \"deleted\": false\n                }\n              ],\n              \"deleted\": false\n            }\n          ],\n          \"deleted\": false\n        }\n      ],\n      \"securityDeposits\": [],\n      \"workFlowDetails\": {\n        \"assignee\": 510,\n        \"action\": \"Submit\"\n      },\n      \"deleted\": false\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create LOA Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"offlineStatuses\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{loaNumber}}\",\n      \"objectType\": \"LetterOfAcceptanceOffline\",\n      \"status\": {\n        \"code\": \"ACCEPTANCE_LETTER_ISSUED\"\n      },\n      \"objectDate\": \"{{loaDate}}\",\n      \"statusDate\": \"{{loaDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{loaNumber}}\",\n      \"objectType\": \"LetterOfAcceptanceOffline\",\n      \"status\": {\n        \"code\": \"ACCEPTANCE_LETTER_ACKNOWLEDGED\"\n      },\n      \"objectDate\": \"{{loaDate}}\",\n      \"statusDate\": \"{{loaDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{loaNumber}}\",\n      \"objectType\": \"LetterOfAcceptanceOffline\",\n      \"status\": {\n        \"code\": \"AGREEMENT_ORDER_SIGNED\"\n      },\n      \"objectDate\": \"{{loaDate}}\",\n      \"statusDate\": \"{{loaDate}}\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"{{tenantId}}\",\n   \t\"userName\" : \"clerk\"\n   }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_search?tenantId={{tenantId}}&loaNumbers={{loaNumber}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "loaNumbers",
+									"value": "{{loaNumber}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create WO",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4e073025-5f36-471e-a42c-2952b2d19414",
+								"type": "text/javascript",
+								"exec": [
+									"pm.environment.get(\"loaId\");",
+									"pm.environment.get(\"loaNumber\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b39e24dd-3ca7-4866-a092-296c9f4ff00b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"woID\", jsonData.workOrders[0].id);",
+									"pm.environment.set(\"woNum\", jsonData.workOrders[0].workOrderNumber);",
+									"postman.setNextRequest(\"Search sWO\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \n  \"workOrders\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"letterOfAcceptance\": {\n        \"id\": \"{{loaId}}\",\n        \"loaNumber\": \"{{loaNumber}}\",\n        \"tenantId\": \"{{tenantId}}\",\n        \"spillOverFlag\": false\n      },\n      \"workOrderDate\": {{loaDate}},\n      \"status\": {\n      \t\"tenantId\": \"{{tenantId}}\",\n        \"code\": \"CREATED\"\n        },\n      \"workOrderDetails\": [\n        {\n        \"tenantId\": \"{{tenantId}}\",\n        \"remarks\":\t\"Approval\",\n        \"editable\": true\n        }    ],\n      \"documentDetails\":[]\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_create"
+							]
+						},
+						"description": "Work Order for the spillover work"
+					},
+					"response": []
+				},
+				{
+					"name": "Search WO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f3707bb0-938d-46a1-ad81-877c032f660b",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.get(\"loaNumber\");",
+									"pm.environment.get(\"loaId\");",
+									"pm.environment.set(\"woDetailsId\", jsonData.workOrders[0].workOrderDetails[0].id);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"LOA ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaId\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].letterOfAcceptance);",
+									"});",
+									"pm.test(\"LOA Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaNumber\")).to.include(jsonData.workOrders[0].letterOfAcceptance.loaNumber);",
+									"});",
+									"pm.test(\"LOA Estimate ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaEstimateId\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].id);",
+									"});",
+									"pm.test(\"LOA Activity ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaActId1\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].loaActivities[0].id);",
+									"pm.expect(pm.environment.get(\"loaActId2\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].loaActivities[1].id);",
+									"});",
+									"pm.test(\"Detailed Estimate ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"DEid\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].detailedEstimate.id);",
+									"});",
+									"",
+									"if(jsonData.workOrders[0].status.code == \"CREATED\"){",
+									"    pm.test(\"WO status as Created matches\", function () {",
+									"    pm.expect(\"CREATED\").to.include(jsonData.workOrders[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.workOrders[0].status.code == \"CHECKED\"){",
+									"    pm.test(\"WO status as Checked matches\", function () {",
+									"    pm.expect(\"CHECKED\").to.include(jsonData.workOrders[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.workOrders[0].status.code == \"APPROVED\"){",
+									"    pm.test(\"WO status as Approved matches\", function () {",
+									"    pm.expect(\"APPROVED\").to.include(jsonData.workOrders[0].status.code);",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_search?tenantId={{tenantId}}&ids={{woID}}&workOrderNumbers={{woNum}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{woID}}",
+									"equals": true
+								},
+								{
+									"key": "workOrderNumbers",
+									"value": "{{woNum}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search work order for the spillover"
+					},
+					"response": []
+				},
+				{
+					"name": "Update WO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"W001\",\n    \"authToken\": \"{{access_token}}\"\n  },\n    \"workOrders\": [\n        {\n            \"id\": \"{{woID}}\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"letterOfAcceptance\": {\n                \"id\": \"{{loaId}}\",\n                \"tenantId\": \"{{tenantId}}\",\n                \"loaNumber\": \"{{loaNumber}}\",\n                \"spillOverFlag\": false\n            },\n            \"workOrderDetails\": [\n                {\n                    \"id\": \"{{woDetailsId}}\",\n                    \"tenantId\": \"{{tenantId}}\",\n                    \"workOrder\": \"1905a1d5e2cc42ebb4412cb74bcfbb10\",\n                    \"remarks\": \"Checking\",\n                    \"editable\": true,\n                    \"deleted\": false\n                }\n            ],\n            \"workOrderDate\": {{loaDate}},\n            \"workOrderNumber\": \"{{woNum}}\",\n           \"status\": {\n                \"tenantId\": \"{{tenantId}}\",\n                \"code\": \"CHECKED\"\n            },\n            \"deleted\": false\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update WO (Approved)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"W001\",\n    \"authToken\": \"{{access_token}}\"\n  },\n    \"workOrders\": [\n        {\n            \"id\": \"{{woID}}\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"letterOfAcceptance\": {\n                \"id\": \"{{loaId}}\",\n                \"tenantId\": \"{{tenantId}}\",\n                \"loaNumber\": \"{{loaNumber}}\",\n                \"spillOverFlag\": false\n            },\n            \"workOrderDetails\": [\n                {\n                    \"id\": \"{{woDetailsId}}\",\n                    \"tenantId\": \"{{tenantId}}\",\n                    \"workOrder\": \"1905a1d5e2cc42ebb4412cb74bcfbb10\",\n                    \"remarks\": \"Checking\",\n                    \"editable\": true,\n                    \"deleted\": false\n                }\n            ],\n            \"workOrderDate\": {{loaDate}},\n            \"workOrderNumber\": \"{{woNum}}\",\n           \"status\": {\n                \"tenantId\": \"{{tenantId}}\",\n                \"code\": \"APPROVED\"\n            },\n            \"deleted\": false\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create WO Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"offlineStatuses\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{woNum}}\",\n      \"objectType\": \"WorkOrderOffline\",\n      \"status\": {\n        \"code\": \"WORK_ORDER_ACKNOWLEDGED\"\n      },\n      \"objectDate\": \"{{loaDate}}\",\n      \"statusDate\": \"{{loaDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{woNum}}\",\n      \"objectType\": \"WorkOrderOffline\",\n      \"status\": {\n        \"code\": \"SITE_HANDED_OVER\"\n      },\n      \"objectDate\": \"{{loaDate}}\",\n      \"statusDate\": \"{{loaDate}}\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{woNum}}\",\n      \"objectType\": \"WorkOrderOffline\",\n      \"status\": {\n        \"code\": \"WORK_COMMENCED\"\n      },\n      \"objectDate\": \"{{loaDate}}\",\n      \"statusDate\": \"{{loaDate}}\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search WO Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"{{tenantId}}\",\n   \t\"userName\" : \"clerk\"\n   }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_search?tenantId={{tenantId}}&workOrderNumbers={{woNum}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "workOrderNumbers",
+									"value": "{{woNum}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create MB",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "fbc690b6-b7d2-4ee4-88f0-5158ab9b589a",
+								"type": "text/javascript",
+								"exec": [
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.set(\"mbRefNo\", \"MBref-\"+year+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c313bc0-735a-4b20-8aa9-7a814fe130a6",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"MBid\", jsonData.measurementBooks[0].id);",
+									"pm.environment.set(\"MBrefNo\", jsonData.measurementBooks[0].mbRefNo);",
+									"",
+									"postman.setNextRequest(\"Search sMB\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"measurementBooks\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractorComments\": \"Measurement Book\",\n      \"mbDate\": {{loaDate}},\n      \"mbRefNo\": \"{{mbRefNo}}\",\n      \"mbAbstract\": \"Abstract MB\",\n      \"fromPageNo\": \"1\",\n      \"toPageNo\": \"100\",\n      \"letterOfAcceptanceEstimate\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": \"{{loaEstimateId}}\",\n        \"letterOfAcceptance\": \"{{loaId}}\",\n        \"detailedEstimate\": {\n          \"id\": \"{{DEid}}\",\n          \"tenantId\": \"{{tenantId}}\",\n          \"estimateNumber\": \"{{DEnumber}}\"\n        }\n      },\n      \"status\": {\n      \t\"tenantId\": \"{{tenantId}}\",\n      \t\"code\": \"CREATED\"\n      },\n      \"measurementBookDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"quantity\": \"2\",\n          \"rate\": \"450\",\n          \"remarks\": \"Remarks\",\n          \"amount\": 450,\n          \"loaActivity\": {\n            \"id\": \"{{loaActId1}}\"\n          },\n          \"measurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet1}}\"\n              }\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet2}}\"\n              }\n            }\n          ]\n        },\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"quantity\": \"2\",\n          \"rate\": \"450\",\n          \"remarks\": \"Remarks\",\n          \"amount\": 450,\n          \"loaActivity\": {\n            \"id\": \"{{loaActId2}}\"\n          },\n          \"measurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet3}}\"\n              }\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet4}}\"\n              }\n            }\n          ]\n        }\n      ],\n      \"isLegacyMB\": false,\n      \"mbAmount\": \"900\",\n      \"approvedDate\": 1516898890000,\n      \"documentDetails\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search MB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8e11250a-8d13-49eb-954c-c5f401e792dc",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var mbId = pm.environment.get(\"MBid\");",
+									"var loaEstId = pm.environment.get(\"loaEstimateId\");",
+									"",
+									"pm.test(\"MB id Matches\", function () {",
+									"    pm.expect(mbId).to.include(jsonData.measurementBooks[0].id);",
+									"});",
+									"pm.test(\"LOA ID in MB Matches\", function () {",
+									"    pm.expect(loaEstId).to.include(jsonData.measurementBooks[0].letterOfAcceptanceEstimate.id);",
+									"});",
+									"if(jsonData.measurementBooks[0].status.code == \"CREATED\"){",
+									"    pm.test(\"WO status as Created matches\", function () {",
+									"    pm.expect(\"CREATED\").to.include(jsonData.measurementBooks[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.measurementBooks[0].status.code == \"CHECKED\"){",
+									"    pm.test(\"WO status as Checked matches\", function () {",
+									"    pm.expect(\"CHECKED\").to.include(jsonData.measurementBooks[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.measurementBooks[0].status.code == \"APPROVED\"){",
+									"    pm.test(\"WO status as Approved matches\", function () {",
+									"    pm.expect(\"APPROVED\").to.include(jsonData.measurementBooks[0].status.code);",
+									"    });",
+									"}",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_search?tenantId={{tenantId}}&ids={{MBid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{MBid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search Regular MB"
+					},
+					"response": []
+				},
+				{
+					"name": "Update MB",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "fbc690b6-b7d2-4ee4-88f0-5158ab9b589a",
+								"type": "text/javascript",
+								"exec": [
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.set(\"mbRefNo\", \"MBref-\"+year+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c313bc0-735a-4b20-8aa9-7a814fe130a6",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"MBid\", jsonData.measurementBooks[0].id);",
+									"pm.environment.set(\"MBrefNo\", jsonData.measurementBooks[0].mbRefNo);",
+									"",
+									"postman.setNextRequest(\"Search sMB\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n    \"measurementBooks\": [\n        {\n            \"id\": \"69503489400e453ba7e606ac19ba4298\",\n            \"tenantId\": \"default\",\n            \"mbRefNo\": \"MBref-20183828\",\n            \"contractorComments\": \"Measurement Book\",\n            \"mbDate\": 1517473154390,\n            \"mbIssuedDate\": null,\n            \"mbAbstract\": \"Abstract MB\",\n            \"fromPageNo\": 1,\n            \"toPageNo\": 100,\n            \"letterOfAcceptanceEstimate\": {\n                \"id\": \"0f20ae09124d49468caad9b8e5a8d51e\",\n                \"tenantId\": \"default\",\n                \"letterOfAcceptance\": \"92b8af8bb86841c78cee06e6464c2434\",\n                \"detailedEstimate\": {\n                    \"id\": \"e06eba9ba4e2423bb487176e7009334e\",\n                    \"tenantId\": \"default\",\n                    \"estimateNumber\": \"defa/DE/REV/000082/2017-18\",\n                    \"estimateDate\": null,\n                    \"nameOfWork\": null,\n                    \"description\": null,\n                    \"department\": null,\n                    \"adminSanctionNumber\": null,\n                    \"adminSanctionDate\": null,\n                    \"adminSanctionBy\": null,\n                    \"status\": null,\n                    \"workValue\": null,\n                    \"estimateValue\": null,\n                    \"projectCode\": null,\n                    \"parent\": null,\n                    \"copiedFrom\": null,\n                    \"approvedDate\": null,\n                    \"approvedBy\": null,\n                    \"copiedEstimate\": false,\n                    \"beneficiary\": null,\n                    \"modeOfAllotment\": null,\n                    \"worksType\": null,\n                    \"worksSubtype\": null,\n                    \"natureOfWork\": null,\n                    \"ward\": null,\n                    \"location\": null,\n                    \"latitude\": null,\n                    \"longitude\": null,\n                    \"workCategory\": null,\n                    \"locality\": null,\n                    \"councilResolutionNumber\": null,\n                    \"councilResolutionDate\": null,\n                    \"workOrderCreated\": false,\n                    \"billsCreated\": false,\n                    \"spillOverFlag\": false,\n                    \"grossAmountBilled\": null,\n                    \"cancellationReason\": null,\n                    \"cancellationRemarks\": null,\n                    \"totalIncludingRE\": null,\n                    \"abstractEstimateDetail\": null,\n                    \"estimateActivities\": null,\n                    \"multiYearEstimates\": null,\n                    \"estimateTechnicalSanctions\": null,\n                    \"detailedEstimateDeductions\": null,\n                    \"documentDetails\": null,\n                    \"assets\": null,\n                    \"estimateOverheads\": null,\n                    \"workFlowDetails\": null,\n                    \"stateId\": null,\n                    \"fund\": null,\n                    \"function\": null,\n                    \"functionary\": null,\n                    \"scheme\": null,\n                    \"subScheme\": null,\n                    \"budgetGroup\": null,\n                    \"deleted\": false,\n                    \"auditDetails\": null\n                },\n                \"workCompletionDate\": null,\n                \"estimateLOAAmount\": null,\n                \"assetForLOAs\": null,\n                \"loaActivities\": null,\n                \"auditDetails\": null,\n                \"deleted\": false\n            },\n            \"revisionLOA\": null,\n            \"status\": {\n                \"tenantId\": \"default\",\n                \"code\": \"CHECKED\",\n                \"description\": null,\n                \"moduleType\": null,\n                \"orderNumber\": null\n            },\n            \"measurementBookDetails\": [\n                {\n                    \"id\": \"03899abaa1024feeadfb0b70f7cd00a2\",\n                    \"tenantId\": \"default\",\n                    \"measurementBook\": null,\n                    \"loaActivity\": {\n                        \"id\": \"02e3f70f417a4d0785e046f87c3ffcce\",\n                        \"tenantId\": null,\n                        \"letterOfAcceptanceEstimate\": null,\n                        \"estimateActivity\": null,\n                        \"parent\": null,\n                        \"approvedRate\": null,\n                        \"approvedQuantity\": null,\n                        \"approvedAmount\": null,\n                        \"remarks\": null,\n                        \"loaMeasurements\": null,\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"quantity\": 2,\n                    \"rate\": 450,\n                    \"remarks\": \"Remarks\",\n                    \"amount\": 450,\n                    \"measurementSheets\": [\n                        {\n                            \"id\": \"76dacee174584f089c3005fe543e9c49\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"642f36dcccce4d7b83b4c5b9ee206ba8\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"clerk\",\n                                \"lastModifiedBy\": \"clerk\",\n                                \"createdTime\": 1517473382634,\n                                \"lastModifiedTime\": 1517473382634\n                            },\n                            \"deleted\": false\n                        },\n                        {\n                            \"id\": \"c39ae1d0299e4fed94ead029a7abe355\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"ae6590a1e2c14fe4b9648d17f7b73ff7\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"clerk\",\n                                \"lastModifiedBy\": \"clerk\",\n                                \"createdTime\": 1517473382634,\n                                \"lastModifiedTime\": 1517473382634\n                            },\n                            \"deleted\": false\n                        }\n                    ],\n                    \"partRate\": null,\n                    \"reducedRate\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"clerk\",\n                        \"lastModifiedBy\": \"clerk\",\n                        \"createdTime\": 1517473382634,\n                        \"lastModifiedTime\": 1517473382634\n                    },\n                    \"deleted\": null\n                },\n                {\n                    \"id\": \"0f9538d6f7ec433cb2bcbf5af709c55b\",\n                    \"tenantId\": \"default\",\n                    \"measurementBook\": null,\n                    \"loaActivity\": {\n                        \"id\": \"2f19318923a64375844bad10b2b0bde8\",\n                        \"tenantId\": null,\n                        \"letterOfAcceptanceEstimate\": null,\n                        \"estimateActivity\": null,\n                        \"parent\": null,\n                        \"approvedRate\": null,\n                        \"approvedQuantity\": null,\n                        \"approvedAmount\": null,\n                        \"remarks\": null,\n                        \"loaMeasurements\": null,\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"quantity\": 2,\n                    \"rate\": 450,\n                    \"remarks\": \"Remarks\",\n                    \"amount\": 450,\n                    \"measurementSheets\": [\n                        {\n                            \"id\": \"e4649da48d5a49f7afc29c70e1434b55\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"98afb071d180442c9d3e08b89197812b\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"clerk\",\n                                \"lastModifiedBy\": \"clerk\",\n                                \"createdTime\": 1517473382635,\n                                \"lastModifiedTime\": 1517473382635\n                            },\n                            \"deleted\": false\n                        },\n                        {\n                            \"id\": \"d5d0f1b795994c96b818e17c93e876b2\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"d84c217071924973b7aff8db745d6971\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"clerk\",\n                                \"lastModifiedBy\": \"clerk\",\n                                \"createdTime\": 1517473382635,\n                                \"lastModifiedTime\": 1517473382635\n                            },\n                            \"deleted\": false\n                        }\n                    ],\n                    \"partRate\": null,\n                    \"reducedRate\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"clerk\",\n                        \"lastModifiedBy\": \"clerk\",\n                        \"createdTime\": 1517473382635,\n                        \"lastModifiedTime\": 1517473382635\n                    },\n                    \"deleted\": null\n                }\n            ],\n            \"lumpSumMBDetails\": null,\n            \"isLegacyMB\": false,\n            \"mbAmount\": 900,\n            \"approvedDate\": 1516898890000,\n            \"documentDetails\": [],\n            \"workFlowDetails\": null,\n            \"stateId\": null,\n            \"cancellationReason\": null,\n            \"cancellationRemarks\": null,\n            \"billNumber\": null,\n            \"billDate\": null,\n            \"partRateExists\": false,\n            \"billExists\": false,\n            \"auditDetails\": {\n                \"createdBy\": \"clerk\",\n                \"lastModifiedBy\": \"clerk\",\n                \"createdTime\": 1517473382635,\n                \"lastModifiedTime\": 1517473382635\n            },\n            \"deleted\": false\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update MB (Approved)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "fbc690b6-b7d2-4ee4-88f0-5158ab9b589a",
+								"type": "text/javascript",
+								"exec": [
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.set(\"mbRefNo\", \"MBref-\"+year+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c313bc0-735a-4b20-8aa9-7a814fe130a6",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"MBid\", jsonData.measurementBooks[0].id);",
+									"pm.environment.set(\"MBrefNo\", jsonData.measurementBooks[0].mbRefNo);",
+									"",
+									"postman.setNextRequest(\"Search sMB\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n    \"measurementBooks\": [\n        {\n            \"id\": \"14e89aa0f49f4a50945ac4d5a702b756\",\n            \"tenantId\": \"default\",\n            \"mbRefNo\": \"MBref-20181947\",\n            \"contractorComments\": \"Measurement Book\",\n            \"mbDate\": 1517562561531,\n            \"mbIssuedDate\": null,\n            \"mbAbstract\": \"Abstract MB\",\n            \"fromPageNo\": 1,\n            \"toPageNo\": 100,\n            \"letterOfAcceptanceEstimate\": {\n                \"id\": \"69a429364d7b4e7c8f25ecf76dbf5995\",\n                \"tenantId\": \"default\",\n                \"letterOfAcceptance\": \"bf6e9a1ecb034e4c9f9b18c386fb0ec7\",\n                \"detailedEstimate\": {\n                    \"id\": \"51a84767f02b4429b3170df2c331ac05\",\n                    \"tenantId\": \"default\",\n                    \"estimateNumber\": \"defa/DE/ENG/000006/2017-18\",\n                    \"estimateDate\": null,\n                    \"nameOfWork\": null,\n                    \"description\": null,\n                    \"department\": null,\n                    \"adminSanctionNumber\": null,\n                    \"adminSanctionDate\": null,\n                    \"adminSanctionBy\": null,\n                    \"status\": null,\n                    \"workValue\": null,\n                    \"estimateValue\": null,\n                    \"projectCode\": null,\n                    \"parent\": null,\n                    \"copiedFrom\": null,\n                    \"approvedDate\": null,\n                    \"approvedBy\": null,\n                    \"copiedEstimate\": false,\n                    \"beneficiary\": null,\n                    \"modeOfAllotment\": null,\n                    \"worksType\": null,\n                    \"worksSubtype\": null,\n                    \"natureOfWork\": null,\n                    \"ward\": null,\n                    \"location\": null,\n                    \"latitude\": null,\n                    \"longitude\": null,\n                    \"workCategory\": null,\n                    \"locality\": null,\n                    \"councilResolutionNumber\": null,\n                    \"councilResolutionDate\": null,\n                    \"workOrderCreated\": false,\n                    \"billsCreated\": false,\n                    \"spillOverFlag\": false,\n                    \"grossAmountBilled\": null,\n                    \"cancellationReason\": null,\n                    \"cancellationRemarks\": null,\n                    \"totalIncludingRE\": null,\n                    \"abstractEstimateDetail\": null,\n                    \"estimateActivities\": null,\n                    \"multiYearEstimates\": null,\n                    \"estimateTechnicalSanctions\": null,\n                    \"detailedEstimateDeductions\": null,\n                    \"documentDetails\": null,\n                    \"assets\": null,\n                    \"estimateOverheads\": null,\n                    \"workFlowDetails\": null,\n                    \"stateId\": null,\n                    \"fund\": null,\n                    \"function\": null,\n                    \"functionary\": null,\n                    \"scheme\": null,\n                    \"subScheme\": null,\n                    \"budgetGroup\": null,\n                    \"deleted\": false,\n                    \"auditDetails\": null\n                },\n                \"workCompletionDate\": null,\n                \"estimateLOAAmount\": null,\n                \"assetForLOAs\": null,\n                \"loaActivities\": null,\n                \"auditDetails\": null,\n                \"deleted\": false\n            },\n            \"revisionLOA\": null,\n            \"status\": {\n                \"tenantId\": \"default\",\n                \"code\": \"APPROVED\",\n                \"description\": null,\n                \"moduleType\": null,\n                \"orderNumber\": null\n            },\n            \"measurementBookDetails\": [\n                {\n                    \"id\": \"aa10d6d826934890ac33421794f3c787\",\n                    \"tenantId\": \"default\",\n                    \"measurementBook\": null,\n                    \"loaActivity\": {\n                        \"id\": \"548a32a14ac54219ae825dcc16c18c5b\",\n                        \"tenantId\": null,\n                        \"letterOfAcceptanceEstimate\": null,\n                        \"estimateActivity\": null,\n                        \"parent\": null,\n                        \"approvedRate\": null,\n                        \"approvedQuantity\": null,\n                        \"approvedAmount\": null,\n                        \"remarks\": null,\n                        \"loaMeasurements\": null,\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"quantity\": 2,\n                    \"rate\": 450,\n                    \"remarks\": \"Remarks\",\n                    \"amount\": 450,\n                    \"measurementSheets\": [\n                        {\n                            \"id\": \"b94bf4bc68a84aa6bce93e4326b4bc34\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"569497e159084c0ea1f945091acbcab7\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        },\n                        {\n                            \"id\": \"521bc6172e844534a338a263b8c39323\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"3459c5e50a544f86b277f6c045c1a7a7\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        }\n                    ],\n                    \"partRate\": null,\n                    \"reducedRate\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"W001\",\n                        \"lastModifiedBy\": \"W001\",\n                        \"createdTime\": 1517565707864,\n                        \"lastModifiedTime\": 1517565707864\n                    },\n                    \"deleted\": null\n                },\n                {\n                    \"id\": \"7dd5af4c4c404ce7a41939e8e899dc62\",\n                    \"tenantId\": \"default\",\n                    \"measurementBook\": null,\n                    \"loaActivity\": {\n                        \"id\": \"65ae4f38eb814ddf856a71ff90a136c8\",\n                        \"tenantId\": null,\n                        \"letterOfAcceptanceEstimate\": null,\n                        \"estimateActivity\": null,\n                        \"parent\": null,\n                        \"approvedRate\": null,\n                        \"approvedQuantity\": null,\n                        \"approvedAmount\": null,\n                        \"remarks\": null,\n                        \"loaMeasurements\": null,\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"quantity\": 2,\n                    \"rate\": 450,\n                    \"remarks\": \"Remarks\",\n                    \"amount\": 450,\n                    \"measurementSheets\": [\n                        {\n                            \"id\": \"cee433b78c484e6e99edb4bba8172bce\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"863dbc40a8284946857792863c455a19\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        },\n                        {\n                            \"id\": \"ae42a3edc0a1434d8bab4975e8b8c2d0\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"d3fda24c57c34db0b5ea4441956cf9e1\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        }\n                    ],\n                    \"partRate\": null,\n                    \"reducedRate\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"W001\",\n                        \"lastModifiedBy\": \"W001\",\n                        \"createdTime\": 1517565707864,\n                        \"lastModifiedTime\": 1517565707864\n                    },\n                    \"deleted\": null\n                }\n            ],\n            \"lumpSumMBDetails\": null,\n            \"isLegacyMB\": false,\n            \"mbAmount\": 900,\n            \"approvedDate\": 1516898890000,\n            \"documentDetails\": [],\n            \"workFlowDetails\": null,\n            \"stateId\": null,\n            \"cancellationReason\": null,\n            \"cancellationRemarks\": null,\n            \"billNumber\": null,\n            \"billDate\": null,\n            \"partRateExists\": false,\n            \"billExists\": false,\n            \"auditDetails\": {\n                \"createdBy\": \"W001\",\n                \"lastModifiedBy\": \"W001\",\n                \"createdTime\": 1517565707864,\n                \"lastModifiedTime\": 1517565707864\n            },\n            \"deleted\": false\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

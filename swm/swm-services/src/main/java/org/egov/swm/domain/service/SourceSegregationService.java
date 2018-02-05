@@ -138,6 +138,12 @@ public class SourceSegregationService {
                         .before(new Date(sourceSegregation.getSourceSegregationDate())))
                     throw new CustomException("SourceSegregationDate ", "Given Source Segregation Date is invalid: "
                             + dateFormat.format(new Date(sourceSegregation.getSourceSegregationDate())));
+            SourceSegregationSearch sourceSegregationSearch = new SourceSegregationSearch();
+            sourceSegregationSearch.setTenantId(sourceSegregation.getTenantId());
+            sourceSegregationSearch.setSourceSegregationDate(sourceSegregation.getSourceSegregationDate());
+            sourceSegregationSearch.setDumpingGroundCode(sourceSegregation.getDumpingGround().getCode());
+            sourceSegregationSearch.setUlbCode(sourceSegregation.getUlb().getCode());
+            Pagination<SourceSegregation> resultList = search(sourceSegregationSearch);
 
             for (final CollectionDetails cd : sourceSegregation.getCollectionDetails()) {
 
@@ -154,6 +160,32 @@ public class SourceSegregationService {
                 else
                     throw new CustomException("CollectionType", "CollectionType is required");
 
+                if (resultList != null && resultList.getPagedData() != null && !resultList.getPagedData().isEmpty()) {
+
+                    for (CollectionDetails cd1 : resultList.getPagedData().get(0).getCollectionDetails()) {
+
+                        if ((sourceSegregation.getCode() == null || sourceSegregation.getCode().isEmpty())
+                                && cd.getCollectionType().getCode().equalsIgnoreCase(cd1.getCollectionType().getCode()))
+
+                            throw new CustomException("SourceSegregation",
+                                    "Source segregation data already exist for the selected Dumping Ground: "
+                                            + sourceSegregation.getDumpingGround().getName() + ", and ULB:"
+                                            + sourceSegregation.getUlb().getName() + " and Collection type: "
+                                            + cd.getCollectionType().getName() + " on source segregation date"
+                                            + dateFormat.format(new Date(sourceSegregation.getSourceSegregationDate())));
+
+                        if (sourceSegregation.getCode() != null && !sourceSegregation.getCode().isEmpty()
+                                && !sourceSegregation.getCode().equalsIgnoreCase(resultList.getPagedData().get(0).getCode())
+                                && cd.getCollectionType().getCode().equalsIgnoreCase(cd1.getCollectionType().getCode()))
+
+                            throw new CustomException("SourceSegregation",
+                                    "Source segregation data already exist for the selected Dumping Ground: "
+                                            + sourceSegregation.getDumpingGround().getName() + ", and ULB:"
+                                            + sourceSegregation.getUlb().getName() + " and Collection type: "
+                                            + cd.getCollectionType().getName() + " on source segregation date"
+                                            + dateFormat.format(new Date(sourceSegregation.getSourceSegregationDate())));
+                    }
+                }
             }
 
         }

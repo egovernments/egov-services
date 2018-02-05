@@ -285,7 +285,7 @@ public class DataUploadUtils {
 	public String createANewFile(String fileName) {
 		String folder = internalFolderPath;
 		logger.info("Creating a new file: "+fileName);
-		logger.info("In the internal folder: "+folder);
+		logger.info("Into the internal folder: "+folder);
 		try {
 	        HSSFWorkbook workbook = new HSSFWorkbook();
 	        HSSFSheet sheet = workbook.createSheet("Sheet 1"); 

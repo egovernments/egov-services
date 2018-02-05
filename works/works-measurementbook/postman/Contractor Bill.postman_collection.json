@@ -1,0 +1,46 @@
+{
+	"id": "6eadff28-df10-2a1f-14a6-3265a5bc70f2",
+	"name": "Contractor Bill",
+	"description": "",
+	"order": [
+		"3300ecfc-9f95-063d-b27e-5910ef58e5a6"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1516691574005,
+	"owner": "3022735",
+	"public": false,
+	"hasRequests": true,
+	"requests": [
+		{
+			"id": "3300ecfc-9f95-063d-b27e-5910ef58e5a6",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-measurementbook/v1/contractorbills/_create",
+			"queryParams": [],
+			"events": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"auth": null,
+			"time": 1517813546110,
+			"name": "Create bill",
+			"description": "",
+			"collectionId": "6eadff28-df10-2a1f-14a6-3265a5bc70f2",
+			"responses": [],
+			"currentHelper": null,
+			"helperAttributes": null,
+			"rawModeData": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"905c1e2a-cc6d-4c27-bb67-e3027c112b2e\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"default\",\n    \"userInfo\": {\n      \"userName\": \"narasappa\",\n      \"tenantId\": \"default\"\n    }\n  },\n  \"contractorBills\": [\n    {\n        \"tenantId\": \"default\",\n        \"billSequenceNumber\":\"bsn/02\",\n        \"approvedDate\":\"\",\n        \"billDate\":1235467899,\n        \"billAmount\":152,\n        \"billType\":\"sasa\",\n        \"passedAmount\": 5,\n        \"contractorBillAmount\":5,\n        \"approvedBy\": {\n        \t\"userName\":\"approvedBy\"\n        },\n        \"assets\":[{\n            \"tenantId\": \"default\",\n            \"asset\":{\n                \"code\":\"maha/eng/cat/01\"\n            },\n            \"description\":\"Existing asset\",\n            \"amount\":\"150000\"\n        }],\n        \"mbForContractorBill\":[{\n        \t\"measurementBook\" : {\n        \t\t\"tenantId\": \"default\",\n        \t\t\"id\" : \"2b7b6b5115a74a06bddcf7e6e21c1b7f\"\n        \t},\n            \"tenantId\": \"default\"\n        }],\n        \"letterOfAcceptanceEstimate\":{\n            \"tenantId\": \"default\",\n            \"id\":\"0a6dc1fcb5694224ba8f4915a63864e0\"\n        },\n        \"workFlowDetails\": {\n          \"department\": \"ENG\",\n          \"designation\": \"JE\",\n          \"assignee\": 509,\n        \"action\": \"create\"\n      }\n    }]\n}"
+		}
+	]
+}

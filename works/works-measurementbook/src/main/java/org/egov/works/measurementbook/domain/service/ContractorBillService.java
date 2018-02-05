@@ -54,7 +54,7 @@ public class ContractorBillService {
                     + billNumber);
             
         }
-        
+        //TODO : MB object data should be validated before request get processed
         //validator.validateContractorBill(contractorBillRequest, true);
         CommonUtils commonUtils = new CommonUtils();
         BillStatus finStatus = new BillStatus();
@@ -65,24 +65,28 @@ public class ContractorBillService {
             
             
             List<AssetForBill> assetForBill = new ArrayList<>();
-            for (final AssetForBill assetBill : contractorBill.getAssets()) {
-                assetBill.setId(commonUtils.getUUID());
-                assetBill.setAuditDetails(
-                        measurementBookUtils.setAuditDetails(contractorBillRequest.getRequestInfo(), false));
-                assetBill.setContractorBill(contractorBill.getId());
-                assetForBill.add(assetBill);
+            if(contractorBill.getAssets() != null) {
+                for (final AssetForBill assetBill : contractorBill.getAssets()) {
+                    assetBill.setId(commonUtils.getUUID());
+                    assetBill.setAuditDetails(
+                            measurementBookUtils.setAuditDetails(contractorBillRequest.getRequestInfo(), false));
+                    assetBill.setContractorBill(contractorBill.getId());
+                    assetForBill.add(assetBill);
+                }
             }
             contractorBill.setAssets(assetForBill);
             List<MeasurementBookForContractorBill> mbForContractorBill = new ArrayList<>();
-            for (final MeasurementBookForContractorBill mbContractorBill : contractorBill.getMbForContractorBill()) {
-                mbContractorBill.setId(commonUtils.getUUID());
-                mbContractorBill.setAuditDetails(
-                        measurementBookUtils.setAuditDetails(contractorBillRequest.getRequestInfo(), false));
-                mbContractorBill.setContractorBill(contractorBill.getId());
-                mbForContractorBill.add(mbContractorBill);
+            if(contractorBill.getMbForContractorBill() != null) {
+                for (final MeasurementBookForContractorBill mbContractorBill : contractorBill.getMbForContractorBill()) {
+                    mbContractorBill.setId(commonUtils.getUUID());
+                    mbContractorBill.setAuditDetails(
+                            measurementBookUtils.setAuditDetails(contractorBillRequest.getRequestInfo(), false));
+                    mbContractorBill.setContractorBill(contractorBill.getId());
+                    mbForContractorBill.add(mbContractorBill);
+                }
             }
             contractorBill.setMbForContractorBill(mbForContractorBill);
-            if (contractorBill.getSpillOver()) {
+            if (contractorBill.getSpillOver() != null && contractorBill.getSpillOver()) {
                 JSONArray responseJSONArray = measurementBookUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT,
                         CommonConstants.CODE, CommonConstants.CONTRACTORBILL_SPILLOVER_WORKFLOW_REQUIRED,
                         contractorBill.getTenantId(), contractorBillRequest.getRequestInfo(),

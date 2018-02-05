@@ -171,7 +171,7 @@ public class SourceSegregationService {
                                     "Source segregation data already exist for the selected Dumping Ground: "
                                             + sourceSegregation.getDumpingGround().getName() + ", and ULB:"
                                             + sourceSegregation.getUlb().getName() + " and Collection type: "
-                                            + cd.getCollectionType().getName() + " on source segregation date"
+                                            + cd.getCollectionType().getName() + " on source segregation date: "
                                             + dateFormat.format(new Date(sourceSegregation.getSourceSegregationDate())));
 
                         if (sourceSegregation.getCode() != null && !sourceSegregation.getCode().isEmpty()

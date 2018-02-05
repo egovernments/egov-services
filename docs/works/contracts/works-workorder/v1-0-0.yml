@@ -232,43 +232,47 @@ paths:
           type: boolean
           required: false
           description: Boolean value of the LOA whether its Spillover or not
-        - name: isWorkOrderCreated
+        - name: workOrderExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the LOAs where WorkOrder is created. if this values is false, API returns all the LOAs where WorkOrder is not created. If no value then it returns all the LOAs.
-        - name: isOfflineStatusCreated
+        - name: withAllOfflineStatusAndWONotCreated
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the LOAs where Offline Status is AGREEMENT_ORDER_SIGNED. if this values is false, API returns all the LOAs where Offline Status is not created. If no value then it returns all the LOAs.
-        - name: isMilestoneCreated
+        - name: milestoneExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the LOAs where Milestone is created. if this values is false, API returns all the LOAs where Milestone is not created. If no value then it returns all the LOAs.
-        - name: isBillCreated
+        - name: billExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the LOAs where bill is created. if this values is false, API returns all the LOAs where bill is not created. If no value then it returns all the LOAs.
-        - name: isARFCreated
+        - name: contractorAdvanceExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the LOAs where ARF is created. if this values is false, API returns all the LOAs where ARF is not created. If no value then it returns all the LOAs.
-        - name: isMBApproved
+        - name: mbExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the LOAs where MB is approved. if this values is false, API returns all the LOAs where MB is not approved. If no value then it returns all the LOAs.
-          
+        - name: offlineStatus
+          in: query
+          type: string
+          required: false
+          description: Returns all LOA where passed offline status is setted for LOA.
       responses:
         200:
           description: Letter Of Acceptance(s) Retrieved Successfully
@@ -509,36 +513,41 @@ paths:
           required: false
           allowEmptyValue: true
           description: Matches exact or like string given regardless of case-sensitive.
-        - name: isOfflineStatusCreated
+        - name: withAllOfflineStatusAndWONotCreated
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the WOs where Offline Status is WORK_COMMENCED. if this values is false, API returns all the WOs where Offline Status is not created. If no value then it returns all the WOs.
-        - name: isMilestoneCreated
+        - name: milestoneExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the WOs where Milestone is created. if this values is false, API returns all the WOs where Milestone is not created. If no value then it returns all the WOs.
-        - name: isBillCreated
+        - name: billExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the WOs where bill are approved. if this values is false, API returns all the WOs where bill is not created. If no value then it returns all the WOs.'
-        - name: isARFCreated
+        - name: contractorAdvanceExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the WOs where ARF is created. if this values is false, API returns all the WOs where ARF is not created. If no value then it returns all the WOs.
-        - name: isMBApproved
+        - name: mbExists
           in: query
           type: boolean
           required: false
           allowEmptyValue: true
           description: if this value is true, API returns all the WOs where MB is approved. if this values is false, API returns all the WOs where MB is not approved. If no value then it returns all the WOs.
+        - name: offlineStatus
+          in: query
+          type: string
+          required: false
+          description: Returns all WO where passed offline status is setted for WO.
       responses:
         200:
           description: Work Order(s) Retrieved Successfully
@@ -1474,27 +1483,27 @@ definitions:
         type: boolean
         description: Boolean value to identify whether the object is deleted or not from UI.
         default: false
-      isWorkOrderCreated:
+      workOrderExists:
         type: boolean
         description: If WorkOrder is created for a this LOA, value will be updated to true.
         default: false
-      isOfflineStatusCreated:
+      withAllOfflineStatusAndWONotCreated:
         type: boolean
         description: If Offline Status is created for a this LOA, value will be updated to true.
         default: false
-      isMilestoneCreated:
+      milestoneExists:
         type: boolean
         description: If Milestone is created for a this LOA, value will be updated to true.
         default: false
-      isBillCreated:
+      billExists:
         type: boolean
         description: If bill is created for a this LOA, value will be updated to true.
         default: false
-      isARFCreated:
+      contractorAdvanceExists:
         type: boolean
         description: If ARF is created for a this LOA, value will be updated to true.
         default: false
-      isMBCreated:
+      mbExists:
         type: boolean
         description: If MB is created for a this LOA, value will be updated to true.
         default: false
@@ -1513,7 +1522,7 @@ definitions:
       - fileDate
       - letterOfAcceptanceEstimates
       - stampPaperAmount
-
+    
   AssetsForLOA:
       type: object
       description: An Object that holds the basic data of Assets or Land assets for LOA
@@ -1534,7 +1543,7 @@ definitions:
           type: string
           pattern: '[a-zA-Z0-9-\\]+'
           description: Land Asset ID. This field needs to be shown if Nature of work is 'New' and landAssetRequired=true from Abstract/Detailed Estimate.
-          format: singleValueList
+          format: singleValueList 
         letterOfAcceptanceEstimate:
           type: string
           description: LOA Estimate reference, primary key is reference here.
@@ -1548,7 +1557,7 @@ definitions:
         - tenantId
         - asset
         - letterOfAcceptanceEstimate
-
+    
   LetterOfAcceptanceEstimate:
     type: object
     description: An Object that holds the basic data of Letter Of Acceptance Estimate
@@ -1852,23 +1861,23 @@ definitions:
         format: int64
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of Date on which WorkOrder approved. Future date is not allowed. WorkOrder Approved date should be on or after the WorkOrder date.
-      isOfflineStatusCreated:
+      withAllOfflineStatusAndMBNotCreated:
         type: boolean
         description: If Offline Status is created for a this WO, value will be updated to true.
         default: false
-      isMilestoneCreated:
+      milestoneExists:
         type: boolean
         description: If Milestone is created for a this WO, value will be updated to true.
         default: false
-      isBillCreated:
+      billExists:
         type: boolean
         description: If bill is created for a this WO, value will be updated to true.
         default: false
-      isARFCreated:
+      contractorAdvanceExists:
         type: boolean
         description: If ARF is created for a this WO, value will be updated to true.
         default: false
-      isMBCreated:
+      mbExists:
         type: boolean
         description: If MB is created for a this WO, value will be updated to true.
         default: false

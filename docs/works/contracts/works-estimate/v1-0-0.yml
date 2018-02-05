@@ -679,6 +679,11 @@ paths:
           required: false
           allowEmptyValue: true
           description: Search all detailedestimates where all offline status is updated and LOA is not created.
+        - name: offlineStatus
+          in: query
+          type: string
+          required: false
+          description: Returns all DE where passed offline status is setted for DE.
       responses:
         200:
           description: Detailed Estimate(s) Retrieved Successfully
@@ -2151,4 +2156,5 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+
 

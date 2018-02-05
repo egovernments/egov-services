@@ -1356,14 +1356,36 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: ids
-            type: array
-            items: 
-              type: integer
-              format: int64
+          - name: tripNos
+            type: string
             in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
+            description: comma seperated list of trip numbers
+          - name: tripNo
+            type: string
+            in: query
+            description: trip number for the trip sheet
+          - name: regNumber
+            type: string
+            format: singleValueList
+            in: query
+            description: vehicleRegNo  of the Vehicle Trip Sheet            
+          - name: routeCode
+            type: string
+            format: singleValueList
+            in: query
+            description: Route code associated with trip 
+          - name: tenantId
+            type: string
+            in: query
+            description: tenantId of the Vehicle trip sheet
+          - name: tripStartDate
+            type: string
+            in: query
+            description: search for trip sheet details for specified start date
+          - name: tripEndDate
+            type: string
+            in: query
+            description: search for trip sheet details for specified end date            
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:
@@ -1437,7 +1459,59 @@ paths:
           - name: paymentNo
             type: string
             in: query
-            description: paymentNo of the PaymentDetails 
+            description: paymentNo of the PaymentDetails
+          - name: invoiceNo
+            type: string
+            in: query
+            description: invoiceNo of the Vendor Payment Details
+          - name: invoiceDate
+            type: string
+            in: query
+            description: Vendor payment details invoice date specified         
+          - name: vendorNo
+            type: string
+            in: query
+            description: Vendor Number of the PaymentDetails
+          - name: employeeCode
+            type: string
+            in: query
+            description: Employee code of the PaymentDetails
+          - name: vendorInvoiceAmount
+            type: number
+            in: query
+            description: Invoice amount of vendor payment details
+          - name: fromAmount
+            type: number
+            in: query
+            description: Search vendor payment details with from amount greater or equal to specified amount
+          - name: toAmount
+            type: number
+            in: query
+            description: Search vendor payment details with amount less than or equal to specified to amount
+          - name: invoiceFromDate
+            type: string
+            in: query
+            description: search for vendor payment details invoice from date specified
+          - name: invoiceToDate
+            type: string
+            in: query
+            description: search for vendor payment details invoice to date specified
+          - name: fromDate
+            type: string
+            in: query
+            description: search for vendor payment details From date specified
+          - name: toDate
+            type: string
+            in: query
+            description: search for vendor payment details To date specified            
+          - name: contractNo
+            type: string
+            in: query
+            description: Contract Number of the PaymentDetails
+          - name: tenantId
+            type: string
+            in: query
+            description: tenantId of the PaymentDetails
           - name: invoiceFromDate
             type: string
             in: query
@@ -1457,6 +1531,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
               
     /vendorpaymentdetails/_create:
       post:
@@ -1517,22 +1592,50 @@ paths:
             in: query
             description: code of the PaymentDetails
           - name: codes
-            type: string
+            type: array
+            items: 
+              type: integer
+              format: int64
             in: query
-            description: comma seperated list of Codes 
+            maxItems: 50
+            description: comma seperated list of codes
           - name: paymentNo
             type: string
             in: query
             description: paymentNo of the PaymentDetails
+          - name: paymentNos
+            type: string
+            in: query
+            description: comma seperated list of payment numbers
+          - name: tenantId
+            type: string
+            in: query
+            description: tenantId of the PaymentDetails
           - name: voucherNumber
             type: string
             in: query
             description: voucherNumber of the PaymentDetails
+          - name: vendorNo
+            type: string
+            in: query
+            description: Vendor Number of the PaymentDetails
+          - name: voucherDate
+            type: string
+            in: query
+            description: search for voucher date specified
           - name: instrumentNumber
             type: string
             in: query
             description: instrumentNumber of the PaymentDetails
             maxLength: 265
+          - name: instrumentType
+            type: string
+            in: query
+            description: Instrument Type of the PaymentDetails
+          - name: instrumentDate
+            type: string
+            in: query
+            description: search for instrument date specified
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:

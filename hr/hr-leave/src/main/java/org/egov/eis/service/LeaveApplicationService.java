@@ -321,6 +321,8 @@ public class LeaveApplicationService {
 					|| leaveApplication.getCompensatoryForDate().equals("")) {
 				leaveTypeGetRequest.setId(new ArrayList<>(Arrays.asList(leaveApplication.getLeaveType().getId())));
 				leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
+				if(leaveTypes.get(0).getMaxDays()>0 && leaveTypes.get(0).getMaxDays()<leaveApplication.getLeaveDays())
+					errorMsg = applicationConstants.getErrorMessage(ApplicationConstants.MSG_LEAVETYPE_MAXDAYS) + " ";
 			}
 			final List<EmployeeInfo> employees = employeeRepository.getEmployeeById(
 					leaveApplicationRequest.getRequestInfo(), leaveApplication.getTenantId(),

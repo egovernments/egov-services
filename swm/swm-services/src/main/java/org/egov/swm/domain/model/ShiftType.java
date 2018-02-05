@@ -20,12 +20,12 @@ import lombok.Setter;
 public class ShiftType {
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of name shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of name shall be between 1 and 256")
     @JsonProperty("name")
     private String name = null;
 

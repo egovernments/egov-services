@@ -27,12 +27,12 @@ public class DumpingGround {
     private String code;
 
     @JsonProperty("tenantId")
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @NotNull
     private String tenantId;
 
     @JsonProperty("name")
-    @Length(min = 1, max = 128, message = "Value of name shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of name shall be between 1 and 256")
     @NotNull
     private String name;
 

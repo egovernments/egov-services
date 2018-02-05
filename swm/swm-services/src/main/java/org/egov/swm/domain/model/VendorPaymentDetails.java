@@ -25,7 +25,7 @@ import lombok.Setter;
 public class VendorPaymentDetails {
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId;
 

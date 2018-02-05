@@ -25,7 +25,7 @@ import lombok.Setter;
 public class VehicleFuellingDetails {
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -42,8 +42,8 @@ public class VehicleFuellingDetails {
     private Vehicle vehicle = null;
 
     @NotNull
-    @Min(value = 1, message = "Value of fuelFilled shall be between 1 and 100")
-    @Max(value = 300000, message = "Value of fuelFilled shall be between 1 and 100")
+    @Min(value = 1, message = "Value of vehicleReadingDuringFuelling shall be between 1 and 300000")
+    @Max(value = 300000, message = "Value of vehicleReadingDuringFuelling shall be between 1 and 300000")
     @JsonProperty("vehicleReadingDuringFuelling")
     private Double vehicleReadingDuringFuelling = null;
 

@@ -23,7 +23,7 @@ import lombok.Setter;
 public class PaymentDetails {
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId;
 
@@ -67,7 +67,7 @@ public class PaymentDetails {
     @JsonProperty("bankName")
     private String bankName;
 
-    @Length(min = 0, max = 256, message = "Value of branchName shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of branchName shall be between 0 and 256")
     @JsonProperty("branchName")
     private String branchName;
 

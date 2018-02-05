@@ -47,7 +47,7 @@ paths:
             in: query
             description: dumping Ground Code of SourceSegregation
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: SourceSegregations(s) retrieved Successfully
@@ -150,7 +150,7 @@ paths:
             maxItems: 50
             description: comma separated list of Dumping Ground
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: SanitationStaffSchedules(s) retrieved Successfully
@@ -240,7 +240,7 @@ paths:
             in: query
             description: employeeCode of SanitationStaffTarget
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: SanitationStaffTargets(s) retrieved Successfully
@@ -337,7 +337,7 @@ paths:
             in: query
             description: Schedule end date 
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: VehicleSchedules(s) retrieved Successfully
@@ -428,7 +428,7 @@ paths:
             in: query
             description: typeofpump code of pump station
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: RefillingPumpStations(s) retrieved Successfully
@@ -530,7 +530,7 @@ paths:
             in: query
             description: security Deposit of contract 
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: VendorContracts(s) retrieved Successfully
@@ -626,7 +626,7 @@ paths:
             in: query
             description: maintenanceAfter of vehicle maintyenance
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: VehicleMaintenances(s) retrieved Successfully
@@ -718,7 +718,7 @@ paths:
             description: supplier code of the Vendor
             maxLength: 256
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
           - name: sortBy
             type: string
             in: query
@@ -840,7 +840,7 @@ paths:
             in: query
             description: gabageEstimate  of the Route
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
           - name: sortBy
             type: string
             in: query
@@ -930,7 +930,7 @@ paths:
             description: location code of the CollectionPoint
             maxLength: 256  
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
           - name: sortBy
             type: string
             in: query
@@ -1078,7 +1078,7 @@ paths:
             in: query
             description: isUnderWarranty of the Vehicle
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
           - name: sortBy
             type: string
             in: query
@@ -1211,7 +1211,7 @@ paths:
             in: query
             description: receiptDate of the VehicleFuellingDetails
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
           - name: sortBy
             type: string
             in: query
@@ -1291,7 +1291,7 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids 
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: VehicleMaintenanceDetails(s) retrieved Successfully
@@ -1365,7 +1365,7 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids 
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: VehicleTripSheetDetails(s) retrieved Successfully
@@ -1447,7 +1447,7 @@ paths:
             in: query
             description: search for till invoice date specified
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: VendorPaymentDetails(s) retrieved Successfully
@@ -1534,7 +1534,7 @@ paths:
             description: instrumentNumber of the PaymentDetails
             maxLength: 265
           - $ref: '#/parameters/pageSize'
-          - $ref: '#/parameters/offSet'
+          - $ref: '#/parameters/offset'
         responses:
           200:
             description: PaymentDetails(s) retrieved Successfully
@@ -2089,12 +2089,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the WasteSubType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the WasteSubType. e.g. Household or market waste. Waste Subtype is a subset of waste type. Special chararcter not allowed. Space allowed
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         code:
           type: string
@@ -2120,12 +2120,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the DumpingGround
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the DumpingGround. should be unique in ULB
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         ulbs:
           description: ULB's
@@ -2161,12 +2161,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the DumpingGround
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the DumpingGround. should be unique in ULB
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         siteDetails:
           $ref: '#/definitions/SiteDetails'
@@ -2223,7 +2223,7 @@ definitions:
           type: string
           description: name of the bank that has given guarantee. Enable this field Iff mpcbAuthorisation is checked.
           maxLength: 256
-          minLength: 1
+          minLength: 0
         bankValidityFrom:
           type: integer
           format: int64
@@ -2247,12 +2247,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Vendor
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         vendorNo:
           type: string
           description: Vendor number of the Vendor. unique Vendor number shall be generated by the system
-          maxLength: 128
+          maxLength: 256
           minLength: 0
         name:
           type: string
@@ -2322,7 +2322,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the supplier
-          maxLength: 128
+          maxLength: 256
           minLength: 0
         supplierNo:
           type: string
@@ -2332,7 +2332,7 @@ definitions:
         name:
           type: string
           description: Name of the supplier
-          maxLength: 100
+          maxLength: 256
           minLength: 0
         agencyName:
           type: string
@@ -2407,6 +2407,7 @@ definitions:
       required:
       - tenantId
       - name
+      - code
     
     VendorContract:
       type: object
@@ -2415,7 +2416,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Vendor
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         vendor:
           $ref: "#/definitions/Vendor"
@@ -2523,12 +2524,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the ShiftType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the ShiftType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         code:
           type: string
@@ -2547,7 +2548,7 @@ definitions:
           type: string
           description: Unique Identifier of the Shift
           maxLength: 256
-          minLength: 1
+          minLength: 0
         name:
           type: string
           description: Unique Identifier of the Shift
@@ -2556,7 +2557,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Shift
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         shiftType:
           $ref: '#/definitions/ShiftType'
@@ -2593,7 +2594,7 @@ definitions:
           type: string
           description: ULB admin can enter remarks if any
           maxLength: 300
-          minLength: 15
+          minLength: 0
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -2615,12 +2616,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the CollectionType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the CollectionType. e.g. Door to Door, community bin
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         code:
           type: string
@@ -2643,7 +2644,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the VehicleMaintenance
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         vehicle:
           $ref: "#/definitions/Vehicle"
@@ -2717,7 +2718,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Population
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         ward:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
@@ -2755,7 +2756,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the RefillingPumpStation
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
@@ -2773,7 +2774,7 @@ definitions:
           type: string
           description: ULB Admin can enter remarks, if any
           maxLength: 300
-          minLength: 15
+          minLength: 0
         fuelTypes:
           type: array
           items: 
@@ -2784,6 +2785,8 @@ definitions:
         quantity:
           type: number
           format: double
+          minimum: 0
+          maximum: 10000
           description: quantity of the fuel.
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
@@ -2829,13 +2832,13 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Vendor
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of oil OilCompany, operating petrol pumps. e.g. HP
-          maxLength: 20
-          minLength: 2
+          maxLength: 256
+          minLength: 1
       required:
       - code
       - tenantId
@@ -2854,14 +2857,14 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the Toilet
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         toiletType:
           $ref: '#/definitions/ToiletType'
         name:
           type: string
           description: name of the Toilet. Shall be unique within ULB
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
@@ -2904,7 +2907,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the ToiletType
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
@@ -2927,12 +2930,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the SetVehicleSchedule
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         scheduledFrom:
           type: integer
           format: int64
-          description: date picker is requireed. Should be current or future date
+          description: date picker is required. Should be current or future date
         scheduledTo:
           type: integer
           format: int64
@@ -2985,13 +2988,13 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the SanitationStaffTarget
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         targetNo:
           type: string
           description: System shall geneate unique target number
           maxLength: 256
-          minLength: 1
+          minLength: 0
         targetFrom:
           type: integer
           format: int64
@@ -3073,13 +3076,13 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the SanitationStaffSchedule
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         transactionNo:
           type: string
           description: System generated unique transaction number for every schedule
           maxLength: 256
-          minLength: 1
+          minLength: 0
         sanitationStaffTarget:
           $ref: '#/definitions/SanitationStaffTarget'
           description: Staff target number shall be entered by admin. This will populate location details, collection points assigned to individual employee and also the period for which schedule is being prepared.   
@@ -3122,7 +3125,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the VehicleFuellingDetails
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         transactionNo:
           type: string
@@ -3212,7 +3215,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the VehicleMaintenanceDetails
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         isScheduled:
           type: boolean
@@ -3256,7 +3259,7 @@ definitions:
           type: string
           description: remarks by ULB Admin
           maxLength: 300
-          minLength: 15
+          minLength: 0
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -3299,7 +3302,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the VehicleTripSheetDetails
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         route:
           $ref: '#/definitions/Route'
@@ -3308,7 +3311,7 @@ definitions:
         tripNo:
           type: string
           description: system generated unique trip number for every trip.
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         vehicle:
           $ref: '#/definitions/Vehicle'
@@ -3383,7 +3386,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the SourceSegregation
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         dumpingGround:
           $ref: '#/definitions/DumpingGround'
@@ -3419,7 +3422,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the CollectionDetails
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         collectionType:
           $ref: "#/definitions/CollectionType"
@@ -3472,7 +3475,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the VendorPaymentDetails
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         vendorContract:
           $ref: "#/definitions/VendorContract"
@@ -3519,6 +3522,7 @@ definitions:
       - tenantId
       - vendorContract
       - invoiceNo
+      - invoiceDate
       - fromDate
       - toDate
       - vendorInvoiceAmount
@@ -3535,7 +3539,7 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the InstrumentDetails
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         vendorPaymentDetails:
           $ref: "#/definitions/VendorPaymentDetails"
@@ -3576,7 +3580,7 @@ definitions:
           type: string
           description: Bank Branch Name from which payment is made. e.g. Jayanagar, Bangalore
           maxLength: 256
-          minLength: 1
+          minLength: 0
         documents:
           type: array
           description: List of Documents. Document(s) supporting the payment
@@ -3606,12 +3610,12 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the document
-          maxLength: 128
+          maxLength: 256
           minLength: 1
         name:
           type: string
           description: name of the document
-          maxLength: 128
+          maxLength: 256
           minLength: 0
         refId:
           type: string
@@ -3683,8 +3687,8 @@ parameters:
       in: query
       description: Number of records in a per page in  the Search Results, Default value is 20
     
-    offSet:
-      name: offSet
+    offset:
+      name: offset
       type: integer
       format: int32
       in: query

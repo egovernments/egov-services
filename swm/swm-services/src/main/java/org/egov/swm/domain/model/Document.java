@@ -25,11 +25,11 @@ public class Document {
     private String id = null;
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
-    @Length(min = 0, max = 128, message = "Value of name shall be between 0 and 128")
+    @Length(min = 0, max = 256, message = "Value of name shall be between 0 and 256")
     @JsonProperty("name")
     private String name = null;
 
@@ -41,6 +41,10 @@ public class Document {
     @NotNull
     @JsonProperty("fileStoreId")
     private String fileStoreId = null;
+
+    @Length(min = 0, max = 1024, message = "Value of name shall be between 0 and 1024")
+    @JsonProperty("comments")
+    private String comments;
 
     @JsonProperty("auditDetails")
     @Valid

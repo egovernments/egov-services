@@ -19,6 +19,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentTerms {
 
+    @NotNull
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
+    @JsonProperty("tenantId")
+    private String tenantId = null;
+
     @JsonProperty("noOfDays")
     private Long noOfDays = null;
 

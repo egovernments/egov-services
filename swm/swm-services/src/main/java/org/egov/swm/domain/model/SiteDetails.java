@@ -58,7 +58,7 @@ public class SiteDetails {
     private Boolean bankGuarantee;
 
     @JsonProperty("bankName")
-    @Length(min = 0, max = 256, message = "Value of bankName shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of bankName shall be between 0 and 256")
     private String bankName;
 
     @JsonProperty("bankValidityFrom")

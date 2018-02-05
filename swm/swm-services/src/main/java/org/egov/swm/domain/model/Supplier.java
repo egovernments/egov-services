@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Supplier {
 
-    @Length(min = 0, max = 256, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 0, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -29,11 +29,11 @@ public class Supplier {
 
     private String supplierNos = null;
 
-    @Length(min = 0, max = 100, message = "Value of name shall be between 1 and 100")
+    @Length(min = 0, max = 256, message = "Value of name shall be between 0 and 256")
     @JsonProperty("name")
     private String name = null;
 
-    @Length(min = 0, max = 100, message = "Value of agencyName shall be between 1 and 100")
+    @Length(min = 0, max = 100, message = "Value of agencyName shall be between 0 and 100")
     @JsonProperty("agencyName")
     private String agencyName = null;
 
@@ -42,7 +42,7 @@ public class Supplier {
     @JsonProperty("email")
     private String email = null;
 
-    @Length(min = 0, max = 256, message = "Value of tinNumber shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of tinNumber shall be between 0 and 256")
     @JsonProperty("tinNumber")
     private String tinNumber = null;
 

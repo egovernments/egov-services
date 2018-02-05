@@ -21,16 +21,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Shift {
 
-    @Length(min = 0, max = 256, message = "Value of code shall be between 1 and 128")
+    @Length(min = 0, max = 256, message = "Value of code shall be between 0 and 256")
     @JsonProperty("code")
     private String code = null;
 
     @Length(min = 0, max = 256, message = "Value of name shall be between 1 and 256")
+    @NotNull
     @JsonProperty("name")
     private String name = null;
 
     @NotNull
-    @Length(min = 1, max = 128, message = "Value of tenantId shall be between 1 and 128")
+    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 
@@ -70,7 +71,7 @@ public class Shift {
     @JsonProperty("graceTimeTo")
     private Long graceTimeTo = null;
 
-    @Length(min = 0, max = 300, message = "Value of remarks shall be between 1 and 128")
+    @Length(min = 0, max = 300, message = "Value of remarks shall be between 0 and 300")
     @JsonProperty("remarks")
     private String remarks = null;
 

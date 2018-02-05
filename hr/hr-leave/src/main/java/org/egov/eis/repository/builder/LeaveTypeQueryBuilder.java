@@ -160,13 +160,13 @@ public class LeaveTypeQueryBuilder {
 	}
 
 	public static String insertLeaveTypeQuery() {
-		return "INSERT INTO egeis_leavetype(id,name,description,halfdayallowed,payeligible,accumulative,encashable,encloseholiday,includeprefixsuffix,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
-				+ "(nextval('seq_egeis_leaveType'),?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		return "INSERT INTO egeis_leavetype(id,name,description,halfdayallowed,payeligible,accumulative,encashable,encloseholiday,includeprefixsuffix,maxdays,active,createdby,lastmodifiedby,createddate,lastmodifieddate,tenantid) values "
+				+ "(nextval('seq_egeis_leaveType'),?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	}
 
 	public static String updateLeaveTypeQuery() {
 		return "UPDATE egeis_leavetype SET name = ?, description = ?,"
-				+ " halfdayAllowed = ?, payEligible = ?, accumulative = ?, encashable = ?, encloseholiday = ?, includeprefixsuffix = ?,"
+				+ " halfdayAllowed = ?, payEligible = ?, accumulative = ?, encashable = ?, encloseholiday = ?, includeprefixsuffix = ?, maxdays = ?,"
 				+ " active = ? , createdBy = ?, lastModifiedBy=?, createdDate=? , lastModifiedDate=?, tenantId=? where id = ? and tenantid=?";
 	}
 

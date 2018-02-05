@@ -82,6 +82,8 @@ public class LeaveType {
 	@NotNull
 	private Boolean includePrefixSuffix;
 
+	private Integer maxDays;
+
 	private Boolean active;
 
 	private Long createdBy;

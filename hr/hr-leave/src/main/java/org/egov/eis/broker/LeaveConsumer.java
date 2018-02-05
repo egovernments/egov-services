@@ -121,10 +121,10 @@ public class LeaveConsumer {
             LOGGER.info("SaveLeaveTypeConsumer egov-hr-leavetype leaveTypeService:" + leaveTypeService);
             final LeaveTypeRequest leaveTypeRequest = leaveTypeService
                     .create(objectMapper.convertValue(record, LeaveTypeRequest.class));
-            for (final LeaveType leaveType : leaveTypeRequest.getLeaveType())
+           // for (final LeaveType leaveType : leaveTypeRequest.getLeaveType())
                 // TODO : leavetype index id should be changed
-                elasticSearchRepository.index(OBJECT_TYPE_LEAVETYPE,
-                        leaveType.getTenantId() + "" + leaveType.getName(), leaveType);
+                //elasticSearchRepository.index(OBJECT_TYPE_LEAVETYPE,
+                       // leaveType.getTenantId() + "" + leaveType.getName(), leaveType);
         } else if (topic.equalsIgnoreCase(leaveAllotmentCreateTopic))
             leaveAllotmentService.create(objectMapper.convertValue(record, LeaveAllotmentRequest.class));
         else if (topic.equalsIgnoreCase(leaveAllotmentUpdateTopic))

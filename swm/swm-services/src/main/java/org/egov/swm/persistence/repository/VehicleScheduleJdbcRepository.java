@@ -21,6 +21,7 @@ import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.service.RouteService;
 import org.egov.swm.domain.service.VehicleService;
 import org.egov.swm.persistence.entity.VehicleScheduleEntity;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -150,6 +151,12 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
         final List<VehicleScheduleEntity> vehicleScheduleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
+        if (searchRequest.getFromTripSheet() != null && searchRequest.getFromTripSheet()) {
+            if (vehicleScheduleEntities == null || vehicleScheduleEntities.isEmpty()) {
+                throw new CustomException("Route",
+                        "Route not found for the selected Vehicle for the given period");
+            }
+        }
         for (final VehicleScheduleEntity vehicleScheduleEntity : vehicleScheduleEntities) {
 
             vehicleScheduleList.add(vehicleScheduleEntity.toDomain());

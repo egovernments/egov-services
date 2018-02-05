@@ -216,6 +216,38 @@ public class HolidayController {
 		return getSuccessResponse(holidaysList, requestInfo);
 	}
 
+
+	@PostMapping("_searchprefixsuffix")
+	@ResponseBody
+	public ResponseEntity<?> getPrefixSuffixHolidays(@ModelAttribute @Valid HolidayGetRequest holidayGetRequest,
+									BindingResult modelAttributeBindingResult, @RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+									BindingResult requestBodyBindingResult) {
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+		// validate input params
+		if (modelAttributeBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+		}
+
+		// validate input params
+		if (requestBodyBindingResult.hasErrors()) {
+			return errHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+		}
+
+		// Call service
+		List<Holiday> holidaysList = null;
+		try {
+			holidaysList = holidayService.getPrefixSuffixHolidays(holidayGetRequest);
+		} catch (Exception exception) {
+			logger.error("Error while processing request " + holidayGetRequest, exception);
+			return errHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+		}
+
+		return getSuccessResponse(holidaysList, requestInfo);
+	}
+
+
+
 	/**
 	 * Populate Response object and returns holidays List
 	 * 

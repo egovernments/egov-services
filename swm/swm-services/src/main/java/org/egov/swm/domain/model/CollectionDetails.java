@@ -26,8 +26,7 @@ public class CollectionDetails {
     @JsonProperty("id")
     private String id = null;
 
-    @NotNull
-    @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
+    @Length(min = 0, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")
     private String tenantId = null;
 

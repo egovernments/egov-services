@@ -590,6 +590,7 @@ public class AgreementRepository {
 		agreementParameters.put("oldAgreementNumber", agreement.getOldAgreementNumber());
 		agreementParameters.put("referenceNo", agreement.getReferenceNumber());
 		agreementParameters.put("floorNo", agreement.getFloorNumber());
+		agreementParameters.put("parent", agreement.getParent());
 
 		return agreementParameters;
     }

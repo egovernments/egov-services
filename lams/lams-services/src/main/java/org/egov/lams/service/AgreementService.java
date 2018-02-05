@@ -208,7 +208,7 @@ public class AgreementService {
 		Date renewalStartDate = DateUtils.addDays(agreement.getExpiryDate(), 1);
 		agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
 		agreement.setRenewalDate(renewalStartDate);
-		
+		agreement.setParent(agreement.getParent() != null ? agreement.getParent() : agreement.getId());
 		List<Demand> demands = demandService.prepareDemandsForRenewal(agreementRequest, false);
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
@@ -400,7 +400,8 @@ public class AgreementService {
 		updateAuditDetails(agreement, requestInfo);
 		if (workFlowDetails != null) {
 			if (WF_ACTION_APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-				agreementRepository.updateExistingAgreementAsHistory(agreement,userId);
+				agreementRepository.updateExistingAgreementAsHistory(agreement, userId);
+				agreement.setAgreementNumber(agreementNumberService.generateAgrementNumber(agreement.getTenantId()));
 				agreement.setStatus(Status.ACTIVE);
 				agreement.setAgreementDate(new Date());
 				agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));

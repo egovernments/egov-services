@@ -1111,13 +1111,12 @@ public class EstimateValidator {
 
                     }
 
-                    // TODO FIX aset code validation getting deserialization error
-                    // for AttributeDefinition["columns"]
-                   /*  if( abstractEstimateAssetDetail.getAsset() != null && StringUtils.isNotBlank(abstractEstimateAssetDetail.getAsset().getCode())) {
+                    if( abstractEstimateAssetDetail.getAsset() != null && StringUtils.isNotBlank(abstractEstimateAssetDetail.getAsset().getCode())) {
                          List<Asset> assets = assetRepository.searchAssets(abstractEstimateAssetDetail.getTenantId(),
                              abstractEstimateAssetDetail.getAsset().getCode(),requestInfo);
                          if(assets != null && assets.isEmpty())
-                          messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID); }*/
+                          messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID);
+                    }
                     if (asset != null && asset.getCode().equals(abstractEstimateAssetDetail.getAsset().getCode()))
                         messages.put(Constants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS,
                                 Constants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);

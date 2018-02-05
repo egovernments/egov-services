@@ -213,5 +213,17 @@ public class Constants {
     public static final String KEY_CONTRACTORADVANCE_EXISTS = "works.contractoradvance.exists";
     public static final String MESSAGE_CONTRACTORADVANCE_EXISTS = "Contractor Advance already exists for given LOA";
 
+    public static final String KEY_CANNOT_UPDATE_STATUS_FOR_LOA = "CANNOT_UPDATE_STATUS_FOR_LOA";
+    public static final String MESSAGE_CANNOT_UPDATE_STATUS_FOR_LOA = "Status can not be updated for LOA";
+
+    public static final String KEY_INVALID_STATUS_UPDATE_FOR_LOA = "INVALID_STATUS_UPDATE_FOR_LOA";
+    public static final String MESSAGE_INVALID_STATUS_UPDATE_FOR_LOA = "Invalid status updated for LOA";
+
+    public static final String KEY_CANNOT_UPDATE_STATUS_FOR_WORKORDER = "CANNOT_UPDATE_STATUS_FOR_WORKORDER";
+    public static final String MESSAGE_CANNOT_UPDATE_STATUS_FOR_WORKORDER = "Status can not be updated for Workorder";
+
+    public static final String KEY_INVALID_STATUS_UPDATE_FOR_WORKORDER = "INVALID_STATUS_UPDATE_FOR_WORKORDER";
+    public static final String MESSAGE_INVALID_STATUS_UPDATE_FOR_WORKORDER = "Invalid status updated for Workorder";
+
     
 }

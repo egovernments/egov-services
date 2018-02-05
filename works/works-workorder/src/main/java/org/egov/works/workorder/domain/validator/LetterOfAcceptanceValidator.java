@@ -1,11 +1,9 @@
 package org.egov.works.workorder.domain.validator;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
+import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
@@ -16,16 +14,8 @@ import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.workorder.domain.repository.WorksMastersRepository;
 import org.egov.works.workorder.domain.service.EstimateService;
 import org.egov.works.workorder.domain.service.OfflineStatusService;
-import org.egov.works.workorder.web.contract.Contractor;
-import org.egov.works.workorder.web.contract.DetailedEstimate;
-import org.egov.works.workorder.web.contract.EmployeeResponse;
-import org.egov.works.workorder.web.contract.LOAActivity;
-import org.egov.works.workorder.web.contract.LetterOfAcceptance;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
-import org.egov.works.workorder.web.contract.OfflineStatus;
-import org.egov.works.workorder.web.contract.RequestInfo;
+import org.egov.works.workorder.utils.WorkOrderUtils;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +39,9 @@ public class LetterOfAcceptanceValidator {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private WorkOrderUtils workOrderUtils;
 
     private static void validateUniqueLOANumber(LetterOfAcceptanceRequest letterOfAcceptanceRequest,
             HashMap<String, String> messages, LetterOfAcceptance letterOfAcceptance,
@@ -120,6 +113,7 @@ public class LetterOfAcceptanceValidator {
 
             validateLOA(messages, letterOfAcceptance, letterOfAcceptanceRequest.getRequestInfo(), detailedEstimate);
             validateEngineerIncharge(letterOfAcceptanceRequest, messages, letterOfAcceptance);
+            validateUpdateStatus(letterOfAcceptance, letterOfAcceptanceRequest.getRequestInfo(), messages);
             if (letterOfAcceptance.getSpillOverFlag()
                     || letterOfAcceptance.getWorkFlowDetails().getAction().equalsIgnoreCase("APPROVE"))
                 validateCouncilDetails(messages, letterOfAcceptance);
@@ -351,6 +345,53 @@ public class LetterOfAcceptanceValidator {
             savedLetterOfAcceptance = letterOfAcceptances.get(0);
 
         return null;
+    }
+
+    private void validateUpdateStatus(LetterOfAcceptance letterOfAcceptance, RequestInfo requestInfo, Map<String, String> messages) {
+        if(letterOfAcceptance.getId() != null) {
+            List<LetterOfAcceptance> lists = searchLoaById(letterOfAcceptance, requestInfo);
+            List<String> filetsNamesList = null;
+            List<String> filetsValuesList = null;
+            if(lists != null && !lists.isEmpty()) {
+                String status = lists.get(0).getStatus().getCode();
+                if (status.equals(CommonConstants.STATUS_CANCELLED) || status.equals(CommonConstants.STATUS_APPROVED)) {
+                    messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_LOA, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_LOA);
+                } else if((status.equals(CommonConstants.STATUS_REJECTED) && !letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED)) ||
+                        (status.equals(CommonConstants.STATUS_REJECTED) && !letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) ||
+                        (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
+                                letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) )) {
+                    messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_LOA, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_LOA);
+                } else if (!letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(letterOfAcceptance.getStatus().getCode().toUpperCase(), CommonConstants.LETTEROFACCEPTANCE));
+                    JSONArray statusRequestArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, letterOfAcceptance.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(status.toUpperCase(),CommonConstants.LETTEROFACCEPTANCE));
+                    JSONArray dBStatusArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, letterOfAcceptance.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    if (statusRequestArray != null && !statusRequestArray.isEmpty() && dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                        Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
+                        Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
+                        Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("orderNumber");
+                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
+                        if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
+                            messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_LOA, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_LOA);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private List<LetterOfAcceptance> searchLoaById(final LetterOfAcceptance letterOfAcceptance, final RequestInfo requestInfo) {
+        LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = LetterOfAcceptanceSearchContract.builder()
+                .tenantId(letterOfAcceptance.getTenantId()).ids(Arrays.asList(letterOfAcceptance.getId())).build();
+        return letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract,
+                requestInfo);
     }
 
 }

@@ -1,9 +1,6 @@
 package org.egov.works.workorder.domain.validator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
@@ -68,8 +65,8 @@ public class WorkOrderValidator {
                 validateOfflineStatus(workOrderRequest, messages, workOrder);
             validateWorkOrder(messages, workOrder, letterOfAcceptanceResponse);
             validateStatus(workOrder, messages, workOrderRequest.getRequestInfo());
-            //TODO : FIX remarks master topic
-           // validateRemarks(workOrder, messages, workOrderRequest.getRequestInfo());
+            validateUpdateStatus(workOrder, workOrderRequest.getRequestInfo(), messages);
+            validateRemarks(workOrder, messages, workOrderRequest.getRequestInfo());
             if (!messages.isEmpty())
                 throw new CustomException(messages);
 
@@ -292,6 +289,52 @@ public class WorkOrderValidator {
             remarks = objectMapper.convertValue(responseJSONArray.get(0), Remarks.class);
         }
         return remarks;
+    }
+
+    private void validateUpdateStatus(WorkOrder workOrder, RequestInfo requestInfo, Map<String, String> messages) {
+        if(workOrder.getId() != null) {
+            List<WorkOrder> lists = searchWorkOrderById(workOrder, requestInfo);
+            List<String> filetsNamesList = null;
+            List<String> filetsValuesList = null;
+            if(lists != null && !lists.isEmpty()) {
+                String status = lists.get(0).getStatus().getCode();
+                if (status.equals(CommonConstants.STATUS_CANCELLED) || status.equals(CommonConstants.STATUS_APPROVED)) {
+                    messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_WORKORDER, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_WORKORDER);
+                } else if((status.equals(CommonConstants.STATUS_REJECTED) && !workOrder.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED)) ||
+                        (status.equals(CommonConstants.STATUS_REJECTED) && !workOrder.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) ||
+                        (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(workOrder.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
+                                workOrder.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) )) {
+                    messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_WORKORDER, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_WORKORDER);
+                } else if (!workOrder.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(workOrder.getStatus().getCode().toUpperCase(), CommonConstants.WORKORDER));
+                    JSONArray statusRequestArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, workOrder.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
+                    filetsValuesList = new ArrayList<>(Arrays.asList(status.toUpperCase(),CommonConstants.WORKORDER));
+                    JSONArray dBStatusArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,
+                            filetsValuesList, workOrder.getTenantId(), requestInfo,
+                            CommonConstants.MODULENAME_WORKS);
+                    if (statusRequestArray != null && !statusRequestArray.isEmpty() && dBStatusArray != null && !dBStatusArray.isEmpty()) {
+                        Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
+                        Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
+                        Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("orderNumber");
+                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
+                        if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
+                            messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_WORKORDER, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_WORKORDER);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private List<WorkOrder> searchWorkOrderById(final WorkOrder workOrder, final RequestInfo requestInfo) {
+        WorkOrderSearchContract workOrderSearchContract = WorkOrderSearchContract.builder()
+                .tenantId(workOrder.getTenantId()).ids(Arrays.asList(workOrder.getId())).build();
+        return workOrderRepository.search(workOrderSearchContract, requestInfo);
+
     }
 
 }

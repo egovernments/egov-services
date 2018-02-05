@@ -54,7 +54,7 @@ public class ArtifactRepository {
 			throw new ArtifactNotFoundException(fileStoreId);
 
 		org.springframework.core.io.Resource resource = diskFileStoreRepository.read(artifact.getFileLocation());
-		return new Resource(artifact.getContentType(), artifact.getFileName(), resource, artifact.getTenantId(),resource.getFile().length()+" bytes");
+		return new Resource(artifact.getContentType(), artifact.getFileName(), resource, artifact.getTenantId(),""+resource.getFile().length()+" bytes");
 	}
 
 	public List<FileInfo> findByTag(String tag, String tenantId) {

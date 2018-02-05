@@ -69,11 +69,14 @@ public class IndexerService {
 	}
 	
 	public void indexProccessor(Index index, String kafkaJson, boolean isBulk) throws Exception {
+        Long startTime = null;
+        Long endTime = null;
 		StringBuilder url = new StringBuilder();
 		url.append(esHostUrl).append(index.getName()).append("/").append(index.getType()).append("/")
 		   .append("_bulk");	
         logger.info("Index Metadata: "+index);
         logger.info("kafkaJson: "+kafkaJson);
+        startTime = new Date().getTime();
 	    if (index.getJsonPath() != null) {
 				logger.info("Indexing IndexNode JSON to elasticsearch " + kafkaJson);
 				indexerUtils.validateAndIndex(buildIndexJsonWithJsonpath(index, kafkaJson, isBulk), 
@@ -89,6 +92,8 @@ public class IndexerService {
 				indexerUtils.validateAndIndex(buildIndexJsonWithoutJsonpath(index, kafkaJson, isBulk), 
 						url.toString(), index);
 		}
+	    endTime = new Date().getTime();
+		logger.info("TOTAL TIME TAKEN FOR INDEXING: "+(endTime - startTime)+"ms");
 	}
 	
 	public String buildIndexJsonWithJsonpath(Index index, String kafkaJson, boolean isBulk) throws Exception{
@@ -127,7 +132,7 @@ public class IndexerService {
 	    }
 		logger.info("Json being indexed: "+result.toString());
         endTime = new Date().getTime();
-		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime));
+		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime)+"ms");
 
 		return result;
   }
@@ -166,7 +171,7 @@ public class IndexerService {
 	    }
 		logger.info("Json being indexed: "+result.toString());
         endTime = new Date().getTime();
-		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime));
+		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime)+"ms");
 		
 		return result;
   }
@@ -206,7 +211,7 @@ public class IndexerService {
 	    }
 		logger.info("Json being indexed: "+result.toString());
         endTime = new Date().getTime();
-		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime));
+		logger.info("TIME TAKEN for building data to be indexed: "+(endTime - startTime)+"ms");
 
 		return result;
   }

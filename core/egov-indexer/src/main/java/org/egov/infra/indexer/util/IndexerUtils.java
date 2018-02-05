@@ -206,7 +206,7 @@ public class IndexerUtils {
 			Long startTime = new Date().getTime();
 			doIndexing(finalJson, url.toString(), index);
 			Long endTime = new Date().getTime();
-			logger.info("TIME TAKEN for indexing on es: "+(endTime - startTime));
+			logger.info("TIME TAKEN for indexing on es: "+(endTime - startTime)+"ms");
 		}
 	}
 	

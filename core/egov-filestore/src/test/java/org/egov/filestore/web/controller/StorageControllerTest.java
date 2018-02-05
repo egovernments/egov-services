@@ -101,7 +101,7 @@ public class StorageControllerTest {
 		Resource fileSystemResource = new FileSystemResource(FileUtils.toFile(url));
 
 		org.egov.filestore.domain.model.Resource resource =
-				new org.egov.filestore.domain.model.Resource("image/png", "image.png", fileSystemResource, TENANT_ID,600l);
+				new org.egov.filestore.domain.model.Resource("image/png", "image.png", fileSystemResource, TENANT_ID,"600l Bytes");
 
 		when(storageService.retrieve("FileStoreId", TENANT_ID)).thenReturn(resource);
 

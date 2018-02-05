@@ -12,5 +12,5 @@ public class Resource {
     private String fileName;
     private org.springframework.core.io.Resource resource;
     private String tenantId;
-    private Long fileSize;
+    private String fileSize;
 }

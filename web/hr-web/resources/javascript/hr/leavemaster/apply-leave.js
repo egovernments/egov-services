@@ -134,7 +134,7 @@ class ApplyLeave extends React.Component {
             }
 
             if (includePrefixSuffix || includePrefixSuffix=="TRUE" || includePrefixSuffix =="true") {
-              commonApiPost("egov-common-masters", "holidays", "_searchpreficsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+              commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
                 if (res) {
 
                   _this.setState({
@@ -340,7 +340,7 @@ class ApplyLeave extends React.Component {
       }
 
       if (includePrefixSuffix || includePrefixSuffix=="TRUE" || includePrefixSuffix =="true") {
-        commonApiPost("egov-common-masters", "holidays", "_searchpreficsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+        commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
           if (res) {
 
             _this.setState({
@@ -517,7 +517,7 @@ class ApplyLeave extends React.Component {
     };
 
     const renderEnclosingHolidayTr = () => {
-      if (isSearchClicked) {
+      if (this.state.encloseHoliday) {
         return encloseHoliday.map((item, ind) => {
           return (
             <tr key={ind}>

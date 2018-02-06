@@ -1,5 +1,7 @@
 package org.egov.swm.domain.model;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -39,5 +41,8 @@ public class Asset {
 
     @JsonProperty("latitude")
     private Double latitude;
+
+    @JsonProperty("assetAttributes")
+    private List<Attributes> assetAttributes;
 
 }

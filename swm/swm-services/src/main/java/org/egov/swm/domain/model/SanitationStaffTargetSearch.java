@@ -15,6 +15,7 @@ public class SanitationStaffTargetSearch extends SanitationStaffTarget {
     private String swmProcessCode;
     private String dumpingGroundCode;
     private String employeeCode;
+    private Boolean validate;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

@@ -125,6 +125,33 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             paramValues.put("targetTo", validationDateFormat.format(searchRequest.getTargetTo()));
         }
 
+        if (searchRequest.getValidate() != null && searchRequest.getValidate()) {
+            params.append("( ");
+            params.append("( ");
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <:targetFrom1");
+            paramValues.put("targetFrom1", validationDateFormat.format(searchRequest.getTargetFrom()));
+
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <:targetTo1");
+            paramValues.put("targetTo1", validationDateFormat.format(searchRequest.getTargetTo()));
+            params.append(" ) ");
+            addOr(params);
+            params.append(" ( ");
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >:targetFrom2");
+            paramValues.put("targetFrom2", validationDateFormat.format(searchRequest.getTargetFrom()));
+
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >:targetTo2");
+            paramValues.put("targetTo2", validationDateFormat.format(searchRequest.getTargetTo()));
+            params.append(" )");
+            params.append(" )");
+        }
         if (searchRequest.getSwmProcessCode() != null) {
             addAnd(params);
             params.append("swmProcess =:swmProcess");

@@ -249,6 +249,7 @@ public class SanitationStaffTargetService {
             sstSearch.setTargetTo(sanitationStaffTarget.getTargetTo());
             sstSearch.setSwmProcessCode(sanitationStaffTarget.getSwmProcess().getCode());
             sstSearch.setEmployeeCode(sanitationStaffTarget.getEmployee().getCode());
+            sstSearch.setValidate(true);
 
             sstSearchResponse = search(sstSearch);
 

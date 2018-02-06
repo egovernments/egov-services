@@ -35,8 +35,7 @@ public class NoticeValidator {
 			if (workOrderResponse.getWorkOrders() != null && workOrderResponse.getWorkOrders().isEmpty())
 				messages.put(Constants.KEY_NOTICE_WO_NOT_APPROVED, Constants.MESSAGE_NOTICE_WO_NOT_APPROVED);
 
-            //TODO : FIX remarks master topic
-            //validateRemarks(notice, messages, noticeRequest.getRequestInfo());
+            validateRemarks(notice, messages, noticeRequest.getRequestInfo());
 		}
 		if (!messages.isEmpty())
 			throw new CustomException(messages);

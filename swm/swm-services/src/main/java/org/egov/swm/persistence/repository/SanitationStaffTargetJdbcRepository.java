@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.CollectionPoint;
@@ -104,6 +107,22 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("route =:route");
             paramValues.put("route", searchRequest.getRouteCode());
+        }
+        DateFormat validationDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
+        if (searchRequest.getTargetFrom() != null) {
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:targetFrom");
+            paramValues.put("targetFrom", validationDateFormat.format(searchRequest.getTargetFrom()));
+        }
+
+        if (searchRequest.getTargetTo() != null) {
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:targetTo");
+            paramValues.put("targetTo", validationDateFormat.format(searchRequest.getTargetTo()));
         }
 
         if (searchRequest.getSwmProcessCode() != null) {

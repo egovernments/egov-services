@@ -248,6 +248,7 @@ public class SanitationStaffTargetService {
             sstSearch.setTargetFrom(sanitationStaffTarget.getTargetFrom());
             sstSearch.setTargetTo(sanitationStaffTarget.getTargetTo());
             sstSearch.setSwmProcessCode(sanitationStaffTarget.getSwmProcess().getCode());
+            sstSearch.setEmployeeCode(sanitationStaffTarget.getEmployee().getCode());
 
             sstSearchResponse = search(sstSearch);
 
@@ -256,7 +257,8 @@ public class SanitationStaffTargetService {
                     && !sstSearchResponse.getPagedData().isEmpty()) {
 
                 throw new CustomException("SanitationStaffTarget",
-                        "Sanitation Staff Target data already exist for the selected Route: "
+                        "Sanitation Staff Target data already exist for the selected Employee:"
+                                + sanitationStaffTarget.getEmployee().getName() + " and Route: "
                                 + sanitationStaffTarget.getRoute().getName() + ", and SwmProcess:"
                                 + sanitationStaffTarget.getSwmProcess().getName() + " and Target From: "
                                 + dateFormat.format(new Date(sanitationStaffTarget.getTargetFrom())) + " and Target To:"
@@ -270,7 +272,8 @@ public class SanitationStaffTargetService {
                             .equalsIgnoreCase(sstSearchResponse.getPagedData().get(0).getTargetNo())) {
 
                 throw new CustomException("SanitationStaffTarget",
-                        "Sanitation Staff Target data already exist for the selected Route: "
+                        "Sanitation Staff Target data already exist for the selected Employee:"
+                                + sanitationStaffTarget.getEmployee().getName() + " and Route: "
                                 + sanitationStaffTarget.getRoute().getName() + ", and SwmProcess:"
                                 + sanitationStaffTarget.getSwmProcess().getName() + " and Target From: "
                                 + dateFormat.format(new Date(sanitationStaffTarget.getTargetFrom())) + " and Target To:"

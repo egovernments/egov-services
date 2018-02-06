@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egswm_vehicleschedule";
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @Autowired
     private VehicleService vehicleService;

@@ -111,24 +111,27 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
         DateFormat validationDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
-        if (searchRequest.getTargetFrom() != null) {
-            addAnd(params);
-            params.append(
-                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:targetFrom");
-            paramValues.put("targetFrom", validationDateFormat.format(searchRequest.getTargetFrom()));
-        }
+        if (searchRequest.getValidate() == null || !searchRequest.getValidate()) {
+            if (searchRequest.getTargetFrom() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:targetFrom");
+                paramValues.put("targetFrom", validationDateFormat.format(searchRequest.getTargetFrom()));
+            }
 
-        if (searchRequest.getTargetTo() != null) {
-            addAnd(params);
-            params.append(
-                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:targetTo");
-            paramValues.put("targetTo", validationDateFormat.format(searchRequest.getTargetTo()));
+            if (searchRequest.getTargetTo() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:targetTo");
+                paramValues.put("targetTo", validationDateFormat.format(searchRequest.getTargetTo()));
+            }
         }
 
         if (searchRequest.getValidate() != null && searchRequest.getValidate()) {
-            params.append("( ");
-            params.append("( ");
             addAnd(params);
+
+            params.append("( ");
+            params.append("( ");
             params.append(
                     "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <:targetFrom1");
             paramValues.put("targetFrom1", validationDateFormat.format(searchRequest.getTargetFrom()));
@@ -140,7 +143,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             params.append(" ) ");
             addOr(params);
             params.append(" ( ");
-            addAnd(params);
             params.append(
                     "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >:targetFrom2");
             paramValues.put("targetFrom2", validationDateFormat.format(searchRequest.getTargetFrom()));

@@ -31,7 +31,7 @@ public class ContractorBillRepository {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		StringBuilder url = new StringBuilder();
-		url.append(contractorBillUrl).append(tenantId).append("&").append("letterOfAcceptanceNumbers=").append(contractorBillSearchContract.getLetterOfAcceptanceNumbers().get(0));
+		url.append(contractorBillUrl).append("?tenantid=").append(tenantId).append("&").append("letterOfAcceptanceNumbers=").append(contractorBillSearchContract.getLetterOfAcceptanceNumbers().get(0));
 
 		return restTemplate.postForObject(url.toString(), requestInfoWrapper, ContractorBillResponse.class);
 

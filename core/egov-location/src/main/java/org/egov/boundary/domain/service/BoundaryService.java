@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -336,6 +337,9 @@ public class BoundaryService {
 	}
 	
 	public List<MdmsTenantBoundary> getBoundariesByTenantAndHierarchyType(BoundarySearchRequest boundarySearchRequest,RequestInfo requestInfo){
+		Long startTime = null;
+		Long endTime = null;
+		startTime = new Date().getTime();
 		List<MdmsTenantBoundary> list= boundaryRepository.getBoundariesByTenantAndHierarchyType(boundarySearchRequest,requestInfo);
 		List<MdmsTenantBoundary> list2 = new ArrayList<MdmsTenantBoundary>();
 		if(boundarySearchRequest.getHierarchyTypeName() == null || boundarySearchRequest.getHierarchyTypeName().isEmpty()){
@@ -346,6 +350,8 @@ public class BoundaryService {
 			}
 			return list2;
 		}
+		endTime = new Date().getTime();
+		LOG.info("TOTAL TIME TAKEN to fetch boundary = "+(endTime - startTime)+"ms");
 		return list;
 	}
 }

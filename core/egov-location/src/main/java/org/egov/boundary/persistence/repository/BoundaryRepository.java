@@ -352,15 +352,17 @@ public class BoundaryRepository {
 		responseJSONArray = mdmsRepository.getByCriteria(boundarySearchRequest.getTenantId(),
 				boundarySearchRequest.getHierarchyTypeName(), requestInfo);
 		endTime = new Date().getTime();
-		logger.info("Mdms Rest Call time taken  " + (endTime - startTime) + " ms");
+		logger.info("TIME TAKEN for MDMS Search result = " + (endTime - startTime) + "ms");
 		List<TenantBoundary> tenantBoundary = null;
 		if (responseJSONArray != null && responseJSONArray.size() > 0) {
 			tenantBoundary = mapper.convertValue(responseJSONArray, new TypeReference<List<TenantBoundary>>() {
 			});
 		}
 		List<MdmsTenantBoundary> boundaryList = new ArrayList<MdmsTenantBoundary>();
-
+		startTime = new Date().getTime();
 		if (tenantBoundary != null) {
+			Long start = null;
+			Long end = null;
 			for (TenantBoundary tenantBndry : tenantBoundary) {
 				MdmsTenantBoundary mdmsBoundary = MdmsTenantBoundary.builder()
 						.tenantId(boundarySearchRequest.getTenantId()).hierarchyType(tenantBndry.getHierarchyType())
@@ -369,14 +371,20 @@ public class BoundaryRepository {
 				list.add(tenantBndry.getBoundary());
 				if (boundarySearchRequest.getCodes() != null && !boundarySearchRequest.getCodes().isEmpty()) {
 					list.clear();
+					start = new Date().getTime();
 					list = filterBoundaryCodes(tenantBndry.getBoundary().getChildren(),
 							boundarySearchRequest.getCodes());
+					end = new Date().getTime();
+					logger.info("TIME TAKEN for filterBoundaryCodes() = " + (end - start) + "ms");
 				}
 
 				if (boundarySearchRequest.getBoundaryTypeName() != null
 						&& !boundarySearchRequest.getBoundaryTypeName().isEmpty()) {
 					list.clear();
+					start = new Date().getTime();
 					list = prepareChildBoundaryList(tenantBndry);
+					end = new Date().getTime();
+					logger.info("TIME TAKEN for prepareChildBoundaryList() = " + (end - start) + "ms");
 					list = list.stream()
 							.filter(p -> boundarySearchRequest.getBoundaryTypeName().equalsIgnoreCase(p.getLabel()))
 							.collect(Collectors.toList());
@@ -386,7 +394,10 @@ public class BoundaryRepository {
 						&& boundarySearchRequest.getBoundaryTypeName() != null
 						&& !boundarySearchRequest.getBoundaryTypeName().isEmpty()) {
 					list.clear();
+					start = new Date().getTime();
 					list = prepareChildBoundaryList(tenantBndry);
+					end = new Date().getTime();
+					logger.info("TIME TAKEN for prepareChildBoundaryList() = " + (end - start) + "ms");
 					list = list.stream()
 							.filter(p -> boundarySearchRequest.getBoundaryTypeName().equalsIgnoreCase(p.getLabel()))
 							.collect(Collectors.toList());
@@ -396,6 +407,9 @@ public class BoundaryRepository {
 				boundaryList.add(mdmsBoundary);
 			}
 		}
+		endTime = new Date().getTime();
+		logger.info("TIME TAKEN to process the MDMS search result = " + (endTime - startTime) + "ms");
+		
 		return boundaryList;
 	}
 

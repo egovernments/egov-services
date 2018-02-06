@@ -272,6 +272,8 @@ class ApplyLeave extends React.Component {
       var enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, encloseHoliday);
       var includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, includePrefixSuffix);
 
+      console.log("Enclosing : ",enclosingHoliday," includePrefixSuffix : ", includePrefixSuffix);
+
       if (enclosingHoliday) {
         commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
           if (res) {

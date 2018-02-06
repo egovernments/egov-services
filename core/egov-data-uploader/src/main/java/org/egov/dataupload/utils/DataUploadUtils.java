@@ -88,7 +88,7 @@ public class DataUploadUtils {
 		            if(!isCellEmpty(cell)) {
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-			            		logger.info("date: "+cell.getDateCellValue());
+			            		logger.debug("date: "+cell.getDateCellValue());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
 		            	    	logger.debug("numeric: "+cell.getNumericCellValue());
@@ -117,7 +117,7 @@ public class DataUploadUtils {
 		            		}
 		            	}
 		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
-		            		logger.debug("boolean: "+cell.getBooleanCellValue());
+		            		logger.info("boolean: "+cell.getBooleanCellValue());
 		            		dataList.add(cell.getBooleanCellValue());
 
 		            	}
@@ -125,6 +125,8 @@ public class DataUploadUtils {
 	          }
            }
            logger.info("dataList: "+dataList);
+           logger.info("size: "+dataList.size());
+
            if(!dataList.isEmpty()) {
               	excelData.add(dataList);
            }

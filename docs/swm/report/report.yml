@@ -99,14 +99,14 @@ ReportDefinitions:
     label: reports.swm.maintenancecost
     type: number
     source: egswm_vehiclemaintenancedetails
+  - name: salary
+    label: reports.swm.salary
+    type: string
+    source: employee    
   - name: totalcost
     label: reports.swm.totalcost
     type: number
     source: egswm_vehiclemaintenancedetails  
-  - name: salary
-    label: reports.swm.salary
-    type: string
-    source: employee   
   searchParams:
   - name: vehicle
     label: reports.swm.vehicle

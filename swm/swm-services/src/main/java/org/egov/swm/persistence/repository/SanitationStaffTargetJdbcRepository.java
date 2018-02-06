@@ -131,27 +131,78 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             addAnd(params);
 
             params.append("( ");
+
+            // existingFrom >= inputFrom && existingTo <= inputTo
             params.append("( ");
             params.append(
-                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <:targetFrom1");
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:targetFrom1");
             paramValues.put("targetFrom1", validationDateFormat.format(searchRequest.getTargetFrom()));
 
             addAnd(params);
             params.append(
-                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <:targetTo1");
+                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:targetTo1");
             paramValues.put("targetTo1", validationDateFormat.format(searchRequest.getTargetTo()));
             params.append(" ) ");
+            //
+
             addOr(params);
+
+            // existingFrom <= inputFrom && existingTo >= inputTo
             params.append(" ( ");
             params.append(
-                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >:targetFrom2");
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:targetFrom5");
+            paramValues.put("targetFrom5", validationDateFormat.format(searchRequest.getTargetFrom()));
+
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:targetTo5");
+            paramValues.put("targetTo5", validationDateFormat.format(searchRequest.getTargetTo()));
+
+            params.append(" )");
+            //
+
+            addOr(params);
+
+            // existingFrom >= inputFrom && existingTo <= inputFrom && existingTo > inputTo
+            params.append(" ( ");
+            params.append(
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:targetFrom2");
             paramValues.put("targetFrom2", validationDateFormat.format(searchRequest.getTargetFrom()));
+
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:targetFrom3");
+            paramValues.put("targetFrom3", validationDateFormat.format(searchRequest.getTargetFrom()));
 
             addAnd(params);
             params.append(
                     "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >:targetTo2");
             paramValues.put("targetTo2", validationDateFormat.format(searchRequest.getTargetTo()));
+
             params.append(" )");
+            //
+
+            addOr(params);
+
+            // existingFrom >= inputTo && existingTo <= inputTo && existingFrom < inputFrom
+            params.append(" ( ");
+            params.append(
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:targetTo3");
+            paramValues.put("targetTo3", validationDateFormat.format(searchRequest.getTargetTo()));
+
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetTo/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:targetTo4");
+            paramValues.put("targetTo4", validationDateFormat.format(searchRequest.getTargetTo()));
+
+            addAnd(params);
+            params.append(
+                    "to_char((to_timestamp(targetFrom/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <:targetFrom4");
+            paramValues.put("targetFrom4", validationDateFormat.format(searchRequest.getTargetFrom()));
+
+            params.append(" )");
+            //
+
             params.append(" )");
         }
         if (searchRequest.getSwmProcessCode() != null) {

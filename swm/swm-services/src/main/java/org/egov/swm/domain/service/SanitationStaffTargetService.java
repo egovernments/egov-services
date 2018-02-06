@@ -115,7 +115,8 @@ public class SanitationStaffTargetService {
         Pagination<Route> routes;
         CollectionPointSearch search;
         Pagination<CollectionPoint> collectionPoints;
-
+        SanitationStaffTargetSearch sstSearch;
+        Pagination<SanitationStaffTarget> sstSearchResponse;
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         DateFormat validationDateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -239,6 +240,41 @@ public class SanitationStaffTargetService {
                     }
 
                 }
+            }
+
+            sstSearch = new SanitationStaffTargetSearch();
+            sstSearch.setTenantId(sanitationStaffTarget.getTenantId());
+            sstSearch.setRouteCode(sanitationStaffTarget.getRoute().getCode());
+            sstSearch.setTargetFrom(sanitationStaffTarget.getTargetFrom());
+            sstSearch.setTargetTo(sanitationStaffTarget.getTargetTo());
+            sstSearch.setSwmProcessCode(sanitationStaffTarget.getSwmProcess().getCode());
+
+            sstSearchResponse = search(sstSearch);
+
+            if ((sanitationStaffTarget.getTargetNo() == null || sanitationStaffTarget.getTargetNo().isEmpty())
+                    && sstSearchResponse != null && sstSearchResponse.getPagedData() != null
+                    && !sstSearchResponse.getPagedData().isEmpty()) {
+
+                throw new CustomException("SanitationStaffTarget",
+                        "Sanitation Staff Target data already exist for the selected Route: "
+                                + sanitationStaffTarget.getRoute().getName() + ", and SwmProcess:"
+                                + sanitationStaffTarget.getSwmProcess().getName() + " and Target From: "
+                                + dateFormat.format(new Date(sanitationStaffTarget.getTargetFrom())) + " and Target To:"
+                                + dateFormat.format(new Date(sanitationStaffTarget.getTargetTo())));
+            }
+
+            if (sanitationStaffTarget.getTargetNo() != null && !sanitationStaffTarget.getTargetNo().isEmpty()
+                    && sstSearchResponse != null && sstSearchResponse.getPagedData() != null
+                    && !sstSearchResponse.getPagedData().isEmpty()
+                    && !sanitationStaffTarget.getTargetNo()
+                            .equalsIgnoreCase(sstSearchResponse.getPagedData().get(0).getTargetNo())) {
+
+                throw new CustomException("SanitationStaffTarget",
+                        "Sanitation Staff Target data already exist for the selected Route: "
+                                + sanitationStaffTarget.getRoute().getName() + ", and SwmProcess:"
+                                + sanitationStaffTarget.getSwmProcess().getName() + " and Target From: "
+                                + dateFormat.format(new Date(sanitationStaffTarget.getTargetFrom())) + " and Target To:"
+                                + dateFormat.format(new Date(sanitationStaffTarget.getTargetTo())));
             }
 
         }

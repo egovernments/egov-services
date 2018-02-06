@@ -40,13 +40,16 @@
 
 package org.egov.boundary.web.controller;
 
+import java.util.Date;
 import java.util.List;
+
 import javax.validation.Valid;
-import org.egov.boundary.web.contract.factory.ResponseInfoFactory;
+
 import org.egov.boundary.domain.model.BoundarySearchRequest;
 import org.egov.boundary.domain.service.BoundaryService;
 import org.egov.boundary.web.contract.BoundaryMdmsResponse;
 import org.egov.boundary.web.contract.MdmsTenantBoundary;
+import org.egov.boundary.web.contract.factory.ResponseInfoFactory;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.slf4j.Logger;
@@ -80,6 +83,9 @@ public class LocationBoundaryController {
 			@RequestParam(value = "codes", required = false) final List<String> codes,
 			@RequestParam(value = "boundaryType", required = false) final String boundaryType,
 			@RequestBody @Valid RequestInfo requestInfo) {
+		Long startTime;
+		Long endTime;
+		startTime = new Date().getTime();
 		BoundaryMdmsResponse boundaryResponse = new BoundaryMdmsResponse();
 		ResponseInfo responseInfo = getResponseInfo(requestInfo);
 		boundaryResponse.setResponseInfo(responseInfo);
@@ -90,7 +96,10 @@ public class LocationBoundaryController {
 		allBoundarys = boundaryService.getBoundariesByTenantAndHierarchyType(boundarySearchRequest, requestInfo);
 		responseInfo.setStatus(HttpStatus.OK.toString());
 		boundaryResponse.setResponseInfo(responseInfo);
-		return getBoundarySearchSuccessResponse(boundaryResponse, allBoundarys);
+		ResponseEntity<?>  response= getBoundarySearchSuccessResponse(boundaryResponse, allBoundarys);
+		endTime = new Date().getTime();
+		LOGGER.info("ToTAL Time Taken In Controller To fetch Boundaries = " +(endTime - startTime)+"ms");
+		return response;
 
 	}
 

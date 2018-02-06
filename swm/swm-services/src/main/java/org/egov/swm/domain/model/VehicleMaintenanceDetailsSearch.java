@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleMaintenanceDetailsSearch extends VehicleMaintenanceDetails {
-    private String codes;
+    private String transactionNos;
     private String regNumber;
     private String sortBy;
     private Integer pageSize;

@@ -10,12 +10,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.*;
 import org.egov.swm.domain.repository.VehicleMaintenanceDetailsRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.persistence.repository.RouteCollectionPointMapJdbcRepository;
+import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -35,16 +38,24 @@ public class VehicleMaintenanceDetailsService {
 
     private final RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
 
+    private IdgenRepository idgenRepository;
+
+    private String idGenNameForTrnNumPath;
+
     public VehicleMaintenanceDetailsService(final VehicleRepository vehicleRepository,
-            final VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository,
-            final VehicleMaintenanceService vehicleMaintenanceService, final VehicleScheduleService vehicleScheduleService,
-            final RouteService routeService, RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository) {
+                                            final VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository,
+                                            final VehicleMaintenanceService vehicleMaintenanceService, final VehicleScheduleService vehicleScheduleService,
+                                            final RouteService routeService, RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository,
+                                            final IdgenRepository idgenRepository,
+                                            final @Value("${egov.swm.vehiclemaintenancedetails.transaction.num.idgen.name}") String idGenNameForTrnNumPath) {
         this.vehicleRepository = vehicleRepository;
         this.vehicleMaintenanceDetailsRepository = vehicleMaintenanceDetailsRepository;
         this.vehicleMaintenanceService = vehicleMaintenanceService;
         this.vehicleScheduleService = vehicleScheduleService;
         this.routeService = routeService;
         this.routeCollectionPointMapJdbcRepository = routeCollectionPointMapJdbcRepository;
+        this.idgenRepository = idgenRepository;
+        this.idGenNameForTrnNumPath = idGenNameForTrnNumPath;
     }
 
     public VehicleMaintenanceDetailsRequest create(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
@@ -59,7 +70,8 @@ public class VehicleMaintenanceDetailsService {
         for (final VehicleMaintenanceDetails vehicleMaintenanceDetail : vehicleMaintenanceDetailsRequest
                 .getVehicleMaintenanceDetails()) {
             setAuditDetails(vehicleMaintenanceDetail, userId);
-            vehicleMaintenanceDetail.setCode(UUID.randomUUID().toString().replace("-", ""));
+            vehicleMaintenanceDetail.setTransactionNo(
+                    generateTransactionNumber(vehicleMaintenanceDetail.getTenantId(), vehicleMaintenanceDetailsRequest.getRequestInfo()));
         }
 
         return vehicleMaintenanceDetailsRepository.create(vehicleMaintenanceDetailsRequest);
@@ -114,10 +126,10 @@ public class VehicleMaintenanceDetailsService {
     private void validateForUniqueCodesInRequest(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
         final List<String> codesList = vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails().stream()
-                .map(VehicleMaintenanceDetails::getCode).collect(Collectors.toList());
+                .map(VehicleMaintenanceDetails::getTransactionNo).collect(Collectors.toList());
 
         if (codesList.size() != codesList.stream().distinct().count())
-            throw new CustomException("Code", "Duplicate codes in given Vehicle Maintenance Details:");
+            throw new CustomException("Transaction Number", "Duplicate Transaction Numbers in given Vehicle Maintenance Details:");
     }
 
     private void validate(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
@@ -296,13 +308,18 @@ public class VehicleMaintenanceDetailsService {
         if (contract.getAuditDetails() == null)
             contract.setAuditDetails(new AuditDetails());
 
-        if (null == contract.getCode() || contract.getCode().isEmpty()) {
+        if (null == contract.getTransactionNo() || contract.getTransactionNo().isEmpty()) {
             contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
             contract.getAuditDetails().setCreatedTime(new Date().getTime());
         }
 
         contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
         contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
+
+    private String generateTransactionNumber(final String tenantId, final RequestInfo requestInfo) {
+
+        return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTrnNumPath);
     }
 
 }

@@ -1140,11 +1140,11 @@ serviceMaps:
    description: create vehiclemaintenancedetails in egswm_vehiclemaintenancedetails
    fromTopic: swm-vehiclemaintenancedetail-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehiclemaintenancedetails (code, tenantid, isscheduled, maintenancetype, vehicle, actualmaintenancedate, vehiclescheduledmaintenancedate, vehicledowntimeactual, vehicledowntimeactualuom, vehiclereadingduringmaintenance, remarks, costincurred, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehiclemaintenancedetails (transactionno, tenantid, isscheduled, maintenancetype, vehicle, actualmaintenancedate, vehiclescheduledmaintenancedate, vehicledowntimeactual, vehicledowntimeactualuom, vehiclereadingduringmaintenance, remarks, costincurred, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicleMaintenanceDetails.*
       jsonMaps:
        
-       - jsonPath: $.vehicleMaintenanceDetails.*.code
+       - jsonPath: $.vehicleMaintenanceDetails.*.transactionNo
 
        - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
 
@@ -1189,11 +1189,11 @@ serviceMaps:
    description: update vehiclemaintenancedetails in egswm_vehiclemaintenancedetails
    fromTopic: swm-vehiclemaintenancedetail-update-topic
    queryMaps: 
-    - query: UPDATE egswm_vehiclemaintenancedetails SET code = ?, tenantid = ?, isscheduled = ?, maintenancetype = ?, vehicle = ?, actualmaintenancedate = ?, vehiclescheduledmaintenancedate = ?, vehicledowntimeactual = ?, vehicledowntimeactualuom = ?, vehiclereadingduringmaintenance = ?, remarks = ?, costincurred = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
+    - query: UPDATE egswm_vehiclemaintenancedetails SET transactionno = ?, tenantid = ?, isscheduled = ?, maintenancetype = ?, vehicle = ?, actualmaintenancedate = ?, vehiclescheduledmaintenancedate = ?, vehicledowntimeactual = ?, vehicledowntimeactualuom = ?, vehiclereadingduringmaintenance = ?, remarks = ?, costincurred = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and transactionno = ?;
       basePath: $.vehicleMaintenanceDetails.*
       jsonMaps:
        
-       - jsonPath: $.vehicleMaintenanceDetails.*.code
+       - jsonPath: $.vehicleMaintenanceDetails.*.transactionNo
 
        - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
 
@@ -1229,7 +1229,7 @@ serviceMaps:
 
        - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
 
-       - jsonPath: $.vehicleMaintenanceDetails.*.code
+       - jsonPath: $.vehicleMaintenanceDetails.*.transactionNo
 
  - version: 1.0
    name: vehicletripsheetdetails create

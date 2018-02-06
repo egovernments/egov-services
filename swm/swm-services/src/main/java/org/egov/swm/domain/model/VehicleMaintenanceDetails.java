@@ -21,9 +21,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleMaintenanceDetails {
-    @Length(min = 1, max = 256, message = "Value of code shall be between 1 and 256")
-    @JsonProperty("code")
-    private String code = null;
+
+    @Length(min = 0, max = 256, message = "Value of transactionNo shall be between 0 and 256")
+    @JsonProperty("transactionNo")
+    private String transactionNo = null;
 
     @NotNull
     @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")

@@ -43,22 +43,23 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
         if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
             orderBy = "order by " + searchRequest.getSortBy();
 
-        if (searchRequest.getCodes() != null) {
+        if (searchRequest.getTransactionNo() != null) {
             addAnd(params);
-            params.append("code in (:codes)");
-            paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
+            params.append("transactionNo in (:transactionNo)");
+            paramValues.put("transactionNo", searchRequest.getTransactionNo());
+        }
+
+        if (searchRequest.getTransactionNos() != null) {
+            addAnd(params);
+            params.append("transactionNo in (:transactionNos)");
+            paramValues.put("transactionNos",
+                    new ArrayList<>(Arrays.asList(searchRequest.getTransactionNos().split(","))));
         }
 
         if (searchRequest.getTenantId() != null) {
             addAnd(params);
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", searchRequest.getTenantId());
-        }
-
-        if (searchRequest.getCode() != null) {
-            addAnd(params);
-            params.append("code =:code");
-            paramValues.put("code", searchRequest.getCode());
         }
 
         if (searchRequest.getIsScheduled() != null) {

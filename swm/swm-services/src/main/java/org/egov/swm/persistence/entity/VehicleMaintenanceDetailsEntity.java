@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleMaintenanceDetailsEntity {
 
-    private String code;
+    private String transactionNo;
 
     private String tenantid;
 
@@ -51,7 +51,7 @@ public class VehicleMaintenanceDetailsEntity {
     private Long lastModifiedTime;
 
     public VehicleMaintenanceDetails toDomain() {
-        return VehicleMaintenanceDetails.builder().code(code).tenantId(tenantid).isScheduled(isscheduled)
+        return VehicleMaintenanceDetails.builder().transactionNo(transactionNo).tenantId(tenantid).isScheduled(isscheduled)
                 .vehicle(Vehicle.builder().regNumber(vehicle).build()).actualMaintenanceDate(actualmaintenancedate)
                 .vehicleScheduledMaintenanceDate(vehiclescheduledmaintenancedate)
                 .vehicleDowntimeActual(vehicledowntimeactual).vehicleDownTimeActualUom(vehicledowntimeactualuom)

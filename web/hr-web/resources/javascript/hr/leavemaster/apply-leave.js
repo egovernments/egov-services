@@ -25,7 +25,7 @@ class ApplyLeave extends React.Component {
           "status": ""
         }
 
-      }, leaveList: [], stateId: "", owner: "", leaveNumber: ""
+      }, leaveList: [], stateId: "", owner: "", leaveNumber: "", perfixSuffix: "", encloseHoliday: ""
     }
     this.handleChange = this.handleChange.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
@@ -263,28 +263,50 @@ class ApplyLeave extends React.Component {
 
   handleChangeThreeLevel(e, pName, name) {
     var _this = this, val = e.target.value;
-    //if (pName == "leaveType" && _this.state.leaveSet.toDate) {
-      if (pName == "leaveType") {
+    if (pName == "leaveType" && _this.state.leaveSet.toDate) {
       var leaveType = val;
-
-      var asOnDate = new Date();
-      var dd = asOnDate.getDate();
-      var mm = asOnDate.getMonth() + 1; //January is 0!
-      var yyyy = asOnDate.getFullYear();
-
-      if (dd < 10) {
-        dd = '0' + dd
-      }
-
-      if (mm < 10) {
-        mm = '0' + mm
-      }
-
-      asOnDate = dd + '/' + mm + '/' + yyyy;
-
-
-      //var asOnDate = _this.state.leaveSet.toDate;
+      var asOnDate = _this.state.leaveSet.toDate;
+      var fromDate = _this.state.leaveSet.fromDate;
       var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
+      var leaveDays = _this.state.leaveSet.leaveDays;
+      var enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, encloseHoliday);
+      var includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, includePrefixSuffix);
+
+      if (enclosingHoliday) {
+        commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+          if (res) {
+
+            _this.setState({
+              encloseHoliday: res.Holiday
+            });
+
+          }
+        });
+
+      } else {
+        _this.setState({
+          encloseHoliday: ""
+        });
+      }
+
+      if (includePrefixSuffix) {
+        commonApiPost("egov-common-masters", "holidays", "_searchpreficsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+          if (res) {
+
+            _this.setState({
+              perfixSuffix: res.Holiday[0]
+            });
+
+          }
+        });
+
+      } else {
+        _this.setState({
+          perfixSuffix: ""
+        });
+      }
+
+
       commonApiPost("hr-leave", "eligibleleaves", "_search", { leaveType, tenantId, asOnDate, employeeid }, function (err, res) {
         if (res) {
           var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
@@ -423,7 +445,7 @@ class ApplyLeave extends React.Component {
 
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
-    let { leaveSet } = this.state;
+    let { leaveSet, perfixSuffix, encloseHoliday } = this.state;
     let { name, code, leaveDays, availableDays, fromDate, toDate, reason, leaveType } = leaveSet;
     let mode = getUrlVars()["type"];
 
@@ -444,12 +466,105 @@ class ApplyLeave extends React.Component {
       }
     };
 
+    const renderEnclosingHolidayTr = () => {
+      if(isSearchClicked){
+        return encloseHoliday.map((item, ind) => {
+            return (
+                <tr key={ind}>
+                <td>{item.name}</td>
+                <td>{item.applicableOn}</td>
+                </tr>
+            )
+        })
+      }
+    }
+
+    const showEnclosingHolidayTable = () => {
+        if(this.state.encloseHoliday) {
+            return (
+                <div>
+                    <div className="land-table">
+                        <table id="employeeTable" className="table table-bordered">
+                            <thead>
+                                <tr>
+                                  <th>Holiday Name</th>
+                                  <th>Holiday Date </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {renderEnclosingHolidayTr()}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )
+        }
+    }
+
+    const showPrefixSuffix = () => {
+      if (this.state.perfixSuffix) {
+        return (
+          <div>
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Prefix From Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="perfixFromDate" name="perfixFromDate" value={perfixSuffix.prefixFromDate}
+                    disabled />
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Prefix To Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="prefixToDate" name="prefixToDate" value={perfixSuffix.prefixToDate}
+                    disabled />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Suffix From Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="suffixFromDate" name="suffixFromDate" value={perfixSuffix.suffixFromDate}
+                    disabled />
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Suffix To Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="suffixToDate" name="suffixToDate" value={perfixSuffix.suffixToDate}
+                    disabled />
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        )
+      }
+    }
 
     return (
       <div>
         <h3>{getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Apply"} Leave Application </h3>
         <form onSubmit={(e) => { addOrUpdate(e) }}>
           <fieldset>
+
             <div className="row">
               <div className="col-sm-6">
                 <div className="row">
@@ -489,13 +604,10 @@ class ApplyLeave extends React.Component {
                         <option value=""> Select Leave Type</option>
                         {renderOption(this.state.leaveList)}
                       </select>
-
                     </div>
                   </div>
                 </div>
               </div>
-
-
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
@@ -521,7 +633,6 @@ class ApplyLeave extends React.Component {
                       <span><i className="glyphicon glyphicon-calendar"></i></span>
                       <input type="text" id="fromDate" name="fromDate" value="fromDate" value={fromDate}
                         onChange={(e) => { handleChange(e, "fromDate") }} required />
-
                     </div>
                   </div>
                 </div>
@@ -571,6 +682,8 @@ class ApplyLeave extends React.Component {
               </div>
             </div>
 
+            {showPrefixSuffix()}
+            {showEnclosingHolidayTable()}
 
 
             <div className="text-center">

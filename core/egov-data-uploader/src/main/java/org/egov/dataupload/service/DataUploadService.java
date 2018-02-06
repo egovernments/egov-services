@@ -36,6 +36,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.LongSerializationPolicy;
 import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -474,7 +476,9 @@ public class DataUploadService {
 	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
 	            	logger.debug("expression: "+expression);
 	            	logger.debug("key: "+key);
-            		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
+	            	logger.debug("value: "+filteredList.get(k).get(j));
+	            	
+	            	documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
             	}	            	
 			}
 			logger.info("Adding tenantId...");
@@ -486,9 +490,7 @@ public class DataUploadService {
 	        	String key = dataUploadUtils.getJsonPathKey(path, expression);
 	        	documentContext.put(expression.toString(), key, uploaderRequest.getUploadJobs().get(0).getTenantId());
 			}
-			Type type = new TypeToken<Map<String, Object>>() {}.getType();
-			Gson gson = new Gson();
-			Map<String, Object> objectMap = gson.fromJson(documentContext.jsonString(), type);
+			Map<String, Object> objectMap = mapper.readValue(documentContext.jsonString(), Map.class);
 			//this is for setting child objects to empty list in the request if the excel doesn't have values for child.
 			objectMap = dataUploadUtils.eliminateEmptyList(objectMap);
         	filteredListObjects.add(objectMap);
@@ -593,7 +595,7 @@ public class DataUploadService {
 	    		    }
 	    	    }	
 	        } else {
-	    		logger.debug("Adding new key: "+key+" value: "+newMap.get(key)+" to original");
+	    		logger.info("Adding new key: "+key+" value: "+newMap.get(key)+" to original");
 	            original.put(key, newMap.get(key));
 	        }	        
 	    }

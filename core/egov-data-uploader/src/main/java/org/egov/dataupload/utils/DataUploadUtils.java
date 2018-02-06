@@ -88,7 +88,7 @@ public class DataUploadUtils {
 		            if(!isCellEmpty(cell)) {
 		            	if(cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
 		            	    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-			            		logger.debug("date: "+cell.getDateCellValue());
+			            		logger.info("date: "+cell.getDateCellValue());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
 		            	    	logger.debug("numeric: "+cell.getNumericCellValue());

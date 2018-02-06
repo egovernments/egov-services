@@ -98,10 +98,10 @@ public class TrackMilestoneValidator {
     }
 
     private void validateForFinalBill(TrackMilestone trackMilestone, Map<String, String> validationMessages, RequestInfo requestInfo){
-        Milestone milestone = milestoneRepository.search(MilestoneSearchContract.builder().ids(Arrays.asList(trackMilestone.getMilestone().getId())).build(), requestInfo).get(0);
-        LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = letterOfAcceptanceEstimateRepository.searchLOAs(LetterOfAcceptanceEstimateSearchContract.builder().ids(Arrays.asList(milestone.getLetterOfAcceptanceEstimate().getId())).build(), requestInfo).get(0);
-        LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceRepository.searchLOAs(LetterOfAcceptanceSearchContract.builder().ids(Arrays.asList(letterOfAcceptanceEstimate.getLetterOfAcceptance())).build(), requestInfo).get(0);
-        ContractorBillResponse contractorBillResponse = contractorBillRepository.getByLoaNumbers(ContractorBillSearchContract.builder().letterOfAcceptanceNumbers(Arrays.asList(letterOfAcceptance.getLoaNumber())).billTypes(Arrays.asList("Final")).build(), trackMilestone.getTenantId(), requestInfo);
+        Milestone milestone = milestoneRepository.search(MilestoneSearchContract.builder().ids(Arrays.asList(trackMilestone.getMilestone().getId())).tenantId(trackMilestone.getTenantId()).build(), requestInfo).get(0);
+        LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = letterOfAcceptanceEstimateRepository.searchLOAs(LetterOfAcceptanceEstimateSearchContract.builder().ids(Arrays.asList(milestone.getLetterOfAcceptanceEstimate().getId())).tenantId(trackMilestone.getTenantId()).build(), requestInfo).get(0);
+        LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceRepository.searchLOAs(LetterOfAcceptanceSearchContract.builder().ids(Arrays.asList(letterOfAcceptanceEstimate.getLetterOfAcceptance())).tenantId(trackMilestone.getTenantId()).build(), requestInfo).get(0);
+        ContractorBillResponse contractorBillResponse = contractorBillRepository.getByLoaNumbers(ContractorBillSearchContract.builder().letterOfAcceptanceNumbers(Arrays.asList(letterOfAcceptance.getLoaNumber())).billTypes(Arrays.asList("Final")).tenantId(trackMilestone.getTenantId()).build(), trackMilestone.getTenantId(), requestInfo);
         ContractorBill contractorBill = contractorBillResponse.getContractorBills().get(0);
         if(contractorBill!=null && !contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)){
             validationMessages.put(Constants.KEY_TRACKMILESTONE_FINAL_BILL_CREATED, Constants.MESSAGE_TRACKMILESTONE_FINAL_BILL_CREATED);

@@ -95,7 +95,7 @@ public class HolidayService {
 				prefixDays++;
 			}
 			else if(getHolidayByApplicableOn(null, c1.getTime(), holidayGetRequest.getTenantId()) || isSunday(c1.getTime()) || isSecondSaturday(c1.getTime()))  {
-				holiday.setPrefixToDate(c1.getTime());
+				holiday.setPrefixFromDate(c1.getTime());
 				prefixDays++;
 			}
 			else{

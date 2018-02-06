@@ -32,7 +32,7 @@ public class ContractorBillJdbcRepository extends JdbcRepository {
     public List<ContractorBill> searchContractorBills(final ContractorBillSearchContract contractorBillSearchContract,
             final RequestInfo requestInfo) {
 
-        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+        String searchQuery = "select :selectfields from :tablename :condition  :orderby ";
 
         String tableName = TABLE_NAME;
 
@@ -195,15 +195,16 @@ public class ContractorBillJdbcRepository extends JdbcRepository {
 
     private void searchByLOANumbers(List<String> loaNumbers, StringBuilder params, Map<String, Object> paramValues) {
         addAnd(params);
-        params.append(
-                "cb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:loaNumber)");
+        params.append("cb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in " +
+                "(select id from egw_letterofacceptance where loanumber in (:loaNumber))");
         paramValues.put("loaNumber", loaNumbers);
     }
 
     private void searchByLOANumberLike(List<String> loaNumbers, StringBuilder params, Map<String, Object> paramValues) {
         addAnd(params);
         params.append(
-                "cb.letterOfAcceptanceEstimate = loaestimate.id and upper(loaestimate.letterOfAcceptance) like (:loaNumber)");
+                "cb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in " +
+                        "(select id from egw_letterofacceptance where upper(loanumber) like (:loaNumber))");
         paramValues.put("loaNumber", "%" + loaNumbers.get(0).toUpperCase() + "%");
     }
     

@@ -421,6 +421,9 @@ public class DataUploadUtils {
 			if(key.equals("RequestInfo") || key.equals("requestIndo")) {
 				continue;
 			}else {
+				if(!(objectMap.get(key) instanceof Map)) {
+					continue;
+				}
 				Map<String, Object> moduleObject = (Map<String, Object>) objectMap.get(key);
 				for(String mapKey: moduleObject.keySet()) {
 					if(moduleObject.get(mapKey) instanceof List) {

@@ -472,8 +472,8 @@ public class DataUploadService {
             		}
                 	StringBuilder expression = new StringBuilder();
 	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-	            	logger.info("expression: "+expression);
-	            	logger.info("key: "+key);
+	            	logger.debug("expression: "+expression);
+	            	logger.debug("key: "+key);
             		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
             	}	            	
 			}

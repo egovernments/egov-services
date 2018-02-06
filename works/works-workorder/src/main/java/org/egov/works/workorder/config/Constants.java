@@ -185,7 +185,10 @@ public class Constants {
 
     public static final String KEY_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID= "WORKS.TRACKMILESTONE.MILESTONEACTIVITYID.INVALID";
     public static final String MESSAGE_TRACKMILESTONE_MILESTONEACTIVITYID_INVALID = "Given Milestone Activity is invalid:";
-    
+
+    public static final String KEY_TRACKMILESTONE_FINAL_BILL_CREATED= "WORKS.TRACKMILESTONE.FINAL.BILL.CREATED";
+    public static final String MESSAGE_TRACKMILESTONE_FINAL_BILL_CREATED = "Track milestone is not allowed, Final bill already created";
+
     public static final String KEY_WORKORDER_STATUS_REQUIRED= "WORKORDER_STATUS_REQUIRED";
     public static final String MESSAGE_WORKORDER_STATUS_REQUIRED = "Work order status is required";
 

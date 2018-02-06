@@ -1,7 +1,11 @@
 package org.egov.works.workorder.domain.validator;
 
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.workorder.config.Constants;
+import org.egov.works.workorder.domain.repository.ContractorBillRepository;
+import org.egov.works.workorder.domain.repository.LetterOfAcceptanceEstimateRepository;
+import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.workorder.domain.repository.MilestoneRepository;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,15 @@ import java.util.Map;
 public class TrackMilestoneValidator {
     @Autowired
     private MilestoneRepository milestoneRepository;
+
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+
+    @Autowired
+    private LetterOfAcceptanceEstimateRepository letterOfAcceptanceEstimateRepository;
+
+    @Autowired
+    private ContractorBillRepository contractorBillRepository;
 
     public void validate(TrackMilestoneRequest trackMilestoneRequest, Boolean isUpdate) {
         Map<String, String> validationMessages = new HashMap<>();
@@ -42,6 +55,7 @@ public class TrackMilestoneValidator {
                 if (!(totalPercentage.compareTo(BigDecimal.ZERO) == 1 && totalPercentage.compareTo(new BigDecimal(100)) == -1))
                     validationMessages.put(Constants.KEY_TRACKMILESTONE_IN_PROGRESS, Constants.MESSAGE_TRACKMILESTONE_IN_PROGRESS);
             }
+            validateForFinalBill(trackMilestone, validationMessages, trackMilestoneRequest.getRequestInfo());
         }
         if (validationMessages.size() > 0) throw new CustomException(validationMessages);
     }
@@ -81,5 +95,16 @@ public class TrackMilestoneValidator {
 
         }
         return totalPercentage;
+    }
+
+    private void validateForFinalBill(TrackMilestone trackMilestone, Map<String, String> validationMessages, RequestInfo requestInfo){
+        Milestone milestone = milestoneRepository.search(MilestoneSearchContract.builder().ids(Arrays.asList(trackMilestone.getMilestone().getId())).build(), requestInfo).get(0);
+        LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = letterOfAcceptanceEstimateRepository.searchLOAs(LetterOfAcceptanceEstimateSearchContract.builder().ids(Arrays.asList(milestone.getLetterOfAcceptanceEstimate().getId())).build(), requestInfo).get(0);
+        LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceRepository.searchLOAs(LetterOfAcceptanceSearchContract.builder().ids(Arrays.asList(letterOfAcceptanceEstimate.getLetterOfAcceptance())).build(), requestInfo).get(0);
+        ContractorBillResponse contractorBillResponse = contractorBillRepository.getByLoaNumbers(ContractorBillSearchContract.builder().letterOfAcceptanceNumbers(Arrays.asList(letterOfAcceptance.getLoaNumber())).billTypes(Arrays.asList("Final")).build(), trackMilestone.getTenantId(), requestInfo);
+        ContractorBill contractorBill = contractorBillResponse.getContractorBills().get(0);
+        if(contractorBill!=null && !contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)){
+            validationMessages.put(Constants.KEY_TRACKMILESTONE_FINAL_BILL_CREATED, Constants.MESSAGE_TRACKMILESTONE_FINAL_BILL_CREATED);
+        }
     }
 }

@@ -107,6 +107,52 @@ class ApplyLeave extends React.Component {
         if (_this.state.leaveSet.leaveType.id) {
 
           if (_from && _to) {
+
+            //Calling prefix suffix and enclosing holiday api
+            var asOnDate = _this.state.leaveSet.toDate;
+            var fromDate = _this.state.leaveSet.fromDate;
+            var leaveDays = _this.state.leaveSet.leaveDays;
+            var enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
+            var includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
+
+            console.log("Enclosing : ", enclosingHoliday, " includePrefixSuffix : ", includePrefixSuffix);
+
+            if (enclosingHoliday || enclosingHoliday=="TRUE" || enclosingHoliday =="true") {
+              commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+                if (res) {
+                  _this.setState({
+                    encloseHoliday: res.Holiday
+                  });
+
+                }
+              });
+
+            } else {
+              _this.setState({
+                encloseHoliday: ""
+              });
+            }
+
+            if (includePrefixSuffix || includePrefixSuffix=="TRUE" || includePrefixSuffix =="true") {
+              commonApiPost("egov-common-masters", "holidays", "_searchpreficsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+                if (res) {
+
+                  _this.setState({
+                    perfixSuffix: res.Holiday[0]
+                  });
+
+                }
+              });
+
+            } else {
+              _this.setState({
+                perfixSuffix: ""
+              });
+            }
+
+
+
+
             var dateParts1 = _from.split("/");
             var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
             var date1 = new Date(newDateStr);
@@ -165,6 +211,8 @@ class ApplyLeave extends React.Component {
                   var leaveType = _this.state.leaveSet.leaveType.id;
                   var asOnDate = _this.state.leaveSet.toDate;
                   var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
+
+
                   commonApiPost("hr-leave", "eligibleleaves", "_search", {
                     leaveType, tenantId, asOnDate, employeeid
                   }, function (err, res) {
@@ -269,12 +317,12 @@ class ApplyLeave extends React.Component {
       var fromDate = _this.state.leaveSet.fromDate;
       var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
       var leaveDays = _this.state.leaveSet.leaveDays;
-      var enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, encloseHoliday);
-      var includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, includePrefixSuffix);
+      var enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
+      var includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
 
-      console.log("Enclosing : ",enclosingHoliday," includePrefixSuffix : ", includePrefixSuffix);
+      console.log("Enclosing : ", enclosingHoliday, " includePrefixSuffix : ", includePrefixSuffix);
 
-      if (enclosingHoliday) {
+      if (enclosingHoliday || enclosingHoliday=="TRUE" || enclosingHoliday =="true") {
         commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
           if (res) {
 
@@ -291,7 +339,7 @@ class ApplyLeave extends React.Component {
         });
       }
 
-      if (includePrefixSuffix) {
+      if (includePrefixSuffix || includePrefixSuffix=="TRUE" || includePrefixSuffix =="true") {
         commonApiPost("egov-common-masters", "holidays", "_searchpreficsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
           if (res) {
 
@@ -469,93 +517,93 @@ class ApplyLeave extends React.Component {
     };
 
     const renderEnclosingHolidayTr = () => {
-      if(isSearchClicked){
+      if (isSearchClicked) {
         return encloseHoliday.map((item, ind) => {
-            return (
-                <tr key={ind}>
-                <td>{item.name}</td>
-                <td>{item.applicableOn}</td>
-                </tr>
-            )
+          return (
+            <tr key={ind}>
+              <td>{item.name}</td>
+              <td>{item.applicableOn}</td>
+            </tr>
+          )
         })
       }
     }
 
     const showEnclosingHolidayTable = () => {
-        if(this.state.encloseHoliday) {
-            return (
-                <div>
-                    <div className="land-table">
-                        <table id="employeeTable" className="table table-bordered">
-                            <thead>
-                                <tr>
-                                  <th>Holiday Name</th>
-                                  <th>Holiday Date </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {renderEnclosingHolidayTr()}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )
-        }
+      if (this.state.encloseHoliday) {
+        return (
+          <div>
+            <div className="land-table">
+              <table id="employeeTable" className="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Holiday Name</th>
+                    <th>Holiday Date </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renderEnclosingHolidayTr()}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )
+      }
     }
 
     const showPrefixSuffix = () => {
       if (this.state.perfixSuffix) {
         return (
           <div>
-          <div className="row">
-            <div className="col-sm-6">
-              <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label htmlFor="">Prefix From Date</label>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Prefix From Date</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="text" id="perfixFromDate" name="perfixFromDate" value={perfixSuffix.prefixFromDate}
+                      disabled />
+                  </div>
                 </div>
-                <div className="col-sm-6">
-                  <input type="text" id="perfixFromDate" name="perfixFromDate" value={perfixSuffix.prefixFromDate}
-                    disabled />
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Prefix To Date</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="text" id="prefixToDate" name="prefixToDate" value={perfixSuffix.prefixToDate}
+                      disabled />
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="col-sm-6">
-              <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label htmlFor="">Prefix To Date</label>
-                </div>
-                <div className="col-sm-6">
-                  <input type="text" id="prefixToDate" name="prefixToDate" value={perfixSuffix.prefixToDate}
-                    disabled />
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="row">
-            <div className="col-sm-6">
-              <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label htmlFor="">Suffix From Date</label>
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Suffix From Date</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="text" id="suffixFromDate" name="suffixFromDate" value={perfixSuffix.suffixFromDate}
+                      disabled />
+                  </div>
                 </div>
-                <div className="col-sm-6">
-                  <input type="text" id="suffixFromDate" name="suffixFromDate" value={perfixSuffix.suffixFromDate}
-                    disabled />
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Suffix To Date</label>
+                  </div>
+                  <div className="col-sm-6">
+                    <input type="text" id="suffixToDate" name="suffixToDate" value={perfixSuffix.suffixToDate}
+                      disabled />
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="col-sm-6">
-              <div className="row">
-                <div className="col-sm-6 label-text">
-                  <label htmlFor="">Suffix To Date</label>
-                </div>
-                <div className="col-sm-6">
-                  <input type="text" id="suffixToDate" name="suffixToDate" value={perfixSuffix.suffixToDate}
-                    disabled />
-                </div>
-              </div>
-            </div>
-          </div>
           </div>
         )
       }

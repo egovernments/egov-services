@@ -24,10 +24,6 @@ public class BinDetailsEntity {
 
     private String asset = null;
 
-    private Boolean rfidAssigned = null;
-
-    private String rfid = null;
-
     public BinDetails toDomain() {
 
         final BinDetails binDetails = new BinDetails();
@@ -35,8 +31,6 @@ public class BinDetailsEntity {
         binDetails.setId(id);
         binDetails.setCollectionPoint(collectionPoint);
         binDetails.setAsset(Asset.builder().code(asset).build());
-        binDetails.setRfidAssigned(rfidAssigned);
-        binDetails.setRfid(rfid);
         return binDetails;
 
     }

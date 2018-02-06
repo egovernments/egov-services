@@ -290,7 +290,7 @@ serviceMaps:
        - jsonPath: $.collectionPoints.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, asset, rfidassigned, rfid) VALUES (?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, asset) VALUES (?, ?, ?, ?);
       basePath: $.collectionPoints.*.binDetails.*
       jsonMaps:
        
@@ -302,11 +302,6 @@ serviceMaps:
 
        - jsonPath: $.collectionPoints.*.binDetails.*.asset.code
          
-       - jsonPath: $.collectionPoints.*.binDetails.*.rfidAssigned
-         dbType: BOOLEAN
-
-       - jsonPath: $.collectionPoints.*.binDetails.*.rfid
-
 
     - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.collectionPointDetails.*
@@ -349,7 +344,7 @@ serviceMaps:
        - jsonPath: $.collectionPoints.*.tenantId
 
 
-    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, asset, rfidassigned, rfid) VALUES (?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_bindetails(id, tenantid, collectionpoint, asset) VALUES (?, ?, ?, ?);
       basePath: $.collectionPoints.*.binDetails.*
       jsonMaps:
        
@@ -361,11 +356,6 @@ serviceMaps:
 
        - jsonPath: $.collectionPoints.*.binDetails.*.asset.code
          
-       - jsonPath: $.collectionPoints.*.binDetails.*.rfidAssigned
-         dbType: BOOLEAN
-
-       - jsonPath: $.collectionPoints.*.binDetails.*.rfid
-
 
     - query: INSERT INTO egswm_collectionpointdetails(id, tenantid, collectionType, collectionPoint, garbageEstimate, description) VALUES (?, ?, ?, ?, ?, ?);
       basePath: $.collectionPoints.*.collectionPointDetails.*

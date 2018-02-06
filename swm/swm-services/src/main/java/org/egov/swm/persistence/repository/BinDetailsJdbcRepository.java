@@ -49,12 +49,6 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("id", searchRequest.getId());
         }
 
-        if (searchRequest.getRfidAssigned() != null) {
-            addAnd(params);
-            params.append("rfidAssigned =:rfidAssigned");
-            paramValues.put("rfidAssigned", searchRequest.getRfidAssigned());
-        }
-
         if (searchRequest.getAssetCode() != null) {
             addAnd(params);
             params.append("asset =:asset");
@@ -77,12 +71,6 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("collectionPoint =:collectionPoint");
             paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
-        }
-
-        if (searchRequest.getRfid() != null) {
-            addAnd(params);
-            params.append("rfid =:rfid");
-            paramValues.put("rfid", searchRequest.getRfid());
         }
 
         if (params.length() > 0)

@@ -1374,10 +1374,6 @@ paths:
             format: singleValueList
             in: query
             description: Route code associated with trip 
-          - name: tenantId
-            type: string
-            in: query
-            description: tenantId of the Vehicle trip sheet
           - name: tripStartDate
             type: string
             in: query
@@ -1503,23 +1499,10 @@ paths:
           - name: toDate
             type: string
             in: query
-            description: search for vendor payment details To date specified            
           - name: contractNo
             type: string
             in: query
             description: Contract Number of the PaymentDetails
-          - name: tenantId
-            type: string
-            in: query
-            description: tenantId of the PaymentDetails
-          - name: invoiceFromDate
-            type: string
-            in: query
-            description: search for from invoice date specified
-          - name: invoiceToDate
-            type: string
-            in: query
-            description: search for till invoice date specified
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:
@@ -1607,10 +1590,6 @@ paths:
             type: string
             in: query
             description: comma seperated list of payment numbers
-          - name: tenantId
-            type: string
-            in: query
-            description: tenantId of the PaymentDetails
           - name: voucherNumber
             type: string
             in: query
@@ -1772,15 +1751,6 @@ definitions:
           minLength: 1
         asset:
            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/contracts/v1-0-0.yml#/definitions/Asset'
-        rfidAssigned:
-          type: boolean
-          format: checkbox
-          description: Option should be selected if RFID is assigned
-        rfid:
-          type: string
-          description: rfid of the Collection Point. If rfidAssigned is TRUE, this field is mandatory
-          maxLength: 256
-          minLength: 1
       required:
       - tenantId
       - asset
@@ -3796,6 +3766,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

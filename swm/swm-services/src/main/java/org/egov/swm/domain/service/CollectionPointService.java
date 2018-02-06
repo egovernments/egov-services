@@ -229,14 +229,6 @@ public class CollectionPointService {
 
                 }
 
-                if (bd.getRfid() != null) {
-                    if (rfidsMap.get(bd.getRfid()) != null)
-                        throw new CustomException("Rfid", "Duplicate RFIDs in given Bin details: " + bd.getRfid());
-
-                    rfidsMap.put(bd.getRfid(), bd.getRfid());
-
-                }
-
             }
         }
 
@@ -258,19 +250,6 @@ public class CollectionPointService {
                         bd.getAsset().getCode(), "collectionPoint", collectionPoint.getCode()))
                     throw new CustomException("BinId",
                             "The selected bin/asset is already associated with another collection point");
-
-            if (bd.getRfidAssigned() != null && bd.getRfidAssigned())
-                if (bd.getRfid() == null || bd.getRfid().isEmpty())
-                    throw new CustomException("RFID",
-                            "The field RFID Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-            if (bd.getRfid() != null)
-                if (bd.getRfidAssigned() && bd.getRfidAssigned() != null)
-                    if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid(),
-                            "collectionPoint", collectionPoint.getCode()))
-                        throw new CustomException("RFID", "The field RFID must be unique in the system The  value "
-                                + bd.getRfid()
-                                + " for the field RFID already exists in the system. Please provide different value ");
 
         }
     }

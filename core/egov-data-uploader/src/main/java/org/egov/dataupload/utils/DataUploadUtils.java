@@ -3,6 +3,8 @@ package org.egov.dataupload.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +37,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.JsonPath;
 
 
@@ -87,7 +91,7 @@ public class DataUploadUtils {
 			            		logger.debug("date: "+cell.getDateCellValue());
 			            		dataList.add(cell.getDateCellValue().getTime());
 		            	    }else {
-		            	    	logger.info("numeric: "+cell.getNumericCellValue());
+		            	    	logger.debug("numeric: "+cell.getNumericCellValue());
 		            	    	dataList.add(cell.getNumericCellValue());
 		            	    }
 		            	}
@@ -106,14 +110,14 @@ public class DataUploadUtils {
 			            			dataList.add(cell.getStringCellValue());
 			            		}
 		            		}else if(!cell.getStringCellValue().trim().isEmpty()){
-			            		logger.info("string: "+cell.getStringCellValue());
+			            		logger.debug("string: "+cell.getStringCellValue());
 		            			dataList.add(cell.getStringCellValue());
 		            		}else{
 			            		dataList.add(null);
 		            		}
 		            	}
 		            	else if(cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
-		            		logger.info("boolean: "+cell.getBooleanCellValue());
+		            		logger.debug("boolean: "+cell.getBooleanCellValue());
 		            		dataList.add(cell.getBooleanCellValue());
 
 		            	}
@@ -410,6 +414,40 @@ public class DataUploadUtils {
 			excelData = result;
 		}
 		return result;
+	}
+	
+	public Map<String, Object> eliminateEmptyList(Map<String, Object> objectMap) throws IllegalAccessException{
+		for(String key: objectMap.keySet()) {
+			if(key.equals("RequestInfo") || key.equals("requestIndo")) {
+				continue;
+			}else {
+				Map<String, Object> moduleObject = (Map<String, Object>) objectMap.get(key);
+				for(String mapKey: moduleObject.keySet()) {
+					if(moduleObject.get(mapKey) instanceof List) {
+						logger.info("entering checkNull for: "+mapKey);
+						if(checkNullPropsOfObject(((List)moduleObject.get(mapKey)).get(0))) {
+							logger.info("setting empty list for the key: "+mapKey);
+							moduleObject.put(mapKey, new ArrayList<>());
+						}
+					}
+				}
+				objectMap.put(key, moduleObject);
+			}
+		}
+		return objectMap;
+	}
+	
+	public boolean checkNullPropsOfObject(Object obj) throws IllegalAccessException {
+		logger.info("Object: "+obj);
+		Map<String, Object> objectMap = (Map<String, Object>) obj; 
+		for(Entry<String, Object> entry: objectMap.entrySet()) {
+			if(entry.getKey().equals("tenantId"))
+				continue;
+			
+			if(null != entry.getValue())
+				return false;
+		}
+	    return true;            
 	}
 }
 

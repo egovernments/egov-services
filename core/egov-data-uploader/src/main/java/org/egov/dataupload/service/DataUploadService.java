@@ -472,8 +472,8 @@ public class DataUploadService {
             		}
                 	StringBuilder expression = new StringBuilder();
 	            	String key = dataUploadUtils.getJsonPathKey(jsonPath, expression);
-	            	logger.debug("expression: "+expression);
-	            	logger.debug("key: "+key);
+	            	logger.info("expression: "+expression);
+	            	logger.info("key: "+key);
             		documentContext.put(expression.toString(), key, filteredList.get(k).get(j));
             	}	            	
 			}
@@ -489,6 +489,8 @@ public class DataUploadService {
 			Type type = new TypeToken<Map<String, Object>>() {}.getType();
 			Gson gson = new Gson();
 			Map<String, Object> objectMap = gson.fromJson(documentContext.jsonString(), type);
+			//this is for setting child objects to empty list in the request if the excel doesn't have values for child.
+			objectMap = dataUploadUtils.eliminateEmptyList(objectMap);
         	filteredListObjects.add(objectMap);
 		}
 		List<String> uniqueKeysForInnerObject = new ArrayList<>();
@@ -554,6 +556,9 @@ public class DataUploadService {
 	    		logger.info("originalChild: "+originalChild);
 	            List newChild = (List) newMap.get(key);
 	    		logger.info("newChild: "+newChild);
+	    		if(originalChild.isEmpty() || newChild.isEmpty()) {
+	    			continue;
+	    		}
 	    		Map<Object, Object> originalChildEntry = (Map) originalChild.get(originalChild.size() - 1); //other entries have been verified in previous iterations
 	    		Map<Object, Object> newChildEntry = (Map) newChild.get(0);  //cuz definitely the list will always have only one entry.
 	    		int counter = 0;

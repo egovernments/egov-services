@@ -15,9 +15,9 @@ import java.util.Objects;
  * An Object that holds Remarks Master data
  */
 @ApiModel(description = "An Object that holds Remarks Master data")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-02T14:41:12.111Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-10T13:23:45.489Z")
 
-public class Remarks   {
+public class Remarks {
   @JsonProperty("id")
   private String id = null;
 
@@ -25,10 +25,10 @@ public class Remarks   {
   private String tenantId = null;
 
   @JsonProperty("typeOfDocument")
-  private String typeOfDocument = null;
+  private TypeOfDocument typeOfDocument = null;
 
   @JsonProperty("remarksType")
-  private String remarksType = null;
+  private RemarksType remarksType = null;
 
   @JsonProperty("remarksDetails")
   private List<RemarksDetail> remarksDetails = new ArrayList<RemarksDetail>();
@@ -80,7 +80,7 @@ public class Remarks   {
     this.tenantId = tenantId;
   }
 
-  public Remarks typeOfDocument(String typeOfDocument) {
+  public Remarks typeOfDocument(TypeOfDocument typeOfDocument) {
     this.typeOfDocument = typeOfDocument;
     return this;
   }
@@ -92,16 +92,17 @@ public class Remarks   {
   @ApiModelProperty(required = true, value = "Type Of Document of the Remarks Master")
   @NotNull
 
- @Size(min=1,max=100)
-  public String getTypeOfDocument() {
+  @Valid
+
+  public TypeOfDocument getTypeOfDocument() {
     return typeOfDocument;
   }
 
-  public void setTypeOfDocument(String typeOfDocument) {
+  public void setTypeOfDocument(TypeOfDocument typeOfDocument) {
     this.typeOfDocument = typeOfDocument;
   }
 
-  public Remarks remarksType(String remarksType) {
+  public Remarks remarksType(RemarksType remarksType) {
     this.remarksType = remarksType;
     return this;
   }
@@ -113,12 +114,13 @@ public class Remarks   {
   @ApiModelProperty(required = true, value = "Remarks Type of the Remarks Master")
   @NotNull
 
- @Size(min=1,max=100)
-  public String getRemarksType() {
+  @Valid
+
+  public RemarksType getRemarksType() {
     return remarksType;
   }
 
-  public void setRemarksType(String remarksType) {
+  public void setRemarksType(RemarksType remarksType) {
     this.remarksType = remarksType;
   }
 
@@ -218,7 +220,7 @@ public class Remarks   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Remarks {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    typeOfDocument: ").append(toIndentedString(typeOfDocument)).append("\n");

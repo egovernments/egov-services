@@ -57,7 +57,7 @@ public class WorkOrderValidator {
             }
             if (!isUpdate) {
                 validateWorkOrderCreated(workOrderRequest, messages, workOrder);
-                validateWorkOrderDetail(workOrderRequest, messages, workOrder);
+               // validateWorkOrderDetail(workOrderRequest, messages, workOrder);
             }
             LetterOfAcceptanceResponse letterOfAcceptanceResponse = getLetterOfAcceptanceResponse(workOrderRequest, workOrder);
             validateLOA(messages, letterOfAcceptanceResponse);

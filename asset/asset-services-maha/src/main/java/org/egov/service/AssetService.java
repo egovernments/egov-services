@@ -2,6 +2,7 @@ package org.egov.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.egov.contract.AssetResponse;
 import org.egov.mdms.service.MdmsClientService;
 import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
+import org.egov.model.AuditDetails;
 import org.egov.model.CurrentValue;
 import org.egov.model.Department;
 import org.egov.model.FundSource;
@@ -95,7 +97,7 @@ public class AssetService {
 		asset.setId(assetCommonService.getNextId(Sequence.ASSETSEQUENCE));
 
 		asset.setStatus(Status.CAPITALIZED.toString());
-
+        log.info("assetCommonService.getAuditDetails(assetRequest"+assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));
 		asset.setAuditDetails(assetCommonService.getAuditDetails(assetRequest.getRequestInfo()));
 		/* logAwareKafkaTemplate.send(appProps.getStartWfAssetTopicName(),) */
 		logAwareKafkaTemplate.send(appProps.getCreateAssetTopicNameTemp(), assetRequest);
@@ -179,13 +181,15 @@ public class AssetService {
 			}
 			
 		}
+		
+		AuditDetails auditDetails=AuditDetails.builder().createdBy(asset.getAuditDetails().getCreatedBy()).lastModifiedBy(asset.getAuditDetails().getCreatedBy()).createdDate(asset.getAuditDetails().getCreatedDate()).lastModifiedDate(new Date().getTime()).build();
+		asset.setAuditDetails(auditDetails);
+		log.info("asset"+asset);
 		assetRequest.setAsset(asset);
-		
-		
 		List<Long> assetCurrentvalue = currentValueService.getNonTransactedCurrentValues(assetIds, asset.getTenantId(),
 				assetRequest.getRequestInfo());
 		if (!(assetResponse.getAssets().get(0).getGrossValue().equals(asset.getGrossValue()))) {
-			System.err.println("if gross");
+			log.info("if gross");
 
 			if (assetCurrentvalue.contains(asset.getId())) {
 				currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId())
@@ -202,9 +206,9 @@ public class AssetService {
 			if (!errorMap.isEmpty())
 				throw new CustomException(errorMap);
 		} else {
-			System.err.println("else for gross"
+			log.info("else for gross"
 					+ (assetResponse.getAssets().get(0).getGrossValue().equals(asset.getGrossValue())));
-			System.err.println("assetResponse.getAssets().get(0).getGrossValue()"
+			log.info("assetResponse.getAssets().get(0).getGrossValue()"
 					+ assetResponse.getAssets().get(0).getGrossValue());
 			if (assetCurrentvalue.contains(asset.getId())) {
 				currentValue = CurrentValue.builder().assetId(asset.getId()).tenantId(asset.getTenantId())
@@ -234,12 +238,12 @@ public class AssetService {
 			JSONArray jsonArray = mDRepo.getMastersByListParams(moduleMap, requestInfo, searchAsset.getTenantId())
 					.get("ASSET").get("AssetCategory");
 			Map<Long, AssetCategory> asCatMap = mDService.getAssetCategoryMapFromJSONArray(jsonArray);
-			System.err.println("asCatMap for assetcategory name" + asCatMap + "asCatMap.keySet()" + asCatMap.keySet());
+			log.info("asCatMap for assetcategory name" + asCatMap + "asCatMap.keySet()" + asCatMap.keySet());
 			if (searchAsset.getCategoryName() != null)
 				searchAsset.setAssetSubCategory(asCatMap.keySet());
 
 		}
-		System.err.println("searchAsset.get" + searchAsset.getAssetSubCategory());
+		log.info("searchAsset.get" + searchAsset.getAssetSubCategory());
 
 		enrichParentCategory(searchAsset, requestInfo);
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);

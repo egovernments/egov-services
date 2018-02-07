@@ -15,6 +15,7 @@ public class ShiftSearch extends Shift {
     private String departmentCode;
     private String designationCode;
     private String sortBy;
+    private Boolean validate;
     private Integer pageSize;
     private Integer offset;
 }

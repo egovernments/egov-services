@@ -1,6 +1,9 @@
 package org.egov.swm.domain.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -92,6 +95,10 @@ public class ShiftService {
         ShiftType shiftType;
         Department department;
         DesignationResponse designationResponse;
+        ShiftSearch search;
+        Pagination<Shift> shifts;
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (Shift shift : shiftRequest.getShifts()) {
 
             if (shift.getShiftType() != null
@@ -136,6 +143,38 @@ public class ShiftService {
             if (designationResponse != null && designationResponse.getDesignation() != null
                     && !designationResponse.getDesignation().isEmpty())
                 shift.setDesignation(designationResponse.getDesignation().get(0));
+
+            search = new ShiftSearch();
+            search.setTenantId(shift.getTenantId());
+            search.setShiftTypeCode(shift.getShiftType().getCode());
+            search.setShiftStartTime(shift.getShiftStartTime());
+            search.setShiftEndTime(shift.getShiftEndTime());
+            search.setValidate(true);
+            
+            shifts = search(search);
+
+            if ((shift.getCode() == null || shift.getCode().isEmpty())
+                    && shifts != null && shifts.getPagedData() != null
+                    && !shifts.getPagedData().isEmpty()) {
+
+                throw new CustomException("Shift",
+                        "Shift data already exist for the selected Shift Type:"
+                                + shift.getShiftType().getName() + " and Shift start time: "
+                                + dateFormat.format(new Date(shift.getShiftStartTime())) + " and Shift end time:"
+                                + dateFormat.format(new Date(shift.getShiftEndTime())));
+            }
+
+            if (shift.getCode() != null && !shift.getCode().isEmpty()
+                    && shifts != null && shifts.getPagedData() != null
+                    && !shifts.getPagedData().isEmpty()
+                    && !shift.getCode()
+                            .equalsIgnoreCase(shifts.getPagedData().get(0).getCode())) {
+                throw new CustomException("Shift",
+                        "Shift data already exist for the selected Shift Type:"
+                                + shift.getShiftType().getName() + " and Shift start time: "
+                                + dateFormat.format(new Date(shift.getShiftStartTime())) + " and Shift end time:"
+                                + dateFormat.format(new Date(shift.getShiftEndTime())));
+            }
 
         }
     }

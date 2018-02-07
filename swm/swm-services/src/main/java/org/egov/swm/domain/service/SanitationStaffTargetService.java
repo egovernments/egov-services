@@ -250,18 +250,7 @@ public class SanitationStaffTargetService {
             sstSearch.setEmployeeCode(sanitationStaffTarget.getEmployee().getCode());
             sstSearch.setValidate(true);
 
-            System.out.println("sanitationStaffTarget.getTenantId()" + sanitationStaffTarget.getTenantId());
-            System.out.println("sanitationStaffTarget.getRoute().getCode()" + sanitationStaffTarget.getRoute().getCode());
-            System.out
-                    .println("sanitationStaffTarget.getSwmProcess().getCode()" + sanitationStaffTarget.getSwmProcess().getCode());
-            System.out.println("sanitationStaffTarget.getEmployee().getCode()" + sanitationStaffTarget.getEmployee().getCode());
-            System.out.println("sanitationStaffTarget.getTargetFrom()" + sanitationStaffTarget.getTargetFrom());
-            System.out.println("sanitationStaffTarget.getTargetTo()" + sanitationStaffTarget.getTargetTo());
-
             sstSearchResponse = search(sstSearch);
-
-            if (sstSearchResponse != null && sstSearchResponse.getPagedData() != null)
-                System.out.println("sstSearchResponse.getPagedData().size()" + sstSearchResponse.getPagedData().size());
 
             if ((sanitationStaffTarget.getTargetNo() == null || sanitationStaffTarget.getTargetNo().isEmpty())
                     && sstSearchResponse != null && sstSearchResponse.getPagedData() != null

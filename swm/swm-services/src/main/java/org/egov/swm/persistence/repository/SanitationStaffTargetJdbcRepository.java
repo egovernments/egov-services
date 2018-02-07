@@ -175,9 +175,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
         final List<SanitationStaffTarget> sanitationStaffTargetList = new ArrayList<>();
 
-        System.out.println("staff target validate searchQuery----" + searchQuery.toString());
-        System.out.println("staff target validate paramValues----" + paramValues.toString());
-
         final List<SanitationStaffTargetEntity> sanitationStaffTargetEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 

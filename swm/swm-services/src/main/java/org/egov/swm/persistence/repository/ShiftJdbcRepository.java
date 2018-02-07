@@ -1,10 +1,13 @@
 package org.egov.swm.persistence.repository;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
@@ -87,6 +90,42 @@ public class ShiftJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("designation =:designation");
             paramValues.put("designation", searchRequest.getDesignationCode());
+        }
+        DateFormat validationDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+
+        if (searchRequest.getValidate() == null || !searchRequest.getValidate()) {
+            if (searchRequest.getShiftStartTime() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') >=:shiftStartTime");
+                paramValues.put("shiftStartTime", validationDateFormat.format(searchRequest.getShiftStartTime()));
+            }
+
+            if (searchRequest.getShiftEndTime() != null) {
+                addAnd(params);
+                params.append(
+                        "to_char((to_timestamp(shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata')::date,'yyyy-mm-dd') <=:shiftEndTime");
+                paramValues.put("shiftEndTime", validationDateFormat.format(searchRequest.getShiftEndTime()));
+            }
+        }
+
+        if (searchRequest.getShiftStartTime() != null && searchRequest.getShiftEndTime() != null &&
+                searchRequest.getValidate() != null && searchRequest.getValidate()) {
+            addAnd(params);
+            params.append("((to_timestamp(targetfrom/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " (to_timestamp(:shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata')"
+                    +
+                    " or (to_timestamp(targetto/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " (to_timestamp(:shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata')"
+                    +
+                    " or (to_timestamp(:shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " (to_timestamp(targetfrom/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(targetto/1000) AT TIME ZONE 'Asia/Kolkata')"
+                    +
+                    " or (to_timestamp(:shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " (to_timestamp(targetfrom/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(targetto/1000) AT TIME ZONE 'Asia/Kolkata'))");
+            paramValues.put("shiftStartTime", searchRequest.getShiftStartTime());
+            paramValues.put("shiftEndTime", searchRequest.getShiftEndTime());
         }
 
         Pagination<Shift> page = new Pagination<>();

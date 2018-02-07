@@ -43,6 +43,7 @@ class ApplyLeave extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
+
     $('#availableDays,#leaveDays,#name,#code').prop("disabled", true);
 
     if (getUrlVars()["type"]) $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Leave Application");
@@ -106,63 +107,59 @@ class ApplyLeave extends React.Component {
 
         if (_this.state.leaveSet.leaveType.id) {
 
+
+
           if (_from && _to) {
 
             //Calling prefix suffix and enclosing holiday api
-            var asOnDate = _this.state.leaveSet.toDate;
-            var fromDate = _this.state.leaveSet.fromDate;
-            var leaveDays = _this.state.leaveSet.leaveDays;
-            var enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
-            var includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
+            let asOnDate = _this.state.leaveSet.toDate;
+            let fromDate = _this.state.leaveSet.fromDate;
+            let leaveDays = _this.state.leaveSet.leaveDays;
+            let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
+            let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
+            let dateParts1 = _from.split("/");
+            let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
+            let date1 = new Date(newDateStr);
+            let dateParts2 = _to.split("/");
+            let newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
+            let date2 = new Date(newDateStr);
+            let leaveType = _this.state.leaveSet.leaveType.id;
+            let asOnDate = _this.state.leaveSet.toDate;
+            let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
 
-            console.log("Enclosing : ", enclosingHoliday, " includePrefixSuffix : ", includePrefixSuffix);
-
-            if (enclosingHoliday || enclosingHoliday=="TRUE" || enclosingHoliday =="true") {
-              commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-                if (res) {
-                  _this.setState({
-                    encloseHoliday: res.Holiday
-                  });
-
-                }
-              });
-
-            } else {
-              _this.setState({
-                encloseHoliday: ""
-              });
-            }
-
-            if (includePrefixSuffix || includePrefixSuffix=="TRUE" || includePrefixSuffix =="true") {
-              commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-                if (res) {
-
-                  _this.setState({
-                    perfixSuffix: res.Holiday[0]
-                  });
-
-                }
-              });
-
-            } else {
-              _this.setState({
-                perfixSuffix: ""
-              });
-            }
-
-
-
-
-            var dateParts1 = _from.split("/");
-            var newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
-            var date1 = new Date(newDateStr);
-            var dateParts2 = _to.split("/");
-            var newDateStr = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
-            var date2 = new Date(newDateStr);
             if (date1 > date2) {
               showError("From date must be before End date.");
               $('#' + _triggerId).val("");
             } else {
+
+              if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
+                commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+                  if (res) {
+                    _this.setState({
+                      encloseHoliday: res.Holiday
+                    });
+                  }
+                });
+              } else {
+                _this.setState({
+                  encloseHoliday: ""
+                });
+              }
+
+              if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
+                commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+                  if (res) {
+                    _this.setState({
+                      perfixSuffix: res.Holiday[0]
+                    });
+                  }
+                });
+              } else {
+                _this.setState({
+                  perfixSuffix: ""
+                });
+              }
+
               var holidayList = [], m1 = dateParts1[1], m2 = dateParts2[1], y1 = dateParts1[2], y2 = dateParts2[2];
               for (var i = 0; i < allHolidayList.length; i++) {
                 if (allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
@@ -206,39 +203,32 @@ class ApplyLeave extends React.Component {
                 }
               });
 
-              setTimeout(function () {
-                if (_this.state.leaveSet.toDate && _this.state.leaveSet.leaveType.id) {
-                  var leaveType = _this.state.leaveSet.leaveType.id;
-                  var asOnDate = _this.state.leaveSet.toDate;
-                  var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
 
-
-                  commonApiPost("hr-leave", "eligibleleaves", "_search", {
-                    leaveType, tenantId, asOnDate, employeeid
-                  }, function (err, res) {
-                    if (res) {
-                      var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
-                      if (_day <= 0 || _day == "") {
-                        _this.setState({
-                          leaveSet: {
-                            ..._this.state.leaveSet,
-                            availableDays: ""
-                          }
-                        });
-                        return (showError("You do not have leave for this leave type."));
-                      }
-                      else {
-                        _this.setState({
-                          leaveSet: {
-                            ..._this.state.leaveSet,
-                            availableDays: _day
-                          }
-                        });
-                      }
+                commonApiPost("hr-leave", "eligibleleaves", "_search", {
+                  leaveType, tenantId, asOnDate, employeeid
+                }, function (err, res) {
+                  if (res) {
+                    var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+                    if (_day <= 0 || _day == "") {
+                      _this.setState({
+                        leaveSet: {
+                          ..._this.state.leaveSet,
+                          availableDays: ""
+                        }
+                      });
+                      return (showError("You do not have leave for this leave type."));
                     }
-                  });
-                }
-              }, 200);
+                    else {
+                      _this.setState({
+                        leaveSet: {
+                          ..._this.state.leaveSet,
+                          availableDays: _day
+                        }
+                      });
+                    }
+                  }
+                });
+              
             }
           } else {
             _this.setState({
@@ -248,6 +238,8 @@ class ApplyLeave extends React.Component {
               }
             });
           }
+
+          
         } else {
           showError("Please select Leave Type before entering from date and to date.");
           $('#' + _triggerId).val("");
@@ -322,7 +314,7 @@ class ApplyLeave extends React.Component {
 
       console.log("Enclosing : ", enclosingHoliday, " includePrefixSuffix : ", includePrefixSuffix);
 
-      if (enclosingHoliday || enclosingHoliday=="TRUE" || enclosingHoliday =="true") {
+      if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
         commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
           if (res) {
 
@@ -339,7 +331,7 @@ class ApplyLeave extends React.Component {
         });
       }
 
-      if (includePrefixSuffix || includePrefixSuffix=="TRUE" || includePrefixSuffix =="true") {
+      if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
         commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
           if (res) {
 

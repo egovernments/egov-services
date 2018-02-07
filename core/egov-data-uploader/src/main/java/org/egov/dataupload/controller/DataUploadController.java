@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.dataupload.model.JobSearchRequest;
 import org.egov.dataupload.model.ModuleDefRequest;
 import org.egov.dataupload.model.ModuleDefResponse;

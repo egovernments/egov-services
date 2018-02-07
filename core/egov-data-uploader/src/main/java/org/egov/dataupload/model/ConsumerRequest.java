@@ -1,8 +1,5 @@
 package org.egov.dataupload.model;
 
-
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

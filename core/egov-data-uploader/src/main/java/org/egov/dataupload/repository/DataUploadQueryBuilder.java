@@ -13,7 +13,7 @@ public class DataUploadQueryBuilder {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadQueryBuilder.class);
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public String getQuery(final JobSearchRequest jobSearchRequest, final List preparedStatementValues) {
 		final StringBuilder selectQuery = new StringBuilder("select * from egdu_uploadregistry ");
 		addWhereClause(selectQuery, preparedStatementValues, jobSearchRequest);

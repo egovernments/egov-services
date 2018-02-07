@@ -35,10 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.LongSerializationPolicy;
-import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -378,13 +374,12 @@ public class DataUploadService {
 	private Object hitApi(String request, String uri){
 		logger.info("Making inter-service call to the module API...");
 		Object response = null;
+		ObjectMapper mapper = new ObjectMapper();
 		logger.info("Request: "+request);
     	logger.info("URI: "+uri);
-    	
-	    Type type = new TypeToken<Map<String, Object>>() {}.getType();
-		Gson gson = new Gson();
-		Map<String, Object> data = gson.fromJson(request, type);
-		try {
+    	try {
+    		Map<String, Object> data = mapper.readValue(request, Map.class);
+    		logger.info("PASSSSSSSSS");
 			response = dataUploadRepository.doApiCall(data, uri);
 		}catch(Exception e) {
 			logger.error("Failed to parse error object",e);

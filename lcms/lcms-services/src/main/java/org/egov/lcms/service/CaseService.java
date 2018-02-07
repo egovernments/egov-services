@@ -43,8 +43,8 @@ import org.egov.lcms.repository.CaseSearchRepository;
 import org.egov.lcms.repository.MdmsRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.repository.RegisterRepository;
-import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.lcms.util.SummonValidator;
+import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
@@ -58,19 +58,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
-/** 
-* 
-* Author		Date			eGov-JIRA ticket	Commit message
-* ---------------------------------------------------------------------------
-* Veswanth		28th Oct 2017						Initial commit for case service 
-* Shubham		31st Oct 2017						Added legacy create API files
-* Veswanth		31st Oct 2017						Hearing details API implementation
-* Prasad 		31st Nov 2017						Added validation for caseRegister, assignAdvocate, summon and vakalatnama
-* Narendra 		01st Nov 2017						Added summon validator class for case validations
-* Prasad 		20th Nov 2017						Added address in courtdetails for case search
-* Veswanth 		30th Nov 2017						Added master details fetching for all the cases
-* Narendra 		15th Dec 2017						Added entry type in legacy case
-*/
+/**
+ * 
+ * Author Date eGov-JIRA ticket Commit message
+ * ---------------------------------------------------------------------------
+ * Veswanth 28th Oct 2017 Initial commit for case service Shubham 31st Oct 2017
+ * Added legacy create API files Veswanth 31st Oct 2017 Hearing details API
+ * implementation Prasad 31st Nov 2017 Added validation for caseRegister,
+ * assignAdvocate, summon and vakalatnama Narendra 01st Nov 2017 Added summon
+ * validator class for case validations Prasad 20th Nov 2017 Added address in
+ * courtdetails for case search Veswanth 30th Nov 2017 Added master details
+ * fetching for all the cases Narendra 15th Dec 2017 Added entry type in legacy
+ * case
+ */
 @Service
 @Slf4j
 public class CaseService {
@@ -107,7 +107,7 @@ public class CaseService {
 
 	@Autowired
 	ObjectMapper objectMapper;
-	
+
 	/**
 	 * This method is to create Para wise comment
 	 * 
@@ -132,7 +132,7 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getParaWiseCreateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-	
+
 	/**
 	 * This method is to update Para wise comments
 	 * 
@@ -143,7 +143,7 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getParaWiseUpdateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-	
+
 	/**
 	 * This method is to get response info for CaseRequest object
 	 * 
@@ -160,7 +160,7 @@ public class CaseService {
 	}
 
 	/**
-	 * This  method is to create Case
+	 * This method is to create Case
 	 * 
 	 * @param caseRequest
 	 * @return {@link CaseResponse}
@@ -193,7 +193,6 @@ public class CaseService {
 				throw new CustomException(propertiesManager.getRequiredDepartmentPersonCode(),
 						propertiesManager.getRequiredDepartmentPersonCode());
 			}
-
 		}
 	}
 
@@ -214,7 +213,6 @@ public class CaseService {
 			caseobj.setCode(caseobj.getSummon().getCode());
 
 		}
-
 	}
 
 	/**
@@ -236,7 +234,6 @@ public class CaseService {
 		}
 
 		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
-
 	}
 
 	/**
@@ -253,6 +250,56 @@ public class CaseService {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		Map<String, String> masterMap = new HashMap<>();
+
+		setMasterMapValues(masterMap, cases);
+
+		for (Case caseObj : cases) {
+
+			if (caseObj.getSummon() != null) {
+
+				List<String> caseStatusCodes = new ArrayList<String>();
+				String caseStatusCode = "";
+				if (serachResultLevel != null) {
+					for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
+						if (hearingDetail.getCaseStatus() != null)
+							caseStatusCodes.add(hearingDetail.getCaseStatus().getCode());
+					}
+
+					int count = 1;
+					for (String caseStatus : caseStatusCodes) {
+						if (count < caseStatusCodes.size())
+							caseStatusCode = caseStatusCode + caseStatus + ",";
+						else
+							caseStatusCode = caseStatusCode + caseStatus;
+						count++;
+
+					}
+
+					if (!caseStatusCode.isEmpty() || caseStatusCode.length() > 1) {
+						masterMap.put("caseStatus", caseStatusCode);
+					}
+				}
+				getStampDetails(caseObj);
+			}
+		}
+
+		if (!masterMap.isEmpty()) {
+			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterMap, requestInfoWrapper,
+					propertiesManager.getLcmsModuleName());
+			Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
+
+			Map<String, JSONArray> mastersmap = response.get(propertiesManager.getLcmsModuleName());
+
+			for (String key : mastersmap.keySet()) {
+
+				String masterName = key;
+
+				addParticularMastervalues(masterName, cases, mastersmap);
+			}
+		}
+	}
+
+	private void setMasterMapValues(Map<String, String> masterMap, List<Case> cases) {
 
 		List<String> caseTypeCodes = cases.stream()
 				.filter(caseData -> caseData.getSummon() != null && caseData.getSummon().getCaseType() != null
@@ -312,58 +359,11 @@ public class CaseService {
 		if (caseSidesCodes != null && !caseSidesCodes.isEmpty()) {
 			masterMap.put("side", caseSidesCodes);
 		}
-
-		for (Case caseObj : cases) {
-
-			if (caseObj.getSummon() != null) {
-
-				List<String> caseStatusCodes = new ArrayList<String>();
-				String caseStatusCode = "";
-				if (serachResultLevel != null) {
-					for (HearingDetails hearingDetail : caseObj.getHearingDetails()) {
-						if (hearingDetail.getCaseStatus() != null)
-							caseStatusCodes.add(hearingDetail.getCaseStatus().getCode());
-					}
-
-					int count = 1;
-					for (String caseStatus : caseStatusCodes) {
-						if (count < caseStatusCodes.size())
-							caseStatusCode = caseStatusCode + caseStatus + ",";
-						else
-							caseStatusCode = caseStatusCode + caseStatus;
-						count++;
-
-					}
-
-					if (!caseStatusCode.isEmpty() || caseStatusCode.length() > 1) {
-						masterMap.put("caseStatus", caseStatusCode);
-					}
-				}
-				getStampDetails(caseObj);
-			}
-		}
-
-		if (!masterMap.isEmpty()) {
-			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterMap, requestInfoWrapper,
-					propertiesManager.getLcmsModuleName());
-			Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
-
-			Map<String, JSONArray> mastersmap = response.get(propertiesManager.getLcmsModuleName());
-
-			for (String key : mastersmap.keySet()) {
-
-				String masterName = key;
-
-				addParticularMastervalues(masterName, cases, mastersmap);
-			}
-
-		}
-
 	}
-	
+
 	/**
-	 * This method is to add particular master values 
-	 * such as court, side, caseType, caseCategory, bench, caseStatus, Department
+	 * This method is to add particular master values such as court, side,
+	 * caseType, caseCategory, bench, caseStatus, Department
 	 * 
 	 * @param masterName
 	 * @param cases
@@ -670,7 +670,7 @@ public class CaseService {
 		return new CaseResponse(responseFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
 	}
-	
+
 	/**
 	 * This method is to create Hearing detail
 	 * 
@@ -721,7 +721,7 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getHearingCreateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-	
+
 	/**
 	 * This method is to create Events
 	 * 
@@ -761,7 +761,7 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getEventCreateValidated(), event);
 
 	}
-	
+
 	/**
 	 * This method is to update the Hearing details
 	 * 
@@ -783,8 +783,8 @@ public class CaseService {
 	}
 
 	/**
-	 * This method is to validate the Vakalatnama object
-	 * which is inside Case objet
+	 * This method is to validate the Vakalatnama object which is inside Case
+	 * objet
 	 * 
 	 * @param caseRequest
 	 * @throws Exception
@@ -822,11 +822,9 @@ public class CaseService {
 							propertiesManager.getAdvocatenameMessage());
 
 			}
-
 		}
-
 	}
-	
+
 	/**
 	 * This method is to create the Reference Evidence
 	 * 
@@ -853,7 +851,7 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getEvidenceCreateTopic(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-	
+
 	/**
 	 * This method is to update Reference Evidence
 	 * 
@@ -875,14 +873,14 @@ public class CaseService {
 		kafkaTemplate.send(propertiesManager.getEvidenceUpdateTopic(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
-	
+
 	/**
 	 * This method is to fetch the Case details
 	 * 
 	 * @param tenantId
 	 * @param advocateName
 	 * @param requestInfo
-	 * @return CaseDetailsResponse 
+	 * @return CaseDetailsResponse
 	 */
 	public CaseDetailsResponse getCaseNo(String tenantId, String advocateName, RequestInfo requestInfo) {
 
@@ -891,7 +889,7 @@ public class CaseService {
 
 		return new CaseDetailsResponse(responseInfo, caseDetails);
 	}
-	
+
 	/**
 	 * This method is to fetch Events based on Event search criteria
 	 * 

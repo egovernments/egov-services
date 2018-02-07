@@ -379,7 +379,6 @@ public class DataUploadService {
     	logger.info("URI: "+uri);
     	try {
     		Map<String, Object> data = mapper.readValue(request, Map.class);
-    		logger.info("PASSSSSSSSS");
 			response = dataUploadRepository.doApiCall(data, uri);
 		}catch(Exception e) {
 			logger.error("Failed to parse error object",e);

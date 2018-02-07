@@ -58,6 +58,7 @@ public class DataUploadRepository {
 			StringBuilder message = new StringBuilder();
 			ObjectMapper mapper = new ObjectMapper();
 			LOGGER.error("Exception while hitting url: "+url);
+			LOGGER.error("response: "+e.getResponseBodyAsString());
 			List<Object> errors = (List<Object>) JsonPath.read(e.getResponseBodyAsString(),"$.Errors");
 			for(Object error: errors) {
 				String errorObject = mapper.writeValueAsString(error);

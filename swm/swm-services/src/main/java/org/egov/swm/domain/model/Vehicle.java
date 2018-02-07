@@ -73,7 +73,7 @@ public class Vehicle {
     @JsonProperty("endOfWarranty")
     private Long endOfWarranty = null;
 
-    @Length(min = 15, max = 300, message = "Value of remarks shall be between 15 and 300")
+    @Length(max = 300, message = "Value of remarks shall less then 300")
     @JsonProperty("remarks")
     private String remarks = null;
 

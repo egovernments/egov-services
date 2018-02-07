@@ -505,7 +505,7 @@ serviceMaps:
 
        - jsonPath: $.detailedEstimates.*.assets.*.asset.code
 
-       - jsonPath: $.detailedEstimates[?({id} in @.assets[*].id)].id
+       - jsonPath: $.detailedEstimates.*.assets.*.detailedEstimate
 
        - jsonPath: $.detailedEstimates.*.assets.*.auditDetails.createdBy
 

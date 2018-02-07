@@ -26,12 +26,8 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: codes
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma separated list of codes 
           - name: code
             type: string
@@ -46,6 +42,10 @@ paths:
             type: string
             in: query
             description: dumping Ground Code of SourceSegregation
+          - name: ulbCode
+            type: string
+            in: query
+            description: code of ULB of source segregation
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:
@@ -113,42 +113,22 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: ids
-            type: array
-            items: 
-              type: integer
-              format: int64
-            in: query
-            maxItems: 50
-            description: comma separated list of Ids 
           - name: transactionNo
-            type: array
-            items: 
-              type: string
+            type: string
             in: query
-            maxItems: 50
+            description: transactionNo of Sanitation staff schedule           
+          - name: transactionNos
+            type: string
+            in: query
             description: comma separated list of transactionNo
-          - name: name
-            type: array
-            items: 
-              type: string
+          - name: targetNo
+            type: string
             in: query
-            maxItems: 50
-            description: comma separated list of SanitationStaff names
-          - name: collectionPoints
-            type: array
-            items: 
-              type: string
+            description: Target Number of sanitation staff target
+          - name: shiftCode
+            type: string
             in: query
-            maxItems: 50
-            description: comma separated list of collection points
-          - name: dumpingGround
-            type: array
-            items: 
-              type: string
-            in: query
-            maxItems: 50
-            description: comma separated list of Dumping Ground
+            description: Shift code of the shift associated with sanitation staff schedule            
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:
@@ -216,12 +196,8 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: targetNos
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma separated list of targetNos 
           - name: targetNo
             type: string
@@ -239,6 +215,20 @@ paths:
             type: string
             in: query
             description: employeeCode of SanitationStaffTarget
+          - name: dumpingGroundCode
+            type: string
+            in: query
+            description: dumpingGroundCode associated with SanitationStaffTarget            
+          - name: targetFrom
+            type: integer
+            format: int64 
+            in: query
+            description: Sanitation staff target start date
+          - name: targetTo
+            type: integer
+            format: int64 
+            in: query
+            description: Sanitation staff target end date
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:
@@ -307,12 +297,8 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: transactionNos
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma separated list of transactionNos 
           - name: transactionNo
             type: string
@@ -406,6 +392,10 @@ paths:
             type: string
             in: query
             description: code of pump station
+          - name: codes
+            type: string
+            in: query
+            description: comma separated list of codes
           - name: name
             type: string
             in: query
@@ -494,12 +484,8 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: contractNos
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma separated list of contractNo 
           - name: contractNo
             type: string
@@ -529,6 +515,11 @@ paths:
             format: double 
             in: query
             description: security Deposit of contract 
+          - name: paymentAmount
+            type: number
+            format: double 
+            in: query
+            description: Payment Amount of contract
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:
@@ -596,13 +587,13 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: codes
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma separated list of codes 
+          - name: code
+            type: string
+            in: query
+            description: code of vehicle maintenance
           - name: regNumber
             type: string
             in: query
@@ -611,10 +602,6 @@ paths:
             type: string
             in: query
             description: code of vehicle Type
-          - name: code
-            type: string
-            in: query
-            description: code of vehicle maintyenance
           - name: downtimeforMaintenance
             type: integer
             format: int64
@@ -692,12 +679,8 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: vendorNos
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma seperated list of vendorNo's
           - name: vendorNo
             type: string
@@ -712,11 +695,16 @@ paths:
             in: query
             description: registrationNo of the Vendor
             maxLength: 256
-          - name: supplier
+          - name: supplierNo
             type: string
             in: query
-            description: supplier code of the Vendor
+            description: supplier number of the Vendor
             maxLength: 256
+          - name: services
+            type: string
+            in: query
+            description: services offered by the Vendor
+            maxLength: 256            
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
           - name: sortBy
@@ -790,12 +778,8 @@ paths:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
           - name: codes
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma seperated list of codes
           - name: code
             type: string
@@ -810,35 +794,30 @@ paths:
             in: query
             description: collectionType of the Route
             maxLength: 256
-          - name: startingCollectionPointCode
+          - name: collectionPointCode
             type: string
             in: query
-            description: endingCollectionPoint code of the Route
-            maxLength: 256
-          - name: endingCollectionPointCode
-            type: string
-            in: query
-            description: endingCollectionPoint code of the Route
+            description: collectionPoint code of the Route
             maxLength: 256
           - name: isEndingDumpingGround
             type: boolean
             in: query
             description: if true will only return ending collection point or Dumping ground in route response.
-          - name: endingDumpingGroundPointCode
+          - name: dumpingGroundCode
             type: string
             in: query
-            description: endingDumpingGroundPoint code of the Route
+            description: Dumping Ground code of the Route
             maxLength: 256
-          - name: distance
+          - name: totalDistance
             type: number
             format: double
             in: query
-            description: distance  of the Route
-          - name: gabageEstimate
+            description: Total Distance of the Route
+          - name: totalGarbageEstimate
             type: number
             format: double
             in: query
-            description: gabageEstimate  of the Route
+            description: Total Garbage Estimate of the Route
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
           - name: sortBy
@@ -911,13 +890,13 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: codes
-            type: array
-            items: 
-              type: integer
-              format: int64
+          - name: code
+            type: string
             in: query
-            maxItems: 50
+            description: code of the Collection point
+          - name: codes
+            type: string
+            in: query
             description: comma seperated list of codes
           - name: name
             type: string

@@ -107,6 +107,7 @@ public class DetailedEstimateService {
                             assetsForEstimate.setAsset(assets.getAsset());
                             assetsForEstimate.setAuditDetails(auditDetails);
                             assetsForEstimate.setId(commonUtils.getUUID());
+                            assetsForEstimate.setTenantId(assets.getTenantId());
                             assetsForEstimates.add(assetsForEstimate);
                         }
                     }

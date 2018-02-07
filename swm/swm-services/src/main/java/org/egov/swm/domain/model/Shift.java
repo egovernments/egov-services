@@ -70,7 +70,7 @@ public class Shift {
     @JsonProperty("remarks")
     private String remarks = null;
 
-    @JsonProperty("auditD0etails")
+    @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
 
 }

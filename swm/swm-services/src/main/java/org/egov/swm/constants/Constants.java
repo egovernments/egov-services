@@ -28,5 +28,7 @@ public class Constants {
     public static final String TENANTBOUNDARY_MASTER_NAME = "TenantBoundary";
     public static final String BIN_ASSET_CATEGORY = "Bin";
     public static final String DRIVER_DESIGNATION_NAME = "Driver";
+    public static final String COLLECTION_CODE = "Process 1";
+    public static final String SEGGREGATION_CODE = "Process 2";
 
 }

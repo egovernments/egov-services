@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
@@ -31,8 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SanitationStaffTargetService {
 
-    public static final String COLLECTION_CODE = "Process 1";
-    public static final String SEGGREGATION_CODE = "Process 2";
     @Autowired
     private SanitationStaffTargetRepository sanitationStaffTargetRepository;
 
@@ -160,8 +159,8 @@ public class SanitationStaffTargetService {
 
             // Validate for collection point based on swmprocess
             if (sanitationStaffTarget.getSwmProcess() != null && sanitationStaffTarget.getSwmProcess().getCode() != null &&
-                    (sanitationStaffTarget.getSwmProcess().getCode().equals(COLLECTION_CODE) ||
-                            sanitationStaffTarget.getSwmProcess().getCode().equals(SEGGREGATION_CODE))) {
+                    (sanitationStaffTarget.getSwmProcess().getCode().equals(Constants.COLLECTION_CODE) ||
+                            sanitationStaffTarget.getSwmProcess().getCode().equals(Constants.SEGGREGATION_CODE))) {
 
                 if (sanitationStaffTarget.getCollectionPoints() != null &&
                         sanitationStaffTarget.getCollectionPoints().size() == 0)
@@ -251,7 +250,18 @@ public class SanitationStaffTargetService {
             sstSearch.setEmployeeCode(sanitationStaffTarget.getEmployee().getCode());
             sstSearch.setValidate(true);
 
+            System.out.println("sanitationStaffTarget.getTenantId()" + sanitationStaffTarget.getTenantId());
+            System.out.println("sanitationStaffTarget.getRoute().getCode()" + sanitationStaffTarget.getRoute().getCode());
+            System.out
+                    .println("sanitationStaffTarget.getSwmProcess().getCode()" + sanitationStaffTarget.getSwmProcess().getCode());
+            System.out.println("sanitationStaffTarget.getEmployee().getCode()" + sanitationStaffTarget.getEmployee().getCode());
+            System.out.println("sanitationStaffTarget.getTargetFrom()" + sanitationStaffTarget.getTargetFrom());
+            System.out.println("sanitationStaffTarget.getTargetTo()" + sanitationStaffTarget.getTargetTo());
+
             sstSearchResponse = search(sstSearch);
+
+            if (sstSearchResponse != null && sstSearchResponse.getPagedData() != null)
+                System.out.println("sstSearchResponse.getPagedData().size()" + sstSearchResponse.getPagedData().size());
 
             if ((sanitationStaffTarget.getTargetNo() == null || sanitationStaffTarget.getTargetNo().isEmpty())
                     && sstSearchResponse != null && sstSearchResponse.getPagedData() != null

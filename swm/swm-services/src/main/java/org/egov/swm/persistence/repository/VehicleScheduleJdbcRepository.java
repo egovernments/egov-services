@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
@@ -179,14 +176,21 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    public static <T> Predicate<T> distinctByRoute(Function<? super T, ?> keyExtractor) {
-        Set<Object> seen = ConcurrentHashMap.newKeySet();
-        return t -> seen.add(keyExtractor.apply(t));
-    }
-
     private List<VehicleScheduleEntity> returnDistinct(List<VehicleScheduleEntity> vehicleScheduleList) {
-        return (List<VehicleScheduleEntity>) vehicleScheduleList.stream()
-                .filter(distinctByRoute(VehicleScheduleEntity::getRoute));
+
+        List<VehicleScheduleEntity> responseList = new ArrayList<>();
+        Map<String, VehicleScheduleEntity> distinctRouteMap = new HashMap<>();
+
+        for (VehicleScheduleEntity entity : vehicleScheduleList) {
+            distinctRouteMap.put(entity.getRoute(), entity);
+        }
+
+        for (String key : distinctRouteMap.keySet()) {
+            responseList.add(distinctRouteMap.get(key));
+
+        }
+
+        return responseList;
 
     }
 

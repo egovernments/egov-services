@@ -102,9 +102,13 @@ public class TrackMilestoneValidator {
         LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = letterOfAcceptanceEstimateRepository.searchLOAs(LetterOfAcceptanceEstimateSearchContract.builder().ids(Arrays.asList(milestone.getLetterOfAcceptanceEstimate().getId())).tenantId(trackMilestone.getTenantId()).build(), requestInfo).get(0);
         LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceRepository.searchLOAs(LetterOfAcceptanceSearchContract.builder().ids(Arrays.asList(letterOfAcceptanceEstimate.getLetterOfAcceptance())).tenantId(trackMilestone.getTenantId()).build(), requestInfo).get(0);
         ContractorBillResponse contractorBillResponse = contractorBillRepository.getByLoaNumbers(ContractorBillSearchContract.builder().letterOfAcceptanceNumbers(Arrays.asList(letterOfAcceptance.getLoaNumber())).billTypes(Arrays.asList("Final")).tenantId(trackMilestone.getTenantId()).build(), trackMilestone.getTenantId(), requestInfo);
-        ContractorBill contractorBill = contractorBillResponse.getContractorBills().get(0);
-        if(contractorBill!=null && contractorBill.getStatus().getCode()!=null && !contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)){
-            validationMessages.put(Constants.KEY_TRACKMILESTONE_FINAL_BILL_CREATED, Constants.MESSAGE_TRACKMILESTONE_FINAL_BILL_CREATED);
+        if(contractorBillResponse!=null && contractorBillResponse.getContractorBills()!=null) {
+            ContractorBill contractorBill = contractorBillResponse.getContractorBills().get(0);
+            if (contractorBill != null) {
+                if (contractorBill.getStatus().getCode() != null && !contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) {
+                    validationMessages.put(Constants.KEY_TRACKMILESTONE_FINAL_BILL_CREATED, Constants.MESSAGE_TRACKMILESTONE_FINAL_BILL_CREATED);
+                }
+            }
         }
     }
 }

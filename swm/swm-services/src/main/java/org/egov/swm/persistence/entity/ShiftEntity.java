@@ -59,6 +59,13 @@ public class ShiftEntity {
         shift.setShiftType(ShiftType.builder().code(shiftType).build());
         shift.setDepartment(Department.builder().code(department).build());
         shift.setDesignation(Designation.builder().code(designation).build());
+        shift.setShiftStartTime(shiftStartTime);
+        shift.setShiftEndTime(shiftEndTime);
+        shift.setLunchStartTime(lunchStartTime);
+        shift.setLunchEndTime(lunchEndTime);
+        shift.setGraceTimeFrom(graceTimeFrom);
+        shift.setGraceTimeTo(graceTimeTo);
+        shift.setRemarks(remarks);
         shift.setAuditDetails(new AuditDetails());
         shift.getAuditDetails().setCreatedBy(createdBy);
         shift.getAuditDetails().setCreatedTime(createdTime);

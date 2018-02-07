@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SanitationStaffSchedule;
 import org.egov.swm.domain.model.SanitationStaffScheduleSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
 import org.egov.swm.domain.model.Shift;
+import org.egov.swm.domain.model.ShiftSearch;
 import org.egov.swm.domain.service.ShiftService;
 import org.egov.swm.persistence.entity.SanitationStaffScheduleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,14 +126,19 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 
         Map<String, Shift> shiftMap = new HashMap<>();
         String tenantId = null;
+        ShiftSearch shiftSearch = new ShiftSearch();
 
         if (sanitationStaffScheduleList != null && !sanitationStaffScheduleList.isEmpty())
             tenantId = sanitationStaffScheduleList.get(0).getTenantId();
 
-        List<Shift> shifts = shiftService.getAll(tenantId, new RequestInfo());
+        shiftSearch.setTenantId(tenantId);
 
-        for (Shift s : shifts) {
-            shiftMap.put(s.getCode(), s);
+        Pagination<Shift> shifts = shiftService.search(shiftSearch);
+
+        if (shifts != null && shifts.getPagedData() != null && !shifts.getPagedData().isEmpty()) {
+            for (Shift s : shifts.getPagedData()) {
+                shiftMap.put(s.getCode(), s);
+            }
         }
 
         for (SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleList) {

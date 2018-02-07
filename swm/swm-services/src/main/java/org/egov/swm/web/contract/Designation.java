@@ -4,9 +4,11 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class Designation {
 
     @NotNull

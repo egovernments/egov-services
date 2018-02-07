@@ -25,11 +25,6 @@ public class Shift {
     @JsonProperty("code")
     private String code = null;
 
-    @Length(min = 0, max = 256, message = "Value of name shall be between 1 and 256")
-    @NotNull
-    @JsonProperty("name")
-    private String name = null;
-
     @NotNull
     @Length(min = 1, max = 256, message = "Value of tenantId shall be between 1 and 256")
     @JsonProperty("tenantId")

@@ -9,6 +9,8 @@ import org.egov.swm.domain.model.SanitationStaffSchedule;
 import org.egov.swm.domain.model.SanitationStaffScheduleSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
+import org.egov.swm.domain.model.Shift;
+import org.egov.swm.domain.model.ShiftSearch;
 import org.egov.swm.domain.repository.SanitationStaffScheduleRepository;
 import org.egov.swm.web.repository.IdgenRepository;
 import org.egov.swm.web.requests.SanitationStaffScheduleRequest;
@@ -85,6 +87,8 @@ public class SanitationStaffScheduleService {
 
         final SanitationStaffTargetSearch sanitationStaffTargetSearch = new SanitationStaffTargetSearch();
         Pagination<SanitationStaffTarget> sanitationStaffTargets;
+        ShiftSearch shiftSearch = new ShiftSearch();
+        Pagination<Shift> shifts;
         for (final SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleRequest
                 .getSanitationStaffSchedules()) {
 
@@ -95,9 +99,14 @@ public class SanitationStaffScheduleService {
                 throw new CustomException("Shift",
                         "The field Shift Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-            if (sanitationStaffSchedule.getShift() != null && sanitationStaffSchedule.getShift().getCode() != null)
-                sanitationStaffSchedule.setShift(shiftService.getShift(sanitationStaffSchedule.getTenantId(),
-                        sanitationStaffSchedule.getShift().getCode(), sanitationStaffScheduleRequest.getRequestInfo()));
+            shiftSearch.setTenantId(sanitationStaffSchedule.getTenantId());
+            shiftSearch.setCode(sanitationStaffSchedule.getShift().getCode());
+            shifts = shiftService.search(shiftSearch);
+            if (shifts != null && shifts.getPagedData() != null && !shifts.getPagedData().isEmpty())
+                sanitationStaffSchedule.setShift(shifts.getPagedData().get(0));
+            else
+                throw new CustomException("Shift", "Given Shift is invalid: "
+                        + sanitationStaffSchedule.getShift().getCode());
 
             // Validate Sanitation Staff Target
 

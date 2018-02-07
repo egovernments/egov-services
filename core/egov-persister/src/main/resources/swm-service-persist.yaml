@@ -1140,11 +1140,11 @@ serviceMaps:
    description: create vehiclemaintenancedetails in egswm_vehiclemaintenancedetails
    fromTopic: swm-vehiclemaintenancedetail-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehiclemaintenancedetails (code, tenantid, isscheduled, maintenancetype, vehicle, actualmaintenancedate, vehiclescheduledmaintenancedate, vehicledowntimeactual, vehicledowntimeactualuom, vehiclereadingduringmaintenance, remarks, costincurred, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehiclemaintenancedetails (transactionno, tenantid, isscheduled, maintenancetype, vehicle, actualmaintenancedate, vehiclescheduledmaintenancedate, vehicledowntimeactual, vehicledowntimeactualuom, vehiclereadingduringmaintenance, remarks, costincurred, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicleMaintenanceDetails.*
       jsonMaps:
        
-       - jsonPath: $.vehicleMaintenanceDetails.*.code
+       - jsonPath: $.vehicleMaintenanceDetails.*.transactionNo
 
        - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
 
@@ -1189,11 +1189,11 @@ serviceMaps:
    description: update vehiclemaintenancedetails in egswm_vehiclemaintenancedetails
    fromTopic: swm-vehiclemaintenancedetail-update-topic
    queryMaps: 
-    - query: UPDATE egswm_vehiclemaintenancedetails SET code = ?, tenantid = ?, isscheduled = ?, maintenancetype = ?, vehicle = ?, actualmaintenancedate = ?, vehiclescheduledmaintenancedate = ?, vehicledowntimeactual = ?, vehicledowntimeactualuom = ?, vehiclereadingduringmaintenance = ?, remarks = ?, costincurred = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and code = ?;
+    - query: UPDATE egswm_vehiclemaintenancedetails SET transactionno = ?, tenantid = ?, isscheduled = ?, maintenancetype = ?, vehicle = ?, actualmaintenancedate = ?, vehiclescheduledmaintenancedate = ?, vehicledowntimeactual = ?, vehicledowntimeactualuom = ?, vehiclereadingduringmaintenance = ?, remarks = ?, costincurred = ?, lastmodifiedby = ?, lastmodifiedtime = ? WHERE tenantid = ? and transactionno = ?;
       basePath: $.vehicleMaintenanceDetails.*
       jsonMaps:
        
-       - jsonPath: $.vehicleMaintenanceDetails.*.code
+       - jsonPath: $.vehicleMaintenanceDetails.*.transactionNo
 
        - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
 
@@ -1229,7 +1229,7 @@ serviceMaps:
 
        - jsonPath: $.vehicleMaintenanceDetails.*.tenantId
 
-       - jsonPath: $.vehicleMaintenanceDetails.*.code
+       - jsonPath: $.vehicleMaintenanceDetails.*.transactionNo
 
  - version: 1.0
    name: vehicletripsheetdetails create
@@ -1673,3 +1673,97 @@ serviceMaps:
        - jsonPath: $.paymentDetails.*.code
          
        - jsonPath: $.paymentDetails.*.tenantId
+
+ - version: 1.0
+   name: shift create
+   description: create shift in egswm_shift
+   fromTopic: swm-shift-save-topic
+   queryMaps: 
+    - query: INSERT INTO egswm_shift (code, tenantId, shiftType, department, designation, shiftStartTime, shiftEndTime, lunchStartTime, lunchEndTime, graceTimeFrom, graceTimeTo, remarks, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.shifts.*
+      jsonMaps:
+       
+       - jsonPath: $.shifts.*.code
+       
+       - jsonPath: $.shifts.*.tenantId
+
+       - jsonPath: $.shifts.*.shiftType.code
+
+       - jsonPath: $.shifts.*.department.code
+
+       - jsonPath: $.shifts.*.designation.code
+
+       - jsonPath: $.shifts.*.shiftStartTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.shiftEndTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.lunchStartTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.lunchEndTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.graceTimeFrom
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.graceTimeTo
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.remarks
+         
+       - jsonPath: $.shifts.*.auditDetails.createdBy
+
+       - jsonPath: $.shifts.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.shifts.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+
+ - version: 1.0
+   name: shift update
+   description: update shift in egswm_shift
+   fromTopic: swm-shift-update-topic
+   queryMaps: 
+    - query: update egswm_shift set shiftType=?, department=?, designation=?, shiftStartTime=?, shiftEndTime=?, lunchStartTime=?, lunchEndTime=?, graceTimeFrom=?, graceTimeTo=?, remarks=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+      basePath: $.shifts.*
+      jsonMaps:
+
+       - jsonPath: $.shifts.*.shiftType.code
+
+       - jsonPath: $.shifts.*.department.code
+
+       - jsonPath: $.shifts.*.designation.code
+
+       - jsonPath: $.shifts.*.shiftStartTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.shiftEndTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.lunchStartTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.lunchEndTime
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.graceTimeFrom
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.graceTimeTo
+         dbType: LONG
+
+       - jsonPath: $.shifts.*.remarks
+         
+       - jsonPath: $.shifts.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.shifts.*.auditDetails.lastModifiedTime
+         dbType: LONG
+         
+       - jsonPath: $.shifts.*.code
+         
+       - jsonPath: $.shifts.*.tenantId

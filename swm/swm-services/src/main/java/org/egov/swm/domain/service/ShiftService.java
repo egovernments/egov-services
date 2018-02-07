@@ -146,11 +146,12 @@ public class ShiftService {
 
             search = new ShiftSearch();
             search.setTenantId(shift.getTenantId());
-            search.setShiftTypeCode(shift.getShiftType().getCode());
+            search.setDepartmentCode(shift.getDepartment().getCode());
+            search.setDesignationCode(shift.getDesignation().getCode());
             search.setShiftStartTime(shift.getShiftStartTime());
             search.setShiftEndTime(shift.getShiftEndTime());
             search.setValidate(true);
-            
+
             shifts = search(search);
 
             if ((shift.getCode() == null || shift.getCode().isEmpty())
@@ -158,8 +159,9 @@ public class ShiftService {
                     && !shifts.getPagedData().isEmpty()) {
 
                 throw new CustomException("Shift",
-                        "Shift data already exist for the selected Shift Type:"
-                                + shift.getShiftType().getName() + " and Shift start time: "
+                        "Shift data already exist for the selected Department:"
+                                + shift.getDepartment().getName() + " and Designation:"
+                                + shift.getDesignation().getName() + "  and Shift start time: "
                                 + dateFormat.format(new Date(shift.getShiftStartTime())) + " and Shift end time:"
                                 + dateFormat.format(new Date(shift.getShiftEndTime())));
             }
@@ -170,8 +172,9 @@ public class ShiftService {
                     && !shift.getCode()
                             .equalsIgnoreCase(shifts.getPagedData().get(0).getCode())) {
                 throw new CustomException("Shift",
-                        "Shift data already exist for the selected Shift Type:"
-                                + shift.getShiftType().getName() + " and Shift start time: "
+                        "Shift data already exist for the selected Department:"
+                                + shift.getDepartment().getName() + " and Designation:"
+                                + shift.getDesignation().getName() + "  and Shift start time: "
                                 + dateFormat.format(new Date(shift.getShiftStartTime())) + " and Shift end time:"
                                 + dateFormat.format(new Date(shift.getShiftEndTime())));
             }

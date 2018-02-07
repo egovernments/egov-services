@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
@@ -145,9 +148,9 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
         final BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleScheduleEntity.class);
 
-        final List<VehicleSchedule> vehicleScheduleList = new ArrayList<>();
+        List<VehicleSchedule> vehicleScheduleList = new ArrayList<>();
 
-        final List<VehicleScheduleEntity> vehicleScheduleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
+        List<VehicleScheduleEntity> vehicleScheduleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
         if (searchRequest.getFromTripSheet() != null && searchRequest.getFromTripSheet()) {
@@ -155,6 +158,8 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
                 throw new CustomException("Route",
                         "Route not found for the selected Vehicle for the given period");
             }
+
+            vehicleScheduleEntities = returnDistinct(vehicleScheduleEntities);
         }
         for (final VehicleScheduleEntity vehicleScheduleEntity : vehicleScheduleEntities) {
 
@@ -166,11 +171,23 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
             populateVehicles(vehicleScheduleList);
 
             populateRoutes(vehicleScheduleList);
+
         }
 
         page.setPagedData(vehicleScheduleList);
 
         return page;
+    }
+
+    public static <T> Predicate<T> distinctByRoute(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
+
+    private List<VehicleScheduleEntity> returnDistinct(List<VehicleScheduleEntity> vehicleScheduleList) {
+        return (List<VehicleScheduleEntity>) vehicleScheduleList.stream()
+                .filter(distinctByRoute(VehicleScheduleEntity::getRoute));
+
     }
 
     private void populateVehicles(List<VehicleSchedule> vehicleScheduleList) {

@@ -8,29 +8,9 @@ import net.minidev.json.JSONArray;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.measurementbook.config.Constants;
-import org.egov.works.measurementbook.domain.repository.EstimateRepository;
-import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
-import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
-import org.egov.works.measurementbook.domain.repository.OfflineStatusRepository;
-import org.egov.works.measurementbook.domain.repository.WorkOrderRepository;
+import org.egov.works.measurementbook.domain.repository.*;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
-import org.egov.works.measurementbook.web.contract.DetailedEstimate;
-import org.egov.works.measurementbook.web.contract.EstimateActivity;
-import org.egov.works.measurementbook.web.contract.EstimateMeasurementSheet;
-import org.egov.works.measurementbook.web.contract.LOAActivity;
-import org.egov.works.measurementbook.web.contract.LOAMeasurementSheet;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceEstimate;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.measurementbook.web.contract.MBMeasurementSheet;
-import org.egov.works.measurementbook.web.contract.MeasurementBook;
-import org.egov.works.measurementbook.web.contract.MeasurementBookDetail;
-import org.egov.works.measurementbook.web.contract.MeasurementBookRequest;
-import org.egov.works.measurementbook.web.contract.MeasurementBookSearchContract;
-import org.egov.works.measurementbook.web.contract.OfflineStatusResponse;
-import org.egov.works.measurementbook.web.contract.RequestInfo;
-import org.egov.works.measurementbook.web.contract.WorkOrder;
-import org.egov.works.measurementbook.web.contract.WorkOrderResponse;
+import org.egov.works.measurementbook.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +34,9 @@ public class MeasurementBookValidator {
 
     @Autowired
     private MeasurementBookUtils measurementBookUtils;
+
+    @Autowired
+    private ContractorBillRepository contractorBillRepository;
 
 	public void validateMB(MeasurementBookRequest measurementBookRequest, Boolean isNew) {
 		final RequestInfo requestInfo = measurementBookRequest.getRequestInfo();
@@ -122,12 +105,27 @@ public class MeasurementBookValidator {
                 validateUpdateStatus(measurementBook, measurementBookRequest.getRequestInfo(), messages);
 			//Validating for part rated MB
 			validateMBForPartRate(measurementBook, messages);
+            if(letterOfAcceptanceResponse != null && !letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty())
+             validateFinalBill(measurementBook, messages, requestInfo, letterOfAcceptanceResponse.getLetterOfAcceptances());
 		}
 		if (!messages.isEmpty())
 	                throw new CustomException(messages);
 	}
 
-	private void vallidateMBAmount(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,
+    private void validateFinalBill(MeasurementBook measurementBook, Map<String, String> messages, RequestInfo requestInfo, List<LetterOfAcceptance> letterOfAcceptances) {
+        ContractorBillSearchContract contractorBillSearchContract = ContractorBillSearchContract.builder()
+                .tenantId(measurementBook.getTenantId())
+                .billTypes(Arrays.asList(Constants.BILL_SUB_TYPE_FINAL))
+                .letterOfAcceptanceNumbers(Arrays.asList(letterOfAcceptances.get(0).getLoaNumber())).build();
+        List<ContractorBill> contractorBills = contractorBillRepository.searchContractorBills(contractorBillSearchContract, requestInfo);
+        for(ContractorBill contractorBill : contractorBills) {
+            if(!contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))
+                messages.put(Constants.KEY_FINAL_BILL_CREATED_FOR_MB,
+                        Constants.MSG_FINAL_BILL_CREATED_FOR_MB);
+        }
+    }
+
+    private void vallidateMBAmount(MeasurementBook measurementBook, LetterOfAcceptance letterOfAcceptance,
 			WorkOrder workOrder, Map<String, String> messages) {
 		Double tenderPercentage = letterOfAcceptance.getTenderFinalizedPercentage();
 		Double amount = 0D;

@@ -90,6 +90,9 @@ public class Constants {
     public static final String KEY_MB_DATE_WORK_COMMENCED_DATE = "MB_DATE_WORK_COMMENCED_DATE";
     public static final String MSG_MB_DATE_WORK_COMMENCED_DATE = "MB Date should be greater than Work Commenced date";
 
+    public static final String KEY_FINAL_BILL_CREATED_FOR_MB = "FINAL_BILL_CREATED_FOR_MB";
+    public static final String MSG_FINAL_BILL_CREATED_FOR_MB = "Final bill is created for LOA, MB can not be created";
+
     public static final String KEY_MB_MEASUREMENTS_MANDATORY_IF_LOA_MEASUREMENTS = "MB_MEASUREMENTS_MANDATORY_IF_LOA_MEASUREMENTS";
     public static final String MSG_MB_MEASUREMENTS_MANDATORY_IF_LOA_MEASUREMENTS = "Measurements are mandatory if Loa measurements present";
 

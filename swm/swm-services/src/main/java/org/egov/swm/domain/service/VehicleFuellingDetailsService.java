@@ -157,6 +157,7 @@ public class VehicleFuellingDetailsService {
             vehicleFuellingDetailsSearch = new VehicleFuellingDetailsSearch();
             vehicleFuellingDetailsSearch.setTenantId(details.getTenantId());
             vehicleFuellingDetailsSearch.setRefuellingStationName(details.getRefuellingStation().getCode());
+            vehicleFuellingDetailsSearch.setReceiptNo(details.getReceiptNo());
 
             fuellingDetails = search(vehicleFuellingDetailsSearch);
 

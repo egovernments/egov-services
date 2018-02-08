@@ -22,6 +22,9 @@ import org.egov.swm.domain.service.AssetService;
 import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
+import org.egov.swm.web.controller.CollectionPointController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,9 @@ import org.springframework.stereotype.Service;
 public class CollectionPointJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egswm_collectionpoint";
+
+    private static final Logger LOG = LoggerFactory.getLogger(CollectionPointJdbcRepository.class);
+
 
     @Autowired
     public BinDetailsJdbcRepository binIdDetailsJdbcRepository;
@@ -55,8 +61,11 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
     public Pagination<CollectionPoint> search(final CollectionPointSearch searchRequest) {
 
+        long start = System.currentTimeMillis();
         String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
+        long end = System.currentTimeMillis();
+        LOG.info("Time taken for searchQuery Concat in CPJDBCREPO " + (end - start) + "ms");
         final Map<String, Object> paramValues = new HashMap<>();
         final StringBuffer params = new StringBuffer();
 
@@ -69,17 +78,24 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
             orderBy = "order by " + searchRequest.getSortBy();
 
+        start = System.currentTimeMillis();
         if (searchRequest.getCodes() != null) {
             addAnd(params);
             params.append("code in (:codes)");
             paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
         }
+        end = System.currentTimeMillis();
+        LOG.info("Time taken Cheacking if condition in CPJDBCREPO " + (end - start) + "ms");
 
+
+        start = System.currentTimeMillis();
         if (searchRequest.getTenantId() != null) {
             addAnd(params);
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", searchRequest.getTenantId());
         }
+        end = System.currentTimeMillis();
+        LOG.info("Time taken adding tenantID condition in CPJDBCREPO " + (end - start) + "ms");
 
         if (searchRequest.getCode() != null) {
             addAnd(params);
@@ -105,28 +121,48 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         if (searchRequest.getPageSize() != null)
             page.setPageSize(searchRequest.getPageSize());
 
+        start = System.currentTimeMillis();
         if (params.length() > 0)
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());
         else
 
             searchQuery = searchQuery.replace(":condition", "");
 
+
         searchQuery = searchQuery.replace(":orderby", orderBy);
 
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for replacing conditions in search query " + (end - start) + "ms");
+
+
+        start = System.currentTimeMillis();
+
         page = (Pagination<CollectionPoint>) getPagination(searchQuery, page, paramValues);
+
+
         searchQuery = searchQuery + " :pagination";
 
         searchQuery = searchQuery.replace(":pagination",
                 "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for pagination " + (end - start) + "ms");
+
         final BeanPropertyRowMapper row = new BeanPropertyRowMapper(CollectionPointEntity.class);
 
         final List<CollectionPoint> collectionPointList = new ArrayList<>();
 
+        start = System.currentTimeMillis();
+
         final List<CollectionPointEntity> collectionPointEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
+
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for returning data from db " + (end - start) + "ms");
+
         StringBuffer collectionPointCodes = new StringBuffer();
 
+        start = System.currentTimeMillis();
         for (final CollectionPointEntity collectionPointEntity : collectionPointEntities) {
             collectionPointList.add(collectionPointEntity.toDomain());
 
@@ -136,6 +172,11 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             collectionPointCodes.append(collectionPointEntity.getCode());
         }
 
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for mapping entity to domain " + (end - start) + "ms");
+
+
+        start = System.currentTimeMillis();
         if (collectionPointList != null && !collectionPointList.isEmpty()) {
 
             populateBoundarys(collectionPointList);
@@ -144,6 +185,9 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
             populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
         }
+
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for populating data " + (end - start) + "ms");
 
         page.setPagedData(collectionPointList);
 

@@ -1,4 +1,4 @@
-contract: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/contracts/v1-0-0.yml
+contract: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/Asset-MAHA/contracts/v1-0-0-mh.yml
 # https://github.com/satishegov/egov-services/tree/master/docs/asset/contracts
 output_folder: ./asset/
 defaults:

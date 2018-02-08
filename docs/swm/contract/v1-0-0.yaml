@@ -980,14 +980,6 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: ids
-            type: array
-            items: 
-              type: integer
-              format: int64
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids
           - name: vehicleTypeCode
             type: string
             format: singleValueList
@@ -1005,6 +997,10 @@ paths:
             in: query
             description: regNumber of the Vehicle
             maxLength: 12
+          - name: regNumbers
+            type: string
+            in: query
+            description: comma seperated list of regNumber's
           - name: engineSrNumber
             type: string
             in: query
@@ -1025,11 +1021,11 @@ paths:
             format: checkbox
             in: query
             description: ulbOwnedVehicle of the Vehicle
-          - name: vendorName
+          - name: vendorNo
             type: string
             format: singleValueList
             in: query
-            description: vendor Name of the Vehicle
+            description: vendor Number of the Vehicle
             maxLength: 265
           - name: purchaseDate
             type: integer
@@ -1128,14 +1124,6 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: ids
-            type: array
-            items: 
-              type: integer
-              format: int64
-            in: query
-            maxItems: 50
-            description: comma seperated list of Ids
           - name: transactionNo
             type: string
             in: query
@@ -1147,6 +1135,18 @@ paths:
             in: query
             description: transactionDate of the VehicleFuellingDetails
             maxLength: 265
+          - name: transactionFromDate
+            type: integer
+            format: int64
+            in: query
+            description: transactionDate of the VehicleFuellingDetails
+            maxLength: 265            
+          - name: transactionToDate
+            type: integer
+            format: int64
+            in: query
+            description: transactionDate of the VehicleFuellingDetails
+            maxLength: 265                        
           - name: regNumber
             type: string
             format: singleValueList
@@ -1261,14 +1261,62 @@ paths:
         parameters:
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
           - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
-          - name: ids
-            type: array
-            items: 
-              type: integer
-              format: int64
+          - name: transactionNos
+            type: string
             in: query
-            maxItems: 50
-            description: comma seperated list of Ids 
+            description: comma seperated list of Transaction number's of VehicleMaintenanceDetails
+          - name: transactionNo
+            type: string
+            in: query
+            description: transactionNo of the VehicleMaintenanceDetails
+            maxLength: 265  
+          - name: isScheduled
+            type: boolean
+            format: checkbox
+            in: query
+            description: isScheduled of the VehicleMaintenanceDetails [Will fetch only scheduled vehicle maintenance/repair]
+          - name: regNumber
+            type: string
+            format: singleValueList
+            in: query
+            description: vehicle Registration Number of the associated with VehicleMaintenanceDetails
+            maxLength: 265            
+          - name: actualMaintenanceDate
+            type: integer
+            format: int64
+            in: query
+            description: Actual date when vehicle was given for Repair/Maintenance
+            maxLength: 265
+          - name: vehicleScheduledMaintenanceDate
+            type: integer
+            format: int64
+            in: query
+            description: Scheduled maintenance date for vehicle
+            maxLength: 265  
+          - name: vehicleDowntimeActual
+            type: number
+            format: double
+            in: query
+            description: Duration when vehicle was down or under Repair/Maintenance   
+          - name: vehicleDownTimeActualUom
+            type: number
+            format: double
+            in: query
+            description: Unit Of Measurement of VehicleMaintenanceDetails
+          - name: vehicleReadingDuringMaintenance
+            type: number
+            format: double
+            in: query
+            description: Reading of the vehicle given for Repair/Maintenance    
+          - name: remarks
+            type: string
+            in: query
+            description: remarks of VehicleMaintenanceDetails
+          - name: costIncurred
+            type: number
+            format: double
+            in: query
+            description: Cost Incurred for vehicle's Repair/Maintenance            
           - $ref: '#/parameters/pageSize'
           - $ref: '#/parameters/offset'
         responses:
@@ -1554,12 +1602,8 @@ paths:
             in: query
             description: code of the PaymentDetails
           - name: codes
-            type: array
-            items: 
-              type: integer
-              format: int64
+            type: string
             in: query
-            maxItems: 50
             description: comma seperated list of codes
           - name: paymentNo
             type: string
@@ -1650,6 +1694,102 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /shifts/_search:
+      post:
+        summary: Get the list of shifts
+        description: shifts
+        tags: 
+          - Shifts
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: code
+            type: string
+            in: query
+            description: code of the Shift
+          - name: codes
+            type: string
+            in: query
+            description: comma seperated list of codes
+          - name: shiftTypeCode
+            type: string
+            in: query
+            description: shift Type code associated with the shift
+          - name: departmentCode
+            type: string
+            in: query
+            description: department of shift
+          - name: designationCode
+            type: string
+            in: query
+            description: designation of the Shift
+          - name: shiftStartTime
+            type: integer
+            format: int64
+            in: query
+            description: Start time of Shift
+          - name: shiftEndTime
+            type: integer
+            format: int64
+            in: query
+            description: End time of Shift
+          - $ref: '#/parameters/pageSize'
+          - $ref: '#/parameters/offset'
+        responses:
+          200:
+            description: Shift(s) retrieved Successfully
+            schema:
+              $ref: '#/definitions/ShiftResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'              
+              
+    /shifts/_create:
+      post:
+        summary: Create new shift(s)
+        description: Create new shift(s)
+        tags: 
+          - Shift
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId'
+          - name: shiftRequest
+            in: body
+            description: Shift Request
+            schema:
+              $ref: '#/definitions/ShiftRequest'
+        responses:
+          201:
+            description: Shift(s) created Successfully
+            schema:
+              $ref: '#/definitions/ShiftResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'              
+              
+    /shifts/_update:
+      post:
+        summary: Update any of the Shift(s)
+        description: Update any of the Shift(s)
+        tags: 
+          - Shifts
+        parameters:
+          - name: shiftRequest
+            in: body
+            description: shift Request
+            schema:
+              $ref: '#/definitions/ShiftRequest'
+        responses:
+          200:
+            description: Shift(s) updated Successfully
+            schema:
+              $ref: '#/definitions/ShiftResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'              
 
 definitions:
 
@@ -2601,11 +2741,6 @@ definitions:
           description: Unique Identifier of the Shift
           maxLength: 256
           minLength: 0
-        name:
-          type: string
-          description: Unique Identifier of the Shift
-          maxLength: 256
-          minLength: 1
         tenantId:
           type: string
           description: tenant id of the Shift
@@ -2651,7 +2786,6 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
-      - name
       - shiftType
       - department
       - designation
@@ -2661,6 +2795,29 @@ definitions:
       - lunchEndTime
       - graceTimeFrom
       - graceTimeTo
+      
+    ShiftRequest:
+      description: Contract class to receive request. Array of Shift items are used in case of create, whereas single Shift item is used for update
+      properties:
+        requestInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+        shifts:
+          description: Used for search result and create only
+          type: array
+          items:
+            $ref: '#/definitions/Shift'            
+            
+    ShiftResponse:
+      description: Contract class to send response. Array of shifts items are used in case of search results or response for create, whereas single shifts item is used for update
+      properties:
+        responseInfo:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        shifts:
+          description: Used for search result and create only
+          type: array
+          maximum: 500
+          items:
+            $ref: '#/definitions/Shift'      
       
     CollectionType:
       type: object
@@ -2744,7 +2901,7 @@ definitions:
           description: Used for search result and create only
           type: array
           items:
-            $ref: '#/definitions/VehicleMaintenance'
+            $ref: '#/definitions/VehicleMaintenance'           
     
     VehicleMaintenanceResponse:
       description: Contract class to send response. Array of VehicleMaintenance items are used in case of search results or response for create, whereas single VehicleMaintenance item is used for update
@@ -2757,7 +2914,6 @@ definitions:
           maximum: 500
           items:
             $ref: '#/definitions/VehicleMaintenance'
-    
     
     Population:
       type: object
@@ -3259,9 +3415,9 @@ definitions:
     VehicleMaintenanceDetails:
       type: object
       properties:
-        code:
+        transactionNo:
           type: string
-          description: Unique Identifier of the VehicleMaintenanceDetails
+          description: Unique number of the VehicleMaintenanceDetails
           maxLength: 256
           minLength: 1
         tenantId:
@@ -3274,8 +3430,7 @@ definitions:
           format: checkbox
           description: Maintenance is either scheduled or non-scheduled. This field captures whether it is sheduled or non-scheduled maintenance / repair. Not selected corresponds to non-scheduled
         
-        # ONLY one of "isMaintenance" OR "isRepair" can be selected. At least one of the two shall be selected  
-          
+        # ONLY one of "isMaintenance" OR "isRepair" can be selected. At least one of the two shall be selected
         maintenanceType:
           type: string
           maxLength: 128

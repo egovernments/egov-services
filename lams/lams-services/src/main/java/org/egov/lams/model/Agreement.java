@@ -150,7 +150,6 @@ public class Agreement {
 	private Boolean isUnderWorkflow;
 	private String firstAllotment;
 	
-	@NotNull
 	private String gstin;
 
 	private String municipalOrderNumber;

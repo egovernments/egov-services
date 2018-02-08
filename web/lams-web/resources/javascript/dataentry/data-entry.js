@@ -513,7 +513,7 @@ var commomFieldsRules = {
         required: true
     },
     gstin: {
-        required: true,
+        required: false,
         alphaNumer: true
     },
     oldAgreementNumber:{
@@ -714,26 +714,6 @@ function onLoadAsset(){
           $(`#paymentCycle`).append(`<option value='${variable}'>${paymentCycle[variable]}</option>`)
       }
   }
-  // var cityGrade = commonApiPost("tenant", "v1/tenant", "_search", {
-  //   code: tenantId
-  // }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {};
-  // console.log(cityGrade);
-  var agreementType = "Create Corporation Agreement";
-  // if (cityGrade.toLowerCase() === 'corp') {
-  //   agreementType = "Create Corporation Agreement";
-  // }
-
-
-  getDesignations(null, function(designations) {
-      for (let variable in designations) {
-          if (!designations[variable]["id"]) {
-              var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
-              designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
-          }
-
-          $(`#approverDesignation`).append(`<option value='${designations[variable]["id"]}'>${designations[variable]["name"]}</option>`);
-      }
-  },agreementType);
 
   if (assetDetails && Object.keys(assetDetails).length) {
       $("#assetCategory\\.name").val(assetDetails["assetCategory"]["name"]);

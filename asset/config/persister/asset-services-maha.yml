@@ -87,9 +87,7 @@ serviceMaps:
        - jsonPath: $.Asset.depreciationExpenseAccount
        
        - jsonPath: $.Asset.titleDocumentsAvailable
-         type: JSON
-         dbType: JSONB
-       
+        
        - jsonPath: $.Asset.totalArea
                 
        - jsonPath: $.Asset.address
@@ -249,9 +247,7 @@ serviceMaps:
        - jsonPath: $.Asset.depreciationExpenseAccount
        
        - jsonPath: $.Asset.titleDocumentsAvailable
-         type: JSON
-         dbType: JSONB
-                  
+                         
        - jsonPath: $.Asset.totalArea
 
        - jsonPath: $.Asset.address

@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Document;
 import org.egov.swm.domain.model.InsuranceDetails;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
@@ -97,7 +96,7 @@ public class VehicleService {
             v.getInsuranceDetails().getInsuranceDocument().setRefCode(v.getRegNumber());
             v.getInsuranceDetails().getInsuranceDocument().setAuditDetails(v.getAuditDetails());
         } else {
-            v.getInsuranceDetails().setInsuranceDocument(new Document());
+            v.getInsuranceDetails().setInsuranceDocument(null);
         }
     }
 

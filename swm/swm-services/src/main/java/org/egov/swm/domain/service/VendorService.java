@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Boundary;
-import org.egov.swm.domain.model.Document;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.TenantBoundary;
@@ -105,12 +104,7 @@ public class VendorService {
                 v.getSupplier().setSupplierNo(vendorSearchResult.getPagedData().get(0).getSupplier().getSupplierNo());
             }
 
-            if (v.getAgreementDocument() != null && v.getAgreementDocument().getFileStoreId() != null) {
-
-                v.getAgreementDocument().setTenantId(v.getTenantId());
-                v.getAgreementDocument().setRefCode(v.getVendorNo());
-
-            }
+            prepareAgreementDocument(v);
 
         }
 
@@ -160,14 +154,14 @@ public class VendorService {
 
                         boundary = boundaryService.getByCode(vendor.getTenantId(), location.getCode(), new RequestInfo());
 
-                       /* if (boundary != null && boundary.getBoundary() != null)
-                            location.builder().id(boundary.getBoundary().getId()).name(boundary.getBoundary().getName())
-                                    .boundaryNum(String.valueOf(boundary.getBoundary().getBoundaryNum()))
-                                    .code(boundary.getBoundary().getCode())
-                                    .build();
-                        else
-                            throw new CustomException("Location", "Given Location is Invalid: " + location.getCode());*/
-                        
+                        /*
+                         * if (boundary != null && boundary.getBoundary() != null)
+                         * location.builder().id(boundary.getBoundary().getId()).name(boundary.getBoundary().getName())
+                         * .boundaryNum(String.valueOf(boundary.getBoundary().getBoundaryNum()))
+                         * .code(boundary.getBoundary().getCode()) .build(); else throw new CustomException("Location",
+                         * "Given Location is Invalid: " + location.getCode());
+                         */
+
                         if (boundary == null || boundary.getBoundary() == null || boundary.getBoundary().getCode() == null
                                 || boundary.getBoundary().getCode().isEmpty())
                             throw new CustomException("Location",
@@ -237,7 +231,7 @@ public class VendorService {
             v.getAgreementDocument().setRefCode(v.getVendorNo());
             v.getAgreementDocument().setAuditDetails(v.getAuditDetails());
         } else
-            v.setAgreementDocument(new Document());
+            v.setAgreementDocument(null);
     }
 
     private String generateVendorNumber(final String tenantId, final RequestInfo requestInfo) {

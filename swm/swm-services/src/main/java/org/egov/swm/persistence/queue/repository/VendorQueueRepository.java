@@ -1,6 +1,7 @@
 package org.egov.swm.persistence.queue.repository;
 
 import org.egov.swm.domain.model.Vendor;
+import org.egov.swm.persistence.repository.DocumentJdbcRepository;
 import org.egov.swm.persistence.repository.ServicedLocationsJdbcRepository;
 import org.egov.swm.persistence.repository.ServicesOfferedJdbcRepository;
 import org.egov.swm.web.requests.VendorRequest;
@@ -20,6 +21,9 @@ public class VendorQueueRepository {
 
     @Autowired
     private ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
+
+    @Autowired
+    private DocumentJdbcRepository documentJdbcRepository;
 
     @Value("${egov.swm.vendor.save.topic}")
     private String saveTopic;
@@ -42,11 +46,14 @@ public class VendorQueueRepository {
 
     public VendorRequest update(final VendorRequest vendorRequest) {
 
-        for (final Vendor cp : vendorRequest.getVendors()) {
+        for (final Vendor v : vendorRequest.getVendors()) {
 
-            servicedLocationsJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
+            servicedLocationsJdbcRepository.delete(v.getTenantId(), v.getVendorNo());
 
-            servicesOfferedJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
+            servicesOfferedJdbcRepository.delete(v.getTenantId(), v.getVendorNo());
+
+            documentJdbcRepository.delete(v.getTenantId(), v.getVendorNo());
+
         }
 
         kafkaTemplate.send(updateTopic, vendorRequest);

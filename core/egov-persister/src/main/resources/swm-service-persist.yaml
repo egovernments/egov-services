@@ -245,22 +245,30 @@ serviceMaps:
        - jsonPath: $.vehicles.*.tenantId
 
 
-    - query: update egswm_document set fileStoreId=?, name=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*.insuranceDetails.insuranceDocument
       jsonMaps:
+       
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.id
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.tenantId
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.name
+         
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.refCode
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.fileStoreId
 
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.name
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.createdBy
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.createdTime
+         dbType: LONG
 
        - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.auditDetails.lastModifiedTime
          dbType: LONG
 
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.refCode
-
-       - jsonPath: $.vehicles.*.insuranceDetails.insuranceDocument.tenantId
 
 
  - version: 1.0
@@ -686,22 +694,29 @@ serviceMaps:
          
        - jsonPath: $.vendors.*.servicesOffered.*.code
 
-    - query: update egswm_document set fileStoreId=?, name=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
+    - query: INSERT INTO egswm_document(id, tenantid, name, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vendors.*.agreementDocument
       jsonMaps:
+       
+       - jsonPath: $.vendors.*.agreementDocument.id
+
+       - jsonPath: $.vendors.*.agreementDocument.tenantId
+
+       - jsonPath: $.vendors.*.agreementDocument.name
+         
+       - jsonPath: $.vendors.*.agreementDocument.refCode
 
        - jsonPath: $.vendors.*.agreementDocument.fileStoreId
 
-       - jsonPath: $.vendors.*.agreementDocument.name
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.createdBy
 
        - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedBy
 
-       - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedTime
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.vendors.*.agreementDocument.refCode
-
-       - jsonPath: $.vendors.*.agreementDocument.tenantId
+       - jsonPath: $.vendors.*.agreementDocument.auditDetails.lastModifiedTime
+         dbType: LONG
 
  - version: 1.0
    name: vendorcontract create

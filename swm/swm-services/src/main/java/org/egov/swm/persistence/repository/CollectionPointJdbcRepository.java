@@ -179,11 +179,22 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         start = System.currentTimeMillis();
         if (collectionPointList != null && !collectionPointList.isEmpty()) {
 
-            populateBoundarys(collectionPointList);
+            start = System.currentTimeMillis();
+                populateBoundarys(collectionPointList);
+            end = System.currentTimeMillis();
+            LOG.info("Time taken for populating Boundary MDMS " + (end - start) + "ms");
 
-            populateBinDetails(collectionPointList, collectionPointCodes.toString());
+            start = System.currentTimeMillis();
+                populateBinDetails(collectionPointList, collectionPointCodes.toString());
 
-            populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
+            end = System.currentTimeMillis();
+            LOG.info("Time taken for populating Bin Details " + (end - start) + "ms");
+
+            start = System.currentTimeMillis();
+                populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
+            end = System.currentTimeMillis();
+            LOG.info("Time taken for populating populateCollectionPointDetails " + (end - start) + "ms");
+
         }
 
         end = System.currentTimeMillis();
@@ -300,7 +311,10 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
         List<CollectionPointDetails> collectionPointDetails = collectionPointDetailsJdbcRepository.search(cpds);
 
-        List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
+        long start = System.currentTimeMillis();
+            List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
+        long end = System.currentTimeMillis();
+        LOG.info("Time taken for populating collectionTypeService MDMS " + (end - start) + "ms");
 
         for (CollectionType ct : collectionTypes) {
             collectionTypeMap.put(ct.getCode(), ct);

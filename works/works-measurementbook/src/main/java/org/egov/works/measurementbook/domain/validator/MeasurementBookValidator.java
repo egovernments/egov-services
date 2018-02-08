@@ -290,9 +290,9 @@ public class MeasurementBookValidator {
                 String status = measurementBooks.get(0).getStatus().getCode();
                 if (status.equals(Constants.STATUS_CANCELLED) || status.equals(Constants.STATUS_APPROVED)) {
                     messages.put(Constants.KEY_MB_CANNOT_UPDATE_STATUS, Constants.MSG_MB_CANNOT_UPDATE_STATUS);
-                } else if((status.equals(Constants.STATUS_REJECTED) && !measurementBook.getStatus().getCode().equals(Constants.STATUS_RESUBMITTED)) ||
-                        (status.equals(Constants.STATUS_RESUBMITTED) && !(measurementBook.getStatus().getCode().equals(Constants.STATUS_CHECKED) ||
-                                measurementBook.getStatus().getCode().equals(Constants.STATUS_CANCELLED)) )) {
+                } else if((status.equals(CommonConstants.STATUS_REJECTED) && !(measurementBook.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED) ||
+                        measurementBook.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))) ||
+                        (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(measurementBook.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED)))) {
                     messages.put(Constants.KEY_MB_INVALID_STATUS, Constants.MSG_MB_INVALID_STATUS);
                 } else if (!measurementBook.getStatus().getCode().equals(Constants.STATUS_REJECTED)) {
                     filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
@@ -309,8 +309,8 @@ public class MeasurementBookValidator {
                         Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
                         Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
                         Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("orderNumber");
-                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
-                        if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
+                        Integer dbStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
+                        if (requestStatusOrderNumber - dbStatusOrderNumber != 1) {
                             messages.put(Constants.KEY_MB_INVALID_STATUS, Constants.MSG_MB_INVALID_STATUS);
                         }
                     }

@@ -100,7 +100,7 @@ public class LetterOfAcceptanceValidator {
 
                     if (messages != null && !messages.isEmpty())
                         throw new CustomException(messages);
-                }
+            }
             }
 
             if (!isUpdate && letterOfAcceptance.getLoaNumber() != null && !letterOfAcceptance.getLoaNumber().isEmpty()) {
@@ -356,10 +356,9 @@ public class LetterOfAcceptanceValidator {
                 String status = lists.get(0).getStatus().getCode();
                 if (status.equals(CommonConstants.STATUS_CANCELLED) || status.equals(CommonConstants.STATUS_APPROVED)) {
                     messages.put(Constants.KEY_CANNOT_UPDATE_STATUS_FOR_LOA, Constants.MESSAGE_CANNOT_UPDATE_STATUS_FOR_LOA);
-                } else if((status.equals(CommonConstants.STATUS_REJECTED) && !letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED)) ||
-                        (status.equals(CommonConstants.STATUS_REJECTED) && !letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) ||
-                        (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
-                                letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) )) {
+                } else if((status.equals(CommonConstants.STATUS_REJECTED) && !(letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED) ||
+                        letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))) ||
+                        (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED)))) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_LOA, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_LOA);
                 } else if (!letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {
                     filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
@@ -376,8 +375,8 @@ public class LetterOfAcceptanceValidator {
                         Map<String, Object> jsonMapRequest = (Map<String, Object>) statusRequestArray.get(0);
                         Map<String, Object> jsonMapDB = (Map<String, Object>) dBStatusArray.get(0);
                         Integer requestStatusOrderNumber = (Integer) jsonMapRequest.get("orderNumber");
-                        Integer dbtStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
-                        if (requestStatusOrderNumber - dbtStatusOrderNumber != 1) {
+                        Integer dbStatusOrderNumber = (Integer) jsonMapDB.get("orderNumber");
+                        if (requestStatusOrderNumber - dbStatusOrderNumber != 1) {
                             messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_LOA, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_LOA);
                         }
                     }

@@ -223,10 +223,10 @@ public class AssetValidator implements Validator {
 			asset.setFundSource(new FundSource());
 		}
 
-		// FIXME TODO remove it after ghansyam handles it in persister
+		/*// FIXME TODO remove it after ghansyam handles it in persister
 		if (asset.getTitleDocumentsAvailable() == null) {
 			asset.setTitleDocumentsAvailable(new ArrayList<>());
-		}
+		}*/
 	}
 
 	public void validateForRevaluation(RevaluationRequest revaluationRequest) {

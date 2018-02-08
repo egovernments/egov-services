@@ -96,7 +96,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setOpeningDate(rs.getLong("openingDate"));
                 asset.setLocation(rs.getString("location"));
                 asset.setCurrentValue(rs.getBigDecimal("currentamount"));
-                
+                /*
                 final String tittleDocs = rs.getString("titledocumentsavailable");
                 List<String> tda = null;
                 try {
@@ -109,8 +109,9 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                     e.printStackTrace();
                 } catch (Exception e) {
           
-                }
-                asset.setTitleDocumentsAvailable(tda);
+                }*/
+                //asset.setTitleDocumentsAvailable(tda);
+                asset.setTitleDocumentsAvailable(rs.getString("titledocumentsavailable"));
                 
                 final String properties = rs.getString("assetAttributes");
                 List<Attributes> asset2 = null;

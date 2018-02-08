@@ -157,6 +157,8 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         final List<CollectionPointEntity> collectionPointEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
+        LOG.info("Search Query CollectionPointEntity " + searchQuery.toString());
+
         end = System.currentTimeMillis();
         LOG.info("Time taken for returning data from db " + (end - start) + "ms");
 

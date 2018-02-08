@@ -3,8 +3,6 @@ package org.egov.swm.domain.service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -98,11 +96,11 @@ public class VehicleFuellingDetailsService {
     private void validate(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
         Pagination<RefillingPumpStation> refillingPumpStationList;
-        findDuplicatesInUniqueFields(vehicleFuellingDetailsRequest);
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicleList;
         RefillingPumpStationSearch refillingPumpStationSearch;
-
+        VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch;
+        Pagination<VehicleFuellingDetails> fuellingDetails;
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
@@ -156,34 +154,35 @@ public class VehicleFuellingDetailsService {
                             "Given ReceiptDate is invalid: " + dateFormat.format(new Date(details.getReceiptDate()))
                                     + " Receipt date should not be after transaction Date");
 
-            validateUniqueFields(details);
-        }
-    }
+            vehicleFuellingDetailsSearch = new VehicleFuellingDetailsSearch();
+            vehicleFuellingDetailsSearch.setTenantId(details.getTenantId());
+            vehicleFuellingDetailsSearch.setRefuellingStationName(details.getRefuellingStation().getCode());
 
-    private void findDuplicatesInUniqueFields(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+            fuellingDetails = search(vehicleFuellingDetailsSearch);
 
-        final Map<String, String> receiptNoMap = new HashMap<>();
+            if ((details.getTransactionNo() == null || details.getTransactionNo().isEmpty())
+                    && fuellingDetails != null && fuellingDetails.getPagedData() != null
+                    && !fuellingDetails.getPagedData().isEmpty()) {
 
-        for (final VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails())
-            if (details.getReceiptNo() != null) {
-                if (receiptNoMap.get(details.getReceiptNo()) != null)
-                    throw new CustomException("name",
-                            "Duplicate ReceiptNos in given Vehicle Fuelling Details : " + details.getReceiptNo());
-
-                receiptNoMap.put(details.getReceiptNo(), details.getReceiptNo());
+                throw new CustomException("VehicleFuellingDetails",
+                        "Vehicle Fuelling data already exist for the selected Pump Station:"
+                                + details.getRefuellingStation().getName() + " and receipt number: "
+                                + details.getReceiptNo());
             }
 
-    }
+            if (details.getTransactionNo() != null && !details.getTransactionNo().isEmpty()
+                    && fuellingDetails != null && fuellingDetails.getPagedData() != null
+                    && !fuellingDetails.getPagedData().isEmpty()
+                    && !details.getTransactionNo()
+                            .equalsIgnoreCase(fuellingDetails.getPagedData().get(0).getTransactionNo())) {
 
-    private void validateUniqueFields(final VehicleFuellingDetails details) {
+                throw new CustomException("VehicleFuellingDetails",
+                        "Vehicle Fuelling data already exist for the selected Pump Station:"
+                                + details.getRefuellingStation().getName() + " and receipt number: "
+                                + details.getReceiptNo());
+            }
 
-        if (details.getReceiptNo() != null)
-            if (!vehicleFuellingDetailsRepository.uniqueCheck(details.getTenantId(), "receiptNo",
-                    details.getReceiptNo(), "transactionNo", details.getTransactionNo()))
-                throw new CustomException("receiptNo", "The field receiptNo must be unique in the system The  value "
-                        + details.getReceiptNo()
-                        + " for the field receiptNo already exists in the system. Please provide different value ");
-
+        }
     }
 
     private void setAuditDetails(final VehicleFuellingDetails contract, final Long userId) {

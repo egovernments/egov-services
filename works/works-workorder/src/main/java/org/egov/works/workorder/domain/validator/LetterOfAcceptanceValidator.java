@@ -360,7 +360,8 @@ public class LetterOfAcceptanceValidator {
                         letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))) ||
                         (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED)))) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_LOA, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_LOA);
-                } else if (!letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {
+                } else if (!(letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED) ||
+                        letterOfAcceptance.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED))) {
                     filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
                     filetsValuesList = new ArrayList<>(Arrays.asList(letterOfAcceptance.getStatus().getCode().toUpperCase(), CommonConstants.LETTEROFACCEPTANCE));
                     JSONArray statusRequestArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,

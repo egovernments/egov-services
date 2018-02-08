@@ -200,7 +200,7 @@ public class MovementRepository {
 				&& movement.getEmployeeAcceptance())
 			try {
 				promoteEmployee(movementRequest);
-				// transferEmployee(movementRequest);
+				transferEmployee(movementRequest);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

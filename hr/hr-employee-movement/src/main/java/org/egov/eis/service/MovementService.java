@@ -61,7 +61,6 @@ import org.egov.eis.web.contract.MovementUploadResponse;
 import org.egov.eis.web.contract.RequestInfo;
 import org.egov.eis.web.contract.ResponseInfo;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,18 +76,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class MovementService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MovementService.class);
-
-	@Value("${kafka.topics.movement.create.name}")
-	private String movementCreateTopic;
-
-	@Value("${kafka.topics.movement.create.key}")
-	private String movementCreateKey;
-
-	@Value("${kafka.topics.movement.update.name}")
-	private String movementUpdateTopic;
-
-	@Value("${kafka.topics.movement.update.key}")
-	private String movementUpdateKey;
 
 	@Autowired
 	private MovementRepository movementRepository;
@@ -110,9 +97,6 @@ public class MovementService {
 
 	@Autowired
 	private PropertiesManager propertiesManager;
-
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	public List<Movement> getMovements(final MovementSearchRequest movementSearchRequest,
 			final RequestInfo requestInfo) {
@@ -316,11 +300,6 @@ public class MovementService {
 			}
 			try {
 				update(movementRequest);
-				// movementProducer.sendMessage(movementUpdateTopic,
-				// movementUpdateKey,
-				// movementRequestJson);
-				// kafkaTemplate.send(movementUpdateTopic, movementRequest);
-
 			} catch (final Exception ex) {
 				ex.printStackTrace();
 			}

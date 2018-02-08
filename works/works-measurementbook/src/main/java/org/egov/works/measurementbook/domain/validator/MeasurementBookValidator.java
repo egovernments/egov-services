@@ -294,7 +294,8 @@ public class MeasurementBookValidator {
                         measurementBook.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))) ||
                         (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(measurementBook.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED)))) {
                     messages.put(Constants.KEY_MB_INVALID_STATUS, Constants.MSG_MB_INVALID_STATUS);
-                } else if (!measurementBook.getStatus().getCode().equals(Constants.STATUS_REJECTED)) {
+                } else if (!(measurementBook.getStatus().getCode().equals(Constants.STATUS_REJECTED) ||
+                        measurementBook.getStatus().getCode().equals(Constants.STATUS_RESUBMITTED))) {
                     filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
                     filetsValuesList = new ArrayList<>(Arrays.asList(measurementBook.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
                     JSONArray statusRequestArray = measurementBookUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,

@@ -304,7 +304,8 @@ public class WorkOrderValidator {
                         workOrder.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))) ||
                         (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(workOrder.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED)))) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_WORKORDER, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_WORKORDER);
-                } else if (!workOrder.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {
+                } else if (!(workOrder.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED) ||
+                        workOrder.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED))) {
                     filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
                     filetsValuesList = new ArrayList<>(Arrays.asList(workOrder.getStatus().getCode().toUpperCase(), CommonConstants.WORKORDER));
                     JSONArray statusRequestArray = workOrderUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,

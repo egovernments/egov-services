@@ -611,7 +611,8 @@ public class EstimateValidator {
                         detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))) ||
                         (status.equals(CommonConstants.STATUS_RESUBMITTED) && !(detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED)))) {
                     messages.put(Constants.KEY_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE, Constants.MESSAGE_INVALID_STATUS_UPDATE_FOR_DETAILED_ESTIMATE);
-                } else if (!detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED)) {
+                } else if (!(detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_REJECTED) ||
+                        detailedEstimate.getStatus().getCode().equals(CommonConstants.STATUS_RESUBMITTED))) {
                     filetsNamesList = new ArrayList<>(Arrays.asList(CommonConstants.CODE,CommonConstants.MODULE_TYPE));
                     filetsValuesList = new ArrayList<>(Arrays.asList(detailedEstimate.getStatus().getCode().toUpperCase(), CommonConstants.DETAILEDESTIMATE));
                     JSONArray statusRequestArray = estimateUtils.getMDMSData(CommonConstants.WORKS_STATUS_APPCONFIG, filetsNamesList,

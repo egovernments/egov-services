@@ -158,7 +158,7 @@ public class VendorPaymentDetailsService {
 
         EmployeeResponse employeeResponse;
         Pagination<VendorContract> vendorContractPage;
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (final VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsRequest.getVendorPaymentDetails()) {
 

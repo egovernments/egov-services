@@ -152,7 +152,7 @@ public class VehicleService {
         String designationId = null;
         EmployeeResponse employeeResponse = null;
 
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         findDuplicatesInUniqueFields(vehicleRequest);
@@ -198,7 +198,7 @@ public class VehicleService {
                 vehicle.setFuelType(fuelTypeService.getFuelType(vehicle.getTenantId(), vehicle.getFuelType().getCode(),
                         vehicleRequest.getRequestInfo()));
 
-            if (vehicle.getInsuranceDetails() != null
+            if ((vehicle.getRegNumber() == null || vehicle.getRegNumber().isEmpty()) && vehicle.getInsuranceDetails() != null
                     && vehicle.getInsuranceDetails().getInsuranceValidityDate() != null)
                 if (!utils.isFutureDate(new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate())))
                     throw new CustomException("InsuranceValidityDate",

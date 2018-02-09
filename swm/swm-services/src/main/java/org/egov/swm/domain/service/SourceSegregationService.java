@@ -100,7 +100,7 @@ public class SourceSegregationService {
 
     private void validate(final SourceSegregationRequest sourceSegregationRequest) {
 
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {

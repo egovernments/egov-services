@@ -101,7 +101,7 @@ public class VehicleFuellingDetailsService {
         RefillingPumpStationSearch refillingPumpStationSearch;
         VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch;
         Pagination<VehicleFuellingDetails> fuellingDetails;
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {

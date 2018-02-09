@@ -96,7 +96,7 @@ public class VehicleTripSheetDetailsService {
         Pagination<Route> routes;
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicleList;
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsRequest

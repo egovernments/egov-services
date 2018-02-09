@@ -116,7 +116,7 @@ public class SanitationStaffTargetService {
         Pagination<CollectionPoint> collectionPoints;
         SanitationStaffTargetSearch sstSearch;
         Pagination<SanitationStaffTarget> sstSearchResponse;
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         DateFormat validationDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
@@ -125,8 +125,9 @@ public class SanitationStaffTargetService {
 
             try {
 
-                if (!validationDateFormat.parse(validationDateFormat.format(sanitationStaffTarget.getTargetFrom())).equals(
-                        validationDateFormat.parse(validationDateFormat.format(new Date())))
+                if ((sanitationStaffTarget.getTargetNo() == null || sanitationStaffTarget.getTargetNo().isEmpty())
+                        && !validationDateFormat.parse(validationDateFormat.format(sanitationStaffTarget.getTargetFrom())).equals(
+                                validationDateFormat.parse(validationDateFormat.format(new Date())))
                         && new Date(sanitationStaffTarget.getTargetFrom()).before(new Date()))
                     throw new CustomException("TargetFrom ", "Please select Target From date as Today's or Future date: "
                             + dateFormat.format(new Date(sanitationStaffTarget.getTargetFrom())));

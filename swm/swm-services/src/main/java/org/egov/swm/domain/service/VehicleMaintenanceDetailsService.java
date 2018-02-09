@@ -134,7 +134,7 @@ public class VehicleMaintenanceDetailsService {
 
     private void validate(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleMaintenanceDetails vehicleMaintenanceDetails : vehicleMaintenanceDetailsRequest

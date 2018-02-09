@@ -98,7 +98,7 @@ public class VendorContractService {
         SwmProcess p;
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (final VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
 

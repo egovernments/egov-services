@@ -55,7 +55,7 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
             validateEntityFieldName(searchRequest.getSortBy(), SourceSegregationSearch.class);
         }
 
-        String orderBy = "order by code";
+        String orderBy = "order by createdTime desc";
         if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
             orderBy = "order by " + searchRequest.getSortBy();
 

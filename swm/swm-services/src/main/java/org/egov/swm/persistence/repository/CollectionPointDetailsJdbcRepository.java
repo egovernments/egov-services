@@ -86,7 +86,7 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
                 .query(searchQuery.toString(), paramValues, row);
 
         long end = System.currentTimeMillis();
-        LOG.info("Time taken for searchQuery for Bind Details " + (end - start) + "ms");
+        LOG.info("Time taken for searchQuery for CollectionPointDetailsEntity " + (end - start) + "ms");
         LOG.info("Search Query CollectionPointDetailsEntity " + searchQuery.toString());
 
         for (final CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities) {

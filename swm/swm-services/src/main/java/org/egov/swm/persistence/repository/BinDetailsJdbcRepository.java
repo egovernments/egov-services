@@ -87,7 +87,7 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
 
         long end = System.currentTimeMillis();
         LOG.info("Time taken for searchQuery for Bind Details " + (end - start) + "ms");
-        LOG.info("Search Query BinDetailsEntity " + searchQuery.toString());
+        LOG.info("Search Query BinDetailsEntity " + searchQuery.toString() + "paramValues " + paramValues);
 
         final List<BinDetails> resultList = new ArrayList<>();
 

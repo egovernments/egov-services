@@ -1468,7 +1468,7 @@ definitions:
         description: Value of the asset after applying Depreciation.
   AssetRequest:
     properties:
-      ResposneInfo:
+      RequestInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Assets:
@@ -1488,7 +1488,7 @@ definitions:
     description: Hold the Asset Response information.
   AssetCategoryRequest:
     properties:
-      ResposneInfo:
+      RequestInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       AssetCategory:
@@ -1508,7 +1508,7 @@ definitions:
     description: Hold the Asset Category Response information.
   RevaluationRequest:
     properties:
-      ResposneInfo:
+      RequestInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Revaluation:
@@ -1528,7 +1528,7 @@ definitions:
     description: Hold the Asset Revaluation Response information.
   DisposalRequest:
     properties:
-      ResposneInfo:
+      RequestInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       Disposal:
@@ -1568,7 +1568,7 @@ definitions:
     description: Hold the Asset Depreciation Response information.
   AssetCurrentValueRequest:
     properties:
-      ResposneInfo:
+      RequestInfo:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
       AssetCurrentValue:

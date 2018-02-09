@@ -61,12 +61,15 @@ public class CollectionPointController {
     public CollectionPointResponse search(@ModelAttribute final CollectionPointSearch collectionPointSearch,
             @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
+        LOG.info("correlationId for CollectionPoint Search " + requestInfo.getCorrelationId());
+
         long start = System.currentTimeMillis();
         final Pagination<CollectionPoint> collectionPointList = collectionPointService.search(collectionPointSearch);
 
         long end = System.currentTimeMillis();
 
         LOG.info("Time taken for collectionPointService.search(collectionPointSearch) in controller " + (end - start) + "ms");
+
 
         return CollectionPointResponse.builder().responseInfo(getResponseInfo(requestInfo))
                 .collectionPoints(collectionPointList.getPagedData()).page(new PaginationContract(collectionPointList))

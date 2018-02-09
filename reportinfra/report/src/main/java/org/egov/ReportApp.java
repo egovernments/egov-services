@@ -137,8 +137,8 @@ public class ReportApp implements EnvironmentAware {
 					
 					} else if(moduleYaml[1].startsWith("file://")){
 						LOGGER.info("The Yaml Location is : "+yamlLocation);
-						 Resource yamlResource = resourceLoader.getResource(moduleYaml[1].toString());
-						 File yamlFile = yamlResource.getFile();
+						Resource yamlResource = resourceLoader.getResource(moduleYaml[1].toString());
+						File yamlFile = yamlResource.getFile();
 						try{
 						rd = mapper.readValue(yamlFile, ReportDefinitions.class);
 						 } catch(Exception e) {

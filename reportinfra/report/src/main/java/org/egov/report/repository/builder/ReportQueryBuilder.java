@@ -51,9 +51,6 @@ public class ReportQueryBuilder {
 	
 	@Value("${mdms.search.enabled}")
 	private boolean isSearchEnabled;
-	
-	@Value("${v2.config.enabled}")
-	private boolean isNewConfigEnabled;
 		 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
 	   
@@ -157,26 +154,30 @@ public class ReportQueryBuilder {
 				url = url.replaceAll("\\$currentTime", Long.toString(getCurrentTime()));
 				 String[] stateid = null;
 				if(es.getStateData() && (!tenantid.equals("default"))) {
+					LOGGER.info("State Data");
 					stateid = tenantid.split("\\.");
 					url = url.replaceAll("\\$tenantid",stateid[0]);
 					finalJson = finalJson.replaceAll("\\$tenantid",stateid[0]);
 				} else {
-				
-				url = url.replaceAll("\\$tenantid",tenantid);
-				finalJson = finalJson.replaceAll("\\$tenantid",tenantid);
+					LOGGER.info("Tenant Data");
+					url = url.replaceAll("\\$tenantId",tenantid);
+					finalJson = finalJson.replaceAll("\\$tenantid",tenantid);
 				}
 				LOGGER.info("Mapper Converted string with replaced values "+requestInfoJson);
-				 URI uri = URI.create(url);
-				 MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-			     Map headerMap = new HashMap<String, String>();
-			     headerMap.put("Content-Type", "application/json");
-			     headers.setAll(headerMap);
-			     HttpEntity<?> request = new HttpEntity<>(finalJson, headers);
-			     try {
-					if(es.getPostObject() != null){
+				URI uri = URI.create(url);
+				LOGGER.info("URI: "+uri);				
+				MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+			    Map headerMap = new HashMap<String, String>();
+			    headerMap.put("Content-Type", "application/json");
+			    headers.setAll(headerMap);
+			    HttpEntity<?> request = new HttpEntity<>(finalJson, headers);
+			    try {
+			    	if(es.getPostObject() != null){
 						res = restTemplate.postForObject(uri,request ,String.class);
-				    }else {
-							res = restTemplate.postForObject(uri,getRInfo(authToken) ,String.class);	
+						LOGGER.info("Response - 1: "+res);				
+			    	}else {
+						res = restTemplate.postForObject(uri,getRInfo(authToken) ,String.class);	
+						LOGGER.info("Response - 2 : "+res);				
 					}
 				 } catch(HttpClientErrorException e){
 						LOGGER.error("Exception while fetching data from mdms: ",e);
@@ -190,7 +191,7 @@ public class ReportQueryBuilder {
 				MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
 				String[] criteriaArray = null;
 				Map<String, String> keyValueMap = new WeakHashMap<>();
-				if(!isNewConfigEnabled) {
+				if(reportDefinition.getVersion().equals("1.0.0")) {
 					LOGGER.info("Entering old config block");
 					String[] splitUrl = url.split("[?]");
 					uri = splitUrl[0].replaceAll("_get", "_search");

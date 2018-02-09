@@ -6,17 +6,31 @@ public class ExternalService {
     
 	@JsonProperty("entity")
 	public String entity;
+	
 	@JsonProperty("apiURL")
 	public String apiURL;
+	
 	@JsonProperty("keyOrder")
 	public String keyOrder;
+	
 	@JsonProperty("tableName")
 	public String tableName;
+	
 	@JsonProperty("stateData")
 	public Boolean stateData = false;
+	
 	@JsonProperty("postObject")
 	public String postObject;
 	
+	@JsonProperty("criteria")
+	public String criteria;
+	
+	public String getCriteria() {
+		return criteria;
+	}
+	public void setCriteria(String criteria) {
+		this.criteria = criteria;
+	}
 	public String getPostObject() {
 		return postObject;
 	}

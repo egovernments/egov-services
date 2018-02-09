@@ -107,15 +107,15 @@ public class ReportApp implements EnvironmentAware {
 		try {
 		//Local Testing
 
-		/*Resource resource = resourceLoader.getResource("file:/ws/reportFileLocations.txt");
+		Resource resource = resourceLoader.getResource("file://home/vishal/ws/reportFileLocations.txt");
 		File file = resource.getFile();
 		fr = new FileReader(file);
-		br = new BufferedReader(fr);*/
+		br = new BufferedReader(fr);
 		
 		//Dev Testing
-		 URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocationsv1.txt");
+		 /*URL url = new URL("https://raw.githubusercontent.com/egovernments/egov-services/master/docs/reportinfra/report/reportFileLocationsv1.txt");
 		 URLConnection urlConnection = url.openConnection();
-		 br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+		 br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));*/
 		 
 		 
 		 

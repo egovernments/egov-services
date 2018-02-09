@@ -1,22 +1,20 @@
 package org.egov.report.repository.builder;
 
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.WeakHashMap;
 
-import javax.xml.ws.RequestWrapper;
-
-import org.egov.swagger.model.RequestInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.egov.domain.model.ReportDefinitions;
-import org.egov.domain.model.RequestInfoWrapper;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.egov.swagger.model.ExternalService;
 import org.egov.swagger.model.ReportDefinition;
 import org.egov.swagger.model.SearchColumn;
@@ -27,6 +25,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -36,15 +35,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.jayway.jsonpath.JsonPath;
 
 @Component
@@ -52,6 +48,12 @@ public class ReportQueryBuilder {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Value("${mdms.search.enabled}")
+	private boolean isSearchEnabled;
+	
+	@Value("${v2.config.enabled}")
+	private boolean isNewConfigEnabled;
 		 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportQueryBuilder.class);
 	   
@@ -61,7 +63,7 @@ public class ReportQueryBuilder {
 		
 		
 		StringBuffer csinput = new StringBuffer();
-		
+		LOGGER.info("ReportDefinition: "+reportDefinition);
 		if(reportDefinition.getQuery().contains("UNION")){
 			baseQuery = generateUnionQuery(searchParams, tenantId, reportDefinition);
 		}else if(reportDefinition.getQuery().contains("FULLJOIN")){
@@ -148,36 +150,105 @@ public class ReportQueryBuilder {
 			 finalJson = finalJson.concat("}");
 			}
 			
-			url = es.getApiURL();
-			LOGGER.info("URL from yaml config: "+url);
-			url = url.replaceAll("\\$currentTime", Long.toString(getCurrentTime()));
-			 String[] stateid = null;
-			if(es.getStateData() && (!tenantid.equals("default"))) {
-				stateid = tenantid.split("\\.");
-				url = url.replaceAll("\\$tenantid",stateid[0]);
-				finalJson = finalJson.replaceAll("\\$tenantid",stateid[0]);
-			} else {
+			if(!isSearchEnabled) {
+				LOGGER.info("Entering _get block");
+				url = es.getApiURL();
+				LOGGER.info("URL from yaml config: "+url);
+				url = url.replaceAll("\\$currentTime", Long.toString(getCurrentTime()));
+				 String[] stateid = null;
+				if(es.getStateData() && (!tenantid.equals("default"))) {
+					stateid = tenantid.split("\\.");
+					url = url.replaceAll("\\$tenantid",stateid[0]);
+					finalJson = finalJson.replaceAll("\\$tenantid",stateid[0]);
+				} else {
+				
+				url = url.replaceAll("\\$tenantid",tenantid);
+				finalJson = finalJson.replaceAll("\\$tenantid",tenantid);
+				}
+				LOGGER.info("Mapper Converted string with replaced values "+requestInfoJson);
+				 URI uri = URI.create(url);
+				 MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+			     Map headerMap = new HashMap<String, String>();
+			     headerMap.put("Content-Type", "application/json");
+			     headers.setAll(headerMap);
+			     HttpEntity<?> request = new HttpEntity<>(finalJson, headers);
+			     try {
+					if(es.getPostObject() != null){
+						res = restTemplate.postForObject(uri,request ,String.class);
+				    }else {
+							res = restTemplate.postForObject(uri,getRInfo(authToken) ,String.class);	
+					}
+				 } catch(HttpClientErrorException e){
+						LOGGER.error("Exception while fetching data from mdms: ",e);
+				 }
+			}else {	
+				ObjectMapper mapper = new ObjectMapper();
+				LOGGER.info("Entering _search block");
+				url = es.getApiURL();
+				LOGGER.info("URL from yaml config: "+url);
+				String uri = null;
+				MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
+				String[] criteriaArray = null;
+				Map<String, String> keyValueMap = new WeakHashMap<>();
+				if(!isNewConfigEnabled) {
+					LOGGER.info("Entering old config block");
+					String[] splitUrl = url.split("[?]");
+					uri = splitUrl[0].replaceAll("_get", "_search");
+					String queryParam = null;
+					if(splitUrl[1].contains("|")) {
+						queryParam = splitUrl[1].split("|")[0];
+						criteriaArray = queryParam.split("[&]");
+					}else {
+						queryParam = splitUrl[1];
+						criteriaArray = queryParam.split("[&]");
+					}
+					LOGGER.info("criteria: "+criteriaArray);
+					for(String pair:  criteriaArray) {
+						if(pair.split("=")[0].equals("tenantId"))
+							continue;
+						keyValueMap.put(pair.split("=")[0], pair.split("=")[1]);
+					}
+				}else {
+					LOGGER.info("Entering new config block");
+					uri = url;
+					String criteria = es.getCriteria();
+					if(null != criteria) {
+						criteriaArray = criteria.split(",");
+						LOGGER.info("criteria: "+criteriaArray);
+						for(String pair:  criteriaArray) {
+							if(pair.split("=")[0].equals("tenantId"))
+								continue;
+							keyValueMap.put(pair.split("=")[0], pair.split("=")[1]);
+						}
+					
+					}
+				}
+				LOGGER.info("keyValueMap: "+keyValueMap);
+				MasterDetail masterDetail = new MasterDetail();
+				masterDetail.setName(keyValueMap.get("masterName"));
+				masterDetail.setFilter(keyValueMap.get("filter"));
+				List<MasterDetail> masterDetails = new ArrayList<>();
+				masterDetails.add(masterDetail);
+				ModuleDetail moduleDetail = new ModuleDetail();
+				moduleDetail.setMasterDetails(masterDetails);
+				moduleDetail.setModuleName(keyValueMap.get("moduleName"));
+				List<ModuleDetail> moduleDetails = new ArrayList<>();
+				moduleDetails.add(moduleDetail);
+				MdmsCriteria mdmsCriteria = new MdmsCriteria();
+				mdmsCriteria.setTenantId(tenantid);
+				mdmsCriteria.setModuleDetails(moduleDetails);
+				mdmsCriteriaReq.setMdmsCriteria(mdmsCriteria);
+				mdmsCriteriaReq.setRequestInfo(getRInfo(authToken));
+				LOGGER.info("URI: "+uri);				
+				try {
+					LOGGER.info("Request: "+mapper.writeValueAsString(mdmsCriteriaReq));
+					res = restTemplate.postForObject(uri,mdmsCriteriaReq ,String.class);
+					LOGGER.info("MDMS response: "+res);
+				}catch(Exception e) {
+					LOGGER.error("Exception while fetching data from mdms: ",e);
+				}
+			}
 			
-			url = url.replaceAll("\\$tenantid",tenantid);
-			finalJson = finalJson.replaceAll("\\$tenantid",tenantid);
-			}
-			LOGGER.info("Mapper Converted string with replaced values "+requestInfoJson);
-			 URI uri = URI.create(url);
-			 MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
-		        Map headerMap = new HashMap<String, String>();
-		        headerMap.put("Content-Type", "application/json");
-		        headers.setAll(headerMap);
-		        HttpEntity<?> request = new HttpEntity<>(finalJson, headers);
-
-			try {
-			if(es.getPostObject() != null){
-			res = restTemplate.postForObject(uri,request ,String.class);
-			} else {
-				res = restTemplate.postForObject(uri,getRInfo(authToken) ,String.class);	
-			}
-			} catch(HttpClientErrorException e){
-				e.printStackTrace();
-			}
 
 			Object jsonObject = JsonPath.read(res,es.getEntity());
 			

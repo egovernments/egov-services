@@ -198,7 +198,7 @@ class ApplyLeave extends React.Component {
               var totalWorkingDays = _days;
 
               if(_this.state.perfixSuffix){
-                console.log("Prefi and suffix" +totalWorkingDays+"  " + _this.state.perfixSuffix.noOfDays);
+                console.log("Prefi and suffix" +totalWorkingDays+"  " + _this.state.perfixSuffix);
                 totalWorkingDays = totalWorkingDays + _this.state.perfixSuffix.noOfDays;
               }
               if(_this.state.encloseHoliday)
@@ -539,7 +539,7 @@ class ApplyLeave extends React.Component {
         } else {
           return (
             <tr>
-              <td colspan="2" align="center" >No Enclosing Holidays</td>
+              <td colSpan="2" className="text-center">No Enclosing Holidays</td>
             </tr>
           )
         }

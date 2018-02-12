@@ -186,7 +186,6 @@ public class CollectionPointService {
     private void findDuplicatesInUniqueFields(final CollectionPointRequest collectionPointRequest) {
 
         Map<String, String> assetOrBinIdsMap = new HashMap<>();
-        new HashMap<>();
         final Map<String, String> nameMap = new HashMap<>();
         Map<String, String> codeMap = new HashMap<>();
 
@@ -194,7 +193,6 @@ public class CollectionPointService {
 
             codeMap = new HashMap<>();
             assetOrBinIdsMap = new HashMap<>();
-            new HashMap<>();
 
             if (collectionPoint.getName() != null) {
 

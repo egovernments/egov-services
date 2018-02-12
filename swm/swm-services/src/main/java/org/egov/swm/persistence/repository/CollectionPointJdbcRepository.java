@@ -225,6 +225,12 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
     }
 
     private void populateBinDetails(List<CollectionPoint> collectionPointList, String collectionPointCodes) {
+
+        LOG.info("Inside populateBinDetails ");
+
+
+        long start = System.currentTimeMillis();
+
         Map<String, List<BinDetails>> binDetailsMap = new HashMap<>();
         Map<String, Asset> assetMap = new HashMap<>();
         String tenantId = null;
@@ -237,10 +243,18 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         bds.setCollectionPoints(collectionPointCodes);
         bds.setTenantId(tenantId);
 
+        long end = System.currentTimeMillis();
+
+        LOG.info("Time taken for initialize bin details " + (end - start) + "ms");
+
+        start = System.currentTimeMillis();
         List<BinDetails> binDetails = binIdDetailsJdbcRepository.search(bds);
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for getting result from binIdDetailsJdbcRepository " + (end - start) + "ms");
 
         List<BinDetails> bdList;
 
+        start = System.currentTimeMillis();
         for (BinDetails bd : binDetails) {
 
             if (binDetailsMap.get(bd.getCollectionPoint()) == null) {
@@ -257,8 +271,16 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
             }
         }
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for putting into result" + (end - start) + "ms");
 
+
+        start = System.currentTimeMillis();
         List<Asset> assets = assetService.getAll(tenantId, new RequestInfo());
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for getting Asset" + (end - start) + "ms");
+
+        start = System.currentTimeMillis();
 
         if (assets != null)
             for (Asset asset : assets) {
@@ -281,6 +303,11 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
                 }
 
         }
+
+        end = System.currentTimeMillis();
+        LOG.info("Time taken for populating Asset data" + (end - start) + "ms");
+
+        LOG.info("Finished populateBinDetails");
 
     }
 

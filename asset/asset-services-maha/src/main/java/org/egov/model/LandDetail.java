@@ -16,7 +16,7 @@ public class LandDetail {
 	
 	private Long id;
 
-	@NotNull
+
 	private String code;
 	
 	@NotNull

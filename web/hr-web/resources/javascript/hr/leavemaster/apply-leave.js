@@ -17,6 +17,7 @@ class ApplyLeave extends React.Component {
         "status": "",
         "stateId": "",
         "tenantId": tenantId,
+        "totalWorkingDays":"",
         "workflowDetails": {
           "department": "",
           "designation": "",
@@ -194,17 +195,21 @@ class ApplyLeave extends React.Component {
                 }
               }
 
-              if(_this.state.perfixSuffix)
-              _days = _days + _this.state.perfixSuffix.noOfDays;
+              var totalWorkingDays = _days;
 
+              if(_this.state.perfixSuffix){
+                console.log("Prefi and suffix" +totalWorkingDays+"  " + _this.state.perfixSuffix.noOfDays);
+                totalWorkingDays = totalWorkingDays + _this.state.perfixSuffix.noOfDays;
+              }
               if(_this.state.encloseHoliday)
-              _days = _days + _this.state.encloseHoliday.length;
+              totalWorkingDays = totalWorkingDays + _this.state.encloseHoliday.length;
 
               _this.setState({
                 leaveSet: {
                   ..._this.state.leaveSet,
                   [_triggerId]: $("#" + _triggerId).val(),
-                  leaveDays: _days
+                  leaveDays: _days,
+                  totalWorkingDays: totalWorkingDays
                 }
               });
 
@@ -500,7 +505,7 @@ class ApplyLeave extends React.Component {
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
     let { leaveSet, perfixSuffix, encloseHoliday } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, reason, leaveType } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, reason, leaveType, totalWorkingDays } = leaveSet;
     let mode = getUrlVars()["type"];
 
     const renderOption = function (list) {
@@ -534,7 +539,7 @@ class ApplyLeave extends React.Component {
         } else {
           return (
             <tr>
-              <td>No Enclosing Holidays</td>
+              <td colspan="2" align="center" >No Enclosing Holidays</td>
             </tr>
           )
         }
@@ -756,6 +761,23 @@ class ApplyLeave extends React.Component {
 
             {showPrefix()}
             {showSuffix()}
+
+            <div className="row">
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Total Working Days</label>
+                  </div>
+                  <div className="col-sm-6">
+
+                    <input type="number" id="totalWorkingDays" name="totalWorkingDays" value={totalWorkingDays}
+                      onChange={(e) => { handleChange(e, "totalWorkingDays") }} disabled />
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+
 
             {showEnclosingHolidayTable()}
 

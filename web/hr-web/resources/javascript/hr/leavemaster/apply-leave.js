@@ -124,7 +124,6 @@ class ApplyLeave extends React.Component {
             let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
             let date2 = new Date(newDateStr1);
             let leaveType = _this.state.leaveSet.leaveType.id;
-            let asOnDate = _this.state.leaveSet.toDate;
             let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
 
             if (date1 > date2) {

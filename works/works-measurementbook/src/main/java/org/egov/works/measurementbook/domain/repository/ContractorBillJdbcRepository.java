@@ -26,7 +26,7 @@ public class ContractorBillJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egw_contractorbill cb";
     public static final String CB_LOAESTIMATE_EXTENTION = ", egw_letterofacceptanceestimate loaestimate";
-    public static final String CB_BILLREGISTER_EXTENTION = ", eg_billregister br";
+    public static final String CB_BILLREGISTER_EXTENTION = ", egf_billregister br";
     public static final String CB_MEASUREMENTBOOK_TABLE_NAME = ", egw_contractorbill_mb cmb";
 
     public List<ContractorBill> searchContractorBills(final ContractorBillSearchContract contractorBillSearchContract,

@@ -146,4 +146,20 @@ public class AllotteeRepository {
 		}
 		return allotteeResponse;
 	}
+	
+	public AllotteeResponse updateAllottee(Allottee allottee, RequestInfo requestInfo) {
+
+		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
+				+ "/users/" + allottee.getId() + "/_updatenovalidate";
+		UserRequest userRequest = UserRequest.buildUserRequestFromAllotte(allottee);
+		CreateUserRequest userCreateRequest = new CreateUserRequest(requestInfo, userRequest);
+		AllotteeResponse allotteeResponse = null;
+		try {
+			allotteeResponse = restTemplate.postForObject(url, userCreateRequest, AllotteeResponse.class);
+		} catch (Exception e) {
+			logger.info("exception while updating user details in modify agreement", e);
+			throw new RuntimeException(e.getMessage() + e);
+		}
+		return allotteeResponse;
+	}
 }

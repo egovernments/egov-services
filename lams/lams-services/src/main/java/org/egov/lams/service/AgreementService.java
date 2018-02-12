@@ -165,7 +165,9 @@ public class AgreementService {
 					.collect(Collectors.toList());
 			agreement.setDemands(demandList);
 		}
-
+		if (agreement.getAllottee() != null && agreement.getAllottee().getId() != null) {
+			allotteeRepository.updateAllottee(agreement.getAllottee(), agreementRequest.getRequestInfo());
+		}
 		agreement.setStatus(Status.ACTIVE);
 		agreement.setIsUnderWorkflow(Boolean.FALSE);
 		agreement.setAgreementDate(agreement.getCommencementDate());

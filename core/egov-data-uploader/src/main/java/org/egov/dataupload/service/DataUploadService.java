@@ -304,18 +304,10 @@ public class DataUploadService {
     		uploadRegistryRepository.updateJob(uploaderRequest);
 			dataUploadUtils.clearInternalDirectory();
 		}		
-		DocumentContext documentContext = null;DocumentContext bulkApiRequest = null;
-		if(uploadDefinition.getIsBulkApi()){
-			String value = JsonPath.read(uploadDefinition.getApiRequest(), 
-	    			uploadDefinition.getArrayPath()).toString();
-			//Module specific content of the request body
-	    	documentContext = JsonPath.parse(value.substring(1, value.length() - 1));
-	    	//Actual request with RequestInfo and module specific content
-	    	bulkApiRequest = JsonPath.parse(uploadDefinition.getApiRequest());
-		}else{
-	    	//Actual request with RequestInfo and module specific content
-			documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
-		}
+
+		DocumentContext documentContext = dataUploadUtils.getDocumentContext(uploadDefinition);
+		DocumentContext bulkApiRequest = dataUploadUtils.getBulkApiRequestContext(uploadDefinition);
+
     	List<Object> resJsonPathList = null;
     	if(null != uploadDefinition.getAdditionalResFields()){
     		resJsonPathList = dataUploadUtils.getResJsonPathList(uploadDefinition.getAdditionalResFields(), coloumnHeaders);
@@ -328,12 +320,8 @@ public class DataUploadService {
 		//Till now the coloumnheaders have been written to result xls. Content processing begins now.
 		
 		int successCount = 0; int failureCount = 0;
-		List<Integer> indexes = new ArrayList<>();
-		
-		//Getting indexes of parentKeys from header list to filter data based on those keys.
-		for(String key: uploadDefinition.getUniqueParentKeys()){
-			indexes.add(coloumnHeaders.indexOf(key));
-		}
+		List<Integer> indexes = dataUploadUtils.getIndexes(uploadDefinition, coloumnHeaders);
+
 		for(int i = 0; i < excelData.size(); i++){
 			String failureMessage = null;
 			//fetching list of all the rows that will be combined to form ONE request.
@@ -443,9 +431,9 @@ public class DataUploadService {
 
 	}
 	
-	private String buildRequestForParentChild(int i, List<List<Object>> filteredList,
-			List<Object> coloumnHeaders, int additionFieldsCount, Definition uploadDefinition, DocumentContext documentContext, 
-			UploaderRequest uploaderRequest, DocumentContext bulkApiRequest) throws Exception {
+	public String buildRequestForParentChild(int i, List<List<Object>> filteredList,
+											 List<Object> coloumnHeaders, int additionFieldsCount, Definition uploadDefinition, DocumentContext documentContext,
+											 UploaderRequest uploaderRequest, DocumentContext bulkApiRequest) throws Exception {
 		String request = null;
 		ObjectMapper mapper = new ObjectMapper();
 		logger.info("filteredList: "+filteredList);

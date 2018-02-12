@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.jayway.jsonpath.DocumentContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -450,5 +451,36 @@ public class DataUploadUtils {
 		}
 	    return true;            
 	}
+
+    public List<Integer> getIndexes(Definition uploadDefinition, List<Object> coloumnHeaders) {
+		List<Integer> indexes = new ArrayList<>();
+
+		//Getting indexes of parentKeys from header list to filter data based on those keys.
+		for(String key: uploadDefinition.getUniqueParentKeys()){
+			indexes.add(coloumnHeaders.indexOf(key));
+		}
+
+		return indexes;
+	}
+
+    public DocumentContext getDocumentContext(Definition uploadDefinition) {
+        if(uploadDefinition.getIsBulkApi()){
+            String value = JsonPath.read(uploadDefinition.getApiRequest(),
+                    uploadDefinition.getArrayPath()).toString();
+            //Module specific content of the request body
+            return  JsonPath.parse(value.substring(1, value.length() - 1));
+            //Actual request with RequestInfo and module specific content
+        }else{
+            //Actual request with RequestInfo and module specific content
+            return JsonPath.parse(uploadDefinition.getApiRequest());
+        }
+    }
+
+    public DocumentContext getBulkApiRequestContext(Definition uploadDefinition) {
+        if(uploadDefinition.getIsBulkApi()) {
+            return JsonPath.parse(uploadDefinition.getApiRequest());
+        }
+        return null;
+    }
 }
 

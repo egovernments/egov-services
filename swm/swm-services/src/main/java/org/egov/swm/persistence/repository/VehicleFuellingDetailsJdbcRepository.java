@@ -70,20 +70,15 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
             params.append("transactionDate =:transactionDate");
             paramValues.put("transactionDate", searchRequest.getTransactionDate());
         }
-        if(searchRequest.getTransactionFromDate() != null){
+        if (searchRequest.getTransactionFromDate() != null) {
             addAnd(params);
             params.append("transactionDate >= :transactionFromDate");
             paramValues.put("transactionFromDate", searchRequest.getTransactionFromDate());
         }
-        if(searchRequest.getTransactionToDate() != null){
+        if (searchRequest.getTransactionToDate() != null) {
             addAnd(params);
             params.append("transactionDate <= :transactionToDate");
             paramValues.put("transactionToDate", searchRequest.getTransactionToDate());
-        }
-        if (searchRequest.getFuelTypeCode() != null) {
-            addAnd(params);
-            params.append("typeOfFuel =:typeOfFuel");
-            paramValues.put("typeOfFuel", searchRequest.getFuelTypeCode());
         }
         if (searchRequest.getRegNumber() != null) {
             addAnd(params);
@@ -112,6 +107,18 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("totalCostIncurred =:totalCostIncurred");
             paramValues.put("totalCostIncurred", searchRequest.getTotalCostIncurred());
+        }
+
+        if (searchRequest.getCostIncurredFrom() != null) {
+            addAnd(params);
+            params.append("totalCostIncurred >=:costIncurredFrom");
+            paramValues.put("costIncurredFrom", searchRequest.getCostIncurredFrom());
+        }
+
+        if (searchRequest.getCostIncurredTo() != null) {
+            addAnd(params);
+            params.append("totalCostIncurred <=:costIncurredTo");
+            paramValues.put("costIncurredTo", searchRequest.getCostIncurredTo());
         }
 
         if (searchRequest.getReceiptNo() != null) {

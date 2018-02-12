@@ -1174,6 +1174,21 @@ paths:
             in: query
             description: fuelType Code of the VehicleFuellingDetails
             maxLength: 265
+          - name: vehicleTypeCode
+            type: string
+            in: query
+            description: vehicleType Code of the VehicleFuellingDetails
+            maxLength: 265
+          - name: costIncurredFrom
+            type: number
+            format: double
+            in: query
+            description: total costIncurred From of the VehicleFuellingDetails
+          - name: costIncurredTo
+            type: number
+            format: double
+            in: query
+            description: total costIncurred to of the VehicleFuellingDetails
           - name: totalCostIncurred
             type: number
             format: double
@@ -3900,6 +3915,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

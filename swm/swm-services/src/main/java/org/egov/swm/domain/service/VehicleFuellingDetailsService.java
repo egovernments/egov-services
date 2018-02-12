@@ -1,9 +1,14 @@
 package org.egov.swm.domain.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -90,7 +95,46 @@ public class VehicleFuellingDetailsService {
 
     public Pagination<VehicleFuellingDetails> search(final VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
 
-        return vehicleFuellingDetailsRepository.search(vehicleFuellingDetailsSearch);
+        Pagination<VehicleFuellingDetails> vehicleFuellingDetailsPage = vehicleFuellingDetailsRepository
+                .search(vehicleFuellingDetailsSearch);
+
+        List<VehicleFuellingDetails> vehicleFuellingDetailsList = new ArrayList<>();
+
+        if (!vehicleFuellingDetailsPage.getPagedData().isEmpty() && !isEmpty(vehicleFuellingDetailsSearch.getFuelTypeCode())) {
+            vehicleFuellingDetailsList = filterByFuelType(vehicleFuellingDetailsPage.getPagedData(),
+                    vehicleFuellingDetailsSearch.getFuelTypeCode());
+            vehicleFuellingDetailsPage.setPagedData(vehicleFuellingDetailsList);
+        }
+
+        if (!vehicleFuellingDetailsPage.getPagedData().isEmpty() && !isEmpty(vehicleFuellingDetailsSearch.getVehicleTypeCode())) {
+            vehicleFuellingDetailsList = filterByVehicleType(vehicleFuellingDetailsPage.getPagedData(),
+                    vehicleFuellingDetailsSearch.getVehicleTypeCode());
+            vehicleFuellingDetailsPage.setPagedData(vehicleFuellingDetailsList);
+        }
+
+        return vehicleFuellingDetailsPage;
+    }
+
+    private List<VehicleFuellingDetails> filterByFuelType(List<VehicleFuellingDetails> vehicleFuellingDetailsList,
+            String fuelTypeCode) {
+        return vehicleFuellingDetailsList.stream()
+                .filter(fuellingDetail -> fuellingDetail.getVehicle() != null &&
+                        fuellingDetail.getVehicle().getFuelType() != null &&
+                        !isEmpty(fuellingDetail.getVehicle().getFuelType().getCode()) &&
+                        fuellingDetail.getVehicle().getFuelType().getCode()
+                                .equals(fuelTypeCode))
+                .collect(Collectors.toList());
+    }
+
+    private List<VehicleFuellingDetails> filterByVehicleType(List<VehicleFuellingDetails> vehicleFuellingDetailsList,
+            String vehicleTypeCode) {
+        return vehicleFuellingDetailsList.stream()
+                .filter(fuellingDetail -> fuellingDetail.getVehicle() != null &&
+                        fuellingDetail.getVehicle().getVehicleType() != null &&
+                        !isEmpty(fuellingDetail.getVehicle().getVehicleType().getCode()) &&
+                        fuellingDetail.getVehicle().getVehicleType().getCode()
+                                .equals(vehicleTypeCode))
+                .collect(Collectors.toList());
     }
 
     private void validate(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {

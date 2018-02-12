@@ -7,7 +7,7 @@ const fs = require("fs")
 
 const winston = require('winston');
 const wcf = require('winston-console-formatter');
-
+const util = require('util')
 const log = new winston.Logger({
     level: 'debug',
 });
@@ -148,7 +148,6 @@ log.info("Loading contract YAML - " + contract_url)
 SwaggerParser.dereference(contract_url)
     .then(function (contract_yaml) {
         //log.debug("contract loaded")
-
         for (const api_path in spec["apis"]) {
             // var yamlResolved = yamljs.stringify(contract_yaml , 8, 2);
             let api = Object.assign({}, defaults, spec["defaults"], spec["apis"][api_path])
@@ -177,9 +176,7 @@ SwaggerParser.dereference(contract_url)
 
             const parameters = apiCall["parameters"]
             let data = {}
-
             let body_params = parameters.filter(elem => elem.in == "body")
-
             let data2 = get_params_data(body_params[0]["schema"], data, "$")
 
             function generate_test(param, param_name, path, type) {
@@ -284,7 +281,12 @@ SwaggerParser.dereference(contract_url)
                             // value: param.minimum - 1
                         }));
                         break;
-
+                    case "reference":
+                        tests.push(Object.assign({}, common, {
+                            subtype: "invalid",
+                            operations: [{json_path: path, value: "{{$GUIDWD}}"}],
+                        }));
+                        break;
                 }
 
                 return tests;
@@ -303,9 +305,9 @@ SwaggerParser.dereference(contract_url)
 
                 const properties = parameters["properties"];
                 for (var param_name in properties) {
+
                     let current_path = path + "." + param_name;
                     var param = properties[param_name];
-
                     if (param_name === "code" || param_name === "fileStoreId") {
                         log.warn(`You are probably processing a reference or generated field - "${path}.${param_name}". Please review your spec file`)
                     }
@@ -319,6 +321,7 @@ SwaggerParser.dereference(contract_url)
                     // }
 
 
+                    // Start of sample JSON generation
                     if (!param.readOnly
                         && !(param_name in generatedFields)
                         && param_name !== 'id'
@@ -351,6 +354,7 @@ SwaggerParser.dereference(contract_url)
                                 for (let [k, _] of Object.entries(refFields)) {
                                     inner_data[k] = sample_values[props[k].type]
                                 }
+
                             } else if (!isParamArray) {
                                 inner_data =  sample_values[param.type]
                             }
@@ -360,12 +364,37 @@ SwaggerParser.dereference(contract_url)
                             jp.set(sample_json, path + "." + param_name + "[0]", sample_values[param.items.type])
                         }
                     }
+                    // End of sample JSON generation
 
                     if (isParamCircular(param_name, parameters)) {
                         log.info("Circular reference detected for - " + path
                             + "." + param_name + ". Skipping the field")
                         continue
                     }
+
+                    //Start of Block to generate the test case for invalid reference field
+                    if (param_name in referenceFields) {
+                        let refFields = []
+                        let generateTestForRef = true
+                        if (param.type === "object" || param.type === "array" || param.type === "string" || param.type === "number") {
+                            if (referenceFields[param_name] !== null && referenceFields[param_name] !== undefined) {
+                                refFields = Object.keys(referenceFields[param_name])
+                            } else {
+                                log.warn("No properties defined for reference field - " + param_name + ", its type is " + param.type)
+                                generateTestForRef = false
+                            }
+                        }
+                        if (generateTestForRef) {
+                            refFieldPath = {
+                                "object": current_path + "." + refFields[0],
+                                "array": current_path + "[0]." + refFields[0],
+                                "string": current_path
+                            };
+                            var tests = generate_test(param, param_name, refFieldPath[param.type], "reference");
+                            data.tests.push(...tests);
+                        }
+                    }
+                    //End of Block to generate the test case for invalid reference field
 
                     if (ignoredFields.indexOf(param_name) >= 0) {
                         if (param_name in spec["defaults"]["data"]) {
@@ -432,13 +461,9 @@ SwaggerParser.dereference(contract_url)
                                 data.tests.push(...tests);
                             }
                         }
-
                     }
-
                 }
-
                 return data;
-
             }
 
             fs.writeFileSync(path.join(output_folder, api_path.replace(/\//g, "") + ".json"), JSON.stringify(data.tests, null, 2));

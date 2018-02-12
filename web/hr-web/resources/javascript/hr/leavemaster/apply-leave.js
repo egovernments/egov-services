@@ -194,6 +194,12 @@ class ApplyLeave extends React.Component {
                 }
               }
 
+              if(_this.state.perfixSuffix)
+              _days = _days + _this.state.perfixSuffix.noOfDays;
+
+              if(_this.state.encloseHoliday)
+              _days = _days + _this.state.encloseHoliday.length;
+
               _this.setState({
                 leaveSet: {
                   ..._this.state.leaveSet,
@@ -203,31 +209,31 @@ class ApplyLeave extends React.Component {
               });
 
 
-                commonApiPost("hr-leave", "eligibleleaves", "_search", {
-                  leaveType, tenantId, asOnDate, employeeid
-                }, function (err, res) {
-                  if (res) {
-                    var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
-                    if (_day <= 0 || _day == "") {
-                      _this.setState({
-                        leaveSet: {
-                          ..._this.state.leaveSet,
-                          availableDays: ""
-                        }
-                      });
-                      return (showError("You do not have leave for this leave type."));
-                    }
-                    else {
-                      _this.setState({
-                        leaveSet: {
-                          ..._this.state.leaveSet,
-                          availableDays: _day
-                        }
-                      });
-                    }
+              commonApiPost("hr-leave", "eligibleleaves", "_search", {
+                leaveType, tenantId, asOnDate, employeeid
+              }, function (err, res) {
+                if (res) {
+                  var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+                  if (_day <= 0 || _day == "") {
+                    _this.setState({
+                      leaveSet: {
+                        ..._this.state.leaveSet,
+                        availableDays: ""
+                      }
+                    });
+                    return (showError("You do not have leave for this leave type."));
                   }
-                });
-              
+                  else {
+                    _this.setState({
+                      leaveSet: {
+                        ..._this.state.leaveSet,
+                        availableDays: _day
+                      }
+                    });
+                  }
+                }
+              });
+
             }
           } else {
             _this.setState({
@@ -238,7 +244,7 @@ class ApplyLeave extends React.Component {
             });
           }
 
-          
+
         } else {
           showError("Please select Leave Type before entering from date and to date.");
           $('#' + _triggerId).val("");
@@ -423,6 +429,13 @@ class ApplyLeave extends React.Component {
     if (_this.state.leaveSet.availableDays <= 0 && _this.state.leaveSet.availableDays == "") {
       return (showError("You do not have leave for this leave type."));
     }
+
+    let maxDays = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "maxDays");
+    if( maxDays < _this.state.leaveSet.leaveDays ){
+      return (showError("Number of Leaves applied exceeds Maximum leaves permitted"));
+    }
+
+
     var employee;
     var today = new Date();
     var asOnDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
@@ -509,14 +522,22 @@ class ApplyLeave extends React.Component {
 
     const renderEnclosingHolidayTr = () => {
       if (this.state.encloseHoliday) {
-        return encloseHoliday.map((item, ind) => {
+        if (this.state.encloseHoliday.length != 0) {
+          return encloseHoliday.map((item, ind) => {
+            return (
+              <tr key={ind}>
+                <td>{item.name}</td>
+                <td>{item.applicableOn}</td>
+              </tr>
+            )
+          })
+        } else {
           return (
-            <tr key={ind}>
-              <td>{item.name}</td>
-              <td>{item.applicableOn}</td>
+            <tr>
+              <td>No Enclosing Holidays</td>
             </tr>
           )
-        })
+        }
       }
     }
 
@@ -542,60 +563,70 @@ class ApplyLeave extends React.Component {
       }
     }
 
-    const showPrefixSuffix = () => {
-      if (this.state.perfixSuffix) {
+    const showPrefix = () => {
+      if (this.state.perfixSuffix && this.state.perfixSuffix.prefixFromDate && this.state.perfixSuffix.prefixToDate) {
         return (
-          <div>
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Prefix From Date</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input type="text" id="perfixFromDate" name="perfixFromDate" value={perfixSuffix.prefixFromDate}
-                      disabled />
-                  </div>
+
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Prefix From Date</label>
                 </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Prefix To Date</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input type="text" id="prefixToDate" name="prefixToDate" value={perfixSuffix.prefixToDate}
-                      disabled />
-                  </div>
+                <div className="col-sm-6">
+                  <input type="text" id="perfixFromDate" name="perfixFromDate" value={perfixSuffix.prefixFromDate}
+                    disabled />
                 </div>
               </div>
             </div>
-
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Suffix From Date</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input type="text" id="suffixFromDate" name="suffixFromDate" value={perfixSuffix.suffixFromDate}
-                      disabled />
-                  </div>
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Prefix To Date</label>
                 </div>
-              </div>
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label htmlFor="">Suffix To Date</label>
-                  </div>
-                  <div className="col-sm-6">
-                    <input type="text" id="suffixToDate" name="suffixToDate" value={perfixSuffix.suffixToDate}
-                      disabled />
-                  </div>
+                <div className="col-sm-6">
+                  <input type="text" id="prefixToDate" name="prefixToDate" value={perfixSuffix.prefixToDate}
+                    disabled />
                 </div>
               </div>
             </div>
           </div>
+
+
+
+        )
+      }
+    }
+
+    const showSuffix = () => {
+      if (this.state.perfixSuffix && this.state.perfixSuffix.suffixFromDate && this.state.perfixSuffix.suffixToDate) {
+        return (
+
+          <div className="row">
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Suffix From Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="suffixFromDate" name="suffixFromDate" value={perfixSuffix.suffixFromDate}
+                    disabled />
+                </div>
+              </div>
+            </div>
+            <div className="col-sm-6">
+              <div className="row">
+                <div className="col-sm-6 label-text">
+                  <label htmlFor="">Suffix To Date</label>
+                </div>
+                <div className="col-sm-6">
+                  <input type="text" id="suffixToDate" name="suffixToDate" value={perfixSuffix.suffixToDate}
+                    disabled />
+                </div>
+              </div>
+            </div>
+          </div>
+
         )
       }
     }
@@ -723,7 +754,9 @@ class ApplyLeave extends React.Component {
               </div>
             </div>
 
-            {showPrefixSuffix()}
+            {showPrefix()}
+            {showSuffix()}
+
             {showEnclosingHolidayTable()}
 
 

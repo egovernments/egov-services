@@ -273,19 +273,29 @@ public class RouteService {
             }
 
             if (route.getTotalDistance() != null && totalDistance != null
-                    && totalDistance.compareTo(route.getTotalDistance()) != 0) {
+                    && round(totalDistance, 2) != round(route.getTotalDistance(), 2)) {
                 throw new CustomException("totalDistance",
                         "Total distance covered is not same as the sum of distance covered by the collection points");
             }
 
             if (route.getTotalGarbageEstimate() != null && totalGarbageEstimate != null
-                    && totalGarbageEstimate.compareTo(route.getTotalGarbageEstimate()) != 0) {
+                    && round(totalGarbageEstimate, 2) != round(route.getTotalGarbageEstimate(), 2)) {
                 throw new CustomException("totalGarbageEstimate",
                         "Total garbage collection estimate is not same as the sum of garbage collection estimates defined in the collection points");
             }
 
         }
 
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
     private void validateUniqueFields(final Route route) {

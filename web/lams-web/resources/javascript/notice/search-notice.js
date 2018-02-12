@@ -353,7 +353,7 @@ class Notice extends React.Component {
     var oReq = new XMLHttpRequest();
     oReq.open("GET", fileURL, true);
     oReq.responseType = "arraybuffer";
-    // console.log(fileURL);
+    console.log(fileURL);
     oReq.onload = function(oEvent) {
       var blob = new Blob([oReq.response], {type: oReq.getResponseHeader('content-type')});
       var url = URL.createObjectURL(blob);
@@ -364,6 +364,7 @@ class Notice extends React.Component {
       $(self.refs.modal).modal('show')
     };
     oReq.send();
+    console.log("requesttttttttttttt", oReq);
   }
   zipDownload(e){
     let {searchClicked, resultSet, searchSet} = this.state;

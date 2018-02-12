@@ -28,7 +28,7 @@ public class SanitationStaffTargetMap {
     @NotNull
     @JsonProperty("sanitationStaffTarget")
     private String sanitationStaffTarget = null;
-    
+
     private String targetNos = null;
 
     @NotNull

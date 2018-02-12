@@ -1,6 +1,12 @@
 package org.egov.swm.domain.service;
 
-import java.util.*;
+import static org.springframework.util.StringUtils.isEmpty;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.swm.domain.model.AuditDetails;
@@ -15,8 +21,6 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 @Transactional(readOnly = true)
@@ -103,35 +107,29 @@ public class VehicleMaintenanceService {
             }
 
             // validate for maintenance after
-            if (vehicleMaintenance.getMaintenanceUom() != null && !vehicleMaintenance.getMaintenanceUom().isEmpty()) {
+            if (vehicleMaintenance.getMaintenanceUom() != null && !vehicleMaintenance.getMaintenanceUom().isEmpty())
                 if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("days")) {
                     if (vehicleMaintenance.getMaintenanceAfter() < 30 || vehicleMaintenance.getMaintenanceAfter() > 700)
                         throw new CustomException("Maintenance After",
                                 " Maintenance after shall be between 0 and 50000 Kms OR between 30 and 700 days: "
                                         + vehicleMaintenance.getMaintenanceAfter());
-                } else {
-                    if (vehicleMaintenance.getMaintenanceAfter() < 1 || vehicleMaintenance.getMaintenanceAfter() > 50000)
-                        throw new CustomException("Maintenance After",
-                                "Maintenance after shall be between 0 and 50000 Kms OR between 30 and 700 days: "
-                                        + vehicleMaintenance.getMaintenanceAfter());
-                }
-            }
+                } else if (vehicleMaintenance.getMaintenanceAfter() < 1 || vehicleMaintenance.getMaintenanceAfter() > 50000)
+                    throw new CustomException("Maintenance After",
+                            "Maintenance after shall be between 0 and 50000 Kms OR between 30 and 700 days: "
+                                    + vehicleMaintenance.getMaintenanceAfter());
 
             // validate downtime maintenance
             if (vehicleMaintenance.getDowntimeforMaintenanceUom() != null
-                    && !vehicleMaintenance.getDowntimeforMaintenanceUom().isEmpty()) {
+                    && !vehicleMaintenance.getDowntimeforMaintenanceUom().isEmpty())
                 if (vehicleMaintenance.getDowntimeforMaintenanceUom().equalsIgnoreCase("days")) {
                     if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0
                             || vehicleMaintenance.getDowntimeforMaintenance() > 30.0)
                         throw new CustomException("DowntimeForMaintenance",
                                 "Maintenance downtime should be with in the range of 1 to 30 days or 0 to 720 hours.");
-                } else {
-                    if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0
-                            || vehicleMaintenance.getDowntimeforMaintenance() > 720.0)
-                        throw new CustomException("DowntimeForMaintenance",
-                                "Maintenance downtime should be with in the range of 1 to 30 days or 0 to 720 hours.");
-                }
-            }
+                } else if (vehicleMaintenance.getDowntimeforMaintenance() < 1.0
+                        || vehicleMaintenance.getDowntimeforMaintenance() > 720.0)
+                    throw new CustomException("DowntimeForMaintenance",
+                            "Maintenance downtime should be with in the range of 1 to 30 days or 0 to 720 hours.");
 
             validateUniqueFields(vehicleMaintenance);
 
@@ -170,15 +168,16 @@ public class VehicleMaintenanceService {
 
     public Pagination<VehicleMaintenance> search(final VehicleMaintenanceSearch vehicleMaintenanceSearch) {
 
-        Pagination<VehicleMaintenance> vehicleMaintenancePage =  vehicleMaintenanceRepository.search(vehicleMaintenanceSearch);
+        final Pagination<VehicleMaintenance> vehicleMaintenancePage = vehicleMaintenanceRepository
+                .search(vehicleMaintenanceSearch);
 
-        if(!vehicleMaintenancePage.getPagedData().isEmpty() && !isEmpty(vehicleMaintenanceSearch.getVehicleTypeCode())){
-            List<VehicleMaintenance> vehicleMaintenances = vehicleMaintenancePage.getPagedData().stream()
-                                                           .filter(vehicleMaintenance -> vehicleMaintenance.getVehicle() != null &&
-                                                                   vehicleMaintenance.getVehicle().getVehicleType() != null &&
-                                                                   vehicleMaintenance.getVehicle().getVehicleType().getCode()
-                                                                           .equals(vehicleMaintenanceSearch.getVehicleTypeCode()))
-                                                           .collect(Collectors.toList());
+        if (!vehicleMaintenancePage.getPagedData().isEmpty() && !isEmpty(vehicleMaintenanceSearch.getVehicleTypeCode())) {
+            final List<VehicleMaintenance> vehicleMaintenances = vehicleMaintenancePage.getPagedData().stream()
+                    .filter(vehicleMaintenance -> vehicleMaintenance.getVehicle() != null &&
+                            vehicleMaintenance.getVehicle().getVehicleType() != null &&
+                            vehicleMaintenance.getVehicle().getVehicleType().getCode()
+                                    .equals(vehicleMaintenanceSearch.getVehicleTypeCode()))
+                    .collect(Collectors.toList());
             vehicleMaintenancePage.setPagedData(vehicleMaintenances);
         }
 

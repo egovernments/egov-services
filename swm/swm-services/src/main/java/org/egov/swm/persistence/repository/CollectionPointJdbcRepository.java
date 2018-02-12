@@ -22,7 +22,6 @@ import org.egov.swm.domain.service.AssetService;
 import org.egov.swm.domain.service.BoundaryService;
 import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
-import org.egov.swm.web.controller.CollectionPointController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,6 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egswm_collectionpoint";
 
     private static final Logger LOG = LoggerFactory.getLogger(CollectionPointJdbcRepository.class);
-
 
     @Autowired
     public BinDetailsJdbcRepository binIdDetailsJdbcRepository;
@@ -117,14 +115,11 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
             searchQuery = searchQuery.replace(":condition", "");
 
-
         searchQuery = searchQuery.replace(":orderby", orderBy);
-
 
         long start = System.currentTimeMillis();
 
         page = (Pagination<CollectionPoint>) getPagination(searchQuery, page, paramValues);
-
 
         searchQuery = searchQuery + " :pagination";
 
@@ -148,7 +143,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         end = System.currentTimeMillis();
         LOG.info("Time taken for returning data from db " + (end - start) + "ms");
 
-        StringBuffer collectionPointCodes = new StringBuffer();
+        final StringBuffer collectionPointCodes = new StringBuffer();
 
         start = System.currentTimeMillis();
         for (final CollectionPointEntity collectionPointEntity : collectionPointEntities) {
@@ -163,23 +158,22 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         end = System.currentTimeMillis();
         LOG.info("Time taken for mapping entity to domain " + (end - start) + "ms");
 
-
         start = System.currentTimeMillis();
         if (collectionPointList != null && !collectionPointList.isEmpty()) {
 
             start = System.currentTimeMillis();
-                populateBoundarys(collectionPointList);
+            populateBoundarys(collectionPointList);
             end = System.currentTimeMillis();
             LOG.info("Time taken for populating Boundary MDMS " + (end - start) + "ms");
 
             start = System.currentTimeMillis();
-                populateBinDetails(collectionPointList, collectionPointCodes.toString());
+            populateBinDetails(collectionPointList, collectionPointCodes.toString());
 
             end = System.currentTimeMillis();
             LOG.info("Time taken for populating Bin Details " + (end - start) + "ms");
 
             start = System.currentTimeMillis();
-                populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
+            populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
             end = System.currentTimeMillis();
             LOG.info("Time taken for populating populateCollectionPointDetails " + (end - start) + "ms");
 
@@ -193,46 +187,35 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateBoundarys(List<CollectionPoint> collectionPointList) {
+    private void populateBoundarys(final List<CollectionPoint> collectionPointList) {
 
         String tenantId = null;
-        Map<String, Boundary> boundaryMap = new HashMap<>();
+        final Map<String, Boundary> boundaryMap = new HashMap<>();
 
         if (collectionPointList != null && !collectionPointList.isEmpty())
             tenantId = collectionPointList.get(0).getTenantId();
 
-        List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+        final List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
 
-        if (boundarys != null) {
-
-            for (Boundary bd : boundarys) {
-
+        if (boundarys != null)
+            for (final Boundary bd : boundarys)
                 boundaryMap.put(bd.getCode(), bd);
 
-            }
-        }
-
-        for (CollectionPoint collectionPoint : collectionPointList) {
-
+        for (final CollectionPoint collectionPoint : collectionPointList)
             if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
-                    && !collectionPoint.getLocation().getCode().isEmpty()) {
-
+                    && !collectionPoint.getLocation().getCode().isEmpty())
                 collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
-            }
-
-        }
 
     }
 
-    private void populateBinDetails(List<CollectionPoint> collectionPointList, String collectionPointCodes) {
+    private void populateBinDetails(final List<CollectionPoint> collectionPointList, final String collectionPointCodes) {
 
         LOG.info("Inside populateBinDetails ");
 
-
         long start = System.currentTimeMillis();
 
-        Map<String, List<BinDetails>> binDetailsMap = new HashMap<>();
-        Map<String, Asset> assetMap = new HashMap<>();
+        final Map<String, List<BinDetails>> binDetailsMap = new HashMap<>();
+        final Map<String, Asset> assetMap = new HashMap<>();
         String tenantId = null;
         BinDetailsSearch bds;
         bds = new BinDetailsSearch();
@@ -248,20 +231,17 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         LOG.info("Time taken for initialize bin details " + (end - start) + "ms");
 
         start = System.currentTimeMillis();
-        List<BinDetails> binDetails = binIdDetailsJdbcRepository.search(bds);
+        final List<BinDetails> binDetails = binIdDetailsJdbcRepository.search(bds);
         end = System.currentTimeMillis();
         LOG.info("Time taken for getting result from binIdDetailsJdbcRepository " + (end - start) + "ms");
 
         List<BinDetails> bdList;
 
         start = System.currentTimeMillis();
-        for (BinDetails bd : binDetails) {
-
-            if (binDetailsMap.get(bd.getCollectionPoint()) == null) {
-
+        for (final BinDetails bd : binDetails)
+            if (binDetailsMap.get(bd.getCollectionPoint()) == null)
                 binDetailsMap.put(bd.getCollectionPoint(), Collections.singletonList(bd));
-
-            } else {
+            else {
 
                 bdList = new ArrayList<>(binDetailsMap.get(bd.getCollectionPoint()));
 
@@ -270,39 +250,28 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
                 binDetailsMap.put(bd.getCollectionPoint(), bdList);
 
             }
-        }
         end = System.currentTimeMillis();
         LOG.info("Time taken for putting into result" + (end - start) + "ms");
 
-
         start = System.currentTimeMillis();
-        List<Asset> assets = assetService.getAll(tenantId, new RequestInfo());
+        final List<Asset> assets = assetService.getAll(tenantId, new RequestInfo());
         end = System.currentTimeMillis();
         LOG.info("Time taken for getting Asset" + (end - start) + "ms");
 
         start = System.currentTimeMillis();
 
         if (assets != null)
-            for (Asset asset : assets) {
+            for (final Asset asset : assets)
                 assetMap.put(asset.getCode(), asset);
-            }
 
-        for (CollectionPoint collectionPoint : collectionPointList) {
-
+        for (final CollectionPoint collectionPoint : collectionPointList)
             collectionPoint.setBinDetails(binDetailsMap.get(collectionPoint.getCode()));
 
-        }
-
-        for (CollectionPoint collectionPoint : collectionPointList) {
-
+        for (final CollectionPoint collectionPoint : collectionPointList)
             if (collectionPoint.getBinDetails() != null)
-                for (BinDetails bd : collectionPoint.getBinDetails()) {
-
+                for (final BinDetails bd : collectionPoint.getBinDetails())
                     if (bd.getAsset() != null && bd.getAsset().getCode() != null)
                         bd.setAsset(assetMap.get(bd.getAsset().getCode()));
-                }
-
-        }
 
         end = System.currentTimeMillis();
         LOG.info("Time taken for populating Asset data" + (end - start) + "ms");
@@ -311,9 +280,10 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
     }
 
-    private void populateCollectionPointDetails(List<CollectionPoint> collectionPointList, String collectionPointCodes) {
-        Map<String, List<CollectionPointDetails>> collectionPointDetailsMap = new HashMap<>();
-        Map<String, CollectionType> collectionTypeMap = new HashMap<>();
+    private void populateCollectionPointDetails(final List<CollectionPoint> collectionPointList,
+            final String collectionPointCodes) {
+        final Map<String, List<CollectionPointDetails>> collectionPointDetailsMap = new HashMap<>();
+        final Map<String, CollectionType> collectionTypeMap = new HashMap<>();
         String tenantId = null;
         CollectionPointDetailsSearch cpds;
         cpds = new CollectionPointDetailsSearch();
@@ -324,30 +294,25 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
         cpds.setCollectionPoints(collectionPointCodes);
         cpds.setTenantId(tenantId);
 
-        List<CollectionPointDetails> collectionPointDetails = collectionPointDetailsJdbcRepository.search(cpds);
+        final List<CollectionPointDetails> collectionPointDetails = collectionPointDetailsJdbcRepository.search(cpds);
 
-        long start = System.currentTimeMillis();
-            List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
-        long end = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
+        final List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
+        final long end = System.currentTimeMillis();
         LOG.info("Time taken for populating collectionTypeService MDMS " + (end - start) + "ms");
 
-        for (CollectionType ct : collectionTypes) {
+        for (final CollectionType ct : collectionTypes)
             collectionTypeMap.put(ct.getCode(), ct);
-        }
         List<CollectionPointDetails> cpdList;
-        for (CollectionPointDetails cpd : collectionPointDetails) {
+        for (final CollectionPointDetails cpd : collectionPointDetails) {
 
             if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null
-                    && !cpd.getCollectionType().getCode().isEmpty()) {
-
+                    && !cpd.getCollectionType().getCode().isEmpty())
                 cpd.setCollectionType(collectionTypeMap.get(cpd.getCollectionType().getCode()));
-            }
 
-            if (collectionPointDetailsMap.get(cpd.getCollectionPoint()) == null) {
-
+            if (collectionPointDetailsMap.get(cpd.getCollectionPoint()) == null)
                 collectionPointDetailsMap.put(cpd.getCollectionPoint(), Collections.singletonList(cpd));
-
-            } else {
+            else {
 
                 cpdList = new ArrayList<>(collectionPointDetailsMap.get(cpd.getCollectionPoint()));
 
@@ -358,11 +323,8 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             }
         }
 
-        for (CollectionPoint collectionPoint : collectionPointList) {
-
+        for (final CollectionPoint collectionPoint : collectionPointList)
             collectionPoint.setCollectionPointDetails(collectionPointDetailsMap.get(collectionPoint.getCode()));
-
-        }
 
     }
 

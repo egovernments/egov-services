@@ -42,7 +42,7 @@ public class OilCompanyService {
 
     public List<OilCompany> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<OilCompany> ocs = new ArrayList<>();
+        final List<OilCompany> ocs = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class OilCompanyService {
                 Constants.OILCOMPANY_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 ocs.add(mapper.convertValue(obj, OilCompany.class));
 
         return ocs;

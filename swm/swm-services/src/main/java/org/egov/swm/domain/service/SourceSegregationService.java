@@ -100,7 +100,7 @@ public class SourceSegregationService {
 
     private void validate(final SourceSegregationRequest sourceSegregationRequest) {
 
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
@@ -138,12 +138,12 @@ public class SourceSegregationService {
                         .before(new Date(sourceSegregation.getSourceSegregationDate())))
                     throw new CustomException("SourceSegregationDate ", "Given Source Segregation Date is invalid: "
                             + dateFormat.format(new Date(sourceSegregation.getSourceSegregationDate())));
-            SourceSegregationSearch sourceSegregationSearch = new SourceSegregationSearch();
+            final SourceSegregationSearch sourceSegregationSearch = new SourceSegregationSearch();
             sourceSegregationSearch.setTenantId(sourceSegregation.getTenantId());
             sourceSegregationSearch.setSourceSegregationDate(sourceSegregation.getSourceSegregationDate());
             sourceSegregationSearch.setDumpingGroundCode(sourceSegregation.getDumpingGround().getCode());
             sourceSegregationSearch.setUlbCode(sourceSegregation.getUlb().getCode());
-            Pagination<SourceSegregation> resultList = search(sourceSegregationSearch);
+            final Pagination<SourceSegregation> resultList = search(sourceSegregationSearch);
 
             for (final CollectionDetails cd : sourceSegregation.getCollectionDetails()) {
 
@@ -160,9 +160,8 @@ public class SourceSegregationService {
                 else
                     throw new CustomException("CollectionType", "CollectionType is required");
 
-                if (resultList != null && resultList.getPagedData() != null && !resultList.getPagedData().isEmpty()) {
-
-                    for (CollectionDetails cd1 : resultList.getPagedData().get(0).getCollectionDetails()) {
+                if (resultList != null && resultList.getPagedData() != null && !resultList.getPagedData().isEmpty())
+                    for (final CollectionDetails cd1 : resultList.getPagedData().get(0).getCollectionDetails()) {
 
                         if ((sourceSegregation.getCode() == null || sourceSegregation.getCode().isEmpty())
                                 && cd.getCollectionType().getCode().equalsIgnoreCase(cd1.getCollectionType().getCode()))
@@ -185,7 +184,6 @@ public class SourceSegregationService {
                                             + cd.getCollectionType().getName() + " on source segregation date"
                                             + dateFormat.format(new Date(sourceSegregation.getSourceSegregationDate())));
                     }
-                }
             }
 
         }
@@ -195,9 +193,8 @@ public class SourceSegregationService {
 
         final Map<String, String> codeMap = new HashMap<>();
 
-        for (SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
-
-            for (CollectionDetails collectionDetail : sourceSegregation.getCollectionDetails()) {
+        for (final SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations())
+            for (final CollectionDetails collectionDetail : sourceSegregation.getCollectionDetails()) {
 
                 if (codeMap.get(collectionDetail.getCollectionType().getCode()) != null)
                     throw new CustomException("Collection Type",
@@ -205,7 +202,6 @@ public class SourceSegregationService {
 
                 codeMap.put(collectionDetail.getCollectionType().getCode(), collectionDetail.getCollectionType().getCode());
             }
-        }
     }
 
     public Pagination<SourceSegregation> search(final SourceSegregationSearch sourceSegregationSearch) {

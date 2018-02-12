@@ -42,7 +42,7 @@ public class DumpingGroundService {
 
     public List<DumpingGround> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<DumpingGround> dgs = new ArrayList<>();
+        final List<DumpingGround> dgs = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class DumpingGroundService {
                 Constants.DUMPINGGROUND_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 dgs.add(mapper.convertValue(obj, DumpingGround.class));
 
         return dgs;

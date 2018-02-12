@@ -76,9 +76,8 @@ public class VehicleService {
 
             setAuditDetails(v, userId);
 
-            if (v.getInsuranceDetails() == null) {
+            if (v.getInsuranceDetails() == null)
                 v.setInsuranceDetails(new InsuranceDetails());
-            }
 
             prepareInsuranceDocument(v);
         }
@@ -95,9 +94,8 @@ public class VehicleService {
             v.getInsuranceDetails().getInsuranceDocument().setTenantId(v.getTenantId());
             v.getInsuranceDetails().getInsuranceDocument().setRefCode(v.getRegNumber());
             v.getInsuranceDetails().getInsuranceDocument().setAuditDetails(v.getAuditDetails());
-        } else {
+        } else
             v.getInsuranceDetails().setInsuranceDocument(null);
-        }
     }
 
     @Transactional
@@ -130,18 +128,17 @@ public class VehicleService {
         return vehicleRepository.search(vehicleSearch);
     }
 
-    private void setVehicleCodesFromVehicleMaintenance(VehicleSearch vehicleSearch) {
-        VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
+    private void setVehicleCodesFromVehicleMaintenance(final VehicleSearch vehicleSearch) {
+        final VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
         vehicleMaintenanceSearch.setTenantId(vehicleSearch.getTenantId());
 
-        Pagination<VehicleMaintenance> vehicleMaintenances = vehicleMaintenanceService.search(vehicleMaintenanceSearch);
+        final Pagination<VehicleMaintenance> vehicleMaintenances = vehicleMaintenanceService.search(vehicleMaintenanceSearch);
 
-        if (!vehicleMaintenances.getPagedData().isEmpty()) {
+        if (!vehicleMaintenances.getPagedData().isEmpty())
             vehicleSearch.setRegNumbers(vehicleMaintenances.getPagedData().stream()
-                    .map(v -> (v.getVehicle() != null) ? v.getVehicle().getRegNumber() : StringUtils.EMPTY)
+                    .map(v -> v.getVehicle() != null ? v.getVehicle().getRegNumber() : StringUtils.EMPTY)
                     .distinct()
                     .collect(Collectors.joining(",")));
-        }
     }
 
     private void validate(final String action, final VehicleRequest vehicleRequest) {
@@ -152,7 +149,7 @@ public class VehicleService {
         String designationId = null;
         EmployeeResponse employeeResponse = null;
 
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         findDuplicatesInUniqueFields(vehicleRequest);
@@ -221,44 +218,38 @@ public class VehicleService {
                         vehicle.getTenantId(),
                         vehicleRequest.getRequestInfo());
                 if (designationResponse != null && designationResponse.getDesignation() != null
-                        && !designationResponse.getDesignation().isEmpty()) {
+                        && !designationResponse.getDesignation().isEmpty())
                     designationId = designationResponse.getDesignation().get(0).getId().toString();
-                } else {
+                else
                     throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
-                }
 
-                if (designationId != null) {
+                if (designationId != null)
                     employeeResponse = employeeRepository.getEmployeeByDesgIdAndCode(designationId,
                             vehicle.getDriver().getCode(), vehicle.getTenantId(), vehicleRequest.getRequestInfo());
-                } else {
+                else
                     throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
-                }
 
                 if (employeeResponse == null || employeeResponse.getEmployees() == null
-                        || employeeResponse.getEmployees().isEmpty()) {
+                        || employeeResponse.getEmployees().isEmpty())
                     throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
-                } else {
+                else
                     vehicle.setDriver(employeeResponse.getEmployees().get(0));
-                }
 
-            } else {
+            } else
                 throw new CustomException("Driver",
                         "The field Driver is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-            }
 
             // validate for is vehicle under warranty
-            if (vehicle.getIsVehicleUnderWarranty() != null && vehicle.getIsVehicleUnderWarranty()) {
+            if (vehicle.getIsVehicleUnderWarranty() != null && vehicle.getIsVehicleUnderWarranty())
                 if (vehicle.getKilometers() == null || vehicle.getEndOfWarranty() == null)
                     throw new CustomException("isVehicleUnderWarranty",
                             "Value should be present for both kilometer and endOfWarranty");
-            }
 
             // validate for is ulb owned
-            if (vehicle.getIsUlbOwned() != null && vehicle.getIsUlbOwned()) {
+            if (vehicle.getIsUlbOwned() != null && vehicle.getIsUlbOwned())
                 if (vehicle.getVendor() == null || isEmpty(vehicle.getVendor()))
                     throw new CustomException("isUlbOwned",
                             "Value should be present for vendor");
-            }
 
             validateUniqueFields(action, vehicle);
         }

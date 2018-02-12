@@ -52,7 +52,7 @@ public class BoundaryService {
     public TenantBoundary getByCode(final String tenantId, final String code, final RequestInfo requestInfo) {
 
         JSONArray responseJSONArray;
-        StringBuilder filter = new StringBuilder();
+        final StringBuilder filter = new StringBuilder();
         filter.append("[?((@.boundary.code=='");
         filter.append(code);
         filter.append("' || '");
@@ -80,7 +80,7 @@ public class BoundaryService {
 
         JSONArray responseJSONArray;
         TenantBoundary tenantBoundary = null;
-        StringBuilder filter = new StringBuilder();
+        final StringBuilder filter = new StringBuilder();
         filter.append("[?(@.hierarchyType.code=='");
         filter.append(hierarchyTypeCode);
         filter.append("' )]");
@@ -91,30 +91,27 @@ public class BoundaryService {
         if (responseJSONArray != null && responseJSONArray.size() > 0)
             tenantBoundary = mapper.convertValue(responseJSONArray.get(0), TenantBoundary.class);
 
-        if (tenantBoundary != null && tenantBoundary.getBoundary() != null) {
-
+        if (tenantBoundary != null && tenantBoundary.getBoundary() != null)
             return findAll(tenantBoundary.getBoundary());
-        }
         return null;
 
     }
 
-    private List<Boundary> findAll(Boundary boundary) {
+    private List<Boundary> findAll(final Boundary boundary) {
 
-        Set<Boundary> result = new HashSet<>();
+        final Set<Boundary> result = new HashSet<>();
 
         result.add(boundary);
         if (boundary.getChildren() != null)
-            for (Boundary child : boundary.getChildren()) {
+            for (final Boundary child : boundary.getChildren())
                 result.addAll(findAll(child));
-            }
 
         return new ArrayList(result);
 
     }
 
     public JSONArray getByCriteria(final String tenantId, final String moduleName, final String masterName,
-            final RequestInfo requestInfo, String filter) {
+            final RequestInfo requestInfo, final String filter) {
 
         List<MasterDetail> masterDetails;
         List<ModuleDetail> moduleDetails;

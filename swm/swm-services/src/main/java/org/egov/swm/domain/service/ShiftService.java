@@ -79,10 +79,8 @@ public class ShiftService {
                 && null != shiftRequest.getRequestInfo().getUserInfo().getId())
             userId = shiftRequest.getRequestInfo().getUserInfo().getId();
 
-        for (final Shift cp : shiftRequest.getShifts()) {
-
+        for (final Shift cp : shiftRequest.getShifts())
             setAuditDetails(cp, userId);
-        }
 
         validate(shiftRequest);
 
@@ -97,9 +95,9 @@ public class ShiftService {
         DesignationResponse designationResponse;
         ShiftSearch search;
         Pagination<Shift> shifts;
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        for (Shift shift : shiftRequest.getShifts()) {
+        for (final Shift shift : shiftRequest.getShifts()) {
 
             if (shift.getShiftType() != null
                     && (shift.getShiftType().getCode() == null || shift.getShiftType().getCode().isEmpty()))
@@ -126,10 +124,9 @@ public class ShiftService {
             // Validate Department
             if (department != null && department.getCode() != null)
                 shift.setDepartment(department);
-            else {
+            else
                 throw new CustomException("Department",
                         "The field Department Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-            }
 
             if (shift.getDesignation() != null
                     && (shift.getDesignation().getCode() == null || shift.getDesignation().getCode().isEmpty()))
@@ -156,28 +153,25 @@ public class ShiftService {
 
             if ((shift.getCode() == null || shift.getCode().isEmpty())
                     && shifts != null && shifts.getPagedData() != null
-                    && !shifts.getPagedData().isEmpty()) {
-
+                    && !shifts.getPagedData().isEmpty())
                 throw new CustomException("Shift",
                         "Shift data already exist for the selected Department:"
                                 + shift.getDepartment().getName() + " and Designation:"
                                 + shift.getDesignation().getName() + "  and Shift start time: "
                                 + dateFormat.format(new Date(shift.getShiftStartTime())) + " and Shift end time:"
                                 + dateFormat.format(new Date(shift.getShiftEndTime())));
-            }
 
             if (shift.getCode() != null && !shift.getCode().isEmpty()
                     && shifts != null && shifts.getPagedData() != null
                     && !shifts.getPagedData().isEmpty()
                     && !shift.getCode()
-                            .equalsIgnoreCase(shifts.getPagedData().get(0).getCode())) {
+                            .equalsIgnoreCase(shifts.getPagedData().get(0).getCode()))
                 throw new CustomException("Shift",
                         "Shift data already exist for the selected Department:"
                                 + shift.getDepartment().getName() + " and Designation:"
                                 + shift.getDesignation().getName() + "  and Shift start time: "
                                 + dateFormat.format(new Date(shift.getShiftStartTime())) + " and Shift end time:"
                                 + dateFormat.format(new Date(shift.getShiftEndTime())));
-            }
 
         }
     }

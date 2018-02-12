@@ -60,7 +60,7 @@ public class PumpStationFuelTypesJdbcRepository extends JdbcRepository {
 
         final BeanPropertyRowMapper row = new BeanPropertyRowMapper(PumpStationFuelTypes.class);
 
-        List<PumpStationFuelTypes> result = namedParameterJdbcTemplate
+        final List<PumpStationFuelTypes> result = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
         return result;
     }

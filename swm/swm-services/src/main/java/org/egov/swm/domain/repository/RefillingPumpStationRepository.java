@@ -29,10 +29,8 @@ public class RefillingPumpStationRepository {
 
     public RefillingPumpStationRequest update(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
-        for (RefillingPumpStation pumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
-
+        for (final RefillingPumpStation pumpStation : refillingPumpStationRequest.getRefillingPumpStations())
             pumpStationFuelTypesJdbcRepository.delete(pumpStation.getTenantId(), pumpStation.getCode());
-        }
 
         return refillingPumpStationQueueRepository.update(refillingPumpStationRequest);
     }

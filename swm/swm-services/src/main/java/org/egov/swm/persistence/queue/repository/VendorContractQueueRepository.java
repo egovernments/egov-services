@@ -1,6 +1,5 @@
 package org.egov.swm.persistence.queue.repository;
 
-import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorContract;
 import org.egov.swm.persistence.repository.VendorContractServicesOfferedJdbcRepository;
 import org.egov.swm.web.requests.VendorContractRequest;
@@ -23,13 +22,12 @@ public class VendorContractQueueRepository {
 
     @Value("${egov.swm.vendorcontract.indexer.topic}")
     private String indexerTopic;
-    
+
     @Autowired
     private VendorContractServicesOfferedJdbcRepository vendorContractServicesOfferedJdbcRepository;
 
     public VendorContractRequest save(final VendorContractRequest vendorContractRequest) {
 
-        
         kafkaTemplate.send(saveTopic, vendorContractRequest);
 
         kafkaTemplate.send(indexerTopic, vendorContractRequest);
@@ -40,11 +38,9 @@ public class VendorContractQueueRepository {
 
     public VendorContractRequest update(final VendorContractRequest vendorContractRequest) {
 
-        for (final VendorContract cp : vendorContractRequest.getVendorContracts()) {
-
+        for (final VendorContract cp : vendorContractRequest.getVendorContracts())
             vendorContractServicesOfferedJdbcRepository.delete(cp.getTenantId(), cp.getContractNo());
-        }
-        
+
         kafkaTemplate.send(updateTopic, vendorContractRequest);
 
         kafkaTemplate.send(indexerTopic, vendorContractRequest);

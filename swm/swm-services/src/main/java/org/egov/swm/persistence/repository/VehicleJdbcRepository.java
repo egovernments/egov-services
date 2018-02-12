@@ -196,7 +196,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
         final List<VehicleEntity> vehicleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
                 row);
-        StringBuffer vehicleCodes = new StringBuffer();
+        final StringBuffer vehicleCodes = new StringBuffer();
         for (final VehicleEntity vehicleEntity : vehicleEntities) {
 
             if (vehicleCodes.length() >= 1)
@@ -224,28 +224,25 @@ public class VehicleJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateDocument(List<Vehicle> vehicleList, String vehicleCodes) {
+    private void populateDocument(final List<Vehicle> vehicleList, final String vehicleCodes) {
 
         String tenantId = null;
-        Map<String, Document> documentMap = new HashMap<>();
+        final Map<String, Document> documentMap = new HashMap<>();
 
         if (vehicleList != null && !vehicleList.isEmpty())
             tenantId = vehicleList.get(0).getTenantId();
 
-        DocumentSearch search = new DocumentSearch();
+        final DocumentSearch search = new DocumentSearch();
         search.setTenantId(tenantId);
         search.setRefCodes(vehicleCodes);
 
-        List<Document> docs = documentJdbcRepository.search(search);
+        final List<Document> docs = documentJdbcRepository.search(search);
 
         if (docs != null)
-            for (Document d : docs) {
-
+            for (final Document d : docs)
                 documentMap.put(d.getRefCode(), d);
 
-            }
-
-        for (Vehicle vehicle : vehicleList) {
+        for (final Vehicle vehicle : vehicleList) {
 
             if (vehicle.getInsuranceDetails() == null)
                 vehicle.setInsuranceDetails(InsuranceDetails.builder().build());
@@ -255,75 +252,57 @@ public class VehicleJdbcRepository extends JdbcRepository {
         }
     }
 
-    private void populateFuelTypes(List<Vehicle> vehicleList) {
-        Map<String, FuelType> fuelTypeMap = new HashMap<>();
+    private void populateFuelTypes(final List<Vehicle> vehicleList) {
+        final Map<String, FuelType> fuelTypeMap = new HashMap<>();
         String tenantId = null;
 
         if (vehicleList != null && !vehicleList.isEmpty())
             tenantId = vehicleList.get(0).getTenantId();
 
-        List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
+        final List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
 
-        for (FuelType ft : fuelTypes) {
+        for (final FuelType ft : fuelTypes)
             fuelTypeMap.put(ft.getCode(), ft);
-        }
 
-        for (Vehicle vehicle : vehicleList) {
-
+        for (final Vehicle vehicle : vehicleList)
             if (vehicle.getFuelType() != null && vehicle.getFuelType().getCode() != null
-                    && !vehicle.getFuelType().getCode().isEmpty()) {
-
+                    && !vehicle.getFuelType().getCode().isEmpty())
                 vehicle.setFuelType(fuelTypeMap.get(vehicle.getFuelType().getCode()));
-            }
-
-        }
     }
 
-    private void populateVehicleTypes(List<Vehicle> vehicleList) {
-        Map<String, VehicleType> vehicleTypeMap = new HashMap<>();
+    private void populateVehicleTypes(final List<Vehicle> vehicleList) {
+        final Map<String, VehicleType> vehicleTypeMap = new HashMap<>();
         String tenantId = null;
 
         if (vehicleList != null && !vehicleList.isEmpty())
             tenantId = vehicleList.get(0).getTenantId();
 
-        List<VehicleType> vehicleTypes = vehicleTypeService.getAll(tenantId, new RequestInfo());
+        final List<VehicleType> vehicleTypes = vehicleTypeService.getAll(tenantId, new RequestInfo());
 
-        for (VehicleType vt : vehicleTypes) {
+        for (final VehicleType vt : vehicleTypes)
             vehicleTypeMap.put(vt.getCode(), vt);
-        }
 
-        for (Vehicle vehicle : vehicleList) {
-
+        for (final Vehicle vehicle : vehicleList)
             if (vehicle.getVehicleType() != null && vehicle.getVehicleType().getCode() != null
-                    && !vehicle.getVehicleType().getCode().isEmpty()) {
-
+                    && !vehicle.getVehicleType().getCode().isEmpty())
                 vehicle.setVehicleType(vehicleTypeMap.get(vehicle.getVehicleType().getCode()));
-            }
-
-        }
     }
 
-    private void populateVendors(List<Vehicle> vehicleList) {
+    private void populateVendors(final List<Vehicle> vehicleList) {
 
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
-        StringBuffer vendorNos = new StringBuffer();
-        Set<String> vendorNoSet = new HashSet<>();
+        final StringBuffer vendorNos = new StringBuffer();
+        final Set<String> vendorNoSet = new HashSet<>();
 
-        for (Vehicle v : vehicleList) {
-
+        for (final Vehicle v : vehicleList)
             if (v.getVendor() != null && v.getVendor().getVendorNo() != null
-                    && !v.getVendor().getVendorNo().isEmpty()) {
-
+                    && !v.getVendor().getVendorNo().isEmpty())
                 vendorNoSet.add(v.getVendor().getVendorNo());
 
-            }
+        final List<String> vendorNoList = new ArrayList(vendorNoSet);
 
-        }
-
-        List<String> vendorNoList = new ArrayList(vendorNoSet);
-
-        for (String vendorNo : vendorNoList) {
+        for (final String vendorNo : vendorNoList) {
 
             if (vendorNos.length() >= 1)
                 vendorNos.append(",");
@@ -335,7 +314,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
         if (vendorNos != null && vendorNos.length() > 0) {
 
             String tenantId = null;
-            Map<String, Vendor> vendorMap = new HashMap<>();
+            final Map<String, Vendor> vendorMap = new HashMap<>();
 
             if (vehicleList != null && !vehicleList.isEmpty())
                 tenantId = vehicleList.get(0).getTenantId();
@@ -347,44 +326,30 @@ public class VehicleJdbcRepository extends JdbcRepository {
             vendors = vendorService.search(vendorSearch);
 
             if (vendors != null && vendors.getPagedData() != null)
-                for (Vendor bd : vendors.getPagedData()) {
-
+                for (final Vendor bd : vendors.getPagedData())
                     vendorMap.put(bd.getVendorNo(), bd);
 
-                }
-
-            for (Vehicle vehicle : vehicleList) {
-
+            for (final Vehicle vehicle : vehicleList)
                 if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null
-                        && !vehicle.getVendor().getVendorNo().isEmpty()) {
-
+                        && !vehicle.getVendor().getVendorNo().isEmpty())
                     vehicle.setVendor(vendorMap.get(vehicle.getVendor().getVendorNo()));
-                }
-
-            }
         }
 
     }
 
-    private void populateDrivers(List<Vehicle> vehicleList) {
+    private void populateDrivers(final List<Vehicle> vehicleList) {
 
-        StringBuffer driverCodes = new StringBuffer();
-        Set<String> driverCodesSet = new HashSet<>();
+        final StringBuffer driverCodes = new StringBuffer();
+        final Set<String> driverCodesSet = new HashSet<>();
 
-        for (Vehicle v : vehicleList) {
-
+        for (final Vehicle v : vehicleList)
             if (v.getDriver() != null && v.getDriver().getCode() != null
-                    && !v.getDriver().getCode().isEmpty()) {
-
+                    && !v.getDriver().getCode().isEmpty())
                 driverCodesSet.add(v.getDriver().getCode());
 
-            }
+        final List<String> driverCodeList = new ArrayList(driverCodesSet);
 
-        }
-
-        List<String> driverCodeList = new ArrayList(driverCodesSet);
-
-        for (String code : driverCodeList) {
+        for (final String code : driverCodeList) {
 
             if (driverCodes.length() >= 1)
                 driverCodes.append(",");
@@ -395,30 +360,22 @@ public class VehicleJdbcRepository extends JdbcRepository {
         if (driverCodes != null && driverCodes.length() > 0) {
 
             String tenantId = null;
-            Map<String, Employee> driverMap = new HashMap<>();
+            final Map<String, Employee> driverMap = new HashMap<>();
 
             if (vehicleList != null && !vehicleList.isEmpty())
                 tenantId = vehicleList.get(0).getTenantId();
 
-            EmployeeResponse response = employeeRepository.getEmployeeByCodes(driverCodes.toString(), tenantId,
+            final EmployeeResponse response = employeeRepository.getEmployeeByCodes(driverCodes.toString(), tenantId,
                     new RequestInfo());
 
             if (response != null && response.getEmployees() != null)
-                for (Employee e : response.getEmployees()) {
-
+                for (final Employee e : response.getEmployees())
                     driverMap.put(e.getCode(), e);
 
-                }
-
-            for (Vehicle vehicle : vehicleList) {
-
+            for (final Vehicle vehicle : vehicleList)
                 if (vehicle.getDriver() != null && vehicle.getDriver().getCode() != null
-                        && !vehicle.getDriver().getCode().isEmpty()) {
-
+                        && !vehicle.getDriver().getCode().isEmpty())
                     vehicle.setDriver(driverMap.get(vehicle.getDriver().getCode()));
-                }
-
-            }
 
         }
 

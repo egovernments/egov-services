@@ -112,13 +112,13 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getServices() != null) {
 
-            ContractServicesOffered servicesOfferedSearch = ContractServicesOffered.builder()
+            final ContractServicesOffered servicesOfferedSearch = ContractServicesOffered.builder()
                     .services(searchRequest.getServices())
                     .tenantId(searchRequest.getTenantId())
                     .build();
-            List<ContractServicesOffered> servicesOffereds = vendorContractServicesOfferedJdbcRepository
+            final List<ContractServicesOffered> servicesOffereds = vendorContractServicesOfferedJdbcRepository
                     .search(servicesOfferedSearch);
-            List<String> vendorContractNos = servicesOffereds.stream()
+            final List<String> vendorContractNos = servicesOffereds.stream()
                     .map(ContractServicesOffered::getVendorcontract).distinct().collect(Collectors.toList());
             if (vendorContractNos != null && !vendorContractNos.isEmpty()) {
                 addAnd(params);
@@ -158,7 +158,7 @@ public class VendorContractJdbcRepository extends JdbcRepository {
         final List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
-        StringBuffer vendorContractNos = new StringBuffer();
+        final StringBuffer vendorContractNos = new StringBuffer();
 
         for (final VendorContractEntity entity : vendorContractEntities) {
 
@@ -182,27 +182,21 @@ public class VendorContractJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateVendors(List<VendorContract> vendorContractList) {
+    private void populateVendors(final List<VendorContract> vendorContractList) {
 
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
-        StringBuffer vendorNos = new StringBuffer();
-        Set<String> vendorNoSet = new HashSet<>();
+        final StringBuffer vendorNos = new StringBuffer();
+        final Set<String> vendorNoSet = new HashSet<>();
 
-        for (VendorContract v : vendorContractList) {
-
+        for (final VendorContract v : vendorContractList)
             if (v.getVendor() != null && v.getVendor().getVendorNo() != null
-                    && !v.getVendor().getVendorNo().isEmpty()) {
-
+                    && !v.getVendor().getVendorNo().isEmpty())
                 vendorNoSet.add(v.getVendor().getVendorNo());
 
-            }
+        final List<String> vendorNoList = new ArrayList(vendorNoSet);
 
-        }
-
-        List<String> vendorNoList = new ArrayList(vendorNoSet);
-
-        for (String vendorNo : vendorNoList) {
+        for (final String vendorNo : vendorNoList) {
 
             if (vendorNos.length() >= 1)
                 vendorNos.append(",");
@@ -213,7 +207,7 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
         if (vendorNos != null && vendorNos.length() > 0) {
             String tenantId = null;
-            Map<String, Vendor> vendorMap = new HashMap<>();
+            final Map<String, Vendor> vendorMap = new HashMap<>();
 
             if (vendorContractList != null && !vendorContractList.isEmpty())
                 tenantId = vendorContractList.get(0).getTenantId();
@@ -225,29 +219,21 @@ public class VendorContractJdbcRepository extends JdbcRepository {
             vendors = vendorService.search(vendorSearch);
 
             if (vendors != null && vendors.getPagedData() != null)
-                for (Vendor bd : vendors.getPagedData()) {
-
+                for (final Vendor bd : vendors.getPagedData())
                     vendorMap.put(bd.getVendorNo(), bd);
 
-                }
-
-            for (VendorContract vendorContract : vendorContractList) {
-
+            for (final VendorContract vendorContract : vendorContractList)
                 if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null
-                        && !vendorContract.getVendor().getVendorNo().isEmpty()) {
-
+                        && !vendorContract.getVendor().getVendorNo().isEmpty())
                     vendorContract.setVendor(vendorMap.get(vendorContract.getVendor().getVendorNo()));
-                }
-
-            }
         }
 
     }
 
-    private void populateServicesOffered(List<VendorContract> vendorContracts, String vendorContractNos) {
-        Map<String, List<ContractServicesOffered>> servicesOfferedMap = new HashMap<>();
-        Map<String, List<SwmProcess>> swmProcessListMap = new HashMap<>();
-        Map<String, SwmProcess> swmProcessMap = new HashMap<>();
+    private void populateServicesOffered(final List<VendorContract> vendorContracts, final String vendorContractNos) {
+        final Map<String, List<ContractServicesOffered>> servicesOfferedMap = new HashMap<>();
+        final Map<String, List<SwmProcess>> swmProcessListMap = new HashMap<>();
+        final Map<String, SwmProcess> swmProcessMap = new HashMap<>();
         String tenantId = null;
         ContractServicesOffered cpds;
         cpds = new ContractServicesOffered();
@@ -260,19 +246,17 @@ public class VendorContractJdbcRepository extends JdbcRepository {
             cpds.setVendorcontracts(vendorContractNos);
             cpds.setTenantId(tenantId);
 
-            List<ContractServicesOffered> servicesOffered = vendorContractServicesOfferedJdbcRepository.search(cpds);
+            final List<ContractServicesOffered> servicesOffered = vendorContractServicesOfferedJdbcRepository.search(cpds);
 
             if (servicesOffered != null && !servicesOffered.isEmpty()) {
 
-                List<SwmProcess> swmProcessList = swmProcessService.getAll(tenantId, new RequestInfo());
+                final List<SwmProcess> swmProcessList = swmProcessService.getAll(tenantId, new RequestInfo());
 
-                for (SwmProcess sp : swmProcessList) {
+                for (final SwmProcess sp : swmProcessList)
                     swmProcessMap.put(sp.getCode(), sp);
-                }
                 List<SwmProcess> bList;
                 List<ContractServicesOffered> cpdList;
-                for (ContractServicesOffered cpd : servicesOffered) {
-
+                for (final ContractServicesOffered cpd : servicesOffered)
                     if (servicesOfferedMap.get(cpd.getVendorcontract()) == null) {
 
                         swmProcessListMap.put(cpd.getVendorcontract(),
@@ -295,13 +279,9 @@ public class VendorContractJdbcRepository extends JdbcRepository {
                         servicesOfferedMap.put(cpd.getVendorcontract(), cpdList);
 
                     }
-                }
 
-                for (VendorContract vendorContract : vendorContracts) {
-
+                for (final VendorContract vendorContract : vendorContracts)
                     vendorContract.setServicesOffered(swmProcessListMap.get(vendorContract.getContractNo()));
-
-                }
 
             }
         }

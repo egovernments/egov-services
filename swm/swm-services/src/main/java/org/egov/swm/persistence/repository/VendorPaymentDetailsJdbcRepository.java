@@ -195,11 +195,8 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
         final List<VendorPaymentDetailsEntity> vendorPaymentDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        for (final VendorPaymentDetailsEntity vendorPaymentDetailsEntity : vendorPaymentDetailsEntities) {
-
+        for (final VendorPaymentDetailsEntity vendorPaymentDetailsEntity : vendorPaymentDetailsEntities)
             vendorPaymentDetailsList.add(vendorPaymentDetailsEntity.toDomain());
-
-        }
 
         if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty()) {
 
@@ -218,58 +215,53 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private List<VendorPaymentDetails> filterForVendorNumber(List<VendorPaymentDetails> vendorPaymentDetailsList,
-            VendorPaymentDetailsSearch searchRequest) {
+    private List<VendorPaymentDetails> filterForVendorNumber(final List<VendorPaymentDetails> vendorPaymentDetailsList,
+            final VendorPaymentDetailsSearch searchRequest) {
         return vendorPaymentDetailsList.stream()
                 .filter(vp -> vp.getVendorContract().getVendor().getVendorNo()
                         .equalsIgnoreCase(searchRequest.getVendorNo()))
                 .collect(Collectors.toList());
     }
 
-    private void populateDocument(List<VendorPaymentDetails> vendorPaymentDetailsList) {
+    private void populateDocument(final List<VendorPaymentDetails> vendorPaymentDetailsList) {
         String tenantId = null;
         Map<String, List<Document>> documentMap = new HashMap<>();
-        String vendorPaymentCodes = vendorPaymentDetailsList.stream()
+        final String vendorPaymentCodes = vendorPaymentDetailsList.stream()
                 .map(VendorPaymentDetails::getPaymentNo)
                 .collect(Collectors.joining(","));
 
         if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
             tenantId = vendorPaymentDetailsList.get(0).getTenantId();
 
-        DocumentSearch search = new DocumentSearch();
+        final DocumentSearch search = new DocumentSearch();
         search.setTenantId(tenantId);
         search.setRefCodes(vendorPaymentCodes);
 
-        List<Document> docs = documentJdbcRepository.search(search);
+        final List<Document> docs = documentJdbcRepository.search(search);
 
         if (docs != null)
             documentMap = docs.stream().collect(Collectors.groupingBy(Document::getRefCode));
 
-        for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
+        for (final VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList)
             vendorPaymentDetails.setDocuments(documentMap.get(vendorPaymentDetails.getPaymentNo()));
-        }
 
     }
 
-    private void populateVendorContracts(List<VendorPaymentDetails> vendorPaymentDetailsList) {
+    private void populateVendorContracts(final List<VendorPaymentDetails> vendorPaymentDetailsList) {
 
         VendorContractSearch vendorContractSearch;
         Pagination<VendorContract> vendorContracts;
-        StringBuffer vendorContractNos = new StringBuffer();
-        Set<String> vendorContractNoSet = new HashSet<>();
+        final StringBuffer vendorContractNos = new StringBuffer();
+        final Set<String> vendorContractNoSet = new HashSet<>();
 
-        for (VendorPaymentDetails v : vendorPaymentDetailsList) {
-
+        for (final VendorPaymentDetails v : vendorPaymentDetailsList)
             if (v.getVendorContract() != null && v.getVendorContract().getContractNo() != null
-                    && !v.getVendorContract().getContractNo().isEmpty()) {
-
+                    && !v.getVendorContract().getContractNo().isEmpty())
                 vendorContractNoSet.add(v.getVendorContract().getContractNo());
-            }
-        }
 
-        List<String> vendorContractNoList = new ArrayList(vendorContractNoSet);
+        final List<String> vendorContractNoList = new ArrayList(vendorContractNoSet);
 
-        for (String vendorContractNo : vendorContractNoList) {
+        for (final String vendorContractNo : vendorContractNoList) {
 
             if (vendorContractNos.length() >= 1)
                 vendorContractNos.append(",");
@@ -279,7 +271,7 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
         }
         if (vendorContractNos != null && vendorContractNos.length() > 0) {
             String tenantId = null;
-            Map<String, VendorContract> vendorContractMap = new HashMap<>();
+            final Map<String, VendorContract> vendorContractMap = new HashMap<>();
 
             if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
                 tenantId = vendorPaymentDetailsList.get(0).getTenantId();
@@ -291,46 +283,32 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             vendorContracts = vendorContractService.search(vendorContractSearch);
 
             if (vendorContracts != null && vendorContracts.getPagedData() != null)
-                for (VendorContract bd : vendorContracts.getPagedData()) {
-
+                for (final VendorContract bd : vendorContracts.getPagedData())
                     vendorContractMap.put(bd.getContractNo(), bd);
 
-                }
-
-            for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
-
+            for (final VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList)
                 if (vendorPaymentDetails.getVendorContract() != null
                         && vendorPaymentDetails.getVendorContract().getContractNo() != null
-                        && !vendorPaymentDetails.getVendorContract().getContractNo().isEmpty()) {
-
+                        && !vendorPaymentDetails.getVendorContract().getContractNo().isEmpty())
                     vendorPaymentDetails
                             .setVendorContract(vendorContractMap.get(vendorPaymentDetails.getVendorContract().getContractNo()));
-                }
-
-            }
         }
 
     }
 
-    private void populateEmployees(List<VendorPaymentDetails> vendorPaymentDetailsList) {
+    private void populateEmployees(final List<VendorPaymentDetails> vendorPaymentDetailsList) {
 
-        StringBuffer employeeCodes = new StringBuffer();
-        Set<String> employeeCodesSet = new HashSet<>();
+        final StringBuffer employeeCodes = new StringBuffer();
+        final Set<String> employeeCodesSet = new HashSet<>();
 
-        for (VendorPaymentDetails sst : vendorPaymentDetailsList) {
-
+        for (final VendorPaymentDetails sst : vendorPaymentDetailsList)
             if (sst.getEmployee() != null && sst.getEmployee().getCode() != null
-                    && !sst.getEmployee().getCode().isEmpty()) {
-
+                    && !sst.getEmployee().getCode().isEmpty())
                 employeeCodesSet.add(sst.getEmployee().getCode());
 
-            }
+        final List<String> employeeCodeList = new ArrayList(employeeCodesSet);
 
-        }
-
-        List<String> employeeCodeList = new ArrayList(employeeCodesSet);
-
-        for (String code : employeeCodeList) {
+        for (final String code : employeeCodeList) {
 
             if (employeeCodes.length() >= 1)
                 employeeCodes.append(",");
@@ -340,30 +318,22 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
         }
         if (employeeCodes != null && employeeCodes.length() > 0) {
             String tenantId = null;
-            Map<String, Employee> employeeMap = new HashMap<>();
+            final Map<String, Employee> employeeMap = new HashMap<>();
 
             if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
                 tenantId = vendorPaymentDetailsList.get(0).getTenantId();
 
-            EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId,
+            final EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId,
                     new RequestInfo());
 
             if (response != null && response.getEmployees() != null)
-                for (Employee e : response.getEmployees()) {
-
+                for (final Employee e : response.getEmployees())
                     employeeMap.put(e.getCode(), e);
 
-                }
-
-            for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
-
+            for (final VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList)
                 if (vendorPaymentDetails.getEmployee() != null && vendorPaymentDetails.getEmployee().getCode() != null
-                        && !vendorPaymentDetails.getEmployee().getCode().isEmpty()) {
-
+                        && !vendorPaymentDetails.getEmployee().getCode().isEmpty())
                     vendorPaymentDetails.setEmployee(employeeMap.get(vendorPaymentDetails.getEmployee().getCode()));
-                }
-
-            }
         }
     }
 

@@ -42,7 +42,7 @@ public class ShiftTypeService {
 
     public List<ShiftType> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<ShiftType> shiftTypes = new ArrayList<>();
+        final List<ShiftType> shiftTypes = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class ShiftTypeService {
                 Constants.SHIFT_TYPE_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 shiftTypes.add(mapper.convertValue(obj, ShiftType.class));
 
         return shiftTypes;

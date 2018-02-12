@@ -42,7 +42,7 @@ public class VehicleTypeService {
 
     public List<VehicleType> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<VehicleType> vehicleTypes = new ArrayList<>();
+        final List<VehicleType> vehicleTypes = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class VehicleTypeService {
                 Constants.VEHICLETYPE_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 vehicleTypes.add(mapper.convertValue(obj, VehicleType.class));
 
         return vehicleTypes;

@@ -95,13 +95,13 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getTypeOfFuelCode() != null) {
 
-            PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
+            final PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
             pumpStation.setTenantId(searchRequest.getTenantId());
             pumpStation.setFuelType(searchRequest.getTypeOfFuelCode());
 
-            List<PumpStationFuelTypes> pumpStationFuelTypes = pumpStationFuelTypesJdbcRepository.search(pumpStation);
+            final List<PumpStationFuelTypes> pumpStationFuelTypes = pumpStationFuelTypesJdbcRepository.search(pumpStation);
 
-            List<String> pumpStationCodes = pumpStationFuelTypes.stream()
+            final List<String> pumpStationCodes = pumpStationFuelTypes.stream()
                     .map(PumpStationFuelTypes::getPumpStation)
                     .collect(Collectors.toList());
             if (pumpStationCodes != null && !pumpStationCodes.isEmpty()) {
@@ -154,10 +154,8 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
         final List<RefillingPumpStationEntity> refillingPumpStationEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        for (final RefillingPumpStationEntity refillingPumpStationEntity : refillingPumpStationEntities) {
-
+        for (final RefillingPumpStationEntity refillingPumpStationEntity : refillingPumpStationEntities)
             refillingPumpStationList.add(refillingPumpStationEntity.toDomain());
-        }
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty()) {
 
@@ -173,44 +171,34 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateBoundarys(List<RefillingPumpStation> refillingPumpStationList) {
+    private void populateBoundarys(final List<RefillingPumpStation> refillingPumpStationList) {
 
         String tenantId = null;
-        Map<String, Boundary> boundaryMap = new HashMap<>();
+        final Map<String, Boundary> boundaryMap = new HashMap<>();
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
-        List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+        final List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
 
-        if (boundarys != null) {
-
-            for (Boundary bd : boundarys) {
-
+        if (boundarys != null)
+            for (final Boundary bd : boundarys)
                 boundaryMap.put(bd.getCode(), bd);
-
-            }
-        }
-        for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
-
+        for (final RefillingPumpStation refillingPumpStation : refillingPumpStationList)
             if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null
-                    && !refillingPumpStation.getLocation().getCode().isEmpty()) {
-
+                    && !refillingPumpStation.getLocation().getCode().isEmpty())
                 refillingPumpStation.setLocation(boundaryMap.get(refillingPumpStation.getLocation().getCode()));
-            }
-
-        }
 
     }
 
-    private void populateFuelTypes(List<RefillingPumpStation> refillingPumpStationList) {
+    private void populateFuelTypes(final List<RefillingPumpStation> refillingPumpStationList) {
 
-        PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
+        final PumpStationFuelTypes pumpStation = new PumpStationFuelTypes();
         List<PumpStationFuelTypes> pumpStationFuelTypes = new ArrayList<>();
-        Map<String, FuelType> fuelTypeMap = new HashMap<>();
-        Map<String, List<PumpStationFuelTypes>> pumpStationFuelTypesMap = new HashMap<>();
-        Map<String, List<FuelType>> fuelTypesMap = new HashMap<>();
-        StringBuffer pumpStationCodes = new StringBuffer();
+        final Map<String, FuelType> fuelTypeMap = new HashMap<>();
+        final Map<String, List<PumpStationFuelTypes>> pumpStationFuelTypesMap = new HashMap<>();
+        final Map<String, List<FuelType>> fuelTypesMap = new HashMap<>();
+        final StringBuffer pumpStationCodes = new StringBuffer();
 
         String tenantId = null;
 
@@ -219,11 +207,10 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
 
         List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
 
-        for (FuelType ft : fuelTypes) {
+        for (final FuelType ft : fuelTypes)
             fuelTypeMap.put(ft.getCode(), ft);
-        }
 
-        for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
+        for (final RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
             if (pumpStationCodes.length() >= 1)
                 pumpStationCodes.append(",");
 
@@ -236,58 +223,46 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
         pumpStationFuelTypes = pumpStationFuelTypesJdbcRepository.search(pumpStation);
 
         List<PumpStationFuelTypes> tempList;
-        for (PumpStationFuelTypes psft : pumpStationFuelTypes) {
-
-            if (pumpStationFuelTypesMap.get(psft.getPumpStation()) == null) {
-
+        for (final PumpStationFuelTypes psft : pumpStationFuelTypes)
+            if (pumpStationFuelTypesMap.get(psft.getPumpStation()) == null)
                 pumpStationFuelTypesMap.put(psft.getPumpStation(), Collections.singletonList(psft));
-
-            } else {
+            else {
                 tempList = new ArrayList<>(pumpStationFuelTypesMap.get(psft.getPumpStation()));
                 tempList.add(psft);
                 pumpStationFuelTypesMap.put(psft.getPumpStation(), tempList);
             }
-        }
 
-        for (String pumpStationCode : pumpStationFuelTypesMap.keySet()) {
+        for (final String pumpStationCode : pumpStationFuelTypesMap.keySet()) {
 
             fuelTypes = new ArrayList<>();
 
-            for (PumpStationFuelTypes psft : pumpStationFuelTypesMap.get(pumpStationCode)) {
+            for (final PumpStationFuelTypes psft : pumpStationFuelTypesMap.get(pumpStationCode))
                 fuelTypes.add(fuelTypeMap.get(psft.getFuelType()));
-            }
 
             fuelTypesMap.put(pumpStationCode, fuelTypes);
 
         }
 
-        for (RefillingPumpStation station : refillingPumpStationList) {
+        for (final RefillingPumpStation station : refillingPumpStationList)
             station.setFuelTypes(fuelTypesMap.get(station.getCode()));
-        }
     }
 
-    private void populateTypeOfPumps(List<RefillingPumpStation> refillingPumpStationList) {
-        Map<String, OilCompany> typeOfPumpMap = new HashMap<>();
+    private void populateTypeOfPumps(final List<RefillingPumpStation> refillingPumpStationList) {
+        final Map<String, OilCompany> typeOfPumpMap = new HashMap<>();
         String tenantId = null;
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
-        List<OilCompany> typeOfPumps = oilCompanyService.getAll(tenantId, new RequestInfo());
+        final List<OilCompany> typeOfPumps = oilCompanyService.getAll(tenantId, new RequestInfo());
 
-        for (OilCompany top : typeOfPumps) {
+        for (final OilCompany top : typeOfPumps)
             typeOfPumpMap.put(top.getCode(), top);
-        }
 
-        for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
-
+        for (final RefillingPumpStation refillingPumpStation : refillingPumpStationList)
             if (refillingPumpStation.getTypeOfPump() != null && refillingPumpStation.getTypeOfPump().getCode() != null
-                    && !refillingPumpStation.getTypeOfPump().getCode().isEmpty()) {
-
+                    && !refillingPumpStation.getTypeOfPump().getCode().isEmpty())
                 refillingPumpStation.setTypeOfPump(typeOfPumpMap.get(refillingPumpStation.getTypeOfPump().getCode()));
-            }
-
-        }
     }
 
 }

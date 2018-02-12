@@ -1,17 +1,31 @@
 package org.egov.swm.domain.service;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Route;
+import org.egov.swm.domain.model.RouteCollectionPointMap;
+import org.egov.swm.domain.model.RouteCollectionPointMapSearch;
+import org.egov.swm.domain.model.RouteSearch;
+import org.egov.swm.domain.model.Vehicle;
+import org.egov.swm.domain.model.VehicleMaintenance;
+import org.egov.swm.domain.model.VehicleMaintenanceDetails;
+import org.egov.swm.domain.model.VehicleMaintenanceDetailsSearch;
+import org.egov.swm.domain.model.VehicleMaintenanceSearch;
+import org.egov.swm.domain.model.VehicleSchedule;
+import org.egov.swm.domain.model.VehicleScheduleSearch;
+import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.repository.VehicleMaintenanceDetailsRepository;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.persistence.repository.RouteCollectionPointMapJdbcRepository;
@@ -20,8 +34,6 @@ import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Service
 public class VehicleMaintenanceDetailsService {
@@ -38,16 +50,16 @@ public class VehicleMaintenanceDetailsService {
 
     private final RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
 
-    private IdgenRepository idgenRepository;
+    private final IdgenRepository idgenRepository;
 
-    private String idGenNameForTrnNumPath;
+    private final String idGenNameForTrnNumPath;
 
     public VehicleMaintenanceDetailsService(final VehicleRepository vehicleRepository,
-                                            final VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository,
-                                            final VehicleMaintenanceService vehicleMaintenanceService, final VehicleScheduleService vehicleScheduleService,
-                                            final RouteService routeService, RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository,
-                                            final IdgenRepository idgenRepository,
-                                            final @Value("${egov.swm.vehiclemaintenancedetails.transaction.num.idgen.name}") String idGenNameForTrnNumPath) {
+            final VehicleMaintenanceDetailsRepository vehicleMaintenanceDetailsRepository,
+            final VehicleMaintenanceService vehicleMaintenanceService, final VehicleScheduleService vehicleScheduleService,
+            final RouteService routeService, final RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository,
+            final IdgenRepository idgenRepository,
+            final @Value("${egov.swm.vehiclemaintenancedetails.transaction.num.idgen.name}") String idGenNameForTrnNumPath) {
         this.vehicleRepository = vehicleRepository;
         this.vehicleMaintenanceDetailsRepository = vehicleMaintenanceDetailsRepository;
         this.vehicleMaintenanceService = vehicleMaintenanceService;
@@ -71,7 +83,8 @@ public class VehicleMaintenanceDetailsService {
                 .getVehicleMaintenanceDetails()) {
             setAuditDetails(vehicleMaintenanceDetail, userId);
             vehicleMaintenanceDetail.setTransactionNo(
-                    generateTransactionNumber(vehicleMaintenanceDetail.getTenantId(), vehicleMaintenanceDetailsRequest.getRequestInfo()));
+                    generateTransactionNumber(vehicleMaintenanceDetail.getTenantId(),
+                            vehicleMaintenanceDetailsRequest.getRequestInfo()));
         }
 
         return vehicleMaintenanceDetailsRepository.create(vehicleMaintenanceDetailsRequest);
@@ -129,12 +142,13 @@ public class VehicleMaintenanceDetailsService {
                 .map(VehicleMaintenanceDetails::getTransactionNo).collect(Collectors.toList());
 
         if (codesList.size() != codesList.stream().distinct().count())
-            throw new CustomException("Transaction Number", "Duplicate Transaction Numbers in given Vehicle Maintenance Details:");
+            throw new CustomException("Transaction Number",
+                    "Duplicate Transaction Numbers in given Vehicle Maintenance Details:");
     }
 
     private void validate(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleMaintenanceDetails vehicleMaintenanceDetails : vehicleMaintenanceDetailsRequest
@@ -162,24 +176,20 @@ public class VehicleMaintenanceDetailsService {
 
             }
 
-            //vehicle downtime actual validation
-            if(!isEmpty(vehicleMaintenanceDetails.getVehicleDownTimeActualUom()) &&
-                    vehicleMaintenanceDetails.getVehicleDowntimeActual() != null){
-                if(vehicleMaintenanceDetails.getVehicleDownTimeActualUom().equalsIgnoreCase("days")){
-                    if(vehicleMaintenanceDetails.getVehicleDowntimeActual() < 1.0 ||
+            // vehicle downtime actual validation
+            if (!isEmpty(vehicleMaintenanceDetails.getVehicleDownTimeActualUom()) &&
+                    vehicleMaintenanceDetails.getVehicleDowntimeActual() != null)
+                if (vehicleMaintenanceDetails.getVehicleDownTimeActualUom().equalsIgnoreCase("days")) {
+                    if (vehicleMaintenanceDetails.getVehicleDowntimeActual() < 1.0 ||
                             vehicleMaintenanceDetails.getVehicleDowntimeActual() > 30.0)
                         throw new CustomException("VehicleDownTime",
                                 "Vehicle DownTime shall be between 1 and 30 days: "
                                         + vehicleMaintenanceDetails.getVehicleDowntimeActual());
-                }
-                else{
-                    if(vehicleMaintenanceDetails.getVehicleDowntimeActual() < 0.0 ||
-                            vehicleMaintenanceDetails.getVehicleDowntimeActual() > 720.0)
-                        throw new CustomException("VehicleDownTime",
-                                "Vehicle DownTime shall be between 0 and 720 hours: "
-                                        + vehicleMaintenanceDetails.getVehicleDowntimeActual());
-                }
-            }
+                } else if (vehicleMaintenanceDetails.getVehicleDowntimeActual() < 0.0 ||
+                        vehicleMaintenanceDetails.getVehicleDowntimeActual() > 720.0)
+                    throw new CustomException("VehicleDownTime",
+                            "Vehicle DownTime shall be between 0 and 720 hours: "
+                                    + vehicleMaintenanceDetails.getVehicleDowntimeActual());
 
             // validation for actual maintenance date
             if (new Date(vehicleMaintenanceDetails.getActualMaintenanceDate()).after(new Date()))
@@ -220,7 +230,7 @@ public class VehicleMaintenanceDetailsService {
             if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("days"))
                 return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter());
             else if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("kms"))
-                 Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(
+                Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(
                         vehicleMaintenanceDetail, vehicleMaintenance.getMaintenanceAfter()));
         } else
             throw new CustomException("VehicleMaintenance",
@@ -238,7 +248,8 @@ public class VehicleMaintenanceDetailsService {
 
         return vehicleMaintenanceService.search(vehicleMaintenanceSearch);
     }
-        //To-Do Need to fix
+
+    // To-Do Need to fix
     private int fetchkilometersFromRoutes(final VehicleMaintenanceDetails vehicleMaintenanceDetail,
             final Long vehicleMaintenanceAfter) {
         final VehicleScheduleSearch vehicleScheduleSearch = new VehicleScheduleSearch();
@@ -268,30 +279,30 @@ public class VehicleMaintenanceDetailsService {
 
             if (!routePage.getPagedData().isEmpty()) {
 
-                //Search for RouteCollection maps for distance
-                final RouteCollectionPointMapSearch routeCollectionPointMapSearch = new RouteCollectionPointMapSearch();
-                routeCollectionPointMapSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
-                routeCollectionPointMapSearch.setRoute(routePage.getPagedData().get(0).getCode());
+            // Search for RouteCollection maps for distance
+            final RouteCollectionPointMapSearch routeCollectionPointMapSearch = new RouteCollectionPointMapSearch();
+            routeCollectionPointMapSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
+            routeCollectionPointMapSearch.setRoute(routePage.getPagedData().get(0).getCode());
 
-                List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository.search(routeCollectionPointMapSearch);
+            final List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository.search(routeCollectionPointMapSearch);
 
-                Double distanceSum = routeCollectionPointMaps.stream().mapToDouble(RouteCollectionPointMap::getDistance).sum();
+            final Double distanceSum = routeCollectionPointMaps.stream().mapToDouble(RouteCollectionPointMap::getDistance).sum();
 
-                final Long dateDifferenceInMilliseconds = vehicleSchedule.getScheduledTo()
-                        - vehicleSchedule.getScheduledFrom();
-                final Long days = TimeUnit.DAYS.convert(dateDifferenceInMilliseconds, TimeUnit.MILLISECONDS);
-                totalDays = totalDays + days;
-                final Double totalKilometersOnRoute = days * distanceSum;
+            final Long dateDifferenceInMilliseconds = vehicleSchedule.getScheduledTo()
+                    - vehicleSchedule.getScheduledFrom();
+            final Long days = TimeUnit.DAYS.convert(dateDifferenceInMilliseconds, TimeUnit.MILLISECONDS);
+            totalDays = totalDays + days;
+            final Double totalKilometersOnRoute = days * distanceSum;
 
-                if (totalKilometers + totalKilometersOnRoute < vehicleMaintenanceAfter)
-                    totalKilometers = totalKilometers + days * distanceSum;
-                else {
-                final Double distanceDifference = vehicleMaintenanceAfter - totalKilometers;
-                    totalDays = totalDays + distanceDifference.longValue()
-                        / distanceSum.longValue();
+            if (totalKilometers + totalKilometersOnRoute < vehicleMaintenanceAfter)
+            totalKilometers = totalKilometers + days * distanceSum;
+            else {
+            final Double distanceDifference = vehicleMaintenanceAfter - totalKilometers;
+            totalDays = totalDays + distanceDifference.longValue()
+                    / distanceSum.longValue();
 
-                    return totalDays.intValue();
-                }
+            return totalDays.intValue();
+            }
             } else
             throw new CustomException("Route", "Next scheduled date not applicable since Route not defined for veicle :" +
                     vehicleMaintenanceDetail.getVehicle().getRegNumber());

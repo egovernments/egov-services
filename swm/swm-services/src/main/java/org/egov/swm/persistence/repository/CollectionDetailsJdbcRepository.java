@@ -74,13 +74,11 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
                 row);
 
         final List<CollectionDetails> resultList = new ArrayList<>();
-        
-        if (entityList != null && !entityList.isEmpty()) {
-            
-            for (final CollectionDetailsEntity cde : entityList) {
 
+        if (entityList != null && !entityList.isEmpty()) {
+
+            for (final CollectionDetailsEntity cde : entityList)
                 resultList.add(cde.toDomain());
-            }
 
             populateCollectionTypes(resultList);
         }
@@ -88,29 +86,23 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
         return resultList;
     }
 
-    private void populateCollectionTypes(List<CollectionDetails> collectionDetailsList) {
+    private void populateCollectionTypes(final List<CollectionDetails> collectionDetailsList) {
 
-        Map<String, CollectionType> collectionTypeMap = new HashMap<>();
+        final Map<String, CollectionType> collectionTypeMap = new HashMap<>();
         String tenantId = null;
 
         if (collectionDetailsList != null && !collectionDetailsList.isEmpty())
             tenantId = collectionDetailsList.get(0).getTenantId();
 
-        List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
+        final List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
 
-        for (CollectionType ct : collectionTypes) {
+        for (final CollectionType ct : collectionTypes)
             collectionTypeMap.put(ct.getCode(), ct);
-        }
 
-        for (CollectionDetails collectionDetails : collectionDetailsList) {
-
+        for (final CollectionDetails collectionDetails : collectionDetailsList)
             if (collectionDetails.getCollectionType() != null && collectionDetails.getCollectionType().getCode() != null
-                    && !collectionDetails.getCollectionType().getCode().isEmpty()) {
-
+                    && !collectionDetails.getCollectionType().getCode().isEmpty())
                 collectionDetails.setCollectionType(collectionTypeMap.get(collectionDetails.getCollectionType().getCode()));
-            }
-
-        }
     }
 
 }

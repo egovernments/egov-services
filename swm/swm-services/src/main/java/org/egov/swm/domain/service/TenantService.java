@@ -42,7 +42,7 @@ public class TenantService {
 
     public List<Tenant> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<Tenant> tenants = new ArrayList<>();
+        final List<Tenant> tenants = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class TenantService {
                 Constants.TENANTS_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 tenants.add(mapper.convertValue(obj, Tenant.class));
 
         return tenants;

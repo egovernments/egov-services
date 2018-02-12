@@ -149,40 +149,31 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
         final List<VehicleMaintenanceDetailsEntity> vehicleMaintenanceDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        for (final VehicleMaintenanceDetailsEntity vehicleMaintenanceDetailsEntity : vehicleMaintenanceDetailsEntities) {
-
+        for (final VehicleMaintenanceDetailsEntity vehicleMaintenanceDetailsEntity : vehicleMaintenanceDetailsEntities)
             vehicleMaintenanceDetailsList.add(vehicleMaintenanceDetailsEntity.toDomain());
-        }
-        if (vehicleMaintenanceDetailsList != null && !vehicleMaintenanceDetailsList.isEmpty()) {
+        if (vehicleMaintenanceDetailsList != null && !vehicleMaintenanceDetailsList.isEmpty())
             populateVehicles(vehicleMaintenanceDetailsList);
-        }
 
         page.setPagedData(vehicleMaintenanceDetailsList);
 
         return page;
     }
 
-    private void populateVehicles(List<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList) {
+    private void populateVehicles(final List<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList) {
 
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicles;
-        StringBuffer vehicleNos = new StringBuffer();
-        Set<String> vehicleNoSet = new HashSet<>();
+        final StringBuffer vehicleNos = new StringBuffer();
+        final Set<String> vehicleNoSet = new HashSet<>();
 
-        for (VehicleMaintenanceDetails vfd : vehicleMaintenanceDetailsList) {
-
+        for (final VehicleMaintenanceDetails vfd : vehicleMaintenanceDetailsList)
             if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
+                    && !vfd.getVehicle().getRegNumber().isEmpty())
                 vehicleNoSet.add(vfd.getVehicle().getRegNumber());
 
-            }
+        final List<String> vehicleNoList = new ArrayList(vehicleNoSet);
 
-        }
-
-        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
-
-        for (String vehicleNo : vehicleNoList) {
+        for (final String vehicleNo : vehicleNoList) {
 
             if (vehicleNos.length() >= 1)
                 vehicleNos.append(",");
@@ -192,7 +183,7 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
         }
         if (vehicleNos != null && vehicleNos.length() > 0) {
             String tenantId = null;
-            Map<String, Vehicle> vehicleMap = new HashMap<>();
+            final Map<String, Vehicle> vehicleMap = new HashMap<>();
 
             if (vehicleMaintenanceDetailsList != null && !vehicleMaintenanceDetailsList.isEmpty())
                 tenantId = vehicleMaintenanceDetailsList.get(0).getTenantId();
@@ -204,21 +195,13 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
             vehicles = vehicleService.search(vehicleSearch);
 
             if (vehicles != null && vehicles.getPagedData() != null)
-                for (Vehicle v : vehicles.getPagedData()) {
-
+                for (final Vehicle v : vehicles.getPagedData())
                     vehicleMap.put(v.getRegNumber(), v);
 
-                }
-
-            for (VehicleMaintenanceDetails vfd : vehicleMaintenanceDetailsList) {
-
+            for (final VehicleMaintenanceDetails vfd : vehicleMaintenanceDetailsList)
                 if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                        && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
+                        && !vfd.getVehicle().getRegNumber().isEmpty())
                     vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
-                }
-
-            }
         }
 
     }

@@ -186,7 +186,7 @@ public class CollectionPointService {
     private void findDuplicatesInUniqueFields(final CollectionPointRequest collectionPointRequest) {
 
         Map<String, String> assetOrBinIdsMap = new HashMap<>();
-        Map<String, String> rfidsMap = new HashMap<>();
+        new HashMap<>();
         final Map<String, String> nameMap = new HashMap<>();
         Map<String, String> codeMap = new HashMap<>();
 
@@ -194,7 +194,7 @@ public class CollectionPointService {
 
             codeMap = new HashMap<>();
             assetOrBinIdsMap = new HashMap<>();
-            rfidsMap = new HashMap<>();
+            new HashMap<>();
 
             if (collectionPoint.getName() != null) {
 
@@ -206,7 +206,7 @@ public class CollectionPointService {
 
             }
 
-            for (CollectionPointDetails collectionPointDetails : collectionPoint.getCollectionPointDetails()) {
+            for (final CollectionPointDetails collectionPointDetails : collectionPoint.getCollectionPointDetails()) {
 
                 if (codeMap.get(collectionPointDetails.getCollectionType().getCode()) != null)
                     throw new CustomException("Collection Type",
@@ -217,8 +217,7 @@ public class CollectionPointService {
                         collectionPointDetails.getCollectionType().getCode());
             }
 
-            for (final BinDetails bd : collectionPoint.getBinDetails()) {
-
+            for (final BinDetails bd : collectionPoint.getBinDetails())
                 if (bd.getAsset() != null && bd.getAsset().getCode() != null) {
 
                     if (assetOrBinIdsMap.get(bd.getAsset().getCode()) != null)
@@ -228,8 +227,6 @@ public class CollectionPointService {
                     assetOrBinIdsMap.put(bd.getAsset().getCode(), bd.getAsset().getCode());
 
                 }
-
-            }
         }
 
     }
@@ -243,15 +240,12 @@ public class CollectionPointService {
                         "The field name must be unique in the system The  value " + collectionPoint.getName()
                                 + " for the field name already exists in the system. Please provide different value ");
 
-        for (final BinDetails bd : collectionPoint.getBinDetails()) {
-
+        for (final BinDetails bd : collectionPoint.getBinDetails())
             if (bd.getAsset() != null && bd.getAsset().getCode() != null)
                 if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "asset",
                         bd.getAsset().getCode(), "collectionPoint", collectionPoint.getCode()))
                     throw new CustomException("BinId",
                             "The selected bin/asset is already associated with another collection point");
-
-        }
     }
 
     public Pagination<CollectionPoint> search(final CollectionPointSearch collectionPointSearch) {

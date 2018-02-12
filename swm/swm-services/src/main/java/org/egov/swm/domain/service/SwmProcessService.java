@@ -42,7 +42,7 @@ public class SwmProcessService {
 
     public List<SwmProcess> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<SwmProcess> sps = new ArrayList<>();
+        final List<SwmProcess> sps = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class SwmProcessService {
                 Constants.SWMPROCESS_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 sps.add(mapper.convertValue(obj, SwmProcess.class));
 
         return sps;

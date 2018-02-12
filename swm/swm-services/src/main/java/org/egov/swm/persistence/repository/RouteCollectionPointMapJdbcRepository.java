@@ -74,10 +74,8 @@ public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
                 searchQuery.toString(),
                 paramValues, row);
 
-        for (final RouteCollectionPointMapEntity routeCollectionPointMapEntity : routeCollectionPointMapEntities) {
-
+        for (final RouteCollectionPointMapEntity routeCollectionPointMapEntity : routeCollectionPointMapEntities)
             routeCollectionPointMapList.add(routeCollectionPointMapEntity.toDomain());
-        }
 
         return routeCollectionPointMapList;
 

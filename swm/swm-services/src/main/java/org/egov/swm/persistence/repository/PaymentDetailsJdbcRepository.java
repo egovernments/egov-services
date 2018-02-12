@@ -131,19 +131,13 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
         final List<PaymentDetailsEntity> paymentdetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        for (final PaymentDetailsEntity paymentdetailsEntity : paymentdetailsEntities) {
-
+        for (final PaymentDetailsEntity paymentdetailsEntity : paymentdetailsEntities)
             paymentdetailsList.add(paymentdetailsEntity.toDomain());
-
-        }
 
         if (paymentdetailsList != null && !paymentdetailsList.isEmpty() &&
                 (searchRequest.getExcludeVendorPaymentDetails() == null ||
-                        searchRequest.getExcludeVendorPaymentDetails().equals(Boolean.FALSE))) {
-
+                        searchRequest.getExcludeVendorPaymentDetails().equals(Boolean.FALSE)))
             populateVendorPaymentDetails(paymentdetailsList);
-
-        }
         page.setTotalResults(paymentdetailsList.size());
 
         page.setPagedData(paymentdetailsList);
@@ -151,27 +145,21 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateVendorPaymentDetails(List<PaymentDetails> paymentdetailsList) {
+    private void populateVendorPaymentDetails(final List<PaymentDetails> paymentdetailsList) {
 
         VendorPaymentDetailsSearch vendorPaymentDetailsSearch;
         Pagination<VendorPaymentDetails> vendorPaymentDetailsPage;
-        StringBuffer paymentNos = new StringBuffer();
-        Set<String> paymentNoSet = new HashSet<>();
+        final StringBuffer paymentNos = new StringBuffer();
+        final Set<String> paymentNoSet = new HashSet<>();
 
-        for (PaymentDetails v : paymentdetailsList) {
-
+        for (final PaymentDetails v : paymentdetailsList)
             if (v.getVendorPaymentDetails() != null && v.getVendorPaymentDetails().getPaymentNo() != null
-                    && !v.getVendorPaymentDetails().getPaymentNo().isEmpty()) {
-
+                    && !v.getVendorPaymentDetails().getPaymentNo().isEmpty())
                 paymentNoSet.add(v.getVendorPaymentDetails().getPaymentNo());
 
-            }
+        final List<String> paymentNoList = new ArrayList(paymentNoSet);
 
-        }
-
-        List<String> paymentNoList = new ArrayList(paymentNoSet);
-
-        for (String paymentNo : paymentNoList) {
+        for (final String paymentNo : paymentNoList) {
 
             if (paymentNos.length() >= 1)
                 paymentNos.append(",");
@@ -181,7 +169,7 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
         }
         if (paymentNos != null && paymentNos.length() > 0) {
             String tenantId = null;
-            Map<String, VendorPaymentDetails> vendorPaymentMap = new HashMap<>();
+            final Map<String, VendorPaymentDetails> vendorPaymentMap = new HashMap<>();
 
             if (paymentdetailsList != null && !paymentdetailsList.isEmpty())
                 tenantId = paymentdetailsList.get(0).getTenantId();
@@ -193,24 +181,16 @@ public class PaymentDetailsJdbcRepository extends JdbcRepository {
             vendorPaymentDetailsPage = vendorPaymentDetailsJdbcRepository.search(vendorPaymentDetailsSearch);
 
             if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null)
-                for (VendorPaymentDetails bd : vendorPaymentDetailsPage.getPagedData()) {
-
+                for (final VendorPaymentDetails bd : vendorPaymentDetailsPage.getPagedData())
                     vendorPaymentMap.put(bd.getPaymentNo(), bd);
 
-                }
-
-            for (PaymentDetails paymentdetails : paymentdetailsList) {
-
+            for (final PaymentDetails paymentdetails : paymentdetailsList)
                 if (paymentdetails.getVendorPaymentDetails() != null
                         && paymentdetails.getVendorPaymentDetails().getPaymentNo() != null
-                        && !paymentdetails.getVendorPaymentDetails().getPaymentNo().isEmpty()) {
-
+                        && !paymentdetails.getVendorPaymentDetails().getPaymentNo().isEmpty())
                     paymentdetails
                             .setVendorPaymentDetails(
                                     vendorPaymentMap.get(paymentdetails.getVendorPaymentDetails().getPaymentNo()));
-                }
-
-            }
         }
 
     }

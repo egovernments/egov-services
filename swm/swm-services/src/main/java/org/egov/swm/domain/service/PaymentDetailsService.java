@@ -64,10 +64,9 @@ public class PaymentDetailsService {
                 && null != paymentDetailsRequest.getRequestInfo().getUserInfo().getId())
             userId = paymentDetailsRequest.getRequestInfo().getUserInfo().getId();
 
-        for (final PaymentDetails paymentDetails : paymentDetailsRequest.getPaymentDetails()) {
+        for (final PaymentDetails paymentDetails : paymentDetailsRequest.getPaymentDetails())
             setAuditDetails(paymentDetails, userId);
-            // prepareDocuments(paymentDetails);
-        }
+        // prepareDocuments(paymentDetails);
 
         validate(paymentDetailsRequest);
 
@@ -77,21 +76,20 @@ public class PaymentDetailsService {
     }
 
     public Pagination<PaymentDetails> search(final PaymentDetailsSearch paymentDetailsSearch) {
-        Pagination<PaymentDetails> paymentDetailsPage = paymentDetailsRepository.search(paymentDetailsSearch);
+        final Pagination<PaymentDetails> paymentDetailsPage = paymentDetailsRepository.search(paymentDetailsSearch);
 
         List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
-        if (!paymentDetailsPage.getPagedData().isEmpty()) {
+        if (!paymentDetailsPage.getPagedData().isEmpty())
             if (!isEmpty(paymentDetailsSearch.getVendorNo())) {
                 paymentDetailsList = filterVendors(paymentDetailsPage.getPagedData(), paymentDetailsSearch.getVendorNo());
                 paymentDetailsPage.setPagedData(paymentDetailsList);
             }
-        }
 
         return paymentDetailsPage;
     }
 
-    private List<PaymentDetails> filterVendors(List<PaymentDetails> paymentDetailsList, String vendorNumber) {
+    private List<PaymentDetails> filterVendors(final List<PaymentDetails> paymentDetailsList, final String vendorNumber) {
         return paymentDetailsList.stream()
                 .filter(paymentDetail -> paymentDetail.getVendorPaymentDetails() != null &&
                         paymentDetail.getVendorPaymentDetails().getVendorContract() != null &&
@@ -99,16 +97,6 @@ public class PaymentDetailsService {
                         paymentDetail.getVendorPaymentDetails().getVendorContract().getVendor().getVendorNo()
                                 .equals(vendorNumber))
                 .collect(Collectors.toList());
-    }
-
-    private void prepareDocuments(final PaymentDetails vendorPaymentDetail) {
-        if (vendorPaymentDetail.getDocuments() != null) {
-            final List<Document> documentList = vendorPaymentDetail.getDocuments().stream()
-                    .filter(record -> record.getFileStoreId() != null).collect(Collectors.toList());
-
-            vendorPaymentDetail.setDocuments(documentList);
-        }
-        vendorPaymentDetail.getDocuments().forEach(document -> setDocumentDetails(document, vendorPaymentDetail));
     }
 
     private void setDocumentDetails(final Document document, final PaymentDetails paymentDetails) {
@@ -153,12 +141,12 @@ public class PaymentDetailsService {
 
     }
 
-    private void validatePaymentAmount(PaymentDetailsRequest paymentDetailsRequest, String action) {
+    private void validatePaymentAmount(final PaymentDetailsRequest paymentDetailsRequest, final String action) {
 
-        Map<String, Double> requestPaymentAmountMap = new HashMap<String, Double>();
+        final Map<String, Double> requestPaymentAmountMap = new HashMap<String, Double>();
 
-        Map<String, Double> vendorPaymentAmountMap = new HashMap<String, Double>();
-        Map<String, List<PaymentDetails>> paymentDetailsMap = new HashMap<String, List<PaymentDetails>>();
+        final Map<String, Double> vendorPaymentAmountMap = new HashMap<String, Double>();
+        final Map<String, List<PaymentDetails>> paymentDetailsMap = new HashMap<String, List<PaymentDetails>>();
         Double amount;
         List<PaymentDetails> paymentDetailsList;
         String tenantId = null;
@@ -167,16 +155,14 @@ public class PaymentDetailsService {
                 && !paymentDetailsRequest.getPaymentDetails().isEmpty())
             tenantId = paymentDetailsRequest.getPaymentDetails().get(0).getTenantId();
 
-        for (PaymentDetails pd : paymentDetailsRequest.getPaymentDetails()) {
+        for (final PaymentDetails pd : paymentDetailsRequest.getPaymentDetails()) {
 
             vendorPaymentAmountMap.put(pd.getVendorPaymentDetails().getPaymentNo(),
                     pd.getVendorPaymentDetails().getVendorInvoiceAmount());
 
-            if (requestPaymentAmountMap.get(pd.getVendorPaymentDetails().getPaymentNo()) == null) {
-
+            if (requestPaymentAmountMap.get(pd.getVendorPaymentDetails().getPaymentNo()) == null)
                 requestPaymentAmountMap.put(pd.getVendorPaymentDetails().getPaymentNo(), pd.getAmount());
-
-            } else {
+            else {
 
                 amount = requestPaymentAmountMap.get(pd.getVendorPaymentDetails().getPaymentNo());
                 amount = amount + pd.getAmount();
@@ -184,11 +170,9 @@ public class PaymentDetailsService {
                 requestPaymentAmountMap.put(pd.getVendorPaymentDetails().getPaymentNo(), amount);
             }
 
-            if (paymentDetailsMap.get(pd.getVendorPaymentDetails().getPaymentNo()) == null) {
-
+            if (paymentDetailsMap.get(pd.getVendorPaymentDetails().getPaymentNo()) == null)
                 paymentDetailsMap.put(pd.getVendorPaymentDetails().getPaymentNo(), Collections.singletonList(pd));
-
-            } else {
+            else {
 
                 paymentDetailsList = new ArrayList<>(paymentDetailsMap.get(pd.getVendorPaymentDetails().getPaymentNo()));
 
@@ -198,43 +182,34 @@ public class PaymentDetailsService {
             }
         }
 
-        for (String paymentNo : vendorPaymentAmountMap.keySet()) {
-
-            if ((requestPaymentAmountMap.get(paymentNo) + getAlreadyPaidAmount(tenantId, paymentNo, action,
-                    paymentDetailsMap.get(paymentNo))) > vendorPaymentAmountMap
-                            .get(paymentNo)) {
-
+        for (final String paymentNo : vendorPaymentAmountMap.keySet())
+            if (requestPaymentAmountMap.get(paymentNo) + getAlreadyPaidAmount(tenantId, paymentNo, action,
+                    paymentDetailsMap.get(paymentNo)) > vendorPaymentAmountMap
+                            .get(paymentNo))
                 throw new CustomException("PaymentAmount",
                         "Total of payment amount(s) is more than the invoice amount");
-            }
-        }
 
     }
 
-    private Double getAlreadyPaidAmount(String tenantId, String paymentNo, String action,
-            List<PaymentDetails> paymentDetailsList) {
+    private Double getAlreadyPaidAmount(final String tenantId, final String paymentNo, final String action,
+            final List<PaymentDetails> paymentDetailsList) {
 
-        Map<String, PaymentDetails> paymentDetailsMap = new HashMap<String, PaymentDetails>();
-        PaymentDetailsSearch search = new PaymentDetailsSearch();
+        final Map<String, PaymentDetails> paymentDetailsMap = new HashMap<String, PaymentDetails>();
+        final PaymentDetailsSearch search = new PaymentDetailsSearch();
         Double paidAmount = (double) 0;
         search.setTenantId(tenantId);
         search.setPaymentNo(paymentNo);
 
-        if (Constants.ACTION_UPDATE.equalsIgnoreCase(action)) {
-            for (PaymentDetails pd : paymentDetailsList) {
+        if (Constants.ACTION_UPDATE.equalsIgnoreCase(action))
+            for (final PaymentDetails pd : paymentDetailsList)
                 paymentDetailsMap.put(pd.getCode(), pd);
-            }
-        }
-        Pagination<PaymentDetails> response = search(search);
+        final Pagination<PaymentDetails> response = search(search);
 
         if (response != null && response.getPagedData() != null && !response.getPagedData().isEmpty())
-            for (PaymentDetails pd : response.getPagedData()) {
-
+            for (final PaymentDetails pd : response.getPagedData())
                 if (Constants.ACTION_CREATE.equalsIgnoreCase(action)
-                        || (Constants.ACTION_UPDATE.equalsIgnoreCase(action) && paymentDetailsMap.get(pd.getCode()) == null)) {
+                        || Constants.ACTION_UPDATE.equalsIgnoreCase(action) && paymentDetailsMap.get(pd.getCode()) == null)
                     paidAmount = paidAmount + pd.getAmount();
-                }
-            }
 
         return paidAmount;
     }

@@ -38,7 +38,7 @@ public class AssetService {
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
 
-        AssetResponse response = restTemplate.postForObject(assetsBySearchCriteriaUrlByCode, wrapper, AssetResponse.class,
+        final AssetResponse response = restTemplate.postForObject(assetsBySearchCriteriaUrlByCode, wrapper, AssetResponse.class,
                 Constants.BIN_ASSET_CATEGORY,
                 code, tenantId);
 
@@ -54,7 +54,8 @@ public class AssetService {
         final RequestInfoWrapper wrapper = new RequestInfoWrapper();
         wrapper.setRequestInfo(requestInfo);
 
-        AssetResponse response = restTemplate.postForObject(assetsBySearchCriteriaUrlByCategory, wrapper, AssetResponse.class,
+        final AssetResponse response = restTemplate.postForObject(assetsBySearchCriteriaUrlByCategory, wrapper,
+                AssetResponse.class,
                 Constants.BIN_ASSET_CATEGORY,
                 tenantId);
 

@@ -161,10 +161,8 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
         final List<VehicleFuellingDetailsEntity> vehicleFuellingDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        for (final VehicleFuellingDetailsEntity vehicleFuellingDetailsEntity : vehicleFuellingDetailsEntities) {
-
+        for (final VehicleFuellingDetailsEntity vehicleFuellingDetailsEntity : vehicleFuellingDetailsEntities)
             vehicleFuellingDetailsList.add(vehicleFuellingDetailsEntity.toDomain());
-        }
         if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty()) {
 
             populateVehicles(vehicleFuellingDetailsList);
@@ -176,27 +174,21 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateVehicles(List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
+    private void populateVehicles(final List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
 
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicles;
-        StringBuffer vehicleNos = new StringBuffer();
-        Set<String> vehicleNoSet = new HashSet<>();
+        final StringBuffer vehicleNos = new StringBuffer();
+        final Set<String> vehicleNoSet = new HashSet<>();
 
-        for (VehicleFuellingDetails vfd : vehicleFuellingDetailsList) {
-
+        for (final VehicleFuellingDetails vfd : vehicleFuellingDetailsList)
             if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
+                    && !vfd.getVehicle().getRegNumber().isEmpty())
                 vehicleNoSet.add(vfd.getVehicle().getRegNumber());
 
-            }
+        final List<String> vehicleNoList = new ArrayList(vehicleNoSet);
 
-        }
-
-        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
-
-        for (String vehicleNo : vehicleNoList) {
+        for (final String vehicleNo : vehicleNoList) {
 
             if (vehicleNos.length() >= 1)
                 vehicleNos.append(",");
@@ -208,7 +200,7 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
         if (vehicleNos != null && vehicleNos.length() > 0) {
 
             String tenantId = null;
-            Map<String, Vehicle> vehicleMap = new HashMap<>();
+            final Map<String, Vehicle> vehicleMap = new HashMap<>();
 
             if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty())
                 tenantId = vehicleFuellingDetailsList.get(0).getTenantId();
@@ -220,47 +212,33 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
             vehicles = vehicleService.search(vehicleSearch);
 
             if (vehicles != null && vehicles.getPagedData() != null)
-                for (Vehicle v : vehicles.getPagedData()) {
-
+                for (final Vehicle v : vehicles.getPagedData())
                     vehicleMap.put(v.getRegNumber(), v);
 
-                }
-
-            for (VehicleFuellingDetails vfd : vehicleFuellingDetailsList) {
-
+            for (final VehicleFuellingDetails vfd : vehicleFuellingDetailsList)
                 if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                        && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
+                        && !vfd.getVehicle().getRegNumber().isEmpty())
                     vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
-                }
-
-            }
 
         }
 
     }
 
-    private void populateRefillingPumpStations(List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
+    private void populateRefillingPumpStations(final List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
 
         RefillingPumpStationSearch refillingPumpStationSearch;
         Pagination<RefillingPumpStation> refillingPumpStations;
-        StringBuffer refillingPumpStationNos = new StringBuffer();
-        Set<String> refillingPumpStationNoSet = new HashSet<>();
+        final StringBuffer refillingPumpStationNos = new StringBuffer();
+        final Set<String> refillingPumpStationNoSet = new HashSet<>();
 
-        for (VehicleFuellingDetails v : vehicleFuellingDetailsList) {
-
+        for (final VehicleFuellingDetails v : vehicleFuellingDetailsList)
             if (v.getRefuellingStation() != null && v.getRefuellingStation().getCode() != null
-                    && !v.getRefuellingStation().getCode().isEmpty()) {
-
+                    && !v.getRefuellingStation().getCode().isEmpty())
                 refillingPumpStationNoSet.add(v.getRefuellingStation().getCode());
 
-            }
+        final List<String> refillingPumpStationNoList = new ArrayList(refillingPumpStationNoSet);
 
-        }
-
-        List<String> refillingPumpStationNoList = new ArrayList(refillingPumpStationNoSet);
-
-        for (String refillingPumpStationNo : refillingPumpStationNoList) {
+        for (final String refillingPumpStationNo : refillingPumpStationNoList) {
 
             if (refillingPumpStationNos.length() >= 1)
                 refillingPumpStationNos.append(",");
@@ -272,7 +250,7 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
         if (refillingPumpStationNos != null && refillingPumpStationNos.length() > 0) {
 
             String tenantId = null;
-            Map<String, RefillingPumpStation> refillingPumpStationMap = new HashMap<>();
+            final Map<String, RefillingPumpStation> refillingPumpStationMap = new HashMap<>();
 
             if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty())
                 tenantId = vehicleFuellingDetailsList.get(0).getTenantId();
@@ -284,23 +262,15 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
             refillingPumpStations = refillingPumpStationService.search(refillingPumpStationSearch);
 
             if (refillingPumpStations != null && refillingPumpStations.getPagedData() != null)
-                for (RefillingPumpStation rps : refillingPumpStations.getPagedData()) {
-
+                for (final RefillingPumpStation rps : refillingPumpStations.getPagedData())
                     refillingPumpStationMap.put(rps.getCode(), rps);
 
-                }
-
-            for (VehicleFuellingDetails vehicleFuellingDetails : vehicleFuellingDetailsList) {
-
+            for (final VehicleFuellingDetails vehicleFuellingDetails : vehicleFuellingDetailsList)
                 if (vehicleFuellingDetails.getRefuellingStation() != null
                         && vehicleFuellingDetails.getRefuellingStation().getCode() != null
-                        && !vehicleFuellingDetails.getRefuellingStation().getCode().isEmpty()) {
-
+                        && !vehicleFuellingDetails.getRefuellingStation().getCode().isEmpty())
                     vehicleFuellingDetails.setRefuellingStation(refillingPumpStationMap
                             .get(vehicleFuellingDetails.getRefuellingStation().getCode()));
-                }
-
-            }
         }
     }
 

@@ -87,7 +87,7 @@ public class SanitationStaffScheduleService {
 
         final SanitationStaffTargetSearch sanitationStaffTargetSearch = new SanitationStaffTargetSearch();
         Pagination<SanitationStaffTarget> sanitationStaffTargets;
-        ShiftSearch shiftSearch = new ShiftSearch();
+        final ShiftSearch shiftSearch = new ShiftSearch();
         Pagination<Shift> shifts;
         for (final SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleRequest
                 .getSanitationStaffSchedules()) {

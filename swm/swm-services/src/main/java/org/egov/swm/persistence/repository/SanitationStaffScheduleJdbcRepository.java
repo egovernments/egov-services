@@ -106,11 +106,8 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
         final List<SanitationStaffScheduleEntity> sanitationStaffScheduleEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        for (final SanitationStaffScheduleEntity sanitationStaffScheduleEntity : sanitationStaffScheduleEntities) {
-
+        for (final SanitationStaffScheduleEntity sanitationStaffScheduleEntity : sanitationStaffScheduleEntities)
             sanitationStaffScheduleList.add(sanitationStaffScheduleEntity.toDomain());
-
-        }
 
         if (sanitationStaffScheduleList != null && !sanitationStaffScheduleList.isEmpty()) {
             populateShifts(sanitationStaffScheduleList);
@@ -122,57 +119,44 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateShifts(List<SanitationStaffSchedule> sanitationStaffScheduleList) {
+    private void populateShifts(final List<SanitationStaffSchedule> sanitationStaffScheduleList) {
 
-        Map<String, Shift> shiftMap = new HashMap<>();
+        final Map<String, Shift> shiftMap = new HashMap<>();
         String tenantId = null;
-        ShiftSearch shiftSearch = new ShiftSearch();
+        final ShiftSearch shiftSearch = new ShiftSearch();
 
         if (sanitationStaffScheduleList != null && !sanitationStaffScheduleList.isEmpty())
             tenantId = sanitationStaffScheduleList.get(0).getTenantId();
 
         shiftSearch.setTenantId(tenantId);
 
-        Pagination<Shift> shifts = shiftService.search(shiftSearch);
+        final Pagination<Shift> shifts = shiftService.search(shiftSearch);
 
-        if (shifts != null && shifts.getPagedData() != null && !shifts.getPagedData().isEmpty()) {
-            for (Shift s : shifts.getPagedData()) {
+        if (shifts != null && shifts.getPagedData() != null && !shifts.getPagedData().isEmpty())
+            for (final Shift s : shifts.getPagedData())
                 shiftMap.put(s.getCode(), s);
-            }
-        }
 
-        for (SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleList) {
-
+        for (final SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleList)
             if (sanitationStaffSchedule.getShift() != null && sanitationStaffSchedule.getShift().getCode() != null
-                    && !sanitationStaffSchedule.getShift().getCode().isEmpty()) {
-
+                    && !sanitationStaffSchedule.getShift().getCode().isEmpty())
                 sanitationStaffSchedule.setShift(shiftMap.get(sanitationStaffSchedule.getShift().getCode()));
-            }
-
-        }
     }
 
-    private void populateSanitationStaffTargets(List<SanitationStaffSchedule> sanitationStaffScheduleList) {
+    private void populateSanitationStaffTargets(final List<SanitationStaffSchedule> sanitationStaffScheduleList) {
 
-        StringBuffer targetNos = new StringBuffer();
-        Set<String> targetNosSet = new HashSet<>();
-        SanitationStaffTargetSearch targetSearch = new SanitationStaffTargetSearch();
+        final StringBuffer targetNos = new StringBuffer();
+        final Set<String> targetNosSet = new HashSet<>();
+        final SanitationStaffTargetSearch targetSearch = new SanitationStaffTargetSearch();
         Pagination<SanitationStaffTarget> targets;
 
-        for (SanitationStaffSchedule sst : sanitationStaffScheduleList) {
-
+        for (final SanitationStaffSchedule sst : sanitationStaffScheduleList)
             if (sst.getSanitationStaffTarget() != null && sst.getSanitationStaffTarget().getTargetNo() != null
-                    && !sst.getSanitationStaffTarget().getTargetNo().isEmpty()) {
-
+                    && !sst.getSanitationStaffTarget().getTargetNo().isEmpty())
                 targetNosSet.add(sst.getSanitationStaffTarget().getTargetNo());
 
-            }
+        final List<String> targetNoList = new ArrayList(targetNosSet);
 
-        }
-
-        List<String> targetNoList = new ArrayList(targetNosSet);
-
-        for (String target : targetNoList) {
+        for (final String target : targetNoList) {
 
             if (targetNos.length() >= 1)
                 targetNos.append(",");
@@ -182,7 +166,7 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
         }
 
         String tenantId = null;
-        Map<String, SanitationStaffTarget> targetMap = new HashMap<>();
+        final Map<String, SanitationStaffTarget> targetMap = new HashMap<>();
 
         if (sanitationStaffScheduleList != null && !sanitationStaffScheduleList.isEmpty())
             tenantId = sanitationStaffScheduleList.get(0).getTenantId();
@@ -192,24 +176,16 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
         targets = sanitationStaffTargetJdbcRepository.search(targetSearch);
 
         if (targets != null && targets.getPagedData() != null)
-            for (SanitationStaffTarget bd : targets.getPagedData()) {
-
+            for (final SanitationStaffTarget bd : targets.getPagedData())
                 targetMap.put(bd.getTargetNo(), bd);
 
-            }
-
-        for (SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleList) {
-
+        for (final SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleList)
             if (sanitationStaffSchedule.getSanitationStaffTarget() != null
                     && sanitationStaffSchedule.getSanitationStaffTarget().getTargetNo() != null
-                    && !sanitationStaffSchedule.getSanitationStaffTarget().getTargetNo().isEmpty()) {
-
+                    && !sanitationStaffSchedule.getSanitationStaffTarget().getTargetNo().isEmpty())
                 sanitationStaffSchedule
                         .setSanitationStaffTarget(
                                 targetMap.get(sanitationStaffSchedule.getSanitationStaffTarget().getTargetNo()));
-            }
-
-        }
 
     }
 

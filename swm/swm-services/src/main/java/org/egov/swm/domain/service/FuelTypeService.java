@@ -42,7 +42,7 @@ public class FuelTypeService {
 
     public List<FuelType> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<FuelType> fuelTypes = new ArrayList<>();
+        final List<FuelType> fuelTypes = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class FuelTypeService {
                 Constants.FUELTYPE_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 fuelTypes.add(mapper.convertValue(obj, FuelType.class));
 
         return fuelTypes;

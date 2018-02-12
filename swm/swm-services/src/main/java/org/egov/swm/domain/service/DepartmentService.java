@@ -43,7 +43,7 @@ public class DepartmentService {
 
     public List<Department> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<Department> departments = new ArrayList<>();
+        final List<Department> departments = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -51,7 +51,7 @@ public class DepartmentService {
                 Constants.DEPARTMENT_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 departments.add(mapper.convertValue(obj, Department.class));
 
         return departments;

@@ -1,5 +1,11 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.BinDetailsSearch;
 import org.egov.swm.persistence.entity.BinDetailsEntity;
@@ -8,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 @Service
 public class BinDetailsJdbcRepository extends JdbcRepository {
@@ -81,24 +85,19 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
 
         final BeanPropertyRowMapper row = new BeanPropertyRowMapper(BinDetailsEntity.class);
 
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
 
-            final List<BinDetailsEntity> entityList = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        final List<BinDetailsEntity> entityList = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
-        long end = System.currentTimeMillis();
+        final long end = System.currentTimeMillis();
         LOG.info("Time taken for searchQuery for Bind Details " + (end - start) + "ms");
         LOG.info("Search Query BinDetailsEntity " + searchQuery.toString() + "paramValues " + paramValues);
 
         final List<BinDetails> resultList = new ArrayList<>();
 
-        if (entityList != null && !entityList.isEmpty()) {
-
-            for (final BinDetailsEntity bde : entityList) {
-
+        if (entityList != null && !entityList.isEmpty())
+            for (final BinDetailsEntity bde : entityList)
                 resultList.add(bde.toDomain());
-            }
-
-        }
 
         return resultList;
     }

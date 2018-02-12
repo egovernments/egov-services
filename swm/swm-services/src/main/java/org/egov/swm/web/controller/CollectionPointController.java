@@ -9,7 +9,6 @@ import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.PaginationContract;
 import org.egov.swm.domain.service.CollectionPointService;
-import org.egov.swm.persistence.repository.JdbcRepository;
 import org.egov.swm.web.requests.CollectionPointRequest;
 import org.egov.swm.web.requests.CollectionPointResponse;
 import org.slf4j.Logger;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CollectionPointController {
 
     private static final Logger LOG = LoggerFactory.getLogger(CollectionPointController.class);
-
 
     @Autowired
     private CollectionPointService collectionPointService;
@@ -63,13 +61,12 @@ public class CollectionPointController {
 
         LOG.info("correlationId for CollectionPoint Search " + requestInfo.getCorrelationId());
 
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
         final Pagination<CollectionPoint> collectionPointList = collectionPointService.search(collectionPointSearch);
 
-        long end = System.currentTimeMillis();
+        final long end = System.currentTimeMillis();
 
         LOG.info("Time taken for collectionPointService.search(collectionPointSearch) in controller " + (end - start) + "ms");
-
 
         return CollectionPointResponse.builder().responseInfo(getResponseInfo(requestInfo))
                 .collectionPoints(collectionPointList.getPagedData()).page(new PaginationContract(collectionPointList))

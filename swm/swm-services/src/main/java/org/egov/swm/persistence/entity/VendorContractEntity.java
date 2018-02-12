@@ -49,9 +49,9 @@ public class VendorContractEntity {
     private Long createdTime = null;
 
     private Long lastModifiedTime = null;
-    
+
     private List<ServicesOffered> serviceOffered = new ArrayList<>();
-    
+
     public VendorContract toDomain() {
 
         final VendorContract vendorContract = new VendorContract();

@@ -116,11 +116,11 @@ public class VendorJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getServices() != null) {
 
-            ServicesOffered servicesOfferedSearch = ServicesOffered.builder().services(searchRequest.getServices())
+            final ServicesOffered servicesOfferedSearch = ServicesOffered.builder().services(searchRequest.getServices())
                     .tenantId(searchRequest.getTenantId())
                     .build();
-            List<ServicesOffered> servicesOffereds = servicesOfferedJdbcRepository.search(servicesOfferedSearch);
-            List<String> vendorNos = servicesOffereds.stream()
+            final List<ServicesOffered> servicesOffereds = servicesOfferedJdbcRepository.search(servicesOfferedSearch);
+            final List<String> vendorNos = servicesOffereds.stream()
                     .map(ServicesOffered::getVendor).distinct().collect(Collectors.toList());
             if (vendorNos != null && !vendorNos.isEmpty()) {
                 addAnd(params);
@@ -159,7 +159,7 @@ public class VendorJdbcRepository extends JdbcRepository {
         LOG.info("Vendor search query  " + searchQuery + " and param values" + paramValues.toString());
         final List<VendorEntity> vendorEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
-        StringBuffer vendorCodes = new StringBuffer();
+        final StringBuffer vendorCodes = new StringBuffer();
 
         for (final VendorEntity vendorEntity : vendorEntities) {
 
@@ -187,56 +187,44 @@ public class VendorJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateDocument(List<Vendor> vendorList, String vendorCodes) {
+    private void populateDocument(final List<Vendor> vendorList, final String vendorCodes) {
 
         String tenantId = null;
-        Map<String, Document> documentMap = new HashMap<>();
+        final Map<String, Document> documentMap = new HashMap<>();
 
         if (vendorList != null && !vendorList.isEmpty())
             tenantId = vendorList.get(0).getTenantId();
 
-        DocumentSearch search = new DocumentSearch();
+        final DocumentSearch search = new DocumentSearch();
         search.setTenantId(tenantId);
         search.setRefCodes(vendorCodes);
 
-        List<Document> docs = documentJdbcRepository.search(search);
+        final List<Document> docs = documentJdbcRepository.search(search);
 
         if (docs != null)
-            for (Document d : docs) {
-
+            for (final Document d : docs)
                 documentMap.put(d.getRefCode(), d);
 
-            }
-
-        for (Vendor vendor : vendorList) {
-
+        for (final Vendor vendor : vendorList)
             vendor.setAgreementDocument(documentMap.get(vendor.getVendorNo()));
-
-        }
 
     }
 
-    private void populateSuppliers(List<Vendor> vendorList) {
+    private void populateSuppliers(final List<Vendor> vendorList) {
 
-        StringBuffer supplierCodes = new StringBuffer();
-        Set<String> supplierCodesSet = new HashSet<>();
-        Supplier supplierSearch = new Supplier();
+        final StringBuffer supplierCodes = new StringBuffer();
+        final Set<String> supplierCodesSet = new HashSet<>();
+        final Supplier supplierSearch = new Supplier();
         List<Supplier> suppliers;
 
-        for (Vendor v : vendorList) {
-
+        for (final Vendor v : vendorList)
             if (v.getSupplier() != null && v.getSupplier().getSupplierNo() != null
-                    && !v.getSupplier().getSupplierNo().isEmpty()) {
-
+                    && !v.getSupplier().getSupplierNo().isEmpty())
                 supplierCodesSet.add(v.getSupplier().getSupplierNo());
 
-            }
+        final List<String> supplierCodeList = new ArrayList(supplierCodesSet);
 
-        }
-
-        List<String> supplierCodeList = new ArrayList(supplierCodesSet);
-
-        for (String code : supplierCodeList) {
+        for (final String code : supplierCodeList) {
 
             if (supplierCodes.length() >= 1)
                 supplierCodes.append(",");
@@ -246,7 +234,7 @@ public class VendorJdbcRepository extends JdbcRepository {
         }
 
         String tenantId = null;
-        Map<String, Supplier> supplierMap = new HashMap<>();
+        final Map<String, Supplier> supplierMap = new HashMap<>();
 
         if (vendorList != null && !vendorList.isEmpty())
             tenantId = vendorList.get(0).getTenantId();
@@ -256,28 +244,20 @@ public class VendorJdbcRepository extends JdbcRepository {
         suppliers = supplierRepository.search(supplierSearch);
 
         if (suppliers != null)
-            for (Supplier bd : suppliers) {
-
+            for (final Supplier bd : suppliers)
                 supplierMap.put(bd.getSupplierNo(), bd);
 
-            }
-
-        for (Vendor vendor : vendorList) {
-
+        for (final Vendor vendor : vendorList)
             if (vendor.getSupplier() != null && vendor.getSupplier().getSupplierNo() != null
-                    && !vendor.getSupplier().getSupplierNo().isEmpty()) {
-
+                    && !vendor.getSupplier().getSupplierNo().isEmpty())
                 vendor.setSupplier(supplierMap.get(vendor.getSupplier().getSupplierNo()));
-            }
-
-        }
 
     }
 
-    private void populateServicedLocations(List<Vendor> vendorList, String vendorCodes) {
-        Map<String, List<ServicedLocations>> servicedLocationsMap = new HashMap<>();
-        Map<String, List<Boundary>> boundaryListMap = new HashMap<>();
-        Map<String, Boundary> boundaryMap = new HashMap<>();
+    private void populateServicedLocations(final List<Vendor> vendorList, final String vendorCodes) {
+        final Map<String, List<ServicedLocations>> servicedLocationsMap = new HashMap<>();
+        final Map<String, List<Boundary>> boundaryListMap = new HashMap<>();
+        final Map<String, Boundary> boundaryMap = new HashMap<>();
         String tenantId = null;
         ServicedLocations sls;
         sls = new ServicedLocations();
@@ -288,20 +268,16 @@ public class VendorJdbcRepository extends JdbcRepository {
         sls.setVendorNos(vendorCodes);
         sls.setTenantId(tenantId);
 
-        List<ServicedLocations> servicedLocations = servicedLocationsJdbcRepository.search(sls);
+        final List<ServicedLocations> servicedLocations = servicedLocationsJdbcRepository.search(sls);
         if (servicedLocations != null && !servicedLocations.isEmpty()) {
 
-            List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
-            if (boundarys != null) {
-
-                for (Boundary b : boundarys) {
+            final List<Boundary> boundarys = boundaryService.getAll(tenantId, new RequestInfo());
+            if (boundarys != null)
+                for (final Boundary b : boundarys)
                     boundaryMap.put(b.getCode(), b);
-                }
-            }
             List<Boundary> bList;
             List<ServicedLocations> cpdList;
-            for (ServicedLocations sl : servicedLocations) {
-
+            for (final ServicedLocations sl : servicedLocations)
                 if (servicedLocationsMap.get(sl.getVendor()) == null) {
 
                     boundaryListMap.put(sl.getVendor(), Collections.singletonList(boundaryMap.get(sl.getLocation())));
@@ -323,21 +299,17 @@ public class VendorJdbcRepository extends JdbcRepository {
                     servicedLocationsMap.put(sl.getVendor(), cpdList);
 
                 }
-            }
 
-            for (Vendor vendor : vendorList) {
-
+            for (final Vendor vendor : vendorList)
                 vendor.setServicedLocations(boundaryListMap.get(vendor.getVendorNo()));
-
-            }
         }
 
     }
 
-    private void populateServicesOffered(List<Vendor> vendorList, String vendorCodes) {
-        Map<String, List<ServicesOffered>> servicesOfferedMap = new HashMap<>();
-        Map<String, List<SwmProcess>> swmProcessListMap = new HashMap<>();
-        Map<String, SwmProcess> swmProcessMap = new HashMap<>();
+    private void populateServicesOffered(final List<Vendor> vendorList, final String vendorCodes) {
+        final Map<String, List<ServicesOffered>> servicesOfferedMap = new HashMap<>();
+        final Map<String, List<SwmProcess>> swmProcessListMap = new HashMap<>();
+        final Map<String, SwmProcess> swmProcessMap = new HashMap<>();
         String tenantId = null;
         ServicesOffered cpds;
         cpds = new ServicesOffered();
@@ -350,19 +322,17 @@ public class VendorJdbcRepository extends JdbcRepository {
             cpds.setVendorNos(vendorCodes);
             cpds.setTenantId(tenantId);
 
-            List<ServicesOffered> servicesOffered = servicesOfferedJdbcRepository.search(cpds);
+            final List<ServicesOffered> servicesOffered = servicesOfferedJdbcRepository.search(cpds);
 
             if (servicesOffered != null && !servicesOffered.isEmpty()) {
 
-                List<SwmProcess> swmProcessList = swmProcessService.getAll(tenantId, new RequestInfo());
+                final List<SwmProcess> swmProcessList = swmProcessService.getAll(tenantId, new RequestInfo());
 
-                for (SwmProcess sp : swmProcessList) {
+                for (final SwmProcess sp : swmProcessList)
                     swmProcessMap.put(sp.getCode(), sp);
-                }
                 List<SwmProcess> bList;
                 List<ServicesOffered> cpdList;
-                for (ServicesOffered cpd : servicesOffered) {
-
+                for (final ServicesOffered cpd : servicesOffered)
                     if (servicesOfferedMap.get(cpd.getVendor()) == null) {
 
                         swmProcessListMap.put(cpd.getVendor(), Collections.singletonList(swmProcessMap.get(cpd.getService())));
@@ -384,13 +354,9 @@ public class VendorJdbcRepository extends JdbcRepository {
                         servicesOfferedMap.put(cpd.getVendor(), cpdList);
 
                     }
-                }
 
-                for (Vendor vendor : vendorList) {
-
+                for (final Vendor vendor : vendorList)
                     vendor.setServicesOffered(swmProcessListMap.get(vendor.getVendorNo()));
-
-                }
 
             }
         }

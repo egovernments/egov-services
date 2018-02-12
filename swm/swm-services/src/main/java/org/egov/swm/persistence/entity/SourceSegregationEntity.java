@@ -23,7 +23,7 @@ public class SourceSegregationEntity {
     private String tenantId = null;
 
     private String dumpingGround = null;
-    
+
     private String ulb = null;
 
     private Long sourceSegregationDate = null;

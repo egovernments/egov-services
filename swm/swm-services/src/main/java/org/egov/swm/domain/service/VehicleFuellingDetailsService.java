@@ -95,7 +95,7 @@ public class VehicleFuellingDetailsService {
 
     public Pagination<VehicleFuellingDetails> search(final VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
 
-        Pagination<VehicleFuellingDetails> vehicleFuellingDetailsPage = vehicleFuellingDetailsRepository
+        final Pagination<VehicleFuellingDetails> vehicleFuellingDetailsPage = vehicleFuellingDetailsRepository
                 .search(vehicleFuellingDetailsSearch);
 
         List<VehicleFuellingDetails> vehicleFuellingDetailsList = new ArrayList<>();
@@ -115,8 +115,8 @@ public class VehicleFuellingDetailsService {
         return vehicleFuellingDetailsPage;
     }
 
-    private List<VehicleFuellingDetails> filterByFuelType(List<VehicleFuellingDetails> vehicleFuellingDetailsList,
-            String fuelTypeCode) {
+    private List<VehicleFuellingDetails> filterByFuelType(final List<VehicleFuellingDetails> vehicleFuellingDetailsList,
+            final String fuelTypeCode) {
         return vehicleFuellingDetailsList.stream()
                 .filter(fuellingDetail -> fuellingDetail.getVehicle() != null &&
                         fuellingDetail.getVehicle().getFuelType() != null &&
@@ -126,8 +126,8 @@ public class VehicleFuellingDetailsService {
                 .collect(Collectors.toList());
     }
 
-    private List<VehicleFuellingDetails> filterByVehicleType(List<VehicleFuellingDetails> vehicleFuellingDetailsList,
-            String vehicleTypeCode) {
+    private List<VehicleFuellingDetails> filterByVehicleType(final List<VehicleFuellingDetails> vehicleFuellingDetailsList,
+            final String vehicleTypeCode) {
         return vehicleFuellingDetailsList.stream()
                 .filter(fuellingDetail -> fuellingDetail.getVehicle() != null &&
                         fuellingDetail.getVehicle().getVehicleType() != null &&
@@ -145,7 +145,7 @@ public class VehicleFuellingDetailsService {
         RefillingPumpStationSearch refillingPumpStationSearch;
         VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch;
         Pagination<VehicleFuellingDetails> fuellingDetails;
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
@@ -207,25 +207,21 @@ public class VehicleFuellingDetailsService {
 
             if ((details.getTransactionNo() == null || details.getTransactionNo().isEmpty())
                     && fuellingDetails != null && fuellingDetails.getPagedData() != null
-                    && !fuellingDetails.getPagedData().isEmpty()) {
-
+                    && !fuellingDetails.getPagedData().isEmpty())
                 throw new CustomException("VehicleFuellingDetails",
                         "Vehicle Fuelling data already exist for the selected Pump Station:"
                                 + details.getRefuellingStation().getName() + " and receipt number: "
                                 + details.getReceiptNo());
-            }
 
             if (details.getTransactionNo() != null && !details.getTransactionNo().isEmpty()
                     && fuellingDetails != null && fuellingDetails.getPagedData() != null
                     && !fuellingDetails.getPagedData().isEmpty()
                     && !details.getTransactionNo()
-                            .equalsIgnoreCase(fuellingDetails.getPagedData().get(0).getTransactionNo())) {
-
+                            .equalsIgnoreCase(fuellingDetails.getPagedData().get(0).getTransactionNo()))
                 throw new CustomException("VehicleFuellingDetails",
                         "Vehicle Fuelling data already exist for the selected Pump Station:"
                                 + details.getRefuellingStation().getName() + " and receipt number: "
                                 + details.getReceiptNo());
-            }
 
         }
     }

@@ -91,7 +91,7 @@ public class ShiftJdbcRepository extends JdbcRepository {
             params.append("designation =:designation");
             paramValues.put("designation", searchRequest.getDesignationCode());
         }
-        DateFormat validationDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        final DateFormat validationDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         validationDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         if (searchRequest.getValidate() == null || !searchRequest.getValidate()) {
@@ -154,7 +154,7 @@ public class ShiftJdbcRepository extends JdbcRepository {
 
         final List<ShiftEntity> shiftEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
-        StringBuffer shiftCodes = new StringBuffer();
+        final StringBuffer shiftCodes = new StringBuffer();
 
         for (final ShiftEntity shiftEntity : shiftEntities) {
             shiftList.add(shiftEntity.toDomain());
@@ -175,51 +175,39 @@ public class ShiftJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateShiftTypes(List<Shift> shiftList) {
-        Map<String, ShiftType> shiftTypeMap = new HashMap<>();
+    private void populateShiftTypes(final List<Shift> shiftList) {
+        final Map<String, ShiftType> shiftTypeMap = new HashMap<>();
         String tenantId = null;
 
         if (shiftList != null && !shiftList.isEmpty())
             tenantId = shiftList.get(0).getTenantId();
 
-        List<ShiftType> shiftTypes = shiftTypeService.getAll(tenantId, new RequestInfo());
+        final List<ShiftType> shiftTypes = shiftTypeService.getAll(tenantId, new RequestInfo());
 
-        for (ShiftType vt : shiftTypes) {
+        for (final ShiftType vt : shiftTypes)
             shiftTypeMap.put(vt.getCode(), vt);
-        }
 
-        for (Shift shift : shiftList) {
-
+        for (final Shift shift : shiftList)
             if (shift.getShiftType() != null && shift.getShiftType().getCode() != null
-                    && !shift.getShiftType().getCode().isEmpty()) {
-
+                    && !shift.getShiftType().getCode().isEmpty())
                 shift.setShiftType(shiftTypeMap.get(shift.getShiftType().getCode()));
-            }
-
-        }
     }
 
-    private void populateDepartments(List<Shift> shiftList) {
-        Map<String, Department> departmentMap = new HashMap<>();
+    private void populateDepartments(final List<Shift> shiftList) {
+        final Map<String, Department> departmentMap = new HashMap<>();
         String tenantId = null;
 
         if (shiftList != null && !shiftList.isEmpty())
             tenantId = shiftList.get(0).getTenantId();
 
-        List<Department> departments = departmentService.getAll(tenantId, new RequestInfo());
+        final List<Department> departments = departmentService.getAll(tenantId, new RequestInfo());
 
-        for (Department vt : departments) {
+        for (final Department vt : departments)
             departmentMap.put(vt.getCode(), vt);
-        }
 
-        for (Shift shift : shiftList) {
-
+        for (final Shift shift : shiftList)
             if (shift.getDepartment() != null && shift.getDepartment().getCode() != null
-                    && !shift.getDepartment().getCode().isEmpty()) {
-
+                    && !shift.getDepartment().getCode().isEmpty())
                 shift.setDepartment(departmentMap.get(shift.getDepartment().getCode()));
-            }
-
-        }
     }
 }

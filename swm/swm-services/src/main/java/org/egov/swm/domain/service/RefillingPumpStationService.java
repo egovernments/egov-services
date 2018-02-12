@@ -86,7 +86,7 @@ public class RefillingPumpStationService {
 
         for (final RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 
-            if (refillingPumpStation.getFuelTypes() != null && !refillingPumpStation.getFuelTypes().isEmpty()) {
+            if (refillingPumpStation.getFuelTypes() != null && !refillingPumpStation.getFuelTypes().isEmpty())
                 for (FuelType fuelType : refillingPumpStation.getFuelTypes()) {
                     // Validate Fuel Type
                     if (fuelType != null && (fuelType.getCode() == null
@@ -97,7 +97,6 @@ public class RefillingPumpStationService {
                         fuelType = fuelTypeService.getFuelType(refillingPumpStation.getTenantId(), fuelType.getCode(),
                                 refillingPumpStationRequest.getRequestInfo());
                 }
-            }
 
             // validate Oil Company
             if (refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null

@@ -124,7 +124,7 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
         SourceSegregation ss;
 
-        StringBuffer sourceSegregationCodes = new StringBuffer();
+        final StringBuffer sourceSegregationCodes = new StringBuffer();
 
         for (final SourceSegregationEntity sourceSegregationEntity : sourceSegregationEntities) {
 
@@ -151,9 +151,10 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateCollectionDetails(List<SourceSegregation> sourceSegregationList, String sourceSegregationCodes) {
+    private void populateCollectionDetails(final List<SourceSegregation> sourceSegregationList,
+            final String sourceSegregationCodes) {
 
-        Map<String, List<CollectionDetails>> collectionDetailsMap = new HashMap<>();
+        final Map<String, List<CollectionDetails>> collectionDetailsMap = new HashMap<>();
         String tenantId = null;
         CollectionDetailsSearch cds;
         cds = new CollectionDetailsSearch();
@@ -164,15 +165,12 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
         cds.setSourceSegregationCodes(sourceSegregationCodes);
         cds.setTenantId(tenantId);
 
-        List<CollectionDetails> collectionDetailss = collectionDetailsJdbcRepository.search(cds);
+        final List<CollectionDetails> collectionDetailss = collectionDetailsJdbcRepository.search(cds);
         List<CollectionDetails> bdList;
-        for (CollectionDetails bd : collectionDetailss) {
-
-            if (collectionDetailsMap.get(bd.getSourceSegregation()) == null) {
-
+        for (final CollectionDetails bd : collectionDetailss)
+            if (collectionDetailsMap.get(bd.getSourceSegregation()) == null)
                 collectionDetailsMap.put(bd.getSourceSegregation(), Collections.singletonList(bd));
-
-            } else {
+            else {
 
                 bdList = new ArrayList<>(collectionDetailsMap.get(bd.getSourceSegregation()));
 
@@ -181,64 +179,48 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
                 collectionDetailsMap.put(bd.getSourceSegregation(), bdList);
 
             }
-        }
 
-        for (SourceSegregation sourceSegregation : sourceSegregationList) {
-
+        for (final SourceSegregation sourceSegregation : sourceSegregationList)
             sourceSegregation.setCollectionDetails(collectionDetailsMap.get(sourceSegregation.getCode()));
 
-        }
-
     }
 
-    private void populateDumpingGrounds(List<SourceSegregation> sourceSegregationList) {
+    private void populateDumpingGrounds(final List<SourceSegregation> sourceSegregationList) {
 
-        Map<String, DumpingGround> dumpingGroundMap = new HashMap<>();
+        final Map<String, DumpingGround> dumpingGroundMap = new HashMap<>();
         String tenantId = null;
 
         if (sourceSegregationList != null && !sourceSegregationList.isEmpty())
             tenantId = sourceSegregationList.get(0).getTenantId();
 
-        List<DumpingGround> dumpingGrounds = dumpingGroundService.getAll(tenantId, new RequestInfo());
+        final List<DumpingGround> dumpingGrounds = dumpingGroundService.getAll(tenantId, new RequestInfo());
 
-        for (DumpingGround dg : dumpingGrounds) {
+        for (final DumpingGround dg : dumpingGrounds)
             dumpingGroundMap.put(dg.getCode(), dg);
-        }
 
-        for (SourceSegregation sourceSegregation : sourceSegregationList) {
-
+        for (final SourceSegregation sourceSegregation : sourceSegregationList)
             if (sourceSegregation.getDumpingGround() != null && sourceSegregation.getDumpingGround().getCode() != null
-                    && !sourceSegregation.getDumpingGround().getCode().isEmpty()) {
-
+                    && !sourceSegregation.getDumpingGround().getCode().isEmpty())
                 sourceSegregation.setDumpingGround(dumpingGroundMap.get(sourceSegregation.getDumpingGround().getCode()));
-            }
-
-        }
     }
 
-    private void populateULBs(List<SourceSegregation> sourceSegregationList) {
+    private void populateULBs(final List<SourceSegregation> sourceSegregationList) {
 
-        Map<String, Tenant> TenantMap = new HashMap<>();
+        final Map<String, Tenant> TenantMap = new HashMap<>();
         String tenantId = null;
 
         if (sourceSegregationList != null && !sourceSegregationList.isEmpty())
             tenantId = sourceSegregationList.get(0).getTenantId();
 
-        List<Tenant> tenants = tenantService.getAll(tenantId, new RequestInfo());
+        final List<Tenant> tenants = tenantService.getAll(tenantId, new RequestInfo());
 
-        for (Tenant t : tenants) {
+        for (final Tenant t : tenants)
             TenantMap.put(t.getCode(), t);
-        }
 
-        for (SourceSegregation sourceSegregation : sourceSegregationList) {
-
+        for (final SourceSegregation sourceSegregation : sourceSegregationList)
             if (sourceSegregation.getUlb() != null && sourceSegregation.getUlb().getCode() != null
-                    && !sourceSegregation.getUlb().getCode().isEmpty()) {
-
+                    && !sourceSegregation.getUlb().getCode().isEmpty())
                 sourceSegregation.setUlb(TenantMap.get(sourceSegregation.getUlb().getCode()));
-            }
-
-        }
     }
 
 }

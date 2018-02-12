@@ -1,7 +1,6 @@
 package org.egov.swm.persistence.entity;
 
 import org.egov.swm.domain.model.AuditDetails;
-import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.SanitationStaffTarget;

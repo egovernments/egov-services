@@ -111,13 +111,13 @@ public class RouteJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getCollectionPointCode() != null) {
 
-            RouteCollectionPointMapSearch routeCollectionPointMap = new RouteCollectionPointMapSearch();
+            final RouteCollectionPointMapSearch routeCollectionPointMap = new RouteCollectionPointMapSearch();
             routeCollectionPointMap.setCollectionPointCode(searchRequest.getCollectionPointCode());
             routeCollectionPointMap.setTenantId(searchRequest.getTenantId());
 
-            List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository
+            final List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository
                     .search(routeCollectionPointMap);
-            List<String> routeCodes = routeCollectionPointMaps.stream()
+            final List<String> routeCodes = routeCollectionPointMaps.stream()
                     .map(RouteCollectionPointMap::getRoute)
                     .collect(Collectors.toList());
             if (routeCodes != null && !routeCodes.isEmpty()) {
@@ -133,13 +133,13 @@ public class RouteJdbcRepository extends JdbcRepository {
 
         if (searchRequest.getDumpingGroundCode() != null) {
 
-            RouteCollectionPointMapSearch routeCollectionPointMap = new RouteCollectionPointMapSearch();
+            final RouteCollectionPointMapSearch routeCollectionPointMap = new RouteCollectionPointMapSearch();
             routeCollectionPointMap.setDumpingGroundCode(searchRequest.getDumpingGroundCode());
             routeCollectionPointMap.setTenantId(searchRequest.getTenantId());
 
-            List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository
+            final List<RouteCollectionPointMap> routeCollectionPointMaps = routeCollectionPointMapJdbcRepository
                     .search(routeCollectionPointMap);
-            List<String> routeCodes = routeCollectionPointMaps.stream()
+            final List<String> routeCodes = routeCollectionPointMaps.stream()
                     .map(RouteCollectionPointMap::getRoute)
                     .collect(Collectors.toList());
             if (routeCodes != null && !routeCodes.isEmpty()) {
@@ -178,7 +178,7 @@ public class RouteJdbcRepository extends JdbcRepository {
         final List<Route> routeList = new ArrayList<>();
 
         final List<RouteEntity> routeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-        StringBuffer routeCodes = new StringBuffer();
+        final StringBuffer routeCodes = new StringBuffer();
 
         for (final RouteEntity routeEntity : routeEntities) {
 
@@ -205,54 +205,44 @@ public class RouteJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateTotalNoOfStops(List<Route> routeList) {
+    private void populateTotalNoOfStops(final List<Route> routeList) {
 
-        for (Route route : routeList) {
-
-            if (route.getCollectionPoints() != null && route.getCollectionPoints().size() > 2) {
-
+        for (final Route route : routeList)
+            if (route.getCollectionPoints() != null && route.getCollectionPoints().size() > 2)
                 route.setTotalNoOfStops(route.getCollectionPoints().size() - 2);
-            } else {
+            else
                 route.setTotalNoOfStops(0);
-            }
-        }
 
     }
 
-    private void populateCollectionTypes(List<Route> routeList) {
+    private void populateCollectionTypes(final List<Route> routeList) {
 
-        Map<String, CollectionType> collectionTypeMap = new HashMap<>();
+        final Map<String, CollectionType> collectionTypeMap = new HashMap<>();
         String tenantId = null;
 
         if (routeList != null && !routeList.isEmpty())
             tenantId = routeList.get(0).getTenantId();
 
-        List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
+        final List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
 
-        for (CollectionType ct : collectionTypes) {
+        for (final CollectionType ct : collectionTypes)
             collectionTypeMap.put(ct.getCode(), ct);
-        }
 
-        for (Route route : routeList) {
-
+        for (final Route route : routeList)
             if (route.getCollectionType() != null && route.getCollectionType().getCode() != null
-                    && !route.getCollectionType().getCode().isEmpty()) {
-
+                    && !route.getCollectionType().getCode().isEmpty())
                 route.setCollectionType(collectionTypeMap.get(route.getCollectionType().getCode()));
-            }
-
-        }
     }
 
-    private void populateRouteCollectionPointMaps(List<Route> routeList, String routeCodes) {
-        Map<String, List<RouteCollectionPointMap>> routeCollectionPointMap = new HashMap<>();
-        Map<String, DumpingGround> dumpingGroundMap = new HashMap<>();
-        Map<String, CollectionPoint> collectionPointMap = new HashMap<>();
+    private void populateRouteCollectionPointMaps(final List<Route> routeList, final String routeCodes) {
+        final Map<String, List<RouteCollectionPointMap>> routeCollectionPointMap = new HashMap<>();
+        final Map<String, DumpingGround> dumpingGroundMap = new HashMap<>();
+        final Map<String, CollectionPoint> collectionPointMap = new HashMap<>();
         CollectionPointSearch cps;
         String tenantId = null;
         RouteCollectionPointMapSearch rcpms;
-        StringBuffer collectionPointCodes = new StringBuffer();
-        Set<String> collectionPointCodeSet = new HashSet<>();
+        final StringBuffer collectionPointCodes = new StringBuffer();
+        final Set<String> collectionPointCodeSet = new HashSet<>();
         Pagination<CollectionPoint> collectionPointList;
 
         if (routeList != null && !routeList.isEmpty())
@@ -263,21 +253,17 @@ public class RouteJdbcRepository extends JdbcRepository {
         rcpms.setTenantId(tenantId);
         rcpms.setRoutes(routeCodes);
 
-        List<RouteCollectionPointMap> routeCollectionPoints = routeCollectionPointMapJdbcRepository.search(rcpms);
+        final List<RouteCollectionPointMap> routeCollectionPoints = routeCollectionPointMapJdbcRepository.search(rcpms);
 
-        if (routeCollectionPoints != null) {
-            for (RouteCollectionPointMap map : routeCollectionPoints) {
+        if (routeCollectionPoints != null)
+            for (final RouteCollectionPointMap map : routeCollectionPoints)
                 if (map.getCollectionPoint() != null && map.getCollectionPoint().getCode() != null
-                        && !map.getCollectionPoint().getCode().isEmpty()) {
-
+                        && !map.getCollectionPoint().getCode().isEmpty())
                     collectionPointCodeSet.add(map.getCollectionPoint().getCode());
-                }
-            }
-        }
 
-        List<String> cpcs = new ArrayList(collectionPointCodeSet);
+        final List<String> cpcs = new ArrayList(collectionPointCodeSet);
 
-        for (String code : cpcs) {
+        for (final String code : cpcs) {
 
             if (collectionPointCodes.length() > 0)
                 collectionPointCodes.append(",");
@@ -294,40 +280,30 @@ public class RouteJdbcRepository extends JdbcRepository {
             collectionPointList = collectionPointJdbcRepository.search(cps);
 
             if (collectionPointList != null && collectionPointList.getPagedData() != null
-                    && !collectionPointList.getPagedData().isEmpty()) {
-
-                for (CollectionPoint cp : collectionPointList.getPagedData()) {
+                    && !collectionPointList.getPagedData().isEmpty())
+                for (final CollectionPoint cp : collectionPointList.getPagedData())
                     collectionPointMap.put(cp.getCode(), cp);
-                }
-            }
         }
 
-        List<DumpingGround> dumpingGrounds = dumpingGroundService.getAll(tenantId, new RequestInfo());
+        final List<DumpingGround> dumpingGrounds = dumpingGroundService.getAll(tenantId, new RequestInfo());
         if (dumpingGrounds != null)
-            for (DumpingGround dg : dumpingGrounds) {
+            for (final DumpingGround dg : dumpingGrounds)
                 dumpingGroundMap.put(dg.getCode(), dg);
-            }
         List<RouteCollectionPointMap> rcpmList;
         if (routeCollectionPoints != null)
-            for (RouteCollectionPointMap rcp : routeCollectionPoints) {
+            for (final RouteCollectionPointMap rcp : routeCollectionPoints) {
 
                 if (rcp.getDumpingGround() != null && rcp.getDumpingGround().getCode() != null
-                        && !rcp.getDumpingGround().getCode().isEmpty()) {
-
+                        && !rcp.getDumpingGround().getCode().isEmpty())
                     rcp.setDumpingGround(dumpingGroundMap.get(rcp.getDumpingGround().getCode()));
-                }
 
                 if (rcp.getCollectionPoint() != null && rcp.getCollectionPoint().getCode() != null
-                        && !rcp.getCollectionPoint().getCode().isEmpty()) {
-
+                        && !rcp.getCollectionPoint().getCode().isEmpty())
                     rcp.setCollectionPoint(collectionPointMap.get(rcp.getCollectionPoint().getCode()));
-                }
 
-                if (routeCollectionPointMap.get(rcp.getRoute()) == null) {
-
+                if (routeCollectionPointMap.get(rcp.getRoute()) == null)
                     routeCollectionPointMap.put(rcp.getRoute(), Collections.singletonList(rcp));
-
-                } else {
+                else {
 
                     rcpmList = new ArrayList<>(routeCollectionPointMap.get(rcp.getRoute()));
 
@@ -338,11 +314,8 @@ public class RouteJdbcRepository extends JdbcRepository {
                 }
             }
 
-        for (Route route : routeList) {
-
+        for (final Route route : routeList)
             route.setCollectionPoints(routeCollectionPointMap.get(route.getCode()));
-
-        }
 
     }
 

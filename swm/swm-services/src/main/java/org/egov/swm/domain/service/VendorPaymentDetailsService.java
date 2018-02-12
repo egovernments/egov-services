@@ -2,11 +2,24 @@ package org.egov.swm.domain.service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Document;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.PaymentDetails;
+import org.egov.swm.domain.model.PaymentDetailsSearch;
+import org.egov.swm.domain.model.VendorContract;
+import org.egov.swm.domain.model.VendorContractSearch;
+import org.egov.swm.domain.model.VendorPaymentDetails;
+import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
 import org.egov.swm.domain.repository.PaymentDetailsRepository;
 import org.egov.swm.domain.repository.VendorPaymentDetailsRepository;
 import org.egov.swm.web.contract.EmployeeResponse;
@@ -78,50 +91,49 @@ public class VendorPaymentDetailsService {
 
     public Pagination<VendorPaymentDetails> search(final VendorPaymentDetailsSearch vendorPaymentDetailsSearch) {
 
-        Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
+        final Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository
+                .search(vendorPaymentDetailsSearch);
 
-        if(vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())
+        if (vendorPaymentDetailsPage.getPagedData() != null && !vendorPaymentDetailsPage.getPagedData().isEmpty())
             vendorPaymentDetailsPage.setPagedData(enrichWithPendingAmount(vendorPaymentDetailsPage.getPagedData(),
                     vendorPaymentDetailsSearch));
 
         return vendorPaymentDetailsPage;
     }
 
-    private List<VendorPaymentDetails> enrichWithPendingAmount(List<VendorPaymentDetails> vendorPaymentDetailsList,
-                                                               VendorPaymentDetailsSearch vendorPaymentDetailsSearch){
+    private List<VendorPaymentDetails> enrichWithPendingAmount(final List<VendorPaymentDetails> vendorPaymentDetailsList,
+            final VendorPaymentDetailsSearch vendorPaymentDetailsSearch) {
 
-        String paymentNumbers = vendorPaymentDetailsList.stream().map(VendorPaymentDetails::getPaymentNo)
-                                .collect(Collectors.joining(","));
+        final String paymentNumbers = vendorPaymentDetailsList.stream().map(VendorPaymentDetails::getPaymentNo)
+                .collect(Collectors.joining(","));
 
-        PaymentDetailsSearch paymentDetailsSearch = new PaymentDetailsSearch();
+        final PaymentDetailsSearch paymentDetailsSearch = new PaymentDetailsSearch();
         paymentDetailsSearch.setTenantId(vendorPaymentDetailsSearch.getTenantId());
         paymentDetailsSearch.setPaymentNos(paymentNumbers);
         paymentDetailsSearch.setExcludeVendorPaymentDetails(true);
 
-        Pagination<PaymentDetails> paymentDetailsPage =  paymentDetailsRepository.search(paymentDetailsSearch);
+        final Pagination<PaymentDetails> paymentDetailsPage = paymentDetailsRepository.search(paymentDetailsSearch);
 
-        HashMap<String, Double> amountMap = new HashMap<>();
-        if(paymentDetailsPage.getPagedData() != null && !paymentDetailsPage.getPagedData().isEmpty()){
-            //Build map of sum of amount for payment number
-            for(String paymentNo : Arrays.asList(paymentNumbers.split(","))){
-                Double sum = 0.0;
-                sum = sum + paymentDetailsPage.getPagedData().stream()
-                            .filter(paymentDetail -> paymentDetail.getVendorPaymentDetails().getPaymentNo().equals(paymentNo))
-                            .mapToDouble(PaymentDetails::getAmount).sum();
-                amountMap.put(paymentNo,sum);
+        final HashMap<String, Double> amountMap = new HashMap<>();
+        if (paymentDetailsPage.getPagedData() != null && !paymentDetailsPage.getPagedData().isEmpty())
+            // Build map of sum of amount for payment number
+            for (final String paymentNo : Arrays.asList(paymentNumbers.split(","))) {
+            Double sum = 0.0;
+            sum = sum + paymentDetailsPage.getPagedData().stream()
+                    .filter(paymentDetail -> paymentDetail.getVendorPaymentDetails().getPaymentNo().equals(paymentNo))
+                    .mapToDouble(PaymentDetails::getAmount).sum();
+            amountMap.put(paymentNo, sum);
             }
-        }
 
-        for(VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsList){
-            if(amountMap.get(vendorPaymentDetail.getPaymentNo()) != null){
+        for (final VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsList)
+            if (amountMap.get(vendorPaymentDetail.getPaymentNo()) != null) {
                 vendorPaymentDetail.setPaidAmount(amountMap.get(vendorPaymentDetail.getPaymentNo()));
                 vendorPaymentDetail.setPendingAmount(vendorPaymentDetail.getVendorInvoiceAmount() -
-                                                     amountMap.get(vendorPaymentDetail.getPaymentNo()));
-            }else{
+                        amountMap.get(vendorPaymentDetail.getPaymentNo()));
+            } else {
                 vendorPaymentDetail.setPaidAmount(0.0);
                 vendorPaymentDetail.setPendingAmount(vendorPaymentDetail.getVendorInvoiceAmount());
             }
-        }
 
         return vendorPaymentDetailsList;
     }
@@ -158,7 +170,7 @@ public class VendorPaymentDetailsService {
 
         EmployeeResponse employeeResponse;
         Pagination<VendorContract> vendorContractPage;
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (final VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsRequest.getVendorPaymentDetails()) {
 
@@ -194,7 +206,7 @@ public class VendorPaymentDetailsService {
                     vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
             }
 
-            //Validation for toDate to be greater than fromDate
+            // Validation for toDate to be greater than fromDate
             if (vendorPaymentDetail.getFromDate() != null && vendorPaymentDetail.getToDate() != null)
                 if (new Date(vendorPaymentDetail.getToDate())
                         .before(new Date(vendorPaymentDetail.getFromDate())))
@@ -202,24 +214,22 @@ public class VendorPaymentDetailsService {
                             + dateFormat.format(new Date(vendorPaymentDetail.getToDate())));
 
             // validation for duplicate service periods
-            VendorPaymentDetailsSearch vendorPaymentDetailsSearch = new VendorPaymentDetailsSearch();
+            final VendorPaymentDetailsSearch vendorPaymentDetailsSearch = new VendorPaymentDetailsSearch();
             vendorPaymentDetailsSearch.setTenantId(vendorPaymentDetail.getTenantId());
             vendorPaymentDetailsSearch.setFromDate(vendorPaymentDetail.getFromDate());
             vendorPaymentDetailsSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
             vendorPaymentDetailsSearch.setToDate(vendorPaymentDetail.getToDate());
             vendorPaymentDetailsSearch.setValidate(true);
 
-            Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository
+            final Pagination<VendorPaymentDetails> vendorPaymentDetailsPage = vendorPaymentDetailsRepository
                     .search(vendorPaymentDetailsSearch);
 
             // For update scenario check after removing record being updated from request.
             if (vendorPaymentDetail.getPaymentNo() != null && !vendorPaymentDetail.getPaymentNo().isEmpty()
                     && vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null
-                    && !vendorPaymentDetailsPage.getPagedData().isEmpty()) {
-
+                    && !vendorPaymentDetailsPage.getPagedData().isEmpty())
                 vendorPaymentDetailsPage.getPagedData()
-                        .removeIf(record -> (record.getPaymentNo().equalsIgnoreCase(vendorPaymentDetail.getPaymentNo())));
-            }
+                        .removeIf(record -> record.getPaymentNo().equalsIgnoreCase(vendorPaymentDetail.getPaymentNo()));
 
             if (vendorPaymentDetailsPage != null && vendorPaymentDetailsPage.getPagedData() != null
                     && !vendorPaymentDetailsPage.getPagedData().isEmpty())
@@ -227,25 +237,26 @@ public class VendorPaymentDetailsService {
                         "Invoice period is overlapping with earlier records: "
                                 + vendorPaymentDetail.getVendorContract().getContractNo());
 
-            //validation for invoice period outside contract period
-            if(vendorPaymentDetail.getFromDate() != null && vendorPaymentDetail.getToDate() != null &&
-               vendorPaymentDetail.getVendorContract() != null){
+            // validation for invoice period outside contract period
+            if (vendorPaymentDetail.getFromDate() != null && vendorPaymentDetail.getToDate() != null &&
+                    vendorPaymentDetail.getVendorContract() != null) {
 
-                VendorContractSearch vendorContractSearch = new VendorContractSearch();
+                final VendorContractSearch vendorContractSearch = new VendorContractSearch();
                 vendorContractSearch.setTenantId(vendorPaymentDetail.getTenantId());
                 vendorContractSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
 
-                Pagination<VendorContract> vendorContracts = vendorContractService.search(vendorContractSearch);
-                if(vendorContracts != null && !vendorContracts.getPagedData().isEmpty()){
-                    VendorContract vendorContract = vendorContracts.getPagedData().get(0);
-                    if(new Date(vendorPaymentDetail.getFromDate())
+                final Pagination<VendorContract> vendorContracts = vendorContractService.search(vendorContractSearch);
+                if (vendorContracts != null && !vendorContracts.getPagedData().isEmpty()) {
+                    final VendorContract vendorContract = vendorContracts.getPagedData().get(0);
+                    if (new Date(vendorPaymentDetail.getFromDate())
                             .before(new Date(vendorContract.getContractPeriodFrom())) ||
                             new Date(vendorPaymentDetail.getToDate())
                                     .after(new Date(vendorContract.getContractPeriodTo())))
                         throw new CustomException("Out Of Contract Period",
                                 " Invalid invoice. Submitted invoice period (" +
                                         dateFormat.format(vendorPaymentDetail.getFromDate()) + " - " +
-                                        dateFormat.format(vendorPaymentDetail.getToDate()) + ") is outside the contract period (" +
+                                        dateFormat.format(vendorPaymentDetail.getToDate()) + ") is outside the contract period ("
+                                        +
                                         dateFormat.format(vendorContract.getContractPeriodFrom()) + " - " +
                                         dateFormat.format(vendorContract.getContractPeriodTo()) + ").");
                 }

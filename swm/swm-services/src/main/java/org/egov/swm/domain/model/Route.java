@@ -3,7 +3,11 @@ package org.egov.swm.domain.model;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -66,7 +70,7 @@ public class Route {
     private Integer totalNoOfStops;
 
     public boolean hasDumpingGround() {
-        Long count = collectionPoints.stream().filter(cp -> (cp.getDumpingGround() != null)).count();
+        final Long count = collectionPoints.stream().filter(cp -> (cp.getDumpingGround() != null)).count();
 
         return count > 0;
     }

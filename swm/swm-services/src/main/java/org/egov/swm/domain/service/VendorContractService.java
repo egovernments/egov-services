@@ -40,7 +40,7 @@ public class VendorContractService {
 
     @Autowired
     private SwmProcessService swmProcessService;
-    
+
     @Transactional
     public VendorContractRequest create(final VendorContractRequest vendorContractRequest) {
 
@@ -57,7 +57,6 @@ public class VendorContractService {
             for (final VendorContract vc : vendorContractRequest.getVendorContracts()) {
 
                 setAuditDetails(vc, userId);
-                
 
                 vc.setContractNo(
                         generateVendorContractNumber(vc.getTenantId(), vendorContractRequest.getRequestInfo()));
@@ -98,7 +97,7 @@ public class VendorContractService {
         SwmProcess p;
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (final VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
 
@@ -126,7 +125,7 @@ public class VendorContractService {
 
                     }
                 }
-            
+
             if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null) {
                 vendorSearch = new VendorSearch();
                 vendorSearch.setTenantId(vendorContract.getTenantId());
@@ -142,20 +141,22 @@ public class VendorContractService {
             if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractPeriodTo() != null)
                 if (new Date(vendorContract.getContractPeriodTo())
                         .before(new Date(vendorContract.getContractPeriodFrom())))
-                    throw new CustomException("ContractPeriodToDate ", "Contract Period To date shall be greater than Contract Period From date: "
-                            + dateFormat.format(new Date(vendorContract.getContractPeriodTo())));
-            
+                    throw new CustomException("ContractPeriodToDate ",
+                            "Contract Period To date shall be greater than Contract Period From date: "
+                                    + dateFormat.format(new Date(vendorContract.getContractPeriodTo())));
+
             if (vendorContract.getContractDate() != null)
                 if (new Date()
                         .before(new Date(vendorContract.getContractDate())))
                     throw new CustomException("ContractDate ", "Contract date can not be future date: "
                             + dateFormat.format(new Date(vendorContract.getContractDate())));
-            
+
             if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractDate() != null)
                 if (new Date(vendorContract.getContractDate())
                         .after(new Date(vendorContract.getContractPeriodFrom())))
-                    throw new CustomException("ContractPeriodFrom ", "Contract Period From date shall be equal to or greater than Contract date: "
-                            + dateFormat.format(new Date(vendorContract.getContractPeriodFrom())));
+                    throw new CustomException("ContractPeriodFrom ",
+                            "Contract Period From date shall be equal to or greater than Contract date: "
+                                    + dateFormat.format(new Date(vendorContract.getContractPeriodFrom())));
 
         }
 

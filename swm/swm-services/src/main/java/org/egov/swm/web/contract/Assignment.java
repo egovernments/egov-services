@@ -56,7 +56,7 @@ public class Assignment {
 
     @JsonProperty("department")
     private Long department;
-    
+
     @JsonProperty("designation")
     private Long designation;
 

@@ -21,7 +21,7 @@ public class City {
 
     @JsonProperty("name")
     private String name = null;
-    
+
     @JsonProperty("code")
     private String code = null;
 
@@ -36,7 +36,7 @@ public class City {
 
     @JsonProperty("regionName")
     private String regionName = null;
-    
+
     @JsonProperty("ulbGrade")
     private String ulbGrade = null;
 

@@ -42,7 +42,7 @@ public class CollectionTypeService {
 
     public List<CollectionType> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<CollectionType> collectionTypes = new ArrayList<>();
+        final List<CollectionType> collectionTypes = new ArrayList<>();
 
         JSONArray responseJSONArray;
 
@@ -50,7 +50,7 @@ public class CollectionTypeService {
                 Constants.COLLECTIONTYPE_MASTER_NAME, null, null, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            for (Object obj : responseJSONArray)
+            for (final Object obj : responseJSONArray)
                 collectionTypes.add(mapper.convertValue(obj, CollectionType.class));
 
         return collectionTypes;

@@ -38,11 +38,8 @@ public class VehicleQueueRepository {
 
     public VehicleRequest update(final VehicleRequest vehicleRequest) {
 
-        for (final Vehicle v : vehicleRequest.getVehicles()) {
-
+        for (final Vehicle v : vehicleRequest.getVehicles())
             documentJdbcRepository.delete(v.getTenantId(), v.getRegNumber());
-
-        }
 
         kafkaTemplate.send(updateTopic, vehicleRequest);
 

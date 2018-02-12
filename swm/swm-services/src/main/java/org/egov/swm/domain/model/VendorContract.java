@@ -67,7 +67,7 @@ public class VendorContract {
     @Valid
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;
-    
+
     @NotNull
     @Size(min = 1)
     @JsonProperty("servicesOffered")

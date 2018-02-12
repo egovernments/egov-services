@@ -46,7 +46,7 @@ public class DocumentJdbcRepository extends JdbcRepository {
             params.append("refCode =:refCode");
             paramValues.put("refCode", searchRequest.getRefCode());
         }
-        
+
         if (searchRequest.getRefCodes() != null) {
             addAnd(params);
             params.append("refCode in (:refCodes)");

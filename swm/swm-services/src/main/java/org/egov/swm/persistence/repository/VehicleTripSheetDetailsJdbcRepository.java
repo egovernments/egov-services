@@ -128,10 +128,8 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
         final List<VehicleTripSheetDetailsEntity> vehicleTripSheetDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        for (final VehicleTripSheetDetailsEntity vehicleTripSheetDetailsEntity : vehicleTripSheetDetailsEntities) {
-
+        for (final VehicleTripSheetDetailsEntity vehicleTripSheetDetailsEntity : vehicleTripSheetDetailsEntities)
             vehicleTripSheetDetailsList.add(vehicleTripSheetDetailsEntity.toDomain());
-        }
 
         if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty()) {
             populateRoutes(vehicleTripSheetDetailsList);
@@ -144,27 +142,21 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private void populateRoutes(List<VehicleTripSheetDetails> vehicleTripSheetDetailsList) {
+    private void populateRoutes(final List<VehicleTripSheetDetails> vehicleTripSheetDetailsList) {
 
-        StringBuffer routeCodes = new StringBuffer();
-        Set<String> routeCodesSet = new HashSet<>();
-        RouteSearch routeSearch = new RouteSearch();
+        final StringBuffer routeCodes = new StringBuffer();
+        final Set<String> routeCodesSet = new HashSet<>();
+        final RouteSearch routeSearch = new RouteSearch();
         Pagination<Route> routes;
 
-        for (VehicleTripSheetDetails sst : vehicleTripSheetDetailsList) {
-
+        for (final VehicleTripSheetDetails sst : vehicleTripSheetDetailsList)
             if (sst.getRoute() != null && sst.getRoute().getCode() != null
-                    && !sst.getRoute().getCode().isEmpty()) {
-
+                    && !sst.getRoute().getCode().isEmpty())
                 routeCodesSet.add(sst.getRoute().getCode());
 
-            }
+        final List<String> routeCodeList = new ArrayList(routeCodesSet);
 
-        }
-
-        List<String> routeCodeList = new ArrayList(routeCodesSet);
-
-        for (String code : routeCodeList) {
+        for (final String code : routeCodeList) {
 
             if (routeCodes.length() >= 1)
                 routeCodes.append(",");
@@ -175,7 +167,7 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
         if (routeCodes != null && routeCodes.length() > 0) {
 
             String tenantId = null;
-            Map<String, Route> routeMap = new HashMap<>();
+            final Map<String, Route> routeMap = new HashMap<>();
 
             if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
                 tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
@@ -185,46 +177,32 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
             routes = routeService.search(routeSearch);
 
             if (routes != null && routes.getPagedData() != null)
-                for (Route bd : routes.getPagedData()) {
-
+                for (final Route bd : routes.getPagedData())
                     routeMap.put(bd.getCode(), bd);
 
-                }
-
-            for (VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsList) {
-
+            for (final VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsList)
                 if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null
-                        && !vehicleTripSheetDetails.getRoute().getCode().isEmpty()) {
-
+                        && !vehicleTripSheetDetails.getRoute().getCode().isEmpty())
                     vehicleTripSheetDetails.setRoute(routeMap.get(vehicleTripSheetDetails.getRoute().getCode()));
-                }
-
-            }
         }
 
     }
 
-    private void populateVehicles(List<VehicleTripSheetDetails> vehicleTripSheetDetailsList) {
+    private void populateVehicles(final List<VehicleTripSheetDetails> vehicleTripSheetDetailsList) {
 
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicles;
-        StringBuffer vehicleNos = new StringBuffer();
-        Set<String> vehicleNoSet = new HashSet<>();
+        final StringBuffer vehicleNos = new StringBuffer();
+        final Set<String> vehicleNoSet = new HashSet<>();
 
-        for (VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList) {
-
+        for (final VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList)
             if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
+                    && !vfd.getVehicle().getRegNumber().isEmpty())
                 vehicleNoSet.add(vfd.getVehicle().getRegNumber());
 
-            }
+        final List<String> vehicleNoList = new ArrayList(vehicleNoSet);
 
-        }
-
-        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
-
-        for (String vehicleNo : vehicleNoList) {
+        for (final String vehicleNo : vehicleNoList) {
 
             if (vehicleNos.length() >= 1)
                 vehicleNos.append(",");
@@ -234,7 +212,7 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
         }
         if (vehicleNos != null && vehicleNos.length() > 0) {
             String tenantId = null;
-            Map<String, Vehicle> vehicleMap = new HashMap<>();
+            final Map<String, Vehicle> vehicleMap = new HashMap<>();
 
             if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
                 tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
@@ -246,21 +224,13 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
             vehicles = vehicleService.search(vehicleSearch);
 
             if (vehicles != null && vehicles.getPagedData() != null)
-                for (Vehicle v : vehicles.getPagedData()) {
-
+                for (final Vehicle v : vehicles.getPagedData())
                     vehicleMap.put(v.getRegNumber(), v);
 
-                }
-
-            for (VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList) {
-
+            for (final VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList)
                 if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                        && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
+                        && !vfd.getVehicle().getRegNumber().isEmpty())
                     vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
-                }
-
-            }
         }
 
     }

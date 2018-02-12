@@ -26,7 +26,7 @@ public class Tenant {
 
         private String value;
 
-        TypeEnum(String value) {
+        TypeEnum(final String value) {
             this.value = value;
         }
 
@@ -37,12 +37,10 @@ public class Tenant {
         }
 
         @JsonCreator
-        public static TypeEnum fromValue(String text) {
-            for (TypeEnum b : TypeEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
+        public static TypeEnum fromValue(final String text) {
+            for (final TypeEnum b : TypeEnum.values())
+                if (String.valueOf(b.value).equals(text))
                     return b;
-                }
-            }
             return null;
         }
     }

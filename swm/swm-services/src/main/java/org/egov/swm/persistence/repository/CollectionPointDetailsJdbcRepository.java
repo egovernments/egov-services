@@ -1,5 +1,11 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.persistence.entity.CollectionPointDetailsEntity;
@@ -9,14 +15,11 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-
 @Service
 public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egswm_collectionpointdetails";
     private static final Logger LOG = LoggerFactory.getLogger(CollectionPointDetailsJdbcRepository.class);
-
 
     @Transactional
     public void delete(final String tenantId, final String collectionPoint) {
@@ -80,19 +83,17 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
         final List<CollectionPointDetails> collectionPointDetailsList = new ArrayList<>();
 
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
 
         final List<CollectionPointDetailsEntity> collectionPointDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        long end = System.currentTimeMillis();
+        final long end = System.currentTimeMillis();
         LOG.info("Time taken for searchQuery for CollectionPointDetailsEntity " + (end - start) + "ms");
         LOG.info("Search Query CollectionPointDetailsEntity " + searchQuery.toString() + "paramValues " + paramValues);
 
-        for (final CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities) {
-
+        for (final CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities)
             collectionPointDetailsList.add(collectionPointDetailsEntity.toDomain());
-        }
 
         return collectionPointDetailsList;
     }

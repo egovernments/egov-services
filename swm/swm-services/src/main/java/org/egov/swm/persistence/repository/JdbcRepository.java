@@ -75,16 +75,14 @@ public abstract class JdbcRepository {
         Boolean isAuditableFieldExist = Boolean.FALSE;
         for (final String s : sortByList) {
             for (int i = 0; i < object.getDeclaredFields().length; i++) {
-                if (object.getDeclaredFields()[i].getName().equalsIgnoreCase("auditDetails")) {
-                    for (int j = 0; j < object.getDeclaredFields()[i].getType().getDeclaredFields().length; j++) {
+                if (object.getDeclaredFields()[i].getName().equalsIgnoreCase("auditDetails"))
+                    for (int j = 0; j < object.getDeclaredFields()[i].getType().getDeclaredFields().length; j++)
                         if (object.getDeclaredFields()[i].getType().getDeclaredFields()[j].getName()
                                 .equals(s.contains(" ") ? s.split(" ")[0] : s)) {
                             isAuditableFieldExist = Boolean.TRUE;
                             break;
                         } else
                             isAuditableFieldExist = Boolean.FALSE;
-                    }
-                }
                 if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
                     isFieldExist = Boolean.TRUE;
                     break;

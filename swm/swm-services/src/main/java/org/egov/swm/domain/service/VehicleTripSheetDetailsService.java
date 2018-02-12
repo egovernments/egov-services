@@ -96,7 +96,7 @@ public class VehicleTripSheetDetailsService {
         Pagination<Route> routes;
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicleList;
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
 
         for (final VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsRequest
@@ -125,23 +125,20 @@ public class VehicleTripSheetDetailsService {
             routeSearch.setCode(vehicleTripSheetDetails.getRoute().getCode());
             routes = routeService.search(routeSearch);
 
-            if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null) {
+            if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null)
                 if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty())
                     throw new CustomException("Route",
                             "Given Route is invalid: " + vehicleTripSheetDetails.getRoute().getCode());
                 else
                     vehicleTripSheetDetails.setRoute(routes.getPagedData().get(0));
 
-            }
-
-            //To Check All field's are mandatory if one of the collection-point is dumping ground in the route
-            if(routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty()){
-                Route route = routes.getPagedData().get(0);
-                if(route.getCollectionPoints() != null && route.hasDumpingGround() &&
-                    !vehicleTripSheetDetails.isAllNotNull()){
-                        throw new CustomException("VehicleTripSheetDetails",
-                                "All Field's are Mandatory in Trip Sheet Details.");
-                }
+            // To Check All field's are mandatory if one of the collection-point is dumping ground in the route
+            if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty()) {
+                final Route route = routes.getPagedData().get(0);
+                if (route.getCollectionPoints() != null && route.hasDumpingGround() &&
+                        !vehicleTripSheetDetails.isAllNotNull())
+                    throw new CustomException("VehicleTripSheetDetails",
+                            "All Field's are Mandatory in Trip Sheet Details.");
             }
 
             if (vehicleTripSheetDetails.getVehicle() != null
@@ -167,13 +164,12 @@ public class VehicleTripSheetDetailsService {
 
             }
 
-            //Entry weight and Exit weight validations
-            if(vehicleTripSheetDetails.getEntryWeight() != null &&
+            // Entry weight and Exit weight validations
+            if (vehicleTripSheetDetails.getEntryWeight() != null &&
                     vehicleTripSheetDetails.getExitWeight() != null &&
-                    vehicleTripSheetDetails.getExitWeight() >= vehicleTripSheetDetails.getEntryWeight()){
+                    vehicleTripSheetDetails.getExitWeight() >= vehicleTripSheetDetails.getEntryWeight())
                 throw new CustomException("Invalid Weights",
                         " Entry weight shall be more than exit weight. ");
-            }
         }
     }
 

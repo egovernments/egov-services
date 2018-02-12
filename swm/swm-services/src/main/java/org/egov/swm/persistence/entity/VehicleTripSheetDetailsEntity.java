@@ -65,11 +65,21 @@ public class VehicleTripSheetDetailsEntity {
         vehicleTripSheetDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
         vehicleTripSheetDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-        if(entryWeight != null && exitWeight !=null)
-            vehicleTripSheetDetails.setGarbageWeight(entryWeight - exitWeight);
+        if (entryWeight != null && exitWeight != null)
+            vehicleTripSheetDetails.setGarbageWeight(round(entryWeight - exitWeight, 2));
 
         return vehicleTripSheetDetails;
 
+    }
+
+    public double round(double value, final int places) {
+        if (places < 0)
+            throw new IllegalArgumentException();
+
+        final long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        final long tmp = Math.round(value);
+        return (double) tmp / factor;
     }
 
 }

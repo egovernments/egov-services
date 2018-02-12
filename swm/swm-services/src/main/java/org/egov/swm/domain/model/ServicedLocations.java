@@ -16,7 +16,7 @@ public class ServicedLocations {
     private String tenantId;
 
     private String vendor;
-    
+
     private String vendorNos;
 
     private String location;

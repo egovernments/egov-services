@@ -78,14 +78,14 @@ public class RouteService {
 
     public Pagination<Route> search(final RouteSearch routeSearch) {
 
-        Pagination<Route> routePage = routeRepository.search(routeSearch);
+        final Pagination<Route> routePage = routeRepository.search(routeSearch);
 
         // Filter ending collection point or dumping ground
         if (routeSearch.getIsEndingDumpingGround() != null &&
                 routeSearch.getIsEndingDumpingGround() && !routePage.getPagedData().isEmpty()) {
-            List<Route> routes = routePage.getPagedData();
-            for (Route route : routes) {
-                List<RouteCollectionPointMap> routeCollectionPointMapList = route.getCollectionPoints().stream()
+            final List<Route> routes = routePage.getPagedData();
+            for (final Route route : routes) {
+                final List<RouteCollectionPointMap> routeCollectionPointMapList = route.getCollectionPoints().stream()
                         .filter(collectionPoint -> collectionPoint.getIsEndingCollectionPoint()
                                 || collectionPoint.getDumpingGround() != null)
                         .collect(Collectors.toList());
@@ -98,11 +98,10 @@ public class RouteService {
         // Filter to return only collection point's excluding dumping ground.
         if (routeSearch.getExcludeDumpingGround() != null &&
                 routeSearch.getExcludeDumpingGround() && !routePage.getPagedData().isEmpty()) {
-            List<Route> routes = routePage.getPagedData();
-            for (Route route : routes) {
+            final List<Route> routes = routePage.getPagedData();
+            for (final Route route : routes)
                 route.getCollectionPoints()
                         .removeIf(routeCollectionPointMap -> routeCollectionPointMap.getDumpingGround() != null);
-            }
         }
 
         return routePage;
@@ -132,8 +131,8 @@ public class RouteService {
                 throw new CustomException("CollectionType", "CollectionType is required");
 
             // Validate CollectionPoints
-            if (route.getCollectionPoints() != null) {
-                for (RouteCollectionPointMap rcpm : route.getCollectionPoints()) {
+            if (route.getCollectionPoints() != null)
+                for (final RouteCollectionPointMap rcpm : route.getCollectionPoints()) {
                     rcpm.setId(UUID.randomUUID().toString().replace("-", ""));
                     rcpm.setTenantId(route.getTenantId());
 
@@ -152,8 +151,8 @@ public class RouteService {
 
                     if (rcpm != null
                             && (rcpm.getCollectionPoint() == null
-                                    || (rcpm.getCollectionPoint().getCode() == null
-                                            || rcpm.getCollectionPoint().getCode().isEmpty()))
+                                    || rcpm.getCollectionPoint().getCode() == null
+                                    || rcpm.getCollectionPoint().getCode().isEmpty())
                             && (rcpm.getDumpingGround() == null || rcpm.getDumpingGround().getCode() == null
                                     || rcpm.getDumpingGround().getCode().isEmpty()))
                         throw new CustomException("CollectionPoint",
@@ -182,7 +181,6 @@ public class RouteService {
                                 rcpm.getDumpingGround().getCode(), routeRequest.getRequestInfo()));
 
                 }
-            }
 
             validateUniqueFields(route);
 
@@ -207,7 +205,7 @@ public class RouteService {
                 nameMap.put(route.getName(), route.getName());
             }
             if (route.getCollectionPoints() != null) {
-                for (RouteCollectionPointMap rcpm : route.getCollectionPoints()) {
+                for (final RouteCollectionPointMap rcpm : route.getCollectionPoints()) {
 
                     if (rcpm.getDistance() != null)
                         totalDistance = totalDistance + rcpm.getDistance();
@@ -216,16 +214,14 @@ public class RouteService {
                         totalGarbageEstimate = totalGarbageEstimate + rcpm.getGarbageEstimate();
 
                     if (dumpingGround && rcpm.getDumpingGround() != null && rcpm.getDumpingGround().getCode() != null
-                            && !rcpm.getDumpingGround().getCode().isEmpty()) {
+                            && !rcpm.getDumpingGround().getCode().isEmpty())
                         throw new CustomException("dumpingGround",
                                 "Duplicate ending dumpingGrounds in given routes : "
                                         + rcpm.getDumpingGround().getCode());
-                    }
 
                     if (rcpm.getDumpingGround() != null && rcpm.getDumpingGround().getCode() != null
-                            && !rcpm.getDumpingGround().getCode().isEmpty()) {
+                            && !rcpm.getDumpingGround().getCode().isEmpty())
                         dumpingGround = true;
-                    }
 
                     if (rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null
                             && !rcpm.getCollectionPoint().getCode().isEmpty()) {
@@ -250,21 +246,18 @@ public class RouteService {
                                 && collectionPointMap.get(rcpm.getCollectionPoint().getCode()) != null)
                             throw new CustomException("collectionPoint",
                                     "Duplicate collectionPoints in given routes : " + rcpm.getCollectionPoint().getCode());
-                        if (rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null) {
+                        if (rcpm.getCollectionPoint() != null && rcpm.getCollectionPoint().getCode() != null)
                             collectionPointMap.put(rcpm.getCollectionPoint().getCode(), rcpm.getCollectionPoint().getCode());
-                        }
                     }
                 }
 
-                if (!startingCollectionPoint) {
+                if (!startingCollectionPoint)
                     throw new CustomException("startingCollectionPoint",
                             "The field starting collection point is Mandatory . It cannot be not be null or empty.Please provide correct value");
-                }
 
-                if (endingCollectionPoint && dumpingGround) {
+                if (endingCollectionPoint && dumpingGround)
                     throw new CustomException("collectionPoint",
                             "Both ending collection point and ending dumping ground cannot be sent");
-                }
 
                 if (!endingCollectionPoint && !dumpingGround)
                     throw new CustomException("collectionPoint",
@@ -273,28 +266,26 @@ public class RouteService {
             }
 
             if (route.getTotalDistance() != null && totalDistance != null
-                    && round(totalDistance, 2) != round(route.getTotalDistance(), 2)) {
+                    && round(totalDistance, 2) != round(route.getTotalDistance(), 2))
                 throw new CustomException("totalDistance",
                         "Total distance covered is not same as the sum of distance covered by the collection points");
-            }
 
             if (route.getTotalGarbageEstimate() != null && totalGarbageEstimate != null
-                    && round(totalGarbageEstimate, 2) != round(route.getTotalGarbageEstimate(), 2)) {
+                    && round(totalGarbageEstimate, 2) != round(route.getTotalGarbageEstimate(), 2))
                 throw new CustomException("totalGarbageEstimate",
                         "Total garbage collection estimate is not same as the sum of garbage collection estimates defined in the collection points");
-            }
 
         }
 
     }
 
-    public static double round(double value, int places) {
+    public double round(double value, final int places) {
         if (places < 0)
             throw new IllegalArgumentException();
 
-        long factor = (long) Math.pow(10, places);
+        final long factor = (long) Math.pow(10, places);
         value = value * factor;
-        long tmp = Math.round(value);
+        final long tmp = Math.round(value);
         return (double) tmp / factor;
     }
 

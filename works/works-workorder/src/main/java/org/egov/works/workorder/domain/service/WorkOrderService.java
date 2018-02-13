@@ -1,8 +1,11 @@
 package org.egov.works.workorder.domain.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.config.PropertiesManager;
@@ -10,13 +13,7 @@ import org.egov.works.workorder.domain.repository.WorkOrderRepository;
 import org.egov.works.workorder.domain.repository.builder.IdGenerationRepository;
 import org.egov.works.workorder.domain.validator.WorkOrderValidator;
 import org.egov.works.workorder.utils.WorkOrderUtils;
-import org.egov.works.workorder.web.contract.RequestInfo;
-import org.egov.works.workorder.web.contract.User;
-import org.egov.works.workorder.web.contract.WorkOrder;
-import org.egov.works.workorder.web.contract.WorkOrderDetail;
-import org.egov.works.workorder.web.contract.WorkOrderRequest;
-import org.egov.works.workorder.web.contract.WorkOrderResponse;
-import org.egov.works.workorder.web.contract.WorkOrderSearchContract;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +48,7 @@ public class WorkOrderService {
 
         workOrderValidator.validateWorkOrder(workOrderRequest, Boolean.FALSE);
         String departmentCode;
+        List<WorkOrder> workOrders = new ArrayList<>();
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
             workOrder.setId(commonUtils.getUUID());
             workOrder.setAuditDetails(workOrderUtils.setAuditDetails(workOrderRequest.getRequestInfo(), false));
@@ -83,8 +81,20 @@ public class WorkOrderService {
                 workOrder.setApprovedBy(approvedBy);
             }
 
+            if(workOrder.getStatus() != null &&
+                    workOrder.getStatus().equals(CommonConstants.STATUS_APPROVED) || workOrder.getStatus().getCode().equals(CommonConstants.STATUS_CREATED)) {
+                workOrders.add(workOrder);
+                workOrder.setWithoutOfflineStatus(true);
+            }
+
         }
         kafkaTemplate.send(propertiesManager.getWorksWorkOrderCreateTopic(), workOrderRequest);
+        if(workOrders != null && !workOrders.isEmpty()) {
+            WorkOrderRequest backUpdateRequest = new WorkOrderRequest();
+            backUpdateRequest.setWorkOrders(workOrders);
+            kafkaTemplate.send(propertiesManager.getWorksLetterofAcceptanceBackupdateOnCreateWOTopic(), backUpdateRequest);
+            kafkaTemplate.send(propertiesManager.getWorksLetterofAcceptanceBackupdateWithAllOfflineStatusAndWOTopic(), backUpdateRequest);
+        }
         WorkOrderResponse workOrderResponse = new WorkOrderResponse();
         workOrderResponse.setWorkOrders(workOrderRequest.getWorkOrders());
         workOrderResponse.setResponseInfo(workOrderUtils.getResponseInfo(workOrderRequest.getRequestInfo()));
@@ -93,6 +103,7 @@ public class WorkOrderService {
 
     public WorkOrderResponse update(final WorkOrderRequest workOrderRequest) {
         workOrderValidator.validateWorkOrder(workOrderRequest, Boolean.TRUE);
+        List<WorkOrder> workOrders = new ArrayList<>();
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
             if (workOrder.getId() == null)
                 workOrder.setId(commonUtils.getUUID());
@@ -111,8 +122,18 @@ public class WorkOrderService {
                 approvedBy.setUserName(workOrderRequest.getRequestInfo().getUserInfo().getUserName());
                 workOrder.setApprovedBy(approvedBy);
             }
+
+            if(workOrder.getStatus() != null &&
+                    workOrder.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED)) {
+                workOrders.add(workOrder);
+            }
         }
         kafkaTemplate.send(propertiesManager.getWorksWorkOrderCreateTopic(), workOrderRequest);
+        if(workOrders != null && !workOrders.isEmpty()) {
+            WorkOrderRequest backUpdateRequest = new WorkOrderRequest();
+            backUpdateRequest.setWorkOrders(workOrders);
+            kafkaTemplate.send(propertiesManager.getWorksLetterofAcceptanceBackupdateOnCancelWOTopic(), backUpdateRequest);
+        }
         WorkOrderResponse workOrderResponse = new WorkOrderResponse();
         workOrderResponse.setWorkOrders(workOrderRequest.getWorkOrders());
         workOrderResponse.setResponseInfo(workOrderUtils.getResponseInfo(workOrderRequest.getRequestInfo()));

@@ -121,8 +121,8 @@ public class LetterOfAcceptanceService {
 
             LetterOfAcceptance loa = null;
             if(letterOfAcceptance.getStatus().getCode().equalsIgnoreCase(Constants.STATUS_APPROVED)) {
-                loa = letterOfAcceptance;
-                letterOfAcceptanceList.add(loa);
+                letterOfAcceptanceList.add(letterOfAcceptance);
+                letterOfAcceptance.setWithoutOfflineStatus(true);
             }
 
             if ((isRevision != null && !isRevision) && letterOfAcceptance.getSecurityDeposits() != null)

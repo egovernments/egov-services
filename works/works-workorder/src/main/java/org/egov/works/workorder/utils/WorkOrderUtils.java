@@ -10,11 +10,8 @@ import org.egov.works.commons.web.contract.MasterDetails;
 import org.egov.works.commons.web.contract.MdmsCriteria;
 import org.egov.works.commons.web.contract.ModuleDetails;
 import org.egov.works.commons.web.contract.Remarks;
-import org.egov.works.workorder.web.contract.AuditDetails;
-import org.egov.works.workorder.web.contract.MdmsRequest;
-import org.egov.works.workorder.web.contract.MdmsResponse;
-import org.egov.works.workorder.web.contract.RequestInfo;
-import org.egov.works.workorder.web.contract.ResponseInfo;
+import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,6 +28,9 @@ public class WorkOrderUtils {
     private final RestTemplate restTemplate;
 
     private final String mdmsBySearchCriteriaUrl;
+
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
 
     @Autowired
     public WorkOrderUtils(final RestTemplate restTemplate,
@@ -173,6 +173,14 @@ public class WorkOrderUtils {
             cityCode = ((Map) jsonMap.get("city")).get("code").toString();
         }
         return cityCode;
+    }
+
+    public LetterOfAcceptanceEstimate searchLoaEstimateById(String tenantId, LetterOfAcceptanceEstimate letterOfAcceptanceEstimate, RequestInfo requestInfo) {
+        LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = LetterOfAcceptanceSearchContract.builder()
+                .tenantId(tenantId)
+                .loaEstimateId(letterOfAcceptanceEstimate.getId()).build();
+        List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract, requestInfo);
+        return letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().isEmpty() ? letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0) : null;
     }
 
 }

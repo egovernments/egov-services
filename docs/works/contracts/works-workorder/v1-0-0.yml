@@ -272,7 +272,12 @@ paths:
           in: query
           type: string
           required: false
-          description: Returns all LOA where passed offline status is setted for LOA.
+          description: Returns all LOA where passed offline status is set for LOA.
+        - name: loaEstimateId
+          in: query
+          type: string
+          required: false
+          description: Returns all LOA for passed Loa estimate Id's.
       responses:
         200:
           description: Letter Of Acceptance(s) Retrieved Successfully
@@ -1491,6 +1496,10 @@ definitions:
         type: boolean
         description: If Offline Status is created for a this LOA, value will be updated to true.
         default: false
+      withoutOfflineStatus:
+        type: boolean
+        description: LOA created and not even one offline status is updated, value will be updated to true.
+        default: false
       milestoneExists:
         type: boolean
         description: If Milestone is created for a this LOA, value will be updated to true.
@@ -1503,9 +1512,9 @@ definitions:
         type: boolean
         description: If ARF is created for a this LOA, value will be updated to true.
         default: false
-      mbExists:
+      mbExistsAndBillNotCreated:
         type: boolean
-        description: If MB is created for a this LOA, value will be updated to true.
+        description: If MB is created for a this LOA but bill not exists, value will be updated to true.
         default: false
     required:
       - tenantId
@@ -1871,15 +1880,19 @@ definitions:
         default: false
       billExists:
         type: boolean
-        description: If bill is created for a this WO, value will be updated to true.
+        description: If Final bill is created for a this WO, value will be updated to true.
         default: false
       contractorAdvanceExists:
         type: boolean
         description: If ARF is created for a this WO, value will be updated to true.
         default: false
-      mbExists:
+      mbExistsAndBillNotCreated:
         type: boolean
-        description: If MB is created for a this WO, value will be updated to true.
+        description: If MB is created for a this WO but bill is not created yet, value will be updated to true.
+        default: false
+      withoutOfflineStatus:
+        type: boolean
+        description: Workorder created but not even one offline status is updated, then value will be updated to true.
         default: false
     required:
       - tenantId

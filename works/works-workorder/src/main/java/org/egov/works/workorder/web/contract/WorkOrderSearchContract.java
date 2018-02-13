@@ -1,5 +1,6 @@
 package org.egov.works.workorder.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -59,5 +60,17 @@ public class WorkOrderSearchContract {
     private String workOrderNumberLike;
 
     private String loaNumberLike;
+
+    private Boolean withAllOfflineStatusAndMBNotCreated = false;
+
+    private Boolean milestoneExists = false;
+
+    private Boolean billExists = false;
+
+    private Boolean contractorAdvanceExists = false;
+
+    private Boolean mbExistsAndBillNotCreated = false;
+
+    private Boolean withoutOfflineStatus = false;
 
 }

@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object that holds the basic data for a Work Order
  */
 @ApiModel(description = "An Object that holds the basic data for a Work Order")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-01-21T14:55:23.877Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-09T07:10:58.747Z")
 
 public class WorkOrder   {
   @JsonProperty("id")
@@ -63,6 +63,24 @@ public class WorkOrder   {
 
   @JsonProperty("approvedDate")
   private Long approvedDate = null;
+
+  @JsonProperty("withAllOfflineStatusAndMBNotCreated")
+  private Boolean withAllOfflineStatusAndMBNotCreated = false;
+
+  @JsonProperty("milestoneExists")
+  private Boolean milestoneExists = false;
+
+  @JsonProperty("billExists")
+  private Boolean billExists = false;
+
+  @JsonProperty("contractorAdvanceExists")
+  private Boolean contractorAdvanceExists = false;
+
+  @JsonProperty("mbExistsAndBillNotCreated")
+  private Boolean mbExistsAndBillNotCreated = false;
+
+  @JsonProperty("withoutOfflineStatus")
+  private Boolean withoutOfflineStatus = false;
 
   public WorkOrder id(String id) {
     this.id = id;
@@ -390,9 +408,129 @@ public class WorkOrder   {
     this.approvedDate = approvedDate;
   }
 
+  public WorkOrder withAllOfflineStatusAndMBNotCreated(Boolean withAllOfflineStatusAndMBNotCreated) {
+    this.withAllOfflineStatusAndMBNotCreated = withAllOfflineStatusAndMBNotCreated;
+    return this;
+  }
+
+   /**
+   * If Offline Status is created for a this WO, value will be updated to true.
+   * @return withAllOfflineStatusAndMBNotCreated
+  **/
+  @ApiModelProperty(value = "If Offline Status is created for a this WO, value will be updated to true.")
+
+
+  public Boolean getWithAllOfflineStatusAndMBNotCreated() {
+    return withAllOfflineStatusAndMBNotCreated;
+  }
+
+  public void setWithAllOfflineStatusAndMBNotCreated(Boolean withAllOfflineStatusAndMBNotCreated) {
+    this.withAllOfflineStatusAndMBNotCreated = withAllOfflineStatusAndMBNotCreated;
+  }
+
+  public WorkOrder milestoneExists(Boolean milestoneExists) {
+    this.milestoneExists = milestoneExists;
+    return this;
+  }
+
+   /**
+   * If Milestone is created for a this WO, value will be updated to true.
+   * @return milestoneExists
+  **/
+  @ApiModelProperty(value = "If Milestone is created for a this WO, value will be updated to true.")
+
+
+  public Boolean getMilestoneExists() {
+    return milestoneExists;
+  }
+
+  public void setMilestoneExists(Boolean milestoneExists) {
+    this.milestoneExists = milestoneExists;
+  }
+
+  public WorkOrder billExists(Boolean billExists) {
+    this.billExists = billExists;
+    return this;
+  }
+
+   /**
+   * If Final bill is created for a this WO, value will be updated to true.
+   * @return billExists
+  **/
+  @ApiModelProperty(value = "If Final bill is created for a this WO, value will be updated to true.")
+
+
+  public Boolean getBillExists() {
+    return billExists;
+  }
+
+  public void setBillExists(Boolean billExists) {
+    this.billExists = billExists;
+  }
+
+  public WorkOrder contractorAdvanceExists(Boolean contractorAdvanceExists) {
+    this.contractorAdvanceExists = contractorAdvanceExists;
+    return this;
+  }
+
+   /**
+   * If ARF is created for a this WO, value will be updated to true.
+   * @return contractorAdvanceExists
+  **/
+  @ApiModelProperty(value = "If ARF is created for a this WO, value will be updated to true.")
+
+
+  public Boolean getContractorAdvanceExists() {
+    return contractorAdvanceExists;
+  }
+
+  public void setContractorAdvanceExists(Boolean contractorAdvanceExists) {
+    this.contractorAdvanceExists = contractorAdvanceExists;
+  }
+
+  public WorkOrder mbExistsAndBillNotCreated(Boolean mbExistsAndBillNotCreated) {
+    this.mbExistsAndBillNotCreated = mbExistsAndBillNotCreated;
+    return this;
+  }
+
+   /**
+   * If MB is created for a this WO but bill is not created yet, value will be updated to true.
+   * @return mbExistsAndBillNotCreated
+  **/
+  @ApiModelProperty(value = "If MB is created for a this WO but bill is not created yet, value will be updated to true.")
+
+
+  public Boolean getMbExistsAndBillNotCreated() {
+    return mbExistsAndBillNotCreated;
+  }
+
+  public void setMbExistsAndBillNotCreated(Boolean mbExistsAndBillNotCreated) {
+    this.mbExistsAndBillNotCreated = mbExistsAndBillNotCreated;
+  }
+
+  public WorkOrder withoutOfflineStatus(Boolean withoutOfflineStatus) {
+    this.withoutOfflineStatus = withoutOfflineStatus;
+    return this;
+  }
+
+   /**
+   * Workorder created but not even one offline status is updated, then value will be updated to true.
+   * @return withoutOfflineStatus
+  **/
+  @ApiModelProperty(value = "Workorder created but not even one offline status is updated, then value will be updated to true.")
+
+
+  public Boolean getWithoutOfflineStatus() {
+    return withoutOfflineStatus;
+  }
+
+  public void setWithoutOfflineStatus(Boolean withoutOfflineStatus) {
+    this.withoutOfflineStatus = withoutOfflineStatus;
+  }
+
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -414,12 +552,18 @@ public class WorkOrder   {
         Objects.equals(this.deleted, workOrder.deleted) &&
         Objects.equals(this.remarks, workOrder.remarks) &&
         Objects.equals(this.approvedBy, workOrder.approvedBy) &&
-        Objects.equals(this.approvedDate, workOrder.approvedDate);
+        Objects.equals(this.approvedDate, workOrder.approvedDate) &&
+        Objects.equals(this.withAllOfflineStatusAndMBNotCreated, workOrder.withAllOfflineStatusAndMBNotCreated) &&
+        Objects.equals(this.milestoneExists, workOrder.milestoneExists) &&
+        Objects.equals(this.billExists, workOrder.billExists) &&
+        Objects.equals(this.contractorAdvanceExists, workOrder.contractorAdvanceExists) &&
+        Objects.equals(this.mbExistsAndBillNotCreated, workOrder.mbExistsAndBillNotCreated) &&
+        Objects.equals(this.withoutOfflineStatus, workOrder.withoutOfflineStatus);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails, workFlowDetails, auditDetails, status, stateId, deleted, remarks, approvedBy, approvedDate);
+    return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails, workFlowDetails, auditDetails, status, stateId, deleted, remarks, approvedBy, approvedDate, withAllOfflineStatusAndMBNotCreated, milestoneExists, billExists, contractorAdvanceExists, mbExistsAndBillNotCreated, withoutOfflineStatus);
   }
 
   @Override
@@ -442,6 +586,12 @@ public class WorkOrder   {
     sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
     sb.append("    approvedBy: ").append(toIndentedString(approvedBy)).append("\n");
     sb.append("    approvedDate: ").append(toIndentedString(approvedDate)).append("\n");
+    sb.append("    withAllOfflineStatusAndMBNotCreated: ").append(toIndentedString(withAllOfflineStatusAndMBNotCreated)).append("\n");
+    sb.append("    milestoneExists: ").append(toIndentedString(milestoneExists)).append("\n");
+    sb.append("    billExists: ").append(toIndentedString(billExists)).append("\n");
+    sb.append("    contractorAdvanceExists: ").append(toIndentedString(contractorAdvanceExists)).append("\n");
+    sb.append("    mbExistsAndBillNotCreated: ").append(toIndentedString(mbExistsAndBillNotCreated)).append("\n");
+    sb.append("    withoutOfflineStatus: ").append(toIndentedString(withoutOfflineStatus)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -450,10 +600,11 @@ public class WorkOrder   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
   }
 }
+

@@ -9,10 +9,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ErrorRes;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.measurementbook.config.Constants;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.measurementbook.web.contract.RequestInfo;
+import org.egov.works.measurementbook.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -37,6 +34,8 @@ public class LetterOfAcceptanceRepository {
     private String loaUpdateUrl;
     
     private String loaSearchUrl;
+
+    private String loaSearchByLoaEstimateIdUrl;
     
     @Autowired
     private ObjectMapper objectMapper;
@@ -46,12 +45,14 @@ public class LetterOfAcceptanceRepository {
                                @Value("${egov.services.workorder.contractorsearchpath}") final String contractorSearchUrl,
                                @Value("${egov.services.egov_works_loa.createpath}") final String loaCreateUrl,
                                @Value("${egov.services.egov_works_loa.updatepath}") final String loaUpdateUrl,
-                               @Value("${egov.services.egov_works_loa.searchpath}") final String loaSearchUrl) {
+                               @Value("${egov.services.egov_works_loa.searchpath}") final String loaSearchUrl,
+                               @Value("${egov.services.egov_works_loa.searchbyloaestimateidpath}") final String loaSearchByLoaEstimateIdUrl) {
         this.restTemplate = restTemplate;
         this.contractorSearchUrl = workOrderHostname + contractorSearchUrl;
         this.loaCreateUrl = workOrderHostname + loaCreateUrl;
         this.loaUpdateUrl = workOrderHostname + loaUpdateUrl;
         this.loaSearchUrl = workOrderHostname + loaSearchUrl;
+        this.loaSearchByLoaEstimateIdUrl = workOrderHostname + loaSearchByLoaEstimateIdUrl;
     }
 
     public List<LetterOfAcceptance> searchLetterOfAcceptance(List<String> codes,List<String> names, String tenantId,
@@ -102,4 +103,14 @@ public class LetterOfAcceptanceRepository {
         	throw new CustomException(errors);
         }
     }
+
+    public List<LetterOfAcceptance> searchLoaByLoaEstimateId(final String tenantId, final LetterOfAcceptanceEstimate letterOfAcceptanceEstimate,
+                                                               final RequestInfo requestInfo) {
+        String loaEstimateId = letterOfAcceptanceEstimate.getId();
+        return restTemplate.postForObject(loaSearchByLoaEstimateIdUrl, requestInfo, LetterOfAcceptanceResponse.class, tenantId,
+                loaEstimateId).getLetterOfAcceptances();
+
+    }
 }
+
+

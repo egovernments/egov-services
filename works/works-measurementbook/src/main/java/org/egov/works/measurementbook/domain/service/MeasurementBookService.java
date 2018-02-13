@@ -58,6 +58,7 @@ public class MeasurementBookService {
 
 	public MeasurementBookResponse create(MeasurementBookRequest measurementBookRequest) {
 		measurementBookValidator.validateMB(measurementBookRequest, true);
+        List<MeasurementBook> measurementBooks = new ArrayList<>();
 		Boolean isWorkflowReq = isConfigRequired(CommonConstants.WORKFLOW_REQUIRED_APPCONFIG,
 				measurementBookRequest.getRequestInfo(),
 				measurementBookRequest.getMeasurementBooks().get(0).getTenantId());
@@ -106,8 +107,24 @@ public class MeasurementBookService {
                     measurementBook.setStatus(status);
                 }
             }
+
+            List<LetterOfAcceptance> letterOfAcceptances =
+                    letterOfAcceptanceRepository.searchLoaByLoaEstimateId(measurementBook.getTenantId(), measurementBook.getLetterOfAcceptanceEstimate(), measurementBookRequest.getRequestInfo());
+            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+                measurementBook.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
+
+            if(measurementBook.getStatus() != null && measurementBook.getStatus().equals(CommonConstants.STATUS_CREATED) ||
+                    measurementBook.getStatus().equals(CommonConstants.STATUS_APPROVED)) {
+                measurementBooks.add(measurementBook);
+            }
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);
+        if(measurementBooks != null && !measurementBooks.isEmpty()) {
+            MeasurementBookRequest backUpdateRequest = new MeasurementBookRequest();
+            backUpdateRequest.setMeasurementBooks(measurementBooks);
+            kafkaTemplate.send(propertiesManager.getWorksLoaBackUpdateOnCreateMB(), backUpdateRequest);
+            kafkaTemplate.send(propertiesManager.getWorksLoaBackUpdateOnCreateMBAndNoBill(), backUpdateRequest);
+        }
 		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
 		measurementBookResponse.setMeasurementBooks(measurementBookRequest.getMeasurementBooks());
 		return measurementBookResponse;
@@ -142,34 +159,6 @@ public class MeasurementBookService {
         }
         measurementBook.setStatus(status);
     }
-
-	/*private void updateStatus(MeasurementBook measurementBook, boolean isNew, RequestInfo requestInfo) {
-		String action = measurementBook.getWorkFlowDetails().getAction();
-		if (isNew) {
-			if (!action.equalsIgnoreCase(Constants.SAVE))
-				measurementBook.setStatus(MeasurementBookStatus.CREATED);
-			else
-				measurementBook.setStatus(MeasurementBookStatus.SAVED);
-		} else {
-			if (action.equalsIgnoreCase(Constants.SUBMIT)
-					&& measurementBook.getStatus().equals(MeasurementBookStatus.CREATED))
-				measurementBook.setStatus(MeasurementBookStatus.CHECKED);
-			else if (action.equalsIgnoreCase(Constants.APPROVE)
-					&& measurementBook.getStatus().equals(MeasurementBookStatus.CHECKED))
-				measurementBook.setStatus(MeasurementBookStatus.APPROVED);
-			else if (action.equalsIgnoreCase(Constants.REJECT)
-					&& !(measurementBook.getStatus().equals(MeasurementBookStatus.APPROVED)
-							|| measurementBook.getStatus().equals(MeasurementBookStatus.CANCELLED)))
-				measurementBook.setStatus(MeasurementBookStatus.REJECTED);
-			else if (action.equalsIgnoreCase(Constants.CANCEL)
-					&& measurementBook.getStatus().equals(MeasurementBookStatus.REJECTED))
-				measurementBook.setStatus(MeasurementBookStatus.CANCELLED);
-			else if (action.equalsIgnoreCase(Constants.FORWARD)
-					&& measurementBook.getStatus().equals(MeasurementBookStatus.REJECTED))
-				measurementBook.setStatus(MeasurementBookStatus.RESUBMITTED);
-		}
-	}
-*/
     
 	/**
 	 * @param measurementBook
@@ -352,6 +341,7 @@ public class MeasurementBookService {
 
 	public MeasurementBookResponse update(MeasurementBookRequest measurementBookRequest) {
 		measurementBookValidator.validateMB(measurementBookRequest, false);
+        List<MeasurementBook> measurementBooks = new ArrayList<>();
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
 			for (MeasurementBookDetail measurementBookDetail : measurementBook.getMeasurementBookDetails()) {
 				if (measurementBookDetail.getId() == null)
@@ -378,10 +368,22 @@ public class MeasurementBookService {
 
 			if (measurementBook.getLumpSumMBDetails() != null && !measurementBook.getLumpSumMBDetails().isEmpty())
 				createUpdateRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo(), true);
-			
-			//updateStatus(measurementBook, false);
+
+            List<LetterOfAcceptance> letterOfAcceptances =
+                    letterOfAcceptanceRepository.searchLoaByLoaEstimateId(measurementBook.getTenantId(), measurementBook.getLetterOfAcceptanceEstimate(), measurementBookRequest.getRequestInfo());
+            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+                measurementBook.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
+
+            if(measurementBook.getStatus() != null && measurementBook.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))
+                measurementBooks.add(measurementBook);
+
 		}
 		kafkaTemplate.send(propertiesManager.getWorksMBCreateUpdateTopic(), measurementBookRequest);
+        if(measurementBooks != null && !measurementBooks.isEmpty()) {
+            MeasurementBookRequest backUpdateRequest = new MeasurementBookRequest();
+            backUpdateRequest.setMeasurementBooks(measurementBooks);
+            kafkaTemplate.send(propertiesManager.getWorksLoaBackUpdateOnCreateMB(), backUpdateRequest);
+        }
 		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
 		measurementBookResponse.setMeasurementBooks(measurementBookRequest.getMeasurementBooks());
 		return measurementBookResponse;

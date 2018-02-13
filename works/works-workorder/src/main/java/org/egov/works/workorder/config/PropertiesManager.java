@@ -82,4 +82,38 @@ public class PropertiesManager {
     @Value("${egov.services.works.detailedestimate.backupdate.oncancelloa.topic}")
     private String worksDetailedEstimateBackupdateOnCancelLoaTopic;
 
+    @Value("${egov.services.works.loa.backupdate.oncreatewo.topic}")
+    private String worksLetterofAcceptanceBackupdateOnCreateWOTopic;
+
+    @Value("${egov.services.works.loa.backupdate.oncancelwo.topic}")
+    private String worksLetterofAcceptanceBackupdateOnCancelWOTopic;
+
+    @Value("${egov.services.works.loa.backupdate.oncreatemilestone.topic}")
+    private String worksLetterofAcceptanceBackupdateOnCreateMilestoneTopic;
+
+    @Value("${egov.services.works.loa.backupdate.oncancelmilestone.topic}")
+    private String worksLetterofAcceptanceBackupdateOnCancelMilestoneTopic;
+
+    @Value("${egov.services.works.loa.backupdate.oncreatecontractoradvance.topic}")
+    private String worksLetterofAcceptanceBackupdateOnCreateContractorAdvanceTopic;
+
+    @Value("${egov.services.works.loa.backupdate.oncancelcontractorservice.topic}")
+    private String worksLetterofAcceptanceBackupdateOnCancelContractorAdvanceTopic;
+
+    @Value("${egov.services.works.loa.backupdate.withallofflinestatusandworkorder.topic}")
+    private String worksLetterofAcceptanceBackupdateWithAllOfflineStatusAndWOTopic;
+
+    @Value("${egov.services.works.workorder.backupdate.oncreatemilestone.topic}")
+    private String worksWorkOrderBackupdateOnCreateMilestoneTopic;
+
+    @Value("${egov.services.works.workorder.backupdate.oncancelmilestone.topic}")
+    private String worksWorkOrderBackupdateOnCancelMilestoneTopic;
+
+    @Value("${egov.services.works.workorder.backupdate.oncreatecontractoradvance.topic}")
+    private String worksWorkOrderBackupdateOnCreateContractorAdvanceTopic;
+
+    @Value("${egov.services.works.workorder.backupdate.oncancelcontractorservice.topic}")
+    private String worksWorkOrderBackupdateOnCancelContractorAdvanceTopic;
+
+
 }

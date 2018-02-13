@@ -227,6 +227,12 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
         }
 
         params.append(" and wo.deleted = false");
+        params.append(" and wo.withAllOfflineStatusAndWONotCreated = ").append(workOrderSearchContract.getWithAllOfflineStatusAndMBNotCreated());
+        params.append(" and wo.milestoneExists = ").append(workOrderSearchContract.getMilestoneExists());
+        params.append(" and wo.billExists = ").append(workOrderSearchContract.getBillExists());
+        params.append(" and wo.contractorAdvanceExists = ").append(workOrderSearchContract.getContractorAdvanceExists());
+        params.append(" and wo.mbExistsAndBillNotCreated = ").append(workOrderSearchContract.getMbExistsAndBillNotCreated());
+        params.append(" and wo.withoutOfflineStatus = ").append(workOrderSearchContract.getWithoutOfflineStatus());
 
         if (params.length() > 0) {
 

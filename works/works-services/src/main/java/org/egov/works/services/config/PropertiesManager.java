@@ -41,4 +41,16 @@ public class PropertiesManager {
     @Value("${egov.services.works.service.offlinestatus.update.validated}")
     private String worksServiceOfflineStatusUpdateValidatedTopic;
 
+    @Value("${egov.services.works.loa.backupdate.onupdateofflinestatus.topic}")
+    private String worksBackUpdateLOAWithOfflineStatusTopic;
+
+    @Value("${egov.services.works.loa.backupdate.withallofflinestatus.topic}")
+    private String worksBackUpdateLOAWithAllOfflineStatusTopic;
+
+    @Value("${egov.services.works.workorder.backupdate.onupdateofflinestatus.topic}")
+    private String worksBackUpdateWorkOrderWithOfflineStatusTopic;
+
+    @Value("${egov.services.works.workorder.backupdate.withallofflinestatus.topic}")
+    private String worksBackUpdateWorkOrderWithAllOfflineStatusTopic;
+
 }

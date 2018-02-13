@@ -7,8 +7,10 @@ import java.util.Map;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
+import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.config.PropertiesManager;
 import org.egov.works.measurementbook.domain.repository.ContractorBillRepository;
+import org.egov.works.measurementbook.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.domain.repository.builder.IdGenerationRepository;
 import org.egov.works.measurementbook.domain.validator.ContractorBillValidator;
@@ -43,6 +45,9 @@ public class ContractorBillService {
 
     @Autowired
     private MeasurementBookRepository measurementBookRepository;
+
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
     
     @Transactional
     public ContractorBillResponse create(ContractorBillRequest contractorBillRequest) {
@@ -58,10 +63,16 @@ public class ContractorBillService {
         //validator.validateContractorBill(contractorBillRequest, true);
         CommonUtils commonUtils = new CommonUtils();
         BillStatus finStatus = new BillStatus();
+        List<ContractorBill> contractorBills = new ArrayList<>();
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
             contractorBill.setId(commonUtils.getUUID());
             contractorBill.setAuditDetails(
                     measurementBookUtils.setAuditDetails(contractorBillRequest.getRequestInfo(), false));
+
+            List<LetterOfAcceptance> letterOfAcceptances =
+                    letterOfAcceptanceRepository.searchLoaByLoaEstimateId(contractorBill.getTenantId(), contractorBill.getLetterOfAcceptanceEstimate(), contractorBillRequest.getRequestInfo());
+            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+                contractorBill.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
             
             
             List<AssetForBill> assetForBill = new ArrayList<>();
@@ -105,8 +116,21 @@ public class ContractorBillService {
                 finStatus.setCode("CREATED");
                 contractorBill.setStatus(finStatus);
             }
+
+            if(contractorBill.getBillSubType().equalsIgnoreCase(Constants.BILL_SUB_TYPE_FINAL) && contractorBill.getStatus() != null && (contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
+                contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_APPROVED))) {
+                contractorBills.add(contractorBill);
+            }
         }
         kafkaTemplate.send(propertiesManager.getContractorBillCreateUpdateTopic(), contractorBillRequest);
+        if(contractorBills != null && !contractorBills.isEmpty()) {
+            ContractorBillRequest backUpdateRequest = new ContractorBillRequest();
+            backUpdateRequest.setContractorBills(contractorBills);
+            kafkaTemplate.send(propertiesManager.getWorksLoaBackUpdateOnCreateBill(), backUpdateRequest);
+            kafkaTemplate.send(propertiesManager.getWorksLoaBackUpdateOnCreateMBAndBill(), backUpdateRequest);
+
+        }
+
         updateMBForBillStatus(contractorBillRequest);
         ContractorBillResponse contractorBillResponse = new ContractorBillResponse();
         contractorBillResponse.setContractorBills(contractorBillRequest.getContractorBills());
@@ -116,10 +140,22 @@ public class ContractorBillService {
     public ContractorBillResponse update(ContractorBillRequest contractorBillRequest) {
         ContractorBillResponse contractorBillResponse = new ContractorBillResponse();
         //validator.validateContractorBill(contractorBillRequest, false);
+        List<ContractorBill> contractorBills = new ArrayList<>();
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
             populateAuditDetails(contractorBillRequest.getRequestInfo(), contractorBill);
+            List<LetterOfAcceptance> letterOfAcceptances =
+                    letterOfAcceptanceRepository.searchLoaByLoaEstimateId(contractorBill.getTenantId(), contractorBill.getLetterOfAcceptanceEstimate(), contractorBillRequest.getRequestInfo());
+            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+                contractorBill.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
+            if(contractorBill.getStatus() != null && contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))
+                contractorBills.add(contractorBill);
         }
         kafkaTemplate.send(propertiesManager.getContractorBillCreateUpdateTopic(), contractorBillRequest);
+        if(contractorBills != null && !contractorBills.isEmpty()) {
+            ContractorBillRequest backUpdateRequest = new ContractorBillRequest();
+            backUpdateRequest.setContractorBills(contractorBills);
+            kafkaTemplate.send(propertiesManager.getWorksLoaBackUpdateOnCreateBill(), backUpdateRequest);
+        }
         updateMBForBillStatus(contractorBillRequest);
         contractorBillResponse.setContractorBills(contractorBillRequest.getContractorBills());
         return contractorBillResponse;

@@ -11,6 +11,8 @@ public class Constants {
     public static final String WORKORDER="WorkOrderOffline";
     public static final String LETTEROFACCEPTANCE="LetterOfAcceptanceOffline";
     public static final String DETAILEDESTIMATE="DetailedEstimateOffline";
+    public static final String LOA_OFFLINESTATUS_AGREEMENT_ORDER_SIGNED="AGREEMENT_ORDER_SIGNED";
+    public static final String WORKORDER_OFFLINESTATUS_WORK_COMMENCED="WORK_COMMENCED";
 
     public static final String KEY_FILESTORE_INVALID = "INVALID_FILESTORE";
     public static final String MESSAGE_FILESTORE_INVALID = "Plese provide valid value for filestore which exists in the system";

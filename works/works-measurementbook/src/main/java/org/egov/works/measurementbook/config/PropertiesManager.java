@@ -40,4 +40,25 @@ public class PropertiesManager {
 
     @Value("${egov.services.works.measurementbook.backupdate.for.billstatus.topic}")
     private String measurementBookBackUpdateForBillStatus;
+
+    @Value("${egov.services.works.loa.backupdate.oncreatebill.topic}")
+    private String worksLoaBackUpdateOnCreateBill;
+
+    @Value("${egov.services.works.loa.backupdate.oncancelbill.topic}")
+    private String worksLoaBackUpdateOnCancelBill;
+
+    @Value("${egov.services.works.loa.backupdate.oncreatemb.topic}")
+    private String worksLoaBackUpdateOnCreateMB;
+
+    @Value("${egov.services.works.loa.backupdate.oncancelmb.topic}")
+    private String worksLoaBackUpdateOnCancelMB;
+
+    @Value("${egov.services.works.loa.backupdate.oncreatembandnobill.topic}")
+    private String worksLoaBackUpdateOnCreateMBAndNoBill;
+
+    @Value("${egov.services.works.loa.backupdate.oncreatembandbill.topic}")
+    private String worksLoaBackUpdateOnCreateMBAndBill;
+
+
+
 }

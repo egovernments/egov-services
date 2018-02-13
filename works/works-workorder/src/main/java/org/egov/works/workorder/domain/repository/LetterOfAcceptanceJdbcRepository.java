@@ -47,7 +47,8 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         if ((letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null
                 && !letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().isEmpty())
                 || (letterOfAcceptanceSearchCriteria.getDepartment() != null
-                        && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty()) || StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike()))
+                        && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty()) || StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike())
+                || StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getLoaEstimateId()))
             tableName += LOA_ESTIMATESEARCH_EXTENTION;
 
         StringBuilder orderBy = new StringBuilder("order by loa.createdtime");
@@ -164,6 +165,13 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
 
         }
 
+        if(StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getLoaEstimateId())) {
+            addAnd(params);
+            params.append(
+                    "loaestimate.letterofacceptance = loa.id and loaestimate.id in (:loaestimateid) and loaestimate.tenantId =:tenantId");
+            paramValues.put("loaestimateid", letterOfAcceptanceSearchCriteria.getLoaEstimateId());
+        }
+
         if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getDetailedEstimateNumberLike())) {
             addAnd(params);
             params.append(
@@ -180,6 +188,13 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         }
 
         params.append(" and loa.deleted = false");
+        params.append(" and loa.workOrderExists = ").append(letterOfAcceptanceSearchCriteria.getWorkOrderExists());
+        params.append(" and loa.withAllOfflineStatusAndWONotCreated = ").append(letterOfAcceptanceSearchCriteria.getWithAllOfflineStatusAndWONotCreated());
+        params.append(" and loa.milestoneExists = ").append(letterOfAcceptanceSearchCriteria.getMilestoneExists());
+        params.append(" and loa.billExists = ").append(letterOfAcceptanceSearchCriteria.getBillExists());
+        params.append(" and loa.contractorAdvanceExists = ").append(letterOfAcceptanceSearchCriteria.getContractorAdvanceExists());
+        params.append(" and loa.mbExistsAndBillNotCreated = ").append(letterOfAcceptanceSearchCriteria.getMbExistsAndBillNotCreated());
+        params.append(" and loa.withoutOfflineStatus = ").append(letterOfAcceptanceSearchCriteria.getWithoutOfflineStatus());
 
         if (params.length() > 0) {
 

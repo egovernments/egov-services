@@ -220,7 +220,7 @@ class ApplyLeave extends React.Component {
     let allHolidayList = _this.state.allHolidayList;
     let hrConfigurations = _this.state.hrConfigurations;
     let encloseHoliday = 0;
-
+    let prefixSuffixDays = 0;
     
     //Calling enclosing Holiday api
     let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");

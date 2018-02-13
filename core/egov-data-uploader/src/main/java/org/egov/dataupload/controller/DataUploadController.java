@@ -1,17 +1,19 @@
 package org.egov.dataupload.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.egov.dataupload.model.JobSearchRequest;
-import org.egov.dataupload.model.ModuleDefRequest;
-import org.egov.dataupload.model.ModuleDefResponse;
-import org.egov.dataupload.model.ModuleDefs;
-import org.egov.dataupload.model.UploadJob;
-import org.egov.dataupload.model.UploaderRequest;
-import org.egov.dataupload.model.UploaderResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import org.egov.dataupload.model.*;
 import org.egov.dataupload.service.DataUploadService;
+import org.egov.dataupload.utils.DataUploadUtils;
 import org.egov.dataupload.utils.ResponseInfoFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,10 @@ public class DataUploadController {
 	
 	@Autowired
 	public ResponseInfoFactory responseInfoFactory;
-	
+
+	@Autowired
+    public DataUploadUtils dataUploadUtils;
+
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadController.class);
 	
 	
@@ -86,6 +91,60 @@ public class DataUploadController {
 			throw e;
 		}
 	}
+
+
+    @PostMapping(value = "upload-definitions/_test",produces = "application/json")
+    public ResponseEntity<?> definitionTest(@RequestBody @Valid DefinitionTestRequest definitionTestRequest) throws Exception {
+        try {
+            logger.info("Inside controller");
+            DefinitionTestResponse response = new DefinitionTestResponse();
+            response.results = new ArrayList<>();
+
+            List<?> results = response.results;
+
+
+
+            List<Object> headers = definitionTestRequest.getHeaders();
+            List<List<Object>> data = definitionTestRequest.getData();
+            Definition uploadDefinition = definitionTestRequest.getDefinition();
+            UploaderRequest uploaderRequest = new UploaderRequest();
+            uploaderRequest.uploadJobs = new ArrayList<UploadJob>();
+            UploadJob uploadJob = new UploadJob();
+            uploadJob.setTenantId("default");
+            uploaderRequest.uploadJobs.add(uploadJob);
+
+			ObjectMapper objectMapper = new ObjectMapper();
+
+            if (null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()) {
+
+                DocumentContext documentContext = dataUploadUtils.getDocumentContext(uploadDefinition);
+                DocumentContext bulkApiRequest = dataUploadUtils.getBulkApiRequestContext(uploadDefinition);
+                List<Integer> indexes = dataUploadUtils.getIndexes(uploadDefinition, headers);
+
+                for (int i = 0; i < data.size(); i++) {
+                    List<List<Object>> filteredList = dataUploadUtils.filter(data, indexes, data.get(i));
+                    String request = dataUploadService.buildRequestForParentChild(i, filteredList, headers, 0, uploadDefinition, documentContext, uploaderRequest, bulkApiRequest);
+                    results.add(objectMapper.readValue(request, new TypeReference<Map<String, Object>>(){}));
+                    i +=  (filteredList.size() - 1);
+                }
+            } else {
+
+                DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
+
+                for (int i = 0; i < data.size(); i++) {
+                    String request = dataUploadService.buildRequest(headers, 0, uploadDefinition, documentContext, uploaderRequest, data.get(i));
+                    results.add(objectMapper.readValue(request, new TypeReference<Map<String, Object>>(){}));
+                }
+            }
+
+//            return "[" + String.join(",",results) + "]";
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 }
 
 		

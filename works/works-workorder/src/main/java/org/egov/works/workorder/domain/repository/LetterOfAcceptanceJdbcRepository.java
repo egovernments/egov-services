@@ -59,7 +59,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
 
         searchQuery = searchQuery.replace(":tablename", tableName);
 
-        searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":selectfields", " loa.* ");
 
         if (letterOfAcceptanceSearchCriteria.getTenantId() != null) {
             addAnd(params);

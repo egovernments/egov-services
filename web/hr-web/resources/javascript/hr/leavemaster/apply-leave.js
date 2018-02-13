@@ -225,15 +225,13 @@ class ApplyLeave extends React.Component {
     //Calling enclosing Holiday api
     let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
     if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
-      
-      setTimeout(
       commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
           _this.setState({
             encloseHoliday: res.Holiday
           });
         }
-      }),200);
+      });
     } else {
       _this.setState({
         encloseHoliday: ""
@@ -243,7 +241,6 @@ class ApplyLeave extends React.Component {
     //calling PrefixSuffix api
     let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
     if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
-      setTimeout(
       commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
           console.log("prefixsuffix ", res);
@@ -251,7 +248,7 @@ class ApplyLeave extends React.Component {
             perfixSuffix: res.Holiday[0]
           });
         }
-      }),200);
+      });
     } else {
       _this.setState({
         perfixSuffix: ""
@@ -295,11 +292,11 @@ class ApplyLeave extends React.Component {
 
     var totalWorkingDays = _days;
 
-    if (_this.state.perfixSuffix) {
-      totalWorkingDays = totalWorkingDays + _this.state.perfixSuffix.noOfDays;
-    }
-    if (_this.state.encloseHoliday)
-      totalWorkingDays = totalWorkingDays + _this.state.encloseHoliday.length;
+    if (this.state.perfixSuffix) 
+      totalWorkingDays = totalWorkingDays + this.state.perfixSuffix.noOfDays;
+    
+    if (this.state.encloseHoliday)
+      totalWorkingDays = totalWorkingDays + this.state.encloseHoliday.length;
 
 
     _this.setState({

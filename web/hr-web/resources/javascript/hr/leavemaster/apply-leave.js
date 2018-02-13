@@ -187,20 +187,6 @@ class ApplyLeave extends React.Component {
           }
         })
       }
-
-      var totalWorkingDays = this.state.leaveSet.leaveDays;
-
-      if (this.state.perfixSuffix) 
-        totalWorkingDays = totalWorkingDays + this.state.perfixSuffix.noOfDays;
-      
-      if (this.state.encloseHoliday)
-        totalWorkingDays = totalWorkingDays + this.state.encloseHoliday.length;
-
-        _this.setState({
-            ..._this.state,
-            totalWorkingDays: totalWorkingDays
-        });
-
     }
   }
 
@@ -233,7 +219,8 @@ class ApplyLeave extends React.Component {
     let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
     let allHolidayList = _this.state.allHolidayList;
     let hrConfigurations = _this.state.hrConfigurations;
-
+    let prefixSuffixDays = 0;
+    let enclosingDays = 0;
 
     
     //Calling enclosing Holiday api
@@ -241,6 +228,7 @@ class ApplyLeave extends React.Component {
     if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
       commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
+          enclosingDays = res.Holiday.length;
           _this.setState({
             encloseHoliday: res.Holiday
           });
@@ -257,7 +245,7 @@ class ApplyLeave extends React.Component {
     if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
       commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
-          console.log("prefixsuffix ", res);
+          prefixSuffixDays = res.Holiday[0].noOfDays;
           _this.setState({
             perfixSuffix: res.Holiday[0]
           });
@@ -304,11 +292,12 @@ class ApplyLeave extends React.Component {
       }
     }
 
-    
+
     _this.setState({
       leaveSet: {
         ..._this.state.leaveSet,
-        leaveDays: _days
+        leaveDays: _days,
+        totalWorkingDays : _days + prefixSuffixDays + enclosingDays
       }
     });
 

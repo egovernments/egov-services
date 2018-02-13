@@ -219,7 +219,7 @@ class ApplyLeave extends React.Component {
     let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
     let allHolidayList = _this.state.allHolidayList;
     let hrConfigurations = _this.state.hrConfigurations;
-    let encloseHoliday = 0;
+    let enclosingDays = 0;
     let prefixSuffixDays = 0;
     
     //Calling enclosing Holiday api
@@ -228,7 +228,7 @@ class ApplyLeave extends React.Component {
       commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
           console.log("enclosingDays", res.Holiday.length);
-          encloseHoliday = res.Holiday.length;
+          enclosingDays = res.Holiday.length;
           _this.setState({
             encloseHoliday: res.Holiday
           });
@@ -245,7 +245,7 @@ class ApplyLeave extends React.Component {
     if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
       commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
-          console.log("enclosingDays", res.Holiday.length);
+          console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
           prefixSuffixDays = res.Holiday[0].noOfDays;
           _this.setState({
             perfixSuffix: res.Holiday[0]

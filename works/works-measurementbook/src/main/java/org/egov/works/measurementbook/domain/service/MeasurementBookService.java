@@ -110,7 +110,7 @@ public class MeasurementBookService {
 
             List<LetterOfAcceptance> letterOfAcceptances =
                     letterOfAcceptanceRepository.searchLoaByLoaEstimateId(measurementBook.getTenantId(), measurementBook.getLetterOfAcceptanceEstimate(), measurementBookRequest.getRequestInfo());
-            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+            if(letterOfAcceptances != null && !letterOfAcceptances.isEmpty())
                 measurementBook.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
 
             if(measurementBook.getStatus() != null && measurementBook.getStatus().equals(CommonConstants.STATUS_CREATED) ||
@@ -371,7 +371,7 @@ public class MeasurementBookService {
 
             List<LetterOfAcceptance> letterOfAcceptances =
                     letterOfAcceptanceRepository.searchLoaByLoaEstimateId(measurementBook.getTenantId(), measurementBook.getLetterOfAcceptanceEstimate(), measurementBookRequest.getRequestInfo());
-            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+            if(letterOfAcceptances != null && !letterOfAcceptances.isEmpty())
                 measurementBook.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
 
             if(measurementBook.getStatus() != null && measurementBook.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))

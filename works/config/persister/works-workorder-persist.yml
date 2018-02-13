@@ -857,7 +857,7 @@ serviceMaps:
       basePath: $.milestones.*
       jsonMaps:
 
-       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.milestones.*.tenantId
        
@@ -871,7 +871,7 @@ serviceMaps:
       basePath: $.milestones.*
       jsonMaps:
 
-       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.milestones.*.tenantId
        
@@ -885,7 +885,7 @@ serviceMaps:
       basePath: $.measurementBooks.*
       jsonMaps:
 
-       - jsonPath: $.measurementBooks.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.measurementBooks.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.measurementBooks.*.tenantId
        
@@ -899,7 +899,7 @@ serviceMaps:
       basePath: $.contractorBills.*
       jsonMaps:
 
-       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorBills.*.tenantId
 
@@ -913,7 +913,7 @@ serviceMaps:
       basePath: $.contractorBills.*
       jsonMaps:
 
-       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorBills.*.tenantId
        
@@ -927,7 +927,7 @@ serviceMaps:
       basePath: $.contractorBills.*
       jsonMaps:
 
-       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorBills.*.tenantId
        
@@ -941,7 +941,7 @@ serviceMaps:
       basePath: $.contractorBills.*
       jsonMaps:
 
-       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorBills.*.tenantId
        
@@ -955,7 +955,7 @@ serviceMaps:
       basePath: $.contractorBills.*
       jsonMaps:
 
-       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorBills.*.tenantId
 
@@ -969,7 +969,7 @@ serviceMaps:
       basePath: $.contractorAdvanceRequisitions.*
       jsonMaps:
 
-       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorAdvanceRequisitions.*.tenantId
        
@@ -983,7 +983,7 @@ serviceMaps:
       basePath: $.contractorAdvanceRequisitions.*
       jsonMaps:
 
-       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorAdvanceRequisitions.*.tenantId
 
@@ -1011,7 +1011,7 @@ serviceMaps:
       basePath: $.milestones.*
       jsonMaps:
 
-       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.milestones.*.tenantId
        
@@ -1025,7 +1025,7 @@ serviceMaps:
       basePath: $.milestones.*
       jsonMaps:
 
-       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.milestones.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.milestones.*.tenantId
 
@@ -1039,7 +1039,7 @@ serviceMaps:
       basePath: $.contractorBills.*
       jsonMaps:
       
-       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
        
        - jsonPath: $.contractorBills.*.tenantId
        
@@ -1053,7 +1053,7 @@ serviceMaps:
       basePath: $.contractorBills.*
       jsonMaps:
       
-       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorBills.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorBills.*.tenantId
 
@@ -1067,7 +1067,7 @@ serviceMaps:
       basePath: $.contractorAdvanceRequisitions.*
       jsonMaps:
 
-       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorAdvanceRequisitions.*.tenantId
        
@@ -1081,7 +1081,7 @@ serviceMaps:
       basePath: $.contractorAdvanceRequisitions.*
       jsonMaps:
 
-       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.*.letterOfAcceptance
+       - jsonPath: $.contractorAdvanceRequisitions.*.letterOfAcceptanceEstimate.letterOfAcceptance
 
        - jsonPath: $.contractorAdvanceRequisitions.*.tenantId
 

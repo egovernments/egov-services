@@ -71,7 +71,7 @@ public class ContractorBillService {
 
             List<LetterOfAcceptance> letterOfAcceptances =
                     letterOfAcceptanceRepository.searchLoaByLoaEstimateId(contractorBill.getTenantId(), contractorBill.getLetterOfAcceptanceEstimate(), contractorBillRequest.getRequestInfo());
-            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+            if(letterOfAcceptances != null && !letterOfAcceptances.isEmpty())
                 contractorBill.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
             
             
@@ -117,7 +117,7 @@ public class ContractorBillService {
                 contractorBill.setStatus(finStatus);
             }
 
-            if(contractorBill.getBillSubType().equalsIgnoreCase(Constants.BILL_SUB_TYPE_FINAL) && contractorBill.getStatus() != null && (contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CHECKED) ||
+            if(contractorBill.getBillType() != null && contractorBill.getBillType().equalsIgnoreCase(Constants.BILL_SUB_TYPE_FINAL) && contractorBill.getStatus() != null && (contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CREATED) ||
                 contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_APPROVED))) {
                 contractorBills.add(contractorBill);
             }
@@ -145,7 +145,7 @@ public class ContractorBillService {
             populateAuditDetails(contractorBillRequest.getRequestInfo(), contractorBill);
             List<LetterOfAcceptance> letterOfAcceptances =
                     letterOfAcceptanceRepository.searchLoaByLoaEstimateId(contractorBill.getTenantId(), contractorBill.getLetterOfAcceptanceEstimate(), contractorBillRequest.getRequestInfo());
-            if(letterOfAcceptances != null && letterOfAcceptances.isEmpty())
+            if(letterOfAcceptances != null && !letterOfAcceptances.isEmpty())
                 contractorBill.setLetterOfAcceptanceEstimate(letterOfAcceptances.get(0).getLetterOfAcceptanceEstimates().get(0));
             if(contractorBill.getStatus() != null && contractorBill.getStatus().getCode().equals(CommonConstants.STATUS_CANCELLED))
                 contractorBills.add(contractorBill);

@@ -17,7 +17,7 @@ class ApplyLeave extends React.Component {
         "status": "",
         "stateId": "",
         "tenantId": tenantId,
-        "totalWorkingDays":"",
+        "totalWorkingDays": "",
         "workflowDetails": {
           "department": "",
           "designation": "",
@@ -34,6 +34,8 @@ class ApplyLeave extends React.Component {
     this.getPrimaryAssigmentDep = this.getPrimaryAssigmentDep.bind(this);
     this.isSecondSat = this.isSecondSat.bind(this);
     this.isFourthSat = this.isFourthSat.bind(this);
+    this.calculate = this.calculate.bind(this);
+
   }
 
   componentDidMount() {
@@ -82,6 +84,7 @@ class ApplyLeave extends React.Component {
         }
       });
     } else {
+
       var hrConfigurations = [], allHolidayList = [];
       commonApiPost("hr-masters", "hrconfigurations", "_search", {
         tenantId
@@ -89,7 +92,8 @@ class ApplyLeave extends React.Component {
         if (res) {
           hrConfigurations = res;
         }
-      })
+      });
+
       commonApiPost("egov-common-masters", "holidays", "_search", {
         tenantId
       }, function (err, res) {
@@ -99,8 +103,8 @@ class ApplyLeave extends React.Component {
       $('#fromDate, #toDate').datepicker({
         format: 'dd/mm/yyyy',
         autoclose: true
-
       });
+
       $('#fromDate, #toDate').on("change", function (e) {
         var _from = $('#fromDate').val();
         var _to = $('#toDate').val();
@@ -108,147 +112,32 @@ class ApplyLeave extends React.Component {
 
         if (_this.state.leaveSet.leaveType.id) {
 
-
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              [_triggerId]: $("#" + _triggerId).val()
+            }
+          });
 
           if (_from && _to) {
 
-            //Calling prefix suffix and enclosing holiday api
-            let asOnDate = _this.state.leaveSet.toDate;
-            let fromDate = _this.state.leaveSet.fromDate;
-            let leaveDays = _this.state.leaveSet.leaveDays;
-            let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
-            let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
             let dateParts1 = _from.split("/");
             let newDateStr = dateParts1[1] + "/" + dateParts1[0] + "/ " + dateParts1[2];
             let date1 = new Date(newDateStr);
+
             let dateParts2 = _to.split("/");
             let newDateStr1 = dateParts2[1] + "/" + dateParts2[0] + "/" + dateParts2[2];
             let date2 = new Date(newDateStr1);
-            let leaveType = _this.state.leaveSet.leaveType.id;
-            let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
+
 
             if (date1 > date2) {
               showError("From date must be before End date.");
               $('#' + _triggerId).val("");
-            } else {
-
-              if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
-                commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-                  if (res) {
-                    _this.setState({
-                      encloseHoliday: res.Holiday
-                    });
-                  }
-                });
-              } else {
-                _this.setState({
-                  encloseHoliday: ""
-                });
-              }
-
-              if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
-                commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-                  if (res) {
-                    _this.setState({
-                      perfixSuffix: res.Holiday[0]
-                    });
-                  }
-                });
-              } else {
-                _this.setState({
-                  perfixSuffix: ""
-                });
-              }
-
-              var holidayList = [], m1 = dateParts1[1], m2 = dateParts2[1], y1 = dateParts1[2], y2 = dateParts2[2];
-              for (var i = 0; i < allHolidayList.length; i++) {
-                if (allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
-                  holidayList.push(new Date(allHolidayList[i].applicableOn.split("/")[2], allHolidayList[i].applicableOn.split("/")[1] - 1, allHolidayList[i].applicableOn.split("/")[0]).getTime());
-                }
-              }
-              //Calculate working days
-              var _days = 0;
-              var parts1 = $('#fromDate').val().split("/");
-              var parts2 = $('#toDate').val().split("/");
-              var startDate = new Date(parts1[2], (+parts1[1] - 1), parts1[0]);
-              var endDate = new Date(parts2[2], (+parts2[1] - 1), parts2[0]);
-
-              if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week") {
-                for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-                  if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && !(d.getDay() === 0 || d.getDay() === 6))
-                    _days++;
-                }
-              } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd Saturday holiday") {
-                for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-                  if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && !_this.isSecondSat(d) && d.getDay() != 0)
-                    _days++;
-                }
-              } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd and 4th Saturday holiday") {
-                for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-                  if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && d.getDay() != 0 && !_this.isSecondSat(d) && !_this.isFourthSat(d))
-                    _days++;
-                }
-              } else {
-                for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-                  if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && !(d.getDay() === 0))
-                    _days++;
-                }
-              }
-
-              var totalWorkingDays = _days;
-
-              if(_this.state.perfixSuffix){
-                console.log("Prefi and suffix" +totalWorkingDays+"  " + _this.state.perfixSuffix);
-                totalWorkingDays = totalWorkingDays + _this.state.perfixSuffix.noOfDays;
-              }
-              if(_this.state.encloseHoliday)
-              totalWorkingDays = totalWorkingDays + _this.state.encloseHoliday.length;
-
-              _this.setState({
-                leaveSet: {
-                  ..._this.state.leaveSet,
-                  [_triggerId]: $("#" + _triggerId).val(),
-                  leaveDays: _days,
-                  totalWorkingDays: totalWorkingDays
-                }
-              });
-
-
-              commonApiPost("hr-leave", "eligibleleaves", "_search", {
-                leaveType, tenantId, asOnDate, employeeid
-              }, function (err, res) {
-                if (res) {
-                  var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
-                  if (_day <= 0 || _day == "") {
-                    _this.setState({
-                      leaveSet: {
-                        ..._this.state.leaveSet,
-                        availableDays: ""
-                      }
-                    });
-                    return (showError("You do not have leave for this leave type."));
-                  }
-                  else {
-                    _this.setState({
-                      leaveSet: {
-                        ..._this.state.leaveSet,
-                        availableDays: _day
-                      }
-                    });
-                  }
-                }
-              });
-
             }
-          } else {
-            _this.setState({
-              leaveSet: {
-                ..._this.state.leaveSet,
-                [_triggerId]: $("#" + _triggerId).val()
-              }
-            });
-          }
 
+
+            _this.calculate();
+          }
 
         } else {
           showError("Please select Leave Type before entering from date and to date.");
@@ -311,87 +200,134 @@ class ApplyLeave extends React.Component {
     })
   }
 
-  handleChangeThreeLevel(e, pName, name) {
-    var _this = this, val = e.target.value;
-    if (pName == "leaveType" && _this.state.leaveSet.toDate) {
-      var leaveType = val;
-      var asOnDate = _this.state.leaveSet.toDate;
-      var fromDate = _this.state.leaveSet.fromDate;
-      var employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
-      var leaveDays = _this.state.leaveSet.leaveDays;
-      var enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
-      var includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
+  calculate() {
 
-      console.log("Enclosing : ", enclosingHoliday, " includePrefixSuffix : ", includePrefixSuffix);
+    let _this = this;
+    let asOnDate = _this.state.leaveSet.toDate;
+    let fromDate = _this.state.leaveSet.fromDate;
+    let leaveDays = _this.state.leaveSet.leaveDays;
+    let leaveType = _this.state.leaveSet.leaveType.id;
+    let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
 
-      if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
-        commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-          if (res) {
-
-            _this.setState({
-              encloseHoliday: res.Holiday
-            });
-
-          }
-        });
-
-      } else {
-        _this.setState({
-          encloseHoliday: ""
-        });
-      }
-
-      if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
-        commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-          if (res) {
-
-            _this.setState({
-              perfixSuffix: res.Holiday[0]
-            });
-
-          }
-        });
-
-      } else {
-        _this.setState({
-          perfixSuffix: ""
-        });
-      }
-
-
-      commonApiPost("hr-leave", "eligibleleaves", "_search", { leaveType, tenantId, asOnDate, employeeid }, function (err, res) {
+    //Calling enclosing Holiday api
+    let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
+    if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
+      commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
-          var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
-          if (_day <= 0 || _day == "") {
-            _this.setState({
-              leaveSet: {
-                ..._this.state.leaveSet,
-                availableDays: "",
-                [pName]: {
-                  ..._this.state.leaveSet[pName],
-                  [name]: val
-                }
-              }
-            });
-            return (showError("You do not have leave for this leave type."));
-          }
-          else {
-            _this.setState({
-              leaveSet: {
-                ..._this.state.leaveSet,
-                availableDays: _day,
-                [pName]: {
-                  ..._this.state.leaveSet[pName],
-                  [name]: val
-                }
-              }
-            });
-          }
+          _this.setState({
+            encloseHoliday: res.Holiday
+          });
         }
       });
-
-
     } else {
+      _this.setState({
+        encloseHoliday: ""
+      });
+    }
+
+    //calling PrefixSuffix api
+    let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
+    if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
+      commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+        if (res) {
+          console.log("prefixsuffix ", res);
+          _this.setState({
+            perfixSuffix: res.Holiday[0]
+          });
+        }
+      });
+    } else {
+      _this.setState({
+        perfixSuffix: ""
+      });
+    }
+
+
+    var holidayList = [], m1 = dateParts1[1], m2 = dateParts2[1], y1 = dateParts1[2], y2 = dateParts2[2];
+    for (var i = 0; i < allHolidayList.length; i++) {
+      if (allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
+        holidayList.push(new Date(allHolidayList[i].applicableOn.split("/")[2], allHolidayList[i].applicableOn.split("/")[1] - 1, allHolidayList[i].applicableOn.split("/")[0]).getTime());
+      }
+    }
+    //Calculate working days
+    var _days = 0;
+    var parts1 = $('#fromDate').val().split("/");
+    var parts2 = $('#toDate').val().split("/");
+    var startDate = new Date(parts1[2], (+parts1[1] - 1), parts1[0]);
+    var endDate = new Date(parts2[2], (+parts2[1] - 1), parts2[0]);
+
+    if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week") {
+      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && !(d.getDay() === 0 || d.getDay() === 6))
+          _days++;
+      }
+    } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd Saturday holiday") {
+      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && !_this.isSecondSat(d) && d.getDay() != 0)
+          _days++;
+      }
+    } else if (hrConfigurations["HRConfiguration"]["Weekly_holidays"][0] == "5-day week with 2nd and 4th Saturday holiday") {
+      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && d.getDay() != 0 && !_this.isSecondSat(d) && !_this.isFourthSat(d))
+          _days++;
+      }
+    } else {
+      for (var d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+        if (holidayList.indexOf(d.getTime()) == -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0] != "Y" && !(d.getDay() === 0))
+          _days++;
+      }
+    }
+
+    var totalWorkingDays = _days;
+
+    if (_this.state.perfixSuffix) {
+      console.log("Prefi and suffix", _this.state.perfixSuffix);
+      totalWorkingDays = totalWorkingDays + _this.state.perfixSuffix.noOfDays;
+    }
+    if (_this.state.encloseHoliday)
+      totalWorkingDays = totalWorkingDays + _this.state.encloseHoliday.length;
+
+    _this.setState({
+      leaveSet: {
+        ..._this.state.leaveSet,
+        [_triggerId]: $("#" + _triggerId).val(),
+        leaveDays: _days,
+        totalWorkingDays: totalWorkingDays
+      }
+    });
+
+
+    commonApiPost("hr-leave", "eligibleleaves", "_search", {
+      leaveType, tenantId, asOnDate, employeeid
+    }, function (err, res) {
+      if (res) {
+        var _day = res && res["EligibleLeave"] && res["EligibleLeave"][0] ? res["EligibleLeave"][0].noOfDays : "";
+        if (_day <= 0 || _day == "") {
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              availableDays: ""
+            }
+          });
+          return (showError("You do not have leave for this leave type."));
+        }
+        else {
+          _this.setState({
+            leaveSet: {
+              ..._this.state.leaveSet,
+              availableDays: _day
+            }
+          });
+        }
+      }
+    });
+
+  }
+
+  handleChangeThreeLevel(e, pName, name) {
+    var _this = this, val = e.target.value;
+    if (pName == "leaveType") {
+
       this.setState({
         leaveSet: {
           ...this.state.leaveSet,
@@ -400,7 +336,23 @@ class ApplyLeave extends React.Component {
             [name]: e.target.value
           }
         }
-      })
+      });
+
+    if(_this.state.leaveSet.fromDate && _this.state.leaveSet.toDate)
+      _this.calculate();
+    
+
+    } else {
+
+      this.setState({
+        leaveSet: {
+          ...this.state.leaveSet,
+          [pName]: {
+            ...this.state.leaveSet[pName],
+            [name]: e.target.value
+          }
+        }
+      });
     }
   }
 
@@ -436,7 +388,7 @@ class ApplyLeave extends React.Component {
     }
 
     let maxDays = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "maxDays");
-    if( maxDays < _this.state.leaveSet.leaveDays ){
+    if (maxDays < _this.state.leaveSet.leaveDays) {
       return (showError("Number of Leaves applied exceeds Maximum leaves permitted"));
     }
 
@@ -596,8 +548,6 @@ class ApplyLeave extends React.Component {
               </div>
             </div>
           </div>
-
-
 
         )
       }
@@ -775,7 +725,7 @@ class ApplyLeave extends React.Component {
                   </div>
                 </div>
               </div>
-              
+
             </div>
 
 

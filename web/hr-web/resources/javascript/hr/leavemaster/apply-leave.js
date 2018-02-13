@@ -90,7 +90,11 @@ class ApplyLeave extends React.Component {
         tenantId
       }, function (err, res) {
         if (res) {
-          hrConfigurations = res;
+          _this.setState({
+            ..._this.state,
+            hrConfigurations : res ? res : []
+        });
+
         }
       });
 
@@ -214,6 +218,7 @@ class ApplyLeave extends React.Component {
     let leaveType = _this.state.leaveSet.leaveType.id;
     let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
     let allHolidayList = _this.state.allHolidayList;
+    let hrConfigurations = _this.state.hrConfigurations;
 
     //Calling enclosing Holiday api
     let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");

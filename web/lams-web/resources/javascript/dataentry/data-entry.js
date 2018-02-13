@@ -132,7 +132,7 @@ $(document).ready(function() {
         });
         calcFooterYearSum();
       }else{
-        alert('This agreement number is not data entry screen.')
+        alert('This agreement is not a data entry agreement.')
       }
     });
   }
@@ -146,7 +146,9 @@ $(document).ready(function() {
     //validation check before adding
     $("#subesquentrenewalsTable tbody tr:eq("+(index-1)+")").find('input').each(function(index){
       // console.log(index, $(this).attr('id'), $(this).attr('name'), $(this).val());
-      if(!$(this).val()){
+      if($(this).attr('class')==='resolutionNumber' || $(this).attr('class')==='resolutionDate'){
+        valid = true;
+      }else if(!$(this).val()){
         valid = false;
         return valid;
       }else{

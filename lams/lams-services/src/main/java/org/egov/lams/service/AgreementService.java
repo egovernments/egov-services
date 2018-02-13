@@ -155,6 +155,7 @@ public class AgreementService {
 		updateAuditDetails(agreement, agreementRequest.getRequestInfo());
 		agreement.setExpiryDate(getExpiryDate(agreement));
 		agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
+		Allottee allottee = agreement.getAllottee();
 		Agreement oldAgreement = agreementRepository.findByAgreementId(agreement.getId()).get(0);
 		if (isDemandChangeRequired(agreement, oldAgreement)) {
 			agreement.setDemands(null);
@@ -165,8 +166,9 @@ public class AgreementService {
 					.collect(Collectors.toList());
 			agreement.setDemands(demandList);
 		}
-		if (agreement.getAllottee() != null && agreement.getAllottee().getId() != null) {
-			allotteeRepository.updateAllottee(agreement.getAllottee(), agreementRequest.getRequestInfo());
+		if (allottee != null && allottee.getId() != null) {
+			allottee.setTenantId(agreement.getTenantId());
+			allotteeRepository.updateAllottee(allottee, agreementRequest.getRequestInfo());
 		}
 		agreement.setStatus(Status.ACTIVE);
 		agreement.setIsUnderWorkflow(Boolean.FALSE);

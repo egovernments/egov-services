@@ -30,7 +30,7 @@ public class AssetRepository {
 	public AssetResponse getAssets(String urlParams, RequestInfoWrapper requestInfoWrapper) {
 		String url = null;
 		AssetResponse assetResponse = null;
-		url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePAth()
+		url = propertiesManager.getAssetServiceHostName() + propertiesManager.getAssetServiceBasePath()
 				+ propertiesManager.getAssetServiceSearchPath() + "?" + urlParams;
 
 		logger.info("the url of asset api call : " + url);

@@ -34,7 +34,7 @@ public class AllotteeRepository {
 	
 	public AllotteeResponse getAllottees(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 
-		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
+		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePath()
 				+ propertiesManager.getAllotteeServiceSearchPath();
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
 		userSearchRequest.setRequestInfo(requestInfo);
@@ -56,7 +56,7 @@ public class AllotteeRepository {
 	public AllotteeResponse getAllottees(Allottee allottee, RequestInfo requestInfo) {
 
 		logger.info("inside get allottee");
-		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
+		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePath()
 				+ propertiesManager.getAllotteeServiceSearchPath();
 		UserSearchRequest userSearchRequest = new UserSearchRequest();
 		userSearchRequest.setRequestInfo(requestInfo);
@@ -81,8 +81,8 @@ public class AllotteeRepository {
 	public AllotteeResponse createAllottee(Allottee allottee, RequestInfo requestInfo) {
 
 		logger.info("inside create allottee");
-		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
-				+ propertiesManager.getAllotteeServiceCreatePAth();
+		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePath()
+				+ propertiesManager.getAllotteeServiceCreatePath();
 		String allotteeName = allottee.getName().replaceAll(" ", "");
 		String userName = getUserName(allotteeName, allottee.getMobileNumber());
 
@@ -149,7 +149,7 @@ public class AllotteeRepository {
 	
 	public AllotteeResponse updateAllottee(Allottee allottee, RequestInfo requestInfo) {
 
-		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePAth()
+		String url = propertiesManager.getAllotteeServiceHostName() + propertiesManager.getAllotteeServiceBasePath()
 				+ "/users/" + allottee.getId() + "/_updatenovalidate";
 		UserRequest userRequest = UserRequest.buildUserRequestFromAllotte(allottee);
 		CreateUserRequest userCreateRequest = new CreateUserRequest(requestInfo, userRequest);
@@ -157,7 +157,7 @@ public class AllotteeRepository {
 		try {
 			allotteeResponse = restTemplate.postForObject(url, userCreateRequest, AllotteeResponse.class);
 		} catch (Exception e) {
-			logger.info("exception while updating user details in modify agreement", e);
+			logger.error("exception while updating user details in modify agreement", e);
 			throw new RuntimeException(e.getMessage() + e);
 		}
 		return allotteeResponse;

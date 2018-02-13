@@ -15,7 +15,7 @@ public class PropertiesManager {
 	private String assetServiceHostName;
 
 	@Value("${egov.services.asset_service.basepath}")
-	private String assetServiceBasePAth;
+	private String assetServiceBasePath;
 
 	@Value("${egov.services.asset_service.searchpath}")
 	private String assetServiceSearchPath;
@@ -24,13 +24,13 @@ public class PropertiesManager {
 	private String allotteeServiceHostName;
 
 	@Value("${egov.services.allottee_service.basepath}")
-	private String allotteeServiceBasePAth;
+	private String allotteeServiceBasePath;
 
 	@Value("${egov.services.allottee_service.searchpath}")
 	private String allotteeServiceSearchPath;
 
 	@Value("${egov.services.allottee_service.createpath}")
-	private String allotteeServiceCreatePAth;
+	private String allotteeServiceCreatePath;
 
 	@Value("${egov.services.lams.agreementnumber_sequence}")
 	private String agreementNumberSequence;

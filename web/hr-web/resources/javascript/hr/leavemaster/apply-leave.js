@@ -99,10 +99,8 @@ class ApplyLeave extends React.Component {
       }, function (err, res) {
 
         _this.setState({
-          leaveSet: {
             ..._this.state,
             allHolidayList : res ? res.Holiday : []
-          }
         });
 
       });

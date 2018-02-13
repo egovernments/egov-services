@@ -97,7 +97,14 @@ class ApplyLeave extends React.Component {
       commonApiPost("egov-common-masters", "holidays", "_search", {
         tenantId
       }, function (err, res) {
-        allHolidayList = res ? res.Holiday : [];
+
+        _this.setState({
+          leaveSet: {
+            ..._this.state,
+            allHolidayList : res ? res.Holiday : []
+          }
+        });
+
       });
 
       $('#fromDate, #toDate').datepicker({
@@ -208,6 +215,7 @@ class ApplyLeave extends React.Component {
     let leaveDays = _this.state.leaveSet.leaveDays;
     let leaveType = _this.state.leaveSet.leaveType.id;
     let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
+    let allHolidayList = _this.state.allHolidayList;
 
     //Calling enclosing Holiday api
     let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
@@ -244,6 +252,7 @@ class ApplyLeave extends React.Component {
 
     
     var holidayList = [], m1 = fromDate.split("/")[1], m2 = asOnDate.split("/")[1], y1 = fromDate.split("/")[2], y2 = asOnDate.split("/")[2];
+    console.log
     for (var i = 0; i < allHolidayList.length; i++) {
       if (allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
         holidayList.push(new Date(allHolidayList[i].applicableOn.split("/")[2], allHolidayList[i].applicableOn.split("/")[1] - 1, allHolidayList[i].applicableOn.split("/")[0]).getTime());

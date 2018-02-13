@@ -225,6 +225,7 @@ public class PerformanceAssessmentRowMapper {
 				detail.setValue(rs.getString("value"));
 				detail.setId(rs.getString("detailId"));
 				detail.setPeriod(rs.getString("period"));
+				detail.setRemarks(rs.getString("valueDetailRemarks"));
 				List<KpiValueDetail> detailList = new ArrayList<>(); 
 				detailList.add(detail);
 				kpiValueDetailMap.put(rs.getString("detailValueId"), detailList); 

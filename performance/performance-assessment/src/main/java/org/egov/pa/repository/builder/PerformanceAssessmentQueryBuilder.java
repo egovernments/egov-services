@@ -84,7 +84,7 @@ public class PerformanceAssessmentQueryBuilder {
     
     public static final String COMPARE_SEARCH_OBJECTIVE_BASE_QUERY = "SELECT master.id, master.name, master.code, master.targettype as targetType, master.instructions, master.finyear as finYear, master.department as departmentId, master.category as categoryId, master.periodicity,  "  
     		+ " target.id as targetId, target.kpicode as targetKpiCode, target.finyear as targetFinYear, target.targetvalue as targetValue, target.tenantid as targetTenantId, " 
-    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId, value.finyear as valueFinYear, detail.id as detailId, detail.valueid as detailValueId, detail.value as value, detail.period as period, detail.id as valueDetailId " 
+    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId, value.finyear as valueFinYear, detail.id as detailId, detail.valueid as detailValueId, detail.value as value, detail.period as period, detail.id as valueDetailId, detail.remarks as valueDetailRemarks " 
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode AND value.finyear = target.finyear "  
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE (master.targettype = 'OBJECTIVE' OR master.targettype = 'TEXT') " ;   
     		

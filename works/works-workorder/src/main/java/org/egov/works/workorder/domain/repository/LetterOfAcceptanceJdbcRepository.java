@@ -188,13 +188,26 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         }
 
         params.append(" and loa.deleted = false");
-        params.append(" and loa.workOrderExists = ").append(letterOfAcceptanceSearchCriteria.getWorkOrderExists());
-        params.append(" and loa.withAllOfflineStatusAndWONotCreated = ").append(letterOfAcceptanceSearchCriteria.getWithAllOfflineStatusAndWONotCreated());
-        params.append(" and loa.milestoneExists = ").append(letterOfAcceptanceSearchCriteria.getMilestoneExists());
-        params.append(" and loa.billExists = ").append(letterOfAcceptanceSearchCriteria.getBillExists());
-        params.append(" and loa.contractorAdvanceExists = ").append(letterOfAcceptanceSearchCriteria.getContractorAdvanceExists());
-        params.append(" and loa.mbExistsAndBillNotCreated = ").append(letterOfAcceptanceSearchCriteria.getMbExistsAndBillNotCreated());
-        params.append(" and loa.withoutOfflineStatus = ").append(letterOfAcceptanceSearchCriteria.getWithoutOfflineStatus());
+        if(letterOfAcceptanceSearchCriteria.getWorkOrderExists() != null)
+          params.append(" and loa.workOrderExists = ").append(letterOfAcceptanceSearchCriteria.getWorkOrderExists());
+
+        if(letterOfAcceptanceSearchCriteria.getWithAllOfflineStatusAndWONotCreated() != null)
+          params.append(" and loa.withAllOfflineStatusAndWONotCreated = ").append(letterOfAcceptanceSearchCriteria.getWithAllOfflineStatusAndWONotCreated());
+
+        if(letterOfAcceptanceSearchCriteria.getMilestoneExists() != null)
+          params.append(" and loa.milestoneExists = ").append(letterOfAcceptanceSearchCriteria.getMilestoneExists());
+
+        if(letterOfAcceptanceSearchCriteria.getBillExists() != null)
+          params.append(" and loa.billExists = ").append(letterOfAcceptanceSearchCriteria.getBillExists());
+
+        if(letterOfAcceptanceSearchCriteria.getContractorAdvanceExists() != null)
+          params.append(" and loa.contractorAdvanceExists = ").append(letterOfAcceptanceSearchCriteria.getContractorAdvanceExists());
+
+        if(letterOfAcceptanceSearchCriteria.getMbExistsAndBillNotCreated() != null)
+          params.append(" and loa.mbExistsAndBillNotCreated = ").append(letterOfAcceptanceSearchCriteria.getMbExistsAndBillNotCreated());
+
+        if(letterOfAcceptanceSearchCriteria.getWithoutOfflineStatus() != null)
+          params.append(" and loa.withoutOfflineStatus = ").append(letterOfAcceptanceSearchCriteria.getWithoutOfflineStatus());
 
         if (params.length() > 0) {
 

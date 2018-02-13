@@ -220,6 +220,44 @@ class ApplyLeave extends React.Component {
     let allHolidayList = _this.state.allHolidayList;
     let hrConfigurations = _this.state.hrConfigurations;
 
+
+    //Calling enclosing Holiday api
+    let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
+    if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
+      blockUI();
+      commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+        if (res) {
+          _this.setState({
+            encloseHoliday: res.Holiday
+          });
+        }
+      });
+      unblockUI();
+    } else {
+      _this.setState({
+        encloseHoliday: ""
+      });
+    }
+
+    //calling PrefixSuffix api
+    let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
+    if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
+      blockUI();
+      commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
+        if (res) {
+          console.log("prefixsuffix ", res);
+          _this.setState({
+            perfixSuffix: res.Holiday[0]
+          });
+        }
+      });
+      unblockUI();
+    } else {
+      _this.setState({
+        perfixSuffix: ""
+      });
+    }
+
     var holidayList = [], m1 = fromDate.split("/")[1], m2 = asOnDate.split("/")[1], y1 = fromDate.split("/")[2], y2 = asOnDate.split("/")[2];
     for (var i = 0; i < allHolidayList.length; i++) {
       if (allHolidayList[i].applicableOn && +allHolidayList[i].applicableOn.split("/")[1] >= +m1 && +allHolidayList[i].applicableOn.split("/")[1] <= +m2 && +allHolidayList[i].applicableOn.split("/")[2] <= y1 && +allHolidayList[i].applicableOn.split("/")[2] >= y2) {
@@ -288,48 +326,6 @@ class ApplyLeave extends React.Component {
         }
       }
     });
-
-
-    //Calling enclosing Holiday api
-    let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
-    if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
-      commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-        if (res) {
-          _this.setState({
-            encloseHoliday: res.Holiday,
-            leaveSet:{
-              ..._this.state.leaveSet,
-              totalWorkingDays : _this.state.leaveSet.totalWorkingDays + res.Holiday.length
-            }
-          });
-        }
-      });
-    } else {
-      _this.setState({
-        encloseHoliday: ""
-      });
-    }
-
-    //calling PrefixSuffix api
-    let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
-    if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
-      commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
-        if (res) {
-          console.log("prefixsuffix ", res);
-          _this.setState({
-            perfixSuffix: res.Holiday[0],
-            leaveSet:{
-              ..._this.state.leaveSet,
-              totalWorkingDays : _this.state.leaveSet.totalWorkingDays + res.Holiday[0].noOfDays
-            }
-          });
-        }
-      });
-    } else {
-      _this.setState({
-        perfixSuffix: ""
-      });
-    }
 
   }
 

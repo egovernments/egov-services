@@ -1,10 +1,14 @@
 package org.egov.dataupload.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.egov.dataupload.model.*;
@@ -90,13 +94,13 @@ public class DataUploadController {
 
 
     @PostMapping(value = "upload-definitions/_test",produces = "application/json")
-    public String definitionTest(@RequestBody @Valid DefinitionTestRequest definitionTestRequest) throws Exception {
+    public ResponseEntity<?> definitionTest(@RequestBody @Valid DefinitionTestRequest definitionTestRequest) throws Exception {
         try {
             logger.info("Inside controller");
-//            DefinitionTestResponse response = new DefinitionTestResponse();
-//            response.results = new ArrayList<>();
+            DefinitionTestResponse response = new DefinitionTestResponse();
+            response.results = new ArrayList<>();
 
-            List<String> results = new ArrayList<>();
+            List<?> results = response.results;
 
 
 
@@ -109,6 +113,7 @@ public class DataUploadController {
             uploadJob.setTenantId("default");
             uploaderRequest.uploadJobs.add(uploadJob);
 
+			ObjectMapper objectMapper = new ObjectMapper();
 
             if (null != uploadDefinition.getIsParentChild() && uploadDefinition.getIsParentChild()) {
 
@@ -119,7 +124,7 @@ public class DataUploadController {
                 for (int i = 0; i < data.size(); i++) {
                     List<List<Object>> filteredList = dataUploadUtils.filter(data, indexes, data.get(i));
                     String request = dataUploadService.buildRequestForParentChild(i, filteredList, headers, 0, uploadDefinition, documentContext, uploaderRequest, bulkApiRequest);
-                    results.add(request);
+                    results.add(objectMapper.readValue(request, new TypeReference<Map<String, Object>>(){}));
                     i +=  (filteredList.size() - 1);
                 }
             } else {
@@ -128,13 +133,13 @@ public class DataUploadController {
 
                 for (int i = 0; i < data.size(); i++) {
                     String request = dataUploadService.buildRequest(headers, 0, uploadDefinition, documentContext, uploaderRequest, data.get(i));
-                    results.add(request);
+                    results.add(objectMapper.readValue(request, new TypeReference<Map<String, Object>>(){}));
                 }
             }
 
-            return "[" + String.join(",",results) + "]";
+//            return "[" + String.join(",",results) + "]";
 
-//            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             throw e;
         }

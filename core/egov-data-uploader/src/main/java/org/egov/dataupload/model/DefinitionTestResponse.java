@@ -6,6 +6,7 @@ import groovy.transform.ToString;
 import lombok.*;
 import org.egov.common.contract.response.ResponseInfo;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -20,6 +21,6 @@ public class DefinitionTestResponse {
     private ResponseInfo responseInfo;
 
     @JsonProperty("results")
-    public List<String> results;
+    public List<HashMap<String, Object>> results;
 
 }

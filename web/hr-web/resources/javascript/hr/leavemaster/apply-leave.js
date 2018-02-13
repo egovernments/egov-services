@@ -219,18 +219,16 @@ class ApplyLeave extends React.Component {
     let employeeid = getUrlVars()["id"] || _this.state.leaveSet.employee;
     let allHolidayList = _this.state.allHolidayList;
     let hrConfigurations = _this.state.hrConfigurations;
-    let prefixSuffixDays = 0;
-    let enclosingDays = 0;
-    var _days = 0;
+    let encloseHoliday = 0;
 
-    function getEnclosingHoliday(){
+    
     //Calling enclosing Holiday api
     let enclosingHoliday = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "encloseHoliday");
     if (enclosingHoliday || enclosingHoliday == "TRUE" || enclosingHoliday == "true") {
       commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
           console.log("enclosingDays", res.Holiday.length);
-          enclosingDays = res.Holiday.length;
+          encloseHoliday = res.Holiday.length;
           _this.setState({
             encloseHoliday: res.Holiday
           });
@@ -241,15 +239,13 @@ class ApplyLeave extends React.Component {
         encloseHoliday: ""
       });
     }
-  }
 
-  function getPrefixSuffix(){
     //calling PrefixSuffix api
     let includePrefixSuffix = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "includePrefixSuffix");
     if (includePrefixSuffix || includePrefixSuffix == "TRUE" || includePrefixSuffix == "true") {
       commonApiPost("egov-common-masters", "holidays", "_searchprefixsuffix", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
-          console.log("prefixSuffixDays", res.Holiday[0].noOfDays);
+          console.log("enclosingDays", res.Holiday.length);
           prefixSuffixDays = res.Holiday[0].noOfDays;
           _this.setState({
             perfixSuffix: res.Holiday[0]
@@ -261,9 +257,6 @@ class ApplyLeave extends React.Component {
         perfixSuffix: ""
       });
     }
-  }
-
-  function calculateWorkingDays(){
 
     var holidayList = [], m1 = fromDate.split("/")[1], m2 = asOnDate.split("/")[1], y1 = fromDate.split("/")[2], y2 = asOnDate.split("/")[2];
     for (var i = 0; i < allHolidayList.length; i++) {
@@ -272,7 +265,7 @@ class ApplyLeave extends React.Component {
       }
     }
     //Calculate working days
-    
+    var _days = 0;
     var parts1 = $('#fromDate').val().split("/");
     var parts2 = $('#toDate').val().split("/");
     var startDate = new Date(parts1[2], (+parts1[1] - 1), parts1[0]);
@@ -299,21 +292,17 @@ class ApplyLeave extends React.Component {
           _days++;
       }
     }
-  }
-  
-  $.when(getPrefixSuffix(), getEnclosingHoliday(), calculateWorkingDays()).then(
 
-   function(){ 
-    console.log("prefixSuffixDays ", prefixSuffixDays," ", enclosingDays ); 
+
+   setTimeout( function(){
+     console.log("prefixSuffixDays ", prefixSuffixDays," ", enclosingDays );
     _this.setState({
       leaveSet: {
         ..._this.state.leaveSet,
         leaveDays: _days,
-        totalWorkingDays : _days + prefixSuffixDays + enclosingDays
+        totalWorkingDays: _days + prefixSuffixDays +  enclosingDays
       }
-    });}
-
-  );
+    })},500);
 
 
     commonApiPost("hr-leave", "eligibleleaves", "_search", {

@@ -73,18 +73,7 @@ public class PerformanceAssessmentRowMapper {
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			 
 			if(!kpiMap.containsKey(rs.getString("code"))) { 
-				KPI kpi = new KPI();
-				kpi.setId(rs.getString("id"));
-				kpi.setName(rs.getString("name"));
-				kpi.setCode(rs.getString("code"));
-				kpi.setDepartmentId(rs.getLong("departmentId"));
-				kpi.setFinancialYear(rs.getString("financialYear"));
-				kpi.setInstructions(rs.getString("instructions"));
-				kpi.setPeriodicity(rs.getString("periodicity"));
-				kpi.setTargetType(rs.getString("targetType"));
-				kpi.setAuditDetails(addAuditDetails(rs));
-				kpi.setCategoryId(rs.getString("categoryId"));
-				kpiMap.put(rs.getString("code"), kpi); 
+				kpiMap.put(rs.getString("code"), constructKpiObject(rs)); 
 			}
 			
 			if(!kpiTargetMap.containsKey(rs.getString("code"))) { 
@@ -96,6 +85,25 @@ public class PerformanceAssessmentRowMapper {
 				targetList.add(constructKpiTargetObject(rs));
 			}
 			return null;
+		}
+		
+		private KPI constructKpiObject(ResultSet rs) {
+			KPI kpi = new KPI();
+			try { 
+				kpi.setId(rs.getString("id"));
+				kpi.setName(rs.getString("name"));
+				kpi.setCode(rs.getString("code"));
+				kpi.setDepartmentId(rs.getLong("departmentId"));
+				kpi.setFinancialYear(rs.getString("financialYear"));
+				kpi.setInstructions(rs.getString("instructions"));
+				kpi.setPeriodicity(rs.getString("periodicity"));
+				kpi.setTargetType(rs.getString("targetType"));
+				kpi.setAuditDetails(addAuditDetails(rs));
+				kpi.setCategoryId(rs.getString("categoryId"));
+			} catch (Exception e) { 
+				log.error("Encountered an exception while creating the KPI Object " + e );
+			}
+			return kpi;
 		}
 		
 		private KpiTarget constructKpiTargetObject(ResultSet rs) { 
@@ -138,7 +146,6 @@ public class PerformanceAssessmentRowMapper {
 			value.setTenantId(rs.getString("tenantId"));
 			List<KpiValue> kpiValueList = new ArrayList<>();
 			kpiValueList.add(value);
-			// valueList.setKpiValue(value);
 			return valueList;
 		}
 	}
@@ -150,17 +157,7 @@ public class PerformanceAssessmentRowMapper {
 		public KpiTarget mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			
 			if(!kpiMap.containsKey(rs.getString("code"))) { 
-				KPI kpi = new KPI(); 
-				kpi.setId(rs.getString("id"));
-				kpi.setName(rs.getString("name"));
-				kpi.setCode(rs.getString("code"));
-				kpi.setDepartmentId(rs.getLong("departmentId"));
-				kpi.setFinancialYear(rs.getString("financialYear"));
-				kpi.setInstructions(rs.getString("instructions"));
-				kpi.setPeriodicity(rs.getString("periodicity"));
-				kpi.setTargetType(rs.getString("targetType"));
-				kpi.setCategoryId(rs.getString("categoryId"));
-				kpiMap.put(rs.getString("code"), kpi); 
+				kpiMap.put(rs.getString("code"), constructKpiObject(rs)); 
 			}
 			
 			KpiTarget target = new KpiTarget(); 
@@ -183,6 +180,24 @@ public class PerformanceAssessmentRowMapper {
 				target.setTargetDescription(rs.getString("targetValue"));
 			}
 			return target;
+		}
+		
+		private KPI constructKpiObject(ResultSet rs) {
+			KPI kpi = new KPI();
+			try { 
+				kpi.setId(rs.getString("id"));
+				kpi.setName(rs.getString("name"));
+				kpi.setCode(rs.getString("code"));
+				kpi.setDepartmentId(rs.getLong("departmentId"));
+				kpi.setFinancialYear(rs.getString("financialYear"));
+				kpi.setInstructions(rs.getString("instructions"));
+				kpi.setPeriodicity(rs.getString("periodicity"));
+				kpi.setTargetType(rs.getString("targetType"));
+				kpi.setCategoryId(rs.getString("categoryId"));
+			} catch (Exception e) { 
+				log.error("Encountered an exception while creating the KPI Object " + e );
+			}
+			return kpi;
 		}
 	}
 	
@@ -219,25 +234,12 @@ public class PerformanceAssessmentRowMapper {
 				reportMap.put(rs.getString("valueTenantId"), secondMap);
 			}
 			if(!kpiValueDetailMap.containsKey(rs.getString("detailValueId"))) { 
-				KpiValueDetail detail = new KpiValueDetail();
-				detail.setId(rs.getString("valueDetailId"));
-				log.info("VALUE DETAIL ID IS NOW AS : "  + rs.getString("valueDetailId"));
-				detail.setValue(rs.getString("value"));
-				detail.setId(rs.getString("detailId"));
-				detail.setPeriod(rs.getString("period"));
-				detail.setRemarks(rs.getString("valueDetailRemarks"));
 				List<KpiValueDetail> detailList = new ArrayList<>(); 
-				detailList.add(detail);
+				detailList.add(prepareDetailObject(rs));
 				kpiValueDetailMap.put(rs.getString("detailValueId"), detailList); 
 			} else { 
 				List<KpiValueDetail> detailList  = kpiValueDetailMap.get(rs.getString("detailValueId")) ;
-				KpiValueDetail detail = new KpiValueDetail(); 
-				detail.setId(rs.getString("valueDetailId"));
-				log.info("VALUE DETAIL ID IS NOW AS : "  + rs.getString("valueDetailId"));
-				detail.setValue(rs.getString("value"));
-				detail.setId(rs.getString("detailId"));
-				detail.setPeriod(rs.getString("period"));
-				detailList.add(detail);
+				detailList.add(prepareDetailObject(rs));
 			}
 			
 			if(StringUtils.isBlank(rs.getString("detailValueId"))) { 
@@ -252,6 +254,19 @@ public class PerformanceAssessmentRowMapper {
 				valueDetailMap.put(rs.getString("valueKpiCode").concat("_" + rs.getString("valueTenantId")).concat("_"+ rs.getString("valueFinYear")), valueDetailList);
 			}
 			return null; 
+		}
+		
+		private KpiValueDetail prepareDetailObject(ResultSet rs) { 
+			KpiValueDetail detail = new KpiValueDetail();
+			try { 
+				detail.setId(rs.getString("valueDetailId"));
+				detail.setValue(rs.getString("value"));
+				detail.setPeriod(rs.getString("period"));
+				detail.setRemarks(rs.getString("valueDetailRemarks"));
+			} catch(Exception e) { 
+				log.error("Encountered an exception while creating the KPI Value Detail Object" + e);
+			}
+			return detail;
 		}
 		
 		private KpiValue addKpiValue(ResultSet rs) {

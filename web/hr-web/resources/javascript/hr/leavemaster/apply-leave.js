@@ -721,7 +721,7 @@ class ApplyLeave extends React.Component {
                   </div>
                   <div className="col-sm-6">
 
-                    <input type="number" id="totalWorkingDays" name="totalWorkingDays" value={leaveDays + perfixSuffix? 0 : perfixSuffix.noOfDays + encloseHoliday ? 0 : encloseHoliday.length }
+                    <input type="number" id="totalWorkingDays" name="totalWorkingDays" value={leaveDays + perfixSuffix ? perfixSuffix.noOfDays : 0 + encloseHoliday ? encloseHoliday.length : 0 }
                       onChange={(e) => { handleChange(e, "totalWorkingDays") }} disabled />
                   </div>
                 </div>

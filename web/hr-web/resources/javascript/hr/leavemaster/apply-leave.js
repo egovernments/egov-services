@@ -255,14 +255,6 @@ class ApplyLeave extends React.Component {
       }
     }
 
-
-    if (_this.state.perfixSuffix) {
-      console.log("Prefi and suffix", _this.state.perfixSuffix);
-      totalWorkingDays = totalWorkingDays + _this.state.perfixSuffix.noOfDays;
-    }
-    if (_this.state.encloseHoliday)
-      totalWorkingDays = totalWorkingDays + _this.state.encloseHoliday.length;
-
     _this.setState({
       leaveSet: {
         ..._this.state.leaveSet,
@@ -304,7 +296,11 @@ class ApplyLeave extends React.Component {
       commonApiPost("egov-common-masters", "holidays", "_search", { tenantId, fromDate, toDate: asOnDate }, function (err, res) {
         if (res) {
           _this.setState({
-            encloseHoliday: res.Holiday
+            encloseHoliday: res.Holiday,
+            leaveSet:{
+              ..._this.state.leaveSet,
+              totalWorkingDays : _this.state.leaveSet.totalWorkingDays + res.Holiday.length
+            }
           });
         }
       });
@@ -321,7 +317,11 @@ class ApplyLeave extends React.Component {
         if (res) {
           console.log("prefixsuffix ", res);
           _this.setState({
-            perfixSuffix: res.Holiday[0]
+            perfixSuffix: res.Holiday[0],
+            leaveSet:{
+              ..._this.state.leaveSet,
+              totalWorkingDays : _this.state.leaveSet.totalWorkingDays + res.Holiday[0].noOfDays
+            }
           });
         }
       });

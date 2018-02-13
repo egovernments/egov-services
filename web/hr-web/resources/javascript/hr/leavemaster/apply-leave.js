@@ -17,7 +17,6 @@ class ApplyLeave extends React.Component {
         "status": "",
         "stateId": "",
         "tenantId": tenantId,
-        "totalWorkingDays": "",
         "workflowDetails": {
           "department": "",
           "designation": "",
@@ -290,20 +289,11 @@ class ApplyLeave extends React.Component {
       }
     }
 
-    var totalWorkingDays = _days;
-
-    if (this.state.perfixSuffix) 
-      totalWorkingDays = totalWorkingDays + this.state.perfixSuffix.noOfDays;
-    
-    if (this.state.encloseHoliday)
-      totalWorkingDays = totalWorkingDays + this.state.encloseHoliday.length;
-
 
     _this.setState({
       leaveSet: {
         ..._this.state.leaveSet,
         leaveDays: _days,
-        totalWorkingDays: totalWorkingDays
       }
     });
 
@@ -468,7 +458,7 @@ class ApplyLeave extends React.Component {
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
     let { leaveSet, perfixSuffix, encloseHoliday } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, reason, leaveType, totalWorkingDays } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, reason, leaveType } = leaveSet;
     let mode = getUrlVars()["type"];
 
     const renderOption = function (list) {
@@ -731,7 +721,7 @@ class ApplyLeave extends React.Component {
                   </div>
                   <div className="col-sm-6">
 
-                    <input type="number" id="totalWorkingDays" name="totalWorkingDays" value={totalWorkingDays}
+                    <input type="number" id="totalWorkingDays" name="totalWorkingDays" value={leaveDays + perfixSuffix? 0 : perfixSuffix.noOfDays + encloseHoliday ? 0 : encloseHoliday.length }
                       onChange={(e) => { handleChange(e, "totalWorkingDays") }} disabled />
                   </div>
                 </div>

@@ -301,7 +301,6 @@ class ApplyLeave extends React.Component {
     _this.setState({
       leaveSet: {
         ..._this.state.leaveSet,
-        [_triggerId]: $("#" + _triggerId).val(),
         leaveDays: _days,
         totalWorkingDays: totalWorkingDays
       }

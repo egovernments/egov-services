@@ -40,6 +40,8 @@
 
 package org.egov.eis.repository.builder;
 
+import java.util.List;
+
 import org.egov.eis.config.ApplicationProperties;
 import org.egov.eis.web.contract.DesignationGetRequest;
 import org.slf4j.Logger;
@@ -47,139 +49,142 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class DesignationQueryBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(DesignationQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(DesignationQueryBuilder.class);
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	private static final String BASE_QUERY = "SELECT id, name, code, description, chartOfAccounts, active, tenantId"
-			+ " FROM egeis_designation";
+    private static final String BASE_QUERY = "SELECT id, name, code, description, chartOfAccounts, active, tenantId"
+            + " FROM egeis_designation";
 
-	@SuppressWarnings("rawtypes")
-	public String getQuery(DesignationGetRequest designationGetRequest, List preparedStatementValues) {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    @SuppressWarnings("rawtypes")
+    public String getQuery(DesignationGetRequest designationGetRequest, List preparedStatementValues) {
+        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, designationGetRequest);
-		addOrderByClause(selectQuery, designationGetRequest);
-		addPagingClause(selectQuery, preparedStatementValues, designationGetRequest);
+        addWhereClause(selectQuery, preparedStatementValues, designationGetRequest);
+        addOrderByClause(selectQuery, designationGetRequest);
+        addPagingClause(selectQuery, preparedStatementValues, designationGetRequest);
 
-		logger.debug("Query : " + selectQuery);
-		return selectQuery.toString();
-	}
+        logger.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			DesignationGetRequest designationGetRequest) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
+            DesignationGetRequest designationGetRequest) {
 
-		if (designationGetRequest.getId() == null && designationGetRequest.getName() == null
-				&& designationGetRequest.getCode() == null && designationGetRequest.getActive() == null
-				&& designationGetRequest.getTenantId() == null)
-			return;
+        if (designationGetRequest.getId() == null && designationGetRequest.getName() == null
+                && designationGetRequest.getCode() == null && designationGetRequest.getActive() == null
+                && designationGetRequest.getTenantId() == null)
+            return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
 
-		if (designationGetRequest.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" tenantId = ?");
-			preparedStatementValues.add(designationGetRequest.getTenantId());
-		}
+        if (designationGetRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" tenantId = ?");
+            preparedStatementValues.add(designationGetRequest.getTenantId());
+        }
 
-		if (designationGetRequest.getId() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" id IN " + getIdQuery(designationGetRequest.getId()));
-		}
-		
-		if (designationGetRequest.getCodes() != null) {
-                    isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-                    selectQuery.append(" code IN " + getCodesQuery(designationGetRequest.getCodes()));
-                }
+        if (designationGetRequest.getId() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" id IN " + getIdQuery(designationGetRequest.getId()));
+        }
 
-		if (designationGetRequest.getName() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" name = ?");
-			preparedStatementValues.add(designationGetRequest.getName());
-		}
+        if (designationGetRequest.getCodes() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" code IN " + getCodesQuery(designationGetRequest.getCodes()));
+        }
 
-		if (designationGetRequest.getCode() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" code = ?");
-			preparedStatementValues.add(designationGetRequest.getCode());
-		}
+        if (designationGetRequest.getName() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" name = ?");
+            preparedStatementValues.add(designationGetRequest.getName());
+        }
 
-		if (designationGetRequest.getActive() != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" active = ?");
-			preparedStatementValues.add(designationGetRequest.getActive());
-		}
-	}
+        if (designationGetRequest.getCode() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" code = ?");
+            preparedStatementValues.add(designationGetRequest.getCode());
+        }
 
-	private void addOrderByClause(StringBuilder selectQuery,
-			DesignationGetRequest designationGetRequest) {
-		String sortBy = (designationGetRequest.getSortBy() == null ? "name"
-				: designationGetRequest.getSortBy());
-		String sortOrder = (designationGetRequest.getSortOrder() == null ? "ASC"
-				: designationGetRequest.getSortOrder());
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-	}
+        if (designationGetRequest.getActive() != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" active = ?");
+            preparedStatementValues.add(designationGetRequest.getActive());
+        }
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			DesignationGetRequest designationGetRequest) {
-		// handle limit(also called pageSize) here
-		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
-		if (designationGetRequest.getPageSize() != null)
-			pageSize = designationGetRequest.getPageSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+    private void addOrderByClause(StringBuilder selectQuery,
+            DesignationGetRequest designationGetRequest) {
+        String sortBy = (designationGetRequest.getSortBy() == null ? "name"
+                : designationGetRequest.getSortBy());
+        String sortOrder = (designationGetRequest.getSortOrder() == null ? "ASC"
+                : designationGetRequest.getSortOrder());
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
 
-		// handle offset here
-		selectQuery.append(" OFFSET ?");
-		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (designationGetRequest.getPageNumber() != null)
-			pageNumber = designationGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
-	}
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
+            DesignationGetRequest designationGetRequest) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT ?");
+        long pageSize = Integer.parseInt(applicationProperties.hrSearchPageSizeDefault());
+        if (designationGetRequest.getPageSize() != null)
+            pageSize = designationGetRequest.getPageSize();
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
 
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 * 
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND");
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (designationGetRequest.getPageNumber() != null)
+            pageNumber = designationGetRequest.getPageNumber() - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to pageNo * pageSize
+    }
 
-		return true;
-	}
+    /**
+     * This method is always called at the beginning of the method so that and is prepended before the field's predicate is
+     * handled.
+     * 
+     * @param appendAndClauseFlag
+     * @param queryString
+     * @return boolean indicates if the next predicate should append an "AND"
+     */
+    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND");
 
-	private static String getIdQuery(List<Long> idList) {
-		StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++) {
-				query.append(", " + idList.get(i));
-			}
-		}
-		return query.append(")").toString();
-	}
-	
-	private static String getCodesQuery(List<String> codeList) {
-            StringBuilder query = new StringBuilder("(");
-            if (codeList.size() >= 1) {
-                    query.append(codeList.get(0).toString());
-                    for (int i = 1; i < codeList.size(); i++) {
-                            query.append(", " + codeList.get(i));
-                    }
+        return true;
+    }
+
+    private static String getIdQuery(List<Long> idList) {
+        StringBuilder query = new StringBuilder("(");
+        if (idList.size() >= 1) {
+            query.append(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++) {
+                query.append(", " + idList.get(i));
             }
-            return query.append(")").toString();
-       }
+        }
+        return query.append(")").toString();
+    }
+
+    private static String getCodesQuery(List<String> codeList) {
+        StringBuilder query = new StringBuilder("(");
+        if (codeList.size() >= 1) {
+            query.append("'");
+            query.append(codeList.get(0).toString());
+            query.append("'");
+            for (int i = 1; i < codeList.size(); i++) {
+                query.append(",");
+                query.append("'");
+                query.append(codeList.get(i));
+                query.append("'");
+            }
+        }
+        return query.append(")").toString();
+    }
 }

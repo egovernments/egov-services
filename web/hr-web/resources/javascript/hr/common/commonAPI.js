@@ -754,7 +754,7 @@ function getDropdown(name, cb, params) {
                 getCommonMaster('egov-common-masters', 'holidaytypes', function (err, res) {
                   if (res) {
                     localStorage.setItem('holidayTypes', JSON.stringify(res['HolidayType']));
-                    cb(res['districtList']);
+                    cb(res['HolidayType']);
                   } else {
                     cb([]);
                   }

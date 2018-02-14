@@ -290,6 +290,9 @@ class EmployeeTransfer extends React.Component {
         }
       }
 
+      getDropdown("districtList", function(res) {
+        checkCountAndCall("districtList", res);
+      });
       getDropdown("assignments_designation", function(res) {
         checkCountAndCall("designationList", res);
       });
@@ -314,9 +317,7 @@ class EmployeeTransfer extends React.Component {
       getDropdown("transferType", function(res) {
         checkCountAndCall("transferList", res);
       });
-      getDropdown("districtList", function(res) {
-        checkCountAndCall("districtList", res);
-      });
+
 
 
       // $('#code,#name,#departmentId,#designationId').prop("disabled", true);

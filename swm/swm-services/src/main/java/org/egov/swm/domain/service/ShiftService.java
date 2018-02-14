@@ -95,7 +95,7 @@ public class ShiftService {
         DesignationResponse designationResponse;
         ShiftSearch search;
         Pagination<Shift> shifts;
-        final DateFormat dateFormat = new SimpleDateFormat("HH:mm a");
+        final DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         for (final Shift shift : shiftRequest.getShifts()) {
 

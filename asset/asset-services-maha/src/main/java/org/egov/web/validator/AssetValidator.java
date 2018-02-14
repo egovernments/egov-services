@@ -329,7 +329,7 @@ public class AssetValidator implements Validator {
 	    	 if(null==landDetails.get(i).getIsEnabled())
 	    		 landDetails.get(i).setIsEnabled(true);
 	    	 //ignoring the duplicate landdetails validatation when code is null
-	    	 if(landDetails.get(i).getIsEnabled()==true && !(landDetails.get(i).getCode().toString()).equalsIgnoreCase("null")) {
+	    	 if(landDetails.get(i).getIsEnabled()==true && !(null==landDetails.get(i).getCode())) {
 	    		 landDetailsList.add(landDetails.get(i));
 	    	 }
 			

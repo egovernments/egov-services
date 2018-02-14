@@ -113,17 +113,17 @@ public class ShiftJdbcRepository extends JdbcRepository {
         if (searchRequest.getShiftStartTime() != null && searchRequest.getShiftEndTime() != null &&
                 searchRequest.getValidate() != null && searchRequest.getValidate()) {
             addAnd(params);
-            params.append("((to_timestamp(targetfrom/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+            params.append("((to_timestamp(shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
                     " (to_timestamp(:shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata')"
                     +
-                    " or (to_timestamp(targetto/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
+                    " or (to_timestamp(shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
                     " (to_timestamp(:shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(:shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata')"
                     +
                     " or (to_timestamp(:shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
-                    " (to_timestamp(targetfrom/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(targetto/1000) AT TIME ZONE 'Asia/Kolkata')"
+                    " (to_timestamp(shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata')"
                     +
                     " or (to_timestamp(:shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata') BETWEEN" +
-                    " (to_timestamp(targetfrom/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(targetto/1000) AT TIME ZONE 'Asia/Kolkata'))");
+                    " (to_timestamp(shiftStartTime/1000) AT TIME ZONE 'Asia/Kolkata') AND (to_timestamp(shiftEndTime/1000) AT TIME ZONE 'Asia/Kolkata'))");
             paramValues.put("shiftStartTime", searchRequest.getShiftStartTime());
             paramValues.put("shiftEndTime", searchRequest.getShiftEndTime());
         }

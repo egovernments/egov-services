@@ -56,15 +56,19 @@ public class DesignationRepository {
 
     private final String designationByCodeUrl;
 
+    private final String designationByCodesUrl;
+
     @Autowired
     public DesignationRepository(final RestTemplate restTemplate,
             @Value("${egov.services.hr_masters.hostname}") final String designationServiceHostname,
             @Value("${egov.services.hr_masters.designations.by.name}") final String designationByNameUrl,
-            @Value("${egov.services.hr_masters.designations.by.code}") final String designationByCodeUrl) {
+            @Value("${egov.services.hr_masters.designations.by.code}") final String designationByCodeUrl,
+            @Value("${egov.services.hr_masters.designations.by.codes}") final String designationByCodesUrl) {
 
         this.restTemplate = restTemplate;
         this.designationByNameUrl = designationServiceHostname + designationByNameUrl;
         this.designationByCodeUrl = designationServiceHostname + designationByCodeUrl;
+        this.designationByCodesUrl = designationServiceHostname + designationByCodesUrl;
     }
 
     public DesignationResponse getDesignationByName(final String designationName, final String tenantId,
@@ -85,6 +89,17 @@ public class DesignationRepository {
         wrapper.setRequestInfo(requestInfo);
 
         return restTemplate.postForObject(designationByCodeUrl, wrapper, DesignationResponse.class, designationCode,
+                tenantId);
+
+    }
+
+    public DesignationResponse getDesignationByCodes(final String designationCodes, final String tenantId,
+            final RequestInfo requestInfo) {
+
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+
+        return restTemplate.postForObject(designationByCodesUrl, wrapper, DesignationResponse.class, designationCodes,
                 tenantId);
 
     }

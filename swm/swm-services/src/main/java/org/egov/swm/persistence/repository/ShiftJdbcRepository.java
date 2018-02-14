@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.apache.commons.lang.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Shift;
@@ -18,6 +19,9 @@ import org.egov.swm.domain.service.DepartmentService;
 import org.egov.swm.domain.service.ShiftTypeService;
 import org.egov.swm.persistence.entity.ShiftEntity;
 import org.egov.swm.web.contract.Department;
+import org.egov.swm.web.contract.Designation;
+import org.egov.swm.web.contract.DesignationResponse;
+import org.egov.swm.web.repository.DesignationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,9 @@ public class ShiftJdbcRepository extends JdbcRepository {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private DesignationRepository designationRepository;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -168,6 +175,7 @@ public class ShiftJdbcRepository extends JdbcRepository {
         if (shiftList != null && !shiftList.isEmpty()) {
             populateShiftTypes(shiftList);
             populateDepartments(shiftList);
+            populateDesignations(shiftList);
         }
 
         page.setPagedData(shiftList);
@@ -188,8 +196,7 @@ public class ShiftJdbcRepository extends JdbcRepository {
             shiftTypeMap.put(vt.getCode(), vt);
 
         for (final Shift shift : shiftList)
-            if (shift.getShiftType() != null && shift.getShiftType().getCode() != null
-                    && !shift.getShiftType().getCode().isEmpty())
+            if (shift.getShiftType() != null && StringUtils.isNotEmpty(shift.getShiftType().getCode()))
                 shift.setShiftType(shiftTypeMap.get(shift.getShiftType().getCode()));
     }
 
@@ -206,8 +213,38 @@ public class ShiftJdbcRepository extends JdbcRepository {
             departmentMap.put(vt.getCode(), vt);
 
         for (final Shift shift : shiftList)
-            if (shift.getDepartment() != null && shift.getDepartment().getCode() != null
-                    && !shift.getDepartment().getCode().isEmpty())
+            if (shift.getDepartment() != null && StringUtils.isNotEmpty(shift.getDepartment().getCode()))
                 shift.setDepartment(departmentMap.get(shift.getDepartment().getCode()));
+    }
+
+    private void populateDesignations(final List<Shift> shiftList) {
+
+        final StringBuffer designationCodes = new StringBuffer();
+        final Map<String, Designation> designationMap = new HashMap<>();
+        String tenantId = null;
+
+        if (shiftList != null && !shiftList.isEmpty())
+            tenantId = shiftList.get(0).getTenantId();
+
+        for (Shift shift : shiftList) {
+            if (shift.getDesignation() != null && StringUtils.isNotEmpty(shift.getDesignation().getCode())) {
+                if (designationCodes.length() >= 1)
+                    designationCodes.append(",");
+
+                designationCodes.append(shift.getDesignation().getCode());
+            }
+        }
+        final DesignationResponse designationResponse = designationRepository.getDesignationByCodes(designationCodes.toString(),
+                tenantId, new RequestInfo());
+
+        if (designationResponse != null && designationResponse.getDesignation() != null
+                && !designationResponse.getDesignation().isEmpty()) {
+            for (final Designation d : designationResponse.getDesignation())
+                designationMap.put(d.getCode(), d);
+        }
+
+        for (final Shift shift : shiftList)
+            if (shift.getDesignation() != null && StringUtils.isNotEmpty(shift.getDesignation().getCode()))
+                shift.setDesignation(designationMap.get(shift.getDesignation().getCode()));
     }
 }

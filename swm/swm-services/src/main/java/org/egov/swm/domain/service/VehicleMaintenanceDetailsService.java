@@ -183,13 +183,11 @@ public class VehicleMaintenanceDetailsService {
                     if (vehicleMaintenanceDetails.getVehicleDowntimeActual() < 1.0 ||
                             vehicleMaintenanceDetails.getVehicleDowntimeActual() > 30.0)
                         throw new CustomException("VehicleDownTime",
-                                "Vehicle DownTime shall be between 1 and 30 days: "
-                                        + vehicleMaintenanceDetails.getVehicleDowntimeActual());
+                                "Vehicle Actual DownTime shall be between 1 and 30 days");
                 } else if (vehicleMaintenanceDetails.getVehicleDowntimeActual() < 0.0 ||
                         vehicleMaintenanceDetails.getVehicleDowntimeActual() > 720.0)
                     throw new CustomException("VehicleDownTime",
-                            "Vehicle DownTime shall be between 0 and 720 hours: "
-                                    + vehicleMaintenanceDetails.getVehicleDowntimeActual());
+                            "Vehicle Actual DownTime shall be between 0 and 720 hours");
 
             // validation for actual maintenance date
             if (new Date(vehicleMaintenanceDetails.getActualMaintenanceDate()).after(new Date()))

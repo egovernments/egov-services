@@ -40,13 +40,20 @@
 
 package org.egov.eis.web.contract;
 
-import lombok.*;
+import java.util.List;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @Getter
@@ -57,29 +64,31 @@ import java.util.List;
 @EqualsAndHashCode
 public class DesignationGetRequest {
 
-	private List<Long> id;
+    private List<Long> id;
 
-	@Size(min=3, max=100)
-	private String name;
+    @Size(min = 3, max = 100)
+    private String name;
 
-	@Size(max=20)
-	private String code;
+    @Size(max = 20)
+    private String code;
 
-	private Boolean active;
+    private Boolean active;
 
     private String sortBy;
 
-	private String sortOrder;
+    private String sortOrder;
 
-	@NotNull
-	private String tenantId;
+    @NotNull
+    private String tenantId;
 
-	private String departmentCode;
+    private String departmentCode;
 
-	@Min(1)
-	@Max(500)
-	private Short pageSize;
+    @Min(1)
+    @Max(500)
+    private Short pageSize;
 
-	private Short pageNumber;
+    private Short pageNumber;
+
+    private List<String> codes;
 
 }

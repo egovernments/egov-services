@@ -94,6 +94,11 @@ public class DesignationQueryBuilder {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 			selectQuery.append(" id IN " + getIdQuery(designationGetRequest.getId()));
 		}
+		
+		if (designationGetRequest.getCodes() != null) {
+                    isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+                    selectQuery.append(" code IN " + getCodesQuery(designationGetRequest.getCodes()));
+                }
 
 		if (designationGetRequest.getName() != null) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
@@ -166,4 +171,15 @@ public class DesignationQueryBuilder {
 		}
 		return query.append(")").toString();
 	}
+	
+	private static String getCodesQuery(List<String> codeList) {
+            StringBuilder query = new StringBuilder("(");
+            if (codeList.size() >= 1) {
+                    query.append(codeList.get(0).toString());
+                    for (int i = 1; i < codeList.size(); i++) {
+                            query.append(", " + codeList.get(i));
+                    }
+            }
+            return query.append(")").toString();
+       }
 }

@@ -328,28 +328,51 @@ public class AssetValidator implements Validator {
 	     for (int i = 0; i < landDetails.size(); i++) {
 	    	 if(null==landDetails.get(i).getIsEnabled())
 	    		 landDetails.get(i).setIsEnabled(true);
-	    	 if(landDetails.get(i).getIsEnabled()==true) {
+	    	 //ignoring the duplicate landdetails validatation when code is null
+	    	 if(landDetails.get(i).getIsEnabled()==true && !(landDetails.get(i).getCode().toString()).equalsIgnoreCase("null")) {
 	    		 landDetailsList.add(landDetails.get(i));
 	    	 }
 			
 		}
 		}
+		
+		/*for (LandDetail ld : landDetailsList) {
+			System.err.println("ld"+ld);
+			
+		}*/
 		List<String> landDetailCode = new ArrayList<>();
 		if (landDetailsList != null && !landDetailsList.isEmpty()) {
-			/*if(landDetails.get(0).getIsEnabled()==true) {*/
+			if(landDetailsList.get(0).getCode()!=null) {
+				landDetailCode.add(landDetailsList.get(0).getCode());
+				for (int i = 1; i < landDetailsList.size(); i++) {
+					if ((!landDetailCode.isEmpty()) && (!landDetailCode.contains(landDetailsList.get(i).getCode())))
+						landDetailCode.add(landDetailsList.get(i).getCode());
+					else {
+						errorMap.put(applicationProperties.getLandDetails(),
+								"Same landdetails cannot be attached multiple times to the asset");
+					}
+					
+				}
+					
+			}	
+			
+		}
+	/*	if (landDetailsList != null && !landDetailsList.isEmpty()) {
+			
 			landDetailCode.add(landDetailsList.get(0).getCode());
-			//}
+			
 			for (int i = 1; i < landDetailsList.size(); i++) {
-				/*if(landDetails.get(i).getIsEnabled()==true) {*/
+			
 				if ((!landDetailCode.isEmpty()) && (!landDetailCode.contains(landDetailsList.get(i).getCode())))
 					landDetailCode.add(landDetailsList.get(i).getCode());
-				//}
+			
 				else
 					errorMap.put(applicationProperties.getLandDetails(),
 							"Same landdetails cannot be attached multiple times to the asset");
 			}
-		}
 			
+		}
+		*/	
 			}
 		
 	

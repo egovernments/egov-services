@@ -42,6 +42,8 @@ class EmployeeTransfer extends React.Component {
         positionList: [],
         departmentList: [],
         designationList: [],
+        ulbDepartmentList:[],
+        ulbDesignationList:[],
         employees: [],
         promotionList: [],
         wfDesignationList: [],
@@ -57,6 +59,7 @@ class EmployeeTransfer extends React.Component {
       this.addOrUpdate = this.addOrUpdate.bind(this);
       this.setInitialState = this.setInitialState.bind(this);
       this.vacantPositionFun = this.vacantPositionFun.bind(this);
+      this.getUlbDetails = this.getUlbDetails.bind(this);
       this.getUsersFun = this.getUsersFun.bind(this);
       this.makeAjaxUpload = this.makeAjaxUpload.bind(this);
 
@@ -313,6 +316,11 @@ class EmployeeTransfer extends React.Component {
       });
 
 
+      _this.setState({
+          ..._this.state,
+          ulbDepartmentList :_this.state.departmentList,
+          ulbDesignationList :_this.state.designationList
+      });
 
 
       // $('#code,#name,#departmentId,#designationId').prop("disabled", true);
@@ -335,7 +343,8 @@ class EmployeeTransfer extends React.Component {
           var _designation = _this.state.movement.designationAssigned;
           var _department = _this.state.movement.departmentAssigned;
           var _effectiveFrom = _this.state.movement.effectiveFrom;
-          _this.vacantPositionFun(_department, _designation, _effectiveFrom);
+          var _ulb = _this.state.movement.transferedLocation;
+          _this.vacantPositionFun(_department, _designation, _effectiveFrom, _ulb);
         }
       });
 
@@ -389,10 +398,10 @@ class EmployeeTransfer extends React.Component {
       })
     }
 
-    vacantPositionFun(departmentId, designationId, effectiveFrom) {
+    vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
       var _this = this;
       commonApiPost("hr-masters", "vacantpositions", "_search", {
-        tenantId,
+        tenantId: ulb ? "ap."+ulb.toLowerCase() : tenantId,
         departmentId: departmentId,
         designationId: designationId,
         asOnDate: effectiveFrom
@@ -403,6 +412,34 @@ class EmployeeTransfer extends React.Component {
               ..._this.state.movement,
             },
             pNameList: res.Position
+          })
+        }
+      });
+
+    }
+
+    getUlbDetails(ulb){
+      var _this = this;
+      commonApiPost("egov-common-masters", "departments", "_search", {
+        tenantId: ulb ? "ap."+ulb.toLowerCase() : tenantId,
+        pageSize: 500
+      }, function(err, res) {
+        if (res) {
+          _this.setState({
+            ..._this.state,
+            ulbDepartmentList : res.Department
+          })
+        }
+      });
+
+      commonApiPost("hr-masters", "designations", "_search", {
+        tenantId: ulb ? "ap."+ulb.toLowerCase() : tenantId,
+        pageSize: 500
+      }, function(err, res) {
+        if (res) {
+          _this.setState({
+            ..._this.state,
+            ulbDesignationList : res.Designation
           })
         }
       });
@@ -446,14 +483,16 @@ class EmployeeTransfer extends React.Component {
           if (this.state.movement.departmentAssigned && this.state.movement.effectiveFrom) {
             var _department = this.state.movement.departmentAssigned;
             var _date = this.state.movement.effectiveFrom;
-            _this.vacantPositionFun(_department, e.target.value, _date);
+            var _ulb = _this.state.movement.transferedLocation;
+            _this.vacantPositionFun(_department, e.target.value, _date, _ulb);
           }
           break;
         case "departmentAssigned":
           if (this.state.movement.designationAssigned && this.state.movement.effectiveFrom) {
             var _designation = this.state.movement.designationAssigned;
             var _date = this.state.movement.effectiveFrom;
-            _this.vacantPositionFun(e.target.value, _designation, _date);
+            var _ulb = _this.state.movement.transferedLocation;
+            _this.vacantPositionFun(e.target.value, _designation, _date, _ulb);
           }
           break;
         case "department":
@@ -469,6 +508,9 @@ class EmployeeTransfer extends React.Component {
             var _department = this.state.movement.workflowDetails.department;
             _this.getUsersFun(_department, e.target.value);
           }
+          break;
+        case "transferedLocation":
+          _this.getUlbDetails(e.target.value);
           break;
 
       }
@@ -862,7 +904,7 @@ class EmployeeTransfer extends React.Component {
                             <select id="departmentAssigned" name="departmentAssigned" value={departmentAssigned}
                               onChange={(e)=>{  handleChange(e,"departmentAssigned")}}required>
                               <option value="">Select department</option>
-                              {renderOption(this.state.departmentList)}
+                              {renderOption(this.state.ulbDepartmentList)}
                            </select>
                            </div>
                         </div>
@@ -879,7 +921,7 @@ class EmployeeTransfer extends React.Component {
                                 <select id="designationAssigned" name="designationAssigned" value={designationAssigned}
                                     onChange={(e)=>{handleChange(e,"designationAssigned")}}required>
                                 <option value="">Select Designation</option>
-                                {renderOption(this.state.designationList)}
+                                {renderOption(this.state.ulbDesignationList)}
                                </select>
                           </div>
                         </div>

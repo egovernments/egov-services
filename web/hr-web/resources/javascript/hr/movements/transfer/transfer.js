@@ -283,8 +283,11 @@ class EmployeeTransfer extends React.Component {
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
         count--;
-        if (count == 0)
-          _this.setInitialState(_state);
+        if (count == 0){
+          _state.ulbDepartmentList = _state.departmentList,
+          _state.ulbDesignationList = _state.designationList
+            _this.setInitialState(_state);
+        }
       }
 
       getDropdown("assignments_designation", function(res) {
@@ -313,13 +316,6 @@ class EmployeeTransfer extends React.Component {
       });
       getDropdown("districtList", function(res) {
         checkCountAndCall("districtList", res);
-      });
-
-
-      _this.setState({
-          ..._this.state,
-          ulbDepartmentList :_this.state.departmentList,
-          ulbDesignationList :_this.state.designationList
       });
 
 

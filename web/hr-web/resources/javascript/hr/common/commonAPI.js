@@ -740,7 +740,7 @@ function getDropdown(name, cb, params) {
                 getCommonMaster('tenant', 'v1/tenant', function (err, res) {
                   if (res) {
                     localStorage.setItem('districtList', JSON.stringify(res['tenant']));
-                    cb(res['districtList']);
+                    cb(res['tenant']);
                   } else {
                     cb([]);
                   }

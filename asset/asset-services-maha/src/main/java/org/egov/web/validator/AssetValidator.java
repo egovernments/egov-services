@@ -324,8 +324,11 @@ public class AssetValidator implements Validator {
 		List<LandDetail> landDetails = assetRequest.getAsset().getLandDetails();
 		List<LandDetail> landDetailsList= new ArrayList<>();
 		if(landDetails!=null) {
+				
 	     for (int i = 0; i < landDetails.size(); i++) {
-	    	 if(null!=landDetails.get(i).getIsEnabled() && landDetails.get(i).getIsEnabled()==true) {
+	    	 if(null==landDetails.get(i).getIsEnabled())
+	    		 landDetails.get(i).setIsEnabled(true);
+	    	 if(landDetails.get(i).getIsEnabled()==true) {
 	    		 landDetailsList.add(landDetails.get(i));
 	    	 }
 			

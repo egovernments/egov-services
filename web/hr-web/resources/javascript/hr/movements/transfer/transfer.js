@@ -284,9 +284,9 @@ class EmployeeTransfer extends React.Component {
         _state[key] = res;
         count--;
         if (count == 0){
-          _state.ulbDepartmentList = _state.departmentList,
-          _state.ulbDesignationList = _state.designationList
-            _this.setInitialState(_state);
+          _state.ulbDepartmentList = _state.departmentList;
+          _state.ulbDesignationList = _state.designationList;
+          _this.setInitialState(_state);
         }
       }
 
@@ -381,10 +381,28 @@ class EmployeeTransfer extends React.Component {
 
     getUsersFun(departmentId, designationId) {
       var _this = this;
+
+      var asOnDate = new Date();
+      var dd = asOnDate.getDate();
+      var mm = asOnDate.getMonth() + 1; //January is 0!
+      var yyyy = asOnDate.getFullYear();
+
+      if (dd < 10) {
+        dd = '0' + dd
+      }
+
+      if (mm < 10) {
+        mm = '0' + mm
+      }
+
+      asOnDate = dd + '/' + mm + '/' + yyyy;
+
       commonApiPost("hr-employee", "employees", "_search", {
         tenantId,
         departmentId,
-        designationId
+        designationId,
+        asOnDate,
+        active:true
       }, function(err, res) {
         if (res) {
           _this.setState({

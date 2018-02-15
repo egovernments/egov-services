@@ -42,8 +42,8 @@ public class MeasurementBookValidator {
 		final RequestInfo requestInfo = measurementBookRequest.getRequestInfo();
 		Map<String, String> messages = new HashMap<>();
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
-			LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAById(
-					Arrays.asList(measurementBook.getLetterOfAcceptanceEstimate().getLetterOfAcceptance()),
+			LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAEstimateById(
+					measurementBook.getLetterOfAcceptanceEstimate().getId(),
 					measurementBook.getTenantId(), requestInfo);
 			WorkOrderResponse workOrderResponse = workOrderRepository.searchWorkOrder(
 					Arrays.asList(measurementBook.getLetterOfAcceptanceEstimate().getLetterOfAcceptance()),

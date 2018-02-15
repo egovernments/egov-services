@@ -64,12 +64,11 @@ public class LetterOfAcceptanceRepository {
 
     }
     
-	public LetterOfAcceptanceResponse searchLOAById(List<String> idList, String tenantId,
+	public LetterOfAcceptanceResponse searchLOAEstimateById(String loaEstimateId, String tenantId,
 			RequestInfo requestInfo) {
 		String status = CommonConstants.STATUS_APPROVED;
-		String ids = idList != null ? String.join(",", idList) : "";
 		return restTemplate.postForObject(loaSearchUrl, requestInfo, LetterOfAcceptanceResponse.class, tenantId,
-				ids, status);
+                loaEstimateId, status);
 	}
 
     public LetterOfAcceptanceResponse createUpdateLOA(LetterOfAcceptanceRequest letterOfAcceptanceRequest, Boolean isUpdate) {

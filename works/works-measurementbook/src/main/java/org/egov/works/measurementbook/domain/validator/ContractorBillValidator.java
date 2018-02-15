@@ -74,8 +74,8 @@ public class ContractorBillValidator {
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
             if (isNew) {
                 // For LOA exists or not
-                LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAById(
-                        Arrays.asList(contractorBill.getLetterOfAcceptanceEstimate().getLetterOfAcceptance()),
+                LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAEstimateById(
+                        contractorBill.getLetterOfAcceptanceEstimate().getId(),
                         contractorBill.getTenantId(), contractorBillRequest.getRequestInfo());
                 if (letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty()) {
                     messages.put(Constants.KEY_MB_LOA_DOES_NOT_EXIST, Constants.MSG_MB_LOA_DOES_NOT_EXIST);
@@ -315,7 +315,7 @@ public class ContractorBillValidator {
             RequestInfo requestInfo) {
         List<String> mbIds = new ArrayList<String>();
         for (MeasurementBookForContractorBill mbContractorBill : contractorBill.getMbForContractorBill()) {
-            mbIds.add(mbContractorBill.getId());
+            mbIds.add(mbContractorBill.getMeasurementBook().getId());
         }
         List<MeasurementBook> measurementBooks = searchMeasurementBookByIds(contractorBill, requestInfo, mbIds);
         if (measurementBooks != null && mbIds.size() != measurementBooks.size())

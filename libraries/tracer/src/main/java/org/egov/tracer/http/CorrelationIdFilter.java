@@ -58,16 +58,21 @@ public class CorrelationIdFilter implements Filter {
         throws IOException, ServletException {
         RequestContext.clear();
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        if (isBodyCompatibleForParsing(httpRequest)) {
-            final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
-            setCorrelationIdFromBody(wrappedRequest);
+        final MultiReadRequestWrapper wrappedRequest = new MultiReadRequestWrapper(httpRequest);
+        try{
             logRequestURI(httpRequest);
             logRequestBody(wrappedRequest);
+            
+	        	if (isBodyCompatibleForParsing(httpRequest)) {
+	            setCorrelationIdFromBody(wrappedRequest);
+	        } else {
+	            setCorrelationIdFromHeader(httpRequest);
+	            logRequestURI(httpRequest);
+	        }
+        } catch (IOException ex) {
+        	 ex.printStackTrace();
+        } finally {
             filterChain.doFilter(wrappedRequest, servletResponse);
-        } else {
-            setCorrelationIdFromHeader(httpRequest);
-            logRequestURI(httpRequest);
-            filterChain.doFilter(servletRequest, servletResponse);
         }
         logResponse(servletResponse);
     }
@@ -116,14 +121,17 @@ public class CorrelationIdFilter implements Filter {
         return httpRequest.getHeader(RequestHeader.CORRELATION_ID);
     }
 
-    private RequestCorrelationId getCorrelationIdFromRequestBody(MultiReadRequestWrapper httpRequest) {
+    private RequestCorrelationId getCorrelationIdFromRequestBody(MultiReadRequestWrapper httpRequest) throws IOException {
         try {
             @SuppressWarnings("unchecked") final HashMap<String, Object> requestBody = (HashMap<String, Object>)
                 objectMapper.readValue(httpRequest.getInputStream(), HashMap.class);
             return new RequestCorrelationId(requestBody);
         } catch (IOException e) {
             log.error(FAILED_TO_DESERIALIZE_MESSAGE, e);
-            return new RequestCorrelationId(null);
+            
+            // We can't return the correlation in body when it is not parsable
+            throw e;
+            //return new RequestCorrelationId(null);
         }
     }
 

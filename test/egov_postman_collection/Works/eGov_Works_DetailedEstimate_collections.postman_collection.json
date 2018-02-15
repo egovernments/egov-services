@@ -1,0 +1,706 @@
+{
+	"info": {
+		"name": "eGov_Works_DetailedEstimate_collections",
+		"_postman_id": "538c19f1-7614-d178-e7a2-cf40f9174d8d",
+		"description": "Detailed Estimate: Create/Search/Update API's",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Detailed Estimate",
+			"description": "",
+			"item": [
+				{
+					"name": "Login as Clerk",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Tenant ID is default\"] = jsonData.UserRequest.roles[0].tenantId;",
+									"",
+									"postman.setNextRequest(\"Create Estimate\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "clerk",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "WorksMdmsData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "35106fb0-a311-4d11-a980-9b270c668b77",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var uom = jsonData.MdmsRes[\"common-masters\"].Uom;",
+									"var dep = jsonData.MdmsRes[\"common-masters\"].Department;",
+									"var typeOfWork = jsonData.MdmsRes.works.TypeOfWork;",
+									"var scheduleCategory = jsonData.MdmsRes.works.ScheduleCategory;",
+									"var referenceType = jsonData.MdmsRes.works.ReferenceType;",
+									"var budgetGroup = jsonData.MdmsRes.works.BudgetGroup;",
+									"var modeOfAllotment = jsonData.MdmsRes.works.ModeOfAllotment;",
+									"var natureOfWork = jsonData.MdmsRes.works.NatureOfWork;",
+									"",
+									"var uomCode = uom[Math.floor(Math.random() * uom.length)];",
+									"var depCode = dep[Math.floor(Math.random() * dep.length)];",
+									"var typeOfWorkCode = typeOfWork[Math.floor(Math.random() * typeOfWork.length)];",
+									"var scheduleCategoryCode = scheduleCategory[Math.floor(Math.random() * scheduleCategory.length)];",
+									"var referenceTypeCode = referenceType[Math.floor(Math.random() * referenceType.length)];",
+									"var budgetGroupCode = budgetGroup[Math.floor(Math.random() * budgetGroup.length)];",
+									"var modeOfAllotmentCode = modeOfAllotment[Math.floor(Math.random() * modeOfAllotment.length)];",
+									"var natureOfWorkCode = natureOfWork[Math.floor(Math.random() * natureOfWork.length)];",
+									"",
+									"var tW = \"\";",
+									"for(var j=0; j<typeOfWork.length; j++){",
+									"    if(typeOfWork[j].parent == null){",
+									"        pm.environment.set(\"typeOfWork\", typeOfWork[j].code);",
+									"        tW = typeOfWork[j].code;",
+									"        break;",
+									"    }",
+									"}",
+									"console.log(tW);",
+									"for (var i=0; i<typeOfWork.length; i++){",
+									"    if(typeOfWork[i].parent !== null && typeOfWork[i].parent === tW){",
+									"    pm.environment.set(\"subTypeOfWork\", typeOfWork[i].code);",
+									"    break;",
+									"    }",
+									"}",
+									"",
+									"pm.environment.set(\"uom\", uomCode.code);",
+									"pm.environment.set(\"dep\", depCode.code);",
+									"pm.environment.set(\"scheduleCategory\", scheduleCategoryCode.code);",
+									"pm.environment.set(\"referenceType\", referenceTypeCode.code);",
+									"pm.environment.set(\"budgetGroup\", budgetGroupCode.name);",
+									"pm.environment.set(\"modeOfAllotment\", modeOfAllotmentCode.code);",
+									"pm.environment.set(\"natureOfWork\", natureOfWorkCode.name);",
+									"",
+									"postman.setNextRequest(\"Create AE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \n  \"RequestInfo\":{  \n     \"apiId\":\"works-services\",\n      \"ver\":null,\n      \"ts\":null,\n      \"action\":null,\n      \"did\":null,\n      \"key\":null,\n      \"msgId\":\"search with from and to values\",\n      \"authToken\":\"{{access_token}}\",\n      \"tenantId\": \"{{tenantId}}\"\n   },\n   \"MdmsCriteria\":{  \n     \"tenantId\":\"{{tenantId}}\",\n      \"moduleDetails\":[  \n        {  \n           \"moduleName\":\"works\",\n            \"masterDetails\":[  \n              {  \n                 \"name\":\"ScheduleCategory\"\n               },\n                {  \n                 \"name\":\"TypeOfWork\"\n               },\n               {\n               \"name\": \"Overhead\"\n               },\n               {\n                 \"name\": \"Remarks\"\n               },\n               {\n                 \"name\": \"ReferenceType\"\n               },\n               {\n                 \"name\": \"BudgetGroup\"\n               },\n               {\n                 \"name\": \"NatureOfWork\"\n               },\n               {\n                 \"name\": \"ModeOfAllotment\"\n               },\n               {\n                 \"name\": \"ContractorClass\"\n               },\n               {\n                 \"name\": \"WorksStatus\"\n               }\n            ]\n         },\n         {  \n           \"moduleName\":\"common-masters\",\n            \"masterDetails\":[  \n              {  \n                 \"name\":\"Department\"\n               },\n               {\n                  \"name\":\"Uom\"\n               }\n            ]\n         }\n      ]\n   }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/egov-mdms-service/v1/_search",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"egov-mdms-service",
+								"v1",
+								"_search"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "76607aef-9aa0-48a0-89da-42dee0d0f3ef",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var details = jsonData.abstractEstimates[0].abstractEstimateDetails;",
+									"pm.environment.set(\"adminSanctionDate\", jsonData.abstractEstimates[0].adminSanctionDate);",
+									"pm.environment.set(\"projectCode\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].projectCode.code);",
+									"postman.setNextRequest(\"Logout as CE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{devAEid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{devAEid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Project Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\":{\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"search\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n    }\n }"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/projectcodes/_search?tenantId={{tenantId}}&codes={{projectCode}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"projectcodes",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "codes",
+									"value": "{{projectCode}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Search SOR",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3c79ec14-f7ff-4356-9307-43aff7ec170a",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"sorCode\", jsonData.scheduleOfRates[0].code);",
+									"pm.environment.set(\"sorId\", jsonData.scheduleOfRates[0].id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"RequestInfo\":{\r\n  \"apiId\": \"works-masters\",\r\n  \"ver\": \"1.0\",\r\n  \"ts\": 0,\r\n  \"action\": \"search\",\r\n  \"did\": \"1\",\r\n  \"key\": \"string\",\r\n  \"msgId\": \"string\",\r\n  \"requesterId\": \"clerk\",\r\n  \"authToken\": \"{{access_token}}\"\r\n  }\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-masters/v1/scheduleofrates/_search?tenantId={{tenantId}}&sorCodes=SOR63",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-masters",
+								"v1",
+								"scheduleofrates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "sorCodes",
+									"value": "SOR63",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search SOR master data"
+					},
+					"response": []
+				},
+				{
+					"name": "Create DE Normal",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d4c04cdc-7de7-4bba-8e85-2f6af2301800",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = today.getTime();",
+									"var year = today.getFullYear();",
+									"",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.globals.get(\"projectCode\");",
+									"pm.globals.get(\"sorCode\");",
+									"pm.globals.get(\"sorId\");",
+									"pm.globals.get(\"AEid\");",
+									"pm.globals.get(\"AEamount\");",
+									"var aeNum = pm.globals.get(\"AEnumber\");",
+									"var aeProjectCode = pm.globals.get(\"AEprojectCode\");",
+									"pm.environment.set(\"aeNum\", aeNum);",
+									"pm.environment.set(\"aeProjectCode\", aeProjectCode);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a5970272-e33a-4705-879d-652c41e4df06",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var de = jsonData.detailedEstimates;",
+									"",
+									"pm.environment.set(\"detailedEstimates\", JSON.stringify(de));",
+									"pm.environment.set(\"DEid\", jsonData.detailedEstimates[0].id);",
+									"pm.environment.set(\"DEnumber\", jsonData.detailedEstimates[0].estimateNumber);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"1427784646000\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"detailedEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"estimateDate\": {{adminSanctionDate}},\n      \"nameOfWork\": \"Detailed Estimation for the proposed work\",\n      \"description\": \"Detailed Estimation for the proposed work\",\n      \"department\": {\n        \"code\": \"{{dep}}\"\n      },\n      \"workValue\": 900,\n      \"estimateValue\": 1000,\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"code\": \"{{modeOfAllotment}}\"\n      },\n      \"worksType\": {\n        \"code\": \"{{typeOfWork}}\"\n      },\n      \"worksSubtype\": {\n        \"code\": \"{{subTypeOfWork}}\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"{{natureOfWork}}\"\n      },\n      \"ward\": {\n        \"code\": \"172\"\n      },\n      \"location\": \"Roha, MH\",\n      \"workCategory\": \"NON_SLUM\",\n      \"workOrderCreated\": false,\n      \"billsCreated\": false,\n      \"spillOverFlag\": false,\n      \"abstractEstimateDetail\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": \"{{devAEid}}\",\n        \"nameOfWork\": \"Project 1\",\n        \"estimateAmount\": \"{{devAEamount}}\",\n        \"projectCode\": {\n          \"code\": \"{{devAEprojectCode}}\"\n        }\n      },\n      \"documentDetails\": [],\n      \"assets\": [],\n      \"multiYearEstimates\": [],\n      \"estimateActivities\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"scheduleOfRate\": {\n            \"id\": \"fbbba5b04c254d65aeaafefe63c48105\",\n            \"tenantId\": \"{{tenantId}}\",\n            \"code\": \"SOR111\"\n          },\n          \"nonSor\": null,\n          \"uom\": {\n            \"code\": \"{{uom}}\"\n          },\n          \"unitRate\": 225,\n          \"estimateRate\": 225,\n          \"quantity\": 2,\n          \"serviceTaxPerc\": 0,\n          \"revisionType\": \"NON_TENDERED_ITEM\",\n          \"estimateMeasurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 1,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 1: with SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 2,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 2: with SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            }\n          ],\n          \"deleted\": false\n        },\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"scheduleOfRate\": null,\n          \"nonSor\": {\n            \"tenantId\": \"{{tenantId}}\",\n            \"description\": \"Man Power\",\n            \"uom\": {\n              \"code\": \"NOS\"\n            },\n            \"deleted\": false\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"unitRate\": 225,\n          \"quantity\": 2,\n          \"estimateRate\": 225,\n          \"serviceTaxPerc\": 0,\n          \"revisionType\": \"NON_TENDERED_ITEM\",\n          \"estimateMeasurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 1,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 1: with NON-SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"slNo\": 2,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 2: with NON-SOR\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1\n            }\n          ],\n          \"deleted\": false\n        }\n      ],\n      \"estimateOverheads\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"overhead\": {\n            \"accountCode\": \"123\",\n            \"name\": \"TAXFake\",\n            \"code\": \"TAXFake\",\n            \"tenantId\": \"{{tenantId}}\"\n          },\n          \"amount\": 100\n        }\n      ],\n      \"detailedEstimateDeductions\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"chartOfAccounts\": {\n            \"glcode\": \"1981\"\n          },\n          \"amount\": 50\n        }\n      ],\n      \"function\": {\n        \"code\": \"00\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUP\"\n      },\n      \"budgetGroup\": {\n        \"name\": \"{{budgetGroup}}\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_create"
+							]
+						},
+						"description": "Create Detailed Estimate with workflow"
+					},
+					"response": []
+				},
+				{
+					"name": "Search DE Normal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0fcf8468-8471-406d-80a2-5be6ae868ad6",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var deID = pm.environment.get(\"DEid\");",
+									"var deNum = pm.environment.get(\"DEnumber\");",
+									"var de = pm.environment.get(\"detailedEstimates\");",
+									"",
+									"pm.test(\"Detailed Estimate matches ID\", function () {",
+									"    pm.expect(deID).to.include(jsonData.detailedEstimates[0].id);",
+									"});",
+									"pm.test(\"Detailed Estimate matches Number\", function () {",
+									"    pm.expect(deNum).to.include(jsonData.detailedEstimates[0].estimateNumber);",
+									"});",
+									"if(jsonData.detailedEstimates[0].status.code == \"CREATED\"){",
+									"",
+									"    pm.test(\"Detailed Estimate\"+\" CREATED \"+\"matches Status\", function () {",
+									"    pm.expect(\"CREATED\").to.include(jsonData.detailedEstimates[0].status.code);",
+									"    });",
+									"    // jsonData.detailedEstimates[0].status.tenantId = \"{{tenantId}}\";",
+									"    // jsonData.detailedEstimates[0].status.code = \"CHECKED\";",
+									"    // pm.environment.set(\"detailedEstimates\", de);",
+									"",
+									"}",
+									"if(jsonData.detailedEstimates[0].status.code == \"CHECKED\"){",
+									"    ",
+									"    pm.test(\"Detailed Estimate\"+\" CHECKED \"+\"matches Status\", function () {",
+									"    pm.expect(\"CHECKED\").to.include(jsonData.detailedEstimates[0].status.code);",
+									"    });",
+									"    // if(de[0].status.code === \"CHECKED\"){",
+									"    //     de[0].status.tenantId = \"{{tenantId}}\";",
+									"    //     de[0].status.code = \"TECHNICAL_SANCTIONED\";",
+									"    //     de[0].estimateTechnicalSanctions = [{}];",
+									"    //     de[0].estimateTechnicalSanctions[0].tenantId = \"{{tenantId}}\";",
+									"    //     de[0].estimateTechnicalSanctions[0].technicalSanctionDate = 1516687566000;",
+									"    //     pm.environment.set(\"detailedEstimates\", de);",
+									"    // }",
+									"}",
+									"if(jsonData.detailedEstimates[0].status.code == \"TECHNICAL_SANCTIONED\"){",
+									"    ",
+									"    pm.test(\"Detailed Estimate\"+\" TECHNICAL_SANCTIONED \"+\"matches Status\", function () {",
+									"    pm.expect(\"TECHNICAL_SANCTIONED\").to.include(jsonData.detailedEstimates[0].status.code);",
+									"    });",
+									"    pm.globals.set(\"DEid\", jsonData.detailedEstimates[0].id);",
+									"    pm.globals.set(\"DEnum\", jsonData.detailedEstimates[0].estimateNumber);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_search?tenantId={{tenantId}}&ids={{DEid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{DEid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "Update DE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "07a0c84c-b16f-4aad-a5e2-d689f1758e78",
+								"type": "text/javascript",
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"// var today = new Date();",
+									"// var epoch = Math.round(today.getTime()/1000);",
+									"// var year = today.getFullYear();",
+									"// var tenant = pm.environment.get(\"tenantId\");",
+									"// var de = jsonData.detailedEstimates;",
+									"",
+									"// if(de[0].status.code === \"CHECKED\"){",
+									"//     de[0].status.tenantId = tenant;",
+									"//     de[0].status.code = \"TECHNICAL_SANCTIONED\";",
+									"//     de[0].estimateTechnicalSanctions[0].technicalSanctionNumber = tenant+\"/DE/TS/\"+num1;",
+									"//     de[0].estimateTechnicalSanctions[0].technicalSanctionDate = \"1516687566000\";",
+									"//     de[0].estimateTechnicalSanctions[0].technicalSanctionBy.userName = \"clerk\";",
+									"//     de[0].estimateTechnicalSanctions[0].technicalSanctionBy.tenantId = tenant;",
+									"// }",
+									"// pm.environment.set(\"detailedEstimates\", JSON.stringify(de));",
+									"// pm.test(\"Status code is 200\", function () {",
+									"//     pm.response.to.have.status(200);",
+									"// });"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5a9f88cb-ef50-4f57-ab77-24ea10adea56",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"userName\": \"clerk\"\n    }\n  },\n  \"detailedEstimates\": [\n    {\n      \"id\": \"1cf9a85368c34aff83b8381a16d72631\",\n      \"tenantId\": \"default\",\n      \"estimateNumber\": \"defa/DE/PHS/000078/2017-18\",\n      \"estimateDate\": 1516687566000,\n      \"nameOfWork\": \"Repairs\",\n      \"description\": \"Detailed Estimation for the proposed work\",\n      \"department\": {\n        \"id\": null,\n        \"name\": null,\n        \"code\": \"ACC\",\n        \"active\": null,\n        \"tenantId\": null\n      },\n      \"adminSanctionNumber\": null,\n      \"adminSanctionDate\": null,\n      \"adminSanctionBy\": null,\n      \"status\": {\n        \"tenantId\": \"default\",\n        \"code\": \"TECHNICAL_SANCTIONED\",\n        \"description\": null,\n        \"moduleType\": null,\n        \"orderNumber\": null\n      },\n      \"workValue\": 900,\n      \"estimateValue\": 1000,\n      \"projectCode\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"code\": \"defa/WIN/2/4122001/000132/2017-18\",\n        \"name\": null,\n        \"description\": null,\n        \"status\": null,\n        \"active\": false,\n        \"projectValue\": null,\n        \"completionDate\": null,\n        \"deleted\": false,\n        \"auditDetails\": null\n      },\n      \"parent\": null,\n      \"copiedFrom\": null,\n      \"approvedDate\": null,\n      \"approvedBy\": null,\n      \"copiedEstimate\": false,\n      \"beneficiary\": \"GENERAL\",\n      \"modeOfAllotment\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"EProcurement\"\n      },\n      \"worksType\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"Buildings\",\n        \"description\": null,\n        \"active\": null,\n        \"parent\": null\n      },\n      \"worksSubtype\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"OFFICEBUILDINGS\",\n        \"description\": null,\n        \"active\": null,\n        \"parent\": null\n      },\n      \"natureOfWork\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"Addition\",\n        \"expenditureType\": null\n      },\n      \"ward\": {\n        \"id\": null,\n        \"name\": null,\n        \"code\": \"ward_1\",\n        \"tenantId\": null,\n        \"parent\": null,\n        \"boundaryNum\": null,\n        \"fromDate\": null,\n        \"toDate\": null,\n        \"isHistory\": null,\n        \"bndryId\": null,\n        \"localName\": null,\n        \"longitude\": null,\n        \"latitude\": null,\n        \"boundaryType\": null,\n        \"materializedPath\": null,\n        \"children\": null\n      },\n      \"location\": \"Roha, MH\",\n      \"latitude\": null,\n      \"longitude\": null,\n      \"workCategory\": \"NON_SLUM\",\n      \"locality\": {\n        \"id\": null,\n        \"name\": null,\n        \"code\": \"locality_1\",\n        \"tenantId\": null,\n        \"parent\": null,\n        \"boundaryNum\": null,\n        \"fromDate\": null,\n        \"toDate\": null,\n        \"isHistory\": null,\n        \"bndryId\": null,\n        \"localName\": null,\n        \"longitude\": null,\n        \"latitude\": null,\n        \"boundaryType\": null,\n        \"materializedPath\": null,\n        \"children\": null\n      },\n      \"councilResolutionNumber\": null,\n      \"councilResolutionDate\": null,\n      \"workOrderCreated\": false,\n      \"billsCreated\": false,\n      \"spillOverFlag\": false,\n      \"grossAmountBilled\": null,\n      \"cancellationReason\": null,\n      \"cancellationRemarks\": null,\n      \"totalIncludingRE\": 1000,\n      \"abstractEstimateDetail\": {\n        \"id\": \"819146d05cc8472088567dca4fa4521c\",\n        \"tenantId\": \"default\",\n        \"abstractEstimate\": \"fb98a912af0b40949e987ef62d6b5a1d\",\n        \"nameOfWork\": \"Hspital 2\",\n        \"estimateAmount\": 10000,\n        \"grossAmountBilled\": null,\n        \"projectCode\": {\n          \"id\": null,\n          \"tenantId\": null,\n          \"code\": \"defa/WIN/2/4122001/000132/2017-18\",\n          \"name\": null,\n          \"description\": null,\n          \"status\": null,\n          \"active\": false,\n          \"projectValue\": null,\n          \"completionDate\": null,\n          \"deleted\": false,\n          \"auditDetails\": null\n        },\n        \"abstractEstimateAppropriations\": null,\n        \"documentDetails\": null,\n        \"deleted\": false,\n        \"auditDetails\": {\n          \"createdBy\": \"clerk\",\n          \"lastModifiedBy\": \"10002\",\n          \"createdTime\": 1516878312898,\n          \"lastModifiedTime\": 1516878318245\n        }\n      },\n      \"estimateActivities\": [\n        {\n          \"id\": \"dcef66752e76434dbaa1081522982b3e\",\n          \"tenantId\": \"default\",\n          \"scheduleOfRate\": {\n            \"id\": \"fbbba5b04c254d65aeaafefe63c48105\",\n            \"tenantId\": \"default\",\n            \"code\": \"SOR111\",\n            \"description\": \"Rates for CC-ash Road work\",\n            \"scheduleCategory\": {\n              \"id\": null,\n              \"tenantId\": null,\n              \"name\": null,\n              \"code\": \"BTR - FAKE\"\n            },\n            \"uom\": {\n              \"id\": null,\n              \"code\": \"KVA\",\n              \"description\": null,\n              \"category\": null,\n              \"active\": true,\n              \"coversionFactor\": null,\n              \"baseuom\": false,\n              \"createdBy\": null,\n              \"createdDate\": null,\n              \"lastModifiedBy\": null,\n              \"lastModifiedDate\": null\n            },\n            \"sorRates\": [\n              {\n                \"id\": \"283d1eaa334f4ae9888370843c5df1a8\",\n                \"tenantId\": \"default\",\n                \"scheduleOfRate\": \"fbbba5b04c254d65aeaafefe63c48105\",\n                \"fromDate\": 1451606400000,\n                \"toDate\": 1483142400000,\n                \"rate\": 100,\n                \"auditDetails\": null\n              },\n              {\n                \"id\": \"1be9c912cb684745a1d2b1f279a25a79\",\n                \"tenantId\": \"default\",\n                \"scheduleOfRate\": \"fbbba5b04c254d65aeaafefe63c48105\",\n                \"fromDate\": 1483228800000,\n                \"toDate\": 1514678400000,\n                \"rate\": 200,\n                \"auditDetails\": null\n              },\n              {\n                \"id\": \"47338b1e3b854df89580425618b97a0b\",\n                \"tenantId\": \"default\",\n                \"scheduleOfRate\": \"fbbba5b04c254d65aeaafefe63c48105\",\n                \"fromDate\": 1514764800000,\n                \"toDate\": 1546214400000,\n                \"rate\": 300,\n                \"auditDetails\": null\n              }\n            ],\n            \"marketRates\": [],\n            \"deleted\": false,\n            \"auditDetails\": null\n          },\n          \"nonSor\": null,\n          \"uom\": {\n            \"id\": null,\n            \"code\": \"KVA\",\n            \"description\": null,\n            \"category\": null,\n            \"active\": true,\n            \"coversionFactor\": null,\n            \"baseuom\": false,\n            \"createdBy\": null,\n            \"createdDate\": null,\n            \"lastModifiedBy\": null,\n            \"lastModifiedDate\": null\n          },\n          \"unitRate\": 225,\n          \"estimateRate\": 225,\n          \"quantity\": 2,\n          \"serviceTaxPerc\": 0,\n          \"revisionType\": \"NON_TENDERED_ITEM\",\n          \"parent\": null,\n          \"detailedEstimate\": null,\n          \"estimateMeasurementSheets\": [\n            {\n              \"id\": \"52d77bfaa70243be9a12b1e1ff3fd267\",\n              \"tenantId\": \"default\",\n              \"slNo\": 1,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 1: with SOR\",\n              \"number\": 1,\n              \"multiplier\": null,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"estimateActivity\": \"dcef66752e76434dbaa1081522982b3e\",\n              \"parent\": null,\n              \"deleted\": false,\n              \"auditDetails\": {\n                \"createdBy\": \"clerk\",\n                \"lastModifiedBy\": \"clerk\",\n                \"createdTime\": 1516878376926,\n                \"lastModifiedTime\": 1516878376926\n              }\n            },\n            {\n              \"id\": \"2320f8b970e64a2da9a9dbc4135f87ac\",\n              \"tenantId\": \"default\",\n              \"slNo\": 2,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 2: with SOR\",\n              \"number\": 1,\n              \"multiplier\": null,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"estimateActivity\": \"dcef66752e76434dbaa1081522982b3e\",\n              \"parent\": null,\n              \"deleted\": false,\n              \"auditDetails\": {\n                \"createdBy\": \"clerk\",\n                \"lastModifiedBy\": \"clerk\",\n                \"createdTime\": 1516878376926,\n                \"lastModifiedTime\": 1516878376926\n              }\n            }\n          ],\n          \"deleted\": false,\n          \"activityAmount\": null,\n          \"auditDetails\": {\n            \"createdBy\": \"clerk\",\n            \"lastModifiedBy\": \"clerk\",\n            \"createdTime\": 1516878376926,\n            \"lastModifiedTime\": 1516878376926\n          }\n        },\n        {\n          \"id\": \"ca5abb159b554804ba6f78c3609ef825\",\n          \"tenantId\": \"default\",\n          \"scheduleOfRate\": null,\n          \"nonSor\": {\n            \"id\": \"120723d64ff141fa9c01d2c93d92240d\",\n            \"tenantId\": \"default\",\n            \"description\": \"Man Power\",\n            \"uom\": {\n              \"id\": null,\n              \"code\": \"NOS\",\n              \"description\": null,\n              \"category\": null,\n              \"active\": true,\n              \"coversionFactor\": null,\n              \"baseuom\": false,\n              \"createdBy\": null,\n              \"createdDate\": null,\n              \"lastModifiedBy\": null,\n              \"lastModifiedDate\": null\n            },\n            \"deleted\": false\n          },\n          \"uom\": {\n            \"id\": null,\n            \"code\": \"NOS\",\n            \"description\": null,\n            \"category\": null,\n            \"active\": true,\n            \"coversionFactor\": null,\n            \"baseuom\": false,\n            \"createdBy\": null,\n            \"createdDate\": null,\n            \"lastModifiedBy\": null,\n            \"lastModifiedDate\": null\n          },\n          \"unitRate\": 225,\n          \"estimateRate\": 225,\n          \"quantity\": 2,\n          \"serviceTaxPerc\": 0,\n          \"revisionType\": \"NON_TENDERED_ITEM\",\n          \"parent\": null,\n          \"detailedEstimate\": null,\n          \"estimateMeasurementSheets\": [\n            {\n              \"id\": \"688d5bf65bfc4668bd1bd70d941a2d41\",\n              \"tenantId\": \"default\",\n              \"slNo\": 1,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 1: with NON-SOR\",\n              \"number\": 1,\n              \"multiplier\": null,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"estimateActivity\": \"ca5abb159b554804ba6f78c3609ef825\",\n              \"parent\": null,\n              \"deleted\": false,\n              \"auditDetails\": {\n                \"createdBy\": \"clerk\",\n                \"lastModifiedBy\": \"clerk\",\n                \"createdTime\": 1516878376926,\n                \"lastModifiedTime\": 1516878376926\n              }\n            },\n            {\n              \"id\": \"d1469dde2dcd4f98849603c75983ab78\",\n              \"tenantId\": \"default\",\n              \"slNo\": 2,\n              \"identifier\": \"A\",\n              \"remarks\": \"Sheet 2: with NON-SOR\",\n              \"number\": 1,\n              \"multiplier\": null,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"estimateActivity\": \"ca5abb159b554804ba6f78c3609ef825\",\n              \"parent\": null,\n              \"deleted\": false,\n              \"auditDetails\": {\n                \"createdBy\": \"clerk\",\n                \"lastModifiedBy\": \"clerk\",\n                \"createdTime\": 1516878376926,\n                \"lastModifiedTime\": 1516878376926\n              }\n            }\n          ],\n          \"deleted\": false,\n          \"activityAmount\": null,\n          \"auditDetails\": {\n            \"createdBy\": \"clerk\",\n            \"lastModifiedBy\": \"clerk\",\n            \"createdTime\": 1516878376926,\n            \"lastModifiedTime\": 1516878376926\n          }\n        }\n      ],\n      \"multiYearEstimates\": [\n        {\n          \"id\": \"67217c066b604a9982e926d2af7295fd\",\n          \"tenantId\": \"default\",\n          \"financialYear\": {\n            \"id\": \"4\",\n            \"finYearRange\": \"2017-18\",\n            \"startingDate\": null,\n            \"endingDate\": null,\n            \"active\": null,\n            \"isActiveForPosting\": null,\n            \"isClosed\": null,\n            \"transferClosingBalance\": null,\n            \"auditDetails\": null\n          },\n          \"detailedEstimate\": null,\n          \"percentage\": 100,\n          \"deleted\": false,\n          \"auditDetails\": {\n            \"createdBy\": \"clerk\",\n            \"lastModifiedBy\": \"clerk\",\n            \"createdTime\": 1516878376926,\n            \"lastModifiedTime\": 1516878376926\n          }\n        }\n      ],\n      \"estimateTechnicalSanctions\": [{\n      \t\"tenantId\": \"{{tenantId}}\",\n      \t\"technicalSanctionBy\":{\n      \t\t\"userName\": \"clerk\",\n      \t\t\"tenantId\": \"{{tenantId}}\"\n      \t}\n      \t}],\n      \"detailedEstimateDeductions\": [\n        {\n          \"id\": \"44cce48a4177479886849394f7ca541a\",\n          \"tenantId\": \"default\",\n          \"chartOfAccounts\": {\n            \"id\": null,\n            \"glcode\": \"1981\",\n            \"name\": null,\n            \"accountCodePurpose\": null,\n            \"description\": null,\n            \"isActiveForPosting\": null,\n            \"parentId\": null,\n            \"type\": null,\n            \"classification\": null,\n            \"functionRequired\": null,\n            \"budgetCheckRequired\": null,\n            \"majorCode\": null,\n            \"isSubLedger\": null,\n            \"auditDetails\": null\n          },\n          \"detailedEstimate\": null,\n          \"percentage\": null,\n          \"amount\": 50,\n          \"deleted\": false,\n          \"auditDetails\": {\n            \"createdBy\": \"clerk\",\n            \"lastModifiedBy\": \"clerk\",\n            \"createdTime\": 1516878376926,\n            \"lastModifiedTime\": 1516878376926\n          }\n        }\n      ],\n      \"documentDetails\": [],\n      \"assets\": [],\n      \"estimateOverheads\": [\n        {\n          \"id\": \"503ff3923770416ea01662ff2bd57341\",\n          \"tenantId\": \"default\",\n          \"overhead\": {\n            \"id\": null,\n            \"tenantId\": \"default\",\n            \"name\": \"TAXFake\",\n            \"code\": \"TAXFake\",\n            \"accountCode\": \"123\",\n            \"description\": null,\n            \"overheadRate\": []\n          },\n          \"amount\": 100,\n          \"detailedEstimate\": null,\n          \"deleted\": false,\n          \"auditDetails\": {\n            \"createdBy\": \"clerk\",\n            \"lastModifiedBy\": \"clerk\",\n            \"createdTime\": 1516878376926,\n            \"lastModifiedTime\": 1516878376926\n          }\n        }\n      ],\n      \"workFlowDetails\": null,\n      \"stateId\": null,\n      \"fund\": {\n        \"id\": null,\n        \"name\": null,\n        \"code\": \"1\",\n        \"identifier\": null,\n        \"parent\": null,\n        \"active\": null,\n        \"isParent\": null,\n        \"level\": null,\n        \"auditDetails\": null\n      },\n      \"function\": {\n        \"id\": null,\n        \"name\": null,\n        \"code\": \"2\",\n        \"level\": null,\n        \"active\": null,\n        \"parentId\": null,\n        \"auditDetails\": null\n      },\n      \"functionary\": null,\n      \"scheme\": {\n        \"id\": null,\n        \"fund\": null,\n        \"code\": \"2906\",\n        \"name\": null,\n        \"validFrom\": null,\n        \"validTo\": null,\n        \"active\": null,\n        \"description\": null,\n        \"boundary\": null,\n        \"auditDetails\": null\n      },\n      \"subScheme\": {\n        \"id\": null,\n        \"scheme\": null,\n        \"code\": \"BSUP\",\n        \"name\": null,\n        \"validFrom\": null,\n        \"validTo\": null,\n        \"active\": null,\n        \"departmentId\": null,\n        \"auditDetails\": null\n      },\n      \"budgetGroup\": {\n        \"id\": null,\n        \"name\": \"4122002-CWIP-Commercial Complex\",\n        \"description\": null,\n        \"majorCode\": null,\n        \"maxCode\": null,\n        \"minCode\": null,\n        \"accountType\": null,\n        \"budgetingType\": null,\n        \"active\": null,\n        \"auditDetails\": null\n      },\n      \"deleted\": false,\n      \"auditDetails\": {\n        \"createdBy\": \"clerk\",\n        \"lastModifiedBy\": \"clerk\",\n        \"createdTime\": 1516878376926,\n        \"lastModifiedTime\": 1516878376926\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_update"
+							]
+						},
+						"description": "Update Detailed Estimate"
+					},
+					"response": []
+				},
+				{
+					"name": "Update DE (TS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5243532e-6edd-43a9-bcb2-ada06fb4d5bb",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"status\", jsonData.detailedEstimates[0].status.code);"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c5d1c6d7-e851-4d4e-be24-42a4c64abf57",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"userName\": \"clerk\"\n    }\n  },\n  \"detailedEstimates\": {{detailedEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/detailedestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"detailedestimates",
+								"_update"
+							]
+						},
+						"description": "Update Detailed Estimate for Technical Sanction"
+					},
+					"response": []
+				},
+				{
+					"name": "Create DE Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"offlineStatuses\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"NOTICEINVITINGTENDERRELEASED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"TENDER_DOCUMENT_RELEASED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"TENDER_OPENED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"TECHNICAL_EVALUATION_DONE\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"COMMERCIAL_EVALUATION_DONE\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{DEnumber}}\",\n      \"objectType\": \"DetailedEstimateOffline\",\n      \"status\": {\n        \"code\": \"L1_TENDER_FINALIZED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout as Clerk",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b3181149-f32b-436b-810c-101108f83715",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"postman.setNextRequest(\"Login as HOD\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

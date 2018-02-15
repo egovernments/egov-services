@@ -265,15 +265,8 @@ public class RouteService {
 
             }
 
-            if (route.getTotalDistance() != null && totalDistance != null
-                    && round(totalDistance, 2) != round(route.getTotalDistance(), 2))
-                throw new CustomException("totalDistance",
-                        "Total distance covered is not same as the sum of distance covered by the collection points");
-
-            if (route.getTotalGarbageEstimate() != null && totalGarbageEstimate != null
-                    && round(totalGarbageEstimate, 2) != round(route.getTotalGarbageEstimate(), 2))
-                throw new CustomException("totalGarbageEstimate",
-                        "Total garbage collection estimate is not same as the sum of garbage collection estimates defined in the collection points");
+            route.setTotalDistance(round(totalDistance, 2));
+            route.setTotalGarbageEstimate(round(totalGarbageEstimate, 2));
 
         }
 

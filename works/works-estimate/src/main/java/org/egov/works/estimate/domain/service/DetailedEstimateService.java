@@ -376,8 +376,7 @@ public class DetailedEstimateService {
                 .append(estimateUtils.getCityCode(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()))
                 .append("/")
                 .append(propertiesManager.getTechnicalSanctionNumberPrefix())
-                .append("/").append(detailedEstimate.getDepartment().getCode())
-                .append("/").append(tsn);
+                .append("/").append(detailedEstimate.getDepartment().getCode()).append(tsn);
         estimateTechnicalSanction.setTechnicalSanctionNumber(technicalSanctionNumber.toString());
         estimateTechnicalSanctions.add(estimateTechnicalSanction);
         detailedEstimate.setEstimateTechnicalSanctions(estimateTechnicalSanctions);

@@ -223,8 +223,8 @@ public class MeasurementBookService {
 		LetterOfAcceptanceResponse letterOfAcceptanceResponse = null;
 		if (isUpdate && StringUtils.isNotBlank(measurementBook.getRevisionLOA())) {
 			letterOfAcceptance.setId(measurementBook.getRevisionLOA());
-			letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAById(
-					Arrays.asList(measurementBook.getRevisionLOA()), measurementBook.getTenantId(), requestInfo);
+			/*letterOfAcceptanceResponse = letterOfAcceptanceRepository.searchLOAById(
+					Arrays.asList(measurementBook.getRevisionLOA()), measurementBook.getTenantId(), requestInfo);*/
 			letterOfAcceptanceEstimate.setId(letterOfAcceptanceResponse.getLetterOfAcceptances().get(0)
 					.getLetterOfAcceptanceEstimates().get(0).getId());
 		}

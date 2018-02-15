@@ -33,6 +33,9 @@ public class Constants {
     public static final String KEY_MB_LOA_DOES_NOT_EXIST = "MB_LOA_DOES_NOT_EXIST";
     public static final String MSG_MB_LOA_DOES_NOT_EXIST = "Letter Of Acceptance does not exist";
 
+    public static final String KEY_BILL_MB_DETAILS_REQUIRED = "BILL.MB.DETAILS.REQUIRED";
+    public static final String MSG_BILL_MB_DETAILS_REQUIRED = "Measurement Book details required for bill";
+
     public static final String KEY_MB_WO_DOES_NOT_EXIST = "MB_WO_DOES_NOT_EXIST";
     public static final String MSG_MB_WO_DOES_NOT_EXIST = "Work Order does not exist";
 	

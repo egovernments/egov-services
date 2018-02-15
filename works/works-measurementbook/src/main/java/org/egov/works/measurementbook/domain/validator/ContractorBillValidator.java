@@ -81,7 +81,10 @@ public class ContractorBillValidator {
                     messages.put(Constants.KEY_MB_LOA_DOES_NOT_EXIST, Constants.MSG_MB_LOA_DOES_NOT_EXIST);
                 }
                 // Check MB exists for given MBs
-                validateMBExists(contractorBill, messages, contractorBillRequest.getRequestInfo());
+                if(contractorBill.getMbForContractorBill() != null && contractorBill.getMbForContractorBill().isEmpty())
+                    messages.put(Constants.KEY_BILL_MB_DETAILS_REQUIRED, Constants.MSG_BILL_MB_DETAILS_REQUIRED);
+                 else
+                   validateMBExists(contractorBill, messages, contractorBillRequest.getRequestInfo());
 
                 if (!messages.isEmpty())
                     throw new CustomException(messages);
@@ -315,7 +318,7 @@ public class ContractorBillValidator {
             mbIds.add(mbContractorBill.getId());
         }
         List<MeasurementBook> measurementBooks = searchMeasurementBookByIds(contractorBill, requestInfo, mbIds);
-        if (mbIds.size() != measurementBooks.size())
+        if (measurementBooks != null && mbIds.size() != measurementBooks.size())
             messages.put(Constants.KEY_CB_MB_NOT_EXISTS, Constants.MSG_CB_MB_NOT_EXISTS);
     }
 

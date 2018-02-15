@@ -43,14 +43,12 @@ public class Route {
     @JsonProperty("collectionType")
     private CollectionType collectionType = null;
 
-    @NotNull
     @Digits(fraction = 2, integer = 10, message = "totalDistance shall be with 2 decimal points")
     @DecimalMin(value = "0", message = "totalDistance shall be minimum 0 Kms")
     @DecimalMax(value = "500", message = "totalDistance Shall not exceed 500 Kms")
     @JsonProperty("totalDistance")
     private Double totalDistance = null;
 
-    @NotNull
     @Digits(fraction = 2, integer = 10, message = "totalGarbageEstimate shall be with 2 decimal points")
     @DecimalMin(value = "0", message = "totalGarbageEstimate shall be minimum 0 Tons")
     @JsonProperty("totalGarbageEstimate")

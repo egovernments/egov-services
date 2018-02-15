@@ -97,6 +97,19 @@ of messages sent to Kafka.
 forward as necessary. 
  
 #### Change log -
+
+1.1.14
+Handles new exceptions:
+- JSON Parsing Error (When JSON body has errors)
+- JSON Mapping Error (When object type is wrong)
+- Wrong media Type Error
+- Handle tracer's internal exception (if tracer code raises exception)
+- Handle resource exception exception when one of the dependent services is down
+
+Other changes
+- Code optimization
+- Fixed bug where body is set to null on JSON parsing error
+
 1.1.0
 - Correlation id filter enriches RequestInfo with the newly generated correlation id.
 

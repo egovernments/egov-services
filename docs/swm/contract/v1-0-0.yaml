@@ -1858,6 +1858,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/CollectionPoint'
+          minItems: 1
+      required:
+      - collectionPoints
+      
     CollectionPointResponse:
       description: Contract class to send response. Array of CollectionPoint items are used in case of search results or response for create, whereas single CollectionPoint item is used for update
       properties:
@@ -2022,7 +2026,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/Route'
-            
+          minItems: 1
+      required:
+      - routes
+
     RouteResponse:
       description: Contract class to send response. Array of Route items are used in case of search results or response for create, whereas single Route item is used for update
       properties:
@@ -2251,6 +2258,9 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/Vehicle'
+          minItems: 1
+      required:
+      - vehicles
             
     VehicleResponse:
       description: Contract class to send response. Array of Vehicle items are used in case of search results or response for create, whereas single Vehicle item is used for update
@@ -2509,6 +2519,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/Vendor'
+          minItems: 1
+      required:
+      - vendors
+
     VendorResponse:
       description: Contract class to send response. Array of Vendor items are used in case of search results or response for create, whereas single Vendor item is used for update
       properties:
@@ -2688,6 +2702,9 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/VendorContract'
+          minItems: 1
+      required:
+      - vendorContracts
     
     VendorContractResponse:
       description: Contract class to send response. Array of VendorContract items are used in case of search results or response for create, whereas single VendorContract item is used for update
@@ -2818,7 +2835,10 @@ definitions:
           description: Used for search result and create only
           type: array
           items:
-            $ref: '#/definitions/Shift'            
+            $ref: '#/definitions/Shift'     
+          minItems: 1
+      required:
+      - shifts
             
     ShiftResponse:
       description: Contract class to send response. Array of shifts items are used in case of search results or response for create, whereas single shifts item is used for update
@@ -2914,8 +2934,11 @@ definitions:
           description: Used for search result and create only
           type: array
           items:
-            $ref: '#/definitions/VehicleMaintenance'           
-    
+            $ref: '#/definitions/VehicleMaintenance'     
+          minItems: 1
+      required:
+      - vehicleMaintenances
+
     VehicleMaintenanceResponse:
       description: Contract class to send response. Array of VehicleMaintenance items are used in case of search results or response for create, whereas single VehicleMaintenance item is used for update
       properties:
@@ -3028,7 +3051,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/RefillingPumpStation'
-    
+          minItems: 1
+      required:
+      - refillingPumpStations
+
     RefillingPumpStationResponse:
       description: Contract class to send response. Array of RefillingPumpStation items are used in case of search results or response for create, whereas single RefillingPumpStation item is used for update
       properties:
@@ -3190,6 +3216,9 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/VehicleSchedule'
+          minItems: 1
+      required:
+      - vehicleSchedules
     
     VehicleScheduleResponse:
       description: Contract class to send response. Array of VehicleSchedule items are used in case of search results or response for create, whereas single VehicleSchedule item is used for update
@@ -3277,6 +3306,9 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/SanitationStaffTarget'
+          minItems: 1
+      required:
+      - sanitationStaffTargets
     
     SanitationStaffTargetResponse:
       description: Contract class to send response. Array of SanitationStaffTarget items are used in case of search results or response for create, whereas single SanitationStaffTarget item is used for update
@@ -3327,7 +3359,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/SanitationStaffSchedule'
-    
+          minItems: 1
+      required:
+      - sanitationStaffSchedules
+
     SanitationStaffScheduleResponse:
       description: Contract class to send response. Array of SanitationStaffSchedule items are used in case of search results or response for create, whereas single SanitationStaffSchedule item is used for update
       properties:
@@ -3412,7 +3447,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/VehicleFuellingDetails'
-            
+          minItems: 1
+      required:
+      - vehicleFuellingDetails
+
     VehicleFuellingDetailsResponse:
       description: Contract class to send response. Array of VehicleFuellingDetails items are used in case of search results or response for create, whereas single VehicleFuellingDetails item is used for update
       properties:
@@ -3503,6 +3541,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/VehicleMaintenanceDetails'
+          minItems: 1
+      required:
+      - vehicleMaintenanceDetails
+
     VehicleMaintenanceDetailsResponse:
       description: Contract class to send response. Array of VehicleMaintenanceDetails items are used in case of search results or response for create, whereas single VehicleMaintenanceDetails item is used for update
       properties:
@@ -3583,6 +3625,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/VehicleTripSheetDetails'
+          minItems: 1
+      required:
+      - vehicleTripSheetDetails
+
     VehicleTripSheetDetailsResponse:
       description: Contract class to send response. Array of VehicleTripSheetDetails items are used in case of search results or response for create, whereas single VehicleTripSheetDetails item is used for update
       properties:
@@ -3672,6 +3718,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/SourceSegregation'
+          minItems: 1
+      required:
+      - sourceSegregations
+
     SourceSegregationResponse:
       description: Contract class to send response. Array of SourceSegregation items are used in case of search results or response for create, whereas single SourceSegregation item is used for update
       properties:
@@ -3865,6 +3915,10 @@ definitions:
           type: array
           items:
             $ref: '#/definitions/VendorPaymentDetails'
+          minItems: 1
+      required:
+      - vendorPaymentDetails
+
     VendorPaymentDetailsResponse:
       description: Contract class to send response. Array of VendorPaymentDetails items are used in case of search results or response for create, whereas single VendorPaymentDetails item is used for update
       properties:
@@ -3882,17 +3936,21 @@ definitions:
       properties:
         requestInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
-        PaymentDetails:
+        paymentDetails:
           description: Used for search result and create only
           type: array
           items:
             $ref: '#/definitions/PaymentDetails'
+          minItems: 1
+      required:
+      - paymentDetails
+
     PaymentDetailsResponse:
       description: Contract class to send response. Array of PaymentDetails items are used in case of search results or response for create, whereas single PaymentDetails item is used for update
       properties:
         responseInfo:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-        PaymentDetails:
+        paymentDetails:
           description: Used for search result and create only
           type: array
           maximum: 500
@@ -3913,6 +3971,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

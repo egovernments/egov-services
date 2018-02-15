@@ -61,16 +61,16 @@ public class WorkOrderSearchContract {
 
     private String loaNumberLike;
 
-    private Boolean withAllOfflineStatusAndMBNotCreated = false;
+    private Boolean withAllOfflineStatusAndMBNotCreated;
 
-    private Boolean milestoneExists = false;
+    private Boolean milestoneExists;
 
-    private Boolean billExists = false;
+    private Boolean billExists;
 
-    private Boolean contractorAdvanceExists = false;
+    private Boolean contractorAdvanceExists;
 
-    private Boolean mbExistsAndBillNotCreated = false;
+    private Boolean mbExistsAndBillNotCreated;
 
-    private Boolean withoutOfflineStatus = false;
+    private Boolean withoutOfflineStatus;
 
 }

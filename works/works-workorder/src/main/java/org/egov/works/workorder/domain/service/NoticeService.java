@@ -74,7 +74,6 @@ public class NoticeService {
 					documentDetail
 							.setAuditDetails(workOrderUtils.setAuditDetails(noticeRequest.getRequestInfo(), false));
 				}
-//			updateStatus(notice, true);
 
 		}
 		kafkaTemplate.send(propertiesManager.getWorksNoticeCreateTopic(), noticeRequest);

@@ -57,7 +57,6 @@ public class LetterOfAcceptanceService {
     public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
             final Boolean isRevision) {
         letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest, Boolean.FALSE, isRevision);
-        List<LetterOfAcceptanceEstimate> letterOfAcceptanceEstimates = new ArrayList<>();
         List<LetterOfAcceptance> letterOfAcceptanceList = new ArrayList<>();
         for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 

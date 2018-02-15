@@ -50,18 +50,18 @@ public class LetterOfAcceptanceSearchContract {
 
     private String loaEstimateId;
 
-    private Boolean workOrderExists = false;
+    private Boolean workOrderExists;
 
-    private Boolean withAllOfflineStatusAndWONotCreated = false;
+    private Boolean withAllOfflineStatusAndWONotCreated;
 
-    private Boolean withoutOfflineStatus = false;
+    private Boolean withoutOfflineStatus;
 
-    private Boolean milestoneExists = false;
+    private Boolean milestoneExists;
 
-    private Boolean billExists = false;
+    private Boolean billExists;
 
-    private Boolean contractorAdvanceExists = false;
+    private Boolean contractorAdvanceExists;
 
-    private Boolean mbExistsAndBillNotCreated = false;
+    private Boolean mbExistsAndBillNotCreated;
 
 }

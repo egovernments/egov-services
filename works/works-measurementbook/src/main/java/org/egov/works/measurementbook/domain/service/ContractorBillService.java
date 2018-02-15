@@ -59,8 +59,8 @@ public class ContractorBillService {
                     + billNumber);
             
         }
-        //TODO : MB object data should be validated before request get processed
-        //validator.validateContractorBill(contractorBillRequest, true);
+
+        validator.validateContractorBill(contractorBillRequest, true);
         CommonUtils commonUtils = new CommonUtils();
         BillStatus finStatus = new BillStatus();
         List<ContractorBill> contractorBills = new ArrayList<>();
@@ -139,7 +139,7 @@ public class ContractorBillService {
 
     public ContractorBillResponse update(ContractorBillRequest contractorBillRequest) {
         ContractorBillResponse contractorBillResponse = new ContractorBillResponse();
-        //validator.validateContractorBill(contractorBillRequest, false);
+        validator.validateContractorBill(contractorBillRequest, false);
         List<ContractorBill> contractorBills = new ArrayList<>();
         for (final ContractorBill contractorBill : contractorBillRequest.getContractorBills()) {
             populateAuditDetails(contractorBillRequest.getRequestInfo(), contractorBill);

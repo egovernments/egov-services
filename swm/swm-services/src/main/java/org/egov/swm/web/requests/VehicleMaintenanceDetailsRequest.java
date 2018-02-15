@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
@@ -26,5 +28,7 @@ public class VehicleMaintenanceDetailsRequest {
     private RequestInfo requestInfo;
 
     @Valid
+    @NotNull
+    @Size(min = 1)
     private List<VehicleMaintenanceDetails> vehicleMaintenanceDetails = new ArrayList<>();
 }

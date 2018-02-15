@@ -3,6 +3,8 @@ package org.egov.swm.web.requests;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.RefillingPumpStation;
@@ -17,5 +19,7 @@ public @Data class RefillingPumpStationRequest {
     private RequestInfo requestInfo = new RequestInfo();
 
     @Valid
+    @NotNull
+    @Size(min = 1)
     private List<RefillingPumpStation> refillingPumpStations;
 }

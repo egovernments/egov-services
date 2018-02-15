@@ -1,0 +1,929 @@
+{
+	"info": {
+		"name": "eGov_Works_AbstractEstimate_collections",
+		"_postman_id": "21d89092-2df1-dfb1-6297-bbb9e2b8b1a9",
+		"description": "Create/Search/Update Abstract Estimate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Abstract Estimate",
+			"description": "Abstract Estimate with workflow",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5294b8c8-2320-476c-b079-28b94a34db2b",
+								"type": "text/javascript",
+								"exec": [
+									"if(environment.url.has(\"http://egov-micro-dev.egovernments.org\") && environment.tenantId.has(\"default\")){",
+									"    pm.environment.get(\"username\");",
+									"    pm.environment.get(\"password\");",
+									"}",
+									"",
+									"if(environment.url.has(\"http://egov-micro-qa.egovernments.org\") && environment.tenantId.has(\"default\")){",
+									"    pm.environment.get(\"username\");",
+									"    pm.environment.get(\"password\");",
+									"}"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4d925a00-92c5-41e7-8e49-3fa2a75b2e64",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var loginUserName = pm.environment.get(\"username\");",
+									"",
+									"pm.environment.set(\"access_token\", jsonData.access_token);",
+									"",
+									"pass = true;",
+									"fail = false;",
+									"",
+									"if (responseCode.code === 201 || responseCode.code === 200) {",
+									"    tests[\"Request Succesfully Sent\"] = pass;",
+									"}",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"tests[\"Username is valid\"] = jsonData.UserRequest.userName.has(request.data[\"username\"]);",
+									"",
+									"pm.test(\"Login UserRequest Matches\", function () {",
+									"    pm.expect(loginUserName).to.include(jsonData.UserRequest.userName);",
+									"});",
+									"",
+									"var nextSwitch = pm.environment.get(\"callTo\");",
+									"if(nextSwitch === \"Create AE\"){",
+									" postman.setNextRequest(\"WorksMdmsData\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Update AE\"){",
+									" postman.setNextRequest(\"Update AE\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Update AE (FS)\"){",
+									" postman.setNextRequest(\"Update AE (FS)\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Update AE (AS)\"){",
+									" postman.setNextRequest(\"Update AE (AS)\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Search Project Code\"){",
+									" postman.setNextRequest(\"Search Project Code\");   ",
+									"}",
+									"",
+									"if(nextSwitch === \"Search SOR\"){",
+									" postman.setNextRequest(\"Search SOR\");   ",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c429c435-9abe-4a93-9213-986e6415b914",
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"var isLogin = pm.environment.get(\"callTo\");",
+									"// if(isLogin != \"Search AE (AS)\")",
+									"postman.setNextRequest(\"Login\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "WorksMdmsData",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "551ba9c0-7e9e-4f65-b3b1-8a246cd1f630",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var uom = jsonData.MdmsRes[\"common-masters\"].Uom;",
+									"var dep = jsonData.MdmsRes[\"common-masters\"].Department;",
+									"var typeOfWork = jsonData.MdmsRes.works.TypeOfWork;",
+									"var scheduleCategory = jsonData.MdmsRes.works.ScheduleCategory;",
+									"var referenceType = jsonData.MdmsRes.works.ReferenceType;",
+									"var budgetGroup = jsonData.MdmsRes.works.BudgetGroup;",
+									"var modeOfAllotment = jsonData.MdmsRes.works.ModeOfAllotment;",
+									"var natureOfWork = jsonData.MdmsRes.works.NatureOfWork;",
+									"",
+									"var uomCode = uom[Math.floor(Math.random() * uom.length)];",
+									"var depCode = dep[Math.floor(Math.random() * dep.length)];",
+									"var typeOfWorkCode = typeOfWork[Math.floor(Math.random() * typeOfWork.length)];",
+									"var scheduleCategoryCode = scheduleCategory[Math.floor(Math.random() * scheduleCategory.length)];",
+									"var referenceTypeCode = referenceType[Math.floor(Math.random() * referenceType.length)];",
+									"var budgetGroupCode = budgetGroup[Math.floor(Math.random() * budgetGroup.length)];",
+									"var modeOfAllotmentCode = modeOfAllotment[Math.floor(Math.random() * modeOfAllotment.length)];",
+									"var natureOfWorkCode = natureOfWork[Math.floor(Math.random() * natureOfWork.length)];",
+									"var tW = \"\";",
+									"",
+									"for(var j=0; j<typeOfWork.length; j++){",
+									"var tow = typeOfWork[Math.floor(Math.random() * typeOfWork.length)];",
+									"    if(tow.parent == null){",
+									"        pm.environment.set(\"typeOfWork\", typeOfWork[j].code);",
+									"        tW = typeOfWork[j].code;",
+									"        break;",
+									"    }",
+									"}",
+									"for (var i=0; i<typeOfWork.length; i++){",
+									"    if(typeOfWork[i].parent !== null && typeOfWork[i].parent == tW){",
+									"    pm.environment.set(\"subTypeOfWork\", typeOfWork[i].code);",
+									"    break;",
+									"    }",
+									"}",
+									"",
+									"pm.environment.set(\"uom\", uomCode.code);",
+									"pm.environment.set(\"dep\", depCode.code);",
+									"pm.environment.set(\"scheduleCategory\", scheduleCategoryCode.code);",
+									"pm.environment.set(\"referenceType\", referenceTypeCode.code);",
+									"pm.environment.set(\"budgetGroup\", budgetGroupCode.name);",
+									"pm.environment.set(\"modeOfAllotment\", modeOfAllotmentCode.code);",
+									"pm.environment.set(\"natureOfWork\", natureOfWorkCode.name);",
+									"",
+									"postman.setNextRequest(\"Create AE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \n  \"RequestInfo\":{  \n     \"apiId\":\"works-services\",\n      \"ver\":null,\n      \"ts\":null,\n      \"action\":null,\n      \"did\":null,\n      \"key\":null,\n      \"msgId\":\"search mdms data\",\n      \"authToken\":\"{{access_token}}\",\n      \"tenantId\": \"{{tenantId}}\"\n   },\n   \"MdmsCriteria\":{  \n     \"tenantId\":\"{{tenantId}}\",\n      \"moduleDetails\":[  \n        {  \n           \"moduleName\":\"works\",\n            \"masterDetails\":[  \n              {  \n                 \"name\":\"ScheduleCategory\"\n               },\n                {  \n                 \"name\":\"TypeOfWork\"\n               },\n               {\n               \"name\": \"Overhead\"\n               },\n               {\n                 \"name\": \"Remarks\"\n               },\n               {\n                 \"name\": \"ReferenceType\"\n               },\n               {\n                 \"name\": \"BudgetGroup\"\n               },\n               {\n                 \"name\": \"NatureOfWork\"\n               },\n               {\n                 \"name\": \"ModeOfAllotment\"\n               },\n               {\n                 \"name\": \"ContractorClass\"\n               },\n               {\n                 \"name\": \"WorksStatus\"\n               }\n            ]\n         },\n         {  \n           \"moduleName\":\"common-masters\",\n            \"masterDetails\":[  \n              {  \n                 \"name\":\"Department\"\n               },\n               {\n                  \"name\":\"Uom\"\n               }\n            ]\n         }\n      ]\n   }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/egov-mdms-service/v1/_search",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"egov-mdms-service",
+								"v1",
+								"_search"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create AE",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "de510e42-0137-4254-81a1-79b6b81f7bbb",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var b = [\"SC\", \"ST\", \"BC\", \"MINORITY\", \"WOMEN_CHILDREN_WELFARE\", \"GENERAL\"]",
+									"var beneficiary = b[Math.floor(Math.random() * b.length)];",
+									"var url = pm.environment.get(\"url\");",
+									"",
+									"pm.environment.set(\"beneficiary\", beneficiary);",
+									"pm.environment.set(\"referenceNumber\", \"RefNum\"+num1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"",
+									"if(url === \"http://egov-micro-dev.egovernments.org\"){",
+									"    pm.environment.set(\"assignee\", 459);",
+									"}else",
+									"    pm.environment.set(\"assignee\", 25164);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "91445d7c-4c4c-4aa1-a5bf-7e5fe3473d9a",
+								"type": "text/javascript",
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"",
+									"if (responseCode.code === 201 || responseCode.code === 200) {",
+									"    tests[\"Request Succesfully Sent\"] = pass;",
+									"}",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"AEid\", jsonData.abstractEstimates[0].id);",
+									"pm.environment.set(\"AEamount\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].estimateAmount);",
+									"pm.environment.set(\"AEdetailsId\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].id);",
+									"pm.environment.set(\"AEnumber\", jsonData.abstractEstimates[0].abstractEstimateNumber);",
+									"// pm.globals.set(\"AEnumber\", jsonData.abstractEstimates[0].abstractEstimateNumber);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"pm.environment.set(\"stateId\", jsonData.abstractEstimates[0].stateId);",
+									"",
+									"postman.setNextRequest(\"Search AE\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"abstractEstimates\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"dateOfProposal\": \"{{epochDate}}\",\n      \"subject\": \"Normal/Regular/New AE: Project Work\",\n      \"referenceType\": {\n        \"code\": \"{{referenceType}}\"\n      },\n      \"referenceNumber\": \"{{referenceNumber}}\",\n      \"function\": {\n        \"code\": \"2\"\n      },\n      \"documentDetails\": [],\n      \"assetDetails\": [],\n      \"description\": \"Project Estimation for the proposed work\",\n      \"budgetGroup\": {\n        \"name\": \"{{budgetGroup}}\"\n      },\n      \"department\": {\n        \"code\": \"{{dep}}\"\n      },\n      \"beneficiary\": \"{{beneficiary}}\",\n      \"modeOfAllotment\": {\n        \"code\": \"{{modeOfAllotment}}\"\n      },\n      \"fund\": {\n        \"code\": \"1\"\n      },\n      \"scheme\": {\n        \"code\": \"2906\"\n      },\n      \"subScheme\": {\n        \"code\": \"BSUPBSUP\"\n      },\n      \"typeOfWork\": {\n        \"code\": \"{{typeOfWork}}\"\n      },\n      \"subTypeOfWork\": {\n        \"code\": \"{{subTypeOfWork}}\"\n      },\n      \"natureOfWork\": {\n        \"code\": \"{{natureOfWork}}\"\n      },\n      \"ward\": {\n        \"code\": 172\n      },\n      \"locality\": {\n        \"code\": \"locality_1\"\n      },\n      \"workCategory\": \"NON_SLUM\",\n      \"workOrderCreated\": false,\n      \"billsCreated\": false,\n      \"spillOverFlag\": false,\n      \"detailedEstimateCreated\": false,\n      \"implementationPeriod\": 1,\n      \"fundAvailable\": true,\n      \"pmcRequired\": true,\n      \"pmcType\": \"pmc type\",\n      \"pmcName\":{\n        \"code\": \"default-Grade-35\"\n      },\n      \"workProposedAsPerDP\": true,\n      \"dpRemarks\": \"DP Remarks\",\n      \"landAssetRequired\": true,\n      \"noOfLands\": 2,\n      \"otherAssetSpecificationRemarks\": \"Other Asset Remarks\",\n      \"abstractEstimateDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"nameOfWork\": \"Project 1\",\n          \"estimateAmount\": 1000\n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"Create\",\n        \"assignee\": {{assignee}}\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7af76a74-b28a-445d-b431-6a9dd32b26f5",
+								"type": "text/javascript",
+								"exec": [
+									"pass = true;",
+									"fail = false;",
+									"",
+									"var url = pm.environment.get(\"url\");",
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"if (responseCode.code === 201 || responseCode.code === 200) {",
+									"    tests[\"Request Succesfully Sent\"] = pass;",
+									"}",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"AE status is Created\", function () {",
+									"    pm.expect(\"CREATED\").to.include(ae[0].status.code);",
+									"});",
+									"if(url === \"http://egov-micro-qa.egovernments.org\" && ae[0].status.code === \"CREATED\"){",
+									"    ae[0].workFlowDetails.assignee = \"25165\";",
+									"    ae[0].status.tenantId = \"{{tenantId}}\";",
+									"    ae[0].workFlowDetails.action = \"Submit\";",
+									"    pm.environment.set(\"username\",\"WMS002\");",
+									"}",
+									"if(url === \"http://egov-micro-dev.egovernments.org\" && ae[0].status.code === \"CREATED\"){",
+									"        ae[0].workFlowDetails.assignee = \"509\";",
+									"        pm.environment.set(\"username\",\"HOD\");",
+									"        ae[0].status.tenantId = \"{{tenantId}}\";",
+									"        ae[0].workFlowDetails.action = \"Submit\";",
+									"}",
+									"pm.environment.set(\"abstractEstimates\", JSON.stringify(ae));",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Update AE\");",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{AEid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{AEid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update AE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a1ab9641-dfd3-446c-8eea-20adccc81321",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"",
+									"postman.setNextRequest(\"Search AE Checked\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1403f27e-55f6-4481-93ba-c4ba2768aeed",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"userName\": \"WMS002\"\n    }\n  },\n  \"abstractEstimates\": {{abstractEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_update"
+							]
+						},
+						"description": "@JE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE Checked",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "75fb920d-8d08-44c0-a174-0b5a00e6dbfe",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"if(ae[0].status.code === \"CHECKED\"){",
+									"    ",
+									"    pm.test(\"AE status is Checked\", function () {",
+									"        pm.expect(ae[0].status.code).to.eql(\"CHECKED\");",
+									"    });",
+									"    ",
+									"    ae[0].status.tenantId = \"{{tenantId}}\";",
+									"    ae[0].workFlowDetails.action = \"Submit\";",
+									"    ae[0].workFlowDetails.assignee = \"25165\";",
+									"    // ae[0].workFlowDetails.assignee = \"510\";",
+									"    ae[0].financialSanctionNumber = \"FS-ENG-NS-\"+year+\"-\"+num1;",
+									"}",
+									"pm.environment.set(\"abstractEstimates\", JSON.stringify(ae));",
+									"pm.environment.set(\"username\",\"WMS003\");",
+									"// pm.environment.set(\"username\",\"10001\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Update AE (FS)\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&abstractEstimateNumbers={{AEnumber}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "abstractEstimateNumbers",
+									"value": "{{AEnumber}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "@JE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Update AE (FS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5846aa0a-08c6-43ab-93b1-73ae394afed5",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.globals.set(\"projectCode\", jsonData.abstractEstimates[0].abstractEstimateDetails[0].projectCode.code);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"postman.setNextRequest(\"Search AE (FS)\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "87c08381-9933-44fe-bce4-86a292fb3206",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n     \"tenantId\": \"{{tenantId}}\",\n     \"userName\": \"WMS003\"\n    }\n  },\n\t\"abstractEstimates\": {{abstractEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_update"
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE (FS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a57fa2f-3cf4-4629-9110-69ef34d5624b",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"if(ae[0].status.code === \"FINANCIAL_SANCTIONED\"){",
+									"    ",
+									"    pm.test(\"AE status is Financial Sanctioned\", function () {",
+									"        pm.expect(ae[0].status.code).to.eql(\"FINANCIAL_SANCTIONED\");",
+									"    });    ",
+									"    ae[0].status.tenantId = \"{{tenantId}}\";",
+									"    ae[0].workFlowDetails.action = \"Approve\";",
+									"    ae[0].workFlowDetails.assignee = \"25166\";",
+									"    // ae[0].workFlowDetails.assignee = \"510\";",
+									"    ae[0].adminSanctionNumber = \"ADN-\"+year+\"-\"+num1;",
+									"    ae[0].councilResolutionNumber = \"CRN-\"+year+\"-\"+num1;",
+									"}",
+									"pm.environment.set(\"abstractEstimates\", JSON.stringify(ae));",
+									"pm.environment.set(\"username\",\"WMS004\");",
+									"// pm.environment.set(\"username\",\"10002\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Update AE (AS)\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&ids={{AEid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{AEid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Update AE (AS)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5e7fd0fa-a29c-4537-8ed8-fa940cbd4ba0",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0727d512-b60f-497b-ab81-e03b70e9298d",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"status\", jsonData.abstractEstimates[0].status.code);",
+									"postman.setNextRequest(\"Search AE (AS)\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"userInfo\": {\n     \"tenantId\": \"{{tenantId}}\",\n     \"userName\": \"WMS004\"\n    }\n  },\n\t\"abstractEstimates\": {{abstractEstimates}}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_update"
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search AE (AS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7d942cc6-edfe-47fa-b8f8-893e46cac153",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var ae = jsonData.abstractEstimates;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"if(ae[0].status.code === \"ADMINISTRATIVE_SANCTIONED\"){",
+									"    pm.test(\"AE status is Adminstrative Sanctioned\", function () {",
+									"        pm.expect(ae[0].status.code).to.eql(\"ADMINISTRATIVE_SANCTIONED\");",
+									"    });",
+									"    pm.environment.set(\"AEnumber\", ae[0].abstractEstimateNumber);",
+									"    pm.environment.set(\"AEprojectCode\", ae[0].abstractEstimateDetails[0].projectCode.code);",
+									"    pm.environment.set(\"adminSanctionDate\", ae[0].adminSanctionDate);",
+									"}",
+									"pm.environment.set(\"username\",\"W001\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Search Project Code\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"update\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/abstractestimates/_search?tenantId={{tenantId}}&abstractEstimateNumbers={{AEnumber}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"abstractestimates",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "abstractEstimateNumbers",
+									"value": "{{AEnumber}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "@CE login"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Project Code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fa97ca53-fcd9-48d4-b6c4-04bf07940179",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var pc = pm.environment.get(\"AEprojectCode\");",
+									"",
+									"if(jsonData.projectCodes[0].status.code === \"CREATED\"){",
+									"",
+									"    pm.test(\"Project Code Matches\", function () {",
+									"        pm.expect(jsonData.projectCodes[0].code).to.eql(pc);",
+									"    });",
+									"}",
+									"pm.environment.set(\"username\",\"W001\");",
+									"pm.environment.set(\"password\",\"12345678\");",
+									"pm.environment.set(\"callTo\",\"Search SOR\");",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\":{\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\" : \"12345678\",\n    \"action\": \"search\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n    }\n }"
+						},
+						"url": {
+							"raw": "{{url}}/works-estimate/v1/projectcodes/_search?tenantId={{tenantId}}&codes={{projectCode}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-estimate",
+								"v1",
+								"projectcodes",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "codes",
+									"value": "{{projectCode}}",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

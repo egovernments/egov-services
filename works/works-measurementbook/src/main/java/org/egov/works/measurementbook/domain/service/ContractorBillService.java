@@ -55,8 +55,7 @@ public class ContractorBillService {
             String billNumber = idGenerationRepository.generateBillNumber(contractorBill.getTenantId(),
                     contractorBillRequest.getRequestInfo());
             contractorBill.setBillNumber(measurementBookUtils.getCityCode(contractorBill.getTenantId(),
-                    contractorBillRequest.getRequestInfo()) + "/" + propertiesManager.getBillNumberPrefix() + "/"
-                    + billNumber);
+                    contractorBillRequest.getRequestInfo()) + "-"  + billNumber);
             
         }
 

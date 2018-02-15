@@ -1964,8 +1964,6 @@ definitions:
       - name
       - collectionType
       - collectionPoints
-      - totalDistance
-      - totalGarbageEstimate
       
     RouteCollectionPointMap:
       type: object
@@ -3915,6 +3913,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

@@ -145,7 +145,7 @@ public class Constants {
     public static final String KEY_CB_LOA_WORKCOMPLETION_DATE_NULL = "CB_LOA_WORKCOMPLETION_DATE_NULL";
     public static final String MSG_CB_LOA_WORKCOMPLETION_DATE_NULL = "Letter of Acceptance Work completion date is mandatory for final bill.";
     
-    public static final String KEY_CB_MB_NOT_EXISTS = "CB_LOA_WORKCOMPLETION_DATE_NULL";
+    public static final String KEY_CB_MB_NOT_EXISTS = "CB.MB.NOT.EXISTS";
     public static final String MSG_CB_MB_NOT_EXISTS = "Given Measurement Book does not exists/not in approved status.";
     
     public static final String KEY_CB_PARTRATE_MB_MAX_EXISTS = "CB_PARTRATE_MB_MAX_EXISTS";

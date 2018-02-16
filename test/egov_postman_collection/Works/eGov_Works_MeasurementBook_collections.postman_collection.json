@@ -1,0 +1,275 @@
+{
+	"info": {
+		"name": "eGov_Works_MeasurementBook_collections",
+		"_postman_id": "5ed956f4-c1c4-56c9-365f-0f66c63a5452",
+		"description": "EGSVC-3089",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Measurement Book",
+			"description": "",
+			"item": [
+				{
+					"name": "Create WO Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"offlineStatuses\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{woNum}}\",\n      \"objectType\": \"WorkOrderOffline\",\n      \"status\": {\n        \"code\": \"WORK_ORDER_ACKNOWLEDGED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{woNum}}\",\n      \"objectType\": \"WorkOrderOffline\",\n      \"status\": {\n        \"code\": \"SITE_HANDED_OVER\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{woNum}}\",\n      \"objectType\": \"WorkOrderOffline\",\n      \"status\": {\n        \"code\": \"WORK_COMMENCED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search WO Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"{{tenantId}}\",\n   \t\"userName\" : \"clerk\"\n   }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_search?tenantId={{tenantId}}&workOrderNumbers={{woNum}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "workOrderNumbers",
+									"value": "{{woNum}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create MB",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "fbc690b6-b7d2-4ee4-88f0-5158ab9b589a",
+								"type": "text/javascript",
+								"exec": [
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.set(\"mbRefNo\", \"MBref-\"+year+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c313bc0-735a-4b20-8aa9-7a814fe130a6",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"MBid\", jsonData.measurementBooks[0].id);",
+									"pm.environment.set(\"MBrefNo\", jsonData.measurementBooks[0].mbRefNo);",
+									"",
+									"postman.setNextRequest(\"Search sMB\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"requestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"measurementBooks\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractorComments\": \"Measurement Book\",\n      \"mbDate\": 1516878715348,\n      \"mbRefNo\": \"{{mbRefNo}}\",\n      \"mbAbstract\": \"Abstract MB\",\n      \"fromPageNo\": \"1\",\n      \"toPageNo\": \"100\",\n      \"letterOfAcceptanceEstimate\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": \"{{loaEstimateId}}\",\n        \"letterOfAcceptance\": \"{{loaId}}\",\n        \"detailedEstimate\": {\n          \"id\": \"{{DEid}}\",\n          \"tenantId\": \"{{tenantId}}\",\n          \"estimateNumber\": \"{{DEnumber}}\"\n        }\n      },\n      \"status\": {\n      \t\"tenantId\": \"{{tenantId}}\",\n      \t\"code\": \"CREATED\"\n      },\n      \"measurementBookDetails\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"quantity\": \"2\",\n          \"rate\": \"450\",\n          \"remarks\": \"Remarks\",\n          \"amount\": 450,\n          \"loaActivity\": {\n            \"id\": \"{{loaActId1}}\"\n          },\n          \"measurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet1}}\"\n              }\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet2}}\"\n              }\n            }\n          ]\n        },\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"quantity\": \"2\",\n          \"rate\": \"450\",\n          \"remarks\": \"Remarks\",\n          \"amount\": 450,\n          \"loaActivity\": {\n            \"id\": \"{{loaActId2}}\"\n          },\n          \"measurementSheets\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet3}}\"\n              }\n            },\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"remarks\": \"Sheet remarks\",\n              \"number\": 1,\n              \"length\": 1,\n              \"width\": 1,\n              \"depthOrHeight\": 1,\n              \"quantity\": 1,\n              \"loaMeasurementSheet\": {\n                \"id\": \"{{loaMBSheet4}}\"\n              }\n            }\n          ]\n        }\n      ],\n      \"isLegacyMB\": false,\n      \"mbAmount\": \"900\",\n      \"approvedDate\": 1516898890000,\n      \"documentDetails\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search MB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c9cdaee9-7451-41e6-920c-f1d3e1f15afa",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var mbId = pm.environment.get(\"MBid\");",
+									"var loaEstId = pm.environment.get(\"loaEstimateId\");",
+									"",
+									"pm.test(\"MB id Matches\", function () {",
+									"    pm.expect(mbId).to.include(jsonData.measurementBooks[0].id);",
+									"});",
+									"pm.test(\"LOA ID in MB Matches\", function () {",
+									"    pm.expect(loaEstId).to.include(jsonData.measurementBooks[0].letterOfAcceptanceEstimate.id);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_search?tenantId={{tenantId}}&ids={{MBid}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{MBid}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search Regular MB"
+					},
+					"response": []
+				},
+				{
+					"name": "Update MB",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "fbc690b6-b7d2-4ee4-88f0-5158ab9b589a",
+								"type": "text/javascript",
+								"exec": [
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"pm.environment.set(\"epochDate\", epoch);",
+									"pm.environment.set(\"mbRefNo\", \"MBref-\"+year+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6c313bc0-735a-4b20-8aa9-7a814fe130a6",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"MBid\", jsonData.measurementBooks[0].id);",
+									"pm.environment.set(\"MBrefNo\", jsonData.measurementBooks[0].mbRefNo);",
+									"",
+									"postman.setNextRequest(\"Search sMB\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n    \"measurementBooks\": [\n        {\n            \"id\": \"14e89aa0f49f4a50945ac4d5a702b756\",\n            \"tenantId\": \"default\",\n            \"mbRefNo\": \"MBref-20181947\",\n            \"contractorComments\": \"Measurement Book\",\n            \"mbDate\": 1517562561531,\n            \"mbIssuedDate\": null,\n            \"mbAbstract\": \"Abstract MB\",\n            \"fromPageNo\": 1,\n            \"toPageNo\": 100,\n            \"letterOfAcceptanceEstimate\": {\n                \"id\": \"69a429364d7b4e7c8f25ecf76dbf5995\",\n                \"tenantId\": \"default\",\n                \"letterOfAcceptance\": \"bf6e9a1ecb034e4c9f9b18c386fb0ec7\",\n                \"detailedEstimate\": {\n                    \"id\": \"51a84767f02b4429b3170df2c331ac05\",\n                    \"tenantId\": \"default\",\n                    \"estimateNumber\": \"defa/DE/ENG/000006/2017-18\",\n                    \"estimateDate\": null,\n                    \"nameOfWork\": null,\n                    \"description\": null,\n                    \"department\": null,\n                    \"adminSanctionNumber\": null,\n                    \"adminSanctionDate\": null,\n                    \"adminSanctionBy\": null,\n                    \"status\": null,\n                    \"workValue\": null,\n                    \"estimateValue\": null,\n                    \"projectCode\": null,\n                    \"parent\": null,\n                    \"copiedFrom\": null,\n                    \"approvedDate\": null,\n                    \"approvedBy\": null,\n                    \"copiedEstimate\": false,\n                    \"beneficiary\": null,\n                    \"modeOfAllotment\": null,\n                    \"worksType\": null,\n                    \"worksSubtype\": null,\n                    \"natureOfWork\": null,\n                    \"ward\": null,\n                    \"location\": null,\n                    \"latitude\": null,\n                    \"longitude\": null,\n                    \"workCategory\": null,\n                    \"locality\": null,\n                    \"councilResolutionNumber\": null,\n                    \"councilResolutionDate\": null,\n                    \"workOrderCreated\": false,\n                    \"billsCreated\": false,\n                    \"spillOverFlag\": false,\n                    \"grossAmountBilled\": null,\n                    \"cancellationReason\": null,\n                    \"cancellationRemarks\": null,\n                    \"totalIncludingRE\": null,\n                    \"abstractEstimateDetail\": null,\n                    \"estimateActivities\": null,\n                    \"multiYearEstimates\": null,\n                    \"estimateTechnicalSanctions\": null,\n                    \"detailedEstimateDeductions\": null,\n                    \"documentDetails\": null,\n                    \"assets\": null,\n                    \"estimateOverheads\": null,\n                    \"workFlowDetails\": null,\n                    \"stateId\": null,\n                    \"fund\": null,\n                    \"function\": null,\n                    \"functionary\": null,\n                    \"scheme\": null,\n                    \"subScheme\": null,\n                    \"budgetGroup\": null,\n                    \"deleted\": false,\n                    \"auditDetails\": null\n                },\n                \"workCompletionDate\": null,\n                \"estimateLOAAmount\": null,\n                \"assetForLOAs\": null,\n                \"loaActivities\": null,\n                \"auditDetails\": null,\n                \"deleted\": false\n            },\n            \"revisionLOA\": null,\n            \"status\": {\n                \"tenantId\": \"default\",\n                \"code\": \"CHECKED\",\n                \"description\": null,\n                \"moduleType\": null,\n                \"orderNumber\": null\n            },\n            \"measurementBookDetails\": [\n                {\n                    \"id\": \"aa10d6d826934890ac33421794f3c787\",\n                    \"tenantId\": \"default\",\n                    \"measurementBook\": null,\n                    \"loaActivity\": {\n                        \"id\": \"548a32a14ac54219ae825dcc16c18c5b\",\n                        \"tenantId\": null,\n                        \"letterOfAcceptanceEstimate\": null,\n                        \"estimateActivity\": null,\n                        \"parent\": null,\n                        \"approvedRate\": null,\n                        \"approvedQuantity\": null,\n                        \"approvedAmount\": null,\n                        \"remarks\": null,\n                        \"loaMeasurements\": null,\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"quantity\": 2,\n                    \"rate\": 450,\n                    \"remarks\": \"Remarks\",\n                    \"amount\": 450,\n                    \"measurementSheets\": [\n                        {\n                            \"id\": \"b94bf4bc68a84aa6bce93e4326b4bc34\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"569497e159084c0ea1f945091acbcab7\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        },\n                        {\n                            \"id\": \"521bc6172e844534a338a263b8c39323\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"3459c5e50a544f86b277f6c045c1a7a7\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        }\n                    ],\n                    \"partRate\": null,\n                    \"reducedRate\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"W001\",\n                        \"lastModifiedBy\": \"W001\",\n                        \"createdTime\": 1517565707864,\n                        \"lastModifiedTime\": 1517565707864\n                    },\n                    \"deleted\": null\n                },\n                {\n                    \"id\": \"7dd5af4c4c404ce7a41939e8e899dc62\",\n                    \"tenantId\": \"default\",\n                    \"measurementBook\": null,\n                    \"loaActivity\": {\n                        \"id\": \"65ae4f38eb814ddf856a71ff90a136c8\",\n                        \"tenantId\": null,\n                        \"letterOfAcceptanceEstimate\": null,\n                        \"estimateActivity\": null,\n                        \"parent\": null,\n                        \"approvedRate\": null,\n                        \"approvedQuantity\": null,\n                        \"approvedAmount\": null,\n                        \"remarks\": null,\n                        \"loaMeasurements\": null,\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"quantity\": 2,\n                    \"rate\": 450,\n                    \"remarks\": \"Remarks\",\n                    \"amount\": 450,\n                    \"measurementSheets\": [\n                        {\n                            \"id\": \"cee433b78c484e6e99edb4bba8172bce\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"863dbc40a8284946857792863c455a19\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        },\n                        {\n                            \"id\": \"ae42a3edc0a1434d8bab4975e8b8c2d0\",\n                            \"tenantId\": \"default\",\n                            \"remarks\": \"Sheet remarks\",\n                            \"number\": 1,\n                            \"multiplier\": null,\n                            \"length\": 1,\n                            \"width\": 1,\n                            \"depthOrHeight\": 1,\n                            \"quantity\": 1,\n                            \"measurementBookDetail\": null,\n                            \"loaMeasurementSheet\": {\n                                \"id\": \"d3fda24c57c34db0b5ea4441956cf9e1\",\n                                \"tenantId\": null,\n                                \"number\": null,\n                                \"multiplier\": null,\n                                \"length\": null,\n                                \"width\": null,\n                                \"depthOrHeight\": null,\n                                \"quantity\": null,\n                                \"loaActivity\": null,\n                                \"estimateMeasurementSheet\": null,\n                                \"auditDetails\": null,\n                                \"deleted\": false\n                            },\n                            \"auditDetails\": {\n                                \"createdBy\": \"W001\",\n                                \"lastModifiedBy\": \"W001\",\n                                \"createdTime\": 1517565707864,\n                                \"lastModifiedTime\": 1517565707864\n                            },\n                            \"deleted\": false\n                        }\n                    ],\n                    \"partRate\": null,\n                    \"reducedRate\": null,\n                    \"auditDetails\": {\n                        \"createdBy\": \"W001\",\n                        \"lastModifiedBy\": \"W001\",\n                        \"createdTime\": 1517565707864,\n                        \"lastModifiedTime\": 1517565707864\n                    },\n                    \"deleted\": null\n                }\n            ],\n            \"lumpSumMBDetails\": null,\n            \"isLegacyMB\": false,\n            \"mbAmount\": 900,\n            \"approvedDate\": 1516898890000,\n            \"documentDetails\": [],\n            \"workFlowDetails\": null,\n            \"stateId\": null,\n            \"cancellationReason\": null,\n            \"cancellationRemarks\": null,\n            \"billNumber\": null,\n            \"billDate\": null,\n            \"partRateExists\": false,\n            \"billExists\": false,\n            \"auditDetails\": {\n                \"createdBy\": \"W001\",\n                \"lastModifiedBy\": \"W001\",\n                \"createdTime\": 1517565707864,\n                \"lastModifiedTime\": 1517565707864\n            },\n            \"deleted\": false\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

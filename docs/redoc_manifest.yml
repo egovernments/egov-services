@@ -35,3 +35,5 @@ wcms_masters: 'https://raw.githubusercontent.com/egovernments/egov-services/mast
 wcms_new_connection: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/wcms/contracts/new-connection/v1-0-0.yml'
 tradelicense_masters: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/masters/V1.0.0.yaml'
 tradelicense_services: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tradelicense/contracts/services/V1.0.0.yaml'
+lcms: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/contracts/lcms-services/v1-0-0.yml'
+swm_v1.0.0: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yaml'

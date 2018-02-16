@@ -1,0 +1,461 @@
+{
+	"info": {
+		"name": "eGov_Works_LetterOfAcceptance_collection",
+		"_postman_id": "7ffec894-2981-35ae-d423-617a30423c44",
+		"description": "The letter of acceptance created based on detailed estimate.\r\nThe letter of acceptance will be issued to a contractor after the Bid is accepted.\r\nTo create a LOA the status of the estimate should be L1 tender finalised.\r\nThe LOA will always be issued to a single contractor.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Letter Of Acceptance",
+			"description": "",
+			"item": [
+				{
+					"name": "Create LOA",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "77fa89ab-e5a6-4269-8cdb-4c8604ee695f",
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var today = new Date();",
+									"var epoch = Math.round(today.getTime()/1000);",
+									"var year = today.getFullYear();",
+									"",
+									"pm.environment.set(\"fileNumber\", \"FN-\"+num1);",
+									"pm.environment.set(\"loaCRN\", \"CRN-LOA-\"+num1);"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7822d66c-40d4-4942-b8ca-a7d783288bc7",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"loaNumber\", jsonData.letterOfAcceptances[0].loaNumber);",
+									"pm.environment.set(\"loaId\", jsonData.letterOfAcceptances[0].id);",
+									"pm.environment.set(\"loaMBSheet1\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[0].loaMeasurements[0].id);",
+									"pm.environment.set(\"loaMBSheet2\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[0].loaMeasurements[1].id);",
+									"pm.environment.set(\"loaMBSheet3\",jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[1].loaMeasurements[0].id);",
+									"pm.environment.set(\"loaMBSheet4\",jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[1].loaMeasurements[1].id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"letterofacceptances\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"contractor\": {\n        \"code\": \"Grade-38\",\n        \"tenantId\": \"{{tenantId}}\"\n      },\n      \"contractPeriod\": 5,\n      \"emdAmountDeposited\": 200,\n      \"stampPaperAmount\": 100,\n      \"engineerIncharge\": {\n        \"code\": \"HOD\"\n      },\n      \"defectLiabilityPeriod\": 10,\n      \"tenderFinalizedPercentage\": 0,\n      \"loaAmount\": 900,\n      \"fileNumber\": \"{{fileNumber}}\",\n      \"fileDate\": 1516687566000,\n      \"councilResolutionNumber\": \"{{loaCRN}}\",\n      \"councilResolutionDate\": 1516687566000,\n      \"spillOverFlag\": false,\n      \"status\":{\n      \t\"code\": \"CREATED\"\n      },\n      \"letterOfAcceptanceEstimates\": [\n        {\n          \"tenantId\": \"{{tenantId}}\",\n          \"detailedEstimate\": {\n          \t\"id\": \"{{DEid}}\",\n            \"estimateNumber\": \"{{DEnumber}}\"\n          },\n          \"workCompletionDate\": 1516687566000,\n          \"loaActivities\": [\n            {\n              \"tenantId\": \"{{tenantId}}\",\n              \"collectionMode\": \"CASH\",\n              \"percentage\": 10,\n              \"amount\": 100\n            }\n          ],\n          \"estimateLOAAmount\": 900\n        }\n      ],\n      \"workFlowDetails\": {\n        \"action\": \"Submit\",\n        \"assignee\": 510\n      },      \n      \"securityDeposits\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_create"
+							]
+						},
+						"description": "LOA for the spillover estimates"
+					},
+					"response": []
+				},
+				{
+					"name": "Search LOA",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4a3c58f-bf12-4c59-889b-441c49c23980",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"loaId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].letterOfAcceptance);",
+									"pm.environment.set(\"loaNumber\", jsonData.letterOfAcceptances[0].loaNumber);",
+									"pm.environment.set(\"loaStatus\", jsonData.letterOfAcceptances[0].status.code);",
+									"pm.environment.set(\"loaEstimateId\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].id);",
+									"pm.environment.set(\"loaActId1\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[0].id);",
+									"pm.environment.set(\"loaActId2\", jsonData.letterOfAcceptances[0].letterOfAcceptanceEstimates[0].loaActivities[1].id);",
+									"",
+									"pm.test(\"LOA ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaId\")).to.include(jsonData.letterOfAcceptances[0].id);",
+									"});",
+									"pm.test(\"LOA Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaNumber\")).to.include(jsonData.letterOfAcceptances[0].loaNumber);",
+									"});",
+									"if(jsonData.letterOfAcceptances[0].status.code == \"CREATED\"){",
+									"    pm.test(\"LOA status as Created matches\", function () {",
+									"    pm.expect(\"CREATED\").to.include(jsonData.letterOfAcceptances[0].status.code);",
+									"});",
+									"}",
+									"if(jsonData.letterOfAcceptances[0].status.code == \"CHECKED\"){",
+									"    pm.test(\"LOA status as Checked matches\", function () {",
+									"    pm.expect(\"CHECKED\").to.include(jsonData.letterOfAcceptances[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.letterOfAcceptances[0].status.code == \"APPROVED\"){",
+									"    pm.test(\"LOA status as Approved matches\", function () {",
+									"    pm.expect(\"APPROVED\").to.include(jsonData.letterOfAcceptances[0].status.code);",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"{{tenantId}}\",\n   \t\"userName\" : \"clerk\"\n   }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_search?tenantId={{tenantId}}&ids={{loaId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{loaId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search LOA"
+					},
+					"response": []
+				},
+				{
+					"name": "Upldate LOA",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n    \"letterOfAcceptances\": [\n        {\n            \"id\": \"5fa410d966de4571add08d4d07a511a2\",\n            \"tenantId\": \"default\",\n            \"contractor\": {\n                \"id\": null,\n                \"tenantId\": \"default\",\n                \"name\": null,\n                \"localName\": null,\n                \"code\": \"Grade-38\",\n                \"correspondenceAddress\": null,\n                \"paymentAddress\": null,\n                \"contactPerson\": null,\n                \"email\": null,\n                \"narration\": null,\n                \"mobileNumber\": null,\n                \"panNumber\": null,\n                \"tinNumber\": null,\n                \"bank\": null,\n                \"bankAccountNumber\": null,\n                \"pwdApprovalCode\": null,\n                \"exemptedFrom\": null,\n                \"pwdApprovalValidTill\": null,\n                \"epfRegistrationNumber\": null,\n                \"accountCode\": null,\n                \"ifscCode\": null,\n                \"contractorClass\": null,\n                \"pmc\": false,\n                \"status\": null,\n                \"auditDetails\": null\n            },\n            \"loaDate\": 1516878715348,\n            \"loaNumber\": \"defa/LOA//ACC/000010/2017-18\",\n            \"contractPeriod\": 5,\n            \"emdAmountDeposited\": 200,\n            \"stampPaperAmount\": 100,\n            \"engineerIncharge\": {\n                \"id\": null,\n                \"name\": null,\n                \"code\": \"HOD\",\n                \"userName\": null,\n                \"assignments\": []\n            },\n            \"defectLiabilityPeriod\": 10,\n            \"loaAmount\": 900,\n            \"documentDetails\": null,\n            \"status\": {\n                \"tenantId\": \"default\",\n                \"code\": \"APPROVED\",\n                \"description\": null,\n                \"moduleType\": null,\n                \"orderNumber\": null\n            },\n            \"tenderFinalizedPercentage\": 0,\n            \"approvedBy\": null,\n            \"approvedDate\": null,\n            \"fileNumber\": \"FN-8255\",\n            \"fileDate\": 1516687566000,\n            \"parent\": null,\n            \"stateId\": null,\n            \"cancellationReason\": null,\n            \"cancellationRemarks\": null,\n            \"councilResolutionNumber\": \"CRN-LOA-8255\",\n            \"councilResolutionDate\": 1516687566000,\n            \"spillOverFlag\": false,\n            \"letterOfAcceptanceEstimates\": [\n                {\n                    \"id\": \"72b6e1daf0a44520b77c5f025aa927e0\",\n                    \"tenantId\": \"default\",\n                    \"letterOfAcceptance\": \"5fa410d966de4571add08d4d07a511a2\",\n                    \"detailedEstimate\": {\n                        \"id\": \"1cf9a85368c34aff83b8381a16d72631\",\n                        \"tenantId\": \"default\",\n                        \"estimateNumber\": \"defa/DE/PHS/000078/2017-18\",\n                        \"estimateDate\": 1516687566000,\n                        \"nameOfWork\": \"Repairs\",\n                        \"description\": \"Detailed Estimation for the proposed work\",\n                        \"department\": {\n                            \"id\": null,\n                            \"name\": null,\n                            \"code\": \"ACC\"\n                        },\n                        \"adminSanctionNumber\": null,\n                        \"adminSanctionDate\": null,\n                        \"adminSanctionBy\": {\n                            \"id\": null,\n                            \"userName\": null,\n                            \"password\": null,\n                            \"salutation\": null,\n                            \"name\": null,\n                            \"gender\": null,\n                            \"mobileNumber\": null,\n                            \"emailId\": null,\n                            \"altContactNumber\": null,\n                            \"pan\": null,\n                            \"aadhaarNumber\": null,\n                            \"permanentAddress\": null,\n                            \"permanentCity\": null,\n                            \"permanentPincode\": null,\n                            \"correspondenceCity\": null,\n                            \"correspondencePincode\": null,\n                            \"correspondenceAddress\": null,\n                            \"active\": null,\n                            \"dob\": null,\n                            \"pwdExpiryDate\": null,\n                            \"locale\": null,\n                            \"type\": null,\n                            \"signature\": null,\n                            \"accountLocked\": null,\n                            \"roles\": null,\n                            \"fatherOrHusbandName\": null,\n                            \"bloodGroup\": null,\n                            \"identificationMark\": null,\n                            \"photo\": null,\n                            \"createdBy\": null,\n                            \"createdDate\": null,\n                            \"lastModifiedBy\": null,\n                            \"lastModifiedDate\": null,\n                            \"otpReference\": null,\n                            \"tenantId\": null\n                        },\n                        \"status\": {\n                            \"tenantId\": null,\n                            \"code\": \"TECHNICAL_SANCTIONED\",\n                            \"description\": null,\n                            \"moduleType\": null,\n                            \"orderNumber\": null\n                        },\n                        \"workValue\": 900,\n                        \"estimateValue\": 1000,\n                        \"projectCode\": {\n                            \"id\": null,\n                            \"tenantId\": null,\n                            \"code\": \"defa/WIN/2/4122001/000132/2017-18\",\n                            \"name\": null,\n                            \"description\": null,\n                            \"status\": null,\n                            \"active\": false,\n                            \"projectValue\": null,\n                            \"completionDate\": null,\n                            \"deleted\": false,\n                            \"auditDetails\": null\n                        },\n                        \"parent\": null,\n                        \"copiedFrom\": null,\n                        \"approvedDate\": 1516878547022,\n                        \"approvedBy\": {\n                            \"id\": null,\n                            \"userName\": null,\n                            \"password\": null,\n                            \"salutation\": null,\n                            \"name\": null,\n                            \"gender\": null,\n                            \"mobileNumber\": null,\n                            \"emailId\": null,\n                            \"altContactNumber\": null,\n                            \"pan\": null,\n                            \"aadhaarNumber\": null,\n                            \"permanentAddress\": null,\n                            \"permanentCity\": null,\n                            \"permanentPincode\": null,\n                            \"correspondenceCity\": null,\n                            \"correspondencePincode\": null,\n                            \"correspondenceAddress\": null,\n                            \"active\": null,\n                            \"dob\": null,\n                            \"pwdExpiryDate\": null,\n                            \"locale\": null,\n                            \"type\": null,\n                            \"signature\": null,\n                            \"accountLocked\": null,\n                            \"roles\": null,\n                            \"fatherOrHusbandName\": null,\n                            \"bloodGroup\": null,\n                            \"identificationMark\": null,\n                            \"photo\": null,\n                            \"createdBy\": null,\n                            \"createdDate\": null,\n                            \"lastModifiedBy\": null,\n                            \"lastModifiedDate\": null,\n                            \"otpReference\": null,\n                            \"tenantId\": null\n                        },\n                        \"copiedEstimate\": false,\n                        \"beneficiary\": \"GENERAL\",\n                        \"modeOfAllotment\": {\n                            \"id\": null,\n                            \"tenantId\": null,\n                            \"name\": null,\n                            \"code\": \"EProcurement\"\n                        },\n                        \"worksType\": {\n                            \"id\": null,\n                            \"tenantId\": null,\n                            \"name\": null,\n                            \"code\": \"OFFICEBUILDINGS\",\n                            \"description\": null,\n                            \"active\": null,\n                            \"parent\": null\n                        },\n                        \"worksSubtype\": {\n                            \"id\": null,\n                            \"tenantId\": null,\n                            \"name\": null,\n                            \"code\": \"OFFICEBUILDINGS\",\n                            \"description\": null,\n                            \"active\": null,\n                            \"parent\": null\n                        },\n                        \"natureOfWork\": {\n                            \"id\": null,\n                            \"tenantId\": null,\n                            \"name\": null,\n                            \"code\": \"Addition\",\n                            \"expenditureType\": null\n                        },\n                        \"ward\": null,\n                        \"location\": null,\n                        \"latitude\": null,\n                        \"longitude\": null,\n                        \"workCategory\": null,\n                        \"locality\": null,\n                        \"councilResolutionNumber\": null,\n                        \"councilResolutionDate\": null,\n                        \"workOrderCreated\": false,\n                        \"billsCreated\": false,\n                        \"spillOverFlag\": false,\n                        \"grossAmountBilled\": null,\n                        \"cancellationReason\": null,\n                        \"cancellationRemarks\": null,\n                        \"totalIncludingRE\": 1000,\n                        \"abstractEstimateDetail\": null,\n                        \"estimateActivities\": [\n                            {\n                                \"id\": \"dcef66752e76434dbaa1081522982b3e\",\n                                \"tenantId\": \"default\",\n                                \"scheduleOfRate\": null,\n                                \"nonSor\": {\n                                    \"id\": null,\n                                    \"tenantId\": null,\n                                    \"description\": null,\n                                    \"uom\": null\n                                },\n                                \"uom\": {\n                                    \"id\": null,\n                                    \"code\": \"KVA\",\n                                    \"description\": null,\n                                    \"category\": null,\n                                    \"active\": true,\n                                    \"coversionFactor\": null,\n                                    \"baseuom\": false,\n                                    \"createdBy\": null,\n                                    \"createdDate\": null,\n                                    \"lastModifiedBy\": null,\n                                    \"lastModifiedDate\": null\n                                },\n                                \"unitRate\": 225,\n                                \"estimateRate\": 225,\n                                \"quantity\": 2,\n                                \"serviceTaxPerc\": 0,\n                                \"revisionType\": \"NON_TENDERED_ITEM\",\n                                \"parent\": null,\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"estimateMeasurementSheets\": [\n                                    {\n                                        \"id\": \"52d77bfaa70243be9a12b1e1ff3fd267\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 1,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 1: with SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    },\n                                    {\n                                        \"id\": \"2320f8b970e64a2da9a9dbc4135f87ac\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 2,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 2: with SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    }\n                                ],\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878376926,\n                                    \"lastModifiedTime\": 1516878547015\n                                }\n                            },\n                            {\n                                \"id\": \"ca5abb159b554804ba6f78c3609ef825\",\n                                \"tenantId\": \"default\",\n                                \"scheduleOfRate\": null,\n                                \"nonSor\": {\n                                    \"id\": \"120723d64ff141fa9c01d2c93d92240d\",\n                                    \"tenantId\": null,\n                                    \"description\": null,\n                                    \"uom\": null\n                                },\n                                \"uom\": {\n                                    \"id\": null,\n                                    \"code\": \"NOS\",\n                                    \"description\": null,\n                                    \"category\": null,\n                                    \"active\": true,\n                                    \"coversionFactor\": null,\n                                    \"baseuom\": false,\n                                    \"createdBy\": null,\n                                    \"createdDate\": null,\n                                    \"lastModifiedBy\": null,\n                                    \"lastModifiedDate\": null\n                                },\n                                \"unitRate\": 225,\n                                \"estimateRate\": 225,\n                                \"quantity\": 2,\n                                \"serviceTaxPerc\": 0,\n                                \"revisionType\": \"NON_TENDERED_ITEM\",\n                                \"parent\": null,\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"estimateMeasurementSheets\": [\n                                    {\n                                        \"id\": \"688d5bf65bfc4668bd1bd70d941a2d41\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 1,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 1: with NON-SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    },\n                                    {\n                                        \"id\": \"d1469dde2dcd4f98849603c75983ab78\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 2,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 2: with NON-SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    }\n                                ],\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878376926,\n                                    \"lastModifiedTime\": 1516878547015\n                                }\n                            }\n                        ],\n                        \"multiYearEstimates\": [\n                            {\n                                \"id\": \"67217c066b604a9982e926d2af7295fd\",\n                                \"tenantId\": \"default\",\n                                \"financialYear\": {\n                                    \"id\": \"2017-18\",\n                                    \"finYearRange\": null,\n                                    \"startingDate\": null,\n                                    \"endingDate\": null,\n                                    \"active\": null,\n                                    \"isActiveForPosting\": null,\n                                    \"isClosed\": null,\n                                    \"transferClosingBalance\": null,\n                                    \"auditDetails\": null\n                                },\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"percentage\": 100,\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878376926,\n                                    \"lastModifiedTime\": 1516878376926\n                                }\n                            }\n                        ],\n                        \"estimateTechnicalSanctions\": [\n                            {\n                                \"id\": \"9c56265c2c1840d18c43f0a6b87168a7\",\n                                \"tenantId\": \"default\",\n                                \"technicalSanctionNumber\": \"defa/TS/ACC//000014/2017-18\",\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"technicalSanctionDate\": 1516878547022,\n                                \"technicalSanctionBy\": {\n                                    \"id\": null,\n                                    \"userName\": \"clerk\",\n                                    \"password\": null,\n                                    \"salutation\": null,\n                                    \"name\": null,\n                                    \"gender\": null,\n                                    \"mobileNumber\": null,\n                                    \"emailId\": null,\n                                    \"altContactNumber\": null,\n                                    \"pan\": null,\n                                    \"aadhaarNumber\": null,\n                                    \"permanentAddress\": null,\n                                    \"permanentCity\": null,\n                                    \"permanentPincode\": null,\n                                    \"correspondenceCity\": null,\n                                    \"correspondencePincode\": null,\n                                    \"correspondenceAddress\": null,\n                                    \"active\": null,\n                                    \"dob\": null,\n                                    \"pwdExpiryDate\": null,\n                                    \"locale\": null,\n                                    \"type\": null,\n                                    \"signature\": null,\n                                    \"accountLocked\": null,\n                                    \"roles\": null,\n                                    \"fatherOrHusbandName\": null,\n                                    \"bloodGroup\": null,\n                                    \"identificationMark\": null,\n                                    \"photo\": null,\n                                    \"createdBy\": null,\n                                    \"createdDate\": null,\n                                    \"lastModifiedBy\": null,\n                                    \"lastModifiedDate\": null,\n                                    \"otpReference\": null,\n                                    \"tenantId\": null\n                                },\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878547015,\n                                    \"lastModifiedTime\": 1516878547015\n                                }\n                            }\n                        ],\n                        \"detailedEstimateDeductions\": [\n                            {\n                                \"id\": \"44cce48a4177479886849394f7ca541a\",\n                                \"tenantId\": \"default\",\n                                \"chartOfAccounts\": {\n                                    \"id\": null,\n                                    \"glcode\": \"1981\",\n                                    \"name\": null,\n                                    \"accountCodePurpose\": null,\n                                    \"description\": null,\n                                    \"isActiveForPosting\": null,\n                                    \"parentId\": null,\n                                    \"type\": null,\n                                    \"classification\": null,\n                                    \"functionRequired\": null,\n                                    \"budgetCheckRequired\": null,\n                                    \"majorCode\": null,\n                                    \"isSubLedger\": null,\n                                    \"auditDetails\": null\n                                },\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"percentage\": null,\n                                \"amount\": 50,\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878376926,\n                                    \"lastModifiedTime\": 1516878547015\n                                }\n                            }\n                        ],\n                        \"documentDetails\": null,\n                        \"assets\": [],\n                        \"estimateOverheads\": [\n                            {\n                                \"id\": \"503ff3923770416ea01662ff2bd57341\",\n                                \"tenantId\": \"default\",\n                                \"overhead\": null,\n                                \"amount\": 100,\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878376926,\n                                    \"lastModifiedTime\": 1516878547015\n                                }\n                            }\n                        ],\n                        \"workFlowDetails\": null,\n                        \"stateId\": null,\n                        \"fund\": {\n                            \"id\": null,\n                            \"name\": null,\n                            \"code\": \"1\",\n                            \"identifier\": null,\n                            \"parent\": null,\n                            \"active\": null,\n                            \"isParent\": null,\n                            \"level\": null,\n                            \"auditDetails\": null\n                        },\n                        \"function\": {\n                            \"id\": null,\n                            \"name\": null,\n                            \"code\": \"2\",\n                            \"level\": null,\n                            \"active\": null,\n                            \"parentId\": null,\n                            \"auditDetails\": null\n                        },\n                        \"functionary\": {\n                            \"id\": null,\n                            \"code\": null,\n                            \"name\": null,\n                            \"active\": null,\n                            \"auditDetails\": null\n                        },\n                        \"scheme\": {\n                            \"id\": null,\n                            \"fund\": null,\n                            \"code\": \"2906\",\n                            \"name\": null,\n                            \"validFrom\": null,\n                            \"validTo\": null,\n                            \"active\": null,\n                            \"description\": null,\n                            \"boundary\": null,\n                            \"auditDetails\": null\n                        },\n                        \"subScheme\": {\n                            \"id\": null,\n                            \"scheme\": null,\n                            \"code\": \"BSUP\",\n                            \"name\": null,\n                            \"validFrom\": null,\n                            \"validTo\": null,\n                            \"active\": null,\n                            \"departmentId\": null,\n                            \"auditDetails\": null\n                        },\n                        \"budgetGroup\": {\n                            \"id\": null,\n                            \"name\": \"4122002-CWIP-Commercial Complex\",\n                            \"description\": null,\n                            \"majorCode\": null,\n                            \"maxCode\": null,\n                            \"minCode\": null,\n                            \"accountType\": null,\n                            \"budgetingType\": null,\n                            \"active\": null,\n                            \"auditDetails\": null\n                        },\n                        \"deleted\": false,\n                        \"auditDetails\": null\n                    },\n                    \"workCompletionDate\": 1516687566000,\n                    \"estimateLOAAmount\": 900,\n                    \"assetForLOAs\": null,\n                    \"loaActivities\": [\n                        {\n                            \"id\": \"4afeb31932804ae19de954d461909743\",\n                            \"tenantId\": \"default\",\n                            \"letterOfAcceptanceEstimate\": \"72b6e1daf0a44520b77c5f025aa927e0\",\n                            \"estimateActivity\": {\n                                \"id\": \"dcef66752e76434dbaa1081522982b3e\",\n                                \"tenantId\": \"default\",\n                                \"scheduleOfRate\": null,\n                                \"nonSor\": {\n                                    \"id\": null,\n                                    \"tenantId\": null,\n                                    \"description\": null,\n                                    \"uom\": null\n                                },\n                                \"uom\": {\n                                    \"id\": null,\n                                    \"code\": \"KVA\",\n                                    \"description\": null,\n                                    \"category\": null,\n                                    \"active\": true,\n                                    \"coversionFactor\": null,\n                                    \"baseuom\": false,\n                                    \"createdBy\": null,\n                                    \"createdDate\": null,\n                                    \"lastModifiedBy\": null,\n                                    \"lastModifiedDate\": null\n                                },\n                                \"unitRate\": 225,\n                                \"estimateRate\": 225,\n                                \"quantity\": 2,\n                                \"serviceTaxPerc\": 0,\n                                \"revisionType\": \"NON_TENDERED_ITEM\",\n                                \"parent\": null,\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"estimateMeasurementSheets\": [\n                                    {\n                                        \"id\": \"52d77bfaa70243be9a12b1e1ff3fd267\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 1,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 1: with SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    },\n                                    {\n                                        \"id\": \"2320f8b970e64a2da9a9dbc4135f87ac\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 2,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 2: with SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    }\n                                ],\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878376926,\n                                    \"lastModifiedTime\": 1516878547015\n                                }\n                            },\n                            \"parent\": null,\n                            \"approvedRate\": 225,\n                            \"approvedQuantity\": 2,\n                            \"approvedAmount\": 450,\n                            \"remarks\": null,\n                            \"loaMeasurements\": [\n                                {\n                                    \"id\": \"d89446207fec4318849a749d8cdcbebd\",\n                                    \"tenantId\": \"default\",\n                                    \"number\": 1,\n                                    \"multiplier\": null,\n                                    \"length\": 1,\n                                    \"width\": 1,\n                                    \"depthOrHeight\": 1,\n                                    \"quantity\": 1,\n                                    \"loaActivity\": \"4afeb31932804ae19de954d461909743\",\n                                    \"estimateMeasurementSheet\": \"52d77bfaa70243be9a12b1e1ff3fd267\",\n                                    \"auditDetails\": {\n                                        \"createdBy\": \"clerk\",\n                                        \"lastModifiedBy\": \"clerk\",\n                                        \"createdTime\": 1516878715295,\n                                        \"lastModifiedTime\": 1516878715295\n                                    },\n                                    \"deleted\": false\n                                },\n                                {\n                                    \"id\": \"caceaa0eee774066bed3298e7a610b53\",\n                                    \"tenantId\": \"default\",\n                                    \"number\": 1,\n                                    \"multiplier\": null,\n                                    \"length\": 1,\n                                    \"width\": 1,\n                                    \"depthOrHeight\": 1,\n                                    \"quantity\": 1,\n                                    \"loaActivity\": \"4afeb31932804ae19de954d461909743\",\n                                    \"estimateMeasurementSheet\": \"2320f8b970e64a2da9a9dbc4135f87ac\",\n                                    \"auditDetails\": {\n                                        \"createdBy\": \"clerk\",\n                                        \"lastModifiedBy\": \"clerk\",\n                                        \"createdTime\": 1516878715295,\n                                        \"lastModifiedTime\": 1516878715295\n                                    },\n                                    \"deleted\": false\n                                }\n                            ],\n                            \"deleted\": false,\n                            \"auditDetails\": {\n                                \"createdBy\": \"clerk\",\n                                \"lastModifiedBy\": \"clerk\",\n                                \"createdTime\": 1516878715295,\n                                \"lastModifiedTime\": 1516878715295\n                            }\n                        },\n                        {\n                            \"id\": \"a09a48518b9f4365949d8486a2cb5e01\",\n                            \"tenantId\": \"default\",\n                            \"letterOfAcceptanceEstimate\": \"72b6e1daf0a44520b77c5f025aa927e0\",\n                            \"estimateActivity\": {\n                                \"id\": \"ca5abb159b554804ba6f78c3609ef825\",\n                                \"tenantId\": \"default\",\n                                \"scheduleOfRate\": null,\n                                \"nonSor\": {\n                                    \"id\": \"120723d64ff141fa9c01d2c93d92240d\",\n                                    \"tenantId\": null,\n                                    \"description\": null,\n                                    \"uom\": null\n                                },\n                                \"uom\": {\n                                    \"id\": null,\n                                    \"code\": \"NOS\",\n                                    \"description\": null,\n                                    \"category\": null,\n                                    \"active\": true,\n                                    \"coversionFactor\": null,\n                                    \"baseuom\": false,\n                                    \"createdBy\": null,\n                                    \"createdDate\": null,\n                                    \"lastModifiedBy\": null,\n                                    \"lastModifiedDate\": null\n                                },\n                                \"unitRate\": 225,\n                                \"estimateRate\": 225,\n                                \"quantity\": 2,\n                                \"serviceTaxPerc\": 0,\n                                \"revisionType\": \"NON_TENDERED_ITEM\",\n                                \"parent\": null,\n                                \"detailedEstimate\": \"1cf9a85368c34aff83b8381a16d72631\",\n                                \"estimateMeasurementSheets\": [\n                                    {\n                                        \"id\": \"688d5bf65bfc4668bd1bd70d941a2d41\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 1,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 1: with NON-SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    },\n                                    {\n                                        \"id\": \"d1469dde2dcd4f98849603c75983ab78\",\n                                        \"tenantId\": \"default\",\n                                        \"slNo\": 2,\n                                        \"identifier\": \"A\",\n                                        \"remarks\": \"Sheet 2: with NON-SOR\",\n                                        \"number\": 1,\n                                        \"multiplier\": null,\n                                        \"length\": 1,\n                                        \"width\": 1,\n                                        \"depthOrHeight\": 1,\n                                        \"quantity\": 1,\n                                        \"estimateActivity\": null,\n                                        \"parent\": null,\n                                        \"deleted\": false,\n                                        \"auditDetails\": {\n                                            \"createdBy\": \"clerk\",\n                                            \"lastModifiedBy\": \"clerk\",\n                                            \"createdTime\": 1516878376926,\n                                            \"lastModifiedTime\": 1516878547015\n                                        }\n                                    }\n                                ],\n                                \"deleted\": false,\n                                \"auditDetails\": {\n                                    \"createdBy\": \"clerk\",\n                                    \"lastModifiedBy\": \"clerk\",\n                                    \"createdTime\": 1516878376926,\n                                    \"lastModifiedTime\": 1516878547015\n                                }\n                            },\n                            \"parent\": null,\n                            \"approvedRate\": 225,\n                            \"approvedQuantity\": 2,\n                            \"approvedAmount\": 450,\n                            \"remarks\": null,\n                            \"loaMeasurements\": [\n                                {\n                                    \"id\": \"1b4f3d1fa5c74841a47a2e1d1da02934\",\n                                    \"tenantId\": \"default\",\n                                    \"number\": 1,\n                                    \"multiplier\": null,\n                                    \"length\": 1,\n                                    \"width\": 1,\n                                    \"depthOrHeight\": 1,\n                                    \"quantity\": 1,\n                                    \"loaActivity\": \"a09a48518b9f4365949d8486a2cb5e01\",\n                                    \"estimateMeasurementSheet\": \"688d5bf65bfc4668bd1bd70d941a2d41\",\n                                    \"auditDetails\": {\n                                        \"createdBy\": \"clerk\",\n                                        \"lastModifiedBy\": \"clerk\",\n                                        \"createdTime\": 1516878715296,\n                                        \"lastModifiedTime\": 1516878715296\n                                    },\n                                    \"deleted\": false\n                                },\n                                {\n                                    \"id\": \"4e08093182c34fe58796d3422d45ffa5\",\n                                    \"tenantId\": \"default\",\n                                    \"number\": 1,\n                                    \"multiplier\": null,\n                                    \"length\": 1,\n                                    \"width\": 1,\n                                    \"depthOrHeight\": 1,\n                                    \"quantity\": 1,\n                                    \"loaActivity\": \"a09a48518b9f4365949d8486a2cb5e01\",\n                                    \"estimateMeasurementSheet\": \"d1469dde2dcd4f98849603c75983ab78\",\n                                    \"auditDetails\": {\n                                        \"createdBy\": \"clerk\",\n                                        \"lastModifiedBy\": \"clerk\",\n                                        \"createdTime\": 1516878715296,\n                                        \"lastModifiedTime\": 1516878715296\n                                    },\n                                    \"deleted\": false\n                                }\n                            ],\n                            \"deleted\": false,\n                            \"auditDetails\": {\n                                \"createdBy\": \"clerk\",\n                                \"lastModifiedBy\": \"clerk\",\n                                \"createdTime\": 1516878715296,\n                                \"lastModifiedTime\": 1516878715296\n                            }\n                        }\n                    ],\n                    \"auditDetails\": {\n                        \"createdBy\": \"clerk\",\n                        \"lastModifiedBy\": \"clerk\",\n                        \"createdTime\": 1516878715270,\n                        \"lastModifiedTime\": 1516878715270\n                    },\n                    \"deleted\": false\n                }\n            ],\n            \"securityDeposits\": [],\n            \"workFlowDetails\": {\n                \"type\": null,\n                \"businessKey\": null,\n                \"department\": null,\n                \"designation\": null,\n                \"assignee\": 510,\n                \"action\": \"Submit\",\n                \"status\": null,\n                \"comments\": null,\n                \"senderName\": null,\n                \"details\": null,\n                \"stateId\": null\n            },\n            \"auditDetails\": {\n                \"createdBy\": \"clerk\",\n                \"lastModifiedBy\": \"clerk\",\n                \"createdTime\": 1516878715348,\n                \"lastModifiedTime\": 1516878715348\n            },\n            \"deleted\": false\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/letterofacceptances/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"letterofacceptances",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create LOA Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"offlineStatuses\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{loaNumber}}\",\n      \"objectType\": \"LetterOfAcceptanceOffline\",\n      \"status\": {\n        \"code\": \"ACCEPTANCE_LETTER_ISSUED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{loaNumber}}\",\n      \"objectType\": \"LetterOfAcceptanceOffline\",\n      \"status\": {\n        \"code\": \"ACCEPTANCE_LETTER_ACKNOWLEDGED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    },\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"objectNumber\": \"{{loaNumber}}\",\n      \"objectType\": \"LetterOfAcceptanceOffline\",\n      \"status\": {\n        \"code\": \"AGREEMENT_ORDER_SIGNED\"\n      },\n      \"objectDate\": \"1516860742511\",\n      \"statusDate\": \"1516860742511\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Offline Status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"{{tenantId}}\",\n   \t\"userName\" : \"clerk\"\n   }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-services/v1/offlinestatuses/_search?tenantId={{tenantId}}&loaNumbers={{loaNumber}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-services",
+								"v1",
+								"offlinestatuses",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "loaNumbers",
+									"value": "{{loaNumber}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create WO",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4e073025-5f36-471e-a42c-2952b2d19414",
+								"type": "text/javascript",
+								"exec": [
+									"pm.environment.get(\"loaId\");",
+									"pm.environment.get(\"loaNumber\");"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b39e24dd-3ca7-4866-a092-296c9f4ff00b",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.set(\"woID\", jsonData.workOrders[0].id);",
+									"pm.environment.set(\"woNum\", jsonData.workOrders[0].workOrderNumber);",
+									"postman.setNextRequest(\"Search sWO\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \n  \"workOrders\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"letterOfAcceptance\": {\n        \"id\": \"{{loaId}}\",\n        \"loaNumber\": \"{{loaNumber}}\",\n        \"tenantId\": \"{{tenantId}}\",\n        \"spillOverFlag\": false\n      },\n      \"workOrderDate\": 1516878715348,\n      \"status\": {\n      \t\"tenantId\": \"default\",\n        \"code\": \"CREATED\"\n        },\n      \"workOrderDetails\": [\n        {\n        \"tenantId\": \"{{tenantId}}\",\n        \"remarks\":\t\"Approval\",\n        \"editable\": true\n        }    ],\n      \"documentDetails\":[]\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_create"
+							]
+						},
+						"description": "Work Order for the spillover work"
+					},
+					"response": []
+				},
+				{
+					"name": "Search WO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "63587dc4-1943-47d7-8486-7fd71552a187",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"pm.environment.get(\"loaNumber\");",
+									"pm.environment.get(\"loaId\");",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"LOA ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaId\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].letterOfAcceptance);",
+									"});",
+									"pm.test(\"LOA Number matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaNumber\")).to.include(jsonData.workOrders[0].letterOfAcceptance.loaNumber);",
+									"});",
+									"pm.test(\"LOA Estimate ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaEstimateId\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].id);",
+									"});",
+									"pm.test(\"LOA Activity ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"loaActId1\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].loaActivities[0].id);",
+									"pm.expect(pm.environment.get(\"loaActId2\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].loaActivities[1].id);",
+									"});",
+									"pm.test(\"Detailed Estimate ID matches\", function () {",
+									"pm.expect(pm.environment.get(\"DEid\")).to.include(jsonData.workOrders[0].letterOfAcceptance.letterOfAcceptanceEstimates[0].detailedEstimate.id);",
+									"});",
+									"",
+									"if(jsonData.workOrders[0].status.code == \"CREATED\"){",
+									"    pm.test(\"WO status as Created matches\", function () {",
+									"    pm.expect(\"CREATED\").to.include(jsonData.workOrders[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.workOrders[0].status.code == \"CHECKED\"){",
+									"    pm.test(\"WO status as Checked matches\", function () {",
+									"    pm.expect(\"CHECKED\").to.include(jsonData.workOrders[0].status.code);",
+									"    });",
+									"}",
+									"if(jsonData.workOrders[0].status.code == \"APPROVED\"){",
+									"    pm.test(\"WO status as Approved matches\", function () {",
+									"    pm.expect(\"APPROVED\").to.include(jsonData.workOrders[0].status.code);",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"clerk\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_search?tenantId={{tenantId}}&ids={{woID}}&workOrderNumbers={{woNum}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{woID}}",
+									"equals": true
+								},
+								{
+									"key": "workOrderNumbers",
+									"value": "{{woNum}}",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search work order for the spillover"
+					},
+					"response": []
+				},
+				{
+					"name": "Update WO",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"clerk\",\n    \"authToken\": \"{{access_token}}\"\n  },\n    \"workOrders\": [\n        {\n            \"id\": \"1905a1d5e2cc42ebb4412cb74bcfbb10\",\n            \"tenantId\": \"default\",\n            \"letterOfAcceptance\": {\n                \"id\": \"5fa410d966de4571add08d4d07a511a2\",\n                \"tenantId\": \"default\",\n                \"contractor\": null,\n                \"loaDate\": null,\n                \"loaNumber\": \"defa/LOA//ACC/000010/2017-18\",\n                \"contractPeriod\": null,\n                \"emdAmountDeposited\": null,\n                \"stampPaperAmount\": null,\n                \"engineerIncharge\": null,\n                \"defectLiabilityPeriod\": null,\n                \"loaAmount\": null,\n                \"documentDetails\": null,\n                \"status\": null,\n                \"tenderFinalizedPercentage\": null,\n                \"approvedBy\": null,\n                \"approvedDate\": null,\n                \"fileNumber\": null,\n                \"fileDate\": null,\n                \"parent\": null,\n                \"stateId\": null,\n                \"cancellationReason\": null,\n                \"cancellationRemarks\": null,\n                \"councilResolutionNumber\": null,\n                \"councilResolutionDate\": null,\n                \"spillOverFlag\": false,\n                \"letterOfAcceptanceEstimates\": [],\n                \"securityDeposits\": null,\n                \"workFlowDetails\": null,\n                \"auditDetails\": null,\n                \"deleted\": false\n            },\n            \"workOrderDetails\": [\n                {\n                    \"id\": \"82bce4071aeb4d39820c4f6f002d4aea\",\n                    \"tenantId\": \"default\",\n                    \"workOrder\": \"1905a1d5e2cc42ebb4412cb74bcfbb10\",\n                    \"remarks\": \"Approval\",\n                    \"editable\": true,\n                    \"auditDetails\": {\n                        \"createdBy\": \"clerk\",\n                        \"lastModifiedBy\": \"clerk\",\n                        \"createdTime\": 1516878888120,\n                        \"lastModifiedTime\": 1516878888120\n                    },\n                    \"deleted\": false\n                }\n            ],\n            \"workOrderDate\": 1516878715348,\n            \"workOrderNumber\": \"defa/WO//ACC/000003/2017-18\",\n            \"documentDetails\": [],\n            \"workFlowDetails\": null,\n            \"auditDetails\": {\n                \"createdBy\": \"clerk\",\n                \"lastModifiedBy\": \"clerk\",\n                \"createdTime\": 1516878888120,\n                \"lastModifiedTime\": 1516878888120\n            },\n            \"status\": {\n                \"tenantId\": \"default\",\n                \"code\": \"APPROVED\",\n                \"description\": null,\n                \"moduleType\": null,\n                \"orderNumber\": null\n            },\n            \"stateId\": null,\n            \"deleted\": false,\n            \"remarks\": null,\n            \"approvedBy\": null,\n            \"approvedDate\": null\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-workorder/v1/workorders/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-workorder",
+								"v1",
+								"workorders",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

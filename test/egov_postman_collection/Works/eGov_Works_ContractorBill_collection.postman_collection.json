@@ -1,0 +1,316 @@
+{
+	"info": {
+		"name": "eGov_Works_ContractorBill_collection",
+		"_postman_id": "92e0d8c5-94f9-83bd-daf0-1814910c9475",
+		"description": "Based on Measurement book with its status as Approved, can be able to create contractor bill based on billTypes such as Part Bill, Final Bill.\n\nCreate/Search/Update\n\nThe Contractor Bill will be generated based on the actual measurements recorded in the measurement book to provision for payment.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Contractor Bill",
+			"description": "",
+			"item": [
+				{
+					"name": "Login as Clerk",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cd1fcd17-644d-4b37-a625-8aa58469e23f",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"tests[\"Tenant ID is default\"] = jsonData.UserRequest.roles[0].tenantId;",
+									"",
+									"postman.setNextRequest(\"WorksMdmsData\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "clerk",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search MB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d5e24aeb-99b3-4644-a170-ca29af6e7c28",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var mbId = pm.environment.get(\"MBid\");",
+									"var loaEstId = pm.environment.get(\"loaEstimateId\");",
+									"",
+									"pm.environment.set()",
+									"",
+									"pm.test(\"MB id Matches\", function () {",
+									"    pm.expect(mbId).to.include(jsonData.measurementBooks[0].id);",
+									"});",
+									"pm.test(\"LOA ID in MB Matches\", function () {",
+									"    pm.expect(loaEstId).to.include(jsonData.measurementBooks[0].letterOfAcceptanceEstimate.id);",
+									"});",
+									"// postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.works\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"search\",\n    \"authToken\":\"{{access_token}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/measurementbooks/_search?tenantId={{tenantId}}&mbRefNumbers={{MBrefNo}}&statues=APPROVED",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"measurementbooks",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "mbRefNumbers",
+									"value": "{{MBrefNo}}",
+									"equals": true
+								},
+								{
+									"key": "statues",
+									"value": "APPROVED",
+									"equals": true
+								}
+							]
+						},
+						"description": "Search Regular MB"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bill",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a9a73372-9525-409c-b840-f15d0b61f102",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e79e1b3-e6f4-4f06-b001-562f3f606e8b",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"billNumber\", jsonData.contractorBills[0].billNumber);",
+									"pm.environment.set(\"billId\", jsonData.contractorBills[0].id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"userInfo\": {\n      \"userName\": \"clerk\",\n      \"tenantId\": \"{{tenantId}}\"\n    }\n  },\n  \"contractorBills\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"approvedDate\": \"\",\n      \"billDate\": {{workCommencementDate}},\n      \"billAmount\": 450,\n      \"billType\": \"Part\",\n      \"passedAmount\": 450,\n      \"contractorBillAmount\": 450,\n      \"approvedBy\": {\n        \"userName\": \"WMS004\"\n      },\n      \"assets\": [],\n      \"mbForContractorBill\": [\n        {\n          \"measurementBook\": {\n            \"tenantId\": \"{{tenantId}}\",\n            \"id\": \"{{MBid}}\"\n          },\n          \"tenantId\": \"{{tenantId}}\"\n        }\n      ],\n      \"letterOfAcceptanceEstimate\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": \"{{loaEstimateId}}\"\n      },\n      \"workFlowDetails\": {\n        \"assignee\": 25164,\n        \"action\": \"Create\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/contractorbills/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"contractorbills",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Search Bill",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"works master search\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"userInfo\": {\n      \"userName\": \"clerk\",\n      \"tenantId\": \"{{tenantId}}\"\n    \t}\n\t}\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/contractorbills/_search?tenantId={{tenantId}}&ids={{billId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"contractorbills",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "ids",
+									"value": "{{billId}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create Bill",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a9a73372-9525-409c-b840-f15d0b61f102",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e79e1b3-e6f4-4f06-b001-562f3f606e8b",
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.environment.set(\"billNumber\", jsonData.contractorBills[0].billNumber);",
+									"pm.environment.set(\"billId\", jsonData.contractorBills[0].id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"userInfo\": {\n      \"userName\": \"clerk\",\n      \"tenantId\": \"{{tenantId}}\"\n    }\n  },\n  \"contractorBills\": [\n    {\n      \"tenantId\": \"{{tenantId}}\",\n      \"approvedDate\": \"\",\n      \"billDate\": {{workCommencementDate}},\n      \"billAmount\": 450,\n      \"billType\": \"Part\",\n      \"passedAmount\": 450,\n      \"contractorBillAmount\": 450,\n      \"approvedBy\": {\n        \"userName\": \"WMS004\"\n      },\n      \"assets\": [],\n      \"mbForContractorBill\": [\n        {\n          \"measurementBook\": {\n            \"tenantId\": \"{{tenantId}}\",\n            \"id\": \"{{MBid}}\"\n          },\n          \"tenantId\": \"{{tenantId}}\"\n        }\n      ],\n      \"letterOfAcceptanceEstimate\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": \"{{loaEstimateId}}\"\n      },\n      \"workFlowDetails\": {\n        \"assignee\": 25164,\n        \"action\": \"Create\"\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{url}}/works-measurementbook/v1/contractorbills/_update",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"works-measurementbook",
+								"v1",
+								"contractorbills",
+								"_update"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

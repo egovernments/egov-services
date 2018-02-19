@@ -446,7 +446,7 @@ public class DataUploadUtils {
 			if(entry.getKey().equals("tenantId"))
 				continue;
 			
-			if(null != entry.getValue())
+			if(null != entry.getValue() || !entry.getValue().toString().isEmpty())
 				return false;
 		}
 	    return true;            

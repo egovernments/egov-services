@@ -87,6 +87,55 @@ const JSONPath = function () {
 
         delete lastObject[path[path.length - 1]]
     }
+
+    this.flattenObject = (obj) => {
+        let flattenKeys = {};
+        for (let i in obj) {
+            if (!obj.hasOwnProperty(i)) continue;
+            if ((typeof obj[i]) == 'object') {
+                flattenKeys[i] = obj[i];
+                let flatObject = this.flattenObject(obj[i]);
+                for (let j in flatObject) {
+                    if (!flatObject.hasOwnProperty(j)) continue;
+                    flattenKeys[i + '.' + j] = flatObject[j];
+                }
+            } else {
+                flattenKeys[i] = obj[i];
+            }
+        }
+        return flattenKeys;
+    }
+
+    //This function only for Object literal type. This will prefix the given string to key.
+    this.prefixString = (obj, str) => {
+        let keys = Object.keys(obj);
+        let flattenPrefixedKeys = {};
+        for (let j=0; j < keys.length; j++) {
+            let key = str + keys[j];
+            flattenPrefixedKeys[key] = obj[keys[j]];
+        }
+        return flattenPrefixedKeys;
+    }
+
+    this.pathMatching = (obj, path) => {
+        let path1, path_regex
+        path1=path;
+        let flattenObj = this.prefixString(this.flattenObject(obj), '$.')
+        flattenArray=Object.keys(flattenObj)
+        path1 = path1.replace(/\.\*\./g, ".\\d+.")
+        path1 = path1.replace(/\.\./g, "((.\\d+|.[a-zA-Z_]+)+){1,}.")
+        path1 = path1.replace(/[.]/g, "\\.")
+        path1 = "\\" + path1;
+        path_regex = new RegExp(path1)
+        let matched = flattenArray.filter( element => path_regex.test(element))
+        return matched;
+    }
+
+    this.getFieldValue = (obj, path) => {
+        let matched = this.pathMatching(obj, path)
+        let data = matched.map(p => {return {path: p, value:this.get(obj, p)}})
+        return data;
+    }
 }
 
 let jp = new JSONPath()

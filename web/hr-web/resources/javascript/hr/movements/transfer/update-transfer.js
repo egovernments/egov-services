@@ -61,8 +61,10 @@ class UpdateMovement extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleProcess = this.handleProcess.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.getUlbDetails = this.getUlbDetails.bind(this);
     this.vacantPositionFun = this.vacantPositionFun.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
+    this.makeAjaxUpload = this.makeAjaxUpload.bind(this);
 
   }
 
@@ -91,8 +93,11 @@ class UpdateMovement extends React.Component {
     const checkCountAndCall = function (key, res) {
       _state[key] = res;
       count--;
-      if (count == 0)
+      if (count == 0) {
+        _state.ulbDepartmentList = _state.departmentList;
+        _state.ulbDesignationList = _state.designationList;
         _this.setInitialState(_state);
+      }
     }
 
     getDropdown("assignments_designation", function (res) {
@@ -232,7 +237,8 @@ class UpdateMovement extends React.Component {
         var _designation = _this.state.movement.designationAssigned;
         var _department = _this.state.movement.departmentAssigned;
         var _effectiveFrom = _this.state.movement.effectiveFrom;
-        _this.vacantPositionFun(_department, _designation, _effectiveFrom);
+        var _ulb = _this.state.movement.transferedLocation;
+        _this.vacantPositionFun(_department, _designation, _effectiveFrom, _ulb);
       }
     });
 
@@ -270,20 +276,41 @@ class UpdateMovement extends React.Component {
 
   getUsersFun(departmentId, designationId) {
     var _this = this;
-    commonApiPost("hr-employee", "employees", "_search", { tenantId, departmentId, designationId }, function (err, res) {
-      if (res) {
-        _this.setState({
-          ..._this.state,
-          userList: res.Employee
-        })
-      }
-    })
+    var asOnDate = new Date();
+    var dd = asOnDate.getDate();
+    var mm = asOnDate.getMonth() + 1; //January is 0!
+    var yyyy = asOnDate.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm
+    }
+
+    asOnDate = dd + '/' + mm + '/' + yyyy;
+    commonApiPost("hr-employee", "employees", "_search",
+      {
+        tenantId,
+        departmentId,
+        designationId,
+        asOnDate,
+        active: true
+      }, function (err, res) {
+        if (res) {
+          _this.setState({
+            ..._this.state,
+            userList: res.Employee
+          })
+        }
+      })
   }
 
-  vacantPositionFun(departmentId, designationId, effectiveFrom) {
+  vacantPositionFun(departmentId, designationId, effectiveFrom, ulb) {
     var _this = this;
     commonApiPost("hr-masters", "vacantpositions", "_search", {
-      tenantId,
+      tenantId: ulb ? "ap." + ulb.toLowerCase() : tenantId,
       departmentId: departmentId,
       designationId: designationId,
       asOnDate: effectiveFrom
@@ -293,6 +320,34 @@ class UpdateMovement extends React.Component {
           movement: {
             ..._this.state.movement,
           }, pNameList: res.Position
+        })
+      }
+    });
+
+  }
+
+  getUlbDetails(ulb) {
+    var _this = this;
+    commonApiPost("egov-common-masters", "departments", "_search", {
+      tenantId: ulb ? "ap." + ulb.toLowerCase() : tenantId,
+      pageSize: 500
+    }, function (err, res) {
+      if (res) {
+        _this.setState({
+          ..._this.state,
+          ulbDepartmentList: res.Department
+        })
+      }
+    });
+
+    commonApiPost("hr-masters", "designations", "_search", {
+      tenantId: ulb ? "ap." + ulb.toLowerCase() : tenantId,
+      pageSize: 500
+    }, function (err, res) {
+      if (res) {
+        _this.setState({
+          ..._this.state,
+          ulbDesignationList: res.Designation
         })
       }
     });
@@ -336,14 +391,16 @@ class UpdateMovement extends React.Component {
         if (this.state.movement.departmentAssigned && this.state.movement.effectiveFrom) {
           var _department = this.state.movement.departmentAssigned;
           var _date = this.state.movement.effectiveFrom;
-          _this.vacantPositionFun(_department, e.target.value, _date);
+          var _ulb = _this.state.movement.transferedLocation;
+          _this.vacantPositionFun(_department, e.target.value, _date, _ulb);
         }
         break;
       case "departmentAssigned":
         if (this.state.movement.designationAssigned && this.state.movement.effectiveFrom) {
           var _designation = this.state.movement.designationAssigned;
           var _date = this.state.movement.effectiveFrom;
-          _this.vacantPositionFun(e.target.value, _designation, _date);
+          var _ulb = _this.state.movement.transferedLocation;
+          _this.vacantPositionFun(e.target.value, _designation, _date, _ulb);
         }
         break;
       case "department":
@@ -359,6 +416,9 @@ class UpdateMovement extends React.Component {
           var _department = this.state.movement.workflowDetails.department;
           _this.getUsersFun(_department, e.target.value);
         }
+        break;
+      case "transferedLocation":
+        _this.getUlbDetails(e.target.value);
         break;
 
     }
@@ -539,17 +599,17 @@ class UpdateMovement extends React.Component {
 
                     var asOnDate = new Date();
                     var dd = asOnDate.getDate();
-                    var mm = asOnDate.getMonth() + 1; 
+                    var mm = asOnDate.getMonth() + 1;
                     var yyyy = asOnDate.getFullYear();
-              
+
                     if (dd < 10) {
                       dd = '0' + dd
                     }
-              
+
                     if (mm < 10) {
                       mm = '0' + mm
                     }
-              
+
                     asOnDate = dd + '/' + mm + '/' + yyyy;
 
                     commonApiPost("hr-employee", "employees", "_search", { tenantId, asOnDate, positionId: res.Movement[0].workflowDetails.assignee }, function (err, res2) {
@@ -610,17 +670,17 @@ class UpdateMovement extends React.Component {
             var employee, designation;
             var asOnDate = new Date();
             var dd = asOnDate.getDate();
-            var mm = asOnDate.getMonth() + 1; 
+            var mm = asOnDate.getMonth() + 1;
             var yyyy = asOnDate.getFullYear();
-      
+
             if (dd < 10) {
               dd = '0' + dd
             }
-      
+
             if (mm < 10) {
               mm = '0' + mm
             }
-      
+
             asOnDate = dd + '/' + mm + '/' + yyyy;
 
             console.log("res", res.Movement[0].workflowDetails.assignee);
@@ -1036,7 +1096,7 @@ class UpdateMovement extends React.Component {
                       <select id="departmentAssigned" name="departmentAssigned" value={departmentAssigned}
                         onChange={(e) => { handleChange(e, "departmentAssigned") }} required>
                         <option value="">Select department</option>
-                        {renderOption(this.state.departmentList)}
+                        {renderOption(this.state.ulbDepartmentList)}
                       </select>
                     </div>
                   </div>
@@ -1053,7 +1113,7 @@ class UpdateMovement extends React.Component {
                       <select id="designationAssigned" name="designationAssigned" value={designationAssigned}
                         onChange={(e) => { handleChange(e, "designationAssigned") }} required>
                         <option value="">Select Designation</option>
-                        {renderOption(this.state.designationList)}
+                        {renderOption(this.state.ulbDesignationList)}
                       </select>
                     </div>
                   </div>

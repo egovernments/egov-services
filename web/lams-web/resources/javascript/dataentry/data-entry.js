@@ -67,6 +67,7 @@ $(document).on("keyup","input", function() {
 var index=1;
 var create = true;
 var shopsMap = {};
+var shopNumber;
 
 $(document).ready(function() {
 
@@ -112,9 +113,11 @@ $(document).ready(function() {
 
         //setting FloorNumber and ShopNumber values
         if(agreement.asset.assetCategory.name == "Shopping Complex"){
-        $("#floorNumber").val(agreement.floorNumber).attr('disabled',true);
-        $("#referenceNumber").val(agreement.referenceNumber).attr('disabled',true);
+        $("#floorNumber").val(agreement.floorNumber);
+        $("#referenceNumber").val(agreement.referenceNumber);
         }
+        shopNumber = agreement.referenceNumber;
+
         dependentonBasisTime(agreement.basisOfAllotment, agreement.timePeriod);
         // #createAgreementForm select, #createAgreementForm textarea
         $("input, select, textarea").not('div[id*=AssetDetailsBlock] input, div[id*=AssetDetailsBlock] select, div[id*=AssetDetailsBlock] textarea').each(function(index, elm){
@@ -272,6 +275,7 @@ $("select").on("change", function() {
             $(".disabled").attr("disabled", true);
         }
     } else if(this.id == "floorNumber"){
+      if(this.value)
       validateAgreementsForFloor(this.value);
     }
 
@@ -281,12 +285,13 @@ $("select").on("change", function() {
 
 $("input").on("change", function() {
 if (this.id == "referenceNumber"){
+     if(shopNumber!=this.value)
      validateAgreementsForShopNo(this.value);
   }
   fillValueToObject(this);
 });
 function validateAgreementsForFloor(floorNumber) {
-   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,assetCode:getUrlVars()["assetId"]}).responseJSON["Agreements"];
+   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,asset:getUrlVars()["assetId"]}).responseJSON["Agreements"];
    var noOfShops = shopsMap[floorNumber];
  if(noOfAgreements.length === noOfShops){
    showError("Agreements should not exceed number of shops in the floor ");
@@ -297,7 +302,7 @@ function validateAgreementsForFloor(floorNumber) {
  }
 }
 function validateAgreementsForShopNo(referenceNumber) {
-   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, referenceNumber:referenceNumber,assetCode:getUrlVars()["assetId"]}).responseJSON["Agreements"];
+   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, referenceNumber:referenceNumber,asset:getUrlVars()["assetId"]}).responseJSON["Agreements"];
 
  if(noOfAgreements.length >= 1){
    showError("Agreement already exist with same shop number, change the shop number");

@@ -23,6 +23,7 @@ import org.egov.model.Disposal;
 import org.egov.model.FundSource;
 import org.egov.model.LandDetail;
 import org.egov.model.Location;
+import org.egov.model.ModeOfAcquisition;
 import org.egov.model.Revaluation;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.AssetCategoryType;
@@ -146,13 +147,15 @@ public class AssetValidator implements Validator {
 				assetRequest.getRequestInfo(), asset.getTenantId());
 
 		log.debug(" the response for master : " + ResultDataMap);
+		Map<String, JSONArray> rsAssetMap = ResultDataMap.get("ASSET");
 		Map<Long, AssetCategory> assetCatMap = mDService
-				.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET").get("AssetCategory"));
+				.getAssetCategoryMapFromJSONArray(rsAssetMap.get("AssetCategory"));
 		Map<String, FundSource> fundMap = mDService
 				.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("Fund"));
 		Map<String, Department> departmentMap = mDService
 				.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Department"));
-
+		Map<String, ModeOfAcquisition> mOAMap = mDService
+				.getModeOfAcquisitionMapFromJSONArray(rsAssetMap.get("ModeOfAcquisition"));
 		AssetCategory masterAssetCat = assetCatMap.get(asset.getAssetCategory().getId());
 		if (masterAssetCat == null)
 			errorMap.put(applicationProperties.getAssetCategory(), "the given AssetCategory Id is Invalid");
@@ -167,7 +170,13 @@ public class AssetValidator implements Validator {
 			errorMap.put(applicationProperties.getDepartmant(), "the  given Department code is Invalid");
 		else
 			asset.setDepartment(department);
-
+		
+		ModeOfAcquisition modeOfAcquisition=mOAMap.get(asset.getModeOfAcquisition().getCode());
+		if(modeOfAcquisition==null)
+			errorMap.put(applicationProperties.getModeOfAcquisition(), "the  given ModeOfAcquisition code is Invalid");
+		else
+			asset.setModeOfAcquisition(modeOfAcquisition);
+			
 		if (asset.getFundSource() != null) {
 			String fundSourceCode = asset.getFundSource().getCode();
 

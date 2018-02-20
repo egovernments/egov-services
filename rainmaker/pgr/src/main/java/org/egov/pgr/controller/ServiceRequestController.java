@@ -1,5 +1,6 @@
 package org.egov.pgr.controller;
 
+import org.egov.pgr.contract.ServiceReqRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,13 +14,15 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/requests/")
 public class ServiceRequestController {
 
 
 	@PostMapping("_create")
 	@ResponseBody
-	private ResponseEntity<?> create() {
+	private ResponseEntity<?> create(ServiceReqRequest serviceReqRequest) {
+		
+		
 		return new ResponseEntity<>(HttpStatus.OK);	
 	}
 

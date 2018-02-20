@@ -303,7 +303,8 @@ class BaseRegister extends React.Component {
               </div>
               <div className="text-center">
                 <button type="submit" className="btn btn-submit">Search</button>  &nbsp;&nbsp;
-                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
+                <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button> &nbsp;&nbsp;
+                <button type="reset" className="btn btn-submit">Reset</button>
               </div>
             </fieldset>
           </form>

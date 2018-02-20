@@ -878,7 +878,7 @@ class ObjectionAgreement extends React.Component {
                     </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="text" name="courtCaseNo" id="courtCaseNo" value={objection.courtCaseNo}
+                    <input type="text" name="courtCaseNo" id="courtCaseNo" value={objection.courtCaseNo}  maxLength="32"
                       onChange={(e) => { handleChangeTwoLevel(e, "objection", "courtCaseNo") }} required />
                   </div>
                 </div>
@@ -913,7 +913,7 @@ class ObjectionAgreement extends React.Component {
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span>₹</span>
-                      <input type="number" min="0" name="courtFixedRent" id="courtFixedRent" value={objection.courtFixedRent}
+                      <input type="number" min="0" name="courtFixedRent" id="courtFixedRent" value={objection.courtFixedRent} max="99999999"
                         onChange={(e) => { handleChangeTwoLevel(e, "objection", "courtFixedRent") }} required />
                     </div>
                   </div>
@@ -959,7 +959,7 @@ class ObjectionAgreement extends React.Component {
                     <label for="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea name="remarks" id="remarks" value={remarks}
+                    <textarea name="remarks" id="remarks" value={remarks} maxLength="50"
                       onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                   </div>
                 </div>

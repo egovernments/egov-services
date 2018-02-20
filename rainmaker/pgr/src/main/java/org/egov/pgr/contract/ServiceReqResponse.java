@@ -7,7 +7,13 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.contract.response.ResponseInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -15,11 +21,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ServiceReqResponse   {
-  @JsonProperty("responseInfo")
+  @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo = null;
 
-  @JsonProperty("serviceReq")
+  @JsonProperty("ServiceReq")
   private List<ServiceReq> serviceReq = new ArrayList<ServiceReq>();
 
   public ServiceReqResponse responseInfo(ResponseInfo responseInfo) {

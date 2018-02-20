@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		
+
 	</properties>
 
 	<dependencies>
@@ -34,6 +34,11 @@
 			<groupId>org.egov.services</groupId>
 			<artifactId>services-common</artifactId>
 			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.egov.services</groupId>
@@ -53,7 +58,7 @@
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
-			<version>1.1.2.RELEASE</version><!--$NO-MVN-MAN-VER$-->
+			<version>1.1.2.RELEASE</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
 		<dependency>
@@ -61,7 +66,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -84,19 +89,19 @@
 			<version>2.7.9</version>
 		</dependency>
 		<dependency>
-    		<groupId>org.json</groupId>
-    		<artifactId>json</artifactId>
-    		<version>20170516</version>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20170516</version>
 		</dependency>
-                <dependency>
-                 	<groupId>org.springframework.integration</groupId>
-            		<artifactId>spring-integration-kafka</artifactId>
-            		<version>2.1.0.RELEASE</version>
-               </dependency>
-        	<dependency>
-            		<groupId>org.springframework.integration</groupId>
-            		<artifactId>spring-integration-java-dsl</artifactId>
-        	</dependency>        		
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-kafka</artifactId>
+			<version>2.1.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.integration</groupId>
+			<artifactId>spring-integration-java-dsl</artifactId>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

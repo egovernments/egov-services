@@ -2,6 +2,8 @@ package org.egov.pgr.contract;
 
 import java.util.Objects;
 
+import org.egov.tracer.model.ErrorRes;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;

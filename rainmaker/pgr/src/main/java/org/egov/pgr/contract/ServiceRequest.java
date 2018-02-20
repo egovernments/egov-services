@@ -7,18 +7,26 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.egov.common.contract.request.RequestInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * Request object to fetch the report data
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ServiceRequest   {
-  @JsonProperty("requestInfo")
+  @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
 
-  @JsonProperty("services")
+  @JsonProperty("Services")
   private List<Service> services = new ArrayList<Service>();
 
   public ServiceRequest requestInfo(RequestInfo requestInfo) {

@@ -1,0 +1,44 @@
+SearchDefinitions:
+ moduleName: rainmaker-pgr
+ summary: PGR resolver for Rainmaker
+ version: 1.0.0
+ definitions:
+ - name: serviceRequestSearch
+   query: 
+    baseQuery: (select array_to_json(array_agg(row_to_json(serviceRequests)))from (select * from eg_pgr_serviceReq $where) serviceRequests)
+    groupBy:    
+    orderBy: id,DESC
+   searchParams:
+    condition: AND
+    params:
+    - name: tenantid
+      isMandatory: true
+      jsonPath: $.searchCriteria.tenantId
+    - name: servicerequestid
+      isMandatory: false
+      jsonPath: $.searchCriteria.serviceRequestId
+    - name: assignedto
+      isMandatory: false
+      jsonPath: $.searchCriteria.assignedTo
+    - name: accountid
+      isMandatory: false
+      jsonPath: $.searchCriteria.accountId
+    - name: status
+      isMandatory: false
+      jsonPath: $.searchCriteria.status
+    - name: createdtime
+      isMandatory: false
+      jsonPath: $.searchCriteria.startDate
+    - name: createdtime
+      isMandatory: false
+      jsonPath: $.searchCriteria.endDate
+    - name: lastmodifiedtime
+      isMandatory: false
+      jsonPath: $.searchCriteria.lastUpdatedSince
+
+   output:
+    jsonFormat: {"ResponseInfo": {},"serviceReq": []}
+    outJsonPath: $.serviceReq
+    responseInfoPath: $.ResponseInfo
+
+

@@ -513,7 +513,7 @@ class Sale extends React.Component {
             <div className="form-section">
               <div className="row">
                   <div className="col-md-8 col-sm-8">
-                    <h3 className="categoryType">Asset Disposal Details </h3>
+                    <h3 className="categoryType">Asset Sale or Disposal details </h3>
                   </div>
                   <div className="col-md-4 col-sm-4 text-right">
 
@@ -523,7 +523,7 @@ class Sale extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Disposal Date <span>*</span></label>
+                              <label>Sale or Disposal date <span>*</span></label>
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
@@ -538,7 +538,7 @@ class Sale extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Disposal Party Name <span>*</span> </label>
+                              <label>Sale or Disposal party name <span>*</span> </label>
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
@@ -555,7 +555,7 @@ class Sale extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Disposal Party Address <span> *</span> </label>
+                              <label>Sale or Disposal party address <span> *</span> </label>
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
@@ -570,7 +570,7 @@ class Sale extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Disposal Reason <span>*</span></label>
+                              <label>Sale or Disposal reason <span>*</span></label>
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>

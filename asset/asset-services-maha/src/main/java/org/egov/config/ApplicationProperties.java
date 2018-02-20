@@ -179,6 +179,8 @@ public class ApplicationProperties {
     @Value("${errcode.asset.description}")
     private String description;
     
+    @Value("${errcode.asset.modeofacquisition}")
+    private String modeOfAcquisition;
     
     
     @Autowired

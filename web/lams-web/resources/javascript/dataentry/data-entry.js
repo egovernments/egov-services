@@ -275,7 +275,7 @@ $("select").on("change", function() {
             $(".disabled").attr("disabled", true);
         }
     } else if(this.id == "floorNumber"){
-      if(this.value)
+      if(this.value && create)
       validateAgreementsForFloor(this.value);
     }
 
@@ -293,8 +293,9 @@ if (this.id == "referenceNumber"){
 function validateAgreementsForFloor(floorNumber) {
    var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,asset:getUrlVars()["assetId"]}).responseJSON["Agreements"];
    var noOfShops = shopsMap[floorNumber];
- if(noOfAgreements.length === noOfShops){
-   showError("Agreements should not exceed number of shops in the floor ");
+ if(noOfAgreements.length === noOfShops || noOfAgreements.length > noOfShops){
+   showError("Agreements should not exceed number of shops in the floor :" + floorNumber);
+   $('#floorNumber').val('');
    $("#createAgreement").attr("disabled",true);
    return false;
  } else{
@@ -306,6 +307,10 @@ function validateAgreementsForShopNo(referenceNumber) {
 
  if(noOfAgreements.length >= 1){
    showError("Agreement already exist with same shop number, change the shop number");
+   if(create){
+     $("#referenceNumber").val('');
+   }else
+   $("#referenceNumber").val(shopNumber);
    $("#createAgreement").attr("disabled",true);
    return false;
  }else{

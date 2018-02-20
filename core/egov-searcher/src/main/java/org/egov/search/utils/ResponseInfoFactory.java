@@ -1,4 +1,4 @@
-package org.egov.search.model;
+package org.egov.search.utils;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
@@ -10,7 +10,10 @@ public class ResponseInfoFactory {
 	public ResponseInfo createResponseInfoFromRequestInfo(final RequestInfo requestInfo, final Boolean success) {
 		final String apiId = requestInfo != null ? requestInfo.getApiId() : "";
 		final String ver = requestInfo != null ? requestInfo.getVer() : "";
-		final Long ts = requestInfo != null ? requestInfo.getTs() : 0L;
+		Long ts = 0L;
+		if(requestInfo != null) {
+			ts = requestInfo.getTs();
+		}
 		final String resMsgId = "uief87324"; // FIXME : Hard-coded
 		final String msgId = requestInfo != null ? requestInfo.getMsgId() : "";
 		final String responseStatus = success ? "successful" : "failed";

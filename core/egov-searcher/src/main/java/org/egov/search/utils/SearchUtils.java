@@ -74,12 +74,20 @@ public class SearchUtils {
 					}else
 						continue;
 				}
-				if(paramValue instanceof net.minidev.json.JSONArray){
+				if(null == paramValue){
+					if(param.getIsMandatory()){
+						logger.error("param: "+param.getName()+" is not provided");
+						throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
+								"Mandatory param for search not provided. Param: "+param.getName());	
+					}else{
+						continue;
+					}
+				}else if(paramValue instanceof net.minidev.json.JSONArray){
 					whereClause.append(param.getName())
-							   .append(" IN ")
-							   .append(paramValue.toString().replace("[", "(")
-									   .replace("]", ")")
-									   .replace("\"", "\'"));
+					  .append(" IN ")
+					  .append(paramValue.toString().replace("[", "(")
+					  .replace("]", ")")
+					  .replace("\"", "\'"));
 				}else{
 					whereClause.append(param.getName())
 					   .append(" = ")

@@ -429,7 +429,7 @@ class UpdateObjection extends React.Component {
         // console.log('upload to filestore');
         var promiseObj = new Promise(function (resolve, reject) {
             let formData = new FormData();
-            formData.append("jurisdictionId", "ap.public");
+            formData.append("jurisdictionId", tenantId);
             formData.append("module", "LAMS");
             formData.append("file", blob);
             $.ajax({
@@ -555,8 +555,8 @@ class UpdateObjection extends React.Component {
     makeAjaxUpload(file, cb) {
         if (file.constructor == File) {
             let formData = new FormData();
-            formData.append("jurisdictionId", "ap.public");
-            formData.append("module", "PGR");
+            formData.append("jurisdictionId", tenantId);
+            formData.append("module", "LAMS");
             formData.append("file", file);
             $.ajax({
                 url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,

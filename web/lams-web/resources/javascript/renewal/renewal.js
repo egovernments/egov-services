@@ -855,7 +855,7 @@ class RenewalAgreement extends React.Component {
                   </div>
                   <div className="col-sm-6 label-view-text">
                     <label id="rent" name="rent">
-                      {agreement.rent ? agreement.rent : "N/A"}
+                      {minRent ? minRent : "N/A"}
                     </label>
                   </div>
                 </div>
@@ -955,7 +955,7 @@ class RenewalAgreement extends React.Component {
                   <div className="col-sm-6">
                     <div className="text-no-ui">
                       <span>₹</span>
-                      <input type="number" min={minRent} name="renewalRent" id="renewalRent" 
+                      <input type="number" min="0" name="renewalRent" id="renewalRent" 
                         onChange={(e) => { handleChange(e, "rent") }} required />
                     </div>
                   </div>

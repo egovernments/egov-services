@@ -429,7 +429,7 @@ class UpdateObjection extends React.Component {
         // console.log('upload to filestore');
         var promiseObj = new Promise(function (resolve, reject) {
             let formData = new FormData();
-            formData.append("tenantId", tenantId);
+            formData.append("jurisdictionId", "ap.public");
             formData.append("module", "LAMS");
             formData.append("file", blob);
             $.ajax({

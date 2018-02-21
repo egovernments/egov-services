@@ -120,6 +120,8 @@ class Sale extends React.Component {
         }
       }
 
+      if (getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Sale Or Disposal");
+
       $(".datepicker").datepicker({
         format: "dd/mm/yyyy",
         autoclose: true
@@ -170,6 +172,11 @@ class Sale extends React.Component {
         commonApiPost("asset-services", "assets/dispose", "_search", {assetId: id, tenantId, pageSize:500}, function(err, res2) {
               if(res2 && res2.Disposals && res2.Disposals.length) {
                 let disposedAsset = res2.Disposals[0];
+
+                //Changing date format     
+                var d = new Date(disposedAsset.disposalDate);
+                disposedAsset.disposalDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+
                 if(disposedAsset.documents && disposedAsset.documents.length) {
                   var _files = [];
                   for(var i=0; i<disposedAsset.documents.length; i++) {
@@ -452,7 +459,7 @@ class Sale extends React.Component {
 
       return (
       	<div>
-      		<h3 > Create Asset Sale Or Disposal </h3>
+      		<h3 > {getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Asset Sale Or Disposal </h3>
           <form onSubmit={(e) => {createDisposal(e)}}>
               <div className="form-section">
                 <div className="row">

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PGRRequestValidator {
+public class PGRRequestValidatorTest {
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRRequestValidatorTest.class);
+	public static final Logger logger = LoggerFactory.getLogger(PGRRequestValidator.class);
 }

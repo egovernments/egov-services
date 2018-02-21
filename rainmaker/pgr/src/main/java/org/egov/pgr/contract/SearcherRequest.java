@@ -6,13 +6,17 @@ import org.egov.common.contract.request.RequestInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
-@Getter
-@Setter
-@lombok.ToString
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SearcherRequest {
 	
 	@NotNull

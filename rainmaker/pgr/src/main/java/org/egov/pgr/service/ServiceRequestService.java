@@ -32,7 +32,7 @@ public class ServiceRequestService {
 	@Autowired
 	private ResponseInfoFactory factory;
 	
-	public static final Logger logger = LoggerFactory.getLogger(ServiceRequestService.class);
+	public static final Logger logger = LoggerFactory.getLogger(ServiceRequestServiceTest.class);
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;

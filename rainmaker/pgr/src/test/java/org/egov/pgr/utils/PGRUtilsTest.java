@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class PGRUtils {
+public class PGRUtilsTest {
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRUtilsTest.class);
+	public static final Logger logger = LoggerFactory.getLogger(PGRUtils.class);
 
 }

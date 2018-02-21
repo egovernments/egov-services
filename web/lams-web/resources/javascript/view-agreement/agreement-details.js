@@ -878,11 +878,11 @@ class AgreementDetails extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="remarks">Remarks :</label>
+                                        <label htmlFor="floorNo">Floor Number :</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <label id="remarks" name="remarks">
-                                            {agreement.remarks || 'N/A'}
+                                        <label id="floorNo" name="floorNo">
+                                            {agreement.floorNumber || 'N/A'}
                                         </label>
                                     </div>
                                 </div>
@@ -913,6 +913,20 @@ class AgreementDetails extends React.Component {
                                   </div>
                               </div>
                           </div>
+                        </div>
+                        <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="remarks">Remarks :</label>
+                                </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="remarks" name="remarks">
+                                        {agreement.remarks || 'N/A'}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>

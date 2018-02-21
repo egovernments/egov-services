@@ -971,15 +971,15 @@ class CreateAsset extends React.Component {
                 _this.setState({"assetCategories":response});
                 // console.log('Global var : ', response);
                 console.log('Asset Category Master from Promise for update / view: ',response);
-                if(asset.status == "CAPITALIZED") {
+                
                   console.log('Its capitalized');
                   let ifassetLandIMObj = response && response.find((obj)=>{return obj.name === asset.assetCategory.name});
                   console.log('LANDIMMOV : ',ifassetLandIMObj);
                   _this.setState({
-                      capitalized: true,
+                      capitalized: asset.status == "CAPITALIZED"?true:false,
                       ifassetLandIM: ifassetLandIMObj && (ifassetLandIMObj.assetCategoryType === 'LAND' || ifassetLandIMObj.assetCategoryType === 'IMMOVABLE') ? true : false
                   });
-                }
+                
               });
 
               if(asset.assetCategory && asset.assetCategory.id) {

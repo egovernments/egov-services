@@ -54,6 +54,7 @@ class Revaluation extends React.Component {
           document.getElementsByClassName("homepage_logo")[0].src = (logo_ele[0].getAttribute("src") && logo_ele[0].getAttribute("src").indexOf("http") > -1) ? logo_ele[0].getAttribute("src") : window.location.origin + logo_ele[0].getAttribute("src");
         }
       }
+      if (getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Revaluation");
 
       let id = getUrlVars()["id"], _this = this, count = 4, _state = {};
     	$("#revaluationDate").datepicker({
@@ -130,9 +131,24 @@ class Revaluation extends React.Component {
         commonApiPost("asset-services", "assets/revaluation", "_search", {assetId: id, tenantId, pageSize:500}, function(err, res2) {
           if(res2 && res2.Revaluations && res2.Revaluations.length) {
             let revalAsset = res2.Revaluations[0];
-            _this.setState({
-              revaluationSet: revalAsset
+
+            //Changing date format     
+            var d = new Date(revalAsset.revaluationDate);
+            revalAsset.revaluationDate = d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear();
+
+            //Getting the Name of the employee
+            commonApiPost("hr-employee","employees","_search", {
+              tenantId, id:revalAsset.reevaluatedBy, pageSize:500
+            }, function(err, Eres) {
+              console.log("inside the employee call",Eres);
+              if(Eres && Eres.Employee && Eres.Employee.length) 
+              revalAsset.reevaluatedBy = Eres.Employee[0].name;
+              _this.setState({
+                revaluationSet: revalAsset
+              });
             });
+
+            
           }
         })
       }
@@ -353,7 +369,7 @@ class Revaluation extends React.Component {
 
       return (
       	<div>
-      		<h3 > Create Asset Revaluation </h3>
+      		<h3 > {getUrlVars()["type"] ? titleCase(getUrlVars()["type"]) : "Create"} Asset Revaluation </h3>
       		<form onSubmit={(e) => {createRevaluation(e)}}>
 	            <div className="form-section">
                 <div className="row">
@@ -448,7 +464,7 @@ class Revaluation extends React.Component {
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
-                                <input type="number" value={revaluationSet.revaluationAmount} onChange={(e) => handleChange(e, "revaluationAmount")} required/>
+                                <input type="number" min="0" value={revaluationSet.revaluationAmount} onChange={(e) => handleChange(e, "revaluationAmount")} required/>
                               </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
@@ -476,7 +492,7 @@ class Revaluation extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Revaluated By </label>
+                              <label>Re-evaluated By </label>
                             </div>
                             <div className="col-sm-6 label-view-text">
                               <label>{revaluationSet.reevaluatedBy}</label>
@@ -503,7 +519,7 @@ class Revaluation extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Value After Reevaluation </label>
+                              <label>Value After Revaluation </label>
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <input type="text" value={revaluationSet.valueAfterRevaluation} disabled/>

@@ -63,7 +63,7 @@ public class ServiceReq   {
   private String lastName = null;
 
   @JsonProperty("phone")
-  private String phone = null;
+  private Long phone = null;
 
   @JsonProperty("attributes")
   private Object attributes = null;
@@ -412,7 +412,7 @@ public class ServiceReq   {
     this.lastName = lastName;
   }
 
-  public ServiceReq phone(String phone) {
+  public ServiceReq phone(Long phone) {
     this.phone = phone;
     return this;
   }
@@ -424,11 +424,11 @@ public class ServiceReq   {
   @NotNull
 
 
-  public String getPhone() {
+  public Long getPhone() {
     return phone;
   }
 
-  public void setPhone(String phone) {
+  public void setPhone(Long phone) {
     this.phone = phone;
   }
 

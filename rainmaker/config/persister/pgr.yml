@@ -1,0 +1,129 @@
+serviceMaps:
+ serviceName: User Service
+ mappings:
+ - version: 1.0
+   name: Asset
+   description: Persists asset details in eg_asset table
+   fromTopic: save-pgr-servicereq
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO eg_pgr_servicereq(tenantId,serviceCode,serviceRequestId,description,lat,long,address,addressId,email,deviceId,accountId,firstName,lastName,phone,attributes,status,assignedTo,media,source,expectedTime,createdby,createdtime,lastmodifiedby,lastmodifiedtime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+
+      basePath: ServiceReq.*
+      jsonMaps:
+
+
+       - jsonPath: $.ServiceReq.*.tenantId
+
+       - jsonPath: $.ServiceReq.*.serviceCode
+       
+       - jsonPath: $.ServiceReq.*.serviceRequestId
+
+       - jsonPath: $.ServiceReq.*.description
+
+       - jsonPath: $.ServiceReq.*.lat
+
+       - jsonPath: $.ServiceReq.*.long
+
+       - jsonPath: $.ServiceReq.*.address
+
+       - jsonPath: $.ServiceReq.*.addressId
+
+       - jsonPath: $.ServiceReq.*.email
+       
+       - jsonPath: $.ServiceReq.*.deviceId
+       
+       - jsonPath: $.ServiceReq.*.accountId
+
+       - jsonPath: $.ServiceReq.*.firstName
+
+       - jsonPath: $.ServiceReq.*.lastName
+
+       - jsonPath: $.ServiceReq.*.phone
+
+       - jsonPath: $.ServiceReq.*.attributes
+         type: JSON
+         dbType: JSONB
+
+       - jsonPath: $.ServiceReq.*.status
+
+       - jsonPath: $.ServiceReq.*.assignedTo
+
+       - jsonPath: $.ServiceReq.*.media
+         type: JSON
+         dbType: JSONB
+
+       - jsonPath: $.ServiceReq.*.source
+
+       - jsonPath: $.ServiceReq.*.expectedTime
+
+       - jsonPath: $.ServiceReq.*.auditDetails.createdBy
+
+       - jsonPath: $.ServiceReq.*.auditDetails.createdTime
+
+       - jsonPath: $.ServiceReq.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.ServiceReq.*.auditDetails.lastModifiedTime
+       
+       
+
+ - version: 1.0
+   name: Asset
+   description: Persists asset details in eg_asset table
+   fromTopic: update-pgr-servicereq
+   isTransaction: true
+   queryMaps:       
+    - query: UPDATE eg_pgr_servicereq  SET  description=?, lat=?, long=?,address=?, addressid=?, email=?, deviceid=?, accountid=?, firstname=?, lastname=?, phone=?, attributes=?, status=?, assignedto=?, media=?, source=?, expectedtime=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicecode=? AND servicerequestid=?;
+    
+      basePath: ServiceReq.*
+      jsonMaps:
+
+       - jsonPath: $.ServiceReq.*.description
+
+       - jsonPath: $.ServiceReq.*.lat
+
+       - jsonPath: $.ServiceReq.*.long
+
+       - jsonPath: $.ServiceReq.*.address
+
+       - jsonPath: $.ServiceReq.*.addressId
+
+       - jsonPath: $.ServiceReq.*.email
+       
+       - jsonPath: $.ServiceReq.*.deviceId
+       
+       - jsonPath: $.ServiceReq.*.accountId
+
+       - jsonPath: $.ServiceReq.*.firstName
+
+       - jsonPath: $.ServiceReq.*.lastName
+
+       - jsonPath: $.ServiceReq.*.phone
+
+       - jsonPath: $.ServiceReq.*.attributes
+         type: JSON
+         dbType: JSONB
+
+       - jsonPath: $.ServiceReq.*.status
+
+       - jsonPath: $.ServiceReq.*.assignedTo
+
+       - jsonPath: $.ServiceReq.*.media
+         type: JSON
+         dbType: JSONB
+
+       - jsonPath: $.ServiceReq.*.source
+
+       - jsonPath: $.ServiceReq.*.expectedTime
+
+       - jsonPath: $.ServiceReq.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.ServiceReq.*.auditDetails.lastModifiedTime
+
+       - jsonPath: $.ServiceReq.*.tenantId
+
+       - jsonPath: $.ServiceReq.*.serviceCode
+       
+       - jsonPath: $.ServiceReq.*.serviceRequestId
+
+       

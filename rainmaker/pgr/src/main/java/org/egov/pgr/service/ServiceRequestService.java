@@ -1,21 +1,20 @@
 package org.egov.pgr.service;
 
-import java.awt.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.contract.CountResponse;
+import org.egov.pgr.contract.IdGenerationResponse;
+import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.repository.IdGenRepo;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,9 +38,10 @@ public class ServiceRequestService {
 
 	@Autowired
 	private ResponseInfoFactory factory;
-	
-	public static final Logger logger = LoggerFactory.getLogger(ServiceRequestService.class);
-	
+
+	@Autowired
+	private IdGenRepo idGenRepo;
+
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
 
@@ -59,11 +59,30 @@ public class ServiceRequestService {
 
 		log.debug(" the incoming request obj in service : {}", request);
 
+		List<ServiceReq> serviceReqs = request.getServiceReq();
+		long idCount = serviceReqs.size();
+		RequestInfo requestInfo = request.getRequestInfo();
+
+		IdGenerationResponse response = idGenRepo.getId(requestInfo, serviceReqs.get(0).getTenantId(), idCount);
+		List<String> idList = response.getIdResponses().stream().map(IdResponse::getId).collect(Collectors.toList());
+		int count = 0;
+
+		for (ServiceReq servReq : serviceReqs) {
+			servReq.setServiceRequestId(idList.get(count++));
+		}
 		kafkaProducer.send(saveTopic, request);
 		return getServiceReqResponse(request);
 	}
 
-	/***
+	public ServiceReqResponse update(ServiceReqRequest request) {
+
+		log.debug(" the incoming request obj in service : {}", request);
+
+		kafkaProducer.send(updateTopic, request);
+		return getServiceReqResponse(request);
+	}
+
+	/**
 	 * returns ServiceReqResponse built based on the given ServiceReqRequest
 	 * 
 	 * @param serviceReqRequest
@@ -85,15 +104,16 @@ public class ServiceRequestService {
 	 * @author vishal
 	 */
 	public ServiceReqResponse getServiceRequests(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria){
+
 		ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);	
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
+		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		ServiceReqResponse serviceReqResponse = null;
 		Object response = null;
 		response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
-		logger.info("Searcher response: ",response);
+		log.info("Searcher response: " + response);
 		serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
-		
+
 		return serviceReqResponse;
 	}
 	
@@ -104,7 +124,7 @@ public class ServiceRequestService {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		Object response = null;
 		response = serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
-		logger.info("Searcher response: ",response);
+		log.info("Searcher response: ",response);
 		if(null == response) {
 			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
 					0D);

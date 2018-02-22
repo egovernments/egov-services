@@ -14,15 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceRequestServiceTest {
 	
-	public static final Logger logger = LoggerFactory.getLogger(ServiceRequestService.class);
-
 	@Mock
 	private ServiceRequestRepository serviceRequestRepository;
 	

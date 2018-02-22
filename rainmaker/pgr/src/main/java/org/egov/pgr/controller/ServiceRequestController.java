@@ -37,8 +37,10 @@ public class ServiceRequestController {
 
 	@PostMapping("_update")
 	@ResponseBody
-	private ResponseEntity<?> update() {
-		return new ResponseEntity<>(HttpStatus.OK);
+	private ResponseEntity<?> update(@RequestBody ServiceReqRequest serviceRequest) {
+		
+		ServiceReqResponse response = service.update(serviceRequest);
+		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class ApplicationConstants {
     public static final String MSG_ASSIGNMENT_TODATE = "leaveapplication.assignment.todate";
     public static final String MSG_LEAVETYPE_MAXDAYS = "leaveapplication.leavetype.maxdays";
     public static final String MSG_LEAVEALLOTMENT_EXISTS = "leaveallotment.present";
-
+    public static final String MSG_LEAVEAPPLICATION_ENCASHABLE = "leaveapplication.leavetype.encashable";
 
 
     @Autowired

@@ -1,0 +1,1 @@
+alter table egeis_leaveapplication ADD  column LEAVEGROUND CHARACTER VARYING(50) ;

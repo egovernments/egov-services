@@ -65,11 +65,9 @@ public class LeaveApplication {
 
     private LeaveType leaveType;
 
-    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date fromDate;
 
-    @NotNull
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date toDate;
 
@@ -87,6 +85,8 @@ public class LeaveApplication {
     private Float noOfDays;
 
     private Integer halfdays;
+
+    private String leaveGround;
 
     private Boolean firstHalfleave;
 

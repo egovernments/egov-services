@@ -65,6 +65,8 @@ public class LeaveApplicationGetRequest {
 	private String applicationNumber;
 
 	private String status;
+
+	private String leaveGround;
 	
 	private Long stateId;
 

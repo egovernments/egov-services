@@ -460,6 +460,7 @@ public class AgreementRepository {
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
 		Map<String, Object> processMap = getProcessMap(agreementRequest);
+		String userId = requestInfo.getUserInfo().getId().toString();
 		logger.info("Modify agreement::" + agreement);
 		String agreementUpdate = AGREEMENT_UPDATE_QUERY;
 		Map<String, Object> agreementParameters = getInputParams(agreement, processMap);
@@ -484,18 +485,26 @@ public class AgreementRepository {
 				throw new RuntimeException(ex.getMessage());
 			}
 		}
-		List<Object[]> updateBatchArgs;
-		List<Object[]> insertBatchArgs;
-		Map<String, List<Object[]>> paramsMap = null;
+
+		List<Object[]> insertBatchArgs = new ArrayList<>();
+		Map<String, Object> paramsMap = new HashMap<>();
 		List<SubSeqRenewal> renewalDetails = agreement.getSubSeqRenewals();
 		if (!renewalDetails.isEmpty()) {
 			String insertQuery = SUB_SEQ_RENEW_INSERT_QUERY;
-			String updateQuery = "update eglams_history set resolutionno=?,resolutiondate=?,fromdate=?,todate=?,years=?,rent=?,tenantid=? ,lastmodifiedby=?,lastmodifieddate=? where agreementid=? ";
-			paramsMap = getUpdateBatchParamsList(agreement.getId(), renewalDetails, agreement.getTenantId(),requestInfo);
-			updateBatchArgs = paramsMap.get("UPDATEARGS");
-			insertBatchArgs = paramsMap.get("INSERTARGS");
+			String deleteQuery = "delete from  eglams_history  where agreementid=:agreementId  and tenantid=:tenantId";
+			paramsMap.put("agreementId", agreement.getId());
+			paramsMap.put("tenantId", agreement.getTenantId());
+
+			for (SubSeqRenewal renewalHistory : renewalDetails) {
+
+				Object[] historyDetailList = { agreement.getId(), renewalHistory.getResolutionNumber(),
+						renewalHistory.getResolutionDate(), renewalHistory.getHistoryFromDate(),
+						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
+						agreement.getTenantId(), userId, new Date(), userId, new Date() };
+				insertBatchArgs.add(historyDetailList);
+			}
 			try {
-				jdbcTemplate.batchUpdate(updateQuery, updateBatchArgs);
+				namedParameterJdbcTemplate.update(deleteQuery, paramsMap);
 				if (!insertBatchArgs.isEmpty()) {
 					jdbcTemplate.batchUpdate(insertQuery, insertBatchArgs);
 				}
@@ -737,32 +746,7 @@ public class AgreementRepository {
 		return status;
 	}
     
-	private Map<String, List<Object[]>> getUpdateBatchParamsList(Long agreementId, List<SubSeqRenewal> renewalDetails,
-			String tenantId,RequestInfo requestInfo) {
-		String userId = requestInfo.getUserInfo().getId().toString();
-		Map<String, List<Object[]>> paramsMap = new HashMap<>();
-		List<Object[]> updateBatchArgs = new ArrayList<>();
-		List<Object[]> insertBatchArgs = new ArrayList<>();
-		for (SubSeqRenewal renewalHistory : renewalDetails) {
-			if (renewalHistory.getAgreementId() != null) {
-				Object[] historyDetailUpdateList = { renewalHistory.getResolutionNumber(), renewalHistory.getResolutionDate(),
-						renewalHistory.getHistoryFromDate(), renewalHistory.getHistoryToDate(),
-						renewalHistory.getYears(), renewalHistory.getHistoryRent(), tenantId,userId,new Date(), agreementId};
-				updateBatchArgs.add(historyDetailUpdateList);
-			} else {
-				Object[] historyDetailInsertList = { agreementId, renewalHistory.getResolutionNumber(),
-						renewalHistory.getResolutionDate(), renewalHistory.getHistoryFromDate(),
-						renewalHistory.getHistoryToDate(), renewalHistory.getYears(), renewalHistory.getHistoryRent(),
-						tenantId ,userId,new Date(),userId,new Date()};
-				insertBatchArgs.add(historyDetailInsertList);
-			}
-		}
-		paramsMap.put("UPDATEARGS", updateBatchArgs);
-		paramsMap.put("INSERTARGS", insertBatchArgs);
-
-		return paramsMap;
-	}
-    
+   
 	private Map<Long, List<SubSeqRenewal>> getSubSeqRenewals(List<Agreement> agreements) {
 		List<Long> agreementIds = new ArrayList<>();
 		String query = "select * from eglams_history where agreementid in ( ";

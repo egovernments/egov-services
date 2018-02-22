@@ -41,8 +41,6 @@
 package org.egov.eis.broker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.egov.eis.model.LeaveType;
-import org.egov.eis.repository.ElasticSearchRepository;
 import org.egov.eis.service.LeaveAllotmentService;
 import org.egov.eis.service.LeaveApplicationService;
 import org.egov.eis.service.LeaveOpeningBalanceService;
@@ -63,8 +61,6 @@ import java.util.Map;
 public class LeaveConsumer {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(LeaveConsumer.class);
-
-    private static final String OBJECT_TYPE_LEAVETYPE = "leavetype";
 
     @Value("${kafka.topics.leaveopeningbalance.create.name}")
     private String leaveOpeningBalanceCreateTopic;
@@ -89,9 +85,6 @@ public class LeaveConsumer {
 
     @Autowired
     private LeaveTypeService leaveTypeService;
-
-    @Autowired
-    private ElasticSearchRepository elasticSearchRepository;
 
     @Autowired
     private LeaveOpeningBalanceService leaveOpeningBalanceService;
@@ -119,12 +112,7 @@ public class LeaveConsumer {
                     .update(objectMapper.convertValue(record, LeaveOpeningBalanceRequest.class));
         else if (topic.equalsIgnoreCase(leaveTypeTopic)) {
             LOGGER.info("SaveLeaveTypeConsumer egov-hr-leavetype leaveTypeService:" + leaveTypeService);
-            final LeaveTypeRequest leaveTypeRequest = leaveTypeService
-                    .create(objectMapper.convertValue(record, LeaveTypeRequest.class));
-           // for (final LeaveType leaveType : leaveTypeRequest.getLeaveType())
-                // TODO : leavetype index id should be changed
-                //elasticSearchRepository.index(OBJECT_TYPE_LEAVETYPE,
-                       // leaveType.getTenantId() + "" + leaveType.getName(), leaveType);
+            leaveTypeService.create(objectMapper.convertValue(record, LeaveTypeRequest.class));
         } else if (topic.equalsIgnoreCase(leaveAllotmentCreateTopic))
             leaveAllotmentService.create(objectMapper.convertValue(record, LeaveAllotmentRequest.class));
         else if (topic.equalsIgnoreCase(leaveAllotmentUpdateTopic))

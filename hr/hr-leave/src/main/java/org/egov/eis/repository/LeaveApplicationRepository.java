@@ -40,10 +40,6 @@
 
 package org.egov.eis.repository;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.eis.model.LeaveApplication;
@@ -54,197 +50,195 @@ import org.egov.eis.repository.rowmapper.LeaveSummaryRowMapper;
 import org.egov.eis.service.HRStatusService;
 import org.egov.eis.service.UserService;
 import org.egov.eis.service.WorkFlowService;
-import org.egov.eis.web.contract.LeaveApplicationGetRequest;
-import org.egov.eis.web.contract.LeaveApplicationRequest;
-import org.egov.eis.web.contract.LeaveApplicationSingleRequest;
-import org.egov.eis.web.contract.LeaveSearchRequest;
-import org.egov.eis.web.contract.ProcessInstance;
-import org.egov.eis.web.contract.Task;
-import org.egov.eis.web.contract.UserResponse;
+import org.egov.eis.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Repository
 public class LeaveApplicationRepository {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private LeaveApplicationRowMapper leaveApplicationRowMapper;
+    @Autowired
+    private LeaveApplicationRowMapper leaveApplicationRowMapper;
 
-	@Autowired
-	private LeaveSummaryRowMapper leaveSummaryRowMapper;
+    @Autowired
+    private LeaveSummaryRowMapper leaveSummaryRowMapper;
 
-	@Autowired
-	private LeaveApplicationQueryBuilder leaveApplicationQueryBuilder;
+    @Autowired
+    private LeaveApplicationQueryBuilder leaveApplicationQueryBuilder;
 
-	@Autowired
-	private WorkFlowService workFlowService;
+    @Autowired
+    private WorkFlowService workFlowService;
 
-	@Autowired
-	private HRStatusService hrStatusService;
+    @Autowired
+    private HRStatusService hrStatusService;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest,
-			final RequestInfo requestInfo) {
-		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest,
-				preparedStatementValues, requestInfo);
-		final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				leaveApplicationRowMapper);
-		return leaveApplications;
-	}
+    public List<LeaveApplication> findForCriteria(final LeaveApplicationGetRequest leaveApplicationGetRequest,
+                                                  final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = leaveApplicationQueryBuilder.getQuery(leaveApplicationGetRequest,
+                preparedStatementValues, requestInfo);
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveApplicationRowMapper);
+        return leaveApplications;
+    }
 
-	public List<LeaveApplication> findForReportCriteria(final LeaveSearchRequest leaveSearchRequest,
-			final RequestInfo requestInfo) {
-		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		final String queryStr = leaveApplicationQueryBuilder.getLeaveReportQuery(leaveSearchRequest,
-				preparedStatementValues, requestInfo);
-		final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				leaveApplicationRowMapper);
-		return leaveApplications;
-	}
+    public List<LeaveApplication> findForReportCriteria(final LeaveSearchRequest leaveSearchRequest,
+                                                        final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = leaveApplicationQueryBuilder.getLeaveReportQuery(leaveSearchRequest,
+                preparedStatementValues, requestInfo);
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveApplicationRowMapper);
+        return leaveApplications;
+    }
 
-	public List<LeaveApplication> findForLeaveSummaryCriteria(final LeaveSearchRequest leaveSearchRequest,
-			final RequestInfo requestInfo) {
-		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		final String queryStr = leaveApplicationQueryBuilder.getLeaveSummaryReportQuery(leaveSearchRequest,
-				preparedStatementValues, requestInfo);
-		final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				leaveSummaryRowMapper);
-		return leaveApplications;
-	}
+    public List<LeaveApplication> findForLeaveSummaryCriteria(final LeaveSearchRequest leaveSearchRequest,
+                                                              final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = leaveApplicationQueryBuilder.getLeaveSummaryReportQuery(leaveSearchRequest,
+                preparedStatementValues, requestInfo);
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveSummaryRowMapper);
+        return leaveApplications;
+    }
 
-	public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
-		ProcessInstance processInstance = new ProcessInstance();
-		Long stateId = null;
-		if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
-			processInstance = workFlowService.start(leaveApplicationRequest);
-		if (processInstance.getId() != null)
-			stateId = Long.valueOf(processInstance.getId());
-		final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
-		final Date now = new Date();
-		final UserResponse userResponse = userService
-				.findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
-		for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
-			leaveApplication.setStateId(stateId);
-			final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
-					leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(),
-					leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
-					leaveApplication.getLeaveDays(), leaveApplication.getAvailableDays(),
-					leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(), leaveApplication.getReason(),
-					leaveApplication.getStatus(), leaveApplication.getStateId(), userResponse.getUsers().get(0).getId(),
-					now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId() };
-			jdbcTemplate.update(leaveApplicationInsertQuery, obj);
-		}
-		return leaveApplicationRequest;
-	}
+    public LeaveApplicationRequest saveLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
+        ProcessInstance processInstance = new ProcessInstance();
+        Long stateId = null;
+        if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
+            processInstance = workFlowService.start(leaveApplicationRequest);
+        if (processInstance.getId() != null)
+            stateId = Long.valueOf(processInstance.getId());
+        final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertLeaveApplicationQuery();
+        final Date now = new Date();
+        final UserResponse userResponse = userService
+                .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
+        for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            leaveApplication.setStateId(stateId);
+            final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+                    leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(),
+                    leaveApplication.getToDate(), leaveApplication.getCompensatoryForDate(),
+                    leaveApplication.getLeaveDays(), leaveApplication.getAvailableDays(),
+                    leaveApplication.getHalfdays(), leaveApplication.getFirstHalfleave(), leaveApplication.getReason(),
+                    leaveApplication.getStatus(), leaveApplication.getLeaveGround(), leaveApplication.getStateId(), userResponse.getUsers().get(0).getId(),
+                    now, userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
+            jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        }
+        return leaveApplicationRequest;
+    }
 
-	public LeaveApplicationRequest saveCompoffLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
-		ProcessInstance processInstance = new ProcessInstance();
-		Long stateId = null;
-		if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
-			processInstance = workFlowService.start(leaveApplicationRequest);
-		if (processInstance.getId() != null)
-			stateId = Long.valueOf(processInstance.getId());
-		final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertCompoffLeaveApplicationQuery();
-		final Date now = new Date();
-		final UserResponse userResponse = userService
-				.findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
-		for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
-			leaveApplication.setStateId(stateId);
-			final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
-					leaveApplication.getFromDate(), leaveApplication.getToDate(),
-					leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(),
-					leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
-					leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
-					leaveApplication.getStateId(), userResponse.getUsers().get(0).getId(), now,
-					userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId() };
-			jdbcTemplate.update(leaveApplicationInsertQuery, obj);
-		}
-		return leaveApplicationRequest;
-	}
+    public LeaveApplicationRequest saveCompoffLeaveApplication(final LeaveApplicationRequest leaveApplicationRequest) {
+        ProcessInstance processInstance = new ProcessInstance();
+        Long stateId = null;
+        if (StringUtils.isEmpty(leaveApplicationRequest.getType()))
+            processInstance = workFlowService.start(leaveApplicationRequest);
+        if (processInstance.getId() != null)
+            stateId = Long.valueOf(processInstance.getId());
+        final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.insertCompoffLeaveApplicationQuery();
+        final Date now = new Date();
+        final UserResponse userResponse = userService
+                .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
+        for (LeaveApplication leaveApplication : leaveApplicationRequest.getLeaveApplication()) {
+            leaveApplication.setStateId(stateId);
+            final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+                    leaveApplication.getFromDate(), leaveApplication.getToDate(),
+                    leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(),
+                    leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
+                    leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
+                    leaveApplication.getStateId(), userResponse.getUsers().get(0).getId(), now,
+                    userResponse.getUsers().get(0).getId(), now, leaveApplication.getTenantId()};
+            jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        }
+        return leaveApplicationRequest;
+    }
 
-	public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
-		final Task task = workFlowService.update(leaveApplicationRequest);
-		final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.updateLeaveApplicationQuery();
-		final Date now = new Date();
-		final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
-		final UserResponse userResponse = userService
-				.findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
-		leaveApplication.setStateId(Long.valueOf(task.getId()));
-		leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
-		final Object[] obj = new Object[] { leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
-				leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(), leaveApplication.getToDate(),
-				leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(),
-				leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
-				leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
-				Long.valueOf(task.getId()), userResponse.getUsers().get(0).getId(), now, leaveApplication.getId(),
-				leaveApplication.getTenantId() };
-		jdbcTemplate.update(leaveApplicationInsertQuery, obj);
-		return leaveApplication;
-	}
+    public LeaveApplication updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {
+        final Task task = workFlowService.update(leaveApplicationRequest);
+        final String leaveApplicationInsertQuery = LeaveApplicationQueryBuilder.updateLeaveApplicationQuery();
+        final Date now = new Date();
+        final LeaveApplication leaveApplication = leaveApplicationRequest.getLeaveApplication();
+        final UserResponse userResponse = userService
+                .findUserByUserNameAndTenantId(leaveApplicationRequest.getRequestInfo());
+        leaveApplication.setStateId(Long.valueOf(task.getId()));
+        leaveApplicationStatusChange(leaveApplication, leaveApplicationRequest.getRequestInfo());
+        final Object[] obj = new Object[]{leaveApplication.getApplicationNumber(), leaveApplication.getEmployee(),
+                leaveApplication.getLeaveType().getId(), leaveApplication.getFromDate(), leaveApplication.getToDate(),
+                leaveApplication.getCompensatoryForDate(), leaveApplication.getLeaveDays(),
+                leaveApplication.getAvailableDays(), leaveApplication.getHalfdays(),
+                leaveApplication.getFirstHalfleave(), leaveApplication.getReason(), leaveApplication.getStatus(),
+                Long.valueOf(task.getId()), userResponse.getUsers().get(0).getId(), now, leaveApplication.getId(),
+                leaveApplication.getTenantId()};
+        jdbcTemplate.update(leaveApplicationInsertQuery, obj);
+        return leaveApplication;
+    }
 
-	private void leaveApplicationStatusChange(final LeaveApplication leaveApplication, final RequestInfo requestInfo) {
-		final String workFlowAction = leaveApplication.getWorkflowDetails().getAction();
-		if ("Approve".equalsIgnoreCase(workFlowAction))
-			leaveApplication.setStatus(hrStatusService
-					.getHRStatuses(LeaveStatus.APPROVED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
-					.getId());
-		else if ("Reject".equalsIgnoreCase(workFlowAction))
-			leaveApplication.setStatus(hrStatusService
-					.getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
-					.getId());
-		else if ("Cancel".equalsIgnoreCase(workFlowAction))
-			leaveApplication.setStatus(hrStatusService
-					.getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
-					.getId());
-		else if ("Submit".equalsIgnoreCase(workFlowAction))
-			leaveApplication.setStatus(hrStatusService
-					.getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(), requestInfo)
-					.get(0).getId());
-	}
+    private void leaveApplicationStatusChange(final LeaveApplication leaveApplication, final RequestInfo requestInfo) {
+        final String workFlowAction = leaveApplication.getWorkflowDetails().getAction();
+        if ("Approve".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(hrStatusService
+                    .getHRStatuses(LeaveStatus.APPROVED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
+                    .getId());
+        else if ("Reject".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(hrStatusService
+                    .getHRStatuses(LeaveStatus.REJECTED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
+                    .getId());
+        else if ("Cancel".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(hrStatusService
+                    .getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(), requestInfo).get(0)
+                    .getId());
+        else if ("Submit".equalsIgnoreCase(workFlowAction))
+            leaveApplication.setStatus(hrStatusService
+                    .getHRStatuses(LeaveStatus.RESUBMITTED.toString(), leaveApplication.getTenantId(), requestInfo)
+                    .get(0).getId());
+    }
 
-	public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication,
-			final RequestInfo requestInfo) {
-		final String leaveApplicationGetForDateRangeQuery = LeaveApplicationQueryBuilder
-				.getLeaveApplicationForDateRangeQuery();
-		final Object[] obj = new Object[] { leaveApplication.getFromDate(), leaveApplication.getToDate(),
-				leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getEmployee(),
-				hrStatusService
-						.getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(), requestInfo)
-						.get(0).getId(),
-				leaveApplication.getId() == null ? -1 : leaveApplication.getId(), leaveApplication.getTenantId() };
-		final List<LeaveApplication> leaveApplications = jdbcTemplate.query(leaveApplicationGetForDateRangeQuery, obj,
-				leaveApplicationRowMapper);
-		return leaveApplications;
-	}
+    public List<LeaveApplication> getLeaveApplicationForDateRange(LeaveApplication leaveApplication,
+                                                                  final RequestInfo requestInfo) {
+        final String leaveApplicationGetForDateRangeQuery = LeaveApplicationQueryBuilder
+                .getLeaveApplicationForDateRangeQuery();
+        final Object[] obj = new Object[]{leaveApplication.getFromDate(), leaveApplication.getToDate(),
+                leaveApplication.getFromDate(), leaveApplication.getToDate(), leaveApplication.getEmployee(),
+                hrStatusService
+                        .getHRStatuses(LeaveStatus.CANCELLED.toString(), leaveApplication.getTenantId(), requestInfo)
+                        .get(0).getId(),
+                leaveApplication.getId() == null ? -1 : leaveApplication.getId(), leaveApplication.getTenantId()};
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(leaveApplicationGetForDateRangeQuery, obj,
+                leaveApplicationRowMapper);
+        return leaveApplications;
+    }
 
-	public LeaveApplication getLeaveApplicationForDate(Long employeeId, Date compensatoryDate, String tenantId) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		Date fromdate = null;
-		preparedStatementValues.add(employeeId);
-		preparedStatementValues.add(compensatoryDate);
-		preparedStatementValues.add(tenantId);
-		final List<LeaveApplication> leaveApplications = leaveApplicationQueryBuilder
-				.getLeaveApplicationForCompensatoryDate(employeeId, compensatoryDate, fromdate, fromdate, tenantId);
-		return leaveApplications.isEmpty() ? null : leaveApplications.get(0);
-	}
+    public LeaveApplication getLeaveApplicationForDate(Long employeeId, Date compensatoryDate, String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        Date fromdate = null;
+        preparedStatementValues.add(employeeId);
+        preparedStatementValues.add(compensatoryDate);
+        preparedStatementValues.add(tenantId);
+        final List<LeaveApplication> leaveApplications = leaveApplicationQueryBuilder
+                .getLeaveApplicationForCompensatoryDate(employeeId, compensatoryDate, fromdate, fromdate, tenantId);
+        return leaveApplications.isEmpty() ? null : leaveApplications.get(0);
+    }
 
-	public LeaveApplication getLeaveApplicationForDateRange(Long employeeId, Date fromDate, Date toDate,
-			String tenantId) {
-		final List<Object> preparedStatementValues = new ArrayList<>();
-		preparedStatementValues.add(employeeId);
-		preparedStatementValues.add(fromDate);
-		preparedStatementValues.add(toDate);
-		preparedStatementValues.add(tenantId);
-		final List<LeaveApplication> leaveApplications = leaveApplicationQueryBuilder
-				.getLeaveApplicationForCompensatoryDate(employeeId, null, fromDate, toDate, tenantId);
-		return leaveApplications.isEmpty() ? null : leaveApplications.get(0);
-	}
+    public LeaveApplication getLeaveApplicationForDateRange(Long employeeId, Date fromDate, Date toDate,
+                                                            String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<>();
+        preparedStatementValues.add(employeeId);
+        preparedStatementValues.add(fromDate);
+        preparedStatementValues.add(toDate);
+        preparedStatementValues.add(tenantId);
+        final List<LeaveApplication> leaveApplications = leaveApplicationQueryBuilder
+                .getLeaveApplicationForCompensatoryDate(employeeId, null, fromDate, toDate, tenantId);
+        return leaveApplications.isEmpty() ? null : leaveApplications.get(0);
+    }
 
 }

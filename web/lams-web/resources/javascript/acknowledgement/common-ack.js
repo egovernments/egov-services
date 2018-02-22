@@ -26,7 +26,10 @@ class AckOfAgreement extends React.Component {
           <form>
             <h3> Acknowledgement of {getUrlVars()["wftype"]} Agreement : </h3>
             <h3> <center><font color="ass"> {getUrlVars()["action"] ? (getUrlVars()["action"].toLowerCase() == "approve" ? "Application Approved and Forwarded to "+ decodeURIComponent(getUrlVars()["name"]) : (getUrlVars()["action"].toLowerCase() == "forward" ? (getUrlVars()["name"] ? "Application forwarded to " + decodeURIComponent(getUrlVars()["name"]) : "Application forwarded.") : (getUrlVars()["name"] ? "Application rejected and forwarded to " + decodeURIComponent(getUrlVars()["name"]) : (getUrlVars()["action"] && getUrlVars()["action"].toLowerCase() == "cancel" ? "Application cancelled." : "Application rejected.")))) : (getUrlVars()["name"] ? "Application created and forwarded to " + decodeURIComponent(getUrlVars()["name"]) : "Application created")} </font> </center></h3>
-            <h4> <center><font color="ass"><strong> Acknowledgement Number:  {decodeURIComponent(getUrlVars()["ackNo"])}</strong>  </font> </center></h4>
+            <h4> <center><font color="ass">
+            <strong>
+            {getUrlVars()["wftype"].toLowerCase()=="renewal" && getUrlVars()["action"].toLowerCase()=="approve" ? "Agreement Number: "+decodeURIComponent(getUrlVars()["ackNo"]) : "Acknowledgement Number:"+
+            decodeURIComponent(getUrlVars()["ackNo"])}</strong>  </font> </center></h4>
 
             <div className="text-center">
                 <button type="button" className="btn btn-submit" onClick={(e)=>{close()}}>Close</button>

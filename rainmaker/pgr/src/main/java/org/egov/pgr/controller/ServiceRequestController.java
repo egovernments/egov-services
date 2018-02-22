@@ -5,8 +5,6 @@ import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.service.ServiceRequestService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping(value = "/requests/")
 public class ServiceRequestController {
-	
-	public static final Logger logger = LoggerFactory.getLogger(ServiceRequestController.class);
-
+		
 	@Autowired
 	private ServiceRequestService service;
+	
 	
 
 	@PostMapping("_create")
@@ -44,20 +41,34 @@ public class ServiceRequestController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	/**
+	 * Controller enpoint to fetch service requests
+	 * 
+	 * @param requestInfoWrapper
+	 * @param serviceReqSearchCriteria
+	 * @return
+	 * @throws Exception
+	 * @author vishal
+	 */
 	@PostMapping("_search")
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) throws Exception{
-		logger.info("RequestInfo: "+requestInfoWrapper.toString());
-		logger.info("ServiceReqSearchCriteria: "+serviceReqSearchCriteria.toString());
+		log.info("RequestInfo: ",requestInfoWrapper.toString());
+		log.info("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
 		ServiceReqResponse serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	
 	}
 
-	@PostMapping("count/_search")
+	@PostMapping("_count")
 	@ResponseBody
-	private ResponseEntity<?> count() {
-		return new ResponseEntity<>(HttpStatus.OK);
+	private ResponseEntity<?> count(@RequestBody RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) throws Exception{
+		log.info("RequestInfo: ",requestInfoWrapper.toString());
+		log.info("CountCriteria: ",serviceReqSearchCriteria.toString());
+		Object countResponse = service.getCount(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
+		return new ResponseEntity<>(countResponse, HttpStatus.OK);	
 	}
+
 
 }

@@ -1,6 +1,13 @@
 package org.egov.pgr.service;
 
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.contract.CountResponse;
+import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
@@ -16,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,10 +40,7 @@ public class ServiceRequestService {
 	@Autowired
 	private ResponseInfoFactory factory;
 	
-	public static final Logger logger = LoggerFactory.getLogger(ServiceRequestServiceTest.class);
-
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+	public static final Logger logger = LoggerFactory.getLogger(ServiceRequestService.class);
 	
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
@@ -71,6 +76,14 @@ public class ServiceRequestService {
 				.serviceReq(serviceReqRequest.getServiceReq()).build();
 	}
 	
+	/**
+	 * Method to return service requests received from the repo to the controller in the reqd format
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return ServiceReqResponse
+	 * @author vishal
+	 */
 	public ServiceReqResponse getServiceRequests(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria){
 		ObjectMapper mapper = new ObjectMapper();
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);	
@@ -78,10 +91,28 @@ public class ServiceRequestService {
         ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
 		Object response = null;
 		response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
-		logger.info("Searcher response: "+response);
+		logger.info("Searcher response: ",response);
 		serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
 		
 		return serviceReqResponse;
+	}
+	
+	
+	public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria){
+		ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);	
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		Object response = null;
+		response = serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
+		logger.info("Searcher response: ",response);
+		if(null == response) {
+			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+					0D);
+		}else {
+			Double count = JsonPath.read(response, "$.count[0].count");
+			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+					count);
+		}
 	}
 
 }

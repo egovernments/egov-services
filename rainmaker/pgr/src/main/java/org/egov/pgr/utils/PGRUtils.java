@@ -1,13 +1,13 @@
 package org.egov.pgr.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 
 @Component
+@Slf4j
 public class PGRUtils {
 
-	public static final Logger logger = LoggerFactory.getLogger(PGRUtilsTest.class);
 
 }

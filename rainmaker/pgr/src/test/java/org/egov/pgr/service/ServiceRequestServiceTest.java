@@ -37,7 +37,6 @@ public class ServiceRequestServiceTest {
 		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
 		Mockito.when(serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria))
 		.thenReturn(serviceReqResponse);
-		
 		response = service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 		
 		assertNotNull(response);

@@ -47,7 +47,7 @@ public class SearchRepository {
 		}
 		Long startTime = new Date().getTime();
 		List<PGobject> maps = jdbcTemplate.queryForList(query,PGobject.class);
-		LOGGER.info("query result: "+maps.get(0));
+		LOGGER.info("query result: "+maps);
 		Long endTime = new Date().getTime();
 		Long totalExecutionTime = endTime - startTime;
 		LOGGER.info("Query execution time in millisec: "+totalExecutionTime);

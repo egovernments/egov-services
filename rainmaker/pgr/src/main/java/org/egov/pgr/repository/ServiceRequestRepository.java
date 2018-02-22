@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -32,6 +31,15 @@ public class ServiceRequestRepository {
 	@Value("${infra.searcher.endpoint}")
 	private String searcherEndpoint;
 	
+	
+	/**
+	 * Fetches service requests from postgres db based on criteria provided in ServiceReqSearchCriteria
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return Object
+	 * @author vishal
+	 */
 	public Object getServiceRequests(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -48,7 +56,33 @@ public class ServiceRequestRepository {
 			logger.info("Request: "+mapper.writeValueAsString(searcherRequest));
 			response = restTemplate.postForObject(uri.toString(), searcherRequest, Map.class);
 		}catch(HttpClientErrorException e) {
-			logger.error("Searcher threw a BadRequest: ",e);
+			logger.error("Searcher threw aN Exception: ",e);
+			throw new ServiceCallException(e.getResponseBodyAsString());
+		}catch(Exception e) {
+			logger.error("Exception while fetching from searcher: ",e);
+		}
+		
+		return response;
+		
+	}
+	
+	public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		Object response = null;
+		StringBuilder uri = new StringBuilder();
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", "rainmaker-pgr").replace("{searchName}", "count");
+		uri.append(endPoint);
+		logger.info("URI: ",uri.toString());
+		SearcherRequest searcherRequest = new SearcherRequest();
+		searcherRequest.setRequestInfo(requestInfo);
+		searcherRequest.setSearchCriteria(serviceReqSearchCriteria);
+		try {
+			logger.info("Request: ",mapper.writeValueAsString(searcherRequest));
+			response = restTemplate.postForObject(uri.toString(), searcherRequest, Map.class);
+		}catch(HttpClientErrorException e) {
+			logger.error("Searcher threw aN Exception: ",e);
 			throw new ServiceCallException(e.getResponseBodyAsString());
 		}catch(Exception e) {
 			logger.error("Exception while fetching from searcher: ",e);

@@ -89,13 +89,13 @@ public class LeaveAllotmentService {
 
 	public ResponseEntity<?> createLeaveAllotment(LeaveAllotmentRequest leaveAllotmentRequest) {
 		List<LeaveAllotment> leaveAllotment = leaveAllotmentRequest.getLeaveAllotment();
-		kafkaTemplate.send(leaveAllotmentCreateTopic, leaveAllotmentRequest);
+		leaveAllotmentRepository.create(leaveAllotmentRequest);
 		return getSuccessResponseForCreate(leaveAllotment, leaveAllotmentRequest.getRequestInfo());
 	}
 
 	public ResponseEntity<?> updateLeaveAllotment(LeaveAllotmentRequest leaveAllotmentRequest) {
 		List<LeaveAllotment> leaveAllotment = leaveAllotmentRequest.getLeaveAllotment();
-		kafkaTemplate.send(leaveAllotmentUpdateTopic, leaveAllotmentRequest);
+		leaveAllotmentRepository.update(leaveAllotmentRequest);
 		return getSuccessResponseForCreate(leaveAllotment, leaveAllotmentRequest.getRequestInfo());
 	}
 

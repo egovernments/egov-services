@@ -88,15 +88,6 @@ public class LeaveOpeningBalanceService {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(LeaveOpeningBalanceService.class);
 
-	@Value("${kafka.topics.leaveopeningbalance.create.name}")
-	private String leaveOpeningBalanceCreateTopic;
-
-	@Value("${kafka.topics.leaveopeningbalance.update.name}")
-	private String leaveOpeningBalanceUpdateTopic;
-
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-
 	@Autowired
 	private LeaveOpeningBalanceRepository leaveOpeningBalanceRepository;
 
@@ -116,9 +107,6 @@ public class LeaveOpeningBalanceService {
 	private HRStatusService hrStatusService;
 
 	@Autowired
-	private LeaveApplicationRepository leaveApplicationRepository;
-
-	@Autowired
 	private LeaveApplicationService leaveApplicationService;
 
 	@Autowired
@@ -126,9 +114,6 @@ public class LeaveOpeningBalanceService {
 
 	@Autowired
 	private ResponseInfoFactory responseInfoFactory;
-
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	public List<LeaveOpeningBalance> getLeaveOpeningBalances(
 			LeaveOpeningBalanceGetRequest leaveOpeningBalanceGetRequest) {
@@ -146,7 +131,7 @@ public class LeaveOpeningBalanceService {
 
 		leaveSearchRequest.setAsOnDate(new Date());
 		leaveSearchRequest.setTenantId(leaveOpeningBalanceGetRequest.getTenantId());
-		List<Long> employeeIds = new ArrayList<>();
+		List<Long> employeeIds ;
 
 		EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
 				requestInfo);
@@ -172,8 +157,6 @@ public class LeaveOpeningBalanceService {
 				errorLeaveOpeningBalanceList.add(leaveOpeningBalance);
 		}
 		leaveOpeningBalanceRequest.setLeaveOpeningBalance(successLeaveOpeningBalanceList);
-		// kafkaTemplate.send(leaveOpeningBalanceCreateTopic,
-		// leaveOpeningBalanceRequest);
 		leaveOpeningBalanceRepository.create(leaveOpeningBalanceRequest);
 		if (type != null && "upload".equalsIgnoreCase(type))
 			return getSuccessResponseForUpload(successLeaveOpeningBalanceList, errorLeaveOpeningBalanceList,
@@ -191,7 +174,7 @@ public class LeaveOpeningBalanceService {
 		leaveSearchRequest.setIsPrimary(true);
 		leaveSearchRequest.setActive(true);
 		leaveSearchRequest.setTenantId(leaveOpeningBalanceGetRequest.getTenantId());
-		List<Long> employeeIds = new ArrayList<>();
+		List<Long> employeeIds ;
 
 		EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest,
 				requestInfo);
@@ -327,7 +310,6 @@ public class LeaveOpeningBalanceService {
 		leaveTypeGetRequest.setPageSize((short) 500);
 		List<LeaveType> leaveTypes = leaveTypeService.getLeaveTypes(leaveTypeGetRequest);
 		Map<Integer, CalendarYear> calendarYearMap = new HashMap<Integer, CalendarYear>();
-		Map<Long, EmployeeInfo> employeeMap = new HashMap<Long, EmployeeInfo>();
 		Map<Long, LeaveType> leaveTypeMap = new HashMap<Long, LeaveType>();
 		for (CalendarYear cy : calendarYearResponse.getCalendarYear()) {
 			calendarYearMap.put(cy.getName(), cy);
@@ -373,7 +355,7 @@ public class LeaveOpeningBalanceService {
 
 	public ResponseEntity<?> updateLeaveOpeningBalance(LeaveOpeningBalanceRequest leaveOpeningBalanceRequest) {
 		List<LeaveOpeningBalance> leaveOpeningBalance = leaveOpeningBalanceRequest.getLeaveOpeningBalance();
-		kafkaTemplate.send(leaveOpeningBalanceUpdateTopic, leaveOpeningBalanceRequest);
+		leaveOpeningBalanceRepository.update(leaveOpeningBalanceRequest);
 		return getSuccessResponseForCreate(leaveOpeningBalance, leaveOpeningBalanceRequest.getRequestInfo());
 	}
 

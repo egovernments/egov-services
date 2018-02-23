@@ -18,15 +18,17 @@ import lombok.NoArgsConstructor;
 /**
  * Response to the metadata request
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
-@NoArgsConstructor
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-23T09:30:28.401Z")
+
+
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ServiceResponse   {
-  @JsonProperty("ResponseInfo")
+  @JsonProperty("responseInfo")
   private ResponseInfo responseInfo = null;
 
-  @JsonProperty("Services")
+  @JsonProperty("services")
   private List<Service> services = new ArrayList<Service>();
 
   public ServiceResponse responseInfo(ResponseInfo responseInfo) {

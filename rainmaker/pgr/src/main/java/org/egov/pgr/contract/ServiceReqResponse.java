@@ -15,20 +15,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-
 /**
  * Response to the metadata request
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-23T09:30:28.401Z")
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ServiceReqResponse   {
-  @JsonProperty("ResponseInfo")
+  @JsonProperty("responseInfo")
   private ResponseInfo responseInfo = null;
 
-  @JsonProperty("ServiceReq")
+  @JsonProperty("serviceReq")
   private List<ServiceReq> serviceReq = new ArrayList<ServiceReq>();
 
   public ServiceReqResponse responseInfo(ResponseInfo responseInfo) {

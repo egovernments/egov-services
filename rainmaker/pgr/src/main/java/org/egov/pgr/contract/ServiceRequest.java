@@ -18,15 +18,16 @@ import lombok.NoArgsConstructor;
 /**
  * Request object to fetch the report data
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
-@NoArgsConstructor
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-23T09:30:28.401Z")
+
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ServiceRequest   {
-  @JsonProperty("RequestInfo")
+  @JsonProperty("requestInfo")
   private RequestInfo requestInfo = null;
 
-  @JsonProperty("Services")
+  @JsonProperty("services")
   private List<Service> services = new ArrayList<Service>();
 
   public ServiceRequest requestInfo(RequestInfo requestInfo) {

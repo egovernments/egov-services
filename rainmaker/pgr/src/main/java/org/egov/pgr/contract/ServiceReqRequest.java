@@ -1,32 +1,30 @@
 package org.egov.pgr.contract;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import org.egov.common.contract.request.RequestInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-/**
- * Request object to fetch the report data
- */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
-@NoArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.pgr.contract.AuditDetails.AuditDetailsBuilder;
+
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ServiceReqRequest   {
-  @JsonProperty("RequestInfo")
+	
+  @JsonProperty("requestInfo")
   private RequestInfo requestInfo = null;
 
-  @JsonProperty("ServiceReq")
+  @JsonProperty("serviceReq")
   private List<ServiceReq> serviceReq = new ArrayList<ServiceReq>();
 
   public ServiceReqRequest requestInfo(RequestInfo requestInfo) {

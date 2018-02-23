@@ -10,27 +10,31 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+/**
+ * Comment object to encapsulate comment from Citizen OR Employee
+ */
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-23T09:30:28.401Z")
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Media   {
+public class Comment   {
   @JsonProperty("by")
   private String by = null;
 
   @JsonProperty("when")
   private Long when = null;
 
-  @JsonProperty("url")
-  private String url = null;
+  @JsonProperty("message")
+  private String message = null;
 
-  public Media by(String by) {
+  public Comment by(String by) {
     this.by = by;
     return this;
   }
 
    /**
-   * who uploaded/attached this media
+   * who made the commet Citizen/Employee.
    * @return by
   **/
 
@@ -43,7 +47,7 @@ public class Media   {
     this.by = by;
   }
 
-  public Media when(Long when) {
+  public Comment when(Long when) {
     this.when = when;
     return this;
   }
@@ -62,23 +66,23 @@ public class Media   {
     this.when = when;
   }
 
-  public Media url(String url) {
-    this.url = url;
+  public Comment message(String message) {
+    this.message = message;
     return this;
   }
 
    /**
-   * URL for the media
-   * @return url
+   * Comment message.
+   * @return message
   **/
 
 
-  public String getUrl() {
-    return url;
+  public String getMessage() {
+    return message;
   }
 
-  public void setUrl(String url) {
-    this.url = url;
+  public void setMessage(String message) {
+    this.message = message;
   }
 
 
@@ -90,25 +94,25 @@ public class Media   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Media media = (Media) o;
-    return Objects.equals(this.by, media.by) &&
-        Objects.equals(this.when, media.when) &&
-        Objects.equals(this.url, media.url);
+    Comment comment = (Comment) o;
+    return Objects.equals(this.by, comment.by) &&
+        Objects.equals(this.when, comment.when) &&
+        Objects.equals(this.message, comment.message);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(by, when, url);
+    return Objects.hash(by, when, message);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Media {\n");
+    sb.append("class Comment {\n");
     
     sb.append("    by: ").append(toIndentedString(by)).append("\n");
     sb.append("    when: ").append(toIndentedString(when)).append("\n");
-    sb.append("    url: ").append(toIndentedString(url)).append("\n");
+    sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -7,6 +7,8 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.egov.pgr.contract.AuditDetails.AuditDetailsBuilder;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -18,9 +20,10 @@ import lombok.NoArgsConstructor;
 /**
  * Instance of Service request raised for a particular service. As per extension propsed in the Service definition \&quot;attributes\&quot; carry the input values requried by metadata definition in the structure as described by the corresponding schema. 
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-20T05:39:55.235Z")
-@NoArgsConstructor
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-02-23T09:30:28.401Z")
+
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ServiceReq   {
   @JsonProperty("tenantId")
@@ -63,7 +66,7 @@ public class ServiceReq   {
   private String lastName = null;
 
   @JsonProperty("phone")
-  private Long phone = null;
+  private String phone = null;
 
   @JsonProperty("attributes")
   private Object attributes = null;
@@ -113,6 +116,9 @@ public class ServiceReq   {
 
   @JsonProperty("media")
   private List<Media> media = null;
+
+  @JsonProperty("comments")
+  private List<Comment> comments = null;
 
   /**
    * source of the complaint - Text, Mobile app, Phone, CSC, WhatsApp
@@ -172,8 +178,6 @@ public class ServiceReq   {
    * @return tenantId
   **/
   @NotNull
-
-
   public String getTenantId() {
     return tenantId;
   }
@@ -412,7 +416,7 @@ public class ServiceReq   {
     this.lastName = lastName;
   }
 
-  public ServiceReq phone(Long phone) {
+  public ServiceReq phone(String phone) {
     this.phone = phone;
     return this;
   }
@@ -424,11 +428,11 @@ public class ServiceReq   {
   @NotNull
 
 
-  public Long getPhone() {
+  public String getPhone() {
     return phone;
   }
 
-  public void setPhone(Long phone) {
+  public void setPhone(String phone) {
     this.phone = phone;
   }
 
@@ -517,6 +521,34 @@ public class ServiceReq   {
     this.media = media;
   }
 
+  public ServiceReq comments(List<Comment> comments) {
+    this.comments = comments;
+    return this;
+  }
+
+  public ServiceReq addCommentsItem(Comment commentsItem) {
+    if (this.comments == null) {
+      this.comments = new ArrayList<Comment>();
+    }
+    this.comments.add(commentsItem);
+    return this;
+  }
+
+   /**
+   * List of comment associated with this service request sorted by attachment date 
+   * @return comments
+  **/
+
+  @Valid
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
+
   public ServiceReq source(SourceEnum source) {
     this.source = source;
     return this;
@@ -603,6 +635,7 @@ public class ServiceReq   {
         Objects.equals(this.status, serviceReq.status) &&
         Objects.equals(this.assignedTo, serviceReq.assignedTo) &&
         Objects.equals(this.media, serviceReq.media) &&
+        Objects.equals(this.comments, serviceReq.comments) &&
         Objects.equals(this.source, serviceReq.source) &&
         Objects.equals(this.expectedTime, serviceReq.expectedTime) &&
         Objects.equals(this.auditDetails, serviceReq.auditDetails);
@@ -610,7 +643,7 @@ public class ServiceReq   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(tenantId, serviceCode, serviceRequestId, description, lat, _long, address, addressId, email, deviceId, accountId, firstName, lastName, phone, attributes, status, assignedTo, media, source, expectedTime, auditDetails);
+    return Objects.hash(tenantId, serviceCode, serviceRequestId, description, lat, _long, address, addressId, email, deviceId, accountId, firstName, lastName, phone, attributes, status, assignedTo, media, comments, source, expectedTime, auditDetails);
   }
 
   @Override
@@ -636,6 +669,7 @@ public class ServiceReq   {
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    assignedTo: ").append(toIndentedString(assignedTo)).append("\n");
     sb.append("    media: ").append(toIndentedString(media)).append("\n");
+    sb.append("    comments: ").append(toIndentedString(comments)).append("\n");
     sb.append("    source: ").append(toIndentedString(source)).append("\n");
     sb.append("    expectedTime: ").append(toIndentedString(expectedTime)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");

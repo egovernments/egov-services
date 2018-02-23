@@ -35,7 +35,7 @@ public class ServiceRequestRepositoryTest {
 		ReflectionTestUtils.setField(
 				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");
 		
-		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		RequestInfo requestInfo = new RequestInfo();
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
 		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
 
@@ -74,7 +74,7 @@ public class ServiceRequestRepositoryTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void testGetServiceRequestsException() {
-		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		RequestInfo requestInfo = new RequestInfo();
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
 		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
 
@@ -94,7 +94,7 @@ public class ServiceRequestRepositoryTest {
 		ReflectionTestUtils.setField(
 				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");
 		
-		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		RequestInfo requestInfo = new RequestInfo();
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
 		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
 
@@ -133,7 +133,7 @@ public class ServiceRequestRepositoryTest {
 	@SuppressWarnings("unchecked")
 	@Test(expected = Exception.class)
 	public void testGetCountException() {
-		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		RequestInfo requestInfo = new RequestInfo();
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
 		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
 

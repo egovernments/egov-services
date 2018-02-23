@@ -79,7 +79,7 @@ public class LeaveTypeService {
 	}
 
 	public List<LeaveType> createLeaveType(final LeaveTypeRequest leaveTypeRequest) {
-		kafkaTemplate.send("egov-hr-leavetype", leaveTypeRequest);
+		create(leaveTypeRequest);
 		return leaveTypeRequest.getLeaveType();
 	}
 

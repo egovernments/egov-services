@@ -66,6 +66,15 @@ public class ServiceRequestRepository {
 		
 	}
 	
+	
+	/**
+	 * Fetches count of service requests from postgres db based on criteria provided in ServiceReqSearchCriteria
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return Object
+	 * @author vishal
+	 */
 	public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

@@ -1,5 +1,6 @@
 package org.egov.pgr.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,33 +107,41 @@ public class ServiceRequestService {
 	public ServiceReqResponse getServiceRequests(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria){
 
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		ServiceReqResponse serviceReqResponse = null;
-		Object response = null;
-		response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
-		log.info("Searcher response: " + response);
+        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);	
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
+		Object response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
+		log.info("Searcher response: ",response);
+		if(null == response) {
+			return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+					new ArrayList<ServiceReq>());
+		}
 		serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
-
 		return serviceReqResponse;
 	}
 	
 	
+	/**
+	 * Fetches count of service requests and returns in the reqd format.
+	 * 
+	 * @param requestInfo
+	 * @param serviceReqSearchCriteria
+	 * @return Object
+	 * @author vishal
+	 */
 	public Object getCount(RequestInfo requestInfo, ServiceReqSearchCriteria serviceReqSearchCriteria){
 		ObjectMapper mapper = new ObjectMapper();
         mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);	
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		Object response = null;
-		response = serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
+		Object response = serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
 		log.info("Searcher response: ",response);
 		if(null == response) {
 			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
 					0D);
-		}else {
-			Double count = JsonPath.read(response, "$.count[0].count");
-			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
-					count);
 		}
+		Double count = JsonPath.read(response, "$.count[0].count");
+		return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
+					count);
 	}
 
 }

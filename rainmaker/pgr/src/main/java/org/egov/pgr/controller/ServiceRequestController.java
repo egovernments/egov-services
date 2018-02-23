@@ -1,5 +1,7 @@
 package org.egov.pgr.controller;
 
+import javax.validation.Valid;
+
 import org.egov.pgr.contract.RequestInfoWrapper;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
@@ -59,27 +61,33 @@ public class ServiceRequestController {
 	 * 
 	 * @param requestInfoWrapper
 	 * @param serviceReqSearchCriteria
-	 * @return
+	 * @return ResponseEntity<?>
 	 * @author vishal
 	 */
 	@PostMapping("_search")
 	@ResponseBody
-	private ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		
-		log.debug("RequestInfo: ",requestInfoWrapper.toString());
-		log.debug("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
+	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria){
+		log.info("RequestInfo: ",requestInfoWrapper.toString());
+		log.info("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
 		ServiceReqResponse serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	
 	}
-
+	
+	/**
+	 * Controller to fetch count of service requests based on a given criteria
+	 * 
+	 * @param requestInfoWrapper
+	 * @param serviceReqSearchCriteria
+	 * @return ResponseEntity<?>
+	 * @author vishal
+	 */
 	@PostMapping("_count")
 	@ResponseBody
-	private ResponseEntity<?> count(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		
-		log.debug("RequestInfo: ",requestInfoWrapper.toString());
-		log.debug("CountCriteria: ",serviceReqSearchCriteria.toString());
+	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
+			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria){
+		log.info("RequestInfo: ",requestInfoWrapper.toString());
+		log.info("CountCriteria: ",serviceReqSearchCriteria.toString());
 		Object countResponse = service.getCount(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(countResponse, HttpStatus.OK);	
 	}

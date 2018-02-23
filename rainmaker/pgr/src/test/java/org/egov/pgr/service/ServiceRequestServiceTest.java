@@ -1,14 +1,16 @@
 package org.egov.pgr.service;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdGenerationResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.ServiceReq;
@@ -29,7 +31,10 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 @RunWith(MockitoJUnitRunner.class)
@@ -151,15 +156,16 @@ public class ServiceRequestServiceTest {
 	
 	@Test
 	public void testGetServiceRequestsFailure() {
+		ObjectMapper mapper = new ObjectMapper();
 		Object response = new Object();
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
 		Mockito.when(serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria))
 		.thenReturn(null);
-		
 		response = service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
-		
-		assertNull(response);
+		ServiceReqResponse serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
+
+		assertTrue(serviceReqResponse.getServiceReq().isEmpty());
 		
 		
 	}
@@ -172,6 +178,53 @@ public class ServiceRequestServiceTest {
 		.thenThrow(new ServiceCallException());
 		
 		service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
+				
+	}
+	
+	@Test
+	public void testGetCountSuccess() {
+		Map<String, Double> innerMap= new HashMap<>();
+		innerMap.put("count", 1D);
+		Map<String, List<Object>> map = new HashMap<>();
+		List<Object> list = new ArrayList<>();
+		list.add(innerMap);
+		map.put("count", list);
+		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
+		Mockito.when(serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria))
+		.thenReturn(map);
+		Object res = service.getCount(requestInfo, serviceReqSearchCriteria);
+		
+		assertNotNull(res);
+		
+		
+	}
+	
+	@Test
+	public void testGetCountFailure() {
+		ObjectMapper mapper = new ObjectMapper();
+		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
+		Mockito.when(serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria))
+		.thenReturn(null);
+		Object res = service.getCount(requestInfo, serviceReqSearchCriteria);
+		CountResponse response = mapper.convertValue(res, CountResponse.class);
+
+		assertTrue(response.getCount() == 0D);
+		
+		
+	}
+	
+	@Test(expected = Exception.class)
+	public void testGetCountException() {
+		Object response = new Object();
+		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
+		Mockito.when(serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria))
+		.thenReturn(response);
+		
+		service.getCount(requestInfo, serviceReqSearchCriteria);
+		
 				
 	}
 

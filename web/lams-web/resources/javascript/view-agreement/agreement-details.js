@@ -1022,9 +1022,9 @@ class AgreementDetails extends React.Component {
                         {renderSubSeqRenewals()}
                         <br />
                         <div className="text-center">
+                           <button id="sub" type="submit" className="btn btn-submit">View DCB</button>&nbsp;&nbsp;
+                           <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>  &nbsp;&nbsp;
 
-                    <button type="button" className="btn btn-close" onClick={(e) => { this.close() }}>Close</button>  &nbsp;&nbsp;
-                    <button id="sub" type="submit" className="btn btn-submit">View DCB</button>
                         </div>
 
                     </fieldset>

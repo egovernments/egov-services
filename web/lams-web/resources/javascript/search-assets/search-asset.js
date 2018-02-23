@@ -346,7 +346,7 @@ class AssetSearch extends React.Component {
                     </div>
                     <br/>
                     <div className="text-center">
-                        <button type="submit" className="btn btn-submit">Search</button>
+                        <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
                         <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
                     </div>
                     </form>

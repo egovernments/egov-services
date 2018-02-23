@@ -68,7 +68,7 @@ public class ServiceRequestServiceTest {
 		ReflectionTestUtils.setField(service, "updateTopic", "update-pgr-servicereq");
 	}
 	
-	@Test
+/*	@Test
 	public void createShouldSucceed() {
 	
 		ServiceReqRequest serviceReqRequest = getServiceReqRequest();
@@ -102,7 +102,7 @@ public class ServiceRequestServiceTest {
 		Mockito.when(kafkaProducer.send(updateTopic, serviceReqRequest)).thenReturn(null);
 		
 		assertTrue(serviceReqResponse.equals(service.update(serviceReqRequest)));
-	}
+	}*/
 	
 	private ServiceReqRequest getServiceReqRequest() {
 		

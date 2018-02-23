@@ -32,11 +32,11 @@ public class ServiceRequestController {
 	 *  enpoint to create service requests
 	 * 
 	 * @param ServiceReqRequest
-	 * @author el rey
+	 * @author kaviyarasan
 	 */
 	@PostMapping("_create")
 	@ResponseBody
-	private ResponseEntity<?> create(@RequestBody ServiceReqRequest serviceRequest) {
+	private ResponseEntity<?> create(@RequestBody @Valid ServiceReqRequest serviceRequest) {
 
 		ServiceReqResponse response = service.create(serviceRequest);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -50,7 +50,7 @@ public class ServiceRequestController {
 	 */
 	@PostMapping("_update")
 	@ResponseBody
-	private ResponseEntity<?> update(@RequestBody ServiceReqRequest serviceRequest) {
+	private ResponseEntity<?> update(@RequestBody @Valid ServiceReqRequest serviceRequest) {
 		
 		ServiceReqResponse response = service.update(serviceRequest);
 		return new ResponseEntity<>(response,HttpStatus.OK);
@@ -67,14 +67,16 @@ public class ServiceRequestController {
 	@PostMapping("_search")
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria){
-		log.info("RequestInfo: ",requestInfoWrapper.toString());
-		log.info("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
+			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		
+		log.debug("RequestInfo: ",requestInfoWrapper.toString());
+		log.debug("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
 		ServiceReqResponse serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	
 	}
 	
 	/**
+<<<<<<< Updated upstream
 	 * Controller to fetch count of service requests based on a given criteria
 	 * 
 	 * @param requestInfoWrapper
@@ -85,9 +87,10 @@ public class ServiceRequestController {
 	@PostMapping("_count")
 	@ResponseBody
 	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria){
-		log.info("RequestInfo: ",requestInfoWrapper.toString());
-		log.info("CountCriteria: ",serviceReqSearchCriteria.toString());
+			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		
+		log.debug("RequestInfo: ",requestInfoWrapper.toString());
+		log.debug("CountCriteria: ",serviceReqSearchCriteria.toString());
 		Object countResponse = service.getCount(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(countResponse, HttpStatus.OK);	
 	}

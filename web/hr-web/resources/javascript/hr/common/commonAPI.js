@@ -549,6 +549,7 @@ function getDropdown(name, cb, params) {
                                     commonApiPost("hr-masters", "positions", "_paginatedsearch", queryParam, function (err, res) {
                                         if (res) {
                                             positions = positions.concat(res["Position"]);
+                                            localStorage.setItem("assignments_position", JSON.stringify(positions));
                                         }
                                     });
                                 }

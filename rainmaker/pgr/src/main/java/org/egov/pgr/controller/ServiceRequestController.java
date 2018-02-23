@@ -26,7 +26,12 @@ public class ServiceRequestController {
 	private ServiceRequestService service;
 	
 	
-
+	/**
+	 *  enpoint to create service requests
+	 * 
+	 * @param ServiceReqRequest
+	 * @author el rey
+	 */
 	@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody ServiceReqRequest serviceRequest) {
@@ -35,6 +40,12 @@ public class ServiceRequestController {
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
+	/**
+	 *  enpoint to update service requests
+	 * 
+	 * @param ServiceReqRequest
+	 * @author el rey
+	 */
 	@PostMapping("_update")
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody ServiceReqRequest serviceRequest) {
@@ -49,15 +60,15 @@ public class ServiceRequestController {
 	 * @param requestInfoWrapper
 	 * @param serviceReqSearchCriteria
 	 * @return
-	 * @throws Exception
 	 * @author vishal
 	 */
 	@PostMapping("_search")
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) throws Exception{
-		log.info("RequestInfo: ",requestInfoWrapper.toString());
-		log.info("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
+			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		
+		log.debug("RequestInfo: ",requestInfoWrapper.toString());
+		log.debug("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
 		ServiceReqResponse serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	
 	}
@@ -65,9 +76,10 @@ public class ServiceRequestController {
 	@PostMapping("_count")
 	@ResponseBody
 	private ResponseEntity<?> count(@RequestBody RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) throws Exception{
-		log.info("RequestInfo: ",requestInfoWrapper.toString());
-		log.info("CountCriteria: ",serviceReqSearchCriteria.toString());
+			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		
+		log.debug("RequestInfo: ",requestInfoWrapper.toString());
+		log.debug("CountCriteria: ",serviceReqSearchCriteria.toString());
 		Object countResponse = service.getCount(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
 		return new ResponseEntity<>(countResponse, HttpStatus.OK);	
 	}

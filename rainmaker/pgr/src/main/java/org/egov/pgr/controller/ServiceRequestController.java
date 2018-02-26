@@ -76,7 +76,6 @@ public class ServiceRequestController {
 	}
 	
 	/**
-<<<<<<< Updated upstream
 	 * Controller to fetch count of service requests based on a given criteria
 	 * 
 	 * @param requestInfoWrapper

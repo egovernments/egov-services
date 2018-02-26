@@ -19,6 +19,7 @@ import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.repository.IdGenRepo;
 import org.egov.pgr.repository.ServiceRequestRepository;
+import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.ServiceCallException;
@@ -33,10 +34,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
 
-
-@Slf4j
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceRequestServiceTest {
 	
@@ -68,7 +66,7 @@ public class ServiceRequestServiceTest {
 		ReflectionTestUtils.setField(service, "updateTopic", "update-pgr-servicereq");
 	}
 	
-/*	@Test
+	@Test
 	public void createShouldSucceed() {
 	
 		ServiceReqRequest serviceReqRequest = getServiceReqRequest();
@@ -78,13 +76,14 @@ public class ServiceRequestServiceTest {
 		
 		Boolean boolVal =  true;
 		
-		long  longVal = serviceReqRequest.getServiceReq().size();
+		int longVal = serviceReqRequest.getServiceReq().size();
 		
 		
-		Mockito.when(idGenRepo.getId(requestInfo,tenantId, longVal)).thenReturn(getIdGenResponse());
+		Mockito.when(idGenRepo.getId(requestInfo, tenantId, longVal, PGRConstants.SERV_REQ_ID_NAME,
+				PGRConstants.SERV_REQ_ID_FORMAT)).thenReturn(getIdGenResponse());
 		Mockito.when(factory.createResponseInfoFromRequestInfo(requestInfo, boolVal)).thenReturn(responseInfo);
 		Mockito.when(kafkaProducer.send(saveTopic, serviceReqRequest)).thenReturn(null);
-		
+
 		assertTrue(serviceReqResponse.equals(service.create(serviceReqRequest)));
 	}
 	
@@ -102,7 +101,7 @@ public class ServiceRequestServiceTest {
 		Mockito.when(kafkaProducer.send(updateTopic, serviceReqRequest)).thenReturn(null);
 		
 		assertTrue(serviceReqResponse.equals(service.update(serviceReqRequest)));
-	}*/
+	}
 	
 	private ServiceReqRequest getServiceReqRequest() {
 		

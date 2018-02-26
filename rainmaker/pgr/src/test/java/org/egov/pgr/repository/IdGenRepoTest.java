@@ -21,7 +21,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,13 +48,13 @@ public class IdGenRepoTest {
 		ReflectionTestUtils.setField(idGenRepo, "idGenHost", "http://localhost:8088/");
 	}
 	
-/*	@Test
+	@Test
 	public void idGenShouldGetResponse() {
 		
-		long count =2;
+		Integer count =2;
 		
 		when(restTemplate.postForObject(idGenHost+idGenPath, getIdGenRequest(), IdGenerationResponse.class)).thenReturn(getIdGenResponse());
-		assertTrue(getIdGenResponse().equals(idGenRepo.getId(new RequestInfo(), "mh.roha", count)));
+		assertTrue(getIdGenResponse().equals(idGenRepo.getId(new RequestInfo(), "mh.roha", count, PGRConstants.SERV_REQ_ID_NAME, PGRConstants.SERV_REQ_ID_FORMAT)));
 		
 	}
 	
@@ -67,20 +69,20 @@ public class IdGenRepoTest {
 		idResponses.add(idResponse1);
 		IdGenerationResponse mockFailResponse = IdGenerationResponse.builder().idResponses(idResponses).responseInfo(getResponseInfo()).build();
 		
-		long count =2;
+		Integer count =2;
 		
 		when(restTemplate.postForObject(idGenHost+idGenPath, getIdGenRequest(), IdGenerationResponse.class)).thenReturn(getIdGenResponse());
-		assertFalse(mockFailResponse.equals(idGenRepo.getId(new RequestInfo(), "mh.roha", count)));
+		assertFalse(mockFailResponse.equals(idGenRepo.getId(new RequestInfo(), "mh.roha", count, PGRConstants.SERV_REQ_ID_NAME, PGRConstants.SERV_REQ_ID_FORMAT)));
 	}
 	
 	@Test(expected = ServiceCallException.class)
 	public void idGenShouldThrowServiceCallException() {
 		
-		long count =2;
+		Integer count =2;
 		
-		when(restTemplate.postForObject(idGenHost+idGenPath, getIdGenRequest(), IdGenerationResponse.class)).thenThrow(new ServiceCallException());
-		assertFalse(getIdGenResponse().equals(idGenRepo.getId(new RequestInfo(), "mh.roha", count)));
-	}*/
+		when(restTemplate.postForObject(idGenHost+idGenPath, getIdGenRequest(), IdGenerationResponse.class)).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+		assertFalse(getIdGenResponse().equals(idGenRepo.getId(new RequestInfo(), "mh.roha", count, PGRConstants.SERV_REQ_ID_NAME, PGRConstants.SERV_REQ_ID_FORMAT)));
+	}
 	
 	private IdGenerationRequest getIdGenRequest() {
 		

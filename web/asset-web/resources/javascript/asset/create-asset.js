@@ -1621,17 +1621,21 @@ class CreateAsset extends React.Component {
       if(["view", "update"].indexOf(type) > -1 && assetAttributes.length) {
         var tableItems = assetAttributes.filter(function(val, ind) {
           return (val.type == "Table" && name == val.key);
-        });
+        });      
         return tableItems.map(function(val, index) {
           return val.value.map(function(itm, ind){
               if(Object.keys(itm).indexOf("new") == -1) {
                 var _itms = [];
-                for(var key in itm) {
-                  _itms.push({
-                    key: key,
-                    value: itm[key]
-                  })
-                };
+                for (var _clm in item.columns) {
+                  for (var key in itm) {
+                    if (item.columns[_clm].name === key) {
+                      _itms.push({
+                        key: key,
+                        value: itm[key]
+                      })
+                    }
+                  }
+              };
                 return (<tr>
                     <td style={{"padding-top": "12px"}}>{ind+1}</td>
                     {_itms.map(function(_itm, ind2) {

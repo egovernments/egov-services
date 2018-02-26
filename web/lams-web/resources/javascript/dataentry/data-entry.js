@@ -962,6 +962,7 @@ $("#createAgreementForm").validate({
                       hideLoading();
                     } else {
                       showError(response["statusText"]);
+                      showError(err);
                       hideLoading();
                     }
                 } else {

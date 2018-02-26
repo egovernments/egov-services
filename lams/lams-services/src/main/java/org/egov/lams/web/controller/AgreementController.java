@@ -577,11 +577,17 @@ public class AgreementController {
 	}
 
 	private ErrorResponse populateValidationErrors(BindingResult errors) {
+		String errorMsg = "";
+		if (errors.getFieldError() != null) {
+			errorMsg = errors.getFieldError().getDefaultMessage();
+		}
 		ErrorResponse errRes = new ErrorResponse();
 		ObjectError validationError = errors.getGlobalError();
+
 		Error error = new Error();
 		error.setCode(1);
-		error.setDescription(validationError.getDefaultMessage());
+		error.setMessage(validationError != null ? validationError.getDefaultMessage() : errorMsg);
+		error.setDescription(validationError != null ? validationError.getDefaultMessage() : errorMsg);
 		errRes.setError(error);
 		return errRes;
 	}

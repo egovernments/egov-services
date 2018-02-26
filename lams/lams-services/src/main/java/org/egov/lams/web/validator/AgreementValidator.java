@@ -260,11 +260,13 @@ public class AgreementValidator {
 			errors.reject("Agreement not valid", "Only data entry agreements allowed to modify.");
 		}
 		if (!Action.CREATE.equals(agreement.getAction())) {
-			errors.reject("Agreement not valid", "Can't allowed to modify as transactions already made for this agreement!");
+			errors.reject("Agreement not valid",
+					"Can't allowed to modify as transactions already made for this agreement!");
 		}
 		if (agreement.getIsUnderWorkflow()) {
 			errors.reject("Agreement underworkflow", "Agreement is already in other workflow");
 		}
+		validateAgreementsForFloor(agreement, agreement.getAsset().getId(), errors);
 	}
 
 	public void validateAsset(AgreementRequest agreementRequest, Errors errors) {
@@ -279,8 +281,7 @@ public class AgreementValidator {
 		AssetResponse assetResponse = assetService.getAssets(queryString, requestInfoWrapper);
 		if (assetResponse.getAssets() == null || assetResponse.getAssets().isEmpty())
 			errors.rejectValue("Agreement.securityDeposit", "", "No asset is created");
-		if (SHOPPING_COMPLEX.equalsIgnoreCase(assetCategory))
-			validateAgreementsForFloor(agreement, assetId, errors);
+	    validateAgreementsForFloor(agreement, assetId, errors);
 
 	}
 
@@ -288,14 +289,21 @@ public class AgreementValidator {
 		List<Agreement> agreements;
 		Boolean isExist = Boolean.FALSE;
 		String shopNumber = agreement.getReferenceNumber();
+		Long agreementId = agreement.getId();
 		agreements = agreementService.getAgreementsForAssetIdAndFloor(agreement, assetId);
 
 		if (!agreements.isEmpty()) {
-			isExist = agreements.stream().anyMatch(a -> a.getReferenceNumber().equalsIgnoreCase(shopNumber));
-		}
+			if (agreementId == null)
+				isExist = agreements.stream().anyMatch(a -> a.getReferenceNumber().equalsIgnoreCase(shopNumber));
+			else {
+				isExist = agreements.stream().filter(a -> !agreementId.equals(a.getId()))
+						.anyMatch(a -> a.getReferenceNumber().equalsIgnoreCase(shopNumber));
+			}
+		} 
 		if (isExist) {
-			errors.rejectValue("Agreement.ReferenceNumber","", "Agreement already exists with the shop Number: "+shopNumber);
- 
+			errors.rejectValue("Agreement.ReferenceNumber","",
+					"Agreement already exists with the shop Number: " + shopNumber);
+
 		}
 
 	}

@@ -67,7 +67,6 @@ $(document).on("keyup","input", function() {
 var index=1;
 var create = true;
 var shopsMap = {};
-var shopNumber;
 
 $(document).ready(function() {
 
@@ -116,7 +115,6 @@ $(document).ready(function() {
         $("#floorNumber").val(agreement.floorNumber);
         $("#referenceNumber").val(agreement.referenceNumber);
         }
-        shopNumber = agreement.referenceNumber;
 
         dependentonBasisTime(agreement.basisOfAllotment, agreement.timePeriod);
         // #createAgreementForm select, #createAgreementForm textarea
@@ -283,13 +281,6 @@ $("select").on("change", function() {
 
 });
 
-$("input").on("change", function() {
-if (this.id == "referenceNumber"){
-     if(shopNumber!=this.value)
-     validateAgreementsForShopNo(this.value);
-  }
-  fillValueToObject(this);
-});
 function validateAgreementsForFloor(floorNumber) {
    var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, floorNumber:floorNumber,asset:getUrlVars()["assetId"]}).responseJSON["Agreements"];
    var noOfShops = shopsMap[floorNumber];
@@ -299,21 +290,6 @@ function validateAgreementsForFloor(floorNumber) {
    $("#createAgreement").attr("disabled",true);
    return false;
  } else{
-   $("#createAgreement").attr("disabled",false);
- }
-}
-function validateAgreementsForShopNo(referenceNumber) {
-   var noOfAgreements = commonApiPost("lams-services", "agreements", "_search", {tenantId, referenceNumber:referenceNumber,asset:getUrlVars()["assetId"]}).responseJSON["Agreements"];
-
- if(noOfAgreements.length >= 1){
-   showError("Agreement already exist with same shop number, change the shop number");
-   if(create){
-     $("#referenceNumber").val('');
-   }else
-   $("#referenceNumber").val(shopNumber);
-   $("#createAgreement").attr("disabled",true);
-   return false;
- }else{
    $("#createAgreement").attr("disabled",false);
  }
 }
@@ -611,7 +587,7 @@ $.validator.addMethod('integerOnly',function(value){
 },'please check the value/enter integer numbers only.');
 
 $.validator.addMethod('mm/yyyy',function(value){
-  return value.length > 0 ? /[\d]{2}\/[\d]{4}/.test(value) : true;
+  return value.length > 0 ? /^[0-9]{2}\/[0-9]{4}$/.test(value) : true;
 },'please check the value/enter in mm/yyyy format.')
 
 

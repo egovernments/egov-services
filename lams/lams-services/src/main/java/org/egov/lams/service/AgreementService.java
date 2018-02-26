@@ -1,5 +1,6 @@
 package org.egov.lams.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.egov.lams.model.*;
 import org.egov.lams.model.enums.Action;
@@ -87,8 +88,11 @@ public class AgreementService {
 		Set<Long> assets = new HashSet<>();
 		assets.add(assetId);
 		agreementCriteria.setAsset(assets);
-		if(agreement.getReferenceNumber()!=null){
-		agreementCriteria.setReferenceNumber(agreement.getReferenceNumber());
+		if (StringUtils.isNotBlank(agreement.getReferenceNumber())) {
+			agreementCriteria.setReferenceNumber(agreement.getReferenceNumber());
+		}
+		if (StringUtils.isNotBlank(agreement.getFloorNumber())) {
+			agreementCriteria.setFloorNumber(agreement.getFloorNumber());
 		}
 		return agreementRepository.getAgreementForCriteria(agreementCriteria);
 	}

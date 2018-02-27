@@ -911,7 +911,10 @@ class CreateAsset extends React.Component {
         checkCountNCall("asset_category_type", res);
       });
       getDropdown("financialYears", function(res) {
-        checkCountNCall("financialYears", res);
+          res.sort(function (left, right) {
+            return moment.utc(right.startingDate).diff(moment.utc(left.startingDate))
+          });
+          checkCountNCall("financialYears", res);
       });
       getDropdown("assignments_function", function(res) {
        checkCountNCall("functions", res);
@@ -1953,7 +1956,9 @@ class CreateAsset extends React.Component {
             <td>
               <select required value={yr.financialYear} onChange={(e) => {handleYearChange(e, "financialYear", ind)}}  disabled={readonly}>
                 <option value="">Select Financial Year</option>
-                {renderOption(financialYears, "", "", true)}
+                {financialYears.map((year)=>(
+                      <option value={year.finYearRange}>{year.finYearRange}</option>
+                    ))}
               </select>
             </td>
             <td>

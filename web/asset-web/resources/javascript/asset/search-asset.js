@@ -89,7 +89,12 @@ class SearchAsset extends React.Component {
         document.getElementsByClassName("homepage_logo")[0].src = window.location.origin + logo_ele[0].getAttribute("src");
       }
     }
-    $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
+    if (getUrlVars()["type"] === "update") {
+      $('#hpCitizenTitle').text("Modify Asset");
+    }
+    else {
+      $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset");
+    }
     var count = 3, _this = this, _state = {};
     var checkCountNCall = function(key, res) {
       count--;
@@ -210,7 +215,7 @@ class SearchAsset extends React.Component {
 
     return (
       <div>
-      <h3>{titleCase(getUrlVars()["type"])} Asset</h3>
+      <h3>{getUrlVars()["type"]==="update"?"Modify":titleCase(getUrlVars()["type"])} Asset</h3>
       <div className="form-section-inner">
         <form onSubmit={(e)=>{search(e)}}>
         <div className="row">

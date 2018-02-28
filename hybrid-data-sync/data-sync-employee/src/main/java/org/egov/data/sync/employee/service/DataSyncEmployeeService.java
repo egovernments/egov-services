@@ -73,7 +73,8 @@ public class DataSyncEmployeeService {
 
     public void createAsync(EmployeeSyncRequest employeeSyncRequest) {
         log.info("EmployeeSyncRequest before sending to kafka :: " + employeeSyncRequest);
-        kafkaTemplate.send(propertiesManager.getSaveSignatureTopic(), employeeSyncRequest);
+        //kafkaTemplate.send(propertiesManager.getSaveSignatureTopic(), employeeSyncRequest);
+        create(employeeSyncRequest);
     }
 
     @Transactional

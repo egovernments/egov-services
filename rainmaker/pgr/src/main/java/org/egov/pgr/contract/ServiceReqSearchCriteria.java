@@ -46,5 +46,13 @@ public class ServiceReqSearchCriteria {
 	
 	@JsonProperty("lastUpdatedSince")
 	private Long lastUpdatedSince;	
+	
+	@JsonProperty("group")
+	private String group;
+	
+	@JsonProperty("serviceCodes")
+	private List<String> serviceCodes;
+	
+	
 
 }

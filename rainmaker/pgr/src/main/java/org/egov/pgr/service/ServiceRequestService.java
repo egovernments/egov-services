@@ -14,6 +14,7 @@ import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.repository.IdGenRepo;
+import org.egov.pgr.repository.MDMSRespository;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.ResponseInfoFactory;
@@ -47,6 +48,9 @@ public class ServiceRequestService {
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
+	
+	@Autowired
+	private MDMSRespository mDMSRespository;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaProducer;
@@ -209,11 +213,19 @@ public class ServiceRequestService {
 	 */
 	public ServiceReqResponse getServiceRequests(RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
-
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		ServiceReqResponse serviceReqResponse = null;
+		if(null != serviceReqSearchCriteria.getGroup() || !serviceReqSearchCriteria.getGroup().isEmpty()) {
+			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
+			if(null == response)
+				return new ServiceReqResponse();
+			
+			//based on mdms response, fetch the service codes.
+			List<String> serviceCodes = new ArrayList<>();
+			serviceReqSearchCriteria.setServiceCodes(serviceCodes);
+		}
 		Object response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 		log.info("Searcher response: ", response);
 		if (null == response) {
@@ -243,6 +255,13 @@ public class ServiceRequestService {
 		}
 		Double count = JsonPath.read(response, "$.count[0].count");
 		return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), count);
+	}
+	
+	
+	public Object fetchServiceCodes(RequestInfo requestInfo,
+			String tenantId, String department) {
+		return mDMSRespository.fetchServiceCodes(requestInfo, tenantId, department);
+		
 	}
 
 }

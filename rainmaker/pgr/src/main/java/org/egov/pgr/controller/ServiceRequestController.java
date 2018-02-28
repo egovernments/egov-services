@@ -1,4 +1,4 @@
-package org.egov.pgr.controller;
+	package org.egov.pgr.controller;
 
 import javax.validation.Valid;
 
@@ -57,7 +57,7 @@ public class ServiceRequestController {
 	}
 
 	/**
-	 * Controller enpoint to fetch service requests
+	 * Controller endpoint to fetch service requests
 	 * 
 	 * @param requestInfoWrapper
 	 * @param serviceReqSearchCriteria

@@ -885,7 +885,7 @@ class CancellationAgreement extends React.Component {
                     <label htmlFor="orderNo"> Order Number<span>*</span> </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo}
+                    <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo} maxLength="15"
                       onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNo") }} required />
                   </div>
                 </div>
@@ -958,7 +958,7 @@ class CancellationAgreement extends React.Component {
                     <label htmlFor="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea rows="4" cols="50" id="remarks" name="remarks"
+                    <textarea rows="4" cols="50" id="remarks" name="remarks" maxLength="50"
                       onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                   </div>
                 </div>

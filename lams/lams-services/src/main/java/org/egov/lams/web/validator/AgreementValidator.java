@@ -273,8 +273,6 @@ public class AgreementValidator {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		Long assetId = agreementRequest.getAgreement().getAsset().getId();
-		String assetCategory = agreementRequest.getAgreement().getAsset().getCategory().getName();
-
 		String queryString = "id=" + assetId + "&tenantId=" + agreementRequest.getAgreement().getTenantId();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(agreementRequest.getRequestInfo());
@@ -290,18 +288,21 @@ public class AgreementValidator {
 		Boolean isExist = Boolean.FALSE;
 		String shopNumber = agreement.getReferenceNumber();
 		Long agreementId = agreement.getId();
-		agreements = agreementService.getAgreementsForAssetIdAndFloor(agreement, assetId);
+		if (StringUtils.isNotBlank(shopNumber)) {
+			agreements = agreementService.getAgreementsForAssetIdAndFloor(agreement, assetId);
 
-		if (!agreements.isEmpty()) {
-			if (agreementId == null)
-				isExist = agreements.stream().anyMatch(a -> a.getReferenceNumber().equalsIgnoreCase(shopNumber));
-			else {
-				isExist = agreements.stream().filter(a -> !agreementId.equals(a.getId()))
-						.anyMatch(a -> a.getReferenceNumber().equalsIgnoreCase(shopNumber));
+			if (!agreements.isEmpty()) {
+				if (agreementId == null)
+					isExist = agreements.stream().anyMatch(a -> shopNumber.equalsIgnoreCase(a.getReferenceNumber()));
+				else {
+					isExist = agreements.stream().filter(a -> !agreementId.equals(a.getId()))
+							.anyMatch(a -> shopNumber.equalsIgnoreCase(a.getReferenceNumber()));
+				}
 			}
-		} 
+
+		}
 		if (isExist) {
-			errors.rejectValue("Agreement.ReferenceNumber","",
+			errors.rejectValue("Agreement.ReferenceNumber", "",
 					"Agreement already exists with the shop Number: " + shopNumber);
 
 		}

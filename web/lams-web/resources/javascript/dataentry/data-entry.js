@@ -960,9 +960,11 @@ $("#createAgreementForm").validate({
                       }
                       showError(err);
                       hideLoading();
-                    } else {
-                      showError(response["statusText"]);
+                    }else if(err) {
                       showError(err);
+                    }
+                    else {
+                      showError(response["statusText"]);
                       hideLoading();
                     }
                 } else {

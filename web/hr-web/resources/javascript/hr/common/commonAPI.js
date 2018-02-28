@@ -540,22 +540,33 @@ function getDropdown(name, cb, params) {
                     if (res) {
                         var positions = res["Position"];
                         if (res.Page && res.Page.totalPages > 1) {
+                            count = 0;
 
                             try {
+                                var promises = [];
                                 for (var i = 2; i <= res.Page.totalPages; i++) {
 
                                     var queryParam = { tenantId, pageSize: 500 }
                                     queryParam.pageNumber = i;
-                                    commonApiPost("hr-masters", "positions", "_paginatedsearch", queryParam, function (err, res) {
-                                        if (res) {
-                                            positions = positions.concat(res["Position"]);
-                                            if (i == res.Page.totalPages) {
-                                                localStorage.setItem("assignments_position", JSON.stringify(positions));
-                                                cb(positions);
-                                            }
-                                        }
+
+                                    var positionPromise = new Promise(function (resolve, reject) {
+                                        commonApiPost("hr-masters", "positions", "_paginatedsearch", queryParam, function (err, res1) {
+                                            resolve(res1 ? res1["Position"] : []);
+                                        });
                                     });
+
+                                    promises.push(positionPromise);
+
                                 }
+
+                                Promise.all(promises).then(function (results) {
+                                    for (var itm in results)
+                                        positions = positions.concat(results[itm]);
+
+                                    localStorage.setItem("assignments_position", JSON.stringify(positions));
+                                    cb(positions);
+                                });
+
                             } catch (error) {
                                 console.log(error);
                             }

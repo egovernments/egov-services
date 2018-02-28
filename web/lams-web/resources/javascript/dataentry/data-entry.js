@@ -962,6 +962,7 @@ $("#createAgreementForm").validate({
                       hideLoading();
                     }else if(err) {
                       showError(err);
+                      hideLoading();
                     }
                     else {
                       showError(response["statusText"]);

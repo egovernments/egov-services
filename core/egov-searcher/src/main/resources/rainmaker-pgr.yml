@@ -35,6 +35,12 @@ SearchDefinitions:
     - name: lastmodifiedtime
       isMandatory: false
       jsonPath: $.searchCriteria.lastUpdatedSince
+    - name: serviceCodes
+      isMandatory: false
+      jsonPath: $.searchCriteria.serviceCodes
+    - name: group
+      isMandatory: false
+      jsonPath: $.searchCriteria.group
 
    output:
     jsonFormat: {"ResponseInfo": {},"serviceReq": []}
@@ -73,6 +79,12 @@ SearchDefinitions:
     - name: lastmodifiedtime
       isMandatory: false
       jsonPath: $.searchCriteria.lastUpdatedSince
+    - name: serviceCodes
+      isMandatory: false
+      jsonPath: $.searchCriteria.serviceCodes
+    - name: group
+      isMandatory: false
+      jsonPath: $.searchCriteria.group
 
    output:
     jsonFormat: {"ResponseInfo": {},"count": {}}
@@ -111,6 +123,12 @@ SearchDefinitions:
     - name: lastmodifiedtime
       isMandatory: false
       jsonPath: $.searchCriteria.lastUpdatedSince
+    - name: serviceCodes
+      isMandatory: false
+      jsonPath: $.searchCriteria.serviceCodes
+    - name: group
+      isMandatory: false
+      jsonPath: $.searchCriteria.group
 
    output:
     jsonFormat: {"ResponseInfo": {},"serviceReq": []}

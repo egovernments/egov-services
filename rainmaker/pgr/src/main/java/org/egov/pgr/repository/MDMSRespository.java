@@ -34,6 +34,15 @@ public class MDMSRespository {
 	@Value("${mdms.search.endpoint}")
 	private String mdmsEndpoint;
 	
+	/**
+	 * Method to fetch service codes from mdms based on dept and tenantId
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param department
+	 * @return Object
+	 * @author vishal
+	 */
 	public Object fetchServiceCodes(RequestInfo requestInfo, String tenantId, String department) {
 		ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -42,11 +51,11 @@ public class MDMSRespository {
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		log.info("URI: "+uri.toString());
 		
-		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("serviceDefinitions").filter("department").build();
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name("serviceDefinitions").filter("[?(@.group=='"+department+"')]").build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder()
-				.moduleName("pgr").masterDetails(masterDetails).build();
+				.moduleName("rainmaker-pgr").masterDetails(masterDetails).build();
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		moduleDetails.add(moduleDetail);
 		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();

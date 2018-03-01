@@ -221,9 +221,13 @@ public class ServiceRequestService {
 			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
 			if(null == response)
 				return new ServiceReqResponse();
-			
-			//based on mdms response, fetch the service codes.
 			List<String> serviceCodes = new ArrayList<>();
+			try {
+				serviceCodes = JsonPath.read(response, "$.*.serviceCodes");
+			}catch(Exception e) {
+				log.info("MDMS response couldn't be parsed: ",e);
+				return new ServiceReqResponse();
+			}
 			serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 		}
 		Object response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
@@ -258,6 +262,15 @@ public class ServiceRequestService {
 	}
 	
 	
+	/**
+	 * method to fetch service codes from mdms based on dept
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param department
+	 * @return Object
+	 * @author vishal
+	 */
 	public Object fetchServiceCodes(RequestInfo requestInfo,
 			String tenantId, String department) {
 		return mDMSRespository.fetchServiceCodes(requestInfo, tenantId, department);

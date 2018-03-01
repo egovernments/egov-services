@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.egov</groupId>
-	<artifactId>egov-user</artifactId>
+	<artifactId>egov-user-new</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>egov-user</name>
-	<description>egov-user microservice</description>
+	<name>egov-user-new</name>
+	<description>egov-user-new microservice</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

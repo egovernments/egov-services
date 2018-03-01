@@ -10,6 +10,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.Address;
+import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.v11.model.AuditDetails;
 import org.egov.user.domain.v11.model.Role;
 import org.egov.user.domain.v11.model.User;
@@ -72,11 +73,11 @@ public class UserServiceVersionv11 {
 		for (User user : users) {
 			user.setDefaultPasswordExpiry(PasswordExpiryInDays);
 		}
-		String userType = createUserRequest.getRequestInfo().getUserInfo().getType();
-		if (userType == null) {
+		RequestInfo requestInfo = createUserRequest.getRequestInfo();
+		if (null == requestInfo) {
 			List<User> citizenUsers = createUserRequest.getUsers();
 			for (User user : citizenUsers) {
-				if (!user.getType().equals("CITIZEN")) {
+				if (!user.getType().equals(UserType.CITIZEN.toString())) {
 					throw new CustomException("400", "Users Type should be CITIZEN");
 				}
 				user.setRoleToCitizen();
@@ -84,14 +85,20 @@ public class UserServiceVersionv11 {
 			setRequiredInfoToUsers(createUserRequest);
 			kafkaTemplate.send(saveUserTopic, createUserRequest);
 
-		} else if (userType.equalsIgnoreCase("SYSTEM") || userType.equalsIgnoreCase("EMPLOYEE")) {
-			for (User user : users) {
-				if (user.getType().equalsIgnoreCase("CITIZEN")) {
-					user.setRoleToCitizen();
+		} else if (null != requestInfo && null != requestInfo.getUserInfo()
+				&& null != requestInfo.getUserInfo().getType()) {
+
+			String userType = requestInfo.getUserInfo().getType();
+			if (userType.equalsIgnoreCase(UserType.SYSTEM.toString())
+					|| userType.equalsIgnoreCase(UserType.EMPLOYEE.toString())) {
+				for (User user : users) {
+					if (user.getType().equalsIgnoreCase(UserType.CITIZEN.toString())) {
+						user.setRoleToCitizen();
+					}
 				}
+				setRequiredInfoToUsers(createUserRequest);
+				kafkaTemplate.send(saveUserTopic, createUserRequest);
 			}
-			setRequiredInfoToUsers(createUserRequest);
-			kafkaTemplate.send(saveUserTopic, createUserRequest);
 		}
 	}
 
@@ -137,8 +144,10 @@ public class UserServiceVersionv11 {
 		// TODO Auto-generated method stub
 		List<Long> idList = getIds(createUserRequest.getUsers().size(), userSequenceName);
 		List<User> userList = createUserRequest.getUsers();
-		for (int i = 0; i < userList.size(); i++) {
-			userList.get(i).setId(idList.get(i));
+		if (null != idList) {
+			for (int i = 0; i < userList.size(); i++) {
+				userList.get(i).setId(idList.get(i));
+			}
 		}
 		String username = createUserRequest.getRequestInfo().getUserInfo().getName();
 		AuditDetails auditDetails = AuditDetails.builder().createdBy(username).lastModifiedBy(username)
@@ -262,3 +271,4 @@ public class UserServiceVersionv11 {
 		kafkaTemplate.send(userSmsNotification, hashMap);
 	}
 }
+

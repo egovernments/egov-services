@@ -23,10 +23,10 @@ class CreateAgreement extends React.Component {
         <div>
           <div className="form-section">
             <form>
-              <h3> {typeof(getUrlVars()["from"]) == "undefined" ? "Acknowledgement" : "Agreement Number"} of Agreement </h3>
+              <h3> {typeof(getUrlVars()["from"]) == "undefined" ? "Acknowledgement of Create" : "Acknowledgement of Data Entry"}  Agreement </h3>
               <h3> <center>
                 <font color="ass">
-                  {getUrlVars()["action"] ? (getUrlVars()["action"].toLowerCase() == "approve" ? "Agreement Approved." : getUrlVars()["action"].toLowerCase() == "modify" ? "Agreement Updated." : (getUrlVars()["action"].toLowerCase() == "forward" ? (getUrlVars()["name"] ? "Agreement forwarded to " + decodeURIComponent(getUrlVars()["name"]) : "Agreement forwarded.") : (getUrlVars()["name"] ? "Agreement rejected and forwarded to " + decodeURIComponent(getUrlVars()["name"]) : (getUrlVars()["action"] && getUrlVars()["action"].toLowerCase() == "cancel" ? "Agreement cancelled." : "Agreement rejected.")))) : (getUrlVars()["name"] ? "Agreement created and forwarded to " + decodeURIComponent(getUrlVars()["name"]) : "Agreement created")} 
+                  {getUrlVars()["action"] ? (getUrlVars()["action"].toLowerCase() == "approve" ? "Agreement Approved." : getUrlVars()["action"].toLowerCase() == "modify" ? "Agreement Updated." : (getUrlVars()["action"].toLowerCase() == "forward" ? (getUrlVars()["name"] ? "Agreement forwarded to " + decodeURIComponent(getUrlVars()["name"]) : "Agreement forwarded.") : (getUrlVars()["name"] ? "Agreement rejected and forwarded to " + decodeURIComponent(getUrlVars()["name"]) : (getUrlVars()["action"] && getUrlVars()["action"].toLowerCase() == "cancel" ? "Agreement cancelled." : "Agreement rejected.")))) : (getUrlVars()["name"] ? "Agreement created and forwarded to " + decodeURIComponent(getUrlVars()["name"]) : "Successfully Created Agreement for Asset  "+decodeURIComponent(getUrlVars()["asset"]))}
                 </font> </center></h3>
               <h4> <center><font color="ass"><strong> {getUrlVars()["ackNo"] ? (getUrlVars()["from"] == "dataEntry" ? "Agreement Number: " : getUrlVars()["action"] && getUrlVars()["action"].toLowerCase() == "approve" ? "Agreement Number: " : "Acknowledgement number: ") + decodeURIComponent(getUrlVars()["ackNo"]) : ""}</strong>  </font> </center></h4>
               <div className="text-center">

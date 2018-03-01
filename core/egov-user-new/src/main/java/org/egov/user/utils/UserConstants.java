@@ -1,0 +1,61 @@
+package org.egov.user.utils;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
+
+@Configuration
+@PropertySource(value = { "classpath:messages/messages.properties",
+		"classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
+@Order(0)
+public class UserConstants {
+
+	@Autowired
+	private Environment environment;
+
+	public String getErrorMessage(final String property) {
+		return environment.getProperty(property);
+	}
+
+	public static final String TENANTID_MANDATORY_CODE = "user.0001";
+	public static final String TENANTID_MANADATORY_FIELD_NAME = "tenantId";
+	public static final String TENANTID_MANADATORY_ERROR_MESSAGE = "Tenant Id is required";
+
+	public static final String USERNAME_MANDATORY_CODE = "user.0002";
+	public static final String USERNAME_MANADATORY_FIELD_NAME = "userName";
+	public static final String USERNAME_MANADATORY_ERROR_MESSAGE = "UserName is required";
+
+	public static final String NAME_MANDATORY_CODE = "user.0003";
+	public static final String NAME_MANADATORY_FIELD_NAME = "name";
+	public static final String NAME_MANADATORY_ERROR_MESSAGE = "Name is required";
+
+	public static final String GENDER_MANDATORY_CODE = "user.0004";
+	public static final String GENDER_MANADATORY_FIELD_NAME = "gender";
+	public static final String GENDER_MANADATORY_ERROR_MESSAGE = "Gender is required";
+
+	public static final String MOBILENUMBER_MANDATORY_CODE = "user.0005";
+	public static final String MOBILENUMBER_MANADATORY_FIELD_NAME = "mobileNumber";
+	public static final String MOBILENUMBER_MANADATORY_ERROR_MESSAGE = "MobileNumber is required";
+
+	public static final String ACTIVE_MANDATORY_CODE = "user.0006";
+	public static final String ACTIVE_MANADATORY_FIELD_NAME = "active";
+	public static final String ACTIVE_MANADATORY_ERROR_MESSAGE = "Active is required";
+
+	public static final String LOCALE_MANDATORY_CODE = "user.0007";
+	public static final String LOCALE_MANADATORY_FIELD_NAME = "locale";
+	public static final String LOCALE_MANADATORY_ERROR_MESSAGE = "Locale is required";
+
+	public static final String TYPE_MANDATORY_CODE = "user.0008";
+	public static final String TYPE_MANADATORY_FIELD_NAME = "type";
+	public static final String TYPE_MANADATORY_ERROR_MESSAGE = "Type is required";
+
+	public static final String USERNAME_UNIQUE_CODE = "user.0009";
+	public static final String USERNAME_UNQ_FIELD_NAME = "userName";
+	public static final String USERNAME_UNQ_ERROR_MESSAGE = "UserName already exist.";
+
+	public static final String USERNAME_DUPLICATE_CODE = "user.0009";
+	public static final String USERNAME_DUPLICATE_FIELD_NAME = "userName";
+	public static final String USERNAME_DUPLICATE_ERROR_MESSAGE = "UserName Does n't exist.";
+}

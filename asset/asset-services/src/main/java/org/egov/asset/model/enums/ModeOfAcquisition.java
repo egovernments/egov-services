@@ -53,7 +53,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ModeOfAcquisition {
 	
-	ACQUIRED("ACQUIRED"), CONSTRUCTION("CONSTRUCTION"), PURCHASE("PURCHASE"), TENDER("TENDER"), DONATION("DONATION");
+	ACQUIRED("ACQUIRED"), CONSTRUCTION("CONSTRUCTION"), PURCHASE("PURCHASE"), DONATION("DONATION");
 
 	private String value;
 

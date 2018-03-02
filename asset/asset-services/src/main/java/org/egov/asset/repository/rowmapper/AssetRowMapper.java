@@ -113,6 +113,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setDepreciationRate(rs.getDouble("depreciationrate"));
                 asset.setSurveyNumber(rs.getString("surveynumber"));
                 asset.setFunction(rs.getString("function"));
+                asset.setScheme(rs.getString("scheme"));
+                asset.setSubScheme(rs.getString("subscheme"));
                 asset.setCurrentValue(rs.getBigDecimal("currentamount"));
 
                 final BigDecimal marketValue = rs.getBigDecimal("marketValue");

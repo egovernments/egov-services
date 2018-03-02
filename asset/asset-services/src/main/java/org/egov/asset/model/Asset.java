@@ -127,4 +127,12 @@ public class Asset {
     private String function;
     
     private BigDecimal currentValue;
+    
+    private List<Document> documents;
+    
+    @JsonProperty("scheme")
+    private String scheme ;
+
+    @JsonProperty("subScheme")
+    private String subScheme ;
 }

@@ -61,6 +61,7 @@ import org.egov.asset.contract.AssetRequest;
 import org.egov.asset.model.Asset;
 import org.egov.asset.model.AssetCriteria;
 import org.egov.asset.model.AssetStatus;
+import org.egov.asset.model.Document;
 import org.egov.asset.model.Location;
 import org.egov.asset.model.TransactionHistory;
 import org.egov.asset.model.YearWiseDepreciation;
@@ -75,6 +76,7 @@ import org.egov.asset.service.AssetCommonService;
 import org.egov.asset.service.AssetMasterService;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -179,6 +181,27 @@ public class AssetRepository {
             asset.setMarketValue(null);
         }
 
+        
+        List<Document> documents = asset.getDocuments();
+        if (documents != null) {
+                String sql = "INSERT INTO egasset_document (id,asset,filestore,tenantid) values "
+                                + "(nextval('seq_egasset_document'),?,?,?);";
+                log.info("the insert query for assets docs : " + sql);
+                List<Object[]> documentBatchArgs = new ArrayList<>();
+
+                for (Document document : documents) {
+                        Object[] documentRecord = { asset.getId(), document.getFileStore(),
+                                        asset.getTenantId() };
+                        documentBatchArgs.add(documentRecord);
+                }
+
+                try {
+                        jdbcTemplate.batchUpdate(sql, documentBatchArgs);
+                } catch (DataAccessException ex) {
+                        log.info("exception saving asset document details" + ex);
+                        throw new RuntimeException(ex.getMessage());
+                }
+        }
         final Location location = asset.getLocationDetails();
 
         final Object[] obj = new Object[] { asset.getId(), asset.getAssetCategory().getId(), asset.getName(),
@@ -191,7 +214,7 @@ public class AssetRepository {
                 asset.getGrossValue(), asset.getAccumulatedDepreciation(), asset.getAssetReference(),
                 asset.getVersion(), asset.getEnableYearWiseDepreciation(),
                 assetCommonService.getDepreciationRate(asset.getDepreciationRate()), asset.getSurveyNumber(),
-                asset.getMarketValue() ,asset.getFunction()};
+                asset.getMarketValue() ,asset.getFunction(),asset.getScheme(),asset.getSubScheme()};
         try {
             jdbcTemplate.update(query, obj);
         } catch (final Exception ex) {
@@ -245,7 +268,7 @@ public class AssetRepository {
                 location.getDoorNo(), location.getPinCode(), location.getLocality(), location.getBlock(), property,
                 requestInfo.getUserInfo().getId(), new Date().getTime(), asset.getGrossValue(),
                 asset.getAccumulatedDepreciation(), asset.getAssetReference(), asset.getVersion(), asset.getSurveyNumber(),
-                asset.getMarketValue(),asset.getFunction(),
+                asset.getMarketValue(),asset.getFunction(),asset.getScheme(),asset.getSubScheme(),
                 asset.getCode(), asset.getTenantId() };
         try {
             log.debug("query1::" + query + "," + Arrays.toString(obj));

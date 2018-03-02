@@ -622,8 +622,8 @@ public class VoucherServiceTest {
         revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
         revaluation.setFunction(Long.valueOf("124"));
         revaluation.setFund(Long.valueOf("1"));
-        revaluation.setScheme(Long.valueOf("4"));
-        revaluation.setSubScheme(Long.valueOf("5"));
+        revaluation.setRevaluationOrderDate(Long.valueOf("1496430744825"));;
+        revaluation.setRevaluationOrderNo("12");
         revaluation.setComments("coments");
         revaluation.setStatus(Status.APPROVED.toString());
 

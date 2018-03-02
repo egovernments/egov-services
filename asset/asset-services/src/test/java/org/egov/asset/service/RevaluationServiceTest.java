@@ -362,8 +362,8 @@ public class RevaluationServiceTest {
         revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
         revaluation.setFunction(Long.valueOf("2"));
         revaluation.setFund(Long.valueOf("3"));
-        revaluation.setScheme(Long.valueOf("4"));
-        revaluation.setSubScheme(Long.valueOf("5"));
+        revaluation.setRevaluationOrderDate(Long.valueOf("1496430744825"));;
+        revaluation.setRevaluationOrderNo("12");
         revaluation.setComments("coments");
         revaluation.setStatus(Status.APPROVED.toString());
         revaluation.setAuditDetails(getAuditDetails());
@@ -396,8 +396,8 @@ public class RevaluationServiceTest {
         revaluation.setFixedAssetsWrittenOffAccount(Long.valueOf("1"));
         revaluation.setFunction(Long.valueOf("2"));
         revaluation.setFund(Long.valueOf("3"));
-        revaluation.setScheme(Long.valueOf("4"));
-        revaluation.setSubScheme(Long.valueOf("5"));
+        revaluation.setRevaluationOrderDate(Long.valueOf("1496430744825"));;
+        revaluation.setRevaluationOrderNo("12");
         revaluation.setComments("coments");
         revaluation.setStatus(Status.APPROVED.toString());
         revaluation.setAuditDetails(getAuditDetails());

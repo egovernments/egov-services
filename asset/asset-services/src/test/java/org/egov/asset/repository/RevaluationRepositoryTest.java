@@ -161,8 +161,8 @@ public class RevaluationRepositoryTest {
         revaluation.setReasonForRevaluation("Asset Features Enhanced");
         revaluation.setReevaluatedBy("Raman");
         revaluation.setRevaluationDate(Long.valueOf("1495978422356"));
-        revaluation.setScheme(null);
-        revaluation.setSubScheme(null);
+        revaluation.setRevaluationOrderDate(Long.valueOf("1495978422356"));
+        revaluation.setRevaluationOrderNo("12");;
         revaluation.setStatus(Status.APPROVED.toString());
         revaluation.setTenantId("ap.kurnool");
         revaluation.setTypeOfChange(TypeOfChangeEnum.INCREASED);

@@ -68,13 +68,13 @@ public class RevaluationQueryBuilder {
     public static final String INSERT_QUERY = "INSERT into egasset_revalution "
             + "(id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,"
             + "revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,"
-            + "function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference)"
+            + "function,fund,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference,revaluationorderno,revaluationorderdate)"
             + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     public String BASE_QUERY = "SELECT "
             + "id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,"
             + "revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,"
-            + "function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM"
+            + "function,fund,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference,revaluationorderno,revaluationorderdate FROM"
             + " egasset_revalution as revalution";
 
     @SuppressWarnings("rawtypes")

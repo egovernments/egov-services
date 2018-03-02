@@ -100,9 +100,9 @@ public class RevaluationRepository {
                 revaluation.getRevaluationAmount(), revaluation.getValueAfterRevaluation(),
                 revaluation.getRevaluationDate(), requestInfo.getUserInfo().getId().toString(),
                 revaluation.getReasonForRevaluation(), revaluation.getFixedAssetsWrittenOffAccount(),
-                revaluation.getFunction(), revaluation.getFund(), revaluation.getScheme(), revaluation.getSubScheme(),
+                revaluation.getFunction(), revaluation.getFund(),
                 revaluation.getComments(), status, requestInfo.getUserInfo().getId(), new Date().getTime(),
-                requestInfo.getUserInfo().getId(), new Date().getTime(), revaluation.getVoucherReference() };
+                requestInfo.getUserInfo().getId(), new Date().getTime(), revaluation.getVoucherReference(),revaluation.getRevaluationOrderNo(),revaluation.getRevaluationOrderDate()};
         try {
             jdbcTemplate.update(sql, obj);
         } catch (final Exception ex) {

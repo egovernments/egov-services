@@ -115,12 +115,6 @@ public class Revaluation {
     @JsonProperty("fund")
     private Long fund = null;
 
-    @JsonProperty("scheme")
-    private Long scheme = null;
-
-    @JsonProperty("subScheme")
-    private Long subScheme = null;
-
     @JsonProperty("comments")
     private String comments = null;
 
@@ -133,4 +127,11 @@ public class Revaluation {
     @JsonProperty("voucherReference")
     private String voucherReference;
 
+    @JsonProperty("revaluationOrderNo")
+    @NotNull
+    private String revaluationOrderNo;
+
+    @JsonProperty("revaluationOrderDate")
+    @NotNull
+    private Long revaluationOrderDate;
 }

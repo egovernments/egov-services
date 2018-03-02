@@ -78,8 +78,8 @@ public class RevaluationRowMapper implements RowMapper<Revaluation> {
             revaluation.setFixedAssetsWrittenOffAccount(rs.getLong("fixedassetswrittenoffaccount"));
             revaluation.setFunction(rs.getLong("function"));
             revaluation.setFund(rs.getLong("fund"));
-            revaluation.setScheme(rs.getLong("scheme"));
-            revaluation.setSubScheme(rs.getLong("subscheme"));
+            revaluation.setRevaluationOrderNo(rs.getString("revaluationOrderNo"));
+            revaluation.setRevaluationOrderDate(rs.getLong("revaluationOrderDate"));
             revaluation.setComments(rs.getString("comments"));
             revaluation.setStatus(rs.getString("status"));
 

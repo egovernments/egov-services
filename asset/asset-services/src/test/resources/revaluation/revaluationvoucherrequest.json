@@ -36,8 +36,8 @@
 		"fixedAssetsWrittenOffAccount": 1,
 		"function": 124,
 		"fund": 3,
-		"scheme": 4,
-		"subScheme": 5,
+		"revaluationOrderNo": "12",
+		"revaluationOrderDate":1496430744825 ,
 		"comments": "coments",
 		"status": "ACTIVE",
 		"auditDetails": 

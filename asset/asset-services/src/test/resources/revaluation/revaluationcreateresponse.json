@@ -16,10 +16,10 @@
 			"fixedAssetsWrittenOffAccount": 1,
 			"function": 2,
 			"fund": 3,
-			"scheme": 4,
-			"subScheme": 5,
 			"comments": "coments",
 			"status": "APPROVED",
+			"revaluationOrderNo": "12",
+			"revaluationOrderDate":1496430744825 ,
 			"auditDetails": 
 			{
 				"createdBy": "5",

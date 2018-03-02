@@ -89,7 +89,8 @@ public class RevaluationQueryBuilderTest {
     public void getQueryWithTenantIdTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
-        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM egasset_revalution as revalution WHERE revalution.status = ? LIMIT ? OFFSET ?";
+        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,"
+                + "revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,function,fund,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference,revaluationorderno,revaluationorderdate FROM egasset_revalution as revalution WHERE revalution.status = ? LIMIT ? OFFSET ?";
         final RevaluationCriteria revaluationCriteria = RevaluationCriteria.builder().tenantId("ap.kurnool").build();
         assertEquals(expectedQueryWithTenantId,
                 revaluationQueryBuilder.getQuery(revaluationCriteria, preparedStatementValues));
@@ -104,7 +105,8 @@ public class RevaluationQueryBuilderTest {
     public void getQueryWithIdTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
-        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM egasset_revalution as revalution WHERE revalution.status = ? AND revalution.tenantId = ? AND revalution.assetid IN (10,20) ORDER BY revalution.revaluationdate desc LIMIT ? OFFSET ?";
+        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,function,fund,"
+                + "comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference,revaluationorderno,revaluationorderdate FROM egasset_revalution as revalution WHERE revalution.status = ? AND revalution.tenantId = ? AND revalution.assetid IN (10,20) ORDER BY revalution.revaluationdate desc LIMIT ? OFFSET ?";
         final List<Long> assetIds = new ArrayList<>();
         assetIds.add(10L);
         assetIds.add(20L);
@@ -124,7 +126,8 @@ public class RevaluationQueryBuilderTest {
     public void getQueryWithAssetIdsTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
-        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM egasset_revalution as revalution WHERE revalution.status = ? AND revalution.tenantId = ? AND revalution.assetid IN (10,20) ORDER BY revalution.revaluationdate desc LIMIT ? OFFSET ?";
+        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,"
+                + "function,fund,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference,revaluationorderno,revaluationorderdate FROM egasset_revalution as revalution WHERE revalution.status = ? AND revalution.tenantId = ? AND revalution.assetid IN (10,20) ORDER BY revalution.revaluationdate desc LIMIT ? OFFSET ?";
         final List<Long> assetIds = new ArrayList<>();
         assetIds.add(10L);
         assetIds.add(20L);
@@ -144,7 +147,8 @@ public class RevaluationQueryBuilderTest {
     public void getQueryWithSizeTest() {
         final List<Object> preparedStatementValues = new ArrayList<>();
         Mockito.doReturn("500").when(applicationProperties).getSearchPageSizeDefault();
-        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,revaluationdate,reevaluatedby,reasonforrevaluation,fixedassetswrittenoffaccount,function,fund,scheme,subscheme,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference FROM egasset_revalution as revalution WHERE revalution.status = ? LIMIT ? OFFSET ?";
+        final String expectedQueryWithTenantId = "SELECT id,tenantid,assetid,currentcapitalizedvalue,typeofchange,revaluationamount,valueafterrevaluation,revaluationdate,reevaluatedby,"
+                + "reasonforrevaluation,fixedassetswrittenoffaccount,function,fund,comments,status,createdby,createddate,lastmodifiedby,lastmodifieddate,voucherreference,revaluationorderno,revaluationorderdate FROM egasset_revalution as revalution WHERE revalution.status = ? LIMIT ? OFFSET ?";
         final RevaluationCriteria revaluationCriteria = RevaluationCriteria.builder().tenantId("ap.kurnool")
                 .size(Long.valueOf(80)).build();
 

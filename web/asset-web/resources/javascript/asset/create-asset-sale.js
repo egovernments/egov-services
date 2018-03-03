@@ -87,7 +87,7 @@ class Sale extends React.Component {
           departments: [],
           revenueZones: [],
           revenueWards: [],
-          showPANNAadhar: false,
+          typeToDisplay: false,
           assetAccount: [],
           readOnly: false,
           disposedFiles: []
@@ -239,7 +239,7 @@ class Sale extends React.Component {
     handleChange(e, name) {
       if(name == "transactionType") {
         return this.setState({
-          showPANNAadhar: e.target.value && e.target.value.toLowerCase() == "sale" ? true : false,
+          typeToDisplay: e.target.value,
           disposal: {
             ...this.state.disposal,
             [name]: e.target.value,
@@ -267,14 +267,6 @@ class Sale extends React.Component {
             }
           });
         }
-      } else if(name == "transactionType" && e.target.value == "SALE") {
-        this.setState({
-          disposal: {
-            ...this.state.disposal,
-            [name]: e.target.value
-          },
-          showPANNAadhar: true
-        })
       }
 
       this.setState({
@@ -353,7 +345,7 @@ class Sale extends React.Component {
 
   	render() {
       let {handleChange, close, createDisposal, handlePANValidation, handleAadharValidation, viewAssetDetails} = this;
-      let {assetSet, departments, revenueWards, revenueZones, disposal, showPANNAadhar, assetAccount, disposedFiles} = this.state;
+      let {assetSet, departments, revenueWards, revenueZones, disposal, typeToDisplay, assetAccount, disposedFiles} = this.state;
       let self = this;
       const renderOptions = function(list) {
         if(list) {
@@ -420,40 +412,277 @@ class Sale extends React.Component {
       }
 
       const showOtherDetails = function() {
-        if(showPANNAadhar) {
+        if(typeToDisplay && typeToDisplay == "DISPOSAL") {
           return (
-            <div className="row">
-              <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label>Pan Card Number <span>*</span> </label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div>
-                      <input type="text" value={disposal.panCardNumber} onChange={(e)=>handleChange(e, "panCardNumber")} onInput={(e) => {handlePANValidation(e)}} onInvalid={(e) => {handlePANValidation(e)}} required/>
+            <div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Sale or Disposal date <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <input id="disposalDate" type="text" value={disposal.disposalDate} className="datepicker" required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.disposalDate}</label>
                     </div>
                   </div>
-                  <div className="col-sm-6 label-view-text" style={{display: self.state.readOnly ? 'block' : 'none' }}>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Sale or Disposal reason <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <textarea value={disposal.disposalReason} onChange={(e) => handleChange(e, "disposalReason")} required></textarea>
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.disposalReason}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Current Value Of The Asset <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <input type="number" value={disposal.currentValueOfTheAsset} onChange={(e) => handleChange(e, "currentValueOfTheAsset")} required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.currentValueOfTheAsset}</label>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Asset Sale Account Code <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <select required value={disposal.assetSaleAccount} onChange={(e) => handleChange(e, "assetSaleAccount")}>
+                          <option value="">Select Account Code</option>
+                          {renderOptions(assetAccount)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.assetSaleAccount ? getNameById(assetAccount, disposal.assetSaleAccount) : ""}</label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div className="row" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Attach Documents</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div>
+                        <input type="file" multiple onChange={(e) => handleChange(e, "documents")} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        } 
+        if(typeToDisplay && typeToDisplay == "SALE") {
+          return (
+            <div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Sale or Disposal date <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <input id="disposalDate" type="text" value={disposal.disposalDate} className="datepicker" required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.disposalDate}</label>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Sale or Disposal reason <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <textarea value={disposal.disposalReason} onChange={(e) => handleChange(e, "disposalReason")} required></textarea>
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.disposalReason}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Sale or Disposal party name <span>*</span> </label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <input type="text" value={disposal.buyerName} onChange={(e) => handleChange(e, "buyerName")} required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.buyerName}</label>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Sale or Disposal party address <span> *</span> </label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <textarea value={disposal.buyerAddress} onChange={(e) => handleChange(e, "buyerAddress")} required></textarea>
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.buyerAddress}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Pan Card Number <span>*</span> </label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div>
+                        <input type="text" value={disposal.panCardNumber} onChange={(e) => handleChange(e, "panCardNumber")} onInput={(e) => { handlePANValidation(e) }} onInvalid={(e) => { handlePANValidation(e) }} required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
                       <label>{disposal.panCardNumber}</label>
-                  </div>
-              </div>
-            </div>
-            <div className="col-sm-6">
-                <div className="row">
-                  <div className="col-sm-6 label-text">
-                    <label>Aadhar Card Number <span>*</span></label>
-                  </div>
-                  <div className="col-sm-6">
-                    <div>
-                      <input type="text" value={disposal.aadharCardNumber} onChange={(e)=>handleChange(e, "aadharCardNumber")} onInput={(e) => {handleAadharValidation(e)}} onInvalid={(e) => {handleAadharValidation(e)}} required/>
                     </div>
                   </div>
-                  <div className="col-sm-6 label-view-text" style={{display: self.state.readOnly ? 'block' : 'none' }}>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Aadhar Card Number <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div>
+                        <input type="text" value={disposal.aadharCardNumber} onChange={(e) => handleChange(e, "aadharCardNumber")} onInput={(e) => { handleAadharValidation(e) }} onInvalid={(e) => { handleAadharValidation(e) }} required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
                       <label>{disposal.aadharCardNumber}</label>
+                    </div>
                   </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Current Value Of The Asset <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <input type="number" value={disposal.currentValueOfTheAsset} onChange={(e) => handleChange(e, "currentValueOfTheAsset")} required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.currentValueOfTheAsset}</label>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Asset Sale Account Code <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <select required value={disposal.assetSaleAccount} onChange={(e) => handleChange(e, "assetSaleAccount")}>
+                          <option value="">Select Account Code</option>
+                          {renderOptions(assetAccount)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.assetSaleAccount ? getNameById(assetAccount, disposal.assetSaleAccount) : ""}</label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Sale Value <span>*</span></label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <input type="number" value={disposal.saleValue} onChange={(e) => handleChange(e, "saleValue")} required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.saleValue}</label>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Profit/Loss </label>
+                    </div>
+                    <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                      <div>
+                        <input type="text" disabled value={disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""} />
+                      </div>
+                    </div>
+                    <div className="col-sm-6 label-view-text" style={{ display: self.state.readOnly ? 'block' : 'none' }}>
+                      <label>{disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
+                <div className="col-sm-6">
+                  <div className="row">
+                    <div className="col-sm-6 label-text">
+                      <label>Attach Documents</label>
+                    </div>
+                    <div className="col-sm-6">
+                      <div>
+                        <input type="file" multiple onChange={(e) => handleChange(e, "documents")} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>)
+          )
         }
       };
 
@@ -526,71 +755,7 @@ class Sale extends React.Component {
 
                 </div>
                 <div className="form-section-inner">
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Sale or Disposal date <span>*</span></label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <input id="disposalDate" type="text" value={disposal.disposalDate} className="datepicker" required/>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.disposalDate}</label>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Sale or Disposal party name <span>*</span> </label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <input type="text" value={disposal.buyerName} onChange={(e)=>handleChange(e, "buyerName")} required/>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.buyerName}</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Sale or Disposal party address <span> *</span> </label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <textarea value={disposal.buyerAddress} onChange={(e)=>handleChange(e, "buyerAddress")} required></textarea>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.buyerAddress}</label>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Sale or Disposal reason <span>*</span></label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <textarea value={disposal.disposalReason} onChange={(e)=>handleChange(e, "disposalReason")} required></textarea>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.disposalReason}</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
+                <div className="row">
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
@@ -611,89 +776,10 @@ class Sale extends React.Component {
                         </div>
                       </div>
                     </div>
+
                     {showOtherDetails()}
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Current Value Of The Asset <span>*</span></label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <input type="number" value={disposal.currentValueOfTheAsset} onChange={(e)=>handleChange(e, "currentValueOfTheAsset")} required/>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.currentValueOfTheAsset}</label>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Sale Value <span>*</span></label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <input type="number" value={disposal.saleValue} onChange={(e)=>handleChange(e, "saleValue")} required/>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{disposal.saleValue}</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-6">
-                        <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label>Profit/Loss </label>
-                          </div>
-                          <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                            <div>
-                              <input type="text" disabled value={disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""}/>
-                            </div>
-                          </div>
-                          <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                              <label>{disposal.currentValueOfTheAsset && disposal.saleValue ? Math.abs(Number(disposal.currentValueOfTheAsset) - Number(disposal.saleValue)) : ""}</label>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Asset Sale Account Code <span>*</span></label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <select required value={disposal.assetSaleAccount} onChange={(e)=>handleChange(e, "assetSaleAccount")}>
-                                  <option value="">Select Account Code</option>
-                                  {renderOptions(assetAccount)}
-                                </select>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                              <label>{disposal.assetSaleAccount ? getNameById(assetAccount, disposal.assetSaleAccount) : ""}</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                      <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Attach Documents</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <div>
-                                <input type="file" multiple onChange={(e)=>handleChange(e, "documents")}/>
-                              </div>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+
+                    {/* <div className="row" style={{display: this.state.readOnly ? 'block' : 'none' }}>
                       <div className="col-sm-6">
                         <div className="row">
                             <div className="col-sm-6 label-text">
@@ -704,7 +790,7 @@ class Sale extends React.Component {
                             </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                 </div>
               </div>
               <p className="text-right text-danger">Note: Current value of the asset is not considering the depreciation and improvements done on that asset</p>

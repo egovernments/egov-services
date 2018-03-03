@@ -6,8 +6,6 @@ class Revaluation extends React.Component {
         	assetSet: {},
         	functions: [],
         	funds: [],
-          schemes: [],
-          subSchemes: [],
           fixedAssetAccount: [],
           "revaluationSet": {
             "tenantId": tenantId,
@@ -22,11 +20,11 @@ class Revaluation extends React.Component {
             "fixedAssetsWrittenOffAccount": "",
             "function": "",
             "fund": "",
-            "scheme": "",
-            "subScheme": "",
             "comments": "",
             "status": "ACTIVE",
-            "auditDetails": null
+            "auditDetails": null,
+            "revaluationOrderNo":"",
+            "revaluationOrderDate":""
           }
         };
         this.handleChange = this.handleChange.bind(this);
@@ -71,26 +69,23 @@ class Revaluation extends React.Component {
         })
       })
 
+      $("#revaluationOrderDate").datepicker({
+    		format: "dd/mm/yyyy",
+    		autoclose: true
+    	});
+
+      $("#revaluationOrderDate").on("change", function(e) {
+        _this.setState({
+          revaluationSet: {
+            ..._this.state.revaluationSet,
+            "revaluationOrderDate": e.target.value
+          }
+        })
+      })
+
       if(getUrlVars()["type"] == "view") {
         _this.setState({
           readOnly: true
-        });
-
-        //Get schemes & subschemes
-        commonApiPost("egf-masters", "schemes", "_search", {tenantId}, function(err, res) {
-          if(res) {
-            _this.setState({
-              schemes: res["schemes"] || []
-            })
-          }
-        });
-
-        commonApiPost("egf-masters", "subschemes", "_search", {tenantId}, function(err, res) {
-          if(res) {
-            _this.setState({
-              subSchemes: res["subSchemes"] || []
-            })
-          }
         });
       }
 
@@ -188,69 +183,35 @@ class Revaluation extends React.Component {
 
     handleChange(e, name) {
       var _this = this, val = e.target.value;
-      if(name == "scheme") {
-        commonApiPost("egf-masters", "subschemes", "_search", {tenantId, scheme: val}, function(err, res) {
-          if(res) {
-            _this.setState({
-              subSchemes: res["subSchemes"] || []
-            })
-          }
-        })
-      } else if(name == "fund") {
-        commonApiPost("egf-masters", "schemes", "_search", {tenantId, fund: val}, function(err, res) {
-          if(res) {
-            _this.setState({
-              schemes: res["schemes"] || []
-            })
-          }
-        })
-      } else if(name == "revaluationAmount" || name == "typeOfChange") {
+      if(name == "valueAfterRevaluation") {
 
         let valueAfterRevaluation = 0;
-        if(this.state.revaluationSet.currentCapitalizedValue){
-          valueAfterRevaluation = Number(this.state.revaluationSet.currentCapitalizedValue);
-        }else if(this.state.assetSet.grossValue){
-          valueAfterRevaluation = Number(this.state.assetSet.grossValue);
-        }
-
         let revaluationAmount = 0;
-        if(name == "revaluationAmount"){
-          revaluationAmount = Number(val);
-        }else{
-          revaluationAmount = Number(this.state.revaluationSet.revaluationAmount);
+        let typeOfChange = "";
+        if(val){
+          valueAfterRevaluation = Number(val);
+        if(this.state.revaluationSet.currentCapitalizedValue){
+          revaluationAmount = Number(valueAfterRevaluation - this.state.revaluationSet.currentCapitalizedValue);
+          revaluationAmount > 0 ? typeOfChange = "INCREASED": typeOfChange = "DECREASED"
+          revaluationAmount = Math.abs(revaluationAmount);
+        }else if(this.state.assetSet.grossValue){
+          revaluationAmount = Number(valueAfterRevaluation - this.state.assetSet.grossValue);
+          revaluationAmount > 0 ? typeOfChange = "INCREASED": typeOfChange = "DECREASED"
+          revaluationAmount = Math.abs(revaluationAmount);
         }
+      }
 
-        let typeOfChange = '';
-        if(name == 'revaluationAmount'){
-          typeOfChange = this.state.revaluationSet.typeOfChange;
-        }else{
-          typeOfChange = val;
-        }
-        // console.log(typeOfChange, revaluationAmount, valueAfterRevaluation, revaluationAmount+valueAfterRevaluation);
-        if(typeOfChange) {
-          switch (typeOfChange) {
-            case 'INCREASED':
-              setTimeout(function() {
-                _this.setState({
-                  revaluationSet: {
-                    ..._this.state.revaluationSet,
-                    "valueAfterRevaluation": valueAfterRevaluation + revaluationAmount
-                  }
-                })
-              }, 200);
-              break;
-            case 'DECREASED':
-              setTimeout(function() {
-                _this.setState({
-                  revaluationSet: {
-                    ..._this.state.revaluationSet,
-                    "valueAfterRevaluation": valueAfterRevaluation - revaluationAmount
-                  }
-                });
-              }, 200);
-              break;
-          }
-        }
+        setTimeout(function () {
+          _this.setState({
+            revaluationSet: {
+              ..._this.state.revaluationSet,
+              "revaluationAmount": revaluationAmount,
+              "typeOfChange" : typeOfChange
+            }
+          })
+        }, 200);
+
+        
         // switch(name) {
         //   case 'revaluationAmount':
         //
@@ -342,7 +303,7 @@ class Revaluation extends React.Component {
 
   	render() {
       let {handleChange, close, createRevaluation, viewAssetDetails} = this;
-      let {assetSet, functions, funds, revaluationSet, schemes, subSchemes, fixedAssetAccount} = this.state;
+      let {assetSet, functions, funds, revaluationSet, fixedAssetAccount} = this.state;
       const renderOptions = function(list) {
       	if(list) {
       		if(list.constructor == Array) {
@@ -363,6 +324,20 @@ class Revaluation extends React.Component {
 	                        {list[k]}
 	                  </option>)
                	})
+      		}
+      	}
+      }
+
+      const renderOptionsForFund = function(list) {
+      	if(list) {
+      		if(list.constructor == Array) {
+      			return list.map((item, ind)=> {
+                  if(item["active"]) {
+                    return (<option key={ind} value={item.id}>
+                          {item.name}
+                    </option>)
+                  }
+              	})
       		}
       	}
       }
@@ -437,7 +412,52 @@ class Revaluation extends React.Component {
 	                </div>
 	              </div>
 	              <div className="form-section-inner">
+                <div className="row">
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label>Revaluation Order No. </label>
+                            </div>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                  <input type="text" min="0" value={revaluationSet.revaluationOrderNo} onChange={(e) => handleChange(e, "revaluationOrderNo")} required pattern="[a-zA-Z0-9]+" />
+                              </div>
+                            </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{revaluationSet.revaluationOrderNo ? revaluationSet.revaluationOrderNo : ""}</label>
+                            </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                          <div className="row">
+                            <div className="col-sm-6 label-text">
+                              <label>Revaluation Order Date </label>
+                            </div>
+                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                              <div>
+                                  <input id="revaluationOrderDate" className="datepicker" type="text" value={revaluationSet.revaluationOrderDate} onChange={(e) => handleChange(e, "revaluationOrderDate")} required/>
+                              </div>
+                            </div>
+                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                                <label>{revaluationSet.revaluationOrderDate ? revaluationSet.revaluationOrderDate : ""}</label>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
 		            <div className="row">
+                <div className="col-sm-6">
+                      <div className="row">
+                        <div className="col-sm-6 label-text">
+                          <label>Value After Revaluation <span>*</span></label>
+                        </div>
+                        <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
+                          <input type="number" min="0" value={revaluationSet.valueAfterRevaluation} onChange={(e) => handleChange(e, "valueAfterRevaluation")} required  />
+                        </div>
+                        <div className="col-sm-6 label-view-text" style={{ display: this.state.readOnly ? 'block' : 'none' }}>
+                          <label>{revaluationSet.valueAfterRevaluation}</label>
+                        </div>
+                      </div>
+                    </div>
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
@@ -445,7 +465,7 @@ class Revaluation extends React.Component {
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
                               <div>
-                                <select value={revaluationSet.typeOfChange} onChange={(e) => handleChange(e, "typeOfChange")} required>
+                                <select value={revaluationSet.typeOfChange} disabled>
                                   <option value="">Select Type Of Change</option>
                                   <option value="INCREASED">Increase</option>
                                   <option value="DECREASED">Decrease</option>
@@ -454,21 +474,6 @@ class Revaluation extends React.Component {
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
                                 <label>{revaluationSet.typeOfChange}</label>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Revaluation Amount <span>*</span> </label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <input type="number" min="0" value={revaluationSet.revaluationAmount} onChange={(e) => handleChange(e, "revaluationAmount")} required/>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{revaluationSet.revaluationAmount}</label>
                             </div>
                         </div>
                       </div>
@@ -519,16 +524,19 @@ class Revaluation extends React.Component {
                       <div className="col-sm-6">
                           <div className="row">
                             <div className="col-sm-6 label-text">
-                              <label>Value After Revaluation </label>
+                              <label>Addition/Deduction </label>
                             </div>
                             <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <input type="text" value={revaluationSet.valueAfterRevaluation} disabled/>
+                              <div>
+                                <input type="number" value={revaluationSet.revaluationAmount} disabled/>
+                              </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{revaluationSet.valueAfterRevaluation}</label>
+                                <label>{revaluationSet.revaluationAmount}</label>
                             </div>
                         </div>
                       </div>
+                      
                     </div>
                     <div className="row" style={{display: this.state.readOnly ? 'block' : 'none' }}>
                       <div className="col-sm-6">
@@ -624,50 +632,12 @@ class Revaluation extends React.Component {
                               <div>
                                 <select value={revaluationSet.fund} onChange={(e) => handleChange(e, "fund")} required>
                                   <option value="">Select Fund</option>
-                                	{renderOptions(funds)}
+                                	{renderOptionsForFund(funds)}
                                 </select>
                               </div>
                             </div>
                             <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
                                 <label>{revaluationSet.fund ? getNameById(funds, revaluationSet.fund) : ""}</label>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Scheme </label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <select value={revaluationSet.scheme} onChange={(e) => handleChange(e, "scheme")}>
-                                  <option value="">Select Scheme</option>
-                                  {renderOptions(schemes)}
-                                </select>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{revaluationSet.scheme ? getNameById(schemes, revaluationSet.scheme) : ""}</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label>Sub Scheme </label>
-                            </div>
-                            <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
-                              <div>
-                                <select value={revaluationSet.subScheme} onChange={(e) => handleChange(e, "subScheme")}>
-                                  <option value="">Select Sub Scheme</option>
-                                  {renderOptions(subSchemes)}
-                                </select>
-                              </div>
-                            </div>
-                            <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
-                                <label>{revaluationSet.subScheme ? getNameById(subSchemes, revaluationSet.subScheme) : ""}</label>
                             </div>
                         </div>
                       </div>

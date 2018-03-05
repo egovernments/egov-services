@@ -190,7 +190,6 @@ public class ServiceRequestService {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		ServiceReqResponse serviceReqResponse = null;
 		if(null != serviceReqSearchCriteria.getGroup() && !serviceReqSearchCriteria.getGroup().isEmpty()){
-			
 				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
 				if(null == response)
 					return new ServiceReqResponse();

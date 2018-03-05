@@ -54,7 +54,7 @@ const uploadFiles = function(body, cb) {
                           breakout = 1;
                       } else {
                           counter--;
-                          docs.push(res.files[0].fileStoreId);
+                          docs.push({ fileStore: res.files[0].fileStoreId});
                           if(counter == 0) {
                               body.Asset.assetAttributes[i].value = docs;
                               counter1--;
@@ -608,12 +608,17 @@ class CreateAsset extends React.Component {
       }
 
       var floorDetails = tempInfo.assetAttributes.find(function(element) {return element["key"]==="Floor Details"});
-      var noOfFloors = tempInfo.assetAttributes.find(function(element) {return element["key"]==="No. of Floors"});
+      var noOfShops = tempInfo.assetAttributes.find(function(element) {return element["key"]==="Total No. of Shops"});
 
-      console.log("noOfFloors",floorDetails,noOfFloors);
+      var totalShops = 0;
+      for(let _i in floorDetails["value"]){
+        totalShops = totalShops + floorDetails["value"][_i]["No. of Shops"];
+      }
+      
+      console.log("noOfFloors",floorDetails,noOfShops);
 
-      if(floorDetails && noOfFloors && floorDetails["value"].length != noOfFloors["value"] ){
-        return showError("No of Floors and Floor details Does not match. Please Check");
+      if(floorDetails && noOfShops && totalShops != noOfShops["value"] ){
+        return showError("No of Shops and Floor details Does not match. Please Check");
       }
 
       // console.log(JSON.stringify(tempInfo));

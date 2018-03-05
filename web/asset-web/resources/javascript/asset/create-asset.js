@@ -611,9 +611,11 @@ class CreateAsset extends React.Component {
       var noOfShops = tempInfo.assetAttributes.find(function(element) {return element["key"]==="Total No. of Shops"});
 
       var totalShops = 0;
+      if(floorDetails){
       for(let _i in floorDetails["value"]){
         totalShops = totalShops + floorDetails["value"][_i]["No. of Shops"];
       }
+    }
       
       console.log("noOfFloors",floorDetails,noOfShops);
 

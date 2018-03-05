@@ -82,6 +82,31 @@ const uploadFiles = function(body, cb) {
     }
 }
 
+const uploadFilesForAsset = function (body, cb) {
+  if (body.Asset.documents) {
+    let counter = body.Asset.documents.length;
+    for (let j = 0; j < body.Asset.documents.length; j++) {
+      makeAjaxUpload(body.Asset.documents[j], function (err, res) {
+        if (breakout == 1)
+          return;
+        else if (err) {
+          cb(err);
+          breakout = 1;
+        } else {
+          counter--;
+          docs.push(res.files[0].fileStoreId);
+          if (counter == 0) {
+            body.Asset.documents = docs;
+            cb(null, body);
+          }
+        }
+      })
+    }
+  } else {
+    cb(null, body);
+  }
+}
+
 const defaultAssetSetState = {
     "tenantId": tenantId,
     "name": "",
@@ -122,6 +147,8 @@ const defaultAssetSetState = {
     "assetReferenceName": "",
     "assetAttributes":[],
     "depreciationRate": "",
+    "scheme": "",
+    "subScheme": "",
     "enableYearWiseDepreciation": false,
     "yearWiseDepreciation": [Object.assign({}, defaultyearWiseDepRateTemp)]
 };
@@ -174,7 +201,9 @@ class CreateAsset extends React.Component {
         modify2: false,
         allFiles: [],
         removedFiles: {},
-        financialYears: []
+        financialYears: [],
+        schemes: [],
+        subSchemes: []
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
@@ -478,7 +507,21 @@ class CreateAsset extends React.Component {
   }
 
   handleChange(e, name, pattern) {
-      if(name === "status") {
+      
+    if (name == "scheme") {
+      commonApiPost("egf-masters", "subschemes", "_search", { tenantId, scheme: val }, function (err, res) {
+        if (res) {
+          _this.setState({
+            ...this.state,
+            subSchemes: res["subSchemes"] || [],
+            assetSet: {
+              ...this.state.assetSet,
+              [name]: e.target.value
+            }
+          })
+        }
+      })
+    } else if(name === "status") {
         // console.log(name, e.target.value);
         this.state.capitalized = ( e.target.value === "CAPITALIZED");
       } else if(name == "enableYearWiseDepreciation") {
@@ -508,7 +551,7 @@ class CreateAsset extends React.Component {
         this.setState({
             assetSet: {
                 ...this.state.assetSet,
-                [name]: e.target.value
+                [name]: name == "documents" ? e.target.files : e.target.value
             }
         })
       }
@@ -562,6 +605,15 @@ class CreateAsset extends React.Component {
           return showError("Duplicate financial years not allowed.");
       }
 
+      var floorDetails = tempInfo.assetAttributes.find(function(element) {return element["key"]==="Floor Details"});
+      var noOfFloors = tempInfo.assetAttributes.find(function(element) {return element["key"]==="No. of Floors"});
+
+      console.log("noOfFloors",floorDetails,noOfFloors);
+
+      if(floorDetails && noOfFloors && floorDetails["value"].length != noOfFloors["value"] ){
+        return showError("No of Floors and Floor details Does not match. Please Check");
+      }
+
       // console.log(JSON.stringify(tempInfo));
 
       var body = {
@@ -569,39 +621,45 @@ class CreateAsset extends React.Component {
           "Asset": tempInfo
       };
 
-      uploadFiles(body, function(err, _body) {
-        if(err) {
-            showError(err);
-        } else {
+    uploadFiles(body, function (err, _body) {
+      if (err) {
+        showError(err);
+      } else {
+        uploadFilesForAsset(_body, function (err1, __body) {
+          if (err1) {
+            showError(err1);
+          } else {
             $.ajax({
-                url: baseUrl + "/asset-services/assets/" + (type == "update" ? "_update" : "_create") + "?tenantId=" + tenantId,
-                type: 'POST',
-                dataType: 'json',
-                data: JSON.stringify(_body),
-                contentType: 'application/json',
-                headers:{
-                    'auth-token' :authToken
-                },
-                success: function(res) {
-                  window.location.href=`app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${res && res.Assets && res.Assets[0] && res.Assets[0].code ?  res.Assets[0].code : ""}`;
-                },
-                error: function(err) {
-                  console.log(err);
-                  var _err = err["responseJSON"].Error.message || "";
-                  if(err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
-                    for(var key in err["responseJSON"].Error.fields) {
-                      _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
-                    }
-                    showError(_err);
-                  } else if(_err) {
-                    showError(_err);
-                  } else {
-                    showError(err["statusText"]);
+              url: baseUrl + "/asset-services/assets/" + (type == "update" ? "_update" : "_create") + "?tenantId=" + tenantId,
+              type: 'POST',
+              dataType: 'json',
+              data: JSON.stringify(__body),
+              contentType: 'application/json',
+              headers: {
+                'auth-token': authToken
+              },
+              success: function (res) {
+                window.location.href = `app/asset/create-asset-ack.html?name=${tempInfo.name}&type=&value=${getUrlVars()["type"]}&code=${res && res.Assets && res.Assets[0] && res.Assets[0].code ? res.Assets[0].code : ""}`;
+              },
+              error: function (err) {
+                console.log(err);
+                var _err = err["responseJSON"].Error.message || "";
+                if (err["responseJSON"].Error.fields && Object.keys(err["responseJSON"].Error.fields).length) {
+                  for (var key in err["responseJSON"].Error.fields) {
+                    _err += "\n " + key + "- " + err["responseJSON"].Error.fields[key] + " "; //HERE
                   }
+                  showError(_err);
+                } else if (_err) {
+                  showError(_err);
+                } else {
+                  showError(err["statusText"]);
                 }
+              }
             })
-        }
-      })
+          }
+        })
+      }
+    })
   }
 
   handleChangeAssetAttr(e, type, key, col, ind, multi) {
@@ -1024,10 +1082,21 @@ class CreateAsset extends React.Component {
           this.setState({"assetCategories":response});
         });
       }
+
+
+    commonApiPost("egf-masters", "schemes", "_search", { tenantId }, function (err, res) {
+      if (res) {
+        _this.setState({
+          schemes: res["schemes"] || []
+        })
+      }
+    });
+                 
   }
 
   removeRow(e, type, name, index, assetIndex) {
-    /*e.preventDefault();
+    console.log("Remove Row", type);
+    e.preventDefault();
     switch(type) {
       case "custom":
         this.setState({
@@ -1036,6 +1105,24 @@ class CreateAsset extends React.Component {
             removeCustom: true
           }
         });
+        var assetAttributes = Object.assign([], this.state.assetSet.assetAttributes);
+        for(var i=0; i<assetAttributes.length; i++) {
+          if(assetAttributes[i].key == name && assetAttributes[i].value[assetIndex]) {
+            assetAttributes[i].value.splice(assetIndex, 1);
+            break;
+          }
+        }
+
+        var _this = this;
+
+        setTimeout(function(){
+          _this.setState({
+            assetSet: {
+              ..._this.state.assetSet,
+              assetAttributes: assetAttributes
+            }
+          })
+        }, 200);
         break;
       case "old":
         var assetAttributes = Object.assign([], this.state.assetSet.assetAttributes);
@@ -1083,7 +1170,7 @@ class CreateAsset extends React.Component {
           })
         }, 200);
         break;
-    }*/
+    }
   }
 
   openRelatedAssetMdl(e) {
@@ -1151,7 +1238,7 @@ class CreateAsset extends React.Component {
   render() {
     // console.log(this.state);
     let {handleChange, openRelatedAssetMdl, handleClick, addOrUpdate, handleChangeTwoLevel, handleChangeAssetAttr, addNewRow, handleReferenceChange, handleRefSearch, selectRef, removeRow, removeReference, removeReferenceConfirm, openNewRelAssetMdl, addToRemovedFiles, handleAddNewYearRow, handleDelYearRow, handleYearChange} = this;
-    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles, financialYears, functions} = this.state;
+    let {isSearchClicked, list, customFields, error, success, acquisitionList, readonly, newRows, refSet, references, tblSet,departments, relatedAssets, allFiles, removedFiles, financialYears, functions, subSchemes, schemes} = this.state;
     let {
       assetCategory,
       locationDetails,
@@ -1184,7 +1271,9 @@ class CreateAsset extends React.Component {
       assetReference,
       enableYearWiseDepreciation,
       depreciationRate,
-      yearWiseDepreciation
+      yearWiseDepreciation,
+      subScheme,
+      scheme
   	} = this.state.assetSet;
 
     const getType = function() {
@@ -1611,9 +1700,9 @@ class CreateAsset extends React.Component {
                 <td>{checkFields(itemOne, (len ? (len+ind) : (ind+1)), true)}</td>
               );
             })}
-                {/*<td>
+                {<td>
                   <button className="btn btn-close" onClick={(e) => {removeRow(e, "new", item.name, (len ? len : ind), len ? (len+ind) : (ind+1))}}>Remove</button>
-                </td>*/}
+                </td>}
               </tr>)
         })
       }
@@ -1654,9 +1743,9 @@ class CreateAsset extends React.Component {
                       }
                     }
                 })}
-                    {/*<td>
+                    <td>
                       <button className="btn btn-close" onClick={(e) => {removeRow(e, "old", name, ind)}}>Remove</button>
-                    </td>*/}
+                    </td>
                     </tr>)
               }
             })
@@ -1697,9 +1786,9 @@ class CreateAsset extends React.Component {
                   <td>{checkFields(itemOne, 0, true)}</td>
                 )
               })}
-                {/*<td>
-                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "custom")}}>Remove</button>
-                </td>*/}
+                <td>
+                  <button className="btn btn-close" onClick={(e) => {removeRow(e, "custom",item.name,0,0)}}>Remove</button>
+                </td>
                </tr>)
 				}
 
@@ -2146,7 +2235,7 @@ class CreateAsset extends React.Component {
 									{showCodeonUpdate()}
                 </div>
                 <div className="row">
-                  <div className="col-sm-6">
+                  {/* <div className="col-sm-6">
                     <div className="row">
                       <div className="col-sm-6 label-text">
                         <label for="name">Enable Year Wise Depreciation </label>
@@ -2156,8 +2245,9 @@ class CreateAsset extends React.Component {
                           onChange={(e)=>{handleChange(e, "enableYearWiseDepreciation")}} disabled={readonly} checked={[true, "true"].indexOf(enableYearWiseDepreciation) > -1}/>
                       </div>
                     </div>
-                  </div>
-                  {!enableYearWiseDepreciation && <div className="col-sm-6" style={{"display": !enableYearWiseDepreciation ? "block" : "none"}}>
+                  </div> */}
+                  {/* {!enableYearWiseDepreciation &&  */}
+                  <div className="col-sm-6" style={{"display": !enableYearWiseDepreciation ? "block" : "none"}}>
                       <div className="row">
                         <div className="col-sm-6 label-text">
                           <label for="name">Depreciation Rate </label>
@@ -2167,7 +2257,21 @@ class CreateAsset extends React.Component {
                             onChange={(e)=>{handleChange(e, "depreciationRate")}} min="0" disabled={readonly} />
                         </div>
                       </div>
-                    </div>}
+                    </div>
+                    
+                    <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
+                      <div className="row">
+                        <div className="col-sm-6 label-text">
+                          <label>Attach Documents</label>
+                        </div>
+                        <div className="col-sm-6">
+                          <div>
+                            <input type="file" multiple onChange={(e) => handleChange(e, "documents")} />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {/* } */}
                 </div>
                 <div className="row">
   									<div className="col-sm-6">
@@ -2189,7 +2293,45 @@ class CreateAsset extends React.Component {
   										</div>
   									</div>
   								</div>
-                {showYearWiseDep()}
+                <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label>Scheme </label>
+                      </div>
+                      <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                        <div>
+                          <select value={scheme} onChange={(e) => handleChange(e, "scheme")}>
+                            <option value="">Select Scheme</option>
+                            {renderOption(schemes)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                          <label>{scheme ? getNameById(schemes, scheme) : ""}</label>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6 label-text">
+                        <label>Sub Scheme </label>
+                      </div>
+                      <div className="col-sm-6" style={{display: this.state.readOnly ? 'none' : 'block' }}>
+                        <div>
+                          <select value={subScheme} onChange={(e) => handleChange(e, "subScheme")}>
+                            <option value="">Select Sub Scheme</option>
+                            {renderOption(subSchemes)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-sm-6 label-view-text" style={{display: this.state.readOnly ? 'block' : 'none' }}>
+                          <label>{subScheme ? getNameById(subSchemes, subScheme) : ""}</label>
+                      </div>
+                  </div>
+                </div>
+                {/* {showYearWiseDep()} */}
             </div>
 						  </div>
             <div className="form-section" id="allotteeDetailsBlock">

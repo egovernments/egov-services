@@ -187,11 +187,13 @@ class Sale extends React.Component {
 
             _this.setState({
               disposal: disposedAsset,
+              typeToDisplay: disposedAsset.transactionType,
               disposedFiles: JSON.parse(JSON.stringify(_files))
             })
           } else {
             _this.setState({
-              disposal: disposedAsset
+              disposal: disposedAsset,
+              typeToDisplay: disposedAsset.transactionType
             });
           }
         }

@@ -90,6 +90,8 @@ public class LeaveApplication {
 
     private Boolean firstHalfleave;
 
+    private Boolean encashable;
+
     @Size(min = 5, max = 500)
     private String reason;
 

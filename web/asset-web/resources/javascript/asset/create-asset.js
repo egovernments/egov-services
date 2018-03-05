@@ -54,7 +54,7 @@ const uploadFiles = function(body, cb) {
                           breakout = 1;
                       } else {
                           counter--;
-                          docs.push({ fileStore: res.files[0].fileStoreId});
+                          docs.push(res.files[0].fileStoreId);
                           if(counter == 0) {
                               body.Asset.assetAttributes[i].value = docs;
                               counter1--;
@@ -96,7 +96,7 @@ const uploadFilesForAsset = function (body, cb) {
           breakout = 1;
         } else {
           counter--;
-          docs.push(res.files[0].fileStoreId);
+          docs.push({fileStore: res.files[0].fileStoreId});
           if (counter == 0) {
             body.Asset.documents = docs;
             cb(null, body);

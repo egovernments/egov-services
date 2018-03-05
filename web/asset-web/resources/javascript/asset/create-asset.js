@@ -611,15 +611,22 @@ class CreateAsset extends React.Component {
       var noOfShops = tempInfo.assetAttributes.find(function(element) {return element["key"]==="Total No. of Shops"});
 
       var totalShops = 0;
+      var notANumber = false;
       if(floorDetails){
       for(let _i in floorDetails["value"]){
-        totalShops = totalShops + floorDetails["value"][_i]["No. of Shops"];
+        if(Number(floorDetails["value"][_i]["No. of Shops"])==NaN ){
+          notANumber = true;
+        }else
+        totalShops = totalShops + Number(floorDetails["value"][_i]["No. of Shops"]) ;
       }
     }
       
-      console.log("noOfFloors",floorDetails,noOfShops);
+      console.log("noOfFloors",totalShops,noOfShops);
 
-      if(floorDetails && noOfShops && totalShops != noOfShops["value"] ){
+      if(notANumber)
+      return showError("No of Shops in Floor Should be number. Please Check ");
+
+      if(floorDetails && noOfShops && totalShops != Number(noOfShops["value"]) ){
         return showError("No of Shops and Floor details Does not match. Please Check");
       }
 

@@ -222,7 +222,9 @@ class Sale extends React.Component {
         checkCountAndCall("assetAccount", []);
       }
     })
+  }
 
+  componentDidUpdate(){
     $("#disposalDate").datepicker({
       format: "dd/mm/yyyy",
       autoclose: true
@@ -235,7 +237,7 @@ class Sale extends React.Component {
           "disposalDate": e.target.value
         }
       })
-    })
+    });
   }
 
   handleChange(e, name) {

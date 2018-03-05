@@ -131,6 +131,9 @@ class Revaluation extends React.Component {
           var d = new Date(revalAsset.revaluationDate);
           revalAsset.revaluationDate = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
 
+          var d1 = new Date(revalAsset.revaluationOrderDate);
+          revalAsset.revaluationOrderDate = d1.getDate() + "/" + (d1.getMonth() + 1) + "/" + d1.getFullYear();
+
           //Getting the Name of the employee
           commonApiPost("hr-employee", "employees", "_search", {
             tenantId, id: revalAsset.reevaluatedBy, pageSize: 500

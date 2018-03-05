@@ -69,7 +69,7 @@ serviceMaps:
 
        - jsonPath: $.serviceReq.*.media.*.id
 
-       - jsonPath: $.serviceReq[?({id} in @.media[*].id)].auditDetails.createdBy
+       - jsonPath: $.serviceReq.*.media.*.by
 
        - jsonPath: $.serviceReq[?({id} in @.media[*].id)].auditDetails.createdTime
 
@@ -80,14 +80,14 @@ serviceMaps:
        - jsonPath: $.serviceReq[?({id} in @.media[*].id)].serviceRequestId
 
 
-    - query: INSERT INTO eg_pgr_comment(id, by, "when", message, tenantId,serviceRequestId) VALUES (?,?,?,?,?,?);
+    - query: INSERT INTO eg_pgr_comment(id, by, "when", message, tenantId,serviceRequestId, isInternal) VALUES (?,?,?,?,?,?,?);
 
       basePath: serviceReq.*.comments.*
       jsonMaps:
 
        - jsonPath: $.serviceReq.*.comments.*.id
 
-       - jsonPath: $.serviceReq[?({id} in @.comments[*].id)].auditDetails.createdBy
+       - jsonPath: $.serviceReq.*.comments.*.by
 
        - jsonPath: $.serviceReq[?({id} in @.comments[*].id)].auditDetails.createdTime
 
@@ -97,6 +97,7 @@ serviceMaps:
 
        - jsonPath: $.serviceReq[?({id} in @.comments[*].id)].serviceRequestId
 
+       - jsonPath: $.serviceReq.*.comments.*.isInternal
 
 
  - version: 1.0
@@ -105,7 +106,17 @@ serviceMaps:
    fromTopic: update-pgr-servicereq
    isTransaction: true
    queryMaps:
-    - query: UPDATE eg_pgr_servicereq  SET  description=?, lat=?, long=?,address=?, addressid=?, email=?, deviceid=?, accountid=?, firstname=?, lastname=?, phone=?, attributes=?, status=?, assignedto=?, source=?, expectedtime=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicecode=? AND servicerequestid=?;
+    - query: INSERT INTO eg_pgr_servicereq_audit (tenantid, servicecode, servicerequestid, description, lat, "long", address, addressid, email, deviceid, accountid, firstname,lastname, phone, attributes, status, assignedto, source, expectedtime, createdby, createdtime,auditcreatedtime) SELECT tenantid, servicecode, servicerequestid, description, lat, "long", address, addressid, email, deviceid, accountid,firstname, lastname, phone, attributes, status, assignedto, source, expectedtime,lastmodifiedby,lastmodifiedtime,(select extract (EPOCH from now())*1000)  FROM eg_pgr_servicereq where tenantId=? AND servicerequestid=?;
+
+      basePath: serviceReq.*
+      jsonMaps:
+
+       - jsonPath: $.serviceReq.*.tenantId
+
+       - jsonPath: $.serviceReq.*.serviceRequestId
+
+
+    - query: UPDATE eg_pgr_servicereq  SET  description=?, lat=?, long=?,address=?, addressid=?, email=?, deviceid=?, accountid=?, firstname=?, lastname=?, phone=?, attributes=?, status=?, assignedto=?, source=?, expectedtime=?, lastmodifiedby=?, lastmodifiedtime=? WHERE tenantid=? AND servicerequestid=?;
 
       basePath: serviceReq.*
       jsonMaps:
@@ -150,18 +161,18 @@ serviceMaps:
 
        - jsonPath: $.serviceReq.*.tenantId
 
-       - jsonPath: $.serviceReq.*.serviceCode
-
        - jsonPath: $.serviceReq.*.serviceRequestId
 
-    - query: INSERT INTO eg_pgr_media(id, by, "when",url, tenantId,serviceRequestId) VALUES (?,?,?,?,?,?) ON CONFLICT (id) DO NOTHING;
+
+
+    - query: INSERT INTO eg_pgr_media(id, by, "when",url, tenantId,serviceRequestId) VALUES (?,?,?,?,?,?) ON CONFLICT (id,TenantId) DO NOTHING;
 
       basePath: serviceReq.*.media.*
       jsonMaps:
 
        - jsonPath: $.serviceReq.*.media.*.id
 
-       - jsonPath: $.serviceReq[?({id} in @.media[*].id)].auditDetails.lastModifiedBy
+       - jsonPath: $.serviceReq.*.media.*.by
 
        - jsonPath: $.serviceReq[?({id} in @.media[*].id)].auditDetails.lastModifiedTime
 
@@ -172,14 +183,14 @@ serviceMaps:
        - jsonPath: $.serviceReq[?({id} in @.media[*].id)].serviceRequestId
 
 
-    - query: INSERT INTO eg_pgr_comment(id, by, "when", message, tenantId,serviceRequestId) VALUES (?,?,?,?,?,?) ON CONFLICT (id) DO NOTHING;
+    - query: INSERT INTO eg_pgr_comment(id, by, "when", message, tenantId,serviceRequestId, isInternal) VALUES (?,?,?,?,?,?,?) ON CONFLICT (id,tenantId) DO NOTHING;
 
       basePath: serviceReq.*.comments.*
       jsonMaps:
 
        - jsonPath: $.serviceReq.*.comments.*.id
 
-       - jsonPath: $.serviceReq[?({id} in @.comments[*].id)].auditDetails.lastModifiedBy
+       - jsonPath: $.serviceReq.*.comments.*.by
 
        - jsonPath: $.serviceReq[?({id} in @.comments[*].id)].auditDetails.lastModifiedTime
 
@@ -188,3 +199,5 @@ serviceMaps:
        - jsonPath: $.serviceReq[?({id} in @.comments[*].id)].tenantId
 
        - jsonPath: $.serviceReq[?({id} in @.comments[*].id)].serviceRequestId
+
+       - jsonPath: $.serviceReq.*.comments.*.isInternal

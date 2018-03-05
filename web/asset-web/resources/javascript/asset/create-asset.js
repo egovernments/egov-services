@@ -84,6 +84,8 @@ const uploadFiles = function(body, cb) {
 
 const uploadFilesForAsset = function (body, cb) {
   if (body.Asset.documents) {
+    var breakout = 0;
+    var docs = [];
     let counter = body.Asset.documents.length;
     for (let j = 0; j < body.Asset.documents.length; j++) {
       makeAjaxUpload(body.Asset.documents[j], function (err, res) {
@@ -1084,7 +1086,7 @@ class CreateAsset extends React.Component {
       }
 
 
-    commonApiPost("egf-masters", "schemes", "_search", { tenantId }, function (err, res) {
+    commonApiPost("egf-masters", "schemes", "_search", { tenantId, fund: "1" }, function (err, res) {
       if (res) {
         _this.setState({
           schemes: res["schemes"] || []
@@ -2253,7 +2255,7 @@ class CreateAsset extends React.Component {
                           <label for="name">Depreciation Rate </label>
                         </div>
                         <div className="col-sm-6 label-view-text">
-                          <input id="depreciationRate" name="depreciationRate" value={depreciationRate} type="number"
+                          <input id="depreciationRate" name="depreciationRate" value={depreciationRate} type="number" step=".01"
                             onChange={(e)=>{handleChange(e, "depreciationRate")}} min="0" disabled={readonly} />
                         </div>
                       </div>

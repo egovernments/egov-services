@@ -67,7 +67,7 @@ public class ServiceRequestController {
 	@PostMapping("_search")
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
-			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
+			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		
 		log.debug("RequestInfo: ",requestInfoWrapper.toString());
 		log.debug("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());

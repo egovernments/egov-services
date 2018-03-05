@@ -5,9 +5,11 @@ import static org.junit.Assert.*;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.tracer.http.LogAwareRestTemplate;
+import org.egov.tracer.model.ServiceCallException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,13 +17,16 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceRequestRepositoryTest {
 	
 	@Mock
 	private LogAwareRestTemplate restTemplate;
+	
 	
 	@InjectMocks
 	private ServiceRequestRepository serviceRequestRepository;
@@ -35,14 +40,13 @@ public class ServiceRequestRepositoryTest {
 		ReflectionTestUtils.setField(
 				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");
 		
-		RequestInfo requestInfo = new RequestInfo();
-		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
 		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
-
-		Mockito.when(restTemplate.patchForObject("http://localhost:8093/infra-search/rainmaker-pgr/serviceRequestSearch/_get", 
-				searcherRequest, Map.class)).thenReturn(null);
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/serviceRequestSearch/_get");
+		Mockito.when(restTemplate.postForObject(uri.toString(), searcherRequest, Map.class)).thenReturn(null);
+		MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
 		
-		response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
+		response = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);						
 				
 		assertNull(response);
 		
@@ -62,7 +66,10 @@ public class ServiceRequestRepositoryTest {
 		SearcherRequest searcherRequest = new SearcherRequest();
 		searcherRequest.setRequestInfo(requestInfo);
 		searcherRequest.setSearchCriteria(serviceReqSearchCriteria);
-		serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
+		MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/serviceRequestSearch/_get");
+		serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);						
 				
         Mockito.verify(restTemplate).postForObject(
         		Matchers.any(String.class),
@@ -72,78 +79,15 @@ public class ServiceRequestRepositoryTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected = Exception.class)
+	@Test(expected = ServiceCallException.class)
 	public void testGetServiceRequestsException() {
-		RequestInfo requestInfo = new RequestInfo();
-		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
-
-		Mockito.when(restTemplate.patchForObject("http://localhost:8093/infra-search/rainmaker-pgr/serviceRequestSearch/_get", 
-				searcherRequest, Map.class)).thenThrow(Exception.class);
-		
-		serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
-						
-		
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/serviceRequestSearch/_get");
+		MdmsCriteriaReq mdmsCriteriaReq = new MdmsCriteriaReq();
+		Mockito.when(restTemplate.postForObject(uri.toString(), mdmsCriteriaReq, Map.class)).thenThrow(new HttpClientErrorException(HttpStatus.BAD_REQUEST));
+		serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);			
 	}
 	
-	@Test
-	public void testGetCountFailure() {
-		Object response = new Object();
-		ReflectionTestUtils.setField(
-				serviceRequestRepository, "searcherHost", "http://localhost:8093");
-		ReflectionTestUtils.setField(
-				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");
-		
-		RequestInfo requestInfo = new RequestInfo();
-		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
-
-		Mockito.when(restTemplate.patchForObject("http://localhost:8093/infra-search/rainmaker-pgr/count/_get", 
-				searcherRequest, Map.class)).thenReturn(null);
-		
-		response = serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
-				
-		assertNull(response);
-		
-		
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testGetCountSuccess() {
-		ReflectionTestUtils.setField(
-				serviceRequestRepository, "searcherHost", "http://localhost:8093");
-		ReflectionTestUtils.setField(
-				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");
-		
-		RequestInfo requestInfo = new RequestInfo();
-		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
-		SearcherRequest searcherRequest = new SearcherRequest();
-		searcherRequest.setRequestInfo(requestInfo);
-		searcherRequest.setSearchCriteria(serviceReqSearchCriteria);
-		serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
-				
-        Mockito.verify(restTemplate).postForObject(
-        		Matchers.any(String.class),
-        		Matchers.any(SearcherRequest.class),
-                Matchers.any(Class.class));
-		
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test(expected = Exception.class)
-	public void testGetCountException() {
-		RequestInfo requestInfo = new RequestInfo();
-		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
-
-		Mockito.when(restTemplate.patchForObject("http://localhost:8093/infra-search/rainmaker-pgr/count/_get", 
-				searcherRequest, Map.class)).thenThrow(Exception.class);
-		
-		serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
-						
-		
-	}
 
 
 }

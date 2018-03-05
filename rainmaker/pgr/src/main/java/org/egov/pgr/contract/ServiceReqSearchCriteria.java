@@ -53,6 +53,9 @@ public class ServiceReqSearchCriteria {
 	@JsonProperty("serviceCodes")
 	private List<String> serviceCodes;
 	
+	@JsonProperty("phone")
+	private String phone;
+	
 	
 
 }

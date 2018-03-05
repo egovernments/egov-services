@@ -1,5 +1,16 @@
 package org.egov.pgr.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
+import org.egov.pgr.contract.SearcherRequest;
+import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +19,87 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class PGRUtils {
+	
+	@Value("${infra.searcher.host}")
+	private String searcherHost;
+	
+	@Value("${infra.searcher.endpoint}")
+	private String searcherEndpoint;
+	
+	@Value("${mdms.host}")
+	private String mdmsHost;
+	
+	@Value("${mdms.search.endpoint}")
+	private String mdmsEndpoint;
 
+	/**
+	 * Prepares request and uri for service request search
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareSearchRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.SEARCHER_SRSEARCH_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	/**
+	 * Prepares request and uri for count search 
+	 * 
+	 * @param uri
+	 * @param serviceReqSearchCriteria
+	 * @param requestInfo
+	 * @return SearcherRequest
+	 * @author vishal
+	 */
+	public SearcherRequest prepareCountRequest(StringBuilder uri, ServiceReqSearchCriteria serviceReqSearchCriteria, 
+			RequestInfo requestInfo) {
+		uri.append(searcherHost);
+		String endPoint = searcherEndpoint.replace("{moduleName}", PGRConstants.SEARCHER_PGR_MOD_NAME)
+				.replace("{searchName}", PGRConstants.SEARCHER_COUNT_DEF_NAME);
+		uri.append(endPoint);
+		SearcherRequest searcherRequest = SearcherRequest.builder().
+				requestInfo(requestInfo).searchCriteria(serviceReqSearchCriteria).build();
+		
+		return searcherRequest;
+	}
+	
+	/**
+	 * Prepares request and uri for service code search from MDMS
+	 * 
+	 * @param uri
+	 * @param tenantId
+	 * @param department
+	 * @param requestInfo
+	 * @return MdmsCriteriaReq
+	 * @author vishal
+	 */
+	public MdmsCriteriaReq prepareSearchRequestForServiceCodes(StringBuilder uri, String tenantId, 
+			String department, RequestInfo requestInfo) {
+		
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).filter("[?(@.group=='"+department+"')]").build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder()
+				.moduleName(PGRConstants.MDMS_PGR_MOD_NAME).masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		MdmsCriteriaReq mdmsCriteriaReq = MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+		
+		return mdmsCriteriaReq;
+	}
 
 }

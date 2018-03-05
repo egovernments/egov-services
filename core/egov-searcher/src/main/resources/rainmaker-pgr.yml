@@ -41,6 +41,10 @@ SearchDefinitions:
     - name: group
       isMandatory: false
       jsonPath: $.searchCriteria.group
+    - name: phone
+      isMandatory: false
+      jsonPath: $.searchCriteria.phone
+
 
    output:
     jsonFormat: {"ResponseInfo": {},"serviceReq": []}
@@ -85,6 +89,9 @@ SearchDefinitions:
     - name: group
       isMandatory: false
       jsonPath: $.searchCriteria.group
+    - name: phone
+      isMandatory: false
+      jsonPath: $.searchCriteria.phone
 
    output:
     jsonFormat: {"ResponseInfo": {},"count": {}}
@@ -129,6 +136,9 @@ SearchDefinitions:
     - name: group
       isMandatory: false
       jsonPath: $.searchCriteria.group
+    - name: phone
+      isMandatory: false
+      jsonPath: $.searchCriteria.phone
 
    output:
     jsonFormat: {"ResponseInfo": {},"serviceReq": []}

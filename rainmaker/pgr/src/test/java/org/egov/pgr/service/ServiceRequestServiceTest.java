@@ -13,6 +13,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdGenerationResponse;
 import org.egov.pgr.contract.IdResponse;
+import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
@@ -20,13 +21,14 @@ import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.repository.IdGenRepo;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
+import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.tracer.model.ServiceCallException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -46,6 +48,9 @@ public class ServiceRequestServiceTest {
 	
 	@Mock
 	private ResponseInfoFactory factory;
+	
+	@Mock
+	private PGRUtils pGRUtils;
 
 	@Mock
 	private IdGenRepo idGenRepo;
@@ -142,9 +147,15 @@ public class ServiceRequestServiceTest {
 	public void testGetServiceRequestsSuccess() {
 		Object response = null;
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
-		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
+		serviceReqSearchCriteria.setGroup("group");
+		serviceReqSearchCriteria.setTenantId("tenantId");		
 		ServiceReqResponse serviceReqResponse = new ServiceReqResponse();
-		Mockito.when(serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria))
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(pGRUtils.prepareSearchRequest(null, serviceReqSearchCriteria, requestInfo)).thenReturn(searcherRequest);
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/serviceRequestSearch/_get");
+		Mockito.when(serviceRequestRepository.fetchResult(uri, searcherRequest))
 		.thenReturn(serviceReqResponse);
 		response = service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 		
@@ -158,9 +169,16 @@ public class ServiceRequestServiceTest {
 		ObjectMapper mapper = new ObjectMapper();
 		Object response = new Object();
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
-		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		Mockito.when(serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria))
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
+		serviceReqSearchCriteria.setGroup("group");
+		serviceReqSearchCriteria.setTenantId("tenantId");
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(pGRUtils.prepareSearchRequest(null, serviceReqSearchCriteria, requestInfo)).thenReturn(searcherRequest);
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/serviceRequestSearch/_get");
+		Mockito.when(serviceRequestRepository.fetchResult(uri, searcherRequest))
 		.thenReturn(null);
+		
 		response = service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 		ServiceReqResponse serviceReqResponse = mapper.convertValue(response, ServiceReqResponse.class);
 
@@ -169,12 +187,18 @@ public class ServiceRequestServiceTest {
 		
 	}
 	
-	@Test(expected = ServiceCallException.class)
+	@Test(expected = Exception.class)
 	public void testGetServiceRequestsException() {
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
-		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		Mockito.when(serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria))
-		.thenThrow(new ServiceCallException());
+		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();
+		serviceReqSearchCriteria.setGroup("group");
+		serviceReqSearchCriteria.setTenantId("tenantId");
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(service.fetchServiceCodes(requestInfo, "tenantId", "group")).thenReturn(new Object());
+		Mockito.when(pGRUtils.prepareSearchRequest(Matchers.any(StringBuilder.class), 
+				Matchers.any(ServiceReqSearchCriteria.class), Matchers.any(RequestInfo.class))).thenReturn(searcherRequest);
+		Mockito.when(serviceRequestRepository.fetchResult(Matchers.any(StringBuilder.class), Matchers.any(SearcherRequest.class)))
+		.thenReturn(Exception.class);
 		
 		service.getServiceRequests(requestInfo, serviceReqSearchCriteria);
 				
@@ -190,8 +214,13 @@ public class ServiceRequestServiceTest {
 		map.put("count", list);
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		Mockito.when(serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria))
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(pGRUtils.prepareSearchRequest(null, serviceReqSearchCriteria, requestInfo)).thenReturn(searcherRequest);
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/count/_get");
+		Mockito.when(serviceRequestRepository.fetchResult(uri, searcherRequest))
 		.thenReturn(map);
+		
 		Object res = service.getCount(requestInfo, serviceReqSearchCriteria);
 		
 		assertNotNull(res);
@@ -204,7 +233,11 @@ public class ServiceRequestServiceTest {
 		ObjectMapper mapper = new ObjectMapper();
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		Mockito.when(serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria))
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(pGRUtils.prepareSearchRequest(null, serviceReqSearchCriteria, requestInfo)).thenReturn(searcherRequest);
+		StringBuilder uri = new StringBuilder();
+		uri.append("http://localhost:8093/infra-search/rainmaker-pgr/count/_get");
+		Mockito.when(serviceRequestRepository.fetchResult(uri, searcherRequest))
 		.thenReturn(null);
 		Object res = service.getCount(requestInfo, serviceReqSearchCriteria);
 		CountResponse response = mapper.convertValue(res, CountResponse.class);
@@ -216,11 +249,12 @@ public class ServiceRequestServiceTest {
 	
 	@Test(expected = Exception.class)
 	public void testGetCountException() {
-		Object response = new Object();
 		RequestInfo requestInfo = Mockito.mock(RequestInfo.class);
 		ServiceReqSearchCriteria serviceReqSearchCriteria = Mockito.mock(ServiceReqSearchCriteria.class);
-		Mockito.when(serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria))
-		.thenReturn(response);
+		SearcherRequest searcherRequest = new SearcherRequest();
+		Mockito.when(pGRUtils.prepareSearchRequest(null, serviceReqSearchCriteria, requestInfo)).thenReturn(searcherRequest);
+		Mockito.when(serviceRequestRepository.fetchResult(Matchers.any(StringBuilder.class), Matchers.any(SearcherRequest.class)))
+		.thenReturn(Exception.class);
 		
 		service.getCount(requestInfo, serviceReqSearchCriteria);
 		

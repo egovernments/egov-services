@@ -5,18 +5,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.Comment;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
 import org.egov.pgr.contract.Media;
+import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.repository.IdGenRepo;
-import org.egov.pgr.repository.MDMSRespository;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
+import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,9 +51,9 @@ public class ServiceRequestService {
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
-	
+		
 	@Autowired
-	private MDMSRespository mDMSRespository;
+	private PGRUtils pGRUtils;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaProducer;
@@ -213,24 +216,31 @@ public class ServiceRequestService {
 	 */
 	public ServiceReqResponse getServiceRequests(RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
+		log.info("requestInfo: "+requestInfo.toString());
+		log.info("serviceReqSearchCriteria: "+serviceReqSearchCriteria.toString());
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		ServiceReqResponse serviceReqResponse = null;
-		if(null != serviceReqSearchCriteria.getGroup() || !serviceReqSearchCriteria.getGroup().isEmpty()) {
-			Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
-			if(null == response)
-				return new ServiceReqResponse();
-			List<String> serviceCodes = new ArrayList<>();
-			try {
-				serviceCodes = JsonPath.read(response, "$.*.serviceCodes");
-			}catch(Exception e) {
-				log.info("MDMS response couldn't be parsed: ",e);
-				return new ServiceReqResponse();
+		if(null != serviceReqSearchCriteria.getGroup()) {
+			if(!serviceReqSearchCriteria.getGroup().isEmpty()){
+				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
+				if(null == response)
+					return new ServiceReqResponse();
+				List<String> serviceCodes = new ArrayList<>();
+				try {
+					serviceCodes = JsonPath.read(response, PGRConstants.MDMS_JSONPATH_SERVICECODES);
+				}catch(Exception e) {
+					log.info("MDMS response couldn't be parsed: ",e);
+					return new ServiceReqResponse();
+				}
+				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 			}
-			serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 		}
-		Object response = serviceRequestRepository.getServiceRequests(requestInfo, serviceReqSearchCriteria);
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = pGRUtils.prepareSearchRequest(uri, serviceReqSearchCriteria, requestInfo);
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);
 		log.info("Searcher response: ", response);
 		if (null == response) {
 			return new ServiceReqResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false),
@@ -252,12 +262,14 @@ public class ServiceRequestService {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		Object response = serviceRequestRepository.getCount(requestInfo, serviceReqSearchCriteria);
+		StringBuilder uri = new StringBuilder();
+		SearcherRequest searcherRequest = pGRUtils.prepareCountRequest(uri, serviceReqSearchCriteria, requestInfo);
+		Object response = serviceRequestRepository.fetchResult(uri, searcherRequest);		
 		log.info("Searcher response: ", response);
 		if (null == response) {
 			return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), 0D);
 		}
-		Double count = JsonPath.read(response, "$.count[0].count");
+		Double count = JsonPath.read(response, PGRConstants.PG_JSONPATH_COUNT);
 		return new CountResponse(factory.createResponseInfoFromRequestInfo(requestInfo, false), count);
 	}
 	
@@ -273,7 +285,9 @@ public class ServiceRequestService {
 	 */
 	public Object fetchServiceCodes(RequestInfo requestInfo,
 			String tenantId, String department) {
-		return mDMSRespository.fetchServiceCodes(requestInfo, tenantId, department);
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceCodes(uri, tenantId, department, requestInfo);
+		return serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
 		
 	}
 

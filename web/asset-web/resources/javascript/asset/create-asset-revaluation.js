@@ -266,6 +266,11 @@ class Revaluation extends React.Component {
       tempInfo.revaluationDate = new Date(date[2], date[1] - 1, date[0]).getTime();
     }
 
+    if (tempInfo.revaluationOrderDate) {
+      var date = tempInfo.revaluationOrderDate.split("/");
+      tempInfo.revaluationOrderDate = new Date(date[2], date[1] - 1, date[0]).getTime();
+    }
+
     var body = {
       RequestInfo: requestInfo,
       Revaluation: tempInfo
@@ -416,7 +421,7 @@ class Revaluation extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label>Revaluation Order No. </label>
+                      <label>Revaluation Order No. <span>*</span></label>
                     </div>
                     <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
                       <div>
@@ -431,7 +436,7 @@ class Revaluation extends React.Component {
                 <div className="col-sm-6">
                   <div className="row">
                     <div className="col-sm-6 label-text">
-                      <label>Revaluation Order Date </label>
+                      <label>Revaluation Order Date <span>*</span></label>
                     </div>
                     <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
                       <div>

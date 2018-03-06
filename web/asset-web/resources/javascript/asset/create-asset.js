@@ -83,12 +83,13 @@ const uploadFiles = function(body, cb) {
 }
 
 const uploadFilesForAsset = function (body, cb) {
-  if (body.Asset.documents) {
+  if (body.Asset.document && body.Asset.document.length) {
     var breakout = 0;
     var docs = [];
-    let counter = body.Asset.documents.length;
-    for (let j = 0; j < body.Asset.documents.length; j++) {
-      makeAjaxUpload(body.Asset.documents[j], function (err, res) {
+    let counter = body.Asset.document.length;
+    for (let j = 0; j < body.Asset.document.length; j++) {
+      if( body.Asset.document[j] instanceof File){
+      makeAjaxUpload(body.Asset.document[j], function (err, res) {
         if (breakout == 1)
           return;
         else if (err) {
@@ -98,12 +99,16 @@ const uploadFilesForAsset = function (body, cb) {
           counter--;
           docs.push({fileStore: res.files[0].fileStoreId});
           if (counter == 0) {
-            body.Asset.documents = docs;
+            body.Asset.documents = body.Asset.documents.concat(docs);
+            delete body.Asset.document
             cb(null, body);
           }
         }
       })
+    }else{
+      cb(new Error("Not a File"));
     }
+  }
   } else {
     cb(null, body);
   }
@@ -553,7 +558,7 @@ class CreateAsset extends React.Component {
         this.setState({
             assetSet: {
                 ...this.state.assetSet,
-                [name]: name == "documents" ? e.target.files : e.target.value
+                [name]: name == "document" ? e.target.files : e.target.value
             }
         })
       }
@@ -614,23 +619,22 @@ class CreateAsset extends React.Component {
       var notANumber = false;
       if(floorDetails){
       for(let _i in floorDetails["value"]){
-        if(Number(floorDetails["value"][_i]["No. of Shops"])==NaN ){
+        console.log(Number(floorDetails["value"][_i]["No. of Shops"]));
+        if(isNaN(Number(floorDetails["value"][_i]["No. of Shops"]))){
           notANumber = true;
         }else
         totalShops = totalShops + Number(floorDetails["value"][_i]["No. of Shops"]) ;
       }
     }
       
-      console.log("noOfFloors",totalShops,noOfShops);
-
-      if(notANumber)
+      if(notANumber){
       return showError("No of Shops in Floor Should be number. Please Check ");
-
+      }
       if(floorDetails && noOfShops && totalShops != Number(noOfShops["value"]) ){
         return showError("No of Shops and Floor details Does not match. Please Check");
       }
 
-      // console.log(JSON.stringify(tempInfo));
+      console.log(JSON.stringify(tempInfo));
 
       var body = {
           "RequestInfo": requestInfo,
@@ -2282,7 +2286,7 @@ class CreateAsset extends React.Component {
                         </div>
                         <div className="col-sm-6">
                           <div>
-                            <input type="file" multiple onChange={(e) => handleChange(e, "documents")} />
+                            <input type="file" multiple onChange={(e) => handleChange(e, "document")} />
                           </div>
                         </div>
                       </div>

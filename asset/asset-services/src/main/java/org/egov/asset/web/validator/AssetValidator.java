@@ -236,9 +236,6 @@ public class AssetValidator {
         if (StringUtils.isEmpty(disposal.getDisposalReason()))
             throw new RuntimeException("Disposal Reason should be present for disposing asset : " + asset.getName());
 
-        if (disposal.getSaleValue() == null)
-            throw new RuntimeException("Sale Value should be present for disposing asset : " + asset.getName());
-
         verifyPanCardAndAdhaarCardForAssetSale(disposal);
         if (getEnableYearWiseDepreciation(tenantId)) {
             validateAssetCategoryForVoucherGeneration(asset);
@@ -325,7 +322,6 @@ public class AssetValidator {
             assetCurrentAmount = asset.getGrossValue().subtract(asset.getAccumulatedDepreciation());
         } else
             assetCurrentAmount = asset.getGrossValue();
-            
 
         log.debug("Asset Current Value :: " + assetCurrentAmount);
         assetCurrentAmount = new BigDecimal(assetCurrentAmount.setScale(1, BigDecimal.ROUND_HALF_UP).toString());

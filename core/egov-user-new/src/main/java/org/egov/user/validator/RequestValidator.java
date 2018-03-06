@@ -68,6 +68,8 @@ public class RequestValidator {
 	private List<ErrorField> getErrorFields(final UserRequest userRequest, final Boolean createOrUpdate) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		for (final User user : userRequest.getUsers()) {
+			if(!createOrUpdate)
+				addUserIdValidationErrors(user.getId(),errorFields);
 			addTenantIdValidationErrors(user.getTenantId(), errorFields);
 			addUserNameValidationErrors(user.getUserName(), user.getTenantId(), errorFields, createOrUpdate);
 			addNameValidationErrors(user.getName(), errorFields);
@@ -78,6 +80,17 @@ public class RequestValidator {
 			addActiveValidationErrors(user.getActive(), errorFields);
 		}
 		return errorFields;
+	}
+
+	private void addUserIdValidationErrors(Long id, List<ErrorField> errorFields) {
+		// TODO Auto-generated method stub
+		if (null == id) {
+			final ErrorField errorField = ErrorField.builder().code(UserConstants.USERID_MANDATORY_CODE)
+					.message(UserConstants.USERID_MANADATORY_ERROR_MESSAGE)
+					.field(UserConstants.USERID_MANADATORY_FIELD_NAME).build();
+			errorFields.add(errorField);
+		} else
+			return;
 	}
 
 	private void addTypeValidationErrors(String type, List<ErrorField> errorFields) {
@@ -177,7 +190,7 @@ public class RequestValidator {
 
 	private void addActiveValidationErrors(final Boolean active, final List<ErrorField> errorFields) {
 
-		if (active == null) {
+		if (null == active) {
 			final ErrorField errorField = ErrorField.builder().code(UserConstants.ACTIVE_MANDATORY_CODE)
 					.message(UserConstants.ACTIVE_MANADATORY_ERROR_MESSAGE)
 					.field(UserConstants.ACTIVE_MANADATORY_FIELD_NAME).build();

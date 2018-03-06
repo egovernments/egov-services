@@ -50,12 +50,16 @@ public class UserConstants {
 	public static final String TYPE_MANDATORY_CODE = "user.0008";
 	public static final String TYPE_MANADATORY_FIELD_NAME = "type";
 	public static final String TYPE_MANADATORY_ERROR_MESSAGE = "Type is required";
+	
+	public static final String USERID_MANDATORY_CODE = "user.0009";
+	public static final String USERID_MANADATORY_FIELD_NAME = "id";
+	public static final String USERID_MANADATORY_ERROR_MESSAGE = "UserId is Requried";
 
-	public static final String USERNAME_UNIQUE_CODE = "user.0009";
+	public static final String USERNAME_UNIQUE_CODE = "user.0010";
 	public static final String USERNAME_UNQ_FIELD_NAME = "userName";
 	public static final String USERNAME_UNQ_ERROR_MESSAGE = "UserName already exist.";
 
-	public static final String USERNAME_DUPLICATE_CODE = "user.0009";
+	public static final String USERNAME_DUPLICATE_CODE = "user.0011";
 	public static final String USERNAME_DUPLICATE_FIELD_NAME = "userName";
 	public static final String USERNAME_DUPLICATE_ERROR_MESSAGE = "UserName Does n't exist.";
 }

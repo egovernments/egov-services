@@ -147,7 +147,7 @@ $(document).ready(function() {
     //validation check before adding
     $("#subesquentrenewalsTable tbody tr:eq("+(index-1)+")").find('input').each(function(index){
       // console.log(index, $(this).attr('id'), $(this).attr('name'), $(this).val());
-      if($(this).attr('class')==='resolutionNumber' || $(this).attr('class')==='resolutionDate'){
+      if($(this).attr('data-class')==='resolutionNumber' || $(this).attr('data-class')==='resolutionDate'){
         valid = true;
       }else if(!$(this).val()){
         valid = false;

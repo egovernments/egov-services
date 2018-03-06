@@ -157,6 +157,7 @@ const defaultAssetSetState = {
     "scheme": "",
     "subScheme": "",
     "enableYearWiseDepreciation": false,
+    "documents": [],
     "yearWiseDepreciation": [Object.assign({}, defaultyearWiseDepRateTemp)]
 };
 

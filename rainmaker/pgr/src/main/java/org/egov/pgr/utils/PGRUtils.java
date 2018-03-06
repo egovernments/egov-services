@@ -89,7 +89,8 @@ public class PGRUtils {
 		
 		uri.append(mdmsHost).append(mdmsEndpoint);
 		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
-				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).filter("[?(@.group=='"+department+"')]").build();
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).
+				filter("[?(@.group=='"+department+"')]."+PGRConstants.SERVICE_CODES).build();
 		List<MasterDetail> masterDetails = new ArrayList<>();
 		masterDetails.add(masterDetail);
 		ModuleDetail moduleDetail = ModuleDetail.builder()

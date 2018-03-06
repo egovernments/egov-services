@@ -182,8 +182,6 @@ public class ServiceRequestService {
 	 */
 	public ServiceReqResponse getServiceRequests(RequestInfo requestInfo,
 			ServiceReqSearchCriteria serviceReqSearchCriteria) {
-		log.info("requestInfo: "+requestInfo.toString());
-		log.info("serviceReqSearchCriteria: "+serviceReqSearchCriteria.toString());
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -193,13 +191,7 @@ public class ServiceRequestService {
 				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
 				if(null == response)
 					return new ServiceReqResponse();
-				List<String> serviceCodes = new ArrayList<>();
-				try {
-					serviceCodes = JsonPath.read(response, PGRConstants.MDMS_JSONPATH_SERVICECODES);
-				}catch(Exception e) {
-					log.info("MDMS response couldn't be parsed: ",e);
-					return new ServiceReqResponse();
-				}
+				List<String> serviceCodes = (List<String>) response;
 				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 		}
 		StringBuilder uri = new StringBuilder();

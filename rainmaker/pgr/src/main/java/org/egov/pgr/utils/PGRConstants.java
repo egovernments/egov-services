@@ -19,4 +19,6 @@ public class PGRConstants {
 	public static final String SEARCHER_PGR_MOD_NAME = "rainmaker-pgr";
 	public static final String MDMS_PGR_MOD_NAME = "rainmaker-pgr";
 	public static final String MDMS_SERVICETYPE_MASTER_NAME = "serviceDefinitions";
+	public static final String SERVICE_CODES = "serviceCode";
+
 }

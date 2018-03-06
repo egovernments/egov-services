@@ -30,6 +30,8 @@ class EmployeeGrievance extends React.Component {
 
         $('#hp-citizen-title').text("Employee Grievance");
 
+        let _this = this;
+
         commonApiPost("hr-employee", "employees", "_loggedinemployee", { tenantId }, function (err, res) {
             if (res && res.Employee && res.Employee[0]) {
                 var obj = res.Employee[0];

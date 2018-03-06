@@ -124,10 +124,6 @@ class Sale extends React.Component {
 
     if (getUrlVars()["type"]) $('#hpCitizenTitle').text(titleCase(getUrlVars()["type"]) + " Asset Sale Or Disposal");
 
-    $(".datepicker").datepicker({
-      format: "dd/mm/yyyy",
-      autoclose: true
-    });
 
     let id = getUrlVars()["id"], _this = this, count = 5, _state = {};
 
@@ -227,6 +223,7 @@ class Sale extends React.Component {
   }
 
   componentDidUpdate(){
+    let _this = this;
     $("#disposalDate").datepicker({
       format: "dd/mm/yyyy",
       autoclose: true

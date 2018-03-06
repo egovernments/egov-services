@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>EIS</title>
+    <base href="/hr-web/"/>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/global/multi-level-menu/jquery.multilevelpushmenu.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/application.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/egov/custom.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/vistyle.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/responsive.bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/stylesheet/buttons.dataTables.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css"> -->
+
+    <style>
+        body {
+            padding: 0;
+        }
+
+        footer {
+            background-color: #f3f4f5;
+            bottom: 0;
+            clear: both;
+            position: fixed;
+            width: 100%;
+            z-index: 999;
+        }
+
+        footer a {
+            color: rgb(116, 101, 101);
+            text-decoration: none;
+        }
+
+        footer span.copyright {
+            float: left;
+            font-size: 11px;
+            padding: 7px;
+        }
+
+        footer span.version {
+            float: right;
+            font-size: 11px;
+            padding: 7px;
+        }
+
+        footer span.copyright a {
+            color: rgb(116, 101, 101);
+        }
+
+        footer #legal {
+            clear: left;
+            display: block;
+        }
+
+        .constrain {
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 0px;
+        }
+    </style>
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="resources/javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap.min.js"></script>
+
+    <script type="text/javascript" src="resources/javascript/global/multi-level-menu/jquery.multilevelpushmenu.min.js"></script>
+
+    <script type="text/javascript" src="resources/javascript/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/moment.js"></script>
+    <script type="text/javascript" src="resources/javascript/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js">
+
+    </script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.flash.min.js">
+
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js">
+
+    </script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js" charset="utf-8"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.html5.min.js" charset="utf-8"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.4/js/buttons.print.min.js" charset="utf-8"></script>
+    <!-- <script src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" charset="utf-8"></script> -->
+    <script type="text/javascript" src="resources/javascript/dataTables.responsive.min.js"></script>
+
+    <!-- Jquery form validator -->
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="resources/javascript/global/jquery-validation/additional-methods.min.js"></script>
+    <script src="resources/javascript/reactjs/react.min.js"></script>
+    <script src="resources/javascript/reactjs/react-dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
+    <script src="resources/javascript/hr/common/tenantId.js"></script>
+    <script src="resources/javascript/hr/common/commonAPI.js" charset="utf-8"></script>
+</head>
+
+<body class="page-body">
+    <!-- for showing loading spinner -->
+
+    <div id="loadingMask" style="display: none;"></div>
+    <div id="loading" style="display: none;">
+        <div class="loading-indicator"><i class="fa fa-spinner fa-pulse fa-2x"></i></div>
+    </div>
+
+    <div class="page-container horizontal-menu" id="dashboard">
+        <header class="navbar navbar-fixed-top border-header">
+            <!-- set fixed position by adding class "navbar-fixed-top" -->
+            <div class="navbar-inner">
+                <!-- logo -->
+                <div class="navbar-brand">
+                    <a href="javascript:void(0);">
+                        <img src="" height="60" class="homepage_logo">
+                    </a>
+                </div>
+
+                <div class="navbar-brand">
+                    <h3 class="horizontal-page-title homepage hidden-xs hidden-sm" id="hp-citizen-title">EIS</h3>
+                </div>
+
+                <!-- notifications and other links -->
+                <ul class="nav navbar-right pull-right">
+                    <!-- <li class="dropdown">
+                        <a href="javascript:void(0);" class="tooltip-secondary workspace active" data-toggle="tooltip" title="" data-work="worklist" data-original-title="Worklist">
+                            <i class="fa fa-list fa-fw"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="" data-work="drafts" data-original-title="Drafts">
+                            <i class="fa fa-pencil fa-fw"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="tooltip-secondary workspace" data-toggle="tooltip" title="" data-work="notifications" data-original-title="Notifications">
+                            <i class="fa fa-bell fa-fw"></i>
+                        </a>
+                    </li>
+
+                    <li class="hidden-xs menu-responsive">
+                        <a href="javascript:void(0);" class="profile-name">
+                            <i class="fa fa-user img-circle"></i> Chandragiri Murali Krishna
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="home/profile/edit" class="open-popup">
+                                    <i class="fa fa-user"></i>
+                                    <span class="title">Edit Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" onclick="jQuery('.change-password').modal('show', {backdrop: 'static'});">
+                                    <i class="fa fa-key"></i>
+                                    <span class="title">Change Password</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" onclick="jQuery('.add-feedback').modal('show', {backdrop: 'static'});">
+                                    <i class="fa fa-comment"></i>
+                                    <span class="title">Feedback</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="http://apemunicipalityissues.egovernments.org/servicedesk/customer/portal/2" data-strwindname="r&amp;i" class="open-popup">
+                                    <i class="fa fa-bug"></i>
+                                    <span class="title">Report an Issue</span>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="help" data-strwindname="help" class="open-popup">
+                                    <i class="fa fa-question"></i>
+                                    <span class="title">Help</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="" class="signout" id="logout">
+                                    <i class="fa fa-sign-out"></i>
+                                    <span class="title">Sign Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown visible-xs hidden-sm">
+                        <a href="/egi/logout" class="tooltip-secondary signout" data-toggle="tooltip" title="" data-original-title="Sign Out">
+                            <i class="fa fa-sign-out"></i>
+                        </a>
+                    </li> -->
+
+                    <li class="dropdown">
+                        <a href="http://www.egovernments.org" target="_blank">
+                            <img src="resources/images/logo@2x.png" title="Powered by eGovernments" height="25px" style="padding-top:5px">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <!-- Multi level menu content -->
+        <div class="home-container">
+            <!-- <div id="menu" class="homepage" style="min-height: 242px; width: 250px; height: 242px; min-width: 250px;"></div> -->
+            <div class="inline-main-content" style="width:100%">
+                <div class="row main-space" id="worklist">
+                    <div class="col-xs-12">
+                        <!-- Middle Section -->
+                        <div class="body-cont">
+                            <div class="body-cont-inner">
+                                <!-- <div class="form-section"> -->
+                                    <!-- <h3>Employee Search</h3> -->
+                                    <div id="root"></div>
+                                    <!-- <script type="text/babel"  src="resources/javascript/hr/common/employee-search-common.js"></script> -->
+                                    <script>document.write('<script type="text/babel" type="text/babel" src="resources/javascript/hr/grievance/employee-grievance.js?version=' + getTimestamp() + '"\><\/script>');</script>
+
+                                <!-- </div> -->
+                            </div>
+                        </div>
+                        <!-- /Middle Section -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- <footer class="clearfix simple">
+        <div class="constrain">
+            <div id="legal">
+                <span class="copyright">Copyright <span><i class="fa fa-copyright"></i></span> 2017 <a href="http://www.egovernments.org" target="_blank"> eGovernments Foundation.<sup>®</sup></a></span>
+                <span class="version">eGov ERP - 2.1.0-SNAPSHOT_2486 @ Core - 2.1.0-SNAPSHOT_2486</span>
+            </div>
+        </div>
+    </footer> -->
+
+    <script src="resources/javascript/egov/custom.js"></script>
+    <script src="resources/javascript/js.cookies.js"></script>
+
+
+    <script type="text/javascript">
+        $(window).load(function() {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("loadingMask").style.display = "none";
+        });
+        // $(document).on("keydown", disableRefreshAndBack);
+    </script>
+
+    <script type="text/javascript">
+
+        $('.menu-responsive').mouseover(function() {
+            $('.menu-responsive > ul').css('display', 'block')
+        });
+        $('.hidden-xs.menu-responsive').mouseout(function(event) {
+            $('.menu-responsive > ul').css('display', 'none')
+        });
+    </script>
+</body>
+
+</html>

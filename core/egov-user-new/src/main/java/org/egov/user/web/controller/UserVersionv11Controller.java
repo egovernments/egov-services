@@ -6,15 +6,13 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
 import org.egov.user.domain.service.UserServiceVersionv11;
 import org.egov.user.domain.v11.model.User;
 import org.egov.user.domain.v11.model.UserSearchCriteria;
+import org.egov.user.utils.UserUtil;
 import org.egov.user.validator.RequestValidator;
-import org.egov.user.web.contract.factory.ResponseInfoFactory;
 import org.egov.user.web.errorhandlers.ErrorResponse;
 import org.egov.user.web.v11.contract.UserRequest;
-import org.egov.user.web.v11.contract.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +35,14 @@ public class UserVersionv11Controller {
 	RequestValidator requestValidator;
 
 	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+	UserUtil userUtil;
 
+   /**
+    * This Api Will create Bulk Users
+    * @param userRequest
+    * @param errors
+    * @return
+    */
 	@PostMapping(value = "/_create")
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final UserRequest userRequest, final BindingResult errors) {
@@ -52,9 +56,15 @@ public class UserVersionv11Controller {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		userService.createUser(userRequest);
-		return createSuccessResponse(userRequest.getRequestInfo(), userRequest.getUsers());
+		return userUtil.createSuccessResponse(userRequest.getRequestInfo(), userRequest.getUsers());
 	}
 
+	/**
+	 * Method will update the bulk users
+	 * @param userRequest
+	 * @param errors
+	 * @return
+	 */
 	@PostMapping("/_update")
 	public ResponseEntity<?> updateUser(@RequestBody @Valid final UserRequest userRequest, final BindingResult errors) {
 		if (errors.hasErrors()) {
@@ -67,9 +77,30 @@ public class UserVersionv11Controller {
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
 		userService.updateUser(userRequest);
-		return createSuccessResponse(userRequest.getRequestInfo(), userRequest.getUsers());
+		return userUtil.createSuccessResponse(userRequest.getRequestInfo(), userRequest.getUsers());
 	}
 
+	/**
+	 * This function Will use to search the users based on criteria
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param id
+	 * @param name
+	 * @param userName
+	 * @param mobileNumber
+	 * @param aadharNumber
+	 * @param emailId
+	 * @param pan
+	 * @param active
+	 * @param type
+	 * @param roleCodes
+	 * @param lastChangedSince
+	 * @param includeDetails
+	 * @param pageSize
+	 * @param pageNumber
+	 * @param sort
+	 * @return
+	 */
 	@PostMapping("/_search")
 	public ResponseEntity<?> searchUsers(@RequestBody RequestInfo requestInfo,
 			@RequestParam(value = "tenantId", required = true) String tenantId,
@@ -95,9 +126,18 @@ public class UserVersionv11Controller {
 				.includeDetails(includeDetails).build();
 
 		List<User> users = userService.searchUsers(requestInfo, searchCriteria);
-		return createSuccessResponse(requestInfo, users);
+		return userUtil.createSuccessResponse(requestInfo, users);
 	}
 
+	
+	/**
+	 * This function will create opt will send to mobileNumber
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param userName
+	 * @param mobileNumber
+	 * @return
+	 */
 	@PostMapping("/_sendotp")
 	public ResponseEntity<?> sendOtp(@RequestBody RequestInfo requestInfo,
 			@RequestParam(value = "tenantId", required = true) String tenantId,
@@ -105,13 +145,6 @@ public class UserVersionv11Controller {
 			@RequestParam(value = "identity", required = true) String mobileNumber) {
 		userService.createAndSendOtp(requestInfo, tenantId, userName, mobileNumber);
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	public ResponseEntity<?> createSuccessResponse(final RequestInfo requestInfo, List<User> users) {
-		final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		UserResponse userResponse = new UserResponse(responseInfo, users);
-		return new ResponseEntity<>(userResponse, HttpStatus.OK);
 	}
 
 }

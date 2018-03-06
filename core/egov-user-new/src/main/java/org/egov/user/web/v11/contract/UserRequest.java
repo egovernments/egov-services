@@ -16,7 +16,6 @@ import lombok.Setter;
 @Setter
 public class UserRequest {
 
-	@NotNull
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
 

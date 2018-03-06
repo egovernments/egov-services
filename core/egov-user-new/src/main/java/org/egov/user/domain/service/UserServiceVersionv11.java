@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.egov.user.domain.model.Address;
+import org.egov.user.domain.model.enums.AddressType;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.domain.v11.model.AuditDetails;
 import org.egov.user.domain.v11.model.Role;
@@ -17,13 +17,13 @@ import org.egov.user.domain.v11.model.User;
 import org.egov.user.domain.v11.model.UserDetails;
 import org.egov.user.domain.v11.model.UserSearchCriteria;
 import org.egov.user.persistence.repository.UserRepository;
+import org.egov.user.producer.UserProducer;
 import org.egov.user.v11.repository.IdGenRepository;
 import org.egov.user.v11.repository.SearcherRepository;
 import org.egov.user.web.v11.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class UserServiceVersionv11 {
-
-	@Autowired
-	LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -45,7 +42,7 @@ public class UserServiceVersionv11 {
 	private IdGenRepository idGenRepository;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	UserProducer userProducer;
 
 	@Autowired
 	private SearcherRepository searchRepository;
@@ -83,7 +80,7 @@ public class UserServiceVersionv11 {
 				user.setRoleToCitizen();
 			}
 			setRequiredInfoToUsers(createUserRequest);
-			kafkaTemplate.send(saveUserTopic, createUserRequest);
+			userProducer.producer(saveUserTopic, createUserRequest);
 
 		} else if (null != requestInfo && null != requestInfo.getUserInfo()
 				&& null != requestInfo.getUserInfo().getType()) {
@@ -97,42 +94,28 @@ public class UserServiceVersionv11 {
 					}
 				}
 				setRequiredInfoToUsers(createUserRequest);
-				kafkaTemplate.send(saveUserTopic, createUserRequest);
+				userProducer.producer(saveUserTopic, createUserRequest);
 			}
 		}
 	}
 
 	public void updateUser(UserRequest createUserRequest) {
-		kafkaTemplate.send(updateUserTopic, createUserRequest);
-	}
+		List<User> userList = createUserRequest.getUsers();
+		String username = createUserRequest.getRequestInfo().getUserInfo().getName();
+		AuditDetails auditDetails = AuditDetails.builder().createdBy(username).lastModifiedBy(username)
+				.createdTime(new Date().getTime()).lastModifiedTime(new Date().getTime()).build();
+		userList.forEach(user -> user.setAuditDetails(auditDetails));
+		for (User user : userList) {
+			List<Role> roles = user.getRoles();
+			if (null != roles) {
+				roles.forEach(role -> role.setTenantId(user.getTenantId()));
+				roles.forEach(role -> role.setUserId(user.getId()));
+				roles.forEach(role -> role.setLastModifiedDate(new Date().getTime()));
+			}
+		}
 
-	private void setUserInfoFromDbuser(User user, User dbuser) {
-		// TODO Auto-generated method stub
-		if (user.getName() == null)
-			user.setName(dbuser.getName());
-		if (user.getAadhaarNumber() == null)
-			user.setAadhaarNumber(dbuser.getAadhaarNumber());
-		if (user.getMobileNumber() == null)
-			user.setMobileNumber(dbuser.getMobileNumber());
-		if (user.getActive() == null)
-			user.setActive(dbuser.getActive());
-		if (user.getAccountLocked() == null)
-			user.setAccountLocked(dbuser.getAccountLocked());
-		if (user.getEmailId() == null)
-			user.setEmailId(dbuser.getEmailId());
-		if (user.getGender() == null)
-			user.setGender(dbuser.getGender());
-		if (user.getLocale() == null)
-			user.setLocale(dbuser.getLocale());
-		if (user.getType() == null)
-			user.setType(dbuser.getType());
-		if (user.getUserDetails() == null)
-			user.setUserDetails(dbuser.getUserDetails());
-		if (user.getRoles() == null)
-			user.setRoles(dbuser.getRoles());
-		AuditDetails auditDetails = dbuser.getAuditDetails();
-		auditDetails.setLastModifiedTime(new Date().getTime());
-		user.setAuditDetails(auditDetails);
+		userList = prepareUserAddress(userList);
+		userProducer.producer(updateUserTopic, createUserRequest);
 	}
 
 	public boolean isUserPresent(String userName, String tenantId) {
@@ -156,7 +139,7 @@ public class UserServiceVersionv11 {
 
 		for (User user : userList) {
 			List<Role> roles = user.getRoles();
-			if (roles != null) {
+			if (null != roles) {
 				roles.forEach(role -> role.setTenantId(user.getTenantId()));
 				roles.forEach(role -> role.setUserId(user.getId()));
 				roles.forEach(role -> role.setLastModifiedDate(new Date().getTime()));
@@ -175,17 +158,17 @@ public class UserServiceVersionv11 {
 			userDetails = user.getUserDetails();
 			if (userDetails != null) {
 				addressList = new ArrayList<Address>();
-				if (userDetails.getPermanentAddress() != null || userDetails.getPermanentCity() != null
-						|| userDetails.getPermanentPincode() != null) {
-					Address permentAddress = Address.builder().addressType("PERMANENT")
+				if (null != userDetails.getPermanentAddress() || null != userDetails.getPermanentCity()
+						|| null != userDetails.getPermanentPincode()) {
+					Address permentAddress = Address.builder().addressType(AddressType.PERMANENT.toString())
 							.address(userDetails.getPermanentAddress()).city(userDetails.getPermanentCity())
 							.pinCode(userDetails.getPermanentPincode()).userId(user.getId())
 							.tenantId(user.getTenantId()).build();
 					addressList.add(permentAddress);
 				}
-				if (userDetails.getCorrespondenceAddress() != null || userDetails.getCorrespondenceCity() != null
-						|| userDetails.getCorrespondencePincode() != null) {
-					Address correspondenceAddress = Address.builder().addressType("CORRESPONDENCE")
+				if (null != userDetails.getCorrespondenceAddress() || null != userDetails.getCorrespondenceCity()
+						|| null != userDetails.getCorrespondencePincode()) {
+					Address correspondenceAddress = Address.builder().addressType(AddressType.CORRESPONDENCE.toString())
 							.address(userDetails.getCorrespondenceAddress()).city(userDetails.getCorrespondenceCity())
 							.pinCode(userDetails.getCorrespondencePincode()).userId(user.getId())
 							.tenantId(user.getTenantId()).build();
@@ -214,17 +197,17 @@ public class UserServiceVersionv11 {
 		// TODO Auto-generated method stub
 		List<User> userList = searchRepository.getAllUsers(requestInfo, searchCriteria);
 
-		if (searchCriteria.getIncludeDetails() != null && searchCriteria.getIncludeDetails()) {
+		if (null != searchCriteria.getIncludeDetails() && searchCriteria.getIncludeDetails()) {
 			for (User user : userList) {
-				if (user.getUserDetails() != null) {
-					if (user.getUserDetails().getAddresses() != null) {
+				if (null != user.getUserDetails()) {
+					if (null != user.getUserDetails().getAddresses()) {
 						List<Address> addressList = user.getUserDetails().getAddresses();
 						for (Address address : addressList) {
-							if (address.getAddressType().equals("PERMANENT")) {
+							if (address.getAddressType().equals(AddressType.PERMANENT.toString())) {
 								user.getUserDetails().setPermanentAddress(address.getAddress());
 								user.getUserDetails().setPermanentCity(address.getCity());
 								user.getUserDetails().setPermanentPincode(address.getPinCode());
-							} else if (address.getAddressType().equals("CORRESPONDENCE")) {
+							} else if (address.getAddressType().equals(AddressType.CORRESPONDENCE.toString())) {
 								user.getUserDetails().setCorrespondenceAddress(address.getAddress());
 								user.getUserDetails().setCorrespondenceCity(address.getCity());
 								user.getUserDetails().setCorrespondencePincode(address.getPinCode());
@@ -233,19 +216,19 @@ public class UserServiceVersionv11 {
 					}
 				}
 			}
-		} else if (searchCriteria.getIncludeDetails() == null || searchCriteria.getIncludeDetails() == false) {
+		} else if (null == searchCriteria.getIncludeDetails() || searchCriteria.getIncludeDetails() == false) {
 			for (User user : userList) {
 				user.setUserDetails(null);
 			}
 		}
 		List<String> roleCodes = searchCriteria.getRoleCodes();
-		if (roleCodes != null) {
+		if (null != roleCodes) {
 			List<User> users = new ArrayList<User>();
 			for (User user : userList) {
 				List<Role> roles = user.getRoles();
-				if (roles != null)
+				if (null != roles)
 					roles = roles.stream().filter(i -> roleCodes.contains(i.getCode())).collect(Collectors.toList());
-				if (roles != null && roles.size() > 0) {
+				if (null != roles && roles.size() > 0) {
 					users.add(user);
 				}
 			}
@@ -262,13 +245,13 @@ public class UserServiceVersionv11 {
 				.createdTime(new Date().getTime()).lastModifiedTime(new Date().getTime()).build();
 		User user = User.builder().mobileNumber(mobileNumber).userName(userName).password(otpNumber).tenantId(tenantId)
 				.auditDetails(auditDetails).build();
-		kafkaTemplate.send(updateUserOtpTopic, user);
+		userProducer.producer(updateUserOtpTopic, user);
+
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("tenantId", tenantId);
 		hashMap.put("otp", otpNumber);
 		hashMap.put("identity", mobileNumber);
 		hashMap.put("auditDetails", auditDetails);
-		kafkaTemplate.send(userSmsNotification, hashMap);
+		userProducer.producer(userSmsNotification, hashMap);
 	}
 }
-

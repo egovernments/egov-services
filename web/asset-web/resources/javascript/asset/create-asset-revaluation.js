@@ -428,7 +428,7 @@ class Revaluation extends React.Component {
                     </div>
                     <div className="col-sm-6" style={{ display: this.state.readOnly ? 'none' : 'block' }}>
                       <div>
-                        <input type="text" min="0" value={revaluationSet.revaluationOrderNo} onChange={(e) => handleChange(e, "revaluationOrderNo")} required pattern="[a-zA-Z0-9/-.]+" />
+                        <input type="text" min="0" value={revaluationSet.revaluationOrderNo} onChange={(e) => handleChange(e, "revaluationOrderNo")} required pattern="[a-zA-Z0-9./-]+" />
                       </div>
                     </div>
                     <div className="col-sm-6 label-view-text" style={{ display: this.state.readOnly ? 'block' : 'none' }}>

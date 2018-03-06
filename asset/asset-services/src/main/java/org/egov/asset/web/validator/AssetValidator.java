@@ -233,12 +233,6 @@ public class AssetValidator {
         final Asset asset = assetService.getAsset(tenantId, disposal.getAssetId(), disposalRequest.getRequestInfo());
         log.debug("Asset For Disposal :: " + asset);
         validateAssetForCapitalizedStatus(asset);
-        if (StringUtils.isEmpty(disposal.getBuyerName()))
-            throw new RuntimeException("Buyer Name should be present for disposing asset : " + asset.getName());
-
-        if (StringUtils.isEmpty(disposal.getBuyerAddress()))
-            throw new RuntimeException("Buyer Address should be present for disposing asset : " + asset.getName());
-
         if (StringUtils.isEmpty(disposal.getDisposalReason()))
             throw new RuntimeException("Disposal Reason should be present for disposing asset : " + asset.getName());
 

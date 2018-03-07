@@ -2,14 +2,9 @@ package org.egov.pgr.repository;
 
 import java.util.Map;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.contract.SearcherRequest;
-import org.egov.pgr.contract.ServiceReqSearchCriteria;
-import org.egov.pgr.utils.PGRConstants;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -24,14 +19,7 @@ public class ServiceRequestRepository {
 		
 	@Autowired
 	private LogAwareRestTemplate restTemplate;
-	
-	@Value("${infra.searcher.host}")
-	private String searcherHost;
-	
-	@Value("${infra.searcher.endpoint}")
-	private String searcherEndpoint;
-	
-	
+		
 	/**
 	 * Fetches results from searcher framework based on the uri and request that define what is to be searched.
 	 * 

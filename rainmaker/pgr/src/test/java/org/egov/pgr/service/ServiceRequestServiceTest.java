@@ -20,6 +20,7 @@ import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.IdGenRepo;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
@@ -34,6 +35,7 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +49,9 @@ public class ServiceRequestServiceTest {
 	
 	@Mock
 	private LogAwareKafkaTemplate< String, Object> kafkaProducer;
+	
+    @Mock
+	private PGRProducer pGRProducer;
 	
 	@Mock
 	private ResponseInfoFactory factory;
@@ -89,7 +94,7 @@ public class ServiceRequestServiceTest {
 		Mockito.when(idGenRepo.getId(requestInfo, tenantId, longVal, PGRConstants.SERV_REQ_ID_NAME,
 				PGRConstants.SERV_REQ_ID_FORMAT)).thenReturn(getIdGenResponse());
 		Mockito.when(factory.createResponseInfoFromRequestInfo(requestInfo, boolVal)).thenReturn(responseInfo);
-		Mockito.when(kafkaProducer.send(saveTopic, serviceReqRequest)).thenReturn(null);
+		Mockito.doNothing().when(pGRProducer).push(saveTopic, serviceReqRequest);
 
 		assertTrue(serviceReqResponse.equals(service.create(serviceReqRequest)));
 	}
@@ -105,7 +110,7 @@ public class ServiceRequestServiceTest {
 		Boolean boolVal =  true;
 		
 		Mockito.when(factory.createResponseInfoFromRequestInfo(requestInfo, boolVal)).thenReturn(responseInfo);
-		Mockito.when(kafkaProducer.send(updateTopic, serviceReqRequest)).thenReturn(null);
+		Mockito.doNothing().when(pGRProducer).push(updateTopic, serviceReqRequest);
 		
 		assertTrue(serviceReqResponse.equals(service.update(serviceReqRequest)));
 	}

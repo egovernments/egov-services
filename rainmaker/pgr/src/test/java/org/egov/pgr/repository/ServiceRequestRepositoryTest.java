@@ -35,10 +35,10 @@ public class ServiceRequestRepositoryTest {
 	@Test
 	public void testGetServiceRequestsFailure() {
 		Object response = new Object();
-		ReflectionTestUtils.setField(
+/*		ReflectionTestUtils.setField(
 				serviceRequestRepository, "searcherHost", "http://localhost:8093");
 		ReflectionTestUtils.setField(
-				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");
+				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");*/
 		
 		SearcherRequest searcherRequest = Mockito.mock(SearcherRequest.class);
 		StringBuilder uri = new StringBuilder();
@@ -56,10 +56,10 @@ public class ServiceRequestRepositoryTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetServiceRequestsSuccess() {
-		ReflectionTestUtils.setField(
+/*		ReflectionTestUtils.setField(
 				serviceRequestRepository, "searcherHost", "http://localhost:8093");
 		ReflectionTestUtils.setField(
-				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");
+				serviceRequestRepository, "searcherEndpoint", "/infra-search/{moduleName}/{searchName}/_get");*/
 		
 		RequestInfo requestInfo = new RequestInfo();
 		ServiceReqSearchCriteria serviceReqSearchCriteria = new ServiceReqSearchCriteria();

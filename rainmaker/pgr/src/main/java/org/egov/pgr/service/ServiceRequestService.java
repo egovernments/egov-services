@@ -18,6 +18,7 @@ import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
+import org.egov.pgr.producer.PGRProducer;
 import org.egov.pgr.repository.IdGenRepo;
 import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
@@ -45,6 +46,9 @@ public class ServiceRequestService {
 
 	@Value("${kafka.topics.update.servicereq}")
 	private String updateTopic;
+	
+	@Value("${kafka.topics.notification.create.complaint}")
+	private String createComplaintTopic;
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -57,9 +61,9 @@ public class ServiceRequestService {
 		
 	@Autowired
 	private PGRUtils pGRUtils;
-
+	
 	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaProducer;
+	private PGRProducer pGRProducer;
 
 	/***
 	 * Asynchronous method performs business logic if any and adds the data to
@@ -84,8 +88,8 @@ public class ServiceRequestService {
 			servReq.setServiceRequestId(servReqIdList.get(servReqCount++));
 			setIdsForSubList(servReq.getMedia(), servReq.getComments(), true, requestInfo);
 		}
-
-		kafkaProducer.send(saveTopic, request);
+		pGRProducer.push(saveTopic, request);
+		pGRProducer.push(createComplaintTopic, request);
 		return getServiceReqResponse(request);
 	}
 
@@ -105,7 +109,7 @@ public class ServiceRequestService {
 			setIdsForSubList(servReq.getMedia(), servReq.getComments(), false, request.getRequestInfo());
 		}
 
-		kafkaProducer.send(updateTopic, request);
+		pGRProducer.push(updateTopic, request);
 		return getServiceReqResponse(request);
 	}
 

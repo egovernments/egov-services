@@ -120,7 +120,7 @@ public class ServiceRequestService {
 		User user = requestInfo.getUserInfo();
 		Role role = user.getRoles().get(0);
 
-		String by = role.getId() + "-" + role.getName();
+		String by = user.getId() + "-" + role.getName();
 
 		if (null != mediaList)
 			mediaList.forEach(media -> {

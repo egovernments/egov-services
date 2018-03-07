@@ -1097,7 +1097,7 @@ function calcFooterYearSum(){
   $("#subesquentrenewalsTable tbody tr").find('td:eq(4) input').each(function(index){
     let yearndmonth = $(this).val().split('.');
     totalMonth= isNaN(Number(yearndmonth[1])%12) ? totalMonth+0 : totalMonth+Number(yearndmonth[1])%12;
-    if(totalMonth > 12){
+    if(totalMonth >= 12){
       totalYear+=Number(yearndmonth[0])+Math.floor(totalMonth/12);
     }else{
       totalYear+=Number(yearndmonth[0]);

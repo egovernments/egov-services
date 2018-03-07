@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
+import org.egov.common.contract.request.User;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdGenerationResponse;
@@ -109,10 +111,14 @@ public class ServiceRequestServiceTest {
 	}
 	
 	private ServiceReqRequest getServiceReqRequest() {
-		
+
 		List<ServiceReq> reqs = new ArrayList<>();
+		List<Role> roles = new ArrayList<>();
+		roles.add(Role.builder().name("roleName").id(1l).build());
 		reqs.add(ServiceReq.builder().tenantId(tenantId).build());
-		return ServiceReqRequest.builder().serviceReq(reqs).requestInfo(new RequestInfo()).build();
+		return ServiceReqRequest.builder().serviceReq(reqs)
+				.requestInfo(RequestInfo.builder().userInfo(User.builder().id(1l).roles(roles).build()).build())
+				.build();
 	}
 	
 	private ServiceReqResponse getServiceReqResponseForCreate() {

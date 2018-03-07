@@ -14,5 +14,4 @@ public class PGRApp
 	public static void main(String[] args) {
 		SpringApplication.run(PGRApp.class, args);
 	}    
-
 }

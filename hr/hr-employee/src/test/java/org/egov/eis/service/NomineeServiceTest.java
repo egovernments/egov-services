@@ -84,7 +84,8 @@ public class NomineeServiceTest {
         doReturn(Arrays.asList(1L)).when(nomineeRepository).generateSequences(anyInt());
         List<Nominee> actualNominees = nomineeService.createAsync(seedHelper.getNomineeRequest());
         verify(nomineeRepository).generateSequences(anyInt());
-        verify(kafkaTemplate).send(anyString(), any(NomineeRequest.class));
+       // verify(kafkaTemplate).send(anyString(), any(NomineeRequest.class));
+        verify(nomineeRepository).save(anyListOf(Nominee.class));
         assertEquals(expectedNominees, actualNominees);
     }
 
@@ -99,7 +100,7 @@ public class NomineeServiceTest {
     public void testUpdateAsync() throws JsonProcessingException {
         List<Nominee> expectedNominees = seedHelper.getNominees();
         List<Nominee> actualNominees = nomineeService.updateAsync(seedHelper.getNomineeRequest());
-        verify(kafkaTemplate).send(anyString(), any(NomineeRequest.class));
+        verify(nomineeRepository).update(anyListOf(Nominee.class));
         assertEquals(expectedNominees, actualNominees);
     }
 

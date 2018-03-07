@@ -111,8 +111,9 @@ public class NomineeService {
 
     public List<Nominee> createAsync(NomineeRequest nomineeRequest) throws JsonProcessingException {
         populateDataForSave(nomineeRequest.getNominees(), nomineeRequest.getRequestInfo());
-        log.info("nomineeRequest before sending to kafka for create :: " + nomineeRequest);
-        kafkaTemplate.send(propertiesManager.getSaveNomineeTopic(), nomineeRequest);
+        //log.info("nomineeRequest before sending to kafka for create :: " + nomineeRequest);
+        //kafkaTemplate.send(propertiesManager.getSaveNomineeTopic(), nomineeRequest);
+        create(nomineeRequest);
         return nomineeRequest.getNominees();
     }
 
@@ -124,8 +125,9 @@ public class NomineeService {
 
     public List<Nominee> updateAsync(NomineeRequest nomineeRequest) throws JsonProcessingException {
         populateDataForUpdate(nomineeRequest.getNominees(), nomineeRequest.getRequestInfo());
-        log.info("nomineeRequest before sending to kafka for update :: " + nomineeRequest);
-        kafkaTemplate.send(propertiesManager.getUpdateNomineeTopic(), nomineeRequest);
+        //log.info("nomineeRequest before sending to kafka for update :: " + nomineeRequest);
+        //kafkaTemplate.send(propertiesManager.getUpdateNomineeTopic(), nomineeRequest);
+        update(nomineeRequest);
         return nomineeRequest.getNominees();
     }
 

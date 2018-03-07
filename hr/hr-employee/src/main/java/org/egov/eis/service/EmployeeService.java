@@ -321,6 +321,7 @@ public class EmployeeService {
                 .pageNumber(pageNumber).pageSize(pageSize).build();
         return new LinkedHashMap<String, Object>() {{
             put("Employee", Collections.EMPTY_LIST);
+
             put("Page", page);
         }};
     }
@@ -396,9 +397,9 @@ public class EmployeeService {
 
         employeeHelper.populateDefaultDataForCreate(employeeRequest);
 
-        log.info("employeeRequest before sending to kafka :: " + employeeRequest);
-        kafkaTemplate.send(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
-
+        //log.info("employeeRequest before sending to kafka :: " + employeeRequest);
+        //kafkaTemplate.send(propertiesManager.getSaveEmployeeTopic(), employeeRequest);
+        create(employeeRequest);
         return employee;
     }
 
@@ -478,12 +479,14 @@ public class EmployeeService {
         boolean isAssignmentDeleted = assignments.size() != employeeRequest.getEmployee().getAssignments().size();
 
         if (isPositionModified || isFromDateModified || isToDateModified || isAssignmentDeleted) {
-            log.info("employeeRequest before sending to kafka for updating assignments :: " + employeeRequest);
-            kafkaTemplate.send(propertiesManager.getUpdateAssignmentTopic(), employeeRequest);
+            //log.info("employeeRequest before sending to kafka for updating assignments :: " + employeeRequest);
+            //kafkaTemplate.send(propertiesManager.getUpdateAssignmentTopic(), employeeRequest);
+            update(employeeRequest);
         }
 
-        log.info("employeeRequest before sending to kafka for updating employee :: " + employeeRequest);
-        kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequest);
+        //log.info("employeeRequest before sending to kafka for updating employee :: " + employeeRequest);
+        //kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequest);
+        update(employeeRequest);
         return employee;
     }
 
@@ -504,7 +507,8 @@ public class EmployeeService {
         EmployeeRequest employeeRequestForUpdate = new EmployeeRequest();
         employeeRequestForUpdate.setEmployee(employee);
         employeeRequestForUpdate.setRequestInfo(requestInfo);
-        kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequestForUpdate);
+        //kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequestForUpdate);
+        update(employeeRequest);
         return employee;
     }
     

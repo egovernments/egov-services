@@ -576,7 +576,7 @@ class Sale extends React.Component {
                   <div className="col-sm-6 label-text">
                     <label>Pan Card Number <span>*</span> </label>
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
                       <input type="text" value={disposal.panCardNumber} onChange={(e) => handleChange(e, "panCardNumber")} onInput={(e) => { handlePANValidation(e) }} onInvalid={(e) => { handlePANValidation(e) }} required />
                     </div>
@@ -591,7 +591,7 @@ class Sale extends React.Component {
                   <div className="col-sm-6 label-text">
                     <label>Aadhar Card Number <span>*</span></label>
                   </div>
-                  <div className="col-sm-6">
+                  <div className="col-sm-6" style={{ display: self.state.readOnly ? 'none' : 'block' }}>
                     <div>
                       <input type="text" value={disposal.aadharCardNumber} onChange={(e) => handleChange(e, "aadharCardNumber")} onInput={(e) => { handleAadharValidation(e) }} onInvalid={(e) => { handleAadharValidation(e) }} required />
                     </div>

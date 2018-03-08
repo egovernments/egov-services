@@ -192,6 +192,19 @@ class Sale extends React.Component {
               typeToDisplay: disposedAsset.transactionType
             });
           }
+
+          commonApiPost("asset-services", "assets/currentvalue", "_search", { assetIds: id, tenantId }, function (err1, res3) {
+            if (res3){
+              console.log(_this.state.disposal, res3);
+              _this.setState({
+                disposal:{
+                ..._this.state.disposal,
+                currentValueOfTheAsset: res3["AssetCurrentValues"]["0"]["currentAmount"]
+              }
+              });
+            }
+          });
+
         }
       })
     }

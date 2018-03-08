@@ -1,12 +1,18 @@
 package org.egov.pgr.consumer;
 
+import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.egov.pgr.contract.EmailRequest;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.producer.PGRProducer;
+import org.egov.pgr.utils.PGRConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -24,7 +30,7 @@ public class PGRNotificationConsumer {
 	
 	@Autowired
 	private PGRProducer pGRProducer;
-		
+			
 	@Value("${kafka.topics.notification.sms}")
 	private String smsNotifTopic;
 	
@@ -89,13 +95,30 @@ public class PGRNotificationConsumer {
 		StringBuilder subject = new StringBuilder();
 		String body = getBodyAndSubForEmail(serviceReq, topic, subject);
 		EmailRequest emailRequest = EmailRequest.builder().email(email).subject(subject.toString()).body(body)
-				.isHTML(false).build();
+				.isHTML(true).build();
 		
 		return emailRequest;
     }
     
     public String getBodyAndSubForEmail(ServiceReq serviceReq, String topic, StringBuilder subject) {
-    	String message = getMessageForSMS(serviceReq, topic);
+    	Map<String, Object> map = new HashMap<>();
+        VelocityEngine ve = new VelocityEngine();
+        ve.init();
+        VelocityContext context = new VelocityContext();
+    	map.put("name", serviceReq.getFirstName());
+    	map.put("id", serviceReq.getServiceRequestId());
+		if(topic.equals(createComplaintTopic)) {
+        	map.put("status", "created");
+		}else if(topic.equals(assignComplaintTopic)) {
+        	map.put("status", "assgined to Mr."+serviceReq.getAssignedTo());
+		}else {
+        	map.put("status", "closed");
+		}
+        context.put("params", map);
+        Template t = ve.getTemplate(PGRConstants.TEMPLATE_COMPLAINT_EMAIL);
+        StringWriter writer = new StringWriter();
+        t.merge(context, writer);
+    	String message = writer.toString();
     	String subjectText = subjectForEmail;
     	subject.append(subjectText.replace("<id>", serviceReq.getServiceRequestId()));
     	
@@ -107,13 +130,10 @@ public class PGRNotificationConsumer {
 		message = message.replace("<name>", serviceReq.getFirstName())
 				.replace("<id>", serviceReq.getServiceRequestId());
 		if(topic.equals(createComplaintTopic)) {
-    		log.info("Create complaint case");
     		message = message.replaceAll("<status>", "created");
 		}else if(topic.equals(assignComplaintTopic)) {
-    		log.info("Assign complaint case");
     		message = message.replaceAll("<status>", "assgined to Mr."+serviceReq.getAssignedTo());
 		}else {
-    		log.info("Close complaint case");
     		message = message.replaceAll("<status>", "closed");
 		}
     	

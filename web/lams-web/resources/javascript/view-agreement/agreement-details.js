@@ -84,7 +84,7 @@ class AgreementDetails extends React.Component {
                 solvencyCertificateNo: "",
                 solvencyCertificateDate: "",
                 tinNumber: "",
-                documents: "",
+                documents: {},
                 demands: [],
                 workflowDetails: {
                     department: "",
@@ -177,7 +177,7 @@ class AgreementDetails extends React.Component {
 
         var promise1 = new Promise(function(resolve, reject) {
           var reservationCategory = commonApiPost("lams-services", "getreservations", "", {tenantId}).responseJSON;
-          var agreement = commonApiPost("lams-services","agreements","_search", { agreementNumber,status,acknowledgementNumber,action:"Modify",tenantId}).responseJSON["Agreements"][0] || {};
+          var agreement = commonApiPost("lams-services","agreements","_search", { agreementNumber,status,acknowledgementNumber,action:"View",tenantId}).responseJSON["Agreements"][0] || {};
           resolve({reservationCategory:reservationCategory,agreement:agreement});
         });
 
@@ -186,7 +186,8 @@ class AgreementDetails extends React.Component {
               ...this.state,
               reservationCategory:response.reservationCategory,
               agreement: response.agreement,
-              subSeqRenewals: response.agreement.subSeqRenewals
+              subSeqRenewals: response.agreement.subSeqRenewals,
+              documents:response.agreement.documents
           });
         });
     }
@@ -194,7 +195,7 @@ class AgreementDetails extends React.Component {
         var _this = this;
         let { viewDCB } = this;
         let { agreement, reservationCategory} = this.state;
-        let { allottee, asset,subSeqRenewals } = this.state.agreement;
+        let { allottee, asset,subSeqRenewals,documents } = this.state.agreement;
         let { assetCategory, locationDetails } = this.state.agreement.asset;
 
         console.log(this.state);
@@ -1010,6 +1011,50 @@ class AgreementDetails extends React.Component {
 
         }
 
+
+        const renderDocuments=function()
+        {
+             if(documents)
+              return (
+                <div className="form-section" id="documentsBlock">
+                    <h3>Attached Documents </h3>
+                <table id="documentsTable" className="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Document Name</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="documentsTableBody">
+                        {
+                           renderDocumentsList()
+                        }
+                    </tbody>
+                </table>
+                </div>
+              )
+
+        }
+
+        const renderDocumentsList=function()
+        {
+          if (documents.length>0) {
+             var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+            return documents.map((item,index)=>
+            {                   return (<tr key={index}>
+                                      <td>{index+1}.</td>
+                                      <td>{item.fileName || 'N/A'}</td>
+                                      <td>  <a href={window.location.origin + CONST_API_GET_FILE + item.fileStore} target="_self">
+                                          Download
+                                           </a>
+                                      </td>
+                                   </tr>
+                  );
+
+            })
+          }
+        }
         return (
             <div>
                 <h3>Agreement Details</h3>
@@ -1018,6 +1063,7 @@ class AgreementDetails extends React.Component {
                         {renderAssetDetails()}
                         {renderAllottee()}
                         {renderAgreementDetails()}
+                        {renderDocuments()}
                         {renderHistoryDetails()}
                         {renderSubSeqRenewals()}
                         <br />

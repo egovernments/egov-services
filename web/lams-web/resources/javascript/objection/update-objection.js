@@ -82,7 +82,7 @@ class UpdateObjection extends React.Component {
                 solvencyCertificateNo: "",
                 solvencyCertificateDate: "",
                 tinNumber: "",
-                documents: "",
+                documents: {},
                 demands: [],
                 workflowDetails: {
                     department: "",
@@ -277,6 +277,7 @@ class UpdateObjection extends React.Component {
             "_search",
             {
                 stateId: stateId,
+                action:"View",
                 tenantId
             }).responseJSON["Agreements"][0] || {};
 
@@ -1207,7 +1208,6 @@ class UpdateObjection extends React.Component {
                                     <div className="col-sm-6">
                                         <div className="styled-file">
                                             <input id="documents" name="documents" type="file" onChange={(e) => { handleChange(e, "documents") }} multiple disabled />
-                                            {renderFile()}
                                         </div>
                                     </div>
                                 </div>
@@ -1230,6 +1230,48 @@ class UpdateObjection extends React.Component {
             );
         }
 
+        const renederDocuments = function () {
+          return (
+            <div className="form-section" id="documentsBlock">
+            <h3 className="categoryType">Attached Documents </h3>
+                 <div className="form-section-inner">
+
+                <table id="documentsTable" className="table table-bordered">
+                <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Document Name</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="documentsTableBody">
+                    {
+                       renderDocumentsList()
+                    }
+                </tbody>
+            </table>
+            </div>
+            </div>
+          )
+        }
+        const renderDocumentsList=function()
+        {
+          if (documents.length>0) {
+             var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+            return documents.map((item,index)=>
+            {                   return (<tr key={index}>
+                                      <td>{index+1}.</td>
+                                      <td>{item.fileName || 'N/A'}</td>
+                                      <td>  <a href={window.location.origin + CONST_API_GET_FILE + item.fileStore} target="_self">
+                                          Download
+                                           </a>
+                                      </td>
+                                   </tr>
+                  );
+
+            })
+          }
+        }
         const renederWorkflowHistory = function () {
             return (
                 <div className="form-section hide-sec" id="agreementCancelDetails">
@@ -1385,42 +1427,6 @@ class UpdateObjection extends React.Component {
 
         }
 
-        const renderFileTr = function (status) {
-            var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
-
-            for (var i = 0; i < _this.state.movement.documents.length; i++) {
-                return (<tr>
-                    <td>${i + 1}</td>
-                    <td>Document</td>
-                    <td>
-                        <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
-                            Download
-                        </a>
-                    </td>
-                </tr>);
-            }
-
-        }
-
-        const renderFile = function (status) {
-            if (_this.state.movement && _this.state.movement.documents) {
-                return (
-                    <table className="table table-bordered" id="fileTable" style={{ "display": "none" }}>
-                        <thead>
-                            <tr>
-                                <th>Sr. No.</th>
-                                <th>Name</th>
-                                <th>File</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {renderFileTr()}
-                        </tbody>
-                    </table>
-                );
-            }
-        }
-
         return (
             <div>
                 <h3>Objection Of Agreement </h3>
@@ -1430,6 +1436,7 @@ class UpdateObjection extends React.Component {
                         {renderAllottee()}
                         {renderAgreementDetails()}
                         {renederObjectionDetails()}
+                        {renderDocuments()}
                         {renederWorkflowHistory()}
                         {renderWorkFlowDetails()}
 

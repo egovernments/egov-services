@@ -615,9 +615,21 @@ class CreateAsset extends React.Component {
 
       var floorDetails = tempInfo.assetAttributes.find(function(element) {return element["key"]==="Floor Details"});
       var noOfShops = tempInfo.assetAttributes.find(function(element) {return element["key"]==="Total No. of Shops"});
+      var noOfFloors = tempInfo.assetAttributes.find(function(element) {return element["key"]==="No. of Floors"});
+
+      console.log("Akhilllll", floorDetails,noOfShops, floorDetails.value.length, Number(noOfFloors["value"]) );
+
+      if(noOfShops && isNaN(Number(noOfShops["value"]))){
+        return showError("No of Shops Should be number. Please Check ");
+      }
+      
+      if(noOfFloors && isNaN(Number(noOfFloors["value"]))){
+        return showError("No of Floor Should be number. Please Check ");
+      } 
 
       var totalShops = 0;
       var notANumber = false;
+      
       if(floorDetails){
       for(let _i in floorDetails["value"]){
         console.log(Number(floorDetails["value"][_i]["No. of Shops"]));
@@ -631,8 +643,16 @@ class CreateAsset extends React.Component {
       if(notANumber){
       return showError("No of Shops in Floor Should be number. Please Check ");
       }
+
+      console.log("Akhilllll", totalShops != Number(noOfShops["value"]), floorDetails.value.length != Number(noOfFloors["value"]) );
+
+
       if(floorDetails && noOfShops && totalShops != Number(noOfShops["value"]) ){
         return showError("No of Shops and Floor details Does not match. Please Check");
+      }
+
+      if(floorDetails && noOfFloors && floorDetails.value.length != Number(noOfFloors["value"]) ){
+        return showError("No of Floors and Floor details Does not match. Please Check");
       }
 
       console.log(JSON.stringify(tempInfo));
@@ -1294,7 +1314,8 @@ class CreateAsset extends React.Component {
       depreciationRate,
       yearWiseDepreciation,
       subScheme,
-      scheme
+      scheme,
+      documents
   	} = this.state.assetSet;
 
     const getType = function() {
@@ -1476,7 +1497,7 @@ class CreateAsset extends React.Component {
       return fles.map(function(v, ind) {
         return v.value.map(function(file, ind2) {
           return (
-            <tr key={ind2} style={{"background-color": (removedFiles[v.key] && removedFiles[v.key][file] ? "#d3d3d3" : "#ffffff"), "text-decoration": (removedFiles[v.key] && removedFiles[v.key][file] ? "line-through" : "")}}>
+            <tr key={ind2}>
               <td>{ind2+1}</td>
               <td>{v.key}</td>
               <td>
@@ -1506,6 +1527,44 @@ class CreateAsset extends React.Component {
                   <tbody id="agreementSearchResultTableBody">
                     {
                       renderFileBody(allFiles)
+                    }
+                  </tbody>
+
+             </table>
+            )
+      }
+    }
+
+    const renderAssetFileBody = function(fles) {
+        return fles.map(function(file, ind2) {
+          return (
+            <tr key={ind2} style={{"background-color": (removedFiles[v.key] && removedFiles[v.key][file] ? "#d3d3d3" : "#ffffff"), "text-decoration": (removedFiles[v.key] && removedFiles[v.key][file] ? "line-through" : "")}}>
+              <td>{ind2+1}</td>
+              <td>Asset Documents</td>
+              <td>
+                <a href={window.location.origin + CONST_API_GET_FILE + file} target="_blank">
+                  Download
+                </a>
+              </td>
+            </tr>
+          )
+        })
+    }
+
+    const showAssetAttachedFiles = function() {
+      if(documents.length) {
+          return (
+              <table id="fileTable" className="table table-bordered">
+                  <thead>
+                  <tr>
+                      <th>Sr. No.</th>
+                      <th>Name</th>
+                      <th>File</th>
+                  </tr>
+                  </thead>
+                  <tbody id="agreementSearchResultTableBody">
+                    {
+                      renderAssetFileBody(documents)
                     }
                   </tbody>
 
@@ -2353,6 +2412,7 @@ class CreateAsset extends React.Component {
                   </div>
                 </div>
                 {/* {showYearWiseDep()} */}
+                {showAssetAttachedFiles()}
             </div>
 						  </div>
             <div className="form-section" id="allotteeDetailsBlock">

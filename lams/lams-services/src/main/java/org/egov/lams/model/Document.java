@@ -27,5 +27,8 @@ public class Document   {
 
   @JsonProperty("fileStore")
   private String fileStore;
+  
+  private String fileName;
+  private String tenantId;
 }
 

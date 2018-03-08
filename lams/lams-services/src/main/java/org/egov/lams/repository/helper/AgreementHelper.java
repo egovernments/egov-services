@@ -8,6 +8,7 @@ import java.util.Map;
 import org.egov.lams.model.Agreement;
 import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Asset;
+import org.egov.lams.model.Document;
 import org.egov.lams.model.SubSeqRenewal;
 import org.springframework.stereotype.Component;
 
@@ -48,14 +49,17 @@ public class AgreementHelper {
 		}
 		return newAgreements;
 	}
-	
+
 	public List<Agreement> enrichAgreementsWithSubSeqRenewals(List<Agreement> agreements,
-			Map<Long, List<SubSeqRenewal>> subSeqRenewalMap) {
+			Map<Long, List<SubSeqRenewal>> subSeqRenewalMap, Map<Long, List<Document>> documentsMap) {
 		List<Agreement> newAgreements = new ArrayList<>();
 
 		for (Agreement agreement : agreements) {
 			if (subSeqRenewalMap.containsKey(agreement.getId())) {
 				agreement.setSubSeqRenewals(subSeqRenewalMap.get(agreement.getId()));
+			}
+			if (documentsMap.containsKey(agreement.getId())) {
+				agreement.setDocuments(documentsMap.get(agreement.getId()));
 			}
 			newAgreements.add(agreement);
 		}

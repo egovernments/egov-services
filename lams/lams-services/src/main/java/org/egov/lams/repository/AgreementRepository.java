@@ -29,6 +29,7 @@ import org.egov.lams.repository.helper.AgreementHelper;
 import org.egov.lams.repository.helper.AllotteeHelper;
 import org.egov.lams.repository.helper.AssetHelper;
 import org.egov.lams.repository.rowmapper.AgreementRowMapper;
+import org.egov.lams.repository.rowmapper.DocumentRowMapper;
 import org.egov.lams.repository.rowmapper.SubSeqRenewalRowMapper;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.AllotteeResponse;
@@ -59,6 +60,8 @@ public class AgreementRepository {
 	public static final String SOURCE_SYSTEM = "SYSTEM";
 	
 	public static final String ACTION_MODIFY ="MODIFY";
+	
+	public static final String ACTION_VIEW ="VIEW";
 	
 	public static final String SUB_SEQ_RENEW_INSERT_QUERY = "INSERT INTO eglams_history (id,agreementid,resolutionno,resolutiondate,fromdate,todate,years,rent,tenantid,createdby,createddate,lastmodifiedby,lastmodifieddate) values "
 			+ "(nextval('seq_eglams_history'),?,?,?,?,?,?,?,?,?,?,?,?);";
@@ -185,8 +188,10 @@ public class AgreementRepository {
         List<Asset> assets = getAssets(agreementCriteria, requestInfo);
         List<Allottee> allottees = getAllottees(agreementCriteria, requestInfo);
         agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
-		if (ACTION_MODIFY.equalsIgnoreCase(agreementCriteria.getAction())) {
-			agreements = agreementHelper.enrichAgreementsWithSubSeqRenewals(agreements, getSubSeqRenewals(agreements));
+        if (ACTION_MODIFY.equalsIgnoreCase(agreementCriteria.getAction())
+				|| ACTION_VIEW.equalsIgnoreCase(agreementCriteria.getAction())) {
+			agreements = agreementHelper.enrichAgreementsWithSubSeqRenewals(agreements, getSubSeqRenewals(agreements),
+					getAttachedDocuments(agreements));
 		}
 
 		return agreements;
@@ -787,6 +792,32 @@ public class AgreementRepository {
 			logger.info("exception while updating existing agreement as history :: " + e);
 			throw new RuntimeException(e.getMessage());
 		}
+
+	}
+	
+	public Map<Long, List<Document>> getAttachedDocuments(List<Agreement> agreements) {
+		List<Long> agreementIds = new ArrayList<>();
+		String query = "select document.*,filestore.filename as filename from eglams_document document,"
+				+ "eg_filestoremap filestore where filestore.filestoreid =document.filestore and agreement in (:agreementIds) ";
+		Map<String, Object> params = new HashMap<>();
+		List<Document> documents = null;
+		Map<Long, List<Document>> documentsMap = new HashMap<>();
+		for (Agreement agreement : agreements) {
+			agreementIds.add(agreement.getId());
+		}
+		params.put("agreementIds", agreementIds);
+		try {
+			documents = namedParameterJdbcTemplate.query(query, params, new DocumentRowMapper());
+		} catch (DataAccessException e) {
+			logger.info("exception in getting attached documents :: " + e);
+			throw new RuntimeException(e.getMessage());
+		}
+		if (!documents.isEmpty()) {
+
+			documentsMap = documents.stream().collect(Collectors.groupingBy(Document::getAgreement));
+
+		}
+		return documentsMap;
 
 	}
 	

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
+import net.minidev.json.JSONArray;
+
 @Component
 public class SearchUtils {
 	
@@ -82,15 +84,30 @@ public class SearchUtils {
 					}else{
 						continue;
 					}
-				}else if(paramValue instanceof net.minidev.json.JSONArray){
+				}else if(paramValue instanceof net.minidev.json.JSONArray){ //TODO: might need to add some more types
+					logger.info("param: "+param.getName());
+					JSONArray array = (JSONArray)paramValue;
+					StringBuilder paramBuilder = new StringBuilder();
+					for (Object object : array) {
+						paramBuilder.append("'"+object.toString()+"'");
+						if(array.indexOf(object)!=array.size()-1)
+							paramBuilder.append(",");
+					}
 					whereClause.append(param.getName())
 					  .append(" IN ")
-					  .append(paramValue.toString().replace("[", "(")
-					  .replace("]", ")")
-					  .replace("\"", "\'"));
+					  .append("(")
+					  .append(paramBuilder.toString())
+					  .append(")");
 				}else{
+					logger.info("param: "+param.getName());
+					String operator = " = ";
+					if(param.getJsonPath().contains("startDate")) {
+						operator = " >= ";
+					}else if(param.getJsonPath().contains("endDate")) {
+						operator = " <= ";
+					}
 					whereClause.append(param.getName())
-					   .append(" = ")
+					   .append(operator)
 					   .append("'"+paramValue.toString()+"'");
 				}
 			    whereClause.append(" "+condition+" ");

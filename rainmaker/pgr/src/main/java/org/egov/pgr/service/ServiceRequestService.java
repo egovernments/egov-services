@@ -6,9 +6,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.Comment;
 import org.egov.pgr.contract.CountResponse;
 import org.egov.pgr.contract.IdResponse;
@@ -24,7 +25,6 @@ import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
 import org.egov.pgr.utils.PGRUtils;
 import org.egov.pgr.utils.ResponseInfoFactory;
-import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -83,8 +83,9 @@ public class ServiceRequestService {
 
 		List<String> servReqIdList = getIdList(requestInfo, tenantId, servReqLen, PGRConstants.SERV_REQ_ID_NAME,
 				PGRConstants.SERV_REQ_ID_FORMAT);
-
+		AuditDetails auditDetails = pGRUtils.getAuditDetails(requestInfo.getUserInfo().getId()+"");
 		for (ServiceReq servReq : serviceReqs) {
+			servReq.setAuditDetails(auditDetails);
 			servReq.setServiceRequestId(servReqIdList.get(servReqCount++));
 			setIdsForSubList(servReq.getMedia(), servReq.getComments(), true, requestInfo);
 		}
@@ -105,7 +106,11 @@ public class ServiceRequestService {
 
 		List<ServiceReq> serviceReqs = request.getServiceReq();
 
+		AuditDetails auditDetails = pGRUtils.getAuditDetails(request.getRequestInfo().getUserInfo().getId()+"");
 		for (ServiceReq servReq : serviceReqs) {
+			AuditDetails serAudit = servReq.getAuditDetails();
+			serAudit.setLastModifiedBy(auditDetails.getLastModifiedBy());
+			serAudit.setLastModifiedTime(auditDetails.getLastModifiedTime());
 			setIdsForSubList(servReq.getMedia(), servReq.getComments(), false, request.getRequestInfo());
 		}
 

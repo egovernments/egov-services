@@ -1,20 +1,20 @@
 package org.egov.pgr.contract;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.egov.common.contract.request.RequestInfo;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.pgr.contract.AuditDetails.AuditDetailsBuilder;
 
 @AllArgsConstructor
 @NoArgsConstructor

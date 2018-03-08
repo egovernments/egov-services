@@ -4,10 +4,12 @@ package org.egov.search.repository;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.egov.search.model.Definition;
 import org.egov.search.model.SearchRequest;
 import org.egov.search.utils.SearchUtils;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONArray;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.json.JSONArray;
 
 
 
@@ -60,7 +58,7 @@ public class SearchRepository {
 			for(PGobject obj: maps){
 				if(null == obj.getValue())
 					break;
-				LOGGER.info("obj: "+obj.getValue());
+				//LOGGER.info("obj: "+obj.getValue());
 				String tuple = obj.toString();
 				if(tuple.startsWith("[") && tuple.endsWith("]")){
 					JSONArray jsonArray = new JSONArray(tuple);
@@ -76,7 +74,7 @@ public class SearchRepository {
 				}
 			}
 		}
-		LOGGER.info("DB response: "+result);
+		//LOGGER.info("DB response: "+result);
 		
 		return result;
 	}

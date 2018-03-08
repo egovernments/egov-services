@@ -27,7 +27,7 @@ public class ServiceReqSearchCriteria {
 	private String tenantId;
 	
 	@JsonProperty("serviceRequestId")
-	private String serviceRequestId;
+	private List<String> serviceRequestId;
 	
 	@JsonProperty("assignedTo")
 	private String assignedTo;

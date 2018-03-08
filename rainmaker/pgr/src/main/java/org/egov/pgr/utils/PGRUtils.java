@@ -1,6 +1,7 @@
 package org.egov.pgr.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -8,6 +9,7 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.pgr.contract.AuditDetails;
 import org.egov.pgr.contract.SearcherRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.springframework.beans.factory.annotation.Value;
@@ -101,6 +103,13 @@ public class PGRUtils {
 		MdmsCriteriaReq mdmsCriteriaReq = MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
 		
 		return mdmsCriteriaReq;
+	}
+	
+	
+	public AuditDetails getAuditDetails(String by) {
+		
+		Long date = new Date().getTime();
+		return AuditDetails.builder().createdBy(by).createdTime(date).lastModifiedBy(by).lastModifiedTime(date).build();
 	}
 
 }

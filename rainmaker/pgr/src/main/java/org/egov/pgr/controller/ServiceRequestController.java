@@ -1,5 +1,7 @@
 package org.egov.pgr.controller;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.egov.pgr.contract.RequestInfoWrapper;
@@ -7,6 +9,7 @@ import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqResponse;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
 import org.egov.pgr.service.ServiceRequestService;
+import org.egov.pgr.utils.PGRRequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,9 @@ public class ServiceRequestController {
 	@Autowired
 	private ServiceRequestService service;
 	
+	@Autowired
+	private PGRRequestValidator pgrRequestValidator;
+	
 	
 	/**
 	 *  enpoint to create service requests
@@ -38,7 +44,10 @@ public class ServiceRequestController {
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid ServiceReqRequest serviceRequest) {
 
+		long startTime = new Date().getTime();
 		ServiceReqResponse response = service.create(serviceRequest);
+		long endTime = new Date().getTime();
+		log.debug(" the time taken for create in ms: {}",endTime-startTime);
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
@@ -52,7 +61,10 @@ public class ServiceRequestController {
 	@ResponseBody
 	private ResponseEntity<?> update(@RequestBody @Valid ServiceReqRequest serviceRequest) {
 		
+		long startTime = new Date().getTime();
 		ServiceReqResponse response = service.update(serviceRequest);
+		long endTime = new Date().getTime();
+		log.debug(" the time taken for update in ms: {}",endTime-startTime);
 		return new ResponseEntity<>(response,HttpStatus.OK);
 	}
 
@@ -69,9 +81,13 @@ public class ServiceRequestController {
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		
+		pgrRequestValidator.validateSearch(serviceReqSearchCriteria);
+		long startTime = new Date().getTime();
 		log.debug("RequestInfo: ",requestInfoWrapper.toString());
 		log.debug("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
 		ServiceReqResponse serviceReqResponse = service.getServiceRequests(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
+		long endTime = new Date().getTime();
+		log.debug(" the time taken for search in ms: {}",endTime-startTime);
 		return new ResponseEntity<>(serviceReqResponse, HttpStatus.OK);	
 	}
 	
@@ -88,9 +104,13 @@ public class ServiceRequestController {
 	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		
+		pgrRequestValidator.validateSearch(serviceReqSearchCriteria);
+		long startTime = new Date().getTime();
 		log.debug("RequestInfo: ",requestInfoWrapper.toString());
 		log.debug("CountCriteria: ",serviceReqSearchCriteria.toString());
 		Object countResponse = service.getCount(requestInfoWrapper.getRequestInfo(), serviceReqSearchCriteria);
+		long endTime = new Date().getTime();
+		log.debug(" the time taken for count in ms: {}",endTime-startTime);
 		return new ResponseEntity<>(countResponse, HttpStatus.OK);	
 	}
 

@@ -120,7 +120,7 @@ public class SearchService {
 		documentContext.put(resInfoExp.toString(), resInfoExpArray[resInfoExpArray.length - 1], responseInfo);
 		
 		result = documentContext.jsonString().toString();
-		logger.info("Final Result: "+result);
+		//logger.info("Final Result: "+result);
 		return result;
 		
 	}

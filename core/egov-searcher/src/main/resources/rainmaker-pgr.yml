@@ -7,7 +7,7 @@ SearchDefinitions:
    query: 
     baseQuery: select row_to_json(serviceRequests) from (select *, (select array_to_json(array_agg(row_to_json(comments)))from ( select * from eg_pgr_comment where    serviceRequestId=eg_pgr_serviceReq.serviceRequestId) comments),(select array_to_json(array_agg(row_to_json(media)))from ( select * from eg_pgr_media where serviceRequestId=eg_pgr_serviceReq.serviceRequestId) media) from eg_pgr_serviceReq $where) serviceRequests
     groupBy:    
-    orderBy: id,DESC
+    orderBy: 
    searchParams:
     condition: AND
     params:
@@ -102,7 +102,7 @@ SearchDefinitions:
    query: 
     baseQuery: (select array_to_json(array_agg(row_to_json(serviceRequests)))from (select * from eg_pgr_serviceReq $where) serviceRequests)
     groupBy:    
-    orderBy: id,DESC
+    orderBy: 
    searchParams:
     condition: AND
     params:
@@ -144,9 +144,3 @@ SearchDefinitions:
     jsonFormat: {"ResponseInfo": {},"serviceReq": []}
     outJsonPath: $.serviceReq
     responseInfoPath: $.ResponseInfo
-
-
-
-
-
-

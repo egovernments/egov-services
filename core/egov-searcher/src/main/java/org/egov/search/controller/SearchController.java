@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.egov.search.model.SearchRequest;
 import org.egov.search.service.SearchService;
+import org.egov.search.utils.SearchReqValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class SearchController {
 		
 	@Autowired
 	private SearchService searchService;
+	
+	@Autowired
+	private SearchReqValidator searchReqValidator;
 		
 	@Autowired
     public static ResourceLoader resourceLoader;
@@ -42,6 +46,7 @@ public class SearchController {
 		
 		long startTime = new Date().getTime();
 		try {
+			searchReqValidator.validate(searchRequest, moduleName, searchName);
 			Object searchResult = searchService.searchData(searchRequest,moduleName,searchName);
 		    Type type = new TypeToken<Map<String, Object>>() {}.getType();
 			Gson gson = new Gson();

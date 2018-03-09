@@ -54,28 +54,7 @@ public class SearchRepository {
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"Query Execution Timeout! Json query is taking more time than the max exec time, query: "+query);
 		}
-		if(null != maps || !maps.isEmpty()) {
-			for(PGobject obj: maps){
-				if(null == obj.getValue())
-					break;
-				//LOGGER.info("obj: "+obj.getValue());
-				String tuple = obj.toString();
-				if(tuple.startsWith("[") && tuple.endsWith("]")){
-					JSONArray jsonArray = new JSONArray(tuple);
-					for(int i = 0; i < jsonArray.length();  i++){
-						result.add(jsonArray.get(i).toString());
-					}
-				}else{
-					try{
-						result.add(obj.getValue());
-					}catch(Exception e){
-						throw e;
-					}
-				}
-			}
-		}
-		//LOGGER.info("DB response: "+result);
-		
+		result = searchUtils.convertPGOBjects(maps);
 		return result;
 	}
 

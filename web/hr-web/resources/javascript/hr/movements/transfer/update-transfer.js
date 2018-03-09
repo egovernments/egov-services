@@ -749,7 +749,7 @@ class UpdateMovement extends React.Component {
       if (list) {
         return list.map((item, ind) => {
           return (<option key={ind} value={typeof item == "object" ? item.id : item}>
-            {typeof item == "object" ? item.city.name : item}
+            {typeof item == "object" ?  item.city.districtName +" - "+ item.city.name : item}
           </option>)
         })
       }

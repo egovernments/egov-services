@@ -1271,7 +1271,7 @@ class UpdateCancellation extends React.Component {
         }
         const renderDocumentsList=function()
         {
-          if (documents.length>0) {
+          if (documents && documents.length>0) {
              var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
             return documents.map((item,index)=>
             {                   return (<tr key={index}>
@@ -1285,6 +1285,11 @@ class UpdateCancellation extends React.Component {
                   );
 
             })
+          }else {
+            return (<tr><td></td>
+               <td>No Documents</td>
+               <td></td>
+              </tr>)
           }
         }
 

@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.SecureUser;
-import org.egov.user.domain.service.UserServiceVersionv11;
-import org.egov.user.domain.v11.model.User;
-import org.egov.user.domain.v11.model.UserSearchCriteria;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-	private UserServiceVersionv11 userService;
+	private UserService userService;
 
 	@Autowired
-	public CustomUserDetailsService(UserServiceVersionv11 userService) {
+	public CustomUserDetailsService(UserService userService) {
 		this.userService = userService;
 	}
 
@@ -32,11 +32,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 				.tenantId(CustomAuthenticationProvider.getTenantId()).build();
 		User user = userService.searchUsers(requestInfo, searchCriteria).get(0);
 
-		List<org.egov.user.domain.v11.model.Role> roles = user.getRoles();
+		List<org.egov.user.domain.model.Role> roles = user.getRoles();
 
 		List<org.egov.user.web.contract.auth.Role> roleList = new ArrayList<org.egov.user.web.contract.auth.Role>();
 
-		for (org.egov.user.domain.v11.model.Role role : roles) {
+		for (org.egov.user.domain.model.Role role : roles) {
 			org.egov.user.web.contract.auth.Role role1 = new org.egov.user.web.contract.auth.Role(role);
 			roleList.add(role1);
 		}

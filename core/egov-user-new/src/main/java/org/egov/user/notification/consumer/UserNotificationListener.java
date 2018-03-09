@@ -2,7 +2,7 @@ package org.egov.user.notification.consumer;
 
 import java.util.HashMap;
 
-import org.egov.user.domain.v11.model.Otp;
+import org.egov.user.domain.model.Otp;
 import org.egov.user.notification.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;

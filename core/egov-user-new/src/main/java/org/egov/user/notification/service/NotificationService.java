@@ -1,6 +1,6 @@
 package org.egov.user.notification.service;
 
-import org.egov.user.domain.v11.model.Otp;
+import org.egov.user.domain.model.Otp;
 import org.springframework.stereotype.Service;
 
 @Service

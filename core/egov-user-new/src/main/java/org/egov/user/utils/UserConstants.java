@@ -62,4 +62,8 @@ public class UserConstants {
 	public static final String USERNAME_DUPLICATE_CODE = "user.0011";
 	public static final String USERNAME_DUPLICATE_FIELD_NAME = "userName";
 	public static final String USERNAME_DUPLICATE_ERROR_MESSAGE = "UserName Does n't exist.";
+	
+	public static final String USERNAME_INVALIDFORMAT_CODE = "user.0012";
+	public static final String USERNAME_INVALIDFORMAT_NAME = "userName";
+	public static final String USERNAME_INVALIDFORMAT_ERROR_MESSAGE = "Since we configures userLoginPasswordOtpEnabled as true ,So UserName should be mobileNumber.";
 }

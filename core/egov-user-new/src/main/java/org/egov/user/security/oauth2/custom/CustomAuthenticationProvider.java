@@ -3,15 +3,17 @@ package org.egov.user.security.oauth2.custom;
 import static org.springframework.util.StringUtils.isEmpty;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.SecureUser;
-import org.egov.user.domain.service.UserServiceVersionv11;
-import org.egov.user.domain.v11.model.User;
-import org.egov.user.domain.v11.model.UserSearchCriteria;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.UserSearchCriteria;
+import org.egov.user.domain.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,11 +31,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	 * authentication_code.
 	 */
 
-	private UserServiceVersionv11 userService;
+	@Value("${user.login.password.otp.enabled}")
+	private boolean isUserLoginPasswordOtpEnabled;
+
+	private UserService userService;
 
 	private static String tenantId;
 
-	public CustomAuthenticationProvider(UserServiceVersionv11 userService) {
+	public CustomAuthenticationProvider(UserService userService) {
 		this.userService = userService;
 	}
 
@@ -49,10 +54,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		CustomAuthenticationProvider.tenantId = getTenantId(authentication);
 		User user;
 		RequestInfo requestInfo = RequestInfo.builder().action("search").build();
-		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().userName(userName).tenantId(tenantId).build();
+
 		if (userName.contains("@") && userName.contains(".")) {
+			UserSearchCriteria searchCriteria = UserSearchCriteria.builder().emailId(userName).tenantId(tenantId).includeDetails(true)
+					.build();
 			user = userService.searchUsers(requestInfo, searchCriteria).get(0);
 		} else {
+			UserSearchCriteria searchCriteria = UserSearchCriteria.builder().userName(userName).tenantId(tenantId).includeDetails(true)
+					.build();
 			user = userService.searchUsers(requestInfo, searchCriteria).get(0);
 		}
 		if (user == null) {
@@ -63,7 +72,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-		if (password.equals(user.getPassword())) {
+		Boolean isPasswordMatch;
+		if (isUserLoginPasswordOtpEnabled) {
+			Long createdTime = user.getAuditDetails().getLastModifiedTime();
+			Long currentTime = new Date().getTime();
+			if(!((currentTime - createdTime) <= 180)){
+				throw new OAuth2Exception("Please Generate New Otp and Try to login");
+			}
+			isPasswordMatch = password.equals(user.getPassword());
+		} else {
+			isPasswordMatch = bcrypt.matches(password, user.getPassword());
+		}
+
+		if (isPasswordMatch) {
 
 			if (user.getActive() == null || !user.getActive()) {
 				throw new OAuth2Exception("Please activate your account");
@@ -104,8 +125,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				.roles(toAuthRole(user.getRoles())).tenantId(user.getTenantId()).build();
 	}
 
-	private List<org.egov.user.web.contract.auth.Role> toAuthRole(
-			List<org.egov.user.domain.v11.model.Role> domainRoles) {
+	private List<org.egov.user.web.contract.auth.Role> toAuthRole(List<org.egov.user.domain.model.Role> domainRoles) {
 		if (domainRoles == null)
 			return new ArrayList<>();
 		return domainRoles.stream().map(org.egov.user.web.contract.auth.Role::new).collect(Collectors.toList());

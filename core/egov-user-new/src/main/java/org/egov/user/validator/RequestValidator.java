@@ -5,13 +5,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
-import org.egov.user.domain.service.UserServiceVersionv11;
-import org.egov.user.domain.v11.model.User;
+import org.egov.user.domain.model.User;
+import org.egov.user.domain.service.UserService;
 import org.egov.user.utils.UserConstants;
+import org.egov.user.web.contract.UserRequest;
 import org.egov.user.web.errorhandlers.Error;
 import org.egov.user.web.errorhandlers.ErrorResponse;
-import org.egov.user.web.v11.contract.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -24,7 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 public class RequestValidator {
 
 	@Autowired
-	private UserServiceVersionv11 userService;
+	private UserService userService;
+
+	@Value("${user.login.password.otp.enabled}")
+	private boolean isUserLoginPasswordOtpEnabled;
 
 	public ErrorResponse populateErrors(final BindingResult errors) {
 		final ErrorResponse errRes = new ErrorResponse();
@@ -68,8 +72,8 @@ public class RequestValidator {
 	private List<ErrorField> getErrorFields(final UserRequest userRequest, final Boolean createOrUpdate) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		for (final User user : userRequest.getUsers()) {
-			if(!createOrUpdate)
-				addUserIdValidationErrors(user.getId(),errorFields);
+			if (!createOrUpdate)
+				addUserIdValidationErrors(user.getId(), errorFields);
 			addTenantIdValidationErrors(user.getTenantId(), errorFields);
 			addUserNameValidationErrors(user.getUserName(), user.getTenantId(), errorFields, createOrUpdate);
 			addNameValidationErrors(user.getName(), errorFields);
@@ -159,7 +163,16 @@ public class RequestValidator {
 					.message(UserConstants.USERNAME_MANADATORY_ERROR_MESSAGE)
 					.field(UserConstants.USERNAME_MANADATORY_FIELD_NAME).build();
 			errorFields.add(errorField);
-		} else if (createOrUpdate) {
+		} else if (isUserLoginPasswordOtpEnabled) {
+			if (!StringUtils.isNumeric(userName)) {
+				final ErrorField errorField = ErrorField.builder().code(UserConstants.USERNAME_INVALIDFORMAT_CODE)
+						.message(UserConstants.USERNAME_INVALIDFORMAT_ERROR_MESSAGE)
+						.field(UserConstants.USERNAME_INVALIDFORMAT_NAME).build();
+				errorFields.add(errorField);
+			}
+		}
+
+		else if (createOrUpdate) {
 			if (userService.isUserPresent(userName, tenantId)) {
 				final ErrorField errorField = ErrorField.builder().code(UserConstants.USERNAME_UNIQUE_CODE)
 						.message(UserConstants.USERNAME_UNQ_ERROR_MESSAGE).field(UserConstants.USERNAME_UNQ_FIELD_NAME)

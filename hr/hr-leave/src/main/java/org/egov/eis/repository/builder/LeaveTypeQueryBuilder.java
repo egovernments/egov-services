@@ -58,7 +58,7 @@ public class LeaveTypeQueryBuilder {
 	private ApplicationProperties applicationProperties;
 
 	private static final String BASE_QUERY = "SELECT id, name, description, halfdayAllowed, payEligible, accumulative,"
-			+ " encashable, encloseHoliday, includePrefixSuffix, active, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
+			+ " encashable, encloseHoliday, includePrefixSuffix, maxDays, active, createdBy, createdDate, lastModifiedBy, lastModifiedDate, tenantId"
 			+ " FROM egeis_leaveType";
 
 	@SuppressWarnings("rawtypes")

@@ -1245,7 +1245,7 @@ class UpdateCancellation extends React.Component {
                 </div>
             );
         }
-        const renederDocuments = function () {
+        const renderDocuments = function () {
           return (
             <div className="form-section" id="documentsBlock">
             <h3 className="categoryType">Attached Documents </h3>
@@ -1288,7 +1288,7 @@ class UpdateCancellation extends React.Component {
           }
         }
 
-        const renederWorkflowHistory = function () {
+        const renderWorkflowHistory = function () {
             return (
                 <div className="form-section" id="historyDetails">
                 <h3 className="categoryType">Workflow History </h3>
@@ -1449,8 +1449,8 @@ class UpdateCancellation extends React.Component {
                         {renderAllottee()}
                         {renderAgreementDetails()}
                         {renederCancelDetails()}
-                        {renederDocuments()}
-                        {renederWorkflowHistory()}
+                        {renderDocuments()}
+                        {renderWorkflowHistory()}
                         {renderWorkFlowDetails()}
 
                         <br />

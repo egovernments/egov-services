@@ -1324,7 +1324,7 @@ class UpdateRenewal extends React.Component {
             );
         }
 
-        const renederDocuments = function () {
+        const renderDocuments = function () {
           return (
             <div className="form-section" id="documentsBlock">
             <h3 className="categoryType">Attached Documents </h3>

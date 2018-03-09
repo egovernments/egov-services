@@ -1,133 +1,200 @@
 package org.egov.user.web.controller;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.egov.common.contract.response.ResponseInfo;
+import javax.validation.Valid;
+
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.User;
-import org.egov.user.domain.model.UserDetail;
-import org.egov.user.domain.service.TokenService;
+import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.service.UserService;
-import org.egov.user.web.contract.CreateUserRequest;
-import org.egov.user.web.contract.UserDetailResponse;
+import org.egov.user.utils.UserUtil;
+import org.egov.user.validator.RequestValidator;
 import org.egov.user.web.contract.UserRequest;
-import org.egov.user.web.contract.UserSearchRequest;
-import org.egov.user.web.contract.UserSearchResponse;
-import org.egov.user.web.contract.UserSearchResponseContent;
-import org.egov.user.web.contract.auth.CustomUserDetails;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
+import org.egov.user.web.errorhandlers.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
+@RequestMapping("/v110")
 public class UserController {
 
+	@Autowired
 	private UserService userService;
-	private TokenService tokenService;
 
-	@Value("${mobile.number.validation.workaround.enabled}")
-	private String mobileValidationWorkaroundEnabled;
-	private static final String X_PASS_THROUGH_GATEWAY_KEY = "x-pass-through-gateway";
+	@Autowired
+	RequestValidator requestValidator;
 
-	public UserController(UserService userService, TokenService tokenService) {
-		this.userService = userService;
-		this.tokenService = tokenService;
+	@Autowired
+	UserUtil userUtil;
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+	/**
+	 * This Api Will create Bulk Users
+	 * 
+	 * @param userRequest
+	 * @param errors
+	 * @return
+	 */
+	@PostMapping(value = "/_create")
+	@ResponseBody
+	public ResponseEntity<?> create(@RequestBody @Valid final UserRequest userRequest, final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final List<ErrorResponse> errResList = new ArrayList<>();
+			errResList.add(requestValidator.populateErrors(errors));
+
+			return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
+		}
+		final List<ErrorResponse> errorResponses = requestValidator.validateRequest(userRequest, Boolean.TRUE);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+		try {
+			userService.createUser(userRequest);
+		} catch (Exception e) {
+			LOGGER.error("Exception while creating Users: ", e);
+			return userUtil.createFailureResponse(e);
+		}
+		return userUtil.createSuccessResponse(userRequest.getRequestInfo(), userRequest.getUsers());
 	}
 
-	@PostMapping("/citizen/_create")
-	public UserDetailResponse createCitizen(@RequestBody CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toDomain(true);
-		user.setOtpValidationMandatory(true);
-		final User newUser = userService.createCitizen(user);
-		return createResponse(newUser);
+	/**
+	 * Method will update the bulk users
+	 * 
+	 * @param userRequest
+	 * @param errors
+	 * @return
+	 */
+	@PostMapping("/_update")
+	public ResponseEntity<?> updateUser(@RequestBody @Valid final UserRequest userRequest, final BindingResult errors) {
+		if (errors.hasErrors()) {
+			final List<ErrorResponse> errResList = new ArrayList<>();
+			errResList.add(requestValidator.populateErrors(errors));
+
+			return new ResponseEntity<>(errResList, HttpStatus.BAD_REQUEST);
+		}
+		final List<ErrorResponse> errorResponses = requestValidator.validateRequest(userRequest, Boolean.FALSE);
+		if (!errorResponses.isEmpty())
+			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+		try {
+			userService.updateUser(userRequest);
+		} catch (Exception e) {
+			LOGGER.error("Exception while Updating Users: ", e);
+			return userUtil.createFailureResponse(e);
+		}
+		return userUtil.createSuccessResponse(userRequest.getRequestInfo(), userRequest.getUsers());
 	}
 
-	@PostMapping("/users/_createnovalidate")
-	public UserDetailResponse createUserWithoutValidation(@RequestBody CreateUserRequest createUserRequest,
-														  @RequestHeader HttpHeaders headers) {
-		User user = createUserRequest.toDomain(true);
-		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
-		user.setOtpValidationMandatory(false);
-		final User newUser = userService.createUser(user);
-		return createResponse(newUser);
-	}
-
+	/**
+	 * This function Will use to search the users based on criteria
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param id
+	 * @param name
+	 * @param userName
+	 * @param mobileNumber
+	 * @param aadharNumber
+	 * @param emailId
+	 * @param pan
+	 * @param active
+	 * @param type
+	 * @param roleCodes
+	 * @param lastChangedSince
+	 * @param includeDetails
+	 * @param pageSize
+	 * @param pageNumber
+	 * @param sort
+	 * @return
+	 */
 	@PostMapping("/_search")
-	public UserSearchResponse get(@RequestBody UserSearchRequest request) {
-		if(request.getActive() == null) {
-			request.setActive(true);
+	public ResponseEntity<?> searchUsers(@RequestBody RequestInfo requestInfo,
+			@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "id", required = false) List<Long> id,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "mobileNumber", required = false) String mobileNumber,
+			@RequestParam(value = "aadharNumber", required = false) String aadharNumber,
+			@RequestParam(value = "emailId", required = false) String emailId,
+			@RequestParam(value = "pan", required = false) String pan,
+			@RequestParam(value = "active", required = false) Boolean active,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "roleCodes", required = false) List<String> roleCodes,
+			@RequestParam(value = "lastChangedSince", required = false) Long lastChangedSince,
+			@RequestParam(value = "includeDetails", required = false) boolean includeDetails,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+			@RequestParam(value = "sort", required = false) String sort) {
+
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().tenantId(tenantId).id(id).name(name)
+				.userName(userName).aadhaarNumber(aadharNumber).mobileNumber(mobileNumber).emailId(emailId).pan(pan)
+				.active(active).type(type).roleCodes(roleCodes).lastChangedSince(lastChangedSince)
+				.includeDetails(includeDetails).build();
+		List<User> users;
+		try {
+			users = userService.searchUsers(requestInfo, searchCriteria);
+		} catch (Exception e) {
+			LOGGER.error("Exception while Updating Users: ", e);
+			return userUtil.createFailureResponse(e);
 		}
-		return searchUsers(request);
+		return userUtil.createSuccessResponse(requestInfo, users);
 	}
 
-
-	@PostMapping("/v1/_search")
-	public UserSearchResponse getV1(@RequestBody UserSearchRequest request) {
-		return searchUsers(request);
-	}
-
-	@PostMapping("/_details")
-	public CustomUserDetails getUser(@RequestParam(value = "access_token") String accessToken) {
-		final UserDetail userDetail = tokenService.getUser(accessToken);
-		return new CustomUserDetails(userDetail);
-	}
-
-	@PostMapping("/users/{id}/_updatenovalidate")
-	public UserDetailResponse updateUserWithoutValidation(@PathVariable final Long id,
-														  @RequestBody final CreateUserRequest createUserRequest,
-														  @RequestHeader HttpHeaders headers) {
-		User user = createUserRequest.toDomain(false);
-		user.setMobileValidationMandatory(isMobileValidationRequired(headers));
-		user.setId(id);
-		final User updatedUser = userService.updateWithoutOtpValidation(id, user);
-		return createResponse(updatedUser);
-	}
-
-	@PostMapping("/profile/_update")
-	public UserDetailResponse patch(@RequestBody final CreateUserRequest createUserRequest) {
-		User user = createUserRequest.toDomain(false);
-		final User updatedUser = userService.partialUpdate(user);
-		return createResponse(updatedUser);
-	}
-
-	private UserDetailResponse createResponse(User newUser) {
-		UserRequest userRequest = new UserRequest(newUser);
-		ResponseInfo responseInfo = ResponseInfo.builder()
-				.status(String.valueOf(HttpStatus.OK.value()))
-				.build();
-		return new UserDetailResponse(responseInfo, Collections.singletonList(userRequest));
-	}
-
-
-	private UserSearchResponse searchUsers(@RequestBody UserSearchRequest request) {
-		List<User> userModels = userService.searchUsers(request.toDomain());
-
-		List<UserSearchResponseContent> userContracts = userModels.stream()
-				.map(UserSearchResponseContent::new)
-				.collect(Collectors.toList());
-		ResponseInfo responseInfo = ResponseInfo.builder().status(String.valueOf(HttpStatus.OK.value())).build();
-		return new UserSearchResponse(responseInfo, userContracts);
-	}
-
-	private boolean isMobileValidationRequired(HttpHeaders headers) {
-		String x_pass_through_gatewayStr = headers.getFirst(X_PASS_THROUGH_GATEWAY_KEY);
-		Boolean x_pass_through_gateway = false;
-		if (x_pass_through_gatewayStr != null && x_pass_through_gatewayStr.equalsIgnoreCase("true")) {
-			x_pass_through_gateway = true;
+	/**
+	 * This function will create opt will send to mobileNumber
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param userName
+	 * @param mobileNumber
+	 * @return
+	 */
+	@PostMapping("/_sendotpforlogin")
+	public ResponseEntity<?> sendOtp(@RequestBody RequestInfo requestInfo,
+			@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "userName", required = true) String userName,
+			@RequestParam(value = "identity", required = true) String mobileNumber) {
+		try {
+			userService.createAndSendOtp(requestInfo, tenantId, userName, mobileNumber);
+		} catch (Exception e) {
+			LOGGER.error("Exception while Creating otp for login: ", e);
+			return userUtil.createFailureResponse(e);
 		}
-		if (mobileValidationWorkaroundEnabled != null && Boolean.valueOf(mobileValidationWorkaroundEnabled)
-				&& !x_pass_through_gateway) {
-			return false;
-		}
-		return true;
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
-}	
+
+	/**
+	 * This function will create opt will send to mobileNumber
+	 * 
+	 * @param requestInfo
+	 * @param tenantId
+	 * @param userName
+	 * @param mobileNumber
+	 * @return
+	 */
+	@PostMapping("/_sendotpforpasswordupdate")
+	public ResponseEntity<?> sendOtpForUpdatePassword(@RequestBody RequestInfo requestInfo,
+			@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "userName", required = true) String userName,
+			@RequestParam(value = "identity", required = true) String mobileNumber) {
+		try {
+			userService.createAndSendOtpForPasswordUpdate(requestInfo, tenantId, userName, mobileNumber);
+		} catch (Exception e) {
+			LOGGER.error("Exception while Creating otp for password update: ", e);
+			return userUtil.createFailureResponse(e);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+}

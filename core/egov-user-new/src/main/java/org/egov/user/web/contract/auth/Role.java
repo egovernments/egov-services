@@ -17,7 +17,7 @@ public class Role implements Serializable {
     private String code;
     private String tenantId;
 
-    public Role(org.egov.user.domain.v11.model.Role role) {
+    public Role(org.egov.user.domain.model.Role role) {
         this.id = role.getId();
         this.name = role.getName();
         this.code= role.getCode();

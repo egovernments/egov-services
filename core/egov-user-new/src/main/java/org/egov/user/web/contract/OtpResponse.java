@@ -3,14 +3,15 @@ package org.egov.user.web.contract;
 import java.util.List;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.user.domain.model.User;
+import org.egov.user.domain.model.Otp;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
-public class UserResponse {
+@Setter
+public class OtpResponse {
+
 	private ResponseInfo responseInfo;
-    private List<User> users;
+    private List<Otp> otps;
 }

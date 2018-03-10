@@ -12,6 +12,7 @@ class ApplyLeave extends React.Component {
         "fromDate": "",
         "toDate": "",
         "availableDays": "",
+        "leaveGround": "",
         "leaveDays": "",
         "reason": "",
         "status": "",
@@ -391,14 +392,14 @@ class ApplyLeave extends React.Component {
     e.preventDefault();
     var _this = this;
 
-    if (_this.state.leaveSet.availableDays <= 0 && _this.state.leaveSet.availableDays == "") {
-      return (showError("You do not have leave for this leave type."));
-    }
+    // if (_this.state.leaveSet.availableDays <= 0 && _this.state.leaveSet.availableDays == "") {
+    //   return (showError("You do not have leave for this leave type."));
+    // }
 
-    let maxDays = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "maxDays");
-    if (maxDays < _this.state.leaveSet.leaveDays) {
-      return (showError("Number of Leaves applied exceeds Maximum leaves permitted"));
-    }
+    // let maxDays = getNameById(_this.state.leaveList, _this.state.leaveSet.leaveType.id, "maxDays");
+    // if (maxDays < _this.state.leaveSet.leaveDays) {
+    //   return (showError("Number of Leaves applied exceeds Maximum leaves permitted"));
+    // }
 
 
     var employee;
@@ -465,7 +466,7 @@ class ApplyLeave extends React.Component {
   render() {
     let { handleChange, addOrUpdate, handleChangeThreeLevel } = this;
     let { leaveSet, perfixSuffix, encloseHoliday } = this.state;
-    let { name, code, leaveDays, availableDays, fromDate, toDate, reason, leaveType, totalWorkingDays } = leaveSet;
+    let { name, code, leaveDays, availableDays, fromDate, toDate, leaveGround, reason, leaveType, totalWorkingDays } = leaveSet;
     let mode = getUrlVars()["type"];
 
     const renderOption = function (list) {
@@ -730,6 +731,18 @@ class ApplyLeave extends React.Component {
 
                     <input type="number" id="totalWorkingDays" name="totalWorkingDays" value={totalWorkingDays}
                       onChange={(e) => { handleChange(e, "totalWorkingDays") }} disabled />
+                  </div>
+                </div>
+              </div>
+              <div className="col-sm-6">
+                <div className="row">
+                  <div className="col-sm-6 label-text">
+                    <label htmlFor="">Leave Grounds <span>*</span></label>
+                  </div>
+                  <div className="col-sm-6">
+
+                    <input type="text" id="leaveGround" name="leaveGround" value={leaveGround}
+                      onChange={(e) => { handleChange(e, "leaveGround") }} required />
                   </div>
                 </div>
               </div>

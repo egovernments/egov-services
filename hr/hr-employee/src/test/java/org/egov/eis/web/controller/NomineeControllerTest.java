@@ -125,7 +125,7 @@ public class NomineeControllerTest {
         verify(responseInfoFactory, never()).createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
     }
 
-    /*@Test
+    @Test
     public void testCreate_forValidRequest() throws Exception {
         List<Nominee> expectedNominees = seedHelper.getNominees();
         ResponseInfo expectedResponseInfo = seedHelper.getResponseInfo();
@@ -148,9 +148,9 @@ public class NomineeControllerTest {
         verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
         verify(responseInfoFactory, times(1))
                 .createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
-    }*/
+    }
 
-  /*  @Test
+    @Test
     public void testCreate_forInvalidRequest() throws Exception {
         ResponseEntity<?> expectedErrorResponse = seedHelper.getErrorResponseEntity();
 
@@ -171,9 +171,9 @@ public class NomineeControllerTest {
         verify(nomineeService, never()).createAsync(any(NomineeRequest.class));
         verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
         verify(responseInfoFactory, never()).createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
-    }*/
+    }
 
-  /*  @Test
+    @Test
     public void testUpdate_forValidRequest() throws Exception {
         List<Nominee> expectedNominees = seedHelper.getNominees();
         ResponseInfo expectedResponseInfo = seedHelper.getResponseInfo();
@@ -198,8 +198,8 @@ public class NomineeControllerTest {
         verify(responseInfoFactory, times(1))
                 .createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
     }
-*/
-   /* @Test
+
+    @Test
     public void testUpdate_forInvalidRequest() throws Exception {
         ResponseEntity<?> expectedErrorResponse = seedHelper.getErrorResponseEntity();
 
@@ -221,7 +221,7 @@ public class NomineeControllerTest {
         verify(errorHandler, never()).getResponseEntityForUnexpectedErrors(any(RequestInfo.class));
         verify(responseInfoFactory, never()).createResponseInfoFromRequestInfo(any(RequestInfo.class), anyBoolean());
     }
-*/
+
     private String getFileContents(String filePath) throws IOException {
         return new FileUtils().getFileContents(
                 "org/egov/eis/web/controller/NomineeController/" + filePath);

@@ -92,7 +92,7 @@ class CancellationAgreement extends React.Component {
           };
   
           $.ajax({
-            url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+            url: baseUrl + "hr-employee/disciplinary/_create?tenantId=" + tenantId,
             type: 'POST',
             dataType: 'json',
             data: JSON.stringify(body),

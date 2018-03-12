@@ -71,9 +71,9 @@ public class SearchUtils {
                 if(paramValue instanceof net.minidev.json.JSONArray){ //TODO: might need to add some more types
                 	net.minidev.json.JSONArray array = (net.minidev.json.JSONArray)paramValue;
 					StringBuilder paramBuilder = new StringBuilder();
-					for (Object object : array) {
-						paramBuilder.append("'"+object+"'");
-						if(array.indexOf(object)!=array.size()-1)
+					for(int i = 0; i < array.size(); i++) {
+						paramBuilder.append("'"+array.get(i)+"'");
+						if(i < array.size() - 1)
 							paramBuilder.append(",");
 					}
 					whereClause.append(param.getName()).append(" IN ").append("(")

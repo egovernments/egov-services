@@ -62,6 +62,7 @@ public class ServiceRequestController {
 	private ResponseEntity<?> update(@RequestBody @Valid ServiceReqRequest serviceRequest) {
 		
 		long startTime = new Date().getTime();
+		pgrRequestValidator.validateUpdate(serviceRequest);
 		ServiceReqResponse response = service.update(serviceRequest);
 		long endTime = new Date().getTime();
 		log.debug(" the time taken for update in ms: {}",endTime-startTime);
@@ -81,7 +82,7 @@ public class ServiceRequestController {
 	private ResponseEntity<?> search(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute @Valid ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		
-		pgrRequestValidator.validateSearch(serviceReqSearchCriteria);
+		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		long startTime = new Date().getTime();
 		log.debug("RequestInfo: ",requestInfoWrapper.toString());
 		log.debug("ServiceReqSearchCriteria: ",serviceReqSearchCriteria.toString());
@@ -104,7 +105,7 @@ public class ServiceRequestController {
 	private ResponseEntity<?> count(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper, 
 			@ModelAttribute ServiceReqSearchCriteria serviceReqSearchCriteria) {
 		
-		pgrRequestValidator.validateSearch(serviceReqSearchCriteria);
+		pgrRequestValidator.validateSearch(serviceReqSearchCriteria, requestInfoWrapper.getRequestInfo());
 		long startTime = new Date().getTime();
 		log.debug("RequestInfo: ",requestInfoWrapper.toString());
 		log.debug("CountCriteria: ",serviceReqSearchCriteria.toString());

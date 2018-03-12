@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.SearchApplicationRunnerImpl;
-import org.egov.search.controller.SearchController;
 import org.egov.search.model.Definition;
 import org.egov.search.model.Params;
 import org.egov.search.model.SearchDefinition;
@@ -24,7 +23,7 @@ import com.jayway.jsonpath.JsonPath;
 @Service
 public class SearchReqValidator {
 	
-	public static final Logger logger = LoggerFactory.getLogger(SearchController.class);
+	public static final Logger logger = LoggerFactory.getLogger(SearchReqValidator.class);
 	
 	@Autowired
 	private SearchApplicationRunnerImpl runner;
@@ -33,6 +32,7 @@ public class SearchReqValidator {
 	private SearchUtils searchUtils;
 	
 	public void validate(SearchRequest searchRequest, String moduleName, String searchName) {
+		logger.info("Validating search request....");
 		Map<String, SearchDefinition> searchDefinitionMap = runner.getSearchDefinitionMap();
 		Definition searchDefinition = null;
 		try{
@@ -42,6 +42,7 @@ public class SearchReqValidator {
 		}
 		logger.info("Definition being used for process: "+searchDefinition);
 		validateSearchDefAgainstReq(searchDefinition, searchRequest);
+		logger.info("All validations passed!");
 	}
 	
 	public void validateSearchDefAgainstReq(Definition searchDefinition, SearchRequest searchRequest) {
@@ -55,17 +56,20 @@ public class SearchReqValidator {
 				.filter(param -> param.getIsMandatory())
 				.collect(Collectors.toList());
 		
-		for(Params param: params) {
+		params.forEach(entry -> {
+			Object paramValue = null;
 			try {
-				Object paramValue = JsonPath.read(mapper.writeValueAsString(searchRequest), param.getJsonPath());
-				if(null == paramValue)
-					errorMap.put("400", "Missiing Mandatory Property: "+param.getJsonPath());
+				paramValue = JsonPath.read(mapper.writeValueAsString(searchRequest), entry.getJsonPath());
 			}catch(Exception e) {
-				errorMap.put("400", "Missiing Mandatory Property: "+param.getJsonPath());
+				errorMap.put("400", "Missiing Mandatory Property: "+entry.getJsonPath());
 			}
-		}
+			if(null == paramValue) {
+				errorMap.put("400", "Missiing Mandatory Property: "+entry.getJsonPath());
+			}
+		});
 		
-		throw new CustomException(errorMap);
+		if(!errorMap.isEmpty())
+			throw new CustomException(errorMap);
 		
 		
 	}

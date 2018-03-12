@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.contract.ServiceReqSearchCriteria;
@@ -50,14 +51,47 @@ public class PGRRequestValidator {
 		}
 	}
 	
-	public void validateSearch(ServiceReqSearchCriteria criteria) {
-		
-		if((criteria.getStartDate()!=null && criteria.getStartDate()>new Date().getTime()) || (criteria.getEndDate()!=null && criteria.getEndDate()>new Date().getTime()))
+	public void validateSearch(ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
+		log.info("Validating search request...");
+		Map<String, String> errorMap = new HashMap<>();
+		validateUserRBACProxy(errorMap, criteria, requestInfo);
+		if((criteria.getStartDate()!=null && criteria.getStartDate()>new Date().getTime()) || (criteria.getEndDate()!=null && criteria.getEndDate()>new Date().getTime())) {
+			errorMap.put("400", "startDate or endDate cannot be greater than currentDate");
 			throw new CustomException("400","startDate or endDate cannot be greater than currentDate");
-		
+		}
 		if ((criteria.getStartDate() != null && criteria.getEndDate() != null)
-				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0)
-			throw new CustomException("400", "startDate cannot be greater than endDate");
+				&& criteria.getStartDate().compareTo(criteria.getEndDate()) > 0) {
+			errorMap.put("400", "startDate cannot be greater than endDate");
+
+		}
+		
+		if(!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+		
+		log.info("All Validations passed!");
+	}
+	
+	public void validateUserRBACProxy(Map<String, String> errorMap, ServiceReqSearchCriteria criteria, RequestInfo requestInfo) {
+		
+		if(null != requestInfo.getUserInfo()) {
+			if(null == requestInfo.getUserInfo().getId() || 
+					(null == requestInfo.getUserInfo().getRoles() || requestInfo.getUserInfo().getRoles().isEmpty())) {
+				errorMap.put("401","Unauthenticated user, userId and Roles missing in the request.");
+				return;
+			}
+		}else {
+			errorMap.put("401","Unauthenticated user, userInfo missing in the request.");
+			return;
+		}
+		
+		if(requestInfo.getUserInfo().getRoles().get(0).getName().equals("CITIZEN") && requestInfo.getUserInfo().getRoles().size() == 1) {
+			if(null != criteria.getAccountId() && !criteria.getAccountId().isEmpty()) {
+				if(!(criteria.getAccountId().equals(requestInfo.getUserInfo().getId().toString())))
+					errorMap.put("403", "User not authorized to access this information");
+			}else {
+				errorMap.put("403", "User not authorized, accountId missing");
+			}
+		}
 	}
 
 }

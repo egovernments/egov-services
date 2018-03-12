@@ -22,16 +22,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PGRUtils {
 	
-	@Value("${infra.searcher.host}")
+	@Value("${egov.infra.searcher.host}")
 	private String searcherHost;
 	
-	@Value("${infra.searcher.endpoint}")
+	@Value("${egov.infra.searcher.endpoint}")
 	private String searcherEndpoint;
 	
-	@Value("${mdms.host}")
+	@Value("${egov.mdms.host}")
 	private String mdmsHost;
 	
-	@Value("${mdms.search.endpoint}")
+	@Value("${egov.mdms.search.endpoint}")
 	private String mdmsEndpoint;
 
 	/**

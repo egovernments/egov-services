@@ -52,7 +52,7 @@ public class SearchController {
 			Gson gson = new Gson();
 			Map<String, Object> data = gson.fromJson(searchResult.toString(), type);
 			long endTime = new Date().getTime();
-			System.err.println(" the time taken for search in controller in ms : "+(endTime-startTime));
+			logger.info(" the time taken for search in controller in ms : "+(endTime-startTime));
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch(Exception e){
 			logger.error("Exception while searching for result: ",e);

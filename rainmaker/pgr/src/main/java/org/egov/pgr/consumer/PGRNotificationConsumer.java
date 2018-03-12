@@ -1,18 +1,25 @@
 package org.egov.pgr.consumer;
 
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.pgr.contract.EmailRequest;
 import org.egov.pgr.contract.SMSRequest;
 import org.egov.pgr.contract.ServiceReq;
+import org.egov.pgr.contract.ServiceReq.StatusEnum;
 import org.egov.pgr.contract.ServiceReqRequest;
 import org.egov.pgr.producer.PGRProducer;
+import org.egov.pgr.repository.ServiceRequestRepository;
 import org.egov.pgr.utils.PGRConstants;
+import org.egov.pgr.utils.PGRUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -21,6 +28,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,23 +45,19 @@ public class PGRNotificationConsumer {
 	@Value("${kafka.topics.notification.email}")
 	private String emailNotifTopic;
 	
-	@Value("${text.for.sms.email.notif}")
+	@Value("${text.for.sms.notification}")
 	private String textForNotif;
 	
 	@Value("${text.for.subject.email.notif}")
 	private String subjectForEmail;
 	
-	@Value("${kafka.topics.notification.create.complaint}")
-	private String createComplaintTopic;
-	
-	@Value("${kafka.topics.notification.assign.complaint}")
-	private String assignComplaintTopic;
-	
-	@Value("${kafka.topics.notification.close.complaint}")
-	private String closeComplaintTopic;
+	@Autowired
+	private ServiceRequestRepository serviceRequestRepository;
 		
-    @KafkaListener(topics = {"${kafka.topics.notification.create.complaint}", "${kafka.topics.notification.assign.complaint}",
-    		"${kafka.topics.notification.close.complaint}"})
+	@Autowired
+	private PGRUtils pGRUtils;
+		
+    @KafkaListener(topics = {"${kafka.topics.notification.complaint}"})
     
 	public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -64,56 +68,77 @@ public class PGRNotificationConsumer {
 		}catch(final Exception e){
 			log.error("Error while listening to value: "+record+" on topic: "+topic+": ", e.getMessage());
 		}
-		process(topic, serviceReqRequest);		
+		process(serviceReqRequest);		
 	}
     
-    public void process(String topic, ServiceReqRequest serviceReqRequest) {
+    public void process(ServiceReqRequest serviceReqRequest) {
     	for(ServiceReq serviceReq: serviceReqRequest.getServiceReq()) {
-    		SMSRequest smsRequest = prepareSMSRequest(serviceReq, topic);
+    		SMSRequest smsRequest = prepareSMSRequest(serviceReq, serviceReqRequest.getRequestInfo());
         	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
-			pGRProducer.push(smsNotifTopic, smsRequest);
+        	try {
+        		pGRProducer.push(smsNotifTopic, smsRequest);
+        	}catch(Exception e) {
+        		continue;
+        	}
 			if(null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty()) {
-				EmailRequest emailRequest = prepareEmailRequest(serviceReq, topic);
+				EmailRequest emailRequest = prepareEmailRequest(serviceReq);
 	        	log.info("EMAIL: "+emailRequest.getBody()
 	        	+"| SUBJECT: "+emailRequest.getSubject()
 	        	+"| ID: "+emailRequest.getEmail());
-				pGRProducer.push(emailNotifTopic, emailRequest);	
+	        	try {
+	        		pGRProducer.push(emailNotifTopic, emailRequest);
+	        	}catch(Exception e) {
+	        		continue;
+	        	}
 			}
 		}
     }
     
-    public SMSRequest prepareSMSRequest(ServiceReq serviceReq, String topic) {
+    public SMSRequest prepareSMSRequest(ServiceReq serviceReq, RequestInfo requestInfo) {
 		String phone = serviceReq.getPhone();
-		String message = getMessageForSMS(serviceReq, topic);
-		SMSRequest smsRequest = SMSRequest.builder().mobileNumber(phone).message(message).build();
+		String message = getMessageForSMS(serviceReq, requestInfo);
+		SMSRequest smsRequest = SMSRequest.builder().mobileNumber("phone").message("message").build();
 		
 		return smsRequest;
     }
     
-    public EmailRequest prepareEmailRequest(ServiceReq serviceReq, String topic) {
+    public EmailRequest prepareEmailRequest(ServiceReq serviceReq) {
 		String email = serviceReq.getEmail();
 		StringBuilder subject = new StringBuilder();
-		String body = getBodyAndSubForEmail(serviceReq, topic, subject);
+		String body = getBodyAndSubForEmail(serviceReq, subject);
 		EmailRequest emailRequest = EmailRequest.builder().email(email).subject(subject.toString()).body(body)
 				.isHTML(true).build();
 		
 		return emailRequest;
     }
     
-    public String getBodyAndSubForEmail(ServiceReq serviceReq, String topic, StringBuilder subject) {
+    public String getBodyAndSubForEmail(ServiceReq serviceReq, StringBuilder subject) {
     	Map<String, Object> map = new HashMap<>();
         VelocityEngine ve = new VelocityEngine();
         ve.init();
         VelocityContext context = new VelocityContext();
     	map.put("name", serviceReq.getFirstName());
     	map.put("id", serviceReq.getServiceRequestId());
-		if(topic.equals(createComplaintTopic)) {
-        	map.put("status", "created");
-		}else if(topic.equals(assignComplaintTopic)) {
+		switch(serviceReq.getStatus()) {
+		case NEW:{
+        	map.put("status", "submitted");
+    		break;
+		}case INPROGRESS:{
         	map.put("status", "assgined to Mr."+serviceReq.getAssignedTo());
-		}else {
-        	map.put("status", "closed");
+    		break;
+		}case CANCELLED:{
+        	map.put("status", "re-assgined to Mr."+serviceReq.getAssignedTo());
+    		break;
+		}case REJECTED:{
+        	map.put("status", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
+    		break;
+		}case CLOSED:{
+        	map.put("status", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
+    		break;
+		}default:
+			break;
 		}
+		
         context.put("params", map);
         Template t = ve.getTemplate(PGRConstants.TEMPLATE_COMPLAINT_EMAIL);
         StringWriter writer = new StringWriter();
@@ -125,20 +150,51 @@ public class PGRNotificationConsumer {
     	return message;    	
     }
     
-    public String getMessageForSMS(ServiceReq serviceReq, String topic) {
+    public String getMessageForSMS(ServiceReq serviceReq, RequestInfo requestInfo) {
     	String message = textForNotif;
-		message = message.replace("<name>", serviceReq.getFirstName())
-				.replace("<id>", serviceReq.getServiceRequestId());
-		if(topic.equals(createComplaintTopic)) {
-    		message = message.replaceAll("<status>", "created");
-		}else if(topic.equals(assignComplaintTopic)) {
+    	//MessageConstructor msgConstructor = new MessageConstructor();
+    	String serviceType = getServiceType(serviceReq, requestInfo);
+		message = message.replace("<complaint_type>", serviceType)
+				.replace("<id>", serviceReq.getServiceRequestId());//.replace("date", new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
+		switch(serviceReq.getStatus()) {
+		case NEW:{
+    		message = message.replaceAll("<status>", "submitted");
+    		break;
+		}case INPROGRESS:{
     		message = message.replaceAll("<status>", "assgined to Mr."+serviceReq.getAssignedTo());
-		}else {
-    		message = message.replaceAll("<status>", "closed");
+    		break;
+		}case CANCELLED:{
+    		message = message.replaceAll("<status>", "re-assgined to Mr."+serviceReq.getAssignedTo());
+    		break;
+		}case REJECTED:{
+    		message = message.replaceAll("<status>", "rejected on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
+    		break;
+		}case CLOSED:{
+    		message = message.replaceAll("<status>", "resolved on "+new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
+    		break;
+		}default:
+			break;
 		}
-    	
+		
     	return message;
     	
+    }
+    
+    public String getServiceType(ServiceReq serviceReq, RequestInfo requestInfo) {
+		StringBuilder uri = new StringBuilder();
+		MdmsCriteriaReq mdmsCriteriaReq = pGRUtils.prepareSearchRequestForServiceType(uri, serviceReq.getTenantId(),
+				serviceReq.getServiceCode(), requestInfo);
+		List<String> serviceTypes = null;
+		try {
+			Object result = serviceRequestRepository.fetchResult(uri, mdmsCriteriaReq);
+			serviceTypes = (List<String>) JsonPath.read(result, PGRConstants.JSONPATH_SERVICE_CODES);
+			if(null == serviceTypes || serviceTypes.isEmpty())
+				return PGRConstants.DEFAULT_COMPLAINT_TYPE;
+		}catch(Exception e) {
+			return PGRConstants.DEFAULT_COMPLAINT_TYPE;
+		}
+		
+    	return serviceTypes.get(0);
     }
     
 }

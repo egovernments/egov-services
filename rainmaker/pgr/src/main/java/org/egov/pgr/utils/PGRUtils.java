@@ -111,5 +111,33 @@ public class PGRUtils {
 		Long date = new Date().getTime();
 		return AuditDetails.builder().createdBy(by).createdTime(date).lastModifiedBy(by).lastModifiedTime(date).build();
 	}
+	
+	/**
+	 * Prepares request and uri for service type search from MDMS
+	 * 
+	 * @param uri
+	 * @param tenantId
+	 * @param department
+	 * @param requestInfo
+	 * @return MdmsCriteriaReq
+	 * @author vishal
+	 */
+	public MdmsCriteriaReq prepareSearchRequestForServiceType(StringBuilder uri, String tenantId, String serviceCode, RequestInfo requestInfo) {
+		uri.append(mdmsHost).append(mdmsEndpoint);
+		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder()
+				.name(PGRConstants.MDMS_SERVICETYPE_MASTER_NAME).
+				filter("[?(@.serviceCode=='"+serviceCode+"')]."+PGRConstants.SERVICE_NAME).build();
+		List<MasterDetail> masterDetails = new ArrayList<>();
+		masterDetails.add(masterDetail);
+		ModuleDetail moduleDetail = ModuleDetail.builder()
+				.moduleName(PGRConstants.MDMS_PGR_MOD_NAME).masterDetails(masterDetails).build();
+		List<ModuleDetail> moduleDetails = new ArrayList<>();
+		moduleDetails.add(moduleDetail);
+		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(tenantId).moduleDetails(moduleDetails).build();
+		MdmsCriteriaReq mdmsCriteriaReq = MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+		
+		return mdmsCriteriaReq;
+	}
+	
 
 }

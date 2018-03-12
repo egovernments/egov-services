@@ -47,8 +47,8 @@ public class ServiceRequestService {
 	@Value("${kafka.topics.update.servicereq}")
 	private String updateTopic;
 	
-	@Value("${kafka.topics.notification.create.complaint}")
-	private String createComplaintTopic;
+	@Value("${kafka.topics.notification.complaint}")
+	private String complaintTopic;
 
 	@Autowired
 	private ResponseInfoFactory factory;
@@ -90,7 +90,7 @@ public class ServiceRequestService {
 			setIdsForSubList(servReq.getMedia(), servReq.getComments(), true, requestInfo);
 		}
 		pGRProducer.push(saveTopic, request);
-		pGRProducer.push(createComplaintTopic, request);
+		pGRProducer.push(complaintTopic, request);
 		return getServiceReqResponse(request);
 	}
 
@@ -115,6 +115,7 @@ public class ServiceRequestService {
 		}
 
 		pGRProducer.push(updateTopic, request);
+		pGRProducer.push(complaintTopic, request);
 		return getServiceReqResponse(request);
 	}
 
@@ -200,7 +201,7 @@ public class ServiceRequestService {
 				Object response = fetchServiceCodes(requestInfo, serviceReqSearchCriteria.getTenantId(), serviceReqSearchCriteria.getGroup());
 				if(null == response)
 					return new ServiceReqResponse();
-				List<String> serviceCodes = (List<String>) response;
+				List<String> serviceCodes = (List<String>) JsonPath.read(response, PGRConstants.JSONPATH_SERVICE_CODES);
 				serviceReqSearchCriteria.setServiceCodes(serviceCodes);
 		}
 		StringBuilder uri = new StringBuilder();

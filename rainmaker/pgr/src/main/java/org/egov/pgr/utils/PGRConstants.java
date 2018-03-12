@@ -20,6 +20,9 @@ public class PGRConstants {
 	public static final String MDMS_PGR_MOD_NAME = "rainmaker-pgr";
 	public static final String MDMS_SERVICETYPE_MASTER_NAME = "serviceDefinitions";
 	public static final String SERVICE_CODES = "serviceCode";
+	public static final String JSONPATH_SERVICE_CODES = "$.MdmsRes.PGR.ServiceTypes";
+	public static final String SERVICE_NAME = "serviceName";
+	public static final String DEFAULT_COMPLAINT_TYPE = "resolution";
 	
 	//Notification
 	public static final String TEMPLATE_COMPLAINT_EMAIL = "./src/main/resources/email-templates/velocityEmailNotifSample.vm";

@@ -77,9 +77,7 @@ public class PGRNotificationConsumer {
         	log.info("SMS: "+smsRequest.getMessage()+" | MOBILE: "+smsRequest.getMobileNumber());
         	try {
         		pGRProducer.push(smsNotifTopic, smsRequest);
-        	}catch(Exception e) {
-        		continue;
-        	}
+        	}catch(Exception e) {}
 			if(null != serviceReq.getEmail() && !serviceReq.getEmail().isEmpty()) {
 				EmailRequest emailRequest = prepareEmailRequest(serviceReq);
 	        	log.info("EMAIL: "+emailRequest.getBody()
@@ -87,9 +85,7 @@ public class PGRNotificationConsumer {
 	        	+"| ID: "+emailRequest.getEmail());
 	        	try {
 	        		pGRProducer.push(emailNotifTopic, emailRequest);
-	        	}catch(Exception e) {
-	        		continue;
-	        	}
+	        	}catch(Exception e) {}
 			}
 		}
     }
@@ -97,7 +93,7 @@ public class PGRNotificationConsumer {
     public SMSRequest prepareSMSRequest(ServiceReq serviceReq, RequestInfo requestInfo) {
 		String phone = serviceReq.getPhone();
 		String message = getMessageForSMS(serviceReq, requestInfo);
-		SMSRequest smsRequest = SMSRequest.builder().mobileNumber("phone").message("message").build();
+		SMSRequest smsRequest = SMSRequest.builder().mobileNumber(phone).message(message).build();
 		
 		return smsRequest;
     }
@@ -155,7 +151,7 @@ public class PGRNotificationConsumer {
     	//MessageConstructor msgConstructor = new MessageConstructor();
     	String serviceType = getServiceType(serviceReq, requestInfo);
 		message = message.replace("<complaint_type>", serviceType)
-				.replace("<id>", serviceReq.getServiceRequestId());//.replace("date", new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
+				.replace("<id>", serviceReq.getServiceRequestId()).replace("date", new Date(serviceReq.getAuditDetails().getCreatedTime()).toString());
 		switch(serviceReq.getStatus()) {
 		case NEW:{
     		message = message.replaceAll("<status>", "submitted");

@@ -38,35 +38,48 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.model.enums;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode
-public class DisciplinaryDocuments {
+public enum DisciplinaryActions {
+    MEMOPHASE("MEMOPHASE"),
 
-    @JsonProperty("id")
-    private Long id;
+    ENQUIRYPHASE("ENQUIRYPHASE"),
 
-    @JsonProperty("documentType")
-    private String documentType;
+    SHOWCAUSENOTICE("SHOWCAUSENOTICE"),
 
-    @JsonProperty("disciplinaryId")
-    private Long disciplinaryId;
+    COURTORDER("COURTORDER");
 
-    @JsonProperty("fileStoreId")
-    private String fileStoreId;
+    private String value;
 
+    DisciplinaryActions(final String value) {
+        this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return name();
+    }
+
+    @JsonCreator
+    public static List<String> getAllObjectValues() {
+        final List<String> allObjectValues = new ArrayList<>();
+        for (final DisciplinaryActions obj : DisciplinaryActions.values())
+            allObjectValues.add(obj.value);
+        return allObjectValues;
+    }
+
+    @JsonCreator
+    public static DisciplinaryActions fromValue(final String passedValue) {
+        for (final DisciplinaryActions obj : DisciplinaryActions.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
 }

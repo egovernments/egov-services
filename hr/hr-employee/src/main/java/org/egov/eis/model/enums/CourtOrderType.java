@@ -39,38 +39,40 @@
  */
 
 package org.egov.eis.model.enums;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum DisciplinaryApplication {
-    MEMOPHASE("Memo phase"),
-    
-    ENQUIRYPHASE("Enquiry phase"),
-    
-    SHOWCAUSENOTICE("Show Cause notice"),
-    
-    COURTORDER("Court Order");
-
+public enum CourtOrderType {
+    STAY("STAY"), INTERIMORDER("INTERIMORDER"), STATUSQUO("STATUSQUO");
     private String value;
 
-    DisciplinaryApplication(String value) {
-      this.value = value;
+    CourtOrderType(final String value) {
+        this.value = value;
     }
 
     @Override
     @JsonValue
     public String toString() {
-      return String.valueOf(value);
+        return name();
     }
 
     @JsonCreator
-    public static DisciplinaryApplication fromValue(String text) {
-      for (DisciplinaryApplication b : DisciplinaryApplication.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
+    public static List<String> getAllObjectValues() {
+        final List<String> allObjectValues = new ArrayList<>();
+        for (final CourtOrderType obj : CourtOrderType.values())
+            allObjectValues.add(obj.value);
+        return allObjectValues;
     }
-  }
 
+    @JsonCreator
+    public static CourtOrderType fromValue(final String passedValue) {
+        for (final CourtOrderType obj : CourtOrderType.values())
+            if (String.valueOf(obj.value).equals(passedValue.toUpperCase()))
+                return obj;
+        return null;
+    }
+}

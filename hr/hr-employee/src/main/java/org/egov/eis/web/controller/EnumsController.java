@@ -48,8 +48,12 @@ import javax.validation.Valid;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.eis.model.enums.BloodGroup;
+import org.egov.eis.model.enums.CourtOrderType;
+import org.egov.eis.model.enums.DisciplinaryActions;
 import org.egov.eis.model.enums.MaritalStatus;
 import org.egov.eis.web.contract.BloodGroupResponse;
+import org.egov.eis.web.contract.CourtOrderTypeResponse;
+import org.egov.eis.web.contract.DisciplinaryActionsResponse;
 import org.egov.eis.web.contract.MaritalStatusResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
@@ -68,102 +72,192 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class EnumsController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EnumsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnumsController.class);
 
-	@Autowired
-	private RequestValidator requestValidator;
+    @Autowired
+    private RequestValidator requestValidator;
 
-	@Autowired
-	private ResponseInfoFactory responseInfoFactory;
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	/**
-	 * Maps Post Requests for _search & returns ResponseEntity of either
-	 * BloodGroupResponse type or ErrorResponse type
-	 * 
-	 * @param requestInfoWrapper
-	 * @param bindingResult
-	 * @return ResponseEntity<?>
-	 */
-	@PostMapping("/bloodgroups/_search")
-	@ResponseBody
-	public ResponseEntity<?> searchBloodGroup(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			BindingResult bindingResult) {
-		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    /**
+     * Maps Post Requests for _search & returns ResponseEntity of either BloodGroupResponse type or ErrorResponse type
+     *
+     * @param requestInfoWrapper
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+    @PostMapping("/bloodgroups/_search")
+    @ResponseBody
+    public ResponseEntity<?> searchBloodGroup(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
-				bindingResult);
+        final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
+                bindingResult);
 
-		if (errorResponseEntity != null)
-			return errorResponseEntity;
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
 
-		// Call service
-		List<Map<String, String>> bloodGroups = BloodGroup.getBloodGroups();
-		LOGGER.debug("BloodGroups : " + bloodGroups);
+        // Call service
+        final List<Map<String, String>> bloodGroups = BloodGroup.getBloodGroups();
+        LOGGER.debug("BloodGroups : " + bloodGroups);
 
-		return getSuccessResponseForSearchBloodGroup(bloodGroups, requestInfo);
-	}
+        return getSuccessResponseForSearchBloodGroup(bloodGroups, requestInfo);
+    }
 
-	/**
-	 * Maps Post Requests for _search & returns ResponseEntity of either
-	 * MaritalStatusResponse type or ErrorResponse type
-	 * 
-	 * @param requestInfoWrapper
-	 * @param bindingResult
-	 * @return ResponseEntity<?>
-	 */
-	@PostMapping("/maritalstatuses/_search")
-	@ResponseBody
-	public ResponseEntity<?> searchMaritalStatus(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
-			BindingResult bindingResult) {
-		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+    /**
+     * Maps Post Requests for _search & returns ResponseEntity of either MaritalStatusResponse type or ErrorResponse type
+     *
+     * @param requestInfoWrapper
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+    @PostMapping("/maritalstatuses/_search")
+    @ResponseBody
+    public ResponseEntity<?> searchMaritalStatus(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 
-		ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
-				bindingResult);
+        final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
+                bindingResult);
 
-		if (errorResponseEntity != null)
-			return errorResponseEntity;
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
 
-		// Call service
-		List<String> maritalStatuses = MaritalStatus.getAllObjectValues();
+        // Call service
+        final List<String> maritalStatuses = MaritalStatus.getAllObjectValues();
 
-		LOGGER.debug("maritalStatuses : " + maritalStatuses);
+        LOGGER.debug("maritalStatuses : " + maritalStatuses);
 
-		return getSuccessResponseForSearchMaritalStatus(maritalStatuses, requestInfo);
-	}
+        return getSuccessResponseForSearchMaritalStatus(maritalStatuses, requestInfo);
+    }
 
-	/**
-	 * Populate BloodGroupResponse object & returns ResponseEntity of type
-	 * BloodGroupResponse containing ResponseInfo & List of BloodGroup
-	 * 
-	 * @param bloodGroups
-	 * @param requestInfo
-	 * @return ResponseEntity<?>
-	 */
-	private ResponseEntity<?> getSuccessResponseForSearchBloodGroup(List<Map<String, String>> bloodGroups,
-			RequestInfo requestInfo) {
-		BloodGroupResponse bloodGroupResponse = new BloodGroupResponse();
-		bloodGroupResponse.setBloodGroup(bloodGroups);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		bloodGroupResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<BloodGroupResponse>(bloodGroupResponse, HttpStatus.OK);
-	}
+    /**
+     * Maps Post Requests for _search & returns ResponseEntity of either DisciplinaryActionsResponse type or ErrorResponse type
+     *
+     * @param requestInfoWrapper
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
 
-	/**
-	 * Populate MaritalStatusResponse object & returns ResponseEntity of type
-	 * MaritalStatusResponse containing ResponseInfo & List of MaritalStatus
-	 * 
-	 * @param maritalStatuses
-	 * @param requestInfo
-	 * @return ResponseEntity<?>
-	 */
-	private ResponseEntity<?> getSuccessResponseForSearchMaritalStatus(List<String> maritalStatuses,
-			RequestInfo requestInfo) {
-		MaritalStatusResponse maritalStatusResponse = new MaritalStatusResponse();
-		maritalStatusResponse.setMaritalStatus(maritalStatuses);
-		ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
-		responseInfo.setStatus(HttpStatus.OK.toString());
-		maritalStatusResponse.setResponseInfo(responseInfo);
-		return new ResponseEntity<MaritalStatusResponse>(maritalStatusResponse, HttpStatus.OK);
-	}
+    @PostMapping("/disciplinaryactions/_search")
+    @ResponseBody
+    public ResponseEntity<?> searchDisciplinaryActions(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
+                bindingResult);
+
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        // Call service
+        final List<String> disciplinaryActions = DisciplinaryActions.getAllObjectValues();
+        LOGGER.debug("disciplinaryActions : " + disciplinaryActions);
+
+        return getSuccessResponseForDisciplinaryActions(disciplinaryActions, requestInfo);
+    }
+
+    /**
+     * Maps Post Requests for _search & returns ResponseEntity of either CourtOrderTypeResponse type or ErrorResponse type
+     *
+     * @param requestInfoWrapper
+     * @param bindingResult
+     * @return ResponseEntity<?>
+     */
+
+    @PostMapping("/courtordertype/_search")
+    @ResponseBody
+    public ResponseEntity<?> searchCourtOrderType(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+            final BindingResult bindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+
+        final ResponseEntity<?> errorResponseEntity = requestValidator.validateSearchRequest(requestInfo, null,
+                bindingResult);
+
+        if (errorResponseEntity != null)
+            return errorResponseEntity;
+
+        // Call service
+        final List<String> courtOrderType = CourtOrderType.getAllObjectValues();
+        LOGGER.debug("courtOrderType : " + courtOrderType);
+
+        return getSuccessResponseForCourtOrderType(courtOrderType, requestInfo);
+    }
+
+    /**
+     * Populate BloodGroupResponse object & returns ResponseEntity of type BloodGroupResponse containing ResponseInfo & List of
+     * BloodGroup
+     *
+     * @param bloodGroups
+     * @param requestInfo
+     * @return ResponseEntity<?>
+     */
+    private ResponseEntity<?> getSuccessResponseForSearchBloodGroup(final List<Map<String, String>> bloodGroups,
+            final RequestInfo requestInfo) {
+        final BloodGroupResponse bloodGroupResponse = new BloodGroupResponse();
+        bloodGroupResponse.setBloodGroup(bloodGroups);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        bloodGroupResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<BloodGroupResponse>(bloodGroupResponse, HttpStatus.OK);
+    }
+
+    /**
+     * Populate MaritalStatusResponse object & returns ResponseEntity of type MaritalStatusResponse containing ResponseInfo & List
+     * of MaritalStatus
+     *
+     * @param maritalStatuses
+     * @param requestInfo
+     * @return ResponseEntity<?>
+     */
+    private ResponseEntity<?> getSuccessResponseForSearchMaritalStatus(final List<String> maritalStatuses,
+            final RequestInfo requestInfo) {
+        final MaritalStatusResponse maritalStatusResponse = new MaritalStatusResponse();
+        maritalStatusResponse.setMaritalStatus(maritalStatuses);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        maritalStatusResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<MaritalStatusResponse>(maritalStatusResponse, HttpStatus.OK);
+    }
+
+    /**
+     * Populate DisciplinaryActionsResponse object & returns ResponseEntity of type DisciplinaryActionsResponse containing
+     * ResponseInfo & List of DisciplinaryActions
+     *
+     * @param disciplinaryActions
+     * @param requestInfo
+     * @return ResponseEntity<?>
+     */
+
+    private ResponseEntity<?> getSuccessResponseForDisciplinaryActions(final List<String> disciplinaryActions,
+            final RequestInfo requestInfo) {
+        final DisciplinaryActionsResponse disciplinaryActionsResponse = new DisciplinaryActionsResponse();
+        disciplinaryActionsResponse.setDisciplinaryActions(disciplinaryActions);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        disciplinaryActionsResponse.setResponseInfo(responseInfo);
+        return new ResponseEntity<DisciplinaryActionsResponse>(disciplinaryActionsResponse, HttpStatus.OK);
+    }
+
+    /**
+     * Populate CourtOrderTypeResponse object & returns ResponseEntity of type CourtOrderTypeResponse containing ResponseInfo &
+     * List of CourtOrderType
+     *
+     * @param courtOrderType
+     * @param requestInfo
+     * @return ResponseEntity<?>
+     */
+
+    private ResponseEntity<?> getSuccessResponseForCourtOrderType(final List<String> courtOrderTypes,
+            final RequestInfo requestInfo) {
+        final CourtOrderTypeResponse courtOrderRes = new CourtOrderTypeResponse();
+        courtOrderRes.setCourtOrderType(courtOrderTypes);
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        courtOrderRes.setResponseInfo(responseInfo);
+        return new ResponseEntity<CourtOrderTypeResponse>(courtOrderRes, HttpStatus.OK);
+    }
 }

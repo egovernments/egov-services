@@ -57,7 +57,8 @@ import org.egov.eis.web.contract.DisciplinaryResponse;
 import org.egov.eis.web.contract.RequestInfoWrapper;
 import org.egov.eis.web.contract.factory.ResponseInfoFactory;
 import org.egov.eis.web.errorhandler.ErrorHandler;
-import org.egov.eis.web.validator.DisciplinaryValidator;
+import org.egov.eis.web.validator.DisciplinaryValidatorForCreate;
+import org.egov.eis.web.validator.DisciplinaryValidatorForUpdate;
 import org.egov.eis.web.validator.RequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,7 +66,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,8 +83,10 @@ public class DisciplinaryController {
     private DisciplinaryService disciplinaryService;
 
     @Autowired
-    private DisciplinaryValidator disciplinaryValidator;
+    private DisciplinaryValidatorForCreate disciplinaryValidatorForCreate;
 
+    @Autowired
+    private DisciplinaryValidatorForUpdate disciplinaryValidatorForUpdate;
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
 
@@ -98,7 +100,7 @@ public class DisciplinaryController {
     public ResponseEntity<?> create(@RequestBody @Valid final DisciplinaryRequest disciplinaryRequest,
             final BindingResult errors) {
         log.debug("DisciplinaryRequest::" + disciplinaryRequest);
-        final ResponseEntity<?> errorResponseEntity = validateDisciplinaryRequest(disciplinaryRequest, errors);
+        final ResponseEntity<?> errorResponseEntity = validateDisciplinaryRequest(disciplinaryRequest, errors,false);
         if (!isEmpty(errorResponseEntity))
             return errorResponseEntity;
 
@@ -109,15 +111,12 @@ public class DisciplinaryController {
         return getSuccessResponse(disciplinarys, disciplinaryRequest.getRequestInfo());
     }
 
-    @PostMapping(value = "/{disciplinaryId}/_update")
+    @PostMapping(value = "/_update")
     @ResponseBody
-    public ResponseEntity<?> update(@RequestBody @Valid final DisciplinaryRequest disciplinaryRequest, final BindingResult errors,
-            @PathVariable final Long disciplinaryId) {
+    public ResponseEntity<?> update(@RequestBody @Valid final DisciplinaryRequest disciplinaryRequest, final BindingResult errors) {
 
         log.debug("DisciplinaryRequest::" + disciplinaryRequest);
-        disciplinaryRequest.getDisciplinary().setId(disciplinaryId);
-
-        final ResponseEntity<?> errorResponseEntity = validateDisciplinaryRequest(disciplinaryRequest, errors);
+        final ResponseEntity<?> errorResponseEntity = validateDisciplinaryRequest(disciplinaryRequest, errors,true);
         if (!isEmpty(errorResponseEntity))
             return errorResponseEntity;
 
@@ -170,12 +169,14 @@ public class DisciplinaryController {
     }
 
     private ResponseEntity<?> validateDisciplinaryRequest(final DisciplinaryRequest disciplinaryRequest,
-            final BindingResult bindingResult) {
+            final BindingResult bindingResult,Boolean isUpdate) {
         // validate input params that can be handled by annotations
         if (bindingResult.hasErrors())
             return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, disciplinaryRequest.getRequestInfo());
-
-        ValidationUtils.invokeValidator(disciplinaryValidator, disciplinaryRequest, bindingResult);
+        if(isUpdate)
+            ValidationUtils.invokeValidator(disciplinaryValidatorForUpdate, disciplinaryRequest, bindingResult);
+        else
+            ValidationUtils.invokeValidator(disciplinaryValidatorForCreate, disciplinaryRequest, bindingResult);
 
         if (bindingResult.hasErrors())
             return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, disciplinaryRequest.getRequestInfo());

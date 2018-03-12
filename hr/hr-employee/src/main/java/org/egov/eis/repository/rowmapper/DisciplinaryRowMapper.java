@@ -89,6 +89,9 @@ public class DisciplinaryRowMapper implements RowMapper<Disciplinary> {
         disciplinary.setPunishmentAwarded(rs.getString("punishmentAwarded"));
         disciplinary.setShowCauseNoticeNo(rs.getString("showCauseNoticeNo"));
         disciplinary.setTenantId(rs.getString("tenantId"));
+        disciplinary.setCourtOrderType(rs.getString("courtOrderType"));
+        disciplinary.setEnquiryOfficerDesignation(rs.getString("enquiryOfficerDesignation"));
+        disciplinary.setPresentingOfficerDesignation(rs.getString("presentingOfficerDesignation"));
 
         try {
             Date date = isEmpty(rs.getDate("memoDate")) ? null
@@ -170,6 +173,7 @@ public class DisciplinaryRowMapper implements RowMapper<Disciplinary> {
         DisciplinaryDocuments documents = new DisciplinaryDocuments();
         documents.setDisciplinaryId((Long) rs.getObject("disciplinaryId"));
         documents.setFileStoreId(rs.getString("filestoreId"));
+        documents.setDocumentType(rs.getString("documenttype"));
         documents.setId((Long) rs.getObject("documentsId"));
         if (documents.getId() == null)
             disciplinary.setDisciplinaryDocuments(new ArrayList<>());

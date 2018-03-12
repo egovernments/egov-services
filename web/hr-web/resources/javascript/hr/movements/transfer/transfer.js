@@ -749,6 +749,30 @@ class EmployeeTransfer extends React.Component {
     };
 
 
+    const districtFunc=function() {
+      if(transferType!="TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB"){
+        return(
+          <div className="col-sm-6">
+          <div className="row">
+              <div className="col-sm-6 label-text">
+                <label htmlFor="">District-ULB <span>*</span></label>
+              </div>
+              <div className="col-sm-6">
+                <div className="styled-select">
+                  <select id="transferedLocation" name="transferedLocation" value={transferedLocation}
+                    onChange={(e)=>{  handleChange(e,"transferedLocation") }}required>
+                    <option value="">Select District-ULB</option>
+                    {renderOptionForDistrict(_this.state.districtList)}
+                 </select>
+                 </div>
+              </div>
+          </div>
+        </div>
+        );
+      }
+    };
+
+
     return (
       <div>
         <form onSubmit={(e)=> {addOrUpdate(e)}}>
@@ -877,22 +901,7 @@ class EmployeeTransfer extends React.Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label htmlFor="">District-ULB <span>*</span></label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="styled-select">
-                              <select id="transferedLocation" name="transferedLocation" value={transferedLocation}
-                                onChange={(e)=>{  handleChange(e,"transferedLocation") }}required>
-                                <option value="">Select District-ULB</option>
-                                {renderOptionForDistrict(this.state.districtList)}
-                             </select>
-                             </div>
-                          </div>
-                      </div>
-                    </div>
+                {districtFunc()}
                 <div className="col-sm-6">
                     <div className="row">
                       <div className="col-sm-6 label-text">

@@ -81,7 +81,6 @@ public class Disciplinary {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date memoDate;
-    @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date memoServingDate;
@@ -101,10 +100,12 @@ public class Disciplinary {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfAppointmentOfEnquiryOfficerDate;
     private String enquiryOfficerName;
+    private String enquiryOfficerDesignation;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dateOfAppointmentOfPresentingOfficer;
     private String presentingOfficerName;
+    private String presentingOfficerDesignation;
     private String findingsOfEO;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -148,7 +149,7 @@ public class Disciplinary {
     private String tenantId;
     @NotNull
     private Long employeeId;
-    
+
     private Long createdBy;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -158,4 +159,6 @@ public class Disciplinary {
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private Date lastModifiedDate;
+
+    private String courtOrderType;
 }

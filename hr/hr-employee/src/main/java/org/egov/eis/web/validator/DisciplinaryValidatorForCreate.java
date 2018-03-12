@@ -51,7 +51,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class DisciplinaryValidator implements Validator {
+public class DisciplinaryValidatorForCreate implements Validator {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -90,6 +90,14 @@ public class DisciplinaryValidator implements Validator {
             errors.rejectValue("disciplinary.employeeId", "invalid",
                     "Disciplinary Employee With Given Id Does Not Exist In The System. Please Enter Correct EmployeeId");
             return;
+        }
+        if(disciplinary.getCourtCase()){
+            if (isEmpty(disciplinary.getCourtOrderType())) {
+                errors.rejectValue("disciplinary.courtOrderType", "invalid",
+                        "CourtOrder Type Is Not Provided. Please Select CourtOrder Type ");
+                return;
+            }
+
         }
 
     }

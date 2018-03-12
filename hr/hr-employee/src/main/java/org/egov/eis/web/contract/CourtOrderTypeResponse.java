@@ -38,7 +38,12 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -49,24 +54,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@Setter
 @ToString
-@EqualsAndHashCode
-public class DisciplinaryDocuments {
+public class CourtOrderTypeResponse {
 
-    @JsonProperty("id")
-    private Long id;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @JsonProperty("documentType")
-    private String documentType;
-
-    @JsonProperty("disciplinaryId")
-    private Long disciplinaryId;
-
-    @JsonProperty("fileStoreId")
-    private String fileStoreId;
+    @JsonProperty("CourtOrderType")
+    private List<String> courtOrderType = new ArrayList<>();
 
 }

@@ -38,30 +38,34 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.web.contract;
 
-import org.egov.eis.model.enums.DisciplinaryApplication;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class DocumentType {
+@EqualsAndHashCode
+@Getter
+@NoArgsConstructor
+@Setter
+@ToString
+public class DisciplinaryActionsResponse {
 
-    @JsonProperty("id")
-    private Long id = null;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-    @JsonProperty("name")
-    private String name = null;
+    @JsonProperty("DisciplinaryActions")
+    private List<String> disciplinaryActions = new ArrayList<>();
 
-    @JsonProperty("application")
-    private DisciplinaryApplication application = null;
-
-    @JsonProperty("tenantId")
-    private String tenantId;
 }

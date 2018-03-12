@@ -57,7 +57,7 @@ public class DisciplinaryQueryBuilder {
     private ApplicationProperties applicationProperties;
 
     public String BASE_QUERY = "SELECT *,documents.id as documentsId,documents.disciplinaryId as disciplinaryId,documents.filestoreId as filestoreId"
-            + " FROM  egeis_disciplinary as disciplinary LEFT OUTER JOIN egeis_disciplinaryDocuments  documents "
+            + ",documents.documenttype as documenttype FROM  egeis_disciplinary as disciplinary LEFT OUTER JOIN egeis_disciplinaryDocuments  documents "
             + "ON disciplinary.id = documents.disciplinaryId ";
 
     @SuppressWarnings("rawtypes")
@@ -164,7 +164,7 @@ public class DisciplinaryQueryBuilder {
 
                 + ",proceedingsDate,proceedingsServingDate,courtCase,courtOrderNo,courtOrderDate,gistOfDirectionIssuedByCourt,"
 
-                + "createdBy,createdDate,lastModifiedBy,lastModifiedDate,tenantId) values "
+                + "createdBy,createdDate,lastModifiedBy,lastModifiedDate,tenantId,courtOrderType,presentingOfficerDesignation,enquiryOfficerDesignation) values "
 
                 + "(nextval('seq_egeis_disciplinary'),?,?,?,?,?,?,?,"
                 + "?,?,?,?,?,"
@@ -173,7 +173,7 @@ public class DisciplinaryQueryBuilder {
                 + "?,?,?,?,"
                 + "?,?,?,?,"
                 + "?,?,?,?,?,?,"
-                + "?,?,?,?,?,?,?,?,?)";
+                + "?,?,?,?,?,?,?,?,?,?,?,?)";
     }
 
     public static String updateDisciplinaryQuery() {
@@ -185,7 +185,12 @@ public class DisciplinaryQueryBuilder {
                 + "proposedPunishmentByDA=?,showCauseNoticeNo=?,showCauseNoticeDate=?,showCauseNoticeServingDate=?,"
                 + "explanationToShowCauseNotice=?,explanationToShowCauseNoticeAccepted=?,punishmentAwarded=?,proceedingsNumber=?,"
                 + "proceedingsDate=?,proceedingsServingDate=?,courtCase=?,courtOrderNo=?,courtOrderDate=?,gistOfDirectionIssuedByCourt=?,"
-                + " lastModifiedBy=?,lastModifiedDate=? where id = ? and tenantid = ? ";
+                + " lastModifiedBy=?,lastModifiedDate=?,courtOrderType=?,presentingOfficerDesignation=?,enquiryOfficerDesignation=? where id = ? and tenantid = ? ";
     }
+    
+    public static final String DISCIPLINARY_EXISTENCE_CHECK_QUERY = "SELECT exists(SELECT id FROM egeis_disciplinary"
+            + " WHERE id = ? AND tenantId = ?)";
+    
+  
 
 }

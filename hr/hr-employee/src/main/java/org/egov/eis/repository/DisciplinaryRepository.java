@@ -84,9 +84,8 @@ public class DisciplinaryRepository {
                     + "(nextval('seq_egeis_disciplinaryDocuments'),?,?,?,?);";
             log.info("the insert query for disciplinary docs : " + sql);
             final List<Object[]> documentBatchArgs = new ArrayList<>();
-
             for (final DisciplinaryDocuments documents : disciplinaryDocuments) {
-                final Object[] documentRecord = { disciplinary.getId(), documents.getDocumentType().getApplication(),
+                final Object[] documentRecord = { disciplinary.getId(), documents.getDocumentType(),
                         documents.getFileStoreId(),
                         disciplinary.getTenantId() };
                 documentBatchArgs.add(documentRecord);
@@ -121,7 +120,9 @@ public class DisciplinaryRepository {
                 disciplinary.getCourtCase(), disciplinary.getCourtOrderNo(), disciplinary.getCourtOrderDate(),
                 disciplinary.getGistOfDirectionIssuedByCourt(),
                 disciplinaryRequest.getRequestInfo().getUserInfo().getId(), new Date(),
-                disciplinaryRequest.getRequestInfo().getUserInfo().getId(), new Date(), disciplinary.getTenantId() };
+                disciplinaryRequest.getRequestInfo().getUserInfo().getId(), new Date(), disciplinary.getTenantId(),
+                disciplinary.getCourtOrderType(),
+                disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation() };
         jdbcTemplate.update(disciplinaryInsert, obj);
         return disciplinaryRequest;
     }
@@ -151,7 +152,9 @@ public class DisciplinaryRepository {
                 disciplinary.getProceedingsServingDate(),
                 disciplinary.getCourtCase(), disciplinary.getCourtOrderNo(), disciplinary.getCourtOrderDate(),
                 disciplinary.getGistOfDirectionIssuedByCourt(),
-                disciplinary.getLastModifiedBy(), new Date(), disciplinary.getId(), disciplinary.getTenantId() };
+                disciplinary.getLastModifiedBy(), new Date(), disciplinary.getCourtOrderType(),
+                disciplinary.getPresentingOfficerDesignation(), disciplinary.getEnquiryOfficerDesignation(),
+                disciplinary.getId(), disciplinary.getTenantId() };
         jdbcTemplate.update(disciplinaryUpdate, obj);
         return disciplinaryRequest;
 
@@ -163,6 +166,12 @@ public class DisciplinaryRepository {
         final List<Disciplinary> disciplinarys = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 disciplinaryRowMapper);
         return disciplinarys;
+    }
+
+    public boolean checkIfdIDisciplinaryExists(final Long id, final String tenantId) {
+        return jdbcTemplate.queryForObject(DisciplinaryQueryBuilder.DISCIPLINARY_EXISTENCE_CHECK_QUERY,
+                new Object[] { id, tenantId },
+                Boolean.class);
     }
 
 }

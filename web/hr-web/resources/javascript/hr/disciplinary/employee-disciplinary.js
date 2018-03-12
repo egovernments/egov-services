@@ -2,12 +2,57 @@ class CancellationAgreement extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            disciplinarySet: {
-                memoSet: {},
-                enquirySet: {},
-                showcauseSet: {},
-                courtorderSet: {}
-
+            "disciplinarySet": {
+                "employeeId": "",
+                "gistCase": "",
+                "disciplinaryAuthority": "",
+                "orderNo": "",
+                "orderDate": "",
+                "memoNo": "",
+                "memoDate": "",
+                "memoServingDate": "",
+                "dateOfReceiptMemoDate": "",
+                "explanationAccepted": false,
+                "chargeMemoNo": "",
+                "chargeMemoDate": "",
+                "dateOfReceiptToChargeMemoDate": "",
+                "accepted": false,
+                "dateOfAppointmentOfEnquiryOfficerDate": "",
+                "enquiryOfficerName": "",
+                "enquiryOfficerDesignation": "",
+                "dateOfAppointmentOfPresentingOfficer": "",
+                "presentingOfficerName": "",
+                "presentingOfficerDesignation": "",
+                "findingsOfEO": "",
+                "enquiryReportSubmittedDate": "",
+                "dateOfCommunicationOfER": "",
+                "dateOfSubmissionOfExplanationByCO": "",
+                "acceptanceOfExplanation": false,
+                "proposedPunishmentByDA": "",
+                "showCauseNoticeNo": "",
+                "showCauseNoticeDate": "",
+                "showCauseNoticeServingDate": "",
+                "explanationToShowCauseNotice": "",
+                "explanationToShowCauseNoticeAccepted": false,
+                "punishmentAwarded": "",
+                "proceedingsNumber": "",
+                "proceedingsDate": "",
+                "proceedingsServingDate": "",
+                "courtCase": false,
+                "courtOrderType": "",
+                "courtOrderNo": "",
+                "courtOrderDate": "",
+                "gistOfDirectionIssuedByCourt": "",
+                "tenantId": tenantId,
+                "memoDocuments": "",
+                "enquiryDocuments": "",
+                "showCauseDocuments": "",
+                "courtDocuments": ""
+            },
+            employee: {
+                code: "",
+                name: "",
+                designation: ""
             },
             memo: false,
             enquiry: false,
@@ -31,11 +76,46 @@ class CancellationAgreement extends React.Component {
     }
 
     close() {
-        // widow.close();
         open(location, '_self').close();
     }
 
-    addOrUpdate(e) { }
+    addOrUpdate(e) {
+
+        e.preventDefault();
+
+        var _this = this;
+        var disciplinary = Object.assign({}, _this.state.disciplinarySet);
+
+        var body = {
+            "RequestInfo": requestInfo,
+            "Disciplinary": disciplinary
+          };
+  
+          $.ajax({
+            url: baseUrl + "/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(body),
+            contentType: 'application/json',
+            headers: {
+              'auth-token': authToken
+            },
+            success: function(res) {
+                showSuccess("Created successfully Created");
+            },
+            error: function(err) {
+                if (err["responseJSON"].message)
+                  showError(err["responseJSON"].message);
+                // else if (err["responseJSON"].Movement[0]) {
+                //   showError(err["responseJSON"].Movement[0].errorMsg)
+                // }
+                 else {
+                  showError("Something went wrong. Please contact Administrator");
+                }
+            }
+        });
+
+     }
 
     handleSectionChange(e, name) {
 
@@ -48,7 +128,7 @@ class CancellationAgreement extends React.Component {
                 });
                 $('#enquiry, #showcause, #courtorder').prop("disabled", true);
                 $('#enquiry, #showcause, #courtorder').prop("checked", false);
-                
+
             } else {
                 _this.setState({
                     ..._this.state, memo: true
@@ -89,8 +169,8 @@ class CancellationAgreement extends React.Component {
         } else if (name == "courtorder") {
 
             _this.setState({
-                ..._this.state, 
-                courtorder: _this.state.courtorder ? false :true
+                ..._this.state,
+                courtorder: _this.state.courtorder ? false : true
             });
 
         }
@@ -140,8 +220,8 @@ class CancellationAgreement extends React.Component {
 
             _this.setState({
                 ..._this.state,
-                agreement: {
-                    ..._this.state.agreement,
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
                     [name]: e.target.value
                 }
             })
@@ -152,36 +232,13 @@ class CancellationAgreement extends React.Component {
 
         var _this = this;
 
-        switch (name) {
-            case "department":
-                _this.state.agreement.workflowDetails.assignee = "";
-                if (this.state.agreement.workflowDetails.designation) {
-                    var _designation = this.state.agreement.workflowDetails.designation;
-                    if (e.target.value != "" && e.target.value != null)
-                        _this.getUsersFun(e.target.value, _designation);
-                }
-                break;
-            case "designation":
-                _this.state.agreement.workflowDetails.assignee = "";
-                if (this.state.agreement.workflowDetails.department) {
-                    var _department = this.state.agreement.workflowDetails.department;
-                    if (e.target.value != "" && e.target.value != null)
-                        _this.getUsersFun(_department, e.target.value);
-                }
-                break;
-
-        }
-
-
         _this.setState({
             ..._this.state,
-            agreement: {
-                ..._this.state.agreement,
-                [pName]: {
-                    ..._this.state.agreement[pName],
-                    [name]: e.target.value
-                }
+            [pName]: {
+                ..._this.state[pName],
+                [name]: e.target.value
             }
+
         })
 
     }
@@ -254,65 +311,349 @@ class CancellationAgreement extends React.Component {
             }
         }
         $('#hp-citizen-title').text("Employee Disciplinary");
-        var _this = this;
+        let _this = this;
+        let id = getUrlVars()["id"];
 
+        getCommonMasterById("hr-employee", "employees", id, function(err, res) {
+            if (res && res.Employee) {
+              var obj = res.Employee[0];
+              var ind = 0;
+              if (obj.length > 0) {
+                obj.map((item, index) => {
+                  for (var i = 0; i < item.assignments.length; i++) {
+                    if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                      ind = i;
+                      break;
+                    }
+                  }
+                });
+              }
+              _this.setState({
+                ..._this.state,
+                employee: {
+                  name: obj.name,
+                  code: obj.code,
+                  designation: obj.assignments[ind].designation,
+                },
+                disciplinarySet: {
+                  ..._this.state.disciplinarySet,
+                  employeeId: obj.id                
+                }
+    
+              })
+            }
+          });
 
     }
 
-    componentDidMount() {
+    componentDidUpdate() {
 
         var _this = this;
-        console.log(_this.state.memo, " ", _this.state.enquiry, " ", _this.state.showcause, " ", _this.state.courtorder);
-        if (_this.state.memo && _this.state.enquiry && _this.state.showcause) {
-            $('#memo, #enquiry, #showcause,  #courtorder').prop("disabled", true);
-        } else if (_this.state.memo && _this.state.enquiry) {
-            $('#memo, #enquiry, #showcause').prop("disabled", false);
-            $('#courtorder').prop("disabled", true);
-        } else if (_this.state.memo) {
-            $('#memo, #enquiry').prop("disabled", false);
-            $('#courtorder, #showcause').prop("disabled", true);
-        } else {
-            $('#memo').prop("disabled", false);
-            $('#courtorder, #showcause, #enquiry').prop("disabled", true);
-        }
 
-        var ad = this.state.agreement.agreementDate;
 
         $('#orderDate').datepicker({
             format: 'dd/mm/yyyy',
-            startDate: new Date(ad.split("/")[2], ad.split("/")[1] - 1, ad.split("/")[0]),
+            //startDate: new Date(),
             autoclose: true,
-            defaultDate: ""
+
         });
 
         $('#orderDate').on('changeDate', function (e) {
             _this.setState({
-                agreement: {
-                    ..._this.state.agreement,
-                    cancellation: {
-                        ..._this.state.agreement.cancellation,
-                        "orderDate": $("#orderDate").val()
-                    }
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "orderDate": $("#orderDate").val()
                 }
             });
         });
 
 
-        $('#terminationDate').datepicker({
+
+        $('#memoDate').datepicker({
             format: 'dd/mm/yyyy',
-            startDate: new Date(),
+            //startDate: new Date(),
             autoclose: true,
-            defaultDate: ""
+
         });
 
-        $('#terminationDate').on('changeDate', function (e) {
+        $('#memoDate').on('changeDate', function (e) {
             _this.setState({
-                agreement: {
-                    ..._this.state.agreement,
-                    cancellation: {
-                        ..._this.state.agreement.cancellation,
-                        "terminationDate": $("#terminationDate").val()
-                    }
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "memoDate": $("#memoDate").val()
+                }
+
+            });
+        });
+
+
+
+        $('#memoServingDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#memoServingDate').on('changeDate', function (e) {
+            _this.setState({
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "memoServingDate": $("#memoServingDate").val()
+                }
+
+            });
+        });
+
+
+
+        $('#dateOfReceiptMemoDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#dateOfReceiptMemoDate').on('changeDate', function (e) {
+            _this.setState({
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "dateOfReceiptMemoDate": $("#dateOfReceiptMemoDate").val()
+                }
+            });
+        });
+
+
+
+        $('#chargeMemoDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#chargeMemoDate').on('changeDate', function (e) {
+            _this.setState({
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "chargeMemoDate": $("#chargeMemoDate").val()
+                }
+            });
+        });
+
+
+
+        $('#dateOfReceiptToChargeMemoDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#dateOfReceiptToChargeMemoDate').on('changeDate', function (e) {
+            _this.setState({
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "dateOfReceiptToChargeMemoDate": $("#dateOfReceiptToChargeMemoDate").val()
+                }
+            });
+        });
+
+
+
+        $('#dateOfAppointmentOfEnquiryOfficerDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#dateOfAppointmentOfEnquiryOfficerDate').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "dateOfAppointmentOfEnquiryOfficerDate": $("#dateOfAppointmentOfEnquiryOfficerDate").val()
+
+                }
+            });
+        });
+
+
+
+        $('#dateOfAppointmentOfPresentingOfficer').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#dateOfAppointmentOfPresentingOfficer').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "dateOfAppointmentOfPresentingOfficer": $("#dateOfAppointmentOfPresentingOfficer").val()
+
+                }
+            });
+        });
+
+
+
+        $('#enquiryReportSubmittedDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#enquiryReportSubmittedDate').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "enquiryReportSubmittedDate": $("#enquiryReportSubmittedDate").val()
+
+                }
+            });
+        });
+
+
+
+        $('#dateOfCommunicationOfER').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#dateOfCommunicationOfER').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "dateOfCommunicationOfER": $("#dateOfCommunicationOfER").val()
+
+                }
+            });
+        });
+
+
+
+        $('#dateOfSubmissionOfExplanationByCO').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#dateOfSubmissionOfExplanationByCO').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "dateOfSubmissionOfExplanationByCO": $("#dateOfSubmissionOfExplanationByCO").val()
+
+                }
+            });
+        });
+
+
+
+        $('#showCauseNoticeDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#showCauseNoticeDate').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "showCauseNoticeDate": $("#showCauseNoticeDate").val()
+
+                }
+            });
+        });
+
+
+
+        $('#showCauseNoticeServingDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#showCauseNoticeServingDate').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "showCauseNoticeServingDate": $("#showCauseNoticeServingDate").val()
+
+                }
+            });
+        });
+
+
+
+        $('#proceedingsDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#proceedingsDate').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "proceedingsDate": $("#proceedingsDate").val()
+
+                }
+            });
+        });
+
+
+        $('#proceedingsServingDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#proceedingsServingDate').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "proceedingsServingDate": $("#proceedingsServingDate").val()
+                }
+
+            });
+        });
+
+
+
+        $('#courtOrderDate').datepicker({
+            format: 'dd/mm/yyyy',
+            //startDate: new Date(),
+            autoclose: true,
+
+        });
+
+        $('#courtOrderDate').on('changeDate', function (e) {
+            _this.setState({
+
+                disciplinarySet: {
+                    ..._this.state.disciplinarySet,
+                    "courtOrderDate": $("#courtOrderDate").val()
+
                 }
             });
         });
@@ -323,8 +664,53 @@ class CancellationAgreement extends React.Component {
     render() {
         var _this = this;
         let { handleChange, handleSectionChange, handleChangeTwoLevel, addOrUpdate } = this;
-        let { disciplinarySet, memo, enquiry, showcause, courtorder } = this.state;
-        let { memoSet } = this.state.disciplinarySet;
+        let { disciplinarySet, memo, enquiry, showcause, courtorder, employee } = this.state;
+        let {
+            gistCase,
+            disciplinaryAuthority,
+            orderNo,
+            orderDate,
+            memoNo,
+            memoDate,
+            memoServingDate,
+            dateOfReceiptMemoDate,
+            explanationAccepted,
+            chargeMemoNo,
+            chargeMemoDate,
+            dateOfReceiptToChargeMemoDate,
+            accepted,
+            dateOfAppointmentOfEnquiryOfficerDate,
+            enquiryOfficerName,
+            enquiryOfficerDesignation,
+            dateOfAppointmentOfPresentingOfficer,
+            presentingOfficerName,
+            presentingOfficerDesignation,
+            findingsOfEO,
+            enquiryReportSubmittedDate,
+            dateOfCommunicationOfER,
+            dateOfSubmissionOfExplanationByCO,
+            acceptanceOfExplanation,
+            proposedPunishmentByDA,
+            showCauseNoticeNo,
+            showCauseNoticeDate,
+            showCauseNoticeServingDate,
+            explanationToShowCauseNotice,
+            explanationToShowCauseNoticeAccepted,
+            punishmentAwarded,
+            proceedingsNumber,
+            proceedingsDate,
+            proceedingsServingDate,
+            courtCase,
+            courtOrderType,
+            courtOrderNo,
+            courtOrderDate,
+            gistOfDirectionIssuedByCourt,
+            memoDocuments,
+            enquiryDocuments,
+            showCauseDocuments,
+            courtDocuments
+
+        } = this.state.disciplinarySet;
 
         const renderOption = function (data) {
             if (data) {
@@ -419,48 +805,22 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="allotteeName"> Code </label>
+                                            <label htmlFor="code"> Code </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="code" id="code" value={employee.code} maxLength="15"
+                                                onChange={(e) => { handleChangeTwoLevel(e, "employee", "code") }} required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="mobileNumber">Name </label>
+                                            <label htmlFor="Name">Name </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="aadhaarNumber">Designation </label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="panNo">Gist of the Case</label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
+                                            <input type="text" name="name" id="name" value={employee.name} maxLength="15"
+                                                onChange={(e) => { handleChangeTwoLevel(e, "employee", "name") }} required />
                                         </div>
                                     </div>
                                 </div>
@@ -469,11 +829,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="emailId">Disciplinary Authority</label>
+                                            <label htmlFor="designation">Designation </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="designation" id="designation" value={employee.designation} maxLength="15"
+                                                onChange={(e) => { handleChangeTwoLevel(e, "employee", "designation") }} required />
 
                                         </div>
                                     </div>
@@ -481,11 +841,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="address">Order No and Date of Suspension (If Any)</label>
+                                            <label htmlFor="gistCase">Gist of the Case</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="gistCase" id="gistCase" value={gistCase} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "gistCase") }} required />
 
                                         </div>
                                     </div>
@@ -495,11 +855,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="allotteeName">Memo No and Date</label>
+                                            <label htmlFor="disciplinaryAuthority">Disciplinary Authority</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="disciplinaryAuthority" id="disciplinaryAuthority" value={disciplinaryAuthority} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "disciplinaryAuthority") }} required />
 
                                         </div>
                                     </div>
@@ -507,37 +867,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="mobileNumber">Memo serving Date</label>
+                                            <label htmlFor="orderNo">Order No</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="aadhaarNumber">Date of Receipt of Explanation to memo</label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="panNo">Explanation Accepted Y/N</label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="orderNo" id="orderNo" value={orderNo} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "orderNo") }} required />
 
                                         </div>
                                     </div>
@@ -547,11 +881,10 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="emailId">Charge Memo No and Date</label>
+                                            <label htmlFor="orderDate">Order Date of Suspension</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="orderDate" id="orderDate" value={orderDate} required />
 
                                         </div>
                                     </div>
@@ -559,11 +892,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="address">Date of Receipt of written statement to charge memo</label>
+                                            <label htmlFor="memoNo">Memo No</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="memoNo" id="memoNo" value={memoNo} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "memoNo") }} required />
 
                                         </div>
                                     </div>
@@ -573,11 +906,34 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="emailId">Accepted Y/N</label>
+                                            <label htmlFor="memoDate">Memo Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="memoDate" id="memoDate" value={memoDate} required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="memoServingDate">Memo serving Date</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="memoServingDate" id="memoServingDate" value={memoServingDate} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="dateOfReceiptMemoDate">Date of Receipt of Explanation to memo</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="dateOfReceiptMemoDate" id="dateOfReceiptMemoDate" value={dateOfReceiptMemoDate}
+                                                 required />
 
                                         </div>
                                     </div>
@@ -585,11 +941,77 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="address">Attachments</label>
+                                            <label htmlFor="explanationAccepted">Explanation Accepted Y/N</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="checkbox" name="explanationAccepted" id="explanationAccepted" value={""} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "explanationAccepted") }} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="chargeMemoNo">Charge Memo No</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="chargeMemoNo" id="chargeMemoNo" value={chargeMemoNo} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "chargeMemoNo") }} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="chargeMemoDate">Charge Memo Date</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="chargeMemoDate" id="chargeMemoDate" value={chargeMemoDate} maxLength="15"
+                                                 required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="dateOfReceiptToChargeMemoDate">Date of Receipt of written statement to charge memo</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="dateOfReceiptToChargeMemoDate" id="dateOfReceiptToChargeMemoDate" value={dateOfReceiptToChargeMemoDate} maxLength="15"
+                                                 required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="accepted">Accepted Y/N</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="checkbox" name="accepted" id="accepted" value={accepted} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "accepted") }} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="memoDocuments">Attachments</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="memoDocuments" id="memoDocuments" value={memoDocuments} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "memoDocuments") }} required />
 
                                         </div>
                                     </div>
@@ -611,48 +1033,22 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="allotteeName"> Date of Appointment of Enquiry officer </label>
+                                            <label htmlFor="dateOfAppointmentOfEnquiryOfficerDate"> Date of Appointment of Enquiry officer </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="dateOfAppointmentOfEnquiryOfficerDate" id="dateOfAppointmentOfEnquiryOfficerDate" value={dateOfAppointmentOfEnquiryOfficerDate} maxLength="15"
+                                                 required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="mobileNumber">Enquiry officer Name & Designation </label>
+                                            <label htmlFor="enquiryOfficerName">Enquiry officer Name </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="aadhaarNumber">Date of Appointment of Presenting Officer </label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="panNo">Presenting Officer Name & Designation</label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
+                                            <input type="text" name="enquiryOfficerName" id="enquiryOfficerName" value={enquiryOfficerName} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "enquiryOfficerName") }} required />
                                         </div>
                                     </div>
                                 </div>
@@ -661,23 +1057,22 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="emailId">Findings of EO</label>
+                                            <label htmlFor="enquiryOfficerDesignation">Enquiry officer Designation </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
+                                            <input type="text" name="enquiryOfficerDesignation" id="enquiryOfficerDesignation" value={enquiryOfficerDesignation} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "enquiryOfficerDesignation") }} required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="address">Enquiry Report submitted Date</label>
+                                            <label htmlFor="dateOfAppointmentOfPresentingOfficer">Date of Appointment of Presenting Officer </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="dateOfAppointmentOfPresentingOfficer" id="dateOfAppointmentOfPresentingOfficer" value={dateOfAppointmentOfPresentingOfficer} maxLength="15"
+                                                 required />
 
                                         </div>
                                     </div>
@@ -687,11 +1082,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="allotteeName">Date of Communication of ER to delinquent officer</label>
+                                            <label htmlFor="presentingOfficerName">Presenting Officer Name </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="presentingOfficerName" id="presentingOfficerName" value={presentingOfficerName} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "presentingOfficerName") }} required />
 
                                         </div>
                                     </div>
@@ -699,11 +1094,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="mobileNumber">Date of submission of explanation by CO</label>
+                                            <label htmlFor="presentingOfficerDesignation">Presenting Officer Designation</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="presentingOfficerDesignation" id="presentingOfficerDesignation" value={presentingOfficerDesignation} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "presentingOfficerDesignation") }} required />
 
                                         </div>
                                     </div>
@@ -713,11 +1108,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="aadhaarNumber">Acceptance of explanation Y/N</label>
+                                            <label htmlFor="findingsOfEO">Findings of EO</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="findingsOfEO" id="findingsOfEO" value={findingsOfEO} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "findingsOfEO") }} required />
 
                                         </div>
                                     </div>
@@ -725,11 +1120,63 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="panNo">Attachments</label>
+                                            <label htmlFor="enquiryReportSubmittedDate">Enquiry Report submitted Date</label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="enquiryReportSubmittedDate" id="enquiryReportSubmittedDate" value={enquiryReportSubmittedDate} maxLength="15"
+                                                 required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="dateOfCommunicationOfER">Date of Communication of ER to delinquent officer</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="dateOfCommunicationOfER" id="dateOfCommunicationOfER" value={dateOfCommunicationOfER} maxLength="15"
+                                                 required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="dateOfSubmissionOfExplanationByCO">Date of submission of explanation by CO</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="dateOfSubmissionOfExplanationByCO" id="dateOfSubmissionOfExplanationByCO" value={dateOfSubmissionOfExplanationByCO} maxLength="15"
+                                                 required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="acceptanceOfExplanation">Acceptance of explanation Y/N</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="checkbox" name="acceptanceOfExplanation" id="acceptanceOfExplanation" value={acceptanceOfExplanation} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "acceptanceOfExplanation") }} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="enquiryDocuments">Attachments</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="enquiryDocuments" id="enquiryDocuments" value={enquiryDocuments} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "enquiryDocuments") }} required />
 
                                         </div>
                                     </div>
@@ -752,48 +1199,22 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="allotteeName">Proposed Punishment by DA </label>
+                                            <label htmlFor="proposedPunishmentByDA">Proposed Punishment by DA </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="proposedPunishmentByDA" id="proposedPunishmentByDA" value={proposedPunishmentByDA} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "proposedPunishmentByDA") }} required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="mobileNumber">Show cause notice No and Date </label>
+                                            <label htmlFor="showCauseNoticeNo">Show cause notice No </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="aadhaarNumber">Show cause Notice serving Date </label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-6">
-                                    <div className="row">
-                                        <div className="col-sm-6 label-text">
-                                            <label htmlFor="panNo">Explanation to Show cause notice </label>
-                                        </div>
-                                        <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
+                                            <input type="text" name="showCauseNoticeNo" id="showCauseNoticeNo" value={showCauseNoticeNo} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "showCauseNoticeNo") }} required />
                                         </div>
                                     </div>
                                 </div>
@@ -802,37 +1223,37 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="emailId">Explanation to Show cause notice Accepted Y/N </label>
+                                            <label htmlFor="showCauseNoticeDate">Show cause notice Date </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
-
+                                            <input type="text" name="showCauseNoticeDate" id="showCauseNoticeDate" value={showCauseNoticeDate} maxLength="15"
+                                                 required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="address">Punishment Awarded </label>
+                                            <label htmlFor="showCauseNoticeServingDate">Show cause Notice serving Date </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="showCauseNoticeServingDate" id="showCauseNoticeServingDate" value={showCauseNoticeServingDate} maxLength="15"
+                                                required />
 
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <div className="row">
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="allotteeName">Proceedings Number and Date </label>
+                                            <label htmlFor="explanationToShowCauseNotice">Explanation to Show cause notice </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="explanationToShowCauseNotice" id="explanationToShowCauseNotice" value={explanationToShowCauseNotice} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "explanationToShowCauseNotice") }} required />
 
                                         </div>
                                     </div>
@@ -840,11 +1261,11 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="mobileNumber">Proceedings Serving Date </label>
+                                            <label htmlFor="explanationToShowCauseNoticeAccepted">Explanation to Show cause notice Accepted Y/N </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="checkbox" name="explanationToShowCauseNoticeAccepted" id="explanationToShowCauseNoticeAccepted" value={explanationToShowCauseNoticeAccepted} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "explanationToShowCauseNoticeAccepted") }} required />
 
                                         </div>
                                     </div>
@@ -854,11 +1275,63 @@ class CancellationAgreement extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="row">
                                         <div className="col-sm-6 label-text">
-                                            <label htmlFor="panNo">Attachments</label>
+                                            <label htmlFor="punishmentAwarded">Punishment Awarded </label>
                                         </div>
                                         <div className="col-sm-6 label-view-text">
-                                            <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                                onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                            <input type="text" name="punishmentAwarded" id="punishmentAwarded" value={punishmentAwarded} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "punishmentAwarded") }} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="proceedingsNumber">Proceedings Number </label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="proceedingsNumber" id="proceedingsNumber" value={proceedingsNumber} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "proceedingsNumber") }} required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="proceedingsDate">Proceedings Date </label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="proceedingsDate" id="proceedingsDate" value={proceedingsDate} maxLength="15"
+                                                 required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="proceedingsServingDate">Proceedings Serving Date </label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="proceedingsServingDate" id="proceedingsServingDate" value={proceedingsServingDate} maxLength="15"
+                                                required />
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-6">
+                                    <div className="row">
+                                        <div className="col-sm-6 label-text">
+                                            <label htmlFor="showCauseDocuments">Attachments</label>
+                                        </div>
+                                        <div className="col-sm-6 label-view-text">
+                                            <input type="text" name="showCauseDocuments" id="showCauseDocuments" value={showCauseDocuments} maxLength="15"
+                                                onChange={(e) => { handleChange(e, "showCauseDocuments") }} required />
 
                                         </div>
                                     </div>
@@ -883,11 +1356,23 @@ class CancellationAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="emailId">Court case filed if any Y/N </label>
+                                        <label htmlFor="courtCase">Court case filed if any Y/N </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                            onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                        <input type="checkbox" name="courtCase" id="courtCase" value={courtCase} maxLength="15"
+                                            onChange={(e) => { handleChange(e, "courtCase") }} required />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div className="row">
+                                    <div className="col-sm-6 label-text">
+                                        <label htmlFor="courtOrderType">Order Type </label>
+                                    </div>
+                                    <div className="col-sm-6 label-view-text">
+                                        <input type="select" name="courtOrderType" id="courtOrderType" value={courtOrderType} maxLength="15"
+                                            onChange={(e) => { handleChange(e, "courtOrderType") }} required />
 
                                     </div>
                                 </div>
@@ -897,11 +1382,11 @@ class CancellationAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="allotteeName">Order Type </label>
+                                        <label htmlFor="courtOrderNo">Order No </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                            onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                        <input type="text" name="courtOrderNo" id="courtOrderNo" value={courtOrderNo} maxLength="15"
+                                            onChange={(e) => { handleChange(e, "courtOrderNo") }} required />
 
                                     </div>
                                 </div>
@@ -909,11 +1394,11 @@ class CancellationAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="mobileNumber">Order No & Date </label>
+                                        <label htmlFor="courtOrderDate">Order Date </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                            onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                        <input type="text" name="courtOrderDate" id="courtOrderDate" value={courtOrderDate} maxLength="15"
+                                             required />
 
                                     </div>
                                 </div>
@@ -923,11 +1408,11 @@ class CancellationAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="allotteeName">Gist of Direction Issued by Court </label>
+                                        <label htmlFor="gistOfDirectionIssuedByCourt">Gist of Direction Issued by Court </label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                            onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                        <input type="text" name="gistOfDirectionIssuedByCourt" id="gistOfDirectionIssuedByCourt" value={gistOfDirectionIssuedByCourt} maxLength="15"
+                                            onChange={(e) => { handleChange(e, "gistOfDirectionIssuedByCourt") }} required />
 
                                     </div>
                                 </div>
@@ -935,11 +1420,11 @@ class CancellationAgreement extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="panNo">Attachments</label>
+                                        <label htmlFor="courtDocuments">Attachments</label>
                                     </div>
                                     <div className="col-sm-6 label-view-text">
-                                        <input type="text" name="orderNo" id="orderNo" value={""} maxLength="15"
-                                            onChange={(e) => { handleChange(e, "cancellation") }} required />
+                                        <input type="text" name="courtDocuments" id="courtDocuments" value={courtDocuments} maxLength="15"
+                                            onChange={(e) => { handleChange(e, "courtDocuments") }} required />
 
                                     </div>
                                 </div>

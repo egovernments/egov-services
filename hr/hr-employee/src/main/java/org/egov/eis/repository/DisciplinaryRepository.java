@@ -81,7 +81,7 @@ public class DisciplinaryRepository {
         final List<DisciplinaryDocuments> disciplinaryDocuments = disciplinary.getDisciplinaryDocuments();
         if (disciplinaryDocuments != null) {
             final String sql = "INSERT INTO egeis_disciplinaryDocuments (id,disciplinaryId,documentType,filestoreId,tenantid) values "
-                    + "(nextval('seq_egeis_disciplinaryDocuments'),?,?,?,?);";
+                    + "(nextval('seq_egeis_disciplinaryDocument'),?,?,?,?);";
             log.info("the insert query for disciplinary docs : " + sql);
             final List<Object[]> documentBatchArgs = new ArrayList<>();
             for (final DisciplinaryDocuments documents : disciplinaryDocuments) {
@@ -99,7 +99,7 @@ public class DisciplinaryRepository {
             }
         }
 
-        final Object[] obj = new Object[] { disciplinary.getEmployeeId(), disciplinary.getGistCase(),
+        final Object[] obj = new Object[] { disciplinary.getId(), disciplinary.getEmployeeId(), disciplinary.getGistCase(),
                 disciplinary.getDisciplinaryAuthority(), disciplinary.getOrderNo(), disciplinary.getOrderDate(),
                 disciplinary.getMemoNo(), disciplinary.getMemoDate(),
                 disciplinary.getMemoServingDate(), disciplinary.getDateOfReceiptMemoDate(), disciplinary.getExplanationAccepted(),
@@ -174,4 +174,15 @@ public class DisciplinaryRepository {
                 Boolean.class);
     }
 
+    public Long generateSequences() {
+
+        Integer result = null;
+        try {
+            result = jdbcTemplate.queryForObject(DisciplinaryQueryBuilder.GENERATE_SEQUENCES_QUERY, Integer.class);
+            log.debug("result:" + result);
+            return result.longValue();
+        } catch (final Exception ex) {
+            throw new RuntimeException("Next id is not generated.");
+        }
+    }
 }

@@ -752,7 +752,7 @@ class UpdateMovement extends React.Component {
     const renderOptionForDistrict = function (list) {
       if (list) {
         return list.map((item, ind) => {
-          return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+          return (<option key={ind} value={typeof item == "object" ? item.code : item}>
             {typeof item == "object" ?  item.city.districtName +" - "+ item.city.name : item}
           </option>)
         })

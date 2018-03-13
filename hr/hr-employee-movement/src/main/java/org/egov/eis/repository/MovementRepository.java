@@ -189,6 +189,7 @@ public class MovementRepository {
 								movementRequest.getRequestInfo()).get(0).getId())
 				&& movement.getEmployeeAcceptance())
 			try {
+				LOGGER.debug("Promotion Processing : Update employee Request : " + movementRequest);
 				promoteEmployee(movementRequest);
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -250,7 +251,7 @@ public class MovementRepository {
 			//employeeAssignment.setIsPrimary(false);
 		}
 		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
-				movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB))
+				movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
 				&& movement.getStatus()
 						.equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
 								MovementStatus.APPROVED.toString(), null, movement.getTenantId(),

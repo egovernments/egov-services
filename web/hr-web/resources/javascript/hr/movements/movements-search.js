@@ -37,7 +37,7 @@ class EmployeeSearch extends React.Component {
     var employees = [];
     if(departmentId ||designationId||code||employeeType) {
       commonApiPost("hr-employee","employees","_search", {
-          tenantId, code, departmentId, designationId, name, employeeType,pageSize:500
+          tenantId, code, departmentId, designationId, name, employeeType, employeeStatus:7,pageSize:500
         }, function(err, res) {
           if(res) {
             employees = res.Employee;

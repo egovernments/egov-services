@@ -1,11 +1,14 @@
 package org.egov.pgr.utils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pgr.contract.ServiceReq;
 import org.egov.pgr.contract.ServiceReqRequest;
@@ -40,11 +43,15 @@ public class PGRRequestValidator {
 		
 		Map<String, ServiceReq> map = requestService.getServiceRequests(serviceReqRequest.getRequestInfo(),service).getServiceReq().stream().collect(Collectors.toMap(ServiceReq::getServiceRequestId,Function.identity()));
 		
+		List<String> errorList = new ArrayList<>();
 		serviceReqRequest.getServiceReq().forEach( a -> {
 			
 			if(map.get(a.getServiceRequestId()) == null)
-				errorMap.put("EG_PGR_UPDATE ","request object does not exist for given id : "+a.getServiceRequestId());
+				errorList.add(a.getServiceRequestId());
 		});
+		
+		if(!CollectionUtils.isEmpty(errorList))
+		errorMap.put("EG_PGR_UPDATE_SERVICEREQUESTID","request object does not exist for the given id's : "+ errorList);
 		
 		if(!errorMap.isEmpty()) {
 			throw new CustomException(errorMap);

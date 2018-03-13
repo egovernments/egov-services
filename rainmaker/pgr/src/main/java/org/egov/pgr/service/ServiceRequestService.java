@@ -108,9 +108,7 @@ public class ServiceRequestService {
 
 		AuditDetails auditDetails = pGRUtils.getAuditDetails(request.getRequestInfo().getUserInfo().getId()+"");
 		for (ServiceReq servReq : serviceReqs) {
-			AuditDetails serAudit = servReq.getAuditDetails();
-			serAudit.setLastModifiedBy(auditDetails.getLastModifiedBy());
-			serAudit.setLastModifiedTime(auditDetails.getLastModifiedTime());
+			servReq.setAuditDetails(auditDetails);
 			setIdsForSubList(servReq.getMedia(), servReq.getComments(), false, request.getRequestInfo());
 		}
 

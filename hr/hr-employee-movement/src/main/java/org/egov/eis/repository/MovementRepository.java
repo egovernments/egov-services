@@ -52,6 +52,7 @@ import org.egov.eis.config.PropertiesManager;
 import org.egov.eis.model.Document;
 import org.egov.eis.model.Movement;
 import org.egov.eis.model.enums.MovementStatus;
+import org.egov.eis.model.enums.TransferType;
 import org.egov.eis.model.enums.TypeOfMovement;
 import org.egov.eis.repository.builder.MovementQueryBuilder;
 import org.egov.eis.repository.rowmapper.MovementRowMapper;
@@ -180,7 +181,8 @@ public class MovementRepository {
 				movement.getStatus(), movement.getStateId(), userResponse.getUsers().get(0).getId(), now,
 				userResponse.getUsers().get(0).getId(), now, movement.getId(), movement.getTenantId() };
 		jdbcTemplate.update(MovementQueryBuilder.updateMovementQuery(), obj);
-		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)
+		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+				movement.getTransferType().equals(TransferType.TRANSFER_WITHIN_DEPARTMENT_OR_CORPORATION_OR_ULB))
 				&& movement.getStatus()
 						.equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
 								MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
@@ -191,8 +193,8 @@ public class MovementRepository {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-		else if ((movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER)
-				|| movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER_CUM_PROMOTION))
+		else if ((movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+		            movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB))
 				&& movement.getStatus()
 						.equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
 								MovementStatus.APPROVED.toString(), null, movement.getTenantId(),
@@ -247,7 +249,8 @@ public class MovementRepository {
 				employeeAssignment.setToDate(yesterday);
 			//employeeAssignment.setIsPrimary(false);
 		}
-		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)
+		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION) || (movement.getTypeOfMovement().equals(TypeOfMovement.TRANSFER) &&
+				movement.getTransferType().equals(TransferType.TRANSFER_OUTSIDE_CORPORATION_OR_ULB))
 				&& movement.getStatus()
 						.equals(employeeService.getHRStatuses(propertiesManager.getHrMastersServiceStatusesKey(),
 								MovementStatus.APPROVED.toString(), null, movement.getTenantId(),

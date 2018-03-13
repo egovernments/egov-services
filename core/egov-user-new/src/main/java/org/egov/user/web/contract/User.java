@@ -1,4 +1,4 @@
-package org.egov.user.domain.model;
+package org.egov.user.web.contract;
 
 import java.util.Collections;
 import java.util.Date;

@@ -38,7 +38,7 @@
  *
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
-package org.egov.user.notification.web.contract;
+package org.egov.user.web.contract;
 
 import org.springframework.stereotype.Service;
 

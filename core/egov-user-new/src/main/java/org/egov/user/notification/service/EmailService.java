@@ -3,7 +3,7 @@ package org.egov.user.notification.service;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.user.config.PropertiesManager;
 import org.egov.user.domain.model.Otp;
-import org.egov.user.notification.web.contract.EmailRequest;
+import org.egov.user.web.contract.EmailRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package org.egov.user.notification.consumer;
+package org.egov.user.consumer;
 
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 

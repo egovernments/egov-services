@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.Otp;
-import org.egov.user.domain.model.User;
+import org.egov.user.web.contract.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.web.contract.OtpResponse;
 import org.egov.user.web.contract.SearchRequest;

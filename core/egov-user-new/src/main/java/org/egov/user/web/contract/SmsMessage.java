@@ -1,4 +1,4 @@
-package org.egov.user.notification.web.contract;
+package org.egov.user.web.contract;
 
 
 import lombok.*;

@@ -66,4 +66,17 @@ public class UserConstants {
 	public static final String USERNAME_INVALIDFORMAT_CODE = "user.0012";
 	public static final String USERNAME_INVALIDFORMAT_NAME = "userName";
 	public static final String USERNAME_INVALIDFORMAT_ERROR_MESSAGE = "Since we configures userLoginPasswordOtpEnabled as true ,So UserName should be mobileNumber.";
+	
+	
+	public static final String ADDRESS_INVALIDLENGTH_CODE = "user.0013";
+	public static final String ADDRESSE_INVALIDFORMAT_NAME = "address";
+	public static final String ADDRESS_INVALIDFORMAT_ERROR_MESSAGE = "Address Length should not be more than 300 characters.";
+	
+	public static final String CITY_INVALIDLENGTH_CODE = "user.0014";
+	public static final String CITY_INVALIDFORMAT_NAME = "city";
+	public static final String CITY_INVALIDFORMAT_ERROR_MESSAGE = "City Length should not be more than 300 characters.";
+	
+	public static final String PINCODE_INVALIDLENGTH_CODE = "user.0015";
+	public static final String PINCODE_INVALIDFORMAT_NAME = "pinCode";
+	public static final String PINCODE_INVALIDFORMAT_ERROR_MESSAGE = "pinCode Length should not be more than 10 characters.";
 }

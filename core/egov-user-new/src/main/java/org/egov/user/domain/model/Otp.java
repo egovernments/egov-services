@@ -3,6 +3,7 @@ package org.egov.user.domain.model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.egov.user.web.contract.AuditDetails;
 
 @Getter
 @Setter

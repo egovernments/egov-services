@@ -627,7 +627,7 @@ class EmployeeTransfer extends React.Component {
           this.setState({
             movement: {
               ...this.state.movement,
-              documents: e.currentTarget.files
+              documents: []
             }
           })
         }
@@ -684,7 +684,7 @@ class EmployeeTransfer extends React.Component {
         {
             return list.map((item, ind)=>
             {
-                return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+                return (<option key={ind} value={typeof item == "object" ? item.code : item}>
                         {typeof item == "object" ? item.city.districtName +" - "+item.city.name : item}
                   </option>)
             })

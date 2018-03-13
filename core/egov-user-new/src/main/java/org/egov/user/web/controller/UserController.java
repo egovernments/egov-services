@@ -6,11 +6,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.utils.UserUtil;
 import org.egov.user.validator.RequestValidator;
+import org.egov.user.web.contract.User;
 import org.egov.user.web.contract.UserRequest;
 import org.egov.user.web.errorhandlers.ErrorResponse;
 import org.slf4j.Logger;

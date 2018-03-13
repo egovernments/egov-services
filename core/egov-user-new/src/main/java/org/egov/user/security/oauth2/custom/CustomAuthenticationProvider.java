@@ -7,10 +7,9 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.SecureUser;
-import org.egov.user.domain.model.User;
+import org.egov.user.web.contract.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,11 +55,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		RequestInfo requestInfo = RequestInfo.builder().action("search").build();
 
 		if (userName.contains("@") && userName.contains(".")) {
-			UserSearchCriteria searchCriteria = UserSearchCriteria.builder().emailId(userName).tenantId(tenantId).includeDetails(true)
+			UserSearchCriteria searchCriteria = UserSearchCriteria.builder().emailId(userName).tenantId(tenantId)
 					.build();
 			user = userService.searchUsers(requestInfo, searchCriteria).get(0);
 		} else {
-			UserSearchCriteria searchCriteria = UserSearchCriteria.builder().userName(userName).tenantId(tenantId).includeDetails(true)
+			UserSearchCriteria searchCriteria = UserSearchCriteria.builder().userName(userName).tenantId(tenantId)
 					.build();
 			user = userService.searchUsers(requestInfo, searchCriteria).get(0);
 		}
@@ -74,11 +73,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 		Boolean isPasswordMatch;
 		if (isUserLoginPasswordOtpEnabled) {
-			Long createdTime = user.getAuditDetails().getLastModifiedTime();
-			Long currentTime = new Date().getTime();
-			if(!((currentTime - createdTime) <= 180)){
-				throw new OAuth2Exception("Please Generate New Otp and Try to login");
-			}
+			Long createdTime = user.getAuditDetails().getLastModifiedTime() / 1000;
+			Long currentTime = new Date().getTime() / 1000;
+			if (!(currentTime - createdTime <= 60))
+				throw new OAuth2Exception("Time Got Expired , Please Generate New Otp And Try to login ");
+
 			isPasswordMatch = password.equals(user.getPassword());
 		} else {
 			isPasswordMatch = bcrypt.matches(password, user.getPassword());
@@ -90,8 +89,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				throw new OAuth2Exception("Please activate your account");
 			}
 			/**
-			 * We assume that there will be only one type. If it is multimple
-			 * then we have change below code Seperate by comma or other and
+			 * We assume that there will be only one type. If it is multiple
+			 * then we have change below code Separate by comma or other and
 			 * iterate
 			 */
 			List<GrantedAuthority> grantedAuths = new ArrayList<>();
@@ -125,7 +124,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				.roles(toAuthRole(user.getRoles())).tenantId(user.getTenantId()).build();
 	}
 
-	private List<org.egov.user.web.contract.auth.Role> toAuthRole(List<org.egov.user.domain.model.Role> domainRoles) {
+	private List<org.egov.user.web.contract.auth.Role> toAuthRole(List<org.egov.user.web.contract.Role> domainRoles) {
 		if (domainRoles == null)
 			return new ArrayList<>();
 		return domainRoles.stream().map(org.egov.user.web.contract.auth.Role::new).collect(Collectors.toList());

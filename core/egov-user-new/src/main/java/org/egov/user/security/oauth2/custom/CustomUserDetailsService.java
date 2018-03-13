@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.user.domain.model.SecureUser;
-import org.egov.user.domain.model.User;
+import org.egov.user.web.contract.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +32,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 				.tenantId(CustomAuthenticationProvider.getTenantId()).build();
 		User user = userService.searchUsers(requestInfo, searchCriteria).get(0);
 
-		List<org.egov.user.domain.model.Role> roles = user.getRoles();
+		List<org.egov.user.web.contract.Role> roles = user.getRoles();
 
 		List<org.egov.user.web.contract.auth.Role> roleList = new ArrayList<org.egov.user.web.contract.auth.Role>();
 
-		for (org.egov.user.domain.model.Role role : roles) {
+		for (org.egov.user.web.contract.Role role : roles) {
 			org.egov.user.web.contract.auth.Role role1 = new org.egov.user.web.contract.auth.Role(role);
 			roleList.add(role1);
 		}

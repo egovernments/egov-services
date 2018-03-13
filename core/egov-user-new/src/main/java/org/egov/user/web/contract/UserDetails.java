@@ -1,6 +1,4 @@
-package org.egov.user.domain.model;
-
-import java.util.List;
+package org.egov.user.web.contract;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +21,5 @@ public class UserDetails {
 	private String signature;
 	private String identificationMark;
 	private String photo;
-	private List<Address> addresses;
 
 }

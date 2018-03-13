@@ -8,18 +8,16 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
-import org.egov.user.domain.model.Address;
-import org.egov.user.domain.model.AuditDetails;
 import org.egov.user.domain.model.Otp;
-import org.egov.user.domain.model.Role;
-import org.egov.user.domain.model.User;
 import org.egov.user.domain.model.UserSearchCriteria;
 import org.egov.user.domain.model.enums.UserType;
 import org.egov.user.producer.UserProducer;
 import org.egov.user.repository.IdGenRepository;
 import org.egov.user.repository.SearcherRepository;
+import org.egov.user.web.contract.AuditDetails;
+import org.egov.user.web.contract.Role;
+import org.egov.user.web.contract.User;
 import org.egov.user.web.contract.UserRequest;
-import org.egov.user.web.controller.UserController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +124,7 @@ public class UserService {
 				roles.forEach(role -> role.setUserId(user.getId()));
 				roles.forEach(role -> role.setLastModifiedDate(new Date().getTime()));
 			}
-			if (null != user.getUserDetails()) {
+/*			if (null != user.getUserDetails()) {
 				List<Address> addressList = user.getUserDetails().getAddresses();
 				if (null != addressList && addressList.size() > 0) {
 					for (Address address : addressList) {
@@ -134,7 +132,7 @@ public class UserService {
 						address.setTenantId(user.getTenantId());
 					}
 				}
-			}
+			}*/
 		}
 		if (!isUserLoginPasswordOtpEnabled) {
 			updatePassword(createUserRequest, userList.get(0));
@@ -151,13 +149,14 @@ public class UserService {
 			System.out.println("otp1" + otp1);
 			Long currentTime = System.currentTimeMillis() / 1000;
 			if (null != otp1) {
-				Long createdTime = otp1.getAuditDetails().getCreatedTime();
+				Long createdTime = otp1.getAuditDetails().getCreatedTime() / 1000;
 				if (((currentTime - createdTime) <= totalTimeForOtpValidation)) {
 					String encryptedPassword = passwordEncoder.encode(user.getPassword());
 					user.setPassword(encryptedPassword);
 					userProducer.producer(updateUserPasswordTopic, user);
 				} else {
-					throw new CustomException(HttpStatus.BAD_REQUEST.toString(), "InvalidOtp");
+					throw new CustomException(HttpStatus.BAD_REQUEST.toString(),
+							"Otp time Got Expired , Please Generate New Otp And Try UpdatePassword with new otp.");
 				}
 			} else {
 				throw new CustomException(HttpStatus.BAD_REQUEST.toString(), "There is No Otp for this userId");
@@ -186,13 +185,13 @@ public class UserService {
 			for (int i = 0; i < userList.size(); i++) {
 				userList.get(i).setId(idList.get(i));
 				if (null != userList.get(i).getUserDetails()) {
-					List<Address> addresses = userList.get(i).getUserDetails().getAddresses();
-					if (null != addresses) {
+/*					List<Address> addresses = userList.get(i).getUserDetails().getAddresses();
+				if (null != addresses) {
 						for (Address address : addresses) {
 							address.setUserId(userList.get(i).getId());
 							address.setTenantId(userList.get(i).getTenantId());
 						}
-					}
+					}*/
 				}
 			}
 		}
@@ -260,6 +259,13 @@ public class UserService {
 				.auditDetails(auditDetails).build();
 		userProducer.producer(updateUserPasswordTopic, user);
 
+		/*
+		 * Long userId = requestInfo.getUserInfo().getId(); Otp otp =
+		 * Otp.builder().tenantId(tenantId).identity(mobileNumber).otp(otpNumber
+		 * ).auditDetails(auditDetails) .userId(userId).build();
+		 * userProducer.producer(userSaveOtpTopic, otp);
+		 */
+
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("tenantId", tenantId);
 		hashMap.put("otp", otpNumber);
@@ -272,21 +278,24 @@ public class UserService {
 			String mobileNumber) {
 		// TODO Auto-generated method stub
 		String otpNumber = idGenRepository.generateUserOtpNumber(requestInfo, tenantId);
-		String createdBy = requestInfo.getUserInfo().getName();
-		Long userId = requestInfo.getUserInfo().getId();
-		AuditDetails auditDetails = AuditDetails.builder().createdBy(createdBy).lastModifiedBy(createdBy)
-				.createdTime(new Date().getTime()).lastModifiedTime(new Date().getTime()).build();
-		Otp otp = Otp.builder().tenantId(tenantId).identity(mobileNumber).otp(otpNumber).auditDetails(auditDetails)
-				.userId(userId).build();
 
-		userProducer.producer(userSaveOtpTopic, otp);
+		UserSearchCriteria searchCriteria = UserSearchCriteria.builder().userName(userName).tenantId(tenantId)
+				.includeDetails(true).build();
+		User user = searchRepository.getAllUsers(requestInfo, searchCriteria).get(0);
+		Long userId = requestInfo.getUserInfo().getId();
+/*		AuditDetails auditDetails = AuditDetails.builder()
+				.createdBy(userId).lastModifiedBy(userId).createdTime(new Date().getTime())
+				.lastModifiedTime(new Date().getTime()).build();
+		Otp otp = Otp.builder().tenantId(tenantId).identity(mobileNumber).otp(otpNumber).auditDetails(auditDetails)
+				.userId(user.getId()).build(); 
+
+		userProducer.producer(userSaveOtpTopic, otp); */
 
 		HashMap<String, Object> hashMap = new HashMap<String, Object>();
 		hashMap.put("tenantId", tenantId);
 		hashMap.put("otp", otpNumber);
 		hashMap.put("identity", mobileNumber);
-		hashMap.put("auditDetails", auditDetails);
+//		hashMap.put("auditDetails", auditDetails);
 		userProducer.producer(userSmsNotification, hashMap);
 	}
-
 }

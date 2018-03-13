@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.contract.response.ErrorField;
-import org.egov.user.domain.model.User;
+import org.egov.user.web.contract.User;
 import org.egov.user.domain.service.UserService;
 import org.egov.user.utils.UserConstants;
 import org.egov.user.web.contract.UserRequest;
@@ -82,9 +82,40 @@ public class RequestValidator {
 			addLocaleValidationErrors(user.getLocale(), errorFields);
 			addTypeValidationErrors(user.getType(), errorFields);
 			addActiveValidationErrors(user.getActive(), errorFields);
+			if (null != user.getUserDetails()) {
+/*				List<Address> addresses = user.getUserDetails().getAddresses();
+				if (null != addresses && !addresses.isEmpty()) {
+					for (Address address : addresses) {
+						addUserAddressValidationErrors(address, errorFields);
+					}
+
+				}*/
+			}
 		}
 		return errorFields;
 	}
+
+/*	private void addUserAddressValidationErrors(Address address, List<ErrorField> errorFields) {
+		if (null != address.getAddress() && address.getAddress().length() > 300) {
+			final ErrorField errorField = ErrorField.builder().code(UserConstants.ADDRESS_INVALIDLENGTH_CODE)
+					.message(UserConstants.ADDRESS_INVALIDFORMAT_ERROR_MESSAGE)
+					.field(UserConstants.ADDRESSE_INVALIDFORMAT_NAME).build();
+			errorFields.add(errorField);
+		}
+		if (null != address.getCity() && address.getCity().length() > 300) {
+			final ErrorField errorField = ErrorField.builder().code(UserConstants.CITY_INVALIDLENGTH_CODE)
+					.message(UserConstants.CITY_INVALIDFORMAT_ERROR_MESSAGE)
+					.field(UserConstants.CITY_INVALIDFORMAT_NAME).build();
+			errorFields.add(errorField);
+		}
+		if (null != address.getPinCode() && address.getPinCode().length() > 10) {
+			final ErrorField errorField = ErrorField.builder().code(UserConstants.PINCODE_INVALIDLENGTH_CODE)
+					.message(UserConstants.PINCODE_INVALIDFORMAT_ERROR_MESSAGE)
+					.field(UserConstants.PINCODE_INVALIDFORMAT_NAME).build();
+			errorFields.add(errorField);
+		}
+
+	}*/
 
 	private void addUserIdValidationErrors(Long id, List<ErrorField> errorFields) {
 		// TODO Auto-generated method stub

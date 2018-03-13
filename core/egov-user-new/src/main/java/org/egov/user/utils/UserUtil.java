@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.user.domain.model.User;
+import org.egov.user.web.contract.User;
 import org.egov.user.web.contract.UserResponse;
 import org.egov.user.web.contract.factory.ResponseInfoFactory;
 import org.egov.user.web.errorhandlers.Error;

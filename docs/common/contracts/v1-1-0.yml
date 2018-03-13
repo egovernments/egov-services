@@ -107,9 +107,12 @@ definitions:
       userName: 
         type: string
         description: Unique user name of the authenticated user
+      password: 
+        type: string
+        description: password of the user.  
       idToken: 
         type: string
-        description: This can be password/OTP.
+        description: This will be the OTP.
       mobile:
         type: string
         description: mobile number of the autheticated user

@@ -355,6 +355,7 @@ class UpdateLeave extends React.Component {
 
   printNotice(noticeData) {
 
+    console.log(noticeData);
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
@@ -375,9 +376,9 @@ class UpdateLeave extends React.Component {
     doc.text(105, 20, "PROCEEDINGS OF THE COMMISSIONER", 'center');
     doc.text(105, 27, tenantId.split(".")[1].toUpperCase() + ' MUNICIPALITY/MUNICIPAL CORPORATION', 'center');
 
-    doc.text(15, 42, 'Roc.No. '+ "TODO/2018");
+    doc.text(15, 42, 'Roc.No. '+ "noticeData.applicationNumber/2018");
     doc.setLineWidth(0.5);
-    doc.line(15, 43, 53, 43);
+    doc.line(15, 43, 66, 43);
     doc.text(130, 42, 'Dt. ' + today);
     doc.setLineWidth(0.5);
     doc.line(130, 43, 156, 43);
@@ -422,7 +423,6 @@ class UpdateLeave extends React.Component {
     var blob = doc.output('blob');
     
   }
-
 
 
   getPrimaryAssigmentDep(obj, type) {
@@ -546,10 +546,12 @@ class UpdateLeave extends React.Component {
     } else {
       var employee;
       var type;
+      
       var asOnDate = _this.state.leaveSet.toDate;
       var departmentId = _this.state.departmentId;
       var leaveNumber = _this.state.leaveNumber;
       var tempInfo = Object.assign({}, _this.state.leaveSet);
+      var _name = tempInfo.name;
       delete tempInfo.name;
       delete tempInfo.code;
       if (!tempInfo.workflowDetails) {
@@ -576,6 +578,7 @@ class UpdateLeave extends React.Component {
         success: function (res) {
 
           if (ID == "Approve"){
+            tempInfo.name = _name;
             _this.printNotice(tempInfo);
             window.location.href = `app/hr/leavemaster/ack-page.html?type=${ID}&applicationNumber=${leaveNumber}`;
             

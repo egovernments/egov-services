@@ -367,7 +367,7 @@ public class MovementRepository {
 		assignment.setToDate(dor);
 		assignment.setTenantId(destination);
 		employee.getAssignments().add(assignment);
-
+        LOGGER.debug("Create Employee Request :" +employee);
 		final List<HRStatus> hrStatus = employeeService.getHRStatuses(
 				propertiesManager.getHrMastersServiceStatusesEmployeesKey(), null, employee.getEmployeeStatus(), source,
 				sourceRequestInfo);
@@ -406,63 +406,6 @@ public class MovementRepository {
 			employee.setEmployeeType(employeeService
 					.getEmployeeTypes(employeeTypes.get(0).getName(), null, destination, destinationRequestInfo).get(0)
 					.getId());
-
-		final List<Language> motherTongues = employeeService.getLanguages(null, employee.getMotherTongue(), destination,
-				sourceRequestInfo);
-		if (!motherTongues.isEmpty())
-			employee.setMotherTongue(employeeService
-					.getLanguages(motherTongues.get(0).getName(), null, destination, destinationRequestInfo).get(0)
-					.getId());
-
-		final List<Religion> religions = employeeService.getReligions(null, employee.getReligion(), destination,
-				sourceRequestInfo);
-		if (!religions.isEmpty())
-			employee.setReligion(
-					employeeService.getReligions(religions.get(0).getName(), null, destination, destinationRequestInfo)
-							.get(0).getId());
-
-		final List<Community> communities = employeeService.getCommunities(null, employee.getCommunity(), destination,
-				sourceRequestInfo);
-		if (!communities.isEmpty())
-			employee.setCommunity(employeeService
-					.getCommunities(communities.get(0).getName(), null, destination, destinationRequestInfo).get(0)
-					.getId());
-
-		final List<Category> categories = employeeService.getCategories(null, employee.getCategory(), destination,
-				sourceRequestInfo);
-		if (!categories.isEmpty())
-			employee.setCategory(employeeService
-					.getCategories(categories.get(0).getName(), null, destination, destinationRequestInfo).get(0)
-					.getId());
-
-		final List<Long> languagesKnown = new ArrayList<>();
-		for (final Long language : employee.getLanguagesKnown()) {
-			final List<Language> languages = employeeService.getLanguages(null, language, destination,
-					sourceRequestInfo);
-			if (!languages.isEmpty())
-				languagesKnown.add(employeeService
-						.getLanguages(languages.get(0).getName(), null, destination, sourceRequestInfo).get(0).getId());
-		}
-		employee.setLanguagesKnown(languagesKnown);
-
-		final List<BankContract> bankContracts = employeeService.getBanks(null, employee.getBank(), destination,
-				sourceRequestInfo);
-		if (!bankContracts.isEmpty())
-			employee.setBank(
-					employeeService.getBanks(bankContracts.get(0).getCode(), null, destination, destinationRequestInfo)
-							.get(0).getId());
-
-		final List<BankBranchContract> bankBranchContracts = employeeService.getBankBranches(null,
-				employee.getBankBranch(), destination, sourceRequestInfo);
-		if (!bankBranchContracts.isEmpty())
-			employee.setBankBranch(employeeService
-					.getBankBranches(bankBranchContracts.get(0).getCode(), null, destination, destinationRequestInfo)
-					.get(0).getId());
-
-		final List<Group> groups = employeeService.getGroups(null, employee.getGroup(), destination, sourceRequestInfo);
-		if (!groups.isEmpty())
-			employee.setGroup(employeeService
-					.getGroups(groups.get(0).getName(), null, destination, destinationRequestInfo).get(0).getId());
 
 		employeeService.createEmployee(employee, destination, destinationRequestInfo);
 	}

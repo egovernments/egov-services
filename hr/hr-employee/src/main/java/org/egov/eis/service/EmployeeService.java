@@ -508,7 +508,7 @@ public class EmployeeService {
         employeeRequestForUpdate.setEmployee(employee);
         employeeRequestForUpdate.setRequestInfo(requestInfo);
         //kafkaTemplate.send(propertiesManager.getUpdateEmployeeTopic(), employeeRequestForUpdate);
-        update(employeeRequest);
+        update(employeeRequestForUpdate);
         return employee;
     }
     

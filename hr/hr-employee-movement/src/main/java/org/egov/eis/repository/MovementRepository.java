@@ -199,7 +199,9 @@ public class MovementRepository {
 								movementRequest.getRequestInfo()).get(0).getId())
 				&& movement.getEmployeeAcceptance())
 			try {
+				LOGGER.debug("Transfer Processing : Update employee Request : " + movementRequest);
 				promoteEmployee(movementRequest);
+				LOGGER.debug("Transfer Processing : Create employee Request : " + movementRequest);
 				transferEmployee(movementRequest);
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -243,7 +245,7 @@ public class MovementRepository {
 			if (employeeAssignment.getFromDate().before(effectiveFromDate)
 					&& employeeAssignment.getToDate().after(effectiveFromDate))
 				employeeAssignment.setToDate(yesterday);
-			employeeAssignment.setIsPrimary(false);
+			//employeeAssignment.setIsPrimary(false);
 		}
 		if (movement.getTypeOfMovement().equals(TypeOfMovement.PROMOTION)
 				&& movement.getStatus()

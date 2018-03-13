@@ -416,7 +416,7 @@ public class EmployeeController {
             ResponseEntity<?> errorResponseEntity = validateEmployeeRequest(employeeRequest, bindingResult, true);
             if (errorResponseEntity != null)
                 return errorResponseEntity;
-
+            log.info("employeeRequest::" + employeeRequest);
             employee = employeeService.updateEmployee(employeeRequest);
         } catch (UserException ue) {
             log.error("Error while processing request ", ue);
@@ -452,6 +452,7 @@ public class EmployeeController {
             ValidationUtils.invokeValidator(dataIntegrityValidatorForCreate, employeeRequest, bindingResult);
 
         if (bindingResult.hasErrors()) {
+            log.error("Error while processing request ", bindingResult);
             return errorHandler.getErrorResponseEntityForInvalidRequest(bindingResult, employeeRequest.getRequestInfo());
         }
         return null;
